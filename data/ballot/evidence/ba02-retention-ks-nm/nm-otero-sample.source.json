@@ -1,0 +1,13 @@
+{
+  "url": "https://www.co.otero.nm.us/DocumentCenter/View/10361",
+  "finalUrl": "https://www.co.otero.nm.us/DocumentCenter/View/10361/2026-General-Super-Sample?bidId=",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T09:44:17.807068+00:00",
+  "sha256": "81c0e724d35e92c7c3f78eb6f381b6cd0c4dbb13d9ee325301bd789d9a630cfb",
+  "textFile": "nm-otero-sample.txt",
+  "textSha256": "507c43b6ea048c0a56ec2a0e76a34b1dd6f388947e4eac103ce7ed5601846998",
+  "publisher": "Otero County Clerk",
+  "officialBacklink": "https://www.co.otero.nm.us/225/Clerk",
+  "decodedPdfFont": null,
+  "textExtraction": "pdftotext -f1 -l1 -x382 -y95 -W230 -H340 (right column at72dpi)"
+}

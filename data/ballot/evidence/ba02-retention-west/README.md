@@ -19,8 +19,9 @@ not used for facts. The Montana Secretary of State's layout guide supplies the
 actual retention form and the instruction to vote in one oval. Wyoming's current
 Title 22 supplies the Justice/Judge forms.
 
-The Colorado HTML and source PDF bytes are retained compressed. The Colorado
-and Wyoming text snapshots are the relevant retention sections; Wyoming uses
+The Colorado constitution HTML and the Idaho and Wyoming source PDF bytes are
+retained compressed. The Colorado and Wyoming text snapshots are the relevant
+retention sections; Wyoming uses
 `pdftotext -layout`. Each source metadata file records both document and text hashes.
 
 Counts: AK 1, AZ 13, CO 7, ID 33, MT 10, WY 3. The source forms and completed

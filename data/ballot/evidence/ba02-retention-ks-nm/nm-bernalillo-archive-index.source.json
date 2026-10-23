@@ -1,0 +1,14 @@
+{
+  "sourceUrl": "https://rpbc.gop/",
+  "finalUrl": "https://rpbc.gop/",
+  "retrievedAt": "2026-10-23T10:00:38.032740+00:00",
+  "httpStatus": 200,
+  "rawHash": "49087f99268fd31f21017b1240c5399d1df6328206cd5d5e5613a419b5f40a06",
+  "bytes": 137855,
+  "file": "nm-bernalillo-archive-index.html.gz",
+  "compression": "gzip",
+  "sampleLink": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+  "officialPortalLink": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+  "sourceClass": "REFERENCE_PUBLISHER",
+  "use": "Public archive identifies legislative district sample PDFs and links the New Mexico Secretary of State official sample portal. No party opinion, evaluation or recommendation is imported."
+}

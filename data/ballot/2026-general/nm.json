@@ -1679,6 +1679,16 @@
             "collectedAt": "2026-10-14T05:03:51.582324Z",
             "verifiedAt": "2026-10-14T05:03:51.582324Z",
             "quote": "Judicial Retention Justice of the Supreme Court"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall DAVID K THOMSON be retained as Justice of the Supreme Court?",
+            "provenance": {
+              "sourceUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+              "sourceOrg": "Santa Fe County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.642373+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.642373+00:00",
+              "quote": "Shall DAVID K THOMSON be retained as Justice of the Supreme Court?"
+            }
           }
         },
         {
@@ -1698,6 +1708,16 @@
             "collectedAt": "2026-10-14T05:03:51.582324Z",
             "verifiedAt": "2026-10-14T05:03:51.582324Z",
             "quote": "Judicial Retention Justice of the Supreme Court"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall SHANNON BACON be retained as Justice of the Supreme Court?",
+            "provenance": {
+              "sourceUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+              "sourceOrg": "Santa Fe County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.642373+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.642373+00:00",
+              "quote": "Shall SHANNON BACON be retained as Justice of the Supreme Court?"
+            }
           }
         },
         {
@@ -1717,6 +1737,16 @@
             "collectedAt": "2026-10-14T05:03:51.582324Z",
             "verifiedAt": "2026-10-14T05:03:51.582324Z",
             "quote": "Judicial Retention Judge of the Court of Appeals"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall J MILES HANISEE be retained as Judge of the Court of Appeals?",
+            "provenance": {
+              "sourceUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+              "sourceOrg": "Santa Fe County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.642373+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.642373+00:00",
+              "quote": "Shall J MILES HANISEE be retained as Judge of the Court of Appeals?"
+            }
           }
         },
         {
@@ -1983,6 +2013,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 01 | Bernalillo | WILLIAM EDWARD PARNALL |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall WILLIAM EDWARD PARNALL be retained as District Court Judge, Division 01?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall WILLIAM EDWARD PARNALL be retained as District Court Judge, Division 01?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2002,6 +2043,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 04 | Bernalillo | BEATRICE J BRICKHOUSE |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall BEATRICE J BRICKHOUSE be retained as District Court Judge, Division 04?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall BEATRICE J BRICKHOUSE be retained as District Court Judge, Division 04?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2021,6 +2073,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 07 | Bernalillo | ALMA C GARCIA ROBERSON |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall ALMA C GARCIA ROBERSON be retained as District Court Judge, Division 07?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall ALMA C GARCIA ROBERSON be retained as District Court Judge, Division 07?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2040,6 +2103,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 10 | Bernalillo | BRUCE C FOX |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall BRUCE C FOX be retained as District Court Judge, Division 10?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall BRUCE C FOX be retained as District Court Judge, Division 10?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2059,6 +2133,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 13 | Bernalillo | LISA CHAVEZ ORTEGA |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall LISA CHAVEZ ORTEGA be retained as District Court Judge, Division 13?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall LISA CHAVEZ ORTEGA be retained as District Court Judge, Division 13?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2135,6 +2220,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 16 | Bernalillo | JENNIFER J WERNERSBACH |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall JENNIFER J WERNERSBACH be retained as District Court Judge, Division 16?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall JENNIFER J WERNERSBACH be retained as District Court Judge, Division 16?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2154,6 +2250,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 22 | Bernalillo | AMBER LOUISEE CHAVEZ BAKER |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall AMBER LOUISEE CHAVEZ BAKER be retained as District Court Judge, Division 22?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall AMBER LOUISEE CHAVEZ BAKER be retained as District Court Judge, Division 22?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2173,6 +2280,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 25 | Bernalillo | JANE CONWAY LEVY |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall JANE CONWAY LEVY be retained as District Court Judge, Division 25?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall JANE CONWAY LEVY be retained as District Court Judge, Division 25?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2192,6 +2310,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention District Court Judge SECOND JUDICIAL DISTRICT, DIVISION 28 | Bernalillo | CLARA M MORAN |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall CLARA M MORAN be retained as District Court Judge, Division 28?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall CLARA M MORAN be retained as District Court Judge, Division 28?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2211,6 +2340,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 2 | Bernalillo | CHRISTINE EVE RODRIGUEZ |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall CHRISTINE EVE RODRIGUEZ be retained as Judge of the Metropolitan Court, Division 2?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall CHRISTINE EVE RODRIGUEZ be retained as Judge of the Metropolitan Court, Division 2?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2230,6 +2370,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 4 | Bernalillo | JOSHUA J SANCHEZ |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall JOSHUA J SANCHEZ be retained as Judge of the Metropolitan Court, Division 4?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall JOSHUA J SANCHEZ be retained as Judge of the Metropolitan Court, Division 4?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2249,6 +2400,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 8 | Bernalillo | JILL MARTINEZ |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall JILL MARTINEZ be retained as Judge of the Metropolitan Court, Division 8?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall JILL MARTINEZ be retained as Judge of the Metropolitan Court, Division 8?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2268,6 +2430,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 10 | Bernalillo | BRITTANY MALDONADO MALOTT |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall BRITTANY MALDONADO MALOTT be retained as Judge of the Metropolitan Court, Division 10?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall BRITTANY MALDONADO MALOTT be retained as Judge of the Metropolitan Court, Division 10?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2287,6 +2460,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 12 | Bernalillo | JASON M JARAMILLO |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall JASON M JARAMILLO be retained as Judge of the Metropolitan Court, Division 12?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall JASON M JARAMILLO be retained as Judge of the Metropolitan Court, Division 12?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2306,6 +2490,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 14 | Bernalillo | VIDALIA G CHAVEZ |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall VIDALIA G CHAVEZ be retained as Judge of the Metropolitan Court, Division 14?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall VIDALIA G CHAVEZ be retained as Judge of the Metropolitan Court, Division 14?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2325,6 +2520,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 16 | Bernalillo | CLAIRE ANN MCDANIEL |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall CLAIRE ANN MCDANIEL be retained as Judge of the Metropolitan Court, Division 16?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall CLAIRE ANN MCDANIEL be retained as Judge of the Metropolitan Court, Division 16?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -2344,6 +2550,17 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\nJudicial Retention Judge of the Metropolitan Court DIVISION 18 | Bernalillo | ROSIE LAZCANO ALLRED |  | Qualified"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall ROSIE LAZCANO ALLRED be retained as Judge of the Metropolitan Court, Division 18?",
+            "provenance": {
+              "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+              "sourceOrg": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+              "collectedAt": "2026-10-23T09:48:21.385393+00:00",
+              "verifiedAt": "2026-10-23T09:48:21.385393+00:00",
+              "quote": "Shall ROSIE LAZCANO ALLRED be retained as Judge of the Metropolitan Court, Division 18?",
+              "secondHand": true
+            }
           }
         },
         {
@@ -4434,6 +4651,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FIRST JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge FIRST JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"FIRST JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Santa Fe\",\"name\":\"FRANCIS J MATHEW\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall FRANCIS J MATHEW be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+              "sourceOrg": "Santa Fe County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.642373+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.642373+00:00",
+              "quote": "Shall FRANCIS J MATHEW be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4453,6 +4680,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge THIRD JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge THIRD JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"THIRD JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Dona Ana\",\"name\":\"MANUEL ISAAC ARRIETA\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall MANUEL ISAAC ARRIETA be retained as Judge of the 3rd Judicial District, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://www.donaanacountyelections.com/wp-content/uploads/2026/10/Super-Sample_GN-2026.pdf",
+              "sourceOrg": "Doña Ana County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.629395+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.629395+00:00",
+              "quote": "Shall MANUEL ISAAC ARRIETA be retained as Judge of the 3rd Judicial District, Division 1?"
+            }
           }
         },
         {
@@ -4472,6 +4709,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FOURTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge FOURTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"FOURTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Mora\",\"name\":\"MICHAEL A ARAGON\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall MICHAEL A ARAGON be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://co.sanmiguel.nm.us/Notice%20of%20Election%202026%20General%20Election%20%28English%20and%20Spanish%29.pdf",
+              "sourceOrg": "San Miguel County Clerk",
+              "collectedAt": "2026-10-23T09:47:25.377359+00:00",
+              "verifiedAt": "2026-10-23T09:47:25.377359+00:00",
+              "quote": "Shall MICHAEL A ARAGON be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4491,6 +4738,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FIFTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge FIFTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"FIFTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Eddy\",\"name\":\"DAVID E FINGER\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall DAVID E FINGER be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+              "sourceOrg": "Lea County Clerk",
+              "collectedAt": "2026-10-23T09:48:45.964622+00:00",
+              "verifiedAt": "2026-10-23T09:48:45.964622+00:00",
+              "quote": "Shall DAVID E FINGER be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4510,6 +4767,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge SIXTH JUDICIAL DISTRICT, DIVISION 1\",\"classification\":\"Judicial Retention District Court Judge SIXTH JUDICIAL DISTRICT, DIVISION 1\",\"district\":\"SIXTH JUDICIAL DISTRICT, DIVISION 1\",\"county\":\"Grant\",\"name\":\"TOM F STEWART\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Tom F Stewart be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://grantcountynm.gov/DocumentCenter/View/2776/2026-General-Notice-of-Election",
+              "sourceOrg": "Grant County Clerk",
+              "collectedAt": "2026-10-23T09:47:25.377971+00:00",
+              "verifiedAt": "2026-10-23T09:47:25.377971+00:00",
+              "quote": "Shall Tom F Stewart be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4529,6 +4796,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge SEVENTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge SEVENTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"SEVENTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Socorro\",\"name\":\"MERCEDES C MURPHY\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "SHALL MERCEDES C MURPHY BE RETAINED AS THE DISTRICT COURT JUDGE, DIVISION 1?",
+            "provenance": {
+              "sourceUrl": "https://www.sierraco.org/wp-content/uploads/notice-of-election-from-sierra-county-clerk.pdf",
+              "sourceOrg": "Sierra County Clerk",
+              "collectedAt": "2026-10-23T09:47:46.359633+00:00",
+              "verifiedAt": "2026-10-23T09:47:46.359633+00:00",
+              "quote": "SHALL MERCEDES C MURPHY BE RETAINED AS THE DISTRICT COURT JUDGE, DIVISION 1?"
+            }
           }
         },
         {
@@ -4548,6 +4825,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge EIGHTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge EIGHTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"EIGHTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Taos\",\"name\":\"EMILIO JACOB CHAVEZ\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall EMILIO JACOB CHAVEZ be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://cms5.revize.com/revize/colfaxcountynm/Clerk%20Forms/Election/2026/2026%20GE%20Sample%20Ballots.pdf",
+              "sourceOrg": "Colfax County Clerk",
+              "collectedAt": "2026-10-23T09:50:28.164178+00:00",
+              "verifiedAt": "2026-10-23T09:50:28.164178+00:00",
+              "quote": "Shall EMILIO JACOB CHAVEZ be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4567,6 +4854,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge NINTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge NINTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"NINTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Curry\",\"name\":\"BENJAMIN S CROSS\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall BENJAMIN S CROSS be retained as Judge of the Ninth Judicial District, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+              "sourceOrg": "New Mexico Secretary of State",
+              "collectedAt": "2026-10-23T09:36:46.621992+00:00",
+              "verifiedAt": "2026-10-23T09:36:46.621992+00:00",
+              "quote": "JUDICIAL RETENTION: Shall BENJAMIN S CROSS be retained as Judge of the Ninth Judicial District, Division 1? NINTH JUDICIAL DISTRICT : DIVISION 01"
+            }
           }
         },
         {
@@ -4586,6 +4883,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge NINTH JUDICIAL DISTRICT, DIVISION 04\",\"classification\":\"Judicial Retention District Court Judge NINTH JUDICIAL DISTRICT, DIVISION 04\",\"district\":\"NINTH JUDICIAL DISTRICT, DIVISION 04\",\"county\":\"Roosevelt\",\"name\":\"DONNA J MOWRER\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall DONNA J MOWRER be retained as District Court Judge, Division 4?",
+            "provenance": {
+              "sourceUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+              "sourceOrg": "New Mexico Secretary of State",
+              "collectedAt": "2026-10-23T09:36:46.621992+00:00",
+              "verifiedAt": "2026-10-23T09:36:46.621992+00:00",
+              "quote": "JUDICIAL RETENTION: Shall DONNA J MOWRER be retained as District Court Judge, Division 4? NINTH JUDICIAL DISTRICT : DIVISION 04"
+            }
           }
         },
         {
@@ -4605,6 +4912,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge ELEVENTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge ELEVENTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"ELEVENTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"San Juan\",\"name\":\"BRADFORD J DALLEY\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall BRADFORD J DALLEY be retained as District Court Judge Division 1?",
+            "provenance": {
+              "sourceUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+              "sourceOrg": "McKinley County Clerk, Bureau of Elections",
+              "collectedAt": "2026-10-23T09:53:31.656580+00:00",
+              "verifiedAt": "2026-10-23T09:53:31.656580+00:00",
+              "quote": "Shall BRADFORD J DALLEY be retained as District Court Judge Division 1?"
+            }
           }
         },
         {
@@ -4624,6 +4941,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge ELEVENTH JUDICIAL DISTRICT, DIVISION 04\",\"classification\":\"Judicial Retention District Court Judge ELEVENTH JUDICIAL DISTRICT, DIVISION 04\",\"district\":\"ELEVENTH JUDICIAL DISTRICT, DIVISION 04\",\"county\":\"San Juan\",\"name\":\"CURTIS R GURLEY\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall CURTIS R GURLEY be retained as District Court Division 4?",
+            "provenance": {
+              "sourceUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+              "sourceOrg": "McKinley County Clerk, Bureau of Elections",
+              "collectedAt": "2026-10-23T09:53:31.656580+00:00",
+              "verifiedAt": "2026-10-23T09:53:31.656580+00:00",
+              "quote": "Shall CURTIS R GURLEY be retained as District Court Division 4?"
+            }
           }
         },
         {
@@ -4643,6 +4970,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge TWELFTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge TWELFTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"TWELFTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Lincoln\",\"name\":\"STEPHEN P OCHOA\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall STEPHEN P OCHOA be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://www.co.otero.nm.us/DocumentCenter/View/10361/2026-General-Super-Sample?bidId=",
+              "sourceOrg": "Otero County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.807068+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.807068+00:00",
+              "quote": "Shall STEPHEN P OCHOA be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4662,6 +4999,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge THIRTEENTH JUDICIAL DISTRICT, DIVISION 01\",\"classification\":\"Judicial Retention District Court Judge THIRTEENTH JUDICIAL DISTRICT, DIVISION 01\",\"district\":\"THIRTEENTH JUDICIAL DISTRICT, DIVISION 01\",\"county\":\"Valencia\",\"name\":\"JAMES LAWRENCE SANCHEZ\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall JAMES LAWRENCE SANCHEZ be retained as District Court Judge, Division 1?",
+            "provenance": {
+              "sourceUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+              "sourceOrg": "Sandoval County Clerk",
+              "collectedAt": "2026-10-23T09:45:06.492718+00:00",
+              "verifiedAt": "2026-10-23T09:45:06.492718+00:00",
+              "quote": "Shall JAMES LAWRENCE SANCHEZ be retained as District Court Judge, Division 1?"
+            }
           }
         },
         {
@@ -4681,6 +5028,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FIRST JUDICIAL DISTRICT, DIVISION 07\",\"classification\":\"Judicial Retention District Court Judge FIRST JUDICIAL DISTRICT, DIVISION 07\",\"district\":\"FIRST JUDICIAL DISTRICT, DIVISION 07\",\"county\":\"Santa Fe\",\"name\":\"T GLENN ELLINGTON\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall T GLENN ELLINGTON be retained as District Court Judge, Division 7?",
+            "provenance": {
+              "sourceUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+              "sourceOrg": "Santa Fe County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.642373+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.642373+00:00",
+              "quote": "Shall T GLENN ELLINGTON be retained as District Court Judge, Division 7?"
+            }
           }
         },
         {
@@ -4700,6 +5057,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge THIRD JUDICIAL DISTRICT, DIVISION 07\",\"classification\":\"Judicial Retention District Court Judge THIRD JUDICIAL DISTRICT, DIVISION 07\",\"district\":\"THIRD JUDICIAL DISTRICT, DIVISION 07\",\"county\":\"Dona Ana\",\"name\":\"DOUGLAS R DRIGGERS\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall DOUGLAS R DRIGGERS be retained as Judge of the 3rd Judicial District, Division 7?",
+            "provenance": {
+              "sourceUrl": "https://www.donaanacountyelections.com/wp-content/uploads/2026/10/Super-Sample_GN-2026.pdf",
+              "sourceOrg": "Doña Ana County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.629395+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.629395+00:00",
+              "quote": "Shall DOUGLAS R DRIGGERS be retained as Judge of the 3rd Judicial District, Division 7?"
+            }
           }
         },
         {
@@ -4719,6 +5086,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FIFTH JUDICIAL DISTRICT, DIVISION 07\",\"classification\":\"Judicial Retention District Court Judge FIFTH JUDICIAL DISTRICT, DIVISION 07\",\"district\":\"FIFTH JUDICIAL DISTRICT, DIVISION 07\",\"county\":\"Lea\",\"name\":\"MICHAEL HAROLD STONE\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall MICHAEL HAROLD STONE be retained as District Court Judge, Division 7?",
+            "provenance": {
+              "sourceUrl": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+              "sourceOrg": "Lea County Clerk",
+              "collectedAt": "2026-10-23T09:48:45.964622+00:00",
+              "verifiedAt": "2026-10-23T09:48:45.964622+00:00",
+              "quote": "Shall MICHAEL HAROLD STONE be retained as District Court Judge, Division 7?"
+            }
           }
         },
         {
@@ -4738,6 +5115,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge TWELFTH JUDICIAL DISTRICT, DIVISION 04\",\"classification\":\"Judicial Retention District Court Judge TWELFTH JUDICIAL DISTRICT, DIVISION 04\",\"district\":\"TWELFTH JUDICIAL DISTRICT, DIVISION 04\",\"county\":\"Otero\",\"name\":\"ANGIE K SCHNEIDER\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall ANGIE K SCHNEIDER be retained as District Court Judge, Division 4?",
+            "provenance": {
+              "sourceUrl": "https://www.co.otero.nm.us/DocumentCenter/View/10361/2026-General-Super-Sample?bidId=",
+              "sourceOrg": "Otero County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.807068+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.807068+00:00",
+              "quote": "Shall ANGIE K SCHNEIDER be retained as District Court Judge, Division 4?"
+            }
           }
         },
         {
@@ -4757,6 +5144,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge THIRTEENTH JUDICIAL DISTRICT, DIVISION 04\",\"classification\":\"Judicial Retention District Court Judge THIRTEENTH JUDICIAL DISTRICT, DIVISION 04\",\"district\":\"THIRTEENTH JUDICIAL DISTRICT, DIVISION 04\",\"county\":\"Cibola\",\"name\":\"AMANDA CONNIE SANCHEZ VILLALOBOS\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall AMANDA CONNIE SANCHEZ VILLALOBOS be retained as District Court Judge, Division 4?",
+            "provenance": {
+              "sourceUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+              "sourceOrg": "Sandoval County Clerk",
+              "collectedAt": "2026-10-23T09:45:06.492718+00:00",
+              "verifiedAt": "2026-10-23T09:45:06.492718+00:00",
+              "quote": "Shall AMANDA CONNIE SANCHEZ VILLALOBOS be retained as District Court Judge, Division 4?"
+            }
           }
         },
         {
@@ -4776,6 +5173,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FIRST JUDICIAL DISTRICT, DIVISION 10\",\"classification\":\"Judicial Retention District Court Judge FIRST JUDICIAL DISTRICT, DIVISION 10\",\"district\":\"FIRST JUDICIAL DISTRICT, DIVISION 10\",\"county\":\"Santa Fe\",\"name\":\"KATHLEEN MCGARRY ELLENWOOD\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall KATHLEEN MCGARRY ELLENWOOD be retained as District Court Judge, Division 10?",
+            "provenance": {
+              "sourceUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+              "sourceOrg": "Santa Fe County Clerk",
+              "collectedAt": "2026-10-23T09:44:17.642373+00:00",
+              "verifiedAt": "2026-10-23T09:44:17.642373+00:00",
+              "quote": "Shall KATHLEEN MCGARRY ELLENWOOD be retained as District Court Judge, Division 10?"
+            }
           }
         },
         {
@@ -4795,6 +5202,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge FIFTH JUDICIAL DISTRICT, DIVISION 10\",\"classification\":\"Judicial Retention District Court Judge FIFTH JUDICIAL DISTRICT, DIVISION 10\",\"district\":\"FIFTH JUDICIAL DISTRICT, DIVISION 10\",\"county\":\"Chaves\",\"name\":\"DUSTIN KELLY HUNTER\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall DUSTIN KELLY HUNTER be retained as District Court Judge, Division 10?",
+            "provenance": {
+              "sourceUrl": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+              "sourceOrg": "Lea County Clerk",
+              "collectedAt": "2026-10-23T09:48:45.964622+00:00",
+              "verifiedAt": "2026-10-23T09:48:45.964622+00:00",
+              "quote": "Shall DUSTIN KELLY HUNTER be retained as District Court Judge, Division 10?"
+            }
           }
         },
         {
@@ -4814,6 +5231,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge ELEVENTH JUDICIAL DISTRICT, DIVISION 07\",\"classification\":\"Judicial Retention District Court Judge ELEVENTH JUDICIAL DISTRICT, DIVISION 07\",\"district\":\"ELEVENTH JUDICIAL DISTRICT, DIVISION 07\",\"county\":\"McKinley\",\"name\":\"DOUGLAS W DECKER\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall DOUGLAS W DECKER be retained as District Court Judge Division 7",
+            "provenance": {
+              "sourceUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+              "sourceOrg": "McKinley County Clerk, Bureau of Elections",
+              "collectedAt": "2026-10-23T09:53:31.656580+00:00",
+              "verifiedAt": "2026-10-23T09:53:31.656580+00:00",
+              "quote": "Shall DOUGLAS W DECKER be retained as District Court Judge Division 7"
+            }
           }
         },
         {
@@ -4833,6 +5260,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge THIRTEENTH JUDICIAL DISTRICT, DIVISION 07\",\"classification\":\"Judicial Retention District Court Judge THIRTEENTH JUDICIAL DISTRICT, DIVISION 07\",\"district\":\"THIRTEENTH JUDICIAL DISTRICT, DIVISION 07\",\"county\":\"Sandoval\",\"name\":\"CHRISTOPHER GEORGE PEREZ\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall CHRISTOPHER GEORGE PEREZ be retained as District Court Judge, Division 7?",
+            "provenance": {
+              "sourceUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+              "sourceOrg": "Sandoval County Clerk",
+              "collectedAt": "2026-10-23T09:45:06.492718+00:00",
+              "verifiedAt": "2026-10-23T09:45:06.492718+00:00",
+              "quote": "Shall CHRISTOPHER GEORGE PEREZ be retained as District Court Judge, Division 7?"
+            }
           }
         },
         {
@@ -4852,6 +5289,16 @@
             "collectedAt": "2026-10-20T22:52:26.564940+00:00",
             "verifiedAt": "2026-10-20T22:52:26.564940+00:00",
             "quote": "2026 General Election Contest/Candidate List\n{\"contest\":\"Judicial Retention District Court Judge SIXTH JUDICIAL DISTRICT, DIVISION 4\",\"classification\":\"Judicial Retention District Court Judge SIXTH JUDICIAL DISTRICT, DIVISION 4\",\"district\":\"SIXTH JUDICIAL DISTRICT, DIVISION 4\",\"county\":\"Luna\",\"name\":\"JAROD KYLE HOFACKET\",\"party\":\"\",\"status\":\"Qualified\"}"
+          },
+          "retentionQuestion": {
+            "questionText": "Shall Jarod Kyle Hofacket be retained as District Court Judge, Division 4?",
+            "provenance": {
+              "sourceUrl": "https://grantcountynm.gov/DocumentCenter/View/2776/2026-General-Notice-of-Election",
+              "sourceOrg": "Grant County Clerk",
+              "collectedAt": "2026-10-23T09:47:25.377971+00:00",
+              "verifiedAt": "2026-10-23T09:47:25.377971+00:00",
+              "quote": "Shall Jarod Kyle Hofacket be retained as District Court Judge, Division 4?"
+            }
           }
         }
       ],
@@ -11025,7 +11472,7 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:54:53.960042+00:00",
+    "reviewedAt": "2026-10-23T09:53:31.656580+00:00",
     "reviewedBy": "Codex BA-01 official court/county source replay",
     "sources": [
       {
@@ -11126,6 +11573,171 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official2025Constitution incorporates amendments through2024; ArticleVI12 establishes district judges for each judicial district; VI33 explicitly identifies district-judge nonpartisan retention. Qualified roster independently labels each retention.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL",
+        "finalUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL",
+        "retrievedAt": "2026-10-23T09:35:39.395441+00:00",
+        "httpStatus": 200,
+        "rawHash": "85197c551f00342de646558e109448c0c3b430d87fde4a6fcc2062a19c5c4d97",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "2026 General Election official contest/question registry. Exact question text, named judge, district/division and Yes/No alternatives read from the state election office; paired with its certified 2026 candidate list. No result, recommendation or evaluation is imported."
+      },
+      {
+        "requestedUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+        "finalUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+        "retrievedAt": "2026-10-23T09:36:46.621992+00:00",
+        "httpStatus": 200,
+        "rawHash": "535a53bddda5a4dada96a988198df56e41a907933659671d7b7c6f1c2ae481d6",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "2026 General Election official contest/question registry. Exact question text, named judge, district/division and Yes/No alternatives read from the state election office; paired with its certified 2026 candidate list. No result, recommendation or evaluation is imported."
+      },
+      {
+        "requestedUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY",
+        "finalUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY",
+        "retrievedAt": "2026-10-23T09:36:46.820883+00:00",
+        "httpStatus": 200,
+        "rawHash": "d6ad674a133bd4690a1e7543354a15556da5e9abd9b6c21cea06c68c950d9ceb",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "2026 General Election official contest/question registry. Exact question text, named judge, district/division and Yes/No alternatives read from the state election office; paired with its certified 2026 candidate list. No result, recommendation or evaluation is imported."
+      },
+      {
+        "requestedUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+        "finalUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+        "retrievedAt": "2026-10-23T09:44:17.642373+00:00",
+        "httpStatus": 200,
+        "rawHash": "436a119c6dcc0753ab6dd1035af030c585a80790b2818d6c92c206a8747ae179",
+        "publisher": "Santa Fe County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://www.donaanacountyelections.com/wp-content/uploads/2026/10/Super-Sample_GN-2026.pdf",
+        "finalUrl": "https://www.donaanacountyelections.com/wp-content/uploads/2026/10/Super-Sample_GN-2026.pdf",
+        "retrievedAt": "2026-10-23T09:44:17.629395+00:00",
+        "httpStatus": 200,
+        "rawHash": "be7913d6b71c65a6ea5ee5e08b395c5c93dc265865bb9c326fe0a156c33b4e78",
+        "publisher": "Doña Ana County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://co.sanmiguel.nm.us/Notice%20of%20Election%202026%20General%20Election%20%28English%20and%20Spanish%29.pdf",
+        "finalUrl": "https://co.sanmiguel.nm.us/Notice%20of%20Election%202026%20General%20Election%20%28English%20and%20Spanish%29.pdf",
+        "retrievedAt": "2026-10-23T09:47:25.377359+00:00",
+        "httpStatus": 200,
+        "rawHash": "4c90bd9545c2f7a691b7a3f02a5e66c668d67fb0a6bf6d9d05bf1b2072962ff0",
+        "publisher": "San Miguel County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+        "finalUrl": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+        "retrievedAt": "2026-10-23T09:48:45.964622+00:00",
+        "httpStatus": 200,
+        "rawHash": "5aeeb6bdb98c70e6bf6822cbb9b1123bad54df7ac95a48364b45482a5b7ddf00",
+        "publisher": "Lea County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://grantcountynm.gov/DocumentCenter/View/2776/2026-General-Notice-of-Election",
+        "finalUrl": "https://grantcountynm.gov/DocumentCenter/View/2776/2026-General-Notice-of-Election",
+        "retrievedAt": "2026-10-23T09:47:25.377971+00:00",
+        "httpStatus": 200,
+        "rawHash": "38735960dfbecf9464d4d894c532702802dad8a9993db73235746e93af210804",
+        "publisher": "Grant County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://www.sierraco.org/wp-content/uploads/notice-of-election-from-sierra-county-clerk.pdf",
+        "finalUrl": "https://www.sierraco.org/wp-content/uploads/notice-of-election-from-sierra-county-clerk.pdf",
+        "retrievedAt": "2026-10-23T09:47:46.359633+00:00",
+        "httpStatus": 200,
+        "rawHash": "4445eee9f42216a2661f6573154e591b151ed8825b05815ef465ec40848ce4c5",
+        "publisher": "Sierra County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://cms5.revize.com/revize/colfaxcountynm/Clerk%20Forms/Election/2026/2026%20GE%20Sample%20Ballots.pdf",
+        "finalUrl": "https://cms5.revize.com/revize/colfaxcountynm/Clerk%20Forms/Election/2026/2026%20GE%20Sample%20Ballots.pdf",
+        "retrievedAt": "2026-10-23T09:50:28.164178+00:00",
+        "httpStatus": 200,
+        "rawHash": "df8168e18fbe55d6f3535e936259b80d47d12880679ffe906ce15736f2141fba",
+        "publisher": "Colfax County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+        "finalUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+        "retrievedAt": "2026-10-23T09:53:31.656580+00:00",
+        "httpStatus": 200,
+        "rawHash": "e9a4e50b50a83c6621afab93440ab1acf159266cbd85584f66983976897cd860",
+        "publisher": "McKinley County Clerk, Bureau of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://www.co.otero.nm.us/DocumentCenter/View/10361",
+        "finalUrl": "https://www.co.otero.nm.us/DocumentCenter/View/10361/2026-General-Super-Sample?bidId=",
+        "retrievedAt": "2026-10-23T09:44:17.807068+00:00",
+        "httpStatus": 200,
+        "rawHash": "81c0e724d35e92c7c3f78eb6f381b6cd0c4dbb13d9ee325301bd789d9a630cfb",
+        "publisher": "Otero County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+        "finalUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+        "retrievedAt": "2026-10-23T09:45:06.492718+00:00",
+        "httpStatus": 200,
+        "rawHash": "106fb93815eb04990da39b7a4041206997e8b5616aff6e52446b3f151bf0c489",
+        "publisher": "Sandoval County Clerk",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+        "finalUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+        "retrievedAt": "2026-10-23T09:48:21.385393+00:00",
+        "httpStatus": 200,
+        "rawHash": "b13758948c8af738f778a6ae8756f0203366b0610ad882abc15f01ca2c4aa0c7",
+        "publisher": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+        "sourceClass": "REFERENCE_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official November 3, 2026 sample ballot or clerk-issued certified election notice. Exact named retention question copied from the saved document, with the certified candidate record checked separately. This primary ballot wording replaces differing prepared election-results headings."
+      },
+      {
+        "requestedUrl": "https://api.realfile.rtsclients.com/PublicFiles/ee3072ab0d43456cb15a51f7d82c77a2/b3415b23-03d0-4ed9-8efa-861e5acf1bbc/2025%20NM_Election_Handbook_SOS%201.pdf",
+        "finalUrl": "https://api.realfile.rtsclients.com/PublicFiles/ee3072ab0d43456cb15a51f7d82c77a2/b3415b23-03d0-4ed9-8efa-861e5acf1bbc/2025%20NM_Election_Handbook_SOS%201.pdf",
+        "retrievedAt": "2026-10-23T09:40:53.917239+00:00",
+        "httpStatus": 200,
+        "rawHash": "c6ae277cb4d7c9a9e7b2e0815cb07785566b758610690a9bba26c1bb99d6dbd8",
+        "publisher": "New Mexico Secretary of State",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official 2025 Election Handbook, NMSA 1978 sections 1-26-2 through 1-26-6, verifies that the four held judicial office classes are nonpartisan retention/rejection elections. These sections do not prescribe literal question wording; separate sample/notice evidence establishes that wording, with any registry-only questions explicitly pending."
       }
     ]
   }

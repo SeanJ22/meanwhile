@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-10-23",
+  "remainingContests": [
+    "nm-general-2026-judicial-retention-district-court-judge-ninth-judicial-district-division-01",
+    "nm-general-2026-judicial-retention-district-court-judge-ninth-judicial-district-division-04"
+  ],
+  "routes": [
+    {
+      "url": "https://www.currycountynm.gov/elected-officials/clerk-s-office/bureau-of-elections",
+      "outcome": "HTTP 403 public website Access Denied; Mozilla user agent, official Referer and apex hostname variant did not recover. A public September 23 clerk-page archive capture still sends precinct sample requests only to nmvote.org, without a sample PDF link. All 14 Curry County PDF captures listed by the public CDX index from August 1 through October 23 were inspected and contain unrelated forms, agendas, statewide measures or financials; no Ninth retention question was recovered."
+    },
+    {
+      "url": "https://www.rooseveltcounty.com/county-clerk/",
+      "outcome": "Current general-election page links the personal state sample lookup, calendar/proclamation and state questions. All 36 public WordPress attachments after August 1 were inspected: 28 PDFs, two DOCX meeting notices and six named staff/commission photos. All PDF text was checked, including complete OCR of 33 pages across 21 scanned PDFs. No Cross/Mowrer retention question or current general sample is present. The May 2026 Notice-of-Election-Roosevelt.docx concerns a primary and contains an old 2024 date; never used."
+    },
+    {
+      "url": "https://www.newmexicopublicnotices.com/Details.aspx?ID=106018",
+      "outcome": "Public name search for Mowrer returns Curry County Clerk legal 11836, published in Eastern New Mexico News October 14, 2026: NOTICE OF ELECTION for November 3, 2026. Full text requires CAPTCHA, including through a normal cookie-preserving search-to-detail workflow. No bypass attempted."
+    },
+    {
+      "url": "https://www.easternnewmexiconews.com/story/2026/10/07/news/nov-3-sample-ballot/234334.html",
+      "outcome": "Current October 6 supersample reproduces Cross and Mowrer questions for both Curry and Roosevelt. The article does not identify government authorship; discovery/corroboration only until an authenticated official sample or issued notice is saved."
+    },
+    {
+      "url": "https://www.easternnewmexiconews.com/issue/10_14_2026/",
+      "outcome": "Public guarded-browser capture returned HTTP 200 for this complete issue index and its page 26 continuation. All article links were inspected; neither index offers a print-edition PDF, the clerk-issued legal 11836, or an official sample attachment. The site's e-Edition navigation is commented out."
+    },
+    {
+      "url": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx?tab=SampleBallot",
+      "outcome": "Normal cookie-preserving retrieval returns HTTP 200. The complete HTML offers personal voter registration lookup only, with first name, last name, date of birth and county; no public county/style sample menu or PDF link is exposed. The separate public address lookup requires CAPTCHA. No personal identity was supplied and no CAPTCHA was bypassed."
+    },
+    {
+      "url": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+      "outcome": "The complete saved 967,953-byte official certified candidate-list HTML, including hidden fields and scripts, has no occurrence of 'Shall' or 'retained'. Public county-specific lists were also checked using the dropdown's Curry 05 and Roosevelt 11 values: Cross and Mowrer appear, but no literal question does. These establish the current office/name pairs but cannot establish literal ballot wording."
+    },
+    {
+      "url": "https://www.sos.nm.gov/wp-json/wp/v2/media?after=2026-08-01T00%3A00%3A00&per_page=100",
+      "outcome": "The recent public media index contains voter guides for measures, CFIS training, icons and advisories, with no retention sample or template. The broader all-2026 inventory of 153 attachments was separately checked, including unnamed attachments. The 55-page 2025 VSCC report and 39-page VSTL report contain technical standards, without literal retention questions. Beyond the documented 1.10.11 and 1.10.16 rules, 28 other active NMAC 1.10 parts from 5 through 37 were checked; no literal retention question form was found."
+    },
+    {
+      "url": "https://www.newmexicopublicnotices.com/",
+      "outcome": "Exact Phrase public searches for the two newspaper question strings returned no hits. Name search succeeds. This does not establish absence because indexed wording or line breaks may differ; no full text was reconstructed."
+    }
+  ],
+  "nextRoute": "Acquire an authenticated actual Curry/Roosevelt 2026 sample copy, or the county clerk-issued October 14 notice through another public publisher copy."
+}

@@ -4,6 +4,9 @@ import test from "node:test";
 import { genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
 import { withCandidateTickets } from "../lib/ballot/tickets.ts";
+import { divisionsWithDistrictMemberships } from "../lib/ballot/district-memberships.ts";
+import { indexedZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
+import { unestablishedDistrictOfficesForFamilies } from "../lib/ballot/zip-divisions.ts";
 import type { Provenance } from "../lib/sources/types.ts";
 
 type StateInput = GenericBallotProjection & { sourceReceipt: { sources: { requestedUrl: string; finalUrl: string; retrievedAt: string; rawHash: string }[] } };
@@ -63,6 +66,15 @@ test("BA-02: Guam keeps the official joint ticket and every printed contest", as
   assert.ok(tickets.every(row => row.familyName.includes(" / ")));
   for (const office of [/Lieutenant Governor/, /House of Representatives/, /Legislature/, /Attorney General/, /Utilities/, /Education/])
     assert.ok(ballot.contests.some(row => office.test(row.title)), String(office));
+});
+
+test("BA-02: official AS House memberships fill the district gap for real ZIP 96799", async () => {
+  const input = await stateInput("AS"), ballot = Object.values(input.ballots)[0];
+  const indexed = await indexedZipDivisionEntry("96799");
+  assert.ok(indexed);
+  const divisions = [...divisionsWithDistrictMemberships(ballot, indexed.ids)];
+  assert.equal(divisions.filter(id => /\/sldl:\d+$/.test(id)).length, 17);
+  assert.deepEqual(unestablishedDistrictOfficesForFamilies(["as/sldl"], divisions), []);
 });
 
 test("BA-02: Puerto Rico's source-backed no-election statement is a publishable ballot on its own", async () => {

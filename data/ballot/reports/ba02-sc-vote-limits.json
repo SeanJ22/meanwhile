@@ -1,0 +1,2976 @@
+[
+  {
+    "id": "sc-sec-22596-governor-and-lieutenant-governor",
+    "title": "Governor and Lieutenant Governor",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-secretary-of-state",
+    "title": "Secretary of State",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-treasurer",
+    "title": "State Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-attorney-general",
+    "title": "Attorney General",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-comptroller-general",
+    "title": "Comptroller General",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-superintendent-of-education",
+    "title": "State Superintendent of Education",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-commissioner-of-agriculture",
+    "title": "Commissioner of Agriculture",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-senate",
+    "title": "U.S. Senate",
+    "ocdId": "ocd-division/country:us/state:sc",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-1",
+    "title": "U.S. House of Representatives, District 1",
+    "ocdId": "ocd-division/country:us/state:sc/cd:1",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-2",
+    "title": "U.S. House of Representatives, District 2",
+    "ocdId": "ocd-division/country:us/state:sc/cd:2",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-3",
+    "title": "U.S. House of Representatives, District 3",
+    "ocdId": "ocd-division/country:us/state:sc/cd:3",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-4",
+    "title": "U.S. House of Representatives, District 4",
+    "ocdId": "ocd-division/country:us/state:sc/cd:4",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-5",
+    "title": "U.S. House of Representatives, District 5",
+    "ocdId": "ocd-division/country:us/state:sc/cd:5",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-6",
+    "title": "U.S. House of Representatives, District 6",
+    "ocdId": "ocd-division/country:us/state:sc/cd:6",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-u-s-house-of-representatives-district-7",
+    "title": "U.S. House of Representatives, District 7",
+    "ocdId": "ocd-division/country:us/state:sc/cd:7",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t07c019.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-1",
+    "title": "State House of Representatives, District 1",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:1",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-2",
+    "title": "State House of Representatives, District 2",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:2",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-3",
+    "title": "State House of Representatives, District 3",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:3",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-4",
+    "title": "State House of Representatives, District 4",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:4",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-5",
+    "title": "State House of Representatives, District 5",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:5",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-6",
+    "title": "State House of Representatives, District 6",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:6",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-7",
+    "title": "State House of Representatives, District 7",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:7",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-8",
+    "title": "State House of Representatives, District 8",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:8",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-9",
+    "title": "State House of Representatives, District 9",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:9",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-10",
+    "title": "State House of Representatives, District 10",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:10",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-11",
+    "title": "State House of Representatives, District 11",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:11",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-12",
+    "title": "State House of Representatives, District 12",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:12",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-13",
+    "title": "State House of Representatives, District 13",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:13",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-14",
+    "title": "State House of Representatives, District 14",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:14",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-15",
+    "title": "State House of Representatives, District 15",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:15",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-16",
+    "title": "State House of Representatives, District 16",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:16",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-17",
+    "title": "State House of Representatives, District 17",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:17",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-18",
+    "title": "State House of Representatives, District 18",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:18",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-19",
+    "title": "State House of Representatives, District 19",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:19",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-20",
+    "title": "State House of Representatives, District 20",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:20",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-21",
+    "title": "State House of Representatives, District 21",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:21",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-22",
+    "title": "State House of Representatives, District 22",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:22",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-23",
+    "title": "State House of Representatives, District 23",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:23",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-24",
+    "title": "State House of Representatives, District 24",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:24",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-25",
+    "title": "State House of Representatives, District 25",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:25",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-26",
+    "title": "State House of Representatives, District 26",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:26",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-27",
+    "title": "State House of Representatives, District 27",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:27",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-28",
+    "title": "State House of Representatives, District 28",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:28",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-29",
+    "title": "State House of Representatives, District 29",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:29",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-30",
+    "title": "State House of Representatives, District 30",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:30",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-31",
+    "title": "State House of Representatives, District 31",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:31",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-32",
+    "title": "State House of Representatives, District 32",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:32",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-33",
+    "title": "State House of Representatives, District 33",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:33",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-34",
+    "title": "State House of Representatives, District 34",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:34",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-35",
+    "title": "State House of Representatives, District 35",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:35",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-36",
+    "title": "State House of Representatives, District 36",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:36",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-37",
+    "title": "State House of Representatives, District 37",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:37",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-38",
+    "title": "State House of Representatives, District 38",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:38",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-39",
+    "title": "State House of Representatives, District 39",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:39",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-40",
+    "title": "State House of Representatives, District 40",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:40",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-41",
+    "title": "State House of Representatives, District 41",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:41",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-42",
+    "title": "State House of Representatives, District 42",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:42",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-43",
+    "title": "State House of Representatives, District 43",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:43",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-44",
+    "title": "State House of Representatives, District 44",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:44",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-45",
+    "title": "State House of Representatives, District 45",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:45",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-46",
+    "title": "State House of Representatives, District 46",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:46",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-47",
+    "title": "State House of Representatives, District 47",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:47",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-48",
+    "title": "State House of Representatives, District 48",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:48",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-49",
+    "title": "State House of Representatives, District 49",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:49",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-50",
+    "title": "State House of Representatives, District 50",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:50",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-51",
+    "title": "State House of Representatives, District 51",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:51",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-52",
+    "title": "State House of Representatives, District 52",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:52",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-53",
+    "title": "State House of Representatives, District 53",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:53",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-54",
+    "title": "State House of Representatives, District 54",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:54",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-55",
+    "title": "State House of Representatives, District 55",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:55",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-56",
+    "title": "State House of Representatives, District 56",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:56",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-57",
+    "title": "State House of Representatives, District 57",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:57",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-58",
+    "title": "State House of Representatives, District 58",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:58",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-59",
+    "title": "State House of Representatives, District 59",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:59",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-60",
+    "title": "State House of Representatives, District 60",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:60",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-61",
+    "title": "State House of Representatives, District 61",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:61",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-62",
+    "title": "State House of Representatives, District 62",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:62",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-63",
+    "title": "State House of Representatives, District 63",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:63",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-64",
+    "title": "State House of Representatives, District 64",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:64",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-65",
+    "title": "State House of Representatives, District 65",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:65",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-66",
+    "title": "State House of Representatives, District 66",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:66",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-67",
+    "title": "State House of Representatives, District 67",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:67",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-68",
+    "title": "State House of Representatives, District 68",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:68",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-69",
+    "title": "State House of Representatives, District 69",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:69",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-70",
+    "title": "State House of Representatives, District 70",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:70",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-71",
+    "title": "State House of Representatives, District 71",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:71",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-72",
+    "title": "State House of Representatives, District 72",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:72",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-73",
+    "title": "State House of Representatives, District 73",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:73",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-74",
+    "title": "State House of Representatives, District 74",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:74",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-75",
+    "title": "State House of Representatives, District 75",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:75",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-76",
+    "title": "State House of Representatives, District 76",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:76",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-77",
+    "title": "State House of Representatives, District 77",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:77",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-78",
+    "title": "State House of Representatives, District 78",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:78",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-79",
+    "title": "State House of Representatives, District 79",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:79",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-80",
+    "title": "State House of Representatives, District 80",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:80",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-81",
+    "title": "State House of Representatives, District 81",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:81",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-82",
+    "title": "State House of Representatives, District 82",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:82",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-83",
+    "title": "State House of Representatives, District 83",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:83",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-84",
+    "title": "State House of Representatives, District 84",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:84",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-85",
+    "title": "State House of Representatives, District 85",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:85",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-86",
+    "title": "State House of Representatives, District 86",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:86",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-87",
+    "title": "State House of Representatives, District 87",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:87",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-88",
+    "title": "State House of Representatives, District 88",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:88",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-89",
+    "title": "State House of Representatives, District 89",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:89",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-90",
+    "title": "State House of Representatives, District 90",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:90",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-91",
+    "title": "State House of Representatives, District 91",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:91",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-92",
+    "title": "State House of Representatives, District 92",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:92",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-93",
+    "title": "State House of Representatives, District 93",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:93",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-94",
+    "title": "State House of Representatives, District 94",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:94",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-95",
+    "title": "State House of Representatives, District 95",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:95",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-96",
+    "title": "State House of Representatives, District 96",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:96",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-97",
+    "title": "State House of Representatives, District 97",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:97",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-98",
+    "title": "State House of Representatives, District 98",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:98",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-99",
+    "title": "State House of Representatives, District 99",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:99",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-100",
+    "title": "State House of Representatives, District 100",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:100",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-101",
+    "title": "State House of Representatives, District 101",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:101",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-102",
+    "title": "State House of Representatives, District 102",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:102",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-103",
+    "title": "State House of Representatives, District 103",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:103",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-104",
+    "title": "State House of Representatives, District 104",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:104",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-105",
+    "title": "State House of Representatives, District 105",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:105",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-106",
+    "title": "State House of Representatives, District 106",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:106",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-107",
+    "title": "State House of Representatives, District 107",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:107",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-108",
+    "title": "State House of Representatives, District 108",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:108",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-109",
+    "title": "State House of Representatives, District 109",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:109",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-110",
+    "title": "State House of Representatives, District 110",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:110",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-111",
+    "title": "State House of Representatives, District 111",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:111",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-112",
+    "title": "State House of Representatives, District 112",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:112",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-113",
+    "title": "State House of Representatives, District 113",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:113",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-114",
+    "title": "State House of Representatives, District 114",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:114",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-115",
+    "title": "State House of Representatives, District 115",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:115",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-116",
+    "title": "State House of Representatives, District 116",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:116",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-117",
+    "title": "State House of Representatives, District 117",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:117",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-118",
+    "title": "State House of Representatives, District 118",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:118",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-119",
+    "title": "State House of Representatives, District 119",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:119",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-120",
+    "title": "State House of Representatives, District 120",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:120",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-121",
+    "title": "State House of Representatives, District 121",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:121",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-122",
+    "title": "State House of Representatives, District 122",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:122",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-123",
+    "title": "State House of Representatives, District 123",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:123",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22596-state-house-of-representatives-district-124",
+    "title": "State House of Representatives, District 124",
+    "ocdId": "ocd-division/country:us/state:sc/sldl:124",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-sec-22758-state-senate-district-15-unexpired-term",
+    "title": "State Senate District 15 (Unexpired Term)",
+    "ocdId": "ocd-division/country:us/state:sc/sldu:15",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t02c001.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-82326bba74214e176893",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:abbeville",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-710fd5e6b6500e974952",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:abbeville",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-b01d06278beb59f1c00d",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:abbeville",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-540f6f421716f5f94c8b",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:abbeville",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9ca028a523cb8aa298b8",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:aiken",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-f7e51432033f00aee077",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-944a4c33647aa77357e9",
+    "title": "Clerk of Court",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-25709216de1914d7e7d5",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-cc3a3f2e9d875259a99b",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-cddacfb975044397a68f",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-400cc65b92937ee96ba2",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-565266a11021082c5dca",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:allendale",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-75fd775c019a899e7b9b",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:anderson",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0cb2894f23af0a86d93b",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:anderson",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-38d3c1e47f48a8bc6b35",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:bamberg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9b6f582cec3143f5db62",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:bamberg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-3caa658fa09c885fb434",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:barnwell",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9fee77cdf2088a6253f1",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:barnwell",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-14d944e92f4be77df716",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:barnwell",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-dab2ea7a2ad372c3da88",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:barnwell",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0223642154d73dfc3600",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-2c7afa856ab715b076c0",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e9f61c74aa5128b36b3a",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0fd58b90391e39783361",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-38544e76aec0edbd05ac",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:beaufort",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4b86e988da6bb41f310b",
+    "title": "Clerk of Court",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0e4d5d7a1d249dc8b405",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-ddcbf09652e38a8a1e2e",
+    "title": "County Supervisor",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-1a7eba64cc34c6048867",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0347bca00045a9fde939",
+    "title": "Register of Deeds",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t30c005.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-09defe1c12d16252b785",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-5983ea2f6db05b1e6122",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:berkeley",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-be8eadca37fd46c2ce43",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7d6bb2f7ac2c915fca2e",
+    "title": "Register of Deeds",
+    "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.charlestoncounty.gov/departments/rod/"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d37ea3a20ce2be7f324f",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:charleston",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-efdfd696d3d4150c7345",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-bdd6d9c4a908a4538497",
+    "title": "Clerk of Court",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0122885b0e835af8d848",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-473a16fd0a1bf60f3336",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-3cf805fc5649d2583e9b",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-2363a17960d50e12e86f",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7df8f6eb9a8c1913f104",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:cherokee",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-ac8f14808bf2a61eb3fb",
+    "title": "County Council at Large",
+    "ocdId": "ocd-division/country:us/state:sc/county:chester",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://chestercountysc.gov/government/chester-county-council/county-council-members/"
+    ]
+  },
+  {
+    "id": "sc-local-2026-280044f4fbf79b8912be",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:chester",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0fa3d3de2c20e38efa2b",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:chester",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-73001b61090126122baf",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:chesterfield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-2042647c460a7f930789",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:chesterfield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e51ab2ddaa0ad1d75fb3",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:chesterfield",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a358134798c74da9c7c7",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:clarendon",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-07310561de2964f08eab",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:clarendon",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-bb890f7c0a1bee0b0178",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:clarendon",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-051f1f8f91ef1bc7963a",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:colleton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-04ac4f0cff2f55a36c4b",
+    "title": "County Council at Large",
+    "ocdId": "ocd-division/country:us/state:sc/county:colleton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.colletoncounty.org/county-council"
+    ]
+  },
+  {
+    "id": "sc-local-2026-26b279292ceeb21f95ff",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:colleton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-306eb53f9a8cf8040c6c",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:colleton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7437b1895f5017c706c6",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:colleton",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9af5a81e35b23fa3fc04",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:darlington",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-8789e2d64c85949d6df0",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:darlington",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9a6283c9c2176c204eb0",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:dillon",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a0b2520d450d8c445f63",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:dillon",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-bfdeb7f824aca969af74",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:dillon",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-24162157ad8f11f26c51",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:dillon",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-698e80f574e5e1533f65",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:dorchester",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-f2966c822c71e3bb833e",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:edgefield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-22bb4c1d8696f17ac23d",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:edgefield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e5a0c5f4f4508440b5b4",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:edgefield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-86cbe13a0cbd26a1986c",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:edgefield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-533710b53c3bcdf143fe",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:edgefield",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-1083aba01c52c4c05409",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:fairfield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-15a7ecba29f6563d540b",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:fairfield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-629bba09c948289665aa",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:fairfield",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d561f6075a11e7590603",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:fairfield",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4b5ab7136b95062c1583",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:florence",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-db3eafba96930a04e80d",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:florence",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7ae07980934acba54676",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:florence",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7642f23c983f8bd00c03",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:georgetown",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-49b78a49e89ba3fd5d7e",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d2a92629fd5303248389",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-71954a445c3683d6ae9c",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-fc40ddd02c48fd6debc8",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenville",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-fe66eb50c52a75f8587e",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenwood",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-19fa0c1d16c092720ac9",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:greenwood",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-40b94f7e7e6b7725657d",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:hampton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-559e5ab92d75fbfcbf77",
+    "title": "County Council at Large",
+    "ocdId": "ocd-division/country:us/state:sc/county:hampton",
+    "voteFor": 3,
+    "sources": [
+      "https://hamptoncountysc.org/DocumentCenter/View/1201/Sample-Ballot-General-Election-Ballot-Style-1-North-School-District",
+      "https://hamptoncountysc.org/783/Darrin-Williams",
+      "https://hamptoncountysc.org/836/Jordan-Jinks",
+      "https://hamptoncountysc.org/1866/Dennis-Thompson-Jr"
+    ]
+  },
+  {
+    "id": "sc-local-2026-92102e8c1b5857cb35c6",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:hampton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d6b5ac02a18567392ff7",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:hampton",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-5738ae248d2490401fde",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:hampton",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-c8a50e74fc0d9ff923d6",
+    "title": "County Council Chair",
+    "ocdId": "ocd-division/country:us/state:sc/county:horry",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-77df1032bfb7e5f6afda",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:horry",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9a81021b2c599d575391",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:horry",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-5327dafcb7a252c90d85",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:jasper",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-56e65ad448312ef9a665",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:jasper",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a0d2b4fc10f07e583ab9",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:jasper",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-924cffb114e2a74f7622",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:jasper",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-60cde1ec538027d146e0",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9551d49d221b5db2e527",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-023f584d9280979c734a",
+    "title": "County Council Chair",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-2ed2da0cb371921c5946",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-00c5b476651f39ece084",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-97962161218f79752c0e",
+    "title": "Sheriff",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4b18f0e55f05f0f852c6",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:kershaw",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a3f2aa711953def1f3bd",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:lancaster",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4ad3186aad2909d6e89a",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:lancaster",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-c49ad50f9fcd4ef0f4b6",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:laurens",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-252af5ee95d741b3c699",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:laurens",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-360e012e055d72428882",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:laurens",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-b8381e4f0d73f1802d9a",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:laurens",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7a6e67217e55079ac17f",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:lee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4dcf813ca3a0d0882b3b",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:lee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a74b43b4d3123c235646",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:lexington",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7882128313c0dd4e8650",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:lexington",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e7e3053a87e0b7a27021",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:marion",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-72a3cc19ac4b410a484e",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:marion",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-8d0156b10094ed5c4107",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:marion",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-5d55c4f9416ed8ab4b52",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:marlboro",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-bfe2648d4ecb00b11866",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:marlboro",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9487aff911a4f83c0c13",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:marlboro",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-348930aa30c16662f678",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:mccormick",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4bd4c3d01005c45e5ceb",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:mccormick",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e072fbcd075eade7322d",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:mccormick",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e1d0ca14c1dc0a6c15fe",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:mccormick",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-5c457cbed425549198aa",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:newberry",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-69e071097d6905a3ba63",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:newberry",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-57e956887c597ea91f65",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:oconee",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-ceb18e387d9f88f07632",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:oconee",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-9cd5e5f7bb501e6281c5",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:orangeburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-c7eb3d6a22b3a3903c6a",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:orangeburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-aeab2bdf2a597abe0a5f",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:orangeburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-975169b4566891dfb5c0",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:orangeburg",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-1dc3773636c43047a821",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:pickens",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d2f25dcd7b775aad8074",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:pickens",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-4e420f0927903d78be5e",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:richland",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a1cd75e92c6b769f4b4b",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:richland",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d1f94a184a5f8e0b3ebd",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:richland",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-f1ab3b10efef4027d550",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:richland",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-b66a7d3abef572ffe541",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:saluda",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-3eceadaf6c9fa30b2a9e",
+    "title": "County Council Chair",
+    "ocdId": "ocd-division/country:us/state:sc/county:saluda",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-38c886ea9101f579bfcf",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:saluda",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-7e766ae494db14ad8fca",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:saluda",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0bb83abd3fceaa9bf7c9",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:spartanburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-8b5d0022d58f416dffae",
+    "title": "County Council Chair",
+    "ocdId": "ocd-division/country:us/state:sc/county:spartanburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a8bcce759e60e7bd8bc9",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:spartanburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-3528ad1c506ea6cb9b31",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:spartanburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e198b0b452df78501689",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:spartanburg",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-c08a6358534b0e530981",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:sumter",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-a3061539d0ffde7d11ca",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:sumter",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-ae4bfc35a6b7f23883c2",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-120c4db8c7989c7dfc9c",
+    "title": "Coroner",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/scconstitution/A05.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-e5ac68ebc669de6b1b04",
+    "title": "County Supervisor",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-1e34247ee0fc3991623b",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-b536385c5cd109e0d259",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-8ffbad402b5e23fcce4f",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:union",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-980727ea3931c1ea4fdc",
+    "title": "Auditor",
+    "ocdId": "ocd-division/country:us/state:sc/county:williamsburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-0286edf5426bda0fd3e1",
+    "title": "County Supervisor",
+    "ocdId": "ocd-division/country:us/state:sc/county:williamsburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-d750bb956061a826ba28",
+    "title": "County Treasurer",
+    "ocdId": "ocd-division/country:us/state:sc/county:williamsburg",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t04c009.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-932e67e5187f997e572c",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:williamsburg",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  },
+  {
+    "id": "sc-local-2026-5f6cc0bab28f5f08976f",
+    "title": "Probate Judge",
+    "ocdId": "ocd-division/country:us/state:sc/county:york",
+    "voteFor": 1,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://www.scstatehouse.gov/code/t14c023.php"
+    ]
+  },
+  {
+    "id": "sc-local-2026-c40dcba507561d0715aa",
+    "title": "Soil and Water District Commission",
+    "ocdId": "ocd-division/country:us/state:sc/county:york",
+    "voteFor": 2,
+    "sources": [
+      "https://www.gtcountysc.gov/DocumentCenter/View/4203/November-3-2026-General-Election-Sample-Ballots-PDF",
+      "https://lex-co.sc.gov/sites/lexco/files/Documents/Lexington%20County/Departments/Registration%20and%20Elections/2026%20SC%20Conservation%20District%20Election%20Memo.pdf"
+    ]
+  }
+]

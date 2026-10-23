@@ -1,0 +1,443 @@
+[
+  {
+    "contestId": "ks-sos-2026-supreme-court-justice-4",
+    "questionText": "Shall Eric S. Rosen, Justice of the Supreme Court, be retained in office?",
+    "sourceUrl": "https://ksrevisor.gov/kanconst/093_003_0005.html",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall ___________________________________ (Here insert name of justice.) ________________________________________ (Here insert the title of the court.) be retained in office?"
+  },
+  {
+    "contestId": "ks-sos-2026-supreme-court-justice-6",
+    "questionText": "Shall Larkin E. Walsh, Justice of the Supreme Court, be retained in office?",
+    "sourceUrl": "https://ksrevisor.gov/kanconst/093_003_0005.html",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall ___________________________________ (Here insert name of justice.) ________________________________________ (Here insert the title of the court.) be retained in office?"
+  },
+  {
+    "contestId": "ks-sos-2026-court-of-appeals-judge-2",
+    "questionText": "Shall Lesley Ann Isherwood, Judge of the Court of Appeals, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+  },
+  {
+    "contestId": "ks-sos-2026-court-of-appeals-judge-3",
+    "questionText": "Shall Amy Fellows Cline, Judge of the Court of Appeals, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+  },
+  {
+    "contestId": "ks-sos-2026-court-of-appeals-judge-5",
+    "questionText": "Shall Kim R. Schroeder, Judge of the Court of Appeals, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+  },
+  {
+    "contestId": "ks-sos-2026-court-of-appeals-judge-7",
+    "questionText": "Shall Lori Ann Bolton Fleming, Judge of the Court of Appeals, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+  },
+  {
+    "contestId": "ks-sos-2026-court-of-appeals-judge-13",
+    "questionText": "Shall Jacy Hurst, Judge of the Court of Appeals, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_030_0000_article/020_030_0006_section/020_030_0006_k/",
+    "candidateSourceUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
+    "template": "Shall (Here insert name of judge.) , Judge of the Court of Appeals, be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-1-division-5",
+    "questionText": "Shall Joan M. Lowdon, District Court Judge, District 1, Division 5, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-1-division-6",
+    "questionText": "Shall John James Bryant, Jr., District Court Judge, District 1, Division 6, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-2-division-1",
+    "questionText": "Shall Norbert C. Marek, District Court Judge, District 2, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-2-division-2",
+    "questionText": "Shall Christopher T. Etzel, District Court Judge, District 2, Division 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-2-division-3",
+    "questionText": "Shall Jeff Elder, District Court Judge, District 2, Division 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-3-division-1",
+    "questionText": "Shall Jason E. Geier, District Court Judge, District 3, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-3-division-5",
+    "questionText": "Shall Lori Dougherty-Bichsel, District Court Judge, District 3, Division 5, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-3-division-7",
+    "questionText": "Shall Penny R. Moylan, District Court Judge, District 3, Division 7, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-3-division-10",
+    "questionText": "Shall Mary E. Mattivi, District Court Judge, District 3, Division 10, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-3-division-11",
+    "questionText": "Shall Cheryl A. Rios, District Court Judge, District 3, Division 11, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-5-division-2",
+    "questionText": "Shall W. Lee Fowler, District Court Judge, District 5, Division 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-6-division-1",
+    "questionText": "Shall Amy L. Harth, District Court Judge, District 6, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-7-division-1",
+    "questionText": "Shall Amy J. Hanley, District Court Judge, District 7, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-7-division-6",
+    "questionText": "Shall Stacey L. Donovan, District Court Judge, District 7, Division 6, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-8-division-1",
+    "questionText": "Shall Ben J. Sexton, District Court Judge, District 8, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-8-division-4",
+    "questionText": "Shall Keith Collett, District Court Judge, District 8, Division 4, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-9-division-2",
+    "questionText": "Shall Marilyn M. Wilder, District Court Judge, District 9, Division 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-1",
+    "questionText": "Shall Keven M. P. O'Grady, District Court Judge, District 10, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-4",
+    "questionText": "Shall Rhonda K. Mason, District Court Judge, District 10, Division 4, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-5",
+    "questionText": "Shall Erica K. Schoenig, District Court Judge, District 10, Division 5, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-9",
+    "questionText": "Shall Christina Dunn Gyllenborg, District Court Judge, District 10, Division 9, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-10",
+    "questionText": "Shall Kathleen L. Sloan, District Court Judge, District 10, Division 10, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-15",
+    "questionText": "Shall Michael Patrick Joyce, District Court Judge, District 10, Division 15, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-16",
+    "questionText": "Shall Neil B. Foth, District Court Judge, District 10, Division 16, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-17",
+    "questionText": "Shall Thomas Kelly Ryan, District Court Judge, District 10, Division 17, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-18",
+    "questionText": "Shall Timothy P. McCarthy, District Court Judge, District 10, Division 18, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-10-division-19",
+    "questionText": "Shall Jacquelyn Ellen Rokusek, District Court Judge, District 10, Division 19, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-11-division-3",
+    "questionText": "Shall Fred W. Johnson, Jr., District Court Judge, District 11, Division 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-11-division-5",
+    "questionText": "Shall Kurtis I. Loy, District Court Judge, District 11, Division 5, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-11-division-6",
+    "questionText": "Shall Steven A. Stockard, District Court Judge, District 11, Division 6, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-12-division-2",
+    "questionText": "Shall Jennifer R. O'Hare, District Court Judge, District 12, Division 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-21-division-1",
+    "questionText": "Shall John F. Bosch, District Court Judge, District 21, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-21-division-3",
+    "questionText": "Shall Grant Bannister, District Court Judge, District 21, Division 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-25-division-2",
+    "questionText": "Shall Natalie K. Morlock, District Court Judge, District 25, Division 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-25-division-3",
+    "questionText": "Shall Kristi M. Cott, District Court Judge, District 25, Division 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-30-division-1",
+    "questionText": "Shall Francis E. Meisenheimer, District Court Judge, District 30, Division 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-30-division-3",
+    "questionText": "Shall Gaten Thomas Wood, District Court Judge, District 30, Division 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-district-court-30-division-4",
+    "questionText": "Shall Shawn Robert Dejarnett, District Court Judge, District 30, Division 4, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-2-position-1",
+    "questionText": "Shall Brian Yearout, District Magistrate Judge, District 2, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-2-position-3",
+    "questionText": "Shall Angela M. Anderson, District Magistrate Judge, District 2, Position 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-4-position-1",
+    "questionText": "Shall Lori D. Breshears, District Magistrate Judge, District 4, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-4-position-2",
+    "questionText": "Shall David M. Braun, District Magistrate Judge, District 4, Position 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-5-position-0",
+    "questionText": "Shall Douglas P. Jones, District Magistrate Judge, District 5, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-8-position-3",
+    "questionText": "Shall Amy C. Coppola, District Magistrate Judge, District 8, Position 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-9-position-1",
+    "questionText": "Shall Amanda Faber, District Magistrate Judge, District 9, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-10-position-1",
+    "questionText": "Shall Jenifer J. Ashford, District Magistrate Judge, District 10, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-12-position-3",
+    "questionText": "Shall Angela R. Hecke, District Magistrate Judge, District 12, Position 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-12-position-5",
+    "questionText": "Shall Regine Lucy Thompson, District Magistrate Judge, District 12, Position 5, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-12-position-6",
+    "questionText": "Shall Jason C Cohorst, District Magistrate Judge, District 12, Position 6, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-21-position-1",
+    "questionText": "Shall John McNish, District Magistrate Judge, District 21, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-25-position-1",
+    "questionText": "Shall Wade M. Dixon, District Magistrate Judge, District 25, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-25-position-7",
+    "questionText": "Shall Timothy R. Woods, District Magistrate Judge, District 25, Position 7, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-28-position-1",
+    "questionText": "Shall Jennifer L. Oliver, District Magistrate Judge, District 28, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-30-position-1",
+    "questionText": "Shall Candace R. Lattin, District Magistrate Judge, District 30, Position 1, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-30-position-3",
+    "questionText": "Shall Roseanna K. Mathis, District Magistrate Judge, District 30, Position 3, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  },
+  {
+    "contestId": "ks-ba01-2026-magistrate-31-position-2",
+    "questionText": "Shall Zelda Schlotterbeck, District Magistrate Judge, District 31, Position 2, be retained in office?",
+    "sourceUrl": "https://www.kslegislature.gov/b2025_26/laws/020_000_0000_chapter/020_029_0000_article/020_029_0008_section/020_029_0008_k/",
+    "candidateSourceUrl": "https://www.sos.ks.gov/elections/elections_upcoming_candidate.aspx",
+    "template": "Shall _____________________________________________ (Here insert name of judge.)___________________________________________________ (Here insert the title of the court.)be retained in office?"
+  }
+]

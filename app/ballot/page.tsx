@@ -29,6 +29,7 @@ import {
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOfficesForFamilies } from "@/lib/ballot/zip-divisions";
+import { divisionsWithDistrictMemberships } from "@/lib/ballot/district-memberships";
 import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
@@ -484,19 +485,19 @@ export default readerRoute("/ballot", async function BallotPage({
     const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
-    const missingDistrictOffices = new Map<string, string[]>();
+    const electionDistrictFamilies = new Map<string, readonly string[]>();
     await readerData?.districtRead.catch(() => undefined);
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, {}, async (election, districtFamilies) => {
       const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
       const ids = await divisionIdsForZipArea(zip, pointDivisionIds, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
       electionDivisions.set(election.id, ids);
-      missingDistrictOffices.set(election.id, unestablishedDistrictOfficesForFamilies(districtFamilies, ids));
+      electionDistrictFamilies.set(election.id, districtFamilies);
       return ids;
     })) {
       try {
         const candidate = source.normalize(await source.fetch());
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
-        const electionIds = electionDivisions.get(candidate.election.id)!;
+        const electionIds = [...divisionsWithDistrictMemberships(candidate, electionDivisions.get(candidate.election.id)!)];
         const hit = { contests: candidate.contests, absences: candidate.absences, heldContests: [...candidate.heldContests ?? []] };
         if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
           set = candidate;
@@ -504,7 +505,7 @@ export default readerRoute("/ballot", async function BallotPage({
           askOcdIds = electionIds;
           certainty = await zipCertainty(zip, selection, readerData ? await readerData.entry(selection) : undefined);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
-          for (const office of missingDistrictOffices.get(candidate.election.id) ?? []) {
+          for (const office of unestablishedDistrictOfficesForFamilies(electionDistrictFamilies.get(candidate.election.id) ?? [], electionIds)) {
             coverageNotes.push(`We're working on getting the ${office} district for ${zip ? `ZIP ${zip}` : "this area"}. ${office} contests aren't shown until we have it.`);
           }
           break;

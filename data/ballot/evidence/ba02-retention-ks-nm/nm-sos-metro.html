@@ -1,0 +1,1879 @@
+
+
+<!DOCTYPE html>
+<html>
+<head><title>
+	New Mexico Secretary of State
+</title><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta content="text/html; charset=windows-1252" http-equiv="Content-Type" /><meta name="viewport" content="width=device-width, initial-scale=1.0 minimum-scale=0.25, maximum-scale=10.0, user-scalable=yes" /><link href="/Styles/styles.css?v=261014.1238" rel="stylesheet" />
+<link href="/Styles/stylesmobile.css?v=261014.1238" rel="stylesheet" />
+<link href="/Styles/sidemenu.css?v=261014.1238" rel="stylesheet" />
+<link href="/Styles/font_PT_Sans.css?v=261014.1238" rel="stylesheet" />
+<link href="/Styles/jquery-ui.css?v=261014.1238" rel="stylesheet" />
+<link href="/Scripts/animated-horizontal-charts/jqbar.css?v=261014.1238" rel="stylesheet" />
+<link href="/Maps/static/css/0_7_7_leaflet.css?v=261014.1238" rel="stylesheet" />
+<link href="/Maps/static/css/sd-maps.css?v=261014.1238" rel="stylesheet" />
+<link href="/Maps/static/js/Leaflet.Zoom/L.Control.ZoomMin.css?v=261014.1238" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/Scripts/Chart.min.js?v=261014.1238"></script>
+<script src="/Scripts/utils.js?v=261014.1238"></script>
+<script src="/Scripts/sticky.js?v=261014.1238"></script>
+<script src="/Scripts/jquery/jquery-ui.js?v=261014.1238"></script>
+<script src="/Scripts/HeaderTurnoutChart.js?v=261014.1238"></script>
+<script src="/Scripts/imageMapResizer.min.js?v=261014.1238"></script>
+
+    <!--Google Analytics (empty unless GoogleAnalyticsId is set) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RVJ0F9FXW8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', "G-RVJ0F9FXW8");
+</script>
+
+    <!--Azure Application Insights (empty unless AppInsightsConnectionString is set) -->
+    <script src="https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js" crossorigin="anonymous"></script>
+<script>(function () {
+  if (!window.Microsoft || !Microsoft.ApplicationInsights) return;
+  var scrub = function (u) { return typeof u === 'string' ? u.replace(/([?&])enr-pass=[^&#]*&?/gi, '$1').replace(/[?&]$/, '') : u; };
+  var synthetic = /HeadlessChrome/i.test(navigator.userAgent) || /[?&]loadtest=1/i.test(location.search);
+  var navEntry = window.performance && performance.getEntriesByType ? performance.getEntriesByType('navigation')[0] : null;
+  var ai = new Microsoft.ApplicationInsights.ApplicationInsights({ config: { connectionString: "InstrumentationKey=608bbcd8-f9c8-fd87-aa11-3c339ac990ec;EndpointSuffix=applicationinsights.us;IngestionEndpoint=https://usgovvirginia-1.in.applicationinsights.azure.us/;LiveEndpoint=https://usgovvirginia.livediagnostics.monitor.azure.us/;AADAudience=https://monitor.azure.us/;ApplicationId=d8b2b602-6c03-4e23-a180-89d2abe2fe4c" } });
+  ai.loadAppInsights();
+  ai.addTelemetryInitializer(function (item) {
+    var d = item.baseData || {};
+    ['uri', 'refUri', 'target', 'name'].forEach(function (k) { d[k] = scrub(d[k]); });
+    item.tags = item.tags || {};
+    item.tags['ai.application.ver'] = "261014.1238";
+    if (synthetic) { item.tags['ai.operation.syntheticSource'] = 'LoadTest'; item.data = item.data || {}; item.data.synthetic = 'LoadTest'; }
+  });
+  ai.trackPageView({ name: "resultsSW (JMC)", uri: scrub(location.href), refUri: scrub(document.referrer),
+    properties: { page:"resultsSW", election:"current", "type":"JMC", navigation: navEntry ? navEntry.type : 'navigate' } });
+})();</script>
+
+
+        <script type="text/javascript">
+            var serviceUrl = "//api.reciteme.com/asset/js?key=";
+            var serviceKey = "877900304251a536f7337c7313e88abb6e2ff276";
+            var options = {};  // Options can be added as needed
+            options["Storage"] = { "Cookie": { "cookiesDomain": ".state.nm.us" } };
+            var autoLoad = false;
+            var enableFragment = "#reciteEnable";
+
+            var loaded = [], frag = !1;
+            window.location.hash === enableFragment && (frag = !0);
+            function loadScript(c, b) {
+                var a = document.createElement("script"); a.type = "text/javascript";
+                a.readyState ? a.onreadystatechange = function () {
+                    if ("loaded" == a.readyState || "complete" == a.readyState) a.onreadystatechange = null, void 0 != b && b()
+                } : void 0 != b && (a.onload = function () { b() }); a.src = c; document.getElementsByTagName("head")[0].appendChild(a)
+            } function _rc(c) {
+                c += "=";
+                for (var b = document.cookie.split(";"), a = 0; a < b.length; a++) {
+                    for (var d = b[a]; " " == d.charAt(0);)d = d.substring(1, d.length);
+                    if (0 == d.indexOf(c)) return d.substring(c.length, d.length)
+                }
+                return null
+            } function loadService(c) {
+                for (var b = serviceUrl + serviceKey, a = 0; a < loaded.length; a++)if (loaded[a] == b) return;
+                loaded.push(b);
+                loadScript(serviceUrl + serviceKey, function () {
+                    "function" === typeof _reciteLoaded && _reciteLoaded();
+                    "function" == typeof c && c(); Recite.load(options);
+                    Recite.Event.subscribe("Recite:load", function () { Recite.enable() })
+                })
+            }
+            "true" == _rc("Recite.Persist") && loadService();
+            if (autoLoad && "false" != _rc("Recite.Persist") || frag) document.addEventListener ? document.addEventListener("DOMContentLoaded", function (c) { loadService() }) : loadService();
+        </script>
+	<script type="text/javascript">
+        jQuery(".reciteme").click(function (i, e) {
+            loadService();
+            return false;
+        });
+
+    </script>
+
+    <script>
+        var ServiceRoot = 'https://nmresultswebservice.azurewebsites.us/';
+        var Maps = {};
+        var Bound = {};
+        var mapBuilt = [];
+
+        window.onload = function () {
+            var WatchList = getCookie("NMTracked");
+            //var temp = document.cookie;
+            if (WatchList) {
+                var checked = WatchList.split("_");
+                for (var i = 0; i < checked.length; i++) {
+                    var checkbox = document.getElementById("chk-" + checked[i]);
+                    if (checkbox !== null)
+                        checkbox.checked = true;
+                };
+            }
+            ClearSearch();
+            ClearSearchSide();
+            this.countdown();
+        };
+
+        $(document).click(function (event) {
+            if (!$(event.target).closest('#menudiv').length && !$(event.target).closest('#menuToggle').length) {
+                if ($('#menudiv').css("visibility") == 'visible') {
+                    $('#menudiv').css('visibility', 'hidden');
+                }
+            }
+        });
+
+        $(document).click(function (event) {
+            if (!$(event.target).closest('.search-icon-wrapper').length) {
+                if (document.getElementById('header-search-box').style.visibility == 'visible') {
+                    document.getElementById('header-search-box').style.visibility = 'hidden';
+                }
+                $('.search-icon-wrapper').removeClass('search-icon-wrapper-hover');
+                $('.search-icon').removeClass('search-icon-hover');
+            }
+        });
+
+        $(document).click(function (event) {
+            if (!$(event.target).closest('.mtc-icon-position').length) {
+                if (document.getElementById('header-share-box').style.visibility == 'visible') {
+                    document.getElementById('header-share-box').style.visibility = 'hidden';
+                }
+                $('.mtc-icon-position').removeClass('mtc-icon-position-hover');
+                $('.share-icon').removeClass('share-icon-hover');
+            }
+        });
+    </script>
+    <script>
+        //try using on mouse out to auto close the header menu?
+        (function ($) {
+            $(document).ready(OpenMenu);
+        }(jQuery));
+        //@ sourceURL=pen.js
+        jQuery.fn.visibilityToggle = function () {
+            return this.css('visibility', function (i, visibility) {
+                return (visibility == 'visible') ? 'hidden' : 'visible';
+            });
+        };
+        function OpenMenu() {
+            $('#menuToggle').click(function (e) {
+                //$('#menudiv').visibilityToggle();
+                if ($('#menudiv').css("visibility") == 'hidden') {
+                    $('#menudiv').css('visibility', 'visible');
+                }
+                e.preventDefault();
+            });
+            $('#menuclose').click(function (e) {
+                $('#menudiv').visibilityToggle();
+                if ($('#menudiv').css("visibility") == 'visible') {
+                    $('#menudiv').css('visibility', 'hidden');
+                }
+                e.preventDefault();
+            });
+        }
+    </script>
+    <script type="text/javascript">
+        //$(document).ready(function () {
+        //    document.ontouchmove = function (e) {
+        //        e.preventDefault();
+        //    }
+        //});
+        $('body').on({
+            'touchmove': function (e) {
+                stick();
+            }
+        });
+        $('txtQuickSearch').on({
+            'focus': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.scrollTo(0, 0); //the second 0 marks the Y scroll pos. Setting this to i.e. 100 will push the screen up by 100px. 
+            }
+        });
+        $('txtQuickSearchSide').on({
+            'focus': function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.scrollTo(0, 0); //the second 0 marks the Y scroll pos. Setting this to i.e. 100 will push the screen up by 100px. 
+            }
+        });
+    </script>
+    
+    
+    <!--Animated Graphs-->
+    <link href="https://nm-bkb9aybfdbb0gkd9.a02.azurefd.net/Scripts/animated-horizontal-charts/jqbar.css" rel="stylesheet" />
+    <script src="/Scripts/animated-horizontal-charts/jqbar.js"></script>
+    <!--Animated Graphs-->
+    <script src="/Scripts/jquery-jtemplates.js"></script>
+    <script src="/Scripts/Pagination/jquery.simplePagination.js"></script>
+    <link href="https://nm-bkb9aybfdbb0gkd9.a02.azurefd.net/Scripts/Pagination/simplePagination.css" rel="stylesheet" />
+    <!--Maps-->
+    <link href="/maps/static/css/0_7_7_leaflet.css" rel="stylesheet" />
+    <script src="/maps/static/js/0_7_7_leaflet.js"></script>
+    <link href="/maps/static/css/sd-maps.css" rel="stylesheet" />
+    <script src="/maps/static/js/CreateMap.js"></script>
+    <script src="/maps/static/js/BuildCountyMap.js"></script>
+    <script src="/maps/static/js/BuildDistrictMap.js"></script>
+    <script src="/maps/static/js/BuildSWLegMap.js"></script>
+    <script src="/maps/static/js/underscore-min.js"></script>
+    <script src="/Scripts/utils.js"></script>
+    <!-- Leaflet Label -->
+    <script src="/maps/static/js/Leaflet.Label/BaseMarkerMethods.min.js"></script>
+    <script src="/maps/static/js/Leaflet.Label/CircleMarker.Label.js"></script>
+    <script src="/maps/static/js/Leaflet.Label/FeatureGroup.Label.js"></script>
+    <script src="/maps/static/js/Leaflet.Label/Label.min.js"></script>
+    <script src="/maps/static/js/Leaflet.Label/Map.Label.js"></script>
+    <script src="/maps/static/js/Leaflet.Label/Marker.Label.min.js"></script>
+    <script src="/maps/static/js/Leaflet.Label/Path.Label.js"></script>
+    <link href="/maps/static/js/Leaflet.Zoom/L.Control.ZoomMin.css" rel="stylesheet" />
+    <script src="/maps/static/js/Leaflet.Zoom/L.Control.ZoomMin.js"></script>
+    <!--Maps-->
+    <script src="/Scripts/BuildCounties.js?v=90238"></script>
+    <script src="/Scripts/BuildPrecincts.js"></script>
+</head>
+<body onclick="">    
+    <form method="post" action="./resultsSW.aspx?type=JMC&amp;map=CTY" id="form1">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+
+<script src="/ScriptResource.axd?d=uHIkleVeDJf4xS50Krz-yGqepr__PHIj3TraJ6I32lHESm-k85iIxV6uqi9moKLDQecodlMk4avjl85et2WiRU1ffBBH-iMp3QNrOOxRYPKEKYWuKZ0bg2h9rZILgUWD2WWE2cwtEKuLTHAuwmmOzHEMmNx3jK6jNqjWoqmkjxQ1&amp;t=345ad968" type="text/javascript"></script>
+<script src="/ScriptResource.axd?d=g4rhDtzzVaY7-Y7wWkhDRfvUBzA2tiWROlN4EJtSTY7avkG2aFDZzXSenYP8QX9VsmTRBPYjTtjXRLI25FxbfEg-ddQA5Zyumm6ZJKJgVeFuYWEoprq1MBBHU5G4kjthscOnw1USOgMzIiXDzQ97oITkybrqOpubWCwesMobMQs1&amp;t=345ad968" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="3D528200" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="jwJpmPcaSDByoiRhqSE8kW2Tf59GQOh1h1fQruexVh2mNStDYXivTKsoQttHilJFDZpC6vHgALTuU/oYLt+o9gtqmJwWWGDXi28MGgBeqk2fde+sJtcV/hBEscZ0Kd/i6atLwgk9BDL0CikXGnAX1Ng75Vha1enF7VyXySU5gUha0a/0J1pv7vii4nAoNxHre75ij9j1Hvbi0Ewtuwh1Q+mZTlUwb2N3XfROqdI3pB0pke1+8pGj0rjItRfvqKl+y16+xjiLUwHmTZhUJH320arsuWYU6MH7lVL/DhHVJBE0QRTeAOQZNt0g76SAa1j2C37wL8rqcm83Jbrc+pZCBzQ6kPeK4ZUQ6yehWvvoaTRrKgekxEYRfBLhQo0XpFFait+X1zryNEAB8/UQEXhU1uQcaluPxSMgahMxTjROuQJrEOZJ2WPLlV70j07BT6BTjQPyFzs/JhUUfCDhnUaxqjJMVCUlD6NBonmgoaP7HXdul+dFERhdyzt9oevRPCERC+MarHZB9AvpnUjIr9Uab1Djy0YENwE+JS5oZmcZNXbhgER+AZ2/Csiwn8r5xDXvLPnCanUvecGULJVcCA86amIlg/o1FkBWensC7P9bsJg9MEZa8SjBNfe3jz2z6OsyzeCjE1dkpmquhvEp/DReama7Rrk3d2WCTZ1dtwcM6Dbk1YInagGsdG9AJJB1UxYmsiw5B7+svetvtyj7u8Zo9mVUmMkt0FY+gdLWGUDndKWlDW2bH/xo3a8XSnNPoB3n" />
+           
+        <div>
+            <span id="Timer1" style="display:none;"></span>
+        </div>
+        <div id="UpdatePanel1">
+	
+                <input type="hidden" name="ctl00$hidElectionType" id="hidElectionType" value="General" />
+                <input type="hidden" name="ctl00$hidElectionDate" id="hidElectionDate" value="11/3/2026" />
+                <input type="hidden" name="ctl00$hidPrecinctsReported" id="hidPrecinctsReported" value="0" />
+                <input type="hidden" name="ctl00$hidPrecinctsPartial" id="hidPrecinctsPartial" value="0" />
+                <input type="hidden" name="ctl00$hidPrecinctsNotReported" id="hidPrecinctsNotReported" value="2204" />
+                <input type="hidden" name="ctl00$hidVoterTurnout" id="hidVoterTurnout" value="0" />
+                <input type="hidden" name="ctl00$hidVoterTotal" id="hidVoterTotal" value="1459031" />
+                <div id="fader">
+                    <h1>Preparing Export...</h1>
+                </div>
+                <div class="outside-wrapper">
+                    <div id="sticky-anchor"></div>
+                    <div id="sticky" class="top-bluebar">
+                        <!--Menu button here-->
+                        <a href="#" id="menuToggle" title="show menu"><span><em>Menu</em></span></a>
+                        <div>
+                            
+                            
+                        </div>
+                        <div class="refresh-location">
+                            
+                            <span id="lblRefresh">Auto Update: </span>
+                            <label id="myLabel" for="myLabel">
+                                5:00</label>
+                        </div>
+                        <div class=" search-icon-wrapper" onclick="MagClick()">
+                            <div class="search-icon" title="Search"></div>
+                            <div id="header-search-box" class=" search-container">
+                                <div class="search-box-wrapper">
+                                    <!--Search box here -->
+                                    <input name="ctl00$txtQuickSearch" type="text" id="txtQuickSearch" class="textboxSmallTransparent" title="Search for Contest or Candidate" placeholder="Search..." />
+                                    
+                                    <input type="button" name="ctl00$btnSearch" value="Search" onclick="javascript:__doPostBack(&#39;ctl00$btnSearch&#39;,&#39;&#39;)" id="btnSearch" class="search-button" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" mtc-icon-position" onclick="ShareClick()">
+                            <div class="share-icon " title="Share"></div>
+                            <div id="header-share-box" class=" share-container">
+                                <div class="share-header">SHARE ON</div>
+                                <div class="share-icon-wrapper">
+                                    <div class="share-buttons">
+                                        <!-- Facebook --><a href="http://www.facebook.com/sharer.php?u=http://nmresults.azurewebsites.net/resultsSW.aspx?type=JMC&amp;map=CTY" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img title="Share on Facebook" alt="Facebook" src="/Images/facebook.png" /></a><!-- Twitter --><a href="https://twitter.com/share?url=http://nmresults.azurewebsites.net/resultsSW.aspx?type=JMC&amp;map=CTY&text=New Mexico Contests&hashtags=nmpol" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"><img title="Share on Twitter" src="/Images/twitter.png" alt="Twitter"/></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="top-header-box2">
+                            
+    <h3><a onclick="DownloadFile();" id="NavLinks_lnkbtnSWExport" href="javascript:__doPostBack(&#39;ctl00$NavLinks$lnkbtnSWExport&#39;,&#39;&#39;)">Export</a></h3>
+    <h2><a id="NavLinks_lnkTracked" href="MyTrackedContests.aspx">My Tracked Contests</a></h2>
+    <h2><a id="NavLinks_lnkHome" href="Default.aspx">Home</a></h2>
+
+                        </div>
+                    </div>
+                    <!--End Top Blue Bar-->
+                    <div class="top-header">
+                        <div id="pnlHeader" class="section group">
+		
+                            <div class="col desktop" style="padding: 3px 0 0 8px;">
+                                <img src="/Images/sos-logo.jpg" style="width: 78px; height: 78px;" title="New Mexico State Seal" alt="New Mexico State Seal" />
+                            </div>
+                            <div class="col mobile" style="padding: 6px 0 0 8px;">
+                                <img src="/Images/sos-logo.jpg" style="width: 59px; height: 59px;" title="New Mexico State Seal" alt="New Mexico State Seal" />
+                            </div>
+                            <div class="col top-header-box1">
+                                <h2>
+                                    <a id="lnkSOSName" href="Default.aspx" target="_blank"></a>
+                                </h2>
+                                <h1>
+                                    <a id="lnkStateSOS" href="Default.aspx" target="_blank">New Mexico Secretary of State</a>
+                                </h1>
+                            </div>
+                            <!--End top-header-box1-->
+                            <!--End top-header-box2-->
+                            <input type="image" class="reciteme" src="Images/Accessibility_Options_button.jpg" onclick="loadService(); return false;" style="float: right; margin: 15px;">
+                        
+	</div>
+                        <!--End Section Group-->
+                    </div>
+                    <!--End Top Header-->
+
+                    <div class="header-box-wrapper">
+                        <div class="section group">
+                            <a id="lnkDateHeader" class="col header-box1 header-box1-alt" href="Default.aspx?"><h1>Unofficial Results</h1><h2>GENERAL 2026<br />November 3, 2026</h2>
+                                <div class="last-updated">
+                                    <span>Results last updated:</span><span>10/22/2026 9:01 AM MT</span>
+                                </div>
+                            </a>
+                            <!--End Header Box 1-->
+                            <div class="col header-box2">
+                                <div class="header-box-content-top">
+                                    <h1>
+                                        <a id="lnkVoterTurnout" class="button" href="VoterTurnoutDetails.aspx?map=TURN">Statewide Voter Turnout</a>
+                                    </h1>
+                                </div>
+                                <!--End header-box2-content-top-->
+                                <div class="header-box-content-bottom">
+                                    
+                                    <div class="animate-position desktop">
+                                        <div style="height: 150px"><canvas id="voter-turnout-canvas"></canvas><div class="dough-percent"><span class="int">0</span><span class="dec">%</span></div></div>
+                                    </div>
+                                    <!--End Animate Position-->
+                                    <div class="animate-position mobile" style="margin-top: -6px;">
+                                        <div><canvas id="voter-turnout-mobile-canvas"></canvas><div class="dough-percent"><span class="int">0</span><span class="dec">%</span></div></div>
+                                    </div>
+                                    <!--End Animate Position-->
+                                </div>
+                                <!--End header-box-content-bottom-->
+                                <div class="header-box-content-reg">
+                                    <h2><span class="header-ballot-text">Ballots Cast</span><span class="header-ballot-number">0</span><br /><span class="header-voter-text">Eligible Voters</span><span class="header-voter-number">1,459,031</span></h2>
+                                </div>
+                            </div>
+                            <!--End Header Box 2-->
+                            <div class="col header-box3">
+                                <div class="header-box-content-top">
+                                    <h1>
+                                        <a id="lnkPrecinctsReporting" class="button" href="VoterTurnoutDetails.aspx?map=PREC">Precincts Reporting</a>
+                                    </h1>
+                                </div>
+                                <!--End header-box2-content-top-->
+                                <div class="header-box-content-bottom">
+                                    
+                                    <div class="animate-position desktop">
+                                        <div style="height: 150px"><canvas id="precinct-reported-canvas"></canvas><div class="dough-percent"><span class="int">0</span><span class="dec">%</span></div></div>
+                                    </div>
+                                    <!--End Animate Position-->
+                                    <div class="animate-position mobile">
+                                        <div><canvas id="precinct-reported-mobile-canvas"></canvas><div class="dough-percent"><span class="int">0</span><span class="dec">%</span></div></div>
+                                    </div>
+                                    <!--End Animate Position-->
+                                </div>
+                                <!--End header-box-content-bottom-->
+                                <div class="header-box-content-reg header-box-content-prec">
+                                    <h2><div class='colordisc-yellow'></div><span class="header-total-text">Partially</span><span class="header-partial-number">0</span></br><span class="header-total-text">Fully</span> <span class="header-total-number">0</span></br><div></div><span Class="header-Partial-text">Total</span><span Class="header-totalprecincts-text">2204</span></h2>
+                                </div>
+                            </div>
+                            <div id="chartjs-tooltip"></div>
+                            <!--End Header Box 3-->
+                        </div>
+                        <!--End Section Group-->
+                        
+                    </div>
+                    <!--End Header Box Wrapper-->
+                    
+                    
+                    
+                    <!--Main Content-->
+                    
+    
+    
+    <div id="pnlResultsHeader" class="wrapper-results-header">
+		
+        <div class="legislative-header-wrapper">
+            <span id="MainContent_lblResultsHeader">Metropolitan Court Judges - Bernalillo</span>
+        </div>
+    
+	</div>
+    
+    
+    
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>Judge of the Metropolitan Court DIVISION 19</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-223">
+                                        <label class="css-label" for="chk-223">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-223" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl00$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl00$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_0" class="export-button" value="Precinct Level" raceid="11430" party="" officeseqno="470" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl00$CountyExport','')" name="ctl00$MainContent$rptRace$ctl00$CountyExport" type="button" id="MainContent_rptRace_CountyExport_0" class="export-button" value="County Level" raceid="11430" party="" officeseqno="470" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=223" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=223&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>ANDREA INEZ GUNDERSON</h1>
+                                    <h2 class="Democrat">Democrat</h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar1143019963"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '11430', '470', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '11430', '470', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map11430" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo11430">
+                            <div id="countyInfoBox11430"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap11430">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox11430"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County11430" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>Judge of the Metropolitan Court DIVISION 5</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-257">
+                                        <label class="css-label" for="chk-257">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-257" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl01$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl01$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_1" class="export-button" value="Precinct Level" raceid="11429" party="" officeseqno="470" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl01$CountyExport','')" name="ctl00$MainContent$rptRace$ctl01$CountyExport" type="button" id="MainContent_rptRace_CountyExport_1" class="export-button" value="County Level" raceid="11429" party="" officeseqno="470" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=257" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=257&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>RAMON J MAESTAS</h1>
+                                    <h2 class="Democrat">Democrat</h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar1142919961"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>KERRY J MORRIS</h1>
+                                    <h2 class="Republican">Republican</h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar1142919962"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '11429', '470', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '11429', '470', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map11429" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo11429">
+                            <div id="countyInfoBox11429"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap11429">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox11429"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County11429" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall CHRISTINE EVE RODRIGUEZ be retained as Judge of the Metropolitan Court, Division 2? DIVISION 2</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-415">
+                                        <label class="css-label" for="chk-415">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-415" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl02$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl02$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_2" class="export-button" value="Precinct Level" raceid="1328" party="" officeseqno="924" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl02$CountyExport','')" name="ctl00$MainContent$rptRace$ctl02$CountyExport" type="button" id="MainContent_rptRace_CountyExport_2" class="export-button" value="County Level" raceid="1328" party="" officeseqno="924" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=415" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=415&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13289001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13289002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1328', '924', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1328', '924', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1328" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1328">
+                            <div id="countyInfoBox1328"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1328">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1328"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1328" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall JOSHUA J SANCHEZ be retained as Judge of the Metropolitan Court, Division 4? DIVISION 4</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-139">
+                                        <label class="css-label" for="chk-139">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-139" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl03$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl03$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_3" class="export-button" value="Precinct Level" raceid="1330" party="" officeseqno="925" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl03$CountyExport','')" name="ctl00$MainContent$rptRace$ctl03$CountyExport" type="button" id="MainContent_rptRace_CountyExport_3" class="export-button" value="County Level" raceid="1330" party="" officeseqno="925" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=139" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=139&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13309001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13309002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1330', '925', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1330', '925', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1330" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1330">
+                            <div id="countyInfoBox1330"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1330">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1330"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1330" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall JILL MARTINEZ be retained as Judge of the Metropolitan Court, Division 8? DIVISION 8</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-441">
+                                        <label class="css-label" for="chk-441">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-441" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl04$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl04$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_4" class="export-button" value="Precinct Level" raceid="1348" party="" officeseqno="926" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl04$CountyExport','')" name="ctl00$MainContent$rptRace$ctl04$CountyExport" type="button" id="MainContent_rptRace_CountyExport_4" class="export-button" value="County Level" raceid="1348" party="" officeseqno="926" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=441" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=441&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13489001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13489002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1348', '926', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1348', '926', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1348" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1348">
+                            <div id="countyInfoBox1348"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1348">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1348"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1348" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall BRITTANY MALDONADO MALOTT be retained as Judge of the Metropolitan Court, Division 10? DIVISION 10</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-185">
+                                        <label class="css-label" for="chk-185">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-185" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl05$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl05$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_5" class="export-button" value="Precinct Level" raceid="1349" party="" officeseqno="927" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl05$CountyExport','')" name="ctl00$MainContent$rptRace$ctl05$CountyExport" type="button" id="MainContent_rptRace_CountyExport_5" class="export-button" value="County Level" raceid="1349" party="" officeseqno="927" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=185" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=185&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13499001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13499002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1349', '927', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1349', '927', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1349" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1349">
+                            <div id="countyInfoBox1349"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1349">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1349"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1349" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall JASON M JARAMILLO be retained as Judge of the Metropolitan Court, Division 12? DIVISION 12</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-320">
+                                        <label class="css-label" for="chk-320">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-320" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl06$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl06$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_6" class="export-button" value="Precinct Level" raceid="1332" party="" officeseqno="928" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl06$CountyExport','')" name="ctl00$MainContent$rptRace$ctl06$CountyExport" type="button" id="MainContent_rptRace_CountyExport_6" class="export-button" value="County Level" raceid="1332" party="" officeseqno="928" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=320" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=320&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13329001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13329002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1332', '928', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1332', '928', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1332" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1332">
+                            <div id="countyInfoBox1332"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1332">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1332"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1332" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall VIDALIA G CHAVEZ be retained as Judge of the Metropolitan Court, Division 14? DIVISION 14</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-340">
+                                        <label class="css-label" for="chk-340">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-340" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl07$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl07$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_7" class="export-button" value="Precinct Level" raceid="1347" party="" officeseqno="929" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl07$CountyExport','')" name="ctl00$MainContent$rptRace$ctl07$CountyExport" type="button" id="MainContent_rptRace_CountyExport_7" class="export-button" value="County Level" raceid="1347" party="" officeseqno="929" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=340" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=340&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13479001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13479002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1347', '929', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1347', '929', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1347" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1347">
+                            <div id="countyInfoBox1347"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1347">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1347"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1347" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall CLAIRE ANN MCDANIEL be retained as Judge of the Metropolitan Court, Division 16? DIVISION 16</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-41">
+                                        <label class="css-label" for="chk-41">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-41" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl08$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl08$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_8" class="export-button" value="Precinct Level" raceid="1353" party="" officeseqno="930" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl08$CountyExport','')" name="ctl00$MainContent$rptRace$ctl08$CountyExport" type="button" id="MainContent_rptRace_CountyExport_8" class="export-button" value="County Level" raceid="1353" party="" officeseqno="930" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=41" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=41&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13539001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13539002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1353', '930', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1353', '930', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1353" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1353">
+                            <div id="countyInfoBox1353"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1353">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1353"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1353" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+            <div class="wrapper-inside wrapper-border">
+                <div>
+                    <div class="display-results-box-wrapper">
+                        <div class="display-results-box-a">
+                            <h1>JUDICIAL RETENTION: Shall ROSIE LAZCANO ALLRED be retained as Judge of the Metropolitan Court, Division 18? DIVISION 18</h1>
+                        </div>
+                        <div class="wrapper-mobile">
+                            <div class="section group">
+                                <div class="col display-results-box-b">
+                                    <div class="col follow-checkbox">
+                                        <input class="css-checkbox" type="checkbox" onclick="CheckboxChecked(this);" id="chk-102">
+                                        <label class="css-label" for="chk-102">Follow This Contest</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="display-results-box-g">
+                                    <div class="export-box dropdown" style="display: none">
+                                        <div class="export dropbtn">Export</div>
+                                        <div id="export-102" class="dropdown-content export-container">
+                                            <div class="export-header">EXPORT:</div>
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl09$PrecinctExport','')" name="ctl00$MainContent$rptRace$ctl09$PrecinctExport" type="button" id="MainContent_rptRace_PrecinctExport_9" class="export-button" value="Precinct Level" raceid="1326" party="" officeseqno="931" countyid="" />
+                                            <input onclick="DownloadFile(); __doPostBack('ctl00$MainContent$rptRace$ctl09$CountyExport','')" name="ctl00$MainContent$rptRace$ctl09$CountyExport" type="button" id="MainContent_rptRace_CountyExport_9" class="export-button" value="County Level" raceid="1326" party="" officeseqno="931" />
+                                        </div>
+                                    </div>
+                                    <div class="share-box dropdown">
+                                        <img class="mtc-icon-inline-position dropbtn" alt="" title="Share" src="Images/my-tracked-contests-icon.png">
+                                        <div class="dropdown-content export-container">
+                                            <div class="share-header">SHARE ON</div>
+                                            <div class="share-icon-wrapper">
+                                                <div class="share-buttons">
+                                                    <a href="https://www.facebook.com/sharer/sharer.php?u=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=102" target="_blank">
+                                                        <img alt="Share on Facebook" title="Facebook" src="Images/facebook.png" /></a>
+                                                    <a href="https://twitter.com/intent/tweet?text=http://nmresults.azurewebsites.net/SearchResults.aspx?ID=102&hashtags=Vote" target="_blank">
+                                                        <img alt="Share on Twitter" title="Twitter" src="Images/twitter.png" /></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-c">
+                                    <div class="precinct-fully">
+                                        Precincts Fully: 0 / 698
+                                    </div>
+                                    <div class="precinct-separator">|</div>
+                                    <div class="precinct-partial">
+                                        Partially: 0 / 698
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+                    
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>Yes</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13269001"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            <div class="section group">
+                                <div class="col display-results-box-d">
+                                    <h1>No</h1>
+                                    <h2 class=""></h2>
+                                </div>
+                                <div class="col display-results-box-e">
+                                    <div class="wrapper-mobile">
+                                        <div class="bar-graph-wrap">
+                                            <div id="bar13269002"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col display-results-box-f">
+                                    <h1>0</h1>
+                                </div>
+                            </div>
+                            <hr />
+                        
+                            
+                            <div class="section group">
+                                <div class="col display-results-box-totalvotes">
+                                    <h2>total votes</h2>
+                                </div>
+                                <div class="col display-results-box-total">
+                                    <h2>0</h2>
+                                </div>
+                            </div>
+                        
+                </div>
+                <input class="button-maps" type="button" onclick="CreateMap('JMC', '1326', '931', ''); $(this).addClass('active-button');" value="Map" />
+                <input class="button-county" type="button" onclick="BuildCounty('JMC', '1326', '931', ''); $(this).addClass('active-button');" value="County Results" />
+                <div id="Map1326" style="display: none;" class="slidingDiv-maps">
+                    <div class="section group">
+                        <div class="col map-col1" id="Mapinfo1326">
+                            <div id="countyInfoBox1326"></div>
+                        </div>
+                        <div class="col map-col2">
+                            <h1>Click on County Below</h1>
+                            <div class="map" id="Mapmap1326">
+                            </div>
+                        </div>
+                        <div class="col map-col3">
+                            <div id="legendInfoBox1326"></div>
+                        </div>
+                        <div class="modal"></div>
+                    </div>
+                </div>
+                <div id="County1326" style="display: none" class="slidingDiv-maps">
+                    
+                </div>
+            </div>
+        
+    
+    <script src="/Scripts/CountyTurnoutChart.js"></script>
+
+                    <div class="bottom-graybar">
+                        <span id="lblBuildStamp" title="Deployed 261014.1238 (Mountain Time, YYMMDD.HHMM)" class="build-stamp">261014.1238</span>
+                    </div>
+                   
+                </div>
+                
+                <!--End Bottom Bluebar-->
+                
+                <!--End Outside Wrapper-->
+                
+                <div id="menudiv" style="visibility: hidden;" class="side-menu">
+                    <a href="#" id="menuclose" title="close menu"><span>close</span></a>
+                    <div class="nav-header-links">
+                        <span>
+                            <a id="lnkSideMenuHome" class="nav-home-link" href="Default.aspx">Home</a></span>
+                        <span>|</span>
+                        <span>
+                            <a id="lnkSideMenuTracked" class="nav-tracked-link" href="MyTrackedContests.aspx">My Tracked Contests</a></span>
+                    </div>
+                    <!--put the search box here with full functionality-->
+                    <div class="quick-search-side">
+                        <input name="ctl00$txtQuickSearchSide" type="text" id="txtQuickSearchSide" class="textboxSmallGray" title="Search for Contest or Candidate" placeholder="Search" />
+                        <button class="close-icon-side" type="reset" onclick="ClearSearchSide()"></button>
+                    </div>
+                    <h1>Election Results</h1>
+                    <a href="/resultsSW.aspx?type=FED&map=CTY">Federal</a><a href="/resultsSW.aspx?type=SW&map=CTY">Statewide Offices & Questions</a><a href="/resultsSW.aspx?type=LGX&map=CTY">Legislative</a><a href="/resultsSW.aspx?type=JDX&map=CTY">District Judges</a><a href="/resultsSW.aspx?type=ECX&map=CTY">Public Education Commission</a><a href="/resultsSW.aspx?type=JMC&map=CTY">Metropolitan Court Judges - Bernalillo</a><a href="/resultsSW.aspx?type=MGX&map=CTY">Magistrate Judges</a><a href="/resultsList.aspx?type=cty&map=CTY">Offices and Questions by County</a><a href="/resultsSW.aspx?type=MUX&map=CTY">Municipal Offices and Questions</a><a href="/resultsSW.aspx?type=CLX&map=CTY">College District Questions</a><a href="/resultsSW.aspx?type=SWX&map=CTY">Soil & Water Conservation District Questions</a>
+                    
+                    
+                    <h1>Election Resources</h1>
+                    <a id="lnkSideElectionTerm" href="resultsElectionTerminology.aspx">Election Terminology (FAQ)</a>
+                    <a id="lnkSideMedia" href="ResultsMedia.aspx">Media/Results Exports</a>
+                    <a id="lnkSideUpdated" href="resultsCountyLastUpdated.aspx">View Last Date/Time County Updated</a>
+                    <a id="lnkSideRecounts" href="ResultsSW.aspx?type=RECOUNT">Possible Recounts</a>
+                    <a id="lnkSideVoterTurnout" href="VoterTurnoutDetails.aspx">Voter Turnout</a>
+                </div>
+            
+</div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+$(document).ready(SWCandBars); function SWCandBars() {
+$('#bar13269001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13289001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13309001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13329001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13479001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13489001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13499001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar13539001').jqbar({ label: '', value: 0, barColor: '#76DC56', barWidth: 25 });
+$('#bar1142919961').jqbar({ label: '', value: 0, barColor: '#006699', barWidth: 25 });
+$('#bar1143019963').jqbar({ label: '', value: 0, barColor: '#006699', barWidth: 25 });
+$('#bar13539002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13499002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13489002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13479002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13329002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13309002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13289002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar13269002').jqbar({ label: '', value: 0, barColor: '#D40B27', barWidth: 25 });
+$('#bar1142919962').jqbar({ label: '', value: 0, barColor: '#9C4A3D', barWidth: 25 });
+}Sys.Application.add_init(function() {
+    $create(Sys.UI._Timer, {"enabled":true,"interval":300000,"uniqueID":"ctl00$Timer1"}, null, null, $get("Timer1"));
+});
+//]]>
+</script>
+</form>
+    <script>
+        (function ($) {
+            $(document).ready(function () {
+                $('#menuToggle').click(function (e) {
+                    var $parent = $(this).parent('nav');
+                    $parent.toggleClass('open');
+                    var navState = $parent.hasClass('open') ? 'hide' : 'show';
+                    $(this).attr('title', navState + ' navigation');
+                    setTimeout(function () {
+                        console.log('timeout set');
+                        $('#menuToggle > span').toggleClass('navClosed').toggleClass('navOpen');
+                    }, 200);
+                    e.preventDefault();
+                });
+            });
+        }(jQuery));
+        //@ sourceURL=pen.js
+    </script>
+    <script type="text/javascript">
+        // how many minutes
+        var mins = 5;
+
+        // how many seconds (don't change this)
+        var secs = mins * 60;
+
+        function setEvents() {
+        }
+
+        if (document.all) {
+            document.onkeydown = function () {
+            }
+        }
+
+
+        function countdown() {
+            myTimeout = setTimeout('Decrement()', 1000);
+        }
+        function Decrement() {
+            if (document.getElementById) {
+
+                if (secs >= 0) {
+                    minutestext = document.getElementById("myLabel");
+
+                    minutes = getminutes();
+                    seconds = getseconds();
+
+                    seconds = ((seconds < 10) ? "0" + seconds : seconds);
+
+                    //seconds = document.getElementById("seconds");
+                    // if less than a minute remaining
+                    minutestext.textContent = minutes + ':' + seconds;
+                    minutestext.innerText = minutes + ':' + seconds;
+
+                    secs--;
+                    myTimeout = setTimeout('Decrement()', 1000);
+                }
+            }
+        }
+        function getminutes() {
+            // minutes is seconds divided by 60, rounded down
+            mins = Math.floor(secs / 60);
+            return mins;
+        }
+        function getseconds() {
+            // take mins remaining (as seconds) away from total seconds remaining
+            return secs - Math.round(mins * 60);
+        }
+        function restart() {
+            mins = 5;
+            secs = mins * 60;
+            clearTimeout(myTimeout);
+            countdown();
+            location.reload();
+            //HeaderTurnoutChats();
+            //OpenMenu();
+
+            //var type = getUrlVars()["type"];
+            //if (type == "CTYALL" || type == "CTY") {
+            //    CountyTurnoutCharts();
+            //}
+            //if (typeof SWCandBars === 'function') {
+            //    SWCandBars();
+            //}
+            //if (typeof TurnoutCharts === 'function') {
+            //    TurnoutCharts();
+            //}
+
+            //if (typeof built !== 'undefined') {
+            //    built = [];
+            //}
+
+            //if (typeof PrecinctsBuilt !== 'undefined') {
+            //    PrecinctsBuilt = [];
+            //}
+        }
+
+
+        //        $(document).ready(function () {
+        //            $("a[rel=SWMaps]").fancybox({
+        //                'width': '95%',
+        //                'height': '95%',
+        //                'autoScale': false,
+        //                'transitionIn': 'none',
+        //                'transitionOut': 'none',
+        //                'type': 'iframe'
+        //            });
+        //        });
+
+    </script>
+    <!--Quick search auto complete code-->
+    <script>
+        function ClearSearch() {
+            document.getElementById("txtQuickSearch").value = "";
+        }
+        function ClearSearchSide() {
+            document.getElementById("txtQuickSearchSide").value = "";
+        }
+        $(document).ready(function () {
+            var results;
+            var electionType = document.getElementById("hidElectionType").value;
+            var eid = getUrlVars()["eid"];
+            var mode = getUrlVars()["enr-pass"];
+
+            if (eid !== undefined && !isNaN(eid) && eid != "") {
+                results = getValues(ServiceRoot + "NMResultsAjax.svc/GetCandidates?ElectionType=" + electionType + "&ElectionID=" + eid);
+                eid = "&eid=" + eid;
+                mode = "";
+            } else {
+                results = getValues(ServiceRoot + "NMResultsAjax.svc/GetCandidates?ElectionType=" + electionType + "&ElectionID=0");
+                eid = "";
+                if (mode !== undefined && mode !== "") {
+                    mode = "&enr-pass=" + mode;
+                } else {
+                    mode = "";
+                }
+            }
+
+            var objListTest = results;
+
+            $("#txtQuickSearch").autocomplete({
+                appendTo: '#header-search-box',
+                source: objListTest,
+                focus: function (event, ui) {
+                    $("#txtQuickSearch").val(ui.item.desc + ' - ' + ui.item.name);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#txtQuickSearch").val(ui.item.desc + ' - ' + ui.item.name);
+                    window.location.assign("SearchResults.aspx?ID=" + ui.item.ID + eid + mode);
+                    return false;
+                }
+            })
+                .data("ui-autocomplete")._renderItem = function (ul, item) {
+                    return $("<li>")
+                        .append("<a href='SearchResults.aspx?ID=" + item.ID + eid + mode + "'><span class='" + item.Party + "'>" + item.name + "</span><br><span class='search-description'>" + item.desc + "</span></a>")
+                        .appendTo(ul);
+                };
+            $("#txtQuickSearchSide").autocomplete({
+                source: objListTest,
+                focus: function (event, ui) {
+                    $("#txtQuickSearchSide").val(ui.item.desc + ' - ' + ui.item.name);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#txtQuickSearchSide").val(ui.item.desc + ' - ' + ui.item.name);
+                    window.location.assign("SearchResults.aspx?ID=" + ui.itemID + eid + mode);
+                    return false;
+                }
+            })
+                .data("ui-autocomplete")._renderItem = function (ul, item) {
+                    return $("<li>")
+                        .append("<a href='SearchResults.aspx?ID=" + item.ID + eid + mode + "'><span class='" + item.Party + "'>" + item.name + "</span><br><span class='search-description'>" + item.desc + "</span></a>")
+                        .appendTo(ul);
+                };
+        });
+    </script>
+    
+</body>
+</html>

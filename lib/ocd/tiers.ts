@@ -132,7 +132,7 @@ const STATE_OFFICES = new Set([
 
 /** Office identity takes precedence over the geography of its electorate. */
 export function tierForOffice(title: string | null | undefined, ocdId: OcdId): Tier | null {
-  const office = officeIdentity(title);
+  const office = officeIdentity(title?.split(/[—–]/, 1)[0]);
   if (office === "us_senator" || office === "us_representative") return "national";
   if (office !== null && STATE_OFFICES.has(office)) return "state";
   if (office !== null) return "local";

@@ -1,0 +1,12 @@
+{
+  "url": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+  "finalUrl": "https://www.santafecountynm.gov/uploads/documents/Sample-SANT_PCT001.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T09:44:17.642373+00:00",
+  "sha256": "436a119c6dcc0753ab6dd1035af030c585a80790b2818d6c92c206a8747ae179",
+  "textFile": "nm-santa-fe-sample.txt",
+  "textSha256": "48908028eeb74cb79cd73b41bddf67afcd62e657faeeb7bd4558a3e19ffaa651",
+  "publisher": "Santa Fe County Clerk",
+  "officialBacklink": "https://www.santafecountynm.gov/clerk/elections/sample-ballots",
+  "decodedPdfFont": "+29 codepoint custom font recovery"
+}

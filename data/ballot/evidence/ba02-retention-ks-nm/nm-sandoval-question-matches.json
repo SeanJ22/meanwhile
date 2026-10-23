@@ -1,0 +1,44 @@
+[
+  {
+    "contestId": "nm-sos:nm-2026-11-03:judicial-retention-justice-of-the-supreme-court-david-k-thomson",
+    "sourceQuestionText": "Shall DAVID K THOMSON be retained as Justice of the Supreme Court?",
+    "inputQuestionText": "Shall DAVID K THOMSON be retained as Justice of the Supreme Court?",
+    "exactMatch": true,
+    "source": "nm-sandoval-notice.pdf"
+  },
+  {
+    "contestId": "nm-sos:nm-2026-11-03:judicial-retention-justice-of-the-supreme-court-shannon-bacon",
+    "sourceQuestionText": "Shall SHANNON BACON be retained as Justice of the Supreme Court?",
+    "inputQuestionText": "Shall SHANNON BACON be retained as Justice of the Supreme Court?",
+    "exactMatch": true,
+    "source": "nm-sandoval-notice.pdf"
+  },
+  {
+    "contestId": "nm-sos:nm-2026-11-03:judicial-retention-judge-of-the-court-of-appeals-j-miles-hanisee",
+    "sourceQuestionText": "Shall J MILES HANISEE be retained as Judge of the Court of Appeals?",
+    "inputQuestionText": "Shall J MILES HANISEE be retained as Judge of the Court of Appeals?",
+    "exactMatch": true,
+    "source": "nm-sandoval-notice.pdf"
+  },
+  {
+    "contestId": "nm-general-2026-judicial-retention-district-court-judge-thirteenth-judicial-district-division-01",
+    "sourceQuestionText": "Shall JAMES LAWRENCE SANCHEZ be retained as District Court Judge, Division 1?",
+    "inputQuestionText": "Shall JAMES LAWRENCE SANCHEZ be retained as District Court Judge, Division 1?",
+    "exactMatch": true,
+    "source": "nm-sandoval-notice.pdf"
+  },
+  {
+    "contestId": "nm-general-2026-judicial-retention-district-court-judge-thirteenth-judicial-district-division-04",
+    "sourceQuestionText": "Shall AMANDA CONNIE SANCHEZ VILLALOBOS be retained as District Court Judge, Division 4?",
+    "inputQuestionText": "Shall AMANDA CONNIE SANCHEZ VILLALOBOS be retained as District Court Judge, Division 4?",
+    "exactMatch": true,
+    "source": "nm-sandoval-notice.pdf"
+  },
+  {
+    "contestId": "nm-general-2026-judicial-retention-district-court-judge-thirteenth-judicial-district-division-07",
+    "sourceQuestionText": "Shall CHRISTOPHER GEORGE PEREZ be retained as District Court Judge, Division 7?",
+    "inputQuestionText": "Shall CHRISTOPHER GEORGE PEREZ be retained as District Court Judge, Division 7?",
+    "exactMatch": true,
+    "source": "nm-sandoval-notice.pdf"
+  }
+]

@@ -1,0 +1,217 @@
+[
+  {
+    "id": "as-ba01-2026-delegate",
+    "title": "Delegate to the United States Congress",
+    "ocdId": "ocd-division/country:us/territory:as",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://www.govinfo.gov/content/pkg/USCODE-2024-title48/html/USCODE-2024-title48-chap16.htm",
+      "https://www.govinfo.gov/content/pkg/USCODE-2024-title48/html/USCODE-2024-title48-chap16.htm"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-1",
+    "title": "House of Representatives, District 1 \u2013 Manu\u2019a",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:1",
+    "voteFor": 2,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-2",
+    "title": "House of Representatives, District 2 \u2013 Manu\u2019a",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:2",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-3",
+    "title": "House of Representatives, District 3 \u2013 Vaifanua",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:3",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-4",
+    "title": "House of Representatives, District 4 \u2013 Saole",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:4",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-5",
+    "title": "House of Representatives, District 5 \u2013 Sua #1",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:5",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-6",
+    "title": "House of Representatives, District 6 \u2013 Sua #2",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:6",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-7",
+    "title": "House of Representatives, District 7 \u2013 Maoputasi #1",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:7",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-8",
+    "title": "House of Representatives, District 8 \u2013 Maoputasi #2",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:8",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-9",
+    "title": "House of Representatives, District 9 \u2013 Maoputasi #3",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:9",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-10",
+    "title": "House of Representatives, District 10 \u2013 Maoputasi #4",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:10",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-11",
+    "title": "House of Representatives, District 11 \u2013 Maoputasi #5",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:11",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-12",
+    "title": "House of Representatives, District 12 \u2013 Ituau",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:12",
+    "voteFor": 2,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-13",
+    "title": "House of Representatives, District 13 \u2013 Fofo",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:13",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-14",
+    "title": "House of Representatives, District 14 \u2013 Alataua",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:14",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-15",
+    "title": "House of Representatives, District 15 \u2013 Tualauta",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:15",
+    "voteFor": 2,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-16",
+    "title": "House of Representatives, District 16 \u2013 Tualatai",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:16",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  },
+  {
+    "id": "as-ba01-2026-house-17",
+    "title": "House of Representatives, District 17 \u2013 Aitulagi/Leasina",
+    "ocdId": "ocd-division/country:us/territory:as/sldl:17",
+    "voteFor": 1,
+    "sources": [
+      "https://www.aselectionoffice.gov/candidates-information/candidates-for-the-2026-midterm-election",
+      "https://natlex.ilo.org/dyn/natlex2/natlex2/files/download/105136/USA105136.pdf",
+      "https://docs.house.gov/meetings/II/II24/20240118/116694/HHRG-118-II24-20240118-SD013.pdf",
+      "https://radewagen.house.gov/media-center/press-releases/amata-joins-secretary-haaland-signing-ceremony"
+    ]
+  }
+]

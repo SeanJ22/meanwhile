@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+  "finalUrl": "https://prod-rf-lambda.rtssaas.com/PublicFiles/253540aa3da14519b6b6de6de9f31f82/9496b32a-cacc-4f99-88ea-8cc714cf9449/2026%20GENERAL%20-%20Notice%20of%20Election%20ENGLISH%20-%20FINAL%20%2010.08.2026.pdf",
+  "retrievedAt": "2026-10-23T09:45:06.492718+00:00",
+  "httpStatus": 200,
+  "rawHash": "106fb93815eb04990da39b7a4041206997e8b5616aff6e52446b3f151bf0c489",
+  "bytes": 514260,
+  "file": "nm-sandoval-notice.pdf",
+  "textSnapshot": "nm-sandoval-notice.txt",
+  "textHash": "6170813bcce2997bc7511fd104162d69fa039c6cae012dcab2252088f506a353",
+  "extraction": "pdftotext -layout",
+  "officialBacklink": "nm-sandoval-index.html"
+}

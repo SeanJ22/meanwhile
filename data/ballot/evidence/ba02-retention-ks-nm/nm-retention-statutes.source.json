@@ -1,0 +1,17 @@
+{
+  "url": "https://api.realfile.rtsclients.com/PublicFiles/ee3072ab0d43456cb15a51f7d82c77a2/b3415b23-03d0-4ed9-8efa-861e5acf1bbc/2025%20NM_Election_Handbook_SOS%201.pdf",
+  "finalUrl": "https://api.realfile.rtsclients.com/PublicFiles/ee3072ab0d43456cb15a51f7d82c77a2/b3415b23-03d0-4ed9-8efa-861e5acf1bbc/2025%20NM_Election_Handbook_SOS%201.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T09:40:53.917239+00:00",
+  "sha256": "c6ae277cb4d7c9a9e7b2e0815cb07785566b758610690a9bba26c1bb99d6dbd8",
+  "file": "nm-election-handbook.pdf.gz",
+  "textFile": "nm-retention-statutes.txt",
+  "textSha256": "2966a208a4efb9e5e63e617340bdb68b856d077fee3ae5200c9c85bdc3979a52",
+  "sourcePages": [
+    293,
+    294,
+    295,
+    296
+  ],
+  "officialBacklink": "https://www.sos.nm.gov/candidate-and-campaigns/how-to-become-a-candidate/nm-election-handbook/"
+}

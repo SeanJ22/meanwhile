@@ -146,7 +146,7 @@ const AUTHORITIES = {
     routePrefixes: [],
     jurisdictions: ["US", ...REGISTRATION_TARGETS.map(target => target.jurisdiction)],
     recordClasses: ["BALLOT_CANDIDACY"],
-    competentFacts: ["election", "contest", "filed candidate name", "party", "seat count"],
+    competentFacts: ["election", "contest", "filed candidate name", "party", "seat count", "retention question", "election calendar"],
     expectedIdentifierKeys: ["contest_id", "candidacy_id", "absence_id"],
     expectedTemporalFields: ["source_through", "collected_at"],
     horizonSemantics: "Each state/election key carries independently verified contests and candidates. Partial lists establish no absence; authoritative complete successor lists can replace their own candidate set.",
@@ -154,7 +154,7 @@ const AUTHORITIES = {
     freshnessExpectation: "Recheck saved election lists inside the BALLOT_CONTEST freshness window; source gaps remain owed.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER", "REFERENCE_PUBLISHER"] },
   },
   "federal-legislative-records": {
     id: "federal-legislative-records",

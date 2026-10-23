@@ -1,0 +1,13 @@
+{
+  "sourceUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+  "finalUrl": "https://www.co.mckinley.nm.us/DocumentCenter/View/4053/2026-GENERAL-ELECTION-NOTICE-",
+  "retrievedAt": "2026-10-23T09:53:31.656580+00:00",
+  "httpStatus": 200,
+  "rawHash": "e9a4e50b50a83c6621afab93440ab1acf159266cbd85584f66983976897cd860",
+  "bytes": 53993,
+  "file": "nm-mckinley-notice.pdf",
+  "officialBacklink": "nm-mckinley-general.html",
+  "textSnapshot": "nm-mckinley-notice.txt",
+  "textHash": "45790b0e4d4d555159c91b67b1b31461da8c9d2ec69c78af935b29110b090104",
+  "extraction": "pdftotext -layout"
+}

@@ -1,0 +1,176 @@
+{
+  "status": "ARCHIVED_OFFICIAL_SAMPLE_AUTHENTICATED",
+  "secondHand": true,
+  "archiveUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+  "rawHash": "b13758948c8af738f778a6ae8756f0203366b0610ad882abc15f01ca2c4aa0c7",
+  "originalGovernmentUrl": null,
+  "archiveContext": {
+    "sourceUrl": "https://rpbc.gop/",
+    "finalUrl": "https://rpbc.gop/",
+    "retrievedAt": "2026-10-23T10:00:38.032740+00:00",
+    "httpStatus": 200,
+    "rawHash": "49087f99268fd31f21017b1240c5399d1df6328206cd5d5e5613a419b5f40a06",
+    "bytes": 137855,
+    "file": "nm-bernalillo-archive-index.html.gz",
+    "compression": "gzip",
+    "sampleLink": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+    "officialPortalLink": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+    "sourceClass": "REFERENCE_PUBLISHER",
+    "use": "Public archive identifies legislative district sample PDFs and links the New Mexico Secretary of State official sample portal. No party opinion, evaluation or recommendation is imported."
+  },
+  "publisher": "Bernalillo County election sample; public archive at Republican Party of Bernalillo County",
+  "imprint": "SAMPLE BALLOT; November 3, 2026; Bernalillo County; Ballot Style 0101; BERN_PCT184",
+  "visualInspection": "All four saved PDF pages inspected. Questions and choices are unmarked. All 20 retention questions occupy pages 1 and 2. No added recommendations or annotations are visible.",
+  "pdfMetadata": {
+    "title": "Dominion Voting Systems Ballot",
+    "producer": "Acrobat Distiller 25.0 (Windows)",
+    "created": "2026-09-14T07:40:35-06:00",
+    "modified": "2026-09-15T23:19:57-06:00",
+    "originalUrlOrAuthorEmbedded": false
+  },
+  "authentication": "Every question matches the current saved official 2026 state contest registry verbatim; every named judge also occurs in the saved official 2026 certified candidate list. The ballot imprint establishes jurisdiction, election date and style. The archive URL is preserved and no original government URL is claimed.",
+  "candidateList": {
+    "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+    "finalUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
+    "rawHash": "1c7e1464f185f9404b6f93eedb0f06492b9503bfef1f1660b8dd409378d81398",
+    "retrievedAt": "2026-10-20T22:52:26.564940+00:00",
+    "httpStatus": 200
+  },
+  "registrySources": [
+    {
+      "sourceUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL",
+      "sha256": "85197c551f00342de646558e109448c0c3b430d87fde4a6fcc2062a19c5c4d97"
+    },
+    {
+      "sourceUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+      "sha256": "535a53bddda5a4dada96a988198df56e41a907933659671d7b7c6f1c2ae481d6"
+    },
+    {
+      "sourceUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY",
+      "sha256": "d6ad674a133bd4690a1e7543354a15556da5e9abd9b6c21cea06c68c950d9ceb"
+    }
+  ],
+  "questionCount": 20,
+  "questions": [
+    {
+      "contestId": "nm-sos:nm-2026-11-03:judicial-retention-justice-of-the-supreme-court-david-k-thomson",
+      "questionText": "Shall DAVID K THOMSON be retained as Justice of the Supreme Court?",
+      "certifiedName": "DAVID K THOMSON",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL"
+    },
+    {
+      "contestId": "nm-sos:nm-2026-11-03:judicial-retention-justice-of-the-supreme-court-shannon-bacon",
+      "questionText": "Shall SHANNON BACON be retained as Justice of the Supreme Court?",
+      "certifiedName": "SHANNON BACON",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL"
+    },
+    {
+      "contestId": "nm-sos:nm-2026-11-03:judicial-retention-judge-of-the-court-of-appeals-j-miles-hanisee",
+      "questionText": "Shall J MILES HANISEE be retained as Judge of the Court of Appeals?",
+      "certifiedName": "J MILES HANISEE",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-01",
+      "questionText": "Shall WILLIAM EDWARD PARNALL be retained as District Court Judge, Division 01?",
+      "certifiedName": "WILLIAM EDWARD PARNALL",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-04",
+      "questionText": "Shall BEATRICE J BRICKHOUSE be retained as District Court Judge, Division 04?",
+      "certifiedName": "BEATRICE J BRICKHOUSE",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-07",
+      "questionText": "Shall ALMA C GARCIA ROBERSON be retained as District Court Judge, Division 07?",
+      "certifiedName": "ALMA C GARCIA ROBERSON",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-10",
+      "questionText": "Shall BRUCE C FOX be retained as District Court Judge, Division 10?",
+      "certifiedName": "BRUCE C FOX",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-13",
+      "questionText": "Shall LISA CHAVEZ ORTEGA be retained as District Court Judge, Division 13?",
+      "certifiedName": "LISA CHAVEZ ORTEGA",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-16",
+      "questionText": "Shall JENNIFER J WERNERSBACH be retained as District Court Judge, Division 16?",
+      "certifiedName": "JENNIFER J WERNERSBACH",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-22",
+      "questionText": "Shall AMBER LOUISEE CHAVEZ BAKER be retained as District Court Judge, Division 22?",
+      "certifiedName": "AMBER LOUISEE CHAVEZ BAKER",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-25",
+      "questionText": "Shall JANE CONWAY LEVY be retained as District Court Judge, Division 25?",
+      "certifiedName": "JANE CONWAY LEVY",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-district-court-judge-second-judicial-district-division-28",
+      "questionText": "Shall CLARA M MORAN be retained as District Court Judge, Division 28?",
+      "certifiedName": "CLARA M MORAN",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-2",
+      "questionText": "Shall CHRISTINE EVE RODRIGUEZ be retained as Judge of the Metropolitan Court, Division 2?",
+      "certifiedName": "CHRISTINE EVE RODRIGUEZ",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-4",
+      "questionText": "Shall JOSHUA J SANCHEZ be retained as Judge of the Metropolitan Court, Division 4?",
+      "certifiedName": "JOSHUA J SANCHEZ",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-8",
+      "questionText": "Shall JILL MARTINEZ be retained as Judge of the Metropolitan Court, Division 8?",
+      "certifiedName": "JILL MARTINEZ",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-10",
+      "questionText": "Shall BRITTANY MALDONADO MALOTT be retained as Judge of the Metropolitan Court, Division 10?",
+      "certifiedName": "BRITTANY MALDONADO MALOTT",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-12",
+      "questionText": "Shall JASON M JARAMILLO be retained as Judge of the Metropolitan Court, Division 12?",
+      "certifiedName": "JASON M JARAMILLO",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-14",
+      "questionText": "Shall VIDALIA G CHAVEZ be retained as Judge of the Metropolitan Court, Division 14?",
+      "certifiedName": "VIDALIA G CHAVEZ",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-16",
+      "questionText": "Shall CLAIRE ANN MCDANIEL be retained as Judge of the Metropolitan Court, Division 16?",
+      "certifiedName": "CLAIRE ANN MCDANIEL",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    },
+    {
+      "contestId": "nm-bernalillo-general-2026-judicial-retention-judge-of-the-metropolitan-court-division-18",
+      "questionText": "Shall ROSIE LAZCANO ALLRED be retained as Judge of the Metropolitan Court, Division 18?",
+      "certifiedName": "ROSIE LAZCANO ALLRED",
+      "officialRegistryUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JMC&map=CTY"
+    }
+  ]
+}

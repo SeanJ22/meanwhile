@@ -1,0 +1,11 @@
+{
+  "requestedUrl": "https://cms5.revize.com/revize/colfaxcountynm/Clerk%20Forms/Election/2026/2026%20GE%20Sample%20Ballots.pdf",
+  "finalUrl": "https://cms5.revize.com/revize/colfaxcountynm/Clerk%20Forms/Election/2026/2026%20GE%20Sample%20Ballots.pdf",
+  "retrievedAt": "2026-10-23T09:50:28.164178+00:00",
+  "httpStatus": 200,
+  "rawHash": "df8168e18fbe55d6f3535e936259b80d47d12880679ffe906ce15736f2141fba",
+  "textHash": "e3c90c76df4cc5321759fdfacbb0178c81b6dff3efbf2aa6af194f2c6c748570",
+  "textSnapshot": "nm-colfax-sample.ocr.txt",
+  "textMethod": "Page1 rendered at300dpi with pdftoppm, transcribed by tesseract5 --psm3 OMP_THREAD_LIMIT=1; full question visually checked against original sample.",
+  "file": "nm-colfax-sample.pdf.gz"
+}

@@ -1,0 +1,16 @@
+{
+  "sourceUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+  "finalUrl": "https://rpbc.gop/wp-content/uploads/2026/10/HD11-BERN_PCT184.pdf",
+  "retrievedAt": "2026-10-23T09:48:21.385393+00:00",
+  "httpStatus": 200,
+  "rawHash": "b13758948c8af738f778a6ae8756f0203366b0610ad882abc15f01ca2c4aa0c7",
+  "bytes": 99379,
+  "file": "nm-bernalillo-third-party-sample.pdf",
+  "secondHand": true,
+  "sourceClass": "REFERENCE_PUBLISHER",
+  "authoredBy": "Bernalillo County election office sample, authenticated against New Mexico Secretary of State records",
+  "textSnapshot": "nm-bernalillo-third-party-sample.txt",
+  "textHash": "82d4955dac18b56254b4eac65f49b0f935a4f40c8d680030cde3cbcab2f61fbf",
+  "extraction": "pdftotext -raw; embedded custom ASCII font recovered by codepoint+29; text visually checked on saved PDF pages",
+  "authentication": "nm-bernalillo-sample-authentication.json"
+}

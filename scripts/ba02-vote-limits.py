@@ -270,8 +270,9 @@ def missing_count_inventory():
             for contest in ballot["contests"]:
                 if contest.get("voteFor") is None:
                     missing.append({"state": ballot["election"]["state"], "electionId": ballot["election"]["id"],
-                                    "id": contest["id"], "title": contest["title"], "ocdId": contest["ocdId"]})
-    return {"total": len(missing), "byState": dict(sorted(Counter(row["state"] for row in missing).items())), "races": missing}
+                                    "id": contest["id"], "title": contest["title"], "type": contest["type"], "ocdId": contest["ocdId"]})
+    return {"total": len(missing), "byState": dict(sorted(Counter(row["state"] for row in missing).items())),
+            "byType": dict(sorted(Counter(row["type"] for row in missing).items())), "races": missing}
 
 
 if __name__ == "__main__":

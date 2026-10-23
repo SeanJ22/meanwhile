@@ -289,6 +289,30 @@ test("candidate websites and measure links are values on the cited official reco
   assert.ok(manualProjectionCandidate(packageFor(analysed)).semantics.violations.some(problem => problem.includes("analysis.example.gov")));
 });
 
+test("an archived official sample enriches a retention question while candidate lists retain their own authority", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-archived-question-"));
+  try {
+    let state = await fixture();
+    const ballot = ballotOf(state), contest = ballot.contests[0];
+    const url = "https://archive.example.org/county-official-sample.pdf";
+    const provenance = { ...contest.provenance, sourceUrl: url, secondHand: true,
+      quote: "Shall Alice Adams be retained in office?" };
+    contest.type = "RETENTION";
+    contest.retentionQuestion = { questionText: provenance.quote, provenance };
+    state = { ...state, sourceReceipt: { ...state.sourceReceipt, sources: [...state.sourceReceipt.sources,
+      { ...state.sourceReceipt.sources[0], requestedUrl: url, finalUrl: url,
+        sourceClass: "REFERENCE_PUBLISHER", publisher: "Public archive of the county's official sample" }] } };
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+    const published = await publishBallotState({ state: "TX", directory });
+    assert.deepEqual(ballotOf(published.payload).contests[0].retentionQuestion, contest.retentionQuestion);
+    contest.provenance = provenance;
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+    const held = await publishBallotState({ state: "TX", directory });
+    assert.ok(!ballotOf(held.payload).contests.some(row => row.id === contest.id));
+    assert.ok(held.heldContests.some(row => row.contestId === contest.id));
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
 test("a newer complete official list replaces candidates across election authorities and keeps unrelated contests", async () => {
   const scratch = await mkdtemp(resolve(tmpdir(), "ballot-national-"));
   try {

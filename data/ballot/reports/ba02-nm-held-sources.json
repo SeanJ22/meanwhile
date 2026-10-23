@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-10-23T10:16:52.668444+00:00",
+  "mode": "SELECT_ONLY",
+  "reader": {
+    "projectId": "tiny-hill-13996172",
+    "branchId": "br-delicate-lab-ax02xuo5",
+    "role": "readonly",
+    "store": "source_copy",
+    "matchingSourceMetadataRows": 0
+  },
+  "control": {
+    "projectId": "withered-sunset-39821877",
+    "branchId": "br-tiny-frog-aeufpjeq",
+    "stores": [
+      "cp_box_findings",
+      "cp_log_artifacts",
+      "cp_log_scout_results"
+    ],
+    "matchingSourceMetadataRows": 0
+  },
+  "sourceUrlPatterns": [
+    "currycountynm.gov",
+    "rooseveltcounty.com",
+    "newmexicopublicnotices.com/Details.aspx?ID=106018",
+    "easternnewmexiconews.com/story/2026/10/07/news/nov-3-sample-ballot/234334.html"
+  ],
+  "scope": "NM Ninth Judicial District; Curry and Roosevelt County source URLs and document metadata only. No raw source or whole-state corpus was downloaded.",
+  "meaning": "No applicable saved source was found in these production stores at this check. This does not establish that no official question or sample exists."
+}

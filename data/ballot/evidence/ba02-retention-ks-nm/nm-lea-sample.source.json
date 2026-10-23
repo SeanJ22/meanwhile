@@ -1,0 +1,12 @@
+{
+  "url": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+  "finalUrl": "https://www.leacounty.gov/DocumentCenter/View/6571/Sample-LEA_PCT002",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T09:48:45.964622+00:00",
+  "sha256": "5aeeb6bdb98c70e6bf6822cbb9b1123bad54df7ac95a48364b45482a5b7ddf00",
+  "publisher": "Lea County Clerk",
+  "textFile": "nm-lea-sample.txt",
+  "textSha256": "34426fadf783c1102220000a853174effbf76791fffa1c1cada9d501914d3cce",
+  "officialBacklink": "https://www.leacounty.gov/1386/2026-GENERAL-ELECTION-SAMPLE-BALLOTS",
+  "decodedPdfFont": "+29 codepoint custom font recovery"
+}

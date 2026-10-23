@@ -14,9 +14,6 @@ wording on each front.
 
 The two statute captures here were read from their official legislative sites
 on October 23, 2026. Each `.source.json` pins the raw HTML SHA-256, URL and capture
-time. Direct re-downloads of Florida's candidate CSV and Missouri's certified
-candidate PDF returned HTTP 403 on that pass; the existing verified candidate
-records and saved Missouri certification text remain the name and court sources.
-The prescribed question itself comes from the newly captured statute. When
-rechecking a retention question, search held specimens first, then the exact
-retention-ballot statute; a certified candidate list alone often omits wording.
+time. The existing verified candidate records and saved Missouri certification
+text supply the names and courts. The prescribed questions come from the saved
+statutes and official specimen, covering all 25 questions in this builder.

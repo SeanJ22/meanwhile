@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-23T10:28:49.279672+00:00",
+  "status": "OFFICIAL_SAMPLE_OR_CERTIFIED_NOTICE_PENDING",
+  "newspaperSourceUrl": "https://www.easternnewmexiconews.com/story/2026/10/07/news/nov-3-sample-ballot/234334.html",
+  "newspaperUpdatedDate": "2026-10-06",
+  "newspaperAuthorityLimit": "Public article provides no government authorship, county credit, official PDF attachment or source attribution. It prints each alternative twice for Curry and Roosevelt. Those alternatives are not established as official ballot wording.",
+  "currentDecision": "Retain exact official state registry values with truthful provenance; keep the requested source form open. Strict source replay must fail for these two contests.",
+  "questions": [
+    {
+      "contestId": "nm-general-2026-judicial-retention-district-court-judge-ninth-judicial-district-division-01",
+      "name": "Benjamin S Cross",
+      "retainedOfficialRegistryQuestion": "Shall BENJAMIN S CROSS be retained as Judge of the Ninth Judicial District, Division 1?",
+      "officialRegistrySourceUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+      "unprovenNewspaperQuestion": "Shall BENJAMIN S CROSS be retained as Judge of the 9th Judicial District, Division 1?",
+      "candidateSourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99"
+    },
+    {
+      "contestId": "nm-general-2026-judicial-retention-district-court-judge-ninth-judicial-district-division-04",
+      "name": "Donna J Mowrer",
+      "retainedOfficialRegistryQuestion": "Shall DONNA J MOWRER be retained as District Court Judge, Division 4?",
+      "officialRegistrySourceUrl": "https://electionresults.sos.nm.gov/resultsSW.aspx?type=JDX&map=CTY",
+      "unprovenNewspaperQuestion": "Shall DONNA J MOWRER be retained as Judge of the 9th Judicial District, Division 4?",
+      "candidateSourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99"
+    }
+  ]
+}

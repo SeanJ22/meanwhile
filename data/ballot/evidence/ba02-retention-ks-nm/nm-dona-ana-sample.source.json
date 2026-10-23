@@ -1,0 +1,12 @@
+{
+  "url": "https://www.donaanacountyelections.com/wp-content/uploads/2026/10/Super-Sample_GN-2026.pdf",
+  "finalUrl": "https://www.donaanacountyelections.com/wp-content/uploads/2026/10/Super-Sample_GN-2026.pdf",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T09:44:17.629395+00:00",
+  "sha256": "be7913d6b71c65a6ea5ee5e08b395c5c93dc265865bb9c326fe0a156c33b4e78",
+  "textFile": "nm-dona-ana-sample.txt",
+  "textSha256": "9464c7f45db86f4ef0ae4a516c437767e6160ae746c1ac75969a7e0eccb75c2e",
+  "publisher": "Do\u00f1a Ana County Clerk",
+  "officialBacklink": "https://www.donaanacountyelections.com/election-information/",
+  "decodedPdfFont": null
+}

@@ -1,0 +1,7 @@
+{
+  "url": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL",
+  "finalUrl": "https://electionresults.sos.nm.gov/ResultsSW.aspx?cty=01&map=CTY&type=CTYALL",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T09:35:39.395441+00:00",
+  "sha256": "85197c551f00342de646558e109448c0c3b430d87fde4a6fcc2062a19c5c4d97"
+}

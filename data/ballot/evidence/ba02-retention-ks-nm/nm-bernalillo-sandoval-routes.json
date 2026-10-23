@@ -1,0 +1,42 @@
+{
+  "checkedAt": "2026-10-23T09:51:53.057813+00:00",
+  "Bernalillo": {
+    "status": "ARCHIVED_OFFICIAL_SAMPLE_AUTHENTICATED",
+    "routes": [
+      {
+        "url": "https://www.berncoclerk.gov/elections/",
+        "result": "403 with default request, web connector, and Mozilla UA with official page Referer"
+      },
+      {
+        "url": "https://www.bernco.gov/clerk/",
+        "result": "403"
+      },
+      {
+        "url": "https://www.berncoclerk.gov/wp-json/wp/v2/media",
+        "result": "403 with query-free endpoint and Mozilla UA plus official page Referer; search query endpoint also403"
+      },
+      {
+        "url": "https://www.berncoclerk.gov/wp-content/uploads/2023/10/Bernalillo-County-Voter-Guide_2023.pdf",
+        "result": "Known older working route returns403 with and without Mozilla UA+official page Referer; current2026same-name September/October guesses also403"
+      },
+      {
+        "url": "https://voterportal.servis.sos.state.nm.us/WhereToVote.aspx",
+        "result": "200 with CookieJar+Mozilla UA; requires registered voter name and date of birth, not used"
+      },
+      {
+        "url": "https://voterportal.servis.sos.state.nm.us/WhereToVoteAddress.aspx",
+        "result": "200 with CookieJar+Mozilla UA; publicgovernment1CivicPlaza87102 normal address query returnsCAPTCHA required; no further attempts"
+      }
+    ],
+    "heldDiscovery": "nm-bernalillo-third-party-sample.pdf is the unmarked2026BernalilloCountyStyle0101sample preserved in a public archive. All20retention question strings match the saved official current2026state registry exactly; all20judges match the saved official certified roster. The archive page links both this PDF and the official state sampleportal. No original government URL is claimed.",
+    "authentication": "nm-bernalillo-sample-authentication.json",
+    "secondHand": true
+  },
+  "Sandoval": {
+    "status": "CERTIFIED_ELECTION_NOTICE_ACQUIRED",
+    "source": "nm-sandoval-notice.source.json",
+    "questionCount": 6,
+    "scope": "3statewide plus3thirteenthjudicialdistrict",
+    "punctuationDifference": "Sanchez Division1 notice has comma after Judge; initial SOS registry form omitted it. Correct source value is in nm-sandoval-question-matches.json."
+  }
+}

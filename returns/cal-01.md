@@ -7,7 +7,7 @@ check: runner-r86
 ready: no step ids unknown
 river: 2bd4e5e18eb86c078c76b43e412ce04ce481f19c
 at: 2026-10-23T05:45:02Z
-state: returned
+state: answered: stream/cal-01-fx READY 723ee4c4b (pass deadline for state-pointer retirement; publish-now scan in one-hour slices); folds next (Oct 23, 7:35 AM EDT)
 fix_subject: fix:ffcc9097
 fix: River · stream/cal-01 — runner-r86 failed for cal-01: Worked: the Box is building again. cp_box_findings built 6,217 (stalled since release 82) to 6,911, +287 since 05:13. No Netlify Blobs error (0 of 14 digests). The publish-now passes no longer exit 2 wholesale; each now ends with one failur
 

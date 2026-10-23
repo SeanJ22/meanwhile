@@ -1,5 +1,7 @@
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
+import { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
+export { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
 import { pathToFileURL } from "node:url";
 import { readFile } from "node:fs/promises";
 import { withRetainedSourceResponse } from "./lib/retained-source-replay.ts";
@@ -232,36 +234,6 @@ export class AgendaRedirectRefused extends Error {
 
 const AGENDA_REDIRECT_LIMIT = 5;
 
-export function readOncePerRun(base: typeof fetch): typeof fetch & { readonly distinctReads: () => number } {
-  type Held = { readonly status: number; readonly statusText: string; readonly headers: [string, string][]; readonly bytes: Uint8Array };
-  const reads = new Map<string, Promise<Held>>();
-  const wrapped = (async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url = String(input instanceof Request ? input.url : input);
-    let read = reads.get(url);
-    if (!read) {
-      read = (async () => {
-        const response = await base(input, init);
-        return {
-          status: response.status,
-          statusText: response.statusText,
-          headers: [...response.headers.entries()],
-          bytes: new Uint8Array(await response.arrayBuffer()),
-        };
-      })();
-      reads.set(url, read);
-    }
-    const held = await read;
-    const nullBody = held.status === 204 || held.status === 205 || held.status === 304;
-    return new Response(nullBody ? null : held.bytes.slice(), {
-      status: held.status,
-      statusText: held.statusText,
-      headers: held.headers,
-    });
-  }) as typeof fetch & { readonly distinctReads: () => number };
-  Object.defineProperty(wrapped, "distinctReads", { value: () => reads.size });
-  return wrapped;
-}
-
 export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
     const impl = base ?? globalThis.fetch;
@@ -446,97 +418,101 @@ export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocument
   const freshForMs = meetings.some(meeting => Math.abs(Date.parse(meeting.startsAt) - nowMs) <= clock.windowMs)
     ? clock.hotEveryMs : clock.baseEveryMs;
 
-  for (const meeting of ordered) {
-    try {
-      const url = documentUrlFor(meeting);
-      const saved = store.latestFor(meeting.id);
-      const savedAt = saved ? Date.parse(saved.retrievedAt) : Number.NaN;
-      const sourcePostedAt = meeting.postedAt ? Date.parse(meeting.postedAt) : Number.NaN;
-      if (saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
-        savedAt <= nowMs && nowMs - savedAt < freshForMs && !(sourcePostedAt > savedAt)) {
-        reusedFresh++;
-        readableMeetingIds.push(meeting.id);
-        continue;
-      }
-      const viaNoticePage = readThroughNoticePage(meeting);
-      if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
-        noticePagesRefused++;
-        continue;
-      }
-      let override = url && url !== meeting.agendaUrl ? url : null;
-      let fromPortal = false;
-      let fromVendor = false;
-      if (url !== null && readsThroughPortal(meeting, url)) {
-        let portalLink: string | null = null;
-        let portalFailure: string | null = null;
-        try {
-          portalLink = await portalAgendaLinkFor(meeting, fetchImpl, store);
-        } catch (error) {
-          portalFailure = error instanceof Error ? error.message : String(error);
+  try {
+    for (const meeting of ordered) {
+      try {
+        const url = documentUrlFor(meeting);
+        const saved = store.latestFor(meeting.id);
+        const savedAt = saved ? Date.parse(saved.retrievedAt) : Number.NaN;
+        const sourcePostedAt = meeting.postedAt ? Date.parse(meeting.postedAt) : Number.NaN;
+        if (saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
+          savedAt <= nowMs && nowMs - savedAt < freshForMs && !(sourcePostedAt > savedAt)) {
+          reusedFresh++;
+          readableMeetingIds.push(meeting.id);
+          continue;
         }
-        if (portalLink) {
-          override = portalLink;
-          fromPortal = true;
-        } else {
-          // The other public route to the same agenda: the vendor's own file.
-          fromVendor = true;
-          console.log(
-            `  agenda for ${meeting.id} read from the vendor's file: its portal detail page ` +
-              (portalFailure === null ? "links no agenda yet" : `could not be read (${portalFailure})`),
+        const viaNoticePage = readThroughNoticePage(meeting);
+        if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
+          noticePagesRefused++;
+          continue;
+        }
+        let override = url && url !== meeting.agendaUrl ? url : null;
+        let fromPortal = false;
+        let fromVendor = false;
+        if (url !== null && readsThroughPortal(meeting, url)) {
+          let portalLink: string | null = null;
+          let portalFailure: string | null = null;
+          try {
+            portalLink = await portalAgendaLinkFor(meeting, fetchImpl, store);
+          } catch (error) {
+            portalFailure = error instanceof Error ? error.message : String(error);
+          }
+          if (portalLink) {
+            override = portalLink;
+            fromPortal = true;
+          } else {
+            // The other public route to the same agenda: the vendor's own file.
+            fromVendor = true;
+            console.log(
+              `  agenda for ${meeting.id} read from the vendor's file: its portal detail page ` +
+                (portalFailure === null ? "links no agenda yet" : `could not be read (${portalFailure})`),
+            );
+          }
+        }
+        const doc = await retrieveAgendaDocument(
+          meeting,
+          override ? { fetchImpl, held: store, urlOverride: override } : { fetchImpl, held: store },
+        );
+        if (!doc) continue;
+        if (fromPortal) readViaPortal++;
+        if (fromVendor) readFromVendor++;
+        if (doc.extraction === "failed") {
+          failedExtractions++;
+          console.warn(
+            `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
           );
         }
-      }
-      const doc = await retrieveAgendaDocument(
-        meeting,
-        override ? { fetchImpl, held: store, urlOverride: override } : { fetchImpl, held: store },
-      );
-      if (!doc) continue;
-      if (fromPortal) readViaPortal++;
-      if (fromVendor) readFromVendor++;
-      if (doc.extraction === "failed") {
-        failedExtractions++;
-        console.warn(
-          `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
+
+        const alreadyOnAnotherMeeting = store.isUrlOnAnotherMeeting(
+          doc.documentUrl,
+          doc.meetingId,
         );
-      }
+        if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
+          landingPages++;
+          continue;
+        }
 
-      const alreadyOnAnotherMeeting = store.isUrlOnAnotherMeeting(
-        doc.documentUrl,
-        doc.meetingId,
-      );
-      if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
-        landingPages++;
-        continue;
-      }
+        if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
+          noticePagesRefused++;
+          if (url !== null) noticePageRefusedThisRun.add(url);
+          continue;
+        }
 
-      if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
-        noticePagesRefused++;
-        if (url !== null) noticePageRefusedThisRun.add(url);
-        continue;
-      }
+        if (doc.extraction === "failed" && store.latestFor(doc.meetingId)) {
+          failedOverHeld++;
+          continue;
+        }
 
-      if (doc.extraction === "failed" && store.latestFor(doc.meetingId)) {
-        failedOverHeld++;
-        continue;
-      }
+        if (doc.extraction !== "failed" && doc.text) readableMeetingIds.push(doc.meetingId);
 
-      if (doc.extraction !== "failed" && doc.text) readableMeetingIds.push(doc.meetingId);
-
-      const result = store.append(doc);
-      if (!result.stored) unchanged++;
-      else {
-        stored++;
-        if (result.revised) revised++;
+        const result = store.append(doc);
+        if (!result.stored) unchanged++;
+        else {
+          stored++;
+          if (result.revised) revised++;
+        }
+      } catch (error) {
+        if (error instanceof AgendaRedirectRefused) {
+          redirectsRefused++;
+          console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
+          continue;
+        }
+        failed++;
+        console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
       }
-    } catch (error) {
-      if (error instanceof AgendaRedirectRefused) {
-        redirectsRefused++;
-        console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
-        continue;
-      }
-      failed++;
-      console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
     }
+  } finally {
+    fetchImpl.close();
   }
 
   console.log(

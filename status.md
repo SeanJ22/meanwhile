@@ -1,11 +1,18 @@
 # River status
 
-build_state: PRODUCTION IS STILL SERVING RELEASE 82 (f44f9a1); RELEASES 83 AND 84 ARE IN MAIN BUT NOT DEPLOYED; RELEASE 85 (CAL-02) IN GATES AND HELD FROM MERGE UNTIL SEAN LOOKS AT NETLIFY
+build_state: PRODUCTION STILL SERVES RELEASE 82; RELEASES 83 AND 84 FAILED TO DEPLOY ON NETLIFY (function over 250 MB); HOLDING EVERYTHING FOR DS-01 STEP-1 READY
 worker: claude-river
 provider: Claude
 run_id: session_017bJhG9VbQvb1KubNxKCKjA
 lock: session_017bJhG9VbQvb1KubNxKCKjA
-heartbeat: 2026-10-23T01:58:00Z
+heartbeat: 2026-10-23T02:03:00Z
+
+## Cause found: releases 83 and 84 did not deploy (Oct 22, 7:03 PM Phoenix / 10:03 PM EDT)
+
+- Sean read the Netlify build log: both deploys failed at upload with "The function exceeds the maximum size of 250 MB: Failed to upload file: grounded-ask". Release 83 brought SL-02's territory-XX.geojson files, which took data/states from 23.6 MB to 52.4 MB. netlify.toml line 38 (grounded-ask) and line 43 (reader-meetings) pack data/states/*/geo/**/*.geojson into those functions. Release 84 failed the same way because it sits on top of 83. Publishing is not locked and deploy 6ada90f6 is not pinned.
+- Fix in flight: DS-01's step-1 READY keeps the territory files out of the function packages and out of data/derived/resolver-geometry.json. Until it lands River ships nothing (cal-01's CAL-02, gates stopped, waits behind it). Order: DS-01 step 1 first, alone or with cal-01; nothing ships without it.
+- New rule for each release from here: do not call it live until https://meanwhileusa.com/api/build reports the new merge commit. Only then the runner, Vice President (AZ, TX, OH, CA and two random states) and Legistar-name checks. The Vice President and Legistar board names (releases 83 and 84) are therefore not verified live.
+- The earlier line above ("What I cannot see: Netlify's deploy list") is answered by this; the post-deploy observer still passes without checking the served commit.
 
 ## Releases 83 and 84 are in main but not on the live site (Oct 22, 6:58 PM Phoenix / 9:58 PM EDT)
 

@@ -120,7 +120,7 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SCAN_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { groupCalendarReadsByState, stateCalendarEnvironment, stateCalendarMemberResults, type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
@@ -204,6 +204,8 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
 const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 const PASS_REPAIR_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
+/** Work after the readbacks ends this long before the deadline, so the pass's outcome is always saved. */
+const PASS_PERSIST_RESERVE_MS = 2 * 60_000;
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 
@@ -519,15 +521,17 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       (recordClass, scopes) => pointers.readPromotionIdentities(recordClass, scopes))
       .catch((error: unknown) => { console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`); return null; });
     const retryIds = PUBLISH_NOW ? await readPublishNowRetryIds(facts.query, startedAt) : [];
-    const items = await readWorkerPublicationItems(query, selected, since === null ? null
-      : { at: since, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) }, retryIds);
+    const { items, through } = await readWorkerPublicationItems(query, selected, since === null ? null
+      : { at: since, until: startedAt, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) },
+      retryIds, Date.now() + PUBLISH_NOW_SCAN_BUDGET_MS);
+    if (through !== null && through < startedAt) console.log(`RCD_PUBLISH_NOW_SCAN read changes through ${through}; the next pass reads on from there`);
     const heldInputs = shared === null ? null : await readHeldInputs(query, shared, items).catch((error: unknown) => {
       console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`);
       return null;
     });
     const owed = await readOwedFactItems(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
     const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
-    if (PUBLISH_NOW && ONLY === null) await savePublishNowProgress(facts, { startedAt, selectedItemIds: items.map(item => item.id),
+    if (PUBLISH_NOW && ONLY === null) await savePublishNowProgress(facts, { startedAt, scannedThrough: through ?? startedAt, selectedItemIds: items.map(item => item.id),
       owedItemIds: publishNowRetryItemIds(items, [...owed.rosters, ...owed.comments, ...publication.flatMap(task => task.ownerInvocation?.workItemIds ?? [])], heldInputs) });
     if (owed.rosters.length || owed.comments.length) try {
       const context = await workerPublicationContext(RUN_STARTED_AT, repos);
@@ -1605,11 +1609,14 @@ if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
 if (!PUBLISH_NOW && ONLY === null) {
   try {
     const sql = neon(process.env.DATABASE_URL!), query = (text: string, params: readonly unknown[]) => sql.query(text, [...params]);
-    const origins = await reconcileNationalStatePointers({ query, env: process.env });
+    // Doors and readbacks are done; this long tail gets what is left, less the time to save the pass.
+    const origins = await reconcileNationalStatePointers({ query, env: process.env, deadlineMs: PASS_DEADLINE_MS - PASS_PERSIST_RESERVE_MS });
     const retired = await retireNationalStatePointers(query, origins);
     if (retired) console.log(`RCD_STATE_BUCKETS retired=${retired}`);
   } catch (error) {
-    supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RETIREMENT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    if (/^PASS_TIME_BUDGET:/.test(detail)) console.log(`RCD_DEFER state-pointer-retirement: ${detail}`);
+    else supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RETIREMENT_FAILED", detail });
   }
 }
 for (const run of readerRuns) {

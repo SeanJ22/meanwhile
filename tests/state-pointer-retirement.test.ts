@@ -127,3 +127,38 @@ test("retirement uses canonical state replacements and atomically refuses a move
   changed = true;
   await assert.rejects(retireNationalStatePointers(query, origins), /ORIGIN_MOVED/);
 });
+
+test("retirement stops at the pass deadline: units it reconciled stay done, the rest wait for the next pass, nothing is a failure", async t => {
+  const directory = await mkdtemp(join(tmpdir(), "retirement-deadline-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const origins = ["US-NH:merrimack:2026-general", "US-AZ:2026-general:supported-ballot"].map((scope, index) => ({ key: `BALLOT_CANDIDACY:${scope}`, current_version_id: `${index ? "AZ" : "NH"}-v`,
+    promoted_at: "2026-10-15T12:00:00Z", normalized_hash: String(index).repeat(64) }));
+  const env: NodeJS.ProcessEnv = { NODE_ENV: "test", DATABASE_URL: "postgres://fixture/retirement", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) };
+  const slots = { async acquire() { return () => undefined; } };
+  const started: string[] = [];
+  let clock = 0;
+  const launch = async (command: { id: string; args: readonly string[] }) => {
+    started.push(command.id);
+    const prepare = command.args.find(arg => arg.startsWith("--prepare="))?.slice("--prepare=".length);
+    let stdout: string;
+    if (prepare) {
+      const units = origins.map((origin, index) => ({ family: "ballot-contests", state: index ? "AZ" : "NH", contractId: `ballot-contests:${index ? "AZ" : "NH"}`,
+        originVersionId: origin.current_version_id, inputFile: join(prepare, `${index}.json`), fileSha256: "c".repeat(64) }));
+      await writeFile(join(prepare, "manifest.json"), JSON.stringify({ units: [units[0], { ...units[1], contractId: units[0]!.contractId }], unassigned: [] }));
+      stdout = "STATE_RETIREMENT_PREPARED=" + JSON.stringify({ manifestPath: join(prepare, "manifest.json") });
+    } else {
+      stdout = 'STATE_RETIREMENT_UNIT={"family":"ballot-contests","state":"NH","status":"PUBLISHED"}';
+      clock = 2_000; // the first unit used up the pass's remaining time
+    }
+    return { id: command.id, status: 0, signal: null, termination: "EXITED" as const, errorMessage: null, stdout, stderr: "" };
+  };
+  const realNow = Date.now;
+  Date.now = () => 1_000_000 + clock;
+  t.after(() => { Date.now = realNow; });
+  await assert.rejects(reconcileNationalStatePointers({ query: async () => origins, env, slots, launch, deadlineMs: 1_001_000 }), /^Error: PASS_TIME_BUDGET:/);
+  assert.deepEqual(started, ["state-retirement:prepare", "ballot-contests:NH:retirement:NH-v"], "the second unit for the state waits for the next pass");
+
+  started.length = 0; clock = 0;
+  await assert.rejects(reconcileNationalStatePointers({ query: async () => origins, env, slots, launch, deadlineMs: 999_000 }), /^Error: PASS_TIME_BUDGET:/);
+  assert.deepEqual(started, [], "past the deadline nothing starts");
+});

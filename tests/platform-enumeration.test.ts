@@ -3,7 +3,7 @@ import test from "node:test";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { csvFileRecords, heldPlatformTenants, matchPlatformGovernment } from "../lib/control-plane/discovery/platform-enumeration.ts";
+import { csvFileRecords, heldPlatformTenants, matchPlatformGovernment, samePlatformTenant } from "../lib/control-plane/discovery/platform-enumeration.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { legistarClientCatalog, dotgovPlatformTenants, dotgovTenantForGovernment } from "../lib/control-plane/discovery/platform-catalog.ts";
 
@@ -22,7 +22,7 @@ test("catalogue names select exact state governments without crossing county or 
   const city = government("or:city:city-of-example", "City of Example");
   const county = government("or:county:county-of-example", "County of Example", "COUNTY");
   const tenant = { platform: "civicplus", url: "https://directory.example/AgendaCenter", name: "Example", state: "OR", source: "catalogue" };
-  assert.deepEqual(matchPlatformGovernment(tenant, [city, county]), { kind: "MATCHED", government: city, basis: "DIRECTORY_NAME" });
+  assert.deepEqual(matchPlatformGovernment(tenant, [city, county]), { kind: "CANDIDATE", government: city, basis: "DIRECTORY_NAME" });
   assert.equal(matchPlatformGovernment({ ...tenant, state: "WA" }, [city]).kind, "UNRESOLVED");
   assert.equal(matchPlatformGovernment(tenant, [city, { ...city, jurisdictionId: "or:city:another-example" }]).kind, "AMBIGUOUS");
   assert.equal(matchPlatformGovernment({ ...tenant, name: null, state: null }, [city]).kind, "UNRESOLVED");
@@ -47,4 +47,13 @@ test("a government's missing website is filled from its exact state and CISA ide
   assert.equal(dotgovTenantForGovernment(csv, "cisa-version", need)?.url, "https://example.gov/");
   assert.equal(dotgovTenantForGovernment(csv + "ambiguous.gov,City of Example,OR\n", "cisa-version", need), undefined);
   assert.equal(dotgovTenantForGovernment(csv, "cisa-version", { ...need, ownWebAddress: "https://recorded.gov/" }), undefined);
+});
+
+test("shared vendor hosts keep the exact published tenant", () => {
+  assert.equal(samePlatformTenant("https://go.boarddocs.com/az/vail/Board.nsf/Public", "https://go.boarddocs.com/az/other/Board.nsf/Public"), false);
+  assert.equal(samePlatformTenant("https://meetings.boardbook.org/Public/Organization/2065", "https://meetings.boardbook.org/Public/Organization/999"), false);
+  assert.equal(samePlatformTenant("https://ca-ventura.civicplus.com/AgendaCenter", "https://ca-russianriver.civicplus.com/AgendaCenter"), false);
+  assert.equal(samePlatformTenant("https://metro.legistar.com/Calendar.aspx", "https://oregonmetro.legistar.com/Calendar.aspx"), false);
+  assert.equal(samePlatformTenant("https://pub-capecoral.escribemeetings.com/", "https://pub-leecounty.escribemeetings.com/"), false);
+  assert.equal(samePlatformTenant("https://go.boarddocs.com/az/vail/Board.nsf", "https://go.boarddocs.com/az/vail/Board.nsf/Public"), true);
 });

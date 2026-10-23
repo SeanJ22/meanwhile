@@ -92,9 +92,11 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
 
 async function publishRosterFields(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: RosterFactsInput, clocks: Clocks, now: Date): Promise<RosterFactsReport> {
-  const { body, capture } = input;
-  await ensureEntity(db.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: body.state, parentId: body.parentId });
-  const bodyEntity = (await readCheckEntity(db.query, body.id))!;
+  const { capture } = input;
+  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId });
+  const [held] = bodyId !== input.body.id ? await db.query("SELECT name, state, parent_id FROM entity WHERE id = $1", [bodyId]) : [];
+  const body = held ? { id: bodyId, name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null } : input.body;
+  const bodyEntity = (await readCheckEntity(db.query, bodyId))!;
   const copy = await rosterCopy(db, capture);
   const provenance = captureProvenance(capture, bodyEntity.hosts);
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0, departed: 0, people: new Map<string, string>(), outcomes: new Map<string, Map<string, PublishOutcome>>() };
@@ -122,6 +124,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     }
     const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
       externalIds: [...(member.externalIds ?? []), ["roster-name:" + body.id, nameKey(name)],
+        ...(body.id !== input.body.id ? [["roster-name:" + input.body.id, nameKey(name)] as const] : []),
         ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] });
     seated.add(personId);
     tally.people.set(member.recordId, personId);

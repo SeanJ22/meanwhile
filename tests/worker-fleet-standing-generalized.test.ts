@@ -121,7 +121,9 @@ async function harness(t: TestContext) {
     const held = await repos.workItems.mustRead(owner.id);
     return (await repos.workItems.compareAndSet(owner.id, held.revision, { ...held.value, autonomousPlan: plan(value) }, now())).value;
   }
-  const runtime = standingFleetRuntime({ root: ROOT, method: METHOD, vaultRoot, repos, now });
+  const runtime = Object.assign(standingFleetRuntime({ root: ROOT, method: METHOD, vaultRoot, repos, now }), { diggerReads: {
+    sourceChanges: async () => ({ through: now() }), pendingTaskIds: async () => [],
+  } });
   return { repos, item, hold, setPlan, runtime, now };
 }
 

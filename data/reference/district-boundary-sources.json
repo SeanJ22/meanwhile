@@ -2840,6 +2840,9 @@
    "kindField": null,
    "kindValues": null,
    "where": null,
+   "excludeNames": [
+    "Washoe Rural"
+   ],
    "unmatched": "list"
   },
   {
@@ -2851,7 +2854,7 @@
    ],
    "title": "Washoe County Fire Protection Districts",
    "publisher": "Washoe County GIS",
-   "officialPage": null,
+   "officialPage": "https://tmfpd.us/wp-content/uploads/2025/10/Fire-Station-Map-2025.pdf",
    "format": "arcgis",
    "url": "https://wcgisweb.washoecounty.us/arcgis/rest/services/OpenData/OpenData/FeatureServer/126",
    "nameField": "District",

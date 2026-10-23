@@ -71,6 +71,22 @@ export function CaptureHealthPanel() {
             </div>
           )}
 
+          <h3 className={s.h3}>Candidate selections</h3>
+          {v.candidatePicks.kind !== "READ" ? <Unread /> : (
+            <>
+              <p className={s.p}>{n(v.candidatePicks.rows.reduce((sum, row) => sum + row.value, 0))} recorded selections in these {v.days.length} days.</p>
+              <details>
+                <summary>Technical details</summary>
+                <div className={s.tableWrap}><table className={s.table}>
+                  <thead><tr><th>Day</th><th>Race</th><th>Candidate</th><th>ZIP</th><th>District</th><th>Selections</th></tr></thead>
+                  <tbody>{v.candidatePicks.rows.map(row => <tr key={JSON.stringify([row.period, row.race, row.candidate, row.zip, row.district])}>
+                    <td>{row.period}</td><td>{row.race}</td><td>{row.candidate}</td><td>{row.zip ?? "—"}</td><td>{row.district ?? "—"}</td><td className={s.num}>{n(row.value)}</td>
+                  </tr>)}</tbody>
+                </table></div>
+              </details>
+            </>
+          )}
+
           <h3 className={s.h3}>Did anything fail to record?</h3>
           {v.failures.kind === "UNAVAILABLE" ? <Empty>—</Empty> : (
             <div className={s.stack} style={{ gap: 6 }}>

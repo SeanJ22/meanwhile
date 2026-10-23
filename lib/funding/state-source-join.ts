@@ -67,7 +67,8 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
           const selected = cover ? { ...Object.fromEntries([...new Set([...lookup.keys, ...lookup.fields])].map(field => [field, values[field]])),
             ...(malformed ? { __sourceRowIssue: values.__sourceRowIssue } : {}) } : values;
           const key = rowKey(values, cover ? lookup.keys : lookup.filingKeys ?? lookup.keys) ?? `unjoined:${cover ? "cover" : "filing"}`;
-          await (cover ? right : left).write(`${key}\t${JSON.stringify(selected)}\n`);
+          const encoded = JSON.stringify(selected).replaceAll("\u2028", "\\u2028").replaceAll("\u2029", "\\u2029");
+          await (cover ? right : left).write(`${key}\t${encoded}\n`);
         }
       }
     } finally { await left.close(); await right.close(); }

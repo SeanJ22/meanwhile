@@ -1,20 +1,20 @@
-import type { Officeholder } from "../../officials/types.ts";
 import { personIdentityKeys } from "../../officials/people-identity.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import type { Provenance } from "../types.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
+import { legiscanIdentityJoins,type LegiscanIdentityHolder } from "./dataset.ts";
 
 export const LEGISCAN_BULK_CONTRACT = "legiscan-bulk";
 export const LEGISCAN_BULK_SCOPE = "US:legiscan-datasets";
 export const LEGISCAN_BULK_PARSER = "legiscan-bulk/2";
 export const LEGISCAN_API = "https://api.legiscan.com/";
 /** LegiScan state_id is its own identifier space, never Census FIPS. */
-const LEGISCAN_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY US".split(" ");
+const LEGISCAN_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC US".split(" ");
 export interface Dataset {
   state_id: number; session_id: number; session_name: string; dataset_hash: string; dataset_date: string;
   access_key?: string;
 }
-export type HeldPerson = Pick<Officeholder,"id"|"personId"|"nativeIds">;
+export type HeldPerson = LegiscanIdentityHolder;
 interface BillSponsor {
   peopleId: number; name: string; committee: boolean; nativeIds: Record<string,string[]>;
   officeholderId: string | null; joinReason: string | null;
@@ -83,9 +83,13 @@ function normalizeBill(value:unknown, dataset:Dataset, capturedAt:string, people
   const status=Number(raw.status);
   if(!Number.isSafeInteger(status)||status<0) throw Error("LEGISCAN_STATUS_INVALID");
   if(!Array.isArray(raw.sponsors)||!Array.isArray(raw.texts)) throw Error("LEGISCAN_BILL_ARRAY_REQUIRED");
-  const sponsors=raw.sponsors.map(value=>{
-    const row=object(value), peopleId=positive(row.people_id);
+  const sourceSponsors=raw.sponsors.map(object);
+  const identityJoins=new Map(legiscanIdentityJoins(people,sourceSponsors).map(row=>[row.legiscanPeopleId,row.personId]));
+  const sponsors=sourceSponsors.map(row=>{
+    const peopleId=positive(row.people_id);
     const nativeIds:Record<string,string[]>={legiscan:[String(peopleId)]};
+    const personId=identityJoins.get(peopleId);
+    if(personId) nativeIds["ocd-person"]=[personId];
     for(const [field,source] of [["bioguide_id","congress"],["openstates_id","openstates"],["votesmart_id","votesmart"]]) {
       const id=row[field]; if((typeof id==="string"||typeof id==="number")&&String(id)!=="0"&&String(id)) nativeIds[source]=[String(id)];
     }

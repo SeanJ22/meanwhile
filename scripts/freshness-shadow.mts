@@ -36,6 +36,7 @@ import { researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/resea
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
+import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, type HeldDiggerWorkItem } from "../lib/control-plane/workers/held-digger-priority.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
 import { soleWriter } from "../lib/control-plane/repository/shared.ts";
@@ -2203,7 +2204,7 @@ async function runAutonomousWave() {
 
   const legacyRepos = await legacyArtifactActivityRepositories(repos, artifact => heldEventContract(ROOT, artifact) !== null,
     () => readLegacyActivityCaptures(PLANNING_STATE, undefined, HELD_EVENT_URL_PREFIXES));
-  const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : null;
+  const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : fleet;
   const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
   const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && (item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject)),
@@ -2216,7 +2217,13 @@ async function runAutonomousWave() {
   const taskIds = [...new Set([...held.map(task => task.id),
     ...plannedTasks.map(task => task.id)])];
   const taskWorkIds = new Map([...held, ...plannedTasks].map(task => [task.id, task.workItemId]));
-  const metadata = new Map(taskIds.map(id => [id, workItemsById.get(taskWorkIds.get(id)!)]));
+  const metadata = new Map<string, HeldDiggerWorkItem | undefined>(taskIds.map(id => [id, workItemsById.get(taskWorkIds.get(id)!)]));
+  const heldDiggerTasks = [...held, ...plannedTasks]
+    .filter(task => ["HELD_MEETING_DETAILS", "HELD_SUBJECT_DETAILS"].includes(task.workerTask?.contract.recordClass ?? ""));
+  // Deterministic held items are absent from the autonomous coordinator's selections.
+  const heldDiggerItems = await readHeldDiggerWorkItems({ repos, workItemIds: heldDiggerTasks.map(task => task.workItemId) });
+  for (const task of heldDiggerTasks) metadata.set(task.id, heldDiggerItems.get(task.workItemId));
+  const diggerPriorities = await readHeldDiggerPriorities({ repos, items: [...heldDiggerItems.values()] });
   workItemsById.clear();
   const plainTaskIds = new Set([...held.filter(task => !["SCOUT", "DETECTIVE"].includes(task.workerTask?.role ?? "")).map(task => task.id),
     ...planned.decisions.filter(row => row.task && row.action === "WORKER" &&
@@ -2238,24 +2245,28 @@ async function runAutonomousWave() {
   };
 
   const readTaskQueue = () => {
+    const diggerOrder = (id: string) => heldDiggerNamedOrder(diggerPriorities.get(metadata.get(id)?.id ?? ""), {
+      placeOrder, activeDispatches: dispatchTargets.filter(target => target.kind === "DISPATCH"), dispatchPriority,
+    });
     const rank = (id: string): number => {
       const item = metadata.get(id);
       if (!item) return Infinity;
       const own = item.autonomousPlan?.ownerInstructions?.map(receipt => placeOrder.indexOf(receipt)).filter(at => at >= 0) ?? [];
-      return Math.min(placeRankFor(item.subject) ?? Infinity, ...own);
+      return Math.min(placeRankFor(item.subject) ?? Infinity, ...own, diggerOrder(id).rank);
     };
     const compareRound = huntRoundComparator(taskIds, id => {
       const at = rank(id);
-      return placeOrder[at] ?? metadata.get(id)?.autonomousPlan?.ownerInstructions?.[0] ?? null;
+      return placeOrder[at] ?? diggerOrder(id).receiptId ?? metadata.get(id)?.autonomousPlan?.ownerInstructions?.[0] ?? null;
     });
-    return { rank, compareRound };
+    const compare = (a: string, b: string) => compareNamedBeforeBackground(rank(a), rank(b)) || compareRound(a, b) || rank(a) - rank(b) ||
+      (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER);
+    return { rank, compareRound, compare };
   };
   let taskQueue: ReturnType<typeof readTaskQueue> | null = null;
   if (CONTINUOUS_HUNTERS) {
 
     const queue = taskQueue ??= readTaskQueue();
-    const ordered = taskIds.filter(id => !failedTaskIds.has(id)).sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
-      (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
+    const ordered = taskIds.filter(id => !failedTaskIds.has(id)).sort(queue.compare);
     if (!dry && !canary) {
       try {
         writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)), { writtenAt: nowIso(), taskIds: ordered, plainTaskIds: ordered.filter(id => plainTaskIds.has(id)) });
@@ -2289,8 +2300,7 @@ async function runAutonomousWave() {
       }));
       return ids.filter((id, index) => !failedTaskIds.has(id) &&
         (paidOpen || !["SCOUT", "DETECTIVE"].includes(tasks[index]?.value.workerTask?.role ?? "")))
-        .sort((a, b) => queue.compareRound(a, b) || queue.rank(a) - queue.rank(b) ||
-          (plannedOrder.get(a) ?? Number.MAX_SAFE_INTEGER) - (plannedOrder.get(b) ?? Number.MAX_SAFE_INTEGER));
+        .sort(queue.compare);
     },
     onDispatched: result => {
       placeOrderDirty = true;

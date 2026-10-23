@@ -7,7 +7,7 @@ import type { BudgetScope } from "../control-plane/expansion/membership.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 import type { WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
-import type { ProbeFetch } from "../doors/probe.ts";
+import { PROBE_URL_KEYS, type ProbeFetch } from "../doors/probe.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { detectTenancy } from "../hunt/platform-tenancy.ts";
 import type { FixMapRow } from "./fix-map.ts";
@@ -100,7 +100,9 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
   const methods = working.length === 0 ? [] : (await repos.fieldManual.readMany([...workedIn.keys()])).map((row) => row.value).filter((entry: FieldManualEntry) => isTransferableMethod(entry));
   const empty: SpreadPassResult = { methods: 0, perMethod: [], tried: { works: 0, fails: 0, undecided: 0 }, waiting: 0, paid: 0, paidSkipped: 0, robots: {}, requests: 0, writeError: null };
   if (methods.length === 0) return empty;
-  const doors = (await repos.doors.list()).map((row) => row.value);
+  const doors = (await repos.doors.listWhereNarrowed(["status"], "OPEN", {
+    doorId: true, kind: true, ocdId: true, hosts: true, status: true, config: PROBE_URL_KEYS,
+  })).map(row => row.value as DoorRecord);
   const doorById = new Map<string, DoorRecord>(doors.map((door) => [door.doorId, door] as const));
   const platformOf = new Map(doors.map((door) => [door.doorId, platformsOf(door)] as const));
   const perMethod: SpreadMethodReport[] = [];

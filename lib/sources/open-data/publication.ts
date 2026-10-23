@@ -48,7 +48,7 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
       inputRecords:records,outputRecords:records,droppedRecords:0,missingRequiredFields:bound?[]:["exact captured source row"]},
     identities:input.rows.length ? input.rows.map(row=>({subjectId:row.id,jurisdiction:row.state?`US-${row.state}`:"US",identifiers:{record_id:row.id,...row.nativeIds},matchBasis:"EXACT_SCOPED_ID" as const,ambiguous:false})) :
       [{subjectId:scope,jurisdiction:"US",identifiers:{record_id:scope},matchBasis:"EXACT_SCOPED_ID",ambiguous:false}],
-    temporal:{version:normalizedHash,expectedVersion:normalizedHash,sourceThrough:last?.retrievedAt ?? input.now,staleAtRetrieval:false},
+    temporal:{version:last?.retrievedAt ?? input.now,expectedVersion:last?.retrievedAt ?? input.now,sourceThrough:last?.retrievedAt ?? input.now,staleAtRetrieval:false},
     semantics:{factKind:"Native catalog and regulated-facility facts with source dates and unresolved joins retained",violations:[]},
     horizon:{kind:"OPEN_FACT_SET",query:scope,returnedRecords:records,declaredTotal:null,paginationComplete:false,claimsComplete:false},
     absence:{claimsAbsence:false,basis:"NONE",exactSubject:null,exactHorizon:null},sourceProjectionEvidence:sourceProjectionEvidence(input.source,"CURATED_READER_RECORD",scope),

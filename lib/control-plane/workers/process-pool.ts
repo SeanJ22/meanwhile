@@ -4,6 +4,7 @@ import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { readFieldManualRows, type FieldManualQuery, type FieldManualRepos } from "../field-manual.ts";
+import { readMethodKnowledgeRows } from "../../method/manual-bridge.ts";
 import type { FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
@@ -27,6 +28,7 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos; bro
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
       const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
+        : message.kind === "methodKnowledge" ? await readMethodKnowledgeRows(input.repos)
         : message.kind === "manualSources" ? await (()=>{
           const {scope,url}=message.body as {scope:FieldManualSourceScope;url:string};
           return input.repos.fieldManual.sourceHints(scope,url);

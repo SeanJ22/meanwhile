@@ -53,7 +53,7 @@ export async function importCartonRosters(input: ImportSlice & {
   for await (const roster of cartonRows(input, `${CARTON_ROSTERS}:${input.state}`, input.rosters, progress)) {
     const state = /\/state:([a-z]{2})/.exec(roster.bodyId)?.[1]?.toUpperCase() ?? null;
     const parentId = /^(ocd-division\/[^#]+)#/.exec(roster.bodyId)?.[1] ?? null;
-    await ensureEntity(input.facts.query, { id: roster.bodyId, kind: "body", name: roster.bodyName, state, parentId });
+    const bodyId = await ensureEntity(input.facts.query, { id: roster.bodyId, kind: "body", name: roster.bodyName, state, parentId });
     const byUrl = new Map<string, BodyRoster["members"]>();
     for (const member of roster.members) {
       const url = member.membershipSource?.sourceUrl ?? roster.sourceUrl;
@@ -64,7 +64,7 @@ export async function importCartonRosters(input: ImportSlice & {
       if ("error" in read) {
         report.unreadable.push({ url, reason: read.error });
         for (const member of members) {
-          await openBlank(input.facts.query, { entityId: roster.bodyId, field: `member-row:${member.id}`, stage: "ACQUIRE", reason: "SOURCE_BLOCKED",
+          await openBlank(input.facts.query, { entityId: bodyId, field: `member-row:${member.id}`, stage: "ACQUIRE", reason: "SOURCE_BLOCKED",
             detail: `${url}: ${read.error}`, retryMinutes: input.clocks.retryMinutes("officeholder") });
         }
         continue;
@@ -133,8 +133,8 @@ export async function importCartonComments(input: ImportSlice & {
     const read = await receiptCapture({ url: record.sourceUrl, repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now, windowHours: input.clocks.windowHours("comment_rule") });
     if ("error" in read) {
       report.unreadable.push({ url: record.sourceUrl, reason: read.error });
-      await ensureEntity(input.facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state, parentId: body.parentId });
-      await openBlank(input.facts.query, { entityId: record.bodyId, field: "comment:period", stage: "ACQUIRE", reason: "SOURCE_BLOCKED",
+      const bodyId = await ensureEntity(input.facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state, parentId: body.parentId });
+      await openBlank(input.facts.query, { entityId: bodyId, field: "comment:period", stage: "ACQUIRE", reason: "SOURCE_BLOCKED",
         detail: `${record.sourceUrl}: ${read.error}`, retryMinutes: input.clocks.retryMinutes("comment_rule") });
       continue;
     }
@@ -178,9 +178,9 @@ export async function importCartonOffices(input: ImportSlice & {
     const read = await receiptCapture({ url, repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now, windowHours: input.clocks.windowHours("contact") });
     if ("error" in read) {
       report.unreadable.push({ url, reason: read.error });
-      await ensureEntity(input.facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/state:([a-z]{2})/.exec(body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId });
+      const bodyId = await ensureEntity(input.facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/state:([a-z]{2})/.exec(body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId });
       for (const field of [body.officeAddress ? "office_address" : null, body.officePhone ? "office_phone" : null].filter((f): f is string => f !== null)) {
-        await openBlank(input.facts.query, { entityId: body.id, field, stage: "ACQUIRE", reason: "SOURCE_BLOCKED", detail: `${url}: ${read.error}`,
+        await openBlank(input.facts.query, { entityId: bodyId, field, stage: "ACQUIRE", reason: "SOURCE_BLOCKED", detail: `${url}: ${read.error}`,
           retryMinutes: input.clocks.retryMinutes("contact") });
         report.blanks++;
       }

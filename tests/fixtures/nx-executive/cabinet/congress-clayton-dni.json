@@ -1,0 +1,42 @@
+{
+    "nomination": {
+        "actions": {
+            "count": 13,
+            "url": "https://api.congress.gov/v3/nomination/119/1092/actions?format=json"
+        },
+        "authorityDate": "2026-07-28",
+        "citation": "PN1092",
+        "committees": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/1092/committees?format=json"
+        },
+        "congress": 119,
+        "description": "Walter Clayton, of New York, to be Director of National Intelligence, vice Tulsi Gabbard.",
+        "latestAction": {
+            "actionDate": "2026-07-28",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 51 - 47. Record Vote Number: 211."
+        },
+        "nominationType": {
+            "isCivilian": true
+        },
+        "nominees": [
+            {
+                "nomineeCount": 1,
+                "ordinal": 1,
+                "organization": "Office of the Director of National Intelligence",
+                "positionTitle": "Director of National Intelligence",
+                "url": "https://api.congress.gov/v3/nomination/119/1092/1?format=json"
+            }
+        ],
+        "number": 1092,
+        "partNumber": "00",
+        "receivedDate": "2026-06-11",
+        "updateDate": "2026-07-29T11:00:24Z"
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "number": "1092"
+    }
+}

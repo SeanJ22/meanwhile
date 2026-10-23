@@ -25,7 +25,8 @@ export function readOncePerRun(base: typeof fetch): ReadOnceFetch {
       const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new (path: string) => ByteSpool };
       const db = new DatabaseSync(":memory:");
       db.exec("PRAGMA temp_store=FILE; PRAGMA temp.cache_size=-8192; CREATE TEMP TABLE agenda_bytes(url TEXT PRIMARY KEY, bytes BLOB NOT NULL)");
-      spool = { db, insert: db.prepare("INSERT INTO agenda_bytes(url,bytes) VALUES(?,?)"), read: db.prepare("SELECT bytes FROM agenda_bytes WHERE url=?") };
+      // Node SQLite versions that bind an empty view as NULL still need an exact zero-byte BLOB.
+      spool = { db, insert: db.prepare("INSERT INTO agenda_bytes(url,bytes) VALUES(?,coalesce(?,zeroblob(0)))"), read: db.prepare("SELECT bytes FROM agenda_bytes WHERE url=?") };
     }
     return spool;
   };

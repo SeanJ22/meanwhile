@@ -27,14 +27,22 @@ test("no-content responses and failed requests remain exact read-once outcomes",
   const read = readOncePerRun(async input => {
     calls++;
     if (String(input).endsWith("failed")) throw new Error("publisher unavailable");
-    return new Response(null, { status: 204 });
+    return new Response(null, { status: Number(String(input).split("/").at(-1)), headers: { etag: "empty" } });
   });
   try {
-    assert.equal((await read("https://agenda.example/empty")).status, 204);
-    assert.equal((await read("https://agenda.example/empty")).body, null);
+    for (const status of [200, 204, 205, 304]) {
+      const url = `https://agenda.example/${status}`;
+      for (const response of [await read(url), await read(url)]) {
+        assert.equal(response.status, status);
+        assert.equal(response.headers.get("etag"), "empty");
+        if (status === 200) assert.notEqual(response.body, null);
+        else assert.equal(response.body, null);
+        assert.equal((await response.arrayBuffer()).byteLength, 0);
+      }
+    }
     await assert.rejects(read("https://agenda.example/failed"), /publisher unavailable/);
     await assert.rejects(read("https://agenda.example/failed"), /publisher unavailable/);
-    assert.equal(calls, 2);
+    assert.equal(calls, 5);
   } finally { read.close(); }
 });
 

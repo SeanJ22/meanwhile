@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 89 LIVE (/api/build 1e353d4 from 8:37 AM EDT); SP-01 RETURNED; RELEASE 90 CANDIDATE (7 lanes) RE-RUNNING GATES on river-next 1885b95f4 after two PK-01 fold fixes
+build_state: RELEASE 90 (CAL-01-FX, PB-03, PK-01, SRC-01, NX-02-FX, NB-02, DG-02) PR #800 OPEN, run-full-ci + auto-merge; river 5130d339c (tested 1885b95f4, gates 9 of 9, 9,545 pass; main merged after gates, tree identical); production release 89 (/api/build 1e353d4)
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS

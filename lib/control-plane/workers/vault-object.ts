@@ -1,6 +1,7 @@
 import { artifactId as deriveArtifactId, type Artifact } from "../evidence/artifact.ts";
 import { readArtifact, type EvidenceStore } from "../evidence/store.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
+import { artifactRecords } from "./vault.ts";
 
 /** Resolve first-observation metadata, including partial acquisitions, without any retrieval. */
 export function researchVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string, options: { readonly snapshot?: boolean } = {}) {
@@ -8,7 +9,7 @@ export function researchVaultResolver(repos: ControlPlaneRepositories, store: Ev
   let snapshotKeys: Promise<string[]> | undefined;
   const resolved = new Map<string, Promise<{ artifact: Artifact; key: string; bytes: Uint8Array }>>();
   const resolve = async (id: string): Promise<{artifact: Artifact; key: string; bytes: Uint8Array}> => {
-    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
+    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await artifactRecords(repos, id);
     const records = all.filter(a => a.artifactId === id);
     if (!records.length) throw new Error("RESEARCH_ARTIFACT_METADATA_MISSING");
     const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);

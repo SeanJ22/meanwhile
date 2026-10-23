@@ -17,7 +17,7 @@ PK-01 first restore, Sean's 13 states (after SP-01 and PK-01 live): all under 3 
 
 PB-03: named places pass on the live answer: 99559 Main Governing Board under Lower Kuskokwim School District (2 members); 85641 one Vail Governing Board (6 members); 35801 City Council under Huntsville city (2 members), no "Huntsville city governing" label. 36602 shows "Board of Commissioners" under Mobile city (0 members). Oregon FAILS: 97204, 97301, 97401, 97701 all 0 boards (PB-03's table: 79 held, 0 shown); returned (returns/pb-03.md).
 
-Still to run on release 90 (need the runner to follow a462d38 and complete a pass): CAL-01-FX (no ROUTINE_CHILD_TIMED_OUT; publish-now cursor past 2026-10-13T22:24:35Z; calendar doors moving in AZ, NH, NJ and 10+ states), SRC-01 (a new PROMOTED candidate per source on its next scheduled run; a CT card's money reason; SAM after 8 PM EDT), DG-02 (outcomes by state), NB-02 (cp_vital_signs bytes vs 4,707,316,127 at 07:00 UTC).
+Runner baseline at 10:45 AM EDT (cp_vital_signs, pass_cursor): the runner still reports release 1e353d4 (release 89) in the 14:00 UTC hour; rounds_finished is 0 in every hour from 05:00 to 14:00 UTC; the publish-now cursor is still 2026-10-13T22:24:35.734Z. Re-check at 11:45 AM EDT. Still to run on release 90 (need the runner to follow a462d38 and complete a pass): CAL-01-FX (no ROUTINE_CHILD_TIMED_OUT; publish-now cursor past 2026-10-13T22:24:35Z; calendar doors moving in AZ, NH, NJ and 10+ states), SRC-01 (a new PROMOTED candidate per source on its next scheduled run; a CT card's money reason; SAM after 8 PM EDT), DG-02 (outcomes by state), NB-02 (cp_vital_signs bytes vs 4,707,316,127 at 07:00 UTC).
 
 ## Release 89 live checks (Oct 23, 8:37 to 9:05 AM EDT)
 

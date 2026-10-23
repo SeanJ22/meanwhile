@@ -1632,7 +1632,7 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /reconcileRoutineReaderRepairDomain/);
   assert.doesNotMatch(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
   assert.match(runner, /writeContractHandoff\(domain\.contracts\)/);
-  assert.match(runner, /writeContractHandoff\(domain\.contracts\.map/);
+  assert.match(runner, /writeContractHandoff\(readerRepairContractHandoff\(domain\.contracts\)\)/);
   assert.doesNotMatch(runner, /`--contracts=\$\{/);
   assert.match(child, /repairRoutineReaderProjectionReadbacks\(store, selected/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
@@ -2345,6 +2345,15 @@ test("two successful publications settle independently after the canonical point
     /not backed by the candidate's durable/);
   assert.match(await durableRoutineRunnerReceiptIssue(receipt, { ...task, sourceId: "another-source" }, store, "SUCCESS") ?? "",
     /does not match the registered task identity/);
+});
+
+test("a publisher gap expiring between dispatch and its wake check is still runnable", async (t) => {
+  let tick = 0;
+  t.mock.method(Date, "now", () => ++tick);
+  const result = await runBoundedChildPass(["first", "next"].map(id => ({ id, failureDomain: "one-publisher", executable: "ignored", args: [] })),
+    { cwd: process.cwd(), env: process.env, sameDomainGapMs: 2 }, async command => ({ id: command.id, status: 0,
+      signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null }));
+  assert.deepEqual(result.map(row => row.id), ["first", "next"]);
 });
 
 test("C6: two reads of one host in one pass start at least the gap apart; other hosts do not wait, and the outer bound counts the gap", async () => {

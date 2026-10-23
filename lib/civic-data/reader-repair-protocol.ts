@@ -10,7 +10,9 @@ import {
 import type { ReaderReadbackRepairOutcome } from "./reader-verification.ts";
 import type { RoutineCivicDataReaderReadbackReference } from "../control-plane/owner-surface.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
-import { OUTCOME_PARTITION_CONTRACTS } from "./outcome-partitions.ts";
+import { DOOR_OUTCOMES_SOURCE_ID, DOOR_MINUTES_OUTCOMES_SOURCE_ID, OUTCOME_PARTITION_CONTRACTS, outcomePartitionId,
+  type OutcomePartitionContract } from "./outcome-partitions.ts";
+import { outcomePartitionScope, setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
 
 export const ROUTINE_READER_REPAIR_PREFIX = "RCD_READER_REPAIR=";
 export const ROUTINE_READER_CHILD_CONCURRENCY = 4;
@@ -21,6 +23,31 @@ export const ROUTINE_READER_MEETING_BATCH_SIZE = 256;
 export const ROUTINE_READER_CONTRACT_BATCH_SIZE = 32;
 
 export type ReaderRepairContract = RoutineSourceContract | ManualProductionSourceContract;
+
+/** Dynamic outcome contracts must travel with the pass that selected them, just like calendar partitions. */
+export function readerRepairContractHandoff(contracts: readonly ReaderRepairContract[]): readonly (string | OutcomePartitionContract)[] {
+  const outcomes = new Map(OUTCOME_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
+  return contracts.map(contract => outcomes.get(contract.id) ?? contract.id);
+}
+
+export function installOutcomeRepairSelection(contracts: readonly OutcomePartitionContract[]): void {
+  const ids = new Set<string>(), scopes = new Set<string>();
+  for (const contract of contracts) {
+    const identity = contract && typeof contract.doorId === "string" ? meetingPartitionOfId(contract.doorId) : null;
+    const source = contract?.kind === "legistar" ? DOOR_OUTCOMES_SOURCE_ID : contract?.kind === "legistar-insite" ? DOOR_MINUTES_OUTCOMES_SOURCE_ID : null;
+    if (!identity || source === null || identity.source !== contract.kind || identity.bodyId !== contract.bodyId ||
+        contract.id !== outcomePartitionId(contract.doorId) || contract.scope !== outcomePartitionScope(contract.doorId) ||
+        contract.recordClass !== "MEETING_OUTCOME" || contract.sourceId !== source ||
+        contract.wiring?.bodyId !== contract.bodyId || contract.tenant?.contractId !== contract.id ||
+        contract.tenant.scope !== contract.scope || contract.tenant.sourceId !== source || contract.tenant.recordClass !== "MEETING_OUTCOME" ||
+        !/^[a-z0-9-]+$/.test(contract.tenant.slug) || contract.readerProjection?.id !== `door-outcomes:${contract.doorId}` ||
+        ids.has(contract.id) || scopes.has(contract.scope)) throw new Error("READER_REPAIR_OUTCOME_SELECTION_INVALID");
+    ids.add(contract.id); scopes.add(contract.scope);
+  }
+  OUTCOME_PARTITION_CONTRACTS.splice(0, OUTCOME_PARTITION_CONTRACTS.length, ...contracts);
+  setDoorOutcomePointers(contracts.map(contract => ({ contractId: contract.id, scope: contract.scope, recordClass: "MEETING_OUTCOME",
+    slug: contract.tenant.slug, kind: contract.kind })));
+}
 
 /** The state roster and ballot publishers also update their own state's holder/candidacy join. */
 function readerRepairSourcePointers(tasks: readonly Pick<ReaderRepairContract, "recordClass" | "scope">[]): ReadonlySet<string> {

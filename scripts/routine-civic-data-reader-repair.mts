@@ -8,10 +8,12 @@ import { MEETING_PARTITION_CONTRACTS, observableRoutineContracts, type MeetingPa
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   installMeetingPartitionSelection,
+  installOutcomeRepairSelection,
   routineReaderRepairRecord,
   serializeRoutineReaderRepairRecord,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
+import type { OutcomePartitionContract } from "../lib/civic-data/outcome-partitions.ts";
 import {
   repairMeetingReaderProjectionReadbacks,
   repairRoutineReaderProjectionReadbacks,
@@ -44,7 +46,7 @@ const contractBatch = present(argv, "contract-batch");
 const contractId = assignment(argv, "contract")?.trim() ?? null;
 if (assignment(argv, "contracts") !== null) throw new Error("READER_REPAIR_INLINE_SELECTION_RETIRED");
 const selectedMeetingContracts = meetingAggregate ? readContractHandoff<MeetingPartitionContract>(argv) : [];
-const selectedContractIds = contractBatch ? readContractHandoff<string>(argv) : contractId ? [contractId] : [];
+const selectedContracts = contractBatch ? readContractHandoff<string | OutcomePartitionContract>(argv) : contractId ? [contractId] : [];
 if (selectedMeetingContracts.some(contract => typeof contract !== "object" || contract.recordClass !== "MEETING" ||
     !contract.id.startsWith("meetings:") || !contract.scope || !contract.sourceId || !contract.readerProjection?.id)) {
   throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
@@ -104,8 +106,13 @@ if (meetingAggregate) {
     ...observableRoutineContracts(),
     ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   ];
+  const selectedContractIds = selectedContracts.map(contract => typeof contract === "string" ? contract : contract.id);
   if (new Set(selectedContractIds).size !== selectedContractIds.length || selectedContractIds.length === 0) throw new Error("READER_REPAIR_CONTRACT_SELECTION_INVALID");
-  const selected = selectedContractIds.map(contractId => {
+  const outcomes = selectedContracts.filter((contract): contract is OutcomePartitionContract => typeof contract !== "string");
+  installOutcomeRepairSelection(outcomes);
+  const selected = selectedContracts.map(value => {
+    if (typeof value !== "string") return value;
+    const contractId = value;
     const contract = contracts.find(({ id }) => id === contractId);
     if (!contract || contract.readerProjection === null) throw new Error(`READER_REPAIR_CONTRACT_UNKNOWN_OR_NOT_APPLICABLE:${contractId}`);
     if (MEETING_PARTITION_CONTRACTS.some(({ id }) => id === contract.id)) throw new Error(`READER_REPAIR_MEETING_REQUIRES_AGGREGATE:${contract.id}`);

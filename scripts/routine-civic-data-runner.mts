@@ -148,6 +148,7 @@ import {
   parseRoutineReaderRepairRecords,
   reconcileRoutineReaderRepairDomain,
   routineReaderRepairDomains,
+  readerRepairContractHandoff,
   planRoutineReaderRepair,
   readerRepairDomainPhases,
   selectedReaderRepairContracts,
@@ -1563,7 +1564,7 @@ function startReaderRepair(
     return runBoundedChildPass(
     active.map((domain) => {
       const handoff = domain.mode === "MEETING_AGGREGATE" ? writeContractHandoff(domain.contracts)
-        : writeContractHandoff(domain.contracts.map(contract => contract.id));
+        : writeContractHandoff(readerRepairContractHandoff(domain.contracts));
       if (handoff) handoffs.set(domain.id, handoff);
       return {
       id: domain.id,

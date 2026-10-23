@@ -1,6 +1,6 @@
 # River status
 
-build_state: FOLDING (Oct 23, 4:55 AM EDT): river-next = pb-01 + sp-01 + ex-03 + River dead-code gate, pnpm gates running; production still release 88 (/api/build 825ff1c)
+build_state: RELEASE 89 (SP-01, EX-03, River dead-code gate) PR #799 OPEN, auto-merge on, CI running; NEXT FOLD (7 lanes) IN GATES; production still release 88 (/api/build 825ff1c)
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -16,11 +16,10 @@ Sean's orders for this session (Oct 23, ~4:15 to 5:00 AM EDT):
 - A release is live only when https://meanwhileusa.com/api/build shows its merge commit. Then each lane's live check runs at national scale: the named examples plus real places in at least 10 states, counts by state posted here.
 - Hold pb-02 until it posts a new READY with a national sample (returns/pb-02.md).
 
-Queue (7:25 AM EDT):
-- In gates now (from 7:22 AM EDT): sp-01 (SP-01 489e1849b), ex-03 (EX-03 fd4c018c5), River's dead-code gate and River's fold fixes, on river-next 1e4b455bb. The 148 tests that failed or were touched pass on this combination; preflight and the dead-code scan pass.
-- PB-01 withdrew its READY (f5e5f8a38, docs/pb-01-national.md: NOT READY; 1,610 of 10,356 held seats not shown, 37 answers over 3 s, six routes unavailable). River removed it from this fold and wrote returns/pb-01.md, including the two monitoring readers the fold found (line keeper page check, worker readback) that must decode its new place-answer format.
-- First gates on pb-01 + sp-01 + ex-03 (6:18 to 6:55 AM EDT): 14 of 9,344 tests failed; ex-03 0, pb-01 7, sp-01 3, River's dead-code pass 4. The sp-01 and River fixes ride this fold; the pb-01 ones went back with its return.
-- Next fold, in order (trial-merged at 8:15 AM EDT on river-next): cal-01-fx (723ee4c4b), pb-03 (5da6588d8), pk-01 (77b70e1cd), src-01 (7b05903de), nx-02-fx (a5d5f7d4e), nb-02 (0b42253dc), dg-02 (e6745c664). All carry both proofs. Two conflicts, both with River's own dead-code cleanup, resolved and recorded (pk-01 types.ts, dg-02 standing.ts). Dead code the lanes leave on the combination, deleted in the fold: lib/doors/outcome-door-load.ts and drainWorkerQueue (DG-01/DG-02 replaced their callers), plus two imports only drainWorkerQueue used. Knip clean on the trial.
+Queue (8:20 AM EDT):
+- Release 89 = SP-01 (489e1849b) + EX-03 (fd4c018c5) + River's dead-code gate and fold fixes: pnpm gates 9 of 9 on river 1e4b455bb (9,332 pass, 0 fail, 6 skipped; 11:20 to 12:07 UTC). PR #799, auto-merge on. Not live until /api/build shows its merge commit.
+- PB-01 withdrew its READY (returns/pb-01.md). First gates with it: 14 failures, attributed and fixed or returned (see returns/pb-01.md).
+- In gates now (from 8:20 AM EDT), river-next a6a194530 on river 1e4b455bb: cal-01-fx (723ee4c4b), pb-03 (5da6588d8), pk-01 (77b70e1cd), src-01 (7b05903de), nx-02-fx (a5d5f7d4e), nb-02 (0b42253dc), dg-02 (e6745c664). All carry both proofs. Two conflicts, both with River's own dead-code cleanup, resolved and recorded (pk-01 types.ts, dg-02 standing.ts). Dead code the lanes leave on the combination, deleted in the fold: lib/doors/outcome-door-load.ts and drainWorkerQueue (DG-01/DG-02 replaced their callers), plus two imports only drainWorkerQueue used. Knip clean on the trial.
 - Returned again: rn-01 (rn-01-fx fbe50130d conflicts with SP-01 in scripts/fetch-congress-legislators.mts: RN-01's many-state Congress refresh drops SP-01's saved office points; River will not hand-resolve a change that loses reader data. returns/rn-01.md has the exact resolution; first in line once SP-01 is live).
 - CAL-01-FX live check (when shipped): no ROUTINE_CHILD_TIMED_OUT; each pass saves its outcome; the publish-now cursor moves past 2026-10-13T22:24:35Z and owed publications (2,770 at 11:00 UTC) drain; calendar doors record new lastSuccessAt in AZ, NH, NJ and 10+ other states.
 - RN-01-FX live check (when shipped): the round opens with the longest-waiting states (not ak/al/ar/as); no state's walks pass 2 minutes; a release resumes where the round stopped; every state completes within 19 passes; the nine national pointers retire one per pass; voting sites by state on the live card (its replay: 2,836 sites in 13 states).

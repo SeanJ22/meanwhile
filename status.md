@@ -1,11 +1,15 @@
 # River status
 
-build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 CANDIDATE (RN-01-FX ecfc8636f + River National label fix) IN GATES from 11:00 AM EDT on river-next (main merged before gates)
+build_state: RELEASE 90 LIVE (/api/build a462d38); RELEASE 91 CANDIDATE (RN-01-FX + River National label fix) IN GATES from 11:32 AM EDT on river-next 6283ca35f; RN-02 returned (cut from release 88, 15 hunks in runner core)
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
 lock: session_012UDbgz3sjA8QN2m7CY78QS
 heartbeat: 2026-10-23T14:48:38Z
+
+## Open data issue (from RN-02, Oct 23)
+
+NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
 
 ## Release 90 live checks (Oct 23, from 10:24 AM EDT)
 

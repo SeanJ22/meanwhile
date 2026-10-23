@@ -19,7 +19,7 @@ import {
 
 const ROOT = resolve(import.meta.dirname, "..");
 
-test("built registry routes contain their canonical geometry and roster inputs", (context) => {
+test("built registry routes contain their canonical geometry manifests and ZIP inputs", (context) => {
   if (!existsSync(join(ROOT, ".next", "BUILD_ID"))) {
     context.skip("No completed production build; canonical holdings trace proof requires pnpm build.");
     return;

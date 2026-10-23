@@ -119,8 +119,8 @@ if (meetingAggregate) {
     console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(contract,
       result.ok ? { ok: true, value: result.value } : { ok: false, error: safeFailure(result.error) })));
     console.log("RCD_PROGRESS=" + JSON.stringify({ key: contract.id, records: 1 }));
-    // A batch retains receipts only. Release the previous contract's decoded payload before reading the next one.
-    globalThis.gc?.();
+    // CURRENT/NO_PROMOTION inspect identities only. Collect after a typed read decoded a payload.
+    if (!result.ok || result.value.kind === "RECORDED") globalThis.gc?.();
   } });
 }
 

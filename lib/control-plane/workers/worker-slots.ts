@@ -17,6 +17,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
+/** RN-02: largest child maxRSS in a cold replay of all 6,860 production reader contracts (163 native
+ * children, 2026-10-23) was 957,120,512 bytes, in New York. Process trees were sampled every 100 ms;
+ * child getrusage corroborated the peak. Two typed checks run together, with GC after decoded payloads.
+ * Keep that full-country peak plus 5%, rounded up, even after five small CURRENT-only batches. */
+export const READER_REPAIR_PEAK_MIB = 959;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // RH-01 complete native publication peaks: 3,403 MiB Open States and
@@ -30,6 +35,7 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-refresh.mts": 512,
+  "routine-civic-data-reader-repair.mts": READER_REPAIR_PEAK_MIB,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,
   "fetch-congress-legislators.mts": 384,
@@ -306,6 +312,7 @@ function routineMinimumPeakBytes(entry: string): number {
   // New ZIPs must retain room for the measured 0.87–1.21 GB native publication, including unseen growth.
   if (entry.startsWith("national-place:")) return Math.ceil(1.2 * 1024) * MIB;
   if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
+  if (entry.split(/[\\/]/).at(-1) === "routine-civic-data-reader-repair.mts") return READER_REPAIR_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
   return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);

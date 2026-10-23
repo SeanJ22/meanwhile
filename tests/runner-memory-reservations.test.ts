@@ -153,7 +153,7 @@ test("memory samples survive a stopped service and pool a new tenant, readback a
     const slots = routineProcessSlots({ host: restarted, availableBytes: () => 10000 * mib });
     for (const [entry, expected] of [
       ["legistar-members:new/legistar-members-refresh.mts", 179],
-      ["reader-readback:new/routine-civic-data-reader-repair.mts", 126],
+      ["reader-readback:new/routine-civic-data-reader-repair.mts", 959],
       ["national-place:90210/promote-registry-runtime.mts", 1229],
     ] as const) {
       const release = await slots.acquire(entry);

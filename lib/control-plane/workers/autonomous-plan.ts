@@ -107,6 +107,8 @@ export interface AutonomousWorkPlan {
   readonly readerQuestion?: { readonly origin: "ASK"; readonly text: string; readonly place: string | null; readonly divisions: readonly string[] };
   /** Sourced population of the subject, when held; used to order election-site blanks. */
   readonly subjectPopulation?: number;
+  /** County election-office probe outcome; orders voting-source work without retaining the answer. */
+  readonly votingGoogleAvailable?: boolean;
   /** The mission part this work belongs to, set where the plan is built. Read it with `missionPartOfPlan`. */
   readonly missionPart?: string;
   readonly directorySubject?: { readonly jurisdiction: Jurisdiction; readonly divisionId: string | null };

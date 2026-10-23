@@ -146,6 +146,31 @@ test("population order uses existing sourced Census holdings with exact register
   assert.equal(populations.has(`${root.ocdId}/county:unresolved`), false);
 });
 
+test("a county where the Google office probe found no sites leads discovery and the standing hunter queue", async () => {
+  const coverage = new Map([
+    [okaloosa.countyFips!, { countyFips: okaloosa.countyFips!, available: true, pollingLocations: 1, earlyVoteSites: 0, dropOffLocations: 0 }],
+    [bradford.countyFips!, { countyFips: bradford.countyFips!, available: false, pollingLocations: 0, earlyVoteSites: 0, dropOffLocations: 0 }],
+  ]);
+  const divisions = [okaloosa, bradford].map(scope => ({ ocdId: scope.ocdId, divisionType: "county" as const, label: scope.name, state: "FL", geoid: scope.countyFips!, parentOcdId: root.ocdId }));
+  const populations = new Map([[okaloosa.ocdId, 2], [bradford.ocdId, 1]]);
+  const places = votingSourcePlaces({ state: root, divisions, delegation: "county", populations, coverage });
+  assert.equal(places[0].ocdId, bradford.ocdId);
+  const blanks = planVotingSourceBlanks({ electionDate: ELECTION, places, doors: [door], reads: [capturedRead()], coverage });
+  assert.equal(blanks[0].scope.ocdId, bradford.ocdId);
+  const repos = createMemoryRepositories();
+  const ids = await persistVotingSourceBlanks({ repos, blanks, electionDate: ELECTION, now: NOW, coverage });
+  const items = (await repos.workItems.list()).map(row => row.value);
+  assert.equal(fairAutonomousWorkIds(items.reverse(), new Map())[0], ids.workItemIds[0]);
+  assert.equal(items.find(item => item.subject === bradford.ocdId)!.autonomousPlan?.votingGoogleAvailable, false);
+  // A later successful probe refreshes the existing obligation and work item in place.
+  coverage.set(bradford.countyFips!, { ...coverage.get(bradford.countyFips!)!, available: true, pollingLocations: 1 });
+  await persistVotingSourceBlanks({ repos, blanks, electionDate: ELECTION, now: NOW, coverage });
+  assert.equal((await repos.workItems.mustRead(ids.workItemIds[0])).value.autonomousPlan?.votingGoogleAvailable, true);
+  const refreshed = (await repos.workItems.list()).map(row => row.value);
+  const expected = refreshed.find(item => item.subject === okaloosa.ocdId)!;
+  assert.equal(fairAutonomousWorkIds(refreshed, new Map())[0], expected.id);
+});
+
 test("discovery and place blanks share one standing obligation without erasing either debt", async () => {
   const repos = createMemoryRepositories();
   const blank = planVotingSourceBlanks({ electionDate: ELECTION, places: [okaloosa], doors: [door], reads: [capturedRead()] })[0];

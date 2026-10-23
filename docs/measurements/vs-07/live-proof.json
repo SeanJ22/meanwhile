@@ -1,0 +1,1311 @@
+{
+ "generatedBy": "scripts/vs07-replay.mts --live (connected proof) and scripts/vs07-replay.mts over the evidence store (saved-evidence replay)",
+ "productionSnapshot": {
+  "capturedAt": "2026-10-23T11:15:05.179Z",
+  "database": {
+   "projectId": "tiny-hill-13996172",
+   "branchId": "br-delicate-lab-ax02xuo5",
+   "databaseName": "neondb"
+  },
+  "identity": {
+   "current_user": "readonly",
+   "read_only": "on",
+   "can_write": false
+  }
+ },
+ "live": {
+  "AZ": {
+   "productionPointerSites": 345,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T15:03:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 345,
+     "sites": 171,
+     "readerVisibleSites": 171,
+     "retiredWithOfficialReplacement": 212,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 28,
+     "elapsedMs": 8115,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 405,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-22T00:34:19.699Z",
+      "lastSucceededObservedAt": "2026-10-22T00:34:19.699Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "85701",
+       "sites": 153,
+       "rendered": 153,
+       "withHours": 16,
+       "sharedRules": [],
+       "first": {
+        "name": "Pima County School Superintendent\u2019s\u00a0Office \u2013 Drive Up",
+        "address": "200 N Stone Ave, Tucson, AZ",
+        "hours": null,
+        "kind": "DROP_BOX"
+       }
+      },
+      {
+       "zip": "85705",
+       "sites": 153,
+       "rendered": 153,
+       "withHours": 16,
+       "sharedRules": [],
+       "first": {
+        "name": "Pima County School Superintendent\u2019s\u00a0Office \u2013 Drive Up",
+        "address": "200 N Stone Ave, Tucson, AZ",
+        "hours": null,
+        "kind": "DROP_BOX"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T03:03:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 171,
+     "sites": 171,
+     "readerVisibleSites": 171,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 28,
+     "elapsedMs": 4545,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 421,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T15:03:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T15:03:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "85701",
+       "sites": 153,
+       "rendered": 153,
+       "withHours": 16,
+       "sharedRules": [],
+       "first": {
+        "name": "Pima County School Superintendent\u2019s\u00a0Office \u2013 Drive Up",
+        "address": "200 N Stone Ave, Tucson, AZ",
+        "hours": null,
+        "kind": "DROP_BOX"
+       }
+      },
+      {
+       "zip": "85705",
+       "sites": 153,
+       "rendered": 153,
+       "withHours": 16,
+       "sharedRules": [],
+       "first": {
+        "name": "Pima County School Superintendent\u2019s\u00a0Office \u2013 Drive Up",
+        "address": "200 N Stone Ave, Tucson, AZ",
+        "hours": null,
+        "kind": "DROP_BOX"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "CA": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T11:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 9,
+     "priorSites": 0,
+     "sites": 1828,
+     "readerVisibleSites": 1828,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 2707,
+     "elapsedMs": 1201203,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 2217,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T06:01:37.378Z",
+      "lastSucceededObservedAt": "2026-10-13T19:23:16.145Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+     },
+     "zips": [
+      {
+       "zip": "92101",
+       "sites": 362,
+       "rendered": 362,
+       "withHours": 362,
+       "sharedRules": [],
+       "first": {
+        "name": "Alpine Branch Library - Resource Rm",
+        "address": "1752\nAlpine Blvd, Alpine, CA 91901",
+        "hours": "7 A.M. to 8 P.M.",
+        "kind": "VOTE_CENTER"
+       }
+      },
+      {
+       "zip": "90012",
+       "sites": 1054,
+       "rendered": 1054,
+       "withHours": 1054,
+       "sharedRules": [],
+       "first": {
+        "name": "A C Bilbrew Library",
+        "address": "150 E El Segundo Blvd, Los Angeles, 90061-2356",
+        "hours": "24 - Hour",
+        "kind": "DROP_BOX"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-23T23:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 9,
+     "priorSites": 1828,
+     "sites": 1828,
+     "readerVisibleSites": 1828,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 3050,
+     "elapsedMs": 1201382,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 3161,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "92101",
+       "sites": 362,
+       "rendered": 362,
+       "withHours": 362,
+       "sharedRules": [],
+       "first": {
+        "name": "Alpine Branch Library - Resource Rm",
+        "address": "1752\nAlpine Blvd, Alpine, CA 91901",
+        "hours": "7 A.M. to 8 P.M.",
+        "kind": "VOTE_CENTER"
+       }
+      },
+      {
+       "zip": "90012",
+       "sites": 1054,
+       "rendered": 1054,
+       "withHours": 1054,
+       "sharedRules": [],
+       "first": {
+        "name": "Adventure Park",
+        "address": "10130 Gunn Ave, Whittier, 90605",
+        "hours": "Gymnasium Hours: 10/24 - 11/02: 10AM - 7PM\n11/03: 7AM - 8PM",
+        "kind": "VOTE_CENTER"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "FL": {
+   "productionPointerSites": 1,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T12:07:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 73,
+     "priorSites": 1,
+     "sites": 852,
+     "readerVisibleSites": 852,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 3155,
+     "elapsedMs": 1203214,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 3170,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-22T01:36:13.905Z",
+      "lastSucceededObservedAt": "2026-10-22T01:36:13.905Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "33441",
+       "sites": 310,
+       "rendered": 310,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "African-American Research Library",
+        "address": "2650 Sistrunk Boulevard (NW 6th Street), Fort Lauderdale, FL 33311",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      },
+      {
+       "zip": "33130",
+       "sites": 56,
+       "rendered": 56,
+       "withHours": 28,
+       "sharedRules": [],
+       "first": {
+        "name": "Arcolas Lakes Branch Library",
+        "address": "8240 NW 7TH Avenue, Miami, FL 33150",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T00:07:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 73,
+     "priorSites": 852,
+     "sites": 852,
+     "readerVisibleSites": 852,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1812,
+     "elapsedMs": 1202308,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 4790,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T12:07:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T12:07:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "33441",
+       "sites": 310,
+       "rendered": 310,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "African-American Research Library",
+        "address": "2650 Sistrunk Boulevard (NW 6th Street), Fort Lauderdale, FL 33311",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      },
+      {
+       "zip": "33130",
+       "sites": 56,
+       "rendered": 56,
+       "withHours": 28,
+       "sharedRules": [],
+       "first": {
+        "name": "Arcolas Lakes Branch Library",
+        "address": "8240 NW 7TH Avenue, Miami, FL 33150",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "GA": {
+   "productionPointerSites": 132,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T14:28:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 3,
+     "priorSites": 132,
+     "sites": 178,
+     "readerVisibleSites": 178,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 2532,
+     "elapsedMs": 1200600,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 3836,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-22T02:16:17.040Z",
+      "lastSucceededObservedAt": "2026-10-22T02:16:17.040Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "30303",
+       "sites": 33,
+       "rendered": 33,
+       "withHours": 33,
+       "sharedRules": [],
+       "first": {
+        "name": "Adams Park Library",
+        "address": "2231 Campbellton Road SW\n\nAtlanta, GA 30311",
+        "hours": "Monday - Friday, 7 a.m. - 7 p.m.\nSaturday, 9 a.m. - 5 p.m.\nSunday, 12 p.m. - 5 p.m.",
+        "kind": "EARLY_VOTING"
+       }
+      },
+      {
+       "zip": "30044",
+       "sites": 13,
+       "rendered": 13,
+       "withHours": 13,
+       "sharedRules": [],
+       "first": {
+        "name": "Gwinnett Voter Registrations and Elections Beauty P. Baldwin Building",
+        "address": "455 Grayson Highway, Suite 200, Lawrenceville",
+        "hours": "7:00am \u2013 7:00pm",
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T02:28:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 3,
+     "priorSites": 178,
+     "sites": 178,
+     "readerVisibleSites": 178,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 2126,
+     "elapsedMs": 1200764,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 4885,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T14:28:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T14:28:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "30303",
+       "sites": 33,
+       "rendered": 33,
+       "withHours": 33,
+       "sharedRules": [],
+       "first": {
+        "name": "Adams Park Library",
+        "address": "2231 Campbellton Road SW\n\nAtlanta, GA 30311",
+        "hours": "Monday - Friday, 7 a.m. - 7 p.m.\nSaturday, 9 a.m. - 5 p.m.\nSunday, 12 p.m. - 5 p.m.",
+        "kind": "EARLY_VOTING"
+       }
+      },
+      {
+       "zip": "30044",
+       "sites": 13,
+       "rendered": 13,
+       "withHours": 13,
+       "sharedRules": [],
+       "first": {
+        "name": "Gwinnett Voter Registrations and Elections Beauty P. Baldwin Building",
+        "address": "455 Grayson Highway, Suite 200, Lawrenceville",
+        "hours": "7:00am \u2013 7:00pm",
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "IL": {
+   "productionPointerSites": 24,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T11:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 3,
+     "priorSites": 24,
+     "sites": 25,
+     "readerVisibleSites": 25,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 3467,
+     "elapsedMs": 1200273,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 3535,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-22T02:17:21.309Z",
+      "lastSucceededObservedAt": "2026-10-22T02:17:21.309Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "60090",
+       "sites": 0,
+       "rendered": 0,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": null
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-23T23:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 3,
+     "priorSites": 25,
+     "sites": 25,
+     "readerVisibleSites": 25,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 3590,
+     "elapsedMs": 1200213,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 3988,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "60090",
+       "sites": 0,
+       "rendered": 0,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": null
+      }
+     ]
+    }
+   ]
+  },
+  "NC": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T13:48:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 4,
+     "priorSites": 0,
+     "sites": 2879,
+     "readerVisibleSites": 2879,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1953,
+     "elapsedMs": 1202178,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 5181,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-21T10:50:49.119Z",
+      "lastSucceededObservedAt": "2026-10-13T19:23:16.145Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+     },
+     "zips": [
+      {
+       "zip": "28203",
+       "sites": 215,
+       "rendered": 215,
+       "withHours": 25,
+       "sharedRules": [
+        "Polling places will be open from 6:30 a.m. to 7:30 p.m. on Election Day."
+       ],
+       "first": {
+        "name": "HOLY TRINITY GREEK ORTHODOX CATHEDRAL",
+        "address": "600 EAST BLVD, CHARLOTTE, NC, 28203",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "27601",
+       "sites": 231,
+       "rendered": 231,
+       "withHours": 18,
+       "sharedRules": [
+        "Polling places will be open from 6:30 a.m. to 7:30 p.m. on Election Day."
+       ],
+       "first": {
+        "name": "BROOKS AVENUE CHURCH OF CHRIST",
+        "address": "700 BROOKS AVE, RALEIGH, NC, 27607",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T01:48:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 4,
+     "priorSites": 2879,
+     "sites": 2879,
+     "readerVisibleSites": 2879,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1836,
+     "elapsedMs": 1201919,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 5905,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T13:48:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T13:48:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "28203",
+       "sites": 215,
+       "rendered": 215,
+       "withHours": 25,
+       "sharedRules": [
+        "Polling places will be open from 6:30 a.m. to 7:30 p.m. on Election Day."
+       ],
+       "first": {
+        "name": "FORMER UNIVERSITY CITY LIBRARY",
+        "address": "301 E WT HARRIS BLVD, CHARLOTTE, NC 28262",
+        "hours": "8:00AM - 3:00PM",
+        "kind": "EARLY_VOTING"
+       }
+      },
+      {
+       "zip": "27601",
+       "sites": 231,
+       "rendered": 231,
+       "withHours": 18,
+       "sharedRules": [
+        "Polling places will be open from 6:30 a.m. to 7:30 p.m. on Election Day."
+       ],
+       "first": {
+        "name": "JOHN M. BROWN COMMUNITY CENTER",
+        "address": "53 HUNTER ST, APEX, NC 27502",
+        "hours": "8:00AM - 3:00PM",
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "NY": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T11:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 11,
+     "priorSites": 0,
+     "sites": 1292,
+     "readerVisibleSites": 1292,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 3232,
+     "elapsedMs": 1200769,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 1176,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-21T10:49:45.966Z",
+      "lastSucceededObservedAt": "2026-10-13T19:23:16.145Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+     },
+     "zips": [
+      {
+       "zip": "10301",
+       "sites": 82,
+       "rendered": 82,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "CENTRAL FAMILY LIFE",
+        "address": "59 WRIGHT STREET",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "11201",
+       "sites": 409,
+       "rendered": 409,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "ELITE LUX",
+        "address": "1330 UTICA AVENUE",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-23T23:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 11,
+     "priorSites": 1292,
+     "sites": 1292,
+     "readerVisibleSites": 1292,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 2780,
+     "elapsedMs": 1200654,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 2254,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "10301",
+       "sites": 82,
+       "rendered": 82,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "CENTRAL FAMILY LIFE",
+        "address": "59 WRIGHT STREET",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "11201",
+       "sites": 409,
+       "rendered": 409,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "EDWARD R. MURROW HS",
+        "address": "1600 AVENUE L",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "OH": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T13:10:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 0,
+     "sites": 269,
+     "readerVisibleSites": 269,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1292,
+     "elapsedMs": 685923,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 2794,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-21T10:50:45.258Z",
+      "lastSucceededObservedAt": "2026-10-13T19:23:16.145Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+     },
+     "zips": [
+      {
+       "zip": "44113",
+       "sites": 268,
+       "rendered": 268,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "BAY PRESBYTERIAN CHURCH",
+        "address": "25415 LAKE ROAD, 44140-2624",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "43215",
+       "sites": 1,
+       "rendered": 1,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "Franklin County Board of Elections",
+        "address": "1700 Morse Rd, Columbus, Ohio 43229",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T01:10:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 269,
+     "sites": 269,
+     "readerVisibleSites": 269,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1295,
+     "elapsedMs": 787160,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 4008,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T13:10:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T13:10:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "44113",
+       "sites": 268,
+       "rendered": 268,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "BAY PRESBYTERIAN CHURCH",
+        "address": "25415 LAKE ROAD, 44140-2624",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "43215",
+       "sites": 1,
+       "rendered": 1,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "Franklin County Board of Elections",
+        "address": "1700 Morse Rd, Columbus, Ohio 43229",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "PA": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T11:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 3,
+     "priorSites": 0,
+     "sites": 683,
+     "readerVisibleSites": 683,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1473,
+     "elapsedMs": 1200958,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 2231,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-21T10:51:32.549Z",
+      "lastSucceededObservedAt": "2026-10-13T19:23:16.145Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+     },
+     "zips": [
+      {
+       "zip": "19147",
+       "sites": 683,
+       "rendered": 683,
+       "withHours": 683,
+       "sharedRules": [],
+       "first": {
+        "name": "ST MARONS CHURCH",
+        "address": "1013 ELLSWORTH ST, Philadelphia, PA 19147",
+        "hours": "7 A.M. to 8 P.M",
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "19104",
+       "sites": 683,
+       "rendered": 683,
+       "withHours": 683,
+       "sharedRules": [],
+       "first": {
+        "name": "ST MARONS CHURCH",
+        "address": "1013 ELLSWORTH ST, Philadelphia, PA 19147",
+        "hours": "7 A.M. to 8 P.M",
+        "kind": "ELECTION_DAY"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-23T23:27:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 683,
+     "sites": 683,
+     "readerVisibleSites": 683,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 1401,
+     "elapsedMs": 1201012,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 3128,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T11:27:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "19147",
+       "sites": 683,
+       "rendered": 683,
+       "withHours": 683,
+       "sharedRules": [],
+       "first": {
+        "name": "ST MARONS CHURCH",
+        "address": "1013 ELLSWORTH ST, Philadelphia, PA 19147",
+        "hours": "7 A.M. to 8 P.M",
+        "kind": "ELECTION_DAY"
+       }
+      },
+      {
+       "zip": "19104",
+       "sites": 683,
+       "rendered": 683,
+       "withHours": 683,
+       "sharedRules": [],
+       "first": {
+        "name": "ST MARONS CHURCH",
+        "address": "1013 ELLSWORTH ST, Philadelphia, PA 19147",
+        "hours": "7 A.M. to 8 P.M",
+        "kind": "ELECTION_DAY"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "SC": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T12:45:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 0,
+     "sites": 1956,
+     "readerVisibleSites": 1956,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 305,
+     "elapsedMs": 1201646,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 1816,
+     "scheduleClock": {
+      "lastAttemptedAt": null,
+      "lastSucceededObservedAt": "2026-10-13T19:23:16.145Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+     },
+     "zips": [
+      {
+       "zip": "29201",
+       "sites": 135,
+       "rendered": 135,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "Forest Lake Elementary (Arcadia)",
+        "address": "6801 Brookfield Rd Columbia  SC 29206",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T00:45:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 2,
+     "priorSites": 1956,
+     "sites": 1956,
+     "readerVisibleSites": 1956,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 308,
+     "elapsedMs": 1219679,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 2341,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T12:45:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T12:45:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "29201",
+       "sites": 135,
+       "rendered": 135,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "Forest Lake Elementary (Arcadia)",
+        "address": "6801 Brookfield Rd Columbia  SC 29206",
+        "hours": null,
+        "kind": "ELECTION_DAY"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  "TX": {
+   "productionPointerSites": 0,
+   "passes": [
+    {
+     "observedAt": "2026-10-23T12:05:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 7,
+     "priorSites": 0,
+     "sites": 1261,
+     "readerVisibleSites": 1261,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 2826,
+     "elapsedMs": 1201002,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 1455,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-18T10:24:21.106Z",
+      "lastSucceededObservedAt": "2026-10-18T10:24:08.043Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "78207",
+       "sites": 304,
+       "rendered": 304,
+       "withHours": 302,
+       "sharedRules": [],
+       "first": {
+        "name": "Bexar County Justice Center",
+        "address": "300 Dolorosa Street, San Antonio, TX 78205",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      },
+      {
+       "zip": "77002",
+       "sites": 617,
+       "rendered": 617,
+       "withHours": 617,
+       "sharedRules": [],
+       "first": {
+        "name": "A G Hilliard Elementary School",
+        "address": "8115 East Houston Road Houston, TX 77028",
+        "hours": "7 a.m. to 7 p.m.",
+        "kind": "VOTE_CENTER"
+       }
+      },
+      {
+       "zip": "75201",
+       "sites": 70,
+       "rendered": 70,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "Elections Training / Warehouse",
+        "address": "1460 Round Table Dr, DALLAS, 75247",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    },
+    {
+     "observedAt": "2026-10-24T00:05:00.000Z",
+     "dueByStandingSchedule": true,
+     "publications": 7,
+     "priorSites": 1261,
+     "sites": 1261,
+     "readerVisibleSites": 1261,
+     "retiredWithOfficialReplacement": 0,
+     "disappearedWithoutOfficialReplacement": 0,
+     "heldCandidates": [],
+     "liveRequests": 3112,
+     "elapsedMs": 1200914,
+     "finishedWithinSlot": true,
+     "peakWorkerRssMB": 2548,
+     "scheduleClock": {
+      "lastAttemptedAt": "2026-10-23T12:05:00.000Z",
+      "lastSucceededObservedAt": "2026-10-23T12:05:00.000Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+     },
+     "zips": [
+      {
+       "zip": "78207",
+       "sites": 304,
+       "rendered": 304,
+       "withHours": 302,
+       "sharedRules": [],
+       "first": {
+        "name": "BEXAR COUNTY ELECTIONS",
+        "address": "1103 S FRIO ST, SAN ANTONIO, TX 78207",
+        "hours": "7:00 AM-7:00 PM",
+        "kind": "VOTE_CENTER"
+       }
+      },
+      {
+       "zip": "77002",
+       "sites": 617,
+       "rendered": 617,
+       "withHours": 617,
+       "sharedRules": [],
+       "first": {
+        "name": "A G Hilliard Elementary School",
+        "address": "8115 East Houston Road Houston, TX 77028",
+        "hours": "7 a.m. to 7 p.m.",
+        "kind": "VOTE_CENTER"
+       }
+      },
+      {
+       "zip": "75201",
+       "sites": 70,
+       "rendered": 70,
+       "withHours": 0,
+       "sharedRules": [],
+       "first": {
+        "name": "Elections Training / Warehouse",
+        "address": "1460 Round Table Dr, DALLAS, 75247",
+        "hours": null,
+        "kind": "EARLY_VOTING"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "savedEvidenceReplay": {
+  "AZ": [
+   {
+    "observedAt": "2026-10-23T11:21:00.000Z",
+    "publications": 3,
+    "sites": 176,
+    "readerVisibleSites": 176,
+    "savedResponsesRead": 21
+   },
+   {
+    "observedAt": "2026-10-23T23:21:00.000Z",
+    "publications": 3,
+    "sites": 176,
+    "readerVisibleSites": 176,
+    "savedResponsesRead": 21
+   }
+  ],
+  "CA": [
+   {
+    "observedAt": "2026-10-23T12:06:00.000Z",
+    "publications": 9,
+    "sites": 1828,
+    "readerVisibleSites": 1828,
+    "savedResponsesRead": 21
+   },
+   {
+    "observedAt": "2026-10-24T00:06:00.000Z",
+    "publications": 9,
+    "sites": 1828,
+    "readerVisibleSites": 1828,
+    "savedResponsesRead": 21
+   }
+  ],
+  "FL": [
+   {
+    "observedAt": "2026-10-23T12:07:00.000Z",
+    "publications": 73,
+    "sites": 852,
+    "readerVisibleSites": 852,
+    "savedResponsesRead": 15
+   },
+   {
+    "observedAt": "2026-10-24T00:07:00.000Z",
+    "publications": 73,
+    "sites": 852,
+    "readerVisibleSites": 852,
+    "savedResponsesRead": 15
+   }
+  ],
+  "GA": [
+   {
+    "observedAt": "2026-10-23T12:10:00.000Z",
+    "publications": 4,
+    "sites": 178,
+    "readerVisibleSites": 178,
+    "savedResponsesRead": 14
+   },
+   {
+    "observedAt": "2026-10-24T00:10:00.000Z",
+    "publications": 4,
+    "sites": 178,
+    "readerVisibleSites": 178,
+    "savedResponsesRead": 14
+   }
+  ],
+  "IL": [
+   {
+    "observedAt": "2026-10-23T12:10:00.000Z",
+    "publications": 3,
+    "sites": 26,
+    "readerVisibleSites": 26,
+    "savedResponsesRead": 7
+   },
+   {
+    "observedAt": "2026-10-24T00:10:00.000Z",
+    "publications": 3,
+    "sites": 26,
+    "readerVisibleSites": 26,
+    "savedResponsesRead": 7
+   }
+  ],
+  "KY": [
+   {
+    "observedAt": "2026-10-23T12:10:00.000Z",
+    "publications": 1,
+    "sites": 1690,
+    "readerVisibleSites": 1690,
+    "savedResponsesRead": 8
+   },
+   {
+    "observedAt": "2026-10-24T00:10:00.000Z",
+    "publications": 1,
+    "sites": 1690,
+    "readerVisibleSites": 1690,
+    "savedResponsesRead": 8
+   }
+  ],
+  "MI": [
+   {
+    "observedAt": "2026-10-23T12:10:00.000Z",
+    "publications": 2,
+    "sites": 51,
+    "readerVisibleSites": 51,
+    "savedResponsesRead": 5
+   },
+   {
+    "observedAt": "2026-10-24T00:10:00.000Z",
+    "publications": 2,
+    "sites": 51,
+    "readerVisibleSites": 51,
+    "savedResponsesRead": 5
+   }
+  ],
+  "NC": [
+   {
+    "observedAt": "2026-10-23T12:05:00.000Z",
+    "publications": 4,
+    "sites": 2878,
+    "readerVisibleSites": 2878,
+    "savedResponsesRead": 20
+   },
+   {
+    "observedAt": "2026-10-24T00:05:00.000Z",
+    "publications": 4,
+    "sites": 2878,
+    "readerVisibleSites": 2878,
+    "savedResponsesRead": 20
+   }
+  ],
+  "NY": [
+   {
+    "observedAt": "2026-10-23T12:07:00.000Z",
+    "publications": 11,
+    "sites": 1292,
+    "readerVisibleSites": 1292,
+    "savedResponsesRead": 14
+   },
+   {
+    "observedAt": "2026-10-24T00:07:00.000Z",
+    "publications": 11,
+    "sites": 1292,
+    "readerVisibleSites": 1292,
+    "savedResponsesRead": 14
+   }
+  ],
+  "OH": [
+   {
+    "observedAt": "2026-10-23T12:10:00.000Z",
+    "publications": 3,
+    "sites": 357,
+    "readerVisibleSites": 357,
+    "savedResponsesRead": 8
+   },
+   {
+    "observedAt": "2026-10-24T00:10:00.000Z",
+    "publications": 3,
+    "sites": 357,
+    "readerVisibleSites": 357,
+    "savedResponsesRead": 8
+   }
+  ],
+  "PA": [
+   {
+    "observedAt": "2026-10-23T11:18:00.000Z",
+    "publications": 2,
+    "sites": 683,
+    "readerVisibleSites": 683,
+    "savedResponsesRead": 15
+   },
+   {
+    "observedAt": "2026-10-23T23:18:00.000Z",
+    "publications": 2,
+    "sites": 683,
+    "readerVisibleSites": 683,
+    "savedResponsesRead": 15
+   }
+  ],
+  "SC": [
+   {
+    "observedAt": "2026-10-23T12:10:00.000Z",
+    "publications": 2,
+    "sites": 1956,
+    "readerVisibleSites": 1956,
+    "savedResponsesRead": 8
+   },
+   {
+    "observedAt": "2026-10-24T00:10:00.000Z",
+    "publications": 2,
+    "sites": 1956,
+    "readerVisibleSites": 1956,
+    "savedResponsesRead": 8
+   }
+  ],
+  "TX": [
+   {
+    "observedAt": "2026-10-23T12:06:00.000Z",
+    "publications": 9,
+    "sites": 1684,
+    "readerVisibleSites": 1684,
+    "savedResponsesRead": 20
+   },
+   {
+    "observedAt": "2026-10-24T00:06:00.000Z",
+    "publications": 9,
+    "sites": 1684,
+    "readerVisibleSites": 1684,
+    "savedResponsesRead": 20
+   }
+  ]
+ }
+}

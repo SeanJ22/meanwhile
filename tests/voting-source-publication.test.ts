@@ -3,7 +3,8 @@ import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { combineVotingSourceReads, mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { votingSupersededSources } from "../scripts/fetch-voting-sites.mts";
 import type { VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
@@ -115,4 +116,34 @@ test("candidate and measure doors retain shared mappings and reread their offici
   const [checked] = (await listDoors(repos.doors)).doors;
   assert.equal(checked.lastSuccessAt, at);
   assert.equal(checked.validators?.checkedAt, at);
+});
+
+test("a complete current source removes the explicitly superseded file after it publishes", async () => {
+  const read = await readVotingSource(door, { fetch: fetchSource, now: () => at });
+  const oldUrl = "https://vip.sos.nd.gov/previous-file";
+  const prior = mergeVotingSourceRead(undefined, { ...door, url: oldUrl }, { ...read,
+    sources: read.sources.map(source => ({ ...source, url: oldUrl })),
+    sites: read.sites.map(site => ({ ...site, id: `previous-${site.id}`, sources: site.sources!.map(source => ({ ...source, url: oldUrl })) })) }, at);
+  const current = { ...door, supersedes: [oldUrl] };
+  const failed = { ...read, sites: [], rawBodies: [], blanks: [{ id: "held", doorId: door.id, scope: door.scope,
+    reason: "access" as const, status: "open" as const, owed: "Read the current file", tried: [door.url], next: [door.url] }] };
+  assert.equal(mergeVotingSourceRead(prior, current, failed, at).sites.length, prior.sites.length);
+  const next = mergeVotingSourceRead(prior, current, read, at);
+  assert.equal(next.sites.length, read.sites.length);
+  assert.ok(next.sites.every(site => site.sources?.every(source => source.url !== oldUrl)));
+});
+
+test("a partially read section group retains its old route until every section recovers", async () => {
+  const parsed = await readVotingSource(door, { fetch: fetchSource, now: () => at });
+  // Controlled complete section; the native ND fixture also has unrelated directory gaps.
+  const read = { ...parsed, sites: parsed.sites.map(site => ({ ...site, electionDate: door.electionDate })), blanks: [] };
+  const current = { ...door, supersedes: ["https://vip.sos.nd.gov/old-list"] };
+  const sibling = { ...current, id: `${door.id}:early` };
+  const failed = { ...read, doorId: sibling.id, sites: [], blanks: [{ id: `${sibling.id}:held`, doorId: sibling.id, scope: door.scope,
+    reason: "access" as const, status: "open" as const, owed: "Early voting section", tried: [door.url], next: [door.url] }] };
+  const partial = mergeVotingSourceRead(undefined, current, combineVotingSourceReads([read, failed]), at);
+  assert.equal(votingSupersededSources([current, sibling], replaceVotingJurisdiction(null, partial, at)).size, 0);
+  const complete = mergeVotingSourceRead(partial, current, combineVotingSourceReads([read, { ...read, doorId: sibling.id }]), at);
+  assert.deepEqual(complete.blanks, []);
+  assert.ok(votingSupersededSources([current, sibling], replaceVotingJurisdiction(null, complete, at)).has(current.supersedes[0]!));
 });

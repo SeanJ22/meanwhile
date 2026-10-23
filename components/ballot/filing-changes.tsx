@@ -1,5 +1,6 @@
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { CandidacyRemoval } from "@/lib/ballot/types";
+import { ReaderText } from "@/components/ui/reader-text";
 
 /** A sourced filing change is retained without listing a removed candidacy as current. */
 export function FilingChanges({ removals }: { removals: readonly CandidacyRemoval[] }) {
@@ -10,7 +11,7 @@ export function FilingChanges({ removals }: { removals: readonly CandidacyRemova
       <ul className="mt-2 space-y-2">
         {removals.map((record) => (
           <li key={record.id} data-filing-change-id={record.id}>
-            <p>{record.statement}</p>
+            <p><ReaderText text={record.statement} names={[[record.givenName, record.familyName].filter(Boolean).join(" ")]} /></p>
             <CardSourcesContribution id={`filing-change:${record.id}`} sources={[{ what: "Earlier filing", provenance: record.lastListed }, { what: "Revised filing", provenance: record.absentFrom }]} />
           </li>
         ))}

@@ -1,6 +1,7 @@
 "use client";
 
 
+import { readerText } from "@/lib/text/reader-names";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { ExternalLink } from "lucide-react";
@@ -129,13 +130,13 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
             <ul>
               {offices.map((office, i) => (
                 <li
-                  key={`${office.city}-${i}`}
+                  key={`${office.city && readerText(office.city)}-${i}`}
                   data-directory-office={i}
                   className="border-b border-[var(--panel-border)] py-2 last:border-0"
                 >
                   <p className="t-body font-medium text-paper">
                     {details?.[i] ? (details[i].officeKind === "CAPITOL" ? "Capitol office" : "District office") + (office.city ? " · " : "") : ""}
-                    {office.city}
+                    {office.city && readerText(office.city)}
                     {office.state ? `, ${office.state}` : ""}
                   </p>
                   {/*
@@ -151,7 +152,7 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
                         state: office.state,
                         zip: office.zip,
                       });
-                      const text = `${office.address}${office.zip ? ` ${office.zip}` : ""}`;
+                      const text = readerText(`${office.address}${office.zip ? ` ${office.zip}` : ""}`, "address");
                       return url ? (
                         <a
                           href={url}
@@ -230,7 +231,7 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
         }
       >
         {/* Names as filed, with the chamber's title for this (sub)committee; never a rank. */}
-        {seat.title ? `${seat.title}, ` : ""}
+        {seat.title ? `${readerText(seat.title)}, ` : ""}
         {label}
       </p>
       {seat.jurisdiction ? (

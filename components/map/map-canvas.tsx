@@ -3,6 +3,7 @@
 // The voting ring is drawn at the radius the panel sorts by.
 import { readDesignToken } from "@/lib/design/read-token";
 import { NEARBY_RADIUS_MILES } from "@/lib/ballot/voting-sites";
+import { readerText } from "@/lib/text/reader-names";
 
 // MapLibre 6 dropped its default export; everything is named now.
 import {
@@ -701,7 +702,7 @@ export function MapCanvas({
       button.type = "button";
       button.className = "wtp-vote-pin";
       button.dataset.siteId = id;
-      button.setAttribute("aria-label", `Voting location: ${site.name}`);
+      button.setAttribute("aria-label", `Voting location: ${readerText(site.name)}`);
       const dot = document.createElement("span");
       dot.className = "wtp-vote-pin-dot";
       button.appendChild(dot);

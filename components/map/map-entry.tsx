@@ -35,7 +35,7 @@ import { stateAbbrFromOcdId } from "@/lib/map/state-focus";
 import { captureEvent } from "@/lib/events/client";
 import { useActiveScroll } from "@/hooks/use-active-scroll";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
-import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerGovernmentName, withReaderNames, readerText } from "@/lib/text/reader-names";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
@@ -2089,7 +2089,7 @@ export function bodySubject(
         : []),
       // As the body's own page states them; sourced in this card's Sources.
       ...(body.officeContact?.address
-        ? [{ label: "Office address", value: <>{body.officeContact.address}</> }]
+        ? [{ label: "Office address", value: <>{readerText(body.officeContact.address, "address")}</> }]
         : []),
       ...(body.officeContact?.phone
         ? [{ label: "Office phone", value: <>{body.officeContact.phone}</> }]
@@ -2101,7 +2101,7 @@ export function bodySubject(
               label: "Regular meetings",
               value: (
                 <>
-                  {body.meetingCadence.text}
+                  {readerText(body.meetingCadence.text, "sentence", [body.name ?? body.divisionLabel])}
 
                 </>
               ),
@@ -2248,7 +2248,7 @@ function SearchFailedNotice({
 }) {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
+      <p className="font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Search failed
       </p>
       <p className="mt-1.5 t-body leading-relaxed text-text-dim">
@@ -2275,7 +2275,7 @@ function SearchFailedNotice({
 function TileNotice() {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
+      <p className="font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>
       <p className="mt-1.5 t-body leading-relaxed text-text-dim">

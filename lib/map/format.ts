@@ -1,5 +1,6 @@
 import type { Meeting } from "@/lib/sources/types";
 import { formatDateLong, spellOutDates } from "@/lib/text/format-date";
+import { readerText } from "@/lib/text/reader-names";
 
 /**
  * The what of a meeting, jurisdiction-qualified: if the body/title text
@@ -13,8 +14,8 @@ export type CalendarSafeMeeting = Omit<Meeting, "provenance"> &
   Partial<Pick<Meeting, "provenance">>;
 
 export function meetingHeadline(meeting: CalendarSafeMeeting): string {
-  const what = meeting.bodyName || meeting.title;
-  const jurisdiction = meeting.jurisdiction?.trim();
+  const what = readerText(meeting.bodyName || meeting.title, "title");
+  const jurisdiction = readerText(meeting.jurisdiction?.trim() ?? "", "name");
   if (!jurisdiction) return what;
   if (what.toLowerCase().includes(jurisdiction.toLowerCase())) return what;
   return `${jurisdiction} — ${what}`;
@@ -30,7 +31,7 @@ export function meetingRowTitle(
   { jurisdictionShown }: { jurisdictionShown: boolean },
 ): string {
   if (!jurisdictionShown) return meetingHeadline(meeting);
-  const what = meeting.bodyName || meeting.title;
+  const what = readerText(meeting.bodyName || meeting.title, "title");
   /* The body's own name, never a trim of the headline, which could cut into a name that contains the jurisdiction. */
   return what;
 }
@@ -84,7 +85,7 @@ export function meetingSubline(meeting: Meeting): string {
   const jurisdiction = meeting.jurisdiction?.trim();
   if (jurisdiction && !headline.includes(jurisdiction.toLowerCase())) parts.push(jurisdiction);
 
-  return parts.join(" · ");
+  return readerText(parts.join(" · "), "title");
 }
 
 /**
@@ -95,8 +96,8 @@ export function locationLine(
   name: string | null | undefined,
   address: string | null | undefined,
 ): string {
-  const n = (name ?? "").trim();
-  const a = (address ?? "").trim();
+  const n = readerText((name ?? "").trim(), "title");
+  const a = readerText((address ?? "").trim(), "address");
   if (!n) return a;
   if (!a || n.includes(a)) return n;
   if (a.includes(n)) return a;
@@ -134,7 +135,7 @@ export function venueBodyTitle(
     meetings.map((m) => (m.bodyName ?? "").trim()).filter(Boolean),
   );
   if (bodies.size === 1 && !namesASitting([...bodies][0]!)) {
-    return { title: [...bodies][0]!, basis: "body" };
+    return { title: readerText([...bodies][0]!, "title"), basis: "body" };
   }
 
   const jurisdictions = new Set(
@@ -144,7 +145,7 @@ export function venueBodyTitle(
     return { title: bodyFromJurisdiction([...jurisdictions][0]!), basis: "jurisdiction" };
   }
 
-  return { title: venueName, basis: "venue" };
+  return { title: readerText(venueName, "title"), basis: "venue" };
 }
 
 /**
@@ -152,7 +153,7 @@ export function venueBodyTitle(
  * anchored to a comma and the end, so it never bites into a name.
  */
 export function bodyFromJurisdiction(jurisdiction: string): string {
-  return jurisdiction.replace(/,\s*[A-Z]{2}\s*$/, "").trim() || jurisdiction;
+  return readerText(jurisdiction.replace(/,\s*[A-Z]{2}\s*$/, "").trim() || jurisdiction, "name");
 }
 
 /**
@@ -165,7 +166,7 @@ export function meetingEntryTitle(
 ): string {
   if (!bodyShown) return meetingHeadline(meeting);
   const what = (meeting.bodyName ?? "").trim() || (meeting.title ?? "").trim();
-  return what || meetingHeadline(meeting);
+  return readerText(what || meetingHeadline(meeting), "title");
 }
 
 /**

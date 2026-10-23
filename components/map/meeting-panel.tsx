@@ -1,5 +1,6 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { MeetingRow } from "@/components/ui/meeting-row";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
@@ -189,10 +190,10 @@ export function MeetingPanel({
                 >
                   <span className="mw-venue-office__glyph" aria-hidden="true"><Landmark /></span>
                   <span className="min-w-0">
-                    <span className="block font-semibold text-paper">{office.name}</span>
+                    <span className="block font-semibold text-paper">{readerText(office.name, "name")}</span>
                     <span className="block t-detail text-muted">
                       {office.role === "State office" ? "State legislator" : office.role} district office
-                      {venue.address && addressKey(office.address) === addressKey(venue.address) ? "" : ` · ${office.address}`}
+                      {venue.address && addressKey(office.address) === addressKey(venue.address) ? "" : ` · ${readerText(office.address, "address")}`}
                     </span>
                   </span>
                 </button>
@@ -213,7 +214,7 @@ export function MeetingPanel({
         {groups.map((group) => (
           <section key={group.id}>
             <p className="t-structure sticky top-0 z-[1] bg-[var(--panel)] px-5 py-2 text-label">
-              {group.label}
+              {readerText(group.label)}
             </p>
             <div>
               {group.meetings.map((meeting) => (
@@ -234,7 +235,7 @@ export function MeetingPanel({
         ))}
 
         <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : []),
-          ...offices.map(office => ({ what: `${office.name}: district office address`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "", collectedAt: office.collectedAt ?? "", verifiedAt: null } }))]} />
+          ...offices.map(office => ({ what: `${readerText(office.name, "name")}: district office address`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "", collectedAt: office.collectedAt ?? "", verifiedAt: null } }))]} />
       </div>
     </aside>
   );
@@ -287,7 +288,7 @@ export function HowToBeHeard({
     {gap}
     <CardSourcesContribution id={`comment-rules:${bodyId ?? ocdId}`} sources={sources} />
     {lines.length > 0 && <details className="how-to-be-heard mt-3 pl-4">
-      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption uppercase tracking-[0.14em] text-paper-dim">
+      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption  tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
       <ul className="mt-1 space-y-1 t-detail leading-relaxed text-paper-dim">

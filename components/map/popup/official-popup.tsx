@@ -1,5 +1,6 @@
 "use client";
 
+import { ReaderText } from "@/components/ui/reader-text";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { CardGapContribution, CardGapsContribution } from "@/components/ui/card-gap-context";
 
@@ -320,7 +321,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                 className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0"
               >
                 {/* The official title, never ours. */}
-                <p className="t-detail leading-snug">{vote.title}</p>
+                <p className="t-detail leading-snug"><ReaderText text={vote.title} /></p>
 
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
                   <VotePill tone={position.tone as "yes" | "no" | "neutral"}>
@@ -469,7 +470,7 @@ export function BillPlainSummary({
         What this bill does — plain language
       </summary>
       <p className="mt-1 t-caption font-semibold leading-relaxed text-paper-dim">
-        {summary.summary}
+        <ReaderText text={summary.summary} />
       </p>
     </details>
   );
@@ -493,7 +494,7 @@ export function OfficeBlurb({
     <>
       {!bare && <PopupSectionLabel>What this office does</PopupSectionLabel>}
       <p className="mt-1.5 t-detail leading-relaxed text-paper-dim">
-        {blurb.text}
+        <ReaderText text={blurb.text} />
       </p>
       <p className="mt-1 t-caption text-muted">
         Powers defined in:{" "}

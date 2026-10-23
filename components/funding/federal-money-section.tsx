@@ -6,6 +6,8 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
 import { FEDERAL_MONEY_SOURCES } from "@/lib/federal-money/model";
 import { federalMoneyRows, federalMoneySources } from "@/lib/federal-money/view";
 import type { FederalMoneyPlaceRead } from "@/lib/federal-money/reader";
+import { readerText } from "@/lib/text/reader-names";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
 const requests = new Map<string, Promise<FederalMoneyPlaceRead>>();
 const labels = {
@@ -30,6 +32,7 @@ function load(divisionId: string, bodyId?: string, cursor?: string | null) {
 }
 
 export function FederalMoneySection({ divisionId, bodyId, data }: { divisionId: string; bodyId?: string; data?: FederalMoneyPlaceRead }) {
+  const knownNames = useReaderNames();
   const [read, setRead] = useState<FederalMoneyPlaceRead | null>(null);
   const identity = `${divisionId}|${bodyId ?? ""}`;
   const [pageState, setPageState] = useState<{ identity: string; request: number; loading: boolean; failed: boolean } | null>(null);
@@ -70,7 +73,7 @@ export function FederalMoneySection({ divisionId, bodyId, data }: { divisionId: 
       <h4 className="t-detail font-medium text-paper">{labels[source.source]}</h4>
       <dl className="mt-2 space-y-3">{source.rows.map(row => <div key={row.fact.id} data-federal-record={row.fact.id}>
         <dt className="t-body font-medium text-paper">{row.label}</dt>
-        <dd className="mt-1 t-body leading-relaxed text-paper-dim">{row.text}</dd>
+        <dd className="mt-1 t-body leading-relaxed text-paper-dim">{readerText(row.text, "sentence", knownNames)}</dd>
       </div>)}</dl>
       {source.coverageComplete === false && <CardGapContribution id={`federal-money:${identity}:${source.source}:more`} label="more records for this place" />}
     </div> : <CardGapContribution key={source.source} id={`federal-money:${identity}:${source.source}`} label={labels[source.source].toLowerCase()} />)}

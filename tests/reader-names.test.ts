@@ -8,8 +8,49 @@ import {
   readerBodyName,
   readerGovernmentName,
   readerPartyLabel,
+  readerText,
+  READER_ACRONYMS,
   withReaderNames,
 } from "../lib/text/reader-names.ts";
+
+test("reader text cases shouting words inside mixed source text", () => {
+  assert.equal(readerBodyName("BUSINESS IMPROVEMENT DISTRICT BOARD #19 (30th STREET Industrial Corridor)"),
+    "Business Improvement District Board #19 (30th Street Industrial Corridor)");
+  assert.equal(readerText("ALD. MOORE", "name"), "Ald. Moore");
+  assert.equal(readerText("ALD. A. PRATT", "name"), "Ald. A. Pratt");
+  assert.equal(readerText("KEN Paxton", "name"), "Ken Paxton");
+  assert.equal(readerText("JOSH SHAPIRO AND AUSTIN Davis", "name"), "Josh Shapiro and Austin Davis");
+  assert.equal(readerText("McDONALD MACDONALD O’BRIEN-SMITH JR. II III IV", "name"), "McDonald MacDonald O’Brien-Smith Jr. II III IV");
+  assert.equal(readerText("MACEY MACIAS", "name"), "Macey Macias");
+  assert.equal(readerText("CITY OF MILWAUKEE"), "City of Milwaukee");
+  assert.equal(readerText("U. S. SENATOR"), "U. S. Senator");
+  assert.equal(readerPartyLabel("PND"), "Party Not Designated");
+  assert.equal(readerPartyLabel("Democratic / PND"), "Democratic / Party Not Designated");
+  assert.equal(readerPartyLabel("NO LABELS / PND"), "No Labels / Party Not Designated");
+});
+
+test("addresses keep postal codes and PO while casing the street", () => {
+  assert.equal(readerText("PO BOX 19, 100 N MAIN STREET, MILWAUKEE, WI 53202", "address"),
+    "PO Box 19, 100 N Main Street, Milwaukee, WI 53202");
+  assert.equal(readerText("123 30TH STREET, TUCSON AZ 85701", "address"), "123 30th Street, Tucson AZ 85701");
+  assert.equal(readerText("100 BROADWAY, NEW YORK NY", "address"), "100 Broadway, New York NY");
+});
+
+test("sentences retain held names and real acronyms, with no changes to evidence", () => {
+  const source = { quote: "AUTHORIZES BONDS FOR HOUSING IN MILWAUKEE. THE COMMON COUNCIL HEARD KEN PAXTON AND FEMA.", name: "KEN PAXTON" };
+  const before = structuredClone(source);
+  assert.equal(readerText(source.quote, "sentence", ["Milwaukee", "Common Council", "Ken Paxton"]),
+    "Authorizes bonds for housing in Milwaukee. The Common Council heard Ken Paxton and FEMA.");
+  assert.deepEqual(source, before);
+  assert.equal(readerText("I SUPPORT FEMA AND YMCA. BART HAS A PAC AND AN LLC IN THE US.", "sentence"),
+    "I support FEMA and YMCA. BART has a PAC and an LLC in the US.");
+  assert.equal(readerText("9:00AM-7:00PM", "sentence"), "9:00AM-7:00PM");
+  assert.equal(readerText("FEMA’S FUNDS SUPPORT PACS AT 12:30 PM MST.", "sentence"), "FEMA’s funds support PACs at 12:30 PM MST.");
+  assert.equal(readerText("Entity AB123XYZ9", "sentence"), "Entity AB123XYZ9");
+  assert.equal(readerText("APPROVED BY ST. LOUIS (CITY).", "sentence", ["St. Louis (City)"]), "Approved by St. Louis (City).");
+  for (const acronym of READER_ACRONYMS) assert.equal(readerText(acronym), acronym);
+  assert.equal(readerText(readerText(source.quote, "sentence", ["Milwaukee"]), "sentence", ["Milwaukee"]), readerText(source.quote, "sentence", ["Milwaukee"]));
+});
 
 test("a portal's sitting words are not part of the body's name", () => {
   // The Body filter must not list meeting titles as bodies.

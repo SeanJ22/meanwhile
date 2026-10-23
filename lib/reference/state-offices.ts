@@ -1,6 +1,7 @@
 import { US_STATES } from "../control-plane/readiness/catalog.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { readRecords } from "./index.ts";
+import { readerText } from "../text/reader-names.ts";
 
 export interface StateOfficeContact {
   readonly id: string;
@@ -55,7 +56,8 @@ function officesByState(): ReadonlyMap<string, readonly StateOfficeContact[]> {
 
 export function stateOfficesForStates(states: readonly string[]): StateOfficeContact[] {
   const index = officesByState();
-  return [...new Set(states.map(state => state.toUpperCase()))].flatMap(state => index.get(state) ?? []);
+  return [...new Set(states.map(state => state.toUpperCase()))].flatMap(state => index.get(state) ?? [])
+    .map(office => ({ ...office, office: readerText(office.office) }));
 }
 
 export function stateOfficesForDivisions(divisions: readonly string[]): StateOfficeContact[] {

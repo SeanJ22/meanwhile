@@ -1,5 +1,6 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { X } from "lucide-react";
 import { useEffect } from "react";
 
@@ -59,12 +60,12 @@ export function PhoneChoiceModal({
         <div className="phone-modal-body">
           {choices.map((choice) => (
             <a
-              key={`${choice.label}-${choice.phone}`}
+              key={`${readerText(choice.label)}-${choice.phone}`}
               href={telHref(choice.phone)}
               className="phone-modal-row"
               onClick={onClose}
             >
-              <span className="phone-modal-row-label">{choice.label}</span>
+              <span className="phone-modal-row-label">{readerText(choice.label)}</span>
               <span className="phone-modal-row-number">{choice.phone}</span>
             </a>
           ))}

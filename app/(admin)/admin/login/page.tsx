@@ -63,10 +63,10 @@ const STYLE = `
 [data-admin-signin] .signin-card::after { content:""; position:absolute; left:15%; right:15%; bottom:0; height:1px;
   background: linear-gradient(90deg, transparent, var(--lumen-horizon), transparent); opacity:.22; pointer-events:none; }
 [data-admin-signin] .signin-head { display:flex; justify-content:space-between; align-items:center; }
-[data-admin-signin] .signin-chip { font: 500 10.5px var(--font-mono); letter-spacing:.08em; text-transform:uppercase;
+[data-admin-signin] .signin-chip { font: 500 10.5px var(--font-mono); letter-spacing:.08em;
   color: var(--text-dim); padding: 5px 10px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--lumen-rim); }
 [data-admin-signin] .signin-block { display:flex; flex-direction:column; gap:12px; }
-[data-admin-signin] .signin-eyebrow { font: 500 11px var(--font-mono); letter-spacing:.08em; text-transform:uppercase; color: var(--text-dim); margin:0; }
+[data-admin-signin] .signin-eyebrow { font: 500 11px var(--font-mono); letter-spacing:.08em; color: var(--text-dim); margin:0; }
 [data-admin-signin] .signin-eyebrow[data-tone="refused"] { color: var(--canceled); }
 [data-admin-signin] h1.signin-title { margin:0; font: 500 29px var(--font-sans); line-height:1.15; letter-spacing:-.012em; color: var(--text); }
 [data-admin-signin] h1.signin-state-title { margin:0; font: 500 19px var(--font-sans); line-height:1.2; color: var(--text); }
@@ -91,12 +91,12 @@ const STYLE = `
 [data-admin-signin] .signin-rule { height:1px; background: var(--panel-border); border:0; margin:0; }
 [data-admin-signin] .signin-foot { display:flex; flex-direction:column; gap:12px; }
 [data-admin-signin] .signin-facts { display:flex; flex-wrap:wrap; gap:16px; font: 500 10.5px var(--font-mono);
-  letter-spacing:.07em; text-transform:uppercase; color: var(--text-dim); margin:0; }
+  letter-spacing:.07em; color: var(--text-dim); margin:0; }
 [data-admin-signin] .signin-note { margin:0; font: 400 13px var(--font-sans); line-height:1.5; color: var(--text-dim); }
 [data-admin-signin] .signin-note code { font: 500 12px var(--font-mono); color: var(--text); }
 [data-admin-signin] .signin-breakglass { padding: 20px 22px; }
-[data-admin-signin] .signin-breakglass h2 { margin:0 0 10px; font: 600 13px var(--font-mono); letter-spacing:.06em; text-transform:uppercase; color: var(--text-dim); }
-[data-admin-signin] .signin-breakglass label { display:flex; flex-direction:column; gap:7px; font: 500 10.5px var(--font-mono); letter-spacing:.08em; text-transform:uppercase; color: var(--text-dim); margin-top: 12px; }
+[data-admin-signin] .signin-breakglass h2 { margin:0 0 10px; font: 600 13px var(--font-mono); letter-spacing:.06em; color: var(--text-dim); }
+[data-admin-signin] .signin-breakglass label { display:flex; flex-direction:column; gap:7px; font: 500 10.5px var(--font-mono); letter-spacing:.08em; color: var(--text-dim); margin-top: 12px; }
 [data-admin-signin] .signin-breakglass input { min-height:44px; padding:0 14px; border-radius:7px; border:0;
   background: var(--surface); color: var(--text); font: 400 15px var(--font-sans); box-shadow: inset 0 0 0 1px var(--panel-border); }
 [data-admin-signin] .signin-breakglass button { margin-top: 12px; }
@@ -187,9 +187,9 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
           <div className="signin-foot">
             <p className="signin-note">This host serves the owner control center only. Every admin route returns 404 on the public site.</p>
             <p className="signin-facts">
-              <span>SESSION &middot; {SESSION_HOURS} H</span>
-              <span>COOKIE &middot; DEVICE-BOUND</span>
-              <span>AUDIT &middot; ON</span>
+              <span>Session &middot; {SESSION_HOURS} h</span>
+              <span>Cookie &middot; Device-bound</span>
+              <span>Audit &middot; On</span>
             </p>
           </div>
         </section>

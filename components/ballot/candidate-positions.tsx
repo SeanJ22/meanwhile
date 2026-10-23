@@ -1,9 +1,10 @@
+import { ReaderText } from "@/components/ui/reader-text";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { IssuePosition } from "@/lib/candidates/positions";
 import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 
 /**
- * What held campaign and official pages say, as verbatim short quotes with
+ * What held campaign and official pages say, as short quotes with
  * page and read date; no summary, characterisation or count of ours. A phrase
  * match alone does not prove a personal stance. Issues stay in curated order,
  * never sorted by match count.
@@ -38,9 +39,9 @@ export function CandidatePositions({
                   key={`${passage.documentUrl}-${passage.sourceRevisionId ?? "legacy"}-${passage.quote.slice(0, 40)}`}
                   className="mt-1 border-l-2 border-[var(--panel-border)] pl-3"
                 >
-                  {/* Source words, never rewritten; trimmed only for length, with the corpus's ellipses. */}
+                  {/* Source wording with reader casing and the corpus's ellipses. */}
                   <p className="t-record t-detail leading-relaxed text-paper-dim">
-                    &ldquo;{passage.quote}&rdquo;
+                    &ldquo;<ReaderText text={passage.quote} />&rdquo;
                   </p>
 
                 </div>

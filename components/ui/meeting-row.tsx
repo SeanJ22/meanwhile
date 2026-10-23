@@ -1,5 +1,7 @@
 "use client";
 
+import { ReaderText } from "@/components/ui/reader-text";
+import { readerText } from "@/lib/text/reader-names";
 import type { ReactNode } from "react";
 import type { Meeting } from "@/lib/sources/types";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
@@ -35,7 +37,7 @@ export function MeetingRow(props: RowProps) {
   if (props.record) {
     const record = props.record;
     return <div data-meeting-row data-meeting-id={record.meetingId ?? record.id} className="t-detail leading-relaxed">
-      <p>{record.text}</p>
+      <p><ReaderText text={record.text} /></p>
       <CardSourcesContribution id={`ask-meeting:${record.kind}:${record.id}`} sources={[{ what: "Held meeting or agenda record", provenance: {
         sourceUrl: record.sourceUrl ?? "", sourceOrg: record.sourceOrg ?? "", collectedAt: record.retrievedAt ?? "", verifiedAt: null,
       } }]} />
@@ -53,7 +55,7 @@ export function MeetingRow(props: RowProps) {
   return <article data-meeting-row data-meeting-id={meeting.id} className={compact ? "py-2 t-detail leading-relaxed" : "px-5 pb-5 pt-4 t-body leading-relaxed"}>
     {!gapsInParent && <CardGapsContribution id={`meeting:${meeting.id}`} gaps={meetingCardGaps(meeting)} />}
     <h3 className="font-display t-heading font-semibold text-paper">
-      {onOpen ? <button type="button" className="text-left hover:text-signal" onClick={() => onOpen(meeting)}>{title}</button> : title}
+      {onOpen ? <button type="button" className="text-left hover:text-signal" onClick={() => onOpen(meeting)}>{readerText(title)}</button> : readerText(title)}
     </h3>
     {meetingSubline(meeting) && <p className="mt-1 text-paper-dim">{meetingSubline(meeting)}</p>}
     {jurisdiction && <div className="mt-2">{jurisdiction}</div>}
@@ -66,8 +68,8 @@ export function MeetingRow(props: RowProps) {
     {!compact && <p className="t-caption text-muted">{formatRelativeDay(meeting.startsAt)}</p>}
     {where && <div className="mt-2 t-detail text-muted" data-meeting-where={where}>
       {meeting.location ? <>{locationLine(meeting.location.name, meeting.location.address)}{directions && <> · <CheckedLink href={directions.url} target="_blank" rel="noreferrer" className="text-link underline">Directions</CheckedLink></>}</>
-        : access ? <>Online · {access.label}{access.joinUrl && <> · <CheckedLink href={access.joinUrl} target="_blank" rel="noreferrer" className="text-link underline">Join online</CheckedLink></>}</>
-          : statedPlace}
+        : access ? <>Online · {readerText(access.label)}{access.joinUrl && <> · <CheckedLink href={access.joinUrl} target="_blank" rel="noreferrer" className="text-link underline">Join online</CheckedLink></>}</>
+          : statedPlace ? readerText(statedPlace, "address") : null}
     </div>}
     {(agendaLink || recording) && <div className="mt-2 flex flex-wrap items-baseline gap-2 t-detail">
       {agendaLink && <CheckedLink href={agendaLink} target="_blank" rel="noreferrer" className="text-link underline">{meeting.agendaUrl ? "Read the agenda" : "Meeting page"}</CheckedLink>}

@@ -1,5 +1,6 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { useState } from "react";
 
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -21,7 +22,7 @@ export function IncumbentRecordLink({
   return (
     <>
       <p className="mt-1.5 t-caption leading-relaxed text-muted">
-        {holder.name} currently holds this seat, so there&apos;s more
+        {readerText(holder.name, "name")} currently holds this seat, so there&apos;s more
         information about them.
       </p>
       <button
@@ -67,7 +68,7 @@ export function IncumbentNameLink({
         onClick={() => setOpen(true)}
         className="cursor-pointer text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
       >
-        {name}
+        {readerText(name, "name")}
       </button>
       {open && (
         <OfficialModal

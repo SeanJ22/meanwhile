@@ -16,6 +16,7 @@ import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { formatDateMDY } from "@/lib/map/format";
 import { plainMoney } from "@/lib/funding/plain-money";
+import { readerText } from "@/lib/text/reader-names";
 
 /**
  * Campaign money as the FEC publishes it: committee totals in sentences and,
@@ -37,6 +38,7 @@ export function FundingDisplay({
   /** Inside a CardSection that already names the block: drops its own frame and eyebrow. */
   bare?: boolean;
 }) {
+  const knownNames = [data.name, ...data.contributors.flatMap(row => [row.contributorName, row.city ?? ""]), ...Object.values(data.secondHop).map(hop => hop.name)];
   return (
     <div
       data-funding-section
@@ -47,7 +49,7 @@ export function FundingDisplay({
       }
     >
       {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money</p>}
-      {data.registrationLabel && <p className="mt-1 t-detail text-muted">{data.registrationLabel}</p>}
+      {data.registrationLabel && <p className="mt-1 t-detail text-muted">{readerText(data.registrationLabel, "sentence", knownNames)}</p>}
       <MoneyOverview data={data} />
       {data.totals?.smallDonorShare === null && (data.totals.individualItemized === null || data.totals.individualUnitemized === null) && (
         <CardGapContribution id={`money-small-donor-share:${data.fecCandidateId}`} label="small-donor share" />
@@ -55,7 +57,7 @@ export function FundingDisplay({
       {data.concentration && !data.concentration.hasGeography && <CardGapContribution id={`funding-geography:${data.fecCandidateId}`} label="contribution locations" />}
       {data.sentences.map((sentence) => (
         <p key={sentence} className="mt-1.5 t-body leading-relaxed text-paper-dim">
-          {sentence}
+          {readerText(sentence, "sentence", knownNames)}
         </p>
       ))}
       <ReactionControl
@@ -105,7 +107,7 @@ export function FundingDisplay({
                 key={sentence}
                 className="t-detail leading-relaxed text-paper-dim"
               >
-                {sentence}
+                {readerText(sentence, "sentence", knownNames)}
               </li>
             ))}
           </ul>
@@ -128,7 +130,7 @@ export function FundingDisplay({
                 key={sentence}
                 className="t-detail leading-relaxed text-paper-dim"
               >
-                {sentence}
+                {readerText(sentence, "sentence", knownNames)}
               </li>
             ))}
           </ul>
@@ -305,8 +307,8 @@ function ContributorColumn({
   if (groups.length === 0) return null;
   return (
     <div>
-      <p className="t-caption font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
-        {title}
+      <p className="t-caption font-semibold trailing-space-trimmed-8 tracking-[0.08em] text-muted">
+        {readerText(title, "title")}
       </p>
       <ul className="mt-1" data-contributor-group={title}>
         {groups.map((group) => (
@@ -342,9 +344,9 @@ function ContributorRow({
     >
       <div className="flex items-baseline justify-between gap-3">
         <span className="min-w-0 font-medium text-paper">
-          {group.contributorName}
+          {readerText(group.contributorName, "name")}
           {group.city && group.state && (
-            <span className="font-normal text-muted"> · {group.city}, {group.state}</span>
+            <span className="font-normal text-muted"> · {readerText(group.city, "name")}, {group.state}</span>
           )}
           {entityLabel && !typeLabel && (
             <span className="font-normal text-muted"> · {entityLabel}</span>
@@ -432,7 +434,7 @@ function SecondHopPanel({
               <span className="mw-books-label">The campaign&apos;s books</span>
               <span className="mw-books-value">${Math.round(toCampaign.amount).toLocaleString("en-US")}</span>
               <span className="mw-books-note">
-                from {hop.name}, {toCampaign.count} {toCampaign.count === 1 ? toCampaign.noun.replace(/s$/, "") : toCampaign.noun}
+                from {readerText(hop.name, "name")}, {toCampaign.count} {toCampaign.count === 1 ? toCampaign.noun.replace(/s$/, "") : toCampaign.noun}
               </span>
             </div>
           )}
@@ -441,13 +443,13 @@ function SecondHopPanel({
               <span className="mw-books-label">This committee&apos;s books</span>
               <span className="mw-books-value">${Math.round(hop.receipts).toLocaleString("en-US")}</span>
               <span className="mw-books-note">
-                raised by {hop.name} itself — separate money, not added to the campaign&apos;s totals
+                raised by {readerText(hop.name, "name")} itself — separate money, not added to the campaign&apos;s totals
               </span>
             </div>
           )}
         </div>
         <p className="t-caption font-semibold text-paper">
-          Who gives to {hop.name}
+          Who gives to {readerText(hop.name, "name")}
         </p>
         {hop.cycle && <p className="t-caption text-muted">Cycle {hop.cycle - 1}–{String(hop.cycle).slice(2)}</p>}
         <p className="mt-0.5 t-caption leading-relaxed text-voice">
@@ -462,9 +464,9 @@ function SecondHopPanel({
               className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 t-caption last:border-0"
             >
               <span className="min-w-0 text-paper">
-                {row.contributorName}
+                {readerText(row.contributorName, "name")}
                 {row.city && row.state && (
-                  <span className="text-muted"> · {row.city}, {row.state}</span>
+                  <span className="text-muted"> · {readerText(row.city, "name")}, {row.state}</span>
                 )}
                 {row.count > 1 && (
                   <span className="text-muted">
@@ -491,7 +493,7 @@ export function FundingAbsence({ data }: { data: FundingAbsenceData }) {
     <div className="mt-2">
       <p className={SECTION_LABEL_CLASS}>Campaign money</p>
       <p className="mt-1 t-detail leading-relaxed text-muted">
-        {data.statement}
+        {readerText(data.statement, "sentence")}
       </p>
       <CardSourcesContribution id={`funding-absence:${data.searchUrl ?? "unknown"}`} sources={[{ what: "Campaign filing search", provenance: { sourceUrl: data.searchUrl ?? "", sourceOrg: "Federal Election Commission", collectedAt: data.checkedAt, verifiedAt: null } }]} />
     </div>
@@ -501,6 +503,6 @@ export function FundingAbsence({ data }: { data: FundingAbsenceData }) {
 /** The state and local races line: a stated gap, never silence. */
 export function StateFundingNote({ note }: { note: string }) {
   return (
-    <p className="mt-2 t-caption leading-relaxed text-muted">{note}</p>
+    <p className="mt-2 t-caption leading-relaxed text-muted">{readerText(note, "sentence")}</p>
   );
 }

@@ -8,6 +8,8 @@ import { feedbackHref } from "@/lib/feedback/shape";
 import { useReaderCopy } from "@/hooks/use-reader-copy";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
+import { readerText } from "@/lib/text/reader-names";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
 import { recordVotingFailure } from "@/lib/ballot/voting-errors";
@@ -138,7 +140,7 @@ export function VotingSitesPanel({
       state.answer.jurisdictions
         .flatMap((j) => j.sites)
         .filter(isPinnable)
-        .map((s) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng })),
+        .map((s) => ({ id: s.id, name: readerText(s.name, "title"), lat: s.lat, lng: s.lng })),
     );
   }, [state]);
 
@@ -212,18 +214,19 @@ export function VotingSitesPanel({
 /** The actual answered jurisdiction/site body shared by both panel entry paths. */
 export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
   const gaps = useMemo(() => votingAnswerGaps(answer), [answer]);
+  const knownNames = useReaderNames();
   return <>
       <CardGapsContribution id="voting-answer" gaps={gaps} />
       {answer.jurisdictions.map((j) => (
           <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
-            <h3 className="voting-jurisdiction-name">{j.name}</h3>
-            <p className="voting-model">{j.modelSentence}</p>
+            <h3 className="voting-jurisdiction-name">{readerText(j.name, "title")}</h3>
+            <p className="voting-model">{readerText(j.modelSentence, "sentence", [...knownNames, j.name])}</p>
             {/* Which site is yours, or the refusal with its rungs; never a best guess. */}
             <p
               className="voting-narrowing"
               data-kind={j.narrowing.kind.toLowerCase()}
             >
-              {j.narrowing.sentence}
+              {readerText(j.narrowing.sentence, "sentence", [...knownNames, j.name])}
             </p>
             {j.narrowing.kind === "REFUSED" && j.narrowing.rungs.length > 0 && (
               <details className="voting-narrowing-rungs">
@@ -231,39 +234,39 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
                 <ol className="voting-rungs">
                   {j.narrowing.rungs.map((r, i) => (
                     <li key={`${r.rung}-${i}`}>
-                      <span className="voting-rung-what">{r.what}</span>
-                      <span className="voting-rung-result">{r.result}</span>
+                      <span className="voting-rung-what">{readerText(r.what, "sentence", [...knownNames, j.name])}</span>
+                      <span className="voting-rung-result">{readerText(r.result, "sentence", [...knownNames, j.name])}</span>
                       <span className="voting-rung-when">{r.attemptedAt}</span>
                     </li>
                   ))}
                 </ol>
               </details>
             )}
-            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{j.publication.text}</p>}
-            {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
+            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{readerText(j.publication.text, "sentence", [...knownNames, j.name])}</p>}
+            {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{readerText(rule.text, "sentence", [...knownNames, j.name])}</p>)}
             {j.office && <div className="voting-office">
-              <h4>Local election office: {j.office.name}</h4>
+              <h4>Local election office: {readerText(j.office.name, "title")}</h4>
               {j.office.phone && <p>Phone: <a href={`tel:${j.office.phone.replace(/[^+\d]/g, "")}`}>{j.office.phone}</a></p>}
               {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
-              {j.office.address && <p>{j.office.address}</p>}
+              {j.office.address && <p>{readerText(j.office.address, "address")}</p>}
             </div>}
             {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
               <p className="voting-election">
-                Published for the {j.election}.
+                Published for the {readerText(j.election, "title")}.
               </p>
             )}
 
             {j.refusal && (
               <div className="voting-refusal">
-                <p>{j.refusalLine}</p>
-                <p className="voting-refusal-wall">{j.refusal.wall}</p>
+                <p>{j.refusalLine && readerText(j.refusalLine, "sentence", [...knownNames, j.name])}</p>
+                <p className="voting-refusal-wall">{readerText(j.refusal.wall, "sentence", [...knownNames, j.name])}</p>
                 <details>
                   <summary>What we tried</summary>
                   <ol className="voting-rungs">
                     {j.refusal.rungs.map((r, i) => (
                       <li key={`${r.rung}-${i}`}>
-                        <span className="voting-rung-what">{r.what}</span>
-                        <span className="voting-rung-result">{r.result}</span>
+                        <span className="voting-rung-what">{readerText(r.what, "sentence", [...knownNames, j.name])}</span>
+                        <span className="voting-rung-result">{readerText(r.result, "sentence", [...knownNames, j.name])}</span>
                         <span className="voting-rung-when">{r.attemptedAt}</span>
                       </li>
                     ))}
@@ -347,32 +350,33 @@ function SiteRow({
   selected: boolean;
   onSelect: () => void;
 }) {
+  const knownNames = useReaderNames();
   const lastChecked = site.sources?.flatMap(source => source.checkedAt ? [source.checkedAt] : []).sort().at(-1) ?? checkedAt;
   return (
     <li className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
         <MapPin aria-hidden size={14} className="voting-site-icon" />
-        <span className="voting-site-name">{site.name}</span>
+        <span className="voting-site-name">{readerText(site.name, "title")}</span>
       </button>
-      {site.address && <p className="voting-site-address">{site.address}</p>}
+      {site.address && <p className="voting-site-address">{readerText(site.address, "address")}</p>}
       {/* A null distance renders nothing; map gaps join the card footer. */}
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
-      {site.room && <p className="voting-site-room">{site.room}</p>}
+      {site.room && <p className="voting-site-room">{readerText(site.room, "title")}</p>}
       <p className="voting-site-kind">{(site.kinds ?? [site.kind]).map(kind => KIND_LABEL[kind]).join(" · ")}</p>
-      {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {site.election}</p>}
+      {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {readerText(site.election, "title")}</p>}
       {site.electionDate && <p className="voting-site-election">Election date: {site.electionDate}</p>}
-      {(site.precincts?.length || site.precinct) && <p className="voting-site-serves">Precinct: {(site.precincts ?? [site.precinct]).join(", ")}</p>}
-      {site.serves && <p className="voting-site-serves">{site.serves}</p>}
+      {(site.precincts?.length || site.precinct) && <p className="voting-site-serves">Precinct: {readerText((site.precincts ?? [site.precinct]).join(", "), "title")}</p>}
+      {site.serves && <p className="voting-site-serves">{readerText(site.serves, "sentence", [...knownNames, site.name])}</p>}
       {site.schedules?.length ? site.schedules.map((schedule, index) => <p className="voting-site-hours whitespace-pre-line" key={index}>
-        {KIND_LABEL[schedule.kind]}{schedule.electionDate ? ` · ${schedule.electionDate}` : ""}{schedule.days ? ` · ${schedule.days}` : ""}{schedule.hours ? `: ${schedule.hours}` : ""}
+        {KIND_LABEL[schedule.kind]}{schedule.electionDate ? ` · ${schedule.electionDate}` : ""}{schedule.days ? ` · ${readerText(schedule.days, "title")}` : ""}{schedule.hours ? `: ${readerText(schedule.hours, "sentence")}` : ""}
       </p>) : <>
-        {site.days && <p className="voting-site-days">Days: {site.days}</p>}
-        {site.hours && <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p>}
+        {site.days && <p className="voting-site-days">Days: {readerText(site.days, "title")}</p>}
+        {site.hours && <p className="voting-site-hours whitespace-pre-line">Hours: {readerText(site.hours, "sentence")}</p>}
       </>}
-      {site.locationNotes && <p className="voting-site-notes">{site.locationNotes}</p>}
-      {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {site.accessibilityNotes}</p>}
-      {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
-      {site.office && <p className="voting-site-office">{site.office.name}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
+      {site.locationNotes && <p className="voting-site-notes">{readerText(site.locationNotes, "sentence", [...knownNames, site.name])}</p>}
+      {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {readerText(site.accessibilityNotes, "sentence", [...knownNames, site.name])}</p>}
+      {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{readerText(rule.text, "sentence", [...knownNames, site.name])}</p>)}
+      {site.office && <p className="voting-site-office">{readerText(site.office.name, "title")}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
       <p className="voting-site-checked">Last checked: <time dateTime={lastChecked}>{lastChecked.slice(0, 10)}</time></p>
       {site.address && <a
         className="voting-site-directions"

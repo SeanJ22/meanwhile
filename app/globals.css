@@ -368,7 +368,6 @@
     font-family: var(--font-mono);
     font-size: var(--text-caption);
     letter-spacing: 0.22em;
-    text-transform: uppercase;
     color: var(--link);
   }
 
@@ -426,7 +425,6 @@
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     font-weight: 700;
-    text-transform: uppercase;
     letter-spacing: 0.16em;
   }
 
@@ -448,7 +446,6 @@
     font-family: var(--font-mono);
     font-size: 0.625rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.15em;
   }
 
@@ -663,7 +660,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   color: var(--text-muted);
   font-family: inherit;
   font-size: 10px;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   cursor: pointer;
   transition: color var(--dur-fast) var(--ease-move);
@@ -749,7 +745,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .scope-label {
   font-size: 10px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1px;
   margin-inline-end: -1px;
   color: var(--text-dim);
@@ -915,7 +910,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .search-ac-group {
   font-size: 9px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.6px;
   margin-inline-end: -0.6px;
   color: var(--text-muted);
@@ -954,7 +948,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .search-ac-type {
   font-size: 8px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 1px 5px;
   border-radius: 4px;
@@ -1117,7 +1110,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .prox-unit {
   font-size: 10px;
   color: var(--text-muted);
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -1187,7 +1179,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .filters-title {
   font-size: 11px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1.2px;
   margin-inline-end: -1.2px;
   color: var(--text-dim);
@@ -1250,7 +1241,6 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 .filter-label {
   font-size: 11px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1.1px;
   margin-inline-end: -1.1px;
   color: var(--text-dim);
@@ -1576,7 +1566,6 @@ a.ballot-pill-main:focus {
 .ballot-pill-soon {
   font-size: 0.625rem;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.12em;
   margin-inline-end: -0.12em;
   opacity: 0.72;
@@ -1727,7 +1716,6 @@ a.ballot-pill-main:focus {
   font-weight: 600;
   letter-spacing: 0.15em;
   margin-inline-end: -0.15em;
-  text-transform: uppercase;
   color: var(--text-muted);
 }
 
@@ -2421,7 +2409,6 @@ a.ballot-pill-main:focus {
   font-weight: 600;
   letter-spacing: 0.08em;
   margin-inline-end: -0.08em;
-  text-transform: uppercase;
   vertical-align: 1px;
   color: var(--bg);
 }
@@ -2805,7 +2792,6 @@ a.ballot-pill-main:focus {
   font-family: inherit;
   font-size: 11px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1.1px;
   margin-inline-end: -1.1px;
   cursor: pointer;
@@ -2932,7 +2918,6 @@ a.ballot-pill-main:focus {
   border-bottom: 1px solid var(--panel-border);
   font-size: 10px;
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.8px;
   margin-inline-end: -0.8px;
   color: var(--text-dim);
@@ -2942,7 +2927,6 @@ a.ballot-pill-main:focus {
   padding: 8px 12px 3px;
   font-size: 9px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.8px;
   margin-inline-end: -0.8px;
   color: var(--tier-accent, var(--text-muted));
@@ -2975,7 +2959,6 @@ a.ballot-pill-main:focus {
 
 .district-picker-type {
   font-size: 9px;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-muted);
   white-space: nowrap;
@@ -3108,7 +3091,6 @@ a.ballot-pill-main:focus {
 .welcome-divider {
   margin: 20px 0 12px;
   font-size: 10px;
-  text-transform: uppercase;
   letter-spacing: 1px;
   margin-inline-end: -1px;
   color: var(--text-muted);
@@ -3835,7 +3817,6 @@ button.jurisdiction-badge-action:focus-visible {
 .popup-type {
   font-size: 10px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1.3px;
   margin-inline-end: -1.3px;
   /* Room for the expand button, which is absolutely positioned over this row. */
@@ -3878,7 +3859,6 @@ button.jurisdiction-badge-action:focus-visible {
 
 .pk {
   font-size: 10px;
-  text-transform: uppercase;
   color: var(--text-dim);
   letter-spacing: 0.5px;
   white-space: nowrap;
@@ -3908,7 +3888,6 @@ button.jurisdiction-badge-action:focus-visible {
   font-family: var(--font-mono);
   font-size: 10px;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 1.4px;
   margin-inline-end: -1.4px;
   color: var(--text-dim);
@@ -4118,7 +4097,6 @@ button.jurisdiction-badge-action:focus-visible {
   letter-spacing: 0.08em;
   /* Trim the trailing letter-spacing: the exact negative of the tracking above. */
   margin-inline-end: -0.08em;
-  text-transform: uppercase;
   transition: box-shadow var(--dur-base) var(--ease-move),
     transform var(--dur-base) var(--ease-move);
 }
@@ -5221,7 +5199,6 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   font-family: var(--font-display);
   font-size: 0.625rem;
   font-weight: 700;
-  text-transform: uppercase;
   letter-spacing: 0.13em;
   vertical-align: baseline;
 }

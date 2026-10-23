@@ -152,7 +152,7 @@ import { BallotCapture } from "@/components/ballot/ballot-capture";
 import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 
 export const runtime = "nodejs";
 
@@ -947,7 +947,7 @@ export default readerRoute("/ballot", async function BallotPage({
           return (
             <Card
               key={contest.id}
-              title={contest.title}
+              title={readerText(contest.title)}
               titleVisible={false}
               attrs={{
                 "data-contest-id": contest.id,
@@ -964,7 +964,7 @@ export default readerRoute("/ballot", async function BallotPage({
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
-                  {contest.title}
+                  {readerText(contest.title)}
 
                   <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
 
@@ -1038,7 +1038,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             links={availableLinksForNominee(contest.id, nominee.name)}
                             targetKey={`${contest.id}|${nominee.name}`}
                             filingSource={nomineeProvenance(nominee, contest, set!.election.state)}
-                            contestTitle={contest.title}
+                            contestTitle={readerText(contest.title)}
                             contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
@@ -1074,7 +1074,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
                 {contest.voteFor !== null && <PickControl
                   contestId={contest.id}
-                  contestTitle={contest.title}
+                  contestTitle={readerText(contest.title)}
                   voteFor={contest.voteFor}
 
                   options={pickOptionsFor(set, contest)}
@@ -1137,7 +1137,7 @@ export default readerRoute("/ballot", async function BallotPage({
                               links={availableLinksForCandidacy(cand.id)}
                               targetKey={cand.id}
                               filingSource={cand.provenance}
-                              contestTitle={contest.title}
+                              contestTitle={readerText(contest.title)}
                               contestOcdId={contest.ocdId}
                               officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
@@ -1175,7 +1175,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
                   {contest.voteFor !== null && <PickControl
                     contestId={contest.id}
-                    contestTitle={contest.title}
+                    contestTitle={readerText(contest.title)}
                     voteFor={contest.voteFor}
 
                     options={pickOptionsFor(set, contest)}
@@ -1195,7 +1195,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           battlecardSlot={<BallotBattlecard name={ballotCandidateDisplayName(candidate)}
                             partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
                             card={availableCardForCandidacy(candidate.id)} links={availableLinksForCandidacy(candidate.id)} targetKey={candidate.id}
-                            filingSource={provenance} contestTitle={contest.title} contestOcdId={contest.ocdId}
+                            filingSource={provenance} contestTitle={readerText(contest.title)} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
                             resolvedStanding={null}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
@@ -1237,7 +1237,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
             const measure = measureFor(contest.id);
             return (
-              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={readerText(contest.title)} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
 
                 {summary ? (
@@ -1250,10 +1250,10 @@ export default readerRoute("/ballot", async function BallotPage({
                       Plain-language summary — read the official text below
                     </p>
                     <p className="mt-1.5 t-body font-semibold leading-relaxed">
-                      {summary.summary}
+                      {readerText(summary.summary, "sentence", askSubjects.map(subject => subject.name))}
                     </p>
-                    {summary.yesMeans && <p className="mt-2 t-body leading-relaxed" data-measure-yes><strong>YES:</strong> {summary.yesMeans}</p>}
-                    {summary.noMeans && <p className="mt-2 t-body leading-relaxed" data-measure-no><strong>NO:</strong> {summary.noMeans}</p>}
+                    {summary.yesMeans && <p className="mt-2 t-body leading-relaxed" data-measure-yes><strong>Yes:</strong> {readerText(summary.yesMeans, "sentence", askSubjects.map(subject => subject.name))}</p>}
+                    {summary.noMeans && <p className="mt-2 t-body leading-relaxed" data-measure-no><strong>No:</strong> {readerText(summary.noMeans, "sentence", askSubjects.map(subject => subject.name))}</p>}
                   </div>
                 ) : (
                   measure && (
@@ -1277,7 +1277,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           className="border-l-2 border-[var(--panel-border)] pl-3"
                         >
                           <p className="t-body font-semibold leading-snug">
-                            {provision.label}
+                            {readerText(provision.label)}
                           </p>
 
                           <p className="t-eyebrow mt-0.5 text-muted">
@@ -1316,7 +1316,7 @@ export default readerRoute("/ballot", async function BallotPage({
                         className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim"
                         data-measure-question={measure.id}
                       >
-                        {measure.questionText}
+                        {readerText(measure.questionText, "sentence", askSubjects.map(subject => subject.name))}
                       </p>
                       {measure.officialStatement ? (
                         <div className="mt-3" data-measure-statement="PRESENT">
@@ -1324,7 +1324,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             What the authority published with it
                           </p>
                           <p className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim">
-                            {measure.officialStatement}
+                            {readerText(measure.officialStatement, "sentence", askSubjects.map(subject => subject.name))}
                           </p>
                         </div>
                       ) : (
@@ -1355,7 +1355,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
                 <PickControl
                   contestId={contest.id}
-                  contestTitle={contest.title}
+                  contestTitle={readerText(contest.title)}
                   voteFor={1}
                   prominent
                   options={pickOptionsFor(set, contest)}
@@ -1386,7 +1386,7 @@ export default readerRoute("/ballot", async function BallotPage({
           <p className="mt-2 t-body text-muted">We&apos;re working on finding verified candidates for these contests.</p>
           <ul className="mt-2 space-y-2 t-body text-paper-dim">
             {matched.heldContests?.map(contest => <li key={contest.id} data-contest-id={contest.id}>
-              <strong>{contest.title}</strong>: {contest.reason}
+              <strong>{readerText(contest.title)}</strong>: {readerText(contest.reason, "sentence", askSubjects.map(subject => subject.name))}
             </li>)}
           </ul>
         </section>
@@ -1400,7 +1400,7 @@ export default readerRoute("/ballot", async function BallotPage({
               key={note}
               className="mt-2 text-[0.75rem] leading-relaxed text-voice"
             >
-              {note}
+              {readerText(note, "sentence", askSubjects.map(subject => subject.name))}
             </p>
           ))}
         </section>

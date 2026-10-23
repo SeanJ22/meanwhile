@@ -35,7 +35,7 @@ import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import {
   type CardSource,
   meetingCardSources,
@@ -264,10 +264,10 @@ function PlaceSections({
                 className="flex w-full items-baseline justify-between gap-2 rounded border border-[var(--panel-border)] px-2.5 py-1.5 text-left hover:border-[var(--accent-local)]"
               >
                 <span className="min-w-0 truncate t-body text-paper">
-                  {body.name}
+                  {readerText(body.name)}
                 </span>
                 <span
-                  className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em]"
+                  className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em]"
                   style={{ color: `var(--accent-${body.tier})` }}
                 >
                   {TIER_LABEL[body.tier]}
@@ -538,6 +538,7 @@ export function EntityModal({
                   <>
                     <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
                     <AgendaSection
+                      knownNames={[subject.title, ...subject.representation.map(person => person.name), ...subject.meetings.flatMap(meeting => [meeting.bodyName, meeting.jurisdiction])]}
                       meetingId={subject.agenda.meetingId}
                       bodyId={subject.agenda.bodyId}
                       agendaUrl={subject.agenda.agendaUrl}
@@ -566,7 +567,7 @@ export function EntityModal({
           <button type="button" className="mw-row-link" onClick={onOpenVenue}>
             <span className="mw-row-link-label">Where</span>
             <span className="mw-row-link-value">
-              {subject.meetings[0].location.name ?? subject.meetings[0].location.address}
+              {readerText(subject.meetings[0].location.name ?? subject.meetings[0].location.address, "address")}
             </span>
             <span aria-hidden="true">›</span>
           </button>
@@ -586,13 +587,13 @@ export function EntityModal({
     ) : null;
 
   if (subject.subjectKind === "MEETING" && subject.meetings[0]) return <div ref={cardRef}
-    className={embedded ? "mw-embedded" : "account-modal-overlay"} role={embedded ? undefined : "dialog"} aria-modal={embedded ? undefined : "true"} aria-label={subject.title}
+    className={embedded ? "mw-embedded" : "account-modal-overlay"} role={embedded ? undefined : "dialog"} aria-modal={embedded ? undefined : "true"} aria-label={readerText(subject.title)}
     onClick={event => { if (!embedded && event.target === event.currentTarget) onClose(); }}>
-    <MeetingCard meeting={subject.meetings[0]} title={subject.title} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
+    <MeetingCard meeting={subject.meetings[0]} title={readerText(subject.title)} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
       {meetingLinks}
       <CardSection title="What this meeting is about" defaultOpen>{overview}</CardSection>
       <CardSection title="Who sits on it"><Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} /></CardSection>
-      <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={subject.title} />
+      <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={readerText(subject.title)} />
     </MeetingCard>
   </div>;
 
@@ -621,16 +622,16 @@ export function EntityModal({
                   className="popup-badge"
                   data-status={badge.status}
                 >
-                  {badge.label}
+                  {readerText(badge.label)}
                 </span>
               ))}
             </p>
-            <h2 className="account-modal-title">{subject.title}</h2>
+            <h2 className="account-modal-title">{readerText(subject.title)}</h2>
             <p className="account-modal-subtitle">{subject.subtitle}</p>
             {/* Only when this modal is about a division. */}
             {subject.divisionOcdId != null && (
               <BrowsingSubjectLine
-                label={subject.title}
+                label={readerText(subject.title)}
                 homeZip={homeZip}
                 ocdId={subject.divisionOcdId}
               />
@@ -672,7 +673,7 @@ export function EntityModal({
               <CardSection title="Who represents this spot" defaultOpen>
                 {subject.spotRepresentation.map(division => (
                   <div key={division.ocdId} data-spot-division={division.ocdId} className="mb-4 last:mb-0">
-                    <PopupSectionLabel>{division.label}</PopupSectionLabel>
+                    <PopupSectionLabel>{readerText(division.label)}</PopupSectionLabel>
                     <Representation holders={division.holders} vacancy={division.vacancy} gaps={division.rosterGaps} note={division.note}
                       onOpenHolder={onOpenHolder} showTopOffices={false} />
                   </div>
@@ -694,7 +695,7 @@ export function EntityModal({
               key={`${tab}:${subject.subjectId}`}
               subjectType={subject.subjectKind}
               subjectId={subject.subjectId}
-              subject={subject.title}
+              subject={readerText(subject.title)}
             />
           </div>
         )}
@@ -764,7 +765,7 @@ export function Representation({
       {ordered.map((holder) => (
         <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
           {/* `IdentityPortrait` renders initials where no portrait exists. */}
-          <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />
+          <IdentityPortrait name={readerText(holder.name, "name")} photoUrl={holder.photoUrl} />
 
           <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
@@ -776,7 +777,7 @@ export function Representation({
                   onClick={() => onOpenHolder(holder)}
                   className="cursor-pointer hover:text-signal hover:underline"
                 >
-                  {holder.name}
+                  {readerText(holder.name, "name")}
                 </button>
               ) : holder.websiteUrl ? (
                 <CheckedLink
@@ -785,20 +786,20 @@ export function Representation({
                   rel="noreferrer"
                   className="hover:text-signal hover:underline"
                 >
-                  {holder.name}
+                  {readerText(holder.name, "name")}
                 </CheckedLink>
               ) : (
-                holder.name
+                readerText(holder.name, "name")
               )}
             </span>
             {/* trailing-space-trimmed removes the tracking's trailing space from the box. */}
-            <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+            <span className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] text-muted">
               {readerOfficeTitle(holder.officeTitle)}
             </span>
           </div>
 
           {holder.partyLabel && <p className="mt-1 t-caption" style={{ color: partyColorVar(holder.partyLabel) }}>{readerPartyLabel(holder.partyLabel)}</p>}
-          <CardSourcesContribution id={`holder:${holder.id}`} sources={holder.provenance ? [{ what: `Who represents it — ${holder.name}`, provenance: holder.provenance }] : holder.sourceUrl ? [{ what: `Who represents it — ${holder.name}`, provenance: { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []} />
+          <CardSourcesContribution id={`holder:${holder.id}`} sources={holder.provenance ? [{ what: `Who represents it — ${readerText(holder.name, "name")}`, provenance: holder.provenance }] : holder.sourceUrl ? [{ what: `Who represents it — ${readerText(holder.name, "name")}`, provenance: { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []} />
           </div>
         </div>
       ))}
@@ -824,13 +825,13 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
       {groups.map((group) => (
         <section key={group.id}>
           <p className="t-structure mt-3 mb-1 text-label first:mt-0">
-            {group.label}
+            {readerText(group.label)}
           </p>
           {group.meetings.map((meeting) => (
             <div key={meeting.id} data-meeting-id={meeting.id} className="account-modal-person">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="t-body text-paper">
-                  {meeting.title}
+                  {readerText(meeting.title)}
                 </span>
                 <span className="shrink-0 font-mono t-caption text-muted">
                   {formatMeetingDate(meeting)}
@@ -853,7 +854,7 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
                       target="_blank"
                       rel="noreferrer"
                       title={directions.hint}
-                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono t-caption uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono t-caption  tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
                     >
                       Directions
                     </CheckedLink>

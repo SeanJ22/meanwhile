@@ -979,7 +979,6 @@
   font-size: var(--text-mw-12);
   font-weight: 650;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .mw-card-zipctx {
@@ -1320,7 +1319,6 @@ details.mw-sources > summary {
   font-size: var(--text-mw-12);
   font-weight: 650;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .mw-row-link-value {
@@ -1457,7 +1455,6 @@ details.mw-sources > summary {
   font-size: var(--text-mw-12);
   font-weight: 650;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .mw-money-tile-value {
@@ -1628,7 +1625,6 @@ details.mw-sources > summary {
 .mw-books-label {
   font-size: var(--text-mw-11);
   font-weight: 650;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .mw-books-value {
@@ -1988,7 +1984,6 @@ details.mw-sources > summary {
   font-weight: 650;
   letter-spacing: 0.08em;
   margin-inline-end: -0.08em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .mw-district-office__address {

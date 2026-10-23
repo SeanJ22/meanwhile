@@ -48,7 +48,7 @@ export default async function FeedbackPage({
         )}
 
         <section className="mt-10 border-t border-[var(--panel-border)] pt-6">
-          <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
+          <h2 className="font-mono text-[0.6875rem] trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             What happens to this
           </h2>
           <div className="mt-2.5 space-y-3 text-[0.875rem] leading-relaxed text-paper-dim">

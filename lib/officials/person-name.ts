@@ -1,4 +1,5 @@
 /** A person's name with one token in it is incomplete, not a value. */
+import { readerText } from "../text/reader-names.ts";
 
 /** Trailing generational and credential suffixes. Never a given name. */
 const SUFFIX =
@@ -43,7 +44,7 @@ export const INCOMPLETE_NAME_LINE = "We haven’t recorded this person’s full 
 
 /** What to render in a name slot: the name, or the named gap. */
 export function displayPersonName(name: string | null | undefined): string {
-  return isIncompletePersonName(name) ? INCOMPLETE_NAME_LINE : (name as string).trim();
+  return isIncompletePersonName(name) ? INCOMPLETE_NAME_LINE : readerText((name as string).trim(), "name");
 }
 
 /** The initials that stand in for a missing portrait; a generational suffix is not a surname. */

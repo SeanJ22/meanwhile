@@ -4,6 +4,7 @@ import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parse } from "yaml";
 import { CardSourcesList } from "../components/officials/card-sources-list.tsx";
+import { ReaderNamesProvider } from "../components/ui/reader-names-context.tsx";
 import { PersonIdentity } from "../components/officials/person-identity.tsx";
 import { PopupRow } from "../components/map/popup/popup-row.tsx";
 import { fieldSourceLabel, mergeSources, personCardSources } from "../lib/officials/card-sources.ts";
@@ -45,6 +46,21 @@ test("a held verification date renders as its own date", () => {
     what: "District offices", provenance: { ...holder.provenance!, verifiedAt: "2026-10-11T12:00:00Z" },
   }]} />);
   assert.match(html, /Verified<\/span><span[^>]*>2026-10-11/);
+});
+
+test("source quotes read as sentences with held names while saved evidence stays exact", () => {
+  const sources = [{ what: "COMMON COUNCIL MEMBERS", provenance: {
+    sourceOrg: "CITY OF MILWAUKEE", sourceUrl: "https://city.milwaukee.gov/",
+    collectedAt: "2026-10-23", verifiedAt: null,
+    quote: "ALD. MOORE SERVES ON THE COMMON COUNCIL IN MILWAUKEE. FEMA SUPPORT IS AVAILABLE.",
+  } }];
+  const saved = structuredClone(sources);
+  const html = renderToStaticMarkup(<ReaderNamesProvider names={["Ald. Moore", "Common Council", "Milwaukee"]}>
+    <CardSourcesList sources={sources} />
+  </ReaderNamesProvider>);
+  assert.match(html, /Ald\. Moore serves on the Common Council in Milwaukee\. FEMA support is available\./);
+  assert.match(html, /City of Milwaukee/);
+  assert.deepEqual(sources, saved);
 });
 
 test("one source preserves captured identities and last checked dates", () => {

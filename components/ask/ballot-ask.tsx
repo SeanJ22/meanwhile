@@ -1,5 +1,6 @@
 "use client";
 
+import { ReaderText } from "@/components/ui/reader-text";
 import { WorkingOnIt } from "@/components/demand/working-on-it";
 import { AskBodyConfirmation } from "./body-confirmation";
 import type { BodyConfirmation } from "@/lib/ask/body-confirmation";
@@ -14,6 +15,9 @@ import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import type { AskSubjectRef } from "@/lib/ask/subject";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
+import { readerText } from "@/lib/text/reader-names";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
 /**
  * Ask on the ballot page. Uses the same `/api/ask/grounded` engine as the map
@@ -39,6 +43,13 @@ export function BallotAsk({
 }) {
   const [text, setText] = useState("");
   const [reply, setReply] = useState<GroundedReply | null>(null);
+  const inheritedNames = useReaderNames();
+  const knownNames = [
+    ...inheritedNames,
+    ...activeSubjects.map(subject => subject.name),
+    ...(reply?.subject ? [reply.subject.name] : []),
+    ...(reply?.contacts ?? []).map(contact => contact.name),
+  ];
   const [working, setWorking] = useState(false);
   const [failed, setFailed] = useState(false);
   /* The question that produced the reply on screen. */
@@ -180,42 +191,42 @@ export function BallotAsk({
           }} />
           {reply.mode === "CLARIFY" && !reply.confirmation && !reply.clarification && (
             <p>
-              More than one government here matches &ldquo;{reply.mention}&rdquo;
-              {reply.candidates?.length ? `: ${reply.candidates.join(", ")}.` : "."} Which did you
+              More than one government here matches &ldquo;{reply.mention && readerText(reply.mention, "title")}&rdquo;
+              {reply.candidates?.length ? `: ${reply.candidates.map(name => readerText(name, "title")).join(", ")}.` : "."} Which did you
               mean?
             </p>
           )}
 
           {reply.mode === "UNRESOLVED" && !reply.answer && (
-            <p>{unresolvedReadLine(reply)}</p>
+            <p><ReaderText text={unresolvedReadLine(reply)} names={knownNames} /></p>
           )}
 
           {reply.subject && (
             <p className="font-medium">
-              {reply.subject.name}
+              {readerText(reply.subject.name, reply.subject.kind === "PERSON" ? "name" : "title")}
               {reply.subject.office ? (
                 <span className="font-normal text-[var(--text-muted)]">
                   {" "}
-                  · {reply.subject.office}
+                  · {readerOfficeTitle(reply.subject.office)}
                 </span>
               ) : null}
             </p>
           )}
 
           {/* The grounded sentence, when there is one that passed validation. */}
-          {reply.answer && <p className="mt-2">{reply.answer}</p>}
+          {reply.answer && <p className="mt-2"><ReaderText text={reply.answer} names={knownNames} /></p>}
           {reply.aiAnswer && <div className="mt-2" data-ask-ai-answer>
             <p className="t-detail text-[var(--text-muted)]">AI answer</p>
-            <p>{reply.aiAnswer}</p>
+            <p><ReaderText text={reply.aiAnswer} names={knownNames} /></p>
           </div>}
 
           {/* Records render whether or not prose did. */}
-          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={!reply.answer && reply.agendaLead} />
+          <AskAnswerRecords records={records} initiallyOpen={!reply.answer} agendaLead={!reply.answer && reply.agendaLead} knownNames={knownNames} />
 
           {/* Named gaps, each one saying whose gap it is. */}
           {(!reply.answer ? gaps : []).map((g) => (
             <p key={g.statement} className="mt-2 text-[var(--text-muted)]" data-gap={g.whose}>
-              {g.statement}
+              <ReaderText text={g.statement} names={knownNames} />
             </p>
           ))}
 
@@ -227,7 +238,7 @@ export function BallotAsk({
             reply.mode !== "UNRESOLVED" && (
               <WorkingOnIt
                 attrs={{ "data-ask-state": "NOTHING_HELD" }}
-                about={reply.subject?.name}
+                about={reply.subject?.name && readerText(reply.subject.name, "title")}
                 subject={reply.subject?.kind === "BODY" ? { type: "BODY", id: reply.subject.id } : null}
               />
             )}
@@ -249,7 +260,7 @@ export function BallotAsk({
                     rel="noopener noreferrer"
                   >
                     {/* A null publisher renders as the URL's host. */}
-                    {l.label}
+                    {readerText(l.label, "title")}
                   </a>
                 </span>
               ))}

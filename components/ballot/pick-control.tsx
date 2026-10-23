@@ -1,5 +1,6 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { useSyncExternalStore, useCallback } from "react";
 
 import {
@@ -151,7 +152,7 @@ export function PickControl({
                   {measureTone(option.label) === "no" ? "✕" : "✓"}
                 </span>
               )}
-              {option.label}
+              {readerText(option.label)}
             </button>
           );
         })}

@@ -13,9 +13,11 @@ import { noticeSummaryFor } from "@/lib/meetings/notice-summary";
 
 import { agendaItems } from "@/lib/routing/agenda-search";
 import type { MeetingReaderRecords } from "@/lib/meetings/reader-records";
-import { MeetingRecords } from "./meeting-records";
+import { MeetingRecords, meetingRecordNames } from "./meeting-records";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { fetchReaderAgendaResponse } from "@/lib/reader/bootstrap";
+import { readerText } from "@/lib/text/reader-names";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
 /**
  * The meeting's stored notice or agenda text on the meeting surface: public
@@ -38,6 +40,7 @@ interface AgendaDocumentView {
 
 interface AgendaSectionProps {
   meetingId: string;
+  knownNames?: readonly string[];
   /** The body the meeting belongs to; a meeting is read from its body's record. */
   bodyId: string;
   /** The meeting's own agenda link, for the no-document and failed cases. */
@@ -83,7 +86,9 @@ function AgendaForMeeting({
   agendaSlotObservedEmpty,
   provenance,
   carried,
+  knownNames = [],
 }: AgendaSectionProps) {
+  const inheritedNames = useReaderNames();
   /* The same decider the meeting panel uses for a null `agendaUrl`. */
   const agendaState = agendaSentenceFor(
     { id: meetingId, agendaUrl, agendaSlotObservedEmpty, provenance, carried },
@@ -132,23 +137,24 @@ function AgendaForMeeting({
     return null;
   }
 
+  const names = meetingRecordNames(records, [...inheritedNames, ...knownNames]);
   return <>
     {unavailableAuthorities.length > 0 && <CardGapContribution id={`meeting:${meetingId}:supporting-records`} label="supporting meeting records" />}
-    <MinutesRecord meetingId={meetingId} />
-    <MeetingRecords records={records} />
+    <MinutesRecord meetingId={meetingId} knownNames={names} />
+    <MeetingRecords records={records} knownNames={names} />
     {holdingUnavailable ? <>
       <CardGapContribution id={`meeting:${meetingId}:agenda-text`} label="agenda contents" />
       {agendaUrl && <p className="mt-1.5 t-detail"><CheckedLink className="text-signal underline" href={agendaUrl} target="_blank" rel="noreferrer">Read the source document</CheckedLink></p>}
-    </> : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} gapKind={agendaState.whose === "THEIRS" ? "not-posted" : "not-held"} publication={publication} />}
+    </> : <AgendaDocuments documents={documents} meetingId={meetingId} agendaUrl={agendaUrl} gapKind={agendaState.whose === "THEIRS" ? "not-posted" : "not-held"} publication={publication} knownNames={names} />}
   </>;
 }
 
-function MinutesRecord({ meetingId }: { meetingId: string }) {
+function MinutesRecord({ meetingId, knownNames }: { meetingId: string; knownNames: readonly string[] }) {
   const summary = minutesSummaryForMeeting(meetingId);
   if (!summary) return null;
   return <details className="mb-3 t-detail leading-relaxed" open data-minutes-summary={meetingId}>
     <summary className="cursor-pointer text-signal">What happened — plain language</summary>
-    <p className="mt-2 font-semibold">{summary.summary}</p>
+    <p className="mt-2 font-semibold">{readerText(summary.summary, "sentence", knownNames)}</p>
     <CardSourcesContribution id={`minutes:${meetingId}`} sources={[{ what: "Meeting minutes; plain-language paraphrase is ours", provenance: { sourceUrl: summary.minutesUrl, sourceOrg: summary.sourceOrg, collectedAt: summary.readAt, verifiedAt: null } }]} />
   </details>;
 }
@@ -161,6 +167,7 @@ function MinutesRecord({ meetingId }: { meetingId: string }) {
 export function AgendaDocuments(props: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; gapKind?: "not-posted" | "not-held";
   publication?: AgendaPublicationReading | null;
+  knownNames?: readonly string[];
 }) {
   const { documents, meetingId, publication } = props;
   return <><CardSourcesContribution id={`agenda-documents:${meetingId}`} sources={agendaDocumentSources(documents, publication)} /><AgendaDocumentContents {...props} /></>;
@@ -175,10 +182,13 @@ export function agendaDocumentSources(documents: readonly AgendaDocumentView[], 
   }));
 }
 
-function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publication }: {
+function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publication, knownNames = [] }: {
   documents: AgendaDocumentView[]; meetingId: string; agendaUrl: string | null; gapKind?: "not-posted" | "not-held";
   publication?: AgendaPublicationReading | null;
+  knownNames?: readonly string[];
 }) {
+  const inheritedNames = useReaderNames();
+  const names = [...inheritedNames, ...knownNames];
   const latest = documents[0] ?? null;
 
   if (latest && publication?.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX") {
@@ -210,7 +220,7 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publ
     <div className="mt-1.5">
       {items.length > 0 && (
         <div className="mb-2">
-          <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono t-caption tracking-[0.15em] text-muted">
             On the docket — the agenda&apos;s own items, in its words
           </p>
           <ol className="mt-1.5 space-y-1">
@@ -219,7 +229,7 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publ
                 key={item}
                 className="t-detail leading-relaxed text-paper-dim"
               >
-                {item}
+                {readerText(item, "sentence", names)}
               </li>
             ))}
           </ol>
@@ -232,11 +242,11 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publ
       {summary && (
         // Curated from this exact document version; never replaces the official text below.
         <div className="mb-2 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
-          <p className="trailing-space-trimmed-15 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono t-caption tracking-[0.15em] text-muted">
             Plain-language summary — read the official text below
           </p>
           <p className="mt-1.5 t-detail font-semibold leading-relaxed">
-            {summary.summary}
+            {readerText(summary.summary, "sentence", names)}
           </p>
         </div>
       )}
@@ -248,7 +258,7 @@ function AgendaDocumentContents({ documents, meetingId, agendaUrl, gapKind, publ
         </p>
       )}
       <p className="max-h-56 overflow-y-auto whitespace-pre-line rounded border border-[var(--panel-border)] p-3 t-detail leading-relaxed text-paper-dim">
-        {sanitizeStoredText(latest.text)}
+        {readerText(sanitizeStoredText(latest.text), "sentence", names)}
       </p>
 
     </div>

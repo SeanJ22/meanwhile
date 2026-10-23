@@ -4,7 +4,7 @@ import { personInitials } from "@/lib/officials/person-name";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 
 /**
@@ -56,7 +56,7 @@ export function IdentityPortrait({
       {photoUrl ? (
         // Served from our origin.
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={photoUrl} alt={`Portrait of ${name}`} loading="eager" />
+        <img src={photoUrl} alt={`Portrait of ${readerText(name, "name")}`} loading="eager" />
       ) : (
         <span className="id-portrait-initials" aria-hidden="true">
           {initialsOf(name)}
@@ -83,14 +83,14 @@ export function PersonIdentity({
 
   return (
     <div className={`id-header ${large ? "id-header--lg" : ""}`}>
-      <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} large={large} />
+      <IdentityPortrait name={readerText(holder.name, "name")} photoUrl={holder.photoUrl} large={large} />
 
       <div className="min-w-0 flex-1">
         {/* The dialog's h2 on the large card; an h3 inside a popup card. */}
         {large ? (
-          <h2 className="id-name id-name--lg">{holder.name}</h2>
+          <h2 className="id-name id-name--lg">{readerText(holder.name, "name")}</h2>
         ) : (
-          <h3 className="id-name">{holder.name}</h3>
+          <h3 className="id-name">{readerText(holder.name, "name")}</h3>
         )}
 
         <div className="id-chip-row">
@@ -101,14 +101,14 @@ export function PersonIdentity({
             </IdentityChip>
           )}
           {chips.map((chip) => (
-            <IdentityChip key={chip}>{chip}</IdentityChip>
+            <IdentityChip key={chip}>{readerText(chip, "address")}</IdentityChip>
           ))}
         </div>
 
         <p className="id-office">
             {readerOfficeTitle(holder.officeTitle)}
             {/* A seat label identical to the title is not repeated. */}
-            {seatLabel && seatLabel !== holder.officeTitle ? ` · ${seatLabel}` : ""}
+            {seatLabel && seatLabel !== holder.officeTitle ? ` · ${readerText(seatLabel)}` : ""}
         </p>
 
         {/* Term end and (large card) age only from sourced values; age computed at render. */}

@@ -1,5 +1,6 @@
 "use client";
 
+import { ReaderText } from "@/components/ui/reader-text";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useEffect, useId, useRef, useState } from "react";
 
@@ -165,7 +166,7 @@ export function PositionsSection({
                   >
                     {/* Verbatim, marked as a quotation. */}
                     <blockquote className="t-record t-body leading-relaxed text-paper">
-                      &ldquo;{p.quote}&rdquo;
+                      &ldquo;<ReaderText text={p.quote} names={[subjectName]} />&rdquo;
                     </blockquote>
 
                   </figure>

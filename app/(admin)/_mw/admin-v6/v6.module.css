@@ -275,7 +275,6 @@
 .eyebrow {
   font-size: 11px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-dim);
   margin: 0;
 }
@@ -533,7 +532,6 @@
   font-weight: 500;
   font-size: 11px;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--text-dim);
   padding: 6px 10px;
   border-bottom: 1px solid var(--panel-border);
@@ -721,7 +719,6 @@
 .statLabel {
   font-size: 12px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .statSep {
@@ -1306,7 +1303,6 @@
 .legacyScopeLabel {
   font: 500 11px var(--mw-sans);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--mw-muted);
 }
 .legacySelect {
@@ -1661,7 +1657,6 @@
 .legacyLabel {
   font: 500 12px var(--mw-sans);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--mw-muted);
   margin-bottom: 10px;
 }
@@ -1805,7 +1800,6 @@
   font: 500 11px var(--mw-mono);
   letter-spacing: 0.08em;
   white-space: nowrap;
-  text-transform: uppercase;
 }
 .legacyTeal {
   background: var(--mw-teal-bg);
@@ -1840,7 +1834,6 @@
   font: 500 11px var(--mw-mono);
   letter-spacing: 0.08em;
   white-space: nowrap;
-  text-transform: uppercase;
 }
 .legacyDashLarge {
   padding: 5px 11px;
@@ -2174,7 +2167,6 @@
 }
 .legacyKvMetaKey {
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 .legacyKvKey {
   color: var(--mw-muted);
@@ -2207,7 +2199,6 @@
   border-bottom: 1px solid var(--mw-rule);
   font: 500 11px var(--mw-sans);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--mw-muted);
 }
 .legacyTd {

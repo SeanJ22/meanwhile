@@ -66,10 +66,10 @@ test("AQ-01 a nickname-like typo with one real match does not need a confirmatio
   assert.equal(decideNamedBody("When does LAUSD meet?", [la]).kind, "BOUND");
 });
 
-test("AQ-01 the complete meeting composition preserves the reader's district abbreviation", () => {
+test("AQ-01 the complete meeting composition cases a district abbreviation outside the shared acronym list", () => {
   for (const spelling of ["TUSD", "tusd"]) {
     const name = bodyNameFromQuestion(`When was the last ${spelling} meeting?`, [tucson], tucson.id);
-    assert.equal(name && titleCaseName(name), "TUSD");
+    assert.equal(name && titleCaseName(name), "Tusd");
   }
 });
 

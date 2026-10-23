@@ -148,7 +148,7 @@ export default async function CompareStatesPage({
 
       {!comparison && (
         <section className="mt-6">
-          <h2 className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
+          <h2 className="font-mono text-[0.625rem] trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Pick two
           </h2>
           <ul className="mt-3 space-y-2">
@@ -176,13 +176,13 @@ export default async function CompareStatesPage({
                 <h2 className="text-[0.9375rem] font-semibold">{row.question}</h2>
                 <div className="mt-2 grid gap-3 sm:grid-cols-2">
                   <div>
-                    <p className="mb-1.5 font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
+                    <p className="mb-1.5 font-mono text-[0.625rem] trailing-space-trimmed-20 tracking-[0.2em] text-muted">
                       {comparison.left.name}
                     </p>
                     <Cell cell={row.left} />
                   </div>
                   <div>
-                    <p className="mb-1.5 font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
+                    <p className="mb-1.5 font-mono text-[0.625rem] trailing-space-trimmed-20 tracking-[0.2em] text-muted">
                       {comparison.right.name}
                     </p>
                     <Cell cell={row.right} />

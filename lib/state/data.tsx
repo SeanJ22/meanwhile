@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
+import { ReaderNamesProvider } from "@/components/ui/reader-names-context";
 
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
@@ -76,7 +77,18 @@ export function DataProvider({
   value: ShellData;
   children: ReactNode;
 }) {
-  return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
+  const coverage = value.result?.coverage;
+  const names = [
+    ...value.allMeetings.flatMap(meeting => [meeting.bodyName, meeting.jurisdiction]),
+    ...(coverage?.divisions?.map(division => division.label) ?? []),
+    ...(coverage?.governments?.map(government => government.name) ?? []),
+    ...(coverage?.bodies?.flatMap(body => [body.name ?? "", body.divisionLabel,
+      ...(body.readerRoster?.members.map(member => member.name) ?? [])]) ?? []),
+    ...(coverage?.seats?.flatMap(seat => seat.representatives.map(person => person.name)) ?? []),
+    ...(coverage?.senators?.map(person => person.name) ?? []),
+    ...(coverage?.statewideExecutives?.map(person => person.name) ?? []),
+  ];
+  return <DataContext.Provider value={value}><ReaderNamesProvider names={names}>{children}</ReaderNamesProvider></DataContext.Provider>;
 }
 
 export function useShellData(): ShellData {

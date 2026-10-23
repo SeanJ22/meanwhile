@@ -9,20 +9,21 @@ import { FederalMoneySection } from "@/components/funding/federal-money-section"
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardFooter } from "@/components/ui/card-footer";
 import { federalMoneyStateDivision } from "@/lib/federal-money/view";
+import { readerText } from "@/lib/text/reader-names";
 
 function Listing({ row }: { row: RegistrationGovernmentListing }) {
   const [open, setOpen] = useState(false);
   const divisionId = row.associations.length === 1 ? row.associations[0].divisionId : federalMoneyStateDivision(typeof row.state === "string" ? row.state : governmentStateOf(row.id));
   const { register, sources, insideCard } = useCardSourceRegistry([{ what: `Government inventory, ${row.sourceVintage}`, provenance: { kind: "OFFICIAL", sourceOrg: row.provenance.sourceOrg, sourceUrl: row.provenance.sourceUrl, collectedAt: row.provenance.collectedAt, verifiedAt: null } }], row.id);
   return <CardSourceContext value={register}><details className="mt-2" data-government-listing={row.id} onToggle={event => setOpen(event.currentTarget.open)}>
-    <summary className="cursor-pointer t-body text-paper">{row.name}</summary>
+    <summary className="cursor-pointer t-body text-paper">{readerText(row.name, "title")}</summary>
     <div className="mt-1 space-y-1 t-detail text-voice">
-      <p>{row.governmentClass}{row.status ? ` · ${row.status}` : ""}</p>
+      <p>{readerText(row.governmentClass, "title")}{row.status ? ` · ${readerText(row.status, "sentence")}` : ""}</p>
       {row.kind === "DEPENDENT_SCHOOL_SYSTEM" && <p>A dependent school system; this listing does not establish an independent government.</p>}
       {row.associations.length === 0 && <p>We have not connected this listing to a verified service area.</p>}
-      {row.contactTitle && <p>Contact: {row.contactTitle}</p>}
-      {row.mailingAddress && <p>Mailing address: {row.mailingAddress}</p>}
-      {row.officeAddress && <p>Office: {row.officeAddress}</p>}
+      {row.contactTitle && <p>Contact: {readerText(row.contactTitle, "title")}</p>}
+      {row.mailingAddress && <p>Mailing address: {readerText(row.mailingAddress, "address")}</p>}
+      {row.officeAddress && <p>Office: {readerText(row.officeAddress, "address")}</p>}
       {row.officePhone && <p>Office phone: <a href={`tel:${row.officePhone}`} className="text-link">{row.officePhone}</a></p>}
       {row.website && <p><a href={row.website} target="_blank" rel="noopener noreferrer" className="text-link">Official website</a></p>}
       {row.govDomains?.map(link => <p key={link.domain}><a href={link.website} target="_blank" rel="noopener noreferrer" className="text-link">{link.domain}</a></p>)}

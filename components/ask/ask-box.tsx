@@ -55,8 +55,9 @@ import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 import { CalendarLinks } from "@/components/map/popup/calendar-links";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { tierVars } from "@/components/shell/tier-style";
-import { bodyDisplayName } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerText } from "@/lib/text/reader-names";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
 /**
  * The Ask panel: one input, two jobs. An autocomplete pick or an exact name is
@@ -93,10 +94,10 @@ function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
           className="rounded-md border border-[var(--signal)]/35 bg-[var(--signal)]/5 p-3"
         >
           <p className="t-body font-semibold text-paper">
-            {contact.body}
+            {readerText(contact.body, "title")}
           </p>
           <p className="t-detail leading-relaxed text-voice">
-            {contact.service}
+            {readerText(contact.service, "sentence", [contact.body])}
           </p>
           <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
             {contact.phone && (
@@ -128,14 +129,14 @@ function RoutedContactCards({ contacts }: { contacts: AskAnswer["contacts"] }) {
           </p>
           {contact.note && (
             <p className="mt-1 t-caption leading-relaxed text-voice">
-              {contact.note}
+              {readerText(contact.note, "sentence", [contact.body])}
             </p>
           )}
           {/* One source line, at the bottom. */}
           <p className="mt-1.5 t-caption leading-relaxed text-muted">
             This was sourced from {citedContactUrl(contact.sourceUrl)
-              ? <a href={contact.sourceUrl} target="_blank" rel="noreferrer noopener" className="underline decoration-dotted underline-offset-2 hover:text-link">{contact.sourceOrg}</a>
-              : contact.sourceOrg}.
+              ? <a href={contact.sourceUrl} target="_blank" rel="noreferrer noopener" className="underline decoration-dotted underline-offset-2 hover:text-link">{readerText(contact.sourceOrg, "title")}</a>
+              : readerText(contact.sourceOrg, "title")}.
           </p>
         </div>
       ))}
@@ -164,6 +165,7 @@ export function AskBox({
   onOpenPerson?: (holder: SeatHolder) => void;
 }) {
   const { venues, meetings, allMeetings, everydayRouting } = useShellData();
+  const inheritedNames = useReaderNames();
   const ui = useUi();
   /* The reader's home, so an Ask subject is not browse-scoped only. */
   const home = useResolvedLocation(zip);
@@ -177,6 +179,14 @@ export function AskBox({
   const [grounded, setGrounded] = useState<AskAnswerPayload | null>(null);
   /* Follow-up context: the last few resolved subjects, in memory for this mount only. */
   const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
+  const knownNames = useMemo(() => [
+    ...inheritedNames,
+    ...coverage.bodies.flatMap(body => [body.name ?? "", body.divisionLabel, ...(body.readerRoster?.members.map(member => member.name) ?? [])]),
+    ...coverage.seats.flatMap(seat => seat.representatives.map(holder => holder.name)),
+    ...coverage.divisions.map(division => division.label),
+    ...(grounded?.subject ? [grounded.subject.name] : []),
+    ...(grounded?.contacts ?? []).map(contact => contact.name),
+  ].filter(Boolean), [coverage, grounded, inheritedNames]);
   const [priorTurns, setPriorTurns] = useState<
     { question: string; resolvedSubject: string | null }[]
   >([]);
@@ -544,7 +554,7 @@ export function AskBox({
                   {group.items.map((item) => {
                     cursor++;
                     const idx = cursor;
-                    const [before, hit, after] = highlightParts(item.label, text);
+                    const [before, hit, after] = highlightParts(readerText(item.label, "title"), text);
                     return (
                       <button
                         key={item.id}
@@ -572,7 +582,7 @@ export function AskBox({
                           <MeetingStatusPill status="online" />
                         )}
                         {item.meta && (
-                          <span className="search-ac-meta">{item.meta}</span>
+                          <span className="search-ac-meta">{readerText(item.meta, "title")}</span>
                         )}
                       </button>
                     );
@@ -619,10 +629,10 @@ export function AskBox({
         >
           <p className="t-eyebrow text-signal">Where to look</p>
           <p className="mt-1 t-heading font-semibold leading-snug text-paper">
-            {asked.destination.destination.label}
+            {readerText(asked.destination.destination.label, "title")}
           </p>
           <p className="mt-1 t-detail leading-relaxed text-voice">
-            {asked.destination.destination.statement}
+            {readerText(asked.destination.destination.statement, "sentence", knownNames)}
           </p>
           {asked.destination.destination.href ? (
             <a
@@ -630,7 +640,7 @@ export function AskBox({
               data-ask-destination-go
               className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 t-body font-semibold text-link no-underline"
             >
-              {asked.destination.destination.label}
+              {readerText(asked.destination.destination.label, "title")}
             </a>
           ) : (
             asked.destination.destination.action && (
@@ -655,7 +665,7 @@ export function AskBox({
                 }}
                 className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 t-body font-semibold text-link"
               >
-                {asked.destination.destination.label}
+                {readerText(asked.destination.destination.label, "title")}
               </button>
             )
           )}
@@ -674,9 +684,9 @@ export function AskBox({
           <div className="flex items-start justify-between gap-2">
             {grounded.subject ? (
               <p className="min-w-0 flex-1 t-body font-semibold leading-snug text-paper">
-                {grounded.subject.name}
+                {readerText(grounded.subject.name, grounded.subject.kind === "PERSON" ? "name" : "title")}
                 {grounded.subject.office ? (
-                  <span className="font-normal text-muted"> · {grounded.subject.office}</span>
+                  <span className="font-normal text-muted"> · {readerOfficeTitle(grounded.subject.office)}</span>
                 ) : null}
               </p>
             ) : (
@@ -704,8 +714,8 @@ export function AskBox({
               data-ask-grounded-state="CLARIFY"
               className="t-body leading-relaxed text-voice"
             >
-              More than one goes by &ldquo;{grounded.mention}&rdquo;
-              {grounded.candidates?.length ? `: ${grounded.candidates.join(", ")}` : ""}.
+              More than one goes by &ldquo;{grounded.mention && readerText(grounded.mention, "title")}&rdquo;
+              {grounded.candidates?.length ? `: ${grounded.candidates.map(name => readerText(name, "title")).join(", ")}` : ""}.
               Which did you mean?
             </p>
           )}
@@ -715,7 +725,7 @@ export function AskBox({
               data-ask-grounded-state="UNRESOLVED"
               className="t-body leading-relaxed text-voice"
             >
-              {unresolvedReadLine(grounded)}
+              {readerText(unresolvedReadLine(grounded), "sentence", knownNames)}
             </p>
           )}
 
@@ -734,12 +744,12 @@ export function AskBox({
 
           {grounded.answer && (
             <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
-              {grounded.answer}
+              {readerText(grounded.answer, "sentence", knownNames)}
             </p>
           )}
           {grounded.aiAnswer && <div className="mt-2 t-body leading-relaxed" data-ask-ai-answer>
             <p className="t-caption text-muted">AI answer</p>
-            <p>{grounded.aiAnswer}</p>
+            <p>{readerText(grounded.aiAnswer, "sentence", knownNames)}</p>
           </div>}
 
           {/* Keyed on record body ids, never on names in the prose. */}
@@ -770,9 +780,9 @@ export function AskBox({
           )}
 
           {[...new Map((grounded.records ?? []).flatMap(record => record.fecProfile ? [[record.fecProfile.candidateId, record.fecProfile] as const] : [])).values()].map(profile => (
-            <p key={profile.candidateId} className="mt-2 t-detail"><a href={`/candidates/${profile.candidateId}`} className="text-link underline underline-offset-2">{profile.name} · Profile and campaign money</a></p>
+            <p key={profile.candidateId} className="mt-2 t-detail"><a href={`/candidates/${profile.candidateId}`} className="text-link underline underline-offset-2">{readerText(profile.name, "name")} · Profile and campaign money</a></p>
           ))}
-          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={!grounded.answer && grounded.agendaLead} />
+          <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={!grounded.answer && grounded.agendaLead} knownNames={knownNames} />
 
           {(!grounded.answer ? gapsNotInAnswer(grounded.answer, grounded.gaps ?? []) : []).map((g) => (
             <p
@@ -780,7 +790,7 @@ export function AskBox({
               data-ask-gap={g.whose}
               className="mt-1.5 t-detail leading-relaxed text-muted"
             >
-              {g.statement}
+              {readerText(g.statement, "sentence", knownNames)}
             </p>
           ))}
 
@@ -791,7 +801,7 @@ export function AskBox({
             <div className="mt-3" data-ask-preserved-contact>
               <p className="t-eyebrow text-signal">Who handles this</p>
               <p className="mt-1 t-heading font-semibold text-paper">
-                {asked.answer.topic?.label}
+                {asked.answer.topic?.label && readerText(asked.answer.topic.label, "title")}
               </p>
               <RoutedContactCards contacts={asked.contacts} />
             </div>
@@ -809,7 +819,7 @@ export function AskBox({
             grounded.mode !== "TRANSPORT_FAILED" && (
               <WorkingOnIt
                 attrs={{ "data-ask-grounded-state": "NOTHING_HELD" }}
-                about={grounded.subject?.name}
+                about={grounded.subject?.name && readerText(grounded.subject.name, "title")}
                 subject={grounded.subject?.kind === "BODY" ? { type: "BODY", id: grounded.subject.id } : null}
               />
             )}
@@ -832,7 +842,7 @@ export function AskBox({
                       rel="noreferrer noopener"
                       className="underline decoration-dotted underline-offset-2 hover:text-link"
                     >
-                      {l.label}
+                      {readerText(l.label, "title")}
                     </a>
                   </span>
                 ))}
@@ -849,7 +859,7 @@ export function AskBox({
           <div data-ask-refusal className="mt-2.5">
           {/* Only where the server did not resolve the name either. */}
           {asked.binding.kind === "UNRESOLVED" && !grounded?.subject && (
-            <WorkingOnIt attrs={{ "data-ask-entity-state": "UNRESOLVED" }} about={`“${asked.binding.mention}”`} />
+            <WorkingOnIt attrs={{ "data-ask-entity-state": "UNRESOLVED" }} about={`“${readerText(asked.binding.mention, "title")}”`} />
           )}
           {asked.binding.kind === "AMBIGUOUS" && !grounded?.subject && (
             <p
@@ -857,13 +867,13 @@ export function AskBox({
               className="t-body leading-relaxed text-voice"
             >
               More than one government goes by that name —{" "}
-              {asked.binding.candidates.map((c) => c.name).join(" and ")}. Say
+              {asked.binding.candidates.map((c) => readerText(c.name, "title")).join(" and ")}. Say
               which kind you mean — &ldquo;school district&rdquo;,
               &ldquo;town&rdquo; — and we&apos;ll answer for that one.
             </p>
           )}
           <p className="t-body leading-relaxed text-voice">
-            {asked.answer.statement}
+            {asked.answer.statement && readerText(asked.answer.statement, "sentence", knownNames)}
           </p>
           <p className="mt-1.5 t-caption leading-relaxed text-muted">
             You can still head straight to{" "}
@@ -882,7 +892,7 @@ export function AskBox({
         <div className="mt-3">
           <p className="t-eyebrow text-signal">The answer</p>
           <p className="mt-1 t-heading font-semibold leading-snug text-paper">
-            {asked.answer.topic.label}
+            {readerText(asked.answer.topic.label, "title")}
           </p>
           {asked.contacts.length > 0 && (
             <RoutedContactCards contacts={asked.contacts} />
@@ -890,7 +900,7 @@ export function AskBox({
           <ol className="mt-2 space-y-2.5">
             {asked.answer.steps.map((step, i) => (
               <li key={i} className="t-detail leading-relaxed">
-                <p className="text-voice">{step.why}</p>
+                <p className="text-voice">{readerText(step.why, "sentence", knownNames)}</p>
                 {step.bodies.length > 0 && (
                   /* With no opener the name renders as plain text, never an external link. */
                   <p className="mt-0.5 t-body">
@@ -903,10 +913,10 @@ export function AskBox({
                             onClick={() => onOpenBody(body.body)}
                             className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
                           >
-                            {body.label}
+                            {readerText(body.label, "title")}
                           </button>
                         ) : (
-                          <span className="text-paper">{body.label}</span>
+                          <span className="text-paper">{readerText(body.label, "title")}</span>
                         )}
                       </span>
                     ))}
@@ -923,11 +933,11 @@ export function AskBox({
                             onClick={() => onOpenPerson(person)}
                             className="text-left font-medium text-link underline decoration-dotted underline-offset-2 hover:text-paper"
                           >
-                            {person.name}
+                            {readerText(person.name, "name")}
                           </button>
                         ) : (
                           <span className="font-medium text-paper">
-                            {person.name}
+                            {readerText(person.name, "name")}
                           </span>
                         )}
                         <span className="text-muted"> · {readerOfficeTitle(person.officeTitle)}</span>
@@ -978,7 +988,7 @@ export function AskBox({
                 {step.gap &&
                   asked.answer.steps.findIndex((s) => s.gap === step.gap) === i && (
                     <p className="mt-0.5 t-caption leading-relaxed text-voice">
-                      {step.gap}
+                      {step.gap && readerText(step.gap, "sentence", knownNames)}
                     </p>
                   )}
               </li>
@@ -1079,14 +1089,14 @@ function BodyName({
           (b.bodyId === `${ocdId}#governing` || b.bodyId === `${ocdId}#board`),
       )
     : undefined;
-  if (!body || !onOpenBody) return <>{label}</>;
+  if (!body || !onOpenBody) return <>{readerText(label, "title")}</>;
   return (
     <button
       type="button"
       onClick={() => onOpenBody(body)}
       className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
     >
-      {label}
+      {readerText(label, "title")}
     </button>
   );
 }
@@ -1205,10 +1215,10 @@ function DigestAnswer({
                 onClick={() => onOpenPerson(holder)}
                 className="text-left font-medium text-link underline decoration-dotted underline-offset-2 hover:text-paper"
               >
-                {holder.name}
+                {readerText(holder.name, "name")}
               </button>
             ) : (
-              <span className="font-medium text-paper">{holder.name}</span>
+              <span className="font-medium text-paper">{readerText(holder.name, "name")}</span>
             )}
             <span className="text-muted"> · {readerOfficeTitle(holder.officeTitle)}</span>
           </li>
@@ -1243,9 +1253,9 @@ function DigestSection({
 }) {
   return (
     <div className="mt-2.5 border-t border-[var(--panel-border)] pt-2">
-      <p className="t-eyebrow text-muted">{title}</p>
+      <p className="t-eyebrow text-muted">{readerText(title, "title")}</p>
       {gap ? (
-        <p className="mt-1 t-caption leading-relaxed text-voice">{gap}</p>
+        <p className="mt-1 t-caption leading-relaxed text-voice">{readerText(gap, "sentence")}</p>
       ) : (
         <>
           <ul className="mt-1 space-y-1">{children}</ul>

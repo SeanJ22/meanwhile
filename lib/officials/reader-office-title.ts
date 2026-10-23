@@ -1,4 +1,5 @@
 /** Office titles that arrive run together are spelled the way a reader spells them, the same way everywhere. */
+import { readerText } from "../text/reader-names.ts";
 
 /**
  * Reader spellings for titles that arrive run together. Keyed on the exact
@@ -20,9 +21,9 @@ export function readerOfficeTitle(title: string | null | undefined): string {
   const [, head, rest] = trimmed.match(/^([A-Za-z]+)([\s,].*)$/) ?? [];
   if (head) {
     const mappedHead = READER_SPELLING.get(head.toLowerCase());
-    if (mappedHead) return `${mappedHead}${rest}`;
+    if (mappedHead) return readerText(`${mappedHead}${rest}`);
   }
-  return trimmed;
+  return readerText(trimmed);
 }
 
 /** Every title this map knows, for a test that wants the denominator. */

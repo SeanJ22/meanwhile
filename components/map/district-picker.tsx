@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { readerText } from "@/lib/text/reader-names";
 
 import { anchorInViewport, type AnchorPosition } from "@/lib/map/anchor-in-viewport";
 import { TIERS, TIER_LABEL } from "@/lib/ocd/tiers";
@@ -128,7 +129,7 @@ export function DistrictPicker() {
                 }
               >
                 <span className="district-picker-label">
-                  {choice.label}
+                  {readerText(choice.label)}
                   {isSelected ? " ✓" : ""}
                 </span>
                 <span className="district-picker-type">

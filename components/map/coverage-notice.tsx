@@ -52,7 +52,7 @@ import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
 import { formatDateLong } from "@/lib/text/format-date";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
 import { NationalLink } from "../shell/national-link";
@@ -169,9 +169,9 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
       data-seat-sourcing={seat.sourcing}
       className="t-detail leading-snug"
     >
-      {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
+      {seat.label && <span className={TYPE_LABEL_CLASS}>{readerText(seat.label)}</span>}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
-      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{seat.vacancy.sourceOrg}</a></span>}
+      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{readerText(seat.vacancy.sourceOrg)}</a></span>}
       {seat.representatives.length > 0 && <span className="block person-under-heading">
         <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
       </span>}
@@ -203,7 +203,7 @@ function Holder({
    */
   return (
     <div className="person-row">
-      {holder.photoUrl && <Image src={holder.photoUrl} alt={holder.name} width={36} height={44} unoptimized className="mr-2 h-11 w-9 shrink-0 rounded object-cover" />}
+      {holder.photoUrl && <Image src={holder.photoUrl} alt={readerText(holder.name, "name")} width={36} height={44} unoptimized className="mr-2 h-11 w-9 shrink-0 rounded object-cover" />}
       <span className="person-row-name">
         {onOpen ? (
           <button
@@ -211,10 +211,10 @@ function Holder({
             onClick={onOpen}
             className="cursor-pointer text-left hover:text-link hover:underline"
           >
-            {holder.name}
+            {readerText(holder.name, "name")}
           </button>
         ) : (
-          holder.name
+          readerText(holder.name, "name")
         )}
         {showOfficeTitle && <span className="block t-caption text-muted">{readerOfficeTitle(holder.officeTitle)}</span>}
         {holder.selectionMethod === "APPOINTED" && <span className="block t-caption text-muted">Appointed</span>}
@@ -427,7 +427,7 @@ function CoverageBody({
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
       {coverage.fringeDivisions && coverage.fringeDivisions.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-fringe>
-        A small part of {zip} is in {coverage.fringeDivisions.map(division => division.label).join(", ")}. Enter your street address to see if one of them is yours.
+        A small part of {zip} is in {coverage.fringeDivisions.map(division => readerText(division.label)).join(", ")}. Enter your street address to see if one of them is yours.
       </p>}
 
       {!localPending && othersLine && (
@@ -519,7 +519,7 @@ function CoverageBody({
                 {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
               </span>
               <span
-                className={`trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
+                className={`trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
                 {/* Derived rows tag by division type; curated rows by what they are; a body with no division renders its class. */}
                 {body.name === null && body.divisionType !== null
@@ -868,7 +868,7 @@ export function CoverageNotice({
       {/* Pinned: the header never scrolls, so the ballot entry stays reachable. */}
       <div className="coverage-notice-head">
         <p
-          className={`font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
+          className={`font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
         >
           {label}
         </p>
@@ -898,7 +898,7 @@ export function CoverageNotice({
           <h3 className="t-heading text-paper">Governments at this place</h3>
           <ul className="mt-2 space-y-2">
             {result.readerScope.governments.map(body => <li key={body.bodyId} data-upcoming-body={body.bodyId}>
-              <span className="t-body text-paper">{body.name}</span>
+              <span className="t-body text-paper">{readerText(body.name)}</span>
               {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"} held{body.agendasLinked > 0 ? ` · ${body.agendasLinked} ${body.agendasLinked === 1 ? "agenda" : "agendas"} linked` : ""}</p>
                 : <CardGapContribution id={`area-upcoming:${body.bodyId}`} label="upcoming meetings" unit="body" subject={{ type: "BODY", id: body.bodyId }} />}
               {body.upcoming > body.agendasLinked && <CardGapContribution id={`area-agendas:${body.bodyId}`} label="agendas" count={body.upcoming - body.agendasLinked} unit="meeting" kind="not-posted" subject={{ type: "BODY", id: body.bodyId }} />}

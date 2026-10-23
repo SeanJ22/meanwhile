@@ -139,7 +139,7 @@ export function setStatusFields(text, updates) {
  */
 export const CONNECTION_PROOFS = Object.freeze([
   { label: "connected end to end", pattern: /\bconnect(?:ed|ion proof)\b|end[- ]to[- ]end|\bfeeds?\b/i },
-  { label: "still working on the next scheduled run", pattern: /next (?:scheduled|configured) run|\bnext[- ]day proof|\btomorrow proof|\bcontrolled (?:next|tomorrow)\b|following scheduled (?:run|refresh|pass)|\btomorrow(?:'s)?[- ](?:clock|run|pass|tick)\b/i },
+  { label: "still working on the next scheduled run", pattern: /next (?:scheduled|configured)[- ]run|\bnext[- ]day proof|\btomorrow proof|\bcontrolled (?:next|tomorrow)\b|following scheduled (?:run|refresh|pass)|\btomorrow(?:'s)?[- ](?:clock|run|pass|tick)\b/i },
 ]);
 
 /** The connection proofs a READY commit's full message lacks, by label. */

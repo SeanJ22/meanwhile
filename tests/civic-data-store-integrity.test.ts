@@ -790,7 +790,7 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /civicDataPromotions\.currentVersionId, expectedVersionId/);
   assert.match(promote, /pointerOwnsCandidate/);
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
-  assert.match(promote, /validationReceipt: persistedReceipt/);
+  assert.match(promote, /validationReceipt: storedReceipt/);
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
   assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
   assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);

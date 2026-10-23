@@ -1,0 +1,259 @@
+{
+  "state": "MS",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.ms.gov/elections-voting/contact-elections",
+      "finalUrl": "https://www.sos.ms.gov/elections-voting/contact-elections",
+      "publisher": "Mississippi Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.ms.gov/elections-voting",
+      "finalUrl": "https://www.sos.ms.gov/elections-voting",
+      "publisher": "Mississippi Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.ms.gov/yall-vote",
+      "finalUrl": "https://www.sos.ms.gov/yall-vote",
+      "publisher": "Mississippi Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.ms.gov/news/absentee-ballots-now-available-2026-general-election",
+      "finalUrl": "https://www.sos.ms.gov/news/absentee-ballots-now-available-2026-general-election",
+      "publisher": "Mississippi Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.ms.gov/yall-vote/absentee-voting-information",
+      "finalUrl": "https://www.sos.ms.gov/yall-vote/absentee-voting-information",
+      "publisher": "Mississippi Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.ms.gov/content/documents/elections/yallvotedocs/2026%20Mississippi%20Voter%20Information%20Guide.pdf",
+      "finalUrl": "https://www.sos.ms.gov/content/documents/elections/yallvotedocs/2026%20Mississippi%20Voter%20Information%20Guide.pdf",
+      "publisher": "Mississippi Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.sos.ms.gov/content/documents/elections/yallvotedocs/2026%20Mississippi%20Voter%20Information%20Guide.pdf",
+          "finalUrl": "https://www.sos.ms.gov/content/documents/elections/yallvotedocs/2026%20Mississippi%20Voter%20Information%20Guide.pdf",
+          "publisher": "Mississippi Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:44.776567+00:00",
+          "httpStatus": 200,
+          "rawHash": "b3061c1e814e5d977729d5b2a434c017a9181769f4259c162e6feadcb19f47aa",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.ms.gov/elections-voting",
+          "finalUrl": "https://www.sos.ms.gov/elections-voting",
+          "publisher": "Mississippi Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:09.904971+00:00",
+          "httpStatus": 200,
+          "rawHash": "3da42fda5d3b5a4360c642d2221f5ead82e6ce17ef528a40a6cd3cfac5770d05",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.ms.gov/elections-voting/contact-elections",
+          "finalUrl": "https://www.sos.ms.gov/elections-voting/contact-elections",
+          "publisher": "Mississippi Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:10.764393+00:00",
+          "httpStatus": 200,
+          "rawHash": "cffa5ef3d6ad1cf0e4298580c3aee6907a7c20bfb5fef447a4dbad249d4ecf1a",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.ms.gov/news/absentee-ballots-now-available-2026-general-election",
+          "finalUrl": "https://www.sos.ms.gov/news/absentee-ballots-now-available-2026-general-election",
+          "publisher": "Mississippi Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:43.897903+00:00",
+          "httpStatus": 200,
+          "rawHash": "83276131e07cfb4fce71b2ea9dbb604c490f0b448d11b3628c8e0148d111677c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.ms.gov/yall-vote",
+          "finalUrl": "https://www.sos.ms.gov/yall-vote",
+          "publisher": "Mississippi Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:43:02.606749+00:00",
+          "httpStatus": 200,
+          "rawHash": "8543d283950d6d6e8e054f01534a1bbfec2df96d81bb5273e946e8a9d2b92f9c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0f5d5df0dd9933de5612dcd65b0d189f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "early_voting",
+            "text": "The last day to vote in-person absentee is saturday, october 31 .",
+            "quote": "the last day to vote in-person absentee is saturday, october 31 .",
+            "dates": [
+              "2026-10-31"
+            ],
+            "url": "https://www.sos.ms.gov/news/absentee-ballots-now-available-2026-general-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:43.897903+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:58a0cdc64849a8e4dcb7960e453003b5",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "polling_lookup",
+            "text": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+            "quote": "Locate your polling place, view a sample ballot, track your absentee/affidavit ballot, and view your current officer holders with My Election Day.",
+            "dates": [],
+            "url": "https://www.sos.ms.gov/yall-vote",
+            "navigationUrl": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:43:02.606749+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:779ee8820e3c8a649d88878174712496",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "registration_deadline",
+            "text": "Mississippians who are currently registered to vote or submit voter registration applications by monday, october 5, (in-person or postmarked), are entitled to cast a ballot in the general election on tuesday, november 3 .",
+            "quote": "mississippians who are currently registered to vote or submit voter registration applications by monday, october 5, (in-person or postmarked), are entitled to cast a ballot in the general election on tuesday, november 3 .",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://www.sos.ms.gov/news/absentee-ballots-now-available-2026-general-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:43.897903+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:b5f358bb62019bc1fdb7d8a84a89ce97",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "election_office",
+            "text": "Elections",
+            "quote": "Contact Elections",
+            "dates": [],
+            "url": "https://www.sos.ms.gov/elections-voting/contact-elections",
+            "navigationUrl": "https://www.sos.ms.gov/elections-voting",
+            "electionDate": "2026-11-03",
+            "phone": "1-800-829-6786",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:10.764393+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:b5ff6fd14d15b75f939cdf3d6a24fef3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "ballot_lookup",
+            "text": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+            "quote": "Locate your polling place, view a sample ballot, track your absentee/affidavit ballot, and view your current officer holders with My Election Day.",
+            "dates": [],
+            "url": "https://www.sos.ms.gov/yall-vote",
+            "navigationUrl": "https://myelectionday.sos.state.ms.us/VoterOutreach/Pages/VOSearch.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:43:02.606749+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:c352c9f7736d43d0a9a5c5abd6610bc3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.ms.gov/elections-voting/voter-registration-information",
+            "quote": "Voter Registration Information",
+            "dates": [],
+            "url": "https://www.sos.ms.gov/elections-voting",
+            "navigationUrl": "https://www.sos.ms.gov/elections-voting/voter-registration-information",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:09.904971+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:eeff8391e3c1c21ac5308f08681efa94",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "If you know you will vote by an absentee ballot, you may visit or contact your Circuit or Municipal Clerk’s Office at any time within 45 days of the election until 12:00 p.m. (noon) on the Saturday before the election.",
+            "quote": "If you know you will vote by an absentee ballot, you may visit or contact your Circuit or Municipal Clerk’s Office at any time within 45 days of the election until 12:00 p.m. (noon) on the Saturday before the election.",
+            "dates": [
+              "2026-10-31"
+            ],
+            "url": "https://www.sos.ms.gov/content/documents/elections/yallvotedocs/2026%20Mississippi%20Voter%20Information%20Guide.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:44.776567+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:fef6528e60b0bbd328d16755913e61da",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MS",
+            "divisionId": "ocd-division/country:us/state:ms",
+            "fieldKind": "registration_lookup",
+            "text": "https://www.msegov.com/sos/voter_registration/amiregistered/Search",
+            "quote": "Voter Registration Verification",
+            "dates": [],
+            "url": "https://www.sos.ms.gov/yall-vote",
+            "navigationUrl": "https://www.msegov.com/sos/voter_registration/amiregistered/Search",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:43:02.606749+00:00",
+            "sourceOrg": "Mississippi Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

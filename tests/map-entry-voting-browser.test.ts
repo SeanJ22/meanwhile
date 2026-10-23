@@ -54,7 +54,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
       const isZip = input === place.zip;
       answers.set(input, {
         match: true, precision: isZip ? "ZIP" : "ADDRESS", point: isZip ? null : { lat: place.lat, lng: place.lng },
-        outsideCoverage: false, pollingPlaceLinks: [], jurisdictions: [{
+        outsideCoverage: false, jurisdictions: [{
           state: place.state, ocdId: `ocd-division/country:us/state:${place.state.toLowerCase()}`,
           name: `${place.state} protocol fixture`, model: "VOTE_CENTER", election: "Protocol election",
           modelSentence: "Controlled map regression response.", narrowing: { kind: "NOT_NEEDED", sentence: "Protocol response." },
@@ -86,7 +86,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
     else if (url.pathname === "/api/voting-sites") {
       let body = ""; for await (const chunk of request) body += chunk;
       const { address } = JSON.parse(body); inputs.push(address);
-      json(answers.get(address) ?? { match: false, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [] });
+      json(answers.get(address) ?? { match: false, point: null, jurisdictions: [], outsideCoverage: true });
     } else if (url.pathname === "/api/reader-copy") json({});
     else if (url.pathname === "/") response.writeHead(200, { "content-type": "text/html" }).end(`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/entry.css"></head><body><div id="root"></div><script type="module" src="/entry.js"></script></body></html>`);
     else json({});

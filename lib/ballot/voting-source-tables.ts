@@ -1,3 +1,4 @@
+import { guardPdfjsRejections } from "../extract/pdfjs-rejections.ts";
 import { inflateRawSync } from "node:zlib";
 import type { VotingExtraction } from "./voting-source-types.ts";
 
@@ -137,6 +138,7 @@ export function xlsxVotingTables(bytes: Uint8Array, config: VotingExtraction = {
 
 export async function pdfVotingTables(bytes: Uint8Array, config: VotingExtraction = {}): Promise<VotingTable[]> {
   const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  guardPdfjsRejections();
   const doc = await getDocument({ data: new Uint8Array(bytes), useWorkerFetch: false }).promise;
   const tables: VotingTable[] = [];
   try {

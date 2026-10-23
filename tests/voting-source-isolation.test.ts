@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { readFileSync } from "node:fs";
+import { gunzipSync } from "node:zlib";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -69,12 +70,19 @@ test("an unrelated storage failure still fails the source run", async () => {
     capture: { contentType: "text/html", bytes: clean } }, at, { putBytes: async () => { throw new Error("disk unavailable"); } }), /disk unavailable/);
 });
 
-test("compressed publication evidence cannot bypass a restricted document or linking page", async () => {
+test("restricted voting documents stay held; official linking pages use a traced sanitized derivative", async () => {
   const body = { url: door.url, contentType: "text/html", bytes: restricted };
   await assert.rejects(holdVotingRawEvidence({ rawBodies: [body] }), error => error instanceof VotingSourceDocumentHeld && error.url === door.url);
   const read = await readVotingSource(door, { fetch: (async () => new Response(clean, { headers: { "content-type": "text/html" } })) as typeof fetch, now: () => at });
   const linking = { ...door, officialLinkingPage: { url: "https://elections.example.gov/link", html: new TextDecoder().decode(restricted) } };
-  await assert.rejects(votingSourceEvidence(linking, read), error => error instanceof VotingSourceDocumentHeld && error.url === linking.officialLinkingPage.url);
+  const evidence = await votingSourceEvidence(linking, read);
+  const page = evidence.find(capture => capture.url === linking.officialLinkingPage.url)!;
+  assert.ok(page.derivation);
+  assert.notEqual(page.derivation.rawHash, page.derivation.derivedHash);
+  const saved = gunzipSync(Buffer.from(page.savedDocument!.body, "base64")).toString("utf8");
+  assert.equal(saved.includes(credential), false);
+  assert.match(saved, /North Dakota polling places/);
+  assert.equal(page.derivation.derivedHash, `sha256-${page.rawHash}`);
 });
 
 test("separate mappings from the same document replace its prior facts together", async () => {

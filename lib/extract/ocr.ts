@@ -80,7 +80,10 @@ export async function runOcr(
     const execute = opts.execute ?? (async (command: string, args: readonly string[]) => {
       const remaining = deadline - Date.now();
       if (remaining <= 0) throw new Error("document OCR time allowance exhausted");
-      await executeFile(command, [...args], { encoding: "utf8", timeout: remaining, windowsHide: true });
+      // Each source already has its own worker. Tesseract's OpenMP threads
+      // contend across those workers and can turn a small scan into a timeout.
+      await executeFile(command, [...args], { encoding: "utf8", timeout: remaining, windowsHide: true,
+        env: { ...process.env, OMP_THREAD_LIMIT: process.env.OMP_THREAD_LIMIT ?? "1" } });
     });
     const dir = mkdtempSync(join(tmpdir(), "wtp-ocr-"));
     let step = "PDF rasterisation";

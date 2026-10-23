@@ -116,7 +116,7 @@ const AUTHORITIES = {
     competentFacts: ["election", "contests and candidates", "polling locations", "early vote sites", "drop off locations"],
     expectedIdentifierKeys: ["observation_id"], expectedTemporalFields: ["checked_at", "election_day"],
     horizonSemantics: "Address-query observations; no bulk endpoint and no nationwide completeness claim. Native district OCD IDs join only when held; every unjoined row survives. Reader addresses are transient.",
-    parserVersion: "google-civic-voterinfo/1", freshnessExpectation: "Daily elections-catalog checks through the election. Address lookup only on an explicit reader fallback where official voting sources are absent. Publication date unknown when omitted by the API.",
+    parserVersion: "google-civic-voterinfo/1", freshnessExpectation: "Daily elections-catalog checks and county election-office availability/count probes through the election. Reader address answers remain transient and are never saved. Publication date unknown when omitted by the API.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
   },
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),

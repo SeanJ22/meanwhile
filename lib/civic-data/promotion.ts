@@ -420,6 +420,7 @@ export async function processRegisteredManualCandidate(
     trustedLkgPredecessorVersionId(boundedCandidate) !== null
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
+    boundedCandidate.recordClass === "VOTING_SITE" ? store : undefined,
   );
   return appendTypedReaderProjectionReadback(
     store,

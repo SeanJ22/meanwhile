@@ -1,0 +1,129 @@
+{
+  "branch": "stream/vs-07",
+  "base": "origin/river@78f82a232dd1d0545a46835e7716032ff3807425",
+  "connectedSteps": {
+    "input": "RN-01 standing routine admission and state task deadline; official election-office source doors",
+    "output": "LV-01 typed voting projection, geographic voting answer, and VotingJurisdictionRecords panel"
+  },
+  "checks": {
+    "sourceSuite": {
+      "command": "node --experimental-strip-types --import ./scripts/register-test-loader.mjs --test tests/voting-source-*.test.ts tests/voting-job-boundary.test.ts tests/voting-arcgis-definition.test.ts tests/google-civic.test.ts",
+      "tests": 105,
+      "initialPassed": 104,
+      "initialFailed": 1,
+      "failure": "NYC assembly-district/table headings leaked into a few parsed addresses.",
+      "repair": "Truncate the configured PDF address transform at native section/table headings.",
+      "targetedRerun": {
+        "file": "tests/voting-source-counties.test.ts",
+        "passed": 2,
+        "failed": 0,
+        "doorsRead": 92
+      },
+      "finalRun": {
+        "tests": 203,
+        "passed": 203,
+        "failed": 0,
+        "skipped": 0,
+        "includes": [
+          "all voting-source tests",
+          "job/JSONB NUL boundary tests",
+          "Google/privacy tests",
+          "ArcGIS tests",
+          "generic civic promotion/regression/store-integrity tests"
+        ],
+        "testConcurrency": 2
+      }
+    },
+    "ocr": {
+      "initialFailure": "The native Benton scanned PDF timed out in the suite and in isolation under default OpenMP threading.",
+      "repair": "Default each OCR process to one OpenMP thread, retaining an explicit operator override.",
+      "verification": "The original native PDF passed in isolation and the broad source suite with the environment override unset."
+    },
+    "fixtureCredentialScan": {
+      "result": "PASS after final native NC and Philadelphia captures",
+      "confirmedCapturedFixtureFiles": 0,
+      "confirmedOtherFiles": 0
+    },
+    "environmentCredentialValueScan": {
+      "result": "PASS",
+      "filesRead": 315,
+      "environmentValuesChecked": 13,
+      "hits": 0
+    },
+    "envLocalSecretSweep": {
+      "result": "CANNOT_RUN",
+      "reason": ".env.local is absent; current environment credential values were checked separately."
+    },
+    "typescript": {
+      "result": "PASS",
+      "command": "node node_modules/typescript/bin/tsc --noEmit --pretty false"
+    },
+    "eslint": {
+      "result": "PASS",
+      "scope": "Every changed or new TypeScript file",
+      "warnings": 0
+    },
+    "sourceReplacement": {
+      "result": "PASS",
+      "method": "Re-read saved gzip bytes and hashes, reconstruct the scoped successor through the actual merger, then validate exact per-site removals. Missing bytes, omitted current rows and deletion of independent publishers are refused.",
+      "pimaProductionReplay": "345 prior Pima records become 153 current source-backed physical sites; 212 old record IDs are retired with exact evidence. Arizona adds 23 Cochise sites for 176 total.",
+      "philadelphiaProductionReplay": "The current map supplies 683 facilities with 1703 assignments and current hours. The older spreadsheet route is superseded after this publication."
+    },
+    "finalDataAdditions": {
+      "tests": 10,
+      "passed": 10,
+      "failed": 0,
+      "uniqueTestsAcrossFinalRuns": 205,
+      "files": [
+        "tests/voting-source-vs07.test.ts",
+        "tests/voting-source-philly-boundaries.test.ts"
+      ],
+      "northCarolina": "A source-asserted common Election Day hours rule renders beside the current polling list. Missing quote is refused; the CSV\u2019s missing per-row hours are not fabricated.",
+      "philadelphia": "All 1703 official polygons join the native ward/division assignments; a native polling-facility point narrows to one site with hours today and tomorrow. This is not the post-shipping real-home live check."
+    },
+    "whitespace": {
+      "result": "PASS for code and metadata outside captured fixture bytes",
+      "command": "git diff --cached --check -- . ':(exclude)tests/fixtures/**'",
+      "nativeFixtureBytes": "Publisher whitespace and CRLF remain unchanged to preserve acquisition hashes; .gitattributes already declares tests/fixtures/** -text."
+    }
+  },
+  "googlePersistence": "Only election catalog, per-county availability and counts persist. No voterinfo response or sampled home address is saved.",
+  "limitations": [
+    "Brave and Exa credentials and connector tools are unavailable in this environment. Connected search discovered election-office pages; published facts use saved native official responses.",
+    "The supplied SANDAG service names lack a verified sdvote.com backlink. Those routes remain leads. Current official San Diego HTML lists supply voting centers and drop boxes.",
+    "North Carolina\u2019s requested 46-page early PDF remains an extraction gap; the official statewide TSV supplies 367 facilities and 6239 dated schedule rows.",
+    "Bexar\u2019s 58 early sites have source-verified addresses and current-election association; the image timetable is not yet a configured extraction route. All 302 Election Day centers have verified hours.",
+    "Gwinnett and Wayne added lists retain an explicit current-election-association gap. NYC exact precinct assignment and hours remain standing work.",
+    "Read-only replay proves code against captured official responses and exact original production pointers. It does not prove production runner launch admission, future publisher uptime, deployment, or reader network latency.",
+    "River must perform the post-shipping live checks for real Charlotte, San Diego, Philadelphia and San Antonio homes with x-wtp-synthetic-run. Each result must show polling places or vote centers with hours within three seconds.",
+    "American Samoa\u2019s acquired absentee-rule notice has no parsed polling sites; its site-list acquisition remains open. Puerto Rico\u2019s zero count is a source-backed general-election-cycle notice, not a claim that special elections are absent.",
+    "Delaware retains 297 site rows; 278 Election Day rows lack county attribution and the reader filters them out. Nineteen early sites reach the panel. This remains an explicit source-attribution/reader gap."
+  ],
+  "protectedFilesUnchanged": [
+    "lib/sources/google-civic/model.ts",
+    "lib/sources/google-civic/reader-lookup.ts"
+  ],
+  "replacedCode": "The inline source refresh loop was replaced by the single exported refreshVotingSources implementation. Main and replay call the same implementation; no alternate production path or feature switch was added.",
+  "productionReplay": {
+    "artifact": "docs/measurements/vs-07/replay-proof.json",
+    "scopes": 56,
+    "passes": 112,
+    "publishedPasses": 108,
+    "sitesEachDay": 20703,
+    "panelVisibleEachDay": 20425,
+    "stateFailures": [
+      "AK",
+      "GU"
+    ],
+    "sourceCoverageGap": [
+      "AS"
+    ],
+    "readerAttributionGap": {
+      "state": "DE",
+      "filteredElectionDayRows": 278
+    },
+    "slowestTaskSeconds": 244.83,
+    "productionWrites": 0,
+    "repeat": "All56 ordinary routine clocks are due, and the exact task succeeds or repeats the recorded source failure at both controlled schedule dates. Final per-state doors and production code hashes match."
+  }
+}

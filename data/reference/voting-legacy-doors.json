@@ -26,7 +26,8 @@
         "election": "ELECTION",
         "lat": "latitude",
         "lng": "longitude"
-      }
+      },
+      "where": "(ELECTION = '2026 General') OR (ELECTION = 'All')"
     },
     "model": "VOTE_CENTER",
     "access": {
@@ -64,7 +65,8 @@
       },
       "filters": {
         "Election": "2026 General"
-      }
+      },
+      "where": "Election = '2026 General'"
     },
     "model": "VOTE_CENTER",
     "access": {
@@ -169,7 +171,7 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.cochise.az.gov/292/Elections",
     "discoveredFrom": "https://www.cochise.az.gov/509/Voter-Information",
-    "title": "COCHISE COUNTY ELECTIONS \u2013 2026 \u00b7 18 VOTE CENTER LOCATIONS COUNTYWIDE",
+    "title": "COCHISE COUNTY ELECTIONS – 2026 · 18 VOTE CENTER LOCATIONS COUNTYWIDE",
     "extraction": {
       "format": "pdf",
       "kind": "VOTE_CENTER",
@@ -436,6 +438,6 @@
     "title": "24-hour Ballot Drop Boxes",
     "matchingUnit": "COUNTY",
     "electionAssociationVerified": false,
-    "publicationMessage": "Current app overview names October 7\u2013November 3, 2026, but the web-map drop-box popup still names June 24\u2013July 21. Verify current layer rules and posted change notices."
+    "publicationMessage": "Current app overview names October 7–November 3, 2026, but the web-map drop-box popup still names June 24–July 21. Verify current layer rules and posted change notices."
   }
 ]

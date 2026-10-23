@@ -36,7 +36,7 @@ export function platformRegistrationNeed(page: PlatformRegistrationPage): Meetin
 /** A new body's name and type must still be found on the platform. The identity stays on its native government. */
 export function platformRegistrationBinding(page: PlatformRegistrationPage): RegisteredGovernment | { notRegistered: string } {
   const g = page.government;
-  const divisions = [...new Set(g.associations.filter(a => ["SOURCE_CODE", "GOVERNING_FUNCSTAT"].includes(a.basis))
+  const divisions = [...new Set(g.associations.filter(a => ["SOURCE_CODE", "GOVERNING_FUNCSTAT", "SOURCE_BOUNDARY", "COUNTY_IN_NAME"].includes(a.basis))
     .map(a => a.divisionId))];
   // A Census county is an administrative address, not a district's service area.
   // Its native bodies can publish at their registered state while finer place associations remain open.
@@ -56,17 +56,28 @@ const directoryNameSql = (value: string) => `(SELECT string_agg(word,' ' ORDER B
   btrim(regexp_replace(regexp_replace(lower(${value}), '^(the )?(city|town|village|borough) of ', ''), '[^a-z0-9]+', ' ', 'g')), ' +') word
   WHERE word NOT IN ('of','the'))`;
 
-/** A catalogue selects at most two native government records. Two means ambiguous, never a guessed binding. */
+/** A directory name selects governments whose own sites must still be checked; it establishes no portal authority. */
+export async function platformGovernmentCandidates(query: PlatformQuery, tenant: PlatformTenant): Promise<PlatformRegistrationPage[]> {
+  if (!tenant.name || !tenant.state) return [];
+  return await query(`SELECT g AS government,p.current_version_id AS "versionId", p.promoted_at AS "promotedAt", c.normalized_hash AS "readModelHash"
+    FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id,
+      LATERAL jsonb_array_elements(p.payload->'governments') g
+    WHERE p.record_class='REGISTRATION' AND p.scope='US-'||$1||':registration:v1'
+      AND ${directoryNameSql("g->>'name'")}=${directoryNameSql("$2::text")}
+    LIMIT 2`, [tenant.state, tenant.name]) as unknown as PlatformRegistrationPage[];
+}
+
+/** Website or observed link evidence selects at most two records; a printed directory name alone never matches a portal. */
 export async function matchRegisteredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, governmentWebsites: readonly string[] = []): Promise<PlatformRegistrationPage[]> {
   const hosts = [tenant.url, ...governmentWebsites].flatMap(value => { try { return [new URL(value).hostname.replace(/^www\./i, "").toLowerCase()]; } catch { return []; } });
   const rows = await query(`SELECT g AS government,p.current_version_id AS "versionId", p.promoted_at AS "promotedAt", c.normalized_hash AS "readModelHash"
     FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id,
       LATERAL jsonb_array_elements(p.payload->'governments') g
     WHERE p.record_class='REGISTRATION' AND ($1::text IS NULL OR p.scope='US-'||$1||':registration:v1')
-      AND (($3::text IS NULL AND (${websiteHostSql("g->>'website'")}=ANY($2::text[])
+      AND (${websiteHostSql("g->>'website'")}=ANY($2::text[])
         OR (${websiteHostSql("g->>'website'")} LIKE '%.gov' AND EXISTS (
-          SELECT 1 FROM unnest($2::text[]) h WHERE h LIKE '%.'||${websiteHostSql("g->>'website'")}))))
-        OR ($3::text IS NOT NULL AND ${directoryNameSql("g->>'name'")}=${directoryNameSql("$3::text")}))
+          SELECT 1 FROM unnest($2::text[]) h WHERE h LIKE '%.'||${websiteHostSql("g->>'website'")})))
+      AND ($3::text IS NULL OR ${directoryNameSql("g->>'name'")}=${directoryNameSql("$3::text")})
     LIMIT 2`, [tenant.state, hosts, tenant.name]);
   return rows as unknown as PlatformRegistrationPage[];
 }

@@ -5,7 +5,7 @@ import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
 import { readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
-import { stateCoverage } from "@/lib/reader/coverage";
+import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
 import { wireSnapshot } from "@/lib/meetings/freshness";
@@ -64,13 +64,13 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const point = zipRead.value ? null : await (await import("@/lib/registry/server")).divisionsAt(lat, lng);
     const ids = point?.map(division => division.ocdId) ?? location.divisionIds;
     const divisionIds = new Set(ids);
-    const registry = state?.registry ?? place.registry;
+    const registry = place.registry;
     const bodies = registry.registry.bodies;
     const selectedBodyIds = new Set([...meetingBodyIds(bodies, divisionIds), ...territoryBodies(lat, lng, territory)]);
     const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionIds, snapshotSourceFor(place.snapshot), settings,
       selectedBodyIds, new Set(bodies.map(body => body.id)));
     const localIds = state ? ids : ids.filter(id => !/\/(?:cd|sldu|sldl):/.test(id));
-    const coverage = stateCoverage(state ?? { state: location.state, registry, version: place.snapshot.generatedAt },
+    const coverage = stateCoverage(state ? withPlaceRegistry(state, registry) : { state: location.state, registry, version: place.snapshot.generatedAt },
       localIds, lat, lng, place.meetings, place.bodies, place.divisions, territory, result.meetings.length);
     coverage.governments = bindGovernmentBodies(place.governments, bodies);
     coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [location.state];

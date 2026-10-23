@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/MiamiGardens_Energov/FeatureServer?f=pjson",
+  "finalUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/MiamiGardens_Energov/FeatureServer?f=pjson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:20:05.431163+00:00",
+  "rawHash": "fbec91e9e129a95795d5fc91cfc495315cba4a8347398faa7e1169331973f2da"
+}

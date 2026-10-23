@@ -1,0 +1,8 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer/0/query?f=geojson&where=%28countyfp20+%3D+%27001%27+AND+district+IN+%282%2C5%29%29+OR+%28countyfp20+%3D+%27005%27+AND+district+%3D+5%29&outFields=%2A&outSR=4326",
+  "finalUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer/0/query?f=geojson&where=%28countyfp20+%3D+%27001%27+AND+district+IN+%282%2C5%29%29+OR+%28countyfp20+%3D+%27005%27+AND+district+%3D+5%29&outFields=%2A&outSR=4326",
+  "httpStatus": 200,
+  "rawHash": "9fe0b6f8a4d306a5983346815a6ab4efc72959cffb6549eea594ed00b8be221d",
+  "retrievedAt": "2026-10-23T08:27:21.513206+00:00",
+  "contentType": "application/json; charset=utf-8"
+}

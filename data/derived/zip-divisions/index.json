@@ -1,1106 +1,1137 @@
 {
- "formatVersion": 2,
- "generatedAt": "2026-09-23",
- "source": "data/derived/zip-governments.json (national TIGER lattice sampling), with each government's OCD id built from the Census names by lib/ocd/divisions.ts",
- "note": "Every division whose territory reaches each ZCTA, one shard per two-digit ZIP prefix. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area. Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
- "counts": {
-  "zips": 33791,
-  "shards": 99,
-  "divisionReferences": 89660,
-  "edges": 272526,
-  "edgesWithNoOcdId": {},
-  "zipsWithAPartialDivision": 26734,
-  "zipsWithNoCountyEdge": 0,
-  "collisions": 278,
-  "committedIdsKept": 16,
-  "committedIdsNotInTheNationalLayers": 0
- },
- "inheritedSharedIds": {
-  "ocd-division/country:us/state:nj/school_district:union_township_school_district": [
-   "elsd:3416440",
-   "unsd:3416500"
-  ]
- },
- "staleInTheOldIndex": [
-  "ocd-division/country:us/state:nj/school_district:washington_township_school_district"
- ],
- "shards": {
-  "10": {
-   "sha256": "38bd1093c6d54b8a0937aa5808115a8581d7541657cd50aeca123652d24519c8",
-   "zips": 248,
-   "states": [
-    "NY"
-   ]
-  },
-  "11": {
-   "sha256": "c6401574751c1586960d6f845e2ad00ad7119f91f3fe567869af9770124b769b",
-   "zips": 280,
-   "states": [
-    "NY"
-   ]
-  },
-  "12": {
-   "sha256": "9ee89a9907f0917c0ced758edeb86b8d36bf62e0da3018e5bb6b851f88a83ae6",
-   "zips": 498,
-   "states": [
-    "NY"
-   ]
-  },
-  "13": {
-   "sha256": "25d6243fb5206759c39fe6e93f21c68ddf9a9ddfa4ac798cd75e675a42dd8df3",
-   "zips": 403,
-   "states": [
-    "NY"
-   ]
-  },
-  "14": {
-   "sha256": "63dfaed27a85889fd245cbaed91f485338c91541445b16298dd214940c1241d2",
-   "zips": 396,
-   "states": [
-    "NY"
-   ]
-  },
-  "15": {
-   "sha256": "45c7e03e32777e7082cd3e6ca8b8ac336b477e0ee0c70555d4e7f5e3f7575eb5",
-   "zips": 512,
-   "states": [
-    "PA"
-   ]
-  },
-  "16": {
-   "sha256": "186b8c274a3a57889410ebfc8d57aa874dd79f0b9aa4dc1890464d91f12d0515",
-   "zips": 382,
-   "states": [
-    "PA"
-   ]
-  },
-  "17": {
-   "sha256": "c4831f94101121cf33ea71c88932dcffdf8e0afdf0298cf10c59f046428ed683",
-   "zips": 390,
-   "states": [
-    "PA"
-   ]
-  },
-  "18": {
-   "sha256": "07a5771252d4f85002e1ff5167777462072e86f642009b95b8e9b51f33abe67b",
-   "zips": 313,
-   "states": [
-    "PA"
-   ]
-  },
-  "19": {
-   "sha256": "8e7db4fb4628e1c4bb6a246cd620e75988be722fb2ae1ab8400948302acd2ee0",
-   "zips": 304,
-   "states": [
-    "DE",
-    "MD",
-    "PA"
-   ]
-  },
-  "20": {
-   "sha256": "9ebc351e8a8d968292297cf6bd3dd8dad606429f1fb642a04c7b57e18299146e",
-   "zips": 264,
-   "states": [
-    "DC",
-    "MD",
-    "VA",
-    "WV"
-   ]
-  },
-  "21": {
-   "sha256": "a46d27b7bfecadbc6f95df501a3bb666df5474513085368afa568544ac6352ed",
-   "zips": 315,
-   "states": [
-    "MD"
-   ]
-  },
-  "22": {
-   "sha256": "2411fbc09b0e20d53eb9420683ba47951fcf408821d90f47e837cef7c0bcbeda",
-   "zips": 241,
-   "states": [
-    "VA"
-   ]
-  },
-  "23": {
-   "sha256": "056df9738e015d9bf404d296acd2d7f9f0bc672ffd3cb2a278e0c372465a53f1",
-   "zips": 326,
-   "states": [
-    "VA"
-   ]
-  },
-  "24": {
-   "sha256": "add689a7cfa54164f6178eab80e03a8f614a260466431d1d27bd5c7f0f8602e3",
-   "zips": 398,
-   "states": [
-    "VA",
-    "WV"
-   ]
-  },
-  "25": {
-   "sha256": "4703a79b8c7c916e139c23825e3bfd7795817278b8bdeaf97a26e34986981e40",
-   "zips": 350,
-   "states": [
-    "WV"
-   ]
-  },
-  "26": {
-   "sha256": "d4ca51ed93696b28f235e613854955667e28c4dbb4b1de96c00d513063832489",
-   "zips": 281,
-   "states": [
-    "WV"
-   ]
-  },
-  "27": {
-   "sha256": "ae10319906e9356d016d2b0631247ccd4e32341cc82a7bb1d35d7b8050816f0c",
-   "zips": 373,
-   "states": [
-    "NC"
-   ]
-  },
-  "28": {
-   "sha256": "5a7bd65533e2e61bde5b8b99ac04fdd0e3c261f5e27c52799b4d000026a1f50b",
-   "zips": 480,
-   "states": [
-    "NC",
-    "VA"
-   ]
-  },
-  "29": {
-   "sha256": "1716f20ace1ab334fac9fd23eb1cbfddbc2e2d7f0484d13423a02ad0e8b5fba7",
-   "zips": 424,
-   "states": [
-    "SC"
-   ]
-  },
-  "30": {
-   "sha256": "ba704aacd3735d4727440bb5b879c247702c136538af8f672eebb667944a2d45",
-   "zips": 426,
-   "states": [
-    "AL",
-    "GA"
-   ]
-  },
-  "31": {
-   "sha256": "6bcc843b04371337ab070d734116b70fafe484bf404e3de42f9398915a258d59",
-   "zips": 294,
-   "states": [
-    "GA"
-   ]
-  },
-  "32": {
-   "sha256": "7855874a29c47b21f0e3dff9e78986c5f80cd9ff5e6fb4c7e7e9fa853046d9c3",
-   "zips": 410,
-   "states": [
-    "FL"
-   ]
-  },
-  "33": {
-   "sha256": "6b0214075bb685ce900d6a05c24cde8d7813b36ae8404018d8266cffe24108cb",
-   "zips": 410,
-   "states": [
-    "FL"
-   ]
-  },
-  "34": {
-   "sha256": "023fbfed82ab169a677a94e96c15a59144c3a0e3782f85a3750f83b053cc728a",
-   "zips": 193,
-   "states": [
-    "FL"
-   ]
-  },
-  "35": {
-   "sha256": "74d686bd0813ba29a9895257a3c3663ddf907d766cdbf0c862fd6b8893038b22",
-   "zips": 324,
-   "states": [
-    "AL"
-   ]
-  },
-  "36": {
-   "sha256": "6c953e31c09ea174386fa572f1c85508032380599bee5da7e4da4d7e43dc539a",
-   "zips": 332,
-   "states": [
-    "AL",
-    "GA"
-   ]
-  },
-  "37": {
-   "sha256": "ab3edcaed520b645bf16cc62477229b881dce69d729cdf9c3c488652cd89e8b2",
-   "zips": 385,
-   "states": [
-    "TN",
-    "VA"
-   ]
-  },
-  "38": {
-   "sha256": "876f39b6f3e3340ebac0efcd40660e7bd9a7b35fa3a6f20f4eb9dd8765303121",
-   "zips": 422,
-   "states": [
-    "AL",
-    "AR",
-    "KY",
-    "MS",
-    "TN"
-   ]
-  },
-  "39": {
-   "sha256": "9bceb3179cdeb3d53a327d30653322dc588a38c1390c828e87565d533d716655",
-   "zips": 287,
-   "states": [
-    "GA",
-    "MS"
-   ]
-  },
-  "40": {
-   "sha256": "57a90ad50e9216e688d3bb9f7a8a0f244b7619e0913055b1fbb8cd696946d853",
-   "zips": 274,
-   "states": [
-    "KY",
-    "TN"
-   ]
-  },
-  "41": {
-   "sha256": "35115805726c777722842faf714a3d45438736e84e811b11fa65bbc482660603",
-   "zips": 272,
-   "states": [
-    "KY"
-   ]
-  },
-  "42": {
-   "sha256": "fdb2d24f8ad21afabfca2b8b8487ee12db8c74f4bf0ee6a0424b82c58f4192e0",
-   "zips": 234,
-   "states": [
-    "KY",
-    "TN"
-   ]
-  },
-  "43": {
-   "sha256": "49b6371eb8c4b2b458198813b9c30598e5efe782e31c165f5461784bb69939d1",
-   "zips": 419,
-   "states": [
-    "OH"
-   ]
-  },
-  "44": {
-   "sha256": "a4a3101f318d6275ade4815f1cd7844556afb362abaec3257e5c7dd60bc7dec3",
-   "zips": 381,
-   "states": [
-    "OH"
-   ]
-  },
-  "45": {
-   "sha256": "e03f06bfd969a56c5b7d695965c28cbbb78f7fd33737283f84d2ba9b7718f3fc",
-   "zips": 433,
-   "states": [
-    "OH"
-   ]
-  },
-  "46": {
-   "sha256": "8adc3660c6d1a17956f2c321c4f1258c6b9a7ab1f44476f7ee8ec508ef06252f",
-   "zips": 397,
-   "states": [
-    "IN"
-   ]
-  },
-  "47": {
-   "sha256": "3c33a00a8398b62dea706b33d6f2ca07c67d87b61ed14f1b25c111aaa96b80ec",
-   "zips": 410,
-   "states": [
-    "IN",
-    "OH"
-   ]
-  },
-  "48": {
-   "sha256": "4f0ba5ad68a8615d7bdd6565a245807a6a2bb3677ab9763292ba50e90601d2bb",
-   "zips": 485,
-   "states": [
-    "MI"
-   ]
-  },
-  "49": {
-   "sha256": "3c085a3dd1ee29cdad539f3e7cc65b2d7e5b13262d4a4f02abbdbebbf00b9211",
-   "zips": 507,
-   "states": [
-    "MI"
-   ]
-  },
-  "50": {
-   "sha256": "f4bffc7b1183ed4c3f216d6192239d82f9a418a9ee73278e18fcad8d85465320",
-   "zips": 442,
-   "states": [
-    "IA"
-   ]
-  },
-  "51": {
-   "sha256": "7bd8300c711a292b2877cceb0a2e10df672f3fb5cfa78a85452934b69790806d",
-   "zips": 212,
-   "states": [
-    "IA",
-    "MN",
-    "MO",
-    "NE",
-    "SD"
-   ]
-  },
-  "52": {
-   "sha256": "935e7ed4018575533a2e5a005da6500686db079bb5f357e12f0ea634977ff409",
-   "zips": 316,
-   "states": [
-    "IA",
-    "MO"
-   ]
-  },
-  "53": {
-   "sha256": "5529066daf107839b58b3348a63173f55d4db93f2d083e03c14c5804f125beb5",
-   "zips": 329,
-   "states": [
-    "WI"
-   ]
-  },
-  "54": {
-   "sha256": "4ec6e5cfc83ff904cbf6ccc6d7a4c2e74b081a8aa6080e34e50ef1feed548beb",
-   "zips": 454,
-   "states": [
-    "MI",
-    "WI"
-   ]
-  },
-  "55": {
-   "sha256": "933bdcbf84033ec02626658a052d36e26266283f7a9922ebdb541e06e106e8cf",
-   "zips": 402,
-   "states": [
-    "MN"
-   ]
-  },
-  "56": {
-   "sha256": "a4352f741c819c8f25655f8dea064bf71de9d8cac57d98c9dc4337d161fd3e0b",
-   "zips": 479,
-   "states": [
-    "IA",
-    "MN",
-    "ND",
-    "SD"
-   ]
-  },
-  "57": {
-   "sha256": "cd2bb5f15ef5cb30d3749bed14cebcdd7d59312d0205870befc457e5a8247467",
-   "zips": 375,
-   "states": [
-    "IA",
-    "MN",
-    "MT",
-    "ND",
-    "NE",
-    "SD",
-    "WY"
-   ]
-  },
-  "58": {
-   "sha256": "4dd2d61ef2e77e2f653b62b6c491eb53f10cca9bc437ba0041aa5a90f45f33b0",
-   "zips": 388,
-   "states": [
-    "MN",
-    "MT",
-    "ND",
-    "SD"
-   ]
-  },
-  "59": {
-   "sha256": "b0f1fe76c1ae41e21a92a7f30781b9eac4b9dc49654ace68520aa5a817ac7397",
-   "zips": 369,
-   "states": [
-    "ID",
-    "MT",
-    "ND"
-   ]
-  },
-  "60": {
-   "sha256": "8a774db816b9a2df59a9200d3e58daf2b5fc82cac4c2fdf455e3539af14513b3",
-   "zips": 400,
-   "states": [
-    "IL"
-   ]
-  },
-  "61": {
-   "sha256": "2bd3f9acd0f3cbdff750b15d038f10bf85246845f00e48bab0eb489c75f90a5b",
-   "zips": 455,
-   "states": [
-    "IL"
-   ]
-  },
-  "62": {
-   "sha256": "0be0cf0f5f779476c067a42b67fc0a77399dbdac7a56d19b2a01afa616a4cac6",
-   "zips": 541,
-   "states": [
-    "IL"
-   ]
-  },
-  "63": {
-   "sha256": "3d705b7b015c4e481ccb444f410ddca5229902b448663169d9a3321e04a42a52",
-   "zips": 366,
-   "states": [
-    "IL",
-    "MO"
-   ]
-  },
-  "64": {
-   "sha256": "68adb0baf778d43b2f0ce9d7a84d07fc4ad9d80d8ab1567c394e271b979728d8",
-   "zips": 324,
-   "states": [
-    "MO"
-   ]
-  },
-  "65": {
-   "sha256": "258d28ae4699ffcb25f4f40fcd96fae795ff87d47c0ccbb5186315ef03fd151b",
-   "zips": 345,
-   "states": [
-    "AR",
-    "MO"
-   ]
-  },
-  "66": {
-   "sha256": "58f101bb73c46a76fe2c33032ebd05f8c8bf7935899c3b089048a56e6c2b36d8",
-   "zips": 321,
-   "states": [
-    "KS",
-    "NE"
-   ]
-  },
-  "67": {
-   "sha256": "725ab77f2b8e4fd7c0592ec3fd5503b3ded02a44c61325fe10e2c0c3dc41209f",
-   "zips": 383,
-   "states": [
-    "KS"
-   ]
-  },
-  "68": {
-   "sha256": "791e294a87c296f31dc3bc07b4f9a21e9e30d19b0164a973758dfc325cf3bbc2",
-   "zips": 476,
-   "states": [
-    "KS",
-    "NE",
-    "SD"
-   ]
-  },
-  "69": {
-   "sha256": "01bb6b07d8ff2cc5cd91c36961c893b2ebf576670514ce6dbc8ff35629776032",
-   "zips": 110,
-   "states": [
-    "CO",
-    "KS",
-    "NE",
-    "SD"
-   ]
-  },
-  "70": {
-   "sha256": "31c26d8bed6d1b95f55ba3339cf6724127829e977a3cee372ae82c6220bccf74",
-   "zips": 319,
-   "states": [
-    "LA"
-   ]
-  },
-  "71": {
-   "sha256": "62963f3cc45c503dad7b426636eaa7ca7b6fff65d433f74d74afab018b4ced88",
-   "zips": 356,
-   "states": [
-    "AR",
-    "LA",
-    "OK"
-   ]
-  },
-  "72": {
-   "sha256": "e84437fd5471e22ad8eeb4398ccbdedd15b84690a07f3718d8271cb77922704e",
-   "zips": 479,
-   "states": [
-    "AR",
-    "MO",
-    "TN"
-   ]
-  },
-  "73": {
-   "sha256": "2343a7b11c23095ca8aad747056c1afcddf788609e67be09f194af02f1438b18",
-   "zips": 326,
-   "states": [
-    "OK",
-    "TX"
-   ]
-  },
-  "74": {
-   "sha256": "85249e6e11ff7113347756b2b1b882bc786f6c81d112d4fc3e411b11b80c0011",
-   "zips": 339,
-   "states": [
-    "OK"
-   ]
-  },
-  "75": {
-   "sha256": "dc5bf661b4d40d29ef6f6fc7411090056b41b26418902ade60de647a948d54df",
-   "zips": 420,
-   "states": [
-    "TX"
-   ]
-  },
-  "76": {
-   "sha256": "2eb6621e91dc1ccf6ae7379faccbc885e2deb213a6557ab80d1a53482509e39c",
-   "zips": 400,
-   "states": [
-    "TX"
-   ]
-  },
-  "77": {
-   "sha256": "8a5a6135bc485dd2d5e349e744addb8c75efabcb68a9a0e4c00710cb7eb37c69",
-   "zips": 390,
-   "states": [
-    "TX"
-   ]
-  },
-  "78": {
-   "sha256": "378838a054b555e2fc029485774d10a0c065decf0ca90bf5f76a30e93ddfdc41",
-   "zips": 449,
-   "states": [
-    "TX"
-   ]
-  },
-  "79": {
-   "sha256": "dfd6b4cce79b640792d91c6f4907a1b1dc8448f5f33a2960af75fbbb0773e0e7",
-   "zips": 330,
-   "states": [
-    "NM",
-    "TX"
-   ]
-  },
-  "80": {
-   "sha256": "8dc17cdd32e3c9040201dc0bd213844373f82800dabb9f48ef2f8461e934faad",
-   "zips": 331,
-   "states": [
-    "CO",
-    "NE"
-   ]
-  },
-  "81": {
-   "sha256": "939dcd741435760ede9f5c0234c36bc038ae1e311d0486ccbb49ef31295490a5",
-   "zips": 196,
-   "states": [
-    "CO",
-    "NM",
-    "UT"
-   ]
-  },
-  "82": {
-   "sha256": "ecaf884e3e0894a2529d6c8330e92716032ca9cde4d43e902fdbfdf0b77e0509",
-   "zips": 154,
-   "states": [
-    "CO",
-    "MT",
-    "NE",
-    "SD",
-    "UT",
-    "WY"
-   ]
-  },
-  "83": {
-   "sha256": "49983d849e76c91f3761b4af62d356ae983951d2c9475f75474bcbbf8ed64b8e",
-   "zips": 304,
-   "states": [
-    "ID",
-    "UT",
-    "WA",
-    "WY"
-   ]
-  },
-  "84": {
-   "sha256": "c8384f6be8ff002c89b384128ae971f4d2229d86b3826eb111230f4341af730c",
-   "zips": 298,
-   "states": [
-    "AZ",
-    "NV",
-    "UT"
-   ]
-  },
-  "85": {
-   "sha256": "f6e4bf3a7508ce5623d8bd1fc38e150960bf944ce0f49dfacd29b21297399f5f",
-   "zips": 313,
-   "states": [
-    "AZ"
-   ]
-  },
-  "86": {
-   "sha256": "052ca8c0c538cba22a965369970bf3894c3f3ab3f2544892f82b96aea3b5310b",
-   "zips": 104,
-   "states": [
-    "AZ",
-    "NM",
-    "UT"
-   ]
-  },
-  "87": {
-   "sha256": "1997b414f1c338ceae3d169116aad41466e10856a6729c3d3013a67a4e8200f8",
-   "zips": 232,
-   "states": [
-    "AZ",
-    "NM"
-   ]
-  },
-  "88": {
-   "sha256": "d3c9da9fe3bd6313046b8f26a75443f01d2068d7378113c4ce74fc5772082aa5",
-   "zips": 139,
-   "states": [
-    "NM",
-    "TX"
-   ]
-  },
-  "89": {
-   "sha256": "3239de9e3e9bf4775623e2d35e2894da3549e3b0a31394a0262e4b431f5cd158",
-   "zips": 181,
-   "states": [
-    "CA",
-    "ID",
-    "NV",
-    "OR"
-   ]
-  },
-  "90": {
-   "sha256": "f173332da03887701d0c528654ab322440864386e7f84ee531b7f401fdf01ead",
-   "zips": 173,
-   "states": [
-    "CA"
-   ]
-  },
-  "91": {
-   "sha256": "afe1122878fa0b927402003dda358d5d4bb930b77bae71e581a96f17d56220ca",
-   "zips": 162,
-   "states": [
-    "CA"
-   ]
-  },
-  "92": {
-   "sha256": "93f04c4410ea6d3939c5fe507ab51b7f4c3acd6f6b5fd0f707597415649c92ee",
-   "zips": 333,
-   "states": [
-    "CA"
-   ]
-  },
-  "93": {
-   "sha256": "19356caa6d330ef19821fd47230d03bbc31e76ca57148ea91c352ab1aa6aad17",
-   "zips": 293,
-   "states": [
-    "CA"
-   ]
-  },
-  "94": {
-   "sha256": "539d46599b2569d7be398beee8b5a494ee0a2e0a59e50c7e8c04ddb7b3c02e38",
-   "zips": 221,
-   "states": [
-    "CA"
-   ]
-  },
-  "95": {
-   "sha256": "981ef5ae52af92e41e2d49afc82b86381b26d58f971b3efeb22d7051ec2c0683",
-   "zips": 502,
-   "states": [
-    "CA"
-   ]
-  },
-  "96": {
-   "sha256": "574a250eedae4390b7546c75f5aafb0a891b721ca2fcbc9844195140b8b9f599",
-   "zips": 226,
-   "states": [
-    "AS",
-    "CA",
-    "GU",
-    "HI",
-    "MP"
-   ]
-  },
-  "97": {
-   "sha256": "f85cdaf4b57513d577587986aa7d8fbb267b47c35460f1c83cdd4b05d74817d6",
-   "zips": 428,
-   "states": [
-    "CA",
-    "ID",
-    "OR"
-   ]
-  },
-  "98": {
-   "sha256": "a9009e3bbd8ac4aa06c24959986b38013bfc0aba45070424e23099e6132b97ce",
-   "zips": 455,
-   "states": [
-    "WA"
-   ]
-  },
-  "99": {
-   "sha256": "17e8532358b5f3b2f788faa764ff7be0222f86f53fb982edd90b2c5b8033a7ee",
-   "zips": 395,
-   "states": [
-    "AK",
-    "ID",
-    "OR",
-    "WA"
-   ]
-  },
-  "00": {
-   "sha256": "e09aa1753fc3af32c3a595a1486235e753dd492b214e410dc1371f2ba0c4ca4a",
-   "zips": 138,
-   "states": [
-    "PR",
-    "VI"
-   ]
-  },
-  "01": {
-   "sha256": "0fed9405105765135864c26f44b6c31418d3d040eb7f0fbb7ea868c114ee80bd",
-   "zips": 305,
-   "states": [
-    "MA"
-   ]
-  },
-  "02": {
-   "sha256": "4a48abae63b2201f472716db0a52e4644f2e83344e6f3fed4eb44530e30543bd",
-   "zips": 315,
-   "states": [
-    "MA",
-    "RI"
-   ]
-  },
-  "03": {
-   "sha256": "682dec6ca56af2f52828678a4175d65bb71a5f572ec8303978fd52088e7323f7",
-   "zips": 258,
-   "states": [
-    "ME",
-    "NH"
-   ]
-  },
-  "04": {
-   "sha256": "61e0abe8fc28506ae9b2e1a58c7c50e0cdbbc31b816a6e6b50a5b3a7bd089382",
-   "zips": 415,
-   "states": [
-    "ME"
-   ]
-  },
-  "05": {
-   "sha256": "c446d42e290c18fee111b6bde693ebe5526ff4e38e61b0cf0bc1f8ae16d3f061",
-   "zips": 265,
-   "states": [
-    "VT"
-   ]
-  },
-  "06": {
-   "sha256": "29677c64476f041bbc2fc11ca1bff3288db1ab53d14cb53473248529faea5865",
-   "zips": 289,
-   "states": [
-    "CT",
-    "NY"
-   ]
-  },
-  "07": {
-   "sha256": "fa65fbcf198cc9842bb68be8c1efb5f3b912cd2e53160fbf06ba2e5ce712ce47",
-   "zips": 308,
-   "states": [
-    "NJ"
-   ]
-  },
-  "08": {
-   "sha256": "faf04563b84669a8eacef5997c12e4f969d4cd596885a731cd9e7c028f8923fb",
-   "zips": 290,
-   "states": [
-    "NJ"
-   ]
-  }
- },
- "statesToShards": {
-  "PR": [
-   "00"
+  "formatVersion": 2,
+  "generatedAt": "2026-10-23",
+  "source": "data/derived/zip-governments.json (national TIGER lattice sampling), with each government's OCD id built from the Census names by lib/ocd/divisions.ts",
+  "note": "Every division whose territory reaches each ZCTA, one shard per two-digit ZIP prefix. Not a claim that a reader at the ZIP is governed by all of them: `partial` lists those covering only part of the ZIP's sampled area. Committed OCD ids never move; a name collision elsewhere is suffixed with the Census GEOID.",
+  "counts": {
+    "zips": 33791,
+    "shards": 99,
+    "divisionReferences": 98938,
+    "edges": 305736,
+    "edgesWithNoOcdId": {},
+    "zipsWithAPartialDivision": 27962,
+    "zipsWithNoCountyEdge": 0,
+    "collisions": 278,
+    "committedIdsKept": 16,
+    "committedIdsNotInTheNationalLayers": 0
+  },
+  "inheritedSharedIds": {
+    "ocd-division/country:us/state:nj/school_district:union_township_school_district": [
+      "elsd:3416440",
+      "unsd:3416500"
+    ]
+  },
+  "staleInTheOldIndex": [
+    "ocd-division/country:us/state:nj/school_district:washington_township_school_district"
   ],
-  "VI": [
-   "00"
-  ],
-  "MA": [
-   "01",
-   "02"
-  ],
-  "RI": [
-   "02"
-  ],
-  "ME": [
-   "03",
-   "04"
-  ],
-  "NH": [
-   "03"
-  ],
-  "VT": [
-   "05"
-  ],
-  "CT": [
-   "06"
-  ],
-  "NY": [
-   "06",
-   "10",
-   "11",
-   "12",
-   "13",
-   "14"
-  ],
-  "NJ": [
-   "07",
-   "08"
-  ],
-  "PA": [
-   "15",
-   "16",
-   "17",
-   "18",
-   "19"
-  ],
-  "DE": [
-   "19"
-  ],
-  "MD": [
-   "19",
-   "20",
-   "21"
-  ],
-  "DC": [
-   "20"
-  ],
-  "VA": [
-   "20",
-   "22",
-   "23",
-   "24",
-   "28",
-   "37"
-  ],
-  "WV": [
-   "20",
-   "24",
-   "25",
-   "26"
-  ],
-  "NC": [
-   "27",
-   "28"
-  ],
-  "SC": [
-   "29"
-  ],
-  "AL": [
-   "30",
-   "35",
-   "36",
-   "38"
-  ],
-  "GA": [
-   "30",
-   "31",
-   "36",
-   "39"
-  ],
-  "FL": [
-   "32",
-   "33",
-   "34"
-  ],
-  "TN": [
-   "37",
-   "38",
-   "40",
-   "42",
-   "72"
-  ],
-  "AR": [
-   "38",
-   "65",
-   "71",
-   "72"
-  ],
-  "KY": [
-   "38",
-   "40",
-   "41",
-   "42"
-  ],
-  "MS": [
-   "38",
-   "39"
-  ],
-  "OH": [
-   "43",
-   "44",
-   "45",
-   "47"
-  ],
-  "IN": [
-   "46",
-   "47"
-  ],
-  "MI": [
-   "48",
-   "49",
-   "54"
-  ],
-  "IA": [
-   "50",
-   "51",
-   "52",
-   "56",
-   "57"
-  ],
-  "MN": [
-   "51",
-   "55",
-   "56",
-   "57",
-   "58"
-  ],
-  "MO": [
-   "51",
-   "52",
-   "63",
-   "64",
-   "65",
-   "72"
-  ],
-  "NE": [
-   "51",
-   "57",
-   "66",
-   "68",
-   "69",
-   "80",
-   "82"
-  ],
-  "SD": [
-   "51",
-   "56",
-   "57",
-   "58",
-   "68",
-   "69",
-   "82"
-  ],
-  "WI": [
-   "53",
-   "54"
-  ],
-  "ND": [
-   "56",
-   "57",
-   "58",
-   "59"
-  ],
-  "MT": [
-   "57",
-   "58",
-   "59",
-   "82"
-  ],
-  "WY": [
-   "57",
-   "82",
-   "83"
-  ],
-  "ID": [
-   "59",
-   "83",
-   "89",
-   "97",
-   "99"
-  ],
-  "IL": [
-   "60",
-   "61",
-   "62",
-   "63"
-  ],
-  "KS": [
-   "66",
-   "67",
-   "68",
-   "69"
-  ],
-  "CO": [
-   "69",
-   "80",
-   "81",
-   "82"
-  ],
-  "LA": [
-   "70",
-   "71"
-  ],
-  "OK": [
-   "71",
-   "73",
-   "74"
-  ],
-  "TX": [
-   "73",
-   "75",
-   "76",
-   "77",
-   "78",
-   "79",
-   "88"
-  ],
-  "NM": [
-   "79",
-   "81",
-   "86",
-   "87",
-   "88"
-  ],
-  "UT": [
-   "81",
-   "82",
-   "83",
-   "84",
-   "86"
-  ],
-  "WA": [
-   "83",
-   "98",
-   "99"
-  ],
-  "AZ": [
-   "84",
-   "85",
-   "86",
-   "87"
-  ],
-  "NV": [
-   "84",
-   "89"
-  ],
-  "CA": [
-   "89",
-   "90",
-   "91",
-   "92",
-   "93",
-   "94",
-   "95",
-   "96",
-   "97"
-  ],
-  "OR": [
-   "89",
-   "97",
-   "99"
-  ],
-  "AS": [
-   "96"
-  ],
-  "GU": [
-   "96"
-  ],
-  "HI": [
-   "96"
-  ],
-  "MP": [
-   "96"
-  ],
-  "AK": [
-   "99"
-  ]
- },
- "residents": "2020 Census redistricting (PL 94-171) block populations, joined to ZCTAs by the Census 2020 ZCTA-to-block relationship file; -1 marks a division the blocks do not measure"
+  "shards": {
+    "10": {
+      "sha256": "416dcc529741663e0fd00d43404b8e71f33591563b66aee5fa5cbaa12d9646ec",
+      "zips": 248,
+      "states": [
+        "NY"
+      ]
+    },
+    "11": {
+      "sha256": "55e391a3cb547df526d03cfee6e290d16ff39ade457f10906932dc00d78d08d1",
+      "zips": 280,
+      "states": [
+        "NY"
+      ]
+    },
+    "12": {
+      "sha256": "9ee89a9907f0917c0ced758edeb86b8d36bf62e0da3018e5bb6b851f88a83ae6",
+      "zips": 498,
+      "states": [
+        "NY"
+      ]
+    },
+    "13": {
+      "sha256": "25d6243fb5206759c39fe6e93f21c68ddf9a9ddfa4ac798cd75e675a42dd8df3",
+      "zips": 403,
+      "states": [
+        "NY"
+      ]
+    },
+    "14": {
+      "sha256": "63dfaed27a85889fd245cbaed91f485338c91541445b16298dd214940c1241d2",
+      "zips": 396,
+      "states": [
+        "NY"
+      ]
+    },
+    "15": {
+      "sha256": "45c7e03e32777e7082cd3e6ca8b8ac336b477e0ee0c70555d4e7f5e3f7575eb5",
+      "zips": 512,
+      "states": [
+        "PA"
+      ]
+    },
+    "16": {
+      "sha256": "186b8c274a3a57889410ebfc8d57aa874dd79f0b9aa4dc1890464d91f12d0515",
+      "zips": 382,
+      "states": [
+        "PA"
+      ]
+    },
+    "17": {
+      "sha256": "c4831f94101121cf33ea71c88932dcffdf8e0afdf0298cf10c59f046428ed683",
+      "zips": 390,
+      "states": [
+        "PA"
+      ]
+    },
+    "18": {
+      "sha256": "07a5771252d4f85002e1ff5167777462072e86f642009b95b8e9b51f33abe67b",
+      "zips": 313,
+      "states": [
+        "PA"
+      ]
+    },
+    "19": {
+      "sha256": "e467af0b56b62e98830b30b4f8508d8bcd4e244762658ab479b141694671b589",
+      "zips": 304,
+      "states": [
+        "DE",
+        "MD",
+        "PA"
+      ]
+    },
+    "20": {
+      "sha256": "b51e78ec064880a672c21d8c538df0672b9deae36a22dc5291d1ebb0ffceb055",
+      "zips": 264,
+      "states": [
+        "DC",
+        "MD",
+        "VA",
+        "WV"
+      ]
+    },
+    "21": {
+      "sha256": "181a7e9a4bfa21fa95075ab069c95b0c34bd378817801387b4afbbb0e1b455b0",
+      "zips": 315,
+      "states": [
+        "DE",
+        "MD"
+      ]
+    },
+    "22": {
+      "sha256": "c2d58529a6fdf18b959a5bd8e0c38fbc4eb1dc58ef765a75f4a1fe76f6fca02c",
+      "zips": 241,
+      "states": [
+        "DC",
+        "VA"
+      ]
+    },
+    "23": {
+      "sha256": "056df9738e015d9bf404d296acd2d7f9f0bc672ffd3cb2a278e0c372465a53f1",
+      "zips": 326,
+      "states": [
+        "VA"
+      ]
+    },
+    "24": {
+      "sha256": "add689a7cfa54164f6178eab80e03a8f614a260466431d1d27bd5c7f0f8602e3",
+      "zips": 398,
+      "states": [
+        "VA",
+        "WV"
+      ]
+    },
+    "25": {
+      "sha256": "4703a79b8c7c916e139c23825e3bfd7795817278b8bdeaf97a26e34986981e40",
+      "zips": 350,
+      "states": [
+        "WV"
+      ]
+    },
+    "26": {
+      "sha256": "d4ca51ed93696b28f235e613854955667e28c4dbb4b1de96c00d513063832489",
+      "zips": 281,
+      "states": [
+        "WV"
+      ]
+    },
+    "27": {
+      "sha256": "ae10319906e9356d016d2b0631247ccd4e32341cc82a7bb1d35d7b8050816f0c",
+      "zips": 373,
+      "states": [
+        "NC"
+      ]
+    },
+    "28": {
+      "sha256": "f10b5d7d6cf3c75cb04aff67c4c03e737831b9df1573910b45041cd14ebcc7a1",
+      "zips": 480,
+      "states": [
+        "NC",
+        "VA"
+      ]
+    },
+    "29": {
+      "sha256": "1716f20ace1ab334fac9fd23eb1cbfddbc2e2d7f0484d13423a02ad0e8b5fba7",
+      "zips": 424,
+      "states": [
+        "SC"
+      ]
+    },
+    "30": {
+      "sha256": "ba704aacd3735d4727440bb5b879c247702c136538af8f672eebb667944a2d45",
+      "zips": 426,
+      "states": [
+        "AL",
+        "GA"
+      ]
+    },
+    "31": {
+      "sha256": "6bcc843b04371337ab070d734116b70fafe484bf404e3de42f9398915a258d59",
+      "zips": 294,
+      "states": [
+        "GA"
+      ]
+    },
+    "32": {
+      "sha256": "7855874a29c47b21f0e3dff9e78986c5f80cd9ff5e6fb4c7e7e9fa853046d9c3",
+      "zips": 410,
+      "states": [
+        "FL"
+      ]
+    },
+    "33": {
+      "sha256": "1c11145e2e6e6671339503ca2ddd5fa50a4d81c1758e19a1796030dc6d1e8063",
+      "zips": 410,
+      "states": [
+        "FL"
+      ]
+    },
+    "34": {
+      "sha256": "ba0054382642d6bfede4557f62ab45cae90915654e23b81c2d64563aae361a43",
+      "zips": 193,
+      "states": [
+        "FL"
+      ]
+    },
+    "35": {
+      "sha256": "74d686bd0813ba29a9895257a3c3663ddf907d766cdbf0c862fd6b8893038b22",
+      "zips": 324,
+      "states": [
+        "AL"
+      ]
+    },
+    "36": {
+      "sha256": "6c953e31c09ea174386fa572f1c85508032380599bee5da7e4da4d7e43dc539a",
+      "zips": 332,
+      "states": [
+        "AL",
+        "GA"
+      ]
+    },
+    "37": {
+      "sha256": "ab3edcaed520b645bf16cc62477229b881dce69d729cdf9c3c488652cd89e8b2",
+      "zips": 385,
+      "states": [
+        "TN",
+        "VA"
+      ]
+    },
+    "38": {
+      "sha256": "876f39b6f3e3340ebac0efcd40660e7bd9a7b35fa3a6f20f4eb9dd8765303121",
+      "zips": 422,
+      "states": [
+        "AL",
+        "AR",
+        "KY",
+        "MS",
+        "TN"
+      ]
+    },
+    "39": {
+      "sha256": "9bceb3179cdeb3d53a327d30653322dc588a38c1390c828e87565d533d716655",
+      "zips": 287,
+      "states": [
+        "GA",
+        "MS"
+      ]
+    },
+    "40": {
+      "sha256": "57a90ad50e9216e688d3bb9f7a8a0f244b7619e0913055b1fbb8cd696946d853",
+      "zips": 274,
+      "states": [
+        "KY",
+        "TN"
+      ]
+    },
+    "41": {
+      "sha256": "35115805726c777722842faf714a3d45438736e84e811b11fa65bbc482660603",
+      "zips": 272,
+      "states": [
+        "KY"
+      ]
+    },
+    "42": {
+      "sha256": "fdb2d24f8ad21afabfca2b8b8487ee12db8c74f4bf0ee6a0424b82c58f4192e0",
+      "zips": 234,
+      "states": [
+        "KY",
+        "TN"
+      ]
+    },
+    "43": {
+      "sha256": "49b6371eb8c4b2b458198813b9c30598e5efe782e31c165f5461784bb69939d1",
+      "zips": 419,
+      "states": [
+        "OH"
+      ]
+    },
+    "44": {
+      "sha256": "0f9717c2c2e972f6c706684d6b5f383f9de1bcb31ec8a977d1d7d3563ea686b5",
+      "zips": 381,
+      "states": [
+        "OH"
+      ]
+    },
+    "45": {
+      "sha256": "e03f06bfd969a56c5b7d695965c28cbbb78f7fd33737283f84d2ba9b7718f3fc",
+      "zips": 433,
+      "states": [
+        "OH"
+      ]
+    },
+    "46": {
+      "sha256": "8adc3660c6d1a17956f2c321c4f1258c6b9a7ab1f44476f7ee8ec508ef06252f",
+      "zips": 397,
+      "states": [
+        "IN"
+      ]
+    },
+    "47": {
+      "sha256": "3c33a00a8398b62dea706b33d6f2ca07c67d87b61ed14f1b25c111aaa96b80ec",
+      "zips": 410,
+      "states": [
+        "IN",
+        "OH"
+      ]
+    },
+    "48": {
+      "sha256": "4f0ba5ad68a8615d7bdd6565a245807a6a2bb3677ab9763292ba50e90601d2bb",
+      "zips": 485,
+      "states": [
+        "MI"
+      ]
+    },
+    "49": {
+      "sha256": "3c085a3dd1ee29cdad539f3e7cc65b2d7e5b13262d4a4f02abbdbebbf00b9211",
+      "zips": 507,
+      "states": [
+        "MI"
+      ]
+    },
+    "50": {
+      "sha256": "f4bffc7b1183ed4c3f216d6192239d82f9a418a9ee73278e18fcad8d85465320",
+      "zips": 442,
+      "states": [
+        "IA"
+      ]
+    },
+    "51": {
+      "sha256": "9d70b5d596962d5ba137e1be986906f397fba6403370b8c3dc012de633addf1d",
+      "zips": 212,
+      "states": [
+        "IA",
+        "MN",
+        "MO",
+        "NE",
+        "SD"
+      ]
+    },
+    "52": {
+      "sha256": "935e7ed4018575533a2e5a005da6500686db079bb5f357e12f0ea634977ff409",
+      "zips": 316,
+      "states": [
+        "IA",
+        "MO"
+      ]
+    },
+    "53": {
+      "sha256": "5529066daf107839b58b3348a63173f55d4db93f2d083e03c14c5804f125beb5",
+      "zips": 329,
+      "states": [
+        "WI"
+      ]
+    },
+    "54": {
+      "sha256": "4ec6e5cfc83ff904cbf6ccc6d7a4c2e74b081a8aa6080e34e50ef1feed548beb",
+      "zips": 454,
+      "states": [
+        "MI",
+        "WI"
+      ]
+    },
+    "55": {
+      "sha256": "933bdcbf84033ec02626658a052d36e26266283f7a9922ebdb541e06e106e8cf",
+      "zips": 402,
+      "states": [
+        "MN"
+      ]
+    },
+    "56": {
+      "sha256": "a4352f741c819c8f25655f8dea064bf71de9d8cac57d98c9dc4337d161fd3e0b",
+      "zips": 479,
+      "states": [
+        "IA",
+        "MN",
+        "ND",
+        "SD"
+      ]
+    },
+    "57": {
+      "sha256": "cd2bb5f15ef5cb30d3749bed14cebcdd7d59312d0205870befc457e5a8247467",
+      "zips": 375,
+      "states": [
+        "IA",
+        "MN",
+        "MT",
+        "ND",
+        "NE",
+        "SD",
+        "WY"
+      ]
+    },
+    "58": {
+      "sha256": "4dd2d61ef2e77e2f653b62b6c491eb53f10cca9bc437ba0041aa5a90f45f33b0",
+      "zips": 388,
+      "states": [
+        "MN",
+        "MT",
+        "ND",
+        "SD"
+      ]
+    },
+    "59": {
+      "sha256": "b0f1fe76c1ae41e21a92a7f30781b9eac4b9dc49654ace68520aa5a817ac7397",
+      "zips": 369,
+      "states": [
+        "ID",
+        "MT",
+        "ND"
+      ]
+    },
+    "60": {
+      "sha256": "8a774db816b9a2df59a9200d3e58daf2b5fc82cac4c2fdf455e3539af14513b3",
+      "zips": 400,
+      "states": [
+        "IL"
+      ]
+    },
+    "61": {
+      "sha256": "2bd3f9acd0f3cbdff750b15d038f10bf85246845f00e48bab0eb489c75f90a5b",
+      "zips": 455,
+      "states": [
+        "IL"
+      ]
+    },
+    "62": {
+      "sha256": "0be0cf0f5f779476c067a42b67fc0a77399dbdac7a56d19b2a01afa616a4cac6",
+      "zips": 541,
+      "states": [
+        "IL"
+      ]
+    },
+    "63": {
+      "sha256": "3d705b7b015c4e481ccb444f410ddca5229902b448663169d9a3321e04a42a52",
+      "zips": 366,
+      "states": [
+        "IL",
+        "MO"
+      ]
+    },
+    "64": {
+      "sha256": "650e685237f7f23e3f8fc2855e6a69a98f0e6ded13b1b970f9cf1c235f77d1e0",
+      "zips": 324,
+      "states": [
+        "KS",
+        "MO"
+      ]
+    },
+    "65": {
+      "sha256": "258d28ae4699ffcb25f4f40fcd96fae795ff87d47c0ccbb5186315ef03fd151b",
+      "zips": 345,
+      "states": [
+        "AR",
+        "MO"
+      ]
+    },
+    "66": {
+      "sha256": "bcd78b5ec472845b6a3cf86982e656bd1c3deabdc9cfcd1dd7fa9a6009e7a8af",
+      "zips": 321,
+      "states": [
+        "KS",
+        "NE"
+      ]
+    },
+    "67": {
+      "sha256": "451569386c9f3c099653b2c5e82b33ded11caea871e7044a0c5b9082284aef5b",
+      "zips": 383,
+      "states": [
+        "KS"
+      ]
+    },
+    "68": {
+      "sha256": "2e542f4f89691e187d273568ccbfa6b4c9b9d43f2eef2a85fa21488737424cdd",
+      "zips": 476,
+      "states": [
+        "KS",
+        "NE",
+        "SD"
+      ]
+    },
+    "69": {
+      "sha256": "579b8c636aa6be54a1dc77ec2218a92b2bf2053eef5316a7ac535a0b6a356b22",
+      "zips": 110,
+      "states": [
+        "CO",
+        "KS",
+        "NE",
+        "SD"
+      ]
+    },
+    "70": {
+      "sha256": "31c26d8bed6d1b95f55ba3339cf6724127829e977a3cee372ae82c6220bccf74",
+      "zips": 319,
+      "states": [
+        "LA"
+      ]
+    },
+    "71": {
+      "sha256": "62963f3cc45c503dad7b426636eaa7ca7b6fff65d433f74d74afab018b4ced88",
+      "zips": 356,
+      "states": [
+        "AR",
+        "LA",
+        "OK"
+      ]
+    },
+    "72": {
+      "sha256": "e84437fd5471e22ad8eeb4398ccbdedd15b84690a07f3718d8271cb77922704e",
+      "zips": 479,
+      "states": [
+        "AR",
+        "MO",
+        "TN"
+      ]
+    },
+    "73": {
+      "sha256": "a9d63a9ea921c201dbf3e62ab731f5219a120d963210598963c70d6ccef315ec",
+      "zips": 326,
+      "states": [
+        "KS",
+        "OK",
+        "TX"
+      ]
+    },
+    "74": {
+      "sha256": "1ee7430857ef59d4f45b8eabb11205bdb6f72c8f99e8c52f6c1f3904abdf005f",
+      "zips": 339,
+      "states": [
+        "KS",
+        "OK"
+      ]
+    },
+    "75": {
+      "sha256": "dc5bf661b4d40d29ef6f6fc7411090056b41b26418902ade60de647a948d54df",
+      "zips": 420,
+      "states": [
+        "TX"
+      ]
+    },
+    "76": {
+      "sha256": "2eb6621e91dc1ccf6ae7379faccbc885e2deb213a6557ab80d1a53482509e39c",
+      "zips": 400,
+      "states": [
+        "TX"
+      ]
+    },
+    "77": {
+      "sha256": "8a5a6135bc485dd2d5e349e744addb8c75efabcb68a9a0e4c00710cb7eb37c69",
+      "zips": 390,
+      "states": [
+        "TX"
+      ]
+    },
+    "78": {
+      "sha256": "378838a054b555e2fc029485774d10a0c065decf0ca90bf5f76a30e93ddfdc41",
+      "zips": 449,
+      "states": [
+        "TX"
+      ]
+    },
+    "79": {
+      "sha256": "958a8e9aa277b5a56ac57fe1b2b93ff19aeddaed882a349195d8081677d81b3e",
+      "zips": 330,
+      "states": [
+        "NM",
+        "TX"
+      ]
+    },
+    "80": {
+      "sha256": "5002121e6aa97fd478e7bedb1228f012d66f0f412121d0e297d3f594a0f8f00a",
+      "zips": 331,
+      "states": [
+        "CO",
+        "KS",
+        "NE"
+      ]
+    },
+    "81": {
+      "sha256": "1ac6d626429397523e3f33cd65213c8de26ced2163f27b82dafd2afac305bf06",
+      "zips": 196,
+      "states": [
+        "CO",
+        "KS",
+        "NM",
+        "UT"
+      ]
+    },
+    "82": {
+      "sha256": "ecaf884e3e0894a2529d6c8330e92716032ca9cde4d43e902fdbfdf0b77e0509",
+      "zips": 154,
+      "states": [
+        "CO",
+        "MT",
+        "NE",
+        "SD",
+        "UT",
+        "WY"
+      ]
+    },
+    "83": {
+      "sha256": "f9edd3e3c445e3f561e3d1e4b16aa85b74413c5423792b505901b858cf3d8575",
+      "zips": 304,
+      "states": [
+        "ID",
+        "NV",
+        "UT",
+        "WA",
+        "WY"
+      ]
+    },
+    "84": {
+      "sha256": "cfd2f7d9f7cbda2f00b74f049c64fb45931b5d33f03134302278b1bae1605251",
+      "zips": 298,
+      "states": [
+        "AZ",
+        "NV",
+        "UT"
+      ]
+    },
+    "85": {
+      "sha256": "f6e4bf3a7508ce5623d8bd1fc38e150960bf944ce0f49dfacd29b21297399f5f",
+      "zips": 313,
+      "states": [
+        "AZ"
+      ]
+    },
+    "86": {
+      "sha256": "01f1e05a0faf571523dcdedce7dfd122736b2770b1f52fe4edb0771ff0d3e19e",
+      "zips": 104,
+      "states": [
+        "AZ",
+        "NM",
+        "NV",
+        "UT"
+      ]
+    },
+    "87": {
+      "sha256": "23117f9eb3462013cf41319ece2d254267af027a36e6df36de29686639051b2e",
+      "zips": 232,
+      "states": [
+        "AZ",
+        "NM"
+      ]
+    },
+    "88": {
+      "sha256": "d513a79f5bb76621302e85fde531b1527a2bb6d97118b321d2b906e07422d8fb",
+      "zips": 139,
+      "states": [
+        "NM",
+        "TX"
+      ]
+    },
+    "89": {
+      "sha256": "d3551c10447b0b96fd1db09f866be607bd7b440615396c39bdf0c0d7d7b5765b",
+      "zips": 181,
+      "states": [
+        "CA",
+        "ID",
+        "NV",
+        "OR"
+      ]
+    },
+    "90": {
+      "sha256": "f173332da03887701d0c528654ab322440864386e7f84ee531b7f401fdf01ead",
+      "zips": 173,
+      "states": [
+        "CA"
+      ]
+    },
+    "91": {
+      "sha256": "afe1122878fa0b927402003dda358d5d4bb930b77bae71e581a96f17d56220ca",
+      "zips": 162,
+      "states": [
+        "CA"
+      ]
+    },
+    "92": {
+      "sha256": "d22288353d945e8951f6a9aff738950a21ceae928dec4d1896283a4cb0e1c712",
+      "zips": 333,
+      "states": [
+        "CA",
+        "NV"
+      ]
+    },
+    "93": {
+      "sha256": "3dbddaeb5ed01a9a97a22e439ddf98eb5e4970f777d009449f5e1f49f4bc242f",
+      "zips": 293,
+      "states": [
+        "CA",
+        "NV"
+      ]
+    },
+    "94": {
+      "sha256": "a7a0ce54786c0e187c700cf4f416fc56c737199f24287a7aa245ff681958774d",
+      "zips": 221,
+      "states": [
+        "CA"
+      ]
+    },
+    "95": {
+      "sha256": "981ef5ae52af92e41e2d49afc82b86381b26d58f971b3efeb22d7051ec2c0683",
+      "zips": 502,
+      "states": [
+        "CA"
+      ]
+    },
+    "96": {
+      "sha256": "811a6e7f33308e0f996964d7cc3ca672c9be48fee1f52c314872848dd812307b",
+      "zips": 226,
+      "states": [
+        "AS",
+        "CA",
+        "GU",
+        "HI",
+        "MP",
+        "NV"
+      ]
+    },
+    "97": {
+      "sha256": "3897c2b47bc2523b56528b02bb47ca48648a002fe05d8f0422085e07b0f2646f",
+      "zips": 428,
+      "states": [
+        "CA",
+        "ID",
+        "NV",
+        "OR"
+      ]
+    },
+    "98": {
+      "sha256": "04ff6d7c484871e413c1f928bd7f8f319ac2496207f377eb8b55d6d80def1388",
+      "zips": 455,
+      "states": [
+        "OR",
+        "WA"
+      ]
+    },
+    "99": {
+      "sha256": "17e8532358b5f3b2f788faa764ff7be0222f86f53fb982edd90b2c5b8033a7ee",
+      "zips": 395,
+      "states": [
+        "AK",
+        "ID",
+        "OR",
+        "WA"
+      ]
+    },
+    "00": {
+      "sha256": "e09aa1753fc3af32c3a595a1486235e753dd492b214e410dc1371f2ba0c4ca4a",
+      "zips": 138,
+      "states": [
+        "PR",
+        "VI"
+      ]
+    },
+    "01": {
+      "sha256": "0fed9405105765135864c26f44b6c31418d3d040eb7f0fbb7ea868c114ee80bd",
+      "zips": 305,
+      "states": [
+        "MA"
+      ]
+    },
+    "02": {
+      "sha256": "4a48abae63b2201f472716db0a52e4644f2e83344e6f3fed4eb44530e30543bd",
+      "zips": 315,
+      "states": [
+        "MA",
+        "RI"
+      ]
+    },
+    "03": {
+      "sha256": "1fab696c65de31eb674ad8c3b6178aeb944263b5e5407677de5358d9d4180067",
+      "zips": 258,
+      "states": [
+        "ME",
+        "NH"
+      ]
+    },
+    "04": {
+      "sha256": "2cf86d2205305756c3184760820eee120aa404ce66b57b3bfe3aa0aa34e86e7a",
+      "zips": 415,
+      "states": [
+        "ME"
+      ]
+    },
+    "05": {
+      "sha256": "c446d42e290c18fee111b6bde693ebe5526ff4e38e61b0cf0bc1f8ae16d3f061",
+      "zips": 265,
+      "states": [
+        "VT"
+      ]
+    },
+    "06": {
+      "sha256": "29677c64476f041bbc2fc11ca1bff3288db1ab53d14cb53473248529faea5865",
+      "zips": 289,
+      "states": [
+        "CT",
+        "NY"
+      ]
+    },
+    "07": {
+      "sha256": "fa65fbcf198cc9842bb68be8c1efb5f3b912cd2e53160fbf06ba2e5ce712ce47",
+      "zips": 308,
+      "states": [
+        "NJ"
+      ]
+    },
+    "08": {
+      "sha256": "0e5e0e1c32acaf0771597f31697d84f85b0113d8e4f27966edb1ca338def4e9f",
+      "zips": 290,
+      "states": [
+        "DE",
+        "NJ"
+      ]
+    }
+  },
+  "statesToShards": {
+    "PR": [
+      "00"
+    ],
+    "VI": [
+      "00"
+    ],
+    "MA": [
+      "01",
+      "02"
+    ],
+    "RI": [
+      "02"
+    ],
+    "ME": [
+      "03",
+      "04"
+    ],
+    "NH": [
+      "03"
+    ],
+    "VT": [
+      "05"
+    ],
+    "CT": [
+      "06"
+    ],
+    "NY": [
+      "06",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14"
+    ],
+    "NJ": [
+      "07",
+      "08"
+    ],
+    "DE": [
+      "08",
+      "19",
+      "21"
+    ],
+    "PA": [
+      "15",
+      "16",
+      "17",
+      "18",
+      "19"
+    ],
+    "MD": [
+      "19",
+      "20",
+      "21"
+    ],
+    "DC": [
+      "20",
+      "22"
+    ],
+    "VA": [
+      "20",
+      "22",
+      "23",
+      "24",
+      "28",
+      "37"
+    ],
+    "WV": [
+      "20",
+      "24",
+      "25",
+      "26"
+    ],
+    "NC": [
+      "27",
+      "28"
+    ],
+    "SC": [
+      "29"
+    ],
+    "AL": [
+      "30",
+      "35",
+      "36",
+      "38"
+    ],
+    "GA": [
+      "30",
+      "31",
+      "36",
+      "39"
+    ],
+    "FL": [
+      "32",
+      "33",
+      "34"
+    ],
+    "TN": [
+      "37",
+      "38",
+      "40",
+      "42",
+      "72"
+    ],
+    "AR": [
+      "38",
+      "65",
+      "71",
+      "72"
+    ],
+    "KY": [
+      "38",
+      "40",
+      "41",
+      "42"
+    ],
+    "MS": [
+      "38",
+      "39"
+    ],
+    "OH": [
+      "43",
+      "44",
+      "45",
+      "47"
+    ],
+    "IN": [
+      "46",
+      "47"
+    ],
+    "MI": [
+      "48",
+      "49",
+      "54"
+    ],
+    "IA": [
+      "50",
+      "51",
+      "52",
+      "56",
+      "57"
+    ],
+    "MN": [
+      "51",
+      "55",
+      "56",
+      "57",
+      "58"
+    ],
+    "MO": [
+      "51",
+      "52",
+      "63",
+      "64",
+      "65",
+      "72"
+    ],
+    "NE": [
+      "51",
+      "57",
+      "66",
+      "68",
+      "69",
+      "80",
+      "82"
+    ],
+    "SD": [
+      "51",
+      "56",
+      "57",
+      "58",
+      "68",
+      "69",
+      "82"
+    ],
+    "WI": [
+      "53",
+      "54"
+    ],
+    "ND": [
+      "56",
+      "57",
+      "58",
+      "59"
+    ],
+    "MT": [
+      "57",
+      "58",
+      "59",
+      "82"
+    ],
+    "WY": [
+      "57",
+      "82",
+      "83"
+    ],
+    "ID": [
+      "59",
+      "83",
+      "89",
+      "97",
+      "99"
+    ],
+    "IL": [
+      "60",
+      "61",
+      "62",
+      "63"
+    ],
+    "KS": [
+      "64",
+      "66",
+      "67",
+      "68",
+      "69",
+      "73",
+      "74",
+      "80",
+      "81"
+    ],
+    "CO": [
+      "69",
+      "80",
+      "81",
+      "82"
+    ],
+    "LA": [
+      "70",
+      "71"
+    ],
+    "OK": [
+      "71",
+      "73",
+      "74"
+    ],
+    "TX": [
+      "73",
+      "75",
+      "76",
+      "77",
+      "78",
+      "79",
+      "88"
+    ],
+    "NM": [
+      "79",
+      "81",
+      "86",
+      "87",
+      "88"
+    ],
+    "UT": [
+      "81",
+      "82",
+      "83",
+      "84",
+      "86"
+    ],
+    "NV": [
+      "83",
+      "84",
+      "86",
+      "89",
+      "92",
+      "93",
+      "96",
+      "97"
+    ],
+    "WA": [
+      "83",
+      "98",
+      "99"
+    ],
+    "AZ": [
+      "84",
+      "85",
+      "86",
+      "87"
+    ],
+    "CA": [
+      "89",
+      "90",
+      "91",
+      "92",
+      "93",
+      "94",
+      "95",
+      "96",
+      "97"
+    ],
+    "OR": [
+      "89",
+      "97",
+      "98",
+      "99"
+    ],
+    "AS": [
+      "96"
+    ],
+    "GU": [
+      "96"
+    ],
+    "HI": [
+      "96"
+    ],
+    "MP": [
+      "96"
+    ],
+    "AK": [
+      "99"
+    ]
+  },
+  "residents": "2020 Census redistricting (PL 94-171) block populations, joined to ZCTAs by the Census 2020 ZCTA-to-block relationship file; -1 marks a division the blocks do not measure",
+  "bl02AreaIntersectionSource": "Exact official district polygons in data/states/*/geo/bl02*.geojson joined to current Census2020 ZCTA boundaries; appended edges are partial with unknown resident counts."
 }

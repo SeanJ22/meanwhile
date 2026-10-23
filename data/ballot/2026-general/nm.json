@@ -1576,7 +1576,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Bernalillo County.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -1595,7 +1595,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Bernalillo County.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -1614,7 +1614,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Bernalillo, Cibola, Sandoval, San Juan, Socorro counties.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -1633,7 +1633,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Bernalillo, Cibola, Doña Ana, Socorro counties.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -1652,7 +1652,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Doña Ana, Otero counties.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -11019,14 +11019,362 @@
             "verifiedAt": "2026-10-21T00:12:45.086Z",
             "quote": "Thirteenth Judicial District For Cibola County, Sandoval County, and Valencia County"
           }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:2->board_of_education:5",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:2",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 841 blocks in the official House/Assembly district 2 is assigned to district 5 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:4->board_of_education:5",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:4",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 1680 blocks in the official House/Assembly district 4 is assigned to district 5 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:5->board_of_education:5",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:5",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 2846 blocks in the official House/Assembly district 5 is assigned to district 5 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:7->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:7",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 806 blocks in the official House/Assembly district 7 is assigned to district 6 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:8->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:8",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 818 blocks in the official House/Assembly district 8 is assigned to district 6 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:9->board_of_education:5",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:9",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 2078 blocks in the official House/Assembly district 9 is assigned to district 5 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:11->board_of_education:3",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:11",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 783 blocks in the official House/Assembly district 11 is assigned to district 3 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:15->board_of_education:3",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:15",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 635 blocks in the official House/Assembly district 15 is assigned to district 3 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:18->board_of_education:3",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:18",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 700 blocks in the official House/Assembly district 18 is assigned to district 3 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:24->board_of_education:2",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:24",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 496 blocks in the official House/Assembly district 24 is assigned to district 2 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:28->board_of_education:2",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:28",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 397 blocks in the official House/Assembly district 28 is assigned to district 2 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:31->board_of_education:2",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:31",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 489 blocks in the official House/Assembly district 31 is assigned to district 2 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:32->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:32",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 4138 blocks in the official House/Assembly district 32 is assigned to district 6 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:33->board_of_education:7",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:33",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 968 blocks in the official House/Assembly district 33 is assigned to district 7 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:34->board_of_education:7",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:34",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 965 blocks in the official House/Assembly district 34 is assigned to district 7 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:35->board_of_education:7",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:35",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 833 blocks in the official House/Assembly district 35 is assigned to district 7 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:37->board_of_education:7",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:37",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 542 blocks in the official House/Assembly district 37 is assigned to district 7 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:39->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:39",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 2094 blocks in the official House/Assembly district 39 is assigned to district 6 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:49->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:49",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 4117 blocks in the official House/Assembly district 49 is assigned to district 6 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:52->board_of_education:7",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:52",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 925 blocks in the official House/Assembly district 52 is assigned to district 7 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:sldl:53->board_of_education:7",
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:53",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 859 blocks in the official House/Assembly district 53 is assigned to district 7 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:catron->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:catron",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1327 official plan blocks in Catron County (35003) are assigned to district 6."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:grant->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:grant",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1967 official plan blocks in Grant County (35017) are assigned to district 6."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:hidalgo->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:hidalgo",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 863 official plan blocks in Hidalgo County (35023) are assigned to district 6."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:luna->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:luna",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 3124 official plan blocks in Luna County (35029) are assigned to district 6."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:mckinley->board_of_education:5",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:mckinley",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 7580 official plan blocks in McKinley County (35031) are assigned to district 5."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:sierra->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:sierra",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1426 official plan blocks in Sierra County (35051) are assigned to district 6."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:torrance->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:torrance",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 2069 official plan blocks in Torrance County (35057) are assigned to district 6."
+          }
+        },
+        {
+          "id": "nm-bl02-membership:county:valencia->board_of_education:6",
+          "memberOcdId": "ocd-division/country:us/state:nm/county:valencia",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6",
+          "provenance": {
+            "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+            "sourceOrg": "New Mexico Legislature",
+            "collectedAt": "2026-10-23T08:06:13.788719+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 2581 official plan blocks in Valencia County (35061) are assigned to district 6."
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:54:53.960042+00:00",
-    "reviewedBy": "Codex BA-01 official court/county source replay",
+    "reviewedAt": "2026-10-23T08:14:07.889608+00:00",
+    "reviewedBy": "bl02-whole-division-replay",
     "sources": [
       {
         "requestedUrl": "https://candidateportal.servis.sos.state.nm.us/CandidateList.aspx?eid=2917&cty=99",
@@ -11126,6 +11474,46 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official2025Constitution incorporates amendments through2024; ArticleVI12 establishes district judges for each judicial district; VI33 explicitly identifies district-judge nonpartisan retention. Qualified roster independently labels each retention.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+        "finalUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:06:13.788719+00:00",
+        "rawHash": "a659567227f1590c38a32a6d64b78316825835b56944791cdd0964f433ddd045",
+        "publisher": "New Mexico Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www.nmlegis.gov/Redistricting2021/221619.1/HD_221619_block_eq.xlsx",
+        "finalUrl": "https://www.nmlegis.gov/Redistricting2021/221619.1/HD_221619_block_eq.xlsx",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:06:58.270144+00:00",
+        "rawHash": "3cd76cdb8e98e8da5160aaad0eb9072fb9db3f860621fd026075fff04912e017",
+        "publisher": "New Mexico Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www.nmlegis.gov/Sessions/21%20Special2/final/HB0009.pdf",
+        "finalUrl": "https://www.nmlegis.gov/Sessions/21%20Special2/final/HB0009.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:06:13.484113+00:00",
+        "rawHash": "58aaf6a75b2ec6e8b694dd1f875759f6c442cc5c1a868c00367164db9993944a",
+        "publisher": "New Mexico Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/221723.1.geojson",
+        "finalUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/221723.1.geojson",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:41:13.998061+00:00",
+        "rawHash": "dea6fa8d2909e97375d82f95d557664150f4613286f6044d76834ccc17f82a2c",
+        "publisher": "New Mexico Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Adopted 2021 PEC plan 221723.1 linked by the Legislature Maps and Data page; exact districts 2, 3 and 7 supply point and partial ZIP routes where no whole county or city is safe. Existing HB9 and block equivalency evidence establishes the current plan. Demographic properties are omitted from reader geometry."
       }
     ]
   }

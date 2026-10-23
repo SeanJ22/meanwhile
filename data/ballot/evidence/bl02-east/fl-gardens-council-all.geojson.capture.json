@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/ArcGIS/rest/services/Energov_TEST_2/FeatureServer/19/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/ArcGIS/rest/services/Energov_TEST_2/FeatureServer/19/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:19:12.891380+00:00",
+  "rawHash": "64cd151af707d48013d2dc3fcb781ce6bd470ac43137c4e6f32aba13b05e6edc"
+}

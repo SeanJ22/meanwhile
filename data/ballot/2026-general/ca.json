@@ -7046,6 +7046,25 @@
             "verifiedAt": "2026-10-21T00:55:25.504898+00:00",
             "quote": "CITY OF WHITTIER | EV | Shall the measure amending the City's charter so that the City's general municipal elections (currently held in April of each even-numbered year) are held in each even- numbered year on the same day as the November statewide general elections, be adopted?"
           }
+        },
+        {
+          "id": "ca-sf-2026-general-bart-director-district-8",
+          "electionId": "ca-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+          "divisionVintage": "2026",
+          "title": "BART Director, District 8",
+          "type": "CANDIDACY",
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "candidateListComplete": true,
+          "provenance": {
+            "sourceUrl": "https://media.api.sf.gov/documents/N26_EN_VIP.pdf",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:55:55.383Z",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "November 3, 2026 Election Ballot: BART Director, District 8; Candidate for BART Director, District 8: SARA BARZ"
+          }
         }
       ],
       "candidacies": [
@@ -15362,6 +15381,23 @@
             "verifiedAt": "2026-10-21T00:55:25.475251+00:00",
             "quote": "SHERIFF | NON PARTISAN | ROBERT G. LUNA | ALEX VILLANUEVA"
           }
+        },
+        {
+          "id": "ca-sf-2026-general-bart-director-district-8-sara-barz",
+          "contestId": "ca-sf-2026-general-bart-director-district-8",
+          "givenName": "Sara",
+          "familyName": "Barz",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "https://www.SaraBarz.com",
+          "provenance": {
+            "sourceUrl": "https://www.sf.gov/candidates-november-3-2026-general-election",
+            "sourceOrg": "San Francisco Department of Elections",
+            "collectedAt": "2026-10-20T22:56:28.397Z",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "BART Board, District 81 person has qualified for this contest on the November 3, 2026 ballot.Sara Barz"
+          }
         }
       ],
       "measures": [
@@ -17579,14 +17615,710 @@
             "verifiedAt": "2026-10-21T00:55:25.305582+00:00",
             "quote": "Because supreme court justices hold statewide offices, voters everywhere in California decide whether to retain them. In contrast, because court of appeal justices serve in districts, voters in each district alone decide whether to retain them. California’s 99 court of appeal justices are divided among six districts, centered in San Francisco, Los Angeles, Sacramento, San Diego, Fresno, and San Jose."
           }
+        },
+        {
+          "id": "bl02-ca-county_alpine-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:alpine",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_amador-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:amador",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_butte-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:butte",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_calaveras-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:calaveras",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_colusa-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:colusa",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_el_dorado-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:el_dorado",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_fresno-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:fresno",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_glenn-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:glenn",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_inyo-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:inyo",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_kern-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:kern",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_kings-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:kings",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_lassen-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:lassen",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_madera-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:madera",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_mariposa-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:mariposa",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_merced-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:merced",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_modoc-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:modoc",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_mono-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:mono",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_nevada-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:nevada",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_placer-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:placer",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_plumas-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:plumas",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_sacramento-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:sacramento",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_san_joaquin-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:san_joaquin",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_shasta-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:shasta",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_sierra-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:sierra",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_siskiyou-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:siskiyou",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_solano-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:solano",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_stanislaus-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:stanislaus",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_sutter-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:sutter",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_tehama-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:tehama",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_tulare-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:tulare",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_tuolumne-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:tuolumne",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_yolo-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:yolo",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_yuba-to-board_of_equalization_1",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:yuba",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:1",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 1: Alpine, Amador, Butte, Calaveras, Colusa, El Dorado, Fresno, Glenn, Inyo, Kern, Kings, Lassen, Madera, Mariposa, Merced, Modoc, Mono, Nevada, Placer, Plumas, Sacramento, San Bernardino, San Joaquin, Shasta, Sierra, Siskiyou, Solano, Stanislaus, Sutter, Tehama, Tulare, Tuolumne, Yolo, Yuba"
+          }
+        },
+        {
+          "id": "bl02-ca-county_alameda-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:alameda",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_contra_costa-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:contra_costa",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_del_norte-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:del_norte",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_humboldt-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:humboldt",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_lake-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:lake",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_marin-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:marin",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_mendocino-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:mendocino",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_monterey-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:monterey",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_napa-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:napa",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_san_benito-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:san_benito",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_san_francisco-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:san_francisco",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_san_luis_obispo-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:san_luis_obispo",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_san_mateo-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:san_mateo",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_santa_barbara-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:santa_barbara",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_santa_clara-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:santa_clara",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_santa_cruz-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:santa_cruz",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_sonoma-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:sonoma",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_trinity-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:trinity",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_ventura-to-board_of_equalization_2",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:ventura",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:2",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 2: Alameda, Contra Costa, Del Norte, Humboldt, Lake, Marin, Mendocino, Monterey, Napa, San Benito, San Francisco, San Luis Obispo, San Mateo, Santa Barbara, Santa Clara, Santa Cruz, Sonoma, Trinity, Ventura"
+          }
+        },
+        {
+          "id": "bl02-ca-county_los_angeles-to-board_of_equalization_3",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:los_angeles",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:3",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 3: Los Angeles"
+          }
+        },
+        {
+          "id": "bl02-ca-county_imperial-to-board_of_equalization_4",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:imperial",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:4",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 4: Imperial, Orange, Riverside, San Bernardino, San Diego"
+          }
+        },
+        {
+          "id": "bl02-ca-county_orange-to-board_of_equalization_4",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:orange",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:4",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 4: Imperial, Orange, Riverside, San Bernardino, San Diego"
+          }
+        },
+        {
+          "id": "bl02-ca-county_riverside-to-board_of_equalization_4",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:riverside",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:4",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 4: Imperial, Orange, Riverside, San Bernardino, San Diego"
+          }
+        },
+        {
+          "id": "bl02-ca-county_san_diego-to-board_of_equalization_4",
+          "memberOcdId": "ocd-division/country:us/state:ca/county:san_diego",
+          "districtOcdId": "ocd-division/country:us/state:ca/board_of_equalization:4",
+          "provenance": {
+            "sourceUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+            "sourceOrg": "California Secretary of State",
+            "collectedAt": "2026-10-23T07:57:58.058344+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "District 4: Imperial, Orange, Riverside, San Bernardino, San Diego"
+          }
+        },
+        {
+          "id": "bl02-ca-place_burbank_0608954-to-place_burbank",
+          "memberOcdId": "ocd-division/country:us/state:ca/place:burbank_0608954",
+          "districtOcdId": "ocd-division/country:us/state:ca/place:burbank",
+          "provenance": {
+            "sourceUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:08954,08968&in=state:06",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:01:57.203522+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "Burbank city, California; state06; place08954"
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:55:25.504898+00:00",
-    "reviewedBy": "Codex",
+    "reviewedAt": "2026-10-23T08:05:57.731718+00:00",
+    "reviewedBy": "bl02-official-district-memberships",
     "sources": [
       {
         "requestedUrl": "https://www.sos.ca.gov/elections",
@@ -18247,6 +18979,28 @@
         "rawHash": "0e3f20af15b617d3facf3446faf9493a88464d139ac5f6ece71425a5151ba1ac",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Saved exact official response; BA-01 replay checks the complete cited office or published jurisdiction list."
+      },
+      {
+        "requestedUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+        "finalUrl": "https://voterguide.sos.ca.gov/voter-info/boe-map.htm",
+        "httpStatus": 200,
+        "rawHash": "6d1d77c7b96ab241e6e7bfb19f642efde56a6142b953ce5a4c6a6e7767d7141b",
+        "retrievedAt": "2026-10-23T07:57:58.058344+00:00",
+        "publisher": "California Secretary of State",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official2026General voter guide lists counties by Board of Equalization district. Code maps57 whole counties. SanBernardino appears in1and4 and is explicitly excluded from whole-county membership."
+      },
+      {
+        "requestedUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:08954,08968&in=state:06",
+        "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:08954,08968&in=state:06",
+        "httpStatus": 200,
+        "rawHash": "0422f96db05166df46674457c9a1790acd28a5b08410175c89f340573dc8a32f",
+        "retrievedAt": "2026-10-23T08:01:57.203522+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Census NAME response distinguishes Burbank city0608954 from Burbank CDP0608968. Only the city's disambiguated ZIP division aliases the city ballot electorate."
       }
     ]
   }

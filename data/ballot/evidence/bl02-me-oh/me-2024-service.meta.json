@@ -1,0 +1,8 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Voting_Districts_2024_County_Commissioners_Update/FeatureServer?f=pjson",
+  "finalUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Voting_Districts_2024_County_Commissioners_Update/FeatureServer?f=pjson",
+  "httpStatus": 200,
+  "rawHash": "b256b82be385a4c0bea5bb73916422b582099e58de10f805a0bff37c1811d1e9",
+  "retrievedAt": "2026-10-23T08:27:21.326154+00:00",
+  "contentType": "application/json; charset=utf-8"
+}

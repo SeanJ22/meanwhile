@@ -1,0 +1,394 @@
+{
+  "id" : "mi5z-t7dx",
+  "name" : "Municipal Court Districts",
+  "assetType" : "dataset",
+  "attribution" : "Department of City Planning (DCP)",
+  "attributionLink" : "https://www.nyc.gov/content/planning/pages/resources/datasets/municipal-court",
+  "averageRating" : 0,
+  "category" : "City Government",
+  "createdAt" : 1473724291,
+  "description" : "Boundaries of Municipal Court districts.\n\nAll previously released versions of this data are available on the <a href=\"https://www.nyc.gov/content/planning/pages/resources/datasets/municipal-court\">DCP Website: BYTES of the BIG APPLE</a>. Current version: 26b",
+  "diciBackend" : false,
+  "displayType" : "table",
+  "downloadCount" : 1913,
+  "hideFromCatalog" : false,
+  "hideFromDataJson" : false,
+  "locked" : false,
+  "newBackend" : true,
+  "numberOfComments" : 0,
+  "oid" : 39679498,
+  "provenance" : "official",
+  "publicationAppendEnabled" : false,
+  "publicationDate" : 1686761888,
+  "publicationGroup" : 13037153,
+  "publicationStage" : "published",
+  "rowsUpdatedAt" : 1779824526,
+  "rowsUpdatedBy" : "iqqb-gm94",
+  "tableId" : 19181560,
+  "totalTimesRated" : 0,
+  "viewCount" : 978,
+  "viewLastModified" : 1779824525,
+  "viewType" : "tabular",
+  "approvals" : [ {
+    "reviewedAt" : 1622121340,
+    "reviewedAutomatically" : true,
+    "state" : "approved",
+    "submissionId" : 6611545,
+    "submissionObject" : "public_audience_request",
+    "submissionOutcome" : "change_audience",
+    "submittedAt" : 1622121340,
+    "targetAudience" : "public",
+    "workflowId" : 2285,
+    "submissionDetails" : {
+      "permissionType" : "READ"
+    },
+    "submissionOutcomeApplication" : {
+      "endedAt" : 1622121340,
+      "failureCount" : 0,
+      "startedAt" : 1622121340,
+      "status" : "success"
+    },
+    "submitter" : {
+      "id" : "pzic-ykrt",
+      "displayName" : "V. Powell"
+    }
+  } ],
+  "clientContext" : {
+    "clientContextVariables" : [ ],
+    "inheritedVariables" : { }
+  },
+  "columns" : [ {
+    "id" : 576941237,
+    "name" : "MuniCourt",
+    "dataTypeName" : "text",
+    "description" : "Municipal Court district number.",
+    "fieldName" : "muni_court",
+    "position" : 1,
+    "renderTypeName" : "text",
+    "tableColumnId" : 147185055,
+    "cachedContents" : {
+      "non_null" : "28",
+      "largest" : "10",
+      "null" : "0",
+      "top" : [ {
+        "item" : "02",
+        "count" : "5"
+      }, {
+        "item" : "01",
+        "count" : "5"
+      }, {
+        "item" : "05",
+        "count" : "3"
+      }, {
+        "item" : "06",
+        "count" : "3"
+      }, {
+        "item" : "03",
+        "count" : "3"
+      }, {
+        "item" : "04",
+        "count" : "3"
+      }, {
+        "item" : "07",
+        "count" : "2"
+      }, {
+        "item" : "08",
+        "count" : "2"
+      }, {
+        "item" : "10",
+        "count" : "1"
+      }, {
+        "item" : "09",
+        "count" : "1"
+      } ],
+      "smallest" : "01",
+      "count" : "28",
+      "cardinality" : "28"
+    },
+    "format" : { }
+  }, {
+    "id" : 576941239,
+    "name" : "BoroCode",
+    "dataTypeName" : "number",
+    "description" : "Borough code for the borough in which the Municipal Court district is located.",
+    "fieldName" : "boro_code",
+    "position" : 2,
+    "renderTypeName" : "number",
+    "tableColumnId" : 147185057,
+    "cachedContents" : {
+      "non_null" : "28",
+      "largest" : "5",
+      "null" : "0",
+      "top" : [ {
+        "item" : "1",
+        "count" : "10"
+      }, {
+        "item" : "3",
+        "count" : "8"
+      }, {
+        "item" : "4",
+        "count" : "6"
+      }, {
+        "item" : "5",
+        "count" : "2"
+      }, {
+        "item" : "2",
+        "count" : "2"
+      } ],
+      "smallest" : "1",
+      "count" : "28",
+      "cardinality" : "28"
+    },
+    "format" : { }
+  }, {
+    "id" : 576941238,
+    "name" : "BoroName",
+    "dataTypeName" : "text",
+    "description" : "Borough Name.",
+    "fieldName" : "boro_name",
+    "position" : 3,
+    "renderTypeName" : "text",
+    "tableColumnId" : 147185056,
+    "cachedContents" : {
+      "non_null" : "28",
+      "largest" : "Staten Island",
+      "null" : "0",
+      "top" : [ {
+        "item" : "Manhattan",
+        "count" : "10"
+      }, {
+        "item" : "Brooklyn",
+        "count" : "8"
+      }, {
+        "item" : "Queens",
+        "count" : "6"
+      }, {
+        "item" : "Staten Island",
+        "count" : "2"
+      }, {
+        "item" : "Bronx",
+        "count" : "2"
+      } ],
+      "smallest" : "Bronx",
+      "count" : "28",
+      "cardinality" : "28"
+    },
+    "format" : { }
+  }, {
+    "id" : 576941233,
+    "name" : "the_geom",
+    "dataTypeName" : "multipolygon",
+    "fieldName" : "the_geom",
+    "position" : 4,
+    "renderTypeName" : "multipolygon",
+    "tableColumnId" : 140124839,
+    "format" : { }
+  }, {
+    "id" : 576941235,
+    "name" : "Shape_Length",
+    "dataTypeName" : "number",
+    "description" : "Length of feature in internal units.",
+    "fieldName" : "shape_leng",
+    "position" : 5,
+    "renderTypeName" : "number",
+    "tableColumnId" : 140124840,
+    "cachedContents" : {
+      "non_null" : "28",
+      "largest" : "419450.235363",
+      "null" : "0",
+      "top" : [ {
+        "item" : "88485.3075968",
+        "count" : "1"
+      }, {
+        "item" : "236526.630536",
+        "count" : "1"
+      }, {
+        "item" : "107247.230634",
+        "count" : "1"
+      }, {
+        "item" : "92906.3818899",
+        "count" : "1"
+      }, {
+        "item" : "213467.384503",
+        "count" : "1"
+      }, {
+        "item" : "183562.998525",
+        "count" : "1"
+      }, {
+        "item" : "419450.235363",
+        "count" : "1"
+      }, {
+        "item" : "62229.5662744",
+        "count" : "1"
+      }, {
+        "item" : "289078.977912",
+        "count" : "1"
+      }, {
+        "item" : "116546.623304",
+        "count" : "1"
+      }, {
+        "item" : "50608.1910212",
+        "count" : "1"
+      }, {
+        "item" : "68661.9874396",
+        "count" : "1"
+      }, {
+        "item" : "68414.8148625",
+        "count" : "1"
+      }, {
+        "item" : "37938.8472122",
+        "count" : "1"
+      }, {
+        "item" : "36845.0783028",
+        "count" : "1"
+      }, {
+        "item" : "30266.379079",
+        "count" : "1"
+      }, {
+        "item" : "48469.8064692",
+        "count" : "1"
+      }, {
+        "item" : "100309.715577",
+        "count" : "1"
+      }, {
+        "item" : "277153.811694",
+        "count" : "1"
+      }, {
+        "item" : "36454.1012112",
+        "count" : "1"
+      } ],
+      "smallest" : "30266.379079",
+      "count" : "28",
+      "cardinality" : "28"
+    },
+    "format" : { }
+  }, {
+    "id" : 576941236,
+    "name" : "Shape_Area",
+    "dataTypeName" : "number",
+    "description" : "Area of feature in internal units squared.",
+    "fieldName" : "shape_area",
+    "position" : 6,
+    "renderTypeName" : "number",
+    "tableColumnId" : 140124841,
+    "cachedContents" : {
+      "non_null" : "28",
+      "largest" : "1010237901.01",
+      "null" : "0",
+      "top" : [ {
+        "item" : "36799983.2241",
+        "count" : "1"
+      }, {
+        "item" : "49886363.1553",
+        "count" : "1"
+      }, {
+        "item" : "52229949.4252",
+        "count" : "1"
+      }, {
+        "item" : "612021617.201",
+        "count" : "1"
+      }, {
+        "item" : "762405465.776",
+        "count" : "1"
+      }, {
+        "item" : "1010237901.01",
+        "count" : "1"
+      }, {
+        "item" : "193859687.907",
+        "count" : "1"
+      }, {
+        "item" : "47402234.1451",
+        "count" : "1"
+      }, {
+        "item" : "127655910.811",
+        "count" : "1"
+      }, {
+        "item" : "444065599.162",
+        "count" : "1"
+      }, {
+        "item" : "132827592.741",
+        "count" : "1"
+      }, {
+        "item" : "35097563.0687",
+        "count" : "1"
+      }, {
+        "item" : "173516077.759",
+        "count" : "1"
+      }, {
+        "item" : "74066623.6992",
+        "count" : "1"
+      }, {
+        "item" : "466867132.088",
+        "count" : "1"
+      }, {
+        "item" : "60058562.0927",
+        "count" : "1"
+      }, {
+        "item" : "55881635.6932",
+        "count" : "1"
+      }, {
+        "item" : "190589472.135",
+        "count" : "1"
+      }, {
+        "item" : "276207841.828",
+        "count" : "1"
+      }, {
+        "item" : "94069751.8219",
+        "count" : "1"
+      } ],
+      "smallest" : "35097563.0687",
+      "count" : "28",
+      "cardinality" : "28"
+    },
+    "format" : { }
+  } ],
+  "grants" : [ {
+    "inherited" : false,
+    "type" : "viewer",
+    "flags" : [ "public" ]
+  } ],
+  "metadata" : {
+    "attachments" : [ {
+      "filename" : "nymc_metadata.pdf",
+      "assetId" : "44ce4fc8-c009-406a-ac29-5ce81688d1c4",
+      "name" : "nymc_metadata.pdf"
+    } ],
+    "custom_fields" : {
+      "Update" : {
+        "Automation" : "Yes",
+        "Date Made Public" : "1/31/2013",
+        "Update Frequency" : "Quarterly",
+        "Data Change Frequency" : "Quarterly"
+      },
+      "Dataset Information" : {
+        "Agency" : "Department of City Planning (DCP)"
+      }
+    },
+    "rowLabel" : "Municipal Court district",
+    "availableDisplayTypes" : [ "table", "fatrow", "page" ]
+  },
+  "owner" : {
+    "id" : "5fuc-pqz2",
+    "displayName" : "NYC OpenData",
+    "profileImageUrlLarge" : "/api/users/5fuc-pqz2/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/5fuc-pqz2/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/5fuc-pqz2/profile_images/TINY",
+    "screenName" : "NYC OpenData",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "query" : { },
+  "rights" : [ "read" ],
+  "tableAuthor" : {
+    "id" : "5fuc-pqz2",
+    "displayName" : "NYC OpenData",
+    "profileImageUrlLarge" : "/api/users/5fuc-pqz2/profile_images/LARGE",
+    "profileImageUrlMedium" : "/api/users/5fuc-pqz2/profile_images/THUMB",
+    "profileImageUrlSmall" : "/api/users/5fuc-pqz2/profile_images/TINY",
+    "screenName" : "NYC OpenData",
+    "type" : "interactive",
+    "flags" : [ "acceptedEula", "mayBeStoriesCoOwner" ]
+  },
+  "tags" : [ "municipal court districts", "judicial", "judges", "law", "boundary", "boundaries", "districts", "lion", "cscl", "department of city planning", "dcp", "new york city", "nyc" ],
+  "flags" : [ "default", "ownerMayBeContacted", "restorable", "restorePossibleForType" ]
+}

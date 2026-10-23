@@ -1,0 +1,264 @@
+{
+  "state": "MA",
+  "address": "24 Beacon St, Boston, MA 02133",
+  "checkedAt": "2026-10-23T08:05:12.106Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ama/2026-11-03?street=24+Beacon+St&city=Boston&state=MA&zip=02133",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ma-google.json",
+  "sha256": "54f7866494671dac815dcd5fcda3fc396593e77f1d59f3c02f3d46a396d77122",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/ma-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/ma-turbovote.txt",
+  "elapsedMs": 4281,
+  "races": [
+    {
+      "id": "co_840beb12d8f5db2ad5d109539bd4a2bbc2be7a0d",
+      "title": "U.S. Senate Massachusetts",
+      "candidates": [
+        {
+          "name": "Edward J. Markey",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "John Deaton",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Joseph Tache",
+          "party": "Party for Socialism and Liberation"
+        },
+        {
+          "name": "Shiva Ayyadurai",
+          "party": "Unenrolled"
+        }
+      ]
+    },
+    {
+      "id": "co_ca485a6085cff1ffbfb141aeaa19da8defac6c22",
+      "title": "U.S. House Massachusetts District 8",
+      "candidates": [
+        {
+          "name": "Stephen Lynch",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Robert Burke",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Rasheed Walters",
+          "party": "Unenrolled"
+        }
+      ]
+    },
+    {
+      "id": "co_2c32dfc9c5f26bdd52fb2afb88d75c351234d82f",
+      "title": "Governor of Massachusetts",
+      "candidates": [
+        {
+          "name": "Maura Healey",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Michael Minogue",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Andrea James",
+          "party": "Unenrolled"
+        }
+      ]
+    },
+    {
+      "id": "co_bff50e479875390fa3f82042469db398501ca589",
+      "title": "Lieutenant Governor of Massachusetts",
+      "candidates": [
+        {
+          "name": "Kim Driscoll",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Shawn Oliver",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Kayla Kittredge",
+          "party": "Unenrolled"
+        }
+      ]
+    },
+    {
+      "id": "co_0241ce579dc8bdb49ce910596a5988993c709f63",
+      "title": "Massachusetts Secretary of State",
+      "candidates": [
+        {
+          "name": "William Galvin",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Anne Brensley",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_3d50951e25c8afd59fa2a2fe3a57e6bc50805eb1",
+      "title": "Attorney General of Massachusetts",
+      "candidates": [
+        {
+          "name": "Andrea Campbell",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Michael Walsh",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_cc3a1be798402e3626cc3f0505b2acfe444e39de",
+      "title": "Massachusetts Auditor of the Commonwealth",
+      "candidates": [
+        {
+          "name": "Diana DiZoglio",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Al Ozonoff",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_87164c6c3c8f0c3cc254d519547d241ca60a466c",
+      "title": "Massachusetts Governor's Council District 6",
+      "candidates": [
+        {
+          "name": "Terrence Kennedy",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_a956fa9be1359e23216c8a2959afa758243f332c",
+      "title": "Massachusetts Treasurer",
+      "candidates": [
+        {
+          "name": "Deb Goldberg",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Elizabeth Dionne",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_d0ad974d59c11436475c4d7b897c562f710fbf7c",
+      "title": "Massachusetts State Senate 3rd Suffolk District",
+      "candidates": [
+        {
+          "name": "Lydia Edwards",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_00ba9812cc11b570ae778c27d338ccf0a78d9dcc",
+      "title": "Massachusetts House of Representatives 8th Suffolk District",
+      "candidates": [
+        {
+          "name": "Jay Livingstone",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_e57e7a75a344f0717aa0611f34aec26eb269bd30",
+      "title": "Suffolk County Register of Probate",
+      "candidates": [
+        {
+          "name": "Stephanie L. Everett",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_c3270159e76ab391db4c0b1e4bbe60378f0957f9",
+      "title": "Question 1",
+      "summary": "Make records held by the state legislature and the governor's office public records"
+    },
+    {
+      "id": "bm_ed54f58b3cdbccc47f6a70a7c9ec02977ceeaa75",
+      "title": "Question 2",
+      "summary": "Permit employees of the Committee for Public Counsel Services (CPCS) to participate in collective bargaining practices"
+    },
+    {
+      "id": "bm_6025a3efe2e6dcc956b8cc26ca0d19841e6e9add",
+      "title": "Question 3",
+      "summary": "Eliminate political party primaries for state elections and create a single primary where candidates are listed regardless of their political party"
+    },
+    {
+      "id": "bm_658c71af0ea84d9466872d18e5962841b66ca8b6",
+      "title": "Question 4",
+      "summary": "Provide for same-day voter registration"
+    },
+    {
+      "id": "bm_03e962ac180bc869ac8c28898c0a7a33f6041074",
+      "title": "Question 5",
+      "summary": "Change the limit of how much revenue the state can collect in a given year"
+    },
+    {
+      "id": "bm_dd50d86a66c2e1e6ebfa841d932267673ed9b302",
+      "title": "Question 6",
+      "summary": "Create a fund for state money, titled the Nature for All Fund, that would be used to further efforts of nature conservation"
+    },
+    {
+      "id": "bm_4013262283ce41753a3e9929634ede3be015a901",
+      "title": "Question 7",
+      "summary": "Require cities and towns to allow single-family homes on residentially zoned lots that meet minimum standards of at least 5,000 square feet in area"
+    },
+    {
+      "id": "bm_2375bff7f4e9c0501440d4b200476452ef0c52c7",
+      "title": "Question 8",
+      "summary": "Repeal laws that permit the sale of recreational marijuana and the personal cultivation of cannabis in homes"
+    },
+    {
+      "id": "bm_43ce6f864b0f253f105af9ed44093b90de8cd02f",
+      "title": "Question 9",
+      "summary": "Uphold the legislation, An Act Modernizing Firearm Laws (H. 4885), passed in 2024"
+    }
+  ],
+  "headings": [
+    "All Races (12)",
+    "Federal Races",
+    "U.S. Senate Massachusetts",
+    "U.S. House Massachusetts District 8",
+    "State Races",
+    "Governor of Massachusetts",
+    "Lieutenant Governor of Massachusetts",
+    "Massachusetts Secretary of State",
+    "Attorney General of Massachusetts",
+    "Massachusetts Auditor of the Commonwealth",
+    "Massachusetts Governor's Council District 6",
+    "Massachusetts Treasurer",
+    "Massachusetts State Senate 3rd Suffolk District",
+    "Massachusetts House of Representatives 8th Suffolk District",
+    "Local Races",
+    "Suffolk County Register of Probate",
+    "Election Day is in10DAYS15HOURS54MINUTES48SECONDS"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/ma-turbovote-divisions.json",
+      "sha256": "448666a7d4535063503c92cb38acc483a841d3f9b0649edfb49694f43ce7fcee"
+    }
+  ]
+}

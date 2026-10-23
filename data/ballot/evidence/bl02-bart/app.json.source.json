@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://bart.maps.arcgis.com/sharing/rest/content/items/9527685698cc481eb9f0733184bad759/data?f=json",
+  "finalUrl": "https://bart.maps.arcgis.com/sharing/rest/content/items/9527685698cc481eb9f0733184bad759/data?f=json",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:07:06.831058+00:00",
+  "rawHash": "4e72bd72839aef4b682c95358ac07549551b1a53627f2e4b91a5b50f126fa006",
+  "savedBytes": 59953,
+  "publisher": "San Francisco Bay Area Rapid Transit District"
+}

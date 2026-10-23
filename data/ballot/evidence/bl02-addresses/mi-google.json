@@ -1,0 +1,2125 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "2 Woodward Avenue",
+    "addressLine": [
+      "2 Woodward Avenue"
+    ],
+    "city": "Detroit",
+    "state": "MI",
+    "zip": "48226"
+  },
+  "pollingLocations": [
+    {
+      "address": {
+        "locationName": "WCCCD DOWNTOWN CAMPUS",
+        "line1": "1001 WEST FORT STREET",
+        "addressLine": [
+          "1001 WEST FORT STREET"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48226"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 42.326405988474583,
+      "longitude": -83.0556378409098,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "dropOffLocations": [
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "CITY CLERK'S OFFICE - CAYMC",
+        "line2": "2 WOODWARD AVE., SUITE 106",
+        "addressLine": [
+          "CITY CLERK'S OFFICE - CAYMC",
+          "2 WOODWARD AVE., SUITE 106"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48226"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.329621207477452,
+      "longitude": -83.043715035404745,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "WCCCD DOWNTOWN",
+        "line2": "1001 W. FORT ST. (AT LAFAYETTE)",
+        "addressLine": [
+          "WCCCD DOWNTOWN",
+          "1001 W. FORT ST. (AT LAFAYETTE)"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48226"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.326610533891923,
+      "longitude": -83.05561473916876,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "HORATIO WILLIAMS FOUNDATION",
+        "line2": "1010 ANTIETAM AVE.",
+        "addressLine": [
+          "HORATIO WILLIAMS FOUNDATION",
+          "1010 ANTIETAM AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48207"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.339660319857408,
+      "longitude": -83.03926732259427,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "CLARK PARK",
+        "line2": "1130 CLARK ST.",
+        "addressLine": [
+          "CLARK PARK",
+          "1130 CLARK ST."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48209"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.31512830333574,
+      "longitude": -83.091169024042088,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "BUTZEL FAMILY RECREATION CENTER",
+        "line2": "7737 KERCHEVAL",
+        "addressLine": [
+          "BUTZEL FAMILY RECREATION CENTER",
+          "7737 KERCHEVAL"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48214"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.35785426660852,
+      "longitude": -83.002122312142276,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "PISTONS PERFORMANCE CENTER",
+        "line2": "690 AMSTERDAM ST. (AT SECOND AVE.)",
+        "addressLine": [
+          "PISTONS PERFORMANCE CENTER",
+          "690 AMSTERDAM ST. (AT SECOND AVE.)"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48202"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.365071283625134,
+      "longitude": -83.076541997605972,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "RENAISSANCE BAPTIST CHURCH - BALLOT BOX ONLY",
+        "line2": "1045 E. GRAND BLVD. (NEAR E. FOREST)",
+        "addressLine": [
+          "RENAISSANCE BAPTIST CHURCH - BALLOT BOX ONLY",
+          "1045 E. GRAND BLVD. (NEAR E. FOREST)"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48207"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.370484296608069,
+      "longitude": -83.017661888130974,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "DEPARTMENT OF ELECTIONS",
+        "line2": "2978 W. GRAND BLVD",
+        "addressLine": [
+          "DEPARTMENT OF ELECTIONS",
+          "2978 W. GRAND BLVD"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48202"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.368184870496485,
+      "longitude": -83.077528005912768,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "GREATER CHRIST BAPTIST CHURCH",
+        "line2": "3544 IROQUOIS AVE.",
+        "addressLine": [
+          "GREATER CHRIST BAPTIST CHURCH",
+          "3544 IROQUOIS AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48214"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.368523209244358,
+      "longitude": -83.001098115158982,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "CONSIDINE CENTER",
+        "line2": "8904 WOODWARD AVE.",
+        "addressLine": [
+          "CONSIDINE CENTER",
+          "8904 WOODWARD AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48202"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.381606090764109,
+      "longitude": -83.080621469889834,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "UNITY BAPTIST CHURCH",
+        "line2": "7500 TIREMAN AVE.",
+        "addressLine": [
+          "UNITY BAPTIST CHURCH",
+          "7500 TIREMAN AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48204"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.352210985879772,
+      "longitude": -83.144334965534114,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "WCCCD EASTERN CAMPUS",
+        "line2": "5901 CONNER",
+        "addressLine": [
+          "WCCCD EASTERN CAMPUS",
+          "5901 CONNER"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48213"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.3944027352612,
+      "longitude": -82.9875197740665,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "FARWELL RECREATION CENTER",
+        "line2": "2711 E. OUTER DR.",
+        "addressLine": [
+          "FARWELL RECREATION CENTER",
+          "2711 E. OUTER DR."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48234"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.441564588550342,
+      "longitude": -83.05848060384308,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "SAY DETROIT PLAY CENTER",
+        "line2": "19320 VAN DYKE AVE.",
+        "addressLine": [
+          "SAY DETROIT PLAY CENTER",
+          "19320 VAN DYKE AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48234"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.43632991954172,
+      "longitude": -83.022009999147272,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "FAITH TEMPLE",
+        "line2": "19000 CONANT",
+        "addressLine": [
+          "FAITH TEMPLE",
+          "19000 CONANT"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48234"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.432091615765458,
+      "longitude": -83.072695686602714,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "WILLIAM FORD MEMORIAL CHURCH",
+        "line2": "16400 W. WARREN AVE.",
+        "addressLine": [
+          "WILLIAM FORD MEMORIAL CHURCH",
+          "16400 W. WARREN AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48228"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.34375717360458,
+      "longitude": -83.205952681012,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "DAVISON SERVICE YARD",
+        "line2": "8221 W. DAVISON",
+        "addressLine": [
+          "DAVISON SERVICE YARD",
+          "8221 W. DAVISON"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48238"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.385911394503552,
+      "longitude": -83.151210015753463,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "KEMENY RECREATION CENTER",
+        "line2": "2260 S. FORT ST.",
+        "addressLine": [
+          "KEMENY RECREATION CENTER",
+          "2260 S. FORT ST."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48217"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.274246029605777,
+      "longitude": -83.158153783628322,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "JESUS TABERNACLE CHURCH",
+        "line2": "11001 CHALMERS",
+        "addressLine": [
+          "JESUS TABERNACLE CHURCH",
+          "11001 CHALMERS"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48213"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.415985891132124,
+      "longitude": -82.972026015727366,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "FRANKLIN LIBRARY",
+        "line2": "13651 E. MCNICHOLS",
+        "addressLine": [
+          "FRANKLIN LIBRARY",
+          "13651 E. MCNICHOLS"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48205"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.427100527887276,
+      "longitude": -82.984035833766328,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "BOYS & GIRLS CLUBS OF SOUTHEASTERN MICHIGAN",
+        "line2": "16500 TIREMAN AVE.",
+        "addressLine": [
+          "BOYS & GIRLS CLUBS OF SOUTHEASTERN MICHIGAN",
+          "16500 TIREMAN AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48228"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.351247023346076,
+      "longitude": -83.208607962426072,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "BETHANY LUTHERAN CHURCH",
+        "line2": "11475 E. OUTER DR.",
+        "addressLine": [
+          "BETHANY LUTHERAN CHURCH",
+          "11475 E. OUTER DR."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48224"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.405874593424045,
+      "longitude": -82.948559538867116,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "PALMER PARK COMMUNITY CENTER",
+        "line2": "1121 MERRILL PLAISANCE ST.",
+        "addressLine": [
+          "PALMER PARK COMMUNITY CENTER",
+          "1121 MERRILL PLAISANCE ST."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48203"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.424348732206766,
+      "longitude": -83.1177822356497,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "ADAMS BUTZEL RECREATION COMPLEX",
+        "line2": "10500 LYNDON ST.",
+        "addressLine": [
+          "ADAMS BUTZEL RECREATION COMPLEX",
+          "10500 LYNDON ST."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48238"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.396045571886191,
+      "longitude": -83.165307569444764,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "EDISON LIBRARY",
+        "line2": "18400 JOY RD.",
+        "addressLine": [
+          "EDISON LIBRARY",
+          "18400 JOY RD."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48228"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.358009761928386,
+      "longitude": -83.220233183741627,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "HEILMANN COMMUNITY CENTER",
+        "line2": "19601 CRUSADE",
+        "addressLine": [
+          "HEILMANN COMMUNITY CENTER",
+          "19601 CRUSADE"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48205"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.440755421985237,
+      "longitude": -82.963214314030935,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "GREATER ST. PAUL",
+        "line2": "15325 GRATIOT AVE.",
+        "addressLine": [
+          "GREATER ST. PAUL",
+          "15325 GRATIOT AVE."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48205"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.447503516774304,
+      "longitude": -82.970193882028227,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "BALDUCK PARK",
+        "line2": "5271 CANYON ST.",
+        "addressLine": [
+          "BALDUCK PARK",
+          "5271 CANYON ST."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48236"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.413279998497885,
+      "longitude": -82.918301983325151,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "NEW PROSPECT CHURCH (ANNEX)",
+        "line2": "19940 LIVERNOIS",
+        "addressLine": [
+          "NEW PROSPECT CHURCH (ANNEX)",
+          "19940 LIVERNOIS"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48221"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.438990629538992,
+      "longitude": -83.142515399148,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "NORTHWEST ACTIVITIES CENTER",
+        "line2": "18100 MEYERS RD.",
+        "addressLine": [
+          "NORTHWEST ACTIVITIES CENTER",
+          "18100 MEYERS RD."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48235"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.423278829157759,
+      "longitude": -83.169410702499221,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "TINDAL ACTIVITY CENTER",
+        "line2": "10301 W. 7 MILE RD.",
+        "addressLine": [
+          "TINDAL ACTIVITY CENTER",
+          "10301 W. 7 MILE RD."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48221"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.43057208166622,
+      "longitude": -83.163729202669344,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "ROUGE PARK GOLF COURSE  - BALLOT BOX ONLY",
+        "line2": "11701 BURT RD. (OUTER DR. & PLYMOUTH)",
+        "addressLine": [
+          "ROUGE PARK GOLF COURSE  - BALLOT BOX ONLY",
+          "11701 BURT RD. (OUTER DR. & PLYMOUTH)"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48228"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.373478291746785,
+      "longitude": -83.24721862614139,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "LIBERTY TEMPLE BAPTIST CHURCH - BALLOT BOX ONLY",
+        "line2": "17188 GREENFIELD RD. (NEAR 6 MILE/MCNICHOLS)",
+        "addressLine": [
+          "LIBERTY TEMPLE BAPTIST CHURCH - BALLOT BOX ONLY",
+          "17188 GREENFIELD RD. (NEAR 6 MILE/MCNICHOLS)"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48235"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.417272360797988,
+      "longitude": -83.1989788627453,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "GREATER EMMANUEL INSTITUTIONAL COGIC",
+        "line2": "19190 SCHAEFER HWY.",
+        "addressLine": [
+          "GREATER EMMANUEL INSTITUTIONAL COGIC",
+          "19190 SCHAEFER HWY."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48235"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.4324324795135,
+      "longitude": -83.180151211028914,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "NORTH ROSEDALE PARK COMMUNITY HOUSE",
+        "line2": "18445 SCARSDALE ST. (NEAR PURITAN)",
+        "addressLine": [
+          "NORTH ROSEDALE PARK COMMUNITY HOUSE",
+          "18445 SCARSDALE ST. (NEAR PURITAN)"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48223"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.406820899664261,
+      "longitude": -83.223622299464353,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "WCCCD NORTHWEST CAMPUS",
+        "line2": "8200 W. OUTER DR.",
+        "addressLine": [
+          "WCCCD NORTHWEST CAMPUS",
+          "8200 W. OUTER DR."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48219"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.42079456756597,
+      "longitude": -83.222303722764281,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "CROWELL COMMUNITY CENTER",
+        "line2": "16630 LAHSER RD.",
+        "addressLine": [
+          "CROWELL COMMUNITY CENTER",
+          "16630 LAHSER RD."
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48219"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.410438981472048,
+      "longitude": -83.256652968401525,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DROP BOX - DETROIT CITY",
+        "line1": "GREATER GRACE TEMPLE",
+        "line2": "23500 W. 7 MILE RD",
+        "addressLine": [
+          "GREATER GRACE TEMPLE",
+          "23500 W. 7 MILE RD"
+        ],
+        "city": "DETROIT",
+        "state": "MI",
+        "zip": "48219"
+      },
+      "pollingHours": "Sat, Oct 24: 12:00 am - 11:59 pm\nSun, Oct 25: 12:00 am - 11:59 pm\nMon, Oct 26: 12:00 am - 11:59 pm\nTue, Oct 27: 12:00 am - 11:59 pm\nWed, Oct 28: 12:00 am - 11:59 pm\nThu, Oct 29: 12:00 am - 11:59 pm\nFri, Oct 30: 12:00 am - 11:59 pm\nSat, Oct 31: 12:00 am - 11:59 pm\nSun, Nov 1: 12:00 am - 10:59 pm",
+      "latitude": 42.429867399337908,
+      "longitude": -83.2709507093388,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "contests": [
+    {
+      "type": "General",
+      "ballotTitle": "Governor and Lieutenant Governor",
+      "office": "Governor/Lieutenant Governor",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "1",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Jocelyn Benson/Winnie Brinks",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "John James/Jay DeBoyer",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Anthony Hudson/Beau Parmenter",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Donna Brandenburg/Robert Donald Cowper II",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Douglas Campbell/Bobbie Clay",
+          "party": "GREEN"
+        },
+        {
+          "name": "",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Secretary of State",
+      "office": "Secretary of State",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "2",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Garlin Gilchrist II",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Anthony G. Forlini",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Christine Sloan",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Scott E. Aughney",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Eric Borregard",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Attorney General",
+      "office": "Attorney General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "3",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Eli Savit",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Doug Lloyd",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Jason Dye",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "John Perry Ludtke Jr",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Jeff Polonowski",
+          "party": "GREEN"
+        },
+        {
+          "name": "Doug Dern",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "United States Senator",
+      "office": "United States Senator",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "4",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Abdul El-Sayed",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Mike Rogers",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Lydia Christensen",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Tim Long",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Douglas P. Marsh",
+          "party": "GREEN"
+        },
+        {
+          "name": "Walter P. Kristy",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Representative in Congress",
+      "office": "Representative in Congress",
+      "district": {
+        "name": "13th District"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "17",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Donavan McKinney",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "T.P. Nykoriak",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Chris Dardzinski",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Raelyn Light",
+          "party": "GREEN"
+        },
+        {
+          "name": "Simone R. Coleman",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "St Senator",
+      "office": "State Senator",
+      "district": {
+        "name": "1st District",
+        "scope": "stateUpper"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "18",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Justin Onwenu",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Patrick O'Connell",
+          "party": "REPUBLICAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Representative",
+      "office": "Representative in State Legislature",
+      "district": {
+        "name": "9th District",
+        "scope": "stateLower"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "64",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Willie Burton",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Michele Lundgren",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Jahdante John Elijah Smith",
+          "party": "GREEN"
+        },
+        {
+          "name": "Logan Ausherman",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Member of the State Board of Education",
+      "office": "Member of the State Board of Education",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "166",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Judith Pritchett",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Tiffany Tilley",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Terence Collins",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Bree Moeggenberg",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Charles Essner",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "William Mohr II",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Christine C. Schwartz",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Wissam Charafeddine",
+          "party": "GREEN"
+        },
+        {
+          "name": "Mary Anne Hering",
+          "party": "WORKING CLASS PARTY"
+        },
+        {
+          "name": "Kelli Monroe",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Regent of the University of Michigan",
+      "office": "Regent of the University of Michigan",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "167",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Paul Brown",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Amir Makled",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Lena Epstein",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Michael Schostak",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Andrew Chadderdon",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Kyle Maas",
+          "party": "U.S. TAXPAYERS"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Trustee of Michigan State University",
+      "office": "Trustee of Michigan State University",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "168",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Brianna Scott",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Kelly Tebay Zemke",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Julie Maday",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Roger Victory",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Daniel R. Patterson",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Will Tyler White",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Janet Sanger",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "John Sanger",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "John Anthony La Pietra",
+          "party": "GREEN"
+        },
+        {
+          "name": "Yaz Ozbek",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Governor of Wayne State University",
+      "office": "Governor of Wayne State University",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "169",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Shereef Akeel",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Richard Mack",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Andy Anuzis",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Christa Murphy",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Alex Avery",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Jami Van Alstine",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Jeff McDonald",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Paul M. Ragan",
+          "party": "GREEN"
+        },
+        {
+          "name": "Suzanne Roehrig",
+          "party": "WORKING CLASS PARTY"
+        },
+        {
+          "name": "Kathleen Oakford",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "County Exec",
+      "office": "County Executive",
+      "district": {
+        "name": "WAYNE COUNTY",
+        "scope": "countywide"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "171",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Warren C. Evans",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Michael A. Evans",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "John Olumba",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Justice Supreme Court",
+      "office": "Justice of Supreme Court",
+      "district": {
+        "name": "Supreme Court",
+        "scope": "judicial"
+      },
+      "numberElected": "2",
+      "ballotPlacement": "770",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Megan Kathleen Cavanagh",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Noah P. Hood",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Thomas W. Howe",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Casandra Morse-Bills",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Michael Warren",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Jody White",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Ct Appeals",
+      "office": "Judge of Court of Appeals",
+      "district": {
+        "name": "1st District",
+        "scope": "judicial"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "771",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Mariam Saad Bazzi",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Anica Letica",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Christopher M. Murray",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Ct Appeals",
+      "office": "Judge of Court of Appeals",
+      "district": {
+        "name": "1st District",
+        "scope": "judicial"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "775",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Andrew J. Lievense",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Circuit Crt",
+      "office": "Judge of Circuit Court",
+      "district": {
+        "name": "3rd Circuit",
+        "scope": "judicial"
+      },
+      "numberElected": "16",
+      "ballotPlacement": "777",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "David J. Allen",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Chandra W. Baker-Robinson",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Christopher M. Blount",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Nicole L. Castka",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Bradley L. Cobb",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Chris Dingell",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Charlene M. Elder",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Helal A. Farhat",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Nicole N. Goodson",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Edward J. Joseph",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Mary Beth Kelly",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Don Knapp",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Cylenthia LaToye Miller",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Carla G. Testani",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Margaret M. Van Houten",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Shannon Nicol Walker",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Circuit Crt",
+      "office": "Judge of Circuit Court",
+      "district": {
+        "name": "3rd Circuit",
+        "scope": "judicial"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "815",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Aliyah S. Sabree",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Circuit Crt",
+      "office": "Judge of Circuit Court",
+      "district": {
+        "name": "3rd Circuit",
+        "scope": "judicial"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "818",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Shakira Lynn Hawkins",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge Probate Ct",
+      "office": "Judge of Probate Court",
+      "district": {
+        "name": "Wayne County Probate Court",
+        "scope": "judicial"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "842",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Sarah Colegrove",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Suzanne Fanning",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Vanessa M. Moss",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge District Ct",
+      "office": "Judge of District Court",
+      "district": {
+        "name": "36th District",
+        "scope": "judicial"
+      },
+      "numberElected": "6",
+      "ballotPlacement": "878",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Demetria Brue",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "E. Lynise Bryant",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Adrienne Hinnant-Johnson",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Shannon A. Holmes",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Kenneth J. King",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Millicent D. Sherman",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge District Ct",
+      "office": "Judge of District Court",
+      "district": {
+        "name": "36th District",
+        "scope": "judicial"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "917",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Ponce D. Clay",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Herman Griffin IV",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Chastity A. Youngblood",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "Judge District Ct",
+      "office": "Judge of District Court",
+      "district": {
+        "name": "36th District",
+        "scope": "judicial"
+      },
+      "numberElected": "3",
+      "ballotPlacement": "930",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Delphia J. Burton",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "William Burton Jr.",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Kahlilia Yvette Davis",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Jo A. Irby",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "SCH BRD",
+      "office": "Local School District Board Member",
+      "district": {
+        "name": "DETROIT COMMUNITY SCHOOL DISTRICT",
+        "scope": "schoolBoard"
+      },
+      "numberElected": "4",
+      "ballotPlacement": "2157",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Natalie Bien-Aime",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Steve Bland, Jr.",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Michelle Broughton",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Katrina Brown",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Cidney Calloway",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Bobby Christian",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Nicole Conaway",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Vilma Escamilla Duran",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Daniel Ferguson III",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Duane Larry Grigsby, Jr.",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Bessie L. Harris",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "David Harris",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "C. Allan Hubbard",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Henrietta Ivey",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Tabrian C. Joe",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Shinese Johnson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Theodore Jones",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Georgia Mae Lemmons",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "LaMar D. Lemmons",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Clement O. Lett",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Phil Lloyd II",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Darious Morris",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Liana Mulholland",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Tyshea Pope",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "DaNetta L. Simpson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Tawanna Simpson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Jameel Montgomery Smith",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Calesther Smith-Arnold",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Terry E. Whitfield",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Elizabeth A. Williams",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Theresa Williams",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "ballotTitle": "SCH BRD",
+      "office": "Local School District Board Member",
+      "district": {
+        "name": "DETROIT COMMUNITY SCHOOL DISTRICT",
+        "scope": "schoolBoard"
+      },
+      "numberElected": "1",
+      "ballotPlacement": "2604",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "Ijazz Jackson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Aliya Moore",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Shawn Vaughn",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposal 2026-1\n\nA proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "10001",
+      "referendumTitle": "Proposal 2026-1\n\nA proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+      "referendumSubtitle": "PROPOSAL",
+      "referendumText": "Shall a convention of elected delegates be convened in 2027 to draft a general revision of the State Constitution for presentation to the state’s voters for their approval or rejection?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Proposal 2026-2\n\nA proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "ballotPlacement": "10002",
+      "referendumTitle": "Proposal 2026-2\n\nA proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+      "referendumSubtitle": "PROPOSAL",
+      "referendumText": "The proposal would:\n \n• Prohibit regulated electric and gas utilities, contractors with over $250,000 annually in government contracts, and people and organizations with substantial connections to these utilities/contractors from making direct or indirect campaign contributions to those who run for or hold offices that impact them. \n• Expand laws regulating spending on political communications, including those requiring disclosing donor information, to apply to communications clearly identifying candidates or ballot questions, even if they do not expressly advocate voting for/against them. \n• Expressly apply the law requiring disclosure of who paid for political communications to internet political communications. \n\nShould this proposal be adopted?",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "ballot-measure",
+      "ballotTitle": "Renewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo",
+      "district": {
+        "name": "WAYNE COUNTY ZOOLOGICAL AUTHORITY"
+      },
+      "ballotPlacement": "10058",
+      "referendumTitle": "Renewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo",
+      "referendumSubtitle": "WAYNE COUNTY / WAYNE COUNTY ZOOLOGICAL AUTHORITY PROPOSAL",
+      "referendumText": "In 2008 and 2016, pursuant to Public Act 49 of 2008, Wayne County voters renewed a 10-year property tax millage to fund zoological services through the Wayne County Zoological Authority, supporting animal care for more than 2,000 animals and 200 species, educational and senior programs, and facility maintenance at the Detroit Zoo. To continue providing these services, the Authority seeks to renew and restore the millage to the original voter-approved rate of 0.10 mill (10 cents per $1,000 of taxable value). This proposal would renew the millage at 0.0982 mill and restore the remaining 0.0018 mill that was reduced due to required rollback, for a total authorized rate of 0.10 mill on taxable real and personal property for ten (10) years. If approved, the millage rate would be unchanged from those approved by voters in 2008 and 2016. Funds will be disbursed to the Authority and transferred to the Detroit Zoo as permitted by law. All funds are subject to annual independent audits. It is estimated that $6,145,462 will be collected in the first year. Ballot Question: Do you approve the renewal and restoration of the levy of 0.10 mill on all taxable property in Wayne County for a period of ten (10) years, from 2028 through 2037? ",
+      "referendumBallotResponses": [
+        "Yes",
+        "No"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Michigan",
+      "electionAdministrationBody": {
+        "name": "ALL",
+        "electionInfoUrl": "http://www.michigan.gov/sos/0,1607,7-127-1633---,00.html",
+        "electionRegistrationUrl": "https://mvic.sos.state.mi.us/RegisterVoter/Index",
+        "electionRegistrationConfirmationUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+        "absenteeVotingInfoUrl": "https://mvic.sos.state.mi.us/AVApplication/Index",
+        "votingLocationFinderUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+        "ballotInfoUrl": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+        "physicalAddress": {
+          "line1": "430 W ALLEGAN ST",
+          "line2": "LANSING, MI 48918",
+          "addressLine": [
+            "430 W ALLEGAN ST",
+            "LANSING, MI 48918"
+          ]
+        },
+        "electionOfficials": [
+          {
+            "officePhoneNumber": "8002925973",
+            "emailAddress": "SOS.ELECTIONS@MICHIGAN.GOV"
+          }
+        ]
+      },
+      "local_jurisdiction": {
+        "name": "DETROIT",
+        "electionAdministrationBody": {
+          "name": "DETROIT CITY",
+          "electionInfoUrl": "http://www.detroitmi.gov/CityCouncil/CityClerk/tabid/2584/Default.aspx",
+          "electionRegistrationUrl": "https://mvic.sos.state.mi.us/RegisterVoter/Index",
+          "electionRegistrationConfirmationUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+          "absenteeVotingInfoUrl": "https://mvic.sos.state.mi.us/AVApplication/Index",
+          "votingLocationFinderUrl": "https://mvic.sos.state.mi.us/Voter/Index",
+          "ballotInfoUrl": "https://mvic.sos.state.mi.us/PublicBallot/Index",
+          "physicalAddress": {
+            "line1": "2978 W GRAND BLVD",
+            "line2": "DETROIT, MI 48235",
+            "addressLine": [
+              "2978 W GRAND BLVD",
+              "DETROIT, MI 48235"
+            ]
+          },
+          "electionOfficials": [
+            {
+              "officePhoneNumber": "3138760190",
+              "emailAddress": "WINFREYJ@DETROITMI.GOV"
+            }
+          ]
+        },
+        "sources": [
+          {
+            "name": "Voting Information Project",
+            "official": true
+          }
+        ]
+      },
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

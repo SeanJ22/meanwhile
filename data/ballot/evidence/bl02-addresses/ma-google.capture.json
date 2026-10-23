@@ -1,0 +1,12 @@
+{
+  "state": "MA",
+  "address": "24 Beacon St, Boston, MA 02133",
+  "checkedAt": "2026-10-23T07:59:03.875795+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ma-google.json",
+  "sha256": "bfdbc5d2774e75d6df88e4623bf5ae080a706e1c84d7b24f39abd64586956f1d",
+  "contestCount": 0,
+  "contests": []
+}

@@ -1,0 +1,519 @@
+Kansas Statutes (https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0030_section/004_005_0030_k/)
+【turn422744view0】 [wordlim: 200] Crawled: 2 weeks ago; Content type: text/html; Source: open({"ref_id":"https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0030_section/004_005_0030_k/","lineno":null}); Total lines: 100
+L0: 【0†Kansas Legislature kslegislature.gov】
+L1: 
+L2: menu
+L3: 
+L4: 【0†Home】
+L5: 
+L6: [Button: House]
+L7: 
+L8: 【1†account_balanceAbout the House】 【2†groupsRepresentatives】 【3†campaignEvents】 【4†chairSeating Chart】 【5†auto_storiesJournals & Calendars】 【6†manage_accountsChief Clerk of the House】 【7†gavelRules】
+L9: 
+L10: [Button: Senate]
+L11: 【8†account_balanceAbout the Senate】 【9†groupsSenators】 【10†campaignEvents】 【11†assignment_indAppointments】 【12†chairSeating Chart】 【13†auto_storiesJournals & Calendars】 【14†manage_accountsSecretary of the Senate】 【15†gavelRules】
+L12: 
+L13: [Button: Committees]
+L14: 
+L15: 【16†groupsCommittees】 【17†eventHearing Schedule】 【18†handshakeConference Committee Schedule】
+L16: 
+L17: [Button: Measures & Laws]
+L18: 【19†gavelAll Measures】 【20†account_balanceHouse Measures】 【21†account_balanceSenate Measures】 【22†account_balanceVotes】 【23†topicSubject Index】 【24†summarizeReports】 【25†menu_bookStatutes】 【26†schoolHow a Bill Becomes Law】 【27†menu_bookLegislative Procedure Manual】
+L19: 
+L20: [Button: Today]
+L21: 【28†campaignLive Floor Activity】 【29†videocamHouse Video†sg001-harmony.sliq.net】 【30†videocamSenate Video†sg001-harmony.sliq.net】 【31†live_tvStatehouse Live & Archive†sg001-harmony.sliq.net】 【32†smart_displayYouTube Channel†www.youtube.com】
+L22: 
+L23: 【33†Resources】 【34†Archive】 【35†Search】
+L24: 
+L25: description Go to bill or resolution [Input: Go to bill…] arrow_forward
+L26: 
+L27: A^{−} A^{+}
+L28: 
+L29: search Search bills, resolutions, and statutes [Input: Search…] help
+L30: Keywords
+L31: Enter any words to search bills, statutes, and documents.
+L32: `water quality funding`
+L33: 
+L34: Bill or Resolution Number
+L35: Type a number and press Enter to go directly to the detail page.
+L36: `HB 2590` `SCR 1611`
+L37: 
+L38: Statute Number
+L39: `68-102` `72-3715`
+L40: 
+L41: Exact Phrase
+L42: Wrap your query in quotes.
+L43: `“rules of evidence”`
+L44: 
+L45: Document Type
+L46: Prefix with a type to narrow results.
+L47: `testimony: HB 2513` `minutes: budget`
+L48: 
+L49: No results found.
+L50: 
+L51: search Search bills, resolutions, and statutes [Input: Search…]
+L52: 【0†Home】 House 【1†About the House】 【2†Representatives】 【3†Events】 【4†Seating Chart】 【5†Journals & Calendars】 【6†Chief Clerk of the House】 【7†Rules】 Senate 【8†About the Senate】 【9†Senators】 【10†Events】 【11†Appointments】 【12†Seating Chart】 【13†Journals & Calendars】 【14†Secretary of the Senate】 【15†Rules】 Committees 【16†All Committees】 【17†Hearing Schedule】 【18†Conference Committee Schedule】 Measures & Laws 【19†All Measures】 【20†House Measures】 【21†Senate Measures】 【22†Votes】 【23†Subject Index】 【24†Reports】 【25†Statutes】 【26†How a Bill Becomes Law】 【27†Legislative Procedure Manual】 【33†Resources】 Today 【28†Live Floor Activity】 【29†House Video†sg001-harmony.sliq.net】 【30†Senate Video†sg001-harmony.sliq.net】 【31†Statehouse Live & Archive†sg001-harmony.sliq.net】 【32†YouTube Channel†www.youtube.com】 【34†Archive】 【35†Search】
+L53: # 2026 Kansas Statutes
+L54: 
+L55: [Input: Search statutes…] search Search
+L56: 
+L57: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L58: 4-530. District one. State board of education member district one shall consist of senatorial districts 1, 5, 18 and 22.
+L59: History: L. 2022, ch. 64, § 177; April 21.
+L60: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L61: 
+L62: © 2026 Revisor of Statutes, State of Kansas
+L63: 
+L64: arrow_upward Top
+L65: 
+L66: Kansas State Legislature
+L67: 300 SW 10th Ave, Topeka, KS 66612
+L68: 
+L69: Ad Astra Per Aspera
+L70: 
+L71: 【39†Kansas Legislative HotlineIn-State: 1-800-432-3924Out-of-State: 785-296-2149†library.ks.gov】
+L72: # Government
+L73: 
+L74:   * 【40†Legislators】
+L75:   * 【1†House】
+L76:   * 【2†Representatives】
+L77:   * 【8†Senate】
+L78:   * 【9†Senators】
+L79:   * 【16†Committees】
+L80: 
+L81: # Resources
+L82: 
+L83:   * 【19†Bills & Measures】
+L84:   * 【28†Today】
+L85:   * 【41†Live】
+L86:   * 【42†Journals】
+L87:   * 【43†Calendars】
+L88:   * 【34†Archived Records】
+L89:   * 【25†Laws】
+L90:   * 【35†Search】
+L91:   * 【44†RSS Feeds】
+L92: # Support
+L93: 
+L94:   * 【45†Contact Us†www.kslegislature.gov】
+L95:   * 【46†Accessibility†www.ebit.ks.gov】
+L96:   * 【47†Privacy Policy†portal.kansas.gov】
+L97:   * 【48†Visit Us†www.kansashistory.gov】
+L98: 
+L99: © 2026 Kansas State Legislature. All rights reserved. Data updated 1 minute ago · 11:13 AM 10/07/2026
+
+
+Kansas Statutes (https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0032_section/004_005_0032_k/)
+【turn541374view0】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0032_section/004_005_0032_k/","lineno":null}); Total lines: 100
+L0: 【0†Kansas Legislature kslegislature.gov】
+L1: 
+L2: menu
+L3: 
+L4: 【0†Home】
+L5: 
+L6: [Button: House]
+L7: 
+L8: 【1†account_balanceAbout the House】 【2†groupsRepresentatives】 【3†campaignEvents】 【4†chairSeating Chart】 【5†auto_storiesJournals & Calendars】 【6†manage_accountsChief Clerk of the House】 【7†gavelRules】
+L9: 
+L10: [Button: Senate]
+L11: 【8†account_balanceAbout the Senate】 【9†groupsSenators】 【10†campaignEvents】 【11†assignment_indAppointments】 【12†chairSeating Chart】 【13†auto_storiesJournals & Calendars】 【14†manage_accountsSecretary of the Senate】 【15†gavelRules】
+L12: 
+L13: [Button: Committees]
+L14: 
+L15: 【16†groupsCommittees】 【17†eventHearing Schedule】 【18†handshakeConference Committee Schedule】
+L16: 
+L17: [Button: Measures & Laws]
+L18: 【19†gavelAll Measures】 【20†account_balanceHouse Measures】 【21†account_balanceSenate Measures】 【22†account_balanceVotes】 【23†topicSubject Index】 【24†summarizeReports】 【25†menu_bookStatutes】 【26†schoolHow a Bill Becomes Law】 【27†menu_bookLegislative Procedure Manual】
+L19: 
+L20: [Button: Today]
+L21: 【28†campaignLive Floor Activity】 【29†videocamHouse Video†sg001-harmony.sliq.net】 【30†videocamSenate Video†sg001-harmony.sliq.net】 【31†live_tvStatehouse Live & Archive†sg001-harmony.sliq.net】 【32†smart_displayYouTube Channel†www.youtube.com】
+L22: 
+L23: 【33†Resources】 【34†Archive】 【35†Search】
+L24: 
+L25: description Go to bill or resolution [Input: Go to bill…] arrow_forward
+L26: 
+L27: A^{−} A^{+}
+L28: 
+L29: search Search bills, resolutions, and statutes [Input: Search…] help
+L30: Keywords
+L31: Enter any words to search bills, statutes, and documents.
+L32: `water quality funding`
+L33: 
+L34: Bill or Resolution Number
+L35: Type a number and press Enter to go directly to the detail page.
+L36: `HB 2590` `SCR 1611`
+L37: 
+L38: Statute Number
+L39: `68-102` `72-3715`
+L40: 
+L41: Exact Phrase
+L42: Wrap your query in quotes.
+L43: `“rules of evidence”`
+L44: 
+L45: Document Type
+L46: Prefix with a type to narrow results.
+L47: `testimony: HB 2513` `minutes: budget`
+L48: 
+L49: No results found.
+L50: 
+L51: search Search bills, resolutions, and statutes [Input: Search…]
+L52: 【0†Home】 House 【1†About the House】 【2†Representatives】 【3†Events】 【4†Seating Chart】 【5†Journals & Calendars】 【6†Chief Clerk of the House】 【7†Rules】 Senate 【8†About the Senate】 【9†Senators】 【10†Events】 【11†Appointments】 【12†Seating Chart】 【13†Journals & Calendars】 【14†Secretary of the Senate】 【15†Rules】 Committees 【16†All Committees】 【17†Hearing Schedule】 【18†Conference Committee Schedule】 Measures & Laws 【19†All Measures】 【20†House Measures】 【21†Senate Measures】 【22†Votes】 【23†Subject Index】 【24†Reports】 【25†Statutes】 【26†How a Bill Becomes Law】 【27†Legislative Procedure Manual】 【33†Resources】 Today 【28†Live Floor Activity】 【29†House Video†sg001-harmony.sliq.net】 【30†Senate Video†sg001-harmony.sliq.net】 【31†Statehouse Live & Archive†sg001-harmony.sliq.net】 【32†YouTube Channel†www.youtube.com】 【34†Archive】 【35†Search】
+L53: # 2026 Kansas Statutes
+L54: 
+L55: [Input: Search statutes…] search Search
+L56: 
+L57: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L58: 4-532. District three. State board of education member district three shall consist of senatorial districts 11, 23, 35 and 37.
+L59: History: L. 2022, ch. 64, § 179; April 21.
+L60: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L61: 
+L62: © 2026 Revisor of Statutes, State of Kansas
+L63: 
+L64: arrow_upward Top
+L65: 
+L66: Kansas State Legislature
+L67: 300 SW 10th Ave, Topeka, KS 66612
+L68: 
+L69: Ad Astra Per Aspera
+L70: 
+L71: 【39†Kansas Legislative HotlineIn-State: 1-800-432-3924Out-of-State: 785-296-2149†library.ks.gov】
+L72: # Government
+L73: 
+L74:   * 【40†Legislators】
+L75:   * 【1†House】
+L76:   * 【2†Representatives】
+L77:   * 【8†Senate】
+L78:   * 【9†Senators】
+L79:   * 【16†Committees】
+L80: 
+L81: # Resources
+L82: 
+L83:   * 【19†Bills & Measures】
+L84:   * 【28†Today】
+L85:   * 【41†Live】
+L86:   * 【42†Journals】
+L87:   * 【43†Calendars】
+L88:   * 【34†Archived Records】
+L89:   * 【25†Laws】
+L90:   * 【35†Search】
+L91:   * 【44†RSS Feeds】
+L92: # Support
+L93: 
+L94:   * 【45†Contact Us†www.kslegislature.gov】
+L95:   * 【46†Accessibility†www.ebit.ks.gov】
+L96:   * 【47†Privacy Policy†portal.kansas.gov】
+L97:   * 【48†Visit Us†www.kansashistory.gov】
+L98: 
+L99: © 2026 Kansas State Legislature. All rights reserved. Data updated 5 minutes ago · 3:02 AM 10/23/2026
+
+--------------------------------------------------------------------------------
+Kansas Statutes (https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0034_section/004_005_0034_k/)
+【turn541374view1】 [wordlim: 200] Crawled: today; Content type: text/html; Source: open({"ref_id":"https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0034_section/004_005_0034_k/","lineno":null}); Total lines: 100
+L0: 【0†Kansas Legislature kslegislature.gov】
+L1: 
+L2: menu
+L3: 
+L4: 【0†Home】
+L5: 
+L6: [Button: House]
+L7: 
+L8: 【1†account_balanceAbout the House】 【2†groupsRepresentatives】 【3†campaignEvents】 【4†chairSeating Chart】 【5†auto_storiesJournals & Calendars】 【6†manage_accountsChief Clerk of the House】 【7†gavelRules】
+L9: 
+L10: [Button: Senate]
+L11: 【8†account_balanceAbout the Senate】 【9†groupsSenators】 【10†campaignEvents】 【11†assignment_indAppointments】 【12†chairSeating Chart】 【13†auto_storiesJournals & Calendars】 【14†manage_accountsSecretary of the Senate】 【15†gavelRules】
+L12: 
+L13: [Button: Committees]
+L14: 
+L15: 【16†groupsCommittees】 【17†eventHearing Schedule】 【18†handshakeConference Committee Schedule】
+L16: 
+L17: [Button: Measures & Laws]
+L18: 【19†gavelAll Measures】 【20†account_balanceHouse Measures】 【21†account_balanceSenate Measures】 【22†account_balanceVotes】 【23†topicSubject Index】 【24†summarizeReports】 【25†menu_bookStatutes】 【26†schoolHow a Bill Becomes Law】 【27†menu_bookLegislative Procedure Manual】
+L19: 
+L20: [Button: Today]
+L21: 【28†campaignLive Floor Activity】 【29†videocamHouse Video†sg001-harmony.sliq.net】 【30†videocamSenate Video†sg001-harmony.sliq.net】 【31†live_tvStatehouse Live & Archive†sg001-harmony.sliq.net】 【32†smart_displayYouTube Channel†www.youtube.com】
+L22: 
+L23: 【33†Resources】 【34†Archive】 【35†Search】
+L24: 
+L25: description Go to bill or resolution [Input: Go to bill…] arrow_forward
+L26: 
+L27: A^{−} A^{+}
+L28: 
+L29: search Search bills, resolutions, and statutes [Input: Search…] help
+L30: Keywords
+L31: Enter any words to search bills, statutes, and documents.
+L32: `water quality funding`
+L33: 
+L34: Bill or Resolution Number
+L35: Type a number and press Enter to go directly to the detail page.
+L36: `HB 2590` `SCR 1611`
+L37: 
+L38: Statute Number
+L39: `68-102` `72-3715`
+L40: 
+L41: Exact Phrase
+L42: Wrap your query in quotes.
+L43: `“rules of evidence”`
+L44: 
+L45: Document Type
+L46: Prefix with a type to narrow results.
+L47: `testimony: HB 2513` `minutes: budget`
+L48: 
+L49: No results found.
+L50: 
+L51: search Search bills, resolutions, and statutes [Input: Search…]
+L52: 【0†Home】 House 【1†About the House】 【2†Representatives】 【3†Events】 【4†Seating Chart】 【5†Journals & Calendars】 【6†Chief Clerk of the House】 【7†Rules】 Senate 【8†About the Senate】 【9†Senators】 【10†Events】 【11†Appointments】 【12†Seating Chart】 【13†Journals & Calendars】 【14†Secretary of the Senate】 【15†Rules】 Committees 【16†All Committees】 【17†Hearing Schedule】 【18†Conference Committee Schedule】 Measures & Laws 【19†All Measures】 【20†House Measures】 【21†Senate Measures】 【22†Votes】 【23†Subject Index】 【24†Reports】 【25†Statutes】 【26†How a Bill Becomes Law】 【27†Legislative Procedure Manual】 【33†Resources】 Today 【28†Live Floor Activity】 【29†House Video†sg001-harmony.sliq.net】 【30†Senate Video†sg001-harmony.sliq.net】 【31†Statehouse Live & Archive†sg001-harmony.sliq.net】 【32†YouTube Channel†www.youtube.com】 【34†Archive】 【35†Search】
+L53: # 2026 Kansas Statutes
+L54: 
+L55: [Input: Search statutes…] search Search
+L56: 
+L57: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L58: 4-534. District five. State board of education member district five shall consist of senatorial districts 36, 38, 39 and 40.
+L59: History: L. 2022, ch. 64, § 181; April 21.
+L60: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L61: 
+L62: © 2026 Revisor of Statutes, State of Kansas
+L63: 
+L64: arrow_upward Top
+L65: 
+L66: Kansas State Legislature
+L67: 300 SW 10th Ave, Topeka, KS 66612
+L68: 
+L69: Ad Astra Per Aspera
+L70: 
+L71: 【39†Kansas Legislative HotlineIn-State: 1-800-432-3924Out-of-State: 785-296-2149†library.ks.gov】
+L72: # Government
+L73: 
+L74:   * 【40†Legislators】
+L75:   * 【1†House】
+L76:   * 【2†Representatives】
+L77:   * 【8†Senate】
+L78:   * 【9†Senators】
+L79:   * 【16†Committees】
+L80: 
+L81: # Resources
+L82: 
+L83:   * 【19†Bills & Measures】
+L84:   * 【28†Today】
+L85:   * 【41†Live】
+L86:   * 【42†Journals】
+L87:   * 【43†Calendars】
+L88:   * 【34†Archived Records】
+L89:   * 【25†Laws】
+L90:   * 【35†Search】
+L91:   * 【44†RSS Feeds】
+L92: # Support
+L93: 
+L94:   * 【45†Contact Us†www.kslegislature.gov】
+L95:   * 【46†Accessibility†www.ebit.ks.gov】
+L96:   * 【47†Privacy Policy†portal.kansas.gov】
+L97:   * 【48†Visit Us†www.kansashistory.gov】
+L98: 
+L99: © 2026 Kansas State Legislature. All rights reserved. Data updated 5 minutes ago · 3:02 AM 10/23/2026
+
+--------------------------------------------------------------------------------
+Kansas Statutes (https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0036_section/004_005_0036_k/)
+【turn541374view2】 [wordlim: 200] Crawled: 3 days ago; Content type: text/html; Source: open({"ref_id":"https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0036_section/004_005_0036_k/","lineno":null}); Total lines: 100
+L0: 【0†Kansas Legislature kslegislature.gov】
+L1: 
+L2: menu
+L3: 
+L4: 【0†Home】
+L5: 
+L6: [Button: House]
+L7: 
+L8: 【1†account_balanceAbout the House】 【2†groupsRepresentatives】 【3†campaignEvents】 【4†chairSeating Chart】 【5†auto_storiesJournals & Calendars】 【6†manage_accountsChief Clerk of the House】 【7†gavelRules】
+L9: 
+L10: [Button: Senate]
+L11: 【8†account_balanceAbout the Senate】 【9†groupsSenators】 【10†campaignEvents】 【11†assignment_indAppointments】 【12†chairSeating Chart】 【13†auto_storiesJournals & Calendars】 【14†manage_accountsSecretary of the Senate】 【15†gavelRules】
+L12: 
+L13: [Button: Committees]
+L14: 
+L15: 【16†groupsCommittees】 【17†eventHearing Schedule】 【18†handshakeConference Committee Schedule】
+L16: 
+L17: [Button: Measures & Laws]
+L18: 【19†gavelAll Measures】 【20†account_balanceHouse Measures】 【21†account_balanceSenate Measures】 【22†account_balanceVotes】 【23†topicSubject Index】 【24†summarizeReports】 【25†menu_bookStatutes】 【26†schoolHow a Bill Becomes Law】 【27†menu_bookLegislative Procedure Manual】
+L19: 
+L20: [Button: Today]
+L21: 【28†campaignLive Floor Activity】 【29†videocamHouse Video†sg001-harmony.sliq.net】 【30†videocamSenate Video†sg001-harmony.sliq.net】 【31†live_tvStatehouse Live & Archive†sg001-harmony.sliq.net】 【32†smart_displayYouTube Channel†www.youtube.com】
+L22: 
+L23: 【33†Resources】 【34†Archive】 【35†Search】
+L24: 
+L25: description Go to bill or resolution [Input: Go to bill…] arrow_forward
+L26: 
+L27: A^{−} A^{+}
+L28: 
+L29: search Search bills, resolutions, and statutes [Input: Search…] help
+L30: Keywords
+L31: Enter any words to search bills, statutes, and documents.
+L32: `water quality funding`
+L33: 
+L34: Bill or Resolution Number
+L35: Type a number and press Enter to go directly to the detail page.
+L36: `HB 2590` `SCR 1611`
+L37: 
+L38: Statute Number
+L39: `68-102` `72-3715`
+L40: 
+L41: Exact Phrase
+L42: Wrap your query in quotes.
+L43: `“rules of evidence”`
+L44: 
+L45: Document Type
+L46: Prefix with a type to narrow results.
+L47: `testimony: HB 2513` `minutes: budget`
+L48: 
+L49: No results found.
+L50: 
+L51: search Search bills, resolutions, and statutes [Input: Search…]
+L52: 【0†Home】 House 【1†About the House】 【2†Representatives】 【3†Events】 【4†Seating Chart】 【5†Journals & Calendars】 【6†Chief Clerk of the House】 【7†Rules】 Senate 【8†About the Senate】 【9†Senators】 【10†Events】 【11†Appointments】 【12†Seating Chart】 【13†Journals & Calendars】 【14†Secretary of the Senate】 【15†Rules】 Committees 【16†All Committees】 【17†Hearing Schedule】 【18†Conference Committee Schedule】 Measures & Laws 【19†All Measures】 【20†House Measures】 【21†Senate Measures】 【22†Votes】 【23†Subject Index】 【24†Reports】 【25†Statutes】 【26†How a Bill Becomes Law】 【27†Legislative Procedure Manual】 【33†Resources】 Today 【28†Live Floor Activity】 【29†House Video†sg001-harmony.sliq.net】 【30†Senate Video†sg001-harmony.sliq.net】 【31†Statehouse Live & Archive†sg001-harmony.sliq.net】 【32†YouTube Channel†www.youtube.com】 【34†Archive】 【35†Search】
+L53: # 2026 Kansas Statutes
+L54: 
+L55: [Input: Search statutes…] search Search
+L56: 
+L57: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L58: 4-536. District seven. State board of education member district seven shall consist of senatorial districts 24, 31, 33 and 34.
+L59: History: L. 2022, ch. 64, § 183; April 21.
+L60: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L61: 
+L62: © 2026 Revisor of Statutes, State of Kansas
+L63: 
+L64: arrow_upward Top
+L65: 
+L66: Kansas State Legislature
+L67: 300 SW 10th Ave, Topeka, KS 66612
+L68: 
+L69: Ad Astra Per Aspera
+L70: 
+L71: 【39†Kansas Legislative HotlineIn-State: 1-800-432-3924Out-of-State: 785-296-2149†library.ks.gov】
+L72: # Government
+L73: 
+L74:   * 【40†Legislators】
+L75:   * 【1†House】
+L76:   * 【2†Representatives】
+L77:   * 【8†Senate】
+L78:   * 【9†Senators】
+L79:   * 【16†Committees】
+L80: 
+L81: # Resources
+L82: 
+L83:   * 【19†Bills & Measures】
+L84:   * 【28†Today】
+L85:   * 【41†Live】
+L86:   * 【42†Journals】
+L87:   * 【43†Calendars】
+L88:   * 【34†Archived Records】
+L89:   * 【25†Laws】
+L90:   * 【35†Search】
+L91:   * 【44†RSS Feeds】
+L92: # Support
+L93: 
+L94:   * 【45†Contact Us†www.kslegislature.gov】
+L95:   * 【46†Accessibility†www.ebit.ks.gov】
+L96:   * 【47†Privacy Policy†portal.kansas.gov】
+L97:   * 【48†Visit Us†www.kansashistory.gov】
+L98: 
+L99: © 2026 Kansas State Legislature. All rights reserved. Data updated 4 minutes ago · 5:43 PM 10/19/2026
+
+--------------------------------------------------------------------------------
+Kansas Statutes (https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0038_section/004_005_0038_k/)
+【turn541374view3】 [wordlim: 200] Crawled: 3 days ago; Content type: text/html; Source: open({"ref_id":"https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0038_section/004_005_0038_k/","lineno":null}); Total lines: 100
+L0: 【0†Kansas Legislature kslegislature.gov】
+L1: 
+L2: menu
+L3: 
+L4: 【0†Home】
+L5: 
+L6: [Button: House]
+L7: 
+L8: 【1†account_balanceAbout the House】 【2†groupsRepresentatives】 【3†campaignEvents】 【4†chairSeating Chart】 【5†auto_storiesJournals & Calendars】 【6†manage_accountsChief Clerk of the House】 【7†gavelRules】
+L9: 
+L10: [Button: Senate]
+L11: 【8†account_balanceAbout the Senate】 【9†groupsSenators】 【10†campaignEvents】 【11†assignment_indAppointments】 【12†chairSeating Chart】 【13†auto_storiesJournals & Calendars】 【14†manage_accountsSecretary of the Senate】 【15†gavelRules】
+L12: 
+L13: [Button: Committees]
+L14: 
+L15: 【16†groupsCommittees】 【17†eventHearing Schedule】 【18†handshakeConference Committee Schedule】
+L16: 
+L17: [Button: Measures & Laws]
+L18: 【19†gavelAll Measures】 【20†account_balanceHouse Measures】 【21†account_balanceSenate Measures】 【22†account_balanceVotes】 【23†topicSubject Index】 【24†summarizeReports】 【25†menu_bookStatutes】 【26†schoolHow a Bill Becomes Law】 【27†menu_bookLegislative Procedure Manual】
+L19: 
+L20: [Button: Today]
+L21: 【28†campaignLive Floor Activity】 【29†videocamHouse Video†sg001-harmony.sliq.net】 【30†videocamSenate Video†sg001-harmony.sliq.net】 【31†live_tvStatehouse Live & Archive†sg001-harmony.sliq.net】 【32†smart_displayYouTube Channel†www.youtube.com】
+L22: 
+L23: 【33†Resources】 【34†Archive】 【35†Search】
+L24: 
+L25: description Go to bill or resolution [Input: Go to bill…] arrow_forward
+L26: 
+L27: A^{−} A^{+}
+L28: 
+L29: search Search bills, resolutions, and statutes [Input: Search…] help
+L30: Keywords
+L31: Enter any words to search bills, statutes, and documents.
+L32: `water quality funding`
+L33: 
+L34: Bill or Resolution Number
+L35: Type a number and press Enter to go directly to the detail page.
+L36: `HB 2590` `SCR 1611`
+L37: 
+L38: Statute Number
+L39: `68-102` `72-3715`
+L40: 
+L41: Exact Phrase
+L42: Wrap your query in quotes.
+L43: `“rules of evidence”`
+L44: 
+L45: Document Type
+L46: Prefix with a type to narrow results.
+L47: `testimony: HB 2513` `minutes: budget`
+L48: 
+L49: No results found.
+L50: 
+L51: search Search bills, resolutions, and statutes [Input: Search…]
+L52: 【0†Home】 House 【1†About the House】 【2†Representatives】 【3†Events】 【4†Seating Chart】 【5†Journals & Calendars】 【6†Chief Clerk of the House】 【7†Rules】 Senate 【8†About the Senate】 【9†Senators】 【10†Events】 【11†Appointments】 【12†Seating Chart】 【13†Journals & Calendars】 【14†Secretary of the Senate】 【15†Rules】 Committees 【16†All Committees】 【17†Hearing Schedule】 【18†Conference Committee Schedule】 Measures & Laws 【19†All Measures】 【20†House Measures】 【21†Senate Measures】 【22†Votes】 【23†Subject Index】 【24†Reports】 【25†Statutes】 【26†How a Bill Becomes Law】 【27†Legislative Procedure Manual】 【33†Resources】 Today 【28†Live Floor Activity】 【29†House Video†sg001-harmony.sliq.net】 【30†Senate Video†sg001-harmony.sliq.net】 【31†Statehouse Live & Archive†sg001-harmony.sliq.net】 【32†YouTube Channel†www.youtube.com】 【34†Archive】 【35†Search】
+L53: # 2026 Kansas Statutes
+L54: 
+L55: [Input: Search statutes…] search Search
+L56: 
+L57: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L58: 4-538. District nine. State board of education member district nine shall consist of senatorial districts 12, 13, 14 and 15.
+L59: History: L. 2022, ch. 64, § 185; April 21.
+L60: 【36†Prev】  | 【37†Article 5. - STATE BOARD OF EDUCATION MEMBER DISTRICTS】  | 【38†Next】  |
+L61: 
+L62: © 2026 Revisor of Statutes, State of Kansas
+L63: 
+L64: arrow_upward Top
+L65: 
+L66: Kansas State Legislature
+L67: 300 SW 10th Ave, Topeka, KS 66612
+L68: 
+L69: Ad Astra Per Aspera
+L70: 
+L71: 【39†Kansas Legislative HotlineIn-State: 1-800-432-3924Out-of-State: 785-296-2149†library.ks.gov】
+L72: # Government
+L73: 
+L74:   * 【40†Legislators】
+L75:   * 【1†House】
+L76:   * 【2†Representatives】
+L77:   * 【8†Senate】
+L78:   * 【9†Senators】
+L79:   * 【16†Committees】
+L80: 
+L81: # Resources
+L82: 
+L83:   * 【19†Bills & Measures】
+L84:   * 【28†Today】
+L85:   * 【41†Live】
+L86:   * 【42†Journals】
+L87:   * 【43†Calendars】
+L88:   * 【34†Archived Records】
+L89:   * 【25†Laws】
+L90:   * 【35†Search】
+L91:   * 【44†RSS Feeds】
+L92: # Support
+L93: 
+L94:   * 【45†Contact Us†www.kslegislature.gov】
+L95:   * 【46†Accessibility†www.ebit.ks.gov】
+L96:   * 【47†Privacy Policy†portal.kansas.gov】
+L97:   * 【48†Visit Us†www.kansashistory.gov】
+L98: 
+L99: © 2026 Kansas State Legislature. All rights reserved. Data updated 4 minutes ago · 5:43 PM 10/19/2026
+

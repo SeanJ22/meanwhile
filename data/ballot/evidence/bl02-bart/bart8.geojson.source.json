@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://services.arcgis.com/sqS7RNuF1BQinj5N/arcgis/rest/services/Board_of_Directors_District_Boundary_Viewer_Base_Data_WFL1/FeatureServer/2/query?where=District%3D8&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://services.arcgis.com/sqS7RNuF1BQinj5N/arcgis/rest/services/Board_of_Directors_District_Boundary_Viewer_Base_Data_WFL1/FeatureServer/2/query?where=District%3D8&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:07:06.833728+00:00",
+  "rawHash": "13c81e369998edd8792848532974c2744974af3465e9cbd809f91a233e75c4a2",
+  "savedBytes": 28015,
+  "publisher": "San Francisco Bay Area Rapid Transit District"
+}

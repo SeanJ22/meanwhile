@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11?f=json",
+  "finalUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11?f=json",
+  "httpStatus": 200,
+  "rawHash": "4be9cb89186a3111ec97cd23b34bd33dff3d05e5e4d1bf8681fc357ccdec1f94",
+  "retrievedAt": "2026-10-23T08:16:45.129230+00:00"
+}

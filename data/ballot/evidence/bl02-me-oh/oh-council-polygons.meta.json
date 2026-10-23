@@ -1,0 +1,8 @@
+{
+  "requestedUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0/query?f=geojson&where=1%3D1&outFields=%2A&outSR=4326",
+  "finalUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0/query?f=geojson&where=1%3D1&outFields=%2A&outSR=4326",
+  "httpStatus": 200,
+  "rawHash": "82200fc4407ed5598c70baac18f3efb1e6c8f4f85660ba6e631ea4901389c9b7",
+  "retrievedAt": "2026-10-23T08:27:25.346133+00:00",
+  "contentType": "application/json; charset=utf-8"
+}

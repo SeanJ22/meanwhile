@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://maps.commerce.alaska.gov/server/rest/services/Govt_Related/Govt_JudicialDistricts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+  "finalUrl": "https://maps.commerce.alaska.gov/server/rest/services/Govt_Related/Govt_JudicialDistricts/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+  "httpStatus": 200,
+  "rawHash": "1d4040ac983ac67e3980edd29b48d14e8f83293d49e9086c1d3d185b18c9b8c7",
+  "retrievedAt": "2026-10-23T07:59:21.918757+00:00"
+}

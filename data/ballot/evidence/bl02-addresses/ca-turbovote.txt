@@ -1,0 +1,291 @@
+120 Lake St, San Francisco, CA, 94118
+|
+Edit
+ElectionBallot
+Sample Ballot
+Nov 3, 2026 California General Election
+About
+Share
+Help
+English
+Make your voting choices
+
+Use our interactive sample ballot to plan your vote. We'll save your selections to your account so you can review them when you're ready to fill out your ballot.
+
+All Races (30)
+Choose who you plan to vote for
+Filter by party:
+All
+Democratic Party
+Republican Party
+Nonpartisan
+Federal Races
+U.S. House California District 11
+The US House of Representatives is made up of elected officials who represent the interests of their constituents in Congress. They serve two-year terms and have the authority to initiate legislation and impeach federal officials.
+Connie Chan
+Democratic Party
+24 endorsements
+Scott Wiener
+Democratic Party
+19 endorsements
+State Races
+Governor of California
+Xavier Becerra
+Democratic Party
+Steve Hilton
+Republican Party
+Lieutenant Governor of California
+California Secretary of State
+Attorney General of California
+California Commissioner of Insurance
+California Controller
+California State Board of Equalization District 2
+California Superintendent of Public Instruction
+California Treasurer
+California State Assembly District 19
+California Supreme Court Joshua Groban's seat
+Retention Election
+California Supreme Court Kelli Evans' seat
+Retention Election
+California 1st District Court of Appeal Division 1 Charles Smiley's seat
+Retention Election
+California 1st District Court of Appeal Division 1 Kathleen Banke's seat
+Retention Election
+California 1st District Court of Appeal Division 1 Monique Langhorn Wilson's seat
+Retention Election
+California 1st District Court of Appeal Division 2 Tara Desautels' seat
+Retention Election
+California 1st District Court of Appeal Division 2 Therese Stewart's seat
+Retention Election
+California 1st District Court of Appeal Division 3 Ioana Petrou's seat
+Retention Election
+California 1st District Court of Appeal Division 3 Victor Rodriguez's seat
+Retention Election
+California 1st District Court of Appeal Division 4 Tracie L. Brown's seat
+Retention Election
+California 1st District Court of Appeal Division 5 Danny Chou's seat
+Retention Election
+California 1st District Court of Appeal Division 5 Gordon Burns' seat
+Retention Election
+California 1st District Court of Appeal Division 5 Mark Simons' seat
+Retention Election
+Local Races
+San Francisco Assessor-Recorder
+Learn more about Ranked Choice Voting.
+-
+1
+2
+3
+4
+5
+Joaquín Torres
+Nonpartisan|Incumbent
+5 endorsements
+San Francisco Public Defender
+San Francisco Unified Board of Education
+3 seats up for election
+San Francisco Community College Board
+3 seats up for election
+San Francisco Community College Board
+Special Election
+Bay Area Rapid Transit (BART) Board of Directors District 8
+Ballot Measures (25)
+Choose how you plan to vote on each
+
+Ballot measures are a way for voters to directly decide issues. They are proposed laws that require voter approval to pass.
+
+Filter by topic:
+All
+Ballot Measures
+Bonds
+Business Regulation
+Campaign Finance
+Education
+Elections
+Governance
+Government Spending
+Healthcare
+Housing
+Taxes
+Transportation
+Zoning
+Statewide Ballot Measures
+Proposition 1
+Issue $11.25 billion in bonds to fund Multifamily Housing Program, CalVet Home Loan Program, and youth housing
+33 endorsements for and 3 against
+BondsHousing
+Yes
+No
+Proposition 2
+Increase the Budget Stabilization Account (BSA) cap from 10% of general fund revenue to 20% and excluding deposits into the BSA from the Gann Limit
+22 endorsements for and 8 against
+Government Spending
+Yes
+No
+Proposition 3
+Renew the additional income taxes enacted with the approval of Proposition 30 in 2012 that fund education and early childhood programs.
+28 endorsements for and 9 against
+EducationGovernment SpendingTaxes
+Yes
+No
+Proposition 4
+Allow the state and local governments to create programs that provide candidates with public funds under spending limits and eligibility rules
+23 endorsements for and 7 against
+Campaign FinanceElections
+Yes
+No
+Proposition 5
+Eliminate the successor election when a state officer is recalled, thereby leaving the office vacant until it is filled according to state law
+10 endorsements for and 6 against
+ElectionsGovernance
+Yes
+No
+Proposition 37
+Establish a second mortgage homebuyer program for qualified homebuyers on qualifying homes and issue $25 billion in bonds to fund the program
+21 endorsements for and 4 against
+Housing
+Yes
+No
+Proposition 38
+Issue $8.4 billion in general obligation bonds to fund immunology and immunotherapy research
+26 endorsements for and 4 against
+BondsHealthcare
+Yes
+No
+Proposition 39
+Require voters to present government-issued identification when casting ballots and require election officials to use government data to confirm voter citizenship and report verification rates
+22 endorsements for and 55 against
+Elections
+Yes
+No
+Proposition 40
+Levy a one-time 5% tax on the accumulated wealth of taxpayers and trusts with covered assets valued over $1 billion to fund state health care programs, food assistance programs, and public education
+26 endorsements for and 55 against
+HealthcareTaxes
+Yes
+No
+Proposition 41
+Require state laws or ballot initiatives levying a new special tax enacted after January 1, 2026 to require the government entities or departments receiving revenue from the new tax to eliminate their lowest-performing programs and reinvest those savings in higher-performing programs
+18 endorsements for and 8 against
+Government SpendingTaxes
+Yes
+No
+Proposition 42
+Prohibit the enactment of new taxes after January 1, 2026 on ownership or accumulation of retirement holdings, individually-owned assets, and other forms of personal savings
+33 endorsements for and 11 against
+Taxes
+Yes
+No
+Proposition 43
+Require two-thirds vote by electorate to enact, extend, or increase local special tax initiatives and prohibit local governments and ballot initiatives from enacting ad valorem property taxes except those authorized elsewhere in the state constitution
+14 endorsements for and 25 against
+Ballot MeasuresGovernance
+Yes
+No
+Proposition 44
+Prohibit healthcare clinics, specifically federally-qualified health centers and related organizations, from spending less than 90% of their annual revenue on mission-related purposes
+3 endorsements for and 21 against
+Business RegulationHealthcare
+Yes
+No
+Proposition 45
+Establish timelines for local and state agencies to review plans and solicit public comment for essential projects, such as housing, improvements to water supply, transportation, energy, and facilities for health and public safety
+26 endorsements for and 36 against
+GovernanceZoning
+Yes
+No
+Local Ballot Measures
+Proposition RTM
+Create a sales tax for a 14-year period to fund transportation programs in the region
+TaxesTransportation
+Yes
+No
+Proposition A
+Amend the San Francisco Charter to remove outdated provisions and make changes to the governance of local programs and departments
+Governance
+Yes
+No
+Proposition B
+Amend the San Francisco Charter to create a municipal finance corporation and a public bank
+Governance
+Yes
+No
+Proposition C
+Change the method of annual contributions to the city's Housing Trust Fund
+Governance
+Yes
+No
+Proposition D
+Make changes to the city's ballot measure referral and initiative process
+Ballot MeasuresGovernance
+Yes
+No
+Proposition E
+Require the Board of Supervisors to approve all city contracts that would generate more than $4.5 million or cost more than $25 million and amend the city administrator's roles and authority
+Governance
+Yes
+No
+Proposition F
+Amend the structure of the executive branch of the city government and the authorities and duties of the mayor
+Governance
+Yes
+No
+Proposition G
+Open the Upper Great Highway to public vehicles on weekdays, except on holidays
+Transportation
+Yes
+No
+Proposition H
+Implement a 15-year property tax to fund the San Francisco Municipal Transportation Agency
+TaxesTransportation
+Yes
+No
+Proposition J
+Remove the real estate transfer tax exemption for transfers that occur due to a foreclosure
+Taxes
+Yes
+No
+Proposition I
+Dedicate 50% of the revenue from the real estate transfer tax to housing and development purposes
+Taxes
+Yes
+No
+Save Your Choices For Reference Later
+print
+Print
+
+This sample ballot is for informational purposes only and is not an official ballot. It provides an overview of the races and measures that may appear on your ballot, but it may not include every contest or measure on your official ballot. Visit your local election office website to find your Voter Information Guide, which includes your sample ballot.
+
+Ballot information is researched and updated by Ballotpedia, a nonpartisan 501(c)(3) registered nonprofit organization, in partnership with Democracy Works.
+
+Report an Issue
+Election Day is in
+10
+DAYS
+15
+HOURS
+55
+MINUTES
+02
+SECONDS
+Find Where To Vote
+View Election Guide
+Remind Me to Vote
+We provide Americans with the guidance they need to vote in every election
+$5 delivers 430 election reminders that help Americans vote
+We sent election reminders to more than 7 million voters in 2024, help us reach more.
+Support Our Work
+First time voters are 50% more likely to vote if they use TurboVote
+Whether you are a nonprofit, school, business, or individual, if you’d like to encourage your audience to vote in every election, our tools make it easy!
+Partner with Us
+* TurboVote 2024 User Voting Metrics
+
+We Help Voters Participate In Every Election
+
+TurboVote is a product of Democracy Works, a nonpartisan non-profit dedicated to building a stronger democracy.
+
+About
+Feedback
+Help
+English
+Donate

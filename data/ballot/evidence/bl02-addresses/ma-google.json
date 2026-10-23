@@ -1,0 +1,48 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "24 Beacon Street",
+    "addressLine": [
+      "24 Beacon Street"
+    ],
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02133"
+  },
+  "state": [
+    {
+      "name": "Massachusetts",
+      "electionAdministrationBody": {
+        "name": "Secretary of the Commonwealth",
+        "electionInfoUrl": "https://www.sec.state.ma.us/divisions/elections/elections-and-voting.htm",
+        "electionRegistrationUrl": "https://www.sec.state.ma.us/OVR/",
+        "electionRegistrationConfirmationUrl": "https://www.sec.state.ma.us/VoterRegistrationSearch/MyVoterRegStatus.aspx",
+        "absenteeVotingInfoUrl": "https://www.sec.state.ma.us/MailInRequestWeb/MailInBallot.aspx",
+        "votingLocationFinderUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+        "ballotInfoUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/",
+        "electionRulesUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/vote-by-mail.htm",
+        "correspondenceAddress": {
+          "line1": "Elections Division, 1 Ashburton Pl., Rm. 1705",
+          "addressLine": [
+            "Elections Division, 1 Ashburton Pl., Rm. 1705"
+          ],
+          "city": "Boston",
+          "state": "",
+          "zip": "02108"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

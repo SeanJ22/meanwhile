@@ -1,0 +1,123 @@
+{
+  "step": "BL-02",
+  "checkedAt": "2026-10-23T08:54:31.463Z",
+  "stateFiles": 28,
+  "memberships": 4491,
+  "existingGenericBallotContract": "PASS",
+  "uniqueMembershipIds": "PASS",
+  "allMembershipCitationsMatchSourceReceipt": "PASS",
+  "states": [
+    {
+      "state": "AK",
+      "inputSha256": "982119707224bb551fc0b04214861377f055ded494d59d40da3db69ab4b14678"
+    },
+    {
+      "state": "AL",
+      "inputSha256": "8c3073948f0f821ee8e7af5244676b918fa8f886968f0ea6b32d04544566b3e6"
+    },
+    {
+      "state": "AR",
+      "inputSha256": "0cec5e70160923e71915d5443a77233aeab2552914e55f4634a652ce25949422"
+    },
+    {
+      "state": "CA",
+      "inputSha256": "b5150fd979c645f7d2dd5db702ad2886ec4d07cfebad99fb87c8e74edd63b544"
+    },
+    {
+      "state": "DC",
+      "inputSha256": "0e8f13a122a95e546c29ef42a4a571ab347727f9fa0925e697b2f49fd45958bd"
+    },
+    {
+      "state": "DE",
+      "inputSha256": "529c81ed6a4dde54681270f3e038acc1b5f24b2a0afa7b79af2d68bddc45f590"
+    },
+    {
+      "state": "FL",
+      "inputSha256": "f6697a6abce02f9658812363bbe2b81a07da638a23f108a23d818254e9074d82"
+    },
+    {
+      "state": "HI",
+      "inputSha256": "6f725ff5c00b582a2f3c5860da27e05cc61a5fd7e60725b58b1d402a99bf92c0"
+    },
+    {
+      "state": "KS",
+      "inputSha256": "4afb89aff36e19f349839e942071f4102b0be83956adba2ba9ec47eec37abb2a"
+    },
+    {
+      "state": "MA",
+      "inputSha256": "b1e8669e7dc57f2fb3459ca7a72ca22bd0bea11fd2ebacd4567077bda99d7f4f"
+    },
+    {
+      "state": "MD",
+      "inputSha256": "695b8e413a31e918b3b9684b9c67d9c531b7baffd653ba16f3527f22484aedf7"
+    },
+    {
+      "state": "ME",
+      "inputSha256": "8b80ed8a2c5927219265deff5d23b378fa496ce49fc88e7af752fe1ddb5fb223"
+    },
+    {
+      "state": "MI",
+      "inputSha256": "e7e54d3bba1e6393ee0caf705550f689b377602531caca5cbebbe760ec54d289"
+    },
+    {
+      "state": "MN",
+      "inputSha256": "847c5106b201edcedb3cb848b1501875bf3547f793ec3053a9075d3e53949d27"
+    },
+    {
+      "state": "MP",
+      "inputSha256": "d6fad1e86018344a8847d2c43a7d7e074545387a9f516f34926664757028887f"
+    },
+    {
+      "state": "MT",
+      "inputSha256": "bfd55a5ea4460e4b19c60d99066011b1af74998e0b1014167508ec1df730f5c7"
+    },
+    {
+      "state": "NC",
+      "inputSha256": "2c276b8459514bbeb55c34b1acbc0530d1ef689f5678e459cebbe3981397fd4e"
+    },
+    {
+      "state": "NE",
+      "inputSha256": "9ead3f6d8b5916d4d7032c888ccdfe9e423fd55d23e43cb95f2541a23b5cb70f"
+    },
+    {
+      "state": "NH",
+      "inputSha256": "808360a8bd703f0d5520dae06eb6647726cfc08efdab74d690271494a52a8031"
+    },
+    {
+      "state": "NM",
+      "inputSha256": "634f88fe119ac77ee0892f2f2d3a680d25aa3629d5798aaeb8dd4bc5f8aa0fed"
+    },
+    {
+      "state": "NV",
+      "inputSha256": "79b155da2c183070f7c9e1ce8bb5dad3798440700d20bfb7f9d4cb718a5b3245"
+    },
+    {
+      "state": "NY",
+      "inputSha256": "53e9a6c93e46e9aa29448d77a6d7c6d8eda03a997efea630d6481b9f623da3ab"
+    },
+    {
+      "state": "OH",
+      "inputSha256": "76a66a6bf9fd6c6800ef961c154e474853a0325db88fba80f5c9dcf3d0ff61f7"
+    },
+    {
+      "state": "OR",
+      "inputSha256": "b49a3c17433cd092c0ba46fb10c3d850437c4915619a7cd4227b4991141b9979"
+    },
+    {
+      "state": "TX",
+      "inputSha256": "9b22938d70f0463f4db85460d3b452393e08ccfd7a5e24793a1dd56728442b65"
+    },
+    {
+      "state": "UT",
+      "inputSha256": "bac54691ea4651ea0a7eb8438ab56786cc2213406d0e857bcdabe4242c7089dd"
+    },
+    {
+      "state": "VI",
+      "inputSha256": "863c128e7e5db03e729dff16f2ba348b2c5f828ab50d7b6dd5967bb906157bb8"
+    },
+    {
+      "state": "WA",
+      "inputSha256": "3d7f87f358a91e50f18f0fc357ee9dcf31b27f5aaeed491a949543841f437be0"
+    }
+  ]
+}

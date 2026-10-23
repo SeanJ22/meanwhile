@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer?f=pjson",
+  "finalUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer?f=pjson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:20:04.731496+00:00",
+  "rawHash": "662a1c8f49ade74b6872f888f131f36edc7000cd96b3c99040f69079bea581fc"
+}

@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11/query?where=DISTRICT%3D%272%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11/query?where=DISTRICT%3D%272%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "63abbf33a2707ba3ec40cfd63ddc50947301e7318c582066107d6b8fe7d715ef",
+  "retrievedAt": "2026-10-23T08:17:16.957534+00:00"
+}

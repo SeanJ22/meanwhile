@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?objectIds=25782%2C25783%2C25785%2C28794%2C28810%2C28908%2C28911&outFields=OBJECTID%2CGEOID%2CNAME%2CZCTA5&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?objectIds=25782%2C25783%2C25785%2C28794%2C28810%2C28908%2C28911&outFields=OBJECTID%2CGEOID%2CNAME%2CZCTA5&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "e0b5541a5ed6b402585a539dfcc8735086631e7e6b8b2405f532936494002a6f",
+  "savedBytes": 96942,
+  "retrievedAt": "2026-10-23T08:32:13.960823+00:00",
+  "publisher": "U.S. Census Bureau"
+}

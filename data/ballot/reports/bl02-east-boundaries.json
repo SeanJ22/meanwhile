@@ -1,0 +1,312 @@
+{
+  "checkedAt": "2026-10-23T08:23:01.238613+00:00",
+  "files": [
+    {
+      "path": "data/states/dc/geo/bl02-held-districts-11.geojson",
+      "features": 8,
+      "sha256": "3d33b408eb318dceeb84f3edd29c1d3af0992d559d27b8c47783e38bf7c27e5b"
+    },
+    {
+      "path": "data/states/de/geo/bl02-held-districts-10.geojson",
+      "features": 11,
+      "sha256": "f3d2957f1e72abb9e728baa93e42cf3559a7407ca9595cf68b5d4a06d87cb4b7"
+    },
+    {
+      "path": "data/states/fl/geo/bl02-held-districts-12.geojson",
+      "features": 6,
+      "sha256": "ec4fd13784aefc24ef544470a8aa71c0d4422f0f141ebea5f50be473c33461a7"
+    },
+    {
+      "path": "data/states/nc/geo/bl02-held-districts-37.geojson",
+      "features": 1,
+      "sha256": "9a7eae0ddb6a9097e6118ef4318b060fe3bce4e0d85304bbc5e8bce110fc9d0d"
+    },
+    {
+      "path": "data/states/md/geo/bl02-held-districts-24.geojson",
+      "features": 1,
+      "sha256": "b8204d39cff7218017ed2422a32f1bac2bed895a17f063e08fb69aeddca523bd"
+    }
+  ],
+  "splitDistricts": [
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:8",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.836086706120355,
+        "lng": -77.01357147932102
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:2",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.89630585092519,
+        "lng": -77.04283046982447
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:4",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.96532283322328,
+        "lng": -77.03495004828608
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:5",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.92721521993211,
+        "lng": -76.98457519288456
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:6",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.879784664216075,
+        "lng": -77.02048525413858
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:3",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.93712282818905,
+        "lng": -77.08213079838721
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:1",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.92600911565327,
+        "lng": -77.02902889155942
+      }
+    },
+    {
+      "state": "DC",
+      "districtOcdId": "ocd-division/country:us/district:dc/ward:7",
+      "splitsCounty": "ocd-division/country:us/district:dc/county:district_of_columbia",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.884734467810105,
+        "lng": -76.95166637475424
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:5",
+      "splitsCounty": "ocd-division/country:us/state:de/county:new_castle",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.62250847847569,
+        "lng": -75.76538869345734
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:1",
+      "splitsCounty": "ocd-division/country:us/state:de/county:new_castle",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.69797449710127,
+        "lng": -75.64753420643078
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:6",
+      "splitsCounty": "ocd-division/country:us/state:de/county:new_castle",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.431789945986395,
+        "lng": -75.72665657220256
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:4",
+      "splitsCounty": "ocd-division/country:us/state:de/county:new_castle",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.72976300976373,
+        "lng": -75.51776449183575
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:3",
+      "splitsCounty": "ocd-division/country:us/state:de/county:new_castle",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.75135300697164,
+        "lng": -75.71796751656862
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:2",
+      "splitsCounty": "ocd-division/country:us/state:de/county:new_castle",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.788536015402386,
+        "lng": -75.58785368584567
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:2",
+      "splitsCounty": "ocd-division/country:us/state:de/county:kent",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.16923389430171,
+        "lng": -75.62949428755556
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+      "splitsCounty": "ocd-division/country:us/state:de/county:kent",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.96797161640599,
+        "lng": -75.41527306268186
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:6",
+      "splitsCounty": "ocd-division/country:us/state:de/county:kent",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.064337371904855,
+        "lng": -75.66509231458392
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+      "splitsCounty": "ocd-division/country:us/state:de/county:sussex",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.54338420125816,
+        "lng": -75.18074211648414
+      }
+    },
+    {
+      "state": "DE",
+      "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:5",
+      "splitsCounty": "ocd-division/country:us/state:de/county:sussex",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 38.64324779638659,
+        "lng": -75.30477578458107
+      }
+    },
+    {
+      "state": "FL",
+      "districtOcdId": "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+      "splitsCounty": "ocd-division/country:us/state:fl/county:miami-dade",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 25.797387694278328,
+        "lng": -80.10096337466042
+      }
+    },
+    {
+      "state": "FL",
+      "districtOcdId": "ocd-division/country:us/state:fl/county:miami-dade/school_board_district:1",
+      "splitsCounty": "ocd-division/country:us/state:fl/county:miami-dade",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 25.927600446473008,
+        "lng": -80.22356384509425
+      }
+    },
+    {
+      "state": "FL",
+      "districtOcdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:1",
+      "splitsCounty": "ocd-division/country:us/state:fl/county:hillsborough",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 27.9278951635906,
+        "lng": -82.49253241333803
+      }
+    },
+    {
+      "state": "FL",
+      "districtOcdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:3",
+      "splitsCounty": "ocd-division/country:us/state:fl/county:hillsborough",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 27.907426165101498,
+        "lng": -82.3458218316654
+      }
+    },
+    {
+      "state": "FL",
+      "districtOcdId": "ocd-division/country:us/state:fl/county:hillsborough/school_board_district:2",
+      "splitsCounty": "ocd-division/country:us/state:fl/county:hillsborough",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 27.8342811486071,
+        "lng": -82.43415226905549
+      }
+    },
+    {
+      "state": "NC",
+      "districtOcdId": "ocd-division/country:us/state:nc/county:mecklenburg/council_district:4",
+      "splitsCounty": "ocd-division/country:us/state:nc/county:mecklenburg",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 35.2009073762404,
+        "lng": -80.75468230881071
+      }
+    },
+    {
+      "state": "MD",
+      "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+      "splitsCounty": "ocd-division/country:us/state:md/county:montgomery",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 39.22528434399386,
+        "lng": -77.12981199305264
+      }
+    },
+    {
+      "state": "FL",
+      "districtOcdId": "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+      "splitsCounty": "ocd-division/country:us/state:fl/county:miami_dade",
+      "geometryProvidesExactAddressMatch": true,
+      "point": {
+        "lat": 25.92989156196475,
+        "lng": -80.26086990866524
+      }
+    }
+  ],
+  "sourceRouteNotes": [
+    "Miami-Dade BusinessSiteSelection service has obsolete incumbent labels and older shapes; it is retained as failed-source evidence and never used. Current EnerGov MD_LandMgtViewer commission/school layers use current district identities and were selected instead.",
+    "Hillsborough official board directory links its ArcGIS lookup; lookup metadata links the saved webmap and current FMEO county commissioner layer. County GIS's2022 school electoral polygons match the held official2026 qualifying map's single-member district2.",
+    "Mecklenburg's own current GIS endpoint returns403. City of Charlotte government-owned Commission layer, updatedMarch10,2025, independently serves those county districts; saved ArcGIS item metadata identifies the CharlotteNC publisher. Its District4 identifies MarkJerrell, matching the official current county directory and2023 county map already held.",
+    "The source city/county boundaries that split whole municipalities remain exact polygons; no false whole-city memberships are introduced."
+  ],
+  "selectorVerification": {
+    "exactSourcePolygonRepresentativePointsPassed": 27,
+    "heldRacesSelected": 27
+  }
+}

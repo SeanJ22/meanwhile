@@ -1,0 +1,396 @@
+{
+  "checkedAt": "2026-10-23T08:39:10.931634+00:00",
+  "geometryPath": "data/states/nh/geo/bl02-held-districts-33.geojson",
+  "geometrySha256": "4fdf93ffe66cadb5a782df0be4c0347431a20cb1767b8a3a2cc70fa8a47f0dd5",
+  "wardFeatures": 25,
+  "schoolZoneFeatures": 3,
+  "schoolDistrictFeatures": 1,
+  "addedMembership": {
+    "id": "bl02-nh:concord-school-canonical-alias",
+    "memberOcdId": "ocd-division/country:us/state:nh/school_district:concord_school_district",
+    "districtOcdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district",
+    "provenance": {
+      "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=GEOID%3D%273302460%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+      "sourceOrg": "U.S. Census Bureau",
+      "collectedAt": "2026-10-23T08:35:03.782663+00:00",
+      "verifiedAt": "2026-10-23T08:39:10.931634+00:00",
+      "quote": "Concord School District; GEOID3302460"
+    }
+  },
+  "sourceStatuteSha256": "418308547028763dc4c321fcb7251ea6e9498c633fcd6ec52f35a4383d1e5e26",
+  "schoolZones": [
+    {
+      "districtOcdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:a",
+      "wards": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "schoolBoundaryIntersectionApplied": true
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:b",
+      "wards": [
+        5,
+        6,
+        7
+      ],
+      "schoolBoundaryIntersectionApplied": true
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:c",
+      "wards": [
+        8,
+        9,
+        10
+      ],
+      "schoolBoundaryIntersectionApplied": true
+    }
+  ],
+  "points": [
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:1",
+      "lat": 43.02504300016672,
+      "lng": -71.46548658530052
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:2",
+      "lat": 43.00696900018787,
+      "lng": -71.43467985540865
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:3",
+      "lat": 42.99137500004553,
+      "lng": -71.46355319709542
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:4",
+      "lat": 42.99446799998793,
+      "lng": -71.43739996975141
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:5",
+      "lat": 42.98488899978737,
+      "lng": -71.43884986359737
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:6",
+      "lat": 42.973693499974424,
+      "lng": -71.4030582848388
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:7",
+      "lat": 42.97648850005315,
+      "lng": -71.43984306147078
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:8",
+      "lat": 42.93205100027569,
+      "lng": -71.44820442210136
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:9",
+      "lat": 42.962161500092236,
+      "lng": -71.4573255405354
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:10",
+      "lat": 42.98150349977922,
+      "lng": -71.48131963448635
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:11",
+      "lat": 42.99454499987639,
+      "lng": -71.4822637167069
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:manchester/ward:12",
+      "lat": 43.02453300024338,
+      "lng": -71.49346524970628
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:1",
+      "lat": 43.26295200011384,
+      "lng": -71.63747627229003
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:2",
+      "lat": 43.24307299969175,
+      "lng": -71.61241588383254
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:3",
+      "lat": 43.24597200020648,
+      "lng": -71.56603646689969
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:4",
+      "lat": 43.21668300025981,
+      "lng": -71.53543001357383
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:5",
+      "lat": 43.206168999944296,
+      "lng": -71.59015914853819
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:6",
+      "lat": 43.192554999834364,
+      "lng": -71.55137107176375
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:7",
+      "lat": 43.17436100017875,
+      "lng": -71.55458114781315
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:8",
+      "lat": 43.2051495002726,
+      "lng": -71.50401020587887
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:9",
+      "lat": 43.22391149987586,
+      "lng": -71.49866103113712
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:concord/ward:10",
+      "lat": 43.264329500118755,
+      "lng": -71.52193209595359
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:lebanon/ward:1",
+      "lat": 43.64305049987588,
+      "lng": -72.29932934113478
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:lebanon/ward:2",
+      "lat": 43.63618449984595,
+      "lng": -72.26488789853016
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/place:lebanon/ward:3",
+      "lat": 43.64856000011818,
+      "lng": -72.20787104582017
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district",
+      "lat": 43.230658000229155,
+      "lng": -71.55984560660478
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:a",
+      "lat": 43.239807499707084,
+      "lng": -71.63360301247418
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:b",
+      "lat": 43.20383199988477,
+      "lng": -71.57995504113697
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:c",
+      "lat": 43.233961499749114,
+      "lng": -71.50884179543841
+    }
+  ],
+  "schoolAreaOutsideCityWardUnionFraction": 0,
+  "scopeNotes": [
+    "All25 HB1300 ward variants retain their original contest IDs, questions and exact wards. No ward measure is widened citywide.",
+    "Concord's schooldistrict contains part of the city; zone polygons intersect the schooldistrict rather than include all ward1/2 land.",
+    "All29 earlier static-index-unreachable NH contests now have exact point geometry or a canonical schooldistrict membership."
+  ],
+  "verification": {
+    "normalContainsAndSelectorHeldContests": 29,
+    "canonicalSchoolAliasPassed": true,
+    "geometryRepresentativePoints": 29,
+    "realZipCentroids": [
+      {
+        "zip": "03101",
+        "point": {
+          "zip": "03101",
+          "lat": 42.98903,
+          "lng": -71.46611,
+          "postal": {
+            "type": "standard",
+            "zcta": "03101",
+            "place": "Manchester",
+            "state": "NH",
+            "county": "Hillsborough County",
+            "countyFips": "33011",
+            "placeGeoid": "3345140"
+          }
+        },
+        "divisions": [
+          "ocd-division/country:us/state:nh/place:manchester/ward:3"
+        ],
+        "contests": [
+          {
+            "id": "nh-2026-manchester-ward-3-hb1300-property-tax-growth",
+            "title": "Manchester School District Property Tax Growth Limit"
+          }
+        ]
+      },
+      {
+        "zip": "03102",
+        "point": {
+          "zip": "03102",
+          "lat": 43.01191,
+          "lng": -71.49106,
+          "postal": {
+            "type": "standard",
+            "zcta": "03102",
+            "place": "Manchester",
+            "state": "NH",
+            "county": "Hillsborough County",
+            "countyFips": "33011",
+            "placeGeoid": "3345140"
+          }
+        },
+        "divisions": [
+          "ocd-division/country:us/state:nh/place:manchester/ward:12"
+        ],
+        "contests": [
+          {
+            "id": "nh-2026-manchester-ward-12-hb1300-property-tax-growth",
+            "title": "Manchester School District Property Tax Growth Limit"
+          }
+        ]
+      },
+      {
+        "zip": "03103",
+        "point": {
+          "zip": "03103",
+          "lat": 42.95612,
+          "lng": -71.44239,
+          "postal": {
+            "type": "standard",
+            "zcta": "03103",
+            "place": "Manchester",
+            "state": "NH",
+            "county": "Hillsborough County",
+            "countyFips": "33011",
+            "placeGeoid": "3345140"
+          }
+        },
+        "divisions": [
+          "ocd-division/country:us/state:nh/place:manchester/ward:9"
+        ],
+        "contests": [
+          {
+            "id": "nh-2026-manchester-ward-9-hb1300-property-tax-growth",
+            "title": "Manchester School District Property Tax Growth Limit"
+          }
+        ]
+      },
+      {
+        "zip": "03301",
+        "point": {
+          "zip": "03301",
+          "lat": 43.2386,
+          "lng": -71.55626,
+          "postal": {
+            "type": "standard",
+            "zcta": "03301",
+            "place": "Concord",
+            "state": "NH",
+            "county": "Merrimack County",
+            "countyFips": "33013",
+            "placeGeoid": "3314200"
+          }
+        },
+        "divisions": [
+          "ocd-division/country:us/state:nh/place:concord/ward:3",
+          "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district",
+          "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district/school_board_district:a"
+        ],
+        "contests": [
+          {
+            "id": "nh-2026-general:concord-school-district-board-of-education-voting-zone-a",
+            "title": "Concord School District Board of Education, Voting Zone A"
+          },
+          {
+            "id": "nh-2026-concord-ward-3-hb1300-property-tax-growth",
+            "title": "Concord School District Property Tax Growth Limit"
+          },
+          {
+            "id": "nh-2026-concord-school-dewey-property-sale",
+            "title": "Concord School District Sale of Former Dewey School Property"
+          }
+        ]
+      },
+      {
+        "zip": "03303",
+        "point": {
+          "zip": "03303",
+          "lat": 43.31172,
+          "lng": -71.66538,
+          "postal": {
+            "type": "standard",
+            "zcta": "03303",
+            "place": "Concord",
+            "state": "NH",
+            "county": "Merrimack County",
+            "countyFips": "33013",
+            "placeGeoid": null
+          }
+        },
+        "divisions": [],
+        "contests": []
+      },
+      {
+        "zip": "03766",
+        "point": {
+          "zip": "03766",
+          "lat": 43.63257,
+          "lng": -72.23482,
+          "postal": {
+            "type": "standard",
+            "zcta": "03766",
+            "place": "Lebanon",
+            "state": "NH",
+            "county": "Grafton County",
+            "countyFips": "33009",
+            "placeGeoid": "3341300"
+          }
+        },
+        "divisions": [
+          "ocd-division/country:us/state:nh/place:lebanon/ward:3"
+        ],
+        "contests": [
+          {
+            "id": "nh-2026-lebanon-ward-3-hb1300-property-tax-growth",
+            "title": "Lebanon School District Property Tax Growth Limit"
+          }
+        ]
+      },
+      {
+        "zip": "03784",
+        "point": {
+          "zip": "03784",
+          "lat": 43.63833,
+          "lng": -72.30649,
+          "postal": {
+            "type": "standard",
+            "zcta": "03784",
+            "place": "West Lebanon",
+            "state": "NH",
+            "county": "Grafton County",
+            "countyFips": "33009",
+            "placeGeoid": "3341300"
+          }
+        },
+        "divisions": [
+          "ocd-division/country:us/state:nh/place:lebanon/ward:1"
+        ],
+        "contests": [
+          {
+            "id": "nh-2026-lebanon-ward-1-hb1300-property-tax-growth",
+            "title": "Lebanon School District Property Tax Growth Limit"
+          }
+        ]
+      }
+    ]
+  }
+}

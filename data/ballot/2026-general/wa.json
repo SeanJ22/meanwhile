@@ -7970,13 +7970,129 @@
       "absences": [],
       "coverageNotes": [
         "Washington’s official current-election page lists U.S. Representative, state legislative offices, Supreme Court, Court of Appeals and local offices on the November 3 ballot. No U.S. Senate or statewide executive contest is listed for this election. Verified King County and Seattle local offices are included. We're working on getting the remaining local contests and measures."
+      ],
+      "districtMemberships": [
+        {
+          "id": "bl02-wa-boulevard_park-to-county_king-council-8",
+          "memberOcdId": "ocd-division/country:us/state:wa/place:boulevard_park",
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:8",
+          "provenance": {
+            "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "King County GIS",
+            "collectedAt": "2026-10-23T08:11:28.707175+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Boulevard Park CDP, GEOID 5307397: complete Census2025 place polygon is covered by official county:king council district 8 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:11:28.748012+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Boulevard Park CDP; GEOID5307397"
+          }
+        },
+        {
+          "id": "bl02-wa-white_center-to-county_king-council-8",
+          "memberOcdId": "ocd-division/country:us/state:wa/place:white_center",
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:8",
+          "provenance": {
+            "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "King County GIS",
+            "collectedAt": "2026-10-23T08:11:28.707175+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "White Center CDP, GEOID 5378225: complete Census2025 place polygon is covered by official county:king council district 8 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:11:28.748012+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "White Center CDP; GEOID5378225"
+          }
+        },
+        {
+          "id": "bl02-wa-yarrow_point-to-county_king-council-6",
+          "memberOcdId": "ocd-division/country:us/state:wa/place:yarrow_point",
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "King County GIS",
+            "collectedAt": "2026-10-23T08:11:28.707175+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Yarrow Point town, GEOID 5380150: complete Census2025 place polygon is covered by official county:king council district 6 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:11:28.748012+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Yarrow Point town; GEOID5380150"
+          }
+        },
+        {
+          "id": "bl02-wa-beaux_arts_village-to-county_king-council-6",
+          "memberOcdId": "ocd-division/country:us/state:wa/place:beaux_arts_village",
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "King County GIS",
+            "collectedAt": "2026-10-23T08:11:28.707175+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Beaux Arts Village town, GEOID 5304895: complete Census2025 place polygon is covered by official county:king council district 6 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:11:28.748012+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Beaux Arts Village town; GEOID5304895"
+          }
+        },
+        {
+          "id": "bl02-wa-clyde_hill-to-county_king-council-6",
+          "memberOcdId": "ocd-division/country:us/state:wa/place:clyde_hill",
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "King County GIS",
+            "collectedAt": "2026-10-23T08:11:28.707175+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Clyde Hill city, GEOID 5313365: complete Census2025 place polygon is covered by official county:king council district 6 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:11:28.748012+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Clyde Hill city; GEOID5313365"
+          }
+        },
+        {
+          "id": "bl02-wa-hunts_point-to-county_king-council-6",
+          "memberOcdId": "ocd-division/country:us/state:wa/place:hunts_point",
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "King County GIS",
+            "collectedAt": "2026-10-23T08:11:28.707175+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Hunts Point town, GEOID 5332755: complete Census2025 place polygon is covered by official county:king council district 6 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:11:28.748012+00:00",
+            "verifiedAt": "2026-10-23T08:15:04.449141+00:00",
+            "quote": "Hunts Point town; GEOID5332755"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:08:53.016007Z",
-    "reviewedBy": "ba01-pacific-source-replay",
+    "reviewedAt": "2026-10-23T08:19:18.831406+00:00",
+    "reviewedBy": "bl02-official-pacific-council-memberships",
     "sources": [
       {
         "requestedUrl": "https://voter.votewa.gov/CandidateList.aspx?e=899",
@@ -8077,6 +8193,50 @@
         "httpStatus": 200,
         "rawHash": "90dff01a61b379f1afd4382ecb9922e6a9943414c7a0caac54cc6b819a4924e6",
         "reviewedEvidence": "Official full native Export to CSV acquired by its public form post, with modern browser User-Agent and Accept headers; 887 rows across599 offices. All137 congressional/legislative/Supreme Court contests and255 name+party rows match the held file exactly. Mailing/contact fields are excluded from projections."
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "e61617133e9634e0e1afba3b98e78b53274a167dbad55d678465a878f8b63b6f",
+        "retrievedAt": "2026-10-23T08:11:28.707175+00:00",
+        "publisher": "King County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official council boundary response. BL02 uses strict full-polygon containment of Census2025 places; no centroid, area-percentage threshold, geometry buffer, or whole-county assignment. Remaining split places use the exact saved boundary."
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1/query?where=C_DISTRICT%3D5&outFields=C_DISTRICT%2CDISPLAY_NAME&outSR=4326&returnGeometry=true&f=geojson",
+        "finalUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1/query?where=C_DISTRICT%3D5&outFields=C_DISTRICT%2CDISPLAY_NAME&outSR=4326&returnGeometry=true&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "08c3ba561712abe0c813321c95fdbecff7ea41d36247be0d3979246098f17c6e",
+        "retrievedAt": "2026-10-23T08:12:42.271403+00:00",
+        "publisher": "City of Seattle GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official council boundary response. BL02 uses strict full-polygon containment of Census2025 places; no centroid, area-percentage threshold, geometry buffer, or whole-county assignment. Remaining split places use the exact saved boundary."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+        "finalUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_53_place.zip",
+        "httpStatus": 200,
+        "rawHash": "b99039759e33cf931175302da80de9bd8d284c384721d52efde34dfbef2b64f5",
+        "retrievedAt": "2026-10-23T08:11:28.748012+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official2025 TIGER/Line state place shapefile supplies exact names/GEOIDs and complete place polygons for strict whole-place containment. Water/coastline differences are not rounded away."
+      },
+      {
+        "requestedUrl": "https://catalog.data.gov/dataset/seattle-city-council-districts-including-water",
+        "finalUrl": "https://catalog.data.gov/dataset/seattle-city-council-districts-including-water",
+        "httpStatus": 200,
+        "rawHash": "340dde5ba08efbd1bcc9fd359f5e5f21c5a890a0c3f14f9fb5db0191b87f5910",
+        "retrievedAt": "2026-10-23T08:12:42.724363+00:00",
+        "publisher": "City of Seattle via Data.gov",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Government catalog links the Seattle ArcGIS service and states it reflects the November2022 adopted districts. The legacy KingCounty service described2013 boundaries and was rejected."
       }
     ]
   }

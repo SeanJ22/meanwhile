@@ -1,0 +1,1460 @@
+{
+  "step": "BL-02",
+  "state": "MA",
+  "checkedAt": "2026-10-23T07:59:39.875348+00:00",
+  "inputSha256": "3e894262fd5adb2562b488ae460f012e98494afc7541da165b227f94d776826d",
+  "outputSha256": "b1e8669e7dc57f2fb3459ca7a72ca22bd0bea11fd2ebacd4567077bda99d7f4f",
+  "membershipsBefore": 736,
+  "membershipsAfter": 736,
+  "notInZipIndexBefore": 236,
+  "wholeMunicipalityAliasesCorrected": 208,
+  "notInZipIndexAfter": 28,
+  "wholeMunicipalitiesWithReachableMembership": 348,
+  "officialWardMembershipsRetained": 28,
+  "meaning": "The reported 236 unmatched memberships comprised 208 incorrect municipal aliases and 28 legitimate ward IDs absent from the ZIP index. Canonical local IDs replace the 208 municipal member values. Stable membership IDs stay unchanged. Metadata-only publication uses the existing explicit data update API; the ordinary record-change detector does not include memberships. All 348 whole municipalities reach their official Council district. Ward memberships are preserved without widening split cities.",
+  "sources": [
+    {
+      "path": "data/ballot/sources/ba01-northeast/ma-2022-councillor-districts.rendered.txt",
+      "sha256": "6eeb2cd43d4547267b3d65f4cff7c9609a58debd571e3c03a6fe35ca458f6271",
+      "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
+      "capturedAt": "2026-10-21T00:05:16.976Z"
+    },
+    {
+      "path": "data/ballot/sources/ba01-northeast/ma-2025-census-cousub-gazetteer.txt",
+      "sha256": "e17827e458d146d0487ba0a0de21c64f434b375636301fd6104e2a01606324ae",
+      "sourceUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",
+      "capturedAt": "2026-10-21T00:05:34.859789+00:00"
+    },
+    {
+      "path": "data/ballot/sources/ba01-northeast/ma-2020-census-county-fips.txt",
+      "sha256": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+      "sourceUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+      "capturedAt": "2026-10-21T00:05:34.846723+00:00"
+    }
+  ],
+  "zipIndexShards": [
+    {
+      "path": "data/derived/zip-divisions/01.json",
+      "sha256": "0fed9405105765135864c26f44b6c31418d3d040eb7f0fbb7ea868c114ee80bd"
+    },
+    {
+      "path": "data/derived/zip-divisions/02.json",
+      "sha256": "4a48abae63b2201f472716db0a52e4644f2e83344e6f3fed4eb44530e30543bd"
+    }
+  ],
+  "changes": [
+    {
+      "id": "ma-2026-membership:place:barnstable->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:barnstable",
+      "to": "ocd-division/country:us/state:ma/place:barnstable_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:eastham->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:eastham",
+      "to": "ocd-division/country:us/state:ma/county:barnstable/place:eastham_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:harwich->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:harwich",
+      "to": "ocd-division/country:us/state:ma/county:barnstable/place:harwich_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:mashpee->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:mashpee",
+      "to": "ocd-division/country:us/state:ma/county:barnstable/place:mashpee_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:truro->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:truro",
+      "to": "ocd-division/country:us/state:ma/county:barnstable/place:truro_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:wellfleet->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:wellfleet",
+      "to": "ocd-division/country:us/state:ma/county:barnstable/place:wellfleet_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:yarmouth->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:yarmouth",
+      "to": "ocd-division/country:us/state:ma/county:barnstable/place:yarmouth_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:alford->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:alford",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:alford_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:becket->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:becket",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:becket_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:clarksburg->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:clarksburg",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:clarksburg_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:dalton->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:dalton",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:dalton_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:egremont->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:egremont",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:egremont_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:florida->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:florida",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:florida_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:hancock->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:hancock",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:hancock_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:hinsdale->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:hinsdale",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:hinsdale_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:lanesborough->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:lanesborough",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:lanesborough_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:monterey->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:monterey",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:monterey_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:mount_washington->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:mount_washington",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:mount_washington_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:new_ashford->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:new_ashford",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:new_ashford_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:new_marlborough->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:new_marlborough",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:new_marlborough_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:otis->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:otis",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:otis_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:peru->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:peru",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:peru_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:richmond->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:richmond",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:richmond_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:sandisfield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:sandisfield",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:sandisfield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:savoy->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:savoy",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:savoy_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:sheffield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:sheffield",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:sheffield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:stockbridge->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:stockbridge",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:stockbridge_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:tyringham->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:tyringham",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:tyringham_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:washington->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:washington",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:washington_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:west_stockbridge->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:west_stockbridge",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:west_stockbridge_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:windsor->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:windsor",
+      "to": "ocd-division/country:us/state:ma/county:berkshire/place:windsor_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:acushnet->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:acushnet",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:acushnet_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:berkley->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:berkley",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:berkley_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:dartmouth->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:dartmouth",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:dartmouth_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:dighton->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:dighton",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:dighton_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:easton->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:easton",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:easton_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:fairhaven->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:fairhaven",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:fairhaven_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:freetown->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:freetown",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:freetown_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:mansfield->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:mansfield",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:mansfield_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:north_attleborough->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:north_attleborough",
+      "to": "ocd-division/country:us/state:ma/place:north_attleborough_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:norton->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:norton",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:norton_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:raynham->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:raynham",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:raynham_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:rehoboth->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:rehoboth",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:rehoboth_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:seekonk->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:seekonk",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:seekonk_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:swansea->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:swansea",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:swansea_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:westport->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:westport",
+      "to": "ocd-division/country:us/state:ma/county:bristol/place:westport_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:aquinnah->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:aquinnah",
+      "to": "ocd-division/country:us/state:ma/county:dukes/place:aquinnah_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:chilmark->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:chilmark",
+      "to": "ocd-division/country:us/state:ma/county:dukes/place:chilmark_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:gosnold->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:gosnold",
+      "to": "ocd-division/country:us/state:ma/county:dukes/place:gosnold_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:tisbury->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:tisbury",
+      "to": "ocd-division/country:us/state:ma/county:dukes/place:tisbury_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:west_tisbury->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:west_tisbury",
+      "to": "ocd-division/country:us/state:ma/county:dukes/place:west_tisbury_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:amesbury->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:amesbury",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:amesbury_town_city",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:county:essex/place:amesbury_city->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/county:essex/place:amesbury_city",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:amesbury_town_city",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:georgetown->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:georgetown",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:georgetown_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:groveland->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:groveland",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:groveland_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:hamilton->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:hamilton",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:hamilton_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:manchester-by-the-sea->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:manchester-by-the-sea",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:manchester_by_the_sea_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:county:essex/place:manchester-by-the-sea_town->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/county:essex/place:manchester-by-the-sea_town",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:manchester_by_the_sea_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:merrimac->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:merrimac",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:merrimac_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:methuen->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:methuen",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:methuen_town_city",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:county:essex/place:methuen_city->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/county:essex/place:methuen_city",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:methuen_town_city",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:middleton->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:middleton",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:middleton_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:newbury->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:newbury",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:newbury_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:north_andover->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:north_andover",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:north_andover_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:wenham->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:wenham",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:wenham_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:west_newbury->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:west_newbury",
+      "to": "ocd-division/country:us/state:ma/county:essex/place:west_newbury_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:ashfield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:ashfield",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:ashfield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:bernardston->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:bernardston",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:bernardston_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:buckland->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:buckland",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:buckland_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:charlemont->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:charlemont",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:charlemont_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:colrain->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:colrain",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:colrain_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:conway->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:conway",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:conway_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:erving->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:erving",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:erving_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:gill->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:gill",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:gill_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:hawley->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:hawley",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:hawley_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:heath->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:heath",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:heath_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:leverett->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:leverett",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:leverett_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:leyden->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:leyden",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:leyden_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:monroe->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:monroe",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:monroe_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:montague->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:montague",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:montague_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:new_salem->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:new_salem",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:new_salem_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:rowe->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:rowe",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:rowe_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:shelburne->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:shelburne",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:shelburne_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:shutesbury->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:shutesbury",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:shutesbury_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:sunderland->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:sunderland",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:sunderland_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:warwick->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:warwick",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:warwick_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:wendell->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:wendell",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:wendell_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:whately->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:whately",
+      "to": "ocd-division/country:us/state:ma/county:franklin/place:whately_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:agawam->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:agawam",
+      "to": "ocd-division/country:us/state:ma/place:agawam_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:brimfield->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:brimfield",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:brimfield_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:east_longmeadow->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:east_longmeadow",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:east_longmeadow_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:granville->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:granville",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:granville_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:hampden->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:hampden",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:hampden_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:ludlow->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:ludlow",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:ludlow_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:monson->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:monson",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:monson_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:montgomery->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:montgomery",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:montgomery_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:palmer->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:palmer",
+      "to": "ocd-division/country:us/state:ma/place:palmer_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:southwick->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:southwick",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:southwick_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:tolland->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:tolland",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:tolland_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:wales->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:wales",
+      "to": "ocd-division/country:us/state:ma/county:hampden/place:wales_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:west_springfield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:west_springfield",
+      "to": "ocd-division/country:us/state:ma/place:west_springfield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:amherst->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:amherst",
+      "to": "ocd-division/country:us/state:ma/place:amherst_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:chesterfield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:chesterfield",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:chesterfield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:cummington->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:cummington",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:cummington_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:easthampton->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:easthampton",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:easthampton_town_city",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:county:hampshire/place:easthampton_city->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/county:hampshire/place:easthampton_city",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:easthampton_town_city",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:goshen->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:goshen",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:goshen_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:hadley->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:hadley",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:hadley_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:middlefield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:middlefield",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:middlefield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:pelham->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:pelham",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:pelham_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:plainfield->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:plainfield",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:plainfield_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:southampton->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:southampton",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:southampton_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:south_hadley->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:south_hadley",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:south_hadley_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:westhampton->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:westhampton",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:westhampton_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:williamsburg->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:williamsburg",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:williamsburg_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:worthington->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:worthington",
+      "to": "ocd-division/country:us/state:ma/county:hampshire/place:worthington_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:acton->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:acton",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:acton_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:ashby->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:ashby",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:ashby_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:ashland->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:ashland",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:ashland_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:bedford->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:bedford",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:bedford_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:billerica->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:billerica",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:billerica_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:boxborough->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:boxborough",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:boxborough_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:carlisle->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:carlisle",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:carlisle_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:chelmsford->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:chelmsford",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:chelmsford_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:concord->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:concord",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:concord_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:dracut->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:dracut",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:dracut_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:dunstable->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:dunstable",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:dunstable_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:holliston->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:holliston",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:holliston_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:lincoln->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:lincoln",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:lincoln_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:littleton->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:littleton",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:littleton_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:natick->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:natick",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:natick_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:north_reading->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:north_reading",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:sherborn->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:sherborn",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:sherborn_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:stow->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:stow",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:stow_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:sudbury->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:sudbury",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:sudbury_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:tewksbury->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:tewksbury",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:tewksbury_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:tyngsborough->governors_council:5",
+      "from": "ocd-division/country:us/state:ma/place:tyngsborough",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:tyngsborough_town",
+      "district": 5
+    },
+    {
+      "id": "ma-2026-membership:place:watertown->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:watertown",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:watertown_town_city",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:county:middlesex/place:watertown_city->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/county:middlesex/place:watertown_city",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:watertown_town_city",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:wayland->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:wayland",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:wayland_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:westford->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:westford",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:westford_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:weston->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:weston",
+      "to": "ocd-division/country:us/state:ma/county:middlesex/place:weston_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:avon->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:avon",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:avon_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:canton->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:canton",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:canton_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:cohasset->governors_council:4",
+      "from": "ocd-division/country:us/state:ma/place:cohasset",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:cohasset_town",
+      "district": 4
+    },
+    {
+      "id": "ma-2026-membership:place:franklin->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:franklin",
+      "to": "ocd-division/country:us/state:ma/place:franklin_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:medway->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:medway",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:medway_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:millis->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:millis",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:millis_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:norfolk->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:norfolk",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:norfolk_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:plainville->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:plainville",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:plainville_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:randolph->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:randolph",
+      "to": "ocd-division/country:us/state:ma/place:randolph_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:stoughton->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:stoughton",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:stoughton_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:westwood->governors_council:4",
+      "from": "ocd-division/country:us/state:ma/place:westwood",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:westwood_town",
+      "district": 4
+    },
+    {
+      "id": "ma-2026-membership:place:weymouth->governors_council:4",
+      "from": "ocd-division/country:us/state:ma/place:weymouth",
+      "to": "ocd-division/country:us/state:ma/place:weymouth_town",
+      "district": 4
+    },
+    {
+      "id": "ma-2026-membership:place:wrentham->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:wrentham",
+      "to": "ocd-division/country:us/state:ma/county:norfolk/place:wrentham_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:bridgewater->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:bridgewater",
+      "to": "ocd-division/country:us/state:ma/place:bridgewater_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:carver->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:carver",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:carver_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:east_bridgewater->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:east_bridgewater",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:east_bridgewater_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:halifax->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:halifax",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:halifax_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:hanover->governors_council:4",
+      "from": "ocd-division/country:us/state:ma/place:hanover",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:hanover_town",
+      "district": 4
+    },
+    {
+      "id": "ma-2026-membership:place:lakeville->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:lakeville",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:lakeville_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:marion->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:marion",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:marion_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:mattapoisett->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:mattapoisett",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:mattapoisett_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:middleborough->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:middleborough",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:middleborough_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:norwell->governors_council:4",
+      "from": "ocd-division/country:us/state:ma/place:norwell",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:norwell_town",
+      "district": 4
+    },
+    {
+      "id": "ma-2026-membership:place:pembroke->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:pembroke",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:pembroke_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:plympton->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:plympton",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:plympton_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:rochester->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:rochester",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:rochester_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:rockland->governors_council:4",
+      "from": "ocd-division/country:us/state:ma/place:rockland",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:rockland_town",
+      "district": 4
+    },
+    {
+      "id": "ma-2026-membership:place:wareham->governors_council:1",
+      "from": "ocd-division/country:us/state:ma/place:wareham",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:wareham_town",
+      "district": 1
+    },
+    {
+      "id": "ma-2026-membership:place:west_bridgewater->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:west_bridgewater",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:west_bridgewater_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:whitman->governors_council:2",
+      "from": "ocd-division/country:us/state:ma/place:whitman",
+      "to": "ocd-division/country:us/state:ma/county:plymouth/place:whitman_town",
+      "district": 2
+    },
+    {
+      "id": "ma-2026-membership:place:winthrop->governors_council:6",
+      "from": "ocd-division/country:us/state:ma/place:winthrop",
+      "to": "ocd-division/country:us/state:ma/place:winthrop_town",
+      "district": 6
+    },
+    {
+      "id": "ma-2026-membership:place:ashburnham->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:ashburnham",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:ashburnham_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:auburn->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:auburn",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:auburn_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:berlin->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:berlin",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:berlin_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:blackstone->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:blackstone",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:blackstone_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:bolton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:bolton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:bolton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:boylston->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:boylston",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:boylston_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:charlton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:charlton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:charlton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:douglas->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:douglas",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:douglas_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:dudley->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:dudley",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:dudley_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:grafton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:grafton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:grafton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:hardwick->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:hardwick",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:hardwick_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:harvard->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:harvard",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:harvard_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:holden->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:holden",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:holden_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:hubbardston->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:hubbardston",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:hubbardston_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:lancaster->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:lancaster",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:lancaster_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:leicester->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:leicester",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:leicester_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:mendon->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:mendon",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:mendon_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:millbury->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:millbury",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:millbury_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:millville->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:millville",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:millville_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:new_braintree->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:new_braintree",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:new_braintree_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:northbridge->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:northbridge",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:northbridge_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:oakham->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:oakham",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:oakham_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:paxton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:paxton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:paxton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:phillipston->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:phillipston",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:phillipston_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:princeton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:princeton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:princeton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:royalston->governors_council:8",
+      "from": "ocd-division/country:us/state:ma/place:royalston",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:royalston_town",
+      "district": 8
+    },
+    {
+      "id": "ma-2026-membership:place:shrewsbury->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:shrewsbury",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:shrewsbury_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:southborough->governors_council:3",
+      "from": "ocd-division/country:us/state:ma/place:southborough",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:southborough_town",
+      "district": 3
+    },
+    {
+      "id": "ma-2026-membership:place:southbridge->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:southbridge",
+      "to": "ocd-division/country:us/state:ma/place:southbridge_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:sterling->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:sterling",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:sterling_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:sutton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:sutton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:sutton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:templeton->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:templeton",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:templeton_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:uxbridge->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:uxbridge",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:uxbridge_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:west_boylston->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:west_boylston",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:west_boylston_town",
+      "district": 7
+    },
+    {
+      "id": "ma-2026-membership:place:westminster->governors_council:7",
+      "from": "ocd-division/country:us/state:ma/place:westminster",
+      "to": "ocd-division/country:us/state:ma/county:worcester/place:westminster_town",
+      "district": 7
+    }
+  ],
+  "splitCities": [
+    "Boston",
+    "Cambridge",
+    "Braintree"
+  ],
+  "remainingWardIndexGaps": [
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:21",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:22",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:9",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:6",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:7",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:8",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:9",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:10",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:11",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:12",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:13",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:14",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:15",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:16",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:17",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:18",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:19",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:20",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:boston/ward:2",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:1",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:2",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:3",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:4",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:5",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:6",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:7",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:10",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    },
+    {
+      "memberOcdId": "ocd-division/country:us/state:ma/place:cambridge/ward:11",
+      "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+    }
+  ],
+  "readOnlyReplay": {
+    "method": "Normal contestsForDivisions on each corrected canonical member, then normal shardEntry plus contestsForDivisions on actual MA ZIP rows. Each corrected member selects exactly its one official Council contest; all eight districts have a real ZIP example.",
+    "correctedMembersPassed": 208,
+    "districtExamples": [
+      {
+        "zip": "02330",
+        "contestId": "ma-2026-11-03:councillor-1",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1"
+      },
+      {
+        "zip": "01701",
+        "contestId": "ma-2026-11-03:councillor-2",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2"
+      },
+      {
+        "zip": "01432",
+        "contestId": "ma-2026-11-03:councillor-3",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3"
+      },
+      {
+        "zip": "02025",
+        "contestId": "ma-2026-11-03:councillor-4",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4"
+      },
+      {
+        "zip": "01463",
+        "contestId": "ma-2026-11-03:councillor-5",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5"
+      },
+      {
+        "zip": "01867",
+        "contestId": "ma-2026-11-03:councillor-6",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6"
+      },
+      {
+        "zip": "01005",
+        "contestId": "ma-2026-11-03:councillor-7",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7"
+      },
+      {
+        "zip": "01001",
+        "contestId": "ma-2026-11-03:councillor-8",
+        "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8"
+      }
+    ]
+  }
+}

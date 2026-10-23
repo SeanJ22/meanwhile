@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/ArcGIS/rest/services/Energov_TEST_2/FeatureServer/19?f=pjson",
+  "finalUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/ArcGIS/rest/services/Energov_TEST_2/FeatureServer/19?f=pjson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:18:54.163266+00:00",
+  "rawHash": "2afddb948a12a8b6f3244d371071fae3d31081bc692dec5cadb33b05d5b01ef3"
+}

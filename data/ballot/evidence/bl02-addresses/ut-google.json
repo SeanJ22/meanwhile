@@ -1,0 +1,836 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "350 North State Street",
+    "addressLine": [
+      "350 North State Street"
+    ],
+    "city": "Salt Lake City",
+    "state": "UT",
+    "zip": "84114"
+  },
+  "earlyVoteSites": [
+    {
+      "address": {
+        "locationName": "U Of U Marriott Library",
+        "line1": "295 S 1500 E",
+        "addressLine": [
+          "295 S 1500 E"
+        ],
+        "city": "Salt Lake City",
+        "state": "UT",
+        "zip": "84112"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.762517036556424,
+      "longitude": -111.84612136791021,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Salt Lake County Government Center",
+        "line1": "2001 S State Street (100 E)",
+        "addressLine": [
+          "2001 S State Street (100 E)"
+        ],
+        "city": "Salt Lake City",
+        "state": "UT",
+        "zip": "84190"
+      },
+      "pollingHours": "Tue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nSat, Oct 31: 10 am - 3 pm",
+      "latitude": 40.726879529019847,
+      "longitude": -111.88767699754239,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Murray City Hall",
+        "line1": "10 E 4800 S",
+        "addressLine": [
+          "10 E 4800 S"
+        ],
+        "city": "Murray",
+        "state": "UT",
+        "zip": "84107"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.666436670492111,
+      "longitude": -111.89112956322454,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Hunter Library",
+        "line1": "4740 W 4100 S",
+        "addressLine": [
+          "4740 W 4100 S"
+        ],
+        "city": "West Valley City",
+        "state": "UT",
+        "zip": "84120"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.682689418319633,
+      "longitude": -112.00378302635552,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Whitmore Library",
+        "line1": "2197 E Fort Union Blvd (7000 S)",
+        "addressLine": [
+          "2197 E Fort Union Blvd (7000 S)"
+        ],
+        "city": "Cottonwood Heights",
+        "state": "UT",
+        "zip": "84121"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.624599917798356,
+      "longitude": -111.82808980726017,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "West Jordan City Hall",
+        "line1": "8000 S Redwood Rd",
+        "addressLine": [
+          "8000 S Redwood Rd"
+        ],
+        "city": "West Jordan",
+        "state": "UT",
+        "zip": "84088"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.606115388038,
+      "longitude": -111.93948699993943,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "South Jordan Library",
+        "line1": "10673 S Redwood Rd (1700 W)",
+        "addressLine": [
+          "10673 S Redwood Rd (1700 W)"
+        ],
+        "city": "South Jordan",
+        "state": "UT",
+        "zip": "84095"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.557285516350873,
+      "longitude": -111.93656028873419,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Draper City Hall",
+        "line1": "1020 E Pioneer Rd (12400 S)",
+        "addressLine": [
+          "1020 E Pioneer Rd (12400 S)"
+        ],
+        "city": "Draper",
+        "state": "UT",
+        "zip": "84020"
+      },
+      "pollingHours": "Tue, Oct 27: 3 pm - 7 pm\nWed, Oct 28: 3 pm - 7 pm\nThu, Oct 29: 3 pm - 7 pm\nFri, Oct 30: 3 pm - 7 pm",
+      "latitude": 40.524899936242555,
+      "longitude": -111.86284759145566,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "contests": [
+    {
+      "type": "General",
+      "office": "U.S. House District 1",
+      "district": {
+        "name": "US House District 1",
+        "id": "1"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1001",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "JESSE WEST",
+          "party": "Libertarian"
+        },
+        {
+          "name": "BEN MCADAMS",
+          "party": "Democratic"
+        },
+        {
+          "name": "ELIAS HENRY MONTGOMERY",
+          "party": "Unaffiliated"
+        },
+        {
+          "name": "RILEY OWEN",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "State House District 22",
+      "district": {
+        "name": "State House District 22",
+        "id": "22"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1041",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "JEN DAILEY-PROVOST",
+          "party": "Democratic"
+        },
+        {
+          "name": "CHAR VARGA",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "County Council At-Large A",
+      "district": {
+        "name": "County Council At-Large A"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1105",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "GREGORY BEGLARIAN",
+          "party": "Constitution"
+        },
+        {
+          "name": "KATHLEEN ANDERSON",
+          "party": "Republican"
+        },
+        {
+          "name": "ZACH ROBINSON",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "County Council District 1",
+      "district": {
+        "name": "County Council District 1",
+        "id": "1"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1107",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "CASEY POE",
+          "party": "Libertarian"
+        },
+        {
+          "name": "JIRO JOHNSON",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "County Auditor",
+      "district": {
+        "name": "County Auditor"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1112",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "ALI CLOWARD",
+          "party": "Democratic"
+        },
+        {
+          "name": "CHRIS HARDING",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "County Clerk",
+      "district": {
+        "name": "County Clerk"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1114",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "LANNIE CHAPMAN",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "County District Attorney",
+      "district": {
+        "name": "County District Attorney"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1117",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "SIM GILL",
+          "party": "Democratic"
+        },
+        {
+          "name": "KENT DAVIS",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "County Sheriff",
+      "district": {
+        "name": "County Sheriff"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1119",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "SHANE MANWARING",
+          "party": "Republican"
+        },
+        {
+          "name": "ROSIE RIVERA",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "State School Board District 4 (Multi-County)",
+      "district": {
+        "name": "State School Board District 4",
+        "id": "4"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1261",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "LEANN WOOD",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "type": "General",
+      "office": "Salt Lake School Board District 3",
+      "district": {
+        "name": "Salt Lake School Board District 3",
+        "id": "3"
+      },
+      "numberVotingFor": "1",
+      "ballotPlacement": "1347",
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ],
+      "candidates": [
+        {
+          "name": "JARED WRIGHT"
+        },
+        {
+          "name": "ASHLEY ANDERSON"
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Supreme Court"
+      },
+      "ballotPlacement": "1389",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "ballotPlacement": "1390",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "ballotPlacement": "1391",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "ballotPlacement": "1392",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "ballotPlacement": "1393",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "ballotPlacement": "1394",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "ballotPlacement": "1395",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1403",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1404",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1405",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1406",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1407",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1408",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "ballotPlacement": "1409",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Justice Court Alta"
+      },
+      "ballotPlacement": "1427",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "other",
+      "district": {
+        "name": "Justice Court Salt Lake City"
+      },
+      "ballotPlacement": "1436",
+      "referendumBallotResponses": [
+        "YES",
+        "NO"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "referendum",
+      "ballotTitle": "Constitutional Amendment A",
+      "district": {
+        "name": "Constitutional Amendments A B"
+      },
+      "ballotPlacement": "1453",
+      "referendumTitle": "Constitutional Amendment A",
+      "referendumText": "Shall the Utah Constitution be amended to change how proposed constitutional amendments are published, requiring publication for 60 days immediately before the general election in a manner established by state law instead of in newspapers?\nIf voters approve Constitutional Amendment A, state statute would change to require the Lieutenant Governor to publish the full text of all proposed constitutional amendments and other ballot questions from the Legislature, on the Utah Public Notice Website and on the Lieutenant Governor’s website for 60 days immediately before the general election.",
+      "referendumBallotResponses": [
+        "FOR",
+        "AGAINST"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "referendum",
+      "ballotTitle": "Constitutional Amendment B",
+      "district": {
+        "name": "Constitutional Amendments A B"
+      },
+      "ballotPlacement": "1454",
+      "referendumTitle": "Constitutional Amendment B",
+      "referendumText": "Shall the Utah Constitution be amended to require that citizen-proposed laws that increase taxes compared to existing law be approved by at least 60% of voters, instead of a simple majority?",
+      "referendumBallotResponses": [
+        "FOR",
+        "AGAINST"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "type": "referendum",
+      "ballotTitle": "SALT LAKE COUNTY, UTAH - SPECIAL BOND ELECTION",
+      "district": {
+        "name": "County Wide - less Fed Only"
+      },
+      "ballotPlacement": "1460",
+      "referendumTitle": "SALT LAKE COUNTY, UTAH - SPECIAL BOND ELECTION",
+      "referendumText": "OFFICIAL BALLOT FOR THE\nSALT LAKE COUNTY, UTAH\nLOCAL SPECIAL BOND ELECTION\nNovember 3, 2026\nShall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not\nto exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates\nof issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring,\nconstructing or renovating open space, natural habitat, parks, community trails and recreational\nfacilities and other related facilities under the charge of the County and, to the extent necessary,\nfor providing moneys for the refunding, at or prior to the maturity thereof, of general obligation\nbonds of the County authorized hereunder or heretofore issued and now outstanding?\nPROPERTY TAX COST OF BONDS\nA general obligation bond is a debt owed by the County. The County uses tax revenue to pay for\nthe debt. If the bonds are issued as planned (which currently consists of 2 smaller issues of bonds\ntotaling approximately $128,000,000 over the next 5 years, with each issue of bonds maturing\napproximately 10 years from the date it is issued), without regard to the taxes currently levied to\npay outstanding bonds that will decrease over time, an annual property tax to pay debt service on\nthe proposed bonds will be required over a period of 10 years in the estimated amount of $16.39\nper year on a primary residence with the County average value of $658,000 and in the estimated\namount of $29.80 per year on a business or secondary residence having the same value, which are\nequal to a monthly increase of $1.37 for an average residential property and $2.48 on a business\nproperty having the same value.\nThe County currently levies property taxes to pay debt service on other outstanding general\nobligation bonds that have been issued to finance voter approved projects. The incremental property\ntaxes would decrease upon the repayment of the currently outstanding bonds, but the decrease may\nnot occur if the proposed bonds are issued. Taking into account the repayment of the outstanding\nbonds, the County expects that the issuance of the proposed bonds, in the manner currently\nexpected, will result in a net property tax increase of $0 per year on a primary residence with the\nCounty average value of $658,000 and a net property tax increase of $0 per year on a business or\nsecondary residence having the same value, which are equal to a monthly increase of $0 for an\naverage residential property and $0 on a business property having the same value.\nThe foregoing is only an estimate and is not a limit on the amount of taxes that the governing body\nmay be required to levy in order to pay debt service on the bonds. The governing body is obligated\nto levy taxes to the extent provided by law in order to pay the bonds.\nIn addition to the bond payment costs as outlined above, based on current best estimates, the\naverage annual combined net operational and maintenance costs for these facilities during their\nfirst ten years of operation is projected to require additional annual expenditures of $4,710,200. If\napproved, the county will determine during its next budget cycle whether additional operational\nand maintenance costs may or may not require any additional funds from budget cuts or a tax\nincrease.\nTo vote in favor of the above bond issue, select the box immediately\nadjacent to the words “FOR THE ISSUANCE OF BONDS.” To vote against the bond issue, select the box immediately adjacent to the words “AGAINST THE ISSUANCE OF BONDS.”\nFOR THE ISSUANCE OF BONDS\nAGAINST THE ISSUANCE OF BONDS",
+      "referendumBallotResponses": [
+        "FOR THE ISSUANCE OF BONDS",
+        "AGAINST THE ISSUANCE OF BONDS"
+      ],
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Utah",
+      "electionAdministrationBody": {
+        "name": "Office of the Lieutenant Governor",
+        "electionInfoUrl": "https://vote.utah.gov/",
+        "electionRegistrationUrl": "https://secure.utah.gov/voterreg/index.html",
+        "electionRegistrationConfirmationUrl": "https://votesearch.utah.gov/voter-search/search/search-by-voter/voter-info",
+        "votingLocationFinderUrl": "https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote",
+        "ballotInfoUrl": "https://votesearch.utah.gov/voter-search/search/search-by-address/candidates-and-issues",
+        "electionRulesUrl": "https://vote.utah.gov/learn-about-voting-by-mail-and-absentee-voting/",
+        "correspondenceAddress": {
+          "line1": "Office of the Lieutenant Governor P.O. Box 142325",
+          "addressLine": [
+            "Office of the Lieutenant Governor P.O. Box 142325"
+          ],
+          "city": "Salt Lake City",
+          "state": "",
+          "zip": "84114-2325"
+        }
+      },
+      "local_jurisdiction": {
+        "name": "Salt Lake",
+        "electionAdministrationBody": {
+          "name": "Salt Lake County Clerk's Office",
+          "electionRegistrationConfirmationUrl": "https://slco.vote",
+          "absenteeVotingInfoUrl": "https://slco.vote",
+          "votingLocationFinderUrl": "https://slco.vote",
+          "ballotInfoUrl": "https://slco.vote",
+          "electionRulesUrl": "https://slco.vote",
+          "hoursOfOperation": "https://slco.vote",
+          "physicalAddress": {
+            "line1": "2001 S State St #S1-200",
+            "line2": "Salt Lake City",
+            "line3": "UT",
+            "addressLine": [
+              "2001 S State St #S1-200",
+              "Salt Lake City",
+              "UT"
+            ]
+          }
+        },
+        "sources": [
+          {
+            "name": "Voting Information Project",
+            "official": true
+          }
+        ]
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

@@ -1,0 +1,122 @@
+{
+  "ne-education.zip": {
+    "url": "https://sos.nebraska.gov/sites/default/files/doc/ED21-39003.zip",
+    "publisher": "Nebraska Secretary of State",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:03:58.236045+00:00",
+    "sha256": "36a7cf427db6a4db94f15d81034121f6b4091dbdcf802c1c2edc7413efa4fc86",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "ne-regents.zip": {
+    "url": "https://sos.nebraska.gov/sites/default/files/doc/REG21-39003%20Updated%2011-24-21_1.zip",
+    "publisher": "Nebraska Secretary of State",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:03:58.686166+00:00",
+    "sha256": "189786a6e2e2c3d0fcf3b20b7d7cfb55f8268815f6545178155d906bde270e7e",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "ne-psc.zip": {
+    "url": "https://sos.nebraska.gov/sites/default/files/doc/PSC21-39001.zip",
+    "publisher": "Nebraska Secretary of State",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:03:58.919929+00:00",
+    "sha256": "f22398ad892e455aa5e42ffb971663cd71733739adc287118da6ed9e7a99e3f6",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "ne-house.zip": {
+    "url": "https://sos.nebraska.gov/sites/default/files/doc/LEG21-39006.zip",
+    "publisher": "Nebraska Secretary of State",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:05:21.782413+00:00",
+    "sha256": "dd01947f976a830bcd17b69ed2a6ddc863d7ac9a2e86ee03cafe1ecf16200641",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "ne-cities.zip": {
+    "url": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_31_place.zip",
+    "publisher": "U.S. Census Bureau",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:03:59.071245+00:00",
+    "sha256": "aa01fa8c3dafcea27cbe6bd009f38eb774b4c765fd2e5b81701d69a534da16e0",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "ne-counties.extract.geojson.gz": {
+    "url": "https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_us_county_500k.zip",
+    "publisher": "U.S. Census Bureau",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:11:34.806891+00:00",
+    "sha256": "307b6af20ca239e7c4dc32014ff839be3fdd3567e3a6f9d705ec9f57046423bc",
+    "meaning": "Hash identifies the saved STATEFP=31 GeoJSON source extract from the Census2024 county ZIP. Original full-source SHA256=da4051717caec55c75e3748c3608c2a3dbde8d1ff401bbaf4f952e3c3fb63ef1. Only Nebraska features are retained; this is not an original-HTTP-byte hash."
+  },
+  "ut-boards.geojson.gz": {
+    "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "publisher": "Utah Geospatial Resource Center",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:11:35.408739+00:00",
+    "sha256": "322b28c537ad5833a4cb53dea5245db21b23b38ea7bae9dbec0def5d751d2a18",
+    "meaning": "Hash identifies the decompressed original public response bytes."
+  },
+  "ut-cities.geojson.gz": {
+    "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahMunicipalBoundaries/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+    "publisher": "Utah Geospatial Resource Center",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:11:35.872929+00:00",
+    "sha256": "d5ad26d4f9eba1e36d2c8ddf7f3f30d5a27732c280888a3ebb0d5aab094d8a94",
+    "meaning": "Hash identifies the decompressed original public response bytes."
+  },
+  "ut-SB2005S07_BEF.txt.gz": {
+    "url": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+    "publisher": "Utah Legislature",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:11:37.049127+00:00",
+    "sha256": "1d3095b2ba163decdee53d3d7495f54db4a6394875f12b225db83aab19818eba",
+    "meaning": "Hash identifies the decompressed original public response bytes."
+  },
+  "ut-HB2005_BEF.txt.gz": {
+    "url": "https://le.utah.gov/~2021S2/redistrict/HB2005_BEF.txt",
+    "publisher": "Utah Legislature",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:11:37.358419+00:00",
+    "sha256": "58493efa9f5857ce2dd21dbe01ea2ccebb4a2a47942174d09b0004e490aa9d10",
+    "meaning": "Hash identifies the decompressed original public response bytes."
+  },
+  "tx-counties.pdf": {
+    "url": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+    "publisher": "Texas Legislative Council",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T07:59:19.248953+00:00",
+    "sha256": "bc7c23be615d4ce1eb36356a2092406d4ae3961aae17abd8ff3684eb662f2e37",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "tx-cities.pdf": {
+    "url": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+    "publisher": "Texas Legislative Council",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T07:59:54.787201+00:00",
+    "sha256": "5c9b4a1a8ae52081f11227ffe3af7724387be77d7d523e6784de45cca7e8164a",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "tx-split-cities.pdf": {
+    "url": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/d74ac116-4e8a-441d-bc1b-c65048f52060/download/plane2106r130.pdf?download=1",
+    "publisher": "Texas Legislative Council",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:01:53.772111+00:00",
+    "sha256": "f5c0e71d644a96de798b4c5137ade05bdd23ab71d5c554413977e6363e8098e8",
+    "meaning": "Hash identifies original public response bytes."
+  },
+  "tx-census-places.txt": {
+    "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_place_48.txt",
+    "publisher": "U.S. Census Bureau",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:14:06.454038+00:00",
+    "sha256": "614e06f49119eb31a6601dd58731a9514f4c1ca2c33064a182bff0e890196e4a",
+    "meaning": "Original public response bytes. Legal place type and GEOID identify homonymous cities and CDPs in the ZIP index."
+  },
+  "ut-county-names.json": {
+    "url": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahCountyBoundaries/FeatureServer/0/query?where=1%3D1&outFields=NAME%2CFIPS_STR&returnGeometry=false&f=json",
+    "publisher": "Utah Geospatial Resource Center",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-23T08:16:02.189200+00:00",
+    "sha256": "697d5f14a1c18a3727bd60a9f63b8e3f190b3cc7fd758c3fbeb3dc6ccedbe497",
+    "meaning": "Original public response. State county names and FIPS only; geometry is not fetched."
+  }
+}

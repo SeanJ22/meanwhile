@@ -49,6 +49,14 @@
    "sha256": "3a47f301ffce8b5d2367e3a928c95842e4e66697350b93bfcd2cd207474d7e57",
    "bytes": 57525
   },
+  "data/states/ca/geo/bart-director-06.geojson": {
+   "sha256": "974e13d8b68004704b16fec5773e50299a6e02634d712e163ede250f2e673191",
+   "bytes": 28077
+  },
+  "data/states/ca/geo/bl02-sf-census-geography-06.geojson": {
+   "sha256": "3a5f6b47b04d2e88b5795ab68679734b0233ea20f146f21c6cf57f3eab8d5d89",
+   "bytes": 144416
+  },
   "data/states/ca/geo/territory-06.geojson": {
    "sha256": "53c57fe397aef8c4bb3c81920e9458ad9b2e5ec557577cb06d02c63df2e689ae",
    "bytes": 2081601
@@ -61,13 +69,25 @@
    "sha256": "e1977f3e28db6f3805110080bfc6906606a25da77b3d48b2c68683f737a62ee5",
    "bytes": 42763
   },
+  "data/states/dc/geo/bl02-held-districts-11.geojson": {
+   "sha256": "3d33b408eb318dceeb84f3edd29c1d3af0992d559d27b8c47783e38bf7c27e5b",
+   "bytes": 878807
+  },
   "data/states/dc/geo/territory-11.geojson": {
    "sha256": "6625823d881e4172b603073ed90bd6c25240254fd6170327af90f51c5587115c",
    "bytes": 27325
   },
+  "data/states/de/geo/bl02-held-districts-10.geojson": {
+   "sha256": "f3d2957f1e72abb9e728baa93e42cf3559a7407ca9595cf68b5d4a06d87cb4b7",
+   "bytes": 892102
+  },
   "data/states/de/geo/territory-10.geojson": {
    "sha256": "1aa6e4c7e2a649929c4bbb895cc3c0203175c84b4f2d84590bf95b637998c762",
    "bytes": 4631
+  },
+  "data/states/fl/geo/bl02-held-districts-12.geojson": {
+   "sha256": "ec4fd13784aefc24ef544470a8aa71c0d4422f0f141ebea5f50be473c33461a7",
+   "bytes": 190062
   },
   "data/states/fl/geo/territory-12.geojson": {
    "sha256": "de234f8c4225fd760d88b948efea1fa3e65bc5451bed864068380cecb4db144d",
@@ -76,6 +96,10 @@
   "data/states/ga/geo/territory-13.geojson": {
    "sha256": "fd68af0225247e8b1a97787602f0e30462b5825eb72aa18b78d4915845cb3fc7",
    "bytes": 169958
+  },
+  "data/states/hi/geo/bl02-councils-15.geojson": {
+   "sha256": "df821b5a11f104e3336606b95442834f8617dea9de4c8cc877eacbc6ee510473",
+   "bytes": 904258
   },
   "data/states/hi/geo/territory-15.geojson": {
    "sha256": "201e9e2ac7f41293081319887a9a3cd5d357e6084d186d4fe0538b0a16c9ef69",
@@ -97,6 +121,10 @@
    "sha256": "18164fc58e91fbda5d11bb43231f05bddba1b710e10010ba2eaa5a151801feae",
    "bytes": 392845
   },
+  "data/states/ks/geo/bl02-state-board-20.geojson": {
+   "sha256": "532fa2dcb7ba2edcb984aba2c8c68c1ab1f955b649b65c247cf6f81011e7a9fc",
+   "bytes": 768107
+  },
   "data/states/ks/geo/territory-20.geojson": {
    "sha256": "b154ec142b5bfb302d30d70fc2a309a2fabe11498005f6beb9f3eb2ba87c7902",
    "bytes": 29007
@@ -113,9 +141,17 @@
    "sha256": "9f4e8b2cd89108a2eb942ec434cf7dc5504388b24c5bf82d673559f9c5698c29",
    "bytes": 554096
   },
+  "data/states/md/geo/bl02-held-districts-24.geojson": {
+   "sha256": "b8204d39cff7218017ed2422a32f1bac2bed895a17f063e08fb69aeddca523bd",
+   "bytes": 127180
+  },
   "data/states/md/geo/territory-24.geojson": {
    "sha256": "89aeac606a0295868ce91b120619427d667505e200b191650b49ea8c536b193c",
    "bytes": 347
+  },
+  "data/states/me/geo/bl02-final-districts-23.geojson": {
+   "sha256": "ed12dd98b740fa847ade4ed1e7c9e24e7b688fb10636ca8f930c31d29d36028d",
+   "bytes": 86422
   },
   "data/states/me/geo/territory-23.geojson": {
    "sha256": "ffc82afa1281943e3939fbb069932fbc643271f093561a4dcfb1ff533cc24e42",
@@ -141,6 +177,10 @@
    "sha256": "17f28540993e6fb3c210a66c0bdc2af37f7caef4164c96582074c8a82462f2f0",
    "bytes": 1673649
   },
+  "data/states/nc/geo/bl02-held-districts-37.geojson": {
+   "sha256": "9a7eae0ddb6a9097e6118ef4318b060fe3bce4e0d85304bbc5e8bce110fc9d0d",
+   "bytes": 90748
+  },
   "data/states/nc/geo/territory-37.geojson": {
    "sha256": "f5b04015480ba11abc5b40879b8d9e971acaa9feedb28d600cc239993f5d70e6",
    "bytes": 109787
@@ -149,9 +189,17 @@
    "sha256": "2b0c317b4602844e1f0e6a9ca61dfdb62bd172f6e4d248b9407615d9f59048f9",
    "bytes": 820473
   },
+  "data/states/ne/geo/bl02-board-districts-31.geojson": {
+   "sha256": "029744dc346140c2afcf1c4cf7f061ce9b5a1336ea344fd211b6333e627996e6",
+   "bytes": 30630
+  },
   "data/states/ne/geo/territory-31.geojson": {
    "sha256": "f64d39bdeca30ceef196f76c7c855b81bba182d26b6a2745b9bb340a26c1bd59",
    "bytes": 678453
+  },
+  "data/states/nh/geo/bl02-held-districts-33.geojson": {
+   "sha256": "4fdf93ffe66cadb5a782df0be4c0347431a20cb1767b8a3a2cc70fa8a47f0dd5",
+   "bytes": 527249
   },
   "data/states/nh/geo/cousub-33.geojson": {
    "sha256": "3fb5f4ff042ea9b8deae79c9336263bc5815778f513f4d3340ac6339532d7b45",
@@ -217,17 +265,33 @@
    "sha256": "6a18732155ab2aabafcb9e3aaf75a67a080eedfeadfeaadc1809c64dd6882cea",
    "bytes": 69877
   },
+  "data/states/nm/geo/bl02-board-districts-35.geojson": {
+   "sha256": "360770970ec2f8c9e307172cdd0debfb02eec0500641eebb8c07217b54c62623",
+   "bytes": 114207
+  },
   "data/states/nm/geo/territory-35.geojson": {
    "sha256": "42bfdde2b38fc1e0da35c7881108c1d751ba2d6c146031a94a7e43b257e4b48c",
    "bytes": 407486
+  },
+  "data/states/nv/geo/bl02-regents-32.geojson": {
+   "sha256": "0e39787a0880e04b2b0c6445812aea9e2df9d2aeb6cdab98ef6a08cd7a726d94",
+   "bytes": 1619966
   },
   "data/states/nv/geo/territory-32.geojson": {
    "sha256": "70042d22c52530cf3aa777139c2f2b064af7ed68d79c1248288d3ddd93ea5d6b",
    "bytes": 351621
   },
+  "data/states/ny/geo/bl02-held-districts-36.geojson": {
+   "sha256": "817b12141ce97e039eb7513e3a3cdb2bb8ea3cdb5e0748f4b7077d030b123974",
+   "bytes": 144395
+  },
   "data/states/ny/geo/territory-36.geojson": {
    "sha256": "e4e1ed0faa4c1e48cfe736a74ea55b014ea769f018c7720aafd0a9a4ac16f544",
    "bytes": 422114
+  },
+  "data/states/oh/geo/bl02-final-districts-39.geojson": {
+   "sha256": "b033d8e04f299a28b7ef829b74a6ae65a8a6649c2e377147c68670e0e5877266",
+   "bytes": 40583
   },
   "data/states/oh/geo/territory-39.geojson": {
    "sha256": "3d8e1b58739205500c107f7b579b2e46db14524a1f438326f1b7ebc07adf113a",
@@ -236,6 +300,10 @@
   "data/states/ok/geo/territory-40.geojson": {
    "sha256": "80b4f382142c272db352314f1bfb8821bdbefe0ae188abdcea37762a102b8811",
    "bytes": 211722
+  },
+  "data/states/or/geo/bl02-councils-41.geojson": {
+   "sha256": "ef6a99d54f70cd3f1219225bd4e55abd3dcf9201d0559363e198b7bf1c45eeb0",
+   "bytes": 187369
   },
   "data/states/or/geo/territory-41.geojson": {
    "sha256": "976bf418cbacfcefff6b4a8f04ac91037cbbaba954739664d79000a0778078a2",
@@ -265,6 +333,10 @@
    "sha256": "25f0c8444456dbf66f7194915e7d8b7fcdad000906ac2bd6849e4a05f73c5136",
    "bytes": 3012972
   },
+  "data/states/ut/geo/bl02-board-districts-49.geojson": {
+   "sha256": "af29c70a50b852938a59b379993041bbbe9554371e073f5183d3a1bb6cf3086e",
+   "bytes": 114761
+  },
   "data/states/ut/geo/territory-49.geojson": {
    "sha256": "095d146098a298368e70e77e9c17324379ff57ea618fce3b99cfa2c7c4e34c49",
    "bytes": 472359
@@ -276,6 +348,10 @@
   "data/states/vt/geo/territory-50.geojson": {
    "sha256": "5f80f917f076630f5c1313ae7c6793b52bdaaa92d8de93deee316fb6f1b349f6",
    "bytes": 8200
+  },
+  "data/states/wa/geo/bl02-councils-53.geojson": {
+   "sha256": "74ddce77b6136c54b56333f6774676006b65362f716df0accdef19175c34c7e4",
+   "bytes": 545147
   },
   "data/states/wa/geo/territory-53.geojson": {
    "sha256": "cffc50be141b1ff970ba9f786fe4dff5fde7dc0d2046905500dd5d91c6459b68",

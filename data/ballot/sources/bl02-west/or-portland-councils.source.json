@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=DISTRICT+IN+%28%273%27%2C%274%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=DISTRICT+IN+%28%273%27%2C%274%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "ec8b4799a2e1f3a8d73437cabe72e2a33072b3ae53474143094c3415b21626a2",
+  "retrievedAt": "2026-10-23T08:17:17.206857+00:00"
+}

@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_15_place.zip",
+  "finalUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_15_place.zip",
+  "httpStatus": 200,
+  "rawHash": "38018cb6a3e66c2f0174056903d0e8c6c2d18fa5c15b0014d059f2bead42f65b",
+  "retrievedAt": "2026-10-23T08:11:28.668053+00:00"
+}

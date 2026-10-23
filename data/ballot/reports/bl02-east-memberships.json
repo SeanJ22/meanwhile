@@ -1,0 +1,979 @@
+{
+  "checkedAt": "2026-10-23T08:22:59.570224+00:00",
+  "method": "Only whole jurisdictions supported by saved official evidence. No county or city widened into a partial district.",
+  "states": [
+    {
+      "state": "OH",
+      "membershipsAdded": 51,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+        "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+        "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+        "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+        "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:bay_village_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:bay_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:fairview_park_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:fairview_park",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:north_olmsted_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:north_olmsted",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:rocky_river_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:rocky_river",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:westlake_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:westlake",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:brooklyn_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:brooklyn",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:berea_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:berea",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:north_royalton_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:north_royalton",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:olmsted_falls_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:olmsted_falls",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:strongsville_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:strongsville",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:olmsted_township",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:bedford_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:bedford",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:bedford_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:bedford_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:pepper_pike_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:pepper_pike",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:shaker_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:shaker_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:warrensville_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:warrensville_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:highland_hills_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:highland_hills",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:north_randall_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:north_randall",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:orange_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:orange",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:woodmere_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:woodmere",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:beachwood_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:beachwood",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:euclid_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:euclid",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:highland_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:highland_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:lyndhurst_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:lyndhurst",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:richmond_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:richmond_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:south_euclid_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:oh/place:south_euclid",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "splitCounty": "cuyahoga",
+          "splitCity": null,
+          "remaining": null
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+          "splitCounty": "cuyahoga",
+          "splitCity": "cleveland",
+          "remaining": "Whole municipalities added; split Cleveland precincts remain address-geography work."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "splitCounty": "cuyahoga",
+          "splitCity": null,
+          "remaining": null
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+          "splitCounty": "cuyahoga",
+          "splitCity": "cleveland",
+          "remaining": "District 7 contains only Cleveland precincts; needs precise ward/precinct or polygon geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "splitCounty": "cuyahoga",
+          "splitCity": "cleveland",
+          "remaining": "Whole municipalities added; split Cleveland precincts remain address-geography work."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "splitCounty": "cuyahoga",
+          "splitCity": null,
+          "remaining": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://cuyahogacounty.gov/council/about-us/",
+          "sha256": "cefa21d1c4d342721871c1a2db2133170d14b6009b49d94353b0f5298089b985"
+        }
+      ]
+    },
+    {
+      "state": "ME",
+      "membershipsAdded": 11,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:me/county:franklin/council_district:4",
+        "ocd-division/country:us/state:me/county:franklin/council_district:5"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:carrabassett_valley_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:dallas_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:east_central_franklin_ut",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:industry_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:kingfield_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/place:kingfield",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:new_sharon_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:new_vineyard_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:wyman_ut",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:chesterville_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:jay_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:5"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:androscoggin/council_district:2",
+          "splitCounty": "androscoggin",
+          "splitCity": "Lewiston",
+          "remaining": "Statute lists only census units within this city, with no whole municipality; needs census-block or polygon geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:androscoggin/council_district:5",
+          "splitCounty": "androscoggin",
+          "splitCity": "Auburn",
+          "remaining": "Statute lists only census units within this city, with no whole municipality; needs census-block or polygon geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:cumberland/council_district:5",
+          "splitCounty": "cumberland",
+          "splitCity": "Portland",
+          "remaining": "Statute lists only census units within this city, with no whole municipality; needs census-block or polygon geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "splitCounty": "franklin",
+          "remaining": null
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:5",
+          "splitCounty": "franklin",
+          "remaining": null
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "splitCounty": "aroostook",
+          "remaining": "Statutory township boundary held; county town-by-registry list or exact polygon-to-municipality containment still needed."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "splitCounty": "aroostook",
+          "remaining": "Statutory township boundary held; county town-by-registry list or exact polygon-to-municipality containment still needed."
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+          "sha256": "b59d8049c1f1ced0e317fc9d18fd663226287c0f0abdaba311337f9dedec3870"
+        }
+      ]
+    },
+    {
+      "state": "DE",
+      "membershipsAdded": 13,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:de/county:kent/council_district:4",
+        "ocd-division/country:us/state:de/county:kent/council_district:6",
+        "ocd-division/country:us/state:de/county:new_castle/council_district:2",
+        "ocd-division/country:us/state:de/county:new_castle/council_district:6",
+        "ocd-division/country:us/state:de/county:sussex/council_district:4",
+        "ocd-division/country:us/state:de/county:sussex/council_district:5"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:townsend",
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:greenville",
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:magnolia",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:houston",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:frederica",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:farmington",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:felton",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:frankford",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:dagsboro",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:millville",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:ocean_view",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:georgetown",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:de/place:millsboro",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:5"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:5",
+          "splitCounty": "new_castle",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:1",
+          "splitCounty": "new_castle",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:6",
+          "splitCounty": "new_castle",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:4",
+          "splitCounty": "new_castle",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:3",
+          "splitCounty": "new_castle",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:2",
+          "splitCounty": "new_castle",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:2",
+          "splitCounty": "kent",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+          "splitCounty": "kent",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:6",
+          "splitCounty": "kent",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+          "splitCounty": "sussex",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:5",
+          "splitCounty": "sussex",
+          "remaining": "County is split; only strictly contained whole municipality/CDP geometries added. Split places and unincorporated remnants need precise point geography."
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE%3D%2710%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "e2e54bbc1a4d63651987c324a29171138f5b7eaece44bf846c9a84b9049e2ea2"
+        },
+        {
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2710%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "2b59d7c48ee70c36c76cac92667f5ba96a0b64802e7c8bee7202e7a1ab427961"
+        },
+        {
+          "url": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "18e70c9ff5759e17b395349f1d483682d5f3c0e967756074e8a4e6efaf786d31"
+        },
+        {
+          "url": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "c9c08c4c806c62388b5ee8381103c33c671e35d8c17d9faf20890d20553aa69b"
+        },
+        {
+          "url": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "0e2d7ff1d2d328c8d89c895f68a5f6691c1d21b0188bcd4e25ca5bd0fdd89833"
+        }
+      ]
+    },
+    {
+      "state": "AL",
+      "membershipsAdded": 27,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:al/sbe:2",
+        "ocd-division/country:us/state:al/sbe:4",
+        "ocd-division/country:us/state:al/sbe:6",
+        "ocd-division/country:us/state:al/sbe:8"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:barbour",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:chambers",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:clay",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:cleburne",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:dale",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:geneva",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:henry",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:houston",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:lee",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:pike",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:randolph",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:russell",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:tallapoosa",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:greene",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:hale",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:pickens",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:blount",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:calhoun",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:cherokee",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:cullman",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:etowah",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:marshall",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:st_clair",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:dekalb",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:jackson",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:limestone",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:al/county:madison",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "splitCounties": [],
+          "remaining": null
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4",
+          "splitCounties": [
+            "Jefferson",
+            "Tuscaloosa"
+          ],
+          "remaining": "Partial-county census units excluded; whole counties published."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "splitCounties": [
+            "Talladega"
+          ],
+          "remaining": "Partial-county census units excluded; whole counties published."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8",
+          "splitCounties": [],
+          "remaining": null
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+          "sha256": "a227996ae40943a8fca4fe33b99adb67a734993955b3690be9ba5a4c44b38ab9"
+        }
+      ]
+    },
+    {
+      "state": "KS",
+      "membershipsAdded": 20,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:ks/sbe:1",
+        "ocd-division/country:us/state:ks/sbe:3",
+        "ocd-division/country:us/state:ks/sbe:5",
+        "ocd-division/country:us/state:ks/sbe:7",
+        "ocd-division/country:us/state:ks/sbe:9"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:1",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:5",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:18",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:22",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:11",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:23",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:35",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:37",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:36",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:38",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:39",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:40",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:24",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:31",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:33",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:34",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:12",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:13",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:14",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:15",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "remaining": null,
+          "splitCounties": [
+            "Marshall",
+            "Shawnee",
+            "Leavenworth",
+            "Wyandotte"
+          ],
+          "exactCountyPlanSource": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3",
+          "remaining": null,
+          "splitCounties": [
+            "Miami",
+            "Johnson"
+          ],
+          "exactCountyPlanSource": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "remaining": null,
+          "splitCounties": [
+            "Marshall"
+          ],
+          "exactCountyPlanSource": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "remaining": null,
+          "splitCounties": [
+            "Sedgwick"
+          ],
+          "exactCountyPlanSource": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "remaining": null,
+          "splitCounties": [
+            "Butler",
+            "Franklin",
+            "Miami"
+          ],
+          "exactCountyPlanSource": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip"
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+          "sha256": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d"
+        },
+        {
+          "url": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+          "sha256": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d"
+        },
+        {
+          "url": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+          "sha256": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d"
+        },
+        {
+          "url": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+          "sha256": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d"
+        },
+        {
+          "url": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+          "sha256": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d"
+        }
+      ]
+    },
+    {
+      "state": "MN",
+      "membershipsAdded": 2,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:mn/county:hennepin/council_district:3"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:mn/county:hennepin/place:st_louis_park_city",
+          "districtOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mn/place:st_louis_park",
+          "districtOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+          "splitCounty": "hennepin",
+          "splitCity": "minneapolis",
+          "remaining": "Minneapolis portions remain precise address-geography work; entire St.Louis Park published."
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://www.hennepincounty.gov/government/leadership/board-of-commissioners/district-3",
+          "sha256": "5dbfca6e47f5ba77625fe285f59e574cc5ffd2165b4b07c2c68d9675a34e1916"
+        }
+      ]
+    },
+    {
+      "state": "AR",
+      "membershipsAdded": 1,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:ar/place:sulphur_springs"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:ar/place:sulphur_springs_0567760",
+          "districtOcdId": "ocd-division/country:us/state:ar/place:sulphur_springs"
+        }
+      ],
+      "splitDistricts": [],
+      "sourceHashes": [
+        {
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=GEOID%3D%270567760%27&outFields=*&returnGeometry=false&f=json",
+          "sha256": "6a990e2b330a41c374bcc38d1ad3fbe53272f13e1e623f3e677ce4a00f3dcdcd"
+        }
+      ]
+    },
+    {
+      "state": "MD",
+      "membershipsAdded": 3,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:md/county:montgomery/council_district:7"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:md/place:brookeville",
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:md/place:laytonsville",
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:md/place:derwood",
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+          "splitCounty": "montgomery",
+          "remaining": "Strict whole places added; other partial municipality/CDP areas need point geography."
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE%3D%2724%27&outFields=NAME,GEOID&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "522dd49214097955590525ac4a66cf3a1dabcf1da353980afa2b94e8ec56a5f5"
+        },
+        {
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2724%27&outFields=NAME,GEOID&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "ff51a0bb6fe69a3274029ecc0031b4752413ff19620183e46b30b4e60754979f"
+        },
+        {
+          "url": "https://gis.montgomerycountymd.gov/arcgis/rest/services/elections/council_7_districts_maponly/MapServer/0/query?where=COUNCIL%3D%277%27&outFields=COUNCIL&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "7e8900308311efda112ab8ffd03fa8753150594c0926b2de1d9a7244df5cabdf"
+        }
+      ]
+    },
+    {
+      "state": "FL",
+      "membershipsAdded": 1,
+      "districtsNewlyLinked": [
+        "ocd-division/country:us/state:fl/county:miami-dade/council_district:5"
+      ],
+      "added": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:fl/place:fisher_island",
+          "districtOcdId": "ocd-division/country:us/state:fl/county:miami-dade/council_district:5"
+        }
+      ],
+      "splitDistricts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+          "splitCounty": "miami_dade",
+          "remaining": "Exact district polygon supplied in bl02-east-boundaries; whole-city or county membership would be overbroad."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:fl/county:miami-dade/school_board_district:1",
+          "splitCounty": "miami_dade",
+          "remaining": "Exact district polygon supplied in bl02-east-boundaries; whole-city or county membership would be overbroad."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+          "splitCounty": "miami_dade",
+          "remaining": "Exact district polygon supplied in bl02-east-boundaries; whole-city or county membership would be overbroad."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:1",
+          "splitCounty": "hillsborough",
+          "remaining": "Exact district polygon supplied in bl02-east-boundaries; whole-city or county membership would be overbroad."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:fl/county:hillsborough/council_district:3",
+          "splitCounty": "hillsborough",
+          "remaining": "Exact district polygon supplied in bl02-east-boundaries; whole-city or county membership would be overbroad."
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:fl/county:hillsborough/school_board_district:2",
+          "splitCounty": "hillsborough",
+          "remaining": "Exact district polygon supplied in bl02-east-boundaries; whole-city or county membership would be overbroad."
+        }
+      ],
+      "sourceHashes": [
+        {
+          "url": "https://gisweb.miamidade.gov/arcgis/rest/services/EnerGov/MD_LandMgtViewer/MapServer/5/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "30b87ff8baba0e4a8459b753130216a580dd6742a092b517f6d43be2d8b4ad54"
+        },
+        {
+          "url": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2712%27&geometry=-82.9%2C25.1%2C-79.9%2C28.4&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=NAME%2CGEOID&returnGeometry=true&outSR=4326&f=geojson",
+          "sha256": "005ee0bedccf2eec0d7853788a9202457d9f86db09fd3ad43f54d0fb6bc39d56"
+        }
+      ]
+    }
+  ],
+  "selectorVerification": {
+    "sourceBackedMembershipReaderReplaysPassed": 129
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "ocdId": "ocd-division/country:us/state:fl/place:miami_gardens/council_district:4",
+  "sourceUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer/0/query?where=AREA_SEAT%3D4&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "sourceHash": "bd01a4bef5a89cb6bf07c495f923d8ba15c44a0e2929c81185451ea6e1e0ed09",
+  "geometryPath": "data/ballot/evidence/bl02-east/fl-gardens-council4.geojson",
+  "featureCount": 1,
+  "sourceAreaSeat": 4,
+  "sourceLayer": "Boundary_CouncilDistricts_CityMiamiGardens_2023_py",
+  "sourceItem": "46d8851b659a4785aa2e7dd881922e00",
+  "sourceItemModified": 1773675023000,
+  "geometryValid": true,
+  "bounds": [
+    -80.2932027131587,
+    25.9113022853817,
+    -80.2320316766382,
+    25.948176368762
+  ],
+  "visualReference": {
+    "url": "https://www.miamigardens-fl.gov/DocumentCenter/View/7365/City-Council-Seat-4-PDF",
+    "path": "data/ballot/evidence/bl02-east/fl-gardens-seat4.pdf",
+    "rawHash": "56fa9fb93c1706d12349fe828d481ed3acaa7bc71af268f031f7cb573fa4e35f",
+    "observedDateOnMap": "December 4, 2023",
+    "readback": "Current polygon follows NW 27th Avenue south, has the southeastern extension to NW 19th Avenue/NW 151st Street, follows the western municipal boundary/N Red Road, and steps north around NW 183rd Street/NW 34th Court to NW 191st Street as the current map and 2026 legal notice describe."
+  },
+  "legalNotice": {
+    "url": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+    "finalUrl": "https://www.miamidade.gov/resources/legal-ads/municipalities/miami-gardens/Public%20Notice%20-%202026%20Election%20Qualifying%20Period.pdf",
+    "httpStatus": 200,
+    "retrievedAt": "2026-10-21T00:34:08.258159+00:00",
+    "rawHash": "cc75a68c2dcbeab0a7c84a992e49b9e87c1b3971cc9c0138373922d38ca9e13b",
+    "bytes": 150283
+  },
+  "pointChecks": [
+    {
+      "point": [
+        -80.262,
+        25.932
+      ],
+      "expected": true,
+      "meaning": "Interior of Seat 4, around NW 37th Avenue and NW 175th Street"
+    },
+    {
+      "point": [
+        -80.235,
+        25.93
+      ],
+      "expected": false,
+      "meaning": "East of NW 27th Avenue above the Biscayne Canal extension"
+    },
+    {
+      "point": [
+        -80.235,
+        25.913
+      ],
+      "expected": true,
+      "meaning": "Seat 4 southeastern extension between NW 155th and NW 151st Streets"
+    }
+  ],
+  "rejectedSource": {
+    "service": "Energov_TEST_2/FeatureServer/19",
+    "reason": "2021 TEST layer has materially different boundaries from the current official 2023 council layer, current city map and 2026 legal notice; never use it for the current ballot.",
+    "symmetricDifferenceArea": 0.00035815159568075117
+  },
+  "wholeCityMembershipAdded": false,
+  "countySplit": "Miami-Dade"
+}

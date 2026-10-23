@@ -1,0 +1,10 @@
+{
+  "requestedUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/221723.1.geojson",
+  "finalUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/221723.1.geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:41:13.998061+00:00",
+  "rawHash": "dea6fa8d2909e97375d82f95d557664150f4613286f6044d76834ccc17f82a2c",
+  "contentType": "application/geo+json",
+  "publisher": "New Mexico Legislature",
+  "captureNote": "Complete public adopted plan download; source linked by the Legislature PEC Maps and Data page."
+}

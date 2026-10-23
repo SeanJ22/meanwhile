@@ -1,0 +1,470 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "120 4th Street",
+    "addressLine": [
+      "120 4th Street"
+    ],
+    "city": "Juneau",
+    "state": "AK",
+    "zip": "99801"
+  },
+  "pollingLocations": [
+    {
+      "address": {
+        "locationName": "State Office Building",
+        "line1": "333 Willoughby Ave",
+        "addressLine": [
+          "333 Willoughby Ave"
+        ],
+        "city": "Juneau",
+        "state": "AK",
+        "zip": "99801"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 58.301169708653326,
+      "longitude": -134.41163688072572,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Region I Elections Office",
+        "line1": "9109 Mendenhall Mall Road",
+        "line2": "Suite 3",
+        "addressLine": [
+          "9109 Mendenhall Mall Road",
+          "Suite 3"
+        ],
+        "city": "Juneau",
+        "state": "AK",
+        "zip": "99801"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 58.371634699999994,
+      "longitude": -134.59225709999998,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "UAA Student Union",
+        "line1": "2921 Spirit Dr",
+        "addressLine": [
+          "2921 Spirit Dr"
+        ],
+        "city": "Anchorage",
+        "state": "AK",
+        "zip": "99508"
+      },
+      "notes": "Absentee in-person voting location: voters must complete an absentee in person oath and affidavit envelope which will be reviewed by the Alaska Division of Elections and a bi-partisan review board to determine voter eligibility.",
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 61.190158703670789,
+      "longitude": -149.82616952853769,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Midtown Mall",
+        "line1": "600 E Northern Lights Blvd",
+        "addressLine": [
+          "600 E Northern Lights Blvd"
+        ],
+        "city": "Anchorage",
+        "state": "AK",
+        "zip": "99503"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 61.194266236928193,
+      "longitude": -149.87171539067904,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Ted Stevens Anchorage International Airport",
+        "line1": "5000 W International Airport Rd",
+        "addressLine": [
+          "5000 W International Airport Rd"
+        ],
+        "city": "Anchorage",
+        "state": "AK",
+        "zip": "99502"
+      },
+      "notes": "Absentee in-person voting location: voters must complete an absentee in person oath and affidavit envelope which will be reviewed by the Alaska Division of Elections and a bi-partisan review board to determine voter eligibility.",
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 61.17548,
+      "longitude": -149.9805322,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Menard Sports Center",
+        "line1": "1001 S Clapp St",
+        "addressLine": [
+          "1001 S Clapp St"
+        ],
+        "city": "Wasilla",
+        "state": "AK",
+        "zip": "99654"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 61.572088591401958,
+      "longitude": -149.51706809989108,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Region III Elections Office",
+        "line1": "675 7th Ave Ste A2",
+        "addressLine": [
+          "675 7th Ave Ste A2"
+        ],
+        "city": "Fairbanks",
+        "state": "AK",
+        "zip": "99701"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 64.840532786029954,
+      "longitude": -147.72484347891378,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "UAF Wood Center",
+        "line1": "1731 S Chandalar Dr",
+        "addressLine": [
+          "1731 S Chandalar Dr"
+        ],
+        "city": "Fairbanks",
+        "state": "AK",
+        "zip": "99709"
+      },
+      "notes": "Absentee in-person voting location: voters must complete an absentee in person oath and affidavit envelope which will be reviewed by the Alaska Division of Elections and a bi-partisan review board to determine voter eligibility.",
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 64.857427532500125,
+      "longitude": -147.82348096072164,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Region IV Elections Office",
+        "line1": "214 Front St Ste 130",
+        "addressLine": [
+          "214 Front St Ste 130"
+        ],
+        "city": "Nome",
+        "state": "AK",
+        "zip": "99762"
+      },
+      "pollingHours": "Tue, Nov 3: 7 am - 8 pm",
+      "latitude": 64.498034780351972,
+      "longitude": -165.40828006275979,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "earlyVoteSites": [
+    {
+      "address": {
+        "locationName": "State Office Building",
+        "line1": "333 Willoughby Ave Fl 8",
+        "addressLine": [
+          "333 Willoughby Ave Fl 8"
+        ],
+        "city": "Juneau",
+        "state": "AK",
+        "zip": "99801"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 58.301169708653326,
+      "longitude": -134.41163688072572,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Region I Elections Office",
+        "line1": "9109 Mendenhall Mall Road",
+        "line2": "Suite 3",
+        "addressLine": [
+          "9109 Mendenhall Mall Road",
+          "Suite 3"
+        ],
+        "city": "Juneau",
+        "state": "AK",
+        "zip": "99801"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nSat, Oct 24: 10 am - 4 pm\nSun, Oct 25: 12 pm - 4 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nSat, Oct 31: 10 am - 4 pm\nSun, Nov 1: 12 pm - 4 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 58.371634699999994,
+      "longitude": -134.59225709999998,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "South Central Foundation",
+        "line1": "4175 Tudor Centre Dr",
+        "addressLine": [
+          "4175 Tudor Centre Dr"
+        ],
+        "city": "Anchorage",
+        "state": "AK",
+        "zip": "99508"
+      },
+      "notes": "Absentee in-person voting location: voters must complete an absentee in person oath and affidavit envelope which will be reviewed by the Alaska Division of Elections and a bi-partisan review board to determine voter eligibility.",
+      "pollingHours": "Tue, Oct 27: 9 am - 4 pm\nWed, Oct 28: 9 am - 4 pm\nThu, Oct 29: 9 am - 4 pm\nFri, Oct 30: 9 am - 4 pm\nMon, Nov 2: 9 am - 4 pm",
+      "latitude": 61.182206094030626,
+      "longitude": -149.79408107676039,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Midtown Mall",
+        "line1": "600 E Northern Lights Blvd",
+        "addressLine": [
+          "600 E Northern Lights Blvd"
+        ],
+        "city": "Anchorage",
+        "state": "AK",
+        "zip": "99503"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nSat, Oct 24: 10 am - 4 pm\nSun, Oct 25: 12 pm - 4 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nSat, Oct 31: 10 am - 4 pm\nSun, Nov 1: 12 pm - 4 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 61.194266236928193,
+      "longitude": -149.87171539067904,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Anchorage City Hall",
+        "line1": "632 W 6th Ave Rm 105",
+        "addressLine": [
+          "632 W 6th Ave Rm 105"
+        ],
+        "city": "Anchorage",
+        "state": "AK",
+        "zip": "99501"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nSat, Oct 24: 12 pm - 3 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 61.216329913042351,
+      "longitude": -149.89482208970097,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Menard Sports Center",
+        "line1": "1001 S Clapp St",
+        "addressLine": [
+          "1001 S Clapp St"
+        ],
+        "city": "Wasilla",
+        "state": "AK",
+        "zip": "99654"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nSat, Oct 24: 10 am - 4 pm\nSun, Oct 25: 12 pm - 4 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nSat, Oct 31: 10 am - 4 pm\nSun, Nov 1: 12 pm - 4 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 61.572088591401958,
+      "longitude": -149.51706809989108,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Region III Elections Office",
+        "line1": "675 7th Ave Ste A2",
+        "addressLine": [
+          "675 7th Ave Ste A2"
+        ],
+        "city": "Fairbanks",
+        "state": "AK",
+        "zip": "99701"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nSat, Oct 24: 10 am - 4 pm\nSun, Oct 25: 12 pm - 4 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nSat, Oct 31: 10 am - 4 pm\nSun, Nov 1: 12 pm - 4 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 64.840532786029954,
+      "longitude": -147.72484347891378,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Service Area 10 Camp Building 8",
+        "line1": "1234 Drillsite Road",
+        "addressLine": [
+          "1234 Drillsite Road"
+        ],
+        "city": "Prudhoe Bay",
+        "state": "AK"
+      },
+      "notes": "Absentee in-person voting location: voters must complete an absentee in person oath and affidavit envelope which will be reviewed by the Alaska Division of Elections and a bi-partisan review board to determine voter eligibility.",
+      "pollingHours": "Sat, Oct 31: 11 am - 5 pm\nSun, Nov 1: 8 am - 5 pm\nMon, Nov 2: 8 am - 8 pm",
+      "latitude": 70.2128213,
+      "longitude": -148.4051002,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "Region IV Elections Office",
+        "line1": "214 Front St Ste 130",
+        "addressLine": [
+          "214 Front St Ste 130"
+        ],
+        "city": "Nome",
+        "state": "AK",
+        "zip": "99762"
+      },
+      "pollingHours": "Mon, Oct 19: 8 am - 5 pm\nTue, Oct 20: 8 am - 5 pm\nWed, Oct 21: 8 am - 5 pm\nThu, Oct 22: 8 am - 5 pm\nFri, Oct 23: 8 am - 5 pm\nSat, Oct 24: 10 am - 4 pm\nSun, Oct 25: 12 pm - 4 pm\nMon, Oct 26: 8 am - 5 pm\nTue, Oct 27: 8 am - 5 pm\nWed, Oct 28: 8 am - 5 pm\nThu, Oct 29: 8 am - 5 pm\nFri, Oct 30: 8 am - 5 pm\nSat, Oct 31: 10 am - 4 pm\nSun, Nov 1: 12 pm - 4 pm\nMon, Nov 2: 8 am - 5 pm",
+      "latitude": 64.498034780351972,
+      "longitude": -165.40828006275979,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Alaska",
+      "electionAdministrationBody": {
+        "name": "Alaska Division of Elections",
+        "electionInfoUrl": "https://www.elections.alaska.gov/",
+        "electionRegistrationUrl": "https://voterregistration.alaska.gov/",
+        "electionRegistrationConfirmationUrl": "https://myvoterportal.alaska.gov/",
+        "absenteeVotingInfoUrl": "https://www.elections.alaska.gov/voter-information/absentee-and-early-voting/",
+        "votingLocationFinderUrl": "https://www.elections.alaska.gov/election-polls/",
+        "ballotInfoUrl": "https://www.elections.alaska.gov/sample-ballots/",
+        "correspondenceAddress": {
+          "line1": "PO Box 110017",
+          "line2": "Juneau, AK 99811-0017",
+          "addressLine": [
+            "PO Box 110017",
+            "Juneau, AK 99811-0017"
+          ]
+        },
+        "electionOfficials": [
+          {
+            "officePhoneNumber": "(907) 465-4611",
+            "faxNumber": "(907) 465-3203",
+            "emailAddress": "elections@alaska.gov"
+          }
+        ]
+      },
+      "local_jurisdiction": {
+        "name": "04",
+        "electionAdministrationBody": {
+          "name": "Region I Election Office",
+          "correspondenceAddress": {
+            "line1": "PO Box 110018",
+            "line2": "Juneau, AK 99811-0018",
+            "addressLine": [
+              "PO Box 110018",
+              "Juneau, AK 99811-0018"
+            ]
+          },
+          "electionOfficials": [
+            {
+              "officePhoneNumber": "(907) 465-3021",
+              "faxNumber": "(907) 465-2289",
+              "emailAddress": "electionsr1@alaska.gov"
+            }
+          ]
+        },
+        "sources": [
+          {
+            "name": "Voting Information Project",
+            "official": true
+          }
+        ]
+      },
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

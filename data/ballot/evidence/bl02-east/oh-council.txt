@@ -1,0 +1,976 @@
+     
+	About Us
+                          
+<!-- Google tag (gtag.js) EH 2023-07-17-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z92R2RZ4GQ">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Z92R2RZ4GQ');
+
+
+ window._monsido = window._monsido || {
+        token: "G98XI9WyVuNOTjDxOORC8g",
+        statistics: {
+            enabled: true,
+            cookieLessTracking: false,
+            documentTracking: {
+                enabled: true,
+                documentCls: "monsido_download",
+                documentIgnoreCls: "monsido_ignore_download",
+                documentExt: ["pdf","doc","ppt","docx","pptx"],
+            },
+        },
+        heatmap: {
+            enabled: true,
+        },
+    };
+    
+            es-exclude-start-header
+               An official website of the Cuyahoga County government. Here’s how you know
+                               The site is secure.  A lock or https:// means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
+                                 The .gov means it's official.  A .gov website belongs to an official government organization in the United States.
+                                 Skip to Main Content    
+
+
+
+
+
+    To Top
+
+
+   
+
+
+
+
+
+    
+
+
+circle-left
+
+
+
+circle-right
+
+
+
+search
+
+
+
+youtube-play
+
+
+
+twitter-square
+
+
+
+facebook-square
+
+
+
+group
+
+
+
+flag-o
+
+
+
+newspaper-o
+
+
+
+star-o
+
+
+
+desktop
+
+
+
+certificate
+
+
+
+envelope-o
+
+
+
+share-alt
+
+
+
+print
+
+
+
+notebook-list
+
+
+
+notebook-text
+
+
+
+document-recording
+
+
+
+
+    
+
+
+
+
+
+    
+
+
+
+
+
+    Council
+
+
+
+
+
+    A +A -
+
+
+
+
+    
+        
+            
+        
+        
+            Submit
+            
+        
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+    FacebookTwitterYoutubeNewsletter RegistrationInstagramPodcast
+
+
+
+
+    
+    
+        
+            Toggle navigation
+            
+            
+            
+        
+    
+
+    
+        
+        HOME
+        Legislation
+        Reports/Presentations
+        Calendar
+        About Us
+        
+    
+
+
+
+
+
+
+
+
+
+
+
+    
+
+      
+     
+        Find Your District
+
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+    search
+
+
+
+
+     
+
+
+       
+
+    
+                Home 
+                Council 
+                About Us
+    
+
+
+    es-exclude-end-header
+
+
+
+
+
+
+
+    About Us
+
+    
+
+
+
+
+    The Cuyahoga County Council is an 11-member body elected by the residents of our neighborhoods. The Council makes policy decisions for the effective functioning of County government, and is a link between government agencies and citizens. It has legislative and taxing authority for the County, and is a co-equal branch of the County government with the executive branch. This form of government for Cuyahoga County was established in January 2011, replacing the three-member Board of County Commissioners, when the Charter form of government adopted by voters went into effect.All Council meetings are open to the public and take place on the 2nd and 4th Tuesday of each month at 5:00 p.m. Council Chambers are located on the 4th floor of the Cuyahoga County Administrative Headquarters at 2079 East 9th Street, Cleveland, OH 44115. Citizens can also engage directly with their District representatives. Read about the Council committees.
+
+
+
+
+
+    
+    
+        
+            Expand all
+            Collapse all
+        
+
+        
+                
+                    Council Members
+                
+                    
+                        District 2: Dale Miller, President
+                        
+                            Cuyahoga County Council District 2Serving the cities of Brook Park, Lakewood, Cleveland Ward 13, Precincts - A, H, I, J, K, L, M, N, O, P, Q, and Cleveland Ward 15, Precincts -  A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R.Office: 216-698-2011E-mail: damiller@cuyahogacounty.govDale Miller supports honest, efficient, and transparent government at County Council. He is working to create positive conditions for job creation, to improve human services with a prevention focus, and help create career pathways for workers. He is particularly focused on developing effective local responses to four issues that have national and international significance—climate change, reducing the number of people incarcerated, opiate addiction, and strengthening democracy. Dale does his best to apply spiritual principles to public service, believing that government’s primary purposes are to support diversity and inclusion, to help everyone live a happy and prosperous life, and to especially help those who are at a disadvantage. He also believes that fair, respectful, inclusive, and democratic decision-making processes are important, in addition to the results achieved.Dale is a 1967 graduate of Garfield Heights High School who went on to achieve a Bachelor of Science in Psychology from Case Western Reserve University, and a Master of Science and Ph.D. in Clinical Psychology from the University of Utah. He also completed Leadership Cleveland in 1983.Before entering politics, He worked as a program evaluator at a health center in North Platte, Nebraska, and a psychologist with the Community Guidance Center in Cleveland. He was elected to Cleveland City Council, and then served as a State Representative and State Senator. At Cleveland City Council, Dale helped bring the Rock & Roll Hall of Fame and the Great Lakes Science Center to Cleveland. In Columbus, he sponsored legislation that restored state funding for Adult Protective Services for seniors.At County Council, Dale was the primary sponsor of legislation that established the rules under which Council operates and the process for reviewing contracts. He also was the prime sponsor of a series of ordinances that established the county’s financial policies and financial reporting requirements. He was the prime sponsor of several significant County Charter amendments, which were passed by the voters, including a major correction of the Board of Revision structure and a provision making the Inspector General a County Charter agency, with expanded tools including subpoena power and greater access to documents.Dale has also been active on human services issues. He was the prime sponsor of legislation that provides assistance to low income seniors to obtain hearing aids and legislation that funds the ID Crisis Collaborative to assist very low income persons to obtain identification cards necessary to access available benefits. He served for six years as the first Chairperson of the four-county Great Lakes Regional Child Abuse and Neglect Prevention Council, operating under the new structure initiated by the Ohio Legislature in 2016.Dale has been very active on environmental issues. He co-sponsored legislation to create the Cuyahoga County Department of Sustainability and legislation to ban single-use plastic bags. He was also instrumental in initiating and developing the county’s Climate Action Plan. In addition, he played a leadership role in ensuring that several clean energy and environmental improvement programs received funding under the American Rescue Plan Act (ARPA).Councilman Miller is the Chairperson of the Finance and Budgeting Committee and oversees the biennial budget process which allocates about $1.6 billion in funding per year. He is also the Vice-Chair of the Public Works, Procurement & Contracting Committee and serves on the following additional committees and boards:Health, Human Services & Aging
+    Human Resources, Appointments & Equity
+    Operations, Intergovernmental Relations & Public Transportation
+    Board of Control
+    Northeast Ohio Areawide Coordinating Agency (NOACA)
+    Dale lives in the West Park area of Cleveland and has been married to his wife, Carol, for 37 years.  
+                        
+                    
+                    
+                        District 7: Yvonne M. Conwell, Vice President
+                        
+                            Cuyahoga County Council District 7Serving the city of Cleveland Ward 2, Precincts – E, J, Cleveland Ward 3, Precincts – A, B, C, D, E, G, Q, Cleveland Ward 4, Precincts – B, C, D, E, G, I, M, N, O, Q, Cleveland Ward 5, Precincts – C, E, G, H, I, N, Cleveland Ward 6, Precincts – A, B, C, D, E, F, G, J, K, L, O, P, Q, Cleveland Ward 7, Precincts – A, C, D, E, G, H, K, P, Q, Cleveland Ward 8, Precincts – A, B, C, D, E, F, G, H, I, J, L, M, N, O, P, Q, Cleveland Ward 9, Precincts – A, B, E, F, G, H, K, L, M, O, P, R, S, and Cleveland Ward 14, Precincts – G, H, N, O.Office: 216-698-2017E-mail: yconwell@cuyahogacounty.govYvonne M. Conwell is honored to serve as the County Council Representative for District 7. She is committed to building an effective and efficient County government that continues to work every day for safer neighborhoods, stronger health and human services, and the inclusion of a vigorous business environment that promotes sustainable economic growth and equitable job development.Under Conwell’s leadership, District 7 has been enriched by new business growth; creating jobs for businesses with established economic advancement support systems; collaborating with other agencies to help build partnerships that support District 7 infrastructure to be sustainable and stronger, and ensuring that Health and Human services safety nets continue to exist.The Councilwoman has diligently sought to sponsor legislation in every committee she is a member of. And a proud Co-sponsor to adopt the first Equity Plan for Cuyahoga County. The Equity ordinance established definitions and identified specific approaches necessary to implement and achieve "fair and just" practices that were embedded as core elements in the goals and objectives of Cuyahoga County. This legislation was the foundation in which our Diversity, Equity, and Inclusion Department was established.As a lifelong resident of Cuyahoga County and graduate of Cleveland State University, Mrs. Conwell has spent most of her career serving children and families. She loves the city, in which she lives, for its diversity in the arts and its longtime commitment to industry and education. Conwell has been married to her husband, Kevin and together they both enjoy all the arts Cuyahoga County has to offer.Conwell is the Chair of the Health and Human Services Committee, and is a member of Human Resources, Appointments and Equity Committee, Public Works, Procurement and Contracting Committee, Public Safety and Justice Affairs Committee, and Education, Environment & Sustainability Committee.
+
+ 
+                        
+                    
+                    
+                        District 1: Patrick Kelly
+                        
+                            Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake.
+Office: 216-698-2047E-mail: pkelly01@cuyahogacounty.govCouncilmember Patrick Kelly has been a resident of District 1 for more than 50 years, and on Monday, January 2, 2023, he was sworn in as the District 1 representative for the Cuyahoga County Council.Pat spent most of his career as a Police Officer and Bomb Technician for the Westlake Police Department and retired in 2005. Prior to taking his County seat, Pat was the At-Large Council Member for the City of North Olmsted.Councilmember Kelly is an Executive Board Member of the Western Cuyahoga Fraternal Order of Police (FOP) Lodge 25 and the Retired Irish Police Society. He currently works as a Bailiff Supervisor for the Rocky River Municipal Court.Pat has been married to his wife Laura for 40 years and together they have four children, Shannon, Martin, Erin and Caitlin. He is also the proud Grandfather to Callen, Ashlyn, MacKenzie, Brooklyn and Reagan.  
+                        
+                    
+                    
+                        District 3: Martin J. Sweeney
+                        
+                            Cuyahoga County Council District 3Serving the cities of Brooklyn, Cleveland Ward 4, Precincts – D, F, H, J, K, L, P, Cleveland Ward 7, Precincts – B, I, J, L, N, O, R, Cleveland Ward 11, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, Cleveland Ward 12, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, Cleveland Ward 13, Precincts – B, C, D, E, F, G, Cleveland Ward 14, Precincts – A, B, C, D, E, F, I, J, K, L, M.Office: 216-698-2230E-mail: mjsweeney@cuyahogacounty.govBorn and raised in Cleveland, Martin J. Sweeney is a native son who understands and loves Cuyahoga County. Councilman Sweeney has earned a reputation as a hands-on, roll-up-his-sleeves public servant who favors direct contact with constituents.Mr. Sweeney was appointed to the County Council in January 2021 and was duly elected to a full 4-year term on November 8, 2022, representing the residents of District 3. District 3 encompasses the City of Brooklyn, the Village of Linndale and a number of Westside wards and precincts in the City of Cleveland. His focus has always been and remains on economic development, health and human services, and public works to improve all the lives of those living in Cuyahoga County. Councilman Sweeney serves as the Vice Chair of the Heath, Human Services & Aging Committee and is also a member of the Human Resources, Appointments & Equity Committee, the Public Works, Procurement & Contracting Committee, and the Council Operations, Intergovernmental Relations & Public Transportation Committee.Prior to his time on Cuyahoga County Council, Martin served as a member of the Ohio House of Representatives, serving the State’s District 14. He was the Ranking Member on the Higher Education and Workforce Development Committee. Prior to his time in the State Legislature, Councilman Sweeney served 18 years on Cleveland City Council, where he represented Ward 16 and was later unanimously elected by his peers as Cleveland City Council President. He was deeply involved in the redevelopment of downtown, including the Convention Center and Medical Mart, now known as the Global Center, a downtown urban casino, new construction in the historic Flats, and an expansion of Cleveland State University including dormitories, a student center, and a K-12 school on campus.A proud graduate of St. Ignatius High School, Martin earned his bachelor’s degree in political science from Cleveland State University. He was a member of the legendary 1986 CSU basketball team that improbably advanced to the Sweet 16 Round of the NCAA Tournament, in the process capturing the heart of a city.Sweeney graduated from the prestigious Leadership Cleveland Class of 2004, which brings together local community leaders from all walks of life. He is also a graduate of the Harvard Program for Leadership Development and a recipient of the Cleveland State University's 2013 Distinguished Alumni Award for Community Service.Martin and his late wife, Katherine, have four beautiful daughters. 
+                        
+                    
+                    
+                        District 4: Mark Casselberry
+                        
+                            Cuyahoga County Council District 4Serving the cities of Middleburg Heights, Parma, and Parma Heights.Office: 216-698-2013E-mail: mcasselberry@cuyahogacounty.govCouncilman Mark Casselberry is serving his first term on Cuyahoga County Council. Prior to serving at the County level, Councilman Casselberry was Ward 3 Councilman in Parma where he served for 13 years. During his time on Council, Casselberry was elected as majority leader by his colleagues and served as chairman of the finance committee as well as the public service committee.He has been a member of the International Brotherhood of Electrical Workers Local 38 for more than three decades. Mark and his family have volunteered for several food banks in the Parma area, and he and his wife Judy served as board members for the Rise in Love Center, a local charity that helps families in need with food and utilities.An active parish member of St. Charles Borromeo Parish, Casselberry has served as a CYO basketball and volleyball coach, and is also an usher at Sunday Mass.In 2011, he was presented with a citizens award from both the cities of Cleveland and Parma for assisting a motorcycle officer who was involved in a serious traffic accident. Councilman Casselberry was born and raised in the West Park neighborhood of Cleveland. He and his wife Judy moved to Parma in 2002 when they purchased Judy’s childhood home. The Casselberrys have three children and four grandchildren. 
+
+                        
+                    
+                    
+                        District 5: Michael Gallagher
+                        
+                            Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township.
+Office: 216-698-2015E-mail: mjgallagher@cuyahogacounty.govMichael J. Gallagher is honored to serve as the District 5 County Council Representative and is committed to continuing Council’s efforts in restoring the full faith and trust of the public in Cuyahoga County Government. During his initial term in office, Mr. Gallagher has been focused on public safety issues, local business promotion and county finances.Mr. Gallagher’s elected public service began in 1999 when he was first voted on to Strongsville’s City Council, where he also served as President of the Council for 3 years. He has served as a Trustee on the Hospital Board of Southwest General Hospital for 10 years and chaired the Finance Committee for 7 years, which raised and maintained Strongsville’s AAA rating. He is most proud of having founded the Strongsville Youth Commission, which promotes young adult leadership in the city. Mr. Gallagher retired from the State Court of Appeals, 8th District, as a Deputy Court Administrator in 2010. He was the recipient of the Franklin A. Polk Public Servants Award in 2007, awarded by the Cuyahoga County Bar Foundation.Born and raised in Lakewood, he is a graduate of Lakewood’s Saint Edward High School and earned his Bachelor of Arts degree from Cleveland State University. Mr. Gallagher is married to Sandy (Sakellaris) and together they have raised two sons, Alex and Sam, while residing in Strongsville for 27 years.
+ 
+                        
+                    
+                    
+                        District 6: Robert E. Schleper, Jr.
+                        
+                            Cuyahoga County Council District 6Serving the cities of Brecksville, Broadview Heights, Independence, Mayfield Heights, Seven Hills, and Solon; the villages of Bentleyville, Chagrin Falls, Gates Mills, Glenwillow, Hunting Valley, Mayfield, Moreland Hills, Oakwood, Valley View, Walton Hills, and Chagrin Falls Township.Office: 216-698-2016E-mail: rschleper@cuyahogacounty.govDr. Robert E. Schleper, Jr. is a public servant at heart and is committed to the growth and success of Cuyahoga County. Born and raised in Northeastern Ohio, Dr. Schleper is deeply invested in the region’s growth and potential. As the representative for District 6, he believes in building consensus, identifying partnership opportunities, and creating an environment accessible to all residents of the County. He is particularly interested in initiatives that address population decline, brain drain, and educational inequity.Dr. Schleper has worked professionally in the field of education for close to 20 years. He has held educational positions in Cleveland, Boston, and Denver. He has been a high school English teacher and department chair, a high school principal, and has held administrative positions in gifted and talented education, instructional services, and concurrent enrollment. In the university space, he has held faculty appointments and has led numerous student support teams that included academic advising and student success, student affairs, and international affairs. Currently, Dr. Schleper works with the Student Experience Team at Western Governors University, developing and building student success programming within their Academy division. His work focuses on creating transformative and accessible educational experiences for students seeking a new path to higher education.Robert’s political career started in 2015 when he was elected as councilman for the Village of Chagrin Falls. When elected, he was both the youngest, and the first LGBTQ member of that Council. Dr. Schleper was Chair of the Administration and Compensation Committee and Chair of the Arts Commission. Within this position, he served as liaison to the Chagrin Falls Exempted Village School District Board of Education. After moving to Denver, Colorado to pursue a professional opportunity with Denver Public Schools, Dr. Schleper became active in the Denver County political and educational community.In 2018, Dr. Schleper was appointed by then mayor Michael Hancock to serve as Commissioner for LGBTQ Affairs, as well as Commissioner for Crime Prevention and Control. His work on the LGBTQ Commission focused on advancing social, economic, and political equality for lesbian, gay, bisexual, transgender, and queer people. While he was a Crime Prevention and Control Commissioner, he supported evidence-based, diversionary programs and worked to reduce recidivism rates throughout the County. During Dr. Schleper’s tenure, the role of the CPC Commission expanded to include behavioral health, identifying and addressing the specific health needs for those involved in the justice system. Within both positions, he worked with numerous stakeholders and legislators at the city, county, and state levels. Dr. Schleper served as the liaison to Denver Public Schools for both Commissions.In 2021, after returning to Northeastern Ohio, Robert ran for and won a seat on the Chagrin Falls School District’s Board of Education. While on the Board, he sat on the District High Quality Learning Committee, the District Policy Advisory Committee, the District Capital Planning Committee, the District Healthcare Advisory Committee, and was the District Legislative Liaison to the Ohio School Board Association, as well as the Board Union Representative. Dr. Schleper received an Ed.D. in Educational Leadership from New England College. His dissertation, ‘Uncovering Components of Effective High Schools Through Stakeholder and Community Exchange’ researched the connections between high performing school districts and the communities they serve. He also holds an M.Ed in Professional Teaching as well as a B.A. in Journalism and English, both from John Carroll University. He has completed graduate programming, licensure, and been selected to participate in other academic opportunities including Northeastern University’s MAT program, Cleveland State University’s nationally ranked Public Policy program, and other professional and educational certifications.On Council, Dr. Schleper is Chair of the Operations, Information Technology, and Transportation Committee, and Vice Chair of the Education, Environment, and Sustainability Committee. He is a member of the Finance and Budget Committee, the Community Development and Housing Committee, and the Health, Human Services, and Aging Committee.Robert, his husband Thomas, and their daughter Josephine, reside in Moreland Hills.
+                        
+                    
+                    
+                        District 8: Pernel Jones Jr.
+                        
+                            Cuyahoga County Council District 8Serving the cities of Brooklyn Heights, Garfield Heights, Maple Heights, and Cleveland Ward 1, Precincts – B, C, E, G, I, J, Cleveland Ward 2, Precincts – A, B, C, D, F, G, H, K, L, M, N, O, P, Cleveland Ward 3, Precincts – H, I, J, K, Cleveland Ward 4, Precincts – A, Cleveland Ward 5, Precincts – A, B, D, F, H, J, K, L, M, O, Cleveland Ward 7, Precincts – F, M, and Cleveland Ward 14, Precincts – H, N.Office: 216-698-2019Email: pjones@cuyahogacounty.govPernel Jones, Jr., is a lifelong resident of Cuyahoga County. He was elected to a two year term as Vice-President beginning in 2015. In 2021, Mr. Jones was unanimously elected as President. Mr. Jones endeavors to promote trust and confidence in County government through effective and accountable leadership. As a member of the Council, among his goals are job retention and the creation of new jobs in the county.Mr. Jones intends to maintain government’s moral and legal obligations and responsibilities to provide the best social service delivery for our children, seniors, and others in need.He attended Baltimore Polytechnic Institutes in 1986, and received a Bachelor of Science from the University of Maryland in 1991.Currently, Mr. Jones is the Director of Community Relations for the Pernel Jones and Sons Funeral Home. He has been a Licensed Funeral Director since 1992. He married his wife Tammy in 1998. 
+                        
+                    
+                    
+                        District 9: Meredith M. Turner
+                        
+                            Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere.Office: 216-698-2023E-mail: mturner02@cuyahogacounty.gov Meredith M. Turner’s career is grounded in the belief that “education is a passport to the future.” A proud graduate of Shaker Heights High School, Meredith is a lifelong advocate for education, civic engagement, and community empowerment. Her professional journey reflects a deep commitment to serving others across education, government, and electoral politics. Meredith began her career as a teacher and coach in the Cleveland and Shaker Heights City School Districts. She continues to hold an active educator’s license with the Cleveland Metropolitan School District. Her dedication to public service grew during her tenure in the U.S. Senate, where she served for over a decade as an Immigration Caseworker, Regional Representative, and Constituent Services Liaison for Senator Sherrod Brown. Before joining County Council, Meredith worked as an Election Official at the Cuyahoga County Board of Elections, managing absentee ballot processes for voters with disabilities, individuals in nursing homes, and those incarcerated. She also oversaw absentee ballot application rejections and corrections to ensure voting access and accuracy.Meredith is a lifelong Democrat and has dedicated her time to empowering communities through civic engagement. She is an active member of the Democratic Party, serving on the Cuyahoga County Democratic Party Executive Committee, the Shaker Heights Democratic Club, and the Cuyahoga County Women’s Democratic Caucus. Additionally, she has represented Ohio as a delegate to the Democratic National Conventions for every General Election since 2012. Her community involvement extends to founding the Cleveland Chapter of the National Congress of Black Women and serving as Chair of the Social Action Committee for Delta Sigma Theta Sorority, Incorporated, Greater Cleveland Alumnae Chapter. She is a former member of the organization’s National Social Action Commission.  Meredith holds an Associate Degree from Cuyahoga Community College, a Bachelor of Arts in Psychology from Chicago State University, and a Master of Education in Curriculum and Instruction from Cleveland State University. She is a proud member of Leadership Cleveland’s Class of 2025 and has served on numerous advisory boards and commissions, including the Cuyahoga County Common Pleas High-Risk Domestic Violence Court Advisory Community, the Cuyahoga County Corrections & Planning Commission, the City of Shaker Heights Fair Housing Review Board, and the Black Professionals Association Charitable Foundation Board of Trustees. She is also a graduate of the FBI Citizens Academy.Meredith currently serves as Chair of the Finance & Budgeting Committee and Vice Chair of the Economic Development & Planning Committee. She is also a member of the Human Resources, Appointments & Equity Committee, Public Safety & Justice Affairs Committee, and the Board of Control. She sits on the Economic Development Commission and the Citizens Advisory Council on Equity. Awards & HonorsCouncilwoman Turner has received numerous accolades for her leadership and community impact, including:Citizen of the Year (2022)—Omega Psi Phi Fraternity, Zeta Omega ChapterStephanie Tubbs Jones Community Leader Award (2023)—Black Law Students Association, Case Western Reserve University10 Black Dope Girls You Should Know (2023)—Black Women WerkChange Maker Award (2023)—Akron Alumnae Chapter of Delta Sigma ThetaLiving Legacy Award (2023)—Black Women in Faith + Business ExcellenceCitizenship Award (2023)—Beta Lambda Omega Chapter of Iota Phi ThetaMost Influential, Who’s Who in Black Cleveland (2023)Civic Impact Award (2023)—Momentous MentoringEmerging Leader Award (2023)—NAACPDorothy I. Height Social Action Award (2023)—Delta Sigma Theta Sorority, Inc., Greater Cleveland Alumnae ChapterCommunity Engagement Award (2023)—NOBLE (National Organization of Black Law Enforcement Executives)Outstanding Afro-American Woman of the Year Award (2023)—El Hasa Court #47Exceptional Woman of Excellence Award (2024)—Women of God MinistriesThe Power of SHE Social Justice Award (2025)—Zeta Phi Beta Sorority, Gamma Delta Zeta Chapter  
+                        
+                    
+                    
+                        District 10: Michael J. Houser, Sr.
+                        
+                            Cuyahoga County Council District 10Serving the cities of Cleveland Ward 8, Precincts – K, Cleveland Ward 9, Precincts – C, D, I, J, N, Q, T, Cleveland Ward 10, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, East Cleveland, Cleveland Heights, University Heights, and the Village of Bratenahl.Office: 216-698-2022E-mail: mhouser01@cuyahogacounty.govBorn and raised on Cleveland’s Eastside, Councilman Michael J. Houser Sr. leads with a blueprint for a stronger, safer, and more inclusive Cuyahoga County. His career is defined by bold action, measurable results, and a commitment to ensuring every resident has a stable home, a safe neighborhood, and a fair opportunity to succeed.Through his Housing with Houser initiative, he supported new affordable homes for seniors, veterans, and residents with disabilities. He created the District 10 Housing Fund to open new pathways to homeownership and drive revitalization across Glenville, Collinwood, and Cleveland Heights. In East Cleveland, he is the leading voice behind the transformation of the Circle East District, turning a neglected corridor into a center of community pride and economic promise. He also helped create the County’s first Reentry Housing Summit and positioned Cuyahoga County as a national leader in second chance housing reform.Houser is equally committed to building safer communities. He led the creation of the Office of Violence Prevention, shifting the focus from reaction to prevention and strengthening support for neighborhoods most affected by gun violence. He authored the countywide CROWN Act to outlaw hair based discrimination and championed protections for LGBTQIA+ residents. His leadership reflects a belief that safety includes dignity, opportunity, and respect for all people.His work extends beyond housing and safety. He invested in the creation of local businesses by securing seed funding for both the Noble Area Business Association and the Taylor Merchant Association in Cleveland Heights’ small business corridors. He also partnered with East Cleveland to remove more than 250 tons of waste from neighborhoods that had gone ignored for far too long.Earlier in his career, he defended collective bargaining rights through We Are Ohio and served as Special Assistant to Cuyahoga County. In that role he launched the annual Your Voice Matters Youth Summit, created the County’s first Voting Rights Coordinator position, and led a faith based infant mortality initiative. He is a proud graduate of Kent State University and earned a Master of Public Administration from Cleveland State University’s Levin College of Public Affairs and Education.Houser believes Cuyahoga County’s greatest strength is its people when every community grows stronger, every neighborhood feels safer, and everyone moves forward together. Above all, he is a devoted father to his son Michael J. Houser Jr., affectionately known as Bubba.
+                        
+                    
+                    
+                        District 11: Sunny M. Simon
+                        
+                            Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid.
+Office: 216-698-2035E-mail: ssimon@cuyahogacounty.govSunny Simon has served on Cuyahoga County Council since 2011. She was the inaugural Vice President and is currently Chair of the Education, Environment and Sustainability Committee.During her time in office, Ms. Simon has worked to make our new County government accessible and transparent and to restore the public trust. She helped to establish the Office of Inspector General and to create the strongest ethics policy in the State. Ms. Simon has sponsored legislation supporting domestic partner benefits for County employees, reducing pesticide use on County property, directing casino revenue to suburban communities and providing veteran housing. She has also supported increased funding for education, safety, youth and senior services.Ms. Simon is the Board President of the Cuyahoga County Solid Waste District, Vice-Chair of the Cuyahoga County Planning Commission and serves on the Cuyahoga Drug Court Board. She is the former President of South Euclid City Council and founded the South Euclid Humane Society and the South Euclid Dog Park.Ms. Simon holds an honors degree from John Carroll University and a Juris Doctorate from the Case Western Reserve University School of Law. She has a private law practice and has served as a volunteer Juvenile Court magistrate in South Euclid.Ms. Simon is chair of the Education, Environment & Sustainability Committee.
+ 
+                        
+                    
+        
+    
+
+
+
+
+
+    $('[data-sf-role=toggleLink]').on('click', function () {
+        var link = $(this);
+        var icon = link.find('.sf-icon');
+        if (link.hasClass("expanded")) {
+            icon.removeClass('glyphicon-chevron-down');
+            icon.addClass('glyphicon-chevron-right');
+        }
+        else {
+            icon.removeClass('glyphicon-chevron-right');
+            icon.addClass('glyphicon-chevron-down');
+        }
+    });
+
+    $('[data-sf-role=expandAll]').on('click', function () {
+        var wrapper = $(this).closest('[data-sf-role=lists]');
+        var links = wrapper.find('[data-sf-role=toggleLink]');
+        var icons = links.find(".sf-icon");
+        icons.removeClass('glyphicon-chevron-right');
+        icons.addClass('glyphicon-chevron-down');
+    });
+
+    $('[data-sf-role=collapseAll]').on('click', function () {
+        var wrapper = $(this).closest('[data-sf-role=lists]');
+        var links = wrapper.find('[data-sf-role=toggleLink]');
+        var icons = links.find(".sf-icon");
+        icons.removeClass('glyphicon-chevron-down');
+        icons.addClass('glyphicon-chevron-right');
+    });
+
+
+
+
+
+
+    StaffCouncil Administrative Staff
+
+    
+
+                
+                                             
+                   
+Joseph Nanni, Chief of Staff
+                   
+
+                    
+                      Email: jnanni@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-2520
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Michael W. King, Special Counsel
+                   
+
+                    
+                      Email: mking01@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-2239
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Molly M. McGinnis, Office Manager
+                   
+
+                    
+                      Email: mmcginnis01@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-2010
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Trevor McAleer, Legislative Budget Advisor
+                   
+
+                    
+                      Email: tmcaleer@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-6472
+                    
+                      
+              
+                
+              
+            
+
+
+
+
+    
+    
+
+                
+                                             
+                   
+Cynthia L. Mason, Policy Advisor
+                   
+
+                    
+                      Email: cmason@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-2042
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Laura M. Black, Policy Advisor
+                   
+
+                    
+                      Email: LMblack@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-3156
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Katura L. Pleasant, Policy Advisor
+                   
+
+                    
+                      Email: KPleasant01@cuyahogacounty.gov
+                              
+                                      Phone: 216-443-5391
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Devyn Giannetti, Communications & Outreach Specialist
+                   
+
+                    
+                      Email: dgiannetti01@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-3562
+                    
+                      
+              
+                
+              
+            
+
+
+
+
+    
+
+
+
+
+
+
+    Clerk of Council
+
+    
+
+                
+                                             
+                   
+Andria Richardson, Clerk of Council
+                   
+
+                    
+                      Email: arichardson01@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-2020
+                    
+                      
+              
+                
+              
+            
+                
+                                             
+                   
+Janine D. Carter, MPA, CMC, Deputy Clerk of Council
+                   
+
+                    
+                      Email: jdcarter@cuyahogacounty.gov
+                              
+                                      Phone: 216-698-7208
+                    
+                      
+              
+                
+              
+            
+
+
+
+
+    
+    
+    
+
+
+    
+    
+
+
+
+
+    Contact Information Phone:
+ 216-698-2010
+  Fax:
+ 216-698-2040
+  Email: Council@cuyahogacounty.gov Contact Us Form Address:
+ Cuyahoga County Administrative Headquarters
+        2079 East Ninth Street, 8th Floor
+        Cleveland, OH 44115
+    &amp;amp;nbsp;
+
+
+
+
+
+     Find Your DistrictTo find your specific ward or district and its representative, utilize our district map.Find My District
+
+
+
+
+
+     Additional ResourcesCouncil History
+
+    
+
+
+
+
+
+
+      
+
+    
+
+
+
+
+    
+
+
+
+
+
+    
+
+
+
+
+
+    textarea {
+        min-height: 80px;
+        max-height: 80px;
+        height: auto;
+        width: 100%;
+    }
+
+    .hsfontweight {
+        font-weight: 600;
+    }
+
+    .hsfontsize {
+        font-size: 14px;
+    }
+
+
+
+
+    
+         Was this page helpful?        
+        Yes  
+        No
+    
+    
+        
+            
+                How could we make it better? Leaving an email can assist us in troubleshooting the issue.
+                
+            
+        
+        
+            
+                
+            
+        
+        
+            
+                Submit  
+                Cancel
+                
+            
+        
+    
+    
+        Thank you for your feedback
+         Your feedback means a lot to us. We use it to improve the experience of all of our users. 
+    
+    
+    
+    
+    
+
+
+    .grecaptcha-badge {
+    bottom:20px !important;
+    }
+
+    .helpfulsurvey {
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+
+
+
+    $(document).ready(function () {
+
+        $("#yesno").show();
+        $("#comment").hide();
+        $("#thankyou").hide();
+
+        $("#btnyes").click(function () {
+            $(this).prop('disabled', true);
+            $("#btnno").prop('disabled', true);
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6Lc2hj0qAAAAALUak9xGpQoFYjBxBhqeS2Szd9cz', { action: 'submit' }).then(function (token) {
+                    process('Yes', token);
+                });
+            });
+        });
+
+        $("#btnno").click(function () {
+            $(this).prop('disabled', true);
+            $("#btnyes").prop('disabled', true);
+            process('No');
+        });
+
+        $("#btnsubmit").click(function () {
+            $(this).prop('disabled', true);
+            var comment = $("#usercomment").val();
+            if (comment === "") {
+                $("#error").text('Please leave a comment before submitting.');
+                $("#error").show();
+                $("#btnsubmit").prop('disabled', false);
+                return;
+            };
+            grecaptcha.ready(function () {
+                grecaptcha.execute('6Lc2hj0qAAAAALUak9xGpQoFYjBxBhqeS2Szd9cz', { action: 'submit' }).then(function (token) {
+                    process('comment', token);
+                });
+            });
+        });
+
+        $("#btncancel").click(function () {
+            $("#yesno").show();
+            $("#btnno").prop('disabled', false);
+            $("#btnyes").prop('disabled', false);
+            $("#comment").hide();
+            $("#thankyou").hide();
+
+            $("#id").val("");
+            $("#answer").val("");
+        });
+
+        $("#yesno").show();
+        $("#comment").hide();
+        $("#thankyou").hide();
+
+        function process(response, token) {
+            var url = "/council/about-us/ProcessSurvey/";
+            url = url.replace("/itefinity/", "/Sitefinity/"); // fix SF routing issue
+
+            var data = {};
+
+            if (response == 'comment') {
+
+                data = {
+                    ID: $("#id").val(),
+                    Answer: $("#answer").val(),
+                    Action: "comment",
+                    Comment: $("#usercomment").val(),
+                    Email: $("#email").val(),
+                    Token: token
+                };
+            }
+            else {
+                data = {
+                    ID: "",
+                    Answer: response,
+                    Action: "",
+                    Comment: "",
+                    Email: "",
+                    Token: token
+                };
+            }
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(data),
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json'
+                }).done(function (result) {
+
+                    if (result.Action === 'showcomment') {
+                        $("#yesno").hide();
+                        $("#comment").show();
+                        $("#thankyou").hide();
+                        $("#emptycommenterror").hide();
+
+                        $("#id").val(result.ID);
+                        $("#answer").val(result.Answer);
+                    }
+                    else if (result.Action === 'showthankyou') {
+
+                        $("#yesno").hide();
+                        $("#comment").hide();
+                        $("#thankyou").show();
+                    }
+                    else if (result.Action === 'showlengtherror') {
+                        $("#btnsubmit").prop('disabled', false);
+                        $("#error").text('Email has more than 50 characters.');
+                        $("#error").show();
+                    }
+                    else if (result.Action === 'showinvaliderror') {
+                        $("#btnsubmit").prop('disabled', false);
+                        $("#error").text('Email is invalid.');
+                        $("#error").show();
+                    }
+                    else if (result.Action === 'reset') {
+
+                        $("#yesno").show();
+                        $("#comment").hide();
+                        $("#thankyou").hide();
+
+                        $("#id").val();
+                        $("#answer").val();
+                    }
+
+                }).fail(function () {
+            })
+        }
+    });
+
+
+
+
+
+    
+
+
+
+    
+            es-exclude-start-footer
+          
+
+    
+
+
+
+
+    Contact Us
+
+
+
+
+
+    Cuyahoga County Council2079 East Ninth Street - 8th FloorCleveland, OH 44115216-698-2020216-698-2040 (fax)
+
+    
+    
+
+
+
+
+    Site Info
+
+
+
+
+    
+    
+     
+        Departments
+    
+     
+        FAQs
+    
+     
+        Public Records Request
+    
+     
+        Privacy Policy
+    
+     
+        Disclaimer
+    
+     
+        Accessibility
+    
+     
+        County Social Media
+    
+    
+
+
+
+
+
+
+    
+    
+
+
+
+
+    Council Social Media
+
+
+
+
+
+    FacebookLinkedInTwitterYouTube
+
+    
+
+
+    
+    
+    
+    
+
+
+    
+
+
+
+
+    Powered by the Department of Information Technology
+
+
+    
+    
+
+
+
+
+    The official government website of Cuyahoga County. Quick facts about Cuyahoga County from the U.S. Census Bureau Cuyahoga County is a member of the National Association of Counties
+
+    
+
+
+
+
+
+
+           
+
+
+
+
+
+
+
+  
+            es-exclude-end-footer
+             
+	{"IsPagePersonalizationTarget":false,"IsUrlPersonalizationTarget":false,"PageId":"a6cb4d85-ecb2-4225-bec7-ba4216aa9710"}
+
+
+    

@@ -1,0 +1,761 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>
+	Redistricting Maps and Data - New Mexico Legislature
+</title><link href="/Content/css?v=cUg5-MMViQqEs_YL2OMy5MuIBxWJlZhtcr11XxqzgVQ1" rel="stylesheet"/>
+<link href="../favicon.ico?v=1" rel="shortcut icon" type="image/x-icon" /><meta name="google-site-verification" content="kIaN-zm0G27sjSZ51sPSO18BHZ7cCqFoYrRjLwYxz4Y" />
+    <style>
+        #reciteme-button {
+            /* Button Styling and Placement */
+            background: #00344c;
+            width: 60px;
+            height: 60px;
+            bottom: 14px;
+            right: 14px;
+            position: fixed;
+            border-radius: 50%;
+            z-index: 100;
+            cursor: pointer;
+        }
+
+            #reciteme-button:hover {
+                /* Hover Color */
+                background: #e9322e;
+            }
+
+            #reciteme-button img {
+                /** Button Image Size */
+                width: 50px;
+                height: 50px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+        #announcement-banner {
+            background-color: #ffcc00;
+            color: #000;
+            padding: 20px;
+            font-weight: bold;
+            border-bottom: 2px solid #ccc;
+        }
+        /* Announcement Banner */
+    </style>
+
+
+
+</head>
+<body>
+    <form method="post" action="./Maps_And_Data?ID202=221619.1" id="ctl01">
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+
+<script src="../Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+<script src="/bundles/MsAjaxJs?v=c42ygB2U07n37m_Sfa8ZbLGVu4Rr2gsBo7MvUEnJeZ81" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="../Scripts/respond.js" type="text/javascript"></script>
+<script src="../Scripts/bootstrap.min.js" type="text/javascript"></script>
+<script src="../Scripts/FooTable/footable.min.js" type="text/javascript"></script>
+<script src="/bundles/WebFormsJs?v=AAyiAYwMfvmwjNSBfIMrBAqfU5exDukMVhrRuZ-PDU01" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="98436D1A" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="t15bhR2NWkOmHYaDECzEvlnAsxevvhdEGdt1YUFb/4fhK0IG0NYgXFDIXRnZlezUul1ZUNd4aqNnmt5zruHuFnVHGM1oHhAaqu5tMm2aRCzUrSE8Z/7oM2XUbDTVRReP" />
+        
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-70773781-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+        <!-- Recite Me code -->
+        <script type="text/javascript">
+            // Location of your button image:
+            var buttonSrc = '/images/reciteme_button.png';
+        </script>
+        <script type="text/javascript">
+            var serviceUrl = "//api.reciteme.com/asset/js?key=";
+            var serviceKey = "88137f490c474af25e9769770e124fc311560d88";
+            var options = {};  // Options can be added as needed
+            var autoLoad = false;
+            var enableFragment = "#reciteEnable";
+            var loaded = [], frag = !1; window.location.hash === enableFragment && (frag = !0); function loadScript(c, b) { var a = document.createElement("script"); a.type = "text/javascript"; a.readyState ? a.onreadystatechange = function () { if ("loaded" == a.readyState || "complete" == a.readyState) a.onreadystatechange = null, void 0 != b && b() } : void 0 != b && (a.onload = function () { b() }); a.src = c; document.getElementsByTagName("head")[0].appendChild(a) } function _rc(c) { c += "="; for (var b = document.cookie.split(";"), a = 0; a < b.length; a++) { for (var d = b[a]; " " == d.charAt(0);) d = d.substring(1, d.length); if (0 == d.indexOf(c)) return d.substring(c.length, d.length) } return null } function loadService(c) { for (var b = serviceUrl + serviceKey, a = 0; a < loaded.length; a++) if (loaded[a] == b) return; loaded.push(b); loadScript(serviceUrl + serviceKey, function () { "function" === typeof _reciteLoaded && _reciteLoaded(); "function" == typeof c && c(); Recite.load(options); Recite.Event.subscribe("Recite:load", function () { Recite.enable() }) }) } "true" == _rc("Recite.Persist") && loadService(); if (autoLoad && "false" != _rc("Recite.Persist") || frag) document.addEventListener ? document.addEventListener("DOMContentLoaded", function (c) { loadService() }) : loadService();
+
+            // Floating Button:
+            function _reciteLoaded() {
+                if (reciteMeButton && reciteMeButton.parentNode) {
+                    reciteMeButton.parentNode.removeChild(reciteMeButton);
+                }
+            }
+
+            var reciteMeButton;
+            function _createReciteButton() {
+                var buttonParentSelector = 'body';
+                var buttonContainer = document.createElement("div");
+                var buttonImage = document.createElement("img");
+                var buttonAlt = "Launch Recite Me Accessibility and Language Support";
+                var buttonTitle = "Launch Recite Me";
+
+                buttonContainer.setAttribute('id', 'reciteme-button');
+                buttonContainer.setAttribute('title', buttonTitle);
+                buttonImage.setAttribute('alt', buttonAlt);
+                buttonImage.setAttribute('src', buttonSrc);
+                buttonContainer.appendChild(buttonImage);
+                var buttonParent = document.querySelector(buttonParentSelector);
+                buttonParent.appendChild(buttonContainer);
+                buttonContainer.addEventListener("click", function () {
+                    loadService();
+                    return false;
+                });
+                reciteMeButton = buttonContainer;
+            }
+            _createReciteButton();
+        </script>
+
+        
+        <a class="skip-link" href="#maincontent">Skip to main content</a>
+
+
+        <div class="desktop-header hidden-xs" role="banner">
+            <div id="divBanner" style="background-color: transparent !important;">
+                <a id="linkHeader" href="../"><img id="imgHeader" class="center-block img-responsive" src="../Images/banner_logo.jpg" alt="New Mexico Legislature" /></a>
+            </div>
+        </div>
+        <div class="container body-content">
+            <nav class="navbar navbar-default yamm" role="navigation">
+                <div class="navbar-header main-navbar-header" role="menubar">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <!--
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        -->
+                        Main Menu
+                    </button>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <ul class="collapse navbar-collapse nav navbar-nav" id="main-navigation" role="menubar" aria-label="Navigation">
+                    <li><a href="/" role="menuitem">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Districts</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Members/Find_By_Address_Redistrict">Find Your New District by Address</a></li>
+                            <li><a href="/Members/Districts">Districts</a></li>
+                            <li><a href="/Redistricting2021/Default">2021 Redistricting</a></li>
+                            <li><a href="/Redistricting2011/">2011 Redistricting (Archive)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Legislators</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Members/Find_My_Legislator">Find my Legislator</a></li>
+                            <li><a href="/Website_Tutorials?Video=FindingLegislators">Find my Legislator – Tutorial</a></li>
+                            <li><a href="/Members/Leadership">Leadership</a></li>
+                            <li><a href="/Members/Legislator_List?T=R">House</a></li>
+                            <li><a href="/Members/Legislator_List?T=S">Senate</a></li>
+                            <li><a href="/Members/Political_Composition">Political Composition</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/Members/Former_Legislator_List">Former Legislators</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Legislation</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Legislation/BillFinder/Number">Find Legislation by Number</a></li>
+                            <li><a href="/Legislation/BillFinder/Sponsor">Find Legislation by Sponsor</a></li>
+                            <li><a href="/Search">Find Legislation by Keyword</a></li>
+                            <li><a href="/Legislation/BillFinder/Subject">Find Legislation by Subject</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/Legislation/Bill_Finder">Bill Finder</a></li>
+                            <li><a href="/Legislation/BillFinder/Capital_Outlay">Capital Outlay</a></li>
+                            <li><a href="/Legislation/Legislation_List">Daily Bill Locator</a></li>
+                            <li><a href="/Legislation/Action_Abbreviations">Key to Abbreviations</a></li>
+                            <li class="divider"></li>
+                            <li><a href="/MyRoundhouse/">MyRoundhouse</a></li>
+                            <li><a href="/Website_Tutorials?Video=FindingLegislation">Finding Legislation – Tutorial</a></li>
+                            <li><a href="/Website_Tutorials?Video=MyRoundhouse">How to Track Legislation – Tutorial</a></li>
+                            <li class="divider"></li>
+                            <li><a href="https://nmonesource.com/nmos/en/nav.do" target="_blank">New Mexico Law (Statutes)</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown yamm-fw">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Committees</a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <div class="yamm-content" style="padding-top: 0;">
+
+                                    <div class="row hidden-xs" style="margin-top: 0;">
+                                        <ul class="col-sm-3 list-unstyled">
+                                            <li>
+                                                <p class="yamm-header"><strong>House of Representatives Session Committees</strong></p>
+                                            </li>
+                                        </ul>
+                                        <ul class="col-sm-3 list-unstyled">
+                                            <li>
+                                                <p class="yamm-header"><strong>Senate Session Committees</strong></p>
+                                            </li>
+                                        </ul>
+                                        <ul class="col-sm-6 list-unstyled">
+                                            <li>
+                                                <p class="yamm-header"><strong>Interim Committees</strong></p>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="row">
+                                        <ul class="col-sm-3 list-unstyled">
+                                            <li>
+                                                <p class="yamm-header hidden-sm hidden-md hidden-lg"><strong>House of Representatives Session Committees</strong></p>
+                                            </li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HAAWC">Agriculture, Acequias And Water Resources</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HAFC">Appropriations & Finance</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HCEDC">Commerce & Economic Development</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HCPAC">Consumer & Public Affairs</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HEC">Education</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HENRC">Energy, Environment & Natural Resources</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HGEIC">Government, Elections & Indian Affairs</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HHHC">Health & Human Services</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HJC">Judiciary</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HLVMC">Labor, Veterans' & Military Affairs</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HXRC">Rules & Order Of Business</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HRDLC">Rural Development, Land Grants And Cultural Affairs</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=HISC">Special Investigatory Committee</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HTRC">Taxation & Revenue</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=HTPWC">Transportation, Public Works & Capital Improvements</a></li>
+                                        </ul>
+                                        <ul class="col-sm-3 list-unstyled">
+                                            <li>
+                                                <p class="yamm-header hidden-sm hidden-md hidden-lg"><strong>Senate Session Committees</strong></p>
+                                            </li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SXCC">Committees' Committee</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SCONC">Conservation</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SEC">Education</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SFC">Finance</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SHPAC">Health and Public Affairs</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SIRC">Indian, Rural and Cultural Affairs</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SJC">Judiciary</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=SRC">Rules</a></li>
+                                            <li><a href="/Committee/Standing_Committee?CommitteeCode=STBTC">Tax, Business and Transportation</a></li>
+                                        </ul>
+                                        <ul class="col-sm-3 list-unstyled">
+                                            <li>
+                                                <p class="yamm-header hidden-sm hidden-md hidden-lg"><strong>Interim Committees</strong></p>
+                                            </li>
+                                            <!--<li><a href="/Committee/Interim_Committee?CommitteeCode=BHS">Behavioral Health Subcommittee</a></li>-->
+                                            <li><a href="/Committee/Capitol_Buildings_Planning_Commission">Capitol Buildings Planning Commission</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=CSS">Capitol Security Subcommittee</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=CCJ">Courts, Corrections & Justice</a></li>
+                                            <!--<li><a href="/Committee/Interim_Committee?CommitteeCode=CJRS">Criminal Justice Reform Subcommittee</a></li>-->
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=ERDPC">Economic & Rural Development & Policy Committee</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=FRS">Facilities Review Subcommittee</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=ZFFSS">Federal Funding Stabilization & Affordability Subcommittee</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=IAC">Indian Affairs</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=LEC">Interim Legislative Ethics </a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=IPOC">Investments & Pensions Oversight</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=LGC">Land Grant</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=ALC">Legislative Council</a></li>
+                                            <li><a href="/Entity/LESC/Default">Legislative Education Study</a></li>
+                                            <li><a href="/Entity/LFC/Default">Legislative Finance</a></li>
+                                            <li><a href="/Committee/Interim_Committee?CommitteeCode=ZLICW">Legislative Interim Committee Working Group</a></li>
+                            </li>
+                            <!--<ul class="list-unstyled">
+                                                    <li><a href="/Committee/Interim_Committee?CommitteeCode=DISC">Disabilities Concerns Subcommittee</a></li>
+                                                </ul>-->
+                        </ul>
+                        <ul class="col-sm-3 list-unstyled">
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=LHHS">Legislative Health & Human Services</a>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=MVAC">Military & Veterans' Affairs</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=MFA">Mortgage Finance Authority Act Oversight</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=NMFA">New Mexico Finance Authority Oversight</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=PSCO">Public School Capital Outlay Oversight Task Force</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=RHMC">Radioactive & Hazardous Materials</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=RSTP">Revenue Stabilization & Tax Policy</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=STTC">Science, Technology & Telecommunications</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=TSROC">Tobacco Settlement Revenue Oversight </a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=TIRS">Transportation Infrastructure Revenue Subcommittee</a></li>
+                            <li><a href="/Committee/Interim_Committee?CommitteeCode=WNR">Water & Natural Resources </a></li>
+                        </ul>
+        </div>
+        <div class="row" style="margin-top: 10px; margin-bottom: -15px;">
+            <ul class="col-sm-6 list-unstyled text-center">
+                <li><strong><a href="/Publications/Handbook/House_Standing_Committees_26.pdf" target="_blank">2026 House Standing Committees PDF</a></strong></li>
+                <li><strong><a href="/Publications/Handbook/Senate_Standing_Committees_26.pdf" target="_blank">2026 Senate Standing Committees PDF</a></strong></li>
+            </ul>
+            <ul class="col-sm-6 list-unstyled text-center">
+                <li><strong><a href="/Publications/2026_Interim_Committees.pdf">2026 Interim Committees PDF</a></strong></li>
+                <!--<li><strong><a href="/Agendas/StateLegislativeCalendar.pdf">2025 Tentative Interim Committee Calendar</a></strong></li>-->
+                <li><strong><a href="/Committee/Default">Archived Interim Committee Information</a></strong></li>
+            </ul>
+        </div>
+        </div>
+                    </li>
+                    </ul>
+                        <!--</div>-->
+        </li>
+                    <li>
+                        <a href="/Publications/">Publications</a>
+                    </li>
+        <li>
+            <a href="/Calendar/Whats_Happening">What's Happening</a>
+            <!--<a-- href="/Calendar/Session">What's Happening</a-->
+        </li>
+        <li>
+            <!--<a href="/Webcast/">Webcast</a>-->
+            <a href="https://sg001-harmony.sliq.net/00293/harmony" target="_blank">Webcast</a>
+        </li>
+        <li>
+            <a href="/Legislative_Library" target="_blank">Library</a>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Quick Links</a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="/AccessibilityAccommodations/" target="_blank">ADA Access</a></li>
+                <li><a href="/AccessibilityAccommodations/pdfs/ADA Grievance Procedure25 final (1).pdf" target="_blank">ADA Grievance Procedure</a></li>
+                <li><a href="/Publications/anti_harassment_policy.pdf" target="_blank">Anti-Harassment Policy</a></li>
+                <li><a href="/Emergency_Notification" target="_blank">Capitol Emergency Notification Signup</a></li>
+                <li><a href="/Legislation/BillFinder/Capital_Outlay" target="_blank">Capital Outlay</a></li>
+                <li><a href="/Credits" target="_blank">Credits</a></li>
+                <li><a href="/Downloads" target="_blank">Downloads</a></li>
+                <li><a href="https://www.nmlegis.gov/Sessions/26 Regular/" target="_blank">Downloads- FTP</a></li>
+                <li><a href="/Employment" target="_blank">Employment</a></li>
+                <li><a href="/Glossary" target="_blank">Glossary of Legislative Terms</a></li>
+                <li><a href="/Legislation/Action_Abbreviations">Key to Abbreviations</a></li>
+                <li><a href="/Publications/Legislative_Contracts">Legislative Contracts</a></li>
+                <li><a href="/Publications/Handbook/Laws and Policies.pdf">Legislative Council Policies</a></li>
+                <li><a href="/MyRoundhouse/Default">MyRoundhouse</a></li>
+                <li><a href="/Other_Websites">Other Websites</a></li>
+                <li><a href="/Publications/Per_Diem_and_Mileage" target="_blank">Per Diem &amp; Mileage Rates for Legislators</a></li>
+                <li><a href="/Public_Records_Request">Public Records Request</a></li>
+                <li><a href="/Redistricting2021/">2021 Redistricting Information</a></li>
+                <li><a href="/Capitol_Flags">Request a Capitol Flag</a></li>
+                <li><a href="/Publications/Request_For_Proposals">Request for Proposals</a></li>
+                <li><a href="/Publications/Public%20Notice%20ADA%20Requirements.pdf">Public Notice: ADA Requirements</a></li>
+                <li><a href="/Publications/Session_Dates.pdf" target="_blank">Session Dates</a></li>
+                <li><a href="/Publications/Social_Calendar" target="_blank">Social Calendar</a></li>
+                <li><a href="/Visitors">Visit the Capitol</a></li>
+                <li><a href="/Website_Tutorials">Website Video Tutorials</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="/Publications/Highlights">Highlights</a>
+        </li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contact Us</a>
+            <ul class="dropdown-menu contact-list" role="menu" style="list-style: none; margin-left: 0 !important; padding-left: 0;">
+                <li>
+                    <a href="/Members/Find_My_Legislator">Find My Legislator</a>
+                </li>
+                <li>
+                    <a href="/Staff_Directory?Entity=LCS">Legislative Council Service</a>
+                    <span>505-986-4600</span>
+                    <a href="mailto:lcs@nmlegis.gov">lcs@nmlegis.gov</a>
+                </li>
+                <li>
+                    <a href="/Entity/LESC/Default">Legislative Education Study Committee</a>
+                    <span>505-986-4591</span>
+                    <a href="https://goo.gl/maps/W53KByo46jk">325 Don Gaspar, Suite 100<br />
+                        Santa Fe, NM 87501</a>
+                    <a href="mailto:lesc@nmlegis.gov">lesc@nmlegis.gov</a>
+                </li>
+                <li>
+                    <a href="/Entity/LFC/Default">Legislative Finance Committee</a>
+                    <span>505-986-4550</span>
+                    <a href="https://goo.gl/maps/W53KByo46jk">325 Don Gaspar, Suite 101<br />
+                        Santa Fe, NM 87501</a>
+                    <a href="mailto:lfc@nmlegis.gov">lfc@nmlegis.gov</a>
+                </li>
+                <li>
+                    <a href="/Entity/House/Default">House of Representatives</a>
+                    <span>505-986-4751</span>
+                    <a href="mailto:house@nmlegis.gov">house@nmlegis.gov</a>
+                </li>
+                <li>
+                    <a href="/Entity/Senate/Default">Senate</a>
+                    <span>505-986-4714</span>
+                    <a href="mailto:senate@nmlegis.gov">senate@nmlegis.gov</a>
+                </li>
+                <li>
+                    <div style="padding: 3px 20px 3px 20px!important;"><strong>Session Switchboard</strong></div>
+                    <span>505-986-4300</span>
+                    <!--<br />
+                                <span>505-986-4610 (fax)</span>
+                                    -->
+                </li>
+                <li>
+                    <a href="/Visitors">Legislative Information and Tours</a>
+                    <span>505-986-4589</span>
+                </li>
+                <li>
+                    <a href="/Staff_Directory?Entity=LBS">Legislative Building Services</a>
+                    <span>505-986-4575</span>
+                </li>
+                <li>
+                    <!--
+                                <a href="https://goo.gl/1Kmmj3">411 State Capitol, Santa Fe, NM 87501</a>
+                                -->
+                    <a href="https://goo.gl/maps/rdxjh64jABm">The Capitol is located at the corner of
+                                    <br />
+                        Old Santa Fe Trail and Paseo de Peralta<br />
+                        in Santa Fe</a>
+                    <span>505-986-4600</span>
+                    <a href="mailto:lcs@nmlegis.gov">lcs@nmlegis.gov</a>
+                </li>
+            </ul>
+        </li>
+        </ul>
+            </nav>
+            <ol class="breadcrumb">
+                <span id="siteMapBreadcrumbs"><a href="#siteMapBreadcrumbs_SkipLink">Skip Navigation Links</a><span>
+                        <li>
+                            <a id="siteMapBreadcrumbs_lnkPage_0" title="Homepage" href="/">Home</a>
+                        </li>
+                    </span><span> / </span><span>
+                        <li>
+                            <a id="siteMapBreadcrumbs_lnkPage_1" title="Redistriciting 2021" href="/Redistricting2021/">Redistricting 2021</a>
+                        </li>
+                    </span><span> / </span><span class="active">
+                        <li>
+                            <a id="siteMapBreadcrumbs_lnkPage_2" title="Maps &amp; Data" class="active" href="/Redistricting2021/Maps_And_Data">Maps & Data</a>
+                        </li>
+                    </span><a id="siteMapBreadcrumbs_SkipLink"></a></span>
+            </ol>
+        <!--<div class="alert alert-danger text-center">The State Capitol will be closed on Wednesday 10/4/2023</div>-->
+        
+       
+    <nav class="navbar navbar-default yamm redistricting-navbar" role="navigation" style="margin-top: 0;">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed redistricting-navbar-toggle" data-toggle="collapse" data-target="#redistricting-navigation">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" data-toggle="collapse" data-target="#redistricting-navigation" href="#">Redistricting</a>
+        </div>
+        <ul class="nav navbar-nav navbar-collapse collapse redistricting-navbar-nav nav-justified" id="redistricting-navigation">
+            <li><a href="/Redistricting2021/"><span>Home<br />2021 Redistricting</span></a></li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>Congressional Districts <br />for 2022 Election</span></a>
+                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Legislation/Legislation?chamber=S&legType=B&legNo=1&year=21s2"><span>Legislation</span></a></li>
+                            <li><a href="/Redistricting2021/Maps_And_Data?ID202=221711.1"><span>Maps & Data</span></a></li>  
+                    </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>House of Representatives <br />Districts for 2022 Election</span></a>
+                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Legislation/Legislation?chamber=H&legType=B&legNo=8&year=21s2"><span>Legislation</span></a></li>
+                            <li><a href="/Redistricting2021/Maps_And_Data?ID202=221619.1"><span>Maps & Data</span></a></li>
+                    </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>Senate Districts <br />for 2024 Election</span></a>
+                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Legislation/Legislation?chamber=S&legType=B&legNo=2&year=21s2"><span>Legislation</span></a></li>
+                            <li><a href="/Redistricting2021/Maps_And_Data?ID202=221780.1"><span>Maps & Data</span></a></li>
+                    </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>Public Education Commission Districts for 2022-2024 Election</span></a>
+                    <ul class="dropdown-menu" role="menu">
+                            <li><a href="/Legislation/Legislation?chamber=H&legType=B&legNo=9&year=21s2"><span>Legislation</span></a></li>
+                            <li><a href="Redistricting2021/Maps_And_Data?ID202=221723.1"><span>Maps & Data</span></a></li>
+                    </ul>
+            </li>
+            <li><a href="/Redistricting2021/LitigationDocuments"><span>Litigation Documents<br />2021-2023</span></a></li>
+            <li><a href="https://www.nmredistricting.org/"><span>Citizen Redistricting Committee</span></a></li>
+        </ul>
+    </nav>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/css/ol.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/build/ol.js" type="text/javascript"></script>
+    <!--<script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>-->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="ol-ext.css" type="text/css" />
+    <script src="ol-ext.js" type="text/javascript"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prata&display=swap');
+    </style>
+    <link href="plan.css" rel="stylesheet" type="text/css" />
+    <script src="map.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var params = (new URL(document.location.toString().toUpperCase())).searchParams;
+            var id202 = params.get("ID202");
+
+            var districtType = $('#MainContent_RedistrictingContent_formViewTitle_lblTitle').text().substr(0, 3);
+
+            if (districtType == "HOU") {
+                initMap("HOUSE", id202);
+            } else if (districtType == "SEN") {
+                initMap("SENATE", id202);
+            } else if (districtType == "CON") {
+                initMap("CONGRESS", id202);
+            } else if (districtType == "PEC") {
+                initMap("PEC", id202);
+            }
+        });
+        $(function () {
+            $('.footable').footable({
+            });
+        });
+        function showHideStats() {
+            if ($('#MainContent_RedistrictingContent_panelStats:visible').length) {
+                $('#MainContent_RedistrictingContent_panelStats').hide();
+                $('#MainContent_RedistrictingContent_btnStats').val("Show stats");
+            } else {
+                $('#MainContent_RedistrictingContent_panelStats').show();
+                $('#MainContent_RedistrictingContent_btnStats').val("Hide stats");
+            }
+        }
+    </script>
+
+    <div class="panel panel-default full-width">
+        <div class="panel-heading">
+            <h1 class="panel-title">
+                <table cellspacing="0" id="MainContent_RedistrictingContent_formViewTitle" width="100%">
+	<tr>
+		<td colspan="2">
+                        <span id="MainContent_RedistrictingContent_formViewTitle_lblChamber"><b>HB 8</b></span>
+                        <span id="MainContent_RedistrictingContent_formViewTitle_lblDash"><b>-</b></span>
+                        <span id="MainContent_RedistrictingContent_formViewTitle_lblTitle"><b>HOUSE - FINAL VERSION</b></span> - 
+                                                <span id="MainContent_RedistrictingContent_formViewTitle_lblID202"><b>221619.1</b></span>
+                    </td>
+	</tr>
+</table>
+            </h1>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div id="map" class="map"></div>
+                    <br />
+                    <input type="submit" name="ctl00$ctl00$MainContent$RedistrictingContent$btnStats" value="Show stats" onclick="showHideStats(); return false;" id="MainContent_RedistrictingContent_btnStats" class="btn btn-primary" />
+                    <div id="MainContent_RedistrictingContent_panelStats" style="display: none;">
+	
+                        <div>
+		<table class="footable" cellspacing="0" cellpadding="3" id="MainContent_RedistrictingContent_gridViewStats" width="100%">
+			<thead>
+				<tr>
+					<th scope="col">District</th><th scope="col">Population</th><th scope="col">Deviation</th><th scope="col">% Deviation</th><th data-breakpoints="xs sm" scope="col">18+ HISP</th><th data-breakpoints="xs sm" scope="col">18+ WHT</th><th data-breakpoints="xs sm" scope="col">18+ NAT AM</th><th data-breakpoints="xs sm" scope="col">18+ BLK</th><th data-breakpoints="xs sm" scope="col">18+ ASN</th><th data-breakpoints="xs sm" scope="col">Dem Perf</th><th data-breakpoints="xs sm" scope="col">Rep Perf</th>
+				</tr>
+			</thead><tbody>
+				<tr bgcolor="White">
+					<td><font color="Black">1</font></td><td><font color="Black">28162</font></td><td><font color="Black">-2088</font></td><td><font color="Black">-6.9%</font></td><td><font color="Black">19.0%</font></td><td><font color="Black">60.5%</font></td><td><font color="Black">14.4%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">22.7%</font></td><td><font color="Black">77.3%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">2</font></td><td><font color="Black">28237</font></td><td><font color="Black">-2013</font></td><td><font color="Black">-6.7%</font></td><td><font color="Black">21.5%</font></td><td><font color="Black">41.0%</font></td><td><font color="Black">32.5%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">30.8%</font></td><td><font color="Black">69.2%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">3</font></td><td><font color="Black">28323</font></td><td><font color="Black">-1927</font></td><td><font color="Black">-6.4%</font></td><td><font color="Black">25.8%</font></td><td><font color="Black">56.4%</font></td><td><font color="Black">13.4%</font></td><td><font color="Black">0.3%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">23.8%</font></td><td><font color="Black">76.2%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">4</font></td><td><font color="Black">28168</font></td><td><font color="Black">-2082</font></td><td><font color="Black">-6.9%</font></td><td><font color="Black">7.5%</font></td><td><font color="Black">12.1%</font></td><td><font color="Black">76.9%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">55.4%</font></td><td><font color="Black">44.6%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">5</font></td><td><font color="Black">28631</font></td><td><font color="Black">-1619</font></td><td><font color="Black">-5.4%</font></td><td><font color="Black">8.8%</font></td><td><font color="Black">8.4%</font></td><td><font color="Black">79.2%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">1.3%</font></td><td><font color="Black">69.8%</font></td><td><font color="Black">30.2%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">6</font></td><td><font color="Black">28185</font></td><td><font color="Black">-2065</font></td><td><font color="Black">-6.8%</font></td><td><font color="Black">16.2%</font></td><td><font color="Black">18.8%</font></td><td><font color="Black">62.1%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">63.2%</font></td><td><font color="Black">36.8%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">7</font></td><td><font color="Black">29884</font></td><td><font color="Black">-366</font></td><td><font color="Black">-1.2%</font></td><td><font color="Black">64.8%</font></td><td><font color="Black">29.9%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">0.3%</font></td><td><font color="Black">51.1%</font></td><td><font color="Black">48.9%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">8</font></td><td><font color="Black">31124</font></td><td><font color="Black">874</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">52.8%</font></td><td><font color="Black">39.5%</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">1.3%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">44.7%</font></td><td><font color="Black">55.3%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">9</font></td><td><font color="Black">28195</font></td><td><font color="Black">-2055</font></td><td><font color="Black">-6.8%</font></td><td><font color="Black">18.5%</font></td><td><font color="Black">10.6%</font></td><td><font color="Black">66.0%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">1.8%</font></td><td><font color="Black">66.2%</font></td><td><font color="Black">33.8%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">10</font></td><td><font color="Black">30697</font></td><td><font color="Black">447</font></td><td><font color="Black">1.5%</font></td><td><font color="Black">68.6%</font></td><td><font color="Black">23.7%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">2.7%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">63.6%</font></td><td><font color="Black">36.4%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">11</font></td><td><font color="Black">30889</font></td><td><font color="Black">639</font></td><td><font color="Black">2.1%</font></td><td><font color="Black">50.8%</font></td><td><font color="Black">36.7%</font></td><td><font color="Black">5.4%</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">1.3%</font></td><td><font color="Black">75.1%</font></td><td><font color="Black">24.9%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">12</font></td><td><font color="Black">30913</font></td><td><font color="Black">663</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">83.3%</font></td><td><font color="Black">11.9%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">68.8%</font></td><td><font color="Black">31.2%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">13</font></td><td><font color="Black">31134</font></td><td><font color="Black">884</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">77.3%</font></td><td><font color="Black">12.9%</font></td><td><font color="Black">3.5%</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">1.5%</font></td><td><font color="Black">66.3%</font></td><td><font color="Black">33.7%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">14</font></td><td><font color="Black">30166</font></td><td><font color="Black">-84</font></td><td><font color="Black">-0.3%</font></td><td><font color="Black">70.6%</font></td><td><font color="Black">20.5%</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">75.4%</font></td><td><font color="Black">24.6%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">15</font></td><td><font color="Black">31025</font></td><td><font color="Black">775</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">49.4%</font></td><td><font color="Black">40.4%</font></td><td><font color="Black">3.5%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">2.0%</font></td><td><font color="Black">62.3%</font></td><td><font color="Black">37.7%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">16</font></td><td><font color="Black">30663</font></td><td><font color="Black">413</font></td><td><font color="Black">1.4%</font></td><td><font color="Black">58.4%</font></td><td><font color="Black">30.3%</font></td><td><font color="Black">3.9%</font></td><td><font color="Black">2.8%</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">60.8%</font></td><td><font color="Black">39.2%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">17</font></td><td><font color="Black">30908</font></td><td><font color="Black">658</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">39.3%</font></td><td><font color="Black">44.0%</font></td><td><font color="Black">5.8%</font></td><td><font color="Black">3.5%</font></td><td><font color="Black">3.7%</font></td><td><font color="Black">50.7%</font></td><td><font color="Black">49.3%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">18</font></td><td><font color="Black">31064</font></td><td><font color="Black">814</font></td><td><font color="Black">2.7%</font></td><td><font color="Black">30.2%</font></td><td><font color="Black">52.2%</font></td><td><font color="Black">5.0%</font></td><td><font color="Black">3.0%</font></td><td><font color="Black">4.9%</font></td><td><font color="Black">80.6%</font></td><td><font color="Black">19.4%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">19</font></td><td><font color="Black">30681</font></td><td><font color="Black">431</font></td><td><font color="Black">1.4%</font></td><td><font color="Black">48.5%</font></td><td><font color="Black">32.4%</font></td><td><font color="Black">7.8%</font></td><td><font color="Black">5.2%</font></td><td><font color="Black">2.3%</font></td><td><font color="Black">72.6%</font></td><td><font color="Black">27.4%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">20</font></td><td><font color="Black">30886</font></td><td><font color="Black">636</font></td><td><font color="Black">2.1%</font></td><td><font color="Black">30.7%</font></td><td><font color="Black">52.5%</font></td><td><font color="Black">4.0%</font></td><td><font color="Black">3.5%</font></td><td><font color="Black">5.5%</font></td><td><font color="Black">50.5%</font></td><td><font color="Black">49.5%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">21</font></td><td><font color="Black">30064</font></td><td><font color="Black">-186</font></td><td><font color="Black">-0.6%</font></td><td><font color="Black">42.4%</font></td><td><font color="Black">40.9%</font></td><td><font color="Black">4.8%</font></td><td><font color="Black">3.6%</font></td><td><font color="Black">4.3%</font></td><td><font color="Black">56.5%</font></td><td><font color="Black">43.5%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">22</font></td><td><font color="Black">30820</font></td><td><font color="Black">570</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">26.4%</font></td><td><font color="Black">67.0%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">43.0%</font></td><td><font color="Black">57.0%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">23</font></td><td><font color="Black">30924</font></td><td><font color="Black">674</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">34.2%</font></td><td><font color="Black">55.1%</font></td><td><font color="Black">2.7%</font></td><td><font color="Black">2.0%</font></td><td><font color="Black">2.1%</font></td><td><font color="Black">43.9%</font></td><td><font color="Black">56.1%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">24</font></td><td><font color="Black">30954</font></td><td><font color="Black">704</font></td><td><font color="Black">2.3%</font></td><td><font color="Black">33.3%</font></td><td><font color="Black">53.1%</font></td><td><font color="Black">3.8%</font></td><td><font color="Black">2.7%</font></td><td><font color="Black">3.0%</font></td><td><font color="Black">54.8%</font></td><td><font color="Black">45.2%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">25</font></td><td><font color="Black">30330</font></td><td><font color="Black">80</font></td><td><font color="Black">0.3%</font></td><td><font color="Black">38.3%</font></td><td><font color="Black">46.3%</font></td><td><font color="Black">5.3%</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">3.0%</font></td><td><font color="Black">65.8%</font></td><td><font color="Black">34.2%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">26</font></td><td><font color="Black">31095</font></td><td><font color="Black">845</font></td><td><font color="Black">2.8%</font></td><td><font color="Black">68.5%</font></td><td><font color="Black">18.9%</font></td><td><font color="Black">5.0%</font></td><td><font color="Black">3.4%</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">62.8%</font></td><td><font color="Black">37.2%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">27</font></td><td><font color="Black">30863</font></td><td><font color="Black">613</font></td><td><font color="Black">2.0%</font></td><td><font color="Black">26.2%</font></td><td><font color="Black">61.0%</font></td><td><font color="Black">3.0%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">4.3%</font></td><td><font color="Black">49.1%</font></td><td><font color="Black">50.9%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">28</font></td><td><font color="Black">31014</font></td><td><font color="Black">764</font></td><td><font color="Black">2.5%</font></td><td><font color="Black">26.2%</font></td><td><font color="Black">60.9%</font></td><td><font color="Black">2.8%</font></td><td><font color="Black">2.3%</font></td><td><font color="Black">3.5%</font></td><td><font color="Black">49.5%</font></td><td><font color="Black">50.5%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">29</font></td><td><font color="Black">30902</font></td><td><font color="Black">652</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">46.4%</font></td><td><font color="Black">41.7%</font></td><td><font color="Black">3.5%</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">53.2%</font></td><td><font color="Black">46.8%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">30</font></td><td><font color="Black">30506</font></td><td><font color="Black">256</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">30.9%</font></td><td><font color="Black">52.4%</font></td><td><font color="Black">6.0%</font></td><td><font color="Black">3.3%</font></td><td><font color="Black">3.4%</font></td><td><font color="Black">51.4%</font></td><td><font color="Black">48.6%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">31</font></td><td><font color="Black">30286</font></td><td><font color="Black">36</font></td><td><font color="Black">0.1%</font></td><td><font color="Black">20.5%</font></td><td><font color="Black">63.2%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">1.4%</font></td><td><font color="Black">10.0%</font></td><td><font color="Black">43.2%</font></td><td><font color="Black">56.8%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">32</font></td><td><font color="Black">31140</font></td><td><font color="Black">890</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">61.7%</font></td><td><font color="Black">34.1%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">48.4%</font></td><td><font color="Black">51.6%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">33</font></td><td><font color="Black">30955</font></td><td><font color="Black">705</font></td><td><font color="Black">2.3%</font></td><td><font color="Black">53.4%</font></td><td><font color="Black">38.1%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">2.4%</font></td><td><font color="Black">2.0%</font></td><td><font color="Black">59.6%</font></td><td><font color="Black">40.4%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">34</font></td><td><font color="Black">30343</font></td><td><font color="Black">93</font></td><td><font color="Black">0.3%</font></td><td><font color="Black">85.0%</font></td><td><font color="Black">13.1%</font></td><td><font color="Black">0.2%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">0.3%</font></td><td><font color="Black">64.1%</font></td><td><font color="Black">35.9%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">35</font></td><td><font color="Black">30440</font></td><td><font color="Black">190</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">63.5%</font></td><td><font color="Black">30.9%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">59.9%</font></td><td><font color="Black">40.1%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">36</font></td><td><font color="Black">30547</font></td><td><font color="Black">297</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">57.5%</font></td><td><font color="Black">37.3%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">1.3%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">52.5%</font></td><td><font color="Black">47.5%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">37</font></td><td><font color="Black">29783</font></td><td><font color="Black">-467</font></td><td><font color="Black">-1.5%</font></td><td><font color="Black">50.4%</font></td><td><font color="Black">41.3%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">2.5%</font></td><td><font color="Black">2.3%</font></td><td><font color="Black">55.7%</font></td><td><font color="Black">44.3%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">38</font></td><td><font color="Black">30680</font></td><td><font color="Black">430</font></td><td><font color="Black">1.4%</font></td><td><font color="Black">54.7%</font></td><td><font color="Black">38.3%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">1.4%</font></td><td><font color="Black">52.2%</font></td><td><font color="Black">47.8%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">39</font></td><td><font color="Black">28963</font></td><td><font color="Black">-1287</font></td><td><font color="Black">-4.3%</font></td><td><font color="Black">42.9%</font></td><td><font color="Black">51.5%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">55.7%</font></td><td><font color="Black">44.3%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">40</font></td><td><font color="Black">30909</font></td><td><font color="Black">659</font></td><td><font color="Black">2.2%</font></td><td><font color="Black">63.8%</font></td><td><font color="Black">28.1%</font></td><td><font color="Black">5.2%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">64.5%</font></td><td><font color="Black">35.5%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">41</font></td><td><font color="Black">29206</font></td><td><font color="Black">-1044</font></td><td><font color="Black">-3.5%</font></td><td><font color="Black">64.4%</font></td><td><font color="Black">26.3%</font></td><td><font color="Black">5.9%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">69.3%</font></td><td><font color="Black">30.7%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">42</font></td><td><font color="Black">30561</font></td><td><font color="Black">311</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">48.9%</font></td><td><font color="Black">41.4%</font></td><td><font color="Black">5.6%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">77.4%</font></td><td><font color="Black">22.6%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">43</font></td><td><font color="Black">29547</font></td><td><font color="Black">-703</font></td><td><font color="Black">-2.3%</font></td><td><font color="Black">33.6%</font></td><td><font color="Black">56.5%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">4.5%</font></td><td><font color="Black">57.5%</font></td><td><font color="Black">42.5%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">44</font></td><td><font color="Black">30538</font></td><td><font color="Black">288</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">32.8%</font></td><td><font color="Black">57.9%</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">50.8%</font></td><td><font color="Black">49.2%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">45</font></td><td><font color="Black">29916</font></td><td><font color="Black">-334</font></td><td><font color="Black">-1.1%</font></td><td><font color="Black">57.3%</font></td><td><font color="Black">35.4%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">2.1%</font></td><td><font color="Black">76.6%</font></td><td><font color="Black">23.4%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">46</font></td><td><font color="Black">30811</font></td><td><font color="Black">561</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">44.6%</font></td><td><font color="Black">45.0%</font></td><td><font color="Black">6.0%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">77.7%</font></td><td><font color="Black">22.3%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">47</font></td><td><font color="Black">29895</font></td><td><font color="Black">-355</font></td><td><font color="Black">-1.2%</font></td><td><font color="Black">24.7%</font></td><td><font color="Black">67.6%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">2.3%</font></td><td><font color="Black">78.8%</font></td><td><font color="Black">21.2%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">48</font></td><td><font color="Black">30197</font></td><td><font color="Black">-53</font></td><td><font color="Black">-0.2%</font></td><td><font color="Black">54.8%</font></td><td><font color="Black">37.6%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">1.5%</font></td><td><font color="Black">80.9%</font></td><td><font color="Black">19.1%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">49</font></td><td><font color="Black">28547</font></td><td><font color="Black">-1703</font></td><td><font color="Black">-5.6%</font></td><td><font color="Black">40.9%</font></td><td><font color="Black">52.6%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">41.3%</font></td><td><font color="Black">58.7%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">50</font></td><td><font color="Black">30228</font></td><td><font color="Black">-22</font></td><td><font color="Black">-0.1%</font></td><td><font color="Black">24.3%</font></td><td><font color="Black">68.6%</font></td><td><font color="Black">1.2%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">60.3%</font></td><td><font color="Black">39.7%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">51</font></td><td><font color="Black">31056</font></td><td><font color="Black">806</font></td><td><font color="Black">2.7%</font></td><td><font color="Black">28.8%</font></td><td><font color="Black">57.3%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">5.4%</font></td><td><font color="Black">2.5%</font></td><td><font color="Black">35.4%</font></td><td><font color="Black">64.6%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">52</font></td><td><font color="Black">30162</font></td><td><font color="Black">-88</font></td><td><font color="Black">-0.3%</font></td><td><font color="Black">71.7%</font></td><td><font color="Black">24.4%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">62.3%</font></td><td><font color="Black">37.7%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">53</font></td><td><font color="Black">31043</font></td><td><font color="Black">793</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">64.5%</font></td><td><font color="Black">29.2%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">1.5%</font></td><td><font color="Black">52.6%</font></td><td><font color="Black">47.4%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">54</font></td><td><font color="Black">30532</font></td><td><font color="Black">282</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">37.3%</font></td><td><font color="Black">52.8%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">1.4%</font></td><td><font color="Black">24.9%</font></td><td><font color="Black">75.1%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">55</font></td><td><font color="Black">30586</font></td><td><font color="Black">336</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">41.4%</font></td><td><font color="Black">52.5%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">29.6%</font></td><td><font color="Black">70.4%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">56</font></td><td><font color="Black">31101</font></td><td><font color="Black">851</font></td><td><font color="Black">2.8%</font></td><td><font color="Black">23.5%</font></td><td><font color="Black">61.3%</font></td><td><font color="Black">10.8%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">32.2%</font></td><td><font color="Black">67.8%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">57</font></td><td><font color="Black">30541</font></td><td><font color="Black">291</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">41.3%</font></td><td><font color="Black">46.1%</font></td><td><font color="Black">3.8%</font></td><td><font color="Black">3.2%</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">47.9%</font></td><td><font color="Black">52.1%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">58</font></td><td><font color="Black">29755</font></td><td><font color="Black">-495</font></td><td><font color="Black">-1.6%</font></td><td><font color="Black">66.0%</font></td><td><font color="Black">29.4%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">1.8%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">40.4%</font></td><td><font color="Black">59.6%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">59</font></td><td><font color="Black">30586</font></td><td><font color="Black">336</font></td><td><font color="Black">1.1%</font></td><td><font color="Black">42.3%</font></td><td><font color="Black">50.6%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">1.7%</font></td><td><font color="Black">28.2%</font></td><td><font color="Black">71.8%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">60</font></td><td><font color="Black">30785</font></td><td><font color="Black">535</font></td><td><font color="Black">1.8%</font></td><td><font color="Black">42.1%</font></td><td><font color="Black">46.2%</font></td><td><font color="Black">2.9%</font></td><td><font color="Black">2.4%</font></td><td><font color="Black">2.4%</font></td><td><font color="Black">45.9%</font></td><td><font color="Black">54.1%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">61</font></td><td><font color="Black">30783</font></td><td><font color="Black">533</font></td><td><font color="Black">1.8%</font></td><td><font color="Black">70.1%</font></td><td><font color="Black">22.4%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">4.6%</font></td><td><font color="Black">0.6%</font></td><td><font color="Black">35.4%</font></td><td><font color="Black">64.6%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">62</font></td><td><font color="Black">31011</font></td><td><font color="Black">761</font></td><td><font color="Black">2.5%</font></td><td><font color="Black">44.0%</font></td><td><font color="Black">46.9%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">3.7%</font></td><td><font color="Black">1.6%</font></td><td><font color="Black">19.0%</font></td><td><font color="Black">81.0%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">63</font></td><td><font color="Black">30846</font></td><td><font color="Black">596</font></td><td><font color="Black">2.0%</font></td><td><font color="Black">59.1%</font></td><td><font color="Black">32.2%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">4.6%</font></td><td><font color="Black">0.8%</font></td><td><font color="Black">46.5%</font></td><td><font color="Black">53.5%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">64</font></td><td><font color="Black">31054</font></td><td><font color="Black">804</font></td><td><font color="Black">2.7%</font></td><td><font color="Black">29.0%</font></td><td><font color="Black">61.1%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">3.3%</font></td><td><font color="Black">1.8%</font></td><td><font color="Black">23.7%</font></td><td><font color="Black">76.3%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">65</font></td><td><font color="Black">28458</font></td><td><font color="Black">-1792</font></td><td><font color="Black">-5.9%</font></td><td><font color="Black">26.2%</font></td><td><font color="Black">8.5%</font></td><td><font color="Black">63.2%</font></td><td><font color="Black">0.3%</font></td><td><font color="Black">0.4%</font></td><td><font color="Black">75.9%</font></td><td><font color="Black">24.1%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">66</font></td><td><font color="Black">30832</font></td><td><font color="Black">582</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">51.9%</font></td><td><font color="Black">42.1%</font></td><td><font color="Black">0.9%</font></td><td><font color="Black">1.9%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">30.2%</font></td><td><font color="Black">69.8%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">67</font></td><td><font color="Black">31028</font></td><td><font color="Black">778</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">38.0%</font></td><td><font color="Black">53.9%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">2.8%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">33.7%</font></td><td><font color="Black">66.3%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">68</font></td><td><font color="Black">30880</font></td><td><font color="Black">630</font></td><td><font color="Black">2.1%</font></td><td><font color="Black">44.5%</font></td><td><font color="Black">42.3%</font></td><td><font color="Black">3.7%</font></td><td><font color="Black">3.1%</font></td><td><font color="Black">2.6%</font></td><td><font color="Black">50.1%</font></td><td><font color="Black">49.9%</font></td>
+				</tr><tr bgcolor="White">
+					<td><font color="Black">69</font></td><td><font color="Black">28206</font></td><td><font color="Black">-2044</font></td><td><font color="Black">-6.8%</font></td><td><font color="Black">19.3%</font></td><td><font color="Black">11.4%</font></td><td><font color="Black">65.6%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">0.7%</font></td><td><font color="Black">66.5%</font></td><td><font color="Black">33.5%</font></td>
+				</tr><tr bgcolor="#EEEEEE">
+					<td><font color="Black">70</font></td><td><font color="Black">29378</font></td><td><font color="Black">-872</font></td><td><font color="Black">-2.9%</font></td><td><font color="Black">68.4%</font></td><td><font color="Black">26.5%</font></td><td><font color="Black">1.2%</font></td><td><font color="Black">1.0%</font></td><td><font color="Black">0.5%</font></td><td><font color="Black">67.7%</font></td><td><font color="Black">32.3%</font></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+                    
+</div>
+                    <hr />
+                    <table id="MainContent_RedistrictingContent_dataListDocuments" cellspacing="0">
+	<tr>
+		<td>
+                            
+                            <div id="MainContent_RedistrictingContent_dataListDocuments_panel2021Files_0">
+			
+                                <a id="MainContent_RedistrictingContent_dataListDocuments_linkGeoJson_0" href="/Redistricting2021/221619.1/221619.1.geojson" target="_blank">Download geojson</a>
+                                <br />
+                                <a id="MainContent_RedistrictingContent_dataListDocuments_linkAtlasPDF_0" href="/Redistricting2021/221619.1/HD_221619_atlas.pdf" target="_blank">Download atlas PDF</a>
+                                <br />
+                                <a id="MainContent_RedistrictingContent_dataListDocuments_linkSummaryPDF_0" href="/Redistricting2021/221619.1/HD_221619_summary_table.pdf" target="_blank">Download summary table PDF</a>
+                                <br />
+                                <a id="MainContent_RedistrictingContent_dataListDocuments_linkBlock_0" href="/Redistricting2021/221619.1/HD_221619_block_eq.xlsx" target="_blank">Download block equivalency file</a>
+                                <br />
+                                <a id="MainContent_RedistrictingContent_dataListDocuments_linkShapefile_0" href="/Redistricting2021/221619.1/HD_221619_shapefile.zip" target="_blank">Download shapefile</a>
+
+                            
+		</div>
+                        </td>
+	</tr>
+</table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+
+
+        </div>
+        <div class="footer noprint" style="margin-top: -20px;">
+            <div class="row" style="margin-left: -5px; margin-right: -5px;">
+                <div class="col-xs-12 col-sm-8">
+                    <div style="display: block;">
+                        <img id="imgSeal" src="../Images/Capitol/seal.png" alt="State Seal" width="50" style="float: left; margin-left: 5px; margin-right: 5px;" />
+                        <div style="font-weight: bold;">
+                            <span>New Mexico Legislature © 2026</span>
+                            <br />
+                            <span>
+                                <a style="font-style: italic;" href="/Visitors" target="_blank">Visit the Capitol</a>
+                            </span>
+                            <br />
+                            <span>
+                                <a style="font-style: italic;" href="/PrivacyPolicy" target="_blank">Privacy Policy</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    Email <a href="mailto:legis.webmaster@nmlegis.gov">legis.webmaster@nmlegis.gov</a> if you encounter an issue with the website or have a suggestion to improve it. This email is NOT for use to contact your legislators. Please contact them directly.
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+
+</html>

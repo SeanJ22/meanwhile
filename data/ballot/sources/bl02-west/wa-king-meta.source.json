@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135?f=json",
+  "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135?f=json",
+  "httpStatus": 200,
+  "rawHash": "f9dbcb095c4d05f0951047e716dc8715ce710721a68c213d930cb9e300914b05",
+  "retrievedAt": "2026-10-23T08:10:48.100294+00:00"
+}

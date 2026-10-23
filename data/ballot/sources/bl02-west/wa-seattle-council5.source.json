@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1/query?where=C_DISTRICT%3D5&outFields=C_DISTRICT%2CDISPLAY_NAME&outSR=4326&returnGeometry=true&f=geojson",
+  "finalUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1/query?where=C_DISTRICT%3D5&outFields=C_DISTRICT%2CDISPLAY_NAME&outSR=4326&returnGeometry=true&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "08c3ba561712abe0c813321c95fdbecff7ea41d36247be0d3979246098f17c6e",
+  "retrievedAt": "2026-10-23T08:12:42.271403+00:00"
+}

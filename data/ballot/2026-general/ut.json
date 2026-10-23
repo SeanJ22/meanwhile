@@ -7966,13 +7966,1837 @@
             "verifiedAt": "2026-10-20T22:57:20.564672+00:00",
             "quote": "Seventh Judicial District. The Seventh Judicial District consists of Carbon, Emery, Grand, and San Juan Counties."
           }
+        },
+        {
+          "id": "bl02-ut-county:rich-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:rich",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49033 (Rich) to State Board district 1."
+          }
+        },
+        {
+          "id": "bl02-ut-county:morgan-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:morgan",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49029 (Morgan) to State Board district 1."
+          }
+        },
+        {
+          "id": "bl02-ut-county:cache-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:cache",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49005 (Cache) to State Board district 1."
+          }
+        },
+        {
+          "id": "bl02-ut-county:box_elder-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:box_elder",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49003 (Box Elder) to State Board district 1."
+          }
+        },
+        {
+          "id": "bl02-ut-county:juab-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:juab",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49023 (Juab) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:grand-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:grand",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49019 (Grand) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:carbon-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:carbon",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49007 (Carbon) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:sevier-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:sevier",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49041 (Sevier) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:sanpete-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:sanpete",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49039 (Sanpete) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:emery-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:emery",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49015 (Emery) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:beaver-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:beaver",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49001 (Beaver) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-county:millard-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/county:millard",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "SB2005S07_BEF.txt assigns every Census block in county 49027 (Millard) to State Board district 14."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:1-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:1",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 2414 blocks assigned to House district 1 in HB2005_BEF.txt are assigned to State Board district 1 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:2-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:2",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 835 blocks assigned to House district 2 in HB2005_BEF.txt are assigned to State Board district 1 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:3-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:3",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 737 blocks assigned to House district 3 in HB2005_BEF.txt are assigned to State Board district 1 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:5-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:5",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 1094 blocks assigned to House district 5 in HB2005_BEF.txt are assigned to State Board district 1 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:7-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:7",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 615 blocks assigned to House district 7 in HB2005_BEF.txt are assigned to State Board district 2 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:9-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:9",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 707 blocks assigned to House district 9 in HB2005_BEF.txt are assigned to State Board district 2 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:18-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:18",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 608 blocks assigned to House district 18 in HB2005_BEF.txt are assigned to State Board district 4 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:19-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:19",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 576 blocks assigned to House district 19 in HB2005_BEF.txt are assigned to State Board district 4 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:20-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:20",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 561 blocks assigned to House district 20 in HB2005_BEF.txt are assigned to State Board district 4 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:25-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:25",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 600 blocks assigned to House district 25 in HB2005_BEF.txt are assigned to State Board district 5 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:36-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:36",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 391 blocks assigned to House district 36 in HB2005_BEF.txt are assigned to State Board district 8 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:37-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:37",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 445 blocks assigned to House district 37 in HB2005_BEF.txt are assigned to State Board district 8 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:38-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:38",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 499 blocks assigned to House district 38 in HB2005_BEF.txt are assigned to State Board district 8 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:42-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:42",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 629 blocks assigned to House district 42 in HB2005_BEF.txt are assigned to State Board district 7 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:53-in-sbe:11",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:53",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:11",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 572 blocks assigned to House district 53 in HB2005_BEF.txt are assigned to State Board district 11 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:54-in-sbe:11",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:54",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:11",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 653 blocks assigned to House district 54 in HB2005_BEF.txt are assigned to State Board district 11 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-sldl:66-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/sldl:66",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+            "sourceOrg": "Utah Legislature",
+            "collectedAt": "2026-10-23T08:11:37.049127+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "All 2825 blocks assigned to House district 66 in HB2005_BEF.txt are assigned to State Board district 14 in SB2005S07_BEF.txt."
+          }
+        },
+        {
+          "id": "bl02-ut-place:newton-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:newton",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Newton."
+          }
+        },
+        {
+          "id": "bl02-ut-place:eureka-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:eureka",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Eureka."
+          }
+        },
+        {
+          "id": "bl02-ut-place:huntsville-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:huntsville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=2 polygon covers the entire UGRC municipality polygon NAME=Huntsville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:levan-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:levan",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Levan."
+          }
+        },
+        {
+          "id": "bl02-ut-place:cedar_city-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:cedar_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Cedar City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:clarkston-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:clarkston",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Clarkston."
+          }
+        },
+        {
+          "id": "bl02-ut-place:north_ogden-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:north_ogden",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=2 polygon covers the entire UGRC municipality polygon NAME=North Ogden."
+          }
+        },
+        {
+          "id": "bl02-ut-place:mount_pleasant-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:mount_pleasant",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Mount Pleasant."
+          }
+        },
+        {
+          "id": "bl02-ut-place:central_valley-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:central_valley",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Central Valley."
+          }
+        },
+        {
+          "id": "bl02-ut-place:nephi-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:nephi",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Nephi."
+          }
+        },
+        {
+          "id": "bl02-ut-place:west_haven-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:west_haven",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=2 polygon covers the entire UGRC municipality polygon NAME=West Haven."
+          }
+        },
+        {
+          "id": "bl02-ut-place:tremonton-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:tremonton",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Tremonton."
+          }
+        },
+        {
+          "id": "bl02-ut-place:brian_head-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:brian_head",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Brian Head."
+          }
+        },
+        {
+          "id": "bl02-ut-place:garden_city-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:garden_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Garden City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:fillmore-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:fillmore",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Fillmore."
+          }
+        },
+        {
+          "id": "bl02-ut-place:centerville-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:centerville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=Centerville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:rocky_ridge-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:rocky_ridge",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Rocky Ridge."
+          }
+        },
+        {
+          "id": "bl02-ut-place:howell-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:howell",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Howell."
+          }
+        },
+        {
+          "id": "bl02-ut-place:wales-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:wales",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Wales."
+          }
+        },
+        {
+          "id": "bl02-ut-place:deweyville-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:deweyville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Deweyville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:gunnison-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:gunnison",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Gunnison."
+          }
+        },
+        {
+          "id": "bl02-ut-place:ferron-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:ferron",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Ferron."
+          }
+        },
+        {
+          "id": "bl02-ut-place:fairview-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:fairview",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Fairview."
+          }
+        },
+        {
+          "id": "bl02-ut-place:elk_ridge-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:elk_ridge",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Elk Ridge."
+          }
+        },
+        {
+          "id": "bl02-ut-place:clawson-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:clawson",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Clawson."
+          }
+        },
+        {
+          "id": "bl02-ut-place:fayette-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:fayette",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Fayette."
+          }
+        },
+        {
+          "id": "bl02-ut-place:woodruff-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:woodruff",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Woodruff."
+          }
+        },
+        {
+          "id": "bl02-ut-place:fruit_heights-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:fruit_heights",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=Fruit Heights."
+          }
+        },
+        {
+          "id": "bl02-ut-place:wellington-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:wellington",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Wellington."
+          }
+        },
+        {
+          "id": "bl02-ut-place:bear_river_city-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:bear_river_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Bear River City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:smithfield-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:smithfield",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Smithfield."
+          }
+        },
+        {
+          "id": "bl02-ut-place:santaquin-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:santaquin",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Santaquin."
+          }
+        },
+        {
+          "id": "bl02-ut-place:kamas-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:kamas",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Kamas."
+          }
+        },
+        {
+          "id": "bl02-ut-place:wellsville-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:wellsville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Wellsville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:emery-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:emery",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Emery."
+          }
+        },
+        {
+          "id": "bl02-ut-place:mendon-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:mendon",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Mendon."
+          }
+        },
+        {
+          "id": "bl02-ut-place:delta-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:delta",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Delta."
+          }
+        },
+        {
+          "id": "bl02-ut-place:aurora-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:aurora",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Aurora."
+          }
+        },
+        {
+          "id": "bl02-ut-place:kanosh-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:kanosh",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Kanosh."
+          }
+        },
+        {
+          "id": "bl02-ut-place:elwood-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:elwood",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Elwood."
+          }
+        },
+        {
+          "id": "bl02-ut-place:plymouth-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:plymouth",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Plymouth."
+          }
+        },
+        {
+          "id": "bl02-ut-place:minersville-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:minersville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Minersville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:huntington-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:huntington",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Huntington."
+          }
+        },
+        {
+          "id": "bl02-ut-place:joseph-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:joseph",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Joseph."
+          }
+        },
+        {
+          "id": "bl02-ut-place:paradise-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:paradise",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Paradise."
+          }
+        },
+        {
+          "id": "bl02-ut-place:paragonah-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:paragonah",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Paragonah."
+          }
+        },
+        {
+          "id": "bl02-ut-place:elmo-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:elmo",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Elmo."
+          }
+        },
+        {
+          "id": "bl02-ut-place:perry-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:perry",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Perry."
+          }
+        },
+        {
+          "id": "bl02-ut-place:millville-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:millville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Millville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:hinckley-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:hinckley",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Hinckley."
+          }
+        },
+        {
+          "id": "bl02-ut-place:meadow-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:meadow",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Meadow."
+          }
+        },
+        {
+          "id": "bl02-ut-place:north_logan-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:north_logan",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=North Logan."
+          }
+        },
+        {
+          "id": "bl02-ut-place:alpine-in-sbe:11",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:alpine",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:11",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=11 polygon covers the entire UGRC municipality polygon NAME=Alpine."
+          }
+        },
+        {
+          "id": "bl02-ut-place:hyde_park-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:hyde_park",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Hyde Park."
+          }
+        },
+        {
+          "id": "bl02-ut-place:monroe-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:monroe",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Monroe."
+          }
+        },
+        {
+          "id": "bl02-ut-place:centerfield-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:centerfield",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Centerfield."
+          }
+        },
+        {
+          "id": "bl02-ut-place:lynndyl-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:lynndyl",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Lynndyl."
+          }
+        },
+        {
+          "id": "bl02-ut-place:west_bountiful-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:west_bountiful",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=West Bountiful."
+          }
+        },
+        {
+          "id": "bl02-ut-place:cleveland-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:cleveland",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Cleveland."
+          }
+        },
+        {
+          "id": "bl02-ut-place:harrisville-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:harrisville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=2 polygon covers the entire UGRC municipality polygon NAME=Harrisville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:coalville-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:coalville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Coalville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:redmond-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:redmond",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Redmond."
+          }
+        },
+        {
+          "id": "bl02-ut-place:richmond-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:richmond",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Richmond."
+          }
+        },
+        {
+          "id": "bl02-ut-place:green_river-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:green_river",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Green River."
+          }
+        },
+        {
+          "id": "bl02-ut-place:sterling-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:sterling",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Sterling."
+          }
+        },
+        {
+          "id": "bl02-ut-place:brigham_city-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:brigham_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Brigham City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:providence-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:providence",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Providence."
+          }
+        },
+        {
+          "id": "bl02-ut-place:castle_dale-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:castle_dale",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Castle Dale."
+          }
+        },
+        {
+          "id": "bl02-ut-place:honeyville-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:honeyville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Honeyville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:north_salt_lake-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:north_salt_lake",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=North Salt Lake."
+          }
+        },
+        {
+          "id": "bl02-ut-place:mayfield-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:mayfield",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Mayfield."
+          }
+        },
+        {
+          "id": "bl02-ut-place:moroni-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:moroni",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Moroni."
+          }
+        },
+        {
+          "id": "bl02-ut-place:henefer-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:henefer",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Henefer."
+          }
+        },
+        {
+          "id": "bl02-ut-place:scipio-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:scipio",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Scipio."
+          }
+        },
+        {
+          "id": "bl02-ut-place:milford-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:milford",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Milford."
+          }
+        },
+        {
+          "id": "bl02-ut-place:farmington-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:farmington",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=Farmington."
+          }
+        },
+        {
+          "id": "bl02-ut-place:randolph-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:randolph",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Randolph."
+          }
+        },
+        {
+          "id": "bl02-ut-place:bountiful-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:bountiful",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=Bountiful."
+          }
+        },
+        {
+          "id": "bl02-ut-place:oakley-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:oakley",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Oakley."
+          }
+        },
+        {
+          "id": "bl02-ut-place:willard-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:willard",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Willard."
+          }
+        },
+        {
+          "id": "bl02-ut-place:trenton-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:trenton",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Trenton."
+          }
+        },
+        {
+          "id": "bl02-ut-place:corinne-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:corinne",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Corinne."
+          }
+        },
+        {
+          "id": "bl02-ut-place:oak_city-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:oak_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Oak City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:moab-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:moab",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Moab."
+          }
+        },
+        {
+          "id": "bl02-ut-place:river_heights-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:river_heights",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=River Heights."
+          }
+        },
+        {
+          "id": "bl02-ut-place:fielding-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:fielding",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Fielding."
+          }
+        },
+        {
+          "id": "bl02-ut-place:morgan-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:morgan",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Morgan."
+          }
+        },
+        {
+          "id": "bl02-ut-place:spring_city-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:spring_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Spring City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:salina-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:salina",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Salina."
+          }
+        },
+        {
+          "id": "bl02-ut-place:hyrum-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:hyrum",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Hyrum."
+          }
+        },
+        {
+          "id": "bl02-ut-place:leamington-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:leamington",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Leamington."
+          }
+        },
+        {
+          "id": "bl02-ut-place:amalga-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:amalga",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Amalga."
+          }
+        },
+        {
+          "id": "bl02-ut-place:snowville-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:snowville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Snowville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:garland-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:garland",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Garland."
+          }
+        },
+        {
+          "id": "bl02-ut-place:castle_valley-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:castle_valley",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Castle Valley."
+          }
+        },
+        {
+          "id": "bl02-ut-place:marriott_slaterville-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:marriott_slaterville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=2 polygon covers the entire UGRC municipality polygon NAME=Marriott-Slaterville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:orangeville-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:orangeville",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Orangeville."
+          }
+        },
+        {
+          "id": "bl02-ut-place:glenwood-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:glenwood",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Glenwood."
+          }
+        },
+        {
+          "id": "bl02-ut-place:helper-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:helper",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Helper."
+          }
+        },
+        {
+          "id": "bl02-ut-place:holden-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:holden",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Holden."
+          }
+        },
+        {
+          "id": "bl02-ut-place:mona-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:mona",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Mona."
+          }
+        },
+        {
+          "id": "bl02-ut-place:woods_cross-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:woods_cross",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=4 polygon covers the entire UGRC municipality polygon NAME=Woods Cross."
+          }
+        },
+        {
+          "id": "bl02-ut-place:ephraim-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:ephraim",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Ephraim."
+          }
+        },
+        {
+          "id": "bl02-ut-place:goshen-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:goshen",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Goshen."
+          }
+        },
+        {
+          "id": "bl02-ut-place:parowan-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:parowan",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Parowan."
+          }
+        },
+        {
+          "id": "bl02-ut-place:east_carbon-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:east_carbon",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=East Carbon."
+          }
+        },
+        {
+          "id": "bl02-ut-place:annabella-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:annabella",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Annabella."
+          }
+        },
+        {
+          "id": "bl02-ut-place:price-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:price",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Price."
+          }
+        },
+        {
+          "id": "bl02-ut-place:manti-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:manti",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Manti."
+          }
+        },
+        {
+          "id": "bl02-ut-place:mantua-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:mantua",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Mantua."
+          }
+        },
+        {
+          "id": "bl02-ut-place:enoch-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:enoch",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Enoch."
+          }
+        },
+        {
+          "id": "bl02-ut-place:laketown-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:laketown",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Laketown."
+          }
+        },
+        {
+          "id": "bl02-ut-place:scofield-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:scofield",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Scofield."
+          }
+        },
+        {
+          "id": "bl02-ut-place:fountain_green-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:fountain_green",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Fountain Green."
+          }
+        },
+        {
+          "id": "bl02-ut-place:sigurd-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:sigurd",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Sigurd."
+          }
+        },
+        {
+          "id": "bl02-ut-place:beaver-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:beaver",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Beaver."
+          }
+        },
+        {
+          "id": "bl02-ut-place:woodland_hills-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:woodland_hills",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Woodland Hills."
+          }
+        },
+        {
+          "id": "bl02-ut-place:nibley-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:nibley",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Nibley."
+          }
+        },
+        {
+          "id": "bl02-ut-place:elsinore-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:elsinore",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Elsinore."
+          }
+        },
+        {
+          "id": "bl02-ut-place:richfield-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:richfield",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Richfield."
+          }
+        },
+        {
+          "id": "bl02-ut-place:white_city-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:white_city",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=7 polygon covers the entire UGRC municipality polygon NAME=White City."
+          }
+        },
+        {
+          "id": "bl02-ut-place:logan-in-sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:logan",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=1 polygon covers the entire UGRC municipality polygon NAME=Logan."
+          }
+        },
+        {
+          "id": "bl02-ut-place:spring_lake-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:ut/place:spring_lake",
+          "districtOcdId": "ocd-division/country:us/state:ut/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+            "sourceOrg": "Utah Geospatial Resource Center",
+            "collectedAt": "2026-10-23T08:11:35.408739+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "UGRC district DIST=14 polygon covers the entire UGRC municipality polygon NAME=Spring Lake."
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T01:02:36.591681+00:00",
+    "reviewedAt": "2026-10-23T08:16:02.941396+00:00",
     "reviewedBy": "Codex BA-01 official county source replay",
     "sources": [
       {
@@ -8046,6 +9870,56 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Amended2026GeneralCertification pages19-21 explicitly prints all25regional district/juvenile retention decisions, their25names,and each district whole-county membership. SevenThirdDistrict names independently appear in officialSaltLakeBT1. Municipal/countyjustice courts remain separate until exact political-subdivision electorates are verified.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+        "finalUrl": "https://le.utah.gov/~2021S2/redistrict/SB2005S07_BEF.txt",
+        "httpStatus": 200,
+        "rawHash": "1d3095b2ba163decdee53d3d7495f54db4a6394875f12b225db83aab19818eba",
+        "retrievedAt": "2026-10-23T08:11:37.049127+00:00",
+        "publisher": "Utah Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/ut-SB2005S07_BEF.txt.gz. Hash identifies the decompressed original public response bytes."
+      },
+      {
+        "requestedUrl": "https://le.utah.gov/~2021S2/redistrict/HB2005_BEF.txt",
+        "finalUrl": "https://le.utah.gov/~2021S2/redistrict/HB2005_BEF.txt",
+        "httpStatus": 200,
+        "rawHash": "58493efa9f5857ce2dd21dbe01ea2ccebb4a2a47942174d09b0004e490aa9d10",
+        "retrievedAt": "2026-10-23T08:11:37.358419+00:00",
+        "publisher": "Utah Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/ut-HB2005_BEF.txt.gz. Hash identifies the decompressed original public response bytes."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "finalUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahSchoolBoardDistricts2022to2032/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "322b28c537ad5833a4cb53dea5245db21b23b38ea7bae9dbec0def5d751d2a18",
+        "retrievedAt": "2026-10-23T08:11:35.408739+00:00",
+        "publisher": "Utah Geospatial Resource Center",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/ut-boards.geojson.gz. Hash identifies the decompressed original public response bytes."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahMunicipalBoundaries/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "finalUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahMunicipalBoundaries/FeatureServer/0/query?where=1%3D1&outFields=%2A&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "d5ad26d4f9eba1e36d2c8ddf7f3f30d5a27732c280888a3ebb0d5aab094d8a94",
+        "retrievedAt": "2026-10-23T08:11:35.872929+00:00",
+        "publisher": "Utah Geospatial Resource Center",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/ut-cities.geojson.gz. Hash identifies the decompressed original public response bytes."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahCountyBoundaries/FeatureServer/0/query?where=1%3D1&outFields=NAME%2CFIPS_STR&returnGeometry=false&f=json",
+        "finalUrl": "https://services1.arcgis.com/99lidPhWCzftIe9K/ArcGIS/rest/services/UtahCountyBoundaries/FeatureServer/0/query?where=1%3D1&outFields=NAME%2CFIPS_STR&returnGeometry=false&f=json",
+        "httpStatus": 200,
+        "rawHash": "697d5f14a1c18a3727bd60a9f63b8e3f190b3cc7fd758c3fbeb3dc6ccedbe497",
+        "retrievedAt": "2026-10-23T08:16:02.189200+00:00",
+        "publisher": "Utah Geospatial Resource Center",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/ut-county-names.json. Original public response. State county names and FIPS only; geometry is not fetched."
       }
     ]
   }

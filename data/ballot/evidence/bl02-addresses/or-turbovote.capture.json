@@ -1,0 +1,132 @@
+{
+  "state": "OR",
+  "address": "900 Court St NE, Salem, OR 97301",
+  "checkedAt": "2026-10-23T08:05:10.399Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aor/2026-11-03?street=900+Court+St+NE&city=Salem&state=OR&zip=97301",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/or-google.json",
+  "sha256": "5276ea6b8d2372df52b06451b04af9d3f0be1ed9969146efe40dcc8f19c163e2",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/or-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/or-turbovote.txt",
+  "elapsedMs": 5014,
+  "races": [
+    {
+      "id": "co_918e84e89461b5dea0192faea0b0d07b7ea95ba5",
+      "title": "U.S. Senate Oregon",
+      "candidates": [
+        {
+          "name": "Jeff Merkley",
+          "party": "Democratic Party, Working Families Party|Incumbent"
+        },
+        {
+          "name": "David Brock Smith",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Gary Dye",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Chris Henry",
+          "party": "Pacific Green Party of Oregon, Progressive Party"
+        }
+      ]
+    },
+    {
+      "id": "co_989c5e2dd0d2779db94c31936d8a75f1e3cdb4b2",
+      "title": "U.S. House Oregon District 6",
+      "candidates": [
+        {
+          "name": "Andrea Salinas",
+          "party": "Democratic Party, Independent Party of Oregon|Incumbent"
+        },
+        {
+          "name": "David Russ",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_ce3010e23e0cb942888579a8f7e0375ed225b2b3",
+      "title": "Governor of Oregon",
+      "candidates": [
+        {
+          "name": "Tina Kotek",
+          "party": "Democratic Party, Working Families Party|Incumbent"
+        },
+        {
+          "name": "Christine Drazan",
+          "party": "Republican Party, Libertarian Party"
+        },
+        {
+          "name": "Brett Smith",
+          "party": "Pacific Green Party of Oregon"
+        }
+      ]
+    },
+    {
+      "id": "co_bcdba80ccf6dea55bdc4d578aab52beea2dad0da",
+      "title": "Oregon State Senate District 11",
+      "candidates": [
+        {
+          "name": "Virginia Stapleton",
+          "party": "Democratic Party, Working Families Party"
+        },
+        {
+          "name": "Tracy Cramer",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_95d00299a2618ab215c860aff7e08e5c6323eb34",
+      "title": "Oregon House of Representatives District 21",
+      "candidates": [
+        {
+          "name": "Kevin Mannix",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Michael Welsh",
+          "party": "Democratic Party, Working Families Party"
+        }
+      ]
+    },
+    {
+      "id": "co_48e6611e3daa76c964adf3bf7d211c2ff6c609fb",
+      "title": "Mayor of Salem",
+      "candidates": [
+        {
+          "name": "Vanessa Nordyke",
+          "party": "Nonpartisan"
+        }
+      ]
+    }
+  ],
+  "measures": [],
+  "headings": [
+    "All Races (6)",
+    "Federal Races",
+    "U.S. Senate Oregon",
+    "U.S. House Oregon District 6",
+    "State Races",
+    "Governor of Oregon",
+    "Oregon State Senate District 11",
+    "Oregon House of Representatives District 21",
+    "Local Races",
+    "Mayor of Salem",
+    "Election Day is in10DAYS15HOURS54MINUTES49SECONDS"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/or-turbovote-divisions.json",
+      "sha256": "eee5574e5072341a4bf371ef16b37f67c69cf7fe2e74ca96d0e26f9c7888faff"
+    }
+  ]
+}

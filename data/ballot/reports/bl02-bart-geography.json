@@ -1,0 +1,66 @@
+{
+  "district": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+  "sourceUrl": "https://services.arcgis.com/sqS7RNuF1BQinj5N/arcgis/rest/services/Board_of_Directors_District_Boundary_Viewer_Base_Data_WFL1/FeatureServer/2/query?where=District%3D8&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+  "sourceHash": "13c81e369998edd8792848532974c2744974af3465e9cbd809f91a233e75c4a2",
+  "zipIntersections": [
+    "94102",
+    "94104",
+    "94105",
+    "94108",
+    "94109",
+    "94111",
+    "94112",
+    "94115",
+    "94116",
+    "94117",
+    "94118",
+    "94121",
+    "94122",
+    "94123",
+    "94127",
+    "94129",
+    "94131",
+    "94132",
+    "94133"
+  ],
+  "countySplit": "San Francisco",
+  "wholeCountyMembershipAdded": false,
+  "wholeCityMembershipAdded": false,
+  "countySubdivisions": [
+    {
+      "name": "Merced-McLaren CCD",
+      "outsideShareOfArea": 0.3118831513903647
+    },
+    {
+      "name": "Sunset CCD",
+      "outsideShareOfArea": 0.7423435465891571
+    },
+    {
+      "name": "Richmond-Presidio-Marina CCD",
+      "outsideShareOfArea": 0.010860659573234921
+    },
+    {
+      "name": "Western Addition-Buena Vista-Eureka Valley CCD",
+      "outsideShareOfArea": 0.9105367492458762
+    },
+    {
+      "name": "Mission-Bernal CCD",
+      "outsideShareOfArea": 1.0000000000000002
+    },
+    {
+      "name": "Bayview CCD",
+      "outsideShareOfArea": 1.0000000000000004
+    },
+    {
+      "name": "SoMa-Potrero-Mission Bay CCD",
+      "outsideShareOfArea": 0.9933026981943521
+    },
+    {
+      "name": "Downtown-Northeast Neighborhoods-Treasure Island CCD",
+      "outsideShareOfArea": 0.947115167484902
+    }
+  ],
+  "upstream": "BART official district viewer and Census current ZCTA polygons",
+  "downstream": "Existing resolver geometry and ZIP area ballot selector",
+  "publication": "Prepared data only; deployed geometry manifests remain pinned until a supported data publisher updates their serving copy."
+}

@@ -1,0 +1,274 @@
+{
+  "checkedAt": "2026-10-23T08:16:02.941396+00:00",
+  "dataOnly": true,
+  "states": {
+    "NE": {
+      "membershipRows": 527,
+      "districtMembershipCounts": {
+        "ocd-division/country:us/state:ne/board_of_education:5": 173,
+        "ocd-division/country:us/state:ne/board_of_education:6": 118,
+        "ocd-division/country:us/state:ne/board_of_education:7": 208,
+        "ocd-division/country:us/state:ne/board_of_education:8": 2,
+        "ocd-division/country:us/state:ne/board_of_regents:1": 8,
+        "ocd-division/country:us/state:ne/board_of_regents:2": 6,
+        "ocd-division/country:us/state:ne/board_of_regents:4": 4,
+        "ocd-division/country:us/state:ne/public_service_commission:2": 8
+      },
+      "splitCounties": [
+        {
+          "family": "board_of_education",
+          "county": "Douglas",
+          "districtFractions": {
+            "4": 0.2360497,
+            "8": 0.3017738,
+            "3": 0.4606959
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "board_of_education",
+          "county": "Burt",
+          "districtFractions": {
+            "3": 0.9809081,
+            "6": 0.0187162
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "board_of_education",
+          "county": "Cuming",
+          "districtFractions": {
+            "3": 0.8770277,
+            "6": 0.1229723
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "board_of_education",
+          "county": "Lancaster",
+          "districtFractions": {
+            "5": 0.6015866,
+            "1": 0.3984043
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "board_of_regents",
+          "county": "Douglas",
+          "districtFractions": {
+            "4": 0.2254294,
+            "2": 0.1772987,
+            "8": 0.595775
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "board_of_regents",
+          "county": "Sarpy",
+          "districtFractions": {
+            "2": 0.3864308,
+            "5": 0.6128613
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "board_of_regents",
+          "county": "Lancaster",
+          "districtFractions": {
+            "5": 0.6015871,
+            "1": 0.3984043
+          },
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "family": "public_service_commission",
+          "county": "Douglas",
+          "districtFractions": {
+            "2": 0.4322079,
+            "3": 0.5663585
+          },
+          "wholeCountyMembershipAdded": false
+        }
+      ],
+      "method": "Strict coverage by state-adopted district polygons. Generalized county boundaries that protrude outside a district are omitted; whole Census places and whole state legislative districts supply safe narrower memberships."
+    },
+    "UT": {
+      "membershipRows": 152,
+      "districtMembershipCounts": {
+        "ocd-division/country:us/state:ut/sbe:1": 49,
+        "ocd-division/country:us/state:ut/sbe:11": 3,
+        "ocd-division/country:us/state:ut/sbe:14": 77,
+        "ocd-division/country:us/state:ut/sbe:2": 7,
+        "ocd-division/country:us/state:ut/sbe:4": 10,
+        "ocd-division/country:us/state:ut/sbe:5": 1,
+        "ocd-division/country:us/state:ut/sbe:7": 2,
+        "ocd-division/country:us/state:ut/sbe:8": 3
+      },
+      "blockCount": 71207,
+      "splitCounties": [
+        {
+          "county": "Summit",
+          "districts": [
+            1,
+            6
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Weber",
+          "districts": [
+            2,
+            3
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Davis",
+          "districts": [
+            3,
+            4
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Salt Lake",
+          "districts": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Utah",
+          "districts": [
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Iron",
+          "districts": [
+            14,
+            15
+          ],
+          "wholeCountyMembershipAdded": false
+        }
+      ],
+      "method": "Exact join of enacted Census-block equivalency files for counties and whole House districts; strict whole-polygon coverage for municipalities. No rounding of near-complete city coverage."
+    },
+    "TX": {
+      "membershipRows": 227,
+      "districtMembershipCounts": {
+        "ocd-division/country:us/state:tx/sbe:13": 9,
+        "ocd-division/country:us/state:tx/sbe:14": 39,
+        "ocd-division/country:us/state:tx/sbe:2": 59,
+        "ocd-division/country:us/state:tx/sbe:4": 8,
+        "ocd-division/country:us/state:tx/sbe:5": 6,
+        "ocd-division/country:us/state:tx/sbe:6": 16,
+        "ocd-division/country:us/state:tx/sbe:7": 40,
+        "ocd-division/country:us/state:tx/sbe:8": 26,
+        "ocd-division/country:us/state:tx/sbe:9": 24
+      },
+      "countiesRead": 254,
+      "splitCounties": [
+        {
+          "county": "Dallas",
+          "districts": [
+            9,
+            11,
+            12,
+            13,
+            14
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Denton",
+          "districts": [
+            12,
+            14
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Fort Bend",
+          "districts": [
+            7,
+            8
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Galveston",
+          "districts": [
+            4,
+            7,
+            8
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Harris",
+          "districts": [
+            4,
+            6,
+            7,
+            8
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Hidalgo",
+          "districts": [
+            2,
+            3
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Johnson",
+          "districts": [
+            11,
+            14
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Montgomery",
+          "districts": [
+            6,
+            8
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Tarrant",
+          "districts": [
+            11,
+            13
+          ],
+          "wholeCountyMembershipAdded": false
+        },
+        {
+          "county": "Williamson",
+          "districts": [
+            5,
+            10
+          ],
+          "wholeCountyMembershipAdded": false
+        }
+      ],
+      "method": "Explicit county report, with split-county rows excluded. Whole city rows in split counties require 100% and absence from the separate split-city report; all multi-county asterisk rows are omitted."
+    }
+  }
+}

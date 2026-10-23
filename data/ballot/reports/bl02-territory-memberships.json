@@ -1,0 +1,78 @@
+{
+  "checkedAt": "2026-10-23T08:10:01.707223+00:00",
+  "states": {
+    "MP": {
+      "memberships": [
+        {
+          "id": "bl02-mp-rota-to-municipality-rota",
+          "memberOcdId": "ocd-division/country:us/territory:mp/county:rota",
+          "districtOcdId": "ocd-division/country:us/territory:mp/municipality:rota",
+          "provenance": {
+            "sourceUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-20T23:54:52.138272+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "MP|69|100|01805246|Rota Municipality|H1|A"
+          }
+        },
+        {
+          "id": "bl02-mp-tinian-to-municipality-tinian",
+          "memberOcdId": "ocd-division/country:us/territory:mp/county:tinian",
+          "districtOcdId": "ocd-division/country:us/territory:mp/municipality:tinian",
+          "provenance": {
+            "sourceUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-20T23:54:52.138272+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "MP|69|120|01805248|Tinian Municipality|H1|A"
+          }
+        }
+      ],
+      "splitCounties": [],
+      "meaning": "Entire named island counties; existing district memberships carry the result to the board races."
+    },
+    "VI": {
+      "memberships": [
+        {
+          "id": "bl02-vi-st_croix-to-sldu-st_croix",
+          "memberOcdId": "ocd-division/country:us/territory:vi/county:st_croix",
+          "districtOcdId": "ocd-division/country:us/territory:vi/sldu:st_croix",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "ST. CROIX / SANTA CRUZ; NOVEMBER 3, 2026; LEGISLATURE OF THE VIRGIN ISLANDS; BOARD OF EDUCATION; BOARD OF ELECTIONS. The island county belongs to the same named election district printed on this official sample."
+          }
+        },
+        {
+          "id": "bl02-vi-st_thomas-to-sldu-st_thomas-st_john",
+          "memberOcdId": "ocd-division/country:us/territory:vi/county:st_thomas",
+          "districtOcdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "ST. THOMAS - ST. JOHN / SAN TOMAS - SAN JOHN; NOVEMBER 3, 2026; LEGISLATURE OF THE VIRGIN ISLANDS; BOARD OF EDUCATION; BOARD OF ELECTIONS. The island county belongs to the same named election district printed on this official sample."
+          }
+        },
+        {
+          "id": "bl02-vi-st_john-to-sldu-st_thomas-st_john",
+          "memberOcdId": "ocd-division/country:us/territory:vi/county:st_john",
+          "districtOcdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "ST. THOMAS - ST. JOHN / SAN TOMAS - SAN JOHN; NOVEMBER 3, 2026; LEGISLATURE OF THE VIRGIN ISLANDS; BOARD OF EDUCATION; BOARD OF ELECTIONS. The island county belongs to the same named election district printed on this official sample."
+          }
+        }
+      ],
+      "splitCounties": [],
+      "meaning": "Entire named island counties; existing district memberships carry the result to the board races."
+    }
+  },
+  "method": "Reused original Census county-equivalent names and complete current official territorial ballot specimens. No geography is inferred from a ZIP centroid."
+}

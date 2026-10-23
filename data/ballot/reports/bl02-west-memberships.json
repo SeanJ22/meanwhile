@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-10-23T08:05:57.731718+00:00",
+  "states": {
+    "AK": {
+      "addedMemberships": 345,
+      "byDistrict": {
+        "3": 145,
+        "4": 122,
+        "2": 37,
+        "1": 41
+      },
+      "unmatchedCommunityAliases": [
+        "ocd-division/country:us/state:ak/place:denali_park",
+        "ocd-division/country:us/state:ak/place:mill_bay"
+      ],
+      "wholeCountyMembershipsAdded": 0,
+      "countyBoundaryNote": "Alaska judicial districts are community electorates; borough/census-area boundaries are not asserted by this point service. Only listed community memberships are added."
+    },
+    "CA": {
+      "addedMemberships": 58,
+      "splitCounties": [
+        {
+          "county": "San Bernardino",
+          "districts": [
+            1,
+            4
+          ],
+          "reason": "Listed in both official BOE districts; no whole-county membership added."
+        }
+      ],
+      "specialDistrictContest": "ca-sf-2026-general-bart-director-district-8",
+      "specialDistrictOcdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+      "specialDistrictCandidates": [
+        "Sara Barz"
+      ],
+      "splitSpecialDistrict": {
+        "county": "San Francisco",
+        "district": "BART8",
+        "reason": "VIP states BART7/9 voters do not receive the BART8 contest. No whole-SanFrancisco membership added; reader must use official boundary data."
+      }
+    },
+    "OR": {
+      "addedMemberships": 2,
+      "splitCounties": [
+        {
+          "sourceUrl": "https://www.portland.gov/transition/districtcommission/map",
+          "county": "Multnomah",
+          "city": "Portland",
+          "districtType": "Portland council",
+          "reason": "Official boundary descriptions divide Portland/Multnomah; whole-city/county membership would show races outside the electorate."
+        },
+        {
+          "sourceUrl": "https://multco.us/info/current-proposed-commissioner-district-boundaries",
+          "county": "Multnomah",
+          "city": "Portland",
+          "districtType": "Multnomah county commission",
+          "reason": "Official boundary descriptions divide Portland/Multnomah; whole-city/county membership would show races outside the electorate."
+        }
+      ],
+      "districtsWithoutWholePlaceMemberships": [
+        "place:portland/council_district:3",
+        "place:portland/council_district:4"
+      ],
+      "boundaryStatus": "Exact official resolver polygons and the whole MaywoodPark membership are prepared by scripts/bl02-pacific-councils.py; see its report for publication status."
+    }
+  },
+  "method": "Saved official district lists; only whole named places/counties. Exact Census city codes repair ambiguous place names. Existing contest/candidate/measure IDs retained.",
+  "acquisitionFailures": [
+    {
+      "url": "https://courts.alaska.gov/shc/probate/docs/shs-pr-communities.pdf",
+      "result": "HTTP200 RequestRejected HTML; not used as evidence",
+      "replacement": "Official Alaska Commerce Judicial Districts GIS community table"
+    }
+  ]
+}

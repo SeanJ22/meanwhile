@@ -1,0 +1,12 @@
+{
+  "state": "TX",
+  "address": "1100 Congress Ave, Austin, TX 78701",
+  "checkedAt": "2026-10-23T07:59:03.625490+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/tx-google.json",
+  "sha256": "73c6f792bd7f9e461f0fc36568ac11e6d45d226cf93038929cafa2166c272275",
+  "contestCount": 0,
+  "contests": []
+}

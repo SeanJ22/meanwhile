@@ -12283,14 +12283,1211 @@
             "verifiedAt": "2026-10-20T23:54:07.189544+00:00",
             "quote": "Kansas 30th Judicial District: Sumner County"
           }
+        },
+        {
+          "id": "bl02:6be27ff3e7b442386ca3b7e7",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:1",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district one shall consist of senatorial districts 1, 5, 18 and 22."
+          }
+        },
+        {
+          "id": "bl02:388bae77cba104a08c38c15e",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:5",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district one shall consist of senatorial districts 1, 5, 18 and 22."
+          }
+        },
+        {
+          "id": "bl02:7d2594a55d62703842e51645",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:18",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district one shall consist of senatorial districts 1, 5, 18 and 22."
+          }
+        },
+        {
+          "id": "bl02:240fc2e30a73ac6c71f08242",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:22",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district one shall consist of senatorial districts 1, 5, 18 and 22."
+          }
+        },
+        {
+          "id": "bl02:c0f7ca6dc420480e06a60621",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:11",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district three shall consist of senatorial districts 11, 23, 35 and 37."
+          }
+        },
+        {
+          "id": "bl02:ea4b965dd94ce55f653ce1c2",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:23",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district three shall consist of senatorial districts 11, 23, 35 and 37."
+          }
+        },
+        {
+          "id": "bl02:e9e9abe131b74baefa3ea4da",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:35",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district three shall consist of senatorial districts 11, 23, 35 and 37."
+          }
+        },
+        {
+          "id": "bl02:b6ac36b5c4df05dec2147105",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:37",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:3",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district three shall consist of senatorial districts 11, 23, 35 and 37."
+          }
+        },
+        {
+          "id": "bl02:5f5af187da88927994c77c4f",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:36",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district five shall consist of senatorial districts 36, 38, 39 and 40."
+          }
+        },
+        {
+          "id": "bl02:e56303743a4f7fb2e476b219",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:38",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district five shall consist of senatorial districts 36, 38, 39 and 40."
+          }
+        },
+        {
+          "id": "bl02:98ec18db2f03907158ccb477",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:39",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district five shall consist of senatorial districts 36, 38, 39 and 40."
+          }
+        },
+        {
+          "id": "bl02:a406e71526c5fc40a5494727",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:40",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district five shall consist of senatorial districts 36, 38, 39 and 40."
+          }
+        },
+        {
+          "id": "bl02:302131acf45a4cc7719bd150",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:24",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district seven shall consist of senatorial districts 24, 31, 33 and 34."
+          }
+        },
+        {
+          "id": "bl02:abb2382021a65a4dfcaabd3c",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:31",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district seven shall consist of senatorial districts 24, 31, 33 and 34."
+          }
+        },
+        {
+          "id": "bl02:a945a5433a89c4fb20394c7b",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:33",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district seven shall consist of senatorial districts 24, 31, 33 and 34."
+          }
+        },
+        {
+          "id": "bl02:617363a2bedb2121821e31bd",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:34",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district seven shall consist of senatorial districts 24, 31, 33 and 34."
+          }
+        },
+        {
+          "id": "bl02:830e675025a524be0fbbd0ae",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:12",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district nine shall consist of senatorial districts 12, 13, 14 and 15."
+          }
+        },
+        {
+          "id": "bl02:cc741de66b23f6e657a21400",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:13",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district nine shall consist of senatorial districts 12, 13, 14 and 15."
+          }
+        },
+        {
+          "id": "bl02:1cf1fb68745c5395c1682dad",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:14",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district nine shall consist of senatorial districts 12, 13, 14 and 15."
+          }
+        },
+        {
+          "id": "bl02:5c90c288f591272740957658",
+          "memberOcdId": "ocd-division/country:us/state:ks/sldu:15",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+            "sourceOrg": "Kansas Legislature",
+            "collectedAt": "2026-10-23T08:08:17.168144+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "State board of education member district nine shall consist of senatorial districts 12, 13, 14 and 15."
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:morton->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:morton",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:stanton->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:stanton",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:stevens->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:stevens",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:grant->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:grant",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:seward->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:seward",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:haskell->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:haskell",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:hamilton->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:hamilton",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:greeley->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:greeley",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:wallace->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:wallace",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:sherman->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:sherman",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:cheyenne->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:cheyenne",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:kearny->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:kearny",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:wichita->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:wichita",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:finney->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:finney",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:scott->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:scott",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:logan->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:logan",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:thomas->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:thomas",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:rawlins->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:rawlins",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:gray->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:gray",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:meade->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:meade",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:ford->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:ford",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:clark->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:clark",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:comanche->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:comanche",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:kiowa->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:kiowa",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:barber->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:barber",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:pratt->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:pratt",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:kingman->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:kingman",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:lane->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:lane",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:hodgeman->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:hodgeman",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:ness->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:ness",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:gove->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:gove",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:sheridan->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:sheridan",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:decatur->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:decatur",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:trego->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:trego",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:graham->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:graham",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:norton->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:norton",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:edwards->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:edwards",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:pawnee->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:pawnee",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:rush->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:rush",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:stafford->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:stafford",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:barton->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:barton",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:ellis->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:ellis",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:rooks->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:rooks",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:phillips->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:phillips",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:russell->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:russell",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:osborne->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:osborne",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:smith->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:smith",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:reno->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:reno",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:rice->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:rice",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:ellsworth->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:ellsworth",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:mcpherson->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:mcpherson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:saline->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:saline",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:lincoln->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:lincoln",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:mitchell->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:mitchell",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:jewell->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:jewell",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:ottawa->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:ottawa",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:cloud->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:cloud",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:republic->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:republic",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:harvey->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:harvey",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:marion->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:marion",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:chase->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:chase",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:dickinson->ocd-division/country:us/state:ks/sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:dickinson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:clay->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:clay",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:washington->ocd-division/country:us/state:ks/sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:washington",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:riley->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:riley",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:chautauqua->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:chautauqua",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:elk->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:elk",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:montgomery->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:wilson->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:wilson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:labette->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:labette",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:neosho->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:neosho",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:cherokee->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:cherokee",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:crawford->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:crawford",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:greenwood->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:greenwood",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:woodson->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:woodson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:coffey->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:coffey",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:pottawatomie->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:pottawatomie",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:nemaha->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:nemaha",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:jackson->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:jackson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:brown->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:brown",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:allen->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:allen",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:anderson->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:anderson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:bourbon->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:bourbon",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:linn->ocd-division/country:us/state:ks/sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:linn",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:jefferson->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:jefferson",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:atchison->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:atchison",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
+        },
+        {
+          "id": "bl02-ks-apple7:ocd-division/country:us/state:ks/county:doniphan->ocd-division/country:us/state:ks/sbe:1",
+          "memberOcdId": "ocd-division/country:us/state:ks/county:doniphan",
+          "districtOcdId": "ocd-division/country:us/state:ks/sbe:1",
+          "provenance": {
+            "sourceUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+            "sourceOrg": "Kansas Legislative Research Department",
+            "collectedAt": "2026-10-23T08:43:22.972405+00:00",
+            "verifiedAt": "2026-10-23T08:47:26.040757+00:00"
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:59:50.123727+00:00",
-    "reviewedBy": "BL-12 Kansas official-source conversion",
+    "reviewedAt": "2026-10-23T08:47:26.040757+00:00",
+    "reviewedBy": "BL-02 Kansas enacted education-district geometry replay",
     "sources": [
       {
         "requestedUrl": "https://www.sedgwick.gov/elections/election-notices-news-releases/notice-of-general-election/",
@@ -12588,6 +13785,86 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "scripts/ba01-south-ks-judicial.py replays the exact 2026 Secretary of State office tuples and names, judicial district whole-county map, current constitutional/statutory electorate rules, and magistrate county assignments. No candidate residential contact fields are published."
+      },
+      {
+        "requestedUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+        "finalUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0030_section/004_005_0030_k/",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:08:17.168144+00:00",
+        "httpStatus": 200,
+        "rawHash": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d",
+        "reviewedEvidence": "Saved rendered current2026 statute excerpt in data/ballot/evidence/bl02-east/ks-sbe-statutes.rendered.txt; hash identifies that rendered evidence, not publisher HTTP bytes. Four complete current Senate districts compose each State Board district, expressly in2022law. This narrower exact legislative membership avoids widening split counties. County-by-district list remains to be derived from the state's plan."
+      },
+      {
+        "requestedUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+        "finalUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0032_section/004_005_0032_k/",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:08:17.168144+00:00",
+        "httpStatus": 200,
+        "rawHash": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d",
+        "reviewedEvidence": "Saved rendered current2026 statute excerpt in data/ballot/evidence/bl02-east/ks-sbe-statutes.rendered.txt; hash identifies that rendered evidence, not publisher HTTP bytes. Four complete current Senate districts compose each State Board district, expressly in2022law. This narrower exact legislative membership avoids widening split counties. County-by-district list remains to be derived from the state's plan."
+      },
+      {
+        "requestedUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+        "finalUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0034_section/004_005_0034_k/",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:08:17.168144+00:00",
+        "httpStatus": 200,
+        "rawHash": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d",
+        "reviewedEvidence": "Saved rendered current2026 statute excerpt in data/ballot/evidence/bl02-east/ks-sbe-statutes.rendered.txt; hash identifies that rendered evidence, not publisher HTTP bytes. Four complete current Senate districts compose each State Board district, expressly in2022law. This narrower exact legislative membership avoids widening split counties. County-by-district list remains to be derived from the state's plan."
+      },
+      {
+        "requestedUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+        "finalUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0036_section/004_005_0036_k/",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:08:17.168144+00:00",
+        "httpStatus": 200,
+        "rawHash": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d",
+        "reviewedEvidence": "Saved rendered current2026 statute excerpt in data/ballot/evidence/bl02-east/ks-sbe-statutes.rendered.txt; hash identifies that rendered evidence, not publisher HTTP bytes. Four complete current Senate districts compose each State Board district, expressly in2022law. This narrower exact legislative membership avoids widening split counties. County-by-district list remains to be derived from the state's plan."
+      },
+      {
+        "requestedUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+        "finalUrl": "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0038_section/004_005_0038_k/",
+        "publisher": "Kansas Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:08:17.168144+00:00",
+        "httpStatus": 200,
+        "rawHash": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d",
+        "reviewedEvidence": "Saved rendered current2026 statute excerpt in data/ballot/evidence/bl02-east/ks-sbe-statutes.rendered.txt; hash identifies that rendered evidence, not publisher HTTP bytes. Four complete current Senate districts compose each State Board district, expressly in2022law. This narrower exact legislative membership avoids widening split counties. County-by-district list remains to be derived from the state's plan."
+      },
+      {
+        "requestedUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+        "finalUrl": "https://klrd.gov/wp-content/uploads/2023/11/Apple7-kml.zip",
+        "publisher": "Kansas Legislative Research Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:43:22.972405+00:00",
+        "httpStatus": 200,
+        "rawHash": "0daf67b1dd7df513ffbb7fcd6c6eb430fad32f7d90077b97db70c0c868b566f8",
+        "reviewedEvidence": "BL-02 source-bound replay into data/states/ks/geo/bl02-state-board-20.geojson. Official enacted Apple7 State Board of Education KML. Parse explicit District fields, preserve every polygon coordinate and hole, and key the five held races with their existing sbe IDs. The archive contains all ten districts. Existing exact Senate memberships remain valid; point polygons and ZIP intersections also reach the education districts directly."
+      },
+      {
+        "requestedUrl": "https://klrd.gov/policy-area/redistricting/enacted-plans-2022/",
+        "finalUrl": "https://klrd.gov/policy-area/redistricting/enacted-plans-2022/",
+        "publisher": "Kansas Legislative Research Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:43:23.209545+00:00",
+        "httpStatus": 200,
+        "rawHash": "d753fdcde7d8dc0148e0f741da6ba2e7c838e3a188edad26f651c06039d2673d",
+        "reviewedEvidence": "BL-02 source-bound replay into data/states/ks/geo/bl02-state-board-20.geojson. Official Kansas Legislative Research Department Enacted Plans2022 index explicitly lists State Board of Education Apple7 and links this exact KML ZIP as the enacted plan, establishing plan identity and official source ownership."
+      },
+      {
+        "requestedUrl": "https://klrd.gov/wp-content/uploads/2023/11/2020-Final-Counties-Kansas.zip",
+        "finalUrl": "https://klrd.gov/wp-content/uploads/2023/11/2020-Final-Counties-Kansas.zip",
+        "publisher": "Kansas Legislative Research Department",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:46:00.222193+00:00",
+        "httpStatus": 200,
+        "rawHash": "1ee4f1da5817253e264e4711a0b37907fe762a0de81e29678b5e28959f64d4c7",
+        "reviewedEvidence": "BL-02 source-bound replay into data/states/ks/geo/bl02-state-board-20.geojson. Official KLRD2020 Kansas county KML, linked beside the enacted plans, contains all105 county polygons from the same census base. Exact covers establishes whole-county memberships; positive-area partial intersections enumerate split counties. No threshold, buffer, centroid or county widening is used."
       }
     ]
   }

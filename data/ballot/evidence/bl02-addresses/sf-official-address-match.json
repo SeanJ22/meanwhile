@@ -1,0 +1,16 @@
+{
+  "requestedUrl": "https://data.sf.gov/resource/3mea-di5p.csv?$select=address%2Clongitude%2Clatitude&$limit=500000",
+  "finalUrl": "https://data.sf.gov/resource/3mea-di5p.csv?$select=address%2Clongitude%2Clatitude&$limit=500000",
+  "publisher": "San Francisco Department of Technology, Enterprise Addressing System",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:30:52.768697+00:00",
+  "rawHash": "26573dd5c606f252424480680bc2628a737232d05ccf045ffcf519152b40d23e",
+  "evidence": "sf-official-address-coordinates.csv.gz",
+  "records": 224421,
+  "selected": {
+    "address": "120 LAKE ST",
+    "longitude": "-122.46087175348501",
+    "latitude": "37.78710097494804"
+  },
+  "matching": "Downloaded public three-column city dataset without sending any requested address; matched the exact address locally. No Census geocoder request occurred."
+}

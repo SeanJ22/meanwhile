@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?where=ZCTA5+LIKE+%27941%25%27&outFields=GEOID%2CNAME%2CZCTA5&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?where=ZCTA5+LIKE+%27941%25%27&outFields=GEOID%2CNAME%2CZCTA5&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:07:06.898692+00:00",
+  "rawHash": "c091f29d60bdfb33d1a521e4d841743a2630103c0be5a073af4bf4f8f18c6ceb",
+  "savedBytes": 356780,
+  "publisher": "U.S. Census Bureau"
+}

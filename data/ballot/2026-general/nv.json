@@ -399,7 +399,7 @@
           "candidateListComplete": true,
           "voteFor": null,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Clark County.",
           "provenance": {
             "sourceUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
             "sourceOrg": "Nevada Secretary of State",
@@ -1199,7 +1199,7 @@
           "candidateListComplete": true,
           "voteFor": null,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Clark County.",
           "provenance": {
             "sourceUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
             "sourceOrg": "Nevada Secretary of State",
@@ -1219,7 +1219,7 @@
           "candidateListComplete": true,
           "voteFor": null,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Clark County.",
           "provenance": {
             "sourceUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
             "sourceOrg": "Nevada Secretary of State",
@@ -1239,7 +1239,7 @@
           "candidateListComplete": true,
           "voteFor": null,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Clark County.",
           "provenance": {
             "sourceUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
             "sourceOrg": "Nevada Secretary of State",
@@ -1399,7 +1399,7 @@
           "candidateListComplete": true,
           "voteFor": null,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Washoe County.",
           "provenance": {
             "sourceUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
             "sourceOrg": "Nevada Secretary of State",
@@ -4319,13 +4319,699 @@
           }
         }
       ],
-      "absences": []
+      "absences": [],
+      "districtMemberships": [
+        {
+          "id": "nv-bl02-membership:sldl:25->board_of_regents:10",
+          "memberOcdId": "ocd-division/country:us/state:nv/sldl:25",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 987 blocks in the official House/Assembly district 25 is assigned to district 10 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:sldl:33->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/sldl:33",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "Every one of the 11197 blocks in the official House/Assembly district 33 is assigned to district 8 in the official target plan; both official block sets match exactly."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:county:elko->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:elko",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 5430 official plan blocks in Elko County (32007) are assigned to district 8."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:county:esmeralda->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:esmeralda",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 441 official plan blocks in Esmeralda County (32009) are assigned to district 8."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:county:eureka->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:eureka",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 850 official plan blocks in Eureka County (32011) are assigned to district 8."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:county:lincoln->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:lincoln",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1329 official plan blocks in Lincoln County (32017) are assigned to district 8."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:county:nye->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:nye",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 4176 official plan blocks in Nye County (32023) are assigned to district 8."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:county:white_pine->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/county:white_pine",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 2303 official plan blocks in White Pine County (32033) are assigned to district 8."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:alamo->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:alamo",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 45 Census 2020 blocks of Alamo (00500) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:amargosa_valley->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:amargosa_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 139 Census 2020 blocks of Amargosa Valley (01000) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:baker->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:baker",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 14 Census 2020 blocks of Baker (04100) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:beatty->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:beatty",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 107 Census 2020 blocks of Beatty (05100) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:beaverdam->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:beaverdam",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 5 Census 2020 blocks of Beaverdam (05125) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:bennett_springs->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:bennett_springs",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 14 Census 2020 blocks of Bennett Springs (05275) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:bunkerville->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:bunkerville",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 35 Census 2020 blocks of Bunkerville (08100) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:caliente->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:caliente",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 85 Census 2020 blocks of Caliente (08500) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:carlin->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:carlin",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 196 Census 2020 blocks of Carlin (08900) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:crescent_valley->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:crescent_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 63 Census 2020 blocks of Crescent Valley (16300) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:dry_valley->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:dry_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 3 Census 2020 blocks of Dry Valley (19800) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:dyer->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:dyer",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 32 Census 2020 blocks of Dyer (20700) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:elko->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:elko",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 602 Census 2020 blocks of Elko (22500) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:ely->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:ely",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 381 Census 2020 blocks of Ely (23500) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:eureka->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:eureka",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 67 Census 2020 blocks of Eureka (23900) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:gabbs->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:gabbs",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 43 Census 2020 blocks of Gabbs (25900) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:goldfield->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:goldfield",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 115 Census 2020 blocks of Goldfield (28900) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:hiko->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:hiko",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 11 Census 2020 blocks of Hiko (32900) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:indian_springs->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:indian_springs",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 35 Census 2020 blocks of Indian Springs (35300) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:jackpot->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:jackpot",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 26 Census 2020 blocks of Jackpot (36500) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:lamoille->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:lamoille",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 12 Census 2020 blocks of Lamoille (39300) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:lund->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:lund",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 27 Census 2020 blocks of Lund (43400) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:mcgill->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mcgill",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 90 Census 2020 blocks of McGill (44200) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:mesquite->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mesquite",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 311 Census 2020 blocks of Mesquite (46000) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:moapa_town->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:moapa_town",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 53 Census 2020 blocks of Moapa Town (47840) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:moapa_valley->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:moapa_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 210 Census 2020 blocks of Moapa Valley (47880) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:mogul->board_of_regents:10",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mogul",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 42 Census 2020 blocks of Mogul (48000) are assigned to Board of Regents district 10 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:montello->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:montello",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 27 Census 2020 blocks of Montello (48400) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:mountain_city->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mountain_city",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 9 Census 2020 blocks of Mountain City (49200) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:mount_charleston->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mount_charleston",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 24 Census 2020 blocks of Mount Charleston (49310) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:mount_wilson->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mount_wilson",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 7 Census 2020 blocks of Mount Wilson (49425) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:nellis_afb->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:nellis_afb",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 89 Census 2020 blocks of Nellis AFB (50400) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:oasis->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:oasis",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 3 Census 2020 blocks of Oasis (52200) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:osino->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:osino",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 68 Census 2020 blocks of Osino (53200) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:owyhee->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:owyhee",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 130 Census 2020 blocks of Owyhee (53600) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:pahrump->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:pahrump",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1764 Census 2020 blocks of Pahrump (53800) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:panaca->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:panaca",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 43 Census 2020 blocks of Panaca (54200) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:pioche->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:pioche",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 67 Census 2020 blocks of Pioche (57400) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:preston->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:preston",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 13 Census 2020 blocks of Preston (58000) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:rachel->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:rachel",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 13 Census 2020 blocks of Rachel (58820) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:ruth->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:ruth",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 31 Census 2020 blocks of Ruth (63800) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:sandy_valley->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:sandy_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 211 Census 2020 blocks of Sandy Valley (64600) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:silver_peak->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:silver_peak",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 21 Census 2020 blocks of Silver Peak (67000) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:spring_creek->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:spring_creek",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 193 Census 2020 blocks of Spring Creek (68550) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:tonopah->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:tonopah",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 148 Census 2020 blocks of Tonopah (73600) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:ursine->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:ursine",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 8 Census 2020 blocks of Ursine (77200) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:verdi->board_of_regents:10",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:verdi",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 104 Census 2020 blocks of Verdi (79400) are assigned to Board of Regents district 10 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:wells->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:wells",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 142 Census 2020 blocks of Wells (83000) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        },
+        {
+          "id": "nv-bl02-membership:place:west_wendover->board_of_regents:8",
+          "memberOcdId": "ocd-division/country:us/state:nv/place:west_wendover",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+          "provenance": {
+            "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+            "sourceOrg": "Nevada Legislative Counsel Bureau",
+            "collectedAt": "2026-10-23T08:05:27.344761+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 78 Census 2020 blocks of West Wendover (83730) are assigned to Board of Regents district 8 in the adopted official plan."
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:34:28.500536+00:00",
-    "reviewedBy": "Codex BA-01 official county source replay",
+    "reviewedAt": "2026-10-23T08:14:07.889608+00:00",
+    "reviewedBy": "bl02-whole-division-replay",
     "sources": [
       {
         "requestedUrl": "https://www.landercountynv.org/2026%20Master%20General%20Statewide%20Certified%20List%20of%20Candidates.APPROVED.pdf?t=202606251410050",
@@ -4367,6 +5053,56 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Official complete November3,2026 general contest/candidate table, pages4-5, COUNTY PARTISAN section. Six countywide offices and15 named candidates replayed against exact name/party rows; commissioner districts excluded.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+        "finalUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:05:27.344761+00:00",
+        "rawHash": "fcf05b9d05e3978a5f0cd5f5da12ceeaadf0a111ad3b67b80ebeea472e5c4c37",
+        "publisher": "Nevada Legislative Counsel Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Assembly_Final_SB1_Amd2.xlsx",
+        "finalUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Assembly_Final_SB1_Amd2.xlsx",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:05:27.730015+00:00",
+        "rawHash": "bc3c4a0f9a3afe874fbfc797040b848ff77e9998f208aaa2eed23fb4fb65b68a",
+        "publisher": "Nevada Legislative Counsel Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST32_NV.zip",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST32_NV.zip",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:08:28.547461+00:00",
+        "rawHash": "ea0e6834f8389127a74eb4be4e28b86659fe067af7d4fa0ab91f746060d4adb9",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2020_Gazetteer/2020_gaz_place_32.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2020_Gazetteer/2020_gaz_place_32.txt",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:11:30.192057+00:00",
+        "rawHash": "68bec412c867ac788d7d0d75ba7165c6d78f8ff0e18a76f4b9bf35fe044bd566",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://www.leg.state.nv.us/Division/Research/Documents/BOR2021_Tables.pdf",
+        "finalUrl": "https://www.leg.state.nv.us/Division/Research/Documents/BOR2021_Tables.pdf",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:05:27.375509+00:00",
+        "rawHash": "c88a433b900b4f0602968e2befd1e834012eabc8970145eda1ed710531563b98",
+        "publisher": "Nevada Legislative Counsel Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
       }
     ]
   }

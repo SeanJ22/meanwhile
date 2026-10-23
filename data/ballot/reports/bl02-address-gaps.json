@@ -1,0 +1,4076 @@
+{
+  "step": "BL-02",
+  "checkedAt": "2026-10-23T08:47:04.535166+00:00",
+  "electionDate": "2026-11-03",
+  "scope": "Ten actual addresses in ten states compared against TurboVote rendered sample ballots and live Google Civic voterinfo election12000. A comparator list is a discovery lead, not an official completeness denominator. Names are preserved as each source displays them; ticket races are compared to their held joint contest.",
+  "method": "Address search and manual-address Continue through TurboVote public UI; capture full rendered HTML and parse every office detail and ballot-measure list item, including collapsed entries. Google uses configured credential through normal HTTPS/proxy. Network bridge fetches verify TLS with the configured cloud CA; browser receives those verified response bytes without changing persistent certificate trust.",
+  "summary": {
+    "addresses": 10,
+    "states": 10,
+    "turboVoteSampleBallotsRead": 10,
+    "googleResponses": 10,
+    "googleWithContests": 2,
+    "googleWithoutContests": 8,
+    "sourceListedNotHeld": 41,
+    "heldConnectionLeads": 3,
+    "jurisdictionChecks": 8
+  },
+  "comparisons": [
+    {
+      "state": "CA",
+      "address": "120 Lake St, San Francisco, CA 94118",
+      "checkedAt": "2026-10-23T08:04:57.580Z",
+      "heldInput": "data/ballot/2026-general/ca.json",
+      "heldInputSha256": "b5150fd979c645f7d2dd5db702ad2886ec4d07cfebad99fb87c8e74edd63b544",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:ca/place:san_francisco",
+        "ocd-division/country:us/state:ca/sldl:19",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:ca/county:san_francisco",
+        "ocd-division/country:us/state:ca/sldu:11",
+        "ocd-division/country:us/state:ca/cd:11",
+        "ocd-division/country:us/state:ca"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aca/2026-11-03?street=120+Lake+St&city=San+Francisco&state=CA&zip=94118",
+        "raceCount": 30,
+        "measureCount": 25,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ca-turbovote.html.gz",
+        "renderedSourceSha256": "8d0634ad9a7dc9e634e9377cacc71d6da3f10c007af3a9494aecf03f2e44c0a9",
+        "capture": "data/ballot/evidence/bl02-addresses/ca-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. House California District 11",
+            "sourceContestId": "co_ae741f41cc47c45d290e0e0601faf9ae1bab963f",
+            "heldContestId": "ca-sos-2026-general-united-states-representative-district-11",
+            "heldTitle": "United States Representative District 11",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Connie Chan",
+              "Scott Wiener"
+            ]
+          },
+          {
+            "title": "Governor of California",
+            "sourceContestId": "co_57c7c646fdfcd4be1e86eeaae50b3fb0d98a21b1",
+            "heldContestId": "ca-sos-2026-general-governor",
+            "heldTitle": "Governor",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Xavier Becerra",
+              "Steve Hilton"
+            ]
+          },
+          {
+            "title": "Lieutenant Governor of California",
+            "sourceContestId": "co_994053846cecb2f971b9e31d0efcfacca94d737e",
+            "heldContestId": "ca-sos-2026-general-lieutenant-governor",
+            "heldTitle": "Lieutenant Governor",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Fiona Ma",
+              "Gloria J. Romero"
+            ]
+          },
+          {
+            "title": "California Secretary of State",
+            "sourceContestId": "co_6b063f00cc6732d084b5aac831c95ea059372243",
+            "heldContestId": "ca-sos-2026-general-secretary-of-state",
+            "heldTitle": "Secretary of State",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Shirley Weber",
+              "Donald P. Wagner"
+            ]
+          },
+          {
+            "title": "Attorney General of California",
+            "sourceContestId": "co_a196b4549acab1b79d5e34c86e6e5cb3356ebc17",
+            "heldContestId": "ca-sos-2026-general-attorney-general",
+            "heldTitle": "Attorney General",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Rob Bonta",
+              "Michael Gates"
+            ]
+          },
+          {
+            "title": "California Commissioner of Insurance",
+            "sourceContestId": "co_0e563622fc00e9ed11d730338c824f7c0a17afdb",
+            "heldContestId": "ca-sos-2026-general-insurance-commissioner",
+            "heldTitle": "Insurance Commissioner",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Ben Allen",
+              "Jane Kim"
+            ]
+          },
+          {
+            "title": "California Controller",
+            "sourceContestId": "co_5202d3ab9a719c3bddb92ea7ea5a13140cd36822",
+            "heldContestId": "ca-sos-2026-general-controller",
+            "heldTitle": "Controller",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Malia Cohen",
+              "Herb Morgan"
+            ]
+          },
+          {
+            "title": "California State Board of Equalization District 2",
+            "sourceContestId": "co_e0f2c39195eeaceb298a8d4cb8281cb964b81e2b",
+            "heldContestId": "ca-sos-2026-general-board-of-equalization-member-district-2",
+            "heldTitle": "Board of Equalization Member District 2",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Sally Lieber",
+              "John Pimentel"
+            ]
+          },
+          {
+            "title": "California Superintendent of Public Instruction",
+            "sourceContestId": "co_53cfde66e5519fef9ea9a698cba5e58559f347ff",
+            "heldContestId": "ca-sos-2026-general-superintendent-of-public-instruction",
+            "heldTitle": "Superintendent of Public Instruction",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Richard Barrera",
+              "Sonja Shaw"
+            ]
+          },
+          {
+            "title": "California Treasurer",
+            "sourceContestId": "co_152c04818b5fca8d6458bc9bff5267eaee933e21",
+            "heldContestId": "ca-sos-2026-general-treasurer",
+            "heldTitle": "Treasurer",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Eleni Kounalakis",
+              "Jennifer Hawks"
+            ]
+          },
+          {
+            "title": "California State Assembly District 19",
+            "sourceContestId": "co_52a81ae2d0898a29a1ce7d7dd3451f84287edc52",
+            "heldContestId": "ca-sos-2026-general-state-assembly-member-district-19",
+            "heldTitle": "State Assembly Member District 19",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Catherine Stefani",
+              "Philip Wing"
+            ]
+          },
+          {
+            "title": "California Supreme Court Joshua Groban's seat",
+            "sourceContestId": "co_26a3e4fb3389bf984dfb5aff04acb9fe9ee6c253",
+            "heldContestId": "ca-sos-2026-general-retention-joshua-groban",
+            "heldTitle": "Associate Justice of the Supreme Court — JOSHUA GROBAN",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Joshua Groban"
+            ]
+          },
+          {
+            "title": "California Supreme Court Kelli Evans' seat",
+            "sourceContestId": "co_fcbf467d0ffc9441fe054ec6ef18d93deff5b43d",
+            "heldContestId": "ca-sos-2026-general-retention-kelli-m-evans",
+            "heldTitle": "Associate Justice of the Supreme Court — KELLI M. EVANS",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kelli M. Evans"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 1 Charles Smiley's seat",
+            "sourceContestId": "co_5f188e1c0d49c6e0bce54ebc72a9699bb35acdaf",
+            "heldContestId": "ca-sos-2026-general-retention-charles-a-smiley",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division One — CHARLES A. SMILEY",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Charles A. Smiley III"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 1 Kathleen Banke's seat",
+            "sourceContestId": "co_cbe76308dcd2a16b4ef8bc382e42f83351bd6854",
+            "heldContestId": "ca-sos-2026-general-retention-kathleen-m-banke",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division One — KATHLEEN M. BANKE",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kathleen M. Banke"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 1 Monique Langhorn Wilson's seat",
+            "sourceContestId": "co_863663c9a4585a31e4e201e10b52c55bb20c7ac6",
+            "heldContestId": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division One — MONIQUE LANGHORNE WILSON",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Monique Langhorne Wilson"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 2 Tara Desautels' seat",
+            "sourceContestId": "co_6bf1e7f5901f337e1b4fc82a1846f211d88c54ca",
+            "heldContestId": "ca-sos-2026-general-retention-tara-m-desautels",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division Two — TARA M. DESAUTELS",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Tara M. Desautels"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 2 Therese Stewart's seat",
+            "sourceContestId": "co_7ba042afa7ce1b1f8ae81f2198836e34f1c27e0b",
+            "heldContestId": "ca-sos-2026-general-retention-therese-m-stewart",
+            "heldTitle": "Presiding Justice, Court of Appeal, First District, Division Two — THERESE M. STEWART",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Therese M. Stewart"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 3 Ioana Petrou's seat",
+            "sourceContestId": "co_ce59de425677d795485ce99a086bb2702562bda2",
+            "heldContestId": "ca-sos-2026-general-retention-ioana-petrou",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division Three — IOANA PETROU",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Ioana Petrou"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 3 Victor Rodriguez's seat",
+            "sourceContestId": "co_0be1b098d35a5639b0e6bef0a33c12d744e2be72",
+            "heldContestId": "ca-sos-2026-general-retention-victor-a-rodriguez",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division Three — VICTOR A. RODRIGUEZ",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Victor Rodriguez"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 4 Tracie L. Brown's seat",
+            "sourceContestId": "co_ff51791b8855be56a97ef746d6e50a75516bcc92",
+            "heldContestId": "ca-sos-2026-general-retention-tracie-l-brown",
+            "heldTitle": "Presiding Justice, Court of Appeal, First District, Division Four — TRACIE L. BROWN",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Tracie L. Brown"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 5 Danny Chou's seat",
+            "sourceContestId": "co_39e4aa085b390b8d3f54e451538b601296d1cf33",
+            "heldContestId": "ca-sos-2026-general-retention-danny-y-chou",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division Five — DANNY Y. CHOU",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Danny Y. Chou"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 5 Gordon Burns' seat",
+            "sourceContestId": "co_2898b9d24ce48e94a5865bb211ccd4214aace848",
+            "heldContestId": "ca-sos-2026-general-retention-gordon-burns",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division Five — GORDON BURNS",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Gordon Burns"
+            ]
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 5 Mark Simons' seat",
+            "sourceContestId": "co_e17f3bbd462becfb1f4a3979352b4536ec425710",
+            "heldContestId": "ca-sos-2026-general-retention-mark-simons",
+            "heldTitle": "Associate Justice, Court of Appeal, First District, Division Five — MARK SIMONS",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Mark Simons"
+            ]
+          },
+          {
+            "title": "San Francisco Assessor-Recorder",
+            "sourceContestId": "co_6bcca243c7e846aeaa4ba76c8d37f6c9b1c5456f",
+            "heldContestId": "ca-sf-2026-assessor-recorder",
+            "heldTitle": "Assessor-Recorder",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Joaquín Torres"
+            ]
+          },
+          {
+            "title": "San Francisco Public Defender",
+            "sourceContestId": "co_69b277ad274e680e40573bedd1d9ad5996a4ee09",
+            "heldContestId": "ca-sf-2026-public-defender",
+            "heldTitle": "Public Defender",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Manohar Raju"
+            ]
+          },
+          {
+            "title": "San Francisco Unified Board of Education",
+            "sourceContestId": "co_c5fbc1928b59f948ef24216107c294ac74004df0",
+            "heldContestId": "ca-sf-2026-board-education",
+            "heldTitle": "Board of Education (3 seats)",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Alida Fisher",
+              "Phil Kim",
+              "Autumn Brown Garibay",
+              "Virginia Cheung",
+              "Ryan Hazelton",
+              "Laurance Lem Lee",
+              "Reina Tello",
+              "Tim Tung"
+            ]
+          },
+          {
+            "title": "San Francisco Community College Board",
+            "sourceContestId": "co_b3582ad0274c0e3441eea6cd31c46f2c0eebbefd",
+            "heldContestId": "ca-sf-2026-community-college-board",
+            "heldTitle": "Community College Board (3 seats)",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Elijah Ball",
+              "Leah LaCroix",
+              "Monroe Lace",
+              "Jeremy Lee",
+              "Bunny McFadden",
+              "Rome Moses Jones",
+              "Erwin Tam",
+              "Lisa Wynn"
+            ]
+          },
+          {
+            "title": "San Francisco Community College Board",
+            "sourceContestId": "co_7524f0ed89dd1e7278b515c1ce79b82a3512ce57",
+            "heldContestId": "ca-sf-2026-community-college-board-partial",
+            "heldTitle": "Community College Board Partial Term",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Ruth Ferguson"
+            ]
+          },
+          {
+            "title": "Bay Area Rapid Transit (BART) Board of Directors District 8",
+            "sourceContestId": "co_ffa21d207f9663b3a9ab3dc6a750f810d82c3203",
+            "heldContestId": "ca-sf-2026-general-bart-director-district-8",
+            "heldTitle": "BART Director, District 8",
+            "status": "EXACT_POINT_PAGE_REPLAY_VERIFIED",
+            "sourceCandidates": [
+              "Sara Barz"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_9427b3a749ff3bde1ba7548962dd4c4d5f873383",
+            "title": "Proposition 1",
+            "summary": "Issue $11.25 billion in bonds to fund Multifamily Housing Program, CalVet Home Loan Program, and youth housing",
+            "heldContestId": "ca-sos-2026-general-proposition-1",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_4f8a21affa1b621ce1390fe029381945f581f8d7",
+            "title": "Proposition 2",
+            "summary": "Increase the Budget Stabilization Account (BSA) cap from 10% of general fund revenue to 20% and excluding deposits into the BSA from the Gann Limit",
+            "heldContestId": "ca-sos-2026-general-proposition-2",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_24f046e36284e823348667a319788bacc0b2982d",
+            "title": "Proposition 3",
+            "summary": "Renew the additional income taxes enacted with the approval of Proposition 30 in 2012 that fund education and early childhood programs.",
+            "heldContestId": "ca-sos-2026-general-proposition-3",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_8798df8e6c632ba64a2263676da5f33b9ba809f8",
+            "title": "Proposition 4",
+            "summary": "Allow the state and local governments to create programs that provide candidates with public funds under spending limits and eligibility rules",
+            "heldContestId": "ca-sos-2026-general-proposition-4",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_b2c7ebb370da9d896f68b025c8247b89cc0520e7",
+            "title": "Proposition 5",
+            "summary": "Eliminate the successor election when a state officer is recalled, thereby leaving the office vacant until it is filled according to state law",
+            "heldContestId": "ca-sos-2026-general-proposition-5",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_0cbd0f5411163daff542b1f3f678db335d897885",
+            "title": "Proposition 37",
+            "summary": "Establish a second mortgage homebuyer program for qualified homebuyers on qualifying homes and issue $25 billion in bonds to fund the program",
+            "heldContestId": "ca-sos-2026-general-proposition-37",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_7409dfd7eb9a5d53a78816702201cf9318298a29",
+            "title": "Proposition 38",
+            "summary": "Issue $8.4 billion in general obligation bonds to fund immunology and immunotherapy research",
+            "heldContestId": "ca-sos-2026-general-proposition-38",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_73d99df4eb847f4a06278242e0df8dab2483bf61",
+            "title": "Proposition 39",
+            "summary": "Require voters to present government-issued identification when casting ballots and require election officials to use government data to confirm voter citizenship and report verification rates",
+            "heldContestId": "ca-sos-2026-general-proposition-39",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_56fa2f1b8366373b6479a8448a3ab03bd6a4acab",
+            "title": "Proposition 40",
+            "summary": "Levy a one-time 5% tax on the accumulated wealth of taxpayers and trusts with covered assets valued over $1 billion to fund state health care programs, food assistance programs, and public education",
+            "heldContestId": "ca-sos-2026-general-proposition-40",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_f940db6c9a2c9252970716fed30a06685e8e321b",
+            "title": "Proposition 41",
+            "summary": "Require state laws or ballot initiatives levying a new special tax enacted after January 1, 2026 to require the government entities or departments receiving revenue from the new tax to eliminate their lowest-performing programs and reinvest those savings in higher-performing programs",
+            "heldContestId": "ca-sos-2026-general-proposition-41",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_053a28365d0f1a2d67f72a19084f405a7b987513",
+            "title": "Proposition 42",
+            "summary": "Prohibit the enactment of new taxes after January 1, 2026 on ownership or accumulation of retirement holdings, individually-owned assets, and other forms of personal savings",
+            "heldContestId": "ca-sos-2026-general-proposition-42",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_1dbd7ce13613bb770f9135b8bada5bda3bcbfcf5",
+            "title": "Proposition 43",
+            "summary": "Require two-thirds vote by electorate to enact, extend, or increase local special tax initiatives and prohibit local governments and ballot initiatives from enacting ad valorem property taxes except those authorized elsewhere in the state constitution",
+            "heldContestId": "ca-sos-2026-general-proposition-43",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_fe4012db10c96364fabe16ef3c913727b08a3748",
+            "title": "Proposition 44",
+            "summary": "Prohibit healthcare clinics, specifically federally-qualified health centers and related organizations, from spending less than 90% of their annual revenue on mission-related purposes",
+            "heldContestId": "ca-sos-2026-general-proposition-44",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_d77fbfd89db4adcfa0663839871133a6ed2945d9",
+            "title": "Proposition 45",
+            "summary": "Establish timelines for local and state agencies to review plans and solicit public comment for essential projects, such as housing, improvements to water supply, transportation, energy, and facilities for health and public safety",
+            "heldContestId": "ca-sos-2026-general-proposition-45",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_e31aa73711f3dc4abdbc5f3cfc4366d7329ae05c",
+            "title": "Proposition RTM",
+            "summary": "Create a sales tax for a 14-year period to fund transportation programs in the region",
+            "heldContestId": "ca-sf-2026-regional-transit-measure",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_065c1708c54eb775f7e9fd1d9fdc7f8245f9966a",
+            "title": "Proposition A",
+            "summary": "Amend the San Francisco Charter to remove outdated provisions and make  changes to the governance of local programs and departments",
+            "heldContestId": "ca-sf-2026-proposition-a",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_87ceb09bb6be28ffd6bebfd8cf89e4236ae724a4",
+            "title": "Proposition B",
+            "summary": "Amend the San Francisco Charter to create a municipal finance corporation and a public bank",
+            "heldContestId": "ca-sf-2026-proposition-b",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_b5853cbe6270bc741787b6e49bca45ecfc1464a6",
+            "title": "Proposition C",
+            "summary": "Change the method of annual contributions to the city's Housing Trust Fund",
+            "heldContestId": "ca-sf-2026-proposition-c",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_db0bbca2541c2ebf039de84094e1ba23221c57ff",
+            "title": "Proposition D",
+            "summary": "Make changes to the city's ballot measure referral and initiative process",
+            "heldContestId": "ca-sf-2026-proposition-d",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_a679fc985bb168848ba89faa042a0fac6d5cf30c",
+            "title": "Proposition E",
+            "summary": "Require the Board of Supervisors to approve all city contracts that would generate more than $4.5 million or cost more than $25 million and amend the city administrator's roles and authority",
+            "heldContestId": "ca-sf-2026-proposition-e",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_8a03cbdf1d1ccc9084a3d0e50714dc995edfce69",
+            "title": "Proposition F",
+            "summary": "Amend the structure of the executive branch of the city government and the authorities and duties of the mayor",
+            "heldContestId": "ca-sf-2026-proposition-f",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_55c00e5e6b00736aa04451ab245fa9d70d25f705",
+            "title": "Proposition G",
+            "summary": "Open the Upper Great Highway to public vehicles on weekdays, except on holidays",
+            "heldContestId": "ca-sf-2026-proposition-g",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_08564a28d5114db265a7a520a4297ff2ede4d78e",
+            "title": "Proposition H",
+            "summary": "Implement a 15-year property tax to fund the San Francisco Municipal Transportation Agency",
+            "heldContestId": "ca-sf-2026-proposition-h",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_ada758c259715f98811bd2e73521a90c91615790",
+            "title": "Proposition J",
+            "summary": "Remove the real estate transfer tax exemption for transfers that occur due to a foreclosure",
+            "heldContestId": "ca-sf-2026-proposition-j",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_f41d77df6b1c319a4ae7e66937dd071edbea8956",
+            "title": "Proposition I",
+            "summary": "Dedicate 50% of the revenue from the real estate transfer tax to housing and development purposes",
+            "heldContestId": "ca-sf-2026-proposition-i",
+            "status": "HELD_AND_SELECTED"
+          }
+        ]
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.623619+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ca-google.json",
+        "sha256": "5d07c6a4af502ee199b4fb952fdd3cea90fbd3ccc3e82543c39c5a826d9df6df",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [],
+      "jurisdictionChecks": [],
+      "notes": [
+        "BART District 8 splits San Francisco. The actual120LakeSt point page verifies BART8 and BOE2 today and tomorrow from the production-seeded CA replay. The official SFcity address CSV uniquely matches the address locally; held official CCD+BART polygons supply its point divisions. The exactpoint proof supersedes this basic TurboVote-division comparison for these records; the94118 ZIPproof is saved separately. All30 TurboVote offices are held after BL-02 addition, including BART8; all25 TurboVote measures are held."
+      ],
+      "readerPageReplay": {
+        "proof": "data/ballot/reports/bl02-page-replay.json",
+        "status": "PAGE_RENDERED",
+        "placeParams": {
+          "zip": "94118"
+        },
+        "productionPublicationVerified": false,
+        "omittedSourceRaces": [
+          {
+            "title": "U.S. House California District 11",
+            "heldContestId": "ca-sos-2026-general-united-states-representative-district-11",
+            "reason": "The replay lacks the qualified election-geography authority for this district"
+          },
+          {
+            "title": "California State Assembly District 19",
+            "heldContestId": "ca-sos-2026-general-state-assembly-member-district-19",
+            "reason": "The replay lacks the qualified election-geography authority for this district"
+          },
+          {
+            "title": "California Supreme Court Joshua Groban's seat",
+            "heldContestId": "ca-sos-2026-general-retention-joshua-groban",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California Supreme Court Kelli Evans' seat",
+            "heldContestId": "ca-sos-2026-general-retention-kelli-m-evans",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 1 Charles Smiley's seat",
+            "heldContestId": "ca-sos-2026-general-retention-charles-a-smiley",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 1 Kathleen Banke's seat",
+            "heldContestId": "ca-sos-2026-general-retention-kathleen-m-banke",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 1 Monique Langhorn Wilson's seat",
+            "heldContestId": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 2 Tara Desautels' seat",
+            "heldContestId": "ca-sos-2026-general-retention-tara-m-desautels",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 2 Therese Stewart's seat",
+            "heldContestId": "ca-sos-2026-general-retention-therese-m-stewart",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 3 Ioana Petrou's seat",
+            "heldContestId": "ca-sos-2026-general-retention-ioana-petrou",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 3 Victor Rodriguez's seat",
+            "heldContestId": "ca-sos-2026-general-retention-victor-a-rodriguez",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 4 Tracie L. Brown's seat",
+            "heldContestId": "ca-sos-2026-general-retention-tracie-l-brown",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 5 Danny Chou's seat",
+            "heldContestId": "ca-sos-2026-general-retention-danny-y-chou",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 5 Gordon Burns' seat",
+            "heldContestId": "ca-sos-2026-general-retention-gordon-burns",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          },
+          {
+            "title": "California 1st District Court of Appeal Division 5 Mark Simons' seat",
+            "heldContestId": "ca-sos-2026-general-retention-mark-simons",
+            "reason": "Held RETENTION races are omitted by the page candidacy filter"
+          }
+        ]
+      },
+      "readerExactPointReplay": {
+        "proof": "data/ballot/reports/bl02-page-replay-exact.json",
+        "status": "PAGE_RENDERED",
+        "pageParams": {
+          "state": "CA",
+          "lat": "37.78710097494804",
+          "lng": "-122.46087175348501"
+        },
+        "addressEvidence": {
+          "countyGeometryPath": "data/states/ca/geo/bl02-sf-census-geography-06.geojson",
+          "countyGeometrySha256": "3a5f6b47b04d2e88b5795ab68679734b0233ea20f146f21c6cf57f3eab8d5d89",
+          "metadata": "data/ballot/evidence/bl02-addresses/sf-official-address-match.json",
+          "source": "data/ballot/evidence/bl02-addresses/sf-official-address-coordinates.csv.gz",
+          "sourceUrl": "https://data.sf.gov/resource/3mea-di5p.csv?$select=address%2Clongitude%2Clatitude&$limit=500000",
+          "publisher": "San Francisco Department of Technology, Enterprise Addressing System",
+          "rawSha256": "26573dd5c606f252424480680bc2628a737232d05ccf045ffcf519152b40d23e",
+          "exactRow": {
+            "address": "120 LAKE ST",
+            "longitude": "-122.46087175348501",
+            "latitude": "37.78710097494804"
+          },
+          "uniqueMatches": 1,
+          "geometryDivisions": [
+            "ocd-division/country:us/state:ca",
+            "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+            "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district",
+            "ocd-division/country:us/state:ca/county:san_francisco/place:richmond_presidio_marina_ccd",
+            "ocd-division/country:us/state:ca/county:san_francisco"
+          ]
+        },
+        "tomorrow": {
+          "clock": "2026-10-24T12:00:00.000Z",
+          "proof": "data/ballot/reports/bl02-page-replay-exact-tomorrow.json",
+          "publisherProof": "data/ballot/reports/bl02-readonly-replay.json",
+          "publisherPayloadUnchanged": true,
+          "publisherOriginalCheckoutPreservesRepair": true,
+          "pageReRendered": true,
+          "sameContestIds": true,
+          "readerVersion": "official-ballot-authorities:8c492abec101ea0fddfeb085635622a4",
+          "expected": [
+            {
+              "id": "ca-sos-2026-general-board-of-equalization-member-district-2",
+              "titlePresent": true,
+              "idPresent": true
+            },
+            {
+              "id": "ca-sf-2026-general-bart-director-district-8",
+              "titlePresent": true,
+              "idPresent": true
+            }
+          ],
+          "elapsedMs": 162,
+          "html": "data/ballot/evidence/bl02-addresses/ca-reader-exact-page-tomorrow.html.gz",
+          "htmlSha256": "dc38dcdf87231169ee60ef32555ed7121db3e24a0a27b20e934be20787f102be",
+          "scope": "Controlled-clock actual page render using the unchanged CA payload proven by the normal next-day publisher replay; no production writes or future waiting."
+        },
+        "productionPublicationVerified": false
+      }
+    },
+    {
+      "state": "MI",
+      "address": "2 Woodward Ave, Detroit, MI 48226",
+      "checkedAt": "2026-10-23T08:04:58.860Z",
+      "heldInput": "data/ballot/2026-general/mi.json",
+      "heldInputSha256": "e7e54d3bba1e6393ee0caf705550f689b377602531caca5cbebbe760ec54d289",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:mi/sldl:9",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:mi",
+        "ocd-division/country:us/state:mi/place:detroit",
+        "ocd-division/country:us/state:mi/county:wayne",
+        "ocd-division/country:us/state:mi/sldu:1",
+        "ocd-division/country:us/state:mi/cd:13"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ami/2026-11-03?street=2+Woodward+Ave&city=Detroit&state=MI&zip=48226",
+        "raceCount": 30,
+        "measureCount": 4,
+        "savedSource": "data/ballot/evidence/bl02-addresses/mi-turbovote.html.gz",
+        "renderedSourceSha256": "ea99fbd7761de88e4d90780dfe23a156a266ef0322ec510735b3cca54bc75e87",
+        "capture": "data/ballot/evidence/bl02-addresses/mi-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Michigan",
+            "sourceContestId": "co_71188e1037f34d9b0c4a09216ecb225e1acce81d",
+            "heldContestId": "mi-sos-2026-general-us-senate",
+            "heldTitle": "U.S. Senate",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Abdul El-Sayed",
+              "Mike Rogers",
+              "Douglas P. Marsh",
+              "Lydia Christensen",
+              "Walter Kristy",
+              "Timothy Long"
+            ]
+          },
+          {
+            "title": "U.S. House Michigan District 13",
+            "sourceContestId": "co_f13e64a7f5a48c7d27b547325233077d2b25776b",
+            "heldContestId": "mi-sos-2026-general-us-house-13",
+            "heldTitle": "13th District Representative in Congress",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Donavan McKinney",
+              "Taras Nykoriak",
+              "Raelyn Light",
+              "Christopher Dardzinski",
+              "Simone Coleman",
+              "Burgess Foster"
+            ]
+          },
+          {
+            "title": "Governor of Michigan",
+            "sourceContestId": "co_a801ef296320ff6ec37755b38d402cbadfd014aa",
+            "heldContestId": "mi-sos-2026-general-governor-lieutenant-governor",
+            "heldTitle": "Governor / Lt. Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jocelyn Benson",
+              "John James",
+              "Douglas Campbell",
+              "Anthony Hudson",
+              "Donna Brandenburg",
+              "Joe Hunt",
+              "Evan Space"
+            ]
+          },
+          {
+            "title": "Lieutenant Governor of Michigan",
+            "sourceContestId": "co_ca599cdd660383d39f624eb96f501a7674cc601b",
+            "heldContestId": "mi-sos-2026-general-governor-lieutenant-governor",
+            "heldTitle": "Governor / Lt. Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Winnie Brinks",
+              "Jay DeBoyer",
+              "Bobbie Clay",
+              "Beau Parmenter",
+              "Robert Cowper II"
+            ]
+          },
+          {
+            "title": "Michigan Secretary of State",
+            "sourceContestId": "co_8bf8df6f4f90c6fff780e789942f75bdc4a162bd",
+            "heldContestId": "mi-sos-2026-general-secretary-of-state",
+            "heldTitle": "Secretary of State",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Garlin Gilchrist II",
+              "Anthony Forlini",
+              "Eric Borregard",
+              "Christine Sloan",
+              "Scott Aughney"
+            ]
+          },
+          {
+            "title": "Attorney General of Michigan",
+            "sourceContestId": "co_6042b534a461872bc34be34a0818aee2efa9fc2c",
+            "heldContestId": "mi-sos-2026-general-attorney-general",
+            "heldTitle": "Attorney General",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Eli Savit",
+              "Doug Lloyd",
+              "Jeff Polonowski",
+              "Jason Dye",
+              "Doug Dern",
+              "John Ludtke"
+            ]
+          },
+          {
+            "title": "Michigan State Board of Education",
+            "sourceContestId": "co_8780ea8fb89a380721603d395c0a5ed0f87af8a1",
+            "heldContestId": "mi-sos-2026-general-state-board-of-education",
+            "heldTitle": "Member of the State Board of Education",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Judith Pritchett",
+              "Tiffany Tilley",
+              "Terence Collins",
+              "Bree Moeggenberg",
+              "Wissam Charafeddine",
+              "Charles Essner",
+              "Kelli Monroe",
+              "William Mohr II",
+              "Christine Schwartz",
+              "Mary Anne Hering"
+            ]
+          },
+          {
+            "title": "Michigan State University Board of Trustees",
+            "sourceContestId": "co_2fc534aba448ebcc5adea3b6b45e2884e2de2b54",
+            "heldContestId": "mi-sos-2026-general-michigan-state-university-trustee",
+            "heldTitle": "Trustee of Michigan State University",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Brianna Scott",
+              "Kelly Tebay",
+              "Julie Maday",
+              "Roger Victory",
+              "John Anthony La Pietra",
+              "Daniel Patterson",
+              "William White",
+              "Janet Sanger",
+              "John Sanger",
+              "Yaz Ozbek"
+            ]
+          },
+          {
+            "title": "University of Michigan Board of Regents",
+            "sourceContestId": "co_f61edd1a424a4d05df9eae2f2d511e117c5030e3",
+            "heldContestId": "mi-sos-2026-general-university-of-michigan-regent",
+            "heldTitle": "Regent of the University of Michigan",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Paul Brown",
+              "Amir Makled",
+              "Lena Epstein",
+              "Michael Schostak",
+              "Andrew Chadderdon",
+              "Kyle Maas"
+            ]
+          },
+          {
+            "title": "Wayne State University Board of Governors",
+            "sourceContestId": "co_97d7e4c9754ff5221a77d2285c7d8150a847593a",
+            "heldContestId": "mi-sos-2026-general-wayne-state-university-governor",
+            "heldTitle": "Governor of Wayne State University",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Shereef Akeel",
+              "Richard Mack",
+              "Andy Anuzis",
+              "Christa Murphy",
+              "Paul Ragan",
+              "Alexander Avery",
+              "Jami Van Alstine",
+              "Kathleen Oakford",
+              "Jeff McDonald",
+              "Suzanne Roehrig"
+            ]
+          },
+          {
+            "title": "Michigan State Senate District 1",
+            "sourceContestId": "co_bc3e7ec8a0bc776e300382025398176b08eac85b",
+            "heldContestId": "mi-sos-2026-general-state-senate-1",
+            "heldTitle": "1st District State Senator",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Justin Onwenu",
+              "Patrick O'Connell"
+            ]
+          },
+          {
+            "title": "Michigan House of Representatives District 9",
+            "sourceContestId": "co_0514a4fe9123d4e5be1c7c35c5a87ee082dcc0a4",
+            "heldContestId": "mi-sos-2026-general-state-house-9",
+            "heldTitle": "9th District Representative in State Legislature",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Willie Burton",
+              "Michele Lundgren",
+              "Jahdante Smith",
+              "Logan Ausherman"
+            ]
+          },
+          {
+            "title": "Michigan Supreme Court Megan Cavanagh's and Noah Hood's seats",
+            "sourceContestId": "co_add404624d04a2503397d10c3efbd0c3a2fa43b2",
+            "heldContestId": "mi-sos-2026-general-supreme-court-justice",
+            "heldTitle": "Justice of Supreme Court",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Megan Cavanagh",
+              "Noah Hood",
+              "Thomas Howe",
+              "Casandra Morse-Bills",
+              "Michael D. Warren Jr.",
+              "Jody White"
+            ]
+          },
+          {
+            "title": "Michigan 1st District Court of Appeals Incumbent Partial Term Ending 01/01/2031",
+            "sourceContestId": "co_1589705810e4fc67f5af778224052c91b35eabf3",
+            "heldContestId": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+            "heldTitle": "1st District Judge of Court of Appeals Incumbent Partial Term Ending 01/01/2031 (1) Position",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Andrew Lievense"
+            ]
+          },
+          {
+            "title": "Michigan 1st District Court of Appeals Incumbent seats",
+            "sourceContestId": "co_67f7cdd55ffd85d4b68891c1ee86f8c0fb57fd52",
+            "heldContestId": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+            "heldTitle": "1st District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Mariam Bazzi",
+              "Anica Letica",
+              "Christopher Murray"
+            ]
+          },
+          {
+            "title": "Belleville District Library Board At-large",
+            "sourceContestId": "co_75682d4f011f37a59c35697d5cc730dc688bcf65",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Daniel R. Fleming",
+              "Shekitra Green",
+              "Thays Harris",
+              "Sharon C. Peters",
+              "Linda Green Priest"
+            ]
+          },
+          {
+            "title": "Northville District Library Board At-large",
+            "sourceContestId": "co_0870314fa91d28d802f9b4588d7ec9d38a72afa1",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Deborah Charbonneau",
+              "Carol M. Doyle",
+              "Laura J. Eisele",
+              "Amy E. Field",
+              "Jeri Johnson",
+              "Karren Yurgalite",
+              "Lisa B. Zimmer"
+            ]
+          },
+          {
+            "title": "Plymouth District Library Board At-large",
+            "sourceContestId": "co_1ef8e3dd1fe48bb8d1c74350c188d0b07febe2e4",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Lynn Broniak-Hull",
+              "Yasir Khogali",
+              "Joseph H. LeBlanc",
+              "Michael F. Pappas",
+              "Jessica Yaser"
+            ]
+          },
+          {
+            "title": "Schoolcraft College Board of Trustees At-large",
+            "sourceContestId": "co_052f7f7547fcf0188d5def30985756309d9a12a9",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Brian D. Broderick",
+              "Jackie Coleman",
+              "Candy R. Little",
+              "Alexander D. Steward"
+            ]
+          },
+          {
+            "title": "Schoolcraft College Board of Trustees At-large",
+            "sourceContestId": "co_275bb2c71986b5a8ada040039dfbcda837da9e79",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Joan Noricks"
+            ]
+          },
+          {
+            "title": "Wayne County Executive",
+            "sourceContestId": "co_a6305eb06d47111ea9ced67be87a51fe7d48767b",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Warren Evans",
+              "Michael Evans",
+              "John Olumba"
+            ]
+          },
+          {
+            "title": "Detroit Public Schools Community District, At-large",
+            "sourceContestId": "co_69f676ac3c62a4d42b13f09ca78e6466b7b202d6",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Steven Bland Jr.",
+              "Bessie Harris",
+              "Natalie Bien-Aime",
+              "Michelle Broughton",
+              "Katrina Brown",
+              "Cidney Calloway",
+              "Bobby Christian",
+              "Nicole Conaway",
+              "Vilma Escamilla-Duran",
+              "Daniel Ferguson III",
+              "Duane Grigsby Jr.",
+              "David Harris",
+              "C. Allan Hubbard",
+              "Henrietta Ivey",
+              "Tabrian Joe",
+              "Shinese Johnson",
+              "Theodore Jones",
+              "Georgia Lemmons",
+              "LaMar Lemmons",
+              "Clement Lett",
+              "Phil Lloyd II",
+              "Darious Morris",
+              "Liana Mulholland",
+              "Tyshea Pope",
+              "Danetta Simpson",
+              "Tawanna Simpson",
+              "Jameel Smith",
+              "Calesther Smith-Arnold",
+              "Terry Whitfield",
+              "Elizabeth Williams",
+              "Theresa Williams"
+            ]
+          },
+          {
+            "title": "Detroit Public Schools Community District, At-large",
+            "sourceContestId": "co_5417ea9b2401bbc5cd888819965d9d82f77fd1d3",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Ijazz Jackson",
+              "Aliya Moore",
+              "Shawn Vaughn"
+            ]
+          },
+          {
+            "title": "Michigan 3rd Circuit Court Incumbent",
+            "sourceContestId": "co_bb5b4b89708ba6ca0e4ccde47890c905491c02a0",
+            "heldContestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+            "heldTitle": "3rd Circuit Judge of Circuit Court Incumbent 6 Year Terms (16) Positions",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "David Allen",
+              "Chandra Baker",
+              "Christopher M. Blount",
+              "Nicole Castka",
+              "Bradley Cobb",
+              "Christopher Dingell",
+              "Charlene Elder",
+              "Helal Farhat",
+              "Nicole Goodson",
+              "Edward Joseph",
+              "Mary Beth Kelly",
+              "Don Knapp",
+              "Cylenthia LaToye Miller",
+              "Carla Testani",
+              "Margaret Van Houten",
+              "Shannon Walker"
+            ]
+          },
+          {
+            "title": "Michigan 3rd Circuit Court Incumbent special election",
+            "sourceContestId": "co_dfb0854f06bb31cdda706646055520e1526673db",
+            "heldContestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+            "heldTitle": "3rd Circuit Judge of Circuit Court Incumbent Partial Term - 4 Years Ending 01/01/2031 (1) Position",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Aliyah Sabree"
+            ]
+          },
+          {
+            "title": "Michigan 3rd Circuit Court Non-incumbent",
+            "sourceContestId": "co_2b5aa095d4920c8b2e948f8181bb0506583eea36",
+            "heldContestId": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+            "heldTitle": "3rd Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Shakira Lynn Hawkins"
+            ]
+          },
+          {
+            "title": "Michigan 36th District Court Incumbent",
+            "sourceContestId": "co_de979557eab8eafd3937be31b36d7a0854c72c59",
+            "heldContestId": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+            "heldTitle": "36th District Judge of District Court Incumbent 6 Year Terms (6) Positions",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Demetria Brue",
+              "Esther Lynise Bryant-Weekes",
+              "Adrienne Hinnant-Johnson",
+              "Shannon A. Holmes",
+              "Kenneth King",
+              "Millicent Sherman"
+            ]
+          },
+          {
+            "title": "Michigan 36th District Court Incumbent special election",
+            "sourceContestId": "co_ca3e8573b8ec5511b9bbd811d6e44e618bd4da33",
+            "heldContestId": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+            "heldTitle": "36th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (3) Positions",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Poncé Clay",
+              "Herman Griffin",
+              "Chastity Youngblood"
+            ]
+          },
+          {
+            "title": "Michigan 36th District Court Non-incumbent",
+            "sourceContestId": "co_afb0e995c0c43e3a8bbfbb3f40afa1d5f0d09a52",
+            "heldContestId": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+            "heldTitle": "36th District Judge of District Court Non-Incumbent 6 Year Terms (3) Positions",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Delphia Burton",
+              "William Burton Jr.",
+              "Kahlilia Davis",
+              "Jo A. Irby"
+            ]
+          },
+          {
+            "title": "Wayne County Probate Court Non-incumbent",
+            "sourceContestId": "co_34f2f0391f916d568472b075f63bb7c35a34387c",
+            "heldContestId": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+            "heldTitle": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Sarah Colegrove",
+              "Suzanne Fanning",
+              "Vanessa Moss"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_df8f1f4c0c5f00cd1347acb6919267feae6f1c2a",
+            "title": "Proposal 1",
+            "summary": "Asks voters whether to hold a state constitutional convention",
+            "heldContestId": "mi-sos-2026-general-proposal-2026-1",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_8b95972c362bc239e7e11ea8af6f7a6bafe52291",
+            "title": "Proposal 2",
+            "summary": "Prohibit certain organizations and individuals—such as regulated electric and gas utilities, contractors with over $250,000 annually in government contracts, and people and organizations with substantial connections to those utilities or contractors—from making direct or indirect contributions to those who run for office, and also provide further regulations for campaign finance laws and spending on political communications",
+            "heldContestId": "mi-sos-2026-general-proposal-2026-2",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_91b535be4ad8255433a7ad09cb27b7897161fc6c",
+            "title": "Levy Property Mill Tax to Fund Museums Measure",
+            "summary": "Levy a mill tax of $20 per $100,000 in assessed value for a period of 10 years to fund historical museums",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_849855072fa470affd6fb2bb4f49eb639537fb03",
+            "title": "Levy Property Mill Tax to Fund Zoological Services Measure",
+            "summary": "Levy a mill tax of $10 per $100,000 in assessed value for a period of 10 years to fund zoological services",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          }
+        ]
+      },
+      "google": {
+        "status": "CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.624286+00:00",
+        "electionId": "12000",
+        "contestCount": 27,
+        "savedSource": "data/ballot/evidence/bl02-addresses/mi-google.json",
+        "sha256": "2d27c0abd22e1fe018eefef49c96b050a38a13fbbab432c0fe3092ce405550ac",
+        "missing": [
+          {
+            "sourceIndex": 11,
+            "title": "County Executive",
+            "district": {
+              "name": "WAYNE COUNTY",
+              "scope": "countywide"
+            },
+            "status": "NOT_HELD"
+          },
+          {
+            "sourceIndex": 22,
+            "title": "Local School District Board Member",
+            "district": {
+              "name": "DETROIT COMMUNITY SCHOOL DISTRICT",
+              "scope": "schoolBoard"
+            },
+            "status": "NOT_HELD",
+            "candidates": [
+              "Natalie Bien-Aime",
+              "Steve Bland, Jr.",
+              "Michelle Broughton",
+              "Katrina Brown",
+              "Cidney Calloway",
+              "Bobby Christian",
+              "Nicole Conaway",
+              "Vilma Escamilla Duran",
+              "Daniel Ferguson III",
+              "Duane Larry Grigsby, Jr.",
+              "Bessie L. Harris",
+              "David Harris",
+              "C. Allan Hubbard",
+              "Henrietta Ivey",
+              "Tabrian C. Joe",
+              "Shinese Johnson",
+              "Theodore Jones",
+              "Georgia Mae Lemmons",
+              "LaMar D. Lemmons",
+              "Clement O. Lett",
+              "Phil Lloyd II",
+              "Darious Morris",
+              "Liana Mulholland",
+              "Tyshea Pope",
+              "DaNetta L. Simpson",
+              "Tawanna Simpson",
+              "Jameel Montgomery Smith",
+              "Calesther Smith-Arnold",
+              "Terry E. Whitfield",
+              "Elizabeth A. Williams",
+              "Theresa Williams"
+            ]
+          },
+          {
+            "sourceIndex": 23,
+            "title": "Local School District Board Member",
+            "district": {
+              "name": "DETROIT COMMUNITY SCHOOL DISTRICT",
+              "scope": "schoolBoard"
+            },
+            "status": "NOT_HELD",
+            "candidates": [
+              "Ijazz Jackson",
+              "Aliya Moore",
+              "Shawn Vaughn"
+            ]
+          },
+          {
+            "sourceIndex": 26,
+            "title": "Renewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo",
+            "district": {
+              "name": "WAYNE COUNTY ZOOLOGICAL AUTHORITY"
+            },
+            "status": "NOT_HELD"
+          }
+        ],
+        "unidentifiableContests": [],
+        "note": null
+      },
+      "remaining": [
+        {
+          "title": "Wayne County Executive",
+          "sourceContestId": "co_a6305eb06d47111ea9ced67be87a51fe7d48767b",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Warren Evans",
+            "Michael Evans",
+            "John Olumba"
+          ]
+        },
+        {
+          "title": "Detroit Public Schools Community District, At-large",
+          "sourceContestId": "co_69f676ac3c62a4d42b13f09ca78e6466b7b202d6",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Steven Bland Jr.",
+            "Bessie Harris",
+            "Natalie Bien-Aime",
+            "Michelle Broughton",
+            "Katrina Brown",
+            "Cidney Calloway",
+            "Bobby Christian",
+            "Nicole Conaway",
+            "Vilma Escamilla-Duran",
+            "Daniel Ferguson III",
+            "Duane Grigsby Jr.",
+            "David Harris",
+            "C. Allan Hubbard",
+            "Henrietta Ivey",
+            "Tabrian Joe",
+            "Shinese Johnson",
+            "Theodore Jones",
+            "Georgia Lemmons",
+            "LaMar Lemmons",
+            "Clement Lett",
+            "Phil Lloyd II",
+            "Darious Morris",
+            "Liana Mulholland",
+            "Tyshea Pope",
+            "Danetta Simpson",
+            "Tawanna Simpson",
+            "Jameel Smith",
+            "Calesther Smith-Arnold",
+            "Terry Whitfield",
+            "Elizabeth Williams",
+            "Theresa Williams"
+          ]
+        },
+        {
+          "title": "Detroit Public Schools Community District, At-large",
+          "sourceContestId": "co_5417ea9b2401bbc5cd888819965d9d82f77fd1d3",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Ijazz Jackson",
+            "Aliya Moore",
+            "Shawn Vaughn"
+          ]
+        },
+        {
+          "id": "bm_91b535be4ad8255433a7ad09cb27b7897161fc6c",
+          "title": "Levy Property Mill Tax to Fund Museums Measure",
+          "summary": "Levy a mill tax of $20 per $100,000 in assessed value for a period of 10 years to fund historical museums",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_849855072fa470affd6fb2bb4f49eb639537fb03",
+          "title": "Levy Property Mill Tax to Fund Zoological Services Measure",
+          "summary": "Levy a mill tax of $10 per $100,000 in assessed value for a period of 10 years to fund zoological services",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        }
+      ],
+      "jurisdictionChecks": [
+        {
+          "title": "Belleville District Library Board At-large",
+          "sourceContestId": "co_75682d4f011f37a59c35697d5cc730dc688bcf65",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Daniel R. Fleming",
+            "Shekitra Green",
+            "Thays Harris",
+            "Sharon C. Peters",
+            "Linda Green Priest"
+          ]
+        },
+        {
+          "title": "Northville District Library Board At-large",
+          "sourceContestId": "co_0870314fa91d28d802f9b4588d7ec9d38a72afa1",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Deborah Charbonneau",
+            "Carol M. Doyle",
+            "Laura J. Eisele",
+            "Amy E. Field",
+            "Jeri Johnson",
+            "Karren Yurgalite",
+            "Lisa B. Zimmer"
+          ]
+        },
+        {
+          "title": "Plymouth District Library Board At-large",
+          "sourceContestId": "co_1ef8e3dd1fe48bb8d1c74350c188d0b07febe2e4",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Lynn Broniak-Hull",
+            "Yasir Khogali",
+            "Joseph H. LeBlanc",
+            "Michael F. Pappas",
+            "Jessica Yaser"
+          ]
+        },
+        {
+          "title": "Schoolcraft College Board of Trustees At-large",
+          "sourceContestId": "co_052f7f7547fcf0188d5def30985756309d9a12a9",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Brian D. Broderick",
+            "Jackie Coleman",
+            "Candy R. Little",
+            "Alexander D. Steward"
+          ]
+        },
+        {
+          "title": "Schoolcraft College Board of Trustees At-large",
+          "sourceContestId": "co_275bb2c71986b5a8ada040039dfbcda837da9e79",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Joan Noricks"
+          ]
+        }
+      ],
+      "notes": [
+        "TurboVote includes Belleville, Northville and Plymouth library boards and Schoolcraft College at Detroit City Hall. Confirm their official electorates before treating them as missing address contests."
+      ]
+    },
+    {
+      "state": "AK",
+      "address": "120 4th St, Juneau, AK 99801",
+      "checkedAt": "2026-10-23T08:04:58.858Z",
+      "heldInput": "data/ballot/2026-general/ak.json",
+      "heldInputSha256": "982119707224bb551fc0b04214861377f055ded494d59d40da3db69ab4b14678",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:ak",
+        "ocd-division/country:us/state:ak/cd:at-large",
+        "ocd-division/country:us/state:ak/place:juneau",
+        "ocd-division/country:us/state:ak/sldu:b",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:ak/sldl:4",
+        "ocd-division/country:us/state:ak/borough:juneau"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aak/2026-11-03?street=120+4th+St&city=Juneau&state=AK&zip=99801",
+        "raceCount": 6,
+        "measureCount": 2,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ak-turbovote.html.gz",
+        "renderedSourceSha256": "a89e117149b0bb0db3eb01d11d5505dcbda5b27aba12002a79469510dab97b53",
+        "capture": "data/ballot/evidence/bl02-addresses/ak-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Alaska",
+            "sourceContestId": "co_6d1223fe7d2eac72584d4f7e55213846a47fb102",
+            "heldContestId": "ak-doe-2026-general-united-states-senator",
+            "heldTitle": "UNITED STATES SENATOR",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dan S. Sullivan",
+              "Mary Peltola",
+              "Gerald Heikes",
+              "Daniel J. Sullivan Jr."
+            ]
+          },
+          {
+            "title": "U.S. House Alaska At-large District",
+            "sourceContestId": "co_d3113d0d81d03902cd0929fc952b4ad6da9adc29",
+            "heldContestId": "ak-doe-2026-general-united-states-representative",
+            "heldTitle": "UNITED STATES REPRESENTATIVE",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Nicholas Begich",
+              "Eric Hafner",
+              "Jim McDermott",
+              "Bill Hill"
+            ]
+          },
+          {
+            "title": "Governor of Alaska",
+            "sourceContestId": "co_29cb86f871a9025ffd4336e8e90f8e571e663d57",
+            "heldContestId": "ak-doe-2026-general-governor-lieutenant-governor",
+            "heldTitle": "GOVERNOR / LIEUTENANT GOVERNOR",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jonathan Kreiss-Tomkins",
+              "David Bronson",
+              "Treg Taylor",
+              "Bernadette Wilson"
+            ]
+          },
+          {
+            "title": "Lieutenant Governor of Alaska",
+            "sourceContestId": "co_b28ba0d90086a571508905268cb5f06b89e86bb4",
+            "heldContestId": "ak-doe-2026-general-governor-lieutenant-governor",
+            "heldTitle": "GOVERNOR / LIEUTENANT GOVERNOR",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Josh Church",
+              "Candi English",
+              "Mike Shower",
+              "Zachary Johnson"
+            ]
+          },
+          {
+            "title": "Alaska House of Representatives District 4",
+            "sourceContestId": "co_a59654d22529c5c23a5116938d88bd438312b000",
+            "heldContestId": "ak-doe-2026-general-house-district-04",
+            "heldTitle": "HOUSE DISTRICT 04",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Sara Hannan"
+            ]
+          },
+          {
+            "title": "Alaska Supreme Court Jude Pate's seat",
+            "sourceContestId": "co_af310333f7efcb31e0b46fac8e99e7085f881673",
+            "heldContestId": "ak-doe-2026-general-supreme-court",
+            "heldTitle": "SUPREME COURT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jude Pate"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_73b6d4b1e6b0452fd468f931e2c8160e660f9fdb",
+            "title": "Ballot Measure 2",
+            "summary": "Repeal the top-four ranked-choice voting (RCV) system that was adopted in 2020",
+            "heldContestId": "ak-doe-2026-general-measure-2",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_07aa1cbdc3dce15699bda228c06d8b8bcdcaa798",
+            "title": "Ballot Measure 3",
+            "summary": "Amend state law to provide that \"Only a person who is a citizen of the United States\" may vote in any election",
+            "heldContestId": "ak-doe-2026-general-measure-3",
+            "status": "HELD_AND_SELECTED"
+          }
+        ]
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.624760+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ak-google.json",
+        "sha256": "a350eb3b2fc446ffe300c5ae5d3f59b0505b9b0867c07256e40b44e0d8f1553e",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [],
+      "jurisdictionChecks": [],
+      "notes": []
+    },
+    {
+      "state": "DE",
+      "address": "411 Legislative Ave, Dover, DE 19901",
+      "checkedAt": "2026-10-23T08:05:04.934Z",
+      "heldInput": "data/ballot/2026-general/de.json",
+      "heldInputSha256": "529c81ed6a4dde54681270f3e038acc1b5f24b2a0afa7b79af2d68bddc45f590",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:de/place:dover",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:de/sldl:32",
+        "ocd-division/country:us/state:de/cd:at-large",
+        "ocd-division/country:us/state:de",
+        "ocd-division/country:us/state:de/sldu:17",
+        "ocd-division/country:us/state:de/county:kent"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ade/2026-11-03?street=411+Legislative+Ave&city=Dover&state=DE&zip=19901",
+        "raceCount": 6,
+        "measureCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/de-turbovote.html.gz",
+        "renderedSourceSha256": "4d092b13c0ebe6e5215ebbe3c2c542e5cfd55d4baf795fd16d59d33b7c48ff1b",
+        "capture": "data/ballot/evidence/bl02-addresses/de-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Delaware",
+            "sourceContestId": "co_27de46c6527881e8bf9f3098df9acc60f90232bd",
+            "heldContestId": "de-2026-general-u-s-senator",
+            "heldTitle": "U.S. Senator",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Chris Coons",
+              "Michael Katz",
+              "William McVay",
+              "John Shulli",
+              "Travis Jack Stevens"
+            ]
+          },
+          {
+            "title": "U.S. House Delaware At-large District",
+            "sourceContestId": "co_3decb4340fb98406ab7a9188cbfb9ae3d8697ae7",
+            "heldContestId": "de-2026-general-representative-in-congress",
+            "heldTitle": "Representative in Congress",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Sarah McBride",
+              "Joseph Arminio",
+              "Earl Cooper",
+              "Scott Walker"
+            ]
+          },
+          {
+            "title": "Attorney General of Delaware",
+            "sourceContestId": "co_72d0ad79b4a33cf2494cca9ddb2aaf948f18b4e2",
+            "heldContestId": "de-2026-general-attorney-general",
+            "heldTitle": "Attorney General",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kathy Jennings",
+              "David Graham",
+              "Phil Dyer Jr."
+            ]
+          },
+          {
+            "title": "Delaware State Auditor",
+            "sourceContestId": "co_60cb3c0c44dd6072c631346d4d31f4a6801c3c23",
+            "heldContestId": "de-2026-general-auditor-of-accounts",
+            "heldTitle": "Auditor of Accounts",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Lydia York",
+              "April Callaway",
+              "Austin Cassidy"
+            ]
+          },
+          {
+            "title": "Delaware Treasurer",
+            "sourceContestId": "co_f43a90ce180cbc0263fdc6c9ae33a7274974a583",
+            "heldContestId": "de-2026-general-state-treasurer",
+            "heldTitle": "State Treasurer",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Ted Lauzen",
+              "Michael Ramone"
+            ]
+          },
+          {
+            "title": "Delaware House of Representatives District 32",
+            "sourceContestId": "co_0c6c40f086576ba770c972486b262609edd27499",
+            "heldContestId": "de-2026-general-state-representative-district-32",
+            "heldTitle": "State Representative District 32",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kerri Evelyn Harris"
+            ]
+          }
+        ],
+        "measures": []
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.625155+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/de-google.json",
+        "sha256": "15e3b7fc652c449a8788d53b007a82d5b9fd8f5f4e5accdeadff44992a76d2a6",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [],
+      "jurisdictionChecks": [],
+      "notes": []
+    },
+    {
+      "state": "TX",
+      "address": "1100 Congress Ave, Austin, TX 78701",
+      "checkedAt": "2026-10-23T08:05:05.334Z",
+      "heldInput": "data/ballot/2026-general/tx.json",
+      "heldInputSha256": "9b22938d70f0463f4db85460d3b452393e08ccfd7a5e24793a1dd56728442b65",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:tx/county:travis",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:tx/sldl:49",
+        "ocd-division/country:us/state:tx/sldu:14",
+        "ocd-division/country:us/state:tx",
+        "ocd-division/country:us/state:tx/cd:37",
+        "ocd-division/country:us/state:tx/place:austin"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Atx/2026-11-03?street=1100+Congress+Ave&city=Austin&state=TX&zip=78701",
+        "raceCount": 55,
+        "measureCount": 11,
+        "savedSource": "data/ballot/evidence/bl02-addresses/tx-turbovote.html.gz",
+        "renderedSourceSha256": "81012ef05608bb659eff9106217dfc45472d8ea5207f12fe8901099afae077c8",
+        "capture": "data/ballot/evidence/bl02-addresses/tx-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Texas",
+            "sourceContestId": "co_ee14d9c4f21f9a7f434bcdc87bb5d4ce838b7ff4",
+            "heldContestId": "tx-sos-2026-u-s-senator",
+            "heldTitle": "U. S. SENATOR",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "James Talarico",
+              "Ken Paxton",
+              "Ted Brown",
+              "Avery Ayers",
+              "Bradford Hall",
+              "Zul Mohamed",
+              "Jade Simmons"
+            ]
+          },
+          {
+            "title": "U.S. House Texas District 10",
+            "sourceContestId": "co_ab54ef5e0fceffeeb8198e716372d311cfdee618",
+            "heldContestId": "tx-sos-2026-u-s-representative-district-10",
+            "heldTitle": "U. S. REPRESENTATIVE DISTRICT 10",
+            "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+            "sourceCandidates": [
+              "Caitlin Rourk",
+              "Chris Gober"
+            ]
+          },
+          {
+            "title": "Governor of Texas",
+            "sourceContestId": "co_5aba4ec168ef7c0e3274f853ebf77497cd97de69",
+            "heldContestId": "tx-sos-2026-governor",
+            "heldTitle": "GOVERNOR",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Greg Abbott",
+              "Gina Hinojosa",
+              "Pat Dixon",
+              "Edward Giles",
+              "Jinghpaw Majoishingra",
+              "Mike Miller",
+              "Jenn Mack Raphoon"
+            ]
+          },
+          {
+            "title": "Lieutenant Governor of Texas",
+            "sourceContestId": "co_2aa35f825ccbcc52b376576be03eba8cd74ecd5f",
+            "heldContestId": "tx-sos-2026-lieutenant-governor",
+            "heldTitle": "LIEUTENANT GOVERNOR",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dan Patrick",
+              "Vikki Goodwin",
+              "Kevin McCormick",
+              "Anthony Cristo",
+              "Arturo Espinosa",
+              "Stephen Samuelson"
+            ]
+          },
+          {
+            "title": "Attorney General of Texas",
+            "sourceContestId": "co_f948fcaa0d66e5bbf1eed4bf8f650273867e8225",
+            "heldContestId": "tx-sos-2026-attorney-general",
+            "heldTitle": "ATTORNEY GENERAL",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Nathan Johnson",
+              "Mayes Middleton",
+              "Tom Oxford"
+            ]
+          },
+          {
+            "title": "Texas Commissioner of Agriculture",
+            "sourceContestId": "co_84a288a75a3df26d5a65122640709ff08214d133",
+            "heldContestId": "tx-sos-2026-commissioner-of-agriculture",
+            "heldTitle": "COMMISSIONER OF AGRICULTURE",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Clayton Tucker",
+              "Nate Sheets",
+              "Austin Kelly"
+            ]
+          },
+          {
+            "title": "Texas Comptroller of Public Accounts",
+            "sourceContestId": "co_9109c1e7b462174b38b199e7b196e0a4ad131e2a",
+            "heldContestId": "tx-sos-2026-comptroller-of-public-accounts",
+            "heldTitle": "COMPTROLLER OF PUBLIC ACCOUNTS",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Donald Huffines",
+              "Sarah Eckhardt",
+              "Shehla Faizi",
+              "V. Alonzo Echavarria-Garza"
+            ]
+          },
+          {
+            "title": "Texas Land Commissioner",
+            "sourceContestId": "co_184555dcbdbe7d291212fca8a38af216cf6438b9",
+            "heldContestId": "tx-sos-2026-commissioner-of-the-general-land-office",
+            "heldTitle": "COMMISSIONER OF THE GENERAL LAND OFFICE",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dawn Buckingham",
+              "Benjamin Flores",
+              "Neil Snider"
+            ]
+          },
+          {
+            "title": "Texas Railroad Commission",
+            "sourceContestId": "co_5a5d62b08cf73d329d9e372edf78c59592d3305d",
+            "heldContestId": "tx-sos-2026-railroad-commissioner",
+            "heldTitle": "RAILROAD COMMISSIONER",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jon Rosenthal",
+              "Bo French",
+              "Arthur DiBianca"
+            ]
+          },
+          {
+            "title": "Texas State Board of Education District 5",
+            "sourceContestId": "co_a77ec5bd113e0e536db5e9d71e6131e8168a7d87",
+            "heldContestId": "tx-sos-2026-member-state-board-of-education-district-5",
+            "heldTitle": "MEMBER, STATE BOARD OF EDUCATION, DISTRICT 5",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Allison Bush",
+              "Mica Arellano"
+            ]
+          },
+          {
+            "title": "Texas House of Representatives District 49",
+            "sourceContestId": "co_6e68510d28efc8ec7a58919658a7656b100fae67",
+            "heldContestId": "tx-sos-2026-state-representative-district-49",
+            "heldTitle": "STATE REPRESENTATIVE DISTRICT 49",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Montserrat Garibay",
+              "Arshia Papari"
+            ]
+          },
+          {
+            "title": "Texas Supreme Court Place 1 Chief Justice Place 1 - Jimmy Blacklock",
+            "sourceContestId": "co_f7944655f01209895e1ad2ac004842560903c943",
+            "heldContestId": "tx-sos-2026-chief-justice-supreme-court",
+            "heldTitle": "CHIEF JUSTICE, SUPREME COURT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jimmy Blacklock",
+              "Maggie Ellis"
+            ]
+          },
+          {
+            "title": "Texas Court of Criminal Appeals Place 3",
+            "sourceContestId": "co_19fcf5c999dbeb4d6dacf515f4b4f47230fb2fdd",
+            "heldContestId": "tx-sos-2026-judge-court-of-criminal-appeals-place-3",
+            "heldTitle": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 3",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Okey Anyiam",
+              "Thomas Smith",
+              "Mark Ash"
+            ]
+          },
+          {
+            "title": "Texas Court of Criminal Appeals Place 4",
+            "sourceContestId": "co_dc73ca13dc1faf0c4d0f0c4b63fcc2c4f9c8bae7",
+            "heldContestId": "tx-sos-2026-judge-court-of-criminal-appeals-place-4",
+            "heldTitle": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 4",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kevin Patrick Yeary",
+              "Audra Riley"
+            ]
+          },
+          {
+            "title": "Texas Court of Criminal Appeals Place 9",
+            "sourceContestId": "co_0974e27252d1f99b6d5645a5f5d98096791f3234",
+            "heldContestId": "tx-sos-2026-judge-court-of-criminal-appeals-place-9",
+            "heldTitle": "JUDGE, COURT OF CRIMINAL APPEALS, PLACE 9",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Holly Taylor",
+              "John Messinger"
+            ]
+          },
+          {
+            "title": "Texas Supreme Court Place 2 Place 2 - James Sullivan",
+            "sourceContestId": "co_9a6a7574959183d9ad84c0abd8180acf91081ed8",
+            "heldContestId": "tx-sos-2026-justice-supreme-court-place-2-unexpired-term",
+            "heldTitle": "JUSTICE, SUPREME COURT, PLACE 2 (UNEXPIRED TERM)",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "James Sullivan",
+              "Chari Kelly"
+            ]
+          },
+          {
+            "title": "Texas Supreme Court Place 7 Place 7 - Kyle Hawkins",
+            "sourceContestId": "co_7b60c1142d7203b24082a769a0d4a528c10124cc",
+            "heldContestId": "tx-sos-2026-justice-supreme-court-place-7",
+            "heldTitle": "JUSTICE, SUPREME COURT, PLACE 7",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kyle Hawkins",
+              "Kristen Hawkins"
+            ]
+          },
+          {
+            "title": "Texas Supreme Court Place 8 Place 8 - Brett Busby",
+            "sourceContestId": "co_2fed4d97a6585af0ac74f35e8ed80dc7bc86a024",
+            "heldContestId": "tx-sos-2026-justice-supreme-court-place-8",
+            "heldTitle": "JUSTICE, SUPREME COURT, PLACE 8",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Brett Busby",
+              "Gisela Triana"
+            ]
+          },
+          {
+            "title": "Texas Fifteenth District Court of Appeals Chief Justice",
+            "sourceContestId": "co_c0b10ea3d8925b064d5a45cc6cb217f82e5d6cf6",
+            "heldContestId": "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+            "heldTitle": "CHIEF JUSTICE, 15TH COURT OF APPEALS DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Scott Brister",
+              "Jerry Zimmerer"
+            ]
+          },
+          {
+            "title": "Texas Fifteenth District Court of Appeals Place 2",
+            "sourceContestId": "co_1b7000b38b78fe70072c9781b21420b0cfa1b0b5",
+            "heldContestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+            "heldTitle": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 2",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Scott Field",
+              "Thomas Baker"
+            ]
+          },
+          {
+            "title": "Texas Fifteenth District Court of Appeals Place 3",
+            "sourceContestId": "co_3896a3fd04368ef7b3da08346316877140c71c43",
+            "heldContestId": "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+            "heldTitle": "JUSTICE, 15TH COURT OF APPEALS DISTRICT, PLACE 3",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "April Farris",
+              "Marc Meyer"
+            ]
+          },
+          {
+            "title": "Texas Third District Court of Appeals Chief Justice",
+            "sourceContestId": "co_43544207252a6f755c9d58fa816e974cec46ba75",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Darlene Byrne",
+              "Cory Liu"
+            ]
+          },
+          {
+            "title": "Austin City Council District 9",
+            "sourceContestId": "co_d9c1bbbdcb00bfa2d2c98556dd357753936124ec",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Zohaib Qadri",
+              "Rich Heyman",
+              "Kai Huang",
+              "Katie Kam",
+              "Dave Thadani"
+            ]
+          },
+          {
+            "title": "Travis Central Appraisal District, Place 1",
+            "sourceContestId": "co_2450d3b5c3cb73d429c29ef42a88b6dfbfb0c79a",
+            "heldContestId": "tx-ba01-2026-travis-appraisal-place-1",
+            "heldTitle": "Travis Central Appraisal District, Board of Directors, Place 1",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Skyler Korgel"
+            ]
+          },
+          {
+            "title": "Travis Central Appraisal District, Place 2",
+            "sourceContestId": "co_c6d8126e1fa23dbdb1b87c25bf3d853bc120e84c",
+            "heldContestId": "tx-ba01-2026-travis-appraisal-place-2",
+            "heldTitle": "Travis Central Appraisal District, Board of Directors, Place 2",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Brian Peña"
+            ]
+          },
+          {
+            "title": "Travis Central Appraisal District, Place 3",
+            "sourceContestId": "co_5e334def546452ba124205621a4a502b43f1c2be",
+            "heldContestId": "tx-ba01-2026-travis-appraisal-place-3",
+            "heldTitle": "Travis Central Appraisal District, Board of Directors, Place 3",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Phil Gorman",
+              "Yvonne Muñoz"
+            ]
+          },
+          {
+            "title": "Travis County Clerk",
+            "sourceContestId": "co_9b3da520d491b20757890963583703b1562dd6a2",
+            "heldContestId": "tx-ba01-2026-travis-county-clerk",
+            "heldTitle": "County Clerk",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dyana Limon-Mercado",
+              "LaShawn Nash"
+            ]
+          },
+          {
+            "title": "Travis County District Clerk",
+            "sourceContestId": "co_0a64830aaabb44915464d93772755f02f1217ec5",
+            "heldContestId": "tx-ba01-2026-travis-district-clerk",
+            "heldTitle": "District Clerk",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Velva Price"
+            ]
+          },
+          {
+            "title": "Travis County Judge",
+            "sourceContestId": "co_10bf66a078cf84160b0aa151306850a638f92ed3",
+            "heldContestId": "tx-ba01-2026-travis-county-judge",
+            "heldTitle": "County Judge",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Andy Brown"
+            ]
+          },
+          {
+            "title": "Travis County Treasurer",
+            "sourceContestId": "co_fb36a445f13a69f26c0df23d72977654200c28fa",
+            "heldContestId": "tx-ba01-2026-travis-county-treasurer",
+            "heldTitle": "County Treasurer",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dolores Ortega Carter"
+            ]
+          },
+          {
+            "title": "Travis County Justice of the Peace Precinct 5",
+            "sourceContestId": "co_c30459da587f78aa02a9f6c41c92c32e4483a28e",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Tanisa Jeffers"
+            ]
+          },
+          {
+            "title": "Austin Independent School District At-large Position 9",
+            "sourceContestId": "co_d138f492cdf480ba96ea54e77305ae725f91a52e",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Kirk Becker",
+              "Pamela Mathai",
+              "Cynthia Soliz"
+            ]
+          },
+          {
+            "title": "Texas 147th District Court",
+            "sourceContestId": "co_13220d38479233e68d46f3d6a863c3f4fae83fc5",
+            "heldContestId": "tx-ba01-2026-district-judge-147",
+            "heldTitle": "DISTRICT JUDGE, 147TH JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Clifford A. Brown"
+            ]
+          },
+          {
+            "title": "Texas 201st District Court",
+            "sourceContestId": "co_21754d99e9e5c9e3064cc661b5b91b11b15b6112",
+            "heldContestId": "tx-ba01-2026-district-judge-201",
+            "heldTitle": "DISTRICT JUDGE, 201ST JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Amy Clark Meachum"
+            ]
+          },
+          {
+            "title": "Texas 250th District Court",
+            "sourceContestId": "co_c80c032804f42b9aeb2fff14da8524eab5b7ffa3",
+            "heldContestId": "tx-ba01-2026-district-judge-250",
+            "heldTitle": "DISTRICT JUDGE, 250TH JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kennon Wooten"
+            ]
+          },
+          {
+            "title": "Texas 261st District Court",
+            "sourceContestId": "co_51d076500acfc999d0389ea9be0afd28c2d541a6",
+            "heldContestId": "tx-ba01-2026-district-judge-261",
+            "heldTitle": "DISTRICT JUDGE, 261ST JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Daniella Deseta Lyttle"
+            ]
+          },
+          {
+            "title": "Texas 299th District Court",
+            "sourceContestId": "co_5215614aaa9b039692af042927c3652f41ced6ea",
+            "heldContestId": "tx-ba01-2026-district-judge-299",
+            "heldTitle": "DISTRICT JUDGE, 299TH JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Karen Sage"
+            ]
+          },
+          {
+            "title": "Texas 331st District Court",
+            "sourceContestId": "co_0f103a6ad4a224b8f7b68c0e49b2e5a53ed76bf1",
+            "heldContestId": "tx-ba01-2026-district-judge-331",
+            "heldTitle": "DISTRICT JUDGE, 331ST JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Chantal Eldridge"
+            ]
+          },
+          {
+            "title": "Texas 403rd District Court",
+            "sourceContestId": "co_84c13f0e8fe45c526442192557d0b8ce7a4f1ddd",
+            "heldContestId": "tx-ba01-2026-district-judge-403",
+            "heldTitle": "DISTRICT JUDGE, 403RD JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Brandy Mueller"
+            ]
+          },
+          {
+            "title": "Texas 419th District Court",
+            "sourceContestId": "co_4f7306f30caa58fce1c070b0b71919752066b54b",
+            "heldContestId": "tx-ba01-2026-district-judge-419",
+            "heldTitle": "DISTRICT JUDGE, 419TH JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Catherine Mauzy"
+            ]
+          },
+          {
+            "title": "Texas 455th District Court",
+            "sourceContestId": "co_b8694e5269ef7a7a7767fb0563d67671fd177e89",
+            "heldContestId": "tx-ba01-2026-district-judge-455",
+            "heldTitle": "DISTRICT JUDGE, 455TH JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Laurie Eiserloh"
+            ]
+          },
+          {
+            "title": "Texas 459th District Court",
+            "sourceContestId": "co_17d342cd043d6f8d57e20d4701989abda07a7f9b",
+            "heldContestId": "tx-ba01-2026-district-judge-459",
+            "heldTitle": "DISTRICT JUDGE, 459TH JUDICIAL DISTRICT",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Maya Guerra Gamble"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 1",
+            "sourceContestId": "co_aa443c29267063b9bb5756b055dd20fc11f6e076",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-1",
+            "heldTitle": "Judge, County Court at Law No. 1",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Todd Wong"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 2",
+            "sourceContestId": "co_781c307324d7ce9a78db72d982ad7c73b4527438",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-2",
+            "heldTitle": "Judge, County Court at Law No. 2",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Leslie Dippel"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 3",
+            "sourceContestId": "co_19db7348382d0522d1d16dcc0fd5a5fd85c26ad1",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-3",
+            "heldTitle": "Judge, County Court at Law No. 3",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Bianca Garcia"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 4",
+            "sourceContestId": "co_bf4bd5046f7580d6e7f8aea256239796c6396b84",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-4",
+            "heldTitle": "Judge, County Court at Law No. 4",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dimple Malhotra"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 5",
+            "sourceContestId": "co_2983345d49fc4ea7dd4fbee75ae3ad8af4916b4f",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-5",
+            "heldTitle": "Judge, County Court at Law No. 5",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Mary Ann Espiritu"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 6",
+            "sourceContestId": "co_4a56520fb12b1620dfcc1265c7027119267ba54a",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-6",
+            "heldTitle": "Judge, County Court at Law No. 6",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Denise Hernández"
+            ]
+          },
+          {
+            "title": "Travis County Court at Law No. 7",
+            "sourceContestId": "co_5e149501723f668598c84056ddd921c922bc6164",
+            "heldContestId": "tx-ba01-2026-travis-judge-county-court-at-law-no-7",
+            "heldTitle": "Judge, County Court at Law No. 7",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Elisabeth A. Earle"
+            ]
+          },
+          {
+            "title": "Travis County Probate Court No. 1",
+            "sourceContestId": "co_7732f37bd3d6cc480854f0a15bef47ed7b87bda7",
+            "heldContestId": "tx-ba01-2026-travis-judge-probate-court-no-1",
+            "heldTitle": "Judge, Probate Court No. 1",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Guy Herman"
+            ]
+          },
+          {
+            "title": "Austin Community College District Board of Trustees Place 1",
+            "sourceContestId": "co_5e43f541198a725216bb0a9ffb6e0651c8f13552",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Dana Walker",
+              "Gloria Gonzales-Dholakia"
+            ]
+          },
+          {
+            "title": "Austin Community College District Board of Trustees Place 2",
+            "sourceContestId": "co_d697c2570ca074a0df95ecde272b64d7786bb0be",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Gigi Edwards Bryant"
+            ]
+          },
+          {
+            "title": "Austin Community College District Board of Trustees Place 3",
+            "sourceContestId": "co_ba9d0a94d89b7c1dd67890f83bb473761a311723",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Nan McRaven",
+              "Trevor Hale"
+            ]
+          },
+          {
+            "title": "North Austin Municipal Utility District 1 Board Place 2",
+            "sourceContestId": "co_dec9d32b17bb3586929ff9cc8b80605d51923a20",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Don Conklin"
+            ]
+          },
+          {
+            "title": "North Austin Municipal Utility District 1 Board Place 4",
+            "sourceContestId": "co_702ff9e4656e02912a4fab7d91e814e85a012799",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "JURISDICTION_CHECK_NEEDED",
+            "sourceCandidates": [
+              "Diana Christiano",
+              "Jennifer Wiebe"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_02f6232f67b542bd69e1635491d3e766c04c286f",
+            "title": "Proposition A",
+            "summary": "Annex the territory of the Pflugerville Independent School District not already within the Austin Community College taxing district and authorize a tax rate of $103.40 per $100,000 in assessed value",
+            "heldContestId": null,
+            "status": "JURISDICTION_CHECK_NEEDED"
+          },
+          {
+            "id": "bm_2c36d9c0960768ef3722a4412b88bfc1a5e7b4cd",
+            "title": "Proposition A",
+            "summary": "Authorize $260 million in bonds to fund improvements of park, recreation, aquatic, and open spaces",
+            "heldContestId": "tx-ba01-2026-austin-proposition-a",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_4e4dd2ff9da2c9a44285c300abca8e67599bdaa0",
+            "title": "Proposition B",
+            "summary": "Authorize $35 million in bonds to fund library facilities",
+            "heldContestId": "tx-ba01-2026-austin-proposition-b",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_a66527896302abbb2a23032574942c49c3a3ab96",
+            "title": "Proposition C",
+            "summary": "Amend the city charter to clarify that the Independent Citizens Redistricting Commission (ICRC) is independent of the city council and establish certain powers and responsibilities of the ICRC",
+            "heldContestId": "tx-ba01-2026-austin-proposition-c",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_d66ee3f156ab128fde55b7e192cda0dff6683b4c",
+            "title": "Proposition D",
+            "summary": "Amend the city charter to remove language requiring the city council to meet at least once a week",
+            "heldContestId": "tx-ba01-2026-austin-proposition-d",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_1eaa23e01447a29731815026dee1d11a943b8c4d",
+            "title": "Proposition E",
+            "summary": "Amend the city charter to remove language requiring the city council's rules and order of business to be determined by ordinance",
+            "heldContestId": "tx-ba01-2026-austin-proposition-e",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_6963e03a104958bff0377a7a09578c57a307e9e9",
+            "title": "Proposition F",
+            "summary": "Amend the city charter to clarify the definition of the term \"election\" and to establish that campaign finance limits are to be modified by January 1 each year",
+            "heldContestId": "tx-ba01-2026-austin-proposition-f",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_39d4b77188658daad5eab5e7a3f73790ddedcc44",
+            "title": "Proposition G",
+            "summary": "Amend the city charter to establish that initiative elections and petitioned charter amendment elections must be held on the next available November election date in an even-numbered year",
+            "heldContestId": "tx-ba01-2026-austin-proposition-g",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_53beea179f3aa8411a71f183b37312643de18410",
+            "title": "Proposition H",
+            "summary": "Amend the city charter to establish the city attorney as a position that is appointed and removed by the city council",
+            "heldContestId": "tx-ba01-2026-austin-proposition-h",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_fc8f758c0e89f2660e76d9003b12cde516462c48",
+            "title": "Proposition I",
+            "summary": "Amend the city charter to require an Independent Affordability and Efficiency Initiative on a regular basis and before tax rate increase elections",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_460e86bcc6cd076214d58d94f4291fd4487faf69",
+            "title": "Proposition J",
+            "summary": "Amend the city charter to make non-substantive corrections",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          }
+        ]
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.625490+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/tx-google.json",
+        "sha256": "73c6f792bd7f9e461f0fc36568ac11e6d45d226cf93038929cafa2166c272275",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [
+        {
+          "title": "U.S. House Texas District 10",
+          "sourceContestId": "co_ab54ef5e0fceffeeb8198e716372d311cfdee618",
+          "heldContestId": "tx-sos-2026-u-s-representative-district-10",
+          "heldTitle": "U. S. REPRESENTATIVE DISTRICT 10",
+          "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+          "sourceCandidates": [
+            "Caitlin Rourk",
+            "Chris Gober"
+          ]
+        },
+        {
+          "title": "Texas Third District Court of Appeals Chief Justice",
+          "sourceContestId": "co_43544207252a6f755c9d58fa816e974cec46ba75",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Darlene Byrne",
+            "Cory Liu"
+          ]
+        },
+        {
+          "title": "Austin City Council District 9",
+          "sourceContestId": "co_d9c1bbbdcb00bfa2d2c98556dd357753936124ec",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Zohaib Qadri",
+            "Rich Heyman",
+            "Kai Huang",
+            "Katie Kam",
+            "Dave Thadani"
+          ]
+        },
+        {
+          "title": "Travis County Justice of the Peace Precinct 5",
+          "sourceContestId": "co_c30459da587f78aa02a9f6c41c92c32e4483a28e",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Tanisa Jeffers"
+          ]
+        },
+        {
+          "title": "Austin Independent School District At-large Position 9",
+          "sourceContestId": "co_d138f492cdf480ba96ea54e77305ae725f91a52e",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Kirk Becker",
+            "Pamela Mathai",
+            "Cynthia Soliz"
+          ]
+        },
+        {
+          "title": "Austin Community College District Board of Trustees Place 1",
+          "sourceContestId": "co_5e43f541198a725216bb0a9ffb6e0651c8f13552",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Dana Walker",
+            "Gloria Gonzales-Dholakia"
+          ]
+        },
+        {
+          "title": "Austin Community College District Board of Trustees Place 2",
+          "sourceContestId": "co_d697c2570ca074a0df95ecde272b64d7786bb0be",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Gigi Edwards Bryant"
+          ]
+        },
+        {
+          "title": "Austin Community College District Board of Trustees Place 3",
+          "sourceContestId": "co_ba9d0a94d89b7c1dd67890f83bb473761a311723",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Nan McRaven",
+            "Trevor Hale"
+          ]
+        },
+        {
+          "id": "bm_fc8f758c0e89f2660e76d9003b12cde516462c48",
+          "title": "Proposition I",
+          "summary": "Amend the city charter to require an Independent Affordability and Efficiency Initiative on a regular basis and before tax rate increase elections",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_460e86bcc6cd076214d58d94f4291fd4487faf69",
+          "title": "Proposition J",
+          "summary": "Amend the city charter to make non-substantive corrections",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        }
+      ],
+      "jurisdictionChecks": [
+        {
+          "title": "North Austin Municipal Utility District 1 Board Place 2",
+          "sourceContestId": "co_dec9d32b17bb3586929ff9cc8b80605d51923a20",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Don Conklin"
+          ]
+        },
+        {
+          "title": "North Austin Municipal Utility District 1 Board Place 4",
+          "sourceContestId": "co_702ff9e4656e02912a4fab7d91e814e85a012799",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "JURISDICTION_CHECK_NEEDED",
+          "sourceCandidates": [
+            "Diana Christiano",
+            "Jennifer Wiebe"
+          ]
+        },
+        {
+          "id": "bm_02f6232f67b542bd69e1635491d3e766c04c286f",
+          "title": "Proposition A",
+          "summary": "Annex the territory of the Pflugerville Independent School District not already within the Austin Community College taxing district and authorize a tax rate of $103.40 per $100,000 in assessed value",
+          "heldContestId": null,
+          "status": "JURISDICTION_CHECK_NEEDED"
+        }
+      ],
+      "notes": [
+        "TurboVote base division response says CD37; its same-address November ballot says CD10. This is a comparator boundary-vintage contradiction, not proof that the app should select CD37 for the November election."
+      ]
+    },
+    {
+      "state": "NE",
+      "address": "1445 K St, Lincoln, NE 68508",
+      "checkedAt": "2026-10-23T08:05:02.884Z",
+      "heldInput": "data/ballot/2026-general/ne.json",
+      "heldInputSha256": "9ead3f6d8b5916d4d7032c888ccdfe9e423fd55d23e43cb95f2541a23b5cb70f",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:ne/place:lincoln",
+        "ocd-division/country:us/state:ne/cd:1",
+        "ocd-division/country:us/state:ne",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:ne/sldl:28",
+        "ocd-division/country:us/state:ne/county:lancaster",
+        "ocd-division/country:us/state:ne/sldu:28"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ane/2026-11-03?street=1445+K+St&city=Lincoln&state=NE&zip=68508",
+        "raceCount": 27,
+        "measureCount": 10,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ne-turbovote.html.gz",
+        "renderedSourceSha256": "5df5a94208f9c6046468e6b2b6f5efd27e4c4f30c4dedc6274a4136107de421b",
+        "capture": "data/ballot/evidence/bl02-addresses/ne-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Nebraska",
+            "sourceContestId": "co_c72173952e1d00598a48c356fac548b008df1a96",
+            "heldContestId": "ne-sos-2026-general-for-united-states-senator",
+            "heldTitle": "United States Senator",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Pete Ricketts",
+              "Chuck Conboy",
+              "Mike Marvin",
+              "Robin Richards",
+              "Dan Osborn"
+            ]
+          },
+          {
+            "title": "U.S. House Nebraska District 1",
+            "sourceContestId": "co_5b700f10918f1e6e40eee7ad5abf805ffc73078d",
+            "heldContestId": "ne-sos-2026-general-for-representative-in-congress-district-1",
+            "heldTitle": "Representative in Congress — District 01",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Mike Flood",
+              "Christopher Backemeyer",
+              "Dan Hartong",
+              "Nik Sandman"
+            ]
+          },
+          {
+            "title": "Governor of Nebraska",
+            "sourceContestId": "co_c8eda86da8a98fbd9e1b655111587998c0349d96",
+            "heldContestId": "ne-sos-2026-general-for-governor-and-lt-governor",
+            "heldTitle": "Governor and Lt. Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jim Pillen",
+              "Lynne Walz",
+              "Brett Lindstrom",
+              "Rick Beard"
+            ]
+          },
+          {
+            "title": "Lieutenant Governor of Nebraska",
+            "sourceContestId": "co_17ca9f5b7fa1c5977c88849b3c9ce1a43dccf3bb",
+            "heldContestId": "ne-sos-2026-general-for-governor-and-lt-governor",
+            "heldTitle": "Governor and Lt. Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Joe Kelly",
+              "Ben Steffen",
+              "Michael Picard",
+              "Keenya Barnes"
+            ]
+          },
+          {
+            "title": "Nebraska Secretary of State",
+            "sourceContestId": "co_46d16d143a9b84d1bfbaa7be01ee96cee68fccbc",
+            "heldContestId": "ne-sos-2026-general-for-secretary-of-state",
+            "heldTitle": "Secretary of State",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Sarah Slattery",
+              "Scott Petersen",
+              "Bob Krist",
+              "Paul Rumbaugh"
+            ]
+          },
+          {
+            "title": "Attorney General of Nebraska",
+            "sourceContestId": "co_7c55615c244058046b7ce927a078d0f2d900b340",
+            "heldContestId": "ne-sos-2026-general-for-attorney-general",
+            "heldTitle": "Attorney General",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Mike Hilgers",
+              "Jocelyn Brasher"
+            ]
+          },
+          {
+            "title": "Nebraska Auditor of Public Accounts",
+            "sourceContestId": "co_ea8f8b8fafeae26bfa564fd7db6ba1e497f34f0c",
+            "heldContestId": "ne-sos-2026-general-for-auditor-of-public-accounts",
+            "heldTitle": "Auditor of Public Accounts",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Mike Foley",
+              "John Knight"
+            ]
+          },
+          {
+            "title": "Nebraska Treasurer",
+            "sourceContestId": "co_701a95c200b8ebf54c6e1c323015a2b9a9098f78",
+            "heldContestId": "ne-sos-2026-general-for-state-treasurer",
+            "heldTitle": "State Treasurer",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Joey Spellerberg",
+              "Daniel Ebers"
+            ]
+          },
+          {
+            "title": "University of Nebraska Board of Regents District 1",
+            "sourceContestId": "co_d7b95dc159d008c5d0cb4655e32156c56a35b7ad",
+            "heldContestId": "ne-sos-2026-general-for-university-of-nebraska-board-of-regents-district-1",
+            "heldTitle": "University of Nebraska Board of Regents — District 01",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Brent Comstock",
+              "Jeremy Hosein"
+            ]
+          },
+          {
+            "title": "Nebraska State Senate District 28",
+            "sourceContestId": "co_ba7012500d625eca4bc79bd12284d987daf76f6e",
+            "heldContestId": "ne-sos-2026-general-for-member-of-the-legislature-district-28",
+            "heldTitle": "Member of the Legislature — District 28",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Patty Pansing Brooks",
+              "Colby Woodson"
+            ]
+          },
+          {
+            "title": "Nebraska Workers' Compensation Court Dirk Block's seat",
+            "sourceContestId": "co_e96a01a7af6762f14c2596db2188df729d529b71",
+            "heldContestId": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-dirk-v-block",
+            "heldTitle": "Judge of the Nebraska Workers' Compensation Court — Dirk V. Block",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Dirk V. Block"
+            ]
+          },
+          {
+            "title": "Nebraska Workers' Compensation Court Thomas Stine's seat",
+            "sourceContestId": "co_8cb18e95148307fcda4fa5759506201a8ab2304f",
+            "heldContestId": "ne-sos-2026-general-retention-judge-of-the-nebraska-workers-compensation-court-thomas-e-stine",
+            "heldTitle": "Judge of the Nebraska Workers' Compensation Court — Thomas E. Stine",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Thomas E. Stine"
+            ]
+          },
+          {
+            "title": "Lancaster County Assessor-Register of Deeds",
+            "sourceContestId": "co_dfb64f90edf7cda669f5dbc53db1fa0e46987fcf",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Dan Nolte",
+              "Tim Johns"
+            ]
+          },
+          {
+            "title": "Lancaster County Attorney",
+            "sourceContestId": "co_936d6dc59a64539fe5fe8ca9901343811863ac71",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Pat Condon",
+              "Randall Ritnour"
+            ]
+          },
+          {
+            "title": "Lancaster County Clerk",
+            "sourceContestId": "co_5ac97bd24d29b8f5e5c2e014f5b6b4e4841fcce5",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Matt Hansen"
+            ]
+          },
+          {
+            "title": "Lancaster County Clerk of the District Court",
+            "sourceContestId": "co_1cb112f6076652e41a2a888937a1df0ef38ba780",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Kristen Anderson",
+              "Landon Parks"
+            ]
+          },
+          {
+            "title": "Lancaster County Engineer",
+            "sourceContestId": "co_969b3cbf8b393b87750bf72ca3cc119706306068",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Pamela Dingman"
+            ]
+          },
+          {
+            "title": "Lancaster County Public Defender",
+            "sourceContestId": "co_f019c2a81e65a7418bacf973a0da44107c9a0fbb",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Kristi Egger"
+            ]
+          },
+          {
+            "title": "Lancaster County Sheriff",
+            "sourceContestId": "co_052536662a33b971838884c0a11a229a33a435ab",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Jay Pitts",
+              "Ben Houchin"
+            ]
+          },
+          {
+            "title": "Lancaster County Treasurer",
+            "sourceContestId": "co_bf906147108f53bc268f38686ffe5375a1af0093",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Rachel Garver",
+              "Jasmine Gibson"
+            ]
+          },
+          {
+            "title": "Lancaster County Board of Commissioners District 1",
+            "sourceContestId": "co_b2450aa2e477308f09d6c8a5c6b4dc417e52d1a0",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Sean Flowerday"
+            ]
+          },
+          {
+            "title": "Nebraska 3rd District Court Andrew Jacobsen's seat",
+            "sourceContestId": "co_41302fb504f53954648a0fb5f9c536da1a3195f8",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Andrew Jacobsen"
+            ]
+          },
+          {
+            "title": "Nebraska 3rd District Court Darla Ideus' seat",
+            "sourceContestId": "co_beb94681b5ac4e38c486a7b8d011129491f6be30",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Darla Ideus"
+            ]
+          },
+          {
+            "title": "Nebraska 3rd District Court Kevin McManaman's seat",
+            "sourceContestId": "co_c66b902c101163bd98c8119c3e48a8d870e76cd5",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Kevin McManaman"
+            ]
+          },
+          {
+            "title": "Nebraska 3rd District Court Matthew Mellor's seat",
+            "sourceContestId": "co_e4ac091b7cf1e22e630f9385e738af4833d93c9b",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Matthew Mellor"
+            ]
+          },
+          {
+            "title": "Nebraska 3rd Judicial District County Court Rodney Reuter's seat",
+            "sourceContestId": "co_d5780d00bd90e82472a00aa3604b0ae70c9cc47d",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Rodney Reuter"
+            ]
+          },
+          {
+            "title": "Lower Platte South Natural Resources District Subdistrict 5",
+            "sourceContestId": "co_be20250a67eabd21362c6690fc8b951f6b648775",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Suzanne Mealer"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_9f7f4847c3971e50c1fc36ef6346e8dd08b8ef09",
+            "title": "Constitutional Amendment 1",
+            "summary": "Change the legislative term limit from two consecutive four-year terms to three",
+            "heldContestId": "ne-sos-2026-general-lr19ca",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_d9be8c79b68869492c4b652b85eb5ea0e0f5b7a5",
+            "title": "Initiative Measure 440",
+            "summary": "Authorize laws to govern sports betting",
+            "heldContestId": "ne-sos-2026-general-initiative-440",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_dec72d39fd20904f85e98f3ba823280779dc3953",
+            "title": "Initiative Measure 441",
+            "summary": "Authorize online sports betting in the state and authorize the state gaming commission to adopt rules and regulations governing the gaming operators",
+            "heldContestId": "ne-sos-2026-general-initiative-441",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_3a58d5b0173122cf7fa7ca78399be7e44caa046f",
+            "title": "Initiative Measure 442",
+            "summary": "Require schools designate sports team as male, female, or co-ed and prohibit male participation on female sports teams",
+            "heldContestId": "ne-sos-2026-general-initiative-442",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_b59d1961aa27fda5744831b5d4e2c0d1c6e4bd89",
+            "title": "Question 1",
+            "summary": "Establish a volleyball sports complex economic development project and appropriate state assistance to fund it",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_20f37d6e9b15f4e1b3ba6558920b064b2894fafe",
+            "title": "Question 2",
+            "summary": "Change election dates so city elections align with statewide elections, hold elections for mayor and district council members in 2027 and 2028, and allow at-large district members to serve until 2025",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_6597fb18fbeb335b6384898fbf8cde27c7234340",
+            "title": "Question 3",
+            "summary": "Change election dates so city elections align with statewide elections beginning in 2030",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_70442c1b2f9b2f624a953e7b911c4d783ff4e307",
+            "title": "Question 4",
+            "summary": "Establish term limits of two consecutive, four-year terms for council members",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_091279ced539b6c8ec05f7b18350c472f39f2d4b",
+            "title": "Question 5",
+            "summary": "Establish term limits of three consecutive four-year terms for council members",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_9d8f85d3d8f4fc93e76052d91875ab92a2216acd",
+            "title": "Question 6",
+            "summary": "Allow citizens residing in the three-mile extraterritorial zoning jurisdiction around the city, but not within the city's limits, to vote in city elections",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          }
+        ]
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.815689+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ne-google.json",
+        "sha256": "28b90561fe5835f7e532ec54a292a00469c7b3cc459e12273592123fbee29106",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [
+        {
+          "title": "Lancaster County Assessor-Register of Deeds",
+          "sourceContestId": "co_dfb64f90edf7cda669f5dbc53db1fa0e46987fcf",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Dan Nolte",
+            "Tim Johns"
+          ]
+        },
+        {
+          "title": "Lancaster County Attorney",
+          "sourceContestId": "co_936d6dc59a64539fe5fe8ca9901343811863ac71",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Pat Condon",
+            "Randall Ritnour"
+          ]
+        },
+        {
+          "title": "Lancaster County Clerk",
+          "sourceContestId": "co_5ac97bd24d29b8f5e5c2e014f5b6b4e4841fcce5",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Matt Hansen"
+          ]
+        },
+        {
+          "title": "Lancaster County Clerk of the District Court",
+          "sourceContestId": "co_1cb112f6076652e41a2a888937a1df0ef38ba780",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Kristen Anderson",
+            "Landon Parks"
+          ]
+        },
+        {
+          "title": "Lancaster County Engineer",
+          "sourceContestId": "co_969b3cbf8b393b87750bf72ca3cc119706306068",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Pamela Dingman"
+          ]
+        },
+        {
+          "title": "Lancaster County Public Defender",
+          "sourceContestId": "co_f019c2a81e65a7418bacf973a0da44107c9a0fbb",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Kristi Egger"
+          ]
+        },
+        {
+          "title": "Lancaster County Sheriff",
+          "sourceContestId": "co_052536662a33b971838884c0a11a229a33a435ab",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Jay Pitts",
+            "Ben Houchin"
+          ]
+        },
+        {
+          "title": "Lancaster County Treasurer",
+          "sourceContestId": "co_bf906147108f53bc268f38686ffe5375a1af0093",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Rachel Garver",
+            "Jasmine Gibson"
+          ]
+        },
+        {
+          "title": "Lancaster County Board of Commissioners District 1",
+          "sourceContestId": "co_b2450aa2e477308f09d6c8a5c6b4dc417e52d1a0",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Sean Flowerday"
+          ]
+        },
+        {
+          "title": "Nebraska 3rd District Court Andrew Jacobsen's seat",
+          "sourceContestId": "co_41302fb504f53954648a0fb5f9c536da1a3195f8",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Andrew Jacobsen"
+          ]
+        },
+        {
+          "title": "Nebraska 3rd District Court Darla Ideus' seat",
+          "sourceContestId": "co_beb94681b5ac4e38c486a7b8d011129491f6be30",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Darla Ideus"
+          ]
+        },
+        {
+          "title": "Nebraska 3rd District Court Kevin McManaman's seat",
+          "sourceContestId": "co_c66b902c101163bd98c8119c3e48a8d870e76cd5",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Kevin McManaman"
+          ]
+        },
+        {
+          "title": "Nebraska 3rd District Court Matthew Mellor's seat",
+          "sourceContestId": "co_e4ac091b7cf1e22e630f9385e738af4833d93c9b",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Matthew Mellor"
+          ]
+        },
+        {
+          "title": "Nebraska 3rd Judicial District County Court Rodney Reuter's seat",
+          "sourceContestId": "co_d5780d00bd90e82472a00aa3604b0ae70c9cc47d",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Rodney Reuter"
+          ]
+        },
+        {
+          "title": "Lower Platte South Natural Resources District Subdistrict 5",
+          "sourceContestId": "co_be20250a67eabd21362c6690fc8b951f6b648775",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Suzanne Mealer"
+          ]
+        },
+        {
+          "id": "bm_b59d1961aa27fda5744831b5d4e2c0d1c6e4bd89",
+          "title": "Question 1",
+          "summary": "Establish a volleyball sports complex economic development project and appropriate state assistance to fund it",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_20f37d6e9b15f4e1b3ba6558920b064b2894fafe",
+          "title": "Question 2",
+          "summary": "Change election dates so city elections align with statewide elections, hold elections for mayor and district council members in 2027 and 2028, and allow at-large district members to serve until 2025",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_6597fb18fbeb335b6384898fbf8cde27c7234340",
+          "title": "Question 3",
+          "summary": "Change election dates so city elections align with statewide elections beginning in 2030",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_70442c1b2f9b2f624a953e7b911c4d783ff4e307",
+          "title": "Question 4",
+          "summary": "Establish term limits of two consecutive, four-year terms for council members",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_091279ced539b6c8ec05f7b18350c472f39f2d4b",
+          "title": "Question 5",
+          "summary": "Establish term limits of three consecutive four-year terms for council members",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_9d8f85d3d8f4fc93e76052d91875ab92a2216acd",
+          "title": "Question 6",
+          "summary": "Allow citizens residing in the three-mile extraterritorial zoning jurisdiction around the city, but not within the city's limits, to vote in city elections",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        }
+      ],
+      "jurisdictionChecks": [],
+      "notes": []
+    },
+    {
+      "state": "UT",
+      "address": "350 N State St, Salt Lake City, UT 84114",
+      "checkedAt": "2026-10-23T08:05:07.790Z",
+      "heldInput": "data/ballot/2026-general/ut.json",
+      "heldInputSha256": "bac54691ea4651ea0a7eb8438ab56786cc2213406d0e857bcdabe4242c7089dd",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:ut/place:salt_lake_city",
+        "ocd-division/country:us/state:ut",
+        "ocd-division/country:us/state:ut/sldl:22",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:ut/sldu:8",
+        "ocd-division/country:us/state:ut/county:salt_lake",
+        "ocd-division/country:us/state:ut/cd:1"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aut/2026-11-03?street=350+N+State+St&city=Salt+Lake+City&state=UT&zip=84114",
+        "raceCount": 10,
+        "measureCount": 2,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ut-turbovote.html.gz",
+        "renderedSourceSha256": "f89eda261eb04c083f06bb7d8174016c04d23f9b30964dbbe5c34c447d511313",
+        "capture": "data/ballot/evidence/bl02-addresses/ut-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. House Utah District 1",
+            "sourceContestId": "co_19a99a8b132881f63462c5def7e80a7de8ada564",
+            "heldContestId": "ut-ltgov-2026-cd-1",
+            "heldTitle": "U.S. House of Representatives District 1",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Ben McAdams",
+              "Riley Owen",
+              "Jesse West",
+              "Elias Montgomery",
+              "Bobby Darvish"
+            ]
+          },
+          {
+            "title": "Utah State Board of Education District 4",
+            "sourceContestId": "co_b0c2384fa74b0cf5a857af6a121188f38390ce4d",
+            "heldContestId": "ut-ltgov-2026-sbe-4",
+            "heldTitle": "Utah State Board of Education District 4",
+            "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+            "sourceCandidates": [
+              "LeAnn Wood"
+            ]
+          },
+          {
+            "title": "Utah House of Representatives District 22",
+            "sourceContestId": "co_e6ac6f1f048d8c61f9da3cb34d5546ecc4352789",
+            "heldContestId": "ut-ltgov-2026-sldl-22",
+            "heldTitle": "Utah House of Representatives District 22",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jen Dailey-Provost",
+              "Char Varga"
+            ]
+          },
+          {
+            "title": "Utah Supreme Court Jill Pohlman's seat",
+            "sourceContestId": "co_06f766b83185dff45ed9fbf761354cfc0179792a",
+            "heldContestId": "ut-ltgov-2026-retention-jill-m-pohlman",
+            "heldTitle": "Justice of the Supreme Court of Utah retention: JILL M. POHLMAN",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jill Pohlman"
+            ]
+          },
+          {
+            "title": "Utah Court of Appeals Amy Oliver's seat",
+            "sourceContestId": "co_7165d4c1a175d88fd8f4949e2fe8aab65e3d27d8",
+            "heldContestId": "ut-ltgov-2026-retention-amy-jo-oliver",
+            "heldTitle": "Judge of the Court of Appeals of Utah retention: AMY JO OLIVER",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Amy Oliver"
+            ]
+          },
+          {
+            "title": "Utah Court of Appeals David Mortensen's seat",
+            "sourceContestId": "co_8d46da4b574d55204c12b966ec7b116889fb011f",
+            "heldContestId": "ut-ltgov-2026-retention-david-ned-mortensen",
+            "heldTitle": "Judge of the Court of Appeals of Utah retention: DAVID NED MORTENSEN",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "David N. Mortensen"
+            ]
+          },
+          {
+            "title": "Utah Court of Appeals Gregory Orme's seat",
+            "sourceContestId": "co_b0c322060be54e7350c361418d07f60352d5b316",
+            "heldContestId": "ut-ltgov-2026-retention-gregory-keith-orme",
+            "heldTitle": "Judge of the Court of Appeals of Utah retention: GREGORY KEITH ORME",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Gregory Orme"
+            ]
+          },
+          {
+            "title": "Utah Court of Appeals John Luthy's seat",
+            "sourceContestId": "co_645550761c1c3da86e9a05e015dc3e294f9019dd",
+            "heldContestId": "ut-ltgov-2026-retention-john-david-luthy",
+            "heldTitle": "Judge of the Court of Appeals of Utah retention: JOHN DAVID LUTHY",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "John Luthy"
+            ]
+          },
+          {
+            "title": "Utah Court of Appeals Michele Christiansen's seat",
+            "sourceContestId": "co_259a31e73df352cbb06a914aba5909008bb859e3",
+            "heldContestId": "ut-ltgov-2026-retention-michele-m-christiansen-forster",
+            "heldTitle": "Judge of the Court of Appeals of Utah retention: MICHELE M. CHRISTIANSEN FORSTER",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Michele Christiansen"
+            ]
+          },
+          {
+            "title": "Utah Court of Appeals Ryan Harris' seat",
+            "sourceContestId": "co_bf1c035e384ae0c50948ddfcd83a2aba1917c5f3",
+            "heldContestId": "ut-ltgov-2026-retention-ryan-m-harris",
+            "heldTitle": "Judge of the Court of Appeals of Utah retention: RYAN M. HARRIS",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Ryan M. Harris"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_7eaed2461cd629fa9334cd3cb88f4b68d4e4af4e",
+            "title": "Constitutional Amendment A",
+            "summary": "Require that constitutional amendments appearing on the ballot must be published for a period of 60 days",
+            "heldContestId": "ut-ltgov-2026-amendment-a",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_8d549d23b7d4ce988b3b9a506302ee3e7f68ecf2",
+            "title": "Constitutional Amendment B",
+            "summary": "Require a supermajority requirement of 60% by voters for citizen-initiated ballot measures that create new taxes, increase existing tax rates, or for a property tax",
+            "heldContestId": "ut-ltgov-2026-amendment-b",
+            "status": "HELD_AND_SELECTED"
+          }
+        ]
+      },
+      "google": {
+        "status": "CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.821437+00:00",
+        "electionId": "12000",
+        "contestCount": 29,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ut-google.json",
+        "sha256": "c67521339969705701cbd766b609d7782331252c48d725cd32fb104c73326ffc",
+        "missing": [
+          {
+            "sourceIndex": 3,
+            "title": "County Council District 1",
+            "district": {
+              "name": "County Council District 1",
+              "id": "1"
+            },
+            "status": "NOT_HELD",
+            "candidates": [
+              "CASEY POE",
+              "JIRO JOHNSON"
+            ]
+          },
+          {
+            "sourceIndex": 8,
+            "title": "State School Board District 4 (Multi-County)",
+            "district": {
+              "name": "State School Board District 4",
+              "id": "4"
+            },
+            "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+            "heldContestId": "ut-ltgov-2026-sbe-4"
+          },
+          {
+            "sourceIndex": 9,
+            "title": "Salt Lake School Board District 3",
+            "district": {
+              "name": "Salt Lake School Board District 3",
+              "id": "3"
+            },
+            "status": "NOT_HELD",
+            "candidates": [
+              "JARED WRIGHT",
+              "ASHLEY ANDERSON"
+            ]
+          }
+        ],
+        "unidentifiableContests": [
+          {
+            "sourceIndex": 10,
+            "district": {
+              "name": "Supreme Court"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 11,
+            "district": {
+              "name": "Court of Appeals"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 12,
+            "district": {
+              "name": "Court of Appeals"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 13,
+            "district": {
+              "name": "Court of Appeals"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 14,
+            "district": {
+              "name": "Court of Appeals"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 15,
+            "district": {
+              "name": "Court of Appeals"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 16,
+            "district": {
+              "name": "Court of Appeals"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 17,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 18,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 19,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 20,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 21,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 22,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 23,
+            "district": {
+              "name": "Third District"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 24,
+            "district": {
+              "name": "Justice Court Alta"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          },
+          {
+            "sourceIndex": 25,
+            "district": {
+              "name": "Justice Court Salt Lake City"
+            },
+            "reason": "Google supplied no office, judge name, referendum title or text; the contest cannot be identified for a race-level comparison."
+          }
+        ],
+        "note": null
+      },
+      "remaining": [
+        {
+          "title": "Utah State Board of Education District 4",
+          "sourceContestId": "co_b0c2384fa74b0cf5a857af6a121188f38390ce4d",
+          "heldContestId": "ut-ltgov-2026-sbe-4",
+          "heldTitle": "Utah State Board of Education District 4",
+          "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+          "sourceCandidates": [
+            "LeAnn Wood"
+          ]
+        }
+      ],
+      "jurisdictionChecks": [],
+      "notes": [
+        "Google supplies16 unnamed judicial YES/NO contests, including an Alta justice court at the Salt Lake City address; identities and electoral applicability need official confirmation. TurboVote supplies no local races here. The7 held Third District retentions are additional held coverage."
+      ]
+    },
+    {
+      "state": "ME",
+      "address": "210 State St, Augusta, ME 04330",
+      "checkedAt": "2026-10-23T08:05:09.884Z",
+      "heldInput": "data/ballot/2026-general/me.json",
+      "heldInputSha256": "8b80ed8a2c5927219265deff5d23b378fa496ce49fc88e7af752fe1ddb5fb223",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:me/cd:2",
+        "ocd-division/country:us/state:me",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:me/sldl:59",
+        "ocd-division/country:us/state:me/sldu:15",
+        "ocd-division/country:us/state:me/place:augusta",
+        "ocd-division/country:us/state:me/county:kennebec"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ame/2026-11-03?street=210+State+St&city=Augusta&state=ME&zip=04330",
+        "raceCount": 6,
+        "measureCount": 3,
+        "savedSource": "data/ballot/evidence/bl02-addresses/me-turbovote.html.gz",
+        "renderedSourceSha256": "849c19144ebd272010c8c26a7f654c61afe019d20c183351649da969c6aa023e",
+        "capture": "data/ballot/evidence/bl02-addresses/me-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Maine",
+            "sourceContestId": "co_0a097912df2df977909172ac1869a433b514d2c5",
+            "heldContestId": "me-sos-2026-us",
+            "heldTitle": "U.S. Senate",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Susan Collins",
+              "Troy Dale Jackson",
+              "Sigrid Ann Olson",
+              "Ashley Webb",
+              "Joseph Steinberger",
+              "Gina Oswald",
+              "Brent Andrews",
+              "Michael Turcotte"
+            ]
+          },
+          {
+            "title": "U.S. House Maine District 2",
+            "sourceContestId": "co_d7136d87005c009fbfd26d84ca719ceb9a305523",
+            "heldContestId": "me-sos-2026-cg-2",
+            "heldTitle": "U.S. House of Representatives District 2",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Matthew Dunlap",
+              "Paul LePage",
+              "Gregory Ward"
+            ]
+          },
+          {
+            "title": "Governor of Maine",
+            "sourceContestId": "co_2451970152d2f3d723a62d33710c36ce6850fddf",
+            "heldContestId": "me-sos-2026-gov",
+            "heldTitle": "Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Hannah Pingree",
+              "Bobby Charles",
+              "Richard Bennett",
+              "Randy Wilcox",
+              "John Glowa"
+            ]
+          },
+          {
+            "title": "Maine State Senate District 15",
+            "sourceContestId": "co_7dcd0670bf6640a5d1721720f3857593c4800468",
+            "heldContestId": "me-sos-2026-ss-15",
+            "heldTitle": "State Senate District 15",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Amanda Heath",
+              "Kati McCormick"
+            ]
+          },
+          {
+            "title": "Maine House of Representatives District 59",
+            "sourceContestId": "co_e3cf39c286c96466043018115cdeed2146a7d506",
+            "heldContestId": "me-sos-2026-sr-59",
+            "heldTitle": "State House of Representatives District 59",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Katrina Couch Ray-Saulis",
+              "John Reny"
+            ]
+          },
+          {
+            "title": "Augusta City Council, At-large",
+            "sourceContestId": "co_c192cf545a1d099c45d2023c4e4db70bd2aa48ed",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Daniel Burns",
+              "Saunders Nash Callahan"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_7a6a44ebf209839aefe8c37718a3581e1319e6f6",
+            "title": "Question 1",
+            "summary": "Authorize up to $7,370,000 in bonds for city facilities, Civic Center equipment and a mechanical study, a replacement fire department rescue vehicle, and street and sidewalk improvements",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_0b7b56ec833958cd480571937a987ecfa2f78e47",
+            "title": "Question 2",
+            "summary": "Authorize up to $53,571,590 in bonds to renovate approximately 48,000 square feet of Farrington Elementary School and construct and equip an approximately 33,000-square-foot expansion",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          },
+          {
+            "id": "bm_726b099b01cad53076f2f0146834fe52ef5852e6",
+            "title": "Question 3",
+            "summary": "Regulate mobile home park lot rents and fees, generally limiting annual increases for lots at or below an affordability threshold to the lesser of inflation or 3%, and creating a Rent Stabilization Board to review increases requiring approval",
+            "heldContestId": null,
+            "status": "NOT_HELD"
+          }
+        ]
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.845309+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/me-google.json",
+        "sha256": "8087710b19e330cfb91a0b85373a82552ba76bed59bb94fdc73a7b95a4fc6e54",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [
+        {
+          "title": "Augusta City Council, At-large",
+          "sourceContestId": "co_c192cf545a1d099c45d2023c4e4db70bd2aa48ed",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Daniel Burns",
+            "Saunders Nash Callahan"
+          ]
+        },
+        {
+          "id": "bm_7a6a44ebf209839aefe8c37718a3581e1319e6f6",
+          "title": "Question 1",
+          "summary": "Authorize up to $7,370,000 in bonds for city facilities, Civic Center equipment and a mechanical study, a replacement fire department rescue vehicle, and street and sidewalk improvements",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_0b7b56ec833958cd480571937a987ecfa2f78e47",
+          "title": "Question 2",
+          "summary": "Authorize up to $53,571,590 in bonds to renovate approximately 48,000 square feet of Farrington Elementary School and construct and equip an approximately 33,000-square-foot expansion",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        },
+        {
+          "id": "bm_726b099b01cad53076f2f0146834fe52ef5852e6",
+          "title": "Question 3",
+          "summary": "Regulate mobile home park lot rents and fees, generally limiting annual increases for lots at or below an affordability threshold to the lesser of inflation or 3%, and creating a Rent Stabilization Board to review increases requiring approval",
+          "heldContestId": null,
+          "status": "NOT_HELD"
+        }
+      ],
+      "jurisdictionChecks": [],
+      "notes": []
+    },
+    {
+      "state": "OR",
+      "address": "900 Court St NE, Salem, OR 97301",
+      "checkedAt": "2026-10-23T08:05:10.399Z",
+      "heldInput": "data/ballot/2026-general/or.json",
+      "heldInputSha256": "b49a3c17433cd092c0ba46fb10c3d850437c4915619a7cd4227b4991141b9979",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:or/sldl:21",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:or/place:salem",
+        "ocd-division/country:us/state:or/place:salem/ward:1",
+        "ocd-division/country:us/state:or",
+        "ocd-division/country:us/state:or/circuit_court:3",
+        "ocd-division/country:us/state:or/county:marion/school_district:salem-keizer_sd_24j",
+        "ocd-division/country:us/state:or/cd:6",
+        "ocd-division/country:us/state:or/county:marion",
+        "ocd-division/country:us/state:or/sldu:11"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aor/2026-11-03?street=900+Court+St+NE&city=Salem&state=OR&zip=97301",
+        "raceCount": 6,
+        "measureCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/or-turbovote.html.gz",
+        "renderedSourceSha256": "5276ea6b8d2372df52b06451b04af9d3f0be1ed9969146efe40dcc8f19c163e2",
+        "capture": "data/ballot/evidence/bl02-addresses/or-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Oregon",
+            "sourceContestId": "co_918e84e89461b5dea0192faea0b0d07b7ea95ba5",
+            "heldContestId": "ballot-or-2026:us-senate",
+            "heldTitle": "US Senator",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jeff Merkley",
+              "David Brock Smith",
+              "Gary Dye",
+              "Chris Henry"
+            ]
+          },
+          {
+            "title": "U.S. House Oregon District 6",
+            "sourceContestId": "co_989c5e2dd0d2779db94c31936d8a75f1e3cdb4b2",
+            "heldContestId": "ballot-or-2026:us-house-6",
+            "heldTitle": "US Representative, 6th District",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Andrea Salinas",
+              "David Russ"
+            ]
+          },
+          {
+            "title": "Governor of Oregon",
+            "sourceContestId": "co_ce3010e23e0cb942888579a8f7e0375ed225b2b3",
+            "heldContestId": "ballot-or-2026:governor",
+            "heldTitle": "Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Tina Kotek",
+              "Christine Drazan",
+              "Brett Smith"
+            ]
+          },
+          {
+            "title": "Oregon State Senate District 11",
+            "sourceContestId": "co_bcdba80ccf6dea55bdc4d578aab52beea2dad0da",
+            "heldContestId": "ballot-or-2026:state-senate-11",
+            "heldTitle": "State Senator, 11th District",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Virginia Stapleton",
+              "Tracy Cramer"
+            ]
+          },
+          {
+            "title": "Oregon House of Representatives District 21",
+            "sourceContestId": "co_95d00299a2618ab215c860aff7e08e5c6323eb34",
+            "heldContestId": "ballot-or-2026:state-house-21",
+            "heldTitle": "State Representative, 21st District",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kevin Mannix",
+              "Michael Welsh"
+            ]
+          },
+          {
+            "title": "Mayor of Salem",
+            "sourceContestId": "co_48e6611e3daa76c964adf3bf7d211c2ff6c609fb",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Vanessa Nordyke"
+            ]
+          }
+        ],
+        "measures": []
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.853506+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/or-google.json",
+        "sha256": "6390ac61940d629f14e1dd8f372e4fa617c5c62ad9579454ef6023e74ad4a796",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [
+        {
+          "title": "Mayor of Salem",
+          "sourceContestId": "co_48e6611e3daa76c964adf3bf7d211c2ff6c609fb",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Vanessa Nordyke"
+          ]
+        }
+      ],
+      "jurisdictionChecks": [],
+      "notes": []
+    },
+    {
+      "state": "MA",
+      "address": "24 Beacon St, Boston, MA 02133",
+      "checkedAt": "2026-10-23T08:05:12.106Z",
+      "heldInput": "data/ballot/2026-general/ma.json",
+      "heldInputSha256": "b1e8669e7dc57f2fb3459ca7a72ca22bd0bea11fd2ebacd4567077bda99d7f4f",
+      "comparisonBasis": "Current state ballot file and ordinary ballotForDivisions using the actual basic address OCD divisions returned by TurboVote. This is a read-only held-data comparison, not production-page verification; source-listed gaps await official jurisdiction/roster verification before acquisition or publication.",
+      "addressDivisions": [
+        "ocd-division/country:us/state:ma/sldl:8th_suffolk",
+        "ocd-division/country:us",
+        "ocd-division/country:us/state:ma/county:suffolk",
+        "ocd-division/country:us/state:ma/sldu:3rd_suffolk",
+        "ocd-division/country:us/state:ma/place:boston",
+        "ocd-division/country:us/state:ma",
+        "ocd-division/country:us/state:ma/cd:8"
+      ],
+      "turbovote": {
+        "status": "COMPARED",
+        "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ama/2026-11-03?street=24+Beacon+St&city=Boston&state=MA&zip=02133",
+        "raceCount": 12,
+        "measureCount": 9,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ma-turbovote.html.gz",
+        "renderedSourceSha256": "54f7866494671dac815dcd5fcda3fc396593e77f1d59f3c02f3d46a396d77122",
+        "capture": "data/ballot/evidence/bl02-addresses/ma-turbovote.capture.json",
+        "races": [
+          {
+            "title": "U.S. Senate Massachusetts",
+            "sourceContestId": "co_840beb12d8f5db2ad5d109539bd4a2bbc2be7a0d",
+            "heldContestId": "ma-2026-11-03:us-senate",
+            "heldTitle": "Senator in Congress",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Edward J. Markey",
+              "John Deaton",
+              "Joseph Tache",
+              "Shiva Ayyadurai"
+            ]
+          },
+          {
+            "title": "U.S. House Massachusetts District 8",
+            "sourceContestId": "co_ca485a6085cff1ffbfb141aeaa19da8defac6c22",
+            "heldContestId": "ma-2026-11-03:us-house-8",
+            "heldTitle": "Representative in Congress – Eighth District",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Stephen Lynch",
+              "Robert Burke",
+              "Rasheed Walters"
+            ]
+          },
+          {
+            "title": "Governor of Massachusetts",
+            "sourceContestId": "co_2c32dfc9c5f26bdd52fb2afb88d75c351234d82f",
+            "heldContestId": "ma-2026-11-03:governor-lieutenant-governor",
+            "heldTitle": "Governor & Lieutenant Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Maura Healey",
+              "Michael Minogue",
+              "Andrea James"
+            ]
+          },
+          {
+            "title": "Lieutenant Governor of Massachusetts",
+            "sourceContestId": "co_bff50e479875390fa3f82042469db398501ca589",
+            "heldContestId": "ma-2026-11-03:governor-lieutenant-governor",
+            "heldTitle": "Governor & Lieutenant Governor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Kim Driscoll",
+              "Shawn Oliver",
+              "Kayla Kittredge"
+            ]
+          },
+          {
+            "title": "Massachusetts Secretary of State",
+            "sourceContestId": "co_0241ce579dc8bdb49ce910596a5988993c709f63",
+            "heldContestId": "ma-2026-11-03:secretary-of-state",
+            "heldTitle": "Secretary of State",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "William Galvin",
+              "Anne Brensley"
+            ]
+          },
+          {
+            "title": "Attorney General of Massachusetts",
+            "sourceContestId": "co_3d50951e25c8afd59fa2a2fe3a57e6bc50805eb1",
+            "heldContestId": "ma-2026-11-03:attorney-general",
+            "heldTitle": "Attorney General",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Andrea Campbell",
+              "Michael Walsh"
+            ]
+          },
+          {
+            "title": "Massachusetts Auditor of the Commonwealth",
+            "sourceContestId": "co_cc3a1be798402e3626cc3f0505b2acfe444e39de",
+            "heldContestId": "ma-2026-11-03:auditor",
+            "heldTitle": "Auditor",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Diana DiZoglio",
+              "Al Ozonoff"
+            ]
+          },
+          {
+            "title": "Massachusetts Governor's Council District 6",
+            "sourceContestId": "co_87164c6c3c8f0c3cc254d519547d241ca60a466c",
+            "heldContestId": "ma-2026-11-03:councillor-6",
+            "heldTitle": "Councillor – Sixth District",
+            "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+            "sourceCandidates": [
+              "Terrence Kennedy"
+            ]
+          },
+          {
+            "title": "Massachusetts Treasurer",
+            "sourceContestId": "co_a956fa9be1359e23216c8a2959afa758243f332c",
+            "heldContestId": "ma-2026-11-03:treasurer",
+            "heldTitle": "Treasurer",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Deb Goldberg",
+              "Elizabeth Dionne"
+            ]
+          },
+          {
+            "title": "Massachusetts State Senate 3rd Suffolk District",
+            "sourceContestId": "co_d0ad974d59c11436475c4d7b897c562f710fbf7c",
+            "heldContestId": "ma-2026-11-03:sldu-3rd_suffolk",
+            "heldTitle": "Senator in General Court – Third Suffolk District",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Lydia Edwards"
+            ]
+          },
+          {
+            "title": "Massachusetts House of Representatives 8th Suffolk District",
+            "sourceContestId": "co_00ba9812cc11b570ae778c27d338ccf0a78d9dcc",
+            "heldContestId": "ma-2026-11-03:sldl-8th_suffolk",
+            "heldTitle": "Representative in General Court – Eighth Suffolk District",
+            "status": "HELD_AND_SELECTED",
+            "sourceCandidates": [
+              "Jay Livingstone"
+            ]
+          },
+          {
+            "title": "Suffolk County Register of Probate",
+            "sourceContestId": "co_e57e7a75a344f0717aa0611f34aec26eb269bd30",
+            "heldContestId": null,
+            "heldTitle": null,
+            "status": "NOT_HELD",
+            "sourceCandidates": [
+              "Stephanie L. Everett"
+            ]
+          }
+        ],
+        "measures": [
+          {
+            "id": "bm_c3270159e76ab391db4c0b1e4bbe60378f0957f9",
+            "title": "Question 1",
+            "summary": "Make records held by the state legislature and the governor's office public records",
+            "heldContestId": "ma-2026-11-03:question-1",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_ed54f58b3cdbccc47f6a70a7c9ec02977ceeaa75",
+            "title": "Question 2",
+            "summary": "Permit employees of the Committee for Public Counsel Services (CPCS) to participate in collective bargaining practices",
+            "heldContestId": "ma-2026-11-03:question-2",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_6025a3efe2e6dcc956b8cc26ca0d19841e6e9add",
+            "title": "Question 3",
+            "summary": "Eliminate political party primaries for state elections and create a single primary where candidates are listed regardless of their political party",
+            "heldContestId": "ma-2026-11-03:question-3",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_658c71af0ea84d9466872d18e5962841b66ca8b6",
+            "title": "Question 4",
+            "summary": "Provide for same-day voter registration",
+            "heldContestId": "ma-2026-11-03:question-4",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_03e962ac180bc869ac8c28898c0a7a33f6041074",
+            "title": "Question 5",
+            "summary": "Change the limit of how much revenue the state can collect in a given year",
+            "heldContestId": "ma-2026-11-03:question-5",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_dd50d86a66c2e1e6ebfa841d932267673ed9b302",
+            "title": "Question 6",
+            "summary": "Create a fund for state money, titled the Nature for All Fund, that would be used to further efforts of nature conservation",
+            "heldContestId": "ma-2026-11-03:question-6",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_4013262283ce41753a3e9929634ede3be015a901",
+            "title": "Question 7",
+            "summary": "Require cities and towns to allow single-family homes on residentially zoned lots that meet minimum standards of at least 5,000 square feet in area",
+            "heldContestId": "ma-2026-11-03:question-7",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_2375bff7f4e9c0501440d4b200476452ef0c52c7",
+            "title": "Question 8",
+            "summary": "Repeal laws that permit the sale of recreational marijuana and the personal cultivation of cannabis in homes",
+            "heldContestId": "ma-2026-11-03:question-8",
+            "status": "HELD_AND_SELECTED"
+          },
+          {
+            "id": "bm_43ce6f864b0f253f105af9ed44093b90de8cd02f",
+            "title": "Question 9",
+            "summary": "Uphold the legislation, An Act Modernizing Firearm Laws (H. 4885), passed in 2024",
+            "heldContestId": "ma-2026-11-03:question-9",
+            "status": "HELD_AND_SELECTED"
+          }
+        ]
+      },
+      "google": {
+        "status": "NO_CONTESTS_RETURNED",
+        "httpStatus": 200,
+        "checkedAt": "2026-10-23T07:59:03.875795+00:00",
+        "electionId": "12000",
+        "contestCount": 0,
+        "savedSource": "data/ballot/evidence/bl02-addresses/ma-google.json",
+        "sha256": "bfdbc5d2774e75d6df88e4623bf5ae080a706e1c84d7b24f39abd64586956f1d",
+        "missing": [],
+        "unidentifiableContests": [],
+        "note": "HTTP200 contains no contests. It does not establish an empty ballot or completeness."
+      },
+      "remaining": [
+        {
+          "title": "Massachusetts Governor's Council District 6",
+          "sourceContestId": "co_87164c6c3c8f0c3cc254d519547d241ca60a466c",
+          "heldContestId": "ma-2026-11-03:councillor-6",
+          "heldTitle": "Councillor – Sixth District",
+          "status": "HELD_POINT_OR_DISTRICT_CONNECTION_NEEDED",
+          "sourceCandidates": [
+            "Terrence Kennedy"
+          ]
+        },
+        {
+          "title": "Suffolk County Register of Probate",
+          "sourceContestId": "co_e57e7a75a344f0717aa0611f34aec26eb269bd30",
+          "heldContestId": null,
+          "heldTitle": null,
+          "status": "NOT_HELD",
+          "sourceCandidates": [
+            "Stephanie L. Everett"
+          ]
+        }
+      ],
+      "jurisdictionChecks": [],
+      "notes": [
+        "Boston is split among Council districts. A whole-city membership would be incorrect; this address requires its ward/precinct or point boundary to reach Council6."
+      ]
+    }
+  ],
+  "sourceReplay": {
+    "turbovoteRenderedHtmlHashes": "10/10 matched",
+    "turbovoteAdvertisedRaceCounts": "10/10 matched",
+    "turbovoteExtractedRaceAndCandidateText": "10/10 present in saved source DOM",
+    "googleResponseHashesAndContestCounts": "10/10 matched"
+  },
+  "followUp": {
+    "owner": "Ballot acquisition",
+    "nextAction": "Use each remaining source-listed race or question as a lead; obtain the official address-style sample and district boundary, preserve the source, fill missing records or district memberships, and replay through the normal reader. Check jurisdiction leads before acquiring or showing them for the tested address."
+  }
+}

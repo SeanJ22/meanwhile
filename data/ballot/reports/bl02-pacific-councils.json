@@ -1,0 +1,252 @@
+{
+  "checkedAt": "2026-10-23T08:19:18.831406+00:00",
+  "states": {
+    "HI": {
+      "districts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:hi/county:hawaii/council_district:4",
+          "wholePlaces": [
+            {
+              "place": "Black Sands",
+              "geoid": "1502832",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:black_sands"
+            },
+            {
+              "place": "Kamaili",
+              "geoid": "1527350",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:kamaili"
+            },
+            {
+              "place": "Leilani Estates",
+              "geoid": "1544562",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:leilani_estates"
+            },
+            {
+              "place": "Nanawale Estates",
+              "geoid": "1553975",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:nanawale_estates"
+            },
+            {
+              "place": "Pahoa",
+              "geoid": "1559900",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:pahoa"
+            },
+            {
+              "place": "Seaview",
+              "geoid": "1569238",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:seaview"
+            }
+          ],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10/query?where=shortname+IN+%28%27C4%27%2C%27C5%27%2C%27C6%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:hi/county:hawaii/council_district:5",
+          "wholePlaces": [
+            {
+              "place": "Kurtistown",
+              "geoid": "1542800",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:kurtistown"
+            },
+            {
+              "place": "Tiki Gardens",
+              "geoid": "1570280",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:tiki_gardens"
+            }
+          ],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10/query?where=shortname+IN+%28%27C4%27%2C%27C5%27%2C%27C6%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:hi/county:hawaii/council_district:6",
+          "wholePlaces": [
+            {
+              "place": "Discovery Harbour",
+              "geoid": "1505900",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:discovery_harbour"
+            },
+            {
+              "place": "Hawaiian Ocean View",
+              "geoid": "1512530",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:hawaiian_ocean_view"
+            },
+            {
+              "place": "Naalehu",
+              "geoid": "1553600",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:naalehu"
+            },
+            {
+              "place": "Pahala",
+              "geoid": "1559750",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:pahala"
+            },
+            {
+              "place": "Volcano Golf Course",
+              "geoid": "1572468",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:volcano_golf_course"
+            },
+            {
+              "place": "Waiohinu",
+              "geoid": "1579550",
+              "memberOcdId": "ocd-division/country:us/state:hi/place:waiohinu"
+            }
+          ],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10/query?where=shortname+IN+%28%27C4%27%2C%27C5%27%2C%27C6%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/11/query?where=distnumber+IN+%284%2C6%29&outFields=distname%2Cdistnumber&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:hi/county:honolulu/council_district:6",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/11/query?where=distnumber+IN+%284%2C6%29&outFields=distname%2Cdistnumber&returnGeometry=true&outSR=4326&f=geojson"
+        }
+      ],
+      "preparedBoundaryFile": "data/states/hi/geo/bl02-councils-15.geojson",
+      "wholePlaceMemberships": 14,
+      "splitCounties": [
+        "Hawaii",
+        "Honolulu"
+      ],
+      "wholeCountyMembershipsAdded": 0,
+      "topologyCorrections": [],
+      "boundaryOnlyDistricts": [
+        "ocd-division/country:us/state:hi/county:honolulu/council_district:4",
+        "ocd-division/country:us/state:hi/county:honolulu/council_district:6"
+      ]
+    },
+    "WA": {
+      "districts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:2",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:4",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:8",
+          "wholePlaces": [
+            {
+              "place": "Boulevard Park",
+              "geoid": "5307397",
+              "memberOcdId": "ocd-division/country:us/state:wa/place:boulevard_park"
+            },
+            {
+              "place": "White Center",
+              "geoid": "5378225",
+              "memberOcdId": "ocd-division/country:us/state:wa/place:white_center"
+            }
+          ],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:wa/county:king/council_district:6",
+          "wholePlaces": [
+            {
+              "place": "Yarrow Point",
+              "geoid": "5380150",
+              "memberOcdId": "ocd-division/country:us/state:wa/place:yarrow_point"
+            },
+            {
+              "place": "Beaux Arts Village",
+              "geoid": "5304895",
+              "memberOcdId": "ocd-division/country:us/state:wa/place:beaux_arts_village"
+            },
+            {
+              "place": "Clyde Hill",
+              "geoid": "5313365",
+              "memberOcdId": "ocd-division/country:us/state:wa/place:clyde_hill"
+            },
+            {
+              "place": "Hunts Point",
+              "geoid": "5332755",
+              "memberOcdId": "ocd-division/country:us/state:wa/place:hunts_point"
+            }
+          ],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:wa/place:seattle/council_district:5",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1/query?where=C_DISTRICT%3D5&outFields=C_DISTRICT%2CDISPLAY_NAME&outSR=4326&returnGeometry=true&f=geojson"
+        }
+      ],
+      "preparedBoundaryFile": "data/states/wa/geo/bl02-councils-53.geojson",
+      "wholePlaceMemberships": 6,
+      "splitCounties": [
+        "King"
+      ],
+      "wholeCountyMembershipsAdded": 0,
+      "topologyCorrections": [],
+      "boundaryOnlyDistricts": [
+        "ocd-division/country:us/state:wa/county:king/council_district:2",
+        "ocd-division/country:us/state:wa/county:king/council_district:4",
+        "ocd-division/country:us/state:wa/place:seattle/council_district:5"
+      ]
+    },
+    "OR": {
+      "districts": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:or/place:portland/council_district:3",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=DISTRICT+IN+%28%273%27%2C%274%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+          "wholePlaces": [],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=DISTRICT+IN+%28%273%27%2C%274%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson"
+        },
+        {
+          "districtOcdId": "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+          "wholePlaces": [
+            {
+              "place": "Maywood Park",
+              "geoid": "4146730",
+              "memberOcdId": "ocd-division/country:us/state:or/place:maywood_park"
+            }
+          ],
+          "needsExactBoundaryForOtherPlaces": true,
+          "sourceUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11/query?where=DISTRICT%3D%272%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson"
+        }
+      ],
+      "preparedBoundaryFile": "data/states/or/geo/bl02-councils-41.geojson",
+      "wholePlaceMemberships": 1,
+      "splitCounties": [
+        "Multnomah"
+      ],
+      "wholeCountyMembershipsAdded": 0,
+      "topologyCorrections": [
+        {
+          "districtOcdId": "ocd-division/country:us/state:or/place:portland/council_district:4",
+          "sourceIssue": "Hole lies outside shell[-122.615857642108 45.4626394837313]",
+          "action": "Restored ring nesting using the identical source coordinate set; no new vertices, buffering or snapping.",
+          "originalSignedArea": -0.013532442540057737,
+          "correctedArea": 0.0135324425400577
+        }
+      ],
+      "boundaryOnlyDistricts": [
+        "ocd-division/country:us/state:or/place:portland/council_district:3",
+        "ocd-division/country:us/state:or/place:portland/council_district:4"
+      ]
+    }
+  },
+  "method": "Official current council polygons and Census2025 full place polygons. Only exact complete containment becomes a ballot districtMembership. All partial electorates remain explicitly split and retain their exact boundaries for the existing reader geometry path.",
+  "lesson": "Legacy GIS endpoints may remain live with old boundaries. The Seattle2013 layer was rejected; the government catalog's November2022 adopted layer is used.",
+  "publication": "Prepared data only; serving geometry manifests are managed by the parent task. No release or production write performed here."
+}

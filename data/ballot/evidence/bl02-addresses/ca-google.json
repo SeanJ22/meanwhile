@@ -1,0 +1,47 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "120 Lake Street",
+    "addressLine": [
+      "120 Lake Street"
+    ],
+    "city": "San Francisco",
+    "state": "CA",
+    "zip": "94118"
+  },
+  "state": [
+    {
+      "name": "California",
+      "electionAdministrationBody": {
+        "name": "Secretary of State",
+        "electionInfoUrl": "https://www.sos.ca.gov/elections/",
+        "electionRegistrationUrl": "https://registertovote.ca.gov/?t=s",
+        "electionRegistrationConfirmationUrl": "https://voterstatus.sos.ca.gov",
+        "votingLocationFinderUrl": "https://www.sos.ca.gov/elections/polling-place",
+        "ballotInfoUrl": "https://voterstatus.sos.ca.gov/",
+        "electionRulesUrl": "https://www.sos.ca.gov/elections/voter-registration/vote-mail",
+        "correspondenceAddress": {
+          "line1": "1500 11th Street, 5th Floor",
+          "addressLine": [
+            "1500 11th Street, 5th Floor"
+          ],
+          "city": "Sacramento",
+          "state": "",
+          "zip": "95814"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

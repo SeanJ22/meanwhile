@@ -1,0 +1,488 @@
+{
+  "state": "NE",
+  "address": "1445 K St, Lincoln, NE 68508",
+  "checkedAt": "2026-10-23T08:05:02.884Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ane/2026-11-03?street=1445+K+St&city=Lincoln&state=NE&zip=68508",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ne-google.json",
+  "sha256": "5df5a94208f9c6046468e6b2b6f5efd27e4c4f30c4dedc6274a4136107de421b",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/ne-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/ne-turbovote.txt",
+  "elapsedMs": 3970,
+  "races": [
+    {
+      "id": "co_c72173952e1d00598a48c356fac548b008df1a96",
+      "title": "U.S. Senate Nebraska",
+      "candidates": [
+        {
+          "name": "Pete Ricketts",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Chuck Conboy",
+          "party": "America First Party Nebraska"
+        },
+        {
+          "name": "Mike Marvin",
+          "party": "Legal Marijuana Now Party"
+        },
+        {
+          "name": "Robin Richards",
+          "party": "Nebraska Working People Party"
+        },
+        {
+          "name": "Dan Osborn",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_5b700f10918f1e6e40eee7ad5abf805ffc73078d",
+      "title": "U.S. House Nebraska District 1",
+      "candidates": [
+        {
+          "name": "Mike Flood",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Christopher Backemeyer",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Dan Hartong",
+          "party": "America First Party Nebraska"
+        },
+        {
+          "name": "Nik Sandman",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_c8eda86da8a98fbd9e1b655111587998c0349d96",
+      "title": "Governor of Nebraska",
+      "candidates": [
+        {
+          "name": "Jim Pillen",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Lynne Walz",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Brett Lindstrom",
+          "party": "America First Party Nebraska"
+        },
+        {
+          "name": "Rick Beard",
+          "party": "Legal Marijuana Now Party"
+        }
+      ]
+    },
+    {
+      "id": "co_17ca9f5b7fa1c5977c88849b3c9ce1a43dccf3bb",
+      "title": "Lieutenant Governor of Nebraska",
+      "candidates": [
+        {
+          "name": "Joe Kelly",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Ben Steffen",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Michael Picard",
+          "party": "America First Party Nebraska"
+        },
+        {
+          "name": "Keenya Barnes",
+          "party": "Legal Marijuana Now Party"
+        }
+      ]
+    },
+    {
+      "id": "co_46d16d143a9b84d1bfbaa7be01ee96cee68fccbc",
+      "title": "Nebraska Secretary of State",
+      "candidates": [
+        {
+          "name": "Sarah Slattery",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Scott Petersen",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Bob Krist",
+          "party": "America First Party Nebraska"
+        },
+        {
+          "name": "Paul Rumbaugh",
+          "party": "Nebraska Working People Party"
+        }
+      ]
+    },
+    {
+      "id": "co_7c55615c244058046b7ce927a078d0f2d900b340",
+      "title": "Attorney General of Nebraska",
+      "candidates": [
+        {
+          "name": "Mike Hilgers",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Jocelyn Brasher",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_ea8f8b8fafeae26bfa564fd7db6ba1e497f34f0c",
+      "title": "Nebraska Auditor of Public Accounts",
+      "candidates": [
+        {
+          "name": "Mike Foley",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "John Knight",
+          "party": "America First Party Nebraska"
+        }
+      ]
+    },
+    {
+      "id": "co_701a95c200b8ebf54c6e1c323015a2b9a9098f78",
+      "title": "Nebraska Treasurer",
+      "candidates": [
+        {
+          "name": "Joey Spellerberg",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Daniel Ebers",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_d7b95dc159d008c5d0cb4655e32156c56a35b7ad",
+      "title": "University of Nebraska Board of Regents District 1",
+      "candidates": [
+        {
+          "name": "Brent Comstock",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Jeremy Hosein",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_ba7012500d625eca4bc79bd12284d987daf76f6e",
+      "title": "Nebraska State Senate District 28",
+      "candidates": [
+        {
+          "name": "Patty Pansing Brooks",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Colby Woodson",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_e96a01a7af6762f14c2596db2188df729d529b71",
+      "title": "Nebraska Workers' Compensation Court Dirk Block's seat",
+      "candidates": [
+        {
+          "name": "Dirk V. Block",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_8cb18e95148307fcda4fa5759506201a8ab2304f",
+      "title": "Nebraska Workers' Compensation Court Thomas Stine's seat",
+      "candidates": [
+        {
+          "name": "Thomas E. Stine",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_dfb64f90edf7cda669f5dbc53db1fa0e46987fcf",
+      "title": "Lancaster County Assessor-Register of Deeds",
+      "candidates": [
+        {
+          "name": "Dan Nolte",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Tim Johns",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_936d6dc59a64539fe5fe8ca9901343811863ac71",
+      "title": "Lancaster County Attorney",
+      "candidates": [
+        {
+          "name": "Pat Condon",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Randall Ritnour",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_5ac97bd24d29b8f5e5c2e014f5b6b4e4841fcce5",
+      "title": "Lancaster County Clerk",
+      "candidates": [
+        {
+          "name": "Matt Hansen",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_1cb112f6076652e41a2a888937a1df0ef38ba780",
+      "title": "Lancaster County Clerk of the District Court",
+      "candidates": [
+        {
+          "name": "Kristen Anderson",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Landon Parks",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_969b3cbf8b393b87750bf72ca3cc119706306068",
+      "title": "Lancaster County Engineer",
+      "candidates": [
+        {
+          "name": "Pamela Dingman",
+          "party": "Republican Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_f019c2a81e65a7418bacf973a0da44107c9a0fbb",
+      "title": "Lancaster County Public Defender",
+      "candidates": [
+        {
+          "name": "Kristi Egger",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_052536662a33b971838884c0a11a229a33a435ab",
+      "title": "Lancaster County Sheriff",
+      "candidates": [
+        {
+          "name": "Jay Pitts",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Ben Houchin",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_bf906147108f53bc268f38686ffe5375a1af0093",
+      "title": "Lancaster County Treasurer",
+      "candidates": [
+        {
+          "name": "Rachel Garver",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Jasmine Gibson",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_b2450aa2e477308f09d6c8a5c6b4dc417e52d1a0",
+      "title": "Lancaster County Board of Commissioners District 1",
+      "candidates": [
+        {
+          "name": "Sean Flowerday",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_41302fb504f53954648a0fb5f9c536da1a3195f8",
+      "title": "Nebraska 3rd District Court Andrew Jacobsen's seat",
+      "candidates": [
+        {
+          "name": "Andrew Jacobsen",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_beb94681b5ac4e38c486a7b8d011129491f6be30",
+      "title": "Nebraska 3rd District Court Darla Ideus' seat",
+      "candidates": [
+        {
+          "name": "Darla Ideus",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_c66b902c101163bd98c8119c3e48a8d870e76cd5",
+      "title": "Nebraska 3rd District Court Kevin McManaman's seat",
+      "candidates": [
+        {
+          "name": "Kevin McManaman",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_e4ac091b7cf1e22e630f9385e738af4833d93c9b",
+      "title": "Nebraska 3rd District Court Matthew Mellor's seat",
+      "candidates": [
+        {
+          "name": "Matthew Mellor",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_d5780d00bd90e82472a00aa3604b0ae70c9cc47d",
+      "title": "Nebraska 3rd Judicial District County Court Rodney Reuter's seat",
+      "candidates": [
+        {
+          "name": "Rodney Reuter",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_be20250a67eabd21362c6690fc8b951f6b648775",
+      "title": "Lower Platte South Natural Resources District Subdistrict 5",
+      "candidates": [
+        {
+          "name": "Suzanne Mealer",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_9f7f4847c3971e50c1fc36ef6346e8dd08b8ef09",
+      "title": "Constitutional Amendment 1",
+      "summary": "Change the legislative term limit from two consecutive four-year terms to three"
+    },
+    {
+      "id": "bm_d9be8c79b68869492c4b652b85eb5ea0e0f5b7a5",
+      "title": "Initiative Measure 440",
+      "summary": "Authorize laws to govern sports betting"
+    },
+    {
+      "id": "bm_dec72d39fd20904f85e98f3ba823280779dc3953",
+      "title": "Initiative Measure 441",
+      "summary": "Authorize online sports betting in the state and authorize the state gaming commission to adopt rules and regulations governing the gaming operators"
+    },
+    {
+      "id": "bm_3a58d5b0173122cf7fa7ca78399be7e44caa046f",
+      "title": "Initiative Measure 442",
+      "summary": "Require schools designate sports team as male, female, or co-ed and prohibit male participation on female sports teams"
+    },
+    {
+      "id": "bm_b59d1961aa27fda5744831b5d4e2c0d1c6e4bd89",
+      "title": "Question 1",
+      "summary": "Establish a volleyball sports complex economic development project and appropriate state assistance to fund it"
+    },
+    {
+      "id": "bm_20f37d6e9b15f4e1b3ba6558920b064b2894fafe",
+      "title": "Question 2",
+      "summary": "Change election dates so city elections align with statewide elections, hold elections for mayor and district council members in 2027 and 2028, and allow at-large district members to serve until 2025"
+    },
+    {
+      "id": "bm_6597fb18fbeb335b6384898fbf8cde27c7234340",
+      "title": "Question 3",
+      "summary": "Change election dates so city elections align with statewide elections beginning in 2030"
+    },
+    {
+      "id": "bm_70442c1b2f9b2f624a953e7b911c4d783ff4e307",
+      "title": "Question 4",
+      "summary": "Establish term limits of two consecutive, four-year terms for council members"
+    },
+    {
+      "id": "bm_091279ced539b6c8ec05f7b18350c472f39f2d4b",
+      "title": "Question 5",
+      "summary": "Establish term limits of three consecutive four-year terms for council members"
+    },
+    {
+      "id": "bm_9d8f85d3d8f4fc93e76052d91875ab92a2216acd",
+      "title": "Question 6",
+      "summary": "Allow citizens residing in the three-mile extraterritorial zoning jurisdiction around the city, but not within the city's limits, to vote in city elections"
+    }
+  ],
+  "headings": [
+    "All Races (27)",
+    "Federal Races",
+    "U.S. Senate Nebraska",
+    "U.S. House Nebraska District 1",
+    "State Races",
+    "Governor of Nebraska",
+    "Lieutenant Governor of Nebraska",
+    "Nebraska Secretary of State",
+    "Attorney General of Nebraska",
+    "Nebraska Auditor of Public Accounts",
+    "Nebraska Treasurer",
+    "University of Nebraska Board of Regents District 1",
+    "Nebraska State Senate District 28",
+    "Nebraska Workers' Compensation Court Dirk Block's seat",
+    "Nebraska Workers' Compensation Court Thomas Stine's seat",
+    "Local Races",
+    "Lancaster County Assessor-Register of Deeds",
+    "Lancaster County Attorney",
+    "Lancaster County Clerk",
+    "Lancaster County Clerk of the District Court",
+    "Lancaster County Engineer",
+    "Lancaster County Public Defender",
+    "Lancaster County Sheriff",
+    "Lancaster County Treasurer",
+    "Lancaster County Board of Commissioners District 1",
+    "Nebraska 3rd District Court Andrew Jacobsen's seat",
+    "Nebraska 3rd District Court Darla Ideus' seat",
+    "Nebraska 3rd District Court Kevin McManaman's seat",
+    "Nebraska 3rd District Court Matthew Mellor's seat",
+    "Nebraska 3rd Judicial District County Court Rodney Reuter's seat",
+    "Lower Platte South Natural Resources District Subdistrict 5",
+    "Statewide Ballot Measures",
+    "Local Ballot Measures",
+    "Election Day is in10DAYS15HOURS54MINUTES58SECONDS"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/ne-turbovote-divisions.json",
+      "sha256": "41880b943c8c5d06c7258237006c85aea19528184db8045493c244f9895176f6"
+    }
+  ]
+}

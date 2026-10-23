@@ -1,0 +1,28 @@
+{
+  "step": "BL-02",
+  "sourceUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/221723.1.geojson",
+  "sourceHash": "dea6fa8d2909e97375d82f95d557664150f4613286f6044d76834ccc17f82a2c",
+  "geometryPath": "data/states/nm/geo/bl02-board-districts-35.geojson",
+  "districts": 3,
+  "allSourcePolygonsValid": true,
+  "geometryChanged": false,
+  "representativePoints": [
+    {
+      "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2",
+      "lat": 35.1301005,
+      "lng": -106.496735900467
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3",
+      "lat": 35.132239999999996,
+      "lng": -106.62889765412973
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7",
+      "lat": 32.149685000000005,
+      "lng": -106.83804367852835
+    }
+  ],
+  "wholeCountyWidening": false,
+  "properties": "Identity and source only; source coordinates preserved."
+}

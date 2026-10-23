@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?where=1%3D1&geometry=-77.11979521874902%2C38.79164435125649%2C-76.9091499559327%2C38.99596803651135&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnIdsOnly=true&f=json",
+  "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/2/query?where=1%3D1&geometry=-77.11979521874902%2C38.79164435125649%2C-76.9091499559327%2C38.99596803651135&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&returnIdsOnly=true&f=json",
+  "httpStatus": 200,
+  "rawHash": "581a7b7fc3b50a5adfc46be488079b1f55292051c7bf98f3a6a865cf26dc241c",
+  "savedBytes": 670,
+  "retrievedAt": "2026-10-23T08:31:10.803414+00:00",
+  "publisher": "U.S. Census Bureau"
+}

@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10?f=json",
+  "finalUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10?f=json",
+  "httpStatus": 200,
+  "rawHash": "eb09f2c488d0cabe47ec6c0754d6af5c75f7add7cc33db1c166a01d5b0d59af1",
+  "retrievedAt": "2026-10-23T08:10:47.461878+00:00"
+}

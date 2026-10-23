@@ -8189,14 +8189,26 @@
             "verifiedAt": "2026-10-20T23:45:57.603804+00:00",
             "quote": "County: Stone; Judicial Circuit: Sixteenth Judicial Circuit; Division 2"
           }
+        },
+        {
+          "id": "bl02:054effac8fd10d6d6c8ace19",
+          "memberOcdId": "ocd-division/country:us/state:ar/place:sulphur_springs_0567760",
+          "districtOcdId": "ocd-division/country:us/state:ar/place:sulphur_springs",
+          "provenance": {
+            "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=GEOID%3D%270567760%27&outFields=*&returnGeometry=false&f=json",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:08:57.786351+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "GEOID0567760: Sulphur Springs city"
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-20T23:45:57.603804+00:00",
+    "reviewedBy": "BL-02 source-bound whole-place district memberships",
+    "reviewedAt": "2026-10-23T08:22:59.570224+00:00",
     "sources": [
       {
         "requestedUrl": "https://www.sos.arkansas.gov/elections",
@@ -10626,6 +10638,16 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Current official Circuit Judges directory county-captioned tables place each entire county in the named circuit and list the division. scripts/ba01-south-ar-circuits.py checks every membership, all candidate pairs and explicit general-ballot status against saved responses; canonical district IDs match the captured OCD registry."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=GEOID%3D%270567760%27&outFields=*&returnGeometry=false&f=json",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=GEOID%3D%270567760%27&outFields=*&returnGeometry=false&f=json",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:08:57.786351+00:00",
+        "httpStatus": 200,
+        "rawHash": "6a990e2b330a41c374bcc38d1ad3fbe53272f13e1e623f3e677ce4a00f3dcdcd",
+        "reviewedEvidence": "Current official Census incorporated-place query establishes Sulphur Springs city GEOID0567760, distinct from the same-named CDP0567790. The committed ZIP index uses the collision-suffixed city alias; same-division membership connects it to the held BentonCounty mayor contest's unsuffixed city ID."
       }
     ]
   }

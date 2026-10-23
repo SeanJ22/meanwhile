@@ -1,0 +1,1252 @@
+{
+  "step": "BL-02",
+  "checkedAt": "2026-10-23T08:14:07.889608+00:00",
+  "states": [
+    {
+      "state": "MT",
+      "heldDistricts": [
+        1,
+        5
+      ],
+      "addedMemberships": 68,
+      "membershipsBefore": 15,
+      "membershipsAfter": 83,
+      "officialBlocksChecked": 88417,
+      "sources": [
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/mt-psc-law.html",
+          "requestedUrl": "https://archive.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+          "finalUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:04:54.314482+00:00",
+          "rawHash": "03e286e0fc1d982165cb353be5b670a8324f87872ae27f953b9cf39bc1ac15ea"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/mt-house-blocks.xlsx",
+          "requestedUrl": "https://archive.legmt.gov/content/Districting/2020/maps/State-Legislative/Final-SOS-Submission/blockequiv_final_house_districts_2023.xlsx",
+          "finalUrl": "https://archive.legmt.gov/content/Districting/2020/maps/State-Legislative/Final-SOS-Submission/blockequiv_final_house_districts_2023.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:08:45.068992+00:00",
+          "rawHash": "64afcfabe7fbe31f45da47e9b6e87b0260205e0e7b38cd8db536bdd283e5a18e"
+        }
+      ],
+      "districts": [
+        {
+          "district": 1,
+          "countySplits": [
+            "Big Horn",
+            "Cascade",
+            "Rosebud",
+            "Yellowstone"
+          ],
+          "wholeDivisionMembershipsAdded": 42,
+          "reachableFromAddedMemberships": true
+        },
+        {
+          "district": 5,
+          "countySplits": [
+            "Cascade",
+            "Deer Lodge",
+            "Flathead",
+            "Lake",
+            "Lewis and Clark",
+            "Missoula",
+            "Sanders"
+          ],
+          "wholeDivisionMembershipsAdded": 26,
+          "reachableFromAddedMemberships": true
+        }
+      ],
+      "splitCounties": [
+        {
+          "county": "Big Horn",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:big_horn",
+          "districts": [
+            1,
+            2
+          ]
+        },
+        {
+          "county": "Cascade",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:cascade",
+          "districts": [
+            1,
+            3,
+            5
+          ]
+        },
+        {
+          "county": "Deer Lodge",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:deer_lodge",
+          "districts": [
+            3,
+            5
+          ]
+        },
+        {
+          "county": "Flathead",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:flathead",
+          "districts": [
+            4,
+            5
+          ]
+        },
+        {
+          "county": "Gallatin",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:gallatin",
+          "districts": [
+            2,
+            3
+          ]
+        },
+        {
+          "county": "Lake",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:lake",
+          "districts": [
+            4,
+            5
+          ]
+        },
+        {
+          "county": "Lewis and Clark",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:lewis_and_clark",
+          "districts": [
+            3,
+            5
+          ]
+        },
+        {
+          "county": "Missoula",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:missoula",
+          "districts": [
+            4,
+            5
+          ]
+        },
+        {
+          "county": "Ravalli",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:ravalli",
+          "districts": [
+            3,
+            4
+          ]
+        },
+        {
+          "county": "Rosebud",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:rosebud",
+          "districts": [
+            1,
+            2
+          ]
+        },
+        {
+          "county": "Sanders",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:sanders",
+          "districts": [
+            4,
+            5
+          ]
+        },
+        {
+          "county": "Sweet Grass",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:sweet_grass",
+          "districts": [
+            2,
+            3
+          ]
+        },
+        {
+          "county": "Yellowstone",
+          "countyOcdId": "ocd-division/country:us/state:mt/county:yellowstone",
+          "districts": [
+            1,
+            2
+          ]
+        }
+      ],
+      "memberships": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:3",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:4",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:5",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:7",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:11",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:15",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:16",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:17",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:18",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:19",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:20",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:21",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:22",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:23",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:24",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:25",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:26",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:27",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:28",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:29",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:30",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:31",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:32",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:33",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:34",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:35",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:36",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:38",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:43",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:44",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:45",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:76",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:80",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:81",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:82",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:83",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:84",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:91",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:92",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:99",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:blaine",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:carter",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:chouteau",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:custer",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:daniels",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:dawson",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:fallon",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:garfield",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:glacier",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:golden_valley",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:granite",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:hill",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:liberty",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:mccone",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:musselshell",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:phillips",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:pondera",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:powder_river",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:powell",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:prairie",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:richland",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:roosevelt",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:sheridan",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:teton",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:toole",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:treasure",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:valley",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:mt/county:wibaux",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1"
+        }
+      ],
+      "remainingExactMatchDistricts": [],
+      "inputSha256": "b84cd5831651db4f9cc8908cb951cfd338190937206f44f6dbaaecfa0b736539",
+      "meaning": "Only whole counties, places and whole legislative districts enter districtMemberships. A district with no wholly contained indexed division remains open for exact boundary matching.",
+      "memberKinds": {
+        "legislativeDistrict": 40,
+        "county": 28
+      },
+      "countyAndPlaceAliasesMatchHeldZipIndex": true
+    },
+    {
+      "state": "NM",
+      "heldDistricts": [
+        2,
+        3,
+        5,
+        6,
+        7
+      ],
+      "addedMemberships": 29,
+      "membershipsBefore": 33,
+      "membershipsAfter": 62,
+      "officialBlocksChecked": 107215,
+      "sources": [
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nm-pec-blocks.xlsx",
+          "requestedUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+          "finalUrl": "https://www.nmlegis.gov/Redistricting2021/221723.1/PEC_221723_block_eq.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:06:13.788719+00:00",
+          "rawHash": "a659567227f1590c38a32a6d64b78316825835b56944791cdd0964f433ddd045"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nm-house-blocks.xlsx",
+          "requestedUrl": "https://www.nmlegis.gov/Redistricting2021/221619.1/HD_221619_block_eq.xlsx",
+          "finalUrl": "https://www.nmlegis.gov/Redistricting2021/221619.1/HD_221619_block_eq.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:06:58.270144+00:00",
+          "rawHash": "3cd76cdb8e98e8da5160aaad0eb9072fb9db3f860621fd026075fff04912e017"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nm-pec-law.pdf",
+          "requestedUrl": "https://www.nmlegis.gov/Sessions/21%20Special2/final/HB0009.pdf",
+          "finalUrl": "https://www.nmlegis.gov/Sessions/21%20Special2/final/HB0009.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:06:13.484113+00:00",
+          "rawHash": "58aaf6a75b2ec6e8b694dd1f875759f6c442cc5c1a868c00367164db9993944a"
+        }
+      ],
+      "districts": [
+        {
+          "district": 2,
+          "countySplits": [
+            "Bernalillo"
+          ],
+          "wholeDivisionMembershipsAdded": 3,
+          "reachableFromAddedMemberships": true
+        },
+        {
+          "district": 3,
+          "countySplits": [
+            "Bernalillo"
+          ],
+          "wholeDivisionMembershipsAdded": 3,
+          "reachableFromAddedMemberships": true
+        },
+        {
+          "district": 5,
+          "countySplits": [
+            "Bernalillo",
+            "Cibola",
+            "Sandoval",
+            "San Juan",
+            "Socorro"
+          ],
+          "wholeDivisionMembershipsAdded": 5,
+          "reachableFromAddedMemberships": true
+        },
+        {
+          "district": 6,
+          "countySplits": [
+            "Bernalillo",
+            "Cibola",
+            "Do\u00f1a Ana",
+            "Socorro"
+          ],
+          "wholeDivisionMembershipsAdded": 12,
+          "reachableFromAddedMemberships": true
+        },
+        {
+          "district": 7,
+          "countySplits": [
+            "Do\u00f1a Ana",
+            "Otero"
+          ],
+          "wholeDivisionMembershipsAdded": 6,
+          "reachableFromAddedMemberships": true
+        }
+      ],
+      "splitCounties": [
+        {
+          "county": "Bernalillo",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:bernalillo",
+          "districts": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ]
+        },
+        {
+          "county": "Chaves",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:chaves",
+          "districts": [
+            8,
+            9
+          ]
+        },
+        {
+          "county": "Cibola",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:cibola",
+          "districts": [
+            5,
+            6
+          ]
+        },
+        {
+          "county": "Do\u00f1a Ana",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:dona_ana",
+          "districts": [
+            6,
+            7
+          ]
+        },
+        {
+          "county": "Otero",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:otero",
+          "districts": [
+            7,
+            9
+          ]
+        },
+        {
+          "county": "Sandoval",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:sandoval",
+          "districts": [
+            4,
+            5
+          ]
+        },
+        {
+          "county": "San Juan",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:san_juan",
+          "districts": [
+            5,
+            10
+          ]
+        },
+        {
+          "county": "Santa Fe",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:santa_fe",
+          "districts": [
+            4,
+            10
+          ]
+        },
+        {
+          "county": "Socorro",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:socorro",
+          "districts": [
+            5,
+            6
+          ]
+        },
+        {
+          "county": "Taos",
+          "countyOcdId": "ocd-division/country:us/state:nm/county:taos",
+          "districts": [
+            8,
+            10
+          ]
+        }
+      ],
+      "memberships": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:2",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:4",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:5",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:7",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:8",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:9",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:11",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:15",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:18",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:3"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:24",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:28",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:31",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:2"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:32",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:33",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:34",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:35",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:37",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:39",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:49",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:52",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/sldl:53",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:7"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:catron",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:grant",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:hidalgo",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:luna",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:mckinley",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:5"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:sierra",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:torrance",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nm/county:valencia",
+          "districtOcdId": "ocd-division/country:us/state:nm/board_of_education:6"
+        }
+      ],
+      "remainingExactMatchDistricts": [],
+      "inputSha256": "8d5bbbe6df561a8a5716066cffa83038426c891adbe2e2d573f8285300d44148",
+      "meaning": "Only whole counties, places and whole legislative districts enter districtMemberships. A district with no wholly contained indexed division remains open for exact boundary matching.",
+      "memberKinds": {
+        "legislativeDistrict": 21,
+        "county": 8
+      },
+      "countyAndPlaceAliasesMatchHeldZipIndex": true
+    },
+    {
+      "state": "NV",
+      "heldDistricts": [
+        2,
+        3,
+        5,
+        8,
+        10
+      ],
+      "addedMemberships": 57,
+      "membershipsBefore": 0,
+      "membershipsAfter": 57,
+      "officialBlocksChecked": 57409,
+      "sources": [
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nv-regents-blocks.xlsx",
+          "requestedUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+          "finalUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:05:27.344761+00:00",
+          "rawHash": "fcf05b9d05e3978a5f0cd5f5da12ceeaadf0a111ad3b67b80ebeea472e5c4c37"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nv-assembly-blocks.xlsx",
+          "requestedUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Assembly_Final_SB1_Amd2.xlsx",
+          "finalUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Assembly_Final_SB1_Amd2.xlsx",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:05:27.730015+00:00",
+          "rawHash": "bc3c4a0f9a3afe874fbfc797040b848ff77e9998f208aaa2eed23fb4fb65b68a"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nv-place-blocks.zip",
+          "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST32_NV.zip",
+          "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/baf2020/BlockAssign_ST32_NV.zip",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:08:28.547461+00:00",
+          "rawHash": "ea0e6834f8389127a74eb4be4e28b86659fe067af7d4fa0ab91f746060d4adb9"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nv-place-names.txt",
+          "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2020_Gazetteer/2020_gaz_place_32.txt",
+          "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2020_Gazetteer/2020_gaz_place_32.txt",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:11:30.192057+00:00",
+          "rawHash": "68bec412c867ac788d7d0d75ba7165c6d78f8ff0e18a76f4b9bf35fe044bd566"
+        },
+        {
+          "path": "data/ballot/evidence/bl02-west-extra/nv-regents-tables.pdf",
+          "requestedUrl": "https://www.leg.state.nv.us/Division/Research/Documents/BOR2021_Tables.pdf",
+          "finalUrl": "https://www.leg.state.nv.us/Division/Research/Documents/BOR2021_Tables.pdf",
+          "httpStatus": 200,
+          "retrievedAt": "2026-10-23T08:05:27.375509+00:00",
+          "rawHash": "c88a433b900b4f0602968e2befd1e834012eabc8970145eda1ed710531563b98"
+        }
+      ],
+      "districts": [
+        {
+          "district": 2,
+          "countySplits": [
+            "Clark"
+          ],
+          "wholeDivisionMembershipsAdded": 0,
+          "reachableFromAddedMemberships": false
+        },
+        {
+          "district": 3,
+          "countySplits": [
+            "Clark"
+          ],
+          "wholeDivisionMembershipsAdded": 0,
+          "reachableFromAddedMemberships": false
+        },
+        {
+          "district": 5,
+          "countySplits": [
+            "Clark"
+          ],
+          "wholeDivisionMembershipsAdded": 0,
+          "reachableFromAddedMemberships": false
+        },
+        {
+          "district": 8,
+          "countySplits": [
+            "Clark"
+          ],
+          "wholeDivisionMembershipsAdded": 54,
+          "reachableFromAddedMemberships": true
+        },
+        {
+          "district": 10,
+          "countySplits": [
+            "Washoe"
+          ],
+          "wholeDivisionMembershipsAdded": 3,
+          "reachableFromAddedMemberships": true
+        }
+      ],
+      "splitCounties": [
+        {
+          "county": "Clark",
+          "countyOcdId": "ocd-division/country:us/state:nv/county:clark",
+          "districts": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            12,
+            13
+          ]
+        },
+        {
+          "county": "Storey",
+          "countyOcdId": "ocd-division/country:us/state:nv/county:storey",
+          "districts": [
+            9,
+            11
+          ]
+        },
+        {
+          "county": "Washoe",
+          "countyOcdId": "ocd-division/country:us/state:nv/county:washoe",
+          "districts": [
+            9,
+            10,
+            11
+          ]
+        }
+      ],
+      "memberships": [
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/sldl:25",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/sldl:33",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/county:elko",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/county:esmeralda",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/county:eureka",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/county:lincoln",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/county:nye",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/county:white_pine",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:alamo",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:amargosa_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:baker",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:beatty",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:beaverdam",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:bennett_springs",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:bunkerville",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:caliente",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:carlin",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:crescent_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:dry_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:dyer",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:elko",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:ely",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:eureka",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:gabbs",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:goldfield",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:hiko",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:indian_springs",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:jackpot",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:lamoille",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:lund",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mcgill",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mesquite",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:moapa_town",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:moapa_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mogul",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:montello",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mountain_city",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mount_charleston",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:mount_wilson",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:nellis_afb",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:oasis",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:osino",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:owyhee",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:pahrump",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:panaca",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:pioche",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:preston",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:rachel",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:ruth",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:sandy_valley",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:silver_peak",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:spring_creek",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:tonopah",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:ursine",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:verdi",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:wells",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        },
+        {
+          "memberOcdId": "ocd-division/country:us/state:nv/place:west_wendover",
+          "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+        }
+      ],
+      "remainingExactMatchDistricts": [
+        2,
+        3,
+        5
+      ],
+      "inputSha256": "8630a566be32057ad7c06513d530049a64245392e0b71003679222c4b7229f65",
+      "meaning": "Only whole counties, places and whole legislative districts enter districtMemberships. A district with no wholly contained indexed division remains open for exact boundary matching.",
+      "memberKinds": {
+        "legislativeDistrict": 2,
+        "county": 6,
+        "place": 49
+      },
+      "countyAndPlaceAliasesMatchHeldZipIndex": true
+    }
+  ],
+  "method": "Compare every block ID from each state legislature's adopted district list. Assign a county, municipality or existing legislative district only when all of its official blocks belong to one target district. Montana PSC assignment is explicit in current MCA 69-1-104. County splits are retained as flags; no split county is assigned wholesale.",
+  "nvRemainder": "Board of Regents districts 2, 3 and 5 divide every county, incorporated place/CDP, Assembly district and Senate district they touch. The source-backed exact polygons supplied in nvExactGeometry cover these districts for point selection; parent task handles the resolver manifest and publication.",
+  "sourceConflict": "Nevada summary table lists Storey wholly in district 9, while the adopted block-equivalency file assigns some Storey blocks to district 11. No Storey membership is added; neither district is a held 2026 race in this file.",
+  "nvExactGeometry": {
+    "path": "data/states/nv/geo/bl02-regents-32.geojson",
+    "sourceUrl": "https://www.leg.state.nv.us/Division/Research/Documents/2021Regents_BDR_Final.zip",
+    "sourceHash": "cc0f343c7143c14d909acf25a96f3e915ed3f6e4c650946103f4f0465a88be86",
+    "inputCrs": "EPSG:4269",
+    "outputCrs": "EPSG:4326",
+    "districts": 13,
+    "allSourcePolygonsValid": true,
+    "representativePoints": [
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:1",
+        "lat": 36.24734700001409,
+        "lng": -115.14374899996633
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:2",
+        "lat": 36.21190700020796,
+        "lng": -115.22678796138644
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:3",
+        "lat": 36.03767550002436,
+        "lng": -115.14942846793116
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:4",
+        "lat": 36.16308949998049,
+        "lng": -115.05933293882754
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:5",
+        "lat": 36.17741299996004,
+        "lng": -115.10796885500037
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:6",
+        "lat": 35.62446750012509,
+        "lng": -115.04012741074868
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:7",
+        "lat": 36.17411749997271,
+        "lng": -115.29125173980574
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8",
+        "lat": 38.83514349997259,
+        "lng": -116.07510834515779
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:9",
+        "lat": 39.4471474997074,
+        "lng": -118.14538153350529
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10",
+        "lat": 39.46332649981818,
+        "lng": -119.8494902078578
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:11",
+        "lat": 40.75301849985394,
+        "lng": -118.50847134172392
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:12",
+        "lat": 36.012870000050526,
+        "lng": -115.01748030476897
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:13",
+        "lat": 36.17730100019108,
+        "lng": -115.46378297042702
+      }
+    ],
+    "meaning": "Adopted official district geometry supplies exact point selection for all Regents districts, including 2, 3 and 5 where no complete county, place, Assembly district or Senate district can supply a safe membership. Resolver manifest publication is handled by the BL-02 parent task."
+  },
+  "readOnlySelectionReplay": {
+    "membershipsChecked": 154,
+    "normalSelector": "contestsForDivisions",
+    "allSourceRepresentativePointsMatched": 13,
+    "nevadaRealZipCentroidExamples": [
+      {
+        "zip": "89001",
+        "lat": 37.33765,
+        "lng": -115.30238,
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:8"
+      },
+      {
+        "zip": "89030",
+        "lat": 36.21231,
+        "lng": -115.12313,
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:5"
+      },
+      {
+        "zip": "89052",
+        "lat": 35.97987,
+        "lng": -115.10794,
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:3"
+      },
+      {
+        "zip": "89102",
+        "lat": 36.14534,
+        "lng": -115.18661,
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:2"
+      },
+      {
+        "zip": "89439",
+        "lat": 39.52335,
+        "lng": -119.99038,
+        "districtOcdId": "ocd-division/country:us/state:nv/board_of_regents:10"
+      }
+    ]
+  },
+  "countyCodeReference": {
+    "path": "data/ballot/sources/ba01-northeast/ma-2020-census-county-fips.txt",
+    "sha256": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+    "sourceUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+    "method": "Read only MT/NM/NV rows to convert state/county block prefixes to county names, then verify every published county alias against held ZIP index."
+  }
+}

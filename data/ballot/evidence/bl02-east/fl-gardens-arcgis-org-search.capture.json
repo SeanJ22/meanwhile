@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www.arcgis.com/sharing/rest/search?q=orgid%3AnvgO38kfurKbA7B9&f=json&num=100",
+  "finalUrl": "https://www.arcgis.com/sharing/rest/search?q=orgid%3AnvgO38kfurKbA7B9&f=json&num=100",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:19:46.702315+00:00",
+  "rawHash": "9a3c9211fdfc09e5b08d446e7f74048d69a7f1f1e524c73b9463ffcbd482d70e"
+}

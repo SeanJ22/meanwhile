@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:08954,08968&in=state:06",
+  "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:08954,08968&in=state:06",
+  "httpStatus": 200,
+  "rawHash": "0422f96db05166df46674457c9a1790acd28a5b08410175c89f340573dc8a32f",
+  "retrievedAt": "2026-10-23T08:01:57.203522+00:00"
+}

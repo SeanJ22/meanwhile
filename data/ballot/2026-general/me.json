@@ -15705,14 +15705,1130 @@
             "verifiedAt": "2026-10-21T01:01:46.832531+00:00",
             "quote": "District 8 consists of Thomaston and Cushing and elects one member."
           }
+        },
+        {
+          "id": "bl02:5f13ceb8e364cf2b4057aff4",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:carrabassett_valley_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:1e0135a4b52069b638243a75",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:dallas_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:fa21f6e5b6b7755f7c933fb8",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:east_central_franklin_ut",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:9d6bf2aa114299a064ced9bb",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:industry_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:c4c3970b4e18f9ee6b6bb1a8",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:kingfield_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:2b21946c45a4dfd9ce00ea3c",
+          "memberOcdId": "ocd-division/country:us/state:me/place:kingfield",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:4cf07e56c3d8f48055b26cd2",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:new_sharon_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:ef0c07729274990b4ad6d894",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:new_vineyard_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:40dab97333faff27da8738a4",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:wyman_ut",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 4 consists of the minor civil divisions and unorganized territories of Carrabassett Valley, Dallas Plantation, East Central Franklin, Industry, Kingfield, New Sharon, New Vineyard and Wyman Township."
+          }
+        },
+        {
+          "id": "bl02:0f576d9b35c67add12de78d8",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:chesterville_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 5 consists of the minor civil divisions of Chesterville and Jay."
+          }
+        },
+        {
+          "id": "bl02:f81dbb506e89c8deefaf5ddd",
+          "memberOcdId": "ocd-division/country:us/state:me/county:franklin/place:jay_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:franklin/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://legislature.maine.gov/statutes/30-a/title30-Asec67.html",
+            "sourceOrg": "Maine Legislature",
+            "collectedAt": "2026-10-21T00:47:00.808370+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Commissioner District Number 5 consists of the minor civil divisions of Chesterville and Jay."
+          }
+        },
+        {
+          "id": "bl02-final:a52e205eb02697f8d1d62ca5",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:allagash_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Allagash"
+          }
+        },
+        {
+          "id": "bl02-final:afddff258aac68e591ef35b2",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:caswell_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Caswell"
+          }
+        },
+        {
+          "id": "bl02-final:9f6c8fefb84e1bd732ba577f",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:cyr_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Cyr Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:a885c13651f42fd370f5aa73",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:eagle_lake_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Eagle Lake"
+          }
+        },
+        {
+          "id": "bl02-final:d8900d2face5a19f1139579a",
+          "memberOcdId": "ocd-division/country:us/state:me/place:eagle_lake",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Eagle Lake"
+          }
+        },
+        {
+          "id": "bl02-final:10bcd8bc9c63174c623e48a2",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:fort_kent_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Fort Kent"
+          }
+        },
+        {
+          "id": "bl02-final:7811bfcbc5442cc1192d514b",
+          "memberOcdId": "ocd-division/country:us/state:me/place:fort_kent",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Fort Kent"
+          }
+        },
+        {
+          "id": "bl02-final:162f6b5b07b1a94918bac974",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:frenchville_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Frenchville"
+          }
+        },
+        {
+          "id": "bl02-final:4572c1690e08286affe80b15",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:grand_isle_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Grand Isle"
+          }
+        },
+        {
+          "id": "bl02-final:a087305c9a95dbc5c23bd5e7",
+          "memberOcdId": "ocd-division/country:us/state:me/place:grand_isle",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Grand Isle"
+          }
+        },
+        {
+          "id": "bl02-final:c7bea874013cf206a68b44fe",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:hamlin_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Hamlin"
+          }
+        },
+        {
+          "id": "bl02-final:cc8d2dd1df02d1491e8a5e17",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:madawaska_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Madawaska"
+          }
+        },
+        {
+          "id": "bl02-final:fa5e5ee01e28f8fd948e46ea",
+          "memberOcdId": "ocd-division/country:us/state:me/place:madawaska",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Madawaska"
+          }
+        },
+        {
+          "id": "bl02-final:8889c79140d046e5825b20ca",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:new_canada_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: New Canada"
+          }
+        },
+        {
+          "id": "bl02-final:744d2af8869cf3e94c195759",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:st_agatha_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: St. Agatha"
+          }
+        },
+        {
+          "id": "bl02-final:504467a75d88145f72801c59",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:st_francis_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: St. Francis"
+          }
+        },
+        {
+          "id": "bl02-final:c553af11a101617fe82e8175",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:st_john_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: St. John Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:5b17bb873ecf8dfc8ddaedc3",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:stockholm_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Stockholm"
+          }
+        },
+        {
+          "id": "bl02-final:7697a1dc84278be84c9bcf6c",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:van_buren_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Van Buren"
+          }
+        },
+        {
+          "id": "bl02-final:c60e444e9826bf16efb89ef1",
+          "memberOcdId": "ocd-division/country:us/state:me/place:van_buren",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Van Buren"
+          }
+        },
+        {
+          "id": "bl02-final:14f6046b774f909b5c9c1ee1",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:wallagrass_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Wallagrass"
+          }
+        },
+        {
+          "id": "bl02-final:acb59b5bc6a3b29de1939799",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:westmanland_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Westmanland"
+          }
+        },
+        {
+          "id": "bl02-final:83ebade432886e81b0efe1ff",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:winterville_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.599803+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Northern Registry of Deeds — Serves the following communities: Winterville Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:5d9bd3cc647ab0c55cf985e8",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:amity_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Amity"
+          }
+        },
+        {
+          "id": "bl02-final:9577d047625ecd74158e5bd4",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:ashland_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Ashland"
+          }
+        },
+        {
+          "id": "bl02-final:e9d1de6f1262dd534cc976f2",
+          "memberOcdId": "ocd-division/country:us/state:me/place:ashland",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Ashland"
+          }
+        },
+        {
+          "id": "bl02-final:c25e80008624d4fffaaeba5b",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:blaine_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Blaine"
+          }
+        },
+        {
+          "id": "bl02-final:52c7db56f727607afed59398",
+          "memberOcdId": "ocd-division/country:us/state:me/place:blaine",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Blaine"
+          }
+        },
+        {
+          "id": "bl02-final:26f0950aaff4ca7b07b12660",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:bridgewater_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Bridgewater"
+          }
+        },
+        {
+          "id": "bl02-final:bdc78d9632404747add6367d",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:caribou_city",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Caribou"
+          }
+        },
+        {
+          "id": "bl02-final:1a8f8a9cbbf496ce0b94097f",
+          "memberOcdId": "ocd-division/country:us/state:me/place:caribou",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Caribou"
+          }
+        },
+        {
+          "id": "bl02-final:73872d04a162908b21064533",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:castle_hill_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Castle Hill"
+          }
+        },
+        {
+          "id": "bl02-final:3f9dd603765001e4b391392b",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:chapman_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Chapman"
+          }
+        },
+        {
+          "id": "bl02-final:4c42f179943a804ddf57a8b9",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:crystal_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Crystal"
+          }
+        },
+        {
+          "id": "bl02-final:ae9ca7a4ab1a83602e436244",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:dyer_brook_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Dyer Brook"
+          }
+        },
+        {
+          "id": "bl02-final:da464bc6b8b926609ac977a9",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:easton_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Easton"
+          }
+        },
+        {
+          "id": "bl02-final:66b648dde62224d563d5f47d",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:fort_fairfield_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Fort Fairfield"
+          }
+        },
+        {
+          "id": "bl02-final:36ea36417c321e32e713b32f",
+          "memberOcdId": "ocd-division/country:us/state:me/place:fort_fairfield",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Fort Fairfield"
+          }
+        },
+        {
+          "id": "bl02-final:8f8ef4bb1d33042453c985fc",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:garfield_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Garfield Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:1a03cbbe5b1b2fe2a10c98ad",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:glenwood_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Glenwood Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:f05cac5600d473ad3f78ac13",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:hammond_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Hammond"
+          }
+        },
+        {
+          "id": "bl02-final:051fbb823eb4ede6f0e298bb",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:haynesville_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Haynesville"
+          }
+        },
+        {
+          "id": "bl02-final:bc9887d7fddc097779c58c0d",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:hersey_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Hersey"
+          }
+        },
+        {
+          "id": "bl02-final:8b45c55de26ee6c36d19d052",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:hodgdon_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Hodgdon"
+          }
+        },
+        {
+          "id": "bl02-final:1340ead73595c53d9a8506f6",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:houlton_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Houlton"
+          }
+        },
+        {
+          "id": "bl02-final:3c7300ab97659378a737e201",
+          "memberOcdId": "ocd-division/country:us/state:me/place:houlton",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Houlton"
+          }
+        },
+        {
+          "id": "bl02-final:78542649bacfcf4a49f8ce05",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:island_falls_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Island Falls"
+          }
+        },
+        {
+          "id": "bl02-final:3d58ce4c3fe0bca0dd669f41",
+          "memberOcdId": "ocd-division/country:us/state:me/place:island_falls",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Island Falls"
+          }
+        },
+        {
+          "id": "bl02-final:50152909a702a408c2d9a1c1",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:limestone_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Limestone"
+          }
+        },
+        {
+          "id": "bl02-final:cf59d88fa65f2e2b4195ee8a",
+          "memberOcdId": "ocd-division/country:us/state:me/place:limestone",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Limestone"
+          }
+        },
+        {
+          "id": "bl02-final:aefb3457ccf18451913ae582",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:linneus_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Linneus"
+          }
+        },
+        {
+          "id": "bl02-final:be383a2ad5ad8160eaee350c",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:littleton_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Littleton"
+          }
+        },
+        {
+          "id": "bl02-final:6dfbd3143ccd3723e147c793",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:ludlow_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Ludlow"
+          }
+        },
+        {
+          "id": "bl02-final:ee17dd998f14209c0cd08496",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:macwahoc_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Macwahoc Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:e1c58ad1797d96feacd411f5",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:mapleton_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Mapleton"
+          }
+        },
+        {
+          "id": "bl02-final:5a395e646d6db3a58010b7ca",
+          "memberOcdId": "ocd-division/country:us/state:me/place:mapleton",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Mapleton"
+          }
+        },
+        {
+          "id": "bl02-final:78f6e0b55ada472b3981c468",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:mars_hill_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Mars Hill"
+          }
+        },
+        {
+          "id": "bl02-final:04e12537dd0bb6971fb86d86",
+          "memberOcdId": "ocd-division/country:us/state:me/place:mars_hill",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Mars Hill"
+          }
+        },
+        {
+          "id": "bl02-final:b914dff538964bca7af36f7f",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:masardis_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Masardis"
+          }
+        },
+        {
+          "id": "bl02-final:a7b1dd4a5841138fbc1f678f",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:merrill_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Merrill"
+          }
+        },
+        {
+          "id": "bl02-final:eb5b267d785940fd5d174dc8",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:monticello_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Monticello"
+          }
+        },
+        {
+          "id": "bl02-final:77f13cd8877dbc997334618c",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:moro_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Moro Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:9f38b926697677486a91eac3",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:nashville_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Nashville Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:d69888fdeebf03428700b9ca",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:new_limerick_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: New Limerick"
+          }
+        },
+        {
+          "id": "bl02-final:04f78f96f97168b5d53901f9",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:new_sweden_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: New Sweden"
+          }
+        },
+        {
+          "id": "bl02-final:132ad03ff69d72183f18c534",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:oakfield_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Oakfield"
+          }
+        },
+        {
+          "id": "bl02-final:8fc31de306da8ddc043f2c76",
+          "memberOcdId": "ocd-division/country:us/state:me/place:oakfield",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Oakfield"
+          }
+        },
+        {
+          "id": "bl02-final:6d3b43b3a9d0a9db08cd535f",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:orient_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Orient"
+          }
+        },
+        {
+          "id": "bl02-final:67ecef6541e373ff0770b4a2",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:perham_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Perham"
+          }
+        },
+        {
+          "id": "bl02-final:fc5be47fd55d71fb9358783e",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:portage_lake_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Portage Lake"
+          }
+        },
+        {
+          "id": "bl02-final:a725a322bea4fc1cc44e9d3c",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:presque_isle_city",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Presque Isle"
+          }
+        },
+        {
+          "id": "bl02-final:12731857f651c10c4188d1d2",
+          "memberOcdId": "ocd-division/country:us/state:me/place:presque_isle",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Presque Isle"
+          }
+        },
+        {
+          "id": "bl02-final:a37b0404b9fe2bed03d3d2c3",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:reed_plantation",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Reed Plantation"
+          }
+        },
+        {
+          "id": "bl02-final:7e6e44f74d7884b87f64bb68",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:sherman_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Sherman"
+          }
+        },
+        {
+          "id": "bl02-final:a9c5b1c08f883c188976ab68",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:smyrna_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Smyrna"
+          }
+        },
+        {
+          "id": "bl02-final:34bb11188aac7bbac5106bd6",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:wade_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Wade"
+          }
+        },
+        {
+          "id": "bl02-final:a2cfc40878d9f995ab761537",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:washburn_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Washburn"
+          }
+        },
+        {
+          "id": "bl02-final:97176b2c4e949907c307a347",
+          "memberOcdId": "ocd-division/country:us/state:me/place:washburn",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Washburn"
+          }
+        },
+        {
+          "id": "bl02-final:3c3c74ad329cc7dced743e35",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:westfield_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Westfield"
+          }
+        },
+        {
+          "id": "bl02-final:d4fc97ee1fd7b98c0dc7c53b",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:weston_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Weston"
+          }
+        },
+        {
+          "id": "bl02-final:45b368b317c26fa2fcb5c444",
+          "memberOcdId": "ocd-division/country:us/state:me/county:aroostook/place:woodland_town",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Woodland"
+          }
+        },
+        {
+          "id": "bl02-final:8cfbe0a8bb6eeb98cf7fd401",
+          "memberOcdId": "ocd-division/country:us/state:me/place:woodland",
+          "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+          "provenance": {
+            "sourceUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+            "sourceOrg": "Aroostook County Government",
+            "collectedAt": "2026-10-23T08:27:22.681227+00:00",
+            "verifiedAt": "2026-10-23T08:32:29.195605+00:00",
+            "quote": "Southern Registry of Deeds — Serves the following communities: Woodland"
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T01:01:46.832531+00:00",
-    "reviewedBy": "BA-01 official ballot PDF replay",
+    "reviewedAt": "2026-10-23T08:32:29.195605+00:00",
+    "reviewedBy": "BL-02 final Maine/Ohio district-source replay",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -15883,6 +16999,106 @@
         "httpStatus": 200,
         "rawHash": "d9ba07a5bd87f107bb8cd71c59cc4b211941f9e8699f6b48289038e5dfd7b051",
         "reviewedEvidence": "Actual official HTTP response. Maine source replay checks regular and special candidate lists, October15 write-ins, office titles and whole-division statutory memberships. No residential addresses enter reader records."
+      },
+      {
+        "requestedUrl": "https://www11.maine.gov/revenue/taxes/property-tax/transfer-tax/county-registries-of-deeds",
+        "finalUrl": "https://www11.maine.gov/revenue/taxes/property-tax/transfer-tax/county-registries-of-deeds",
+        "retrievedAt": "2026-10-23T08:29:21.116491+00:00",
+        "httpStatus": 200,
+        "rawHash": "b2ae46f845e0c6ae1f5c1064fd9d05cb84f3d7bb8e1da12a95f1be2482b70821",
+        "publisher": "Maine Revenue Services",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Government directory directly links the Aroostook County Deeds page, establishing the county publisher for its two whole-community registry lists."
+      },
+      {
+        "requestedUrl": "https://aroostook.me.us/departments/deeds/",
+        "finalUrl": "https://aroostook.me.us/departments/deeds/",
+        "retrievedAt": "2026-10-23T08:27:21.464496+00:00",
+        "httpStatus": 200,
+        "rawHash": "95ec36e1e33b31d74d335829bd347bab6dd6ace3d3c292bf7b477d4dada712b1",
+        "publisher": "Aroostook County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "County Deeds page directly links the Northern and Southern Registry of Deeds community-list PDFs; the lists are captured and replayed separately."
+      },
+      {
+        "requestedUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+        "finalUrl": "https://aroostook.me.us/pdfs/rodn-areas/",
+        "retrievedAt": "2026-10-23T08:27:22.599803+00:00",
+        "httpStatus": 200,
+        "rawHash": "2c5aec6c9a9bee74a35e23ba0da73b459be70270b16e6a888947ba1afcf57f2d",
+        "publisher": "Aroostook County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved original county PDF at data/ballot/evidence/bl02-me-oh/me-registry-north.raw.gz. Code confirms each named whole town/city/plantation occurs in the table and binds only matching existing ZIP-index aliases. Aggregated unorganized territories and retired Cary/Oxbow names are not widened from individual township rows."
+      },
+      {
+        "requestedUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+        "finalUrl": "https://aroostook.me.us/pdfs/rods-areas/",
+        "retrievedAt": "2026-10-23T08:27:22.681227+00:00",
+        "httpStatus": 200,
+        "rawHash": "6d51d13c4b8aac5582b63db0d4b1fcf9b720abd031511c0cbe199abd1b91d426",
+        "publisher": "Aroostook County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved original county PDF at data/ballot/evidence/bl02-me-oh/me-registry-south.raw.gz. Code confirms each named whole town/city/plantation occurs in the table and binds only matching existing ZIP-index aliases. Aggregated unorganized territories and retired Cary/Oxbow names are not widened from individual township rows."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer/0/query?f=geojson&where=%28countyfp20+%3D+%27001%27+AND+district+IN+%282%2C5%29%29+OR+%28countyfp20+%3D+%27005%27+AND+district+%3D+5%29&outFields=%2A&outSR=4326",
+        "finalUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer/0/query?f=geojson&where=%28countyfp20+%3D+%27001%27+AND+district+IN+%282%2C5%29%29+OR+%28countyfp20+%3D+%27005%27+AND+district+%3D+5%29&outFields=%2A&outSR=4326",
+        "retrievedAt": "2026-10-23T08:27:21.513206+00:00",
+        "httpStatus": 200,
+        "rawHash": "9fe0b6f8a4d306a5983346815a6ab4efc72959cffb6549eea594ed00b8be221d",
+        "publisher": "Maine Legislature / Secretary of State / Office of GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original State of Maine GIS response, SHA256 checked before use. Authoritative2021 commission polygons supply exact unchanged Androscoggin2/5 and Cumberland5 boundaries. The2024 update applies only to Farmington in Franklin County and is not substituted for these unrelated counties. Original polygon coordinate arrays are copied without simplification or buffering into data/states/me/geo/bl02-final-districts-23.geojson."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer/0?f=pjson",
+        "retrievedAt": "2026-10-23T08:27:21.356059+00:00",
+        "httpStatus": 200,
+        "rawHash": "1072e4bfcc3b077d32f104163572109db6496dcee2c165abd26f6c627350bec2",
+        "publisher": "Maine Legislature / Secretary of State / Office of GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original State of Maine GIS response, SHA256 checked before use. Authoritative2021 commission polygons supply exact unchanged Androscoggin2/5 and Cumberland5 boundaries. The2024 update applies only to Farmington in Franklin County and is not substituted for these unrelated counties. Original polygon coordinate arrays are copied without simplification or buffering into data/states/me/geo/bl02-final-districts-23.geojson."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer?f=pjson",
+        "finalUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/ArcGIS/rest/services/MaineVotingDistricts2021CountyCommissioners/FeatureServer?f=pjson",
+        "retrievedAt": "2026-10-23T08:28:47.345286+00:00",
+        "httpStatus": 200,
+        "rawHash": "a857862ec5d50b32b4304431abde87e43eaf77a3453f19e833cce4154d55eb56",
+        "publisher": "Maine Legislature / Secretary of State / Office of GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original State of Maine GIS response, SHA256 checked before use. Authoritative2021 commission polygons supply exact unchanged Androscoggin2/5 and Cumberland5 boundaries. The2024 update applies only to Farmington in Franklin County and is not substituted for these unrelated counties. Original polygon coordinate arrays are copied without simplification or buffering into data/states/me/geo/bl02-final-districts-23.geojson."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/content/items/0d9bf16c70294d31a54de55b6d012b57?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/0d9bf16c70294d31a54de55b6d012b57?f=pjson",
+        "retrievedAt": "2026-10-23T08:28:47.225883+00:00",
+        "httpStatus": 200,
+        "rawHash": "11b69d0f1789cf299b36d44c90ed561b691614ea2d928c79df72d67e144de855",
+        "publisher": "Maine Legislature / Secretary of State / Office of GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original State of Maine GIS response, SHA256 checked before use. Authoritative2021 commission polygons supply exact unchanged Androscoggin2/5 and Cumberland5 boundaries. The2024 update applies only to Farmington in Franklin County and is not substituted for these unrelated counties. Original polygon coordinate arrays are copied without simplification or buffering into data/states/me/geo/bl02-final-districts-23.geojson."
+      },
+      {
+        "requestedUrl": "https://www.arcgis.com/sharing/rest/portals/RbMX0mRVOFNTdLzd?f=pjson",
+        "finalUrl": "https://www.arcgis.com/sharing/rest/portals/RbMX0mRVOFNTdLzd?f=pjson",
+        "retrievedAt": "2026-10-23T08:28:47.463546+00:00",
+        "httpStatus": 200,
+        "rawHash": "d392e2ce18e557bf490637b613af2a073aec1c4aa2ea61240180fab66825d0cf",
+        "publisher": "Maine Legislature / Secretary of State / Office of GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original State of Maine GIS response, SHA256 checked before use. Authoritative2021 commission polygons supply exact unchanged Androscoggin2/5 and Cumberland5 boundaries. The2024 update applies only to Farmington in Franklin County and is not substituted for these unrelated counties. Original polygon coordinate arrays are copied without simplification or buffering into data/states/me/geo/bl02-final-districts-23.geojson."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Voting_Districts_2024_County_Commissioners_Update/FeatureServer?f=pjson",
+        "finalUrl": "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Voting_Districts_2024_County_Commissioners_Update/FeatureServer?f=pjson",
+        "retrievedAt": "2026-10-23T08:27:21.326154+00:00",
+        "httpStatus": 200,
+        "rawHash": "b256b82be385a4c0bea5bb73916422b582099e58de10f805a0bff37c1811d1e9",
+        "publisher": "Maine Legislature / Secretary of State / Office of GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Original State of Maine GIS response, SHA256 checked before use. Authoritative2021 commission polygons supply exact unchanged Androscoggin2/5 and Cumberland5 boundaries. The2024 update applies only to Farmington in Franklin County and is not substituted for these unrelated counties. Original polygon coordinate arrays are copied without simplification or buffering into data/states/me/geo/bl02-final-districts-23.geojson."
       }
     ]
   }

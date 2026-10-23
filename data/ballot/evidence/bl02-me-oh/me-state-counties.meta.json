@@ -1,0 +1,8 @@
+{
+  "requestedUrl": "https://www11.maine.gov/sos/kids/government/counties",
+  "finalUrl": "https://www11.maine.gov/sos/kids/government/counties",
+  "httpStatus": 200,
+  "rawHash": "2d9188684e6f765892ed020e8f237df44248af9543ff633b7f39fcb4b5f9d7a7",
+  "retrievedAt": "2026-10-23T08:27:22.483266+00:00",
+  "contentType": "text/html; charset=UTF-8"
+}

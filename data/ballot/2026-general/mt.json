@@ -78,7 +78,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Big Horn, Cascade, Rosebud, Yellowstone counties.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
@@ -98,7 +98,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": 4,
-          "scopeNote": null,
+          "scopeNote": "This district covers parts of Cascade, Deer Lodge, Flathead, Lake, Lewis and Clark, Missoula, Sanders counties.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
@@ -7977,14 +7977,830 @@
             "verifiedAt": "2026-10-21T00:11:23.669626+00:00",
             "quote": "(1) 1st district: Lewis and Clark and Broadwater Counties;"
           }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:3->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:3",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 3 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:4->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:4",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 4 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:5->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:5",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 5 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:7->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:7",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 7 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:11->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:11",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 11 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:15->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:15",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 15 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:16->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:16",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 16 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:17->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:17",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 17 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:18->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:18",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 18 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:19->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:19",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 19 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:20->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:20",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 20 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:21->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:21",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 21 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:22->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:22",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 22 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:23->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:23",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 23 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:24->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:24",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 24 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:25->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:25",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 25 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:26->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:26",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 26 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:27->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:27",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 27 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:28->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:28",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 28 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:29->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:29",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 29 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:30->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:30",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 30 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:31->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:31",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 31 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:32->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:32",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 32 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:33->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:33",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 33 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:34->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:34",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 34 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:35->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:35",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 35 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:36->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:36",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 36 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:38->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:38",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 38 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:43->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:43",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 43 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:44->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:44",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 44 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:45->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:45",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 45 is assigned to public service commission district 1 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:76->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:76",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 76 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:80->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:80",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 80 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:81->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:81",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 81 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:82->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:82",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 82 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:83->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:83",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 83 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:84->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:84",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 84 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:91->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:91",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 91 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:92->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:92",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 92 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:sldl:99->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/sldl:99",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "House district 99 is assigned to public service commission district 5 by MCA 69-1-104."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:blaine->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:blaine",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1451 official plan blocks in Blaine County (30005) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:carter->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:carter",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 747 official plan blocks in Carter County (30011) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:chouteau->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:chouteau",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1143 official plan blocks in Chouteau County (30015) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:custer->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:custer",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1163 official plan blocks in Custer County (30017) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:daniels->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:daniels",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 462 official plan blocks in Daniels County (30019) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:dawson->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:dawson",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 909 official plan blocks in Dawson County (30021) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:fallon->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:fallon",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 659 official plan blocks in Fallon County (30025) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:garfield->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:garfield",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1000 official plan blocks in Garfield County (30033) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:glacier->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:glacier",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1404 official plan blocks in Glacier County (30035) are assigned to district 5."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:golden_valley->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:golden_valley",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 480 official plan blocks in Golden Valley County (30037) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:granite->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:granite",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 802 official plan blocks in Granite County (30039) are assigned to district 5."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:hill->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:hill",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 2279 official plan blocks in Hill County (30041) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:liberty->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:liberty",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 715 official plan blocks in Liberty County (30051) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:mccone->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:mccone",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 406 official plan blocks in McCone County (30055) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:musselshell->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:musselshell",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 861 official plan blocks in Musselshell County (30065) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:phillips->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:phillips",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1373 official plan blocks in Phillips County (30071) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:pondera->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:pondera",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1045 official plan blocks in Pondera County (30073) are assigned to district 5."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:powder_river->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:powder_river",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1095 official plan blocks in Powder River County (30075) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:powell->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:powell",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1315 official plan blocks in Powell County (30077) are assigned to district 5."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:prairie->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:prairie",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 377 official plan blocks in Prairie County (30079) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:richland->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:richland",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1449 official plan blocks in Richland County (30083) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:roosevelt->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:roosevelt",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1264 official plan blocks in Roosevelt County (30085) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:sheridan->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:sheridan",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1071 official plan blocks in Sheridan County (30091) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:teton->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:teton",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1203 official plan blocks in Teton County (30099) are assigned to district 5."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:toole->public_service_commission:5",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:toole",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:5",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 872 official plan blocks in Toole County (30101) are assigned to district 5."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:treasure->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:treasure",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 257 official plan blocks in Treasure County (30103) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:valley->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:valley",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 1577 official plan blocks in Valley County (30105) are assigned to district 1."
+          }
+        },
+        {
+          "id": "mt-bl02-membership:county:wibaux->public_service_commission:1",
+          "memberOcdId": "ocd-division/country:us/state:mt/county:wibaux",
+          "districtOcdId": "ocd-division/country:us/state:mt/public_service_commission:1",
+          "provenance": {
+            "sourceUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+            "sourceOrg": "Montana Legislature",
+            "collectedAt": "2026-10-23T08:04:54.314482+00:00",
+            "verifiedAt": "2026-10-23T08:14:07.889608+00:00",
+            "quote": "All 238 official plan blocks in Wibaux County (30109) are assigned to district 1."
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:18:52.278241+00:00",
-    "reviewedBy": "Codex BA-01 official court/county source replay",
+    "reviewedAt": "2026-10-23T08:14:07.889608+00:00",
+    "reviewedBy": "bl02-whole-division-replay",
     "sources": [
       {
         "requestedUrl": "https://candidatefiling.mt.gov/candidatefiling/CandidateList.aspx?e=450002987",
@@ -8099,6 +8915,26 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "ConstitutionVII8(3) explicitly places unopposed incumbents on approval/rejection ballot.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://archive.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+        "finalUrl": "https://mca.legmt.gov/bills/mca/title_0690/chapter_0010/part_0010/section_0040/0690-0010-0010-0040.html",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:04:54.314482+00:00",
+        "rawHash": "03e286e0fc1d982165cb353be5b670a8324f87872ae27f953b9cf39bc1ac15ea",
+        "publisher": "Montana Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
+      },
+      {
+        "requestedUrl": "https://archive.legmt.gov/content/Districting/2020/maps/State-Legislative/Final-SOS-Submission/blockequiv_final_house_districts_2023.xlsx",
+        "finalUrl": "https://archive.legmt.gov/content/Districting/2020/maps/State-Legislative/Final-SOS-Submission/blockequiv_final_house_districts_2023.xlsx",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:08:45.068992+00:00",
+        "rawHash": "64afcfabe7fbe31f45da47e9b6e87b0260205e0e7b38cd8db536bdd283e5a18e",
+        "publisher": "Montana Districting and Apportionment Commission",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "BL-02 source-bound replay; whole-division membership requires every block in the official member district to have the same target. Split counties are reported and never widened."
       }
     ]
   }

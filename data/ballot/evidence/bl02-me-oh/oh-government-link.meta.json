@@ -1,0 +1,8 @@
+{
+  "requestedUrl": "https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+  "finalUrl": "https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+  "httpStatus": 200,
+  "rawHash": "9ea26b2c4b3498bb95ec17d69a210be58e2b532f1e40780f6896dc9ffc492bfe",
+  "retrievedAt": "2026-10-23T08:27:21.897951+00:00",
+  "contentType": "text/html; charset=utf-8"
+}

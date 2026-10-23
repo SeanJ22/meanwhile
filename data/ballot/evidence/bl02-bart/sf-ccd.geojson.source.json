@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/22/query?where=STATE%3D%2706%27+AND+COUNTY%3D%27075%27&outFields=NAME%2CGEOID&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/tigerWMS_Current/MapServer/22/query?where=STATE%3D%2706%27+AND+COUNTY%3D%27075%27&outFields=NAME%2CGEOID&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:07:06.919088+00:00",
+  "rawHash": "2d94034a9a8f3f822a993746835056b730334ad0c49673a9d20fa9ebc10f6939",
+  "savedBytes": 143523,
+  "publisher": "U.S. Census Bureau"
+}

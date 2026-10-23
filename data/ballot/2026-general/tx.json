@@ -75237,13 +75237,2737 @@
             "verifiedAt": "2026-10-21T00:24:54.434109+00:00",
             "quote": "Governor Abbott appointed Leslie Timmons as District Attorney of the 31st Judicial District in Gray, Hemphill, Lipscomb, Roberts, and Wheeler Counties for a term set to expire December 31, 2026, or until her successor shall be duly elected and qualified."
           }
+        },
+        {
+          "id": "bl02-tx-county:angelina-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:angelina",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Angelina — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:aransas-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:aransas",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Aransas — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:bastrop-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:bastrop",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Bastrop — District 5; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:blanco-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:blanco",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Blanco — District 5; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:bosque-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:bosque",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Bosque — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:brazoria-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:brazoria",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Brazoria — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:caldwell-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:caldwell",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Caldwell — District 5; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:calhoun-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:calhoun",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Calhoun — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:cameron-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:cameron",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Cameron — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:camp-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:camp",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Camp — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:cass-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:cass",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Cass — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:chambers-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:chambers",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Chambers — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:cherokee-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:cherokee",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Cherokee — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:clay-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:clay",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Clay — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:comanche-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:comanche",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Comanche — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:coryell-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:coryell",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Coryell — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:eastland-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:eastland",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Eastland — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:ellis-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:ellis",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Ellis — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:erath-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:erath",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Erath — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:franklin-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:franklin",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Franklin — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:gregg-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:gregg",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Gregg — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:grimes-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:grimes",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Grimes — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:guadalupe-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:guadalupe",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Guadalupe — District 5; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:hamilton-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:hamilton",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Hamilton — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:hardin-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:hardin",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Hardin — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:harrison-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:harrison",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Harrison — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:hays-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:hays",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Hays — District 5; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:hill-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:hill",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Hill — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:houston-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:houston",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Houston — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:jack-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jack",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Jack — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:jackson-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jackson",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Jackson — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:jasper-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jasper",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Jasper — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:jefferson-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:jefferson",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Jefferson — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:kaufman-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:kaufman",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Kaufman — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:kenedy-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:kenedy",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Kenedy — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:kleberg-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:kleberg",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Kleberg — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:liberty-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:liberty",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Liberty — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:marion-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:marion",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Marion — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:matagorda-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:matagorda",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Matagorda — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:mclennan-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:mclennan",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: McLennan — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:mills-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:mills",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Mills — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:montague-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:montague",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Montague — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:morris-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:morris",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Morris — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:nacogdoches-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:nacogdoches",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Nacogdoches — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:navarro-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:navarro",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Navarro — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:newton-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:newton",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Newton — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:nueces-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:nueces",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Nueces — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:orange-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:orange",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Orange — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:palo_pinto-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:palo_pinto",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Palo Pinto — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:panola-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:panola",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Panola — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:polk-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:polk",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Polk — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:rains-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:rains",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Rains — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:refugio-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:refugio",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Refugio — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:rockwall-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:rockwall",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Rockwall — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:rusk-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:rusk",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Rusk — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:sabine-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:sabine",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Sabine — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:san_augustine-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:san_augustine",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: San Augustine — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:san_jacinto-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:san_jacinto",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: San Jacinto — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:san_patricio-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:san_patricio",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: San Patricio — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:shelby-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:shelby",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Shelby — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:smith-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:smith",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Smith — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:titus-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:titus",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Titus — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:travis-in-sbe:5",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:travis",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:5",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Travis — District 5; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:trinity-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:trinity",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Trinity — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:tyler-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:tyler",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Tyler — District 7; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:upshur-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:upshur",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Upshur — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:van_zandt-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:van_zandt",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Van Zandt — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:victoria-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:victoria",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Victoria — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:walker-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:walker",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Walker — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:waller-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:waller",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Waller — District 8; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:wharton-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:wharton",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Wharton — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:willacy-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:willacy",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Willacy — District 2; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:wise-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:wise",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Wise — District 14; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-county:wood-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/county:wood",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:19.248953+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-150: Wood — District 9; no County Total split rows."
+          }
+        },
+        {
+          "id": "bl02-tx-place:alamo-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:alamo",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Alamo (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:alton-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:alton",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Alton (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:cesar_chavez-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:cesar_chavez",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: César Chávez (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:donna-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:donna",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Donna (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:doolittle-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:doolittle",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Doolittle (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:edcouch-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:edcouch",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Edcouch (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:edinburg-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:edinburg",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Edinburg (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:elsa-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:elsa",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Elsa (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:granjeno-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:granjeno",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Granjeno (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:harding_gill_tract-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:harding_gill_tract",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Harding Gill Tract (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hargill-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hargill",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hargill (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:heidelberg-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:heidelberg",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Heidelberg (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hidalgo-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hidalgo",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hidalgo (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:indian_hills-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:indian_hills",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Indian Hills (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:la_blanca-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:la_blanca",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: La Blanca (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:la_coma_heights-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:la_coma_heights",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: La Coma Heights (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:la_homa-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:la_homa",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: La Homa (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:la_villa-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:la_villa",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: La Villa (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:laguna_seca-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:laguna_seca",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Laguna Seca (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:linn-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:linn",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Linn (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:llano_grande-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:llano_grande",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Llano Grande (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:lopezville-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:lopezville",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Lopezville (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:mcallen-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:mcallen",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: McAllen (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:mercedes-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:mercedes",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Mercedes (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:midway_north-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:midway_north",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Midway North (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:midway_south-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:midway_south",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Midway South (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:mila_doce-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:mila_doce",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Mila Doce (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:mission-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:mission",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Mission (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:monte_alto-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:monte_alto",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Monte Alto (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:muniz-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:muniz",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Muniz (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:murillo-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:murillo",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Murillo (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:north_alamo-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:north_alamo",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: North Alamo (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:olivarez-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:olivarez",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Olivarez (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:palmhurst-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:palmhurst",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Palmhurst (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:palmview_south-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:palmview_south",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Palmview South (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:pharr-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:pharr",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Pharr (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:progreso-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:progreso",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Progreso (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:progreso_lakes-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:progreso_lakes",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Progreso Lakes (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:relampago-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:relampago",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Relampago (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:san_carlos-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:san_carlos",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: San Carlos (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:san_juan_4865516-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:san_juan_4865516",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: San Juan (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:scissors-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:scissors",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Scissors (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:south_alamo-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:south_alamo",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: South Alamo (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:villa_verde-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:villa_verde",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Villa Verde (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:weslaco-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:weslaco",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Weslaco (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:west_sharyland-in-sbe:2",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:west_sharyland",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: West Sharyland (100 %) in District 2; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:aldine-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:aldine",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Aldine (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bellaire-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bellaire",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bellaire (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:cloverleaf-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:cloverleaf",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Cloverleaf (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:galena_park-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:galena_park",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Galena Park (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:jacinto_city-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:jacinto_city",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Jacinto City (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:south_houston-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:south_houston",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: South Houston (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:southside_place-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:southside_place",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Southside Place (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:west_university_place-in-sbe:4",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:west_university_place",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: West University Place (100 %) in District 4; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bunker_hill_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bunker_hill_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bunker Hill Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hedwig_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hedwig_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hedwig Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hilshire_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hilshire_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hilshire Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hunters_creek_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hunters_creek_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hunters Creek Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:jersey_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:jersey_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Jersey Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:piney_point_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:piney_point_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Piney Point Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:spring-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:spring",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Spring (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:spring_valley_village-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:spring_valley_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Spring Valley Village (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:grangerland-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:grangerland",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Grangerland (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:magnolia-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:magnolia",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Magnolia (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:montgomery-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:montgomery",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Montgomery (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:oak_ridge_north-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:oak_ridge_north",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Oak Ridge North (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:pinehurst_4857596-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:pinehurst_4857596",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Pinehurst (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:shenandoah-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:shenandoah",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Shenandoah (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:stagecoach-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:stagecoach",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Stagecoach (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:woodloch-in-sbe:6",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:woodloch",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Woodloch (100 %) in District 6; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:arcola-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:arcola",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Arcola (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:beasley-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:beasley",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Beasley (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:cumings-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:cumings",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Cumings (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:fairchilds-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:fairchilds",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Fairchilds (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:fifth_street-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:fifth_street",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Fifth Street (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:fresno-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:fresno",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Fresno (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:fulshear-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:fulshear",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Fulshear (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:kendleton-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:kendleton",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Kendleton (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:meadows_place-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:meadows_place",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Meadows Place (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:needville-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:needville",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Needville (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:orchard-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:orchard",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Orchard (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:pleak-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:pleak",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Pleak (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:richmond-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:richmond",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Richmond (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:rosenberg-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:rosenberg",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Rosenberg (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:sienna-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:sienna",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Sienna (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:simonton-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:simonton",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Simonton (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:thompsons-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:thompsons",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Thompsons (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:weston_lakes-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:weston_lakes",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Weston Lakes (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bacliff-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bacliff",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bacliff (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bayou_vista-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bayou_vista",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bayou Vista (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bolivar_peninsula-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bolivar_peninsula",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bolivar Peninsula (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:clear_lake_shores-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:clear_lake_shores",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Clear Lake Shores (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:dickinson-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:dickinson",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Dickinson (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:galveston-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:galveston",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Galveston (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hitchcock-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hitchcock",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hitchcock (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:jamaica_beach-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:jamaica_beach",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Jamaica Beach (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:kemah-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:kemah",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Kemah (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:la_marque-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:la_marque",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: La Marque (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:san_leon-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:san_leon",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: San Leon (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:santa_fe-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:santa_fe",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Santa Fe (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:tiki_island-in-sbe:7",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:tiki_island",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:7",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Tiki Island (100 %) in District 7; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:four_corners-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:four_corners",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Four Corners (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:barrett-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:barrett",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Barrett (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:crosby-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:crosby",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Crosby (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:deer_park-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:deer_park",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Deer Park (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:el_lago-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:el_lago",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: El Lago (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:highlands-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:highlands",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Highlands (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:la_porte-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:la_porte",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: La Porte (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:nassau_bay-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:nassau_bay",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Nassau Bay (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:sheldon-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:sheldon",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Sheldon (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:taylor_lake_village-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:taylor_lake_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Taylor Lake Village (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:webster-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:webster",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Webster (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:deerwood-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:deerwood",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Deerwood (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:panorama_village-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:panorama_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Panorama Village (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:patton_village-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:patton_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Patton Village (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:porter_heights-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:porter_heights",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Porter Heights (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:roman_forest-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:roman_forest",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Roman Forest (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:splendora-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:splendora",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Splendora (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:willis-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:willis",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Willis (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:woodbranch-in-sbe:8",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:woodbranch",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Woodbranch (100 %) in District 8; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:sunnyvale-in-sbe:9",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:sunnyvale",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:9",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Sunnyvale (100 %) in District 9; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bear_creek_ranch-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bear_creek_ranch",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bear Creek Ranch (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:cockrell_hill-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:cockrell_hill",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Cockrell Hill (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:desoto-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:desoto",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: DeSoto (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:duncanville-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:duncanville",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Duncanville (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hutchins-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hutchins",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hutchins (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:lancaster-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:lancaster",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Lancaster (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:wilmer-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:wilmer",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Wilmer (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:everman-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:everman",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Everman (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:forest_hill-in-sbe:13",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:forest_hill",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:13",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Forest Hill (100 %) in District 13; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:argyle-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:argyle",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Argyle (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:bartonville-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:bartonville",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Bartonville (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:copper_canyon-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:copper_canyon",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Copper Canyon (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:corinth-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:corinth",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Corinth (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:dish-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:dish",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: DISH (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:double_oak-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:double_oak",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Double Oak (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hackberry-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hackberry",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hackberry (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:hickory_creek-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:hickory_creek",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Hickory Creek (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:highland_village-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:highland_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Highland Village (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:justin-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:justin",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Justin (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:krum-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:krum",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Krum (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:lake_dallas-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:lake_dallas",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Lake Dallas (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:lakewood_village-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:lakewood_village",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Lakewood Village (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:lantana-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:lantana",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Lantana (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:northlake-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:northlake",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Northlake (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:oak_point-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:oak_point",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Oak Point (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:ponder-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:ponder",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Ponder (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:savannah-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:savannah",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Savannah (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:shady_shores-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:shady_shores",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Shady Shores (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:the_colony-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:the_colony",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: The Colony (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:alvarado-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:alvarado",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Alvarado (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:briaroaks-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:briaroaks",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: Briaroaks (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
+        },
+        {
+          "id": "bl02-tx-place:the_homesteads-in-sbe:14",
+          "memberOcdId": "ocd-division/country:us/state:tx/place:the_homesteads",
+          "districtOcdId": "ocd-division/country:us/state:tx/sbe:14",
+          "provenance": {
+            "sourceUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+            "sourceOrg": "Texas Legislative Council",
+            "collectedAt": "2026-10-23T07:59:54.787201+00:00",
+            "verifiedAt": "2026-10-23T08:16:02.941396+00:00",
+            "quote": "PLANE2106 Red-125: The Homesteads (100 %) in District 14; absent from Red-130 split-city list; no multi-county asterisk."
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:26:08.577555+00:00",
+    "reviewedAt": "2026-10-23T08:16:02.941396+00:00",
     "reviewedBy": "BL-16 source conversion",
     "sources": [
       {
@@ -75390,6 +78114,46 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "publisher": "Office of the Texas Governor",
         "reviewedEvidence": "Exact Governor appointment announcement explicitly confirms LeslieTimmons, DistrictAttorney31, thefive counties, and a term expiring December31,2026. It corroborates the certified write-in office's visually reviewed numeral."
+      },
+      {
+        "requestedUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+        "finalUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/0d9a33e0-0c70-4e1e-9eec-ae967522107e/download/plane2106_r150.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "bc7c23be615d4ce1eb36356a2092406d4ae3961aae17abd8ff3684eb662f2e37",
+        "retrievedAt": "2026-10-23T07:59:19.248953+00:00",
+        "publisher": "Texas Legislative Council",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/tx-counties.pdf. Hash identifies original public response bytes."
+      },
+      {
+        "requestedUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+        "finalUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/926c4320-0a5d-4575-964b-44e2c22e5cd9/download/plane2106r125.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "5c9b4a1a8ae52081f11227ffe3af7724387be77d7d523e6784de45cca7e8164a",
+        "retrievedAt": "2026-10-23T07:59:54.787201+00:00",
+        "publisher": "Texas Legislative Council",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/tx-cities.pdf. Hash identifies original public response bytes."
+      },
+      {
+        "requestedUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/d74ac116-4e8a-441d-bc1b-c65048f52060/download/plane2106r130.pdf?download=1",
+        "finalUrl": "https://data.capitol.texas.gov/dataset/ad1ae979-6df9-4322-98cf-6771cc67f02d/resource/d74ac116-4e8a-441d-bc1b-c65048f52060/download/plane2106r130.pdf?download=1",
+        "httpStatus": 200,
+        "rawHash": "f5c0e71d644a96de798b4c5137ade05bdd23ab71d5c554413977e6363e8098e8",
+        "retrievedAt": "2026-10-23T08:01:53.772111+00:00",
+        "publisher": "Texas Legislative Council",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/tx-split-cities.pdf. Hash identifies original public response bytes."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_place_48.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_place_48.txt",
+        "httpStatus": 200,
+        "rawHash": "614e06f49119eb31a6601dd58731a9514f4c1ca2c33064a182bff0e890196e4a",
+        "retrievedAt": "2026-10-23T08:14:06.454038+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Saved source at data/ballot/evidence/bl02-interior/tx-census-places.txt. Original public response bytes. Legal place type and GEOID identify homonymous cities and CDPs in the ZIP index."
       }
     ]
   }

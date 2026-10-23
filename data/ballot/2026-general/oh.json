@@ -12814,14 +12814,626 @@
             "verifiedAt": "2026-10-21T00:32:31.009318Z",
             "quote": "Twelfth district: Brown, Butler, Clermont, Clinton, Fayette, Madison, Preble, and Warren"
           }
+        },
+        {
+          "id": "bl02:a47a25e9457f67fff5172fcd",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:bay_village_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:e9c28fa7cce683cdcc65aab1",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:bay_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:191947d200fb3a6895f1a43d",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:fairview_park_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:111018991232ffd6389ca18d",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:fairview_park",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:33d1248bc6e36beeb76ab01c",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:north_olmsted_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:3c3ccbf6e6667d34bcf80221",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:north_olmsted",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:9f26e307f457b00b6bf5c218",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:rocky_river_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:30abf3aa84e9ad5302820ace",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:rocky_river",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:a77067c35697aca07aee700c",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:westlake_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:d833aee9674b2721a9ef2df7",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:westlake",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:1",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 1Serving the cities of Bay Village, Fairview Park, North Olmsted, Rocky River, and Westlake. "
+          }
+        },
+        {
+          "id": "bl02:93c8d5df568f16668e1ff99c",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:brooklyn_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 3Serving the cities of Brooklyn, Cleveland Ward 4, Precincts – D, F, H, J, K, L, P, Cleveland Ward 7, Precincts – B, I, J, L, N, O, R, Cleveland Ward 11, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, Cleveland Ward 12, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, Cleveland Ward 13, Precincts – B, C, D, E, F, G, Cleveland Ward 14, Precincts – A, B, C, D, E, F, I, J, K, L, M."
+          }
+        },
+        {
+          "id": "bl02:68cb0e89bfa78ddbfbe8a4d4",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:brooklyn",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:3",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 3Serving the cities of Brooklyn, Cleveland Ward 4, Precincts – D, F, H, J, K, L, P, Cleveland Ward 7, Precincts – B, I, J, L, N, O, R, Cleveland Ward 11, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, Cleveland Ward 12, Precincts – A, B, C, D, E, F, G, H, I, J, K, L, M, N, Cleveland Ward 13, Precincts – B, C, D, E, F, G, Cleveland Ward 14, Precincts – A, B, C, D, E, F, I, J, K, L, M."
+          }
+        },
+        {
+          "id": "bl02:0990f280a6d3260d25acef11",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:berea_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:4c582ee840f26859be5af009",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:berea",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:99ea803f735ab96b3ec9eb79",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:north_royalton_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:113d260ee11290e254096e52",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:north_royalton",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:0244081a33ab4b2431cb1842",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:olmsted_falls_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:9df1f065b000dd155b56f81e",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:olmsted_falls",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:c4645e1f0c542a284432bce9",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:strongsville_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:3859405bd8b7ec27575bb3c2",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:strongsville",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:e870324d7c1f226d574c0531",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:olmsted_township",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 5Serving the cities of Berea, North Royalton, Olmsted Falls, Strongsville, and Olmsted Township. "
+          }
+        },
+        {
+          "id": "bl02:aa32ffa399de98adba593ae7",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:bedford_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:6f48a499ebb56291eeb12df1",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:bedford",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:b01049043c234c945b5c1b1e",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:bedford_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:f650d0c6e963c32ef3a80b30",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:bedford_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:8d22fbba14ae90d7ecb00286",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:pepper_pike_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:8cc03474e983cd8a7610cec4",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:pepper_pike",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:51ee391478f694f24f6c6007",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:shaker_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:a327fa627674170dede0e47a",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:shaker_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:d883041bb9f2e32aa77640a7",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:warrensville_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:34f382fb8aac8cebe032d403",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:warrensville_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:9505e7fbee46fa4055f35b72",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:highland_hills_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:a5d6e7e8a08628f657a63725",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:highland_hills",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:8dc068b1642c27f8dbaaaf60",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:north_randall_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:5c9b5e1a3608dea35e04c86b",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:north_randall",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:870b37f2861c3e6e00bd65ab",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:orange_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:e400373516389f250432c95b",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:orange",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:686ce3745eb3bf8d9ec01de5",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:woodmere_village",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:1f3228215d00d66a9d42c32b",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:woodmere",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:9",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 9Serving the cities of Bedford, Bedford Heights, and Cleveland Ward 1, Precincts – A, D, F, H, K, L, M, N, O, P, Q, R, S, Cleveland Ward 2, Precincts – I, Cleveland Ward 3, Precincts – F, L, M, N, O, P, R, and Cleveland Ward 6, Precincts – H, I, M, N, and Pepper Pike, Shaker Heights, and Warrensville Heights. The villages of Highland Hills, North Randall, Orange, and Woodmere."
+          }
+        },
+        {
+          "id": "bl02:fac707543160a34dcbc7da94",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:beachwood_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:6a9324259ea7544b2ecf9d30",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:beachwood",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:04a8e1c3b1738fd295b68f44",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:euclid_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:9fb462d207af7e6e0f0367a7",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:euclid",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:e5e74c40a2d515ac13711224",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:highland_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:3d2b09672a3dfe858bd4d40d",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:highland_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:218c2053e4e48bac816ae9e4",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:lyndhurst_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:11dd29d6cf8482cf2f4ee53f",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:lyndhurst",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:6fa1a3ac51f7c99ca393ac10",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:richmond_heights_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:0b85732b7974cb779ea89b1f",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:richmond_heights",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:c9dfc8b50bc1d04bb5dab020",
+          "memberOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/place:south_euclid_city",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
+        },
+        {
+          "id": "bl02:9a4c297a13a309dd244ebf74",
+          "memberOcdId": "ocd-division/country:us/state:oh/place:south_euclid",
+          "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:11",
+          "provenance": {
+            "sourceUrl": "https://cuyahogacounty.gov/council/about-us/",
+            "sourceOrg": "Cuyahoga County Council",
+            "collectedAt": "2026-10-23T07:58:11.745808+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00",
+            "quote": "Cuyahoga County Council District 11Serving the cities of Beachwood, Euclid, Highland Heights, Lyndhurst, Richmond Heights, and South Euclid. "
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:47:29.936424Z",
-    "reviewedBy": "BA-01 saved official source replay",
+    "reviewedAt": "2026-10-23T08:32:29.195605+00:00",
+    "reviewedBy": "BL-02 final Maine/Ohio district-source replay",
     "sources": [
       {
         "requestedUrl": "https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf",
@@ -13462,6 +14074,46 @@
         "publisher": "Montgomery County Board of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "Original public response bytes retained at data/ballot/evidence/ba01-great-lakes/oh-county-sample-montgomery-new-lebanon.raw.gz. Hash identifies decompressed bytes. Replay parses each distinct office/term and all eligible candidates; sample PDFs confirm printed names, and explicit certified write-in rows supply unprinted eligible choices. County-to-appeals-district membership follows current ORC2501.01."
+      },
+      {
+        "requestedUrl": "https://cuyahogacounty.gov/council/about-us/",
+        "finalUrl": "https://cuyahogacounty.gov/council/about-us/",
+        "publisher": "Cuyahoga County Council",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T07:58:11.745808+00:00",
+        "httpStatus": 200,
+        "rawHash": "cefa21d1c4d342721871c1a2db2133170d14b6009b49d94353b0f5298089b985",
+        "reviewedEvidence": "Saved current official council directory at data/ballot/evidence/bl02-east/oh-council.html. Replay reads each district's Serving paragraph and adds only explicitly named whole municipalities. Cleveland ward/precinct portions never become whole-city memberships."
+      },
+      {
+        "requestedUrl": "https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+        "finalUrl": "https://gis.cuyahogacounty.us/Geocortex/Essentials/REST/sites/CCGIS/map",
+        "retrievedAt": "2026-10-23T08:27:21.897951+00:00",
+        "httpStatus": 200,
+        "rawHash": "9ea26b2c4b3498bb95ec17d69a210be58e2b532f1e40780f6896dc9ffc492bfe",
+        "publisher": "Cuyahoga County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "County government GIS directory explicitly links the2022–2032 adopted council district layer. All11 district records are held; the exact district7 polygon is copied unchanged into data/states/oh/geo/bl02-final-districts-39.geojson. District7 splits Cleveland; no Cleveland or Cuyahoga whole-place membership is created."
+      },
+      {
+        "requestedUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0?f=pjson",
+        "finalUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0?f=pjson",
+        "retrievedAt": "2026-10-23T08:27:21.432853+00:00",
+        "httpStatus": 200,
+        "rawHash": "525ac6bce2b6086abc91db85d74553ae6695215c9116a7f1937c21c6412896b0",
+        "publisher": "Cuyahoga County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "County government GIS directory explicitly links the2022–2032 adopted council district layer. All11 district records are held; the exact district7 polygon is copied unchanged into data/states/oh/geo/bl02-final-districts-39.geojson. District7 splits Cleveland; no Cleveland or Cuyahoga whole-place membership is created."
+      },
+      {
+        "requestedUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0/query?f=geojson&where=1%3D1&outFields=%2A&outSR=4326",
+        "finalUrl": "https://services7.arcgis.com/GXM8JipKyc0m6HBi/arcgis/rest/services/County_Council_Districts_2021_effective_2022-2032/FeatureServer/0/query?f=geojson&where=1%3D1&outFields=%2A&outSR=4326",
+        "retrievedAt": "2026-10-23T08:27:25.346133+00:00",
+        "httpStatus": 200,
+        "rawHash": "82200fc4407ed5598c70baac18f3efb1e6c8f4f85660ba6e631ea4901389c9b7",
+        "publisher": "Cuyahoga County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "County government GIS directory explicitly links the2022–2032 adopted council district layer. All11 district records are held; the exact district7 polygon is copied unchanged into data/states/oh/geo/bl02-final-districts-39.geojson. District7 splits Cleveland; no Cleveland or Cuyahoga whole-place membership is created."
       }
     ]
   }

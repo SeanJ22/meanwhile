@@ -1,0 +1,990 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "1100 Congress Avenue",
+    "addressLine": [
+      "1100 Congress Avenue"
+    ],
+    "city": "Austin",
+    "state": "TX",
+    "zip": "78701"
+  },
+  "earlyVoteSites": [
+    {
+      "address": {
+        "locationName": "TRAVIS COUNTY CIVIL AND FAMILY COURTS FACILITY",
+        "line1": "1700 Guadalupe St",
+        "addressLine": [
+          "1700 Guadalupe St"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78701"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.279946233055718,
+      "longitude": -97.742503233743591,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "AUSTIN RECREATION CENTER",
+        "line1": "1301 Shoal Creek Blvd",
+        "addressLine": [
+          "1301 Shoal Creek Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78701"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.278143784327764,
+      "longitude": -97.748970425945132,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "UT TEXAS UNION",
+        "line1": "2308 Whitis Ave",
+        "addressLine": [
+          "2308 Whitis Ave"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78712"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.286660830971535,
+      "longitude": -97.741163533186025,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "AUSTIN CITY HALL",
+        "line1": "301 W 2nd St",
+        "addressLine": [
+          "301 W 2nd St"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78701"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.265057840879933,
+      "longitude": -97.747463323165135,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "CARVER BRANCH LIBRARY",
+        "line1": "1161 Angelina St",
+        "addressLine": [
+          "1161 Angelina St"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78702"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.26957296963884,
+      "longitude": -97.724218019994467,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "LBJ SCHOOL OF PUBLIC AFFAIRS",
+        "line1": "2315 Red River St",
+        "addressLine": [
+          "2315 Red River St"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78712"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.285521999583406,
+      "longitude": -97.728672464476119,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "MILLENNIUM YOUTH ENTERTAINMENT COMPLEX",
+        "line1": "1156 Hargrave St",
+        "addressLine": [
+          "1156 Hargrave St"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78702"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.271702677189509,
+      "longitude": -97.710738731725073,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "CEPEDA BRANCH LIBRARY",
+        "line1": "651 N Pleasant Valley Rd",
+        "addressLine": [
+          "651 N Pleasant Valley Rd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78702"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.25912458208871,
+      "longitude": -97.708835521552231,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "RANDALLS FLAGSHIP WEST LAKE HILLS",
+        "line1": "3300 Bee Caves Rd",
+        "addressLine": [
+          "3300 Bee Caves Rd"
+        ],
+        "city": "West Lake Hills",
+        "state": "TX",
+        "zip": "78746"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.275357740462542,
+      "longitude": -97.798788326206264,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "SOUTH AUSTIN RECREATION CENTER",
+        "line1": "1100 Cumberland Rd",
+        "addressLine": [
+          "1100 Cumberland Rd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78704"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.241666712918462,
+      "longitude": -97.768611132284462,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "AUSTIN ENERGY HEADQUARTERS",
+        "line1": "4815 Mueller Blvd",
+        "addressLine": [
+          "4815 Mueller Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78723"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.302260803870695,
+      "longitude": -97.704709066434958,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "TRAVIS COUNTY CLERK",
+        "line1": "5501 Airport Blvd",
+        "addressLine": [
+          "5501 Airport Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78751"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.316173113160929,
+      "longitude": -97.712648704505639,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "NORTHWEST RECREATION CENTER",
+        "line1": "2913 Northland Dr",
+        "addressLine": [
+          "2913 Northland Dr"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78757"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.333701819281753,
+      "longitude": -97.751912025940243,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DAN RUIZ BRANCH LIBRARY",
+        "line1": "1600 Grove Blvd",
+        "addressLine": [
+          "1600 Grove Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78741"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.229762942058105,
+      "longitude": -97.707158283695051,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "AUSTIN PERMITTING AND DEVELOPMENT CENTER",
+        "line1": "6310 Wilhelmina",
+        "addressLine": [
+          "6310 Wilhelmina"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78752"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.325375298866536,
+      "longitude": -97.709839812259162,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "WHEATSVILLE FOOD COOP SOUTH LAMAR",
+        "line1": "4001 S Lamar Blvd",
+        "addressLine": [
+          "4001 S Lamar Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78704"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.235580090268435,
+      "longitude": -97.79099898371831,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "BEN HUR SHRINE CENTER",
+        "line1": "7811 Rockwood Ln",
+        "addressLine": [
+          "7811 Rockwood Ln"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78757"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.358235634994923,
+      "longitude": -97.73814181993319,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "GEORGE MORALES DOVE SPRINGS RECREATION CENTER",
+        "line1": "5801 Ainez Dr",
+        "addressLine": [
+          "5801 Ainez Dr"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78744"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.18750002655284,
+      "longitude": -97.738333278840358,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "MENCHACA ROAD BRANCH PUBLIC LIBRARY",
+        "line1": "5500 Menchaca Rd",
+        "addressLine": [
+          "5500 Menchaca Rd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78745"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.216457562354957,
+      "longitude": -97.797297497268588,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "FORMER VERIZON",
+        "line1": "9705 Research Blvd",
+        "addressLine": [
+          "9705 Research Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78759"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.390863237902412,
+      "longitude": -97.743976577355113,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "BEDICHEK MIDDLE SCHOOL",
+        "line1": "6800 Bill Hughes Rd",
+        "addressLine": [
+          "6800 Bill Hughes Rd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78745"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.194121494988373,
+      "longitude": -97.786448871526829,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "SHOPS AT ARBOR WALK",
+        "line1": "10515 N Mopac Expy",
+        "addressLine": [
+          "10515 N Mopac Expy"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78759"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.387743766463121,
+      "longitude": -97.73309826700077,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "RIVERBEND CENTRE",
+        "line1": "4214 N Capital of Texas Hwy",
+        "addressLine": [
+          "4214 N Capital of Texas Hwy"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78746"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.342141987448702,
+      "longitude": -97.804594994307422,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "AUSTIN OAKS CHURCH",
+        "line1": "4220 Monterey Oaks Blvd",
+        "addressLine": [
+          "4220 Monterey Oaks Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78749"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.230363117952251,
+      "longitude": -97.8326026950298,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "GUS GARCIA RECREATION CENTER",
+        "line1": "1201 E Rundberg Ln",
+        "addressLine": [
+          "1201 E Rundberg Ln"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78753"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.352500040412639,
+      "longitude": -97.681944399454082,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "DISABILITY RIGHTS TEXAS",
+        "line1": "2222 W Braker Ln",
+        "addressLine": [
+          "2222 W Braker Ln"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78758"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.39273627987799,
+      "longitude": -97.712849787816722,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "CHINATOWN CENTER",
+        "line1": "10901 N Lamar Blvd",
+        "addressLine": [
+          "10901 N Lamar Blvd"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78753"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.378198721156231,
+      "longitude": -97.686693990094284,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "TCC COMPLEX",
+        "line1": "3614 Bill Price Rd",
+        "addressLine": [
+          "3614 Bill Price Rd"
+        ],
+        "city": "Del Valle",
+        "state": "TX",
+        "zip": "78617"
+      },
+      "pollingHours": "Fri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.197922506522296,
+      "longitude": -97.646277566292966,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "COMMUNITY CENTER AT OAK HILL",
+        "line1": "8656 W Highway 71",
+        "addressLine": [
+          "8656 W Highway 71"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78735"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.251392393278515,
+      "longitude": -97.893784022315259,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "COMMUNITY CENTER AT DEL VALLE",
+        "line1": "3518 FM 973",
+        "addressLine": [
+          "3518 FM 973"
+        ],
+        "city": "Del Valle",
+        "state": "TX",
+        "zip": "78617"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.199177224184705,
+      "longitude": -97.642593224565815,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "RIATA TRACE",
+        "line1": "12221 Riata Trace Pkwy",
+        "addressLine": [
+          "12221 Riata Trace Pkwy"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78727"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.428571868089445,
+      "longitude": -97.749882196907748,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "RRISD HARTFIELD PAC",
+        "line1": "5800 McNeil Dr",
+        "addressLine": [
+          "5800 McNeil Dr"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78729"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.447713931888753,
+      "longitude": -97.735998427412554,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "WESTOAK WOODS BAPTIST CHURCH",
+        "line1": "2900 W Slaughter Ln",
+        "addressLine": [
+          "2900 W Slaughter Ln"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78748"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.179711195425671,
+      "longitude": -97.839425902463134,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "RANDALLS BRODIE",
+        "line1": "9911 Brodie Ln",
+        "addressLine": [
+          "9911 Brodie Ln"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78748"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.184068196251545,
+      "longitude": -97.847636697134391,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "BALCONES BINGO",
+        "line1": "13096 N US Highway 183",
+        "addressLine": [
+          "13096 N US Highway 183"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78750"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.438991564691595,
+      "longitude": -97.780442332345,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "BEE CAVE CITY HALL",
+        "line1": "4000 Galleria Pkwy",
+        "addressLine": [
+          "4000 Galleria Pkwy"
+        ],
+        "city": "Bee Cave",
+        "state": "TX",
+        "zip": "78738"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.308234264168824,
+      "longitude": -97.940027104063944,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "MANOR ISD ADMIN BUILDING",
+        "line1": "10335 US Highway 290 E",
+        "addressLine": [
+          "10335 US Highway 290 E"
+        ],
+        "city": "Manor",
+        "state": "TX",
+        "zip": "78653"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.344778639686854,
+      "longitude": -97.572239989681734,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "CIRCLE C COMMUNITY CENTER",
+        "line1": "7817 La Crosse Ave",
+        "addressLine": [
+          "7817 La Crosse Ave"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78739"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.193122519503504,
+      "longitude": -97.908668763210358,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "RANDALLS STEINER RANCH",
+        "line1": "5145 FM 620 N",
+        "addressLine": [
+          "5145 FM 620 N"
+        ],
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78732"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.389167560733554,
+      "longitude": -97.883820698565287,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "PFLUGERVILLE ISD ROCK GYM",
+        "line1": "702 W Pecan St",
+        "addressLine": [
+          "702 W Pecan St"
+        ],
+        "city": "Pflugerville",
+        "state": "TX",
+        "zip": "78660"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.442888214243542,
+      "longitude": -97.626009803456768,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "PFLUGER HALL AND CONFERENCE CENTER",
+        "line1": "203 E Pecan St Ste B",
+        "addressLine": [
+          "203 E Pecan St Ste B"
+        ],
+        "city": "Pflugerville",
+        "state": "TX",
+        "zip": "78660"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.438886131823285,
+      "longitude": -97.619443401451832,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "LAKEWAY ACTIVITY CENTER",
+        "line1": "105 Cross Crk",
+        "addressLine": [
+          "105 Cross Crk"
+        ],
+        "city": "Lakeway",
+        "state": "TX",
+        "zip": "78734"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 10 pm\nFri, Oct 30: 7 am - 10 pm",
+      "latitude": 30.362484420843256,
+      "longitude": -97.981281613687841,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "TYPHOON TEXAS WATERPARK",
+        "line1": "18500 TX 130 SERVICE RD PFLUGERVILLE TX 78660",
+        "addressLine": [
+          "18500 TX 130 SERVICE RD PFLUGERVILLE TX 78660"
+        ]
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.462215414154279,
+      "longitude": -97.597499480609514,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "CHRIST EPISCOPAL CHURCH",
+        "line1": "3520 W Whitestone Blvd",
+        "addressLine": [
+          "3520 W Whitestone Blvd"
+        ],
+        "city": "Cedar Park",
+        "state": "TX",
+        "zip": "78613"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.511249701211369,
+      "longitude": -97.88142316349375,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    },
+    {
+      "address": {
+        "locationName": "LAGO VISTA PUBLIC LIBRARY",
+        "line1": "5803 Thunderbird",
+        "addressLine": [
+          "5803 Thunderbird"
+        ],
+        "city": "Lago Vista",
+        "state": "TX",
+        "zip": "78645"
+      },
+      "pollingHours": "Mon, Oct 19: 7 am - 7 pm\nTue, Oct 20: 7 am - 7 pm\nWed, Oct 21: 7 am - 7 pm\nThu, Oct 22: 7 am - 7 pm\nFri, Oct 23: 7 am - 7 pm\nSat, Oct 24: 7 am - 7 pm\nSun, Oct 25: 7 am - 7 pm\nMon, Oct 26: 7 am - 7 pm\nTue, Oct 27: 7 am - 7 pm\nWed, Oct 28: 7 am - 7 pm\nThu, Oct 29: 7 am - 7 pm\nFri, Oct 30: 7 am - 7 pm",
+      "latitude": 30.452685278723585,
+      "longitude": -97.986693601412981,
+      "sources": [
+        {
+          "name": "Voting Information Project",
+          "official": true
+        }
+      ]
+    }
+  ],
+  "state": [
+    {
+      "name": "Texas",
+      "electionAdministrationBody": {
+        "name": "Secretary of State",
+        "electionInfoUrl": "https://www.sos.state.tx.us/elections/",
+        "electionRegistrationConfirmationUrl": "https://teamrv-mvp.sos.texas.gov/MVP/mvp.do",
+        "votingLocationFinderUrl": "https://teamrv-mvp.sos.texas.gov/MVP/mvp.do",
+        "ballotInfoUrl": "https://www.sos.texas.gov/elections/laws/current-elections-information.shtml",
+        "electionRulesUrl": "https://www.sos.texas.gov/elections/voter/reqabbm.shtml",
+        "correspondenceAddress": {
+          "line1": "P.O. Box 12060",
+          "addressLine": [
+            "P.O. Box 12060"
+          ],
+          "city": "Austin",
+          "state": "",
+          "zip": "78711-2060"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

@@ -1,0 +1,121 @@
+{
+  "step": "BL-02",
+  "state": "NY",
+  "geometryPath": "data/states/ny/geo/bl02-held-districts-36.geojson",
+  "districts": 4,
+  "sourceVersion": "26b",
+  "sources": [
+    {
+      "requestedUrl": "https://data.cityofnewyork.us/resource/mi5z-t7dx.geojson?$limit=100",
+      "finalUrl": "https://data.cityofnewyork.us/resource/mi5z-t7dx.geojson?$limit=100",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-23T08:32:43.938035+00:00",
+      "rawHash": "a83721176af581549c265c8c3254bb5e79461587c522f8f1856a39a5890ffb74"
+    },
+    {
+      "requestedUrl": "https://data.cityofnewyork.us/resource/872g-cjhh.geojson?$where=coundist%3D3",
+      "finalUrl": "https://data.cityofnewyork.us/resource/872g-cjhh.geojson?$where=coundist%3D3",
+      "httpStatus": 200,
+      "retrievedAt": "2026-10-23T08:33:02.057149+00:00",
+      "rawHash": "246c6f8f55307429269ddc4182071c74b17634a1dccc23ceda946200943ce242"
+    }
+  ],
+  "countySplits": [
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "county": "New York",
+      "wholeCountyMembershipAdded": false
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "county": "Queens",
+      "wholeCountyMembershipAdded": false
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "county": "Bronx",
+      "wholeCountyMembershipAdded": false
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+      "county": "New York",
+      "wholeCountyMembershipAdded": false
+    }
+  ],
+  "representativePoints": [
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3",
+      "lat": 40.757574594668526,
+      "lng": -73.99540371302143,
+      "sourceFields": {
+        "boro_code": "1",
+        "boro_name": "Manhattan",
+        "muni_court": "03"
+      }
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4",
+      "lat": 40.6937113962818,
+      "lng": -73.77269020907653,
+      "sourceFields": {
+        "boro_code": "4",
+        "boro_name": "Queens",
+        "muni_court": "04"
+      }
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2",
+      "lat": 40.8560989204223,
+      "lng": -73.90052810264393,
+      "sourceFields": {
+        "boro_code": "2",
+        "boro_name": "Bronx",
+        "muni_court": "02"
+      }
+    },
+    {
+      "districtOcdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3",
+      "lat": 40.748151697068124,
+      "lng": -73.99842319084289,
+      "sourceFields": {
+        "coundist": "3"
+      }
+    }
+  ],
+  "allPolygonsValid": true,
+  "wholeCountyMembershipsAdded": 0,
+  "wholeCityMembershipsAdded": 0,
+  "upstream": "Official NYC DCP current district lists and polygons, matched to already-held NYC Board of Elections contests",
+  "downstream": "Existing resolver geometry and ballot point selector; parent regenerates the combined manifest",
+  "meaning": "Exact election district geometry for all four unreachable held New York races. All districts split a county. Geographic scopes stay narrow; publication and production reader replay belong to the parent BL-02 task.",
+  "normalSelectorReplay": {
+    "containsPassed": 4,
+    "contestsForDivisionsPassed": 4,
+    "realZipCentroidExamples": [
+      {
+        "zip": "10001",
+        "lat": 40.75065,
+        "lng": -73.99729,
+        "districtOcdId": "ocd-division/country:us/state:ny/county:new_york/municipal_court_district:3"
+      },
+      {
+        "zip": "10001",
+        "lat": 40.75065,
+        "lng": -73.99729,
+        "districtOcdId": "ocd-division/country:us/state:ny/place:new_york/council_district:3"
+      },
+      {
+        "zip": "10451",
+        "lat": 40.82217,
+        "lng": -73.92262,
+        "districtOcdId": "ocd-division/country:us/state:ny/county:bronx/municipal_court_district:2"
+      },
+      {
+        "zip": "11004",
+        "lat": 40.74619,
+        "lng": -73.71151,
+        "districtOcdId": "ocd-division/country:us/state:ny/county:queens/municipal_court_district:4"
+      }
+    ]
+  }
+}

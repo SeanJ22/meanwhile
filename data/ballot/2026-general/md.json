@@ -17968,13 +17968,48 @@
       "absences": [],
       "coverageNotes": [
         "Local contests are still being added. Governor and Lieutenant Governor names remain together as printed joint tickets. Campaign websites remain exactly as printed in the official candidate lists."
+      ],
+      "districtMemberships": [
+        {
+          "id": "bl02:81bde027801566574c32b165",
+          "memberOcdId": "ocd-division/country:us/state:md/place:brookeville",
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+          "provenance": {
+            "sourceUrl": "https://gis.montgomerycountymd.gov/arcgis/rest/services/elections/council_7_districts_maponly/MapServer/0/query?where=COUNCIL%3D%277%27&outFields=COUNCIL&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Montgomery County Government",
+            "collectedAt": "2026-10-20T23:29:45.578562+00:00",
+            "verifiedAt": "2026-10-23T08:11:35.150306+00:00"
+          }
+        },
+        {
+          "id": "bl02:4e3e16c588abbb3a99f68d7b",
+          "memberOcdId": "ocd-division/country:us/state:md/place:laytonsville",
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+          "provenance": {
+            "sourceUrl": "https://gis.montgomerycountymd.gov/arcgis/rest/services/elections/council_7_districts_maponly/MapServer/0/query?where=COUNCIL%3D%277%27&outFields=COUNCIL&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Montgomery County Government",
+            "collectedAt": "2026-10-20T23:29:45.578562+00:00",
+            "verifiedAt": "2026-10-23T08:11:35.150306+00:00"
+          }
+        },
+        {
+          "id": "bl02:7f3ba4c2d564587f8784e9a7",
+          "memberOcdId": "ocd-division/country:us/state:md/place:derwood",
+          "districtOcdId": "ocd-division/country:us/state:md/county:montgomery/council_district:7",
+          "provenance": {
+            "sourceUrl": "https://gis.montgomerycountymd.gov/arcgis/rest/services/elections/council_7_districts_maponly/MapServer/0/query?where=COUNCIL%3D%277%27&outFields=COUNCIL&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Montgomery County Government",
+            "collectedAt": "2026-10-20T23:29:45.578562+00:00",
+            "verifiedAt": "2026-10-23T08:11:35.150306+00:00"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:16:24.016357+00:00",
-    "reviewedBy": "BA-01 all Maryland county questions certified ballot replay",
+    "reviewedAt": "2026-10-23T08:23:01.238613+00:00",
+    "reviewedBy": "BL-02 exact district memberships and point-geography replay",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -18565,6 +18600,26 @@
         "httpStatus": 200,
         "rawHash": "f859210bbf56a29fd42a025ab5e62bb151dce3cbe5f651cfa3580eea99ba1220",
         "reviewedEvidence": "All county questions replayed with full certified ballot wording, including explanatory for/against paragraphs. Question lists, exact printed titles, and identical wording verified across every certified county ballot style; county question index cross-checked. Printed ballot controls where index abbreviates or mistitles a question."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE%3D%2724%27&outFields=NAME,GEOID&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE%3D%2724%27&outFields=NAME,GEOID&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:11:02.337521+00:00",
+        "httpStatus": 200,
+        "rawHash": "522dd49214097955590525ac4a66cf3a1dabcf1da353980afa2b94e8ec56a5f5",
+        "reviewedEvidence": "Official current Census place polygons in data/ballot/evidence/bl02-east/md-places.json.gz. Exact whole-place covers test against the separately held official MontgomeryCouncil7 polygon; all partial-city/CDP geometries excluded, with no threshold or tolerance."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2724%27&outFields=NAME,GEOID&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2724%27&outFields=NAME,GEOID&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:11:07.161399+00:00",
+        "httpStatus": 200,
+        "rawHash": "ff51a0bb6fe69a3274029ecc0031b4752413ff19620183e46b30b4e60754979f",
+        "reviewedEvidence": "Official current Census place polygons in data/ballot/evidence/bl02-east/md-cdps.json.gz. Exact whole-place covers test against the separately held official MontgomeryCouncil7 polygon; all partial-city/CDP geometries excluded, with no threshold or tolerance."
       }
     ]
   }

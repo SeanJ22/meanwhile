@@ -3691,13 +3691,158 @@
         "The Department of Elections' full November 3 general-election list supplies every Qualified candidate in the covered federal, statewide and legislative contests. Its separate declared write-in list supplies six additional Qualified candidates. Withdrawn entries are excluded.",
         "Scott Walker is listed as a Provisional declared write-in for Representative in Congress and is not included among Qualified candidates. The Department says submitted residency materials remain under review by the State Election Commissioner.",
         "Statewide ballot-measure coverage remains unverified because the Department's linked 2026 General Election Sample Ballots page returns Request Rejected."
+      ],
+      "districtMemberships": [
+        {
+          "id": "bl02:8086d6cd1d16f27a36ef0cb2",
+          "memberOcdId": "ocd-division/country:us/state:de/place:townsend",
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "New Castle County Government",
+            "collectedAt": "2026-10-21T00:28:54.979014+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:979a1b89ed9237ad21a9c540",
+          "memberOcdId": "ocd-division/country:us/state:de/place:greenville",
+          "districtOcdId": "ocd-division/country:us/state:de/county:new_castle/council_district:2",
+          "provenance": {
+            "sourceUrl": "https://gis.nccde.org/entserver/rest/services/Initiatives/County_Council/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "New Castle County Government",
+            "collectedAt": "2026-10-21T00:28:54.979014+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:6bbc8aaaf282179e460abfa9",
+          "memberOcdId": "ocd-division/country:us/state:de/place:magnolia",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Kent County Government",
+            "collectedAt": "2026-10-21T00:28:42.727569+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:49cbd638f548778465672547",
+          "memberOcdId": "ocd-division/country:us/state:de/place:houston",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Kent County Government",
+            "collectedAt": "2026-10-21T00:28:42.727569+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:b8b79ebd96ec790bc98ab4db",
+          "memberOcdId": "ocd-division/country:us/state:de/place:frederica",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Kent County Government",
+            "collectedAt": "2026-10-21T00:28:42.727569+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:498b3e202edbd20919b00125",
+          "memberOcdId": "ocd-division/country:us/state:de/place:farmington",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Kent County Government",
+            "collectedAt": "2026-10-21T00:28:42.727569+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:bcc42e128eda86bff18f9006",
+          "memberOcdId": "ocd-division/country:us/state:de/place:felton",
+          "districtOcdId": "ocd-division/country:us/state:de/county:kent/council_district:6",
+          "provenance": {
+            "sourceUrl": "https://gis.kentcountyde.gov/server/rest/services/Boundaries/PoliticalBoundaries/MapServer/0/query?where=1%3D1&outFields=DISTRICT&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Kent County Government",
+            "collectedAt": "2026-10-21T00:28:42.727569+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:7ded061b51ccd14a1474ecf6",
+          "memberOcdId": "ocd-division/country:us/state:de/place:frankford",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Sussex County Government",
+            "collectedAt": "2026-10-21T00:26:54.394111+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:a28ab108fb1135ee7eb4251e",
+          "memberOcdId": "ocd-division/country:us/state:de/place:dagsboro",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Sussex County Government",
+            "collectedAt": "2026-10-21T00:26:54.394111+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:c7407042d98b018a1080c718",
+          "memberOcdId": "ocd-division/country:us/state:de/place:millville",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Sussex County Government",
+            "collectedAt": "2026-10-21T00:26:54.394111+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:58177ecb8e6085f13951b851",
+          "memberOcdId": "ocd-division/country:us/state:de/place:ocean_view",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:4",
+          "provenance": {
+            "sourceUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Sussex County Government",
+            "collectedAt": "2026-10-21T00:26:54.394111+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:d14a7a4d9fcc202a43392c2b",
+          "memberOcdId": "ocd-division/country:us/state:de/place:georgetown",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Sussex County Government",
+            "collectedAt": "2026-10-21T00:26:54.394111+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        },
+        {
+          "id": "bl02:703416ad76cbbfb961c59396",
+          "memberOcdId": "ocd-division/country:us/state:de/place:millsboro",
+          "districtOcdId": "ocd-division/country:us/state:de/county:sussex/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://map.sussexcountyde.gov/trdserver/rest/services/AdministrativeAreas/Districts_And_Boundaries/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Sussex County Government",
+            "collectedAt": "2026-10-21T00:26:54.394111+00:00",
+            "verifiedAt": "2026-10-23T08:04:22.807815+00:00"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "BA-01 all Delaware county electoral district roster replay",
-    "reviewedAt": "2026-10-21T00:28:54.979014+00:00",
+    "reviewedBy": "BL-02 exact district memberships and point-geography replay",
+    "reviewedAt": "2026-10-23T08:23:01.238613+00:00",
     "sources": [
       {
         "requestedUrl": "https://elections.delaware.gov/",
@@ -3843,6 +3988,26 @@
         "httpStatus": 200,
         "rawHash": "175d18d47e70e993b23f5390af08c5a5098b2714465651f08e7770043a09be51",
         "reviewedEvidence": "Official current county council or levy-court district polygons and the linked New Castle public lookup establish exact district identities. Canonical OCD IDs separately checked. No district is widened to the county."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE%3D%2710%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?where=STATE%3D%2710%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T07:59:27.840981+00:00",
+        "httpStatus": 200,
+        "rawHash": "e2e54bbc1a4d63651987c324a29171138f5b7eaece44bf846c9a84b9049e2ea2",
+        "reviewedEvidence": "Current official Census place polygons saved in data/ballot/evidence/bl02-east/de-places.json.gz. Strict geometric covers confirms the entire municipality/CDP lies inside the separately held county's official council district polygon. No tolerance, centroid, ZIP approximation or area-overlap threshold is accepted."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2710%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2710%27&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:01:05.618365+00:00",
+        "httpStatus": 200,
+        "rawHash": "2b59d7c48ee70c36c76cac92667f5ba96a0b64802e7c8bee7202e7a1ab427961",
+        "reviewedEvidence": "Current official Census place polygons saved in data/ballot/evidence/bl02-east/de-cdps.json.gz. Strict geometric covers confirms the entire municipality/CDP lies inside the separately held county's official council district polygon. No tolerance, centroid, ZIP approximation or area-overlap threshold is accepted."
       }
     ]
   }

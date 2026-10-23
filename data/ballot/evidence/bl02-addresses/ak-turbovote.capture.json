@@ -1,0 +1,161 @@
+{
+  "state": "AK",
+  "address": "120 4th St, Juneau, AK 99801",
+  "checkedAt": "2026-10-23T08:04:58.858Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aak/2026-11-03?street=120+4th+St&city=Juneau&state=AK&zip=99801",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ak-google.json",
+  "sha256": "a89e117149b0bb0db3eb01d11d5505dcbda5b27aba12002a79469510dab97b53",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/ak-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/ak-turbovote.txt",
+  "elapsedMs": 7056,
+  "races": [
+    {
+      "id": "co_6d1223fe7d2eac72584d4f7e55213846a47fb102",
+      "title": "U.S. Senate Alaska",
+      "candidates": [
+        {
+          "name": "Dan S. Sullivan",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Mary Peltola",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Gerald Heikes",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Daniel J. Sullivan Jr.",
+          "party": "No Party Affiliation"
+        }
+      ]
+    },
+    {
+      "id": "co_d3113d0d81d03902cd0929fc952b4ad6da9adc29",
+      "title": "U.S. House Alaska At-large District",
+      "candidates": [
+        {
+          "name": "Nicholas Begich",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Eric Hafner",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Jim McDermott",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Bill Hill",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_29cb86f871a9025ffd4336e8e90f8e571e663d57",
+      "title": "Governor of Alaska",
+      "candidates": [
+        {
+          "name": "Jonathan Kreiss-Tomkins",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "David Bronson",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Treg Taylor",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Bernadette Wilson",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_b28ba0d90086a571508905268cb5f06b89e86bb4",
+      "title": "Lieutenant Governor of Alaska",
+      "candidates": [
+        {
+          "name": "Josh Church",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Candi English",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Mike Shower",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Zachary Johnson",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_a59654d22529c5c23a5116938d88bd438312b000",
+      "title": "Alaska House of Representatives District 4",
+      "candidates": [
+        {
+          "name": "Sara Hannan",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_af310333f7efcb31e0b46fac8e99e7085f881673",
+      "title": "Alaska Supreme Court Jude Pate's seat",
+      "candidates": [
+        {
+          "name": "Jude Pate",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_73b6d4b1e6b0452fd468f931e2c8160e660f9fdb",
+      "title": "Ballot Measure 2",
+      "summary": "Repeal the top-four ranked-choice voting (RCV) system that was adopted in 2020"
+    },
+    {
+      "id": "bm_07aa1cbdc3dce15699bda228c06d8b8bcdcaa798",
+      "title": "Ballot Measure 3",
+      "summary": "Amend state law to provide that \"Only a person who is a citizen of the United States\" may vote in any election"
+    }
+  ],
+  "headings": [
+    "All Races (6)",
+    "Federal Races",
+    "U.S. Senate Alaska",
+    "U.S. House Alaska At-large District",
+    "State Races",
+    "Governor of Alaska",
+    "Lieutenant Governor of Alaska",
+    "Alaska House of Representatives District 4",
+    "Alaska Supreme Court Jude Pate's seat",
+    "Election Day is in10DAYS15HOURS55MINUTES01SECONDS",
+    "Deadlines",
+    "Request Ballot",
+    "Return Ballot"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/ak-turbovote-divisions.json",
+      "sha256": "971c5d21ebf461486e01f09f395df9525d97ad0ad140897b2c6b2f620b662d4e"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "state": "OR",
+  "address": "900 Court St NE, Salem, OR 97301",
+  "checkedAt": "2026-10-23T07:59:03.853506+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/or-google.json",
+  "sha256": "6390ac61940d629f14e1dd8f372e4fa617c5c62ad9579454ef6023e74ad4a796",
+  "contestCount": 0,
+  "contests": []
+}

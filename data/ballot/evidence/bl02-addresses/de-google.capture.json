@@ -1,0 +1,12 @@
+{
+  "state": "DE",
+  "address": "411 Legislative Ave, Dover, DE 19901",
+  "checkedAt": "2026-10-23T07:59:03.625155+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/de-google.json",
+  "sha256": "15e3b7fc652c449a8788d53b007a82d5b9fd8f5f4e5accdeadff44992a76d2a6",
+  "contestCount": 0,
+  "contests": []
+}

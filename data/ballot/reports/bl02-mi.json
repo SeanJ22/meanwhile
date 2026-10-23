@@ -1,0 +1,414 @@
+{
+  "checkedAt": "2026-10-23T08:03:25.608574+00:00",
+  "state": "MI",
+  "upstream": "BA-01 saved certified judicial roster and official district statutes",
+  "downstream": "State ballot publisher \u2192 district-membership expansion \u2192 reader ballot",
+  "countScope": "Court contests; ordinary congressional and legislative districts are supplied by promoted Census geography, separately from the static ZIP index.",
+  "beforeUnreachableContests": 89,
+  "afterUnreachableContests": 0,
+  "addedMemberships": 351,
+  "coveredDistricts": 92,
+  "splitCountyDistricts": {
+    "ocd-division/country:us/state:mi/district_court:14a": {
+      "counties": [
+        "washtenaw"
+      ],
+      "section": "600.8120",
+      "territory": "the county of Washtenaw, except the city of Ann Arbor and the township of Ypsilanti",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:14b": {
+      "counties": [
+        "washtenaw"
+      ],
+      "section": "600.8120",
+      "territory": "the township of Ypsilanti",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:15": {
+      "counties": [
+        "washtenaw"
+      ],
+      "section": "600.8120",
+      "territory": "the city of Ann Arbor",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:16": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Livonia",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:17": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the township of Redford in the county of Wayne",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:18": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Westland",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:19": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Dearborn",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:20": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Dearborn Heights",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:21": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Garden City",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:23": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Taylor",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:24": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the cities of Allen Park and Melvindale",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:25": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the cities of Ecorse, Lincoln Park, and River Rouge",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:28": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Southgate",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:31": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Hamtramck",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:32a": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the city of Harper Woods",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:34": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the townships of Sumpter, Van Buren, and Huron in the county of Wayne and the cities of Romulus and Belleville",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:35": {
+      "counties": [
+        "oakland",
+        "wayne"
+      ],
+      "section": "600.8121",
+      "territory": "the cities of Northville and Plymouth and the townships of Northville, Plymouth, and Canton in the county of Wayne",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:36": {
+      "counties": [
+        "wayne"
+      ],
+      "section": "600.8121a",
+      "territory": "the city of Detroit",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:37": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the cities of Warren and Center Line",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:38": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the city of Eastpointe",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:39": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the cities of Roseville and Fraser",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:40": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the city of Saint Clair Shores",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:41a": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the cities of Utica and Sterling Heights and the townships of Shelby and Macomb in the county of Macomb",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:41b": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the city of Mt. Clemens and the townships of Clinton and Harrison in the county of Macomb",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:42/division:1": {
+      "counties": [
+        "macomb"
+      ],
+      "section": "600.8122",
+      "territory": "the cities of Memphis and Richmond and the townships of Bruce, Washington, Armada, Ray, and Richmond",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:43": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Madison Heights, Ferndale, and Hazel Park",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:45": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Huntington Woods, Oak Park, and Pleasant Ridge and the township of Royal Oak in the county of Oakland",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:46": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Southfield and Lathrup Village and the township of Southfield in the county of Oakland",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:47": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Farmington and Farmington Hills",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:48": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Birmingham, Bloomfield Hills, Sylvan Lake, Keego Harbor, and Orchard Lake Village and the townships of Bloomfield and West Bloomfield in the county of Oakland",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:50": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the city of Pontiac",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:51": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the township of Waterford in the county of Oakland",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:52/division:1": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Novi, South Lyon, Wixom, and Walled Lake and the townships of Milford, Highland, Commerce, Lyon, and Novi",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:52/division:2": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the city of the village of Clarkston and the townships of Springfield, Independence, Holly, Groveland, Brandon, Rose, and White Lake",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:52/division:3": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Rochester, Auburn Hills, Rochester Hills, and Lake Angelus and the townships of Oxford, Addison, Orion, and Oakland",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:52/division:4": {
+      "counties": [
+        "oakland"
+      ],
+      "section": "600.8123",
+      "territory": "the cities of Troy and Clawson",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:54a": {
+      "counties": [
+        "clinton",
+        "eaton",
+        "ingham"
+      ],
+      "section": "600.8125",
+      "territory": "the city of Lansing",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:55": {
+      "counties": [
+        "ingham"
+      ],
+      "section": "600.8125",
+      "territory": "the county of Ingham except the cities of Lansing and East Lansing",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:61": {
+      "counties": [
+        "kent"
+      ],
+      "section": "600.8130",
+      "territory": "the city of Grand Rapids",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:62a": {
+      "counties": [
+        "kent"
+      ],
+      "section": "600.8130",
+      "territory": "the city of Wyoming",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:62b": {
+      "counties": [
+        "kent"
+      ],
+      "section": "600.8130",
+      "territory": "the city of Kentwood",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:63": {
+      "counties": [
+        "kent"
+      ],
+      "section": "600.8130",
+      "territory": "the county of Kent, except the cities of Grand Rapids, Walker, Grandville, Wyoming, and Kentwood",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:67/division:1": {
+      "counties": [
+        "genesee"
+      ],
+      "section": "600.8134",
+      "territory": "the cities of Flushing and Clio and the townships of Flushing, Flint, Montrose, Thetford, and Vienna",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:67/division:2": {
+      "counties": [
+        "genesee"
+      ],
+      "section": "600.8134",
+      "territory": "the cities of Davison and Burton and the townships of Davison, Forest, Richfield, and Atlas",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:67/division:3": {
+      "counties": [
+        "genesee"
+      ],
+      "section": "600.8134",
+      "territory": "the city of Mt. Morris and the townships of Mt. Morris and Genesee",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:67/division:4": {
+      "counties": [
+        "genesee",
+        "livingston",
+        "oakland"
+      ],
+      "section": "600.8134",
+      "territory": "the cities of Grand Blanc and Swartz Creek and the townships of Fenton, Argentine, Grand Blanc, Mundy, Gaines, and Clayton and the city of Fenton",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:67/division:5": {
+      "counties": [
+        "genesee"
+      ],
+      "section": "600.8134",
+      "territory": "the city of Flint",
+      "wholeCountyMembershipAdded": false
+    },
+    "ocd-division/country:us/state:mi/district_court:70/division:2": {
+      "counties": [
+        "saginaw"
+      ],
+      "section": "600.8135",
+      "territory": "the county of Saginaw, except the cities of Saginaw and Zilwaukee and the townships of Zilwaukee, Buena Vista, Carrollton, and Bridgeport",
+      "wholeCountyMembershipAdded": false
+    }
+  },
+  "remaining": [],
+  "method": "Compile current Michigan statutory county/city/township and election-division lists into existing ZIP-index IDs. Whole county exclusions expand only to county subdivisions outside the exclusions. Section 8101 county-crossing city rule keeps Memphis scoped to Macomb; Fenton is explicitly included across Genesee and Oakland. Certified 2026 roster keeps proposed 18/29, 38/39, 54A/54B/55 consolidations distinct. Official Michigan Manual confirms formerly conditional circuit creation.",
+  "readerVerification": {
+    "passed": true,
+    "realPlaceSelections": 8,
+    "splitCountyNonWideningChecks": 8,
+    "focusedTests": [
+      "ba01-great-lakes-ballots.test.ts",
+      "ba01-district-memberships.test.ts"
+    ],
+    "correctionDuringVerification": "The first narrow-place check exposed a missing Lansing alias across its county lines; the compiler now maps the complete statutory city. The Memphis neighboring-county check supplies the county alongside its county subdivision, as the reader does."
+  }
+}

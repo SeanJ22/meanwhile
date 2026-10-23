@@ -9470,6 +9470,18 @@
             "verifiedAt": "2026-10-21T01:01:46.489283+00:00",
             "quote": "V. Grafton: District 1, the towns of Enfield and Hanover and the city of Lebanon"
           }
+        },
+        {
+          "id": "bl02-nh:concord-school-canonical-alias",
+          "memberOcdId": "ocd-division/country:us/state:nh/school_district:concord_school_district",
+          "districtOcdId": "ocd-division/country:us/state:nh/county:merrimack/school_district:concord_school_district",
+          "provenance": {
+            "sourceUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=GEOID%3D%273302460%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:35:03.782663+00:00",
+            "verifiedAt": "2026-10-23T08:39:10.931634+00:00",
+            "quote": "Concord School District; GEOID3302460"
+          }
         }
       ]
     }
@@ -9855,10 +9867,40 @@
         "httpStatus": 200,
         "rawHash": "9cc4ac55938dd7a01922d4ca51ff7db7a8966fa179aa869bb262209e27f341c3",
         "reviewedEvidence": "Actual official Lebanon Ward3 general-election sample: all13 candidate races/24 distinct names, both printed party columns and both ballot questions compared. Names in blank write-in spaces are not invented."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/2/query?where=STATE%3D%2733%27+AND+SLDL+IN+%28%27521%27%2C%27517%27%2C%27523%27%2C%27524%27%2C%27525%27%2C%27516%27%2C%27526%27%2C%27515%27%2C%27520%27%2C%27519%27%2C%27522%27%2C%27518%27%2C%27615%27%2C%27616%27%2C%27617%27%2C%27618%27%2C%27619%27%2C%27620%27%2C%27621%27%2C%27622%27%2C%27623%27%2C%27624%27%2C%27413%27%2C%27414%27%2C%27415%27%29&outFields=SLDL%2CNAME%2CGEOID%2CLSY&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/2/query?where=STATE%3D%2733%27+AND+SLDL+IN+%28%27521%27%2C%27517%27%2C%27523%27%2C%27524%27%2C%27525%27%2C%27516%27%2C%27526%27%2C%27515%27%2C%27520%27%2C%27519%27%2C%27522%27%2C%27518%27%2C%27615%27%2C%27616%27%2C%27617%27%2C%27618%27%2C%27619%27%2C%27620%27%2C%27621%27%2C%27622%27%2C%27623%27%2C%27624%27%2C%27413%27%2C%27414%27%2C%27415%27%29&outFields=SLDL%2CNAME%2CGEOID%2CLSY&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:35:03.661631+00:00",
+        "httpStatus": 200,
+        "rawHash": "7341afcf02c2d70af8adda439b63052650e3466b492a3365f9f701c6d5d2c3d4",
+        "reviewedEvidence": "BL-02 source-bound replay to data/states/nh/geo/bl02-held-districts-33.geojson. Full-resolution2026 lower-chamber polygons, retrieved from current TIGERweb Legislative layer2. NH's saved current RSA662 explicitly establishes each of these25House districts as one complete city ward. Same geometry is copied under the wardID, with statute source/hash attached. Held generalized1:500000 orientation geometry is not used."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=GEOID%3D%273302460%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/School/MapServer/0/query?where=GEOID%3D%273302460%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:35:03.782663+00:00",
+        "httpStatus": 200,
+        "rawHash": "70bc222954f1ff39bbebf474e7a025b6f539ff8e99e0e2a2dcf7ef12cd2c7122",
+        "reviewedEvidence": "BL-02 source-bound replay to data/states/nh/geo/bl02-held-districts-33.geojson. Exact current Concord School District GEOID3302460 polygon. Adds only the canonicalCensus-school alias to the same held schooldistrict and provides exact school-boundary clipping for voting zones."
+      },
+      {
+        "requestedUrl": "https://sau8.org/163368_3",
+        "finalUrl": "https://sau8.org/163368_3",
+        "publisher": "Concord School District",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:35:47.938339+00:00",
+        "httpStatus": 200,
+        "rawHash": "dc0db42ee7215e92b96e2e18c369b7b9bb5da9c7cac66c4c1a048c7debb96416",
+        "reviewedEvidence": "BL-02 source-bound replay to data/states/nh/geo/bl02-held-districts-33.geojson. Current official school election page explicitly lists ZoneA Wards1,2,3,4; ZoneB Wards5,6,7; ZoneC Wards8,9,10 and requires voters to belong to the schooldistrict. Zone polygons are ward unions intersected with the schooldistrict, preserving partial school coverage of citywards1/2."
       }
     ],
-    "reviewedAt": "2026-10-21T01:01:46.489283+00:00",
-    "reviewedBy": "BA-01 official ballot PDF replay",
+    "reviewedAt": "2026-10-23T08:39:10.931634+00:00",
+    "reviewedBy": "BL-02 NH exact ward and school-zone replay",
     "contractVersion": 1
   }
 }

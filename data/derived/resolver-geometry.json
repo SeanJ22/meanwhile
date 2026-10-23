@@ -5,7 +5,7 @@
     "Every canonical state geometry and national geometry file appears on exactly one list."
   ],
   "schemaVersion": 2,
-  "generatedAt": "2026-10-22",
+  "generatedAt": "2026-10-23",
   "coveredStateFips": [
     "10",
     "11",
@@ -65,8 +65,8 @@
     "09"
   ],
   "totals": {
-    "features": 12348,
-    "coordinates": 1440400
+    "features": 12458,
+    "coordinates": 1644959
   },
   "files": [
     "data/states/ak/geo/territory-02.geojson",
@@ -80,32 +80,44 @@
     "data/states/az/geo/sldu-04.geojson",
     "data/states/az/geo/territory-04.geojson",
     "data/states/az/geo/unsd-04.geojson",
+    "data/states/ca/geo/bart-director-06.geojson",
+    "data/states/ca/geo/bl02-sf-census-geography-06.geojson",
     "data/states/ca/geo/territory-06.geojson",
     "data/states/co/geo/territory-08.geojson",
     "data/states/ct/geo/territory-09.geojson",
+    "data/states/dc/geo/bl02-held-districts-11.geojson",
     "data/states/dc/geo/territory-11.geojson",
+    "data/states/de/geo/bl02-held-districts-10.geojson",
     "data/states/de/geo/territory-10.geojson",
+    "data/states/fl/geo/bl02-held-districts-12.geojson",
     "data/states/fl/geo/territory-12.geojson",
     "data/states/ga/geo/territory-13.geojson",
+    "data/states/hi/geo/bl02-councils-15.geojson",
     "data/states/hi/geo/territory-15.geojson",
     "data/states/ia/geo/territory-19.geojson",
     "data/states/id/geo/territory-16.geojson",
     "data/states/il/geo/territory-17.geojson",
     "data/states/in/geo/territory-18.geojson",
+    "data/states/ks/geo/bl02-state-board-20.geojson",
     "data/states/ks/geo/territory-20.geojson",
     "data/states/ky/geo/territory-21.geojson",
     "data/states/la/geo/territory-22.geojson",
     "data/states/ma/geo/territory-25.geojson",
+    "data/states/md/geo/bl02-held-districts-24.geojson",
     "data/states/md/geo/territory-24.geojson",
+    "data/states/me/geo/bl02-final-districts-23.geojson",
     "data/states/me/geo/territory-23.geojson",
     "data/states/mi/geo/territory-26.geojson",
     "data/states/mn/geo/territory-27.geojson",
     "data/states/mo/geo/territory-29.geojson",
     "data/states/ms/geo/territory-28.geojson",
     "data/states/mt/geo/territory-30.geojson",
+    "data/states/nc/geo/bl02-held-districts-37.geojson",
     "data/states/nc/geo/territory-37.geojson",
     "data/states/nd/geo/territory-38.geojson",
+    "data/states/ne/geo/bl02-board-districts-31.geojson",
     "data/states/ne/geo/territory-31.geojson",
+    "data/states/nh/geo/bl02-held-districts-33.geojson",
     "data/states/nh/geo/cousub-33.geojson",
     "data/states/nh/geo/elsd-33.geojson",
     "data/states/nh/geo/place-33.geojson",
@@ -122,11 +134,16 @@
     "data/states/nj/geo/sldu-34.geojson",
     "data/states/nj/geo/territory-34.geojson",
     "data/states/nj/geo/unsd-34.geojson",
+    "data/states/nm/geo/bl02-board-districts-35.geojson",
     "data/states/nm/geo/territory-35.geojson",
+    "data/states/nv/geo/bl02-regents-32.geojson",
     "data/states/nv/geo/territory-32.geojson",
+    "data/states/ny/geo/bl02-held-districts-36.geojson",
     "data/states/ny/geo/territory-36.geojson",
+    "data/states/oh/geo/bl02-final-districts-39.geojson",
     "data/states/oh/geo/territory-39.geojson",
     "data/states/ok/geo/territory-40.geojson",
+    "data/states/or/geo/bl02-councils-41.geojson",
     "data/states/or/geo/territory-41.geojson",
     "data/states/pa/geo/territory-42.geojson",
     "data/states/ri/geo/territory-44.geojson",
@@ -134,9 +151,11 @@
     "data/states/sd/geo/territory-46.geojson",
     "data/states/tn/geo/territory-47.geojson",
     "data/states/tx/geo/territory-48.geojson",
+    "data/states/ut/geo/bl02-board-districts-49.geojson",
     "data/states/ut/geo/territory-49.geojson",
     "data/states/va/geo/territory-51.geojson",
     "data/states/vt/geo/territory-50.geojson",
+    "data/states/wa/geo/bl02-councils-53.geojson",
     "data/states/wa/geo/territory-53.geojson",
     "data/states/wi/geo/territory-55.geojson",
     "data/states/wv/geo/territory-54.geojson",
@@ -201,6 +220,16 @@
       "coordinates": 1922
     },
     {
+      "file": "data/states/ca/geo/bart-director-06.geojson",
+      "features": 1,
+      "coordinates": 747
+    },
+    {
+      "file": "data/states/ca/geo/bl02-sf-census-geography-06.geojson",
+      "features": 8,
+      "coordinates": 3491
+    },
+    {
       "file": "data/states/ca/geo/territory-06.geojson",
       "features": 581,
       "coordinates": 90622
@@ -216,14 +245,29 @@
       "coordinates": 1725
     },
     {
+      "file": "data/states/dc/geo/bl02-held-districts-11.geojson",
+      "features": 8,
+      "coordinates": 22386
+    },
+    {
       "file": "data/states/dc/geo/territory-11.geojson",
       "features": 46,
       "coordinates": 949
     },
     {
+      "file": "data/states/de/geo/bl02-held-districts-10.geojson",
+      "features": 11,
+      "coordinates": 22679
+    },
+    {
       "file": "data/states/de/geo/territory-10.geojson",
       "features": 3,
       "coordinates": 198
+    },
+    {
+      "file": "data/states/fl/geo/bl02-held-districts-12.geojson",
+      "features": 6,
+      "coordinates": 4969
     },
     {
       "file": "data/states/fl/geo/territory-12.geojson",
@@ -234,6 +278,11 @@
       "file": "data/states/ga/geo/territory-13.geojson",
       "features": 19,
       "coordinates": 7974
+    },
+    {
+      "file": "data/states/hi/geo/bl02-councils-15.geojson",
+      "features": 5,
+      "coordinates": 22377
     },
     {
       "file": "data/states/hi/geo/territory-15.geojson",
@@ -261,6 +310,11 @@
       "coordinates": 16605
     },
     {
+      "file": "data/states/ks/geo/bl02-state-board-20.geojson",
+      "features": 5,
+      "coordinates": 33433
+    },
+    {
       "file": "data/states/ks/geo/territory-20.geojson",
       "features": 20,
       "coordinates": 1208
@@ -281,9 +335,19 @@
       "coordinates": 25872
     },
     {
+      "file": "data/states/md/geo/bl02-held-districts-24.geojson",
+      "features": 1,
+      "coordinates": 3241
+    },
+    {
       "file": "data/states/md/geo/territory-24.geojson",
       "features": 1,
       "coordinates": 6
+    },
+    {
+      "file": "data/states/me/geo/bl02-final-districts-23.geojson",
+      "features": 3,
+      "coordinates": 2291
     },
     {
       "file": "data/states/me/geo/territory-23.geojson",
@@ -316,6 +380,11 @@
       "coordinates": 74101
     },
     {
+      "file": "data/states/nc/geo/bl02-held-districts-37.geojson",
+      "features": 1,
+      "coordinates": 2450
+    },
+    {
       "file": "data/states/nc/geo/territory-37.geojson",
       "features": 22,
       "coordinates": 5098
@@ -326,9 +395,19 @@
       "coordinates": 35634
     },
     {
+      "file": "data/states/ne/geo/bl02-board-districts-31.geojson",
+      "features": 1,
+      "coordinates": 1326
+    },
+    {
       "file": "data/states/ne/geo/territory-31.geojson",
       "features": 443,
       "coordinates": 28016
+    },
+    {
+      "file": "data/states/nh/geo/bl02-held-districts-33.geojson",
+      "features": 29,
+      "coordinates": 12649
     },
     {
       "file": "data/states/nh/geo/cousub-33.geojson",
@@ -411,9 +490,19 @@
       "coordinates": 1488
     },
     {
+      "file": "data/states/nm/geo/bl02-board-districts-35.geojson",
+      "features": 3,
+      "coordinates": 4987
+    },
+    {
       "file": "data/states/nm/geo/territory-35.geojson",
       "features": 55,
       "coordinates": 18180
+    },
+    {
+      "file": "data/states/nv/geo/bl02-regents-32.geojson",
+      "features": 13,
+      "coordinates": 40316
     },
     {
       "file": "data/states/nv/geo/territory-32.geojson",
@@ -421,9 +510,19 @@
       "coordinates": 15488
     },
     {
+      "file": "data/states/ny/geo/bl02-held-districts-36.geojson",
+      "features": 4,
+      "coordinates": 3653
+    },
+    {
       "file": "data/states/ny/geo/territory-36.geojson",
       "features": 227,
       "coordinates": 18339
+    },
+    {
+      "file": "data/states/oh/geo/bl02-final-districts-39.geojson",
+      "features": 1,
+      "coordinates": 1085
     },
     {
       "file": "data/states/oh/geo/territory-39.geojson",
@@ -434,6 +533,11 @@
       "file": "data/states/ok/geo/territory-40.geojson",
       "features": 63,
       "coordinates": 9720
+    },
+    {
+      "file": "data/states/or/geo/bl02-councils-41.geojson",
+      "features": 3,
+      "coordinates": 4638
     },
     {
       "file": "data/states/or/geo/territory-41.geojson",
@@ -471,6 +575,11 @@
       "coordinates": 131286
     },
     {
+      "file": "data/states/ut/geo/bl02-board-districts-49.geojson",
+      "features": 2,
+      "coordinates": 3093
+    },
+    {
       "file": "data/states/ut/geo/territory-49.geojson",
       "features": 73,
       "coordinates": 20955
@@ -484,6 +593,11 @@
       "file": "data/states/vt/geo/territory-50.geojson",
       "features": 5,
       "coordinates": 348
+    },
+    {
+      "file": "data/states/wa/geo/bl02-councils-53.geojson",
+      "features": 5,
+      "coordinates": 14748
     },
     {
       "file": "data/states/wa/geo/territory-53.geojson",

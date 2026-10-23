@@ -1445,6 +1445,42 @@
             "verifiedAt": "2026-10-21T00:51:43.941410+00:00",
             "quote": "The Board consists of fourteen members; seven from each district, who are elected by the electors of each election district beginning with the 2018 general election. The official St. Thomas/St. John district sample prints the district Legislature and board of elections races on the same ballot. Both STJ and STT seat groups are printed together on the combined district ballot."
           }
+        },
+        {
+          "id": "bl02-vi-st_croix-to-sldu-st_croix",
+          "memberOcdId": "ocd-division/country:us/territory:vi/county:st_croix",
+          "districtOcdId": "ocd-division/country:us/territory:vi/sldu:st_croix",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Croix-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.964501+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "ST. CROIX / SANTA CRUZ; NOVEMBER 3, 2026; LEGISLATURE OF THE VIRGIN ISLANDS; BOARD OF EDUCATION; BOARD OF ELECTIONS. The island county belongs to the same named election district printed on this official sample."
+          }
+        },
+        {
+          "id": "bl02-vi-st_thomas-to-sldu-st_thomas-st_john",
+          "memberOcdId": "ocd-division/country:us/territory:vi/county:st_thomas",
+          "districtOcdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "ST. THOMAS - ST. JOHN / SAN TOMAS - SAN JOHN; NOVEMBER 3, 2026; LEGISLATURE OF THE VIRGIN ISLANDS; BOARD OF EDUCATION; BOARD OF ELECTIONS. The island county belongs to the same named election district printed on this official sample."
+          }
+        },
+        {
+          "id": "bl02-vi-st_john-to-sldu-st_thomas-st_john",
+          "memberOcdId": "ocd-division/country:us/territory:vi/county:st_john",
+          "districtOcdId": "ocd-division/country:us/territory:vi/sldu:st_thomas-st_john",
+          "provenance": {
+            "sourceUrl": "https://vivote.gov/wp-content/uploads/2026/09/2026-General-Election-St.-Thomas-St.-John-District.pdf",
+            "sourceOrg": "Election System of the Virgin Islands",
+            "collectedAt": "2026-10-21T00:35:04.872404+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "ST. THOMAS - ST. JOHN / SAN TOMAS - SAN JOHN; NOVEMBER 3, 2026; LEGISLATURE OF THE VIRGIN ISLANDS; BOARD OF EDUCATION; BOARD OF ELECTIONS. The island county belongs to the same named election district printed on this official sample."
+          }
         }
       ],
       "candidateTickets": [
@@ -1598,8 +1634,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:51:43.941410+00:00",
-    "reviewedBy": "Codex BA-01 official territorial lists and specimens",
+    "reviewedAt": "2026-10-23T08:10:01.707223+00:00",
+    "reviewedBy": "bl02-territorial-county-memberships",
     "sources": [
       {
         "requestedUrl": "https://vivote.gov/wp-content/uploads/2026/08/2026-Election-Public-Offices-Aspirant-Listing-STX-OFFICIAL-August-2026.pdf",

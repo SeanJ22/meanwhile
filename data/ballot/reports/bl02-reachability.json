@@ -1,0 +1,172 @@
+{
+  "step": "BL-02",
+  "baselineRevision": "78f82a232dd1d0545a46835e7716032ff3807425",
+  "scope": "Held non-congressional/non-state-legislative contests against actual referenced static ZIP entries and transitive districtMemberships. BL-01 supplies published Census election geography for legislative bridges.",
+  "before": 263,
+  "after": 0,
+  "states": [
+    {
+      "state": "AK",
+      "before": 20,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "AL",
+      "before": 4,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "AR",
+      "before": 1,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "CA",
+      "before": 9,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "DC",
+      "before": 8,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "DE",
+      "before": 11,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "FL",
+      "before": 6,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "HI",
+      "before": 5,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "KS",
+      "before": 5,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "MD",
+      "before": 1,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "ME",
+      "before": 7,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "MI",
+      "before": 89,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "MN",
+      "before": 1,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "MP",
+      "before": 2,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "MT",
+      "before": 2,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "NC",
+      "before": 1,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "NE",
+      "before": 8,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "NH",
+      "before": 29,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "NM",
+      "before": 5,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "NV",
+      "before": 5,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "NY",
+      "before": 4,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "OH",
+      "before": 6,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "OR",
+      "before": 7,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "TX",
+      "before": 9,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "UT",
+      "before": 8,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "VI",
+      "before": 5,
+      "after": 0,
+      "remaining": []
+    },
+    {
+      "state": "WA",
+      "before": 5,
+      "after": 0,
+      "remaining": []
+    }
+  ],
+  "remainingMeaning": "A missing static ZIP route is not proof of a missing exact-address route. Legislative district bridges are checked separately by BL-01."
+}

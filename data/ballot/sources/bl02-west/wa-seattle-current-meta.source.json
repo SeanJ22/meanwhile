@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1?f=json",
+  "finalUrl": "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Seattle_City_Council_Districts_including_Water/FeatureServer/1?f=json",
+  "httpStatus": 200,
+  "rawHash": "d663b1338c37266e7f9eb4941c1cf0a5bb542603523a5d40dee3505be48617ec",
+  "retrievedAt": "2026-10-23T08:12:24.900889+00:00"
+}

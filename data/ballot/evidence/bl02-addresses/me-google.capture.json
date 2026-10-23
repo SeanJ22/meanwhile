@@ -1,0 +1,12 @@
+{
+  "state": "ME",
+  "address": "210 State St, Augusta, ME 04330",
+  "checkedAt": "2026-10-23T07:59:03.845309+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/me-google.json",
+  "sha256": "8087710b19e330cfb91a0b85373a82552ba76bed59bb94fdc73a7b95a4fc6e54",
+  "contestCount": 0,
+  "contests": []
+}

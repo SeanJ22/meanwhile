@@ -16824,14 +16824,25 @@
             "verifiedAt": "2026-10-20T23:33:03.658057+00:00",
             "quote": "The ninth circuit is composed of Orange and Osceola Counties."
           }
+        },
+        {
+          "id": "bl02:11f0fb6f6827f36ace58a351",
+          "memberOcdId": "ocd-division/country:us/state:fl/place:fisher_island",
+          "districtOcdId": "ocd-division/country:us/state:fl/county:miami-dade/council_district:5",
+          "provenance": {
+            "sourceUrl": "https://gisweb.miamidade.gov/arcgis/rest/services/EnerGov/MD_LandMgtViewer/MapServer/5/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Miami-Dade County GIS",
+            "collectedAt": "2026-10-23T08:13:33.748469+00:00",
+            "verifiedAt": "2026-10-23T08:22:59.570224+00:00"
+          }
         }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T01:02:17.706255+00:00",
-    "reviewedBy": "BA-01 Hillsborough exact numbered/at-large scopes and full county questions",
+    "reviewedAt": "2026-10-23T08:23:01.238613+00:00",
+    "reviewedBy": "BL-02 exact district memberships and point-geography replay",
     "sources": [
       {
         "requestedUrl": "https://dos.fl.gov/elections/for-voters/special-elections/",
@@ -17262,6 +17273,66 @@
         "httpStatus": 200,
         "rawHash": "ae5239fbb9b5dfbcce7f1b51e25adb51efda52d837d9376a04f1e6b52c43f22d",
         "reviewedEvidence": "Official annual city report explicitly establishes four-year at-large council elections. Current 2026 city election notice confirms the same undivided council contest and five qualified names; county sample provides vote-for-three instruction."
+      },
+      {
+        "requestedUrl": "https://gisweb.miamidade.gov/arcgis/rest/services/EnerGov/MD_LandMgtViewer/MapServer/5/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://gisweb.miamidade.gov/arcgis/rest/services/EnerGov/MD_LandMgtViewer/MapServer/5/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Miami-Dade County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:13:33.748469+00:00",
+        "rawHash": "30b87ff8baba0e4a8459b753130216a580dd6742a092b517f6d43be2d8b4ad54",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/fl/geo/bl02-held-districts-12.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
+      },
+      {
+        "requestedUrl": "https://gisweb.miamidade.gov/arcgis/rest/services/EnerGov/MD_LandMgtViewer/MapServer/6/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://gisweb.miamidade.gov/arcgis/rest/services/EnerGov/MD_LandMgtViewer/MapServer/6/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Miami-Dade County GIS / Miami-Dade County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:13:34.042194+00:00",
+        "rawHash": "07d07acffe4e83b9efa94ee46b22fcd69fc74a6785bc4c489270278757c42e05",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/fl/geo/bl02-held-districts-12.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/apTfC6SUmnNfnxuF/arcgis/rest/services/FMEO_Layers/FeatureServer/3/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services.arcgis.com/apTfC6SUmnNfnxuF/arcgis/rest/services/FMEO_Layers/FeatureServer/3/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Hillsborough County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:16:05.682552+00:00",
+        "rawHash": "eb08f8a5d6e76e44c2694271e9a17b727b8c447c0f339ca9689fd45a31e78abd",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/fl/geo/bl02-held-districts-12.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/apTfC6SUmnNfnxuF/ArcGIS/rest/services/2022_School_Districts/FeatureServer/8/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services.arcgis.com/apTfC6SUmnNfnxuF/ArcGIS/rest/services/2022_School_Districts/FeatureServer/8/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "Hillsborough County GIS / Hillsborough County Public Schools",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:16:06.113987+00:00",
+        "rawHash": "ebce72dbbea6984f05de52eebfb697fb0b8f10bbc3db37984277f0e0e95d4778",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/fl/geo/bl02-held-districts-12.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
+      },
+      {
+        "requestedUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2712%27&geometry=-82.9%2C25.1%2C-79.9%2C28.4&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=NAME%2CGEOID&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/5/query?where=STATE%3D%2712%27&geometry=-82.9%2C25.1%2C-79.9%2C28.4&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=NAME%2CGEOID&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:14:32.018265+00:00",
+        "httpStatus": 200,
+        "rawHash": "005ee0bedccf2eec0d7853788a9202457d9f86db09fd3ad43f54d0fb6bc39d56",
+        "reviewedEvidence": "Current official Census regionalCDP polygons in data/ballot/evidence/bl02-east/fl-regional-cdps.json.gz; entire FisherIsland polygon is strictly contained in current MiamiDadeCommission5 geometry."
+      },
+      {
+        "requestedUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer/0/query?where=AREA_SEAT%3D4&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer/0/query?where=AREA_SEAT%3D4&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "City of Miami Gardens",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:21:23.012478+00:00",
+        "rawHash": "bd01a4bef5a89cb6bf07c495f923d8ba15c44a0e2929c81185451ea6e1e0ed09",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/fl/geo/bl02-held-districts-12.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
       }
     ]
   }

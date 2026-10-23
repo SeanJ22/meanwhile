@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413?f=json",
+  "finalUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413?f=json",
+  "httpStatus": 200,
+  "rawHash": "a276606bae62cb460e40922542576124c6894f19a060f8d35d3d06e188a73f20",
+  "retrievedAt": "2026-10-23T08:16:44.774652+00:00"
+}

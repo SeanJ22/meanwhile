@@ -9200,13 +9200,13 @@
       "districtMemberships": [
         {
           "id": "ma-2026-membership:place:barnstable->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:barnstable",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:barnstable_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Barnstable"
           }
         },
@@ -9332,13 +9332,13 @@
         },
         {
           "id": "ma-2026-membership:place:eastham->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:eastham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:barnstable/place:eastham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Eastham"
           }
         },
@@ -9380,13 +9380,13 @@
         },
         {
           "id": "ma-2026-membership:place:harwich->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:harwich",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:barnstable/place:harwich_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Harwich"
           }
         },
@@ -9404,13 +9404,13 @@
         },
         {
           "id": "ma-2026-membership:place:mashpee->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:mashpee",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:barnstable/place:mashpee_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Mashpee"
           }
         },
@@ -9500,13 +9500,13 @@
         },
         {
           "id": "ma-2026-membership:place:truro->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:truro",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:barnstable/place:truro_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Truro"
           }
         },
@@ -9524,13 +9524,13 @@
         },
         {
           "id": "ma-2026-membership:place:wellfleet->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wellfleet",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:barnstable/place:wellfleet_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wellfleet"
           }
         },
@@ -9548,13 +9548,13 @@
         },
         {
           "id": "ma-2026-membership:place:yarmouth->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:yarmouth",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:barnstable/place:yarmouth_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Yarmouth"
           }
         },
@@ -9596,13 +9596,13 @@
         },
         {
           "id": "ma-2026-membership:place:alford->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:alford",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:alford_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Alford"
           }
         },
@@ -9620,13 +9620,13 @@
         },
         {
           "id": "ma-2026-membership:place:becket->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:becket",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:becket_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Becket"
           }
         },
@@ -9668,13 +9668,13 @@
         },
         {
           "id": "ma-2026-membership:place:clarksburg->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:clarksburg",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:clarksburg_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Clarksburg"
           }
         },
@@ -9692,13 +9692,13 @@
         },
         {
           "id": "ma-2026-membership:place:dalton->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:dalton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:dalton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Dalton"
           }
         },
@@ -9716,13 +9716,13 @@
         },
         {
           "id": "ma-2026-membership:place:egremont->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:egremont",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:egremont_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Egremont"
           }
         },
@@ -9740,13 +9740,13 @@
         },
         {
           "id": "ma-2026-membership:place:florida->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:florida",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:florida_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Florida"
           }
         },
@@ -9788,13 +9788,13 @@
         },
         {
           "id": "ma-2026-membership:place:hancock->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hancock",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:hancock_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hancock"
           }
         },
@@ -9812,13 +9812,13 @@
         },
         {
           "id": "ma-2026-membership:place:hinsdale->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hinsdale",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:hinsdale_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hinsdale"
           }
         },
@@ -9836,13 +9836,13 @@
         },
         {
           "id": "ma-2026-membership:place:lanesborough->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:lanesborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:lanesborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Lanesborough"
           }
         },
@@ -9908,13 +9908,13 @@
         },
         {
           "id": "ma-2026-membership:place:monterey->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:monterey",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:monterey_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Monterey"
           }
         },
@@ -9932,13 +9932,13 @@
         },
         {
           "id": "ma-2026-membership:place:mount_washington->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:mount_washington",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:mount_washington_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Mount Washington"
           }
         },
@@ -9956,13 +9956,13 @@
         },
         {
           "id": "ma-2026-membership:place:new_ashford->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:new_ashford",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:new_ashford_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "New Ashford"
           }
         },
@@ -9980,13 +9980,13 @@
         },
         {
           "id": "ma-2026-membership:place:new_marlborough->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:new_marlborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:new_marlborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "New Marlborough"
           }
         },
@@ -10028,13 +10028,13 @@
         },
         {
           "id": "ma-2026-membership:place:otis->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:otis",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:otis_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Otis"
           }
         },
@@ -10052,13 +10052,13 @@
         },
         {
           "id": "ma-2026-membership:place:peru->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:peru",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:peru_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Peru"
           }
         },
@@ -10100,13 +10100,13 @@
         },
         {
           "id": "ma-2026-membership:place:richmond->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:richmond",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:richmond_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Richmond"
           }
         },
@@ -10124,13 +10124,13 @@
         },
         {
           "id": "ma-2026-membership:place:sandisfield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sandisfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:sandisfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sandisfield"
           }
         },
@@ -10148,13 +10148,13 @@
         },
         {
           "id": "ma-2026-membership:place:savoy->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:savoy",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:savoy_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Savoy"
           }
         },
@@ -10172,13 +10172,13 @@
         },
         {
           "id": "ma-2026-membership:place:sheffield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sheffield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:sheffield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sheffield"
           }
         },
@@ -10196,13 +10196,13 @@
         },
         {
           "id": "ma-2026-membership:place:stockbridge->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:stockbridge",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:stockbridge_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Stockbridge"
           }
         },
@@ -10220,13 +10220,13 @@
         },
         {
           "id": "ma-2026-membership:place:tyringham->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:tyringham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:tyringham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Tyringham"
           }
         },
@@ -10244,13 +10244,13 @@
         },
         {
           "id": "ma-2026-membership:place:washington->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:washington",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:washington_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Washington"
           }
         },
@@ -10268,13 +10268,13 @@
         },
         {
           "id": "ma-2026-membership:place:west_stockbridge->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:west_stockbridge",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:west_stockbridge_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "West Stockbridge"
           }
         },
@@ -10316,13 +10316,13 @@
         },
         {
           "id": "ma-2026-membership:place:windsor->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:windsor",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:berkshire/place:windsor_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Windsor"
           }
         },
@@ -10340,13 +10340,13 @@
         },
         {
           "id": "ma-2026-membership:place:acushnet->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:acushnet",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:acushnet_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Acushnet"
           }
         },
@@ -10388,13 +10388,13 @@
         },
         {
           "id": "ma-2026-membership:place:berkley->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:berkley",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:berkley_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Berkley"
           }
         },
@@ -10412,13 +10412,13 @@
         },
         {
           "id": "ma-2026-membership:place:dartmouth->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:dartmouth",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:dartmouth_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Dartmouth"
           }
         },
@@ -10436,13 +10436,13 @@
         },
         {
           "id": "ma-2026-membership:place:dighton->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:dighton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:dighton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Dighton"
           }
         },
@@ -10460,13 +10460,13 @@
         },
         {
           "id": "ma-2026-membership:place:easton->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:easton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:easton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Easton"
           }
         },
@@ -10484,13 +10484,13 @@
         },
         {
           "id": "ma-2026-membership:place:fairhaven->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:fairhaven",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:fairhaven_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Fairhaven"
           }
         },
@@ -10532,13 +10532,13 @@
         },
         {
           "id": "ma-2026-membership:place:freetown->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:freetown",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:freetown_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Freetown"
           }
         },
@@ -10556,13 +10556,13 @@
         },
         {
           "id": "ma-2026-membership:place:mansfield->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:mansfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:mansfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Mansfield"
           }
         },
@@ -10604,13 +10604,13 @@
         },
         {
           "id": "ma-2026-membership:place:north_attleborough->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:north_attleborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:north_attleborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "North Attleborough"
           }
         },
@@ -10640,13 +10640,13 @@
         },
         {
           "id": "ma-2026-membership:place:norton->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:norton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:norton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Norton"
           }
         },
@@ -10664,13 +10664,13 @@
         },
         {
           "id": "ma-2026-membership:place:raynham->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:raynham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:raynham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Raynham"
           }
         },
@@ -10688,13 +10688,13 @@
         },
         {
           "id": "ma-2026-membership:place:rehoboth->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:rehoboth",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:rehoboth_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Rehoboth"
           }
         },
@@ -10712,13 +10712,13 @@
         },
         {
           "id": "ma-2026-membership:place:seekonk->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:seekonk",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:seekonk_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Seekonk"
           }
         },
@@ -10760,13 +10760,13 @@
         },
         {
           "id": "ma-2026-membership:place:swansea->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:swansea",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:swansea_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Swansea"
           }
         },
@@ -10808,13 +10808,13 @@
         },
         {
           "id": "ma-2026-membership:place:westport->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:westport",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:bristol/place:westport_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Westport"
           }
         },
@@ -10832,13 +10832,13 @@
         },
         {
           "id": "ma-2026-membership:place:aquinnah->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:aquinnah",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:dukes/place:aquinnah_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Aquinnah"
           }
         },
@@ -10856,13 +10856,13 @@
         },
         {
           "id": "ma-2026-membership:place:chilmark->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:chilmark",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:dukes/place:chilmark_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Chilmark"
           }
         },
@@ -10904,13 +10904,13 @@
         },
         {
           "id": "ma-2026-membership:place:gosnold->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:gosnold",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:dukes/place:gosnold_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Gosnold"
           }
         },
@@ -10952,13 +10952,13 @@
         },
         {
           "id": "ma-2026-membership:place:tisbury->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:tisbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:dukes/place:tisbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Tisbury"
           }
         },
@@ -10976,13 +10976,13 @@
         },
         {
           "id": "ma-2026-membership:place:west_tisbury->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:west_tisbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:dukes/place:west_tisbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "West Tisbury"
           }
         },
@@ -11000,25 +11000,25 @@
         },
         {
           "id": "ma-2026-membership:place:amesbury->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:amesbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:amesbury_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Amesbury"
           }
         },
         {
           "id": "ma-2026-membership:county:essex/place:amesbury_city->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:amesbury_city",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:amesbury_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Amesbury"
           }
         },
@@ -11144,13 +11144,13 @@
         },
         {
           "id": "ma-2026-membership:place:georgetown->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:georgetown",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:georgetown_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Georgetown"
           }
         },
@@ -11192,13 +11192,13 @@
         },
         {
           "id": "ma-2026-membership:place:groveland->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:groveland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:groveland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Groveland"
           }
         },
@@ -11216,13 +11216,13 @@
         },
         {
           "id": "ma-2026-membership:place:hamilton->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hamilton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:hamilton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hamilton"
           }
         },
@@ -11360,25 +11360,25 @@
         },
         {
           "id": "ma-2026-membership:place:manchester-by-the-sea->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:manchester-by-the-sea",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:manchester_by_the_sea_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Manchester-by-the-Sea"
           }
         },
         {
           "id": "ma-2026-membership:county:essex/place:manchester-by-the-sea_town->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:manchester-by-the-sea_town",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:manchester_by_the_sea_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Manchester-by-the-Sea"
           }
         },
@@ -11408,13 +11408,13 @@
         },
         {
           "id": "ma-2026-membership:place:merrimac->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:merrimac",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:merrimac_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Merrimac"
           }
         },
@@ -11432,37 +11432,37 @@
         },
         {
           "id": "ma-2026-membership:place:methuen->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:methuen",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:methuen_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Methuen"
           }
         },
         {
           "id": "ma-2026-membership:county:essex/place:methuen_city->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:methuen_city",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:methuen_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Methuen"
           }
         },
         {
           "id": "ma-2026-membership:place:middleton->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:middleton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:middleton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Middleton"
           }
         },
@@ -11504,13 +11504,13 @@
         },
         {
           "id": "ma-2026-membership:place:newbury->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:newbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:newbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Newbury"
           }
         },
@@ -11552,13 +11552,13 @@
         },
         {
           "id": "ma-2026-membership:place:north_andover->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:north_andover",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:north_andover_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "North Andover"
           }
         },
@@ -11768,13 +11768,13 @@
         },
         {
           "id": "ma-2026-membership:place:wenham->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wenham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:wenham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wenham"
           }
         },
@@ -11792,13 +11792,13 @@
         },
         {
           "id": "ma-2026-membership:place:west_newbury->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:west_newbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:essex/place:west_newbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "West Newbury"
           }
         },
@@ -11816,13 +11816,13 @@
         },
         {
           "id": "ma-2026-membership:place:ashfield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:ashfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:ashfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Ashfield"
           }
         },
@@ -11840,13 +11840,13 @@
         },
         {
           "id": "ma-2026-membership:place:bernardston->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:bernardston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:bernardston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Bernardston"
           }
         },
@@ -11864,13 +11864,13 @@
         },
         {
           "id": "ma-2026-membership:place:buckland->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:buckland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:buckland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Buckland"
           }
         },
@@ -11888,13 +11888,13 @@
         },
         {
           "id": "ma-2026-membership:place:charlemont->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:charlemont",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:charlemont_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Charlemont"
           }
         },
@@ -11912,13 +11912,13 @@
         },
         {
           "id": "ma-2026-membership:place:colrain->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:colrain",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:colrain_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Colrain"
           }
         },
@@ -11936,13 +11936,13 @@
         },
         {
           "id": "ma-2026-membership:place:conway->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:conway",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:conway_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Conway"
           }
         },
@@ -11984,13 +11984,13 @@
         },
         {
           "id": "ma-2026-membership:place:erving->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:erving",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:erving_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Erving"
           }
         },
@@ -12008,13 +12008,13 @@
         },
         {
           "id": "ma-2026-membership:place:gill->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:gill",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:gill_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Gill"
           }
         },
@@ -12056,13 +12056,13 @@
         },
         {
           "id": "ma-2026-membership:place:hawley->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hawley",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:hawley_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hawley"
           }
         },
@@ -12080,13 +12080,13 @@
         },
         {
           "id": "ma-2026-membership:place:heath->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:heath",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:heath_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Heath"
           }
         },
@@ -12104,13 +12104,13 @@
         },
         {
           "id": "ma-2026-membership:place:leverett->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:leverett",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:leverett_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Leverett"
           }
         },
@@ -12128,13 +12128,13 @@
         },
         {
           "id": "ma-2026-membership:place:leyden->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:leyden",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:leyden_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Leyden"
           }
         },
@@ -12152,13 +12152,13 @@
         },
         {
           "id": "ma-2026-membership:place:monroe->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:monroe",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:monroe_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Monroe"
           }
         },
@@ -12176,13 +12176,13 @@
         },
         {
           "id": "ma-2026-membership:place:montague->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:montague",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:montague_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Montague"
           }
         },
@@ -12200,13 +12200,13 @@
         },
         {
           "id": "ma-2026-membership:place:new_salem->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:new_salem",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:new_salem_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "New Salem"
           }
         },
@@ -12272,13 +12272,13 @@
         },
         {
           "id": "ma-2026-membership:place:rowe->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:rowe",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:rowe_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Rowe"
           }
         },
@@ -12296,13 +12296,13 @@
         },
         {
           "id": "ma-2026-membership:place:shelburne->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:shelburne",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:shelburne_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Shelburne"
           }
         },
@@ -12320,13 +12320,13 @@
         },
         {
           "id": "ma-2026-membership:place:shutesbury->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:shutesbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:shutesbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Shutesbury"
           }
         },
@@ -12344,13 +12344,13 @@
         },
         {
           "id": "ma-2026-membership:place:sunderland->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sunderland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:sunderland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sunderland"
           }
         },
@@ -12368,13 +12368,13 @@
         },
         {
           "id": "ma-2026-membership:place:warwick->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:warwick",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:warwick_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Warwick"
           }
         },
@@ -12392,13 +12392,13 @@
         },
         {
           "id": "ma-2026-membership:place:wendell->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wendell",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:wendell_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wendell"
           }
         },
@@ -12416,13 +12416,13 @@
         },
         {
           "id": "ma-2026-membership:place:whately->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:whately",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:franklin/place:whately_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Whately"
           }
         },
@@ -12440,13 +12440,13 @@
         },
         {
           "id": "ma-2026-membership:place:agawam->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:agawam",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:agawam_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Agawam"
           }
         },
@@ -12500,13 +12500,13 @@
         },
         {
           "id": "ma-2026-membership:place:brimfield->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:brimfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:brimfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Brimfield"
           }
         },
@@ -12572,13 +12572,13 @@
         },
         {
           "id": "ma-2026-membership:place:east_longmeadow->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:east_longmeadow",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:east_longmeadow_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "East Longmeadow"
           }
         },
@@ -12596,13 +12596,13 @@
         },
         {
           "id": "ma-2026-membership:place:granville->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:granville",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:granville_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Granville"
           }
         },
@@ -12620,13 +12620,13 @@
         },
         {
           "id": "ma-2026-membership:place:hampden->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hampden",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:hampden_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hampden"
           }
         },
@@ -12716,13 +12716,13 @@
         },
         {
           "id": "ma-2026-membership:place:ludlow->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:ludlow",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:ludlow_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Ludlow"
           }
         },
@@ -12740,13 +12740,13 @@
         },
         {
           "id": "ma-2026-membership:place:monson->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:monson",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:monson_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Monson"
           }
         },
@@ -12764,13 +12764,13 @@
         },
         {
           "id": "ma-2026-membership:place:montgomery->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:montgomery",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:montgomery_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Montgomery"
           }
         },
@@ -12788,13 +12788,13 @@
         },
         {
           "id": "ma-2026-membership:place:palmer->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:palmer",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:palmer_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Palmer"
           }
         },
@@ -12848,13 +12848,13 @@
         },
         {
           "id": "ma-2026-membership:place:southwick->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:southwick",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:southwick_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Southwick"
           }
         },
@@ -12896,13 +12896,13 @@
         },
         {
           "id": "ma-2026-membership:place:tolland->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:tolland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:tolland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Tolland"
           }
         },
@@ -12920,13 +12920,13 @@
         },
         {
           "id": "ma-2026-membership:place:wales->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wales",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampden/place:wales_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wales"
           }
         },
@@ -12968,13 +12968,13 @@
         },
         {
           "id": "ma-2026-membership:place:west_springfield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:west_springfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:west_springfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "West Springfield"
           }
         },
@@ -13028,13 +13028,13 @@
         },
         {
           "id": "ma-2026-membership:place:amherst->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:amherst",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:amherst_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Amherst"
           }
         },
@@ -13088,13 +13088,13 @@
         },
         {
           "id": "ma-2026-membership:place:chesterfield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:chesterfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:chesterfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Chesterfield"
           }
         },
@@ -13112,13 +13112,13 @@
         },
         {
           "id": "ma-2026-membership:place:cummington->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:cummington",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:cummington_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Cummington"
           }
         },
@@ -13136,37 +13136,37 @@
         },
         {
           "id": "ma-2026-membership:place:easthampton->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:easthampton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:easthampton_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Easthampton"
           }
         },
         {
           "id": "ma-2026-membership:county:hampshire/place:easthampton_city->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:easthampton_city",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:easthampton_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Easthampton"
           }
         },
         {
           "id": "ma-2026-membership:place:goshen->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:goshen",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:goshen_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Goshen"
           }
         },
@@ -13208,13 +13208,13 @@
         },
         {
           "id": "ma-2026-membership:place:hadley->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hadley",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:hadley_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hadley"
           }
         },
@@ -13280,13 +13280,13 @@
         },
         {
           "id": "ma-2026-membership:place:middlefield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:middlefield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:middlefield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Middlefield"
           }
         },
@@ -13328,13 +13328,13 @@
         },
         {
           "id": "ma-2026-membership:place:pelham->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:pelham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:pelham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Pelham"
           }
         },
@@ -13352,13 +13352,13 @@
         },
         {
           "id": "ma-2026-membership:place:plainfield->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:plainfield",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:plainfield_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Plainfield"
           }
         },
@@ -13376,13 +13376,13 @@
         },
         {
           "id": "ma-2026-membership:place:southampton->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:southampton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:southampton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Southampton"
           }
         },
@@ -13400,13 +13400,13 @@
         },
         {
           "id": "ma-2026-membership:place:south_hadley->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:south_hadley",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:south_hadley_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "South Hadley"
           }
         },
@@ -13448,13 +13448,13 @@
         },
         {
           "id": "ma-2026-membership:place:westhampton->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:westhampton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:westhampton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Westhampton"
           }
         },
@@ -13472,13 +13472,13 @@
         },
         {
           "id": "ma-2026-membership:place:williamsburg->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:williamsburg",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:williamsburg_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Williamsburg"
           }
         },
@@ -13496,13 +13496,13 @@
         },
         {
           "id": "ma-2026-membership:place:worthington->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:worthington",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:hampshire/place:worthington_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Worthington"
           }
         },
@@ -13520,13 +13520,13 @@
         },
         {
           "id": "ma-2026-membership:place:acton->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:acton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:acton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Acton"
           }
         },
@@ -13568,13 +13568,13 @@
         },
         {
           "id": "ma-2026-membership:place:ashby->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:ashby",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:ashby_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Ashby"
           }
         },
@@ -13592,13 +13592,13 @@
         },
         {
           "id": "ma-2026-membership:place:ashland->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:ashland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:ashland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Ashland"
           }
         },
@@ -13640,13 +13640,13 @@
         },
         {
           "id": "ma-2026-membership:place:bedford->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:bedford",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:bedford_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Bedford"
           }
         },
@@ -13688,13 +13688,13 @@
         },
         {
           "id": "ma-2026-membership:place:billerica->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:billerica",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:billerica_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Billerica"
           }
         },
@@ -13712,13 +13712,13 @@
         },
         {
           "id": "ma-2026-membership:place:boxborough->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:boxborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:boxborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Boxborough"
           }
         },
@@ -13760,13 +13760,13 @@
         },
         {
           "id": "ma-2026-membership:place:carlisle->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:carlisle",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:carlisle_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Carlisle"
           }
         },
@@ -13784,13 +13784,13 @@
         },
         {
           "id": "ma-2026-membership:place:chelmsford->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:chelmsford",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:chelmsford_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Chelmsford"
           }
         },
@@ -13808,13 +13808,13 @@
         },
         {
           "id": "ma-2026-membership:place:concord->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:concord",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:concord_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Concord"
           }
         },
@@ -13832,13 +13832,13 @@
         },
         {
           "id": "ma-2026-membership:place:dracut->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:dracut",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dracut_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Dracut"
           }
         },
@@ -13856,13 +13856,13 @@
         },
         {
           "id": "ma-2026-membership:place:dunstable->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:dunstable",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:dunstable_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Dunstable"
           }
         },
@@ -13952,13 +13952,13 @@
         },
         {
           "id": "ma-2026-membership:place:holliston->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:holliston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:holliston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Holliston"
           }
         },
@@ -14048,13 +14048,13 @@
         },
         {
           "id": "ma-2026-membership:place:lincoln->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:lincoln",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:lincoln_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Lincoln"
           }
         },
@@ -14072,13 +14072,13 @@
         },
         {
           "id": "ma-2026-membership:place:littleton->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:littleton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:littleton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Littleton"
           }
         },
@@ -14240,13 +14240,13 @@
         },
         {
           "id": "ma-2026-membership:place:natick->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:natick",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:natick_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Natick"
           }
         },
@@ -14288,13 +14288,13 @@
         },
         {
           "id": "ma-2026-membership:place:north_reading->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:north_reading",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:north_reading_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "North Reading"
           }
         },
@@ -14360,13 +14360,13 @@
         },
         {
           "id": "ma-2026-membership:place:sherborn->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sherborn",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:sherborn_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sherborn"
           }
         },
@@ -14456,13 +14456,13 @@
         },
         {
           "id": "ma-2026-membership:place:stow->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:stow",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:stow_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Stow"
           }
         },
@@ -14480,13 +14480,13 @@
         },
         {
           "id": "ma-2026-membership:place:sudbury->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sudbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:sudbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sudbury"
           }
         },
@@ -14504,13 +14504,13 @@
         },
         {
           "id": "ma-2026-membership:place:tewksbury->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:tewksbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:tewksbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Tewksbury"
           }
         },
@@ -14552,13 +14552,13 @@
         },
         {
           "id": "ma-2026-membership:place:tyngsborough->governors_council:5",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:tyngsborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:tyngsborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:5",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Tyngsborough"
           }
         },
@@ -14624,37 +14624,37 @@
         },
         {
           "id": "ma-2026-membership:place:watertown->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:watertown",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:watertown_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Watertown"
           }
         },
         {
           "id": "ma-2026-membership:county:middlesex/place:watertown_city->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:watertown_city",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:watertown_town_city",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Watertown"
           }
         },
         {
           "id": "ma-2026-membership:place:wayland->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wayland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:wayland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wayland"
           }
         },
@@ -14672,13 +14672,13 @@
         },
         {
           "id": "ma-2026-membership:place:westford->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:westford",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:westford_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Westford"
           }
         },
@@ -14696,13 +14696,13 @@
         },
         {
           "id": "ma-2026-membership:place:weston->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:weston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:middlesex/place:weston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Weston"
           }
         },
@@ -14816,13 +14816,13 @@
         },
         {
           "id": "ma-2026-membership:place:avon->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:avon",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:avon_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Avon"
           }
         },
@@ -14888,13 +14888,13 @@
         },
         {
           "id": "ma-2026-membership:place:canton->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:canton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:canton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Canton"
           }
         },
@@ -14912,13 +14912,13 @@
         },
         {
           "id": "ma-2026-membership:place:cohasset->governors_council:4",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:cohasset",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:cohasset_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Cohasset"
           }
         },
@@ -15008,13 +15008,13 @@
         },
         {
           "id": "ma-2026-membership:place:franklin->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:franklin",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:franklin_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Franklin"
           }
         },
@@ -15092,13 +15092,13 @@
         },
         {
           "id": "ma-2026-membership:place:medway->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:medway",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:medway_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Medway"
           }
         },
@@ -15116,13 +15116,13 @@
         },
         {
           "id": "ma-2026-membership:place:millis->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:millis",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:millis_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Millis"
           }
         },
@@ -15188,13 +15188,13 @@
         },
         {
           "id": "ma-2026-membership:place:norfolk->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:norfolk",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:norfolk_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Norfolk"
           }
         },
@@ -15236,13 +15236,13 @@
         },
         {
           "id": "ma-2026-membership:place:plainville->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:plainville",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:plainville_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Plainville"
           }
         },
@@ -15284,13 +15284,13 @@
         },
         {
           "id": "ma-2026-membership:place:randolph->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:randolph",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:randolph_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Randolph"
           }
         },
@@ -15344,13 +15344,13 @@
         },
         {
           "id": "ma-2026-membership:place:stoughton->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:stoughton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:stoughton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Stoughton"
           }
         },
@@ -15416,13 +15416,13 @@
         },
         {
           "id": "ma-2026-membership:place:westwood->governors_council:4",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:westwood",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:westwood_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Westwood"
           }
         },
@@ -15440,13 +15440,13 @@
         },
         {
           "id": "ma-2026-membership:place:weymouth->governors_council:4",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:weymouth",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:weymouth_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Weymouth"
           }
         },
@@ -15476,13 +15476,13 @@
         },
         {
           "id": "ma-2026-membership:place:wrentham->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wrentham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:norfolk/place:wrentham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wrentham"
           }
         },
@@ -15524,13 +15524,13 @@
         },
         {
           "id": "ma-2026-membership:place:bridgewater->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:bridgewater",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:bridgewater_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Bridgewater"
           }
         },
@@ -15584,13 +15584,13 @@
         },
         {
           "id": "ma-2026-membership:place:carver->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:carver",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:carver_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Carver"
           }
         },
@@ -15632,13 +15632,13 @@
         },
         {
           "id": "ma-2026-membership:place:east_bridgewater->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:east_bridgewater",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:east_bridgewater_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "East Bridgewater"
           }
         },
@@ -15656,13 +15656,13 @@
         },
         {
           "id": "ma-2026-membership:place:halifax->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:halifax",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:halifax_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Halifax"
           }
         },
@@ -15680,13 +15680,13 @@
         },
         {
           "id": "ma-2026-membership:place:hanover->governors_council:4",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hanover",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:hanover_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hanover"
           }
         },
@@ -15800,13 +15800,13 @@
         },
         {
           "id": "ma-2026-membership:place:lakeville->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:lakeville",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:lakeville_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Lakeville"
           }
         },
@@ -15824,13 +15824,13 @@
         },
         {
           "id": "ma-2026-membership:place:marion->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:marion",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:marion_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Marion"
           }
         },
@@ -15872,13 +15872,13 @@
         },
         {
           "id": "ma-2026-membership:place:mattapoisett->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:mattapoisett",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:mattapoisett_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Mattapoisett"
           }
         },
@@ -15896,13 +15896,13 @@
         },
         {
           "id": "ma-2026-membership:place:middleborough->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:middleborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:middleborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Middleborough"
           }
         },
@@ -15920,13 +15920,13 @@
         },
         {
           "id": "ma-2026-membership:place:norwell->governors_council:4",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:norwell",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:norwell_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Norwell"
           }
         },
@@ -15944,13 +15944,13 @@
         },
         {
           "id": "ma-2026-membership:place:pembroke->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:pembroke",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:pembroke_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Pembroke"
           }
         },
@@ -15992,13 +15992,13 @@
         },
         {
           "id": "ma-2026-membership:place:plympton->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:plympton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:plympton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Plympton"
           }
         },
@@ -16016,13 +16016,13 @@
         },
         {
           "id": "ma-2026-membership:place:rochester->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:rochester",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:rochester_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Rochester"
           }
         },
@@ -16040,13 +16040,13 @@
         },
         {
           "id": "ma-2026-membership:place:rockland->governors_council:4",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:rockland",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:rockland_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:4",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Rockland"
           }
         },
@@ -16088,13 +16088,13 @@
         },
         {
           "id": "ma-2026-membership:place:wareham->governors_council:1",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:wareham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:wareham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:1",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Wareham"
           }
         },
@@ -16112,13 +16112,13 @@
         },
         {
           "id": "ma-2026-membership:place:west_bridgewater->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:west_bridgewater",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:west_bridgewater_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "West Bridgewater"
           }
         },
@@ -16136,13 +16136,13 @@
         },
         {
           "id": "ma-2026-membership:place:whitman->governors_council:2",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:whitman",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:plymouth/place:whitman_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:2",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Whitman"
           }
         },
@@ -16208,13 +16208,13 @@
         },
         {
           "id": "ma-2026-membership:place:winthrop->governors_council:6",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:winthrop",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:winthrop_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:6",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Winthrop"
           }
         },
@@ -16244,13 +16244,13 @@
         },
         {
           "id": "ma-2026-membership:place:ashburnham->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:ashburnham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:ashburnham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Ashburnham"
           }
         },
@@ -16292,13 +16292,13 @@
         },
         {
           "id": "ma-2026-membership:place:auburn->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:auburn",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:auburn_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Auburn"
           }
         },
@@ -16340,13 +16340,13 @@
         },
         {
           "id": "ma-2026-membership:place:berlin->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:berlin",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:berlin_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Berlin"
           }
         },
@@ -16364,13 +16364,13 @@
         },
         {
           "id": "ma-2026-membership:place:blackstone->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:blackstone",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:blackstone_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Blackstone"
           }
         },
@@ -16388,13 +16388,13 @@
         },
         {
           "id": "ma-2026-membership:place:bolton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:bolton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:bolton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Bolton"
           }
         },
@@ -16412,13 +16412,13 @@
         },
         {
           "id": "ma-2026-membership:place:boylston->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:boylston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:boylston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Boylston"
           }
         },
@@ -16460,13 +16460,13 @@
         },
         {
           "id": "ma-2026-membership:place:charlton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:charlton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:charlton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Charlton"
           }
         },
@@ -16508,13 +16508,13 @@
         },
         {
           "id": "ma-2026-membership:place:douglas->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:douglas",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:douglas_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Douglas"
           }
         },
@@ -16532,13 +16532,13 @@
         },
         {
           "id": "ma-2026-membership:place:dudley->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:dudley",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:dudley_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Dudley"
           }
         },
@@ -16628,13 +16628,13 @@
         },
         {
           "id": "ma-2026-membership:place:grafton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:grafton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:grafton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Grafton"
           }
         },
@@ -16652,13 +16652,13 @@
         },
         {
           "id": "ma-2026-membership:place:hardwick->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hardwick",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:hardwick_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hardwick"
           }
         },
@@ -16676,13 +16676,13 @@
         },
         {
           "id": "ma-2026-membership:place:harvard->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:harvard",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:harvard_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Harvard"
           }
         },
@@ -16700,13 +16700,13 @@
         },
         {
           "id": "ma-2026-membership:place:holden->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:holden",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:holden_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Holden"
           }
         },
@@ -16748,13 +16748,13 @@
         },
         {
           "id": "ma-2026-membership:place:hubbardston->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:hubbardston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:hubbardston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Hubbardston"
           }
         },
@@ -16772,13 +16772,13 @@
         },
         {
           "id": "ma-2026-membership:place:lancaster->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:lancaster",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:lancaster_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Lancaster"
           }
         },
@@ -16796,13 +16796,13 @@
         },
         {
           "id": "ma-2026-membership:place:leicester->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:leicester",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:leicester_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Leicester"
           }
         },
@@ -16868,13 +16868,13 @@
         },
         {
           "id": "ma-2026-membership:place:mendon->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:mendon",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:mendon_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Mendon"
           }
         },
@@ -16916,13 +16916,13 @@
         },
         {
           "id": "ma-2026-membership:place:millbury->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:millbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:millbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Millbury"
           }
         },
@@ -16940,13 +16940,13 @@
         },
         {
           "id": "ma-2026-membership:place:millville->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:millville",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:millville_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Millville"
           }
         },
@@ -16964,13 +16964,13 @@
         },
         {
           "id": "ma-2026-membership:place:new_braintree->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:new_braintree",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:new_braintree_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "New Braintree"
           }
         },
@@ -17012,13 +17012,13 @@
         },
         {
           "id": "ma-2026-membership:place:northbridge->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:northbridge",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:northbridge_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Northbridge"
           }
         },
@@ -17060,13 +17060,13 @@
         },
         {
           "id": "ma-2026-membership:place:oakham->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:oakham",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:oakham_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Oakham"
           }
         },
@@ -17108,13 +17108,13 @@
         },
         {
           "id": "ma-2026-membership:place:paxton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:paxton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:paxton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Paxton"
           }
         },
@@ -17156,13 +17156,13 @@
         },
         {
           "id": "ma-2026-membership:place:phillipston->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:phillipston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:phillipston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Phillipston"
           }
         },
@@ -17180,13 +17180,13 @@
         },
         {
           "id": "ma-2026-membership:place:princeton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:princeton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:princeton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Princeton"
           }
         },
@@ -17204,13 +17204,13 @@
         },
         {
           "id": "ma-2026-membership:place:royalston->governors_council:8",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:royalston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:royalston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:8",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Royalston"
           }
         },
@@ -17252,13 +17252,13 @@
         },
         {
           "id": "ma-2026-membership:place:shrewsbury->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:shrewsbury",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:shrewsbury_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Shrewsbury"
           }
         },
@@ -17276,13 +17276,13 @@
         },
         {
           "id": "ma-2026-membership:place:southborough->governors_council:3",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:southborough",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:southborough_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:3",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Southborough"
           }
         },
@@ -17300,13 +17300,13 @@
         },
         {
           "id": "ma-2026-membership:place:southbridge->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:southbridge",
+          "memberOcdId": "ocd-division/country:us/state:ma/place:southbridge_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Southbridge"
           }
         },
@@ -17360,13 +17360,13 @@
         },
         {
           "id": "ma-2026-membership:place:sterling->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sterling",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:sterling_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sterling"
           }
         },
@@ -17408,13 +17408,13 @@
         },
         {
           "id": "ma-2026-membership:place:sutton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:sutton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:sutton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Sutton"
           }
         },
@@ -17432,13 +17432,13 @@
         },
         {
           "id": "ma-2026-membership:place:templeton->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:templeton",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:templeton_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Templeton"
           }
         },
@@ -17480,13 +17480,13 @@
         },
         {
           "id": "ma-2026-membership:place:uxbridge->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:uxbridge",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:uxbridge_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Uxbridge"
           }
         },
@@ -17576,13 +17576,13 @@
         },
         {
           "id": "ma-2026-membership:place:west_boylston->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:west_boylston",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:west_boylston_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "West Boylston"
           }
         },
@@ -17624,13 +17624,13 @@
         },
         {
           "id": "ma-2026-membership:place:westminster->governors_council:7",
-          "memberOcdId": "ocd-division/country:us/state:ma/place:westminster",
+          "memberOcdId": "ocd-division/country:us/state:ma/county:worcester/place:westminster_town",
           "districtOcdId": "ocd-division/country:us/state:ma/governors_council:7",
           "provenance": {
             "sourceUrl": "https://www.sec.state.ma.us/divisions/elections/voting-information/district/2022-councillor.htm",
             "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division",
             "collectedAt": "2026-10-21T00:05:16.976Z",
-            "verifiedAt": "2026-10-21T00:05:34.947913+00:00",
+            "verifiedAt": "2026-10-23T07:59:39.875348+00:00",
             "quote": "Westminster"
           }
         },
@@ -18035,8 +18035,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:05:34.947913+00:00",
-    "reviewedBy": "BA-01 official ballot PDF replay",
+    "reviewedAt": "2026-10-23T07:59:39.875348+00:00",
+    "reviewedBy": "bl02-ma-membership-normalization",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -18126,7 +18126,7 @@
         "retrievedAt": "2026-10-21T00:05:16.976Z",
         "httpStatus": 200,
         "rawHash": "6eeb2cd43d4547267b3d65f4cff7c9609a58debd571e3c03a6fe35ca458f6271",
-        "reviewedEvidence": "Saved rendered official page; hash describes the saved rendered text. Code reads all 348 whole municipalities and 28 whole wards into their Council districts. Boston, Cambridge and Braintree whole-city memberships, and all partial wards/precincts, are excluded. Census2025 municipal names provide the county-subdivision aliases."
+        "reviewedEvidence": "Official list replayed for 348 whole municipalities and 28 whole wards. BL-02 normalizes 208 whole-municipality aliases against the held ZIP geography index; stable membership IDs retained. Whole-city mappings for split Boston, Cambridge and Braintree are excluded. The ZIP index has no ward IDs; the 28 verified narrow ward memberships remain for exact ward selections."
       },
       {
         "requestedUrl": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2025_Gazetteer/2025_gaz_cousubs_25.txt",

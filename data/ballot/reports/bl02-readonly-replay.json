@@ -1,0 +1,945 @@
+{
+  "checkedAt": "2026-10-23T08:44:47.875Z",
+  "baselineRevision": "78f82a232dd1d0545a46835e7716032ff3807425",
+  "production": {
+    "projectId": "tiny-hill-13996172",
+    "branchId": "br-delicate-lab-ax02xuo5",
+    "branchName": "production",
+    "acquisition": "SELECT-only canonical state reader query, exact candidate and recursive payload parts exported through connected Neon",
+    "writes": 0
+  },
+  "replay": "Ordinary state assembler, promotion validation and typed reader in MemoryRoutineDataStore; no production publication",
+  "upstream": "BA-01 certified state ballot holdings and official district lists; Census ZIP geography",
+  "downstream": "Standing ballot-contests:<state> publisher → canonical state ballot → readerBallotSourcesForDivisions → ballot page",
+  "clocks": {
+    "now": "2026-10-23T12:00:00.000Z",
+    "tomorrow": "2026-10-24T12:00:00.000Z"
+  },
+  "states": [
+    {
+      "state": "CA",
+      "snapshotSha256": "d4cd09eb22750f44a79fd731df80f2d414beb684c20b963797d572cd37a9bbe9",
+      "productionVersion": "official-ballot-authorities:bd14738ab3af82492d37b9295c136468",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "b5150fd979c645f7d2dd5db702ad2886ec4d07cfebad99fb87c8e74edd63b544",
+      "replayVersion": "official-ballot-authorities:8c492abec101ea0fddfeb085635622a4",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 0,
+      "maintenance": null,
+      "expectedMembershipsVerified": 116,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [
+        {
+          "zip": "94118",
+          "contests": [
+            {
+              "id": "ca-sos-2026-general-governor",
+              "title": "Governor",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-lieutenant-governor",
+              "title": "Lieutenant Governor",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-secretary-of-state",
+              "title": "Secretary of State",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-controller",
+              "title": "Controller",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-treasurer",
+              "title": "Treasurer",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-attorney-general",
+              "title": "Attorney General",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-insurance-commissioner",
+              "title": "Insurance Commissioner",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-superintendent-of-public-instruction",
+              "title": "Superintendent of Public Instruction",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-board-of-equalization-member-district-2",
+              "title": "Board of Equalization Member District 2",
+              "ocdId": "ocd-division/country:us/state:ca/board_of_equalization:2"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-kelli-m-evans",
+              "title": "Associate Justice of the Supreme Court — KELLI M. EVANS",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-joshua-groban",
+              "title": "Associate Justice of the Supreme Court — JOSHUA GROBAN",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-charles-a-smiley",
+              "title": "Associate Justice, Court of Appeal, First District, Division One — CHARLES A. SMILEY",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-kathleen-m-banke",
+              "title": "Associate Justice, Court of Appeal, First District, Division One — KATHLEEN M. BANKE",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-monique-langhorne-wilson",
+              "title": "Associate Justice, Court of Appeal, First District, Division One — MONIQUE LANGHORNE WILSON",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-therese-m-stewart",
+              "title": "Presiding Justice, Court of Appeal, First District, Division Two — THERESE M. STEWART",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-tara-m-desautels",
+              "title": "Associate Justice, Court of Appeal, First District, Division Two — TARA M. DESAUTELS",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-ioana-petrou",
+              "title": "Associate Justice, Court of Appeal, First District, Division Three — IOANA PETROU",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-victor-a-rodriguez",
+              "title": "Associate Justice, Court of Appeal, First District, Division Three — VICTOR A. RODRIGUEZ",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-tracie-l-brown",
+              "title": "Presiding Justice, Court of Appeal, First District, Division Four — TRACIE L. BROWN",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-mark-simons",
+              "title": "Associate Justice, Court of Appeal, First District, Division Five — MARK SIMONS",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-danny-y-chou",
+              "title": "Associate Justice, Court of Appeal, First District, Division Five — DANNY Y. CHOU",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-retention-gordon-burns",
+              "title": "Associate Justice, Court of Appeal, First District, Division Five — GORDON BURNS",
+              "ocdId": "ocd-division/country:us/state:ca/court_of_appeals:1"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-1",
+              "title": "Proposition 1: AUTHORIZES BONDS FOR HOUSING AFFORDABILITY PROGRAMS. LEGISLATIVE STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-2",
+              "title": "Proposition 2: INCREASES STATE’S RAINY DAY FUND. LEGISLATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-3",
+              "title": "Proposition 3: PROVIDES PERMANENT FUNDING FOR SCHOOLS AND HEALTH CARE BY EXTENDING EXISTING TAX ON HIGH INCOMES. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-4",
+              "title": "Proposition 4: REPEALS PROHIBITION AGAINST PUBLIC FUNDING OF ELECTION CAMPAIGNS. LEGISLATIVE STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-5",
+              "title": "Proposition 5: CHANGES RECALL ELECTION PROCESS FOR STATEWIDE OFFICERS. LEGISLATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-37",
+              "title": "Proposition 37: CREATES LOAN PROGRAM FOR MIDDLE-INCOME BUYERS OF QUALIFIED NEW HOMES. INITIATIVE STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-38",
+              "title": "Proposition 38: AUTHORIZES BONDS FOR IMMUNOLOGY MEDICAL RESEARCH. INITIATIVE STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-39",
+              "title": "Proposition 39: PROHIBITS CITIZENS FROM VOTING UNLESS THEY PRESENT GOVERNMENT-ISSUED IDENTIFICATION. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-40",
+              "title": "Proposition 40: IMPOSES ONE-TIME TAX ON CERTAIN TAXPAYERS. INITIATIVE CONSTITUTIONAL AMENDMENT AND STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-41",
+              "title": "Proposition 41: PROHIBITS NEW STATE TAXES THAT EXCLUDE REVENUES FROM STATE SPENDING LIMIT. REQUIRES AUDITS FOR NEW STATE SPECIAL TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-42",
+              "title": "Proposition 42: PROHIBITS NEW STATE PERSONAL PROPERTY TAXES AND CERTAIN RETROACTIVE STATE TAXES. INITIATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-43",
+              "title": "Proposition 43: LIMITS VOTERS’ ABILITY TO RAISE REVENUES FOR LOCAL GOVERNMENT SERVICES. LEGISLATIVE CONSTITUTIONAL AMENDMENT.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-44",
+              "title": "Proposition 44: REQUIRES COMMUNITY HEALTH CLINICS SPEND 90% OF REVENUE ON PROGRAM SERVICES. INITIATIVE STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sos-2026-general-proposition-45",
+              "title": "Proposition 45: MODIFIES ENVIRONMENTAL REVIEW FOR CERTAIN PROJECTS. INITIATIVE STATUTE.",
+              "ocdId": "ocd-division/country:us/state:ca"
+            },
+            {
+              "id": "ca-sf-2026-assessor-recorder",
+              "title": "Assessor-Recorder",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-public-defender",
+              "title": "Public Defender",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-board-education",
+              "title": "Board of Education (3 seats)",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-community-college-board",
+              "title": "Community College Board (3 seats)",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-community-college-board-partial",
+              "title": "Community College Board Partial Term",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-a",
+              "title": "Proposition A — Charter Changes Affecting Various City Departments and Commissions",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-b",
+              "title": "Proposition B — Establishing a Municipal Finance Corporation and a Public Bank",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-c",
+              "title": "Proposition C — Contributions to the Housing Fund",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-d",
+              "title": "Proposition D — Changes to Ballot Measure Process",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-e",
+              "title": "Proposition E — City Administrator’s Authority and Changes to City Contracting",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-f",
+              "title": "Proposition F — Changes to Executive Branch Management",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-g",
+              "title": "Proposition G — Allowing Private Vehicles on the Great Highway in Sunset Dunes Park",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-h",
+              "title": "Proposition H — Parcel Tax to Fund Public Muni Operations",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-i",
+              "title": "Proposition I — Changes to Real Property Transfer Tax",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-proposition-j",
+              "title": "Proposition J — Removal of Foreclosure Exemption for Real Property Transfer Tax",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-regional-transit-measure",
+              "title": "RTM — Regional Transit Measure",
+              "ocdId": "ocd-division/country:us/state:ca/county:san_francisco"
+            },
+            {
+              "id": "ca-sf-2026-general-bart-director-district-8",
+              "title": "BART Director, District 8",
+              "ocdId": "ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8"
+            }
+          ]
+        }
+      ],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "734e6f806fe1d0e866fa2413f89bd17abe077415ba8f031f227e3ab05d0e2104"
+    },
+    {
+      "state": "MA",
+      "snapshotSha256": "2f910097f6b2fda62f175d4d0fc7f1275f9931dca972a63d41d409d99a4c4af0",
+      "productionVersion": "official-ballot-authorities:ee816e64b7307c81793ac201d975524a",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "b1e8669e7dc57f2fb3459ca7a72ca22bd0bea11fd2ebacd4567077bda99d7f4f",
+      "replayVersion": "official-ballot-authorities:a59787c4b4a04851e6e3ff8597b7c24f",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 208,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:a59787c4b4a04851e6e3ff8597b7c24f",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 736,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [
+        {
+          "zip": "02601",
+          "contests": [
+            {
+              "id": "ma-2026-11-03:us-senate",
+              "title": "Senator in Congress",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:governor-lieutenant-governor",
+              "title": "Governor & Lieutenant Governor",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:attorney-general",
+              "title": "Attorney General",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:secretary-of-state",
+              "title": "Secretary of State",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:treasurer",
+              "title": "Treasurer",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:auditor",
+              "title": "Auditor",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-1",
+              "title": "Question 1 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-2",
+              "title": "Question 2 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-3",
+              "title": "Question 3 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-4",
+              "title": "Question 4 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-5",
+              "title": "Question 5 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-6",
+              "title": "Question 6 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-7",
+              "title": "Question 7 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-8",
+              "title": "Question 8 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-9",
+              "title": "Question 9 – Referendum on an Existing Law",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:councillor-1",
+              "title": "Councillor – First District",
+              "ocdId": "ocd-division/country:us/state:ma/governors_council:1"
+            }
+          ]
+        },
+        {
+          "zip": "02133",
+          "contests": [
+            {
+              "id": "ma-2026-11-03:us-senate",
+              "title": "Senator in Congress",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:governor-lieutenant-governor",
+              "title": "Governor & Lieutenant Governor",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:attorney-general",
+              "title": "Attorney General",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:secretary-of-state",
+              "title": "Secretary of State",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:treasurer",
+              "title": "Treasurer",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:auditor",
+              "title": "Auditor",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-1",
+              "title": "Question 1 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-2",
+              "title": "Question 2 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-3",
+              "title": "Question 3 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-4",
+              "title": "Question 4 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-5",
+              "title": "Question 5 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-6",
+              "title": "Question 6 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-7",
+              "title": "Question 7 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-8",
+              "title": "Question 8 – Law Proposed by Initiative Petition",
+              "ocdId": "ocd-division/country:us/state:ma"
+            },
+            {
+              "id": "ma-2026-11-03:question-9",
+              "title": "Question 9 – Referendum on an Existing Law",
+              "ocdId": "ocd-division/country:us/state:ma"
+            }
+          ]
+        }
+      ],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "75c110dea1bf2e43cca07e3ba85fe52a30c410b001eadfde877363f3658992f6"
+    },
+    {
+      "state": "MI",
+      "snapshotSha256": "2fa7323ee20bbf50207c4692183488a67ce67fbbace8cdde2337fad14bebb63d",
+      "productionVersion": "official-ballot-authorities:1bc3d6bc2a1bab0e1cff1fb7c9501af6",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "e7e54d3bba1e6393ee0caf705550f689b377602531caca5cbebbe760ec54d289",
+      "replayVersion": "official-ballot-authorities:ea30841718ed60bdbe595d4ac945fc29",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 351,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:ea30841718ed60bdbe595d4ac945fc29",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 520,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [
+        {
+          "zip": "48226",
+          "contests": [
+            {
+              "id": "mi-sos-2026-general-governor-lieutenant-governor",
+              "title": "Governor / Lt. Governor",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-secretary-of-state",
+              "title": "Secretary of State",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-attorney-general",
+              "title": "Attorney General",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-us-senate",
+              "title": "U.S. Senate",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-state-board-of-education",
+              "title": "Member of the State Board of Education",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-university-of-michigan-regent",
+              "title": "Regent of the University of Michigan",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-michigan-state-university-trustee",
+              "title": "Trustee of Michigan State University",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-wayne-state-university-governor",
+              "title": "Governor of Wayne State University",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-supreme-court-justice",
+              "title": "Justice of Supreme Court",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-proposal-2026-1",
+              "title": "A proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-sos-2026-general-proposal-2026-2",
+              "title": "A proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+              "ocdId": "ocd-division/country:us/state:mi"
+            },
+            {
+              "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+              "title": "1st District Judge of Court of Appeals Incumbent 6 Year Terms (3) Positions",
+              "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1"
+            },
+            {
+              "id": "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+              "title": "1st District Judge of Court of Appeals Incumbent Partial Term Ending 01/01/2031 (1) Position",
+              "ocdId": "ocd-division/country:us/state:mi/court_of_appeals:1"
+            },
+            {
+              "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+              "title": "3rd Circuit Judge of Circuit Court Incumbent 6 Year Terms (16) Positions",
+              "ocdId": "ocd-division/country:us/state:mi/circuit_court:3"
+            },
+            {
+              "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+              "title": "3rd Circuit Judge of Circuit Court Non-Incumbent 6 Year Term (1) Position",
+              "ocdId": "ocd-division/country:us/state:mi/circuit_court:3"
+            },
+            {
+              "id": "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+              "title": "3rd Circuit Judge of Circuit Court Incumbent Partial Term - 4 Years Ending 01/01/2031 (1) Position",
+              "ocdId": "ocd-division/country:us/state:mi/circuit_court:3"
+            },
+            {
+              "id": "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+              "title": "WAYNE Judge of Probate Court Non-Incumbent 6 Year Terms (3) Positions Files With County",
+              "ocdId": "ocd-division/country:us/state:mi/county:wayne"
+            },
+            {
+              "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+              "title": "36th District Judge of District Court Incumbent 6 Year Terms (6) Positions",
+              "ocdId": "ocd-division/country:us/state:mi/district_court:36"
+            },
+            {
+              "id": "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+              "title": "36th District Judge of District Court Non-Incumbent 6 Year Terms (3) Positions",
+              "ocdId": "ocd-division/country:us/state:mi/district_court:36"
+            },
+            {
+              "id": "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+              "title": "36th District Judge of District Court Incumbent Partial Term Ending 01/01/2031 (3) Positions",
+              "ocdId": "ocd-division/country:us/state:mi/district_court:36"
+            }
+          ]
+        }
+      ],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "de94f943b004b2e8889e0b5cee5ab16944920b23c711d1df178de000274259cd"
+    },
+    {
+      "state": "AK",
+      "snapshotSha256": "7bc0d6838c4684a66e3161da7bcbb4bf80e1e4d8d813bc05778e45cd49d5729d",
+      "productionVersion": "official-ballot-authorities:682858c9dabbfd7892e48df1666e4bc3",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "982119707224bb551fc0b04214861377f055ded494d59d40da3db69ab4b14678",
+      "replayVersion": "official-ballot-authorities:82a0dd6dc89eb9421548b624e9f31b80",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 345,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:82a0dd6dc89eb9421548b624e9f31b80",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 345,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "077440954be774fb2b24ae7d86bd32a32233d084900de4bed7ec879e1ad34f28"
+    },
+    {
+      "state": "NE",
+      "snapshotSha256": "f650e7a223f4abda71e1274d11713271ca861119c1b77ec9bffc859193a680a4",
+      "productionVersion": "cv-c5c362e17b807b5af3e76ba59e2d9e10",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "9ead3f6d8b5916d4d7032c888ccdfe9e423fd55d23e43cb95f2541a23b5cb70f",
+      "replayVersion": "official-ballot-authorities:36599cf7b696186d8ef6475c36b57460",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 527,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:36599cf7b696186d8ef6475c36b57460",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 527,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "cbf615e06ea2f193e7d8bbc9e37cb82254df675f1bb039df8c53ee0ec8be3f5b"
+    },
+    {
+      "state": "UT",
+      "snapshotSha256": "2c258c19732122a7c3afee5cac45ee58688d97f783a1acab6629bf0b575dea50",
+      "productionVersion": "official-ballot-authorities:8a036408a56c1a98eac50b28218c5787",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "bac54691ea4651ea0a7eb8438ab56786cc2213406d0e857bcdabe4242c7089dd",
+      "replayVersion": "official-ballot-authorities:28541f00f7786a8fc9bee65c27746c59",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 152,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:28541f00f7786a8fc9bee65c27746c59",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 178,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "15452b78e29fd2bb3f6ac2e79dc0b4b38c37a6e175c68cff0a3bacd7a1e5aec9"
+    },
+    {
+      "state": "OR",
+      "snapshotSha256": "717ae15bdd6b4582db811095e5f2a069eaf19930a945c7e463c0241328bbc2b8",
+      "productionVersion": "official-ballot-authorities:281121170afb987ba0a38f5ad4cb237d",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "b49a3c17433cd092c0ba46fb10c3d850437c4915619a7cd4227b4991141b9979",
+      "replayVersion": "official-ballot-authorities:72a90062e038b4abfd39f8ce4649af54",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 2,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:72a90062e038b4abfd39f8ce4649af54",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 2,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "4a0de9f0f474679c337b48d16b8588e562730c79efc30ab38f8b2741c8b21f31"
+    },
+    {
+      "state": "TX",
+      "snapshotSha256": "a152682a162f35c4740a7f2c5f5690589794494b29038776e54d1498384a0405",
+      "productionVersion": "official-ballot-authorities:33558820262f64f5e080d64dd4740143",
+      "exportKind": "canonical-state-reader-metadata-and-identical-projection",
+      "inputSha256": "9b22938d70f0463f4db85460d3b452393e08ccfd7a5e24793a1dd56728442b65",
+      "replayVersion": "official-ballot-authorities:00f2e94b9d3b0b829d9b47f0468f4e20",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 227,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:00f2e94b9d3b0b829d9b47f0468f4e20",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 613,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "c868e29dfbda23a42a9d4343874002bf5228bf362e55a7bc6b562dc2ab9635a4"
+    },
+    {
+      "state": "FL",
+      "snapshotSha256": "8826c5c0cfec939de385ae91f89b26f12c1752575780960d037555241894be38",
+      "productionVersion": "official-ballot-authorities:73c64fa37d807a4fbdfa184af482d058",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "f6697a6abce02f9658812363bbe2b81a07da638a23f108a23d818254e9074d82",
+      "replayVersion": "official-ballot-authorities:756045c9e0c48e8f787c983296b6b517",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 1,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:756045c9e0c48e8f787c983296b6b517",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 70,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "50abdd7e0a729aff1be48b9c34681547b29ea6829b4cc404766a26bb068fab98"
+    },
+    {
+      "state": "ME",
+      "snapshotSha256": "71f2f8dc8b6626086d1df86ee3726a0b768dfba627c57bc24596d30ed926aced",
+      "productionVersion": "official-ballot-authorities:b3d42b017e6b401f7caaf5eb2bff65cb",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "8b80ed8a2c5927219265deff5d23b378fa496ce49fc88e7af752fe1ddb5fb223",
+      "replayVersion": "official-ballot-authorities:b77d48995d1ce74e889870a3ba8f4881",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 93,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:b77d48995d1ce74e889870a3ba8f4881",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 339,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "0e89415ab1754d8a632c5fad157d8db70ae14888816965c7f10fd15f01f2465e"
+    },
+    {
+      "state": "OH",
+      "snapshotSha256": "50a5a75b28436c0c1239acbf4fcb35e48e56be71b0cd93e13ad3b99069c57f91",
+      "productionVersion": "official-ballot-authorities:193695db0b6c7607bdbe1a0ab1e5f344",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "76a66a6bf9fd6c6800ef961c154e474853a0325db88fba80f5c9dcf3d0ff61f7",
+      "replayVersion": "official-ballot-authorities:f06388e24059ad4815b33faea4c35f71",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 51,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:f06388e24059ad4815b33faea4c35f71",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 139,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "7e4006758fb41e3fec31c2a43de4ef3e1da4563370612912ffc0b33904b0cc45"
+    },
+    {
+      "state": "DE",
+      "snapshotSha256": "92f6050a96b07e4e5a5f1341d83835ddfa5150a00377acf97bd528c50b49ac17",
+      "productionVersion": "official-ballot-authorities:f342d957bdeb05b5f142ac490e175d79",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "529c81ed6a4dde54681270f3e038acc1b5f24b2a0afa7b79af2d68bddc45f590",
+      "replayVersion": "official-ballot-authorities:0618aa1fa4cf3f85d094d245cc7136f4",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 13,
+      "maintenance": {
+        "versionId": "official-ballot-authorities:0618aa1fa4cf3f85d094d245cc7136f4",
+        "existingApi": "processRegisteredManualCandidate(..., {confirmUnchanged:false})",
+        "reason": "Existing record-change detector omits districtMemberships; explicit data replacement carries verified metadata."
+      },
+      "expectedMembershipsVerified": 13,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "6894a5a4953217294022c59fc1c58aeb0308adced8ebb570b9eab7b1b5c38f86"
+    },
+    {
+      "state": "DC",
+      "snapshotSha256": "8ca4c3fc9fda21fd56186c505ab93c011360f712b72ea5d18ff62870905b5983",
+      "productionVersion": "official-ballot-authorities:8c829cad4b5d4b704d5da5cf35164468",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "0e8f13a122a95e546c29ef42a4a571ab347727f9fa0925e697b2f49fd45958bd",
+      "replayVersion": "official-ballot-authorities:8c829cad4b5d4b704d5da5cf35164468",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 0,
+      "maintenance": null,
+      "expectedMembershipsVerified": 0,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": true,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "eb9f8b7566a575a2a53867a543b276dae0c153f6053722b96cf39dfa8e9babd9"
+    }
+  ]
+}

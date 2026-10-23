@@ -6979,13 +6979,46 @@
           }
         }
       ],
-      "coverageNotes": []
+      "coverageNotes": [],
+      "districtMemberships": [
+        {
+          "id": "bl02-or-place_fairview_4124250-to-place_fairview",
+          "memberOcdId": "ocd-division/country:us/state:or/place:fairview_4124250",
+          "districtOcdId": "ocd-division/country:us/state:or/place:fairview",
+          "provenance": {
+            "sourceUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:24250,24300&in=state:41",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:01:56.751299+00:00",
+            "verifiedAt": "2026-10-23T08:03:57.341965+00:00",
+            "quote": "Fairview city, Oregon; state41; place24250"
+          }
+        },
+        {
+          "id": "bl02-or-maywood_park-to-county_multnomah-council-2",
+          "memberOcdId": "ocd-division/country:us/state:or/place:maywood_park",
+          "districtOcdId": "ocd-division/country:us/state:or/county:multnomah/council_district:2",
+          "provenance": {
+            "sourceUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11/query?where=DISTRICT%3D%272%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+            "sourceOrg": "Multnomah County GIS",
+            "collectedAt": "2026-10-23T08:17:16.957534+00:00",
+            "verifiedAt": "2026-10-23T08:19:18.831406+00:00",
+            "quote": "Maywood Park city, GEOID 4146730: complete Census2025 place polygon is covered by official county:multnomah council district 2 polygon."
+          },
+          "memberGeometryProvenance": {
+            "sourceUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_41_place.zip",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-23T08:17:16.581564+00:00",
+            "verifiedAt": "2026-10-23T08:19:18.831406+00:00",
+            "quote": "Maywood Park city; GEOID4146730"
+          }
+        }
+      ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T22:59:33.652036Z",
-    "reviewedBy": "ba01-pacific-source-replay",
+    "reviewedAt": "2026-10-23T08:19:18.831406+00:00",
+    "reviewedBy": "bl02-official-pacific-council-memberships",
     "sources": [
       {
         "requestedUrl": "https://sos.oregon.gov/voting-elections/Pages/default.aspx",
@@ -7106,6 +7139,72 @@
         "httpStatus": 200,
         "rawHash": "96de66c011e2b75d2b1be9a6fee03d499c0bf0728ca27dd4e787c7609d790a3f",
         "reviewedEvidence": "Official Directive 2026-09 supplies all 83 federal/statewide/legislative contests and their 167 candidates plus seven circuit-court contests and three district-attorney contests."
+      },
+      {
+        "requestedUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:24250,24300&in=state:41",
+        "finalUrl": "https://api.census.gov/data/2024/acs/acs5?get=NAME&for=place:24250,24300&in=state:41",
+        "httpStatus": 200,
+        "rawHash": "6df25c24573149014394750622e60f05a9b8a0fe12ce33d309d3b54608b08611",
+        "retrievedAt": "2026-10-23T08:01:56.751299+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Census NAME response distinguishes Fairview city4124250 from Fairview CDP4124300. Only the city aliases the city ballot electorate."
+      },
+      {
+        "requestedUrl": "https://www.portland.gov/transition/districtcommission/map",
+        "finalUrl": "https://www.portland.gov/transition/districtcommission/map",
+        "httpStatus": 200,
+        "rawHash": "8bc5cc82f68632b08d45228c6b3d37573367f5858b72b3b8c7e539ccf12b29d3",
+        "retrievedAt": "2026-10-23T08:00:46.615307+00:00",
+        "publisher": "City of Portland",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official boundary description retained to document a split electorate. No whole county or whole Portland membership is asserted for a district occupying only part of it."
+      },
+      {
+        "requestedUrl": "https://multco.us/info/current-proposed-commissioner-district-boundaries",
+        "finalUrl": "https://multco.us/info/current-proposed-commissioner-district-boundaries",
+        "httpStatus": 200,
+        "rawHash": "f74d33c35e0c1618cbba87ec8a669d510a025123681ec54cd09b9f4580a10b20",
+        "retrievedAt": "2026-10-23T08:00:45.223047+00:00",
+        "publisher": "Multnomah County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official boundary description retained to document a split electorate. No whole county or whole Portland membership is asserted for a district occupying only part of it."
+      },
+      {
+        "requestedUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=DISTRICT+IN+%28%273%27%2C%274%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://www.portlandmaps.com/od/rest/services/COP_OpenData_Boundary/MapServer/1413/query?where=DISTRICT+IN+%28%273%27%2C%274%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "ec8b4799a2e1f3a8d73437cabe72e2a33072b3ae53474143094c3415b21626a2",
+        "retrievedAt": "2026-10-23T08:17:17.206857+00:00",
+        "publisher": "City of Portland GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official council boundary response. BL02 uses strict full-polygon containment of Census2025 places; no centroid, area-percentage threshold, geometry buffer, or whole-county assignment. Remaining split places use the exact saved boundary."
+      },
+      {
+        "requestedUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11/query?where=DISTRICT%3D%272%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://www3.multco.us/gisagspublic/rest/services/Countywide/General/MapServer/11/query?where=DISTRICT%3D%272%27&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+        "httpStatus": 200,
+        "rawHash": "63abbf33a2707ba3ec40cfd63ddc50947301e7318c582066107d6b8fe7d715ef",
+        "retrievedAt": "2026-10-23T08:17:16.957534+00:00",
+        "publisher": "Multnomah County GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Exact current official council boundary response. BL02 uses strict full-polygon containment of Census2025 places; no centroid, area-percentage threshold, geometry buffer, or whole-county assignment. Remaining split places use the exact saved boundary."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_41_place.zip",
+        "finalUrl": "https://www2.census.gov/geo/tiger/TIGER2025/PLACE/tl_2025_41_place.zip",
+        "httpStatus": 200,
+        "rawHash": "d05814de06701cca35df9e160017cd11d5ffe43a2530a8fa7f4b3a521e9e1f0f",
+        "retrievedAt": "2026-10-23T08:17:16.581564+00:00",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewOutcome": "SUPPORTED",
+        "reviewedEvidence": "Official2025 TIGER/Line state place shapefile supplies exact names/GEOIDs and complete place polygons for strict whole-place containment. Water/coastline differences are not rounded away."
       }
     ]
   }

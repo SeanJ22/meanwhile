@@ -1,0 +1,180 @@
+{
+  "state": "ME",
+  "address": "210 State St, Augusta, ME 04330",
+  "checkedAt": "2026-10-23T08:05:09.884Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ame/2026-11-03?street=210+State+St&city=Augusta&state=ME&zip=04330",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/me-google.json",
+  "sha256": "849c19144ebd272010c8c26a7f654c61afe019d20c183351649da969c6aa023e",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/me-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/me-turbovote.txt",
+  "elapsedMs": 4889,
+  "races": [
+    {
+      "id": "co_0a097912df2df977909172ac1869a433b514d2c5",
+      "title": "U.S. Senate Maine",
+      "candidates": [
+        {
+          "name": "Susan Collins",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Troy Dale Jackson",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Sigrid Ann Olson",
+          "party": "Democratic Party|Write-In"
+        },
+        {
+          "name": "Ashley Webb",
+          "party": "Democratic Party|Write-In"
+        },
+        {
+          "name": "Joseph Steinberger",
+          "party": "Faith in Humanity Party|Write-In"
+        },
+        {
+          "name": "Gina Oswald",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Brent Andrews",
+          "party": "Unaffiliated|Write-In"
+        },
+        {
+          "name": "Michael Turcotte",
+          "party": "Unenrolled|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_d7136d87005c009fbfd26d84ca719ceb9a305523",
+      "title": "U.S. House Maine District 2",
+      "candidates": [
+        {
+          "name": "Matthew Dunlap",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Paul LePage",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Gregory Ward",
+          "party": "Independent|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_2451970152d2f3d723a62d33710c36ce6850fddf",
+      "title": "Governor of Maine",
+      "candidates": [
+        {
+          "name": "Hannah Pingree",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Bobby Charles",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Richard Bennett",
+          "party": "Independent"
+        },
+        {
+          "name": "Randy Wilcox",
+          "party": "Republican Party|Write-In"
+        },
+        {
+          "name": "John Glowa",
+          "party": "Independent|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_7dcd0670bf6640a5d1721720f3857593c4800468",
+      "title": "Maine State Senate District 15",
+      "candidates": [
+        {
+          "name": "Amanda Heath",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Kati McCormick",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_e3cf39c286c96466043018115cdeed2146a7d506",
+      "title": "Maine House of Representatives District 59",
+      "candidates": [
+        {
+          "name": "Katrina Couch Ray-Saulis",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "John Reny",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_c192cf545a1d099c45d2023c4e4db70bd2aa48ed",
+      "title": "Augusta City Council, At-large",
+      "candidates": [
+        {
+          "name": "Daniel Burns",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Saunders Nash Callahan",
+          "party": "Nonpartisan"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_7a6a44ebf209839aefe8c37718a3581e1319e6f6",
+      "title": "Question 1",
+      "summary": "Authorize up to $7,370,000 in bonds for city facilities, Civic Center equipment and a mechanical study, a replacement fire department rescue vehicle, and street and sidewalk improvements"
+    },
+    {
+      "id": "bm_0b7b56ec833958cd480571937a987ecfa2f78e47",
+      "title": "Question 2",
+      "summary": "Authorize up to $53,571,590 in bonds to renovate approximately 48,000 square feet of Farrington Elementary School and construct and equip an approximately 33,000-square-foot expansion"
+    },
+    {
+      "id": "bm_726b099b01cad53076f2f0146834fe52ef5852e6",
+      "title": "Question 3",
+      "summary": "Regulate mobile home park lot rents and fees, generally limiting annual increases for lots at or below an affordability threshold to the lesser of inflation or 3%, and creating a Rent Stabilization Board to review increases requiring approval"
+    }
+  ],
+  "headings": [
+    "All Races (6)",
+    "Federal Races",
+    "U.S. Senate Maine",
+    "U.S. House Maine District 2",
+    "State Races",
+    "Governor of Maine",
+    "Maine State Senate District 15",
+    "Maine House of Representatives District 59",
+    "Local Races",
+    "Augusta City Council, At-large",
+    "Election Day is in10DAYS15HOURS54MINUTES50SECONDS"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/me-turbovote-divisions.json",
+      "sha256": "fa69188c9c86960fd47d36e98d01bdfff7c89f9723407f138362cd40eb3b18d5"
+    }
+  ]
+}

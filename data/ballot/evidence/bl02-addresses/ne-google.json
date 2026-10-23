@@ -1,0 +1,47 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "1445 K Street",
+    "addressLine": [
+      "1445 K Street"
+    ],
+    "city": "Lincoln",
+    "state": "NE",
+    "zip": "68508"
+  },
+  "state": [
+    {
+      "name": "Nebraska",
+      "electionAdministrationBody": {
+        "name": "Secretary of State, Elections Division",
+        "electionInfoUrl": "https://sos.nebraska.gov/elections/elections-division",
+        "electionRegistrationUrl": "https://www.nebraska.gov/apps-sos-voter-registration/",
+        "electionRegistrationConfirmationUrl": "https://www.votercheck.necvr.ne.gov/voterview",
+        "votingLocationFinderUrl": "https://www.votercheck.necvr.ne.gov/voterview",
+        "ballotInfoUrl": "https://www.votercheck.necvr.ne.gov/voterview/",
+        "electionRulesUrl": "https://sos.nebraska.gov/elections/early-voting",
+        "correspondenceAddress": {
+          "line1": "P.O. Box 94608",
+          "addressLine": [
+            "P.O. Box 94608"
+          ],
+          "city": "Lincoln",
+          "state": "",
+          "zip": "68509-4608"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

@@ -1,0 +1,592 @@
+{
+  "state": "CA",
+  "address": "120 Lake St, San Francisco, CA 94118",
+  "checkedAt": "2026-10-23T08:04:57.580Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aca/2026-11-03?street=120+Lake+St&city=San+Francisco&state=CA&zip=94118",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ca-google.json",
+  "sha256": "8d0634ad9a7dc9e634e9377cacc71d6da3f10c007af3a9494aecf03f2e44c0a9",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/ca-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/ca-turbovote.txt",
+  "elapsedMs": 5800,
+  "races": [
+    {
+      "id": "co_ae741f41cc47c45d290e0e0601faf9ae1bab963f",
+      "title": "U.S. House California District 11",
+      "candidates": [
+        {
+          "name": "Connie Chan",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Scott Wiener",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_57c7c646fdfcd4be1e86eeaae50b3fb0d98a21b1",
+      "title": "Governor of California",
+      "candidates": [
+        {
+          "name": "Xavier Becerra",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Steve Hilton",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_994053846cecb2f971b9e31d0efcfacca94d737e",
+      "title": "Lieutenant Governor of California",
+      "candidates": [
+        {
+          "name": "Fiona Ma",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Gloria J. Romero",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_6b063f00cc6732d084b5aac831c95ea059372243",
+      "title": "California Secretary of State",
+      "candidates": [
+        {
+          "name": "Shirley Weber",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Donald P. Wagner",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_a196b4549acab1b79d5e34c86e6e5cb3356ebc17",
+      "title": "Attorney General of California",
+      "candidates": [
+        {
+          "name": "Rob Bonta",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Michael Gates",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_0e563622fc00e9ed11d730338c824f7c0a17afdb",
+      "title": "California Commissioner of Insurance",
+      "candidates": [
+        {
+          "name": "Ben Allen",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Jane Kim",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_5202d3ab9a719c3bddb92ea7ea5a13140cd36822",
+      "title": "California Controller",
+      "candidates": [
+        {
+          "name": "Malia Cohen",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Herb Morgan",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_e0f2c39195eeaceb298a8d4cb8281cb964b81e2b",
+      "title": "California State Board of Equalization District 2",
+      "candidates": [
+        {
+          "name": "Sally Lieber",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "John Pimentel",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_53cfde66e5519fef9ea9a698cba5e58559f347ff",
+      "title": "California Superintendent of Public Instruction",
+      "candidates": [
+        {
+          "name": "Richard Barrera",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Sonja Shaw",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_152c04818b5fca8d6458bc9bff5267eaee933e21",
+      "title": "California Treasurer",
+      "candidates": [
+        {
+          "name": "Eleni Kounalakis",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Jennifer Hawks",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_52a81ae2d0898a29a1ce7d7dd3451f84287edc52",
+      "title": "California State Assembly District 19",
+      "candidates": [
+        {
+          "name": "Catherine Stefani",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Philip Wing",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_26a3e4fb3389bf984dfb5aff04acb9fe9ee6c253",
+      "title": "California Supreme Court Joshua Groban's seat",
+      "candidates": [
+        {
+          "name": "Joshua Groban",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_fcbf467d0ffc9441fe054ec6ef18d93deff5b43d",
+      "title": "California Supreme Court Kelli Evans' seat",
+      "candidates": [
+        {
+          "name": "Kelli M. Evans",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_5f188e1c0d49c6e0bce54ebc72a9699bb35acdaf",
+      "title": "California 1st District Court of Appeal Division 1 Charles Smiley's seat",
+      "candidates": [
+        {
+          "name": "Charles A. Smiley III",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_cbe76308dcd2a16b4ef8bc382e42f83351bd6854",
+      "title": "California 1st District Court of Appeal Division 1 Kathleen Banke's seat",
+      "candidates": [
+        {
+          "name": "Kathleen M. Banke",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_863663c9a4585a31e4e201e10b52c55bb20c7ac6",
+      "title": "California 1st District Court of Appeal Division 1 Monique Langhorn Wilson's seat",
+      "candidates": [
+        {
+          "name": "Monique Langhorne Wilson",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_6bf1e7f5901f337e1b4fc82a1846f211d88c54ca",
+      "title": "California 1st District Court of Appeal Division 2 Tara Desautels' seat",
+      "candidates": [
+        {
+          "name": "Tara M. Desautels",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_7ba042afa7ce1b1f8ae81f2198836e34f1c27e0b",
+      "title": "California 1st District Court of Appeal Division 2 Therese Stewart's seat",
+      "candidates": [
+        {
+          "name": "Therese M. Stewart",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_ce59de425677d795485ce99a086bb2702562bda2",
+      "title": "California 1st District Court of Appeal Division 3 Ioana Petrou's seat",
+      "candidates": [
+        {
+          "name": "Ioana Petrou",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_0be1b098d35a5639b0e6bef0a33c12d744e2be72",
+      "title": "California 1st District Court of Appeal Division 3 Victor Rodriguez's seat",
+      "candidates": [
+        {
+          "name": "Victor Rodriguez",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_ff51791b8855be56a97ef746d6e50a75516bcc92",
+      "title": "California 1st District Court of Appeal Division 4 Tracie L. Brown's seat",
+      "candidates": [
+        {
+          "name": "Tracie L. Brown",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_39e4aa085b390b8d3f54e451538b601296d1cf33",
+      "title": "California 1st District Court of Appeal Division 5 Danny Chou's seat",
+      "candidates": [
+        {
+          "name": "Danny Y. Chou",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_2898b9d24ce48e94a5865bb211ccd4214aace848",
+      "title": "California 1st District Court of Appeal Division 5 Gordon Burns' seat",
+      "candidates": [
+        {
+          "name": "Gordon Burns",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_e17f3bbd462becfb1f4a3979352b4536ec425710",
+      "title": "California 1st District Court of Appeal Division 5 Mark Simons' seat",
+      "candidates": [
+        {
+          "name": "Mark Simons",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_6bcca243c7e846aeaa4ba76c8d37f6c9b1c5456f",
+      "title": "San Francisco Assessor-Recorder",
+      "candidates": [
+        {
+          "name": "Joaqu\u00edn Torres",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_69b277ad274e680e40573bedd1d9ad5996a4ee09",
+      "title": "San Francisco Public Defender",
+      "candidates": [
+        {
+          "name": "Manohar Raju",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_c5fbc1928b59f948ef24216107c294ac74004df0",
+      "title": "San Francisco Unified Board of Education",
+      "candidates": [
+        {
+          "name": "Alida Fisher",
+          "party": "Nonpartisan|Incumbent"
+        },
+        {
+          "name": "Phil Kim",
+          "party": "Nonpartisan|Incumbent"
+        },
+        {
+          "name": "Autumn Brown Garibay",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Virginia Cheung",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Ryan Hazelton",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Laurance Lem Lee",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Reina Tello",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Tim Tung",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_b3582ad0274c0e3441eea6cd31c46f2c0eebbefd",
+      "title": "San Francisco Community College Board",
+      "candidates": [
+        {
+          "name": "Elijah Ball",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Leah LaCroix",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Monroe Lace",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Jeremy Lee",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Bunny McFadden",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Rome Moses Jones",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Erwin Tam",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Lisa Wynn",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_7524f0ed89dd1e7278b515c1ce79b82a3512ce57",
+      "title": "San Francisco Community College Board",
+      "candidates": [
+        {
+          "name": "Ruth Ferguson",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_ffa21d207f9663b3a9ab3dc6a750f810d82c3203",
+      "title": "Bay Area Rapid Transit (BART) Board of Directors District 8",
+      "candidates": [
+        {
+          "name": "Sara Barz",
+          "party": "Nonpartisan"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_9427b3a749ff3bde1ba7548962dd4c4d5f873383",
+      "title": "Proposition 1",
+      "summary": "Issue $11.25 billion in bonds to fund Multifamily Housing Program, CalVet Home Loan Program, and youth housing"
+    },
+    {
+      "id": "bm_4f8a21affa1b621ce1390fe029381945f581f8d7",
+      "title": "Proposition 2",
+      "summary": "Increase the Budget Stabilization Account (BSA) cap from 10% of general fund revenue to 20% and excluding deposits into the BSA from the Gann Limit"
+    },
+    {
+      "id": "bm_24f046e36284e823348667a319788bacc0b2982d",
+      "title": "Proposition 3",
+      "summary": "Renew the additional income taxes enacted with the approval of Proposition 30 in 2012 that fund education and early childhood programs."
+    },
+    {
+      "id": "bm_8798df8e6c632ba64a2263676da5f33b9ba809f8",
+      "title": "Proposition 4",
+      "summary": "Allow the state and local governments to create programs that provide candidates with public funds under spending limits and eligibility rules"
+    },
+    {
+      "id": "bm_b2c7ebb370da9d896f68b025c8247b89cc0520e7",
+      "title": "Proposition 5",
+      "summary": "Eliminate the successor election when a state officer is recalled, thereby leaving the office vacant until it is filled according to state law"
+    },
+    {
+      "id": "bm_0cbd0f5411163daff542b1f3f678db335d897885",
+      "title": "Proposition 37",
+      "summary": "Establish a second mortgage homebuyer program for qualified homebuyers on qualifying homes and issue $25 billion in bonds to fund the program"
+    },
+    {
+      "id": "bm_7409dfd7eb9a5d53a78816702201cf9318298a29",
+      "title": "Proposition 38",
+      "summary": "Issue $8.4 billion in general obligation bonds to fund immunology and immunotherapy research"
+    },
+    {
+      "id": "bm_73d99df4eb847f4a06278242e0df8dab2483bf61",
+      "title": "Proposition 39",
+      "summary": "Require voters to present government-issued identification when casting ballots and require election officials to use government data to confirm voter citizenship and report verification rates"
+    },
+    {
+      "id": "bm_56fa2f1b8366373b6479a8448a3ab03bd6a4acab",
+      "title": "Proposition 40",
+      "summary": "Levy a one-time 5% tax on the accumulated wealth of taxpayers and trusts with covered assets valued over $1 billion to fund state health care programs, food assistance programs, and public education"
+    },
+    {
+      "id": "bm_f940db6c9a2c9252970716fed30a06685e8e321b",
+      "title": "Proposition 41",
+      "summary": "Require state laws or ballot initiatives levying a new special tax enacted after January 1, 2026 to require the government entities or departments receiving revenue from the new tax to eliminate their lowest-performing programs and reinvest those savings in higher-performing programs"
+    },
+    {
+      "id": "bm_053a28365d0f1a2d67f72a19084f405a7b987513",
+      "title": "Proposition 42",
+      "summary": "Prohibit the enactment of new taxes after January 1, 2026 on ownership or accumulation of retirement holdings, individually-owned assets, and other forms of personal savings"
+    },
+    {
+      "id": "bm_1dbd7ce13613bb770f9135b8bada5bda3bcbfcf5",
+      "title": "Proposition 43",
+      "summary": "Require two-thirds vote by electorate to enact, extend, or increase local special tax initiatives and prohibit local governments and ballot initiatives from enacting ad valorem property taxes except those authorized elsewhere in the state constitution"
+    },
+    {
+      "id": "bm_fe4012db10c96364fabe16ef3c913727b08a3748",
+      "title": "Proposition 44",
+      "summary": "Prohibit healthcare clinics, specifically federally-qualified health centers and related organizations, from spending less than 90% of their annual revenue on mission-related purposes"
+    },
+    {
+      "id": "bm_d77fbfd89db4adcfa0663839871133a6ed2945d9",
+      "title": "Proposition 45",
+      "summary": "Establish timelines for local and state agencies to review plans and solicit public comment for essential projects, such as housing, improvements to water supply, transportation, energy, and facilities for health and public safety"
+    },
+    {
+      "id": "bm_e31aa73711f3dc4abdbc5f3cfc4366d7329ae05c",
+      "title": "Proposition RTM",
+      "summary": "Create a sales tax for a 14-year period to fund transportation programs in the region"
+    },
+    {
+      "id": "bm_065c1708c54eb775f7e9fd1d9fdc7f8245f9966a",
+      "title": "Proposition A",
+      "summary": "Amend the San Francisco Charter to remove outdated provisions and make  changes to the governance of local programs and departments"
+    },
+    {
+      "id": "bm_87ceb09bb6be28ffd6bebfd8cf89e4236ae724a4",
+      "title": "Proposition B",
+      "summary": "Amend the San Francisco Charter to create a municipal finance corporation and a public bank"
+    },
+    {
+      "id": "bm_b5853cbe6270bc741787b6e49bca45ecfc1464a6",
+      "title": "Proposition C",
+      "summary": "Change the method of annual contributions to the city's Housing Trust Fund"
+    },
+    {
+      "id": "bm_db0bbca2541c2ebf039de84094e1ba23221c57ff",
+      "title": "Proposition D",
+      "summary": "Make changes to the city's ballot measure referral and initiative process"
+    },
+    {
+      "id": "bm_a679fc985bb168848ba89faa042a0fac6d5cf30c",
+      "title": "Proposition E",
+      "summary": "Require the Board of Supervisors to approve all city contracts that would generate more than $4.5 million or cost more than $25 million and amend the city administrator's roles and authority"
+    },
+    {
+      "id": "bm_8a03cbdf1d1ccc9084a3d0e50714dc995edfce69",
+      "title": "Proposition F",
+      "summary": "Amend the structure of the executive branch of the city government and the authorities and duties of the mayor"
+    },
+    {
+      "id": "bm_55c00e5e6b00736aa04451ab245fa9d70d25f705",
+      "title": "Proposition G",
+      "summary": "Open the Upper Great Highway to public vehicles on weekdays, except on holidays"
+    },
+    {
+      "id": "bm_08564a28d5114db265a7a520a4297ff2ede4d78e",
+      "title": "Proposition H",
+      "summary": "Implement a 15-year property tax to fund the San Francisco Municipal Transportation Agency"
+    },
+    {
+      "id": "bm_ada758c259715f98811bd2e73521a90c91615790",
+      "title": "Proposition J",
+      "summary": "Remove the real estate transfer tax exemption for transfers that occur due to a foreclosure"
+    },
+    {
+      "id": "bm_f41d77df6b1c319a4ae7e66937dd071edbea8956",
+      "title": "Proposition I",
+      "summary": "Dedicate 50% of the revenue from the real estate transfer tax to housing and development purposes"
+    }
+  ],
+  "headings": [
+    "All Races (30)",
+    "Federal Races",
+    "U.S. House California District 11",
+    "State Races",
+    "Governor of California",
+    "Lieutenant Governor of California",
+    "California Secretary of State",
+    "Attorney General of California",
+    "California Commissioner of Insurance",
+    "California Controller",
+    "California State Board of Equalization District 2",
+    "California Superintendent of Public Instruction",
+    "California Treasurer",
+    "California State Assembly District 19",
+    "California Supreme Court Joshua Groban's seat",
+    "California Supreme Court Kelli Evans' seat",
+    "California 1st District Court of Appeal Division 1 Charles Smiley's seat",
+    "California 1st District Court of Appeal Division 1 Kathleen Banke's seat",
+    "California 1st District Court of Appeal Division 1 Monique Langhorn Wilson's seat",
+    "California 1st District Court of Appeal Division 2 Tara Desautels' seat",
+    "California 1st District Court of Appeal Division 2 Therese Stewart's seat",
+    "California 1st District Court of Appeal Division 3 Ioana Petrou's seat",
+    "California 1st District Court of Appeal Division 3 Victor Rodriguez's seat",
+    "California 1st District Court of Appeal Division 4 Tracie L. Brown's seat",
+    "California 1st District Court of Appeal Division 5 Danny Chou's seat",
+    "California 1st District Court of Appeal Division 5 Gordon Burns' seat",
+    "California 1st District Court of Appeal Division 5 Mark Simons' seat",
+    "Local Races",
+    "San Francisco Assessor-Recorder",
+    "San Francisco Public Defender",
+    "San Francisco Unified Board of Education",
+    "San Francisco Community College Board",
+    "San Francisco Community College Board",
+    "Bay Area Rapid Transit (BART) Board of Directors District 8",
+    "Statewide Ballot Measures",
+    "Local Ballot Measures",
+    "Election Day is in10DAYS15HOURS55MINUTES02SECONDS"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/ca-turbovote-divisions.json",
+      "sha256": "02cb81a5efefa52285fb52afabf0d51e5750569630bc0f851eeb772bb8e1d7b9"
+    }
+  ]
+}

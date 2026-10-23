@@ -1,0 +1,12 @@
+{
+  "state": "CA",
+  "address": "120 Lake St, San Francisco, CA 94118",
+  "checkedAt": "2026-10-23T07:59:03.623619+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ca-google.json",
+  "sha256": "5d07c6a4af502ee199b4fb952fdd3cea90fbd3ccc3e82543c39c5a826d9df6df",
+  "contestCount": 0,
+  "contests": []
+}

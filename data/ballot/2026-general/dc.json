@@ -1208,8 +1208,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "BA-01 current official write-in list replay",
-    "reviewedAt": "2026-10-20T22:52:21.509748+00:00",
+    "reviewedBy": "BL-02 exact district memberships and point-geography replay",
+    "reviewedAt": "2026-10-23T08:23:01.238613+00:00",
     "sources": [
       {
         "requestedUrl": "https://www.dcboe.org/",
@@ -1330,6 +1330,16 @@
         "publisher": "District of Columbia Board of Elections",
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewedEvidence": "All 15 registered write-in candidates for the existing District-wide contests replayed from the current official list. ANC write-ins remain separate local coverage work. Only name, contest, stated party and write-in designation projected."
+      },
+      {
+        "requestedUrl": "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/53/query?where=1%3D1&outFields=WARD&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Administrative_Other_Boundaries_WebMercator/MapServer/53/query?where=1%3D1&outFields=WARD&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "District of Columbia Office of Planning / DC GIS",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:16:05.224581+00:00",
+        "rawHash": "588220bfe132d31b8a203363691494fc7cf10ff45712bca1a8e66a90e2e40cd5",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/dc/geo/bl02-held-districts-11.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
       }
     ]
   }

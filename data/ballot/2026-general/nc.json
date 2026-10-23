@@ -28295,8 +28295,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-20T23:28:56.824181Z",
-    "reviewedBy": "BA-01 official local district replay",
+    "reviewedAt": "2026-10-23T08:23:01.238613+00:00",
+    "reviewedBy": "BL-02 exact district memberships and point-geography replay",
     "sources": [
       {
         "requestedUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2026/Candidate%20Filing/2026_general_candidate_list_by_contest_federal_and_state.pdf",
@@ -28437,6 +28437,16 @@
         "httpStatus": 200,
         "rawHash": "2361fdb41fe68808e6fc8149ebbdb3f99a75aa2068398daf489b7ffa9a87a234",
         "reviewedEvidence": "Official council district geography verified without widening a district election to county scope. Canonical division name separately checked against the saved Open Civic Data registry."
+      },
+      {
+        "requestedUrl": "https://services.arcgis.com/9Nl857LBlQVyzq54/arcgis/rest/services/Commission/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "finalUrl": "https://services.arcgis.com/9Nl857LBlQVyzq54/arcgis/rest/services/Commission/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&f=geojson",
+        "publisher": "City of Charlotte GIS (Mecklenburg County commissioner districts)",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:17:45.469336+00:00",
+        "rawHash": "296d5f2defe453711243dfa2a274c1402f4fcd2d3fd57a017131b8acb3fa07da",
+        "reviewedEvidence": "BL-02 exact government district polygon replay; source response hash verified and geometry copied without widening or simplification into data/states/nc/geo/bl02-held-districts-37.geojson. Each feature is keyed by the held contest's exact OCD district ID; whole county/city aliases remain separate."
       }
     ]
   }

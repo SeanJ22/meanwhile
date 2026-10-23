@@ -1,0 +1,47 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "210 State Street",
+    "addressLine": [
+      "210 State Street"
+    ],
+    "city": "Augusta",
+    "state": "ME",
+    "zip": "04330"
+  },
+  "state": [
+    {
+      "name": "Maine",
+      "electionAdministrationBody": {
+        "name": "Secretary of State",
+        "electionInfoUrl": "https://www.maine.gov/sos/cec/elec/index.html",
+        "electionRegistrationUrl": "https://registertovote.sos.maine.gov/",
+        "absenteeVotingInfoUrl": "https://apps.web.maine.gov/cgi-bin/online/AbsenteeBallot/index.pl",
+        "votingLocationFinderUrl": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+        "ballotInfoUrl": "https://www.maine.gov/portal/government/edemocracy/voter_lookup.php",
+        "electionRulesUrl": "https://www.maine.gov/sos/cec/elec/voter-info/absenteeguide.html",
+        "correspondenceAddress": {
+          "line1": "101 State House Station",
+          "addressLine": [
+            "101 State House Station"
+          ],
+          "city": "Augusta",
+          "state": "",
+          "zip": "04333-0101"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

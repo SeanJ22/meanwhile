@@ -1,0 +1,114 @@
+{
+  "step": "BL-02",
+  "checkedAt": "2026-10-23T08:25:08.471Z",
+  "clock": "2026-10-24T12:00:00.000Z",
+  "status": "PAGE_RENDERED",
+  "productionWrites": 0,
+  "localDatabaseWrites": 0,
+  "networkWrites": 0,
+  "productionData": ".scratch/bl02-replay/ca.json",
+  "snapshotSha256": "16d6218f0c846c63d1aee014b1c254e7213cf7e9a094c907339c571555869441",
+  "readerVersion": "official-ballot-authorities:8c492abec101ea0fddfeb085635622a4",
+  "method": "Actual app/ballot/page.tsx, normal readerRoute and readerBallotSourcesForDivisions, ordinary proof attestation from MemoryRoutineDataStore seeded with the exact SELECT-only production replay. Existing edgeOnly context refuses database fallbacks. Actual server components resolve, then react-dom/server renders the real synchronous/client components.",
+  "place": {
+    "requestedAddress": "120 Lake St, San Francisco, CA 94118",
+    "pageParams": {
+      "zip": "94118"
+    },
+    "basis": "The live Google Civic normalized address and TurboVote sample both establish94118. This page proof uses the real94118 ZIP reader; it does not claim a new exact-address geocode."
+  },
+  "elapsedMs": 195,
+  "underThreeSeconds": true,
+  "contests": [
+    "ca-sos-2026-general-governor",
+    "ca-sos-2026-general-lieutenant-governor",
+    "ca-sos-2026-general-secretary-of-state",
+    "ca-sos-2026-general-controller",
+    "ca-sos-2026-general-treasurer",
+    "ca-sos-2026-general-attorney-general",
+    "ca-sos-2026-general-insurance-commissioner",
+    "ca-sos-2026-general-superintendent-of-public-instruction",
+    "ca-sos-2026-general-board-of-equalization-member-district-2",
+    "ca-sf-2026-assessor-recorder",
+    "ca-sf-2026-public-defender",
+    "ca-sf-2026-board-education",
+    "ca-sf-2026-community-college-board",
+    "ca-sf-2026-community-college-board-partial",
+    "ca-sf-2026-general-bart-director-district-8",
+    "ca-sos-2026-general-proposition-1",
+    "ca-sos-2026-general-proposition-2",
+    "ca-sos-2026-general-proposition-3",
+    "ca-sos-2026-general-proposition-4",
+    "ca-sos-2026-general-proposition-5",
+    "ca-sos-2026-general-proposition-37",
+    "ca-sos-2026-general-proposition-38",
+    "ca-sos-2026-general-proposition-39",
+    "ca-sos-2026-general-proposition-40",
+    "ca-sos-2026-general-proposition-41",
+    "ca-sos-2026-general-proposition-42",
+    "ca-sos-2026-general-proposition-43",
+    "ca-sos-2026-general-proposition-44",
+    "ca-sos-2026-general-proposition-45",
+    "ca-sf-2026-proposition-a",
+    "ca-sf-2026-proposition-b",
+    "ca-sf-2026-proposition-c",
+    "ca-sf-2026-proposition-d",
+    "ca-sf-2026-proposition-e",
+    "ca-sf-2026-proposition-f",
+    "ca-sf-2026-proposition-g",
+    "ca-sf-2026-proposition-h",
+    "ca-sf-2026-proposition-i",
+    "ca-sf-2026-proposition-j",
+    "ca-sf-2026-regional-transit-measure"
+  ],
+  "expected": [
+    {
+      "id": "ca-sos-2026-general-board-of-equalization-member-district-2",
+      "titlePresent": true,
+      "idPresent": true
+    },
+    {
+      "id": "ca-sf-2026-general-bart-director-district-8",
+      "titlePresent": true,
+      "idPresent": true
+    }
+  ],
+  "asyncComponents": {
+    "IncumbentName": 38,
+    "BallotBattlecard": 38,
+    "CandidatePortraitSources": 38,
+    "CandidateContactSources": 38
+  },
+  "html": "data/ballot/evidence/bl02-addresses/ca-reader-page-tomorrow.html.gz",
+  "htmlSha256": "94ef7bb12c4e44cf610366eaed9365da362455d0608abe99d2cb8acfbcae4273",
+  "unavailableReplayDependencies": [
+    "CURATED_READER_RECORD:US:independently-verified-official-filings",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/board_of_equalization:2",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/county:san_francisco",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/county:san_francisco/place:richmond_presidio_marina_ccd",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/county:san_francisco/place:western_addition_buena_vista_eureka_valley_ccd",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/court_of_appeals:1",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/place:san_francisco",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/school_district:san_francisco_unified_school_district",
+    "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:ca/special_district:bay_area_rapid_transit_district/district:8",
+    "candidate-campaign-sites-derived:CA",
+    "candidate-profiles:CA",
+    "candidate-publications:CA",
+    "federal-directory:CA",
+    "registry-runtime:CA"
+  ],
+  "initialHarnessFailures": [
+    {
+      "result": "Zero cards",
+      "cause": "The first replay supplied only the generic promoted map; the actual state reader requires the existing stateAuthorities.load interface. The harness now supplies that ordinary interface."
+    },
+    {
+      "result": "Forty cards with both requested titles; expectation failed",
+      "cause": "The harness used an incorrect BOE contest ID. Corrected to the actual persisted ID including member.",
+      "evidence": ".scratch/bl02-page-replay/second-harness-failure.json"
+    }
+  ],
+  "limitations": "Auxiliary authorities not loaded into this replay remain unavailable and show the app existing gap behavior. This is a real-data read-only local rendering proof, not evidence that production has published these changes.",
+  "htmlEncoding": "gzip; htmlSha256 identifies uncompressed actual page SSR markup"
+}

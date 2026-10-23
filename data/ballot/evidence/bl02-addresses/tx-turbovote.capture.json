@@ -1,0 +1,914 @@
+{
+  "state": "TX",
+  "address": "1100 Congress Ave, Austin, TX 78701",
+  "checkedAt": "2026-10-23T08:05:05.334Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Atx/2026-11-03?street=1100+Congress+Ave&city=Austin&state=TX&zip=78701",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/tx-google.json",
+  "sha256": "81012ef05608bb659eff9106217dfc45472d8ea5207f12fe8901099afae077c8",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/tx-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/tx-turbovote.txt",
+  "elapsedMs": 6426,
+  "races": [
+    {
+      "id": "co_ee14d9c4f21f9a7f434bcdc87bb5d4ce838b7ff4",
+      "title": "U.S. Senate Texas",
+      "candidates": [
+        {
+          "name": "James Talarico",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Ken Paxton",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Ted Brown",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Avery Ayers",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Bradford Hall",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Zul Mohamed",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Jade Simmons",
+          "party": "Independent|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_ab54ef5e0fceffeeb8198e716372d311cfdee618",
+      "title": "U.S. House Texas District 10",
+      "candidates": [
+        {
+          "name": "Caitlin Rourk",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Chris Gober",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_5aba4ec168ef7c0e3274f853ebf77497cd97de69",
+      "title": "Governor of Texas",
+      "candidates": [
+        {
+          "name": "Greg Abbott",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Gina Hinojosa",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Pat Dixon",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Edward Giles",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Jinghpaw Majoishingra",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Mike Miller",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Jenn Mack Raphoon",
+          "party": "Independent|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_2aa35f825ccbcc52b376576be03eba8cd74ecd5f",
+      "title": "Lieutenant Governor of Texas",
+      "candidates": [
+        {
+          "name": "Dan Patrick",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Vikki Goodwin",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Kevin McCormick",
+          "party": "Green Party"
+        },
+        {
+          "name": "Anthony Cristo",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Arturo Espinosa",
+          "party": "Independent|Write-In"
+        },
+        {
+          "name": "Stephen Samuelson",
+          "party": "Independent|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_f948fcaa0d66e5bbf1eed4bf8f650273867e8225",
+      "title": "Attorney General of Texas",
+      "candidates": [
+        {
+          "name": "Nathan Johnson",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Mayes Middleton",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Tom Oxford",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_84a288a75a3df26d5a65122640709ff08214d133",
+      "title": "Texas Commissioner of Agriculture",
+      "candidates": [
+        {
+          "name": "Clayton Tucker",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Nate Sheets",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Austin Kelly",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_9109c1e7b462174b38b199e7b196e0a4ad131e2a",
+      "title": "Texas Comptroller of Public Accounts",
+      "candidates": [
+        {
+          "name": "Donald Huffines",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Sarah Eckhardt",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Shehla Faizi",
+          "party": "Green Party"
+        },
+        {
+          "name": "V. Alonzo Echavarria-Garza",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_184555dcbdbe7d291212fca8a38af216cf6438b9",
+      "title": "Texas Land Commissioner",
+      "candidates": [
+        {
+          "name": "Dawn Buckingham",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Benjamin Flores",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Neil Snider",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_5a5d62b08cf73d329d9e372edf78c59592d3305d",
+      "title": "Texas Railroad Commission",
+      "candidates": [
+        {
+          "name": "Jon Rosenthal",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Bo French",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Arthur DiBianca",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_a77ec5bd113e0e536db5e9d71e6131e8168a7d87",
+      "title": "Texas State Board of Education District 5",
+      "candidates": [
+        {
+          "name": "Allison Bush",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Mica Arellano",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_6e68510d28efc8ec7a58919658a7656b100fae67",
+      "title": "Texas House of Representatives District 49",
+      "candidates": [
+        {
+          "name": "Montserrat Garibay",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Arshia Papari",
+          "party": "Green Party"
+        }
+      ]
+    },
+    {
+      "id": "co_f7944655f01209895e1ad2ac004842560903c943",
+      "title": "Texas Supreme Court Place 1 Chief Justice Place 1 - Jimmy Blacklock",
+      "candidates": [
+        {
+          "name": "Jimmy Blacklock",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Maggie Ellis",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_19fcf5c999dbeb4d6dacf515f4b4f47230fb2fdd",
+      "title": "Texas Court of Criminal Appeals Place 3",
+      "candidates": [
+        {
+          "name": "Okey Anyiam",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Thomas Smith",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Mark Ash",
+          "party": "Libertarian Party"
+        }
+      ]
+    },
+    {
+      "id": "co_dc73ca13dc1faf0c4d0f0c4b63fcc2c4f9c8bae7",
+      "title": "Texas Court of Criminal Appeals Place 4",
+      "candidates": [
+        {
+          "name": "Kevin Patrick Yeary",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Audra Riley",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_0974e27252d1f99b6d5645a5f5d98096791f3234",
+      "title": "Texas Court of Criminal Appeals Place 9",
+      "candidates": [
+        {
+          "name": "Holly Taylor",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "John Messinger",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_9a6a7574959183d9ad84c0abd8180acf91081ed8",
+      "title": "Texas Supreme Court Place 2 Place 2 - James Sullivan",
+      "candidates": [
+        {
+          "name": "James Sullivan",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Chari Kelly",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_7b60c1142d7203b24082a769a0d4a528c10124cc",
+      "title": "Texas Supreme Court Place 7 Place 7 - Kyle Hawkins",
+      "candidates": [
+        {
+          "name": "Kyle Hawkins",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Kristen Hawkins",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_2fed4d97a6585af0ac74f35e8ed80dc7bc86a024",
+      "title": "Texas Supreme Court Place 8 Place 8 - Brett Busby",
+      "candidates": [
+        {
+          "name": "Brett Busby",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Gisela Triana",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_c0b10ea3d8925b064d5a45cc6cb217f82e5d6cf6",
+      "title": "Texas Fifteenth District Court of Appeals Chief Justice",
+      "candidates": [
+        {
+          "name": "Scott Brister",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Jerry Zimmerer",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_1b7000b38b78fe70072c9781b21420b0cfa1b0b5",
+      "title": "Texas Fifteenth District Court of Appeals Place 2",
+      "candidates": [
+        {
+          "name": "Scott Field",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Thomas Baker",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_3896a3fd04368ef7b3da08346316877140c71c43",
+      "title": "Texas Fifteenth District Court of Appeals Place 3",
+      "candidates": [
+        {
+          "name": "April Farris",
+          "party": "Republican Party|Incumbent"
+        },
+        {
+          "name": "Marc Meyer",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_43544207252a6f755c9d58fa816e974cec46ba75",
+      "title": "Texas Third District Court of Appeals Chief Justice",
+      "candidates": [
+        {
+          "name": "Darlene Byrne",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Cory Liu",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_d9c1bbbdcb00bfa2d2c98556dd357753936124ec",
+      "title": "Austin City Council District 9",
+      "candidates": [
+        {
+          "name": "Zohaib Qadri",
+          "party": "Nonpartisan|Incumbent"
+        },
+        {
+          "name": "Rich Heyman",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Kai Huang",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Katie Kam",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Dave Thadani",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_2450d3b5c3cb73d429c29ef42a88b6dfbfb0c79a",
+      "title": "Travis Central Appraisal District, Place 1",
+      "candidates": [
+        {
+          "name": "Skyler Korgel",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_c6d8126e1fa23dbdb1b87c25bf3d853bc120e84c",
+      "title": "Travis Central Appraisal District, Place 2",
+      "candidates": [
+        {
+          "name": "Brian Pe\u00f1a",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_5e334def546452ba124205621a4a502b43f1c2be",
+      "title": "Travis Central Appraisal District, Place 3",
+      "candidates": [
+        {
+          "name": "Phil Gorman",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Yvonne Mu\u00f1oz",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_9b3da520d491b20757890963583703b1562dd6a2",
+      "title": "Travis County Clerk",
+      "candidates": [
+        {
+          "name": "Dyana Limon-Mercado",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "LaShawn Nash",
+          "party": "Independent|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_0a64830aaabb44915464d93772755f02f1217ec5",
+      "title": "Travis County District Clerk",
+      "candidates": [
+        {
+          "name": "Velva Price",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_10bf66a078cf84160b0aa151306850a638f92ed3",
+      "title": "Travis County Judge",
+      "candidates": [
+        {
+          "name": "Andy Brown",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_fb36a445f13a69f26c0df23d72977654200c28fa",
+      "title": "Travis County Treasurer",
+      "candidates": [
+        {
+          "name": "Dolores Ortega Carter",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_c30459da587f78aa02a9f6c41c92c32e4483a28e",
+      "title": "Travis County Justice of the Peace Precinct 5",
+      "candidates": [
+        {
+          "name": "Tanisa Jeffers",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_d138f492cdf480ba96ea54e77305ae725f91a52e",
+      "title": "Austin Independent School District At-large Position 9",
+      "candidates": [
+        {
+          "name": "Kirk Becker",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Pamela Mathai",
+          "party": "Nonpartisan"
+        },
+        {
+          "name": "Cynthia Soliz",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_13220d38479233e68d46f3d6a863c3f4fae83fc5",
+      "title": "Texas 147th District Court",
+      "candidates": [
+        {
+          "name": "Clifford A. Brown",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_21754d99e9e5c9e3064cc661b5b91b11b15b6112",
+      "title": "Texas 201st District Court",
+      "candidates": [
+        {
+          "name": "Amy Clark Meachum",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_c80c032804f42b9aeb2fff14da8524eab5b7ffa3",
+      "title": "Texas 250th District Court",
+      "candidates": [
+        {
+          "name": "Kennon Wooten",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_51d076500acfc999d0389ea9be0afd28c2d541a6",
+      "title": "Texas 261st District Court",
+      "candidates": [
+        {
+          "name": "Daniella Deseta Lyttle",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_5215614aaa9b039692af042927c3652f41ced6ea",
+      "title": "Texas 299th District Court",
+      "candidates": [
+        {
+          "name": "Karen Sage",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_0f103a6ad4a224b8f7b68c0e49b2e5a53ed76bf1",
+      "title": "Texas 331st District Court",
+      "candidates": [
+        {
+          "name": "Chantal Eldridge",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_84c13f0e8fe45c526442192557d0b8ce7a4f1ddd",
+      "title": "Texas 403rd District Court",
+      "candidates": [
+        {
+          "name": "Brandy Mueller",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_4f7306f30caa58fce1c070b0b71919752066b54b",
+      "title": "Texas 419th District Court",
+      "candidates": [
+        {
+          "name": "Catherine Mauzy",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_b8694e5269ef7a7a7767fb0563d67671fd177e89",
+      "title": "Texas 455th District Court",
+      "candidates": [
+        {
+          "name": "Laurie Eiserloh",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_17d342cd043d6f8d57e20d4701989abda07a7f9b",
+      "title": "Texas 459th District Court",
+      "candidates": [
+        {
+          "name": "Maya Guerra Gamble",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_aa443c29267063b9bb5756b055dd20fc11f6e076",
+      "title": "Travis County Court at Law No. 1",
+      "candidates": [
+        {
+          "name": "Todd Wong",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_781c307324d7ce9a78db72d982ad7c73b4527438",
+      "title": "Travis County Court at Law No. 2",
+      "candidates": [
+        {
+          "name": "Leslie Dippel",
+          "party": "Democratic Party"
+        }
+      ]
+    },
+    {
+      "id": "co_19db7348382d0522d1d16dcc0fd5a5fd85c26ad1",
+      "title": "Travis County Court at Law No. 3",
+      "candidates": [
+        {
+          "name": "Bianca Garcia",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_bf4bd5046f7580d6e7f8aea256239796c6396b84",
+      "title": "Travis County Court at Law No. 4",
+      "candidates": [
+        {
+          "name": "Dimple Malhotra",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_2983345d49fc4ea7dd4fbee75ae3ad8af4916b4f",
+      "title": "Travis County Court at Law No. 5",
+      "candidates": [
+        {
+          "name": "Mary Ann Espiritu",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_4a56520fb12b1620dfcc1265c7027119267ba54a",
+      "title": "Travis County Court at Law No. 6",
+      "candidates": [
+        {
+          "name": "Denise Hern\u00e1ndez",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_5e149501723f668598c84056ddd921c922bc6164",
+      "title": "Travis County Court at Law No. 7",
+      "candidates": [
+        {
+          "name": "Elisabeth A. Earle",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_7732f37bd3d6cc480854f0a15bef47ed7b87bda7",
+      "title": "Travis County Probate Court No. 1",
+      "candidates": [
+        {
+          "name": "Guy Herman",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_5e43f541198a725216bb0a9ffb6e0651c8f13552",
+      "title": "Austin Community College District Board of Trustees Place 1",
+      "candidates": [
+        {
+          "name": "Dana Walker",
+          "party": "Nonpartisan|Incumbent"
+        },
+        {
+          "name": "Gloria Gonzales-Dholakia",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_d697c2570ca074a0df95ecde272b64d7786bb0be",
+      "title": "Austin Community College District Board of Trustees Place 2",
+      "candidates": [
+        {
+          "name": "Gigi Edwards Bryant",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_ba9d0a94d89b7c1dd67890f83bb473761a311723",
+      "title": "Austin Community College District Board of Trustees Place 3",
+      "candidates": [
+        {
+          "name": "Nan McRaven",
+          "party": "Nonpartisan|Incumbent"
+        },
+        {
+          "name": "Trevor Hale",
+          "party": "Nonpartisan"
+        }
+      ]
+    },
+    {
+      "id": "co_dec9d32b17bb3586929ff9cc8b80605d51923a20",
+      "title": "North Austin Municipal Utility District 1 Board Place 2",
+      "candidates": [
+        {
+          "name": "Don Conklin",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_702ff9e4656e02912a4fab7d91e814e85a012799",
+      "title": "North Austin Municipal Utility District 1 Board Place 4",
+      "candidates": [
+        {
+          "name": "Diana Christiano",
+          "party": "Nonpartisan|Incumbent"
+        },
+        {
+          "name": "Jennifer Wiebe",
+          "party": "Nonpartisan"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_02f6232f67b542bd69e1635491d3e766c04c286f",
+      "title": "Proposition A",
+      "summary": "Annex the territory of the Pflugerville Independent School District not already within the Austin Community College taxing district and authorize a tax rate of $103.40 per $100,000 in assessed value"
+    },
+    {
+      "id": "bm_2c36d9c0960768ef3722a4412b88bfc1a5e7b4cd",
+      "title": "Proposition A",
+      "summary": "Authorize $260 million in bonds to fund improvements of park, recreation, aquatic, and open spaces"
+    },
+    {
+      "id": "bm_4e4dd2ff9da2c9a44285c300abca8e67599bdaa0",
+      "title": "Proposition B",
+      "summary": "Authorize $35 million in bonds to fund library facilities"
+    },
+    {
+      "id": "bm_a66527896302abbb2a23032574942c49c3a3ab96",
+      "title": "Proposition C",
+      "summary": "Amend the city charter to clarify that the Independent Citizens Redistricting Commission (ICRC) is independent of the city council and establish certain powers and responsibilities of the ICRC"
+    },
+    {
+      "id": "bm_d66ee3f156ab128fde55b7e192cda0dff6683b4c",
+      "title": "Proposition D",
+      "summary": "Amend the city charter to remove language requiring the city council to meet at least once a week"
+    },
+    {
+      "id": "bm_1eaa23e01447a29731815026dee1d11a943b8c4d",
+      "title": "Proposition E",
+      "summary": "Amend the city charter to remove language requiring the city council's rules and order of business to be determined by ordinance"
+    },
+    {
+      "id": "bm_6963e03a104958bff0377a7a09578c57a307e9e9",
+      "title": "Proposition F",
+      "summary": "Amend the city charter to clarify the definition of the term \"election\" and to establish that campaign finance limits are to be modified by January 1 each year"
+    },
+    {
+      "id": "bm_39d4b77188658daad5eab5e7a3f73790ddedcc44",
+      "title": "Proposition G",
+      "summary": "Amend the city charter to establish that initiative elections and petitioned charter amendment elections must be held on the next available November election date in an even-numbered year"
+    },
+    {
+      "id": "bm_53beea179f3aa8411a71f183b37312643de18410",
+      "title": "Proposition H",
+      "summary": "Amend the city charter to establish the city attorney as a position that is appointed and removed by the city council"
+    },
+    {
+      "id": "bm_fc8f758c0e89f2660e76d9003b12cde516462c48",
+      "title": "Proposition I",
+      "summary": "Amend the city charter to require an Independent Affordability and Efficiency Initiative on a regular basis and before tax rate increase elections"
+    },
+    {
+      "id": "bm_460e86bcc6cd076214d58d94f4291fd4487faf69",
+      "title": "Proposition J",
+      "summary": "Amend the city charter to make non-substantive corrections"
+    }
+  ],
+  "headings": [
+    "All Races (55)",
+    "Federal Races",
+    "U.S. Senate Texas",
+    "U.S. House Texas District 10",
+    "State Races",
+    "Governor of Texas",
+    "Lieutenant Governor of Texas",
+    "Attorney General of Texas",
+    "Texas Commissioner of Agriculture",
+    "Texas Comptroller of Public Accounts",
+    "Texas Land Commissioner",
+    "Texas Railroad Commission",
+    "Texas State Board of Education District 5",
+    "Texas House of Representatives District 49",
+    "Texas Supreme Court Place 1 Chief Justice Place 1 - Jimmy Blacklock",
+    "Texas Court of Criminal Appeals Place 3",
+    "Texas Court of Criminal Appeals Place 4",
+    "Texas Court of Criminal Appeals Place 9",
+    "Texas Supreme Court Place 2 Place 2 - James Sullivan",
+    "Texas Supreme Court Place 7 Place 7 - Kyle Hawkins",
+    "Texas Supreme Court Place 8 Place 8 - Brett Busby",
+    "Texas Fifteenth District Court of Appeals Chief Justice",
+    "Texas Fifteenth District Court of Appeals Place 2",
+    "Texas Fifteenth District Court of Appeals Place 3",
+    "Texas Third District Court of Appeals Chief Justice",
+    "Local Races",
+    "Austin City Council District 9",
+    "Travis Central Appraisal District, Place 1",
+    "Travis Central Appraisal District, Place 2",
+    "Travis Central Appraisal District, Place 3",
+    "Travis County Clerk",
+    "Travis County District Clerk",
+    "Travis County Judge",
+    "Travis County Treasurer",
+    "Travis County Justice of the Peace Precinct 5",
+    "Austin Independent School District At-large Position 9",
+    "Texas 147th District Court",
+    "Texas 201st District Court",
+    "Texas 250th District Court",
+    "Texas 261st District Court",
+    "Texas 299th District Court",
+    "Texas 331st District Court",
+    "Texas 403rd District Court",
+    "Texas 419th District Court",
+    "Texas 455th District Court",
+    "Texas 459th District Court",
+    "Travis County Court at Law No. 1",
+    "Travis County Court at Law No. 2",
+    "Travis County Court at Law No. 3",
+    "Travis County Court at Law No. 4",
+    "Travis County Court at Law No. 5",
+    "Travis County Court at Law No. 6",
+    "Travis County Court at Law No. 7",
+    "Travis County Probate Court No. 1",
+    "Austin Community College District Board of Trustees Place 1",
+    "Austin Community College District Board of Trustees Place 2",
+    "Austin Community College District Board of Trustees Place 3",
+    "North Austin Municipal Utility District 1 Board Place 2",
+    "North Austin Municipal Utility District 1 Board Place 4",
+    "Election Day is in10DAYS15HOURS54MINUTES55SECONDS",
+    "Deadlines",
+    "Request Ballot",
+    "Return Ballot"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/tx-turbovote-divisions.json",
+      "sha256": "dac0021a3b0c12030a7b2862be1b2c9917d87504a61bd2cf7a9b79b233882273"
+    }
+  ]
+}

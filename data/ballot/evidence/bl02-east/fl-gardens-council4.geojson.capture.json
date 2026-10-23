@@ -1,0 +1,9 @@
+{
+  "requestedUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer/0/query?where=AREA_SEAT%3D4&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://services1.arcgis.com/nvgO38kfurKbA7B9/arcgis/rest/services/Miami_Gardens_Council_Districts/FeatureServer/0/query?where=AREA_SEAT%3D4&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:21:23.012478+00:00",
+  "rawHash": "bd01a4bef5a89cb6bf07c495f923d8ba15c44a0e2929c81185451ea6e1e0ed09",
+  "publisher": "City of Miami Gardens GIS",
+  "sourceClass": "OFFICIAL_PUBLISHER"
+}

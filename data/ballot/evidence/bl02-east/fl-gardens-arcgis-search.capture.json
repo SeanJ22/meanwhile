@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://www.arcgis.com/sharing/rest/search?q=%22Miami+Gardens%22+%22Council%22&f=json&num=100",
+  "finalUrl": "https://www.arcgis.com/sharing/rest/search?q=%22Miami+Gardens%22+%22Council%22&f=json&num=100",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:19:46.661714+00:00",
+  "rawHash": "64bb6812f4a298004b7385f902043281d6bc84cbb0ab006a2152393b342d7413"
+}

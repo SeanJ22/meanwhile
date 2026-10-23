@@ -1,0 +1,48 @@
+{
+  "election": {
+    "id": "12000",
+    "name": "2026 General Midterm Election",
+    "electionDay": "2026-11-03",
+    "ocdDivisionId": "ocd-division/country:us"
+  },
+  "normalizedInput": {
+    "line1": "411 Legislative Avenue",
+    "addressLine": [
+      "411 Legislative Avenue"
+    ],
+    "city": "Dover",
+    "state": "DE",
+    "zip": "19901"
+  },
+  "state": [
+    {
+      "name": "Delaware",
+      "electionAdministrationBody": {
+        "name": "Department of Elections",
+        "electionInfoUrl": "https://elections.delaware.gov/index.shtml",
+        "electionRegistrationUrl": "https://ivote.de.gov/voterview/registrant/newregistrant",
+        "electionRegistrationConfirmationUrl": "https://ivote.de.gov/voterview",
+        "absenteeVotingInfoUrl": "https://ivote.de.gov/VoterView",
+        "votingLocationFinderUrl": "https://gis.elections.delaware.gov/#lookup_tools",
+        "ballotInfoUrl": "https://ivote.de.gov/VoterView",
+        "electionRulesUrl": "https://elections.delaware.gov/voter/absentee/pdfs/absentee_ballot_application.pdf",
+        "correspondenceAddress": {
+          "line1": "905 S. Governors Ave Ste 170",
+          "addressLine": [
+            "905 S. Governors Ave Ste 170"
+          ],
+          "city": "Dover",
+          "state": "",
+          "zip": "19904"
+        }
+      },
+      "sources": [
+        {
+          "name": "DemocracyWorks",
+          "official": false
+        }
+      ]
+    }
+  ],
+  "kind": "civicinfo#voterInfoResponse"
+}

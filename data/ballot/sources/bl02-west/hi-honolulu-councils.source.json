@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/11/query?where=distnumber+IN+%284%2C6%29&outFields=distname%2Cdistnumber&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/11/query?where=distnumber+IN+%284%2C6%29&outFields=distname%2Cdistnumber&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "ee5f28766deaeb58b13f61f262e3be30cd3de16181cd3035780b9e662d20d890",
+  "retrievedAt": "2026-10-23T08:11:28.535808+00:00"
+}

@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://data.cityofnewyork.us/resource/872g-cjhh.geojson?$where=coundist%3D3",
+  "finalUrl": "https://data.cityofnewyork.us/resource/872g-cjhh.geojson?$where=coundist%3D3",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:33:02.057149+00:00",
+  "rawHash": "246c6f8f55307429269ddc4182071c74b17634a1dccc23ceda946200943ce242"
+}

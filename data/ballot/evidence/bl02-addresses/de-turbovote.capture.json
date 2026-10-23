@@ -1,0 +1,147 @@
+{
+  "state": "DE",
+  "address": "411 Legislative Ave, Dover, DE 19901",
+  "checkedAt": "2026-10-23T08:05:04.934Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Ade/2026-11-03?street=411+Legislative+Ave&city=Dover&state=DE&zip=19901",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/de-google.json",
+  "sha256": "4d092b13c0ebe6e5215ebbe3c2c542e5cfd55d4baf795fd16d59d33b7c48ff1b",
+  "contestCount": 0,
+  "contests": [],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/de-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/de-turbovote.txt",
+  "elapsedMs": 6123,
+  "races": [
+    {
+      "id": "co_27de46c6527881e8bf9f3098df9acc60f90232bd",
+      "title": "U.S. Senate Delaware",
+      "candidates": [
+        {
+          "name": "Chris Coons",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Michael Katz",
+          "party": "Republican Party"
+        },
+        {
+          "name": "William McVay",
+          "party": "Unaffiliated|Write-In"
+        },
+        {
+          "name": "John Shulli",
+          "party": "Unaffiliated|Write-In"
+        },
+        {
+          "name": "Travis Jack Stevens",
+          "party": "Unaffiliated|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_3decb4340fb98406ab7a9188cbfb9ae3d8697ae7",
+      "title": "U.S. House Delaware At-large District",
+      "candidates": [
+        {
+          "name": "Sarah McBride",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Joseph Arminio",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Earl Cooper",
+          "party": "Unaffiliated|Write-In"
+        },
+        {
+          "name": "Scott Walker",
+          "party": "Unaffiliated|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_72d0ad79b4a33cf2494cca9ddb2aaf948f18b4e2",
+      "title": "Attorney General of Delaware",
+      "candidates": [
+        {
+          "name": "Kathy Jennings",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "David Graham",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Phil Dyer Jr.",
+          "party": "Unaffiliated|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_60cb3c0c44dd6072c631346d4d31f4a6801c3c23",
+      "title": "Delaware State Auditor",
+      "candidates": [
+        {
+          "name": "Lydia York",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "April Callaway",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Austin Cassidy",
+          "party": "Independent Party of Delaware"
+        }
+      ]
+    },
+    {
+      "id": "co_f43a90ce180cbc0263fdc6c9ae33a7274974a583",
+      "title": "Delaware Treasurer",
+      "candidates": [
+        {
+          "name": "Ted Lauzen",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Michael Ramone",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_0c6c40f086576ba770c972486b262609edd27499",
+      "title": "Delaware House of Representatives District 32",
+      "candidates": [
+        {
+          "name": "Kerri Evelyn Harris",
+          "party": "Democratic Party|Incumbent"
+        }
+      ]
+    }
+  ],
+  "measures": [],
+  "headings": [
+    "All Races (6)",
+    "Federal Races",
+    "U.S. Senate Delaware",
+    "U.S. House Delaware At-large District",
+    "State Races",
+    "Attorney General of Delaware",
+    "Delaware State Auditor",
+    "Delaware Treasurer",
+    "Delaware House of Representatives District 32",
+    "Election Day is in10DAYS15HOURS54MINUTES55SECONDS"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/de-turbovote-divisions.json",
+      "sha256": "c50316c5c3e1c43f077f32bab7d15c79b168e731f42421e460cfa8659525e399"
+    }
+  ]
+}

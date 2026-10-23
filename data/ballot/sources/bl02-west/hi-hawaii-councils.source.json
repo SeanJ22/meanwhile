@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10/query?where=shortname+IN+%28%27C4%27%2C%27C5%27%2C%27C6%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://geodata.hawaii.gov/arcgis/rest/services/AdminBnd/MapServer/10/query?where=shortname+IN+%28%27C4%27%2C%27C5%27%2C%27C6%27%29&outFields=%2A&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "2897ac560d771fac9890fe0a57bf0f1aace5e4119ea6c20f6cf4b90c125b3055",
+  "retrievedAt": "2026-10-23T08:11:56.999728+00:00"
+}

@@ -1,0 +1,12 @@
+{
+  "captureMethod": "web tool rendered extracts; rawHash identifies saved rendered evidence, not publisher HTTP bytes",
+  "rawHash": "44af2afddf9d6fd98412abb17c44618c79c890fa5a8c8277b7f57e8c981e5e3d",
+  "retrievedAt": "2026-10-23T08:08:17.168144+00:00",
+  "sourceUrls": [
+    "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0030_section/004_005_0030_k/",
+    "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0032_section/004_005_0032_k/",
+    "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0034_section/004_005_0034_k/",
+    "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0036_section/004_005_0036_k/",
+    "https://kslegislature.gov/b2025_26/laws/004_000_0000_chapter/004_005_0000_article/004_005_0038_section/004_005_0038_k/"
+  ]
+}

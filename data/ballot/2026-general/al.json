@@ -8530,13 +8530,339 @@
       "absences": [],
       "coverageNotes": [
         "The Alabama Secretary of State certified the Democratic, Republican and independent candidate lists on August 26, 2026. Republican amendments received August 28 and September 2 add House District 51, the August special-primary congressional nominees and Senate District 25. All listed federal, statewide, legislative and State Board of Education contests are held. The certified lists do not state incumbency or candidate websites."
+      ],
+      "districtMemberships": [
+        {
+          "id": "bl02:af38a16d42aabe0ceff9df6f",
+          "memberOcdId": "ocd-division/country:us/state:al/county:barbour",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:ac96d182f4c1fbd5e09f6af1",
+          "memberOcdId": "ocd-division/country:us/state:al/county:chambers",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:9d132d97ab60efa2c68a0733",
+          "memberOcdId": "ocd-division/country:us/state:al/county:clay",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:52522aff77019209e15fc30b",
+          "memberOcdId": "ocd-division/country:us/state:al/county:cleburne",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:71e34ceb4fffa10cbdb1c0ba",
+          "memberOcdId": "ocd-division/country:us/state:al/county:dale",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:1f97ad4d0b087d3998475704",
+          "memberOcdId": "ocd-division/country:us/state:al/county:geneva",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:fa783625d0d1d133eaf015db",
+          "memberOcdId": "ocd-division/country:us/state:al/county:henry",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:89f05cf217127764ead69d20",
+          "memberOcdId": "ocd-division/country:us/state:al/county:houston",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:9d7a7335152e5a455406dff4",
+          "memberOcdId": "ocd-division/country:us/state:al/county:lee",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:ba5077f5249991ba6a88331a",
+          "memberOcdId": "ocd-division/country:us/state:al/county:pike",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:e74696eef48027e1164e89d5",
+          "memberOcdId": "ocd-division/country:us/state:al/county:randolph",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:00d7903c08ea828f9782d1ec",
+          "memberOcdId": "ocd-division/country:us/state:al/county:russell",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:1c579c62ec91e21279499351",
+          "memberOcdId": "ocd-division/country:us/state:al/county:tallapoosa",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:2",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 2: Barbour County, Chambers County, Clay County, Cleburne County, Dale County, Geneva County, Henry County, Houston County, Lee County, Pike County, Randolph County, Russell County, Tallapoosa County"
+          }
+        },
+        {
+          "id": "bl02:8a9a8421867d330e2f85dcc1",
+          "memberOcdId": "ocd-division/country:us/state:al/county:greene",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 4: Greene County, Hale County, Pickens County, Jefferson County"
+          }
+        },
+        {
+          "id": "bl02:fe59a9a0be8007dc72f0622d",
+          "memberOcdId": "ocd-division/country:us/state:al/county:hale",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 4: Greene County, Hale County, Pickens County, Jefferson County"
+          }
+        },
+        {
+          "id": "bl02:5d7b4e401547344cbf29702e",
+          "memberOcdId": "ocd-division/country:us/state:al/county:pickens",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:4",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 4: Greene County, Hale County, Pickens County, Jefferson County"
+          }
+        },
+        {
+          "id": "bl02:e15e2cf8432633730644a370",
+          "memberOcdId": "ocd-division/country:us/state:al/county:blount",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:1629c96e3e7e0576a1f8e3a8",
+          "memberOcdId": "ocd-division/country:us/state:al/county:calhoun",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:ee974da88ef4ea66f62e4cfc",
+          "memberOcdId": "ocd-division/country:us/state:al/county:cherokee",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:88fa7228af91fb11210111da",
+          "memberOcdId": "ocd-division/country:us/state:al/county:cullman",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:3f06762432a9bb74ad2af372",
+          "memberOcdId": "ocd-division/country:us/state:al/county:etowah",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:e922aa26151f31f1618010e8",
+          "memberOcdId": "ocd-division/country:us/state:al/county:marshall",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:c39b252428023bebcb892708",
+          "memberOcdId": "ocd-division/country:us/state:al/county:st_clair",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:6",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 6: Blount County, Calhoun County, Cherokee County, Cullman County, Etowah County, Marshall County, St. Clair County, Talladega County"
+          }
+        },
+        {
+          "id": "bl02:fe50c6d05b943d7640b261b2",
+          "memberOcdId": "ocd-division/country:us/state:al/county:dekalb",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 8: DeKalb County, Jackson County, Limestone County, Madison County"
+          }
+        },
+        {
+          "id": "bl02:48c173435fc7d6a7ee915088",
+          "memberOcdId": "ocd-division/country:us/state:al/county:jackson",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 8: DeKalb County, Jackson County, Limestone County, Madison County"
+          }
+        },
+        {
+          "id": "bl02:28d6becce471406faed6147b",
+          "memberOcdId": "ocd-division/country:us/state:al/county:limestone",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 8: DeKalb County, Jackson County, Limestone County, Madison County"
+          }
+        },
+        {
+          "id": "bl02:53ca45821fb6075c39c32f0e",
+          "memberOcdId": "ocd-division/country:us/state:al/county:madison",
+          "districtOcdId": "ocd-division/country:us/state:al/sbe:8",
+          "provenance": {
+            "sourceUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+            "sourceOrg": "Alabama Legislature",
+            "collectedAt": "2026-10-23T08:06:16.166307+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 8: DeKalb County, Jackson County, Limestone County, Madison County"
+          }
+        }
       ]
     }
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedBy": "Codex",
-    "reviewedAt": "2026-10-20T22:57:22.442754+00:00",
+    "reviewedBy": "BL-02 source-bound whole-place district memberships",
+    "reviewedAt": "2026-10-23T08:22:59.570224+00:00",
     "sources": [
       {
         "requestedUrl": "https://arc-sos.state.al.us/ucp/L2109672.AI1.pdf",
@@ -8691,6 +9017,16 @@
         "sourceClass": "ELECTION_AUTHORITY",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Saved official November 3, 2026 Shelby County sample ballot. scripts/ba01-south-alabama.py checks the saved PDF hash and exact printed countywide office/candidate/party blocks across all held styles. District, school and division contests require their own exact boundary mappings."
+      },
+      {
+        "requestedUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+        "finalUrl": "https://alison.legislature.state.al.us/files/pdf/2021-Reapportionment/BlockInfo/2021_Alabama_State_Bd_of_Education_Bill_Text.pdf",
+        "publisher": "Alabama Legislature",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:06:16.166307+00:00",
+        "httpStatus": 200,
+        "rawHash": "a227996ae40943a8fca4fe33b99adb67a734993955b3690be9ba5a4c44b38ab9",
+        "reviewedEvidence": "Saved2021 enacted State Board of Education legal-description PDF, generatedJune30,2022. Source replay reads only the initial whole-county list for each held district. A county followed by numbered census tracts is partial and excluded; blank Tract/BlockGroup entries mean no narrower units. District4's subsequent Tuscaloosa block clauses are also excluded."
       }
     ]
   }

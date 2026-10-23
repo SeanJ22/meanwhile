@@ -1796,6 +1796,30 @@
             "verifiedAt": "2026-10-21T00:35:09.562328+00:00",
             "quote": "Every official specimen front for House District 7 (precincts 7) prints the mayor of Rota. House District 4 is split and is not mapped as a whole to either mayor electorate."
           }
+        },
+        {
+          "id": "bl02-mp-rota-to-municipality-rota",
+          "memberOcdId": "ocd-division/country:us/territory:mp/county:rota",
+          "districtOcdId": "ocd-division/country:us/territory:mp/municipality:rota",
+          "provenance": {
+            "sourceUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-20T23:54:52.138272+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "MP|69|100|01805246|Rota Municipality|H1|A"
+          }
+        },
+        {
+          "id": "bl02-mp-tinian-to-municipality-tinian",
+          "memberOcdId": "ocd-division/country:us/territory:mp/county:tinian",
+          "districtOcdId": "ocd-division/country:us/territory:mp/municipality:tinian",
+          "provenance": {
+            "sourceUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+            "sourceOrg": "U.S. Census Bureau",
+            "collectedAt": "2026-10-20T23:54:52.138272+00:00",
+            "verifiedAt": "2026-10-23T08:10:01.707223+00:00",
+            "quote": "MP|69|120|01805248|Tinian Municipality|H1|A"
+          }
         }
       ],
       "candidateTickets": [
@@ -1891,8 +1915,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:55:46.218855+00:00",
-    "reviewedBy": "Codex BA-01 official territorial lists and specimens",
+    "reviewedAt": "2026-10-23T08:10:01.707223+00:00",
+    "reviewedBy": "bl02-territorial-county-memberships",
     "sources": [
       {
         "requestedUrl": "https://www.votecnmi.gov.mp/2026-certified-candidates-list.php",
@@ -1926,6 +1950,16 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewOutcome": "SUPPORTED",
         "reviewedEvidence": "Current FEC Combined Federal/State Disclosure and Election Directory expressly identifies the Commonwealth Election Commission and its URL https://www.votecnmi.gov.mp. This source establishes the .gov.mp publisher; candidate facts come from its current captured certified list and specimen."
+      },
+      {
+        "requestedUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "finalUrl": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+        "publisher": "U.S. Census Bureau",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "retrievedAt": "2026-10-20T23:54:52.138272+00:00",
+        "httpStatus": 200,
+        "rawHash": "9f6e5f6eb6ac2f5e9a36d5fd01dec77991bddc75118f748a069441a4782970d6",
+        "reviewedEvidence": "The held original Census county code list names MP county equivalents RotaMunicipality69100 and TinianMunicipality69120. Their ZIP county names are aliases of those whole mayor electorates; the current CEC specimens already verify each municipality's mayor race."
       }
     ]
   }

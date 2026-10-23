@@ -1,0 +1,12 @@
+{
+  "state": "AK",
+  "address": "120 4th St, Juneau, AK 99801",
+  "checkedAt": "2026-10-23T07:59:03.624760+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ak-google.json",
+  "sha256": "a350eb3b2fc446ffe300c5ae5d3f59b0505b9b0867c07256e40b44e0d8f1553e",
+  "contestCount": 0,
+  "contests": []
+}

@@ -1,0 +1,567 @@
+{
+  "state": "UT",
+  "address": "350 N State St, Salt Lake City, UT 84114",
+  "checkedAt": "2026-10-23T08:05:07.790Z",
+  "httpStatus": 200,
+  "sourceUrl": "https://turbovote.org/ballot-info/ocd-division%2Fcountry%3Aus%2Fstate%3Aut/2026-11-03?street=350+N+State+St&city=Salt+Lake+City&state=UT&zip=84114",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ut-google.json",
+  "sha256": "f89eda261eb04c083f06bb7d8174016c04d23f9b30964dbbe5c34c447d511313",
+  "contestCount": 29,
+  "contests": [
+    {
+      "office": "U.S. House District 1",
+      "type": "General",
+      "district": {
+        "name": "US House District 1",
+        "id": "1"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "JESSE WEST",
+          "party": "Libertarian"
+        },
+        {
+          "name": "BEN MCADAMS",
+          "party": "Democratic"
+        },
+        {
+          "name": "ELIAS HENRY MONTGOMERY",
+          "party": "Unaffiliated"
+        },
+        {
+          "name": "RILEY OWEN",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "State House District 22",
+      "type": "General",
+      "district": {
+        "name": "State House District 22",
+        "id": "22"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "JEN DAILEY-PROVOST",
+          "party": "Democratic"
+        },
+        {
+          "name": "CHAR VARGA",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "County Council At-Large A",
+      "type": "General",
+      "district": {
+        "name": "County Council At-Large A"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "GREGORY BEGLARIAN",
+          "party": "Constitution"
+        },
+        {
+          "name": "KATHLEEN ANDERSON",
+          "party": "Republican"
+        },
+        {
+          "name": "ZACH ROBINSON",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "County Council District 1",
+      "type": "General",
+      "district": {
+        "name": "County Council District 1",
+        "id": "1"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "CASEY POE",
+          "party": "Libertarian"
+        },
+        {
+          "name": "JIRO JOHNSON",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "County Auditor",
+      "type": "General",
+      "district": {
+        "name": "County Auditor"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "ALI CLOWARD",
+          "party": "Democratic"
+        },
+        {
+          "name": "CHRIS HARDING",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "County Clerk",
+      "type": "General",
+      "district": {
+        "name": "County Clerk"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "LANNIE CHAPMAN",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "County District Attorney",
+      "type": "General",
+      "district": {
+        "name": "County District Attorney"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "SIM GILL",
+          "party": "Democratic"
+        },
+        {
+          "name": "KENT DAVIS",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "County Sheriff",
+      "type": "General",
+      "district": {
+        "name": "County Sheriff"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "SHANE MANWARING",
+          "party": "Republican"
+        },
+        {
+          "name": "ROSIE RIVERA",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "State School Board District 4 (Multi-County)",
+      "type": "General",
+      "district": {
+        "name": "State School Board District 4",
+        "id": "4"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "LEANN WOOD",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "Salt Lake School Board District 3",
+      "type": "General",
+      "district": {
+        "name": "Salt Lake School Board District 3",
+        "id": "3"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "JARED WRIGHT",
+          "party": null
+        },
+        {
+          "name": "ASHLEY ANDERSON",
+          "party": null
+        }
+      ]
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Supreme Court"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Justice Court Alta"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Justice Court Salt Lake City"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "referendum",
+      "district": {
+        "name": "Constitutional Amendments A B"
+      },
+      "referendumTitle": "Constitutional Amendment A",
+      "referendumText": "Shall the Utah Constitution be amended to change how proposed constitutional amendments are published, requiring publication for 60 days immediately before the general election in a manner established by state law instead of in newspapers?\nIf voters approve Constitutional Amendment A, state statute would change to require the Lieutenant Governor to publish the full text of all proposed constitutional amendments and other ballot questions from the Legislature, on the Utah Public Notice Website and on the Lieutenant Governor\u2019s website for 60 days immediately before the general election.",
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "referendum",
+      "district": {
+        "name": "Constitutional Amendments A B"
+      },
+      "referendumTitle": "Constitutional Amendment B",
+      "referendumText": "Shall the Utah Constitution be amended to require that citizen-proposed laws that increase taxes compared to existing law be approved by at least 60% of voters, instead of a simple majority?",
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "referendum",
+      "district": {
+        "name": "County Wide - less Fed Only"
+      },
+      "referendumTitle": "SALT LAKE COUNTY, UTAH - SPECIAL BOND ELECTION",
+      "referendumText": "OFFICIAL BALLOT FOR THE\nSALT LAKE COUNTY, UTAH\nLOCAL SPECIAL BOND ELECTION\nNovember 3, 2026\nShall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not\nto exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates\nof issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring,\nconstructing or renovating open space, natural habitat, parks, community trails and recreational\nfacilities and other related facilities under the charge of the County and, to the extent necessary,\nfor providing moneys for the refunding, at or prior to the maturity thereof, of general obligation\nbonds of the County authorized hereunder or heretofore issued and now outstanding?\nPROPERTY TAX COST OF BONDS\nA general obligation bond is a debt owed by the County. The County uses tax revenue to pay for\nthe debt. If the bonds are issued as planned (which currently consists of 2 smaller issues of bonds\ntotaling approximately $128,000,000 over the next 5 years, with each issue of bonds maturing\napproximately 10 years from the date it is issued), without regard to the taxes currently levied to\npay outstanding bonds that will decrease over time, an annual property tax to pay debt service on\nthe proposed bonds will be required over a period of 10 years in the estimated amount of $16.39\nper year on a primary residence with the County average value of $658,000 and in the estimated\namount of $29.80 per year on a business or secondary residence having the same value, which are\nequal to a monthly increase of $1.37 for an average residential property and $2.48 on a business\nproperty having the same value.\nThe County currently levies property taxes to pay debt service on other outstanding general\nobligation bonds that have been issued to finance voter approved projects. The incremental property\ntaxes would decrease upon the repayment of the currently outstanding bonds, but the decrease may\nnot occur if the proposed bonds are issued. Taking into account the repayment of the outstanding\nbonds, the County expects that the issuance of the proposed bonds, in the manner currently\nexpected, will result in a net property tax increase of $0 per year on a primary residence with the\nCounty average value of $658,000 and a net property tax increase of $0 per year on a business or\nsecondary residence having the same value, which are equal to a monthly increase of $0 for an\naverage residential property and $0 on a business property having the same value.\nThe foregoing is only an estimate and is not a limit on the amount of taxes that the governing body\nmay be required to levy in order to pay debt service on the bonds. The governing body is obligated\nto levy taxes to the extent provided by law in order to pay the bonds.\nIn addition to the bond payment costs as outlined above, based on current best estimates, the\naverage annual combined net operational and maintenance costs for these facilities during their\nfirst ten years of operation is projected to require additional annual expenditures of $4,710,200. If\napproved, the county will determine during its next budget cycle whether additional operational\nand maintenance costs may or may not require any additional funds from budget cuts or a tax\nincrease.\nTo vote in favor of the above bond issue, select the box immediately\nadjacent to the words \u201cFOR THE ISSUANCE OF BONDS.\u201d To vote against the bond issue, select the box immediately adjacent to the words \u201cAGAINST THE ISSUANCE OF BONDS.\u201d\nFOR THE ISSUANCE OF BONDS\nAGAINST THE ISSUANCE OF BONDS",
+      "candidates": []
+    }
+  ],
+  "status": "COMPARED",
+  "renderedHtml": "data/ballot/evidence/bl02-addresses/ut-turbovote.html.gz",
+  "visibleText": "data/ballot/evidence/bl02-addresses/ut-turbovote.txt",
+  "elapsedMs": 4866,
+  "races": [
+    {
+      "id": "co_19a99a8b132881f63462c5def7e80a7de8ada564",
+      "title": "U.S. House Utah District 1",
+      "candidates": [
+        {
+          "name": "Ben McAdams",
+          "party": "Democratic Party"
+        },
+        {
+          "name": "Riley Owen",
+          "party": "Republican Party"
+        },
+        {
+          "name": "Jesse West",
+          "party": "Libertarian Party"
+        },
+        {
+          "name": "Elias Montgomery",
+          "party": "Unaffiliated"
+        },
+        {
+          "name": "Bobby Darvish",
+          "party": "Unaffiliated|Write-In"
+        }
+      ]
+    },
+    {
+      "id": "co_b0c2384fa74b0cf5a857af6a121188f38390ce4d",
+      "title": "Utah State Board of Education District 4",
+      "candidates": [
+        {
+          "name": "LeAnn Wood",
+          "party": "Republican Party|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_e6ac6f1f048d8c61f9da3cb34d5546ecc4352789",
+      "title": "Utah House of Representatives District 22",
+      "candidates": [
+        {
+          "name": "Jen Dailey-Provost",
+          "party": "Democratic Party|Incumbent"
+        },
+        {
+          "name": "Char Varga",
+          "party": "Republican Party"
+        }
+      ]
+    },
+    {
+      "id": "co_06f766b83185dff45ed9fbf761354cfc0179792a",
+      "title": "Utah Supreme Court Jill Pohlman's seat",
+      "candidates": [
+        {
+          "name": "Jill Pohlman",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_7165d4c1a175d88fd8f4949e2fe8aab65e3d27d8",
+      "title": "Utah Court of Appeals Amy Oliver's seat",
+      "candidates": [
+        {
+          "name": "Amy Oliver",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_8d46da4b574d55204c12b966ec7b116889fb011f",
+      "title": "Utah Court of Appeals David Mortensen's seat",
+      "candidates": [
+        {
+          "name": "David N. Mortensen",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_b0c322060be54e7350c361418d07f60352d5b316",
+      "title": "Utah Court of Appeals Gregory Orme's seat",
+      "candidates": [
+        {
+          "name": "Gregory Orme",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_645550761c1c3da86e9a05e015dc3e294f9019dd",
+      "title": "Utah Court of Appeals John Luthy's seat",
+      "candidates": [
+        {
+          "name": "John Luthy",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_259a31e73df352cbb06a914aba5909008bb859e3",
+      "title": "Utah Court of Appeals Michele Christiansen's seat",
+      "candidates": [
+        {
+          "name": "Michele Christiansen",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    },
+    {
+      "id": "co_bf1c035e384ae0c50948ddfcd83a2aba1917c5f3",
+      "title": "Utah Court of Appeals Ryan Harris' seat",
+      "candidates": [
+        {
+          "name": "Ryan M. Harris",
+          "party": "Nonpartisan|Incumbent"
+        }
+      ]
+    }
+  ],
+  "measures": [
+    {
+      "id": "bm_7eaed2461cd629fa9334cd3cb88f4b68d4e4af4e",
+      "title": "Constitutional Amendment A",
+      "summary": "Require that constitutional amendments appearing on the ballot must be published for a period of 60 days"
+    },
+    {
+      "id": "bm_8d549d23b7d4ce988b3b9a506302ee3e7f68ecf2",
+      "title": "Constitutional Amendment B",
+      "summary": "Require a supermajority requirement of 60% by voters for citizen-initiated ballot measures that create new taxes, increase existing tax rates, or for a property tax"
+    }
+  ],
+  "headings": [
+    "All Races (10)",
+    "Federal Races",
+    "U.S. House Utah District 1",
+    "State Races",
+    "Utah State Board of Education District 4",
+    "Utah House of Representatives District 22",
+    "Utah Supreme Court Jill Pohlman's seat",
+    "Utah Court of Appeals Amy Oliver's seat",
+    "Utah Court of Appeals David Mortensen's seat",
+    "Utah Court of Appeals Gregory Orme's seat",
+    "Utah Court of Appeals John Luthy's seat",
+    "Utah Court of Appeals Michele Christiansen's seat",
+    "Utah Court of Appeals Ryan Harris' seat",
+    "Election Day is in10DAYS15HOURS54MINUTES52SECONDS",
+    "Deadlines",
+    "Receiving a Ballot",
+    "Return Ballot"
+  ],
+  "observed": [
+    {
+      "sourceUrl": "https://turbovote.org/api/v1/ocd-divisions",
+      "status": 200,
+      "path": "data/ballot/evidence/bl02-addresses/ut-turbovote-divisions.json",
+      "sha256": "f158c2457a0edc7e6c7a9b712ed7d9530529187c2de276c845ddea724b439b47"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+  "finalUrl": "https://services.arcgis.com/Ej0PsM5Aw677QF1W/ArcGIS/rest/services/kccdst_wtrbdy/FeatureServer/135/query?where=kccdst+IN+%28%272%27%2C%274%27%2C%276%27%2C%278%27%29&outFields=kccdst&returnGeometry=true&outSR=4326&f=geojson",
+  "httpStatus": 200,
+  "rawHash": "e61617133e9634e0e1afba3b98e78b53274a167dbad55d678465a878f8b63b6f",
+  "retrievedAt": "2026-10-23T08:11:28.707175+00:00"
+}

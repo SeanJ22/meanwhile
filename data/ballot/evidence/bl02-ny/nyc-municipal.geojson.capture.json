@@ -1,0 +1,7 @@
+{
+  "requestedUrl": "https://data.cityofnewyork.us/resource/mi5z-t7dx.geojson?$limit=100",
+  "finalUrl": "https://data.cityofnewyork.us/resource/mi5z-t7dx.geojson?$limit=100",
+  "httpStatus": 200,
+  "retrievedAt": "2026-10-23T08:32:43.938035+00:00",
+  "rawHash": "a83721176af581549c265c8c3254bb5e79461587c522f8f1856a39a5890ffb74"
+}

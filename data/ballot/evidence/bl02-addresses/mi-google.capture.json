@@ -1,0 +1,952 @@
+{
+  "state": "MI",
+  "address": "2 Woodward Ave, Detroit, MI 48226",
+  "checkedAt": "2026-10-23T07:59:03.624286+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/mi-google.json",
+  "sha256": "2d27c0abd22e1fe018eefef49c96b050a38a13fbbab432c0fe3092ce405550ac",
+  "contestCount": 27,
+  "contests": [
+    {
+      "office": "Governor/Lieutenant Governor",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Jocelyn Benson/Winnie Brinks",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "John James/Jay DeBoyer",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Anthony Hudson/Beau Parmenter",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Donna Brandenburg/Robert Donald Cowper II",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Douglas Campbell/Bobbie Clay",
+          "party": "GREEN"
+        },
+        {
+          "name": "",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "office": "Secretary of State",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Garlin Gilchrist II",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Anthony G. Forlini",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Christine Sloan",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Scott E. Aughney",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Eric Borregard",
+          "party": "GREEN"
+        }
+      ]
+    },
+    {
+      "office": "Attorney General",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Eli Savit",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Doug Lloyd",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Jason Dye",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "John Perry Ludtke Jr",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Jeff Polonowski",
+          "party": "GREEN"
+        },
+        {
+          "name": "Doug Dern",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "office": "United States Senator",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Abdul El-Sayed",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Mike Rogers",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Lydia Christensen",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Tim Long",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Douglas P. Marsh",
+          "party": "GREEN"
+        },
+        {
+          "name": "Walter P. Kristy",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "office": "Representative in Congress",
+      "type": "General",
+      "district": {
+        "name": "13th District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Donavan McKinney",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "T.P. Nykoriak",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Chris Dardzinski",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Raelyn Light",
+          "party": "GREEN"
+        },
+        {
+          "name": "Simone R. Coleman",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "office": "State Senator",
+      "type": "General",
+      "district": {
+        "name": "1st District",
+        "scope": "stateUpper"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Justin Onwenu",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Patrick O'Connell",
+          "party": "REPUBLICAN"
+        }
+      ]
+    },
+    {
+      "office": "Representative in State Legislature",
+      "type": "General",
+      "district": {
+        "name": "9th District",
+        "scope": "stateLower"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Willie Burton",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Michele Lundgren",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Jahdante John Elijah Smith",
+          "party": "GREEN"
+        },
+        {
+          "name": "Logan Ausherman",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "office": "Member of the State Board of Education",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Judith Pritchett",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Tiffany Tilley",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Terence Collins",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Bree Moeggenberg",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Charles Essner",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "William Mohr II",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Christine C. Schwartz",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Wissam Charafeddine",
+          "party": "GREEN"
+        },
+        {
+          "name": "Mary Anne Hering",
+          "party": "WORKING CLASS PARTY"
+        },
+        {
+          "name": "Kelli Monroe",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "office": "Regent of the University of Michigan",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Paul Brown",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Amir Makled",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Lena Epstein",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Michael Schostak",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Andrew Chadderdon",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Kyle Maas",
+          "party": "U.S. TAXPAYERS"
+        }
+      ]
+    },
+    {
+      "office": "Trustee of Michigan State University",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Brianna Scott",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Kelly Tebay Zemke",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Julie Maday",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Roger Victory",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Daniel R. Patterson",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Will Tyler White",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Janet Sanger",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "John Sanger",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "John Anthony La Pietra",
+          "party": "GREEN"
+        },
+        {
+          "name": "Yaz Ozbek",
+          "party": "WORKING CLASS PARTY"
+        }
+      ]
+    },
+    {
+      "office": "Governor of Wayne State University",
+      "type": "General",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Shereef Akeel",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Richard Mack",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Andy Anuzis",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Christa Murphy",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "Alex Avery",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Jami Van Alstine",
+          "party": "LIBERTARIAN"
+        },
+        {
+          "name": "Jeff McDonald",
+          "party": "U.S. TAXPAYERS"
+        },
+        {
+          "name": "Paul M. Ragan",
+          "party": "GREEN"
+        },
+        {
+          "name": "Suzanne Roehrig",
+          "party": "WORKING CLASS PARTY"
+        },
+        {
+          "name": "Kathleen Oakford",
+          "party": "NATURAL LAW"
+        }
+      ]
+    },
+    {
+      "office": "County Executive",
+      "type": "General",
+      "district": {
+        "name": "WAYNE COUNTY",
+        "scope": "countywide"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Warren C. Evans",
+          "party": "DEMOCRATIC"
+        },
+        {
+          "name": "Michael A. Evans",
+          "party": "REPUBLICAN"
+        },
+        {
+          "name": "John Olumba",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Justice of Supreme Court",
+      "type": "General",
+      "district": {
+        "name": "Supreme Court",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Megan Kathleen Cavanagh",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Noah P. Hood",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Thomas W. Howe",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Casandra Morse-Bills",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Michael Warren",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Jody White",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of Court of Appeals",
+      "type": "General",
+      "district": {
+        "name": "1st District",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Mariam Saad Bazzi",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Anica Letica",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Christopher M. Murray",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of Court of Appeals",
+      "type": "General",
+      "district": {
+        "name": "1st District",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Andrew J. Lievense",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of Circuit Court",
+      "type": "General",
+      "district": {
+        "name": "3rd Circuit",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "David J. Allen",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Chandra W. Baker-Robinson",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Christopher M. Blount",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Nicole L. Castka",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Bradley L. Cobb",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Chris Dingell",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Charlene M. Elder",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Helal A. Farhat",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Nicole N. Goodson",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Edward J. Joseph",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Mary Beth Kelly",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Don Knapp",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Cylenthia LaToye Miller",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Carla G. Testani",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Margaret M. Van Houten",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Shannon Nicol Walker",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of Circuit Court",
+      "type": "General",
+      "district": {
+        "name": "3rd Circuit",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Aliyah S. Sabree",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of Circuit Court",
+      "type": "General",
+      "district": {
+        "name": "3rd Circuit",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Shakira Lynn Hawkins",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of Probate Court",
+      "type": "General",
+      "district": {
+        "name": "Wayne County Probate Court",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Sarah Colegrove",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Suzanne Fanning",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Vanessa M. Moss",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of District Court",
+      "type": "General",
+      "district": {
+        "name": "36th District",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Demetria Brue",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "E. Lynise Bryant",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Adrienne Hinnant-Johnson",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Shannon A. Holmes",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Kenneth J. King",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Millicent D. Sherman",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of District Court",
+      "type": "General",
+      "district": {
+        "name": "36th District",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Ponce D. Clay",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Herman Griffin IV",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Chastity A. Youngblood",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Judge of District Court",
+      "type": "General",
+      "district": {
+        "name": "36th District",
+        "scope": "judicial"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Delphia J. Burton",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "William Burton Jr.",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Kahlilia Yvette Davis",
+          "party": "NO PARTY AFFILIATION"
+        },
+        {
+          "name": "Jo A. Irby",
+          "party": "NO PARTY AFFILIATION"
+        }
+      ]
+    },
+    {
+      "office": "Local School District Board Member",
+      "type": "General",
+      "district": {
+        "name": "DETROIT COMMUNITY SCHOOL DISTRICT",
+        "scope": "schoolBoard"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Natalie Bien-Aime",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Steve Bland, Jr.",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Michelle Broughton",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Katrina Brown",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Cidney Calloway",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Bobby Christian",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Nicole Conaway",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Vilma Escamilla Duran",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Daniel Ferguson III",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Duane Larry Grigsby, Jr.",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Bessie L. Harris",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "David Harris",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "C. Allan Hubbard",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Henrietta Ivey",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Tabrian C. Joe",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Shinese Johnson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Theodore Jones",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Georgia Mae Lemmons",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "LaMar D. Lemmons",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Clement O. Lett",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Phil Lloyd II",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Darious Morris",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Liana Mulholland",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Tyshea Pope",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "DaNetta L. Simpson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Tawanna Simpson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Jameel Montgomery Smith",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Calesther Smith-Arnold",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Terry E. Whitfield",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Elizabeth A. Williams",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Theresa Williams",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "office": "Local School District Board Member",
+      "type": "General",
+      "district": {
+        "name": "DETROIT COMMUNITY SCHOOL DISTRICT",
+        "scope": "schoolBoard"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "Ijazz Jackson",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Aliya Moore",
+          "party": "NON PARTISAN"
+        },
+        {
+          "name": "Shawn Vaughn",
+          "party": "NON PARTISAN"
+        }
+      ]
+    },
+    {
+      "office": null,
+      "type": "ballot-measure",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": "Proposal 2026-1\n\nA proposal to convene a constitutional convention for the purpose of drafting a general revision of the state constitution",
+      "referendumText": "Shall a convention of elected delegates be convened in 2027 to draft a general revision of the State Constitution for presentation to the state\u2019s voters for their approval or rejection?",
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "ballot-measure",
+      "district": {
+        "name": "Michigan",
+        "scope": "statewide"
+      },
+      "referendumTitle": "Proposal 2026-2\n\nA proposed initiated law to prohibit campaign contributions from certain regulated utilities and government contractors and apply campaign finance laws and regulations to additional types of political communications",
+      "referendumText": "The proposal would:\n \n\u2022 Prohibit regulated electric and gas utilities, contractors with over $250,000 annually in government contracts, and people and organizations with substantial connections to these utilities/contractors from making direct or indirect campaign contributions to those who run for or hold offices that impact them. \n\u2022 Expand laws regulating spending on political communications, including those requiring disclosing donor information, to apply to communications clearly identifying candidates or ballot questions, even if they do not expressly advocate voting for/against them. \n\u2022 Expressly apply the law requiring disclosure of who paid for political communications to internet political communications. \n\nShould this proposal be adopted?",
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "ballot-measure",
+      "district": {
+        "name": "WAYNE COUNTY ZOOLOGICAL AUTHORITY"
+      },
+      "referendumTitle": "Renewal of Wayne County Zoological Authority Millage in Support of the Detroit Zoo",
+      "referendumText": "In 2008 and 2016,\u00a0pursuant to\u00a0Public Act 49 of 2008,\u00a0Wayne\u00a0County voters renewed a 10-year\u00a0property tax millage to fund zoological services through the\u00a0Wayne\u00a0County Zoological\u00a0Authority, supporting animal care for more than 2,000 animals and 200 species,\u00a0educational\u00a0and senior programs, and facility maintenance at the Detroit Zoo.\u00a0To continue providing these services, the Authority seeks to renew and restore the millage to\u00a0the original voter-approved rate of 0.10 mill (10 cents per $1,000 of taxable value). This\u00a0proposal would renew the millage at 0.0982\u00a0mill and restore the remaining 0.0018\u00a0mill that was\u00a0reduced due to required rollback, for a total authorized rate of 0.10 mill on taxable real and\u00a0personal property\u00a0for ten (10) years.\u00a0If approved, the millage rate would be unchanged from those approved by voters in 2008 and\u00a02016. Funds will be disbursed to the Authority and transferred to the Detroit Zoo as\u00a0permitted\u00a0by law. All funds are subject to annual independent audits. It is estimated that $6,145,462 will\u00a0be collected in the first year.\u00a0Ballot Question:\u00a0Do you approve the renewal and restoration of the levy of 0.10 mill on all taxable property in\u00a0Wayne\u00a0County for a period of ten (10) years, from 2028 through 2037?\u00a0",
+      "candidates": []
+    }
+  ]
+}

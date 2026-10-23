@@ -19494,6 +19494,30 @@
             "verifiedAt": "2026-10-21T00:14:33.452695Z",
             "quote": "Six represent geographic districts (aligned with Minneapolis Park and Recreation Board districts) and three are elected at-large, representing the entire city."
           }
+        },
+        {
+          "id": "bl02:6ae244d006562b3424113d86",
+          "memberOcdId": "ocd-division/country:us/state:mn/county:hennepin/place:st_louis_park_city",
+          "districtOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.hennepincounty.gov/government/leadership/board-of-commissioners/district-3",
+            "sourceOrg": "Hennepin County",
+            "collectedAt": "2026-10-23T08:06:23.980750+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 3 includes much of Downtown Minneapolis, Southwest Minneapolis, and the entirety of the city of St. Louis Park."
+          }
+        },
+        {
+          "id": "bl02:00b4fc74e57e3ed1a27bae82",
+          "memberOcdId": "ocd-division/country:us/state:mn/place:st_louis_park",
+          "districtOcdId": "ocd-division/country:us/state:mn/county:hennepin/council_district:3",
+          "provenance": {
+            "sourceUrl": "https://www.hennepincounty.gov/government/leadership/board-of-commissioners/district-3",
+            "sourceOrg": "Hennepin County",
+            "collectedAt": "2026-10-23T08:06:23.980750+00:00",
+            "verifiedAt": "2026-10-23T08:10:39.205151+00:00",
+            "quote": "District 3 includes much of Downtown Minneapolis, Southwest Minneapolis, and the entirety of the city of St. Louis Park."
+          }
         }
       ],
       "coverageNotes": [
@@ -19503,8 +19527,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-14T05:12:30.398Z",
-    "reviewedBy": "Codex BL-13",
+    "reviewedAt": "2026-10-23T08:22:59.570224+00:00",
+    "reviewedBy": "BL-02 source-bound whole-place district memberships",
     "sources": [
       {
         "sourceClass": "ELECTION_AUTHORITY",
@@ -19885,6 +19909,16 @@
         "publisher": "U.S. Census Bureau",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Original public source bytes saved compressed at data/ballot/evidence/ba01-great-lakes/mn-census-unified-schools.raw.gz. Raw hash identifies decompressed original bytes. Source-bound replay validates jurisdiction, office and all named candidates; PDF text or its documented embedded-font mapping confirms names."
+      },
+      {
+        "requestedUrl": "https://www.hennepincounty.gov/your-government/leadership/3rd-district",
+        "finalUrl": "https://www.hennepincounty.gov/government/leadership/board-of-commissioners/district-3",
+        "publisher": "Hennepin County",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "retrievedAt": "2026-10-23T08:06:23.980750+00:00",
+        "httpStatus": 200,
+        "rawHash": "5dbfca6e47f5ba77625fe285f59e574cc5ffd2165b4b07c2c68d9675a34e1916",
+        "reviewedEvidence": "Current official District3 page explicitly includes the entirety of St.Louis Park, while describing Minneapolis portions. Whole city membership is supported; Minneapolis is not widened."
       }
     ]
   }

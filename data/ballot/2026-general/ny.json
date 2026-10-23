@@ -4958,7 +4958,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers part of New York County.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
@@ -4977,7 +4977,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers part of New York County.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=75037&electionid=387209&lang_code=eng",
@@ -5034,7 +5034,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers part of Queens County.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=32009&electionid=387209&lang_code=eng",
@@ -5072,7 +5072,7 @@
           "type": "CANDIDACY",
           "voteFor": 1,
           "termYears": null,
-          "scopeNote": null,
+          "scopeNote": "This district covers part of Bronx County.",
           "candidateListComplete": true,
           "provenance": {
             "sourceUrl": "https://findmypollsite.vote.nyc/api/contestlist?districtkey=79004&electionid=387209&lang_code=eng",
@@ -14619,8 +14619,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:56:16.692164+00:00",
-    "reviewedBy": "BA-01 official ballot PDF replay",
+    "reviewedAt": "2026-10-23T08:33:02.057149+00:00",
+    "reviewedBy": "bl02-ny-exact-district-geography",
     "sources": [
       {
         "requestedUrl": "https://elections.ny.gov/certification-november-3-2026-general-election",
@@ -14981,6 +14981,26 @@
         "httpStatus": 200,
         "rawHash": "b33dd18a208d34c8dddb8a4017c42456226ebd1c34c40c9ab159ad76661edd18",
         "reviewedEvidence": "Actual normal public pollsite UI response for 1 Edgewater Street, 10305. Exact printed candidate and fusion-party lines replayed from the official sample API."
+      },
+      {
+        "requestedUrl": "https://data.cityofnewyork.us/resource/mi5z-t7dx.geojson?$limit=100",
+        "finalUrl": "https://data.cityofnewyork.us/resource/mi5z-t7dx.geojson?$limit=100",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:32:43.938035+00:00",
+        "rawHash": "a83721176af581549c265c8c3254bb5e79461587c522f8f1856a39a5890ffb74",
+        "publisher": "New York City Department of City Planning",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current 26b official district polygons replayed by exact borough and district fields. Municipal Court districts are the political election districts for NYC Civil Court judges, not the county judicial administration districts. No whole-county or whole-city membership is added."
+      },
+      {
+        "requestedUrl": "https://data.cityofnewyork.us/resource/872g-cjhh.geojson?$where=coundist%3D3",
+        "finalUrl": "https://data.cityofnewyork.us/resource/872g-cjhh.geojson?$where=coundist%3D3",
+        "httpStatus": 200,
+        "retrievedAt": "2026-10-23T08:33:02.057149+00:00",
+        "rawHash": "246c6f8f55307429269ddc4182071c74b17634a1dccc23ceda946200943ce242",
+        "publisher": "New York City Department of City Planning",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Current 26b official district polygons replayed by exact borough and district fields. Municipal Court districts are the political election districts for NYC Civil Court judges, not the county judicial administration districts. No whole-county or whole-city membership is added."
       }
     ]
   }

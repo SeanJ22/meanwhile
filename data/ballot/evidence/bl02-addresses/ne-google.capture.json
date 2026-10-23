@@ -1,0 +1,12 @@
+{
+  "state": "NE",
+  "address": "1445 K St, Lincoln, NE 68508",
+  "checkedAt": "2026-10-23T07:59:03.815689+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ne-google.json",
+  "sha256": "28b90561fe5835f7e532ec54a292a00469c7b3cc459e12273592123fbee29106",
+  "contestCount": 0,
+  "contests": []
+}

@@ -1,0 +1,122 @@
+{
+  "checkedAt": "2026-10-23T08:32:29.195605+00:00",
+  "membershipsAdded": 82,
+  "registryMunicipalities": {
+    "northern": 18,
+    "southern": 46
+  },
+  "geometryFiles": [
+    {
+      "path": "data/states/me/geo/bl02-final-districts-23.geojson",
+      "features": 3,
+      "sha256": "ed12dd98b740fa847ade4ed1e7c9e24e7b688fb10636ca8f930c31d29d36028d"
+    },
+    {
+      "path": "data/states/oh/geo/bl02-final-districts-39.geojson",
+      "features": 1,
+      "sha256": "b033d8e04f299a28b7ef829b74a6ae65a8a6649c2e377147c68670e0e5877266"
+    }
+  ],
+  "splitDistricts": [
+    {
+      "state": "ME",
+      "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:northern",
+      "splitCounty": "aroostook",
+      "wholeMunicipalities": 18,
+      "wholeCountyMembershipAdded": false,
+      "remaining": "Aggregated unorganized territories need exact township-to-aggregate containment; individual township rows never widen an aggregate."
+    },
+    {
+      "state": "ME",
+      "districtOcdId": "ocd-division/country:us/state:me/county:aroostook/registry_district:southern",
+      "splitCounty": "aroostook",
+      "wholeMunicipalities": 46,
+      "wholeCountyMembershipAdded": false,
+      "remaining": "Aggregated unorganized territories need exact township-to-aggregate containment; individual township rows never widen an aggregate."
+    },
+    {
+      "state": "ME",
+      "districtOcdId": "ocd-division/country:us/state:me/county:androscoggin/council_district:2",
+      "splitCounty": "ocd-division/country:us/state:me/county:androscoggin",
+      "wholeCountyMembershipAdded": false,
+      "exactAddressGeometry": true,
+      "point": {
+        "lat": 44.1274260297074,
+        "lng": -70.17953158649128
+      }
+    },
+    {
+      "state": "ME",
+      "districtOcdId": "ocd-division/country:us/state:me/county:androscoggin/council_district:5",
+      "splitCounty": "ocd-division/country:us/state:me/county:androscoggin",
+      "wholeCountyMembershipAdded": false,
+      "exactAddressGeometry": true,
+      "point": {
+        "lat": 44.1295760293406,
+        "lng": -70.25161245893202
+      }
+    },
+    {
+      "state": "ME",
+      "districtOcdId": "ocd-division/country:us/state:me/county:cumberland/council_district:5",
+      "splitCounty": "ocd-division/country:us/state:me/county:cumberland",
+      "wholeCountyMembershipAdded": false,
+      "exactAddressGeometry": true,
+      "point": {
+        "lat": 43.6359389385539,
+        "lng": -70.1183331665341
+      }
+    },
+    {
+      "state": "OH",
+      "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+      "splitCounty": "ocd-division/country:us/state:oh/county:cuyahoga",
+      "wholeCountyMembershipAdded": false,
+      "exactAddressGeometry": true,
+      "point": {
+        "lat": 41.484110677654556,
+        "lng": -81.70439022949071
+      }
+    }
+  ],
+  "verification": "All source hashes match saved original bytes; exact government keys match held contest IDs; original geometry coordinates copied unchanged; each geometry is valid and has a strict interior point; existing contest/candidate/measure/absence records preserved.",
+  "sourceRouteNotes": [
+    "The main Maine.gov directory returned403 and www2 revenue returned401; the public www11 revenue mirror succeeded and directly links the county publisher. County community PDF lists succeeded directly.",
+    "The2024 Maine update uses layer19 and changes only Farmington. Target Androscoggin and Cumberland districts use the separate authoritative2021 service; no Franklin geography is changed.",
+    "Only Cuyahoga7 is projected here. Other current Cuyahoga source polygons have self-intersections and are not silently repaired or substituted. Their verified whole-municipality memberships remain available."
+  ],
+  "upstream": "Held certified state ballots and official county/state district sources",
+  "downstream": "Ordinary state ballot publisher and existing state-geometry point resolver → ballot page",
+  "release": "Data only; no runtime code, manifest edits, production writes or release.",
+  "readerVerification": {
+    "registryPositiveAndNegativePlaces": 4,
+    "wholeAroostookDoesNotWiden": true,
+    "exactPointChecks": [
+      {
+        "districtOcdId": "ocd-division/country:us/state:me/county:androscoggin/council_district:2",
+        "interiorPointMatches": true,
+        "outsidePointExcluded": true,
+        "heldContestSelected": true
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:me/county:androscoggin/council_district:5",
+        "interiorPointMatches": true,
+        "outsidePointExcluded": true,
+        "heldContestSelected": true
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:me/county:cumberland/council_district:5",
+        "interiorPointMatches": true,
+        "outsidePointExcluded": true,
+        "heldContestSelected": true
+      },
+      {
+        "districtOcdId": "ocd-division/country:us/state:oh/county:cuyahoga/council_district:7",
+        "interiorPointMatches": true,
+        "outsidePointExcluded": true,
+        "heldContestSelected": true
+      }
+    ],
+    "passed": true
+  }
+}

@@ -1,0 +1,402 @@
+{
+  "state": "UT",
+  "address": "350 N State St, Salt Lake City, UT 84114",
+  "checkedAt": "2026-10-23T07:59:03.821437+00:00",
+  "httpStatus": 200,
+  "sourceUrl": "https://www.googleapis.com/civicinfo/v2/voterinfo",
+  "electionId": "12000",
+  "evidence": "data/ballot/evidence/bl02-addresses/ut-google.json",
+  "sha256": "c67521339969705701cbd766b609d7782331252c48d725cd32fb104c73326ffc",
+  "contestCount": 29,
+  "contests": [
+    {
+      "office": "U.S. House District 1",
+      "type": "General",
+      "district": {
+        "name": "US House District 1",
+        "id": "1"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "JESSE WEST",
+          "party": "Libertarian"
+        },
+        {
+          "name": "BEN MCADAMS",
+          "party": "Democratic"
+        },
+        {
+          "name": "ELIAS HENRY MONTGOMERY",
+          "party": "Unaffiliated"
+        },
+        {
+          "name": "RILEY OWEN",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "State House District 22",
+      "type": "General",
+      "district": {
+        "name": "State House District 22",
+        "id": "22"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "JEN DAILEY-PROVOST",
+          "party": "Democratic"
+        },
+        {
+          "name": "CHAR VARGA",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "County Council At-Large A",
+      "type": "General",
+      "district": {
+        "name": "County Council At-Large A"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "GREGORY BEGLARIAN",
+          "party": "Constitution"
+        },
+        {
+          "name": "KATHLEEN ANDERSON",
+          "party": "Republican"
+        },
+        {
+          "name": "ZACH ROBINSON",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "County Council District 1",
+      "type": "General",
+      "district": {
+        "name": "County Council District 1",
+        "id": "1"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "CASEY POE",
+          "party": "Libertarian"
+        },
+        {
+          "name": "JIRO JOHNSON",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "County Auditor",
+      "type": "General",
+      "district": {
+        "name": "County Auditor"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "ALI CLOWARD",
+          "party": "Democratic"
+        },
+        {
+          "name": "CHRIS HARDING",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "County Clerk",
+      "type": "General",
+      "district": {
+        "name": "County Clerk"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "LANNIE CHAPMAN",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "County District Attorney",
+      "type": "General",
+      "district": {
+        "name": "County District Attorney"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "SIM GILL",
+          "party": "Democratic"
+        },
+        {
+          "name": "KENT DAVIS",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "County Sheriff",
+      "type": "General",
+      "district": {
+        "name": "County Sheriff"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "SHANE MANWARING",
+          "party": "Republican"
+        },
+        {
+          "name": "ROSIE RIVERA",
+          "party": "Democratic"
+        }
+      ]
+    },
+    {
+      "office": "State School Board District 4 (Multi-County)",
+      "type": "General",
+      "district": {
+        "name": "State School Board District 4",
+        "id": "4"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "LEANN WOOD",
+          "party": "Republican"
+        }
+      ]
+    },
+    {
+      "office": "Salt Lake School Board District 3",
+      "type": "General",
+      "district": {
+        "name": "Salt Lake School Board District 3",
+        "id": "3"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": [
+        {
+          "name": "JARED WRIGHT",
+          "party": null
+        },
+        {
+          "name": "ASHLEY ANDERSON",
+          "party": null
+        }
+      ]
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Supreme Court"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Court of Appeals"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Third District"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Justice Court Alta"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "other",
+      "district": {
+        "name": "Justice Court Salt Lake City"
+      },
+      "referendumTitle": null,
+      "referendumText": null,
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "referendum",
+      "district": {
+        "name": "Constitutional Amendments A B"
+      },
+      "referendumTitle": "Constitutional Amendment A",
+      "referendumText": "Shall the Utah Constitution be amended to change how proposed constitutional amendments are published, requiring publication for 60 days immediately before the general election in a manner established by state law instead of in newspapers?\nIf voters approve Constitutional Amendment A, state statute would change to require the Lieutenant Governor to publish the full text of all proposed constitutional amendments and other ballot questions from the Legislature, on the Utah Public Notice Website and on the Lieutenant Governor\u2019s website for 60 days immediately before the general election.",
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "referendum",
+      "district": {
+        "name": "Constitutional Amendments A B"
+      },
+      "referendumTitle": "Constitutional Amendment B",
+      "referendumText": "Shall the Utah Constitution be amended to require that citizen-proposed laws that increase taxes compared to existing law be approved by at least 60% of voters, instead of a simple majority?",
+      "candidates": []
+    },
+    {
+      "office": null,
+      "type": "referendum",
+      "district": {
+        "name": "County Wide - less Fed Only"
+      },
+      "referendumTitle": "SALT LAKE COUNTY, UTAH - SPECIAL BOND ELECTION",
+      "referendumText": "OFFICIAL BALLOT FOR THE\nSALT LAKE COUNTY, UTAH\nLOCAL SPECIAL BOND ELECTION\nNovember 3, 2026\nShall Salt Lake County, Utah, be authorized to issue general obligation bonds in an amount not\nto exceed $128,000,000 and to mature in no more than eleven (11) years from the date or dates\nof issuance of such bonds for the purpose of providing funds for repairing, completing, acquiring,\nconstructing or renovating open space, natural habitat, parks, community trails and recreational\nfacilities and other related facilities under the charge of the County and, to the extent necessary,\nfor providing moneys for the refunding, at or prior to the maturity thereof, of general obligation\nbonds of the County authorized hereunder or heretofore issued and now outstanding?\nPROPERTY TAX COST OF BONDS\nA general obligation bond is a debt owed by the County. The County uses tax revenue to pay for\nthe debt. If the bonds are issued as planned (which currently consists of 2 smaller issues of bonds\ntotaling approximately $128,000,000 over the next 5 years, with each issue of bonds maturing\napproximately 10 years from the date it is issued), without regard to the taxes currently levied to\npay outstanding bonds that will decrease over time, an annual property tax to pay debt service on\nthe proposed bonds will be required over a period of 10 years in the estimated amount of $16.39\nper year on a primary residence with the County average value of $658,000 and in the estimated\namount of $29.80 per year on a business or secondary residence having the same value, which are\nequal to a monthly increase of $1.37 for an average residential property and $2.48 on a business\nproperty having the same value.\nThe County currently levies property taxes to pay debt service on other outstanding general\nobligation bonds that have been issued to finance voter approved projects. The incremental property\ntaxes would decrease upon the repayment of the currently outstanding bonds, but the decrease may\nnot occur if the proposed bonds are issued. Taking into account the repayment of the outstanding\nbonds, the County expects that the issuance of the proposed bonds, in the manner currently\nexpected, will result in a net property tax increase of $0 per year on a primary residence with the\nCounty average value of $658,000 and a net property tax increase of $0 per year on a business or\nsecondary residence having the same value, which are equal to a monthly increase of $0 for an\naverage residential property and $0 on a business property having the same value.\nThe foregoing is only an estimate and is not a limit on the amount of taxes that the governing body\nmay be required to levy in order to pay debt service on the bonds. The governing body is obligated\nto levy taxes to the extent provided by law in order to pay the bonds.\nIn addition to the bond payment costs as outlined above, based on current best estimates, the\naverage annual combined net operational and maintenance costs for these facilities during their\nfirst ten years of operation is projected to require additional annual expenditures of $4,710,200. If\napproved, the county will determine during its next budget cycle whether additional operational\nand maintenance costs may or may not require any additional funds from budget cuts or a tax\nincrease.\nTo vote in favor of the above bond issue, select the box immediately\nadjacent to the words \u201cFOR THE ISSUANCE OF BONDS.\u201d To vote against the bond issue, select the box immediately adjacent to the words \u201cAGAINST THE ISSUANCE OF BONDS.\u201d\nFOR THE ISSUANCE OF BONDS\nAGAINST THE ISSUANCE OF BONDS",
+      "candidates": []
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 {
   "step": "BL-02",
-  "checkedAt": "2026-10-23T08:18:23.666Z",
+  "checkedAt": "2026-10-23T09:09:56.443Z",
+  "clock": "2026-10-23T12:00:00.000Z",
   "status": "PAGE_RENDERED",
   "productionWrites": 0,
   "localDatabaseWrites": 0,
@@ -16,7 +17,7 @@
     },
     "basis": "The live Google Civic normalized address and TurboVote sample both establish94118. This page proof uses the real94118 ZIP reader; it does not claim a new exact-address geocode."
   },
-  "elapsedMs": 242,
+  "elapsedMs": 197,
   "underThreeSeconds": true,
   "contests": [
     "ca-sos-2026-general-governor",
@@ -78,7 +79,7 @@
     "CandidatePortraitSources": 38,
     "CandidateContactSources": 38
   },
-  "html": "data/ballot/evidence/bl02-addresses/ca-reader-page.html.gz",
+  "html": ".scratch/bl02-page-replay/94118.html",
   "htmlSha256": "94ef7bb12c4e44cf610366eaed9365da362455d0608abe99d2cb8acfbcae4273",
   "unavailableReplayDependencies": [
     "CURATED_READER_RECORD:US:independently-verified-official-filings",
@@ -109,33 +110,6 @@
     }
   ],
   "limitations": "Auxiliary authorities not loaded into this replay remain unavailable and show the app existing gap behavior. This is a real-data read-only local rendering proof, not evidence that production has published these changes.",
-  "browser": {
-    "method": "Actual rendered app page SSR HTML, with the currently built app CSS. Served by Playwright route fulfillment from memory at a loopback URL; no database or server mutation. Client hydration and out-of-replay auxiliary authorities are not included.",
-    "runId": "bl02-production-data-page-replay@2026-10-23T08:19:40.012Z",
-    "viewport": {
-      "width": 1280,
-      "height": 900
-    },
-    "elapsedMs": 1004,
-    "contests": 40,
-    "cards": [
-      {
-        "id": "ca-sos-2026-general-board-of-equalization-member-district-2",
-        "heading": "Board of Equalization Member District 2",
-        "text": "Board of Equalization Member District 2\nBoard of Equalization Member District 2\u25c6\n\nVOTE FOR 1\n\nJP\nJohn Pimentel\nDemocratic\n\njohnpimentel.com (as filed)\n\nView Battlecard\n\nWould you vote for them?\n\nYes\nNo\nUnsure\nSL\nSally J. Lieber\nDemocratic\n\nsallylieber.org (as filed)\n\nView Battlecard\n\nWould you vote for them?\n\nYes\nNo\nUnsure\n\nMoney in state and local races is filed with state campaign-finance systems.\n\nYour pick for this race\n\nJohn Pimentel\nSally J. Lieber\nnot sure\nSources\n2",
-        "screenshot": "data/ballot/evidence/bl02-addresses/ca-reader-boe2.png"
-      },
-      {
-        "id": "ca-sf-2026-general-bart-director-district-8",
-        "heading": "BART Director, District 8",
-        "text": "BART Director, District 8\nBART Director, District 8STATE\u25c6\n\nVOTE FOR 1\n\nSB\nSara Barz\n\nsarabarz.com (as filed)\n\nView Battlecard\n\nWould you vote for them?\n\nYes\nNo\nUnsure\nSomeone else\n\nMoney in state and local races is filed with state campaign-finance systems.\n\nYour pick for this race\n\nSara Barz\nnot sure\nSources\n2",
-        "screenshot": "data/ballot/evidence/bl02-addresses/ca-reader-bart8.png"
-      }
-    ]
-  },
-  "htmlEncoding": "gzip; htmlSha256 identifies uncompressed actual page SSR markup",
-  "visibleLimitation": "The existing BART card renders the level tag STATE for its special_district OCD ID. No runtime classifier was changed in this data-only task.",
-  "timingScope": "elapsedMs measures this cold in-memory SSR replay with missing auxiliary authorities refused. It does not establish end-to-end production first-use speed.",
   "tomorrow": {
     "clock": "2026-10-24T12:00:00.000Z",
     "proof": "data/ballot/reports/bl02-page-replay-tomorrow.json",
@@ -157,8 +131,8 @@
         "idPresent": true
       }
     ],
-    "elapsedMs": 195,
-    "html": "data/ballot/evidence/bl02-addresses/ca-reader-page-tomorrow.html.gz",
+    "elapsedMs": 278,
+    "html": ".scratch/bl02-page-replay/94118-tomorrow.html",
     "htmlSha256": "94ef7bb12c4e44cf610366eaed9365da362455d0608abe99d2cb8acfbcae4273",
     "scope": "Controlled-clock actual page render using the unchanged CA payload proven by the normal next-day publisher replay; no production writes or future waiting."
   }

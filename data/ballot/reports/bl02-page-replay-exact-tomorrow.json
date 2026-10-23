@@ -1,6 +1,6 @@
 {
   "step": "BL-02",
-  "checkedAt": "2026-10-23T08:34:29.045Z",
+  "checkedAt": "2026-10-23T09:08:05.436Z",
   "clock": "2026-10-24T12:00:00.000Z",
   "status": "PAGE_RENDERED",
   "productionWrites": 0,
@@ -41,7 +41,7 @@
     },
     "basis": "Exact local equality on the official San Francisco address dataset uniquely establishes this point. The actual page receives state/latitude/longitude without a ZIP, and the held official BART8 geometry contains it."
   },
-  "elapsedMs": 162,
+  "elapsedMs": 142,
   "underThreeSeconds": true,
   "contests": [
     "ca-sos-2026-general-governor",
@@ -103,7 +103,7 @@
     "CandidatePortraitSources": 38,
     "CandidateContactSources": 38
   },
-  "html": "data/ballot/evidence/bl02-addresses/ca-reader-exact-page-tomorrow.html.gz",
+  "html": ".scratch/bl02-page-replay/120-lake-st-tomorrow.html",
   "htmlSha256": "dc38dcdf87231169ee60ef32555ed7121db3e24a0a27b20e934be20787f102be",
   "unavailableReplayDependencies": [
     "CURATED_READER_RECORD:US:independently-verified-official-filings",
@@ -137,6 +137,5 @@
       "evidence": ".scratch/bl02-page-replay/second-harness-failure.json"
     }
   ],
-  "limitations": "Auxiliary authorities not loaded into this replay remain unavailable and show the app existing gap behavior. This is a real-data read-only local rendering proof, not evidence that production has published these changes.",
-  "htmlEncoding": "gzip; htmlSha256 identifies uncompressed actual page SSR markup"
+  "limitations": "Auxiliary authorities not loaded into this replay remain unavailable and show the app existing gap behavior. This is a real-data read-only local rendering proof, not evidence that production has published these changes."
 }

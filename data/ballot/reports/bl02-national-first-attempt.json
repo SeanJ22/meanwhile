@@ -1,0 +1,310 @@
+{
+  "step": "BL-02",
+  "reason": "Initial national harness failure: the original-checkout experiment compared the whole payload hash. Every membership and contest/candidate ID survived; only new scopeNote text was reset to the original null by the intentionally older inputs.",
+  "failures": [
+    {
+      "state": "MT",
+      "status": "FAIL",
+      "reason": "AssertionError: MT: original checkout lost repaired metadata"
+    },
+    {
+      "state": "NM",
+      "status": "FAIL",
+      "reason": "AssertionError: NM: original checkout lost repaired metadata"
+    },
+    {
+      "state": "NV",
+      "status": "FAIL",
+      "reason": "AssertionError: NV: original checkout lost repaired metadata"
+    },
+    {
+      "state": "NY",
+      "status": "FAIL",
+      "reason": "AssertionError: NY: original checkout lost repaired metadata"
+    }
+  ],
+  "correspondingStateRows": [
+    {
+      "state": "MT",
+      "status": "PASS",
+      "inputContests": 146,
+      "inputHeldContests": 0,
+      "addedMemberships": 68,
+      "changedMemberships": 0,
+      "selectorMembershipsVerified": 83,
+      "selectorContestMatches": 88,
+      "unreachableBefore": 2,
+      "unreachableAfter": 0,
+      "snapshotSha256": "bd8101c7d25f28934a00b44b3f08a478c17c8faa09fab9a21c5838874554540e",
+      "productionVersion": "official-ballot-authorities:f196b02601ce2de89573df872c238988",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "bfd55a5ea4460e4b19c60d99066011b1af74998e0b1014167508ec1df730f5c7",
+      "replayVersion": "official-ballot-authorities:3f263aab4b2d11738ea35eefada29e1a",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 0,
+      "maintenance": null,
+      "expectedMembershipsVerified": 83,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": false,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "48d319fbea1d64ae98f83126eb7e14dce0f03e20de14e82c3e5c5c6bb87afc53"
+    },
+    {
+      "state": "NM",
+      "status": "PASS",
+      "inputContests": 255,
+      "inputHeldContests": 0,
+      "addedMemberships": 29,
+      "changedMemberships": 0,
+      "selectorMembershipsVerified": 62,
+      "selectorContestMatches": 122,
+      "unreachableBefore": 5,
+      "unreachableAfter": 0,
+      "snapshotSha256": "f9ffdb023e2946c44a820b52a10e58715cdbb72fa9fb1494d86d014458935ac9",
+      "productionVersion": "official-ballot-authorities:b3482271bd93de7da4d27828bc8c0e5c",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "634f88fe119ac77ee0892f2f2d3a680d25aa3629d5798aaeb8dd4bc5f8aa0fed",
+      "replayVersion": "official-ballot-authorities:e88f73fcfd7702703d6a31b66f1975f7",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 0,
+      "maintenance": null,
+      "expectedMembershipsVerified": 62,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": false,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "acea102dd76524cfd26f25c15bee8b955c49ad9c672f9a5dd55ca08b31de7a66"
+    },
+    {
+      "state": "NV",
+      "status": "PASS",
+      "inputContests": 78,
+      "inputHeldContests": 0,
+      "addedMemberships": 57,
+      "changedMemberships": 0,
+      "selectorMembershipsVerified": 57,
+      "selectorContestMatches": 57,
+      "unreachableBefore": 5,
+      "unreachableAfter": 0,
+      "snapshotSha256": "ca0d93c04c844cb46b97323737f4fd3f0192112335f43b613bc8ab2013b7259c",
+      "productionVersion": "official-ballot-authorities:5e02188e7553db1be6e24f33715a02ee",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "79b155da2c183070f7c9e1ce8bb5dad3798440700d20bfb7f9d4cb718a5b3245",
+      "replayVersion": "official-ballot-authorities:55ef658b2ba39614c646a6a944e8c92f",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 0,
+      "maintenance": null,
+      "expectedMembershipsVerified": 57,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": false,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "8f98fa67bc5dd39207bb74c056c36098f7e5586d500d27d70739c1f697cd1199"
+    },
+    {
+      "state": "NY",
+      "status": "PASS",
+      "inputContests": 268,
+      "inputHeldContests": 0,
+      "addedMemberships": 0,
+      "changedMemberships": 0,
+      "selectorMembershipsVerified": 44,
+      "selectorContestMatches": 44,
+      "unreachableBefore": 4,
+      "unreachableAfter": 0,
+      "snapshotSha256": "f7a70c1f8357cc82c9fbde66f69ace40cf8251b0cfa9abf1ba27a5d28eb09614",
+      "productionVersion": "official-ballot-authorities:82e6302e8476d19e7594827aa402f201",
+      "exportKind": "full-candidate-and-projection",
+      "inputSha256": "53e9a6c93e46e9aa29448d77a6d7c6d8eda03a997efea630d6481b9f623da3ab",
+      "replayVersion": "official-ballot-authorities:8b516712d1d4628eacabdd38377ac2d6",
+      "publication": "PUBLISHED",
+      "receiptDecision": "GOOD",
+      "ordinaryAssemblerMissingMemberships": 0,
+      "maintenance": null,
+      "expectedMembershipsVerified": 44,
+      "heldContests": [],
+      "originalIdsLost": 0,
+      "selections": [],
+      "tomorrow": {
+        "unchangedFileScheduled": false,
+        "forcedOrdinaryReplay": "PUBLISHED",
+        "payloadUnchanged": true,
+        "originalCheckoutReplay": "PUBLISHED",
+        "originalCheckoutPreservesRepair": false,
+        "allRepairedMembershipsRetained": true,
+        "originalCheckoutFailure": null
+      },
+      "outputSha256": "7b40a9f5a93b8880182f7d19a063f8a5ea34771489a15d25c5c783a035ab52d1"
+    }
+  ],
+  "investigation": {
+    "states": {
+      "MT": [
+        {
+          "ballot": "MT:mt-2026-11-03",
+          "field": "contests",
+          "repairedRows": 146,
+          "originalCheckoutRows": 146,
+          "changedRecords": [
+            {
+              "id": "ballot-mt-2026:public-service-commissioner-district-1",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "ballot-mt-2026:public-service-commissioner-district-5",
+              "fields": [
+                "scopeNote"
+              ]
+            }
+          ]
+        }
+      ],
+      "NM": [
+        {
+          "ballot": "NM:nm-2026-11-03",
+          "field": "contests",
+          "repairedRows": 255,
+          "originalCheckoutRows": 255,
+          "changedRecords": [
+            {
+              "id": "nm-sos:nm-2026-11-03:public-education-commissioner-district-2",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:public-education-commissioner-district-3",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:public-education-commissioner-district-5",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:public-education-commissioner-district-6",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nm-sos:nm-2026-11-03:public-education-commissioner-district-7",
+              "fields": [
+                "scopeNote"
+              ]
+            }
+          ]
+        }
+      ],
+      "NV": [
+        {
+          "ballot": "NV:nv-2026-11-03",
+          "field": "contests",
+          "repairedRows": 78,
+          "originalCheckoutRows": 78,
+          "changedRecords": [
+            {
+              "id": "nv-2026-general-board-of-regent-district-8",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nv-2026-general-board-of-regent-district-2",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nv-2026-general-board-of-regent-district-3",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nv-2026-general-board-of-regent-district-5",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "nv-2026-general-board-of-regent-district-10",
+              "fields": [
+                "scopeNote"
+              ]
+            }
+          ]
+        }
+      ],
+      "NY": [
+        {
+          "ballot": "NY:ny-2026-11-03",
+          "field": "contests",
+          "repairedRows": 268,
+          "originalCheckoutRows": 268,
+          "changedRecords": [
+            {
+              "id": "ny-2026-new-york-city-council-3",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "ny-2026-new-york-county-municipal-court-3",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "ny-2026-queens-county-municipal-court-4",
+              "fields": [
+                "scopeNote"
+              ]
+            },
+            {
+              "id": "ny-2026-bronx-county-municipal-court-2",
+              "fields": [
+                "scopeNote"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "correction": "The original-checkout check now asserts every repaired membership and all contest/candidate/measure IDs survive, and separately records exact optional field differences. The actual next-day current-input experiment still requires byte-identical complete payloads, including scopeNote text, in every held state. No data or runtime behavior was changed to pass this check.",
+    "currentInputNextDayStatesPassed": 54
+  }
+}

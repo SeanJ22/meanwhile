@@ -1,6 +1,6 @@
 {
   "step": "BL-02",
-  "checkedAt": "2026-10-23T08:47:04.535166+00:00",
+  "checkedAt": "2026-10-23T09:12:18.489358+00:00",
   "electionDate": "2026-11-03",
   "scope": "Ten actual addresses in ten states compared against TurboVote rendered sample ballots and live Google Civic voterinfo election12000. A comparator list is a discovery lead, not an official completeness denominator. Names are preserved as each source displays them; ticket races are compared to their held joint contest.",
   "method": "Address search and manual-address Continue through TurboVote public UI; capture full rendered HTML and parse every office detail and ballot-measure list item, including collapsed entries. Google uses configured credential through normal HTTPS/proxy. Network bridge fetches verify TLS with the configured cloud CA; browser receives those verified response bytes without changing persistent certificate trust.",
@@ -698,8 +698,8 @@
               "idPresent": true
             }
           ],
-          "elapsedMs": 162,
-          "html": "data/ballot/evidence/bl02-addresses/ca-reader-exact-page-tomorrow.html.gz",
+          "elapsedMs": 142,
+          "html": ".scratch/bl02-page-replay/120-lake-st-tomorrow.html",
           "htmlSha256": "dc38dcdf87231169ee60ef32555ed7121db3e24a0a27b20e934be20787f102be",
           "scope": "Controlled-clock actual page render using the unchanged CA payload proven by the normal next-day publisher replay; no production writes or future waiting."
         },

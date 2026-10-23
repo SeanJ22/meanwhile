@@ -1,6 +1,6 @@
 {
   "step": "BL-02",
-  "checkedAt": "2026-10-23T08:25:08.471Z",
+  "checkedAt": "2026-10-23T09:09:58.993Z",
   "clock": "2026-10-24T12:00:00.000Z",
   "status": "PAGE_RENDERED",
   "productionWrites": 0,
@@ -17,7 +17,7 @@
     },
     "basis": "The live Google Civic normalized address and TurboVote sample both establish94118. This page proof uses the real94118 ZIP reader; it does not claim a new exact-address geocode."
   },
-  "elapsedMs": 195,
+  "elapsedMs": 278,
   "underThreeSeconds": true,
   "contests": [
     "ca-sos-2026-general-governor",
@@ -79,7 +79,7 @@
     "CandidatePortraitSources": 38,
     "CandidateContactSources": 38
   },
-  "html": "data/ballot/evidence/bl02-addresses/ca-reader-page-tomorrow.html.gz",
+  "html": ".scratch/bl02-page-replay/94118-tomorrow.html",
   "htmlSha256": "94ef7bb12c4e44cf610366eaed9365da362455d0608abe99d2cb8acfbcae4273",
   "unavailableReplayDependencies": [
     "CURATED_READER_RECORD:US:independently-verified-official-filings",
@@ -109,6 +109,5 @@
       "evidence": ".scratch/bl02-page-replay/second-harness-failure.json"
     }
   ],
-  "limitations": "Auxiliary authorities not loaded into this replay remain unavailable and show the app existing gap behavior. This is a real-data read-only local rendering proof, not evidence that production has published these changes.",
-  "htmlEncoding": "gzip; htmlSha256 identifies uncompressed actual page SSR markup"
+  "limitations": "Auxiliary authorities not loaded into this replay remain unavailable and show the app existing gap behavior. This is a real-data read-only local rendering proof, not evidence that production has published these changes."
 }

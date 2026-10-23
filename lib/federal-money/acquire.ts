@@ -11,7 +11,7 @@ import { FEDERAL_MONEY_STATES } from "./sources.ts";
 import { parseFederalMoney } from "./parse.ts";
 import { readFederalMoneyCapture, saveFederalMoneyCapture } from "./vault.ts";
 import { buildFederalBulk, chunkFederalCsvFile, chunkFederalJson, federalBulkCapture, federalBulkId, federalBulkMetadata, saveFederalBulkBytes, stageFederalBulkBytes, vaultFederalBulkBytes, scanFederalJson, federalBulkRangeHeaders, spoolFederalBytes, completedFederalBulkPath, completeFederalBulkState, federalBulkMemory, type FederalBulkContext } from "./bulk.ts";
-import { federalCsvRecords, federalZipBytes, federalZipEntries, FEDERAL_MONEY_CHUNK_ROWS, type FederalZipEntry } from "./streams.ts";
+import { federalCsvRecords, federalZipBytes, federalZipEntries, FEDERAL_MONEY_CHUNK_ROWS, type FederalZipEntry, type FederalJsonEnvelope } from "./streams.ts";
 import type { FederalMoneyCursor, FederalMoneyPage, FederalMoneySource } from "./model.ts";
 
 export interface FederalMoneyAcquireOptions {
@@ -218,12 +218,12 @@ async function sam(ctx: Context, state: string, cursor: FederalMoneyCursor): Pro
   if (cursor.since) { const format = (date: Date) => `${String(date.getUTCMonth() + 1).padStart(2, "0")}/${String(date.getUTCDate()).padStart(2, "0")}/${date.getUTCFullYear()}`; url.searchParams.set("updateDate", `[${format(new Date(cursor.since))},${format(new Date(ctx.now()))}]`); }
   const id = federalBulkId(["sam", state, cursor.registered !== false, cursor.since ?? "initial"]), bulk = bulkContext(ctx);
   await buildFederalBulk(bulk, id, async directory => {
-    let response = await completedFederalBulkPath(directory) ? new Response() : await request(ctx, "sam-gov-entities", url.href, { headers }), downloadToken: string | null = null, requestUrl = url.href;
+    let response = await completedFederalBulkPath(directory) ? new Response() : await request(ctx, "sam-gov-entities", url.href, { headers }), downloadToken: string | null = null, requestUrl = url.href, requestMethod: "GET" | "POST" = "GET";
     for (let pending = 0; ; pending++) {
       ctx.signal?.throwIfAborted();
-      if ([202, 404].includes(response.status)) { await response.body?.cancel(); await ctx.sleep(retryDelay(response, pending, ctx.now()), ctx.signal); response = await request(ctx, "sam-gov-entities", requestUrl, { headers }, true); continue; }
+      if ([202, 404].includes(response.status)) { await response.body?.cancel(); await ctx.sleep(retryDelay(response, pending, ctx.now()), ctx.signal); response = await request(ctx, "sam-gov-entities", requestUrl, { headers, method: requestMethod }, true); continue; }
       const path = await stageFederalBulkBytes(bulk, response, directory);
-      const envelope = await scanFederalJson(bulk, path, "entityData", [key]), data = envelope.value ?? {};
+      const envelope = await samExtractResponse(bulk, path, key), data = envelope.value ?? {};
       if (envelope.found) {
         await scanFederalJson(bulk, path, "entityData", [downloadToken ?? ""]);
         if (data.links && typeof data.links === "object" && valueString((data.links as Record<string, unknown>).nextLink)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov returned a paginated response to a full-state extract request; the response is incomplete.");
@@ -235,13 +235,30 @@ async function sam(ctx: Context, state: string, cursor: FederalMoneyCursor): Pro
       }
       const values = [data.downloadURL, data.downloadUrl, data.downloadLink, data.url, data.message, data.detail].filter(value => typeof value === "string").join(" "), rawLink = values.match(/https:\/\/api\.sam\.gov\/[^\s"<>]+/)?.[0];
       await rm(temporaryPath(path)); await rm(temporaryPath(join(directory, "download.state")), { force: true });
-      if (!rawLink && /not ready|in progress|being processed|not available|try again/i.test(values)) { await ctx.sleep(retryDelay(response, pending, ctx.now()), ctx.signal); response = await request(ctx, "sam-gov-entities", requestUrl, { headers }, true); continue; }
+      if (!rawLink && /not ready|in progress|being processed|not available|try again/i.test(values)) { await ctx.sleep(retryDelay(response, pending, ctx.now()), ctx.signal); response = await request(ctx, "sam-gov-entities", requestUrl, { headers, method: requestMethod }, true); continue; }
       if (!rawLink) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov: the public state extract download link is missing.");
       const download = new URL(publisherUrl(rawLink, SAM)); download.searchParams.delete("apiKey"); download.searchParams.set("api_key", key); downloadToken = download.searchParams.get("token");
-      requestUrl = download.href; response = await request(ctx, "sam-gov-entities", requestUrl, { headers }, true);
+      requestMethod = /\bPOST\s+url\s*:/i.test(values) ? "POST" : "GET";
+      requestUrl = download.href; response = await request(ctx, "sam-gov-entities", requestUrl, { headers, method: requestMethod }, true);
     }
   });
   return bulkPage(ctx, state, { ...cursor, bulkId: id, chunkIndex: 0 }, next);
+}
+async function samExtractResponse(bulk: FederalBulkContext, path: string, key: string): Promise<FederalJsonEnvelope> {
+  const file = await open(path, "r");
+  try {
+    const prefix = Buffer.alloc(4096), { bytesRead } = await file.read(prefix, 0, prefix.length, 0);
+    const start = prefix.subarray(0, bytesRead).toString("utf8").replace(/^\uFEFF/, "").trimStart();
+    if (prefix[0] === 0x1f && prefix[1] === 0x8b || start.startsWith("{") || start.startsWith("[")) return scanFederalJson(bulk, path, "entityData", [key]);
+    if ((await file.stat()).size > 8 * 1024 * 1024) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The publisher control response exceeded its size limit.");
+    let notice = new TextDecoder("utf-8", { fatal: true }).decode(await file.readFile());
+    if (start.startsWith('"')) {
+      try { const value: unknown = JSON.parse(notice); if (typeof value !== "string") throw new Error(); notice = value; }
+      catch { throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov: its extract notice is invalid."); }
+    }
+    if (notice.includes(key) || notice.includes(encodeURIComponent(key))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "SAM.gov: its source response echoed a private credential and cannot be saved.");
+    return { rows: 0, found: false, value: { message: notice } };
+  } finally { await file.close(); }
 }
 export function federalMoneyAcquisitionVault(): EvidenceStore {
   return new DurableEvidenceStore(join(process.cwd(), "data", "control-plane", "vault"));

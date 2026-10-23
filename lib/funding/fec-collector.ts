@@ -19,18 +19,21 @@ export function fecTotalsForPeriod(rows: readonly FecRow[], candidateId: string,
   return latest;
 }
 
-/** National totals do not contain the unitemized line. Preserve it with its own
- * filing date; a bulk individual total never stands in for that line. */
+/** An election's registrations do not cover off-cycle officeholders. Keep their
+ * verified filings and dates; absence from discovery cannot withdraw a filing.
+ * National totals also preserve the separately observed unitemized line. */
 export function projectFecDiscovery(discovery: FecDiscovery, cycle: number, roster?: OfficeholderSet, previous: readonly FundingCandidate[] = []): FundingCandidate[] {
   const totals = new Map<string, FecRow[]>(), held = new Map(previous.map(row => [row.fecCandidateId, row]));
   for (const row of discovery.totals) {
     const id = fecText(row.candidate_id); if (!id) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "FEC_TOTALS_IDENTITY_INVALID");
     const rows = totals.get(id) ?? []; rows.push(row); totals.set(id, rows);
   }
-  return discovery.registrations.map(registration => {
+  const discovered = discovery.registrations.map(registration => {
     const latest = fecTotalsForPeriod(totals.get(registration.candidateId) ?? [], registration.candidateId, cycle);
     return registeredFecCandidate(registration, cycle, latest, fecRegistrationTargets(registration, roster), held.get(registration.candidateId));
   });
+  const seen = new Set(discovered.map(row => row.fecCandidateId));
+  return [...discovered, ...previous.filter(row => !seen.has(row.fecCandidateId))];
 }
 
 function registeredFecCandidate(registration: FecRegistration, cycle: number, latest: FecRow | null, targets: readonly FecTarget[], previous?: FundingCandidate): FundingCandidate {

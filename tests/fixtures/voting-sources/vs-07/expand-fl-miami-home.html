@@ -1,0 +1,1205 @@
+<!DOCTYPE HTML><html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>Office of the Supervisor of Elections of Miami-Dade County</title>
+      <!--grid-layout--><!--ls:begin[stylesheet]-->
+      <style type="text/css">
+          
+          .iw_container
+          {
+            max-width:800px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          .iw_stretch
+          {
+            min-width: 100% !important;
+          }
+        </style><script type="text/javascript">
+	// script to add keyup event and make escape functional to exit from preview
+	// only if it is a preview environment.
+	var frame = window.frameElement;
+	if (frame && frame.src.indexOf("/iw-preview") != -1) {
+		document.addEventListener("DOMContentLoaded", function () {
+			document.body.addEventListener("keyup", function (event) {
+				var key = event.keyCode;
+				if (key === 27) {
+					frame.parentElement.ownerDocument.dispatchEvent(new KeyboardEvent('keyup', {keyCode: key}));
+				}
+			});
+		});
+	}
+	</script><script type="text/javascript">
+    // A simplified version of AjaxRequest.class.js
+    // So component events doesn't require to add AjaxRequest.class.js as resources
+    // TODO: Keep it in the same files as embedded-layout.page.xml in POC, we can consider to move it to another file or not later
+    // TODO: Need to maintain a dependency to the extenal files it references
+    
+    AjaxCall.METHOD_POST = 'POST';
+    AjaxCall.METHOD_GET  = 'GET';
+    AjaxCall.ACTIVEX_MSXML2_XMLHTTP = 'Msxml2.XMLHTTP';
+    AjaxCall.ACTIVEX_LEGACY_XMLHTTP = 'Microsoft.XMLHTTP';
+    AjaxCall.CONTENT_TYPE_URL_ENCODED = 'application/x-www-form-urlencoded';
+    AjaxCall.CONTENT_TYPE = 'Content-Type';
+    AjaxCall.DELIM_QS = '?';
+    AjaxCall.DELIM_PARAM = '&';
+    AjaxCall.DELIM_KEY_VALUE = '=';
+    AjaxCall.READY_STATE_COMPLETE      = 4;
+    AjaxCall.STATUS_OK        = 200;
+    AjaxCall.STATUS_NOT_FOUND = 404;
+    AjaxCall.ERROR_CREATE_REQUEST = 'Unable to create ActiveX XMLHttpRequest.'
+    AjaxCall.ERROR_REQUEST_STATE = 'Error in XMLHttpRequest [$code/$text]';
+
+    /**
+     * Constructor creates an encapsulated XMLHttpRequest object. Both parameters
+     * to the constructor are optional, and may be configured later.
+     *
+     * @param url             the url to which the request is sent
+     * @param handlerFunction the function to invoke and pass the response
+     *                        xml dom and the response text
+     * @param errorHandlerFunction the function to invoke and pass as argument errorHandlerFunction(request) the entire HTTPXMLRequest instance to
+     *                        when the AJAX request failed, for most cases
+     * @param method          HTTP method: POST or GET
+     * @param isDebugMode     indicator for debug mode
+     */
+    function AjaxCall(url, handlerFunction, errorHandlerFunction, method, isDebugMode)
+    {
+      this.mUrl          = url;
+      this.mHandler      = handlerFunction;
+      this.mErrorHandler = errorHandlerFunction;
+      this.mMethod       = method;
+      this.mDebug        = isDebugMode;
+      
+      this.mMethod = (this.mMethod == null) ? this.mMethod = AjaxCall.METHOD_POST : this.mMethod;
+      this.mDebug = (this.mDebug == null) ? this.mDebug = false : this.mDebug;
+
+      this.mAsynchronous = true;
+
+      this.mContentType = null;
+      this.mRequestBody = null;
+
+      this.mParams = new Array();
+      this.mComponentId = null;
+    }
+
+   /**
+    * Sets a request parameter. The key and value are automatically url-encoded.
+    *
+    * @param key   the request parameter key
+    * @param value the request parameter value
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setParameter = function(key, value)
+    {
+      this.mParams[this.mParams.length] = encodeURIComponent(key)
+          + AjaxCall.DELIM_KEY_VALUE + encodeURIComponent(value);
+      return this;
+    }
+
+   /**
+    * Sets a request body
+    *
+    * @param value the request body value
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setBody = function(value)
+    {
+      this.mRequestBody = value;
+      return this;
+    }
+
+   /**
+    * Sets a component id
+    *
+    * @param componentId   the component id
+    * @return a self-reference for method chaining
+    */
+    AjaxCall.prototype.setComponentId = function(componentId)
+    {
+      this.mComponentId = componentId;
+      return this;
+    }
+
+    /**
+     * Submits the request to the url using the data configured in the object.
+     */
+    AjaxCall.prototype.submit = function()
+    {
+      var request = null;
+
+      // INSTANTIATE THE XMLHttpRequest
+      if (window.XMLHttpRequest)
+      {
+        request = new XMLHttpRequest();
+      }
+
+      // SET THE READY STATE CHANGE HANDLER
+
+      // cannot reference object member from the anonymous function
+      var handlerFunction  = this.mHandler;
+      var errorHandlerFunction = this.mErrorHandler;
+      var showResponseText = this.mDebug;
+      var componentId  = this.mComponentId;
+      
+      
+      /**
+       * Triggered when there is a handler for the response
+       */
+      var readyStateChangeFunction = function() {
+        if (AjaxCall.READY_STATE_COMPLETE == request.readyState)
+        {
+          if (AjaxCall.STATUS_OK == request.status)
+          {
+            if (showResponseText)
+            {
+              window.open().document.write('<xmp>' + request.responseText + '</xmp>');
+            }
+
+            if (handlerFunction) // only invoke if defined
+            {
+              handlerFunction(request.responseXML, request.responseText, request, componentId);
+            }
+          }
+          else
+          {
+            if(errorHandlerFunction)
+            {
+              errorHandlerFunction(request);
+            }
+            else
+            {
+              alert(AjaxCall.ERROR_REQUEST_STATE
+                .replace(/\$code/, request.status)
+                .replace(/\$text/, request.statusText));
+            }
+          }
+        }
+      }
+
+      // PREPARE THE REQUEST PROPERTIES AND ANY DEFAULTS
+      
+      var url    = this.mUrl;
+      var body   = this.mRequestBody;
+      var type   = this.mContentType;
+      var params = this.mParams.join(AjaxCall.DELIM_PARAM);
+
+      // if no parameters are set, then there is no need to dispatch them
+      if (params.length > 0)
+      {
+        var paramDelim = (0 > url.indexOf("?"))   // if a url already has a query
+                       ? AjaxCall.DELIM_QS     // string delimiter (?), use an
+                       : AjaxCall.DELIM_PARAM  // ampersand (&) instead
+
+        if (body != null)      // User-set request body, all params go in
+        {                      // the query string for both POST and GET.
+          url += paramDelim + params;
+        }
+        else                   // no request body
+        {
+          if (this.mMethod == AjaxCall.METHOD_GET)
+          {
+            url += paramDelim + params;
+          }
+          else
+          {
+            body = params;
+
+            if (type == null)  // assign default if no type is set
+            {
+              type = AjaxCall.CONTENT_TYPE_URL_ENCODED;
+            }
+          }
+        }
+      }
+
+      // SUBMIT THE REQUEST
+      if(this.mAsynchronous)
+      {
+        if(this.mHandler != null || ( this.mHandler == null && this.mDebug == true) ) // no need to fire a handler if it was null in the first place. FF issue.
+        {
+          request.onreadystatechange = readyStateChangeFunction;
+        }
+      }
+
+      request.open(this.mMethod, url, this.mAsynchronous);
+
+      if (type != null)
+      {
+        request.setRequestHeader(AjaxCall.CONTENT_TYPE, type);
+      }
+
+      request.send(body);
+
+      return request;
+    }
+    </script><script type="text/javascript">
+    // Scripts to handle the flow to update components based on the action
+    // TODO: Keep it in the same files as embedded-layout.page.xml in POC, we can consider to move it to another file or not later
+    // TODO: Need to maintain a dependency to the extenal files it references
+
+    const IW_PREVIEW_HOST_NAME = "iw-preview";
+    const INSTRUCTION_TYPE_UPDATE_PAGE_PARAMETER = "update_page_parameter";
+    const INSTRUCTION_TYPE_REFRESH_COMPONENT = "refresh_component";
+    const INSTRUCTION_TYPE_NAVIGATE_TO_PAGE = "navigate_to_page";
+    
+    var invokeActionURL = "/site/elections/page/home/component/$componentId/datum/$datumId/eventAction/$eventActionId/invokeAction.action";
+    var componentRenderURL = "/elections/home/$componentId.async.RENDER";
+    var variantId = "";
+    var siteApplicationType = "java";
+    var updatePageParameterMap = [];
+    var eventTriggerID = "";
+    var eventDataJson;
+    // An array of events that are already executed
+    var eventsExecuted = [];
+
+    //boolean to check if valid json string
+    function parseJSON(str) {
+      try 
+      {
+        var parsedJSON = JSON.parse(str.trim());
+        if (parsedJSON) {
+		      if (typeof parsedJSON === "object") {
+			      return parsedJSON;
+		      }
+        }
+      }
+      catch (e) 
+      {
+        return null;
+      }
+
+      return null;
+    }
+
+    // currently it only support in runtime server
+    // and it always return all componentId from the page
+    // this is called from component, and needs to pass in the 
+    // componentId(it can its id or other component id) and 
+    // datumId (the datum id of a ComponentEventAction datum)
+    function invokeAction(componentId, datumId, eventActionId, eventData) {
+
+      eventDataJson = eventData;
+      // ex: eventTriggerID: 1702053980345:INTERACTION:onClick
+      eventTriggerID = componentId+":"+datumId+":"+eventActionId;
+      //If the Site is .NET type, do not trigger invokeAction call
+      if(siteApplicationType != null && siteApplicationType == "dotnet")
+      {
+        return;
+      }
+      var url = invokeActionURL.replace(/\$componentId/, componentId).replace(/\$datumId/, datumId).replace(/\$eventActionId/, eventActionId);
+      var request = new AjaxCall(url, handleComponentList, handleAjaxError, AjaxCall.METHOD_POST, false);
+      var requestBody = {};
+
+      if(variantId)
+      {
+        request.setParameter("variantId", variantId);
+      }
+
+      if(!eventsExecuted.includes(eventTriggerID))
+      {
+        //flag to tell if we need to evaluate event trigger variants for ComponentEventTrigger datums
+        //We should not be evaluating event trigger variants when an event is invoked for first time
+        requestBody.evaluateEventTrigger = false;
+        eventsExecuted.push(eventTriggerID);
+      }
+
+      var pageParametersMapJson = {};
+      for (var key in updatePageParameterMap ) {
+        pageParametersMapJson[key] = updatePageParameterMap[key];
+      }
+
+      if (eventData) 
+      {
+        requestBody = parseJSON(eventData);
+        if (requestBody !== null) {
+          requestBody.PageParameters = pageParametersMapJson;
+          request.setBody(JSON.stringify(requestBody));
+          request.submit();
+        }
+        else {
+          console.error("Invalid JSON for EventData");
+        }
+      }
+      else {
+        requestBody.EventData = {};
+        requestBody.PageParameters = pageParametersMapJson;
+        request.setBody(JSON.stringify(requestBody));
+        request.submit();
+      }
+
+    }
+    
+    // Handler for the response returned from invokeAction.action Ajax call
+    // retrieve the information from the response and trigger another Ajax call to refresh the component
+    function handleComponentList(xmlDoc, text) {
+      var invokeActionResponse = JSON.parse(text);      
+      
+      if(invokeActionResponse.actionResults && Array.isArray(invokeActionResponse.actionResults)) {
+        var componentIdList = [];
+        
+        for (var actionResult of invokeActionResponse.actionResults ) {
+          if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_UPDATE_PAGE_PARAMETER) {
+            updatePageParameterMap = [];
+            if(actionResult.objects) {
+              var keys = Object.keys(actionResult.objects);
+              if(keys && Array.isArray(keys)) {
+                for (var key of keys ) {
+                  updatePageParameterMap[key] = actionResult.objects[key];
+                }
+              }
+            }
+          } else if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_REFRESH_COMPONENT) {
+            if(actionResult.objects && actionResult.objects.objectIds && Array.isArray(actionResult.objects.objectIds)) {
+              for (var componentId of actionResult.objects.objectIds ) {
+                componentIdList.push(componentId);
+              }
+            }
+          } else if(actionResult.instructionType && actionResult.instructionType === INSTRUCTION_TYPE_NAVIGATE_TO_PAGE) {
+            if(actionResult.objects.objectIds) {
+              // Navigate to the first page from the action results
+              window.location.href = actionResult.objects.objectIds[0];
+            }
+          }
+        }
+        
+        if(componentIdList.length > 0) {
+          for (var componentId of componentIdList ) {
+            var url = componentRenderURL.replace(/\$componentId/, componentId);
+            var request = new AjaxCall(url, handleComponentRefresh, handleAjaxError, AjaxCall.METHOD_GET, false);
+            request.setComponentId(componentId);
+            request.setParameter("eventTriggerID",eventTriggerID);
+            if(eventDataJson)
+            {
+            request.setParameter("eventData",eventDataJson);
+            }
+            if(url.includes(IW_PREVIEW_HOST_NAME)){
+              request.setParameter("variantId", variantId);
+            }
+            for (var key in updatePageParameterMap ) {
+              request.setParameter(key, updatePageParameterMap[key]);
+            }
+        
+            request.submit();
+          }
+        }
+      }
+    }
+    
+    // Handler for the response returned from component .async.render Ajax call
+    // retrieve the response and updated the div containing the componendid
+    function handleComponentRefresh(xmlDoc, text, request, componentId) {
+      var componentElem = document.getElementById("iw_comp" + componentId);      
+      componentElem.innerHTML = text;
+      // explicitly recreate script elements to ensure they are executed
+      const sources = componentElem.querySelectorAll("script");
+      sources.forEach(source => {
+        const target = document.createElement('script');
+        // add contents of element if it exists
+        if(source.innerHTML) target.innerHTML = source.innerHTML;
+        // copy all attributes
+        [...source.attributes].forEach(attr => { target.setAttribute(attr.nodeName ,attr.nodeValue) });
+        source.after(target);
+        // remove original element when done
+        source.remove();
+      });
+    }
+    
+    // Error handler for Ajax call
+    function handleAjaxError(request) {
+      var url = new URL(request.responseURL);
+      
+      // temporary show mssage as the service is not available in iw-preview yet
+      if(url.pathname.includes(IW_PREVIEW_HOST_NAME)){
+        alert("The service is not available in /iw-preview");
+      } else {
+        alert(AjaxCall.ERROR_REQUEST_STATE
+          .replace(/\$code/, request.status)
+          .replace(/\$text/, request.statusText));
+      }      
+    }
+    
+    </script><link rel="stylesheet" type="text/css" href="/iwov-resources/grid/bootstrap/4.6.0/bootstrap-grid.min.css">
+      <link rel="stylesheet" type="text/css" href="/iwov-resources/ui-frameworks/bootstrap/4.6.0/css/bootstrap.min.css">
+      <!--ls:end[stylesheet]--><!--ls:begin[canonical]--><!--ls:end[canonical]--><!--ls:begin[script]--><script type="text/javascript" src="/iwov-resources/scripts/jQuery/jquery.min.js"></script><script type="text/javascript" src="/iwov-resources/ui-frameworks/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+      <!--ls:end[script]--><!--ls:begin[meta-keywords]--><meta name="keywords" content="elections, vote, be election ready, alina garcia">
+      <!--ls:end[meta-keywords]--><!--ls:begin[meta-description]-->
+      <meta name="description" content="Welcome to the homepage of the Office of the Supervisor of Elections of Miami-Dade County's website.">
+      <!--ls:end[meta-description]--><!--ls:begin[custom-meta-data]-->
+      <meta name="og:type" content="website">
+      <meta name="Organization" content="org146299202858021">
+      <meta name="Category" content="elections-voting">
+      <meta name="ContentType" content="None">
+      <meta name="Audience" content="all-residents">
+      <meta name="og:title" content="Office of the Supervisor of Elections of Miami-Dade County">
+      <meta name="og:url" content="https://www.miamidade.gov/elections/home.page">
+      <meta name="og:description" content="Welcome to the homepage of the Office of the Supervisor of Elections of Miami-Dade County's website.">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!--ls:end[custom-meta-data]--><!--ls:begin[meta-vpath]-->
+      <meta name="vpath" content="">
+      <!--ls:end[meta-vpath]--><!--ls:begin[meta-page-locale-name]-->
+      <meta name="page-locale-name" content="">
+      <!--ls:end[meta-page-locale-name]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources-elections/css/search-custom.css" type="text/css" data-ocde-="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[stylesheet]-->
+      <link rel="stylesheet" href="/resources-elections/css/global-styles.css" type="text/css" data-ocde-="show">
+      <!--ls:end[stylesheet]--><!--ls:begin[script]--><script src="/resources-elections/js/popper.min.js" type="text/javascript" data-ocde-="show"></script>
+      <!--ls:end[script]--><!--ls:begin[script]--><script src="/resources-elections/js/global-styles.js" type="text/javascript" data-ocde-="show"></script>
+      <!--ls:end[script]--><!--ls:begin[favicon]--><link rel="shortcut icon" href="/resources-elections/images/favicon.png" type="image/png">
+      <!--ls:end[favicon]--><!--ls:begin[head-injection]--><!-- appendToHead -->
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KSQJ6F6H');</script>
+<!-- End Google Tag Manager -->
+<!--ls:end[head-injection]--><!--ls:begin[tracker-injection]--><!--ls:end[tracker-injection]--><!--ls:begin[script]--><!--ls:end[script]--><!--ls:begin[script]--><!--ls:end[script]--><script>NS_CSM_td=669418958;NS_CSM_pd=275116665;NS_CSM_u="/clm10";NS_CSM_col="AAAAAAWBdoOj2a4kL8WSvC9MU2AoJ7oM6aWq5E6OcrgG+iikJV5kyFVTztWE6XFfxGhmsKQ1TDp0PUAJDewruvh2Dq5o";</script><script type="text/javascript">function sendTimingInfoInit(){setTimeout(sendTimingInfo,0)}function sendTimingInfo(){var wp=window.performance;if(wp){var c1,c2,t;c1=wp.timing;if(c1){var cm={};cm.ns=c1.navigationStart;if((t=c1.unloadEventStart)>0)cm.us=t;if((t=c1.unloadEventEnd)>0)cm.ue=t;if((t=c1.redirectStart)>0)cm.rs=t;if((t=c1.redirectEnd)>0)cm.re=t;cm.fs=c1.fetchStart;cm.dls=c1.domainLookupStart;cm.dle=c1.domainLookupEnd;cm.cs=c1.connectStart;cm.ce=c1.connectEnd;if((t=c1.secureConnectionStart)>0)cm.scs=t;cm.rqs=c1.requestStart;cm.rss=c1.responseStart;cm.rse=c1.responseEnd;cm.dl=c1.domLoading;cm.di=c1.domInteractive;cm.dcls=c1.domContentLoadedEventStart;cm.dcle=c1.domContentLoadedEventEnd;cm.dc=c1.domComplete;if((t=c1.loadEventStart)>0)cm.ls=t;if((t=c1.loadEventEnd)>0)cm.le=t;cm.tid=NS_CSM_td;cm.pid=NS_CSM_pd;cm.ac=NS_CSM_col;var xhttp=new XMLHttpRequest();if(xhttp){var JSON=JSON||{};JSON.stringify=JSON.stringify||function(ob){var t=typeof(ob);if(t!="object"||ob===null){if(t=="string")ob='"'+ob+'"';return String(ob);}else{var n,v,json=[],arr=(ob&&ob.constructor==Array);for(n in ob){v=ob[n];t=typeof(v);if(t=="string")v='"'+v+'"';else if(t=="object"&&v!==null)v=JSON.stringify(v);json.push((arr?"":'"'+n+'":')+String(v));}return(arr?"[":"{")+String(json)+(arr?"]":"}");}};xhttp.open("POST",NS_CSM_u,true);xhttp.send(JSON.stringify(cm));}}}}if(window.addEventListener)window.addEventListener("load",sendTimingInfoInit,false);else if(window.attachEvent)window.attachEvent("onload",sendTimingInfoInit);else window.onload=sendTimingInfoInit;</script></head>
+   <body><!--ls:begin[body]-->
+      <div class="iw_viewport-wrapper"><!-- Add Top Navigation Component Here -->
+<div class="iw_component" id="iw_comp1745583749994">
+ <!--ls:begin[component-1745583749994]--><style>#iw_comp1745583749994{}</style><style>
+			:root {
+				/*Setting Primary color for the entire site*/
+			  --color-primary-h: 199; /* Hue        */
+			  --color-primary-s: 38%; /* Saturation */
+			  --color-primary-l: 43%; /* Lightness  */
+
+			  --primary-color: hsl(
+			    var(--color-primary-h),
+			    var(--color-primary-s),
+			    var(--color-primary-l)
+			  );
+
+			  --primary-color-500: hsl(
+			    var(--color-primary-h),
+			    var(--color-primary-s),
+			    calc(var(--color-primary-l) * 0.8)
+			  );
+
+				/*Setting Secondar color for the entire site*/
+			  --color-secondary-h: 2.97; /* Hue        */
+			  --color-secondary-s: 77.78%; /* Saturation */
+			  --color-secondary-l: 45.88%; /* Lightness  */
+
+			  --secondary-color: hsl(
+			    var(--color-secondary-h),
+			    var(--color-secondary-s),
+			    var(--color-secondary-l)
+			  );
+
+			  --secondary-color-500: hsl(
+			    var(--color-secondary-h),
+			    var(--color-secondary-s),
+			    calc(var(--color-secondary-l) * 0.7)
+			  );
+			}
+
+  		
+  		 @media (min-width: 1199px) {
+	  		.mdc-custom__header-layout--logoMiddle .mdc-custom__header-layout__logo--middle {
+	  			order: 4;
+	  		}
+
+	  		.mdc-custom__header-layout--logoMiddle .mdc-custom__main-nav-link:nth-child(n+5) {
+	  			order: 5;
+	  		}
+  		}
+  	</style><style>
+  		
+	  		.mdc-custom__header-name__container {
+	  			color: white;
+					font-family: Roboto;
+					word-wrap: break-word
+	  		}
+
+	  		.mdc-custom__header-name__container__line01 {
+					font-size: 48px;
+					font-weight: 800;
+					line-height: 45px;
+	  		}
+
+
+	  		.mdc-custom__header-name__container__line02__roboto {
+					font-size: 20px;
+					font-weight: 400;
+					line-height: 30px;
+	  		}
+
+
+	  		.mdc-custom__header div.elections-alert{
+
+	  			background: hsla(0, 0%, 100%, 1);
+	  		}
+	  		
+	  		.elections-alert .container { position: relative; }
+
+				.mdc-custom__header div.elections-alert div.container button {
+
+					color: #fff;
+					height: 51px;  
+					padding: 16px 48px; 
+					background: var(--Accent, #D0231A); 
+					border: none;
+					border-radius: 8px; 
+					justify-content: flex-start; 
+					align-items: center; 
+					gap: 10px; 
+					display: flex
+
+				}
+
+
+				.mdc-custom__header .alert {
+					text-align: start;
+					color: hsl(202, 100%, 16%);
+				}
+
+
+
+				.alert__wrapper {
+					display: grid;
+					gap: 1.5rem;
+					grid-template-columns: auto 1fr;
+				}
+
+				.alert__body {
+					display: grid;
+					gap: 1.5rem;
+					grid-template-columns: 1fr;
+				}
+
+				.alert__title { font-size: 1.5rem; }
+
+				.alert__desc a {
+					text-decoration: underline;
+					font-weight: 500;
+				}
+
+
+	  		.alert__icon {
+	  			background-color: hsl(202, 100%, 16%);
+	  			width: 40px;
+	  			aspect-ratio: 1/1;
+	  			border-radius: 50%;
+
+	  			display: grid;
+	  			place-items: center;
+
+	  			& img {
+	  				height: 24px;
+
+	  				aspect-ratio: 7/16;
+	  			}
+	  		}
+
+	  		.alert__button {
+	  			display: inline-flex;
+	  			align-items: center;
+	  			justify-content: center;
+	  			text-align: center;
+	  			background-color: var(--secondary-color);
+	  			color: #fff;
+	  			padding: 1em 3em;
+	  			border-radius: 8px;
+    			transition: background-color .3s ease-out;
+
+    			&:is(:hover, :focus) {
+    				background-color: var(--secondary-color-500);
+    				color: #fff;
+    				text-decoration: none;
+    			}
+	  		}
+
+
+	  		.alert__actions {
+	  			display: flex;
+	  			flex-wrap: wrap;
+	  			gap: 1rem;
+	  		}
+
+
+	  		@media (width <= 767px) {
+	  			.alert__wrapper { grid-template-columns: 1fr; }
+
+	  			.alert__icon { display: none; }
+	  		}
+
+
+			
+  	</style><script src="https://www.miamidade.gov/resources/global-components/top-navigation/js/top-navigation.js" type="text/javascript"></script><script type="text/javascript">
+	
+
+		(function(){var g=function(g){
+
+		this.go=function(){var a=document.createElement("script");a.type="text/javascript";a.src=g;document.body&&document.body.appendChild(a)};
+
+		this.start=function(){var t=this;"complete"!==document.readyState?window.addEventListener?window.addEventListener("load",function(){t.go()},!1):window.attachEvent&&window.attachEvent("onload",function(){t.go()}):t.go()};};
+
+		try{(new g("https://zna8zta7cuf00ejmf-miamidadecounty.siteintercept.qualtrics.com/SIE/?Q_ZID=ZN_a8zTa7cUf00EjMF")).start()}catch(i){}})();
+	
+</script><div id="ZN_a8zTa7cUf00EjMF"></div><header class="mdc-custom__header"><a class="sr-only sr-only-focusable" href="#main-content">Skip to main content</a><div class="mdc-custom__nav-bottom__wrapper">
+      <div class="mdc-custom__nav-bottom__header-container">
+         <div class="container">
+            <div class="mdc-custom__nav-bottom mdc-custom__header-layout--site-name">
+               <div class="mdc-custom__nav-bottom__logo"><a href="/elections/home.page"><img class="mdc-custom__header-logo" alt="Site logo" src="/resources-elections/images/elections-seal-full-color.png"></a><div class="mdc-custom__header-name__container">
+                     <div class="mdc-custom__header-name__line01">Alina Garcia</div>
+                     <div class="mdc-custom__header-name__line02"><p><span class="mdc-custom__header-name__line02__sofia-sans">Supervisor of Elections</span> <br><span class="mdc-custom__header-name__line02__roboto"> Miami-Dade County </span><br><span class="mdc-custom__header-name__line02__roboto"> 305-499-8683 </span></p></div>
+                  </div>
+                  <div class="mdc-custom__header-img__container"><img class="mdc-custom__header-img" alt="" src="/resources-elections/images/alina-garcia-headshot.png"></div>
+               </div>
+               <div class="mdc-custom__nav-bottom__item">
+                  <div class="mdc-custom__translate" translate="no"><script src="https://www.miamidade.gov/resources/components/language-selector/language-selector.js" module=""></script><language-selector></language-selector>
+                  </div>
+                  <div class="mdc-custom__nav-bottom__search"><button class="mdc-custom__header-search" id="search-button" aria-label="Search the Supervisor of Elections Miami-Dade County website"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" class="mdc-custom__header-search__svg">
+                           <path d="M13.3266 11.304C14.292 9.96647 14.7189 8.34135 14.5213 6.72495C14.3141 5.03078 13.4368 3.47634 12.0697 2.37088C10.703 1.26574 8.94685 0.689783 7.15266 0.754989C5.35845 0.820196 3.6539 1.52196 2.38076 2.72365C1.10721 3.92572 0.359106 5.53995 0.290772 7.24437C0.222434 8.94886 0.839206 10.6124 2.01352 11.9025C3.18743 13.1921 4.83155 14.0134 6.61556 14.2063C8.32644 14.3912 10.0491 13.9856 11.4669 13.0663L15.5177 16.887C15.5177 16.887 15.5177 16.887 15.5177 16.887C15.7644 17.1198 16.096 17.2482 16.4389 17.2483C16.7819 17.2485 17.1136 17.1202 17.3604 16.8876C17.6077 16.6545 17.7497 16.335 17.7498 15.9986C17.7499 15.6621 17.6082 15.3426 17.3611 15.1093L17.361 15.1093L13.3266 11.304ZM13.0092 7.49815C13.0092 8.18549 12.8657 8.86648 12.5865 9.50238C12.3072 10.1383 11.8974 10.7171 11.3798 11.2054C10.8621 11.6936 10.2468 12.0817 9.56856 12.3466C8.89032 12.6116 8.16293 12.7481 7.42803 12.7481C6.69313 12.7481 5.96574 12.6116 5.2875 12.3466C4.60927 12.0817 3.99394 11.6936 3.47628 11.2054C2.95864 10.7171 2.54887 10.1383 2.26959 9.50238C1.99033 8.86648 1.84682 8.18549 1.84682 7.49815C1.84682 6.11063 2.43106 4.77677 3.47628 3.79093C4.52199 2.80461 5.94324 2.24815 7.42803 2.24815C8.91282 2.24815 10.3341 2.80461 11.3798 3.79093C12.425 4.77677 13.0092 6.11063 13.0092 7.49815Z" stroke-width="0.5"/></svg></button></div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="mdc-custom__nav-bottom__navigation">
+         <div class="container">
+            <nav class="navbar-light mdc-custom__global-nav" id="mainMenu" aria-label="Main Navigation"><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMainMenu" aria-controls="navbarMainMenu" aria-expanded="false" aria-label="Toggle navigation">
+                  <div class="mobile-menu-bars"><span></span><span></span><span></span><div>Menu</div>
+                  </div></button><div class="mdc-custom__global-nav__main collapse navbar-collapse" id="navbarMainMenu">
+                  <ul class="mdc-custom__global-nav__list">
+                     <li class="mdc-custom__mega-container mdc-custom__main-nav-link"><button class="mdc-custom__mega-container__link btn" data-toggle="collapse" type="button" data-target="#BeElectionReadyNav" aria-expanded="false" aria-controls="BeElectionReadyNav">Be Election Ready<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mdc-custom__global-nav__arrow">
+                              <path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg></button><ul class="row collapse" id="BeElectionReadyNav">
+                           <li class="mdc-custom__mega-container__child  "><a href="/elections/voters/home.page">
+                                 <h2 class="mdc-custom__mega-container__title">Be Election Ready</h2></a><div class="mdc-custom__mega-container__description">Find all the information you need to ensure you are election ready.</div>
+                              <ul class="mdc-custom__mega-container__list">
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/index.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Upcoming and Past Elections</h3></a><div class="mdc-custom__mega-container__item__description">Take a look at scheduled elections coming up in 2026 and 2027, as well as past elections
+                                       going back to 2025, with access to older election data.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/registration.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Register to Vote</h3></a><div class="mdc-custom__mega-container__item__description">Read the requirements to register to vote in Miami-Dade County, as well as how to
+                                       update your voter information.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/information.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Voter Information</h3></a><div class="mdc-custom__mega-container__item__description">Get personalized voter information, including your sample ballot and polling place.
+                                       You can also request a vote-by-mail ballot, check its status and make changes to your
+                                       voter information.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/three-ways-to-vote.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Three Ways to Vote</h3></a><div class="mdc-custom__mega-container__item__description">Read about early voting, voting by mail and voting on Election Day.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/toolkit.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Voter Toolkit</h3></a><div class="mdc-custom__mega-container__item__description">Understand the voting process and be sure you have everything you need when you go
+                                       vote.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/petitions.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Petition Amendments, Initiatives &amp; Referendums</h3></a><div class="mdc-custom__mega-container__item__description">Citizens can petition to propose state amendments, as well as Miami-Dade and municipal
+                                       initiatives and referendums, to go up for a vote if certain requirements are met.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/special-needs.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Voters with Special Needs</h3></a><div class="mdc-custom__mega-container__item__description">Voters with disabilities have multiple voting options that meet Americans with Disabilities
+                                       Act (ADA) standards.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/provisional.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Provisional Voting</h3></a><div class="mdc-custom__mega-container__item__description">A provisional ballot shall be issued to a person who may not meet voter requirements.
+                                       The ballot is then reviewed by the Canvassing Board.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/overseas-military.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Overseas and Military Voters</h3></a><div class="mdc-custom__mega-container__item__description">Overseas and military voters who are Miami-Dade County residents can access resources
+                                       to participate in local elections.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/voters/restore-rights.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Restoration of Voting Rights</h3></a><div class="mdc-custom__mega-container__item__description">If you are convicted of a felony, you lose the right to vote in Florida until your
+                                       voting rights are restored.</div>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                     <li class="mdc-custom__mega-container mdc-custom__main-nav-link"><button class="mdc-custom__mega-container__link btn" data-toggle="collapse" type="button" data-target="#CandidatesCampaignsNav" aria-expanded="false" aria-controls="CandidatesCampaignsNav">Candidates &amp; Campaigns<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mdc-custom__global-nav__arrow">
+                              <path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg></button><ul class="row collapse" id="CandidatesCampaignsNav">
+                           <li class="mdc-custom__mega-container__child  "><a href="/elections/candidates-campaigns/home.page">
+                                 <h2 class="mdc-custom__mega-container__title">Candidates &amp; Campaigns</h2></a><div class="mdc-custom__mega-container__description">Resources for anyone who wants to run for office as well as political campaigns.</div>
+                              <ul class="mdc-custom__mega-container__list">
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/candidates-campaigns/candidate-information.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Information for Candidates</h3></a><div class="mdc-custom__mega-container__item__description">Valuable information for candidates and those looking to run for office, including
+                                       County candidates’ qualifying documents and campaign finance reports.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/candidates-campaigns/candidate-qualifying-handbook.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Candidate Qualifying Handbook</h3></a><div class="mdc-custom__mega-container__item__description">Read laws and details about running for a Miami-Dade County office.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/candidates-campaigns/political-committees.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Political Committees</h3></a><div class="mdc-custom__mega-container__item__description">Learn everything you need to know about forming a political committee.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/candidates-campaigns/poll-watchers.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Poll Watchers</h3></a><div class="mdc-custom__mega-container__item__description">Each political party and each candidate may have one poll watcher in each voting location
+                                       or early voting area at any one time during an election.</div>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                     <li class="mdc-custom__mega-container mdc-custom__main-nav-link"><button class="mdc-custom__mega-container__link btn" data-toggle="collapse" type="button" data-target="#StatisticsHistoricalDataNav" aria-expanded="false" aria-controls="StatisticsHistoricalDataNav">Statistics &amp; Historical Data<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mdc-custom__global-nav__arrow">
+                              <path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg></button><ul class="row collapse" id="StatisticsHistoricalDataNav">
+                           <li class="mdc-custom__mega-container__child  "><a href="/elections/data/home.page">
+                                 <h2 class="mdc-custom__mega-container__title">Statistics &amp; Historical Data</h2></a><div class="mdc-custom__mega-container__description">Access election results, data and more election-related information.</div>
+                              <ul class="mdc-custom__mega-container__list">
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/results-archive.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Past Election Results</h3></a><div class="mdc-custom__mega-container__item__description">Access past statistics and results of elections.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/current-precincts-districts-municipalities.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Current Precincts, Districts and Municipalities</h3></a><div class="mdc-custom__mega-container__item__description">Get breakdowns of current voting precincts, districts and municipalities, including
+                                       municipal codes, after 2023 reprecincting.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/voter-registration-statistics.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Voter Registration Statistics</h3></a><div class="mdc-custom__mega-container__item__description">Review current and past voter registration data broken down by political party, precinct,
+                                       demographics and more.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/redistricting.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Redistricting</h3></a><div class="mdc-custom__mega-container__item__description">Every 10 years, the Florida Legislature and certain local jurisdictions redraw districts
+                                       from which Florida voters elect local, state and federal government officials.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/reprecincting.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Reprecincting</h3></a><div class="mdc-custom__mega-container__item__description">After redistricting, the Supervisor of Elections updates the county’s voting precincts
+                                       to conform the precinct boundaries to the new district boundaries.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/calendar-archive.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Election Calendar Archive</h3></a><div class="mdc-custom__mega-container__item__description">Access elections that have been scheduled from 2009 to 2024.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/data/sample-ballots-archive.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Sample Ballots Archive</h3></a><div class="mdc-custom__mega-container__item__description">Access sample ballots from past elections from 2004 to 2024.</div>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                     <li class="mdc-custom__link-container mdc-custom__main-nav-link" tabindex="0"><a class="mdc-custom__link-container__link" href="/elections/poll-workers/home.page">Poll Workers</a></li>
+                     <li class="mdc-custom__mega-container mdc-custom__main-nav-link"><button class="mdc-custom__mega-container__link btn" data-toggle="collapse" type="button" data-target="#NewsLegalNoticesNav" aria-expanded="false" aria-controls="NewsLegalNoticesNav">News &amp; Legal Notices<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mdc-custom__global-nav__arrow">
+                              <path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg></button><ul class="row collapse" id="NewsLegalNoticesNav">
+                           <li class="mdc-custom__mega-container__child  "><a href="/elections/news/home.page">
+                                 <h2 class="mdc-custom__mega-container__title">News &amp; Legal Notices</h2></a><div class="mdc-custom__mega-container__description">Access press releases and legal notices from the Office of the Supervisor of Elections.</div>
+                              <ul class="mdc-custom__mega-container__list">
+                                 <li class="mdc-custom__mega-container__item"><a href="https://www.votemiamidade.gov/elections/news/prindex.page?ORGANIZATION=org146299202858021">
+                                       <h3 class="mdc-custom__mega-container__item__title">News Releases</h3></a><div class="mdc-custom__mega-container__item__description">Read news releases published by the Office of the Supervisor of Elections.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="https://www.votemiamidade.gov/elections/news/legal-ads.page?ORGANIZATION=org146299202858021">
+                                       <h3 class="mdc-custom__mega-container__item__title">Legal Notices</h3></a><div class="mdc-custom__mega-container__item__description">Access legal notices, including lists of potentially ineligible voters.</div>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                     <li class="mdc-custom__mega-container mdc-custom__main-nav-link"><button class="mdc-custom__mega-container__link btn" data-toggle="collapse" type="button" data-target="#AboutUsNav" aria-expanded="false" aria-controls="AboutUsNav">About Us<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mdc-custom__global-nav__arrow">
+                              <path d="M207.029 381.476L12.686 187.132c-9.373-9.373-9.373-24.569 0-33.941l22.667-22.667c9.357-9.357 24.522-9.375 33.901-.04L224 284.505l154.745-154.021c9.379-9.335 24.544-9.317 33.901.04l22.667 22.667c9.373 9.373 9.373 24.569 0 33.941L240.971 381.476c-9.373 9.372-24.569 9.372-33.942 0z"/></svg></button><ul class="row collapse" id="AboutUsNav">
+                           <li class="mdc-custom__mega-container__child  "><a href="/elections/about/home.page">
+                                 <h2 class="mdc-custom__mega-container__title">About Us</h2></a><div class="mdc-custom__mega-container__description">Read about the Office of the Supervisor of Elections.</div>
+                              <ul class="mdc-custom__mega-container__list">
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/biography.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Supervisor of Elections Alina Garcia</h3></a><div class="mdc-custom__mega-container__item__description">A biography of Alina Garcia, Miami-Dade County's Supervisor of Elections.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/contact.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Contact Us</h3></a><div class="mdc-custom__mega-container__item__description">Contact the office of the Miami-Dade County Supervisor of Elections.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/outreach.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Community Outreach</h3></a><div class="mdc-custom__mega-container__item__description">Request Supervisor of Elections staff to discuss election topics with your group or
+                                       organization.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/join-our-team.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Join Our Team</h3></a><div class="mdc-custom__mega-container__item__description">Help ensure safe, secure and accessible elections by joining the Miami-Dade County
+                                       Supervisor of Elections team as a poll worker or election employee.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/document-requests.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Elections Document Requests</h3></a><div class="mdc-custom__mega-container__item__description">A variety of items are available to assist candidates, committees, political parties,
+                                       government agencies, courts, students, media and interested citizens.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/integrity-security.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Elections Integrity &amp; Security</h3></a><div class="mdc-custom__mega-container__item__description">The Miami-Dade Supervisor of Elections is committed to ensuring the ongoing integrity
+                                       and security of the voting process.</div>
+                                 </li>
+                                 <li class="mdc-custom__mega-container__item"><a href="/elections/about/annual-reports.page">
+                                       <h3 class="mdc-custom__mega-container__item__title">Annual Reports</h3></a><div class="mdc-custom__mega-container__item__description">The Annual Report highlights the notable accomplishments made by the Miami-Dade County
+                                       Office of the Supervisor of Elections each year.</div>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                  </ul>
+               </div>
+            </nav>
+         </div>
+      </div>
+   </div>
+   <div class="mdc-custom_fullscreen-search-overlay" id="mdc-custom_search-overlay"><button class="btn mdc-custom_fullscreen-close" id="mdc-custom_fullscreen-close-button"><svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 384 512">
+            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></button><div class="mdc-custom_fullscreen-search-wrapper">
+         <form method="get" class="mdc-custom_fullscreen-searchform" onsubmit="return q.value!=''" action="/elections/home.pagesubmit=true&amp;componentID=1745583749994"><input type="text" value="" class="mdc-custom_fullscreen-search-input" name="q" placeholder="Search..."><input value="" type="submit" class="mdc-custom_fullscreen_submit"><svg xmlns="http://www.w3.org/2000/svg" height="1.5em" viewBox="0 0 18 18" fill="none" class="mdc-custom_fullscreen-search-icon">
+               <path d="M13.3266 11.304C14.292 9.96647 14.7189 8.34135 14.5213 6.72495C14.3141 5.03078 13.4368 3.47634 12.0697 2.37088C10.703 1.26574 8.94685 0.689783 7.15266 0.754989C5.35845 0.820196 3.6539 1.52196 2.38076 2.72365C1.10721 3.92572 0.359106 5.53995 0.290772 7.24437C0.222434 8.94886 0.839206 10.6124 2.01352 11.9025C3.18743 13.1921 4.83155 14.0134 6.61556 14.2063C8.32644 14.3912 10.0491 13.9856 11.4669 13.0663L15.5177 16.887C15.5177 16.887 15.5177 16.887 15.5177 16.887C15.7644 17.1198 16.096 17.2482 16.4389 17.2483C16.7819 17.2485 17.1136 17.1202 17.3604 16.8876C17.6077 16.6545 17.7497 16.335 17.7498 15.9986C17.7499 15.6621 17.6082 15.3426 17.3611 15.1093L17.361 15.1093L13.3266 11.304ZM13.0092 7.49815C13.0092 8.18549 12.8657 8.86648 12.5865 9.50238C12.3072 10.1383 11.8974 10.7171 11.3798 11.2054C10.8621 11.6936 10.2468 12.0817 9.56856 12.3466C8.89032 12.6116 8.16293 12.7481 7.42803 12.7481C6.69313 12.7481 5.96574 12.6116 5.2875 12.3466C4.60927 12.0817 3.99394 11.6936 3.47628 11.2054C2.95864 10.7171 2.54887 10.1383 2.26959 9.50238C1.99033 8.86648 1.84682 8.18549 1.84682 7.49815C1.84682 6.11063 2.43106 4.77677 3.47628 3.79093C4.52199 2.80461 5.94324 2.24815 7.42803 2.24815C8.91282 2.24815 10.3341 2.80461 11.3798 3.79093C12.425 4.77677 13.0092 6.11063 13.0092 7.49815Z" fill="white" stroke="white" stroke-width="0.5"/></svg></form>
+      </div>
+   </div>
+</header><!--ls:end[component-1745583749994]-->
+</div>
+<div class="iw_component" id="iw_comp1752159027714">
+ <!--ls:begin[component-1752159027714]--><style>#iw_comp1752159027714{}</style><nav class="container mdc-custom__breadcrumbs" aria-label="Breadcrumb"><span class="iw-breadcrumb-node">Home</span></nav><!--ls:end[component-1752159027714]-->
+</div>
+<main class="mdc-custom__main-content" id="main-content"><!-- Add Placeholder Here -->
+ <div class="iw_placeholder" id="iw_placeholder1561458686659">
+  <div class="iw_component" id="iw_comp1761088174174">
+   <!--ls:begin[component-1761088174174]--><style>#iw_comp1761088174174{}</style><div class="sr-only">
+   <div class="container">
+      <div class="mdc-custom__content__container">
+         <h1 class="mdc-custom__content__title">Miami-Dade County Supervisor of Elections Alina Garcia</h1>
+      </div>
+   </div>
+</div><!--ls:end[component-1761088174174]-->
+  </div>
+  <div class="iw_component" id="iw_comp1783463013796">
+   <!--ls:begin[component-1783463013796]--><style>#iw_comp1783463013796{}</style><div class="mdc-custom__slider--text-contain"><script type="text/javascript" src="https://www.miamidade.gov/resources/global-components/slider/js/slick.min.js" defer=""></script><div class="container">
+      <div class="mdc-custom__slider mdc-custom__slider-slider--text">
+         <div class="mdc-custom__slider-overlay__grid">
+            <div class="mdc-custom__slider-overlay mdc-custom__slider-overlay--color">
+               <div class="container">
+                  <h2 class="mdc-custom__slider-title">Welcome to the new Supervisor of Elections website</h2>
+                  <div class="mdc-custom__slider-description"><p>Supervisor of Elections Alina Garcia welcomes you to the new Elections website. Find everything you need to Be Election Ready and participate in the ultimate exercise of democracy.</p></div>
+                  <div class="mdc-custom__slider-btn-group"><a href="https://youtu.be/f28k3zLpg74" class="mdc-custom__slider-btn" target="_blank">Watch the Welcome Video</a></div>
+               </div>
+            </div><picture><img src="/resources-elections/images/alina-garcia-welcome-video-slider.jpg" alt="" class="mdc-custom__slider-background-image"></picture></div>
+         <div class="mdc-custom__slider-overlay__grid">
+            <div class="mdc-custom__slider-overlay mdc-custom__slider-overlay--color">
+               <div class="container">
+                  <h2 class="mdc-custom__slider-title">General Election - Tuesday, November 3, 2026</h2>
+                  <div class="mdc-custom__slider-description"><p>Registered voters countywide can vote in the General Election on Tuesday, November 3, 2026. In addition, various municipalities will be voting on local matters. Learn about early voting locations/times and see the Sample Ballot below.</p></div>
+                  <div class="mdc-custom__slider-btn-group"><a href="https://www.votemiamidade.gov/elections/detail.page?mduid_election=ele1787926699492371" class="mdc-custom__slider-btn" target="_blank">Countywide General Election Information</a><a href="https://www.miamidade.gov//elections/library/early-voting/2026-11-03-general-election-early-voting-schedule.pdf" class="mdc-custom__slider-btn" target="_blank">Early Voting Schedule</a><a href="https://www.miamidade.gov/elections/library/2026-11-03-general-election-sample-ballot.pdf" class="mdc-custom__slider-btn" target="_blank">Sample Ballot</a></div>
+               </div>
+            </div><picture><img src="/resources-elections/images/alina-garcia-welcome-video-slider.jpg" alt="" class="mdc-custom__slider-background-image"></picture></div>
+         <div class="mdc-custom__slider-overlay__grid">
+            <div class="mdc-custom__slider-overlay mdc-custom__slider-overlay--color">
+               <div class="container">
+                  <h2 class="mdc-custom__slider-title">Request a vote-by-mail ballot</h2>
+                  <div class="mdc-custom__slider-description"><p>Vote-by-mail ballot requests expire after every General Election every two years. Therefore, voters who wish to vote by mail must submit a new request.</p></div>
+                  <div class="mdc-custom__slider-btn-group"><a href="/elections/voters/vote-by-mail.page" class="mdc-custom__slider-btn">Ask for a Vote-by-Mail Ballot</a></div>
+               </div>
+            </div><picture><img src="/resources-elections/images/alina-garcia-welcome-video-slider.jpg" alt="" class="mdc-custom__slider-background-image"></picture></div>
+         <div class="mdc-custom__slider-overlay__grid">
+            <div class="mdc-custom__slider-overlay mdc-custom__slider-overlay--color">
+               <div class="container">
+                  <h2 class="mdc-custom__slider-title">Become a poll worker</h2>
+                  <div class="mdc-custom__slider-description"><p>Play a vital role in our democracy. See if you're eligible to become a poll worker and help fellow Miami-Dade County residents when they visit their polling place.</p></div>
+                  <div class="mdc-custom__slider-btn-group"><a href="/elections/poll-workers/home.page" class="mdc-custom__slider-btn">Sign Up to be a Poll Worker</a></div>
+               </div>
+            </div><picture><img src="/resources-elections/images/alina-garcia-welcome-video-slider.jpg" alt="" class="mdc-custom__slider-background-image"></picture></div>
+      </div>
+   </div><script>
+      
+      $(document).ready(function() {
+
+        $('.mdc-custom__slider').slick({
+        
+        
+        autoplay:
+        
+            true,
+          
+        
+        
+          autoplaySpeed: 8000,
+          dots: true,
+          arrows: true,
+          regionLabel: 'main image carousel',
+          arrowsPlacement: 'beforeSlides',
+          prevArrow: '<button type="button" class="mdc-custom__slider-custom-prev-button">'
+                     + '  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" class="mdc-custom__slider-arrow" fill="hsl(301deg 32% 36%)" aria-hidden="true"><path d="M238.475 475.535l7.071-7.07c4.686-4.686 4.686-12.284 0-16.971L50.053 256 245.546 60.506c4.686-4.686 4.686-12.284 0-16.971l-7.071-7.07c-4.686-4.686-12.284-4.686-16.97 0L10.454 247.515c-4.686 4.686-4.686 12.284 0 16.971l211.051 211.05c4.686 4.686 12.284 4.686 16.97-.001z"/></svg>'
+                     + '  <span class="sr-only">Previous slide</span>'
+                     + '</button>',
+          nextArrow: '<button type="button" class="mdc-custom__slider-custom-next-button">'
+                     + '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" class="mdc-custom__slider-arrow" fill="hsl(301deg 32% 36%)" aria-hidden="true"><path d="M17.525 36.465l-7.071 7.07c-4.686 4.686-4.686 12.284 0 16.971L205.947 256 10.454 451.494c-4.686 4.686-4.686 12.284 0 16.971l7.071 7.07c4.686 4.686 12.284 4.686 16.97 0l211.051-211.05c4.686-4.686 4.686-12.284 0-16.971L34.495 36.465c-4.686-4.687-12.284-4.687-16.97 0z"/></svg>'
+                     + '  <span class="sr-only">Next slide</span>'
+                     + '</button>',
+          pauseIcon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="mdc-custom__slider-pause" fill="hsl(301deg 32% 36%)" aria-hidden="true"><path d="M218 160h-20c-3.3 0-6 2.7-6 6v180c0 3.3 2.7 6 6 6h20c3.3 0 6-2.7 6-6V166c0-3.3-2.7-6-6-6zm96 0h-20c-3.3 0-6 2.7-6 6v180c0 3.3 2.7 6 6 6h20c3.3 0 6-2.7 6-6V166c0-3.3-2.7-6-6-6zM256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 464c-118.7 0-216-96.1-216-216 0-118.7 96.1-216 216-216 118.7 0 216 96.1 216 216 0 118.7-96.1 216-216 216z"/></svg>',
+          playIcon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="mdc-custom__slider-play" fill="hsl(301deg 32% 36%)" aria-hidden="true"><path d="M256 504c137 0 248-111 248-248S393 8 256 8 8 119 8 256s111 248 248 248zM40 256c0-118.7 96.1-216 216-216 118.7 0 216 96.1 216 216 0 118.7-96.1 216-216 216-118.7 0-216-96.1-216-216zm331.7-18l-176-107c-15.8-8.8-35.7 2.5-35.7 21v208c0 18.4 19.8 29.8 35.7 21l176-101c16.4-9.1 16.4-32.8 0-42zM192 335.8V176.9c0-4.7 5.1-7.6 9.1-5.1l134.5 81.7c3.9 2.4 3.8 8.1-.1 10.3L201 341c-4 2.3-9-.6-9-5.2z"/></svg>'
+        });
+
+
+
+
+      });
+      
+    </script></div><!--ls:end[component-1783463013796]-->
+  </div>
+  <div class="iw_component" id="iw_comp1759144756659">
+   <!--ls:begin[component-1759144756659]--><style>#iw_comp1759144756659{}</style><div class="office-message">
+   <div class="container">
+      <div class="mdc-custom__content__container">
+         <h2 class="mdc-custom__content__sub-title">Our principles</h2>
+         <div class="mdc-custom__content__description"><ul>
+<li>Secure</li>
+<li>Accurate</li>
+<li>Transparent</li>
+<li>Accessible</li>
+</ul></div>
+      </div>
+   </div>
+</div><!--ls:end[component-1759144756659]-->
+  </div>
+  <div class="iw_component" id="iw_comp1754476997832">
+   <!--ls:begin[component-1754476997832]--><style>#iw_comp1754476997832{}</style><div class="feature-banner ">
+   <div class="container">
+      <div class="feature-banner__wrapper">
+         <div class="feature-banner__number">
+            <div class="feature-banner__number__digits">1,639,185</div>
+            <div class="feature-banner__number__title">Registered Voters</div>
+         </div>
+         <div class="feature-banner__divider" aria-hidden="true"></div>
+         <div class="feature-banner__content__container">
+            <h2 class="feature-banner__content__title">Not a registered voter?</h2>
+            <div class="feature-banner__content__description">See if you meet the qualifications to become a Miami-Dade County registered voter and participate in this important democratic process.</div>
+         </div><a href="/elections/voters/registration.page" class="feature-banner__button">Register to vote</a></div>
+   </div>
+</div><!--ls:end[component-1754476997832]-->
+  </div>
+  <div class="iw_component" id="iw_comp1754476998047">
+   <!--ls:begin[component-1754476998047]--><style>#iw_comp1754476998047{}</style><div>
+   <div class="container">
+      <div class="mdc-custom__content__container">
+         <h2 class="mdc-custom__content__sub-title">Elections &amp; Voting</h2>
+      </div>
+   </div>
+</div><!--ls:end[component-1754476998047]-->
+  </div>
+  <div class="iw_component" id="iw_comp1754476998046">
+   <!--ls:begin[component-1754476998046]--><style>#iw_comp1754476998046{}</style><section class="mdc-custom__multi-container mdc-custom__multi-container--center-items">
+   <div class="container">
+      <div class="mdc-custom__multi">
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/elections.svg" alt="An icon of a calendar and a stamp."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/index.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">2026 Elections</span></a></div>
+            <div class="mdc-custom__multi-item__description">Get details, dates and key deadlines for elections scheduled this year.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/voter-registration.svg" alt="An icon of a clipboard with a pen and one of three choices checked off."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/voters/registration.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Register to Vote</span></a></div>
+            <div class="mdc-custom__multi-item__description">Read the requirements necessary to be eligible to vote in Miami-Dade County.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/voter-information.svg" alt="An icon of a person with a checkmark."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/voters/information.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Your Voter Information</span></a></div>
+            <div class="mdc-custom__multi-item__description">Update your registration, find your precinct, view your customized sample ballot and more.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/three-ways-to-vote.svg" alt="An icon of three choices with one choice selected."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/voters/three-ways-to-vote.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Three Ways to Vote</span></a></div>
+            <div class="mdc-custom__multi-item__description">Cast your ballot the way you prefer. Vote by mail, vote early or vote on Election Day.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/vote-by-mail-ballot.svg" alt="An icon of an envelope with a checkmarked piece of paper coming out."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/voters/vote-by-mail.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Vote By Mail</span></a></div>
+            <div class="mdc-custom__multi-item__description">Request and track the status of your vote-by-mail ballot.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/results-archive.svg" alt="An icon of three people with data graphs above them."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/data/results-archive.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Past Election Results</span></a></div>
+            <div class="mdc-custom__multi-item__description">Access past statistics and results of previous elections.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/community-outreach.svg" alt="An icon of three hands raised."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/about/outreach.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Community Outreach</span></a></div>
+            <div class="mdc-custom__multi-item__description">Request to host a community outreach event with Supervisor of Elections staff.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/poll-workers.svg" alt="An icon of three people with a checkmark above them."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/poll-workers/home.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Become a Poll Worker</span></a></div>
+            <div class="mdc-custom__multi-item__description">Serve as a key member of the team that brings democracy to our voters.</div>
+         </div>
+         <div class="mdc-custom__multi-item">
+            <div class="mdc-custom__multi-item__img"><img src="/resources-elections/images/icons/elected-officials.svg" alt="An icon of a government building."></div>
+            <div class="mdc-custom__multi-item__title"><a href="/elections/about/elected-officials.page" class="mdc-custom__multi-item__tite-link"><span class="mdc-custom__multi-item__h-tag">Elected Officials</span></a></div>
+            <div class="mdc-custom__multi-item__description">Find local, statewide and federal elected officials, including their current terms in office.</div>
+         </div>
+      </div>
+   </div>
+</section><!--ls:end[component-1754476998046]-->
+  </div>
+  <div class="iw_component" id="iw_comp1755180302001">
+   <!--ls:begin[component-1755180302001]--><style>#iw_comp1755180302001{}</style><section class="banner-full-width-overflow ">
+   <div class="container">
+      <div class="banner-full-width-overflow__wrapper "><img src="/resources-elections/images/alina-garcia-headshot.png" alt="" class="banner-full-width-overflow__image"><div class="banner-full-width-overflow__content">
+            <h2 class="banner-full-width-overflow__title">Your Supervisor of Elections</h2>
+            <div class="banner-full-width-overflow__description">Meet your Supervisor of Elections, Alina Garcia, and learn more about her vision for the Office of the Supervisor of Elections.</div>
+            <div class="banner-full-width-overflow__button-wrapper"><a href="/elections/about/biography.page" class="banner-full-width-overflow__button-item"><span>Read the Supervisor of Elections' Biography</span></a></div>
+         </div>
+      </div>
+   </div>
+</section><!--ls:end[component-1755180302001]-->
+  </div>
+  <div class="iw_component" id="iw_comp1755180303771">
+   <!--ls:begin[component-1755180303771]--><style>#iw_comp1755180303771{}</style><section class="section-title custom-class">
+   <div class="container">
+      <div class="section-title-wrapper">
+         <div class="section-title__title-wrapper">
+            <h2 class="section-title__title">Latest News &amp; Events</h2>
+         </div>
+         <div class="section-title__button-wrapper"><a href="/elections/news/prindex.page?ORGANIZATION=org146299202858021" class="section-title__button btn-primary">Read News Releases</a></div>
+      </div>
+   </div>
+</section><!--ls:end[component-1755180303771]-->
+  </div>
+  <div class="iw_component" id="iw_comp1755180302438">
+   <!--ls:begin[component-1755180302438]--><style>#iw_comp1755180302438{}</style><section class="multi-column-news news-custom-class">
+   <div class="container">
+      <div class="multi-column-news__wrapper">
+         <article class="multi-column-news__item">
+            <div class="multi-column-news__image-wrapper"><img class="multi-column-news__image" src="/resources-elections/images/vote-by-mail-envelope.jpg" alt="A vote-by-mail envelope." onerror="this.onerror=null; this.src='https://www.miamidade.gov/resources/global/images/404-news.svg';"></div>
+            <div class="multi-column-news__date">May 1, 2026</div>
+            <h3 class="multi-column-news__title"><a href="/elections/voters/vote-by-mail.page">Renew your request to vote by mail</a></h3>
+            <div class="multi-column-news__description">Vote-by-mail ballot requests expire after every General Election every two years. Therefore, voters who vote by mail must submit a new request.</div>
+         </article>
+         <article class="multi-column-news__item">
+            <div class="multi-column-news__image-wrapper"><img class="multi-column-news__image" src="/resources-elections/images/integrity-security.jpg" alt="A computerized image with a lock." onerror="this.onerror=null; this.src='https://www.miamidade.gov/resources/global/images/404-news.svg';"></div>
+            <div class="multi-column-news__date">May 1, 2026</div>
+            <h3 class="multi-column-news__title"><a href="/elections/about/integrity-security.page">Election integrity and security</a></h3>
+            <div class="multi-column-news__description">Read how the Miami-Dade Supervisor of Elections is committed to ensuring the ongoing integrity and security of the voting process.</div>
+         </article>
+         <article class="multi-column-news__item">
+            <div class="multi-column-news__image-wrapper"><img class="multi-column-news__image" src="/resources-elections/images/world-elections.jpg" alt="A photo of various countries' flags." onerror="this.onerror=null; this.src='https://www.miamidade.gov/resources/global/images/404-news.svg';"></div>
+            <div class="multi-column-news__date">May 1, 2026</div>
+            <h3 class="multi-column-news__title"><a href="/elections/about/world-elections.page">2026 elections around the world</a></h3>
+            <div class="multi-column-news__description">Democracy and voting transcend borders, urging citizens living abroad to register and request ballots in advance by reaching out to their embassy or consulate for assistance.</div>
+         </article>
+      </div>
+   </div>
+</section><!--ls:end[component-1755180302438]-->
+  </div>
+  <div class="iw_component" id="iw_comp1754476998711">
+   <!--ls:begin[component-1754476998711]--><style>#iw_comp1754476998711{}</style><div>
+   <div class="container">
+      <div class="mdc-custom__content__container">
+         <h2 class="mdc-custom__content__sub-title">Follow us on Instagram</h2>
+      </div>
+   </div>
+</div><!--ls:end[component-1754476998711]-->
+  </div>
+  <div class="iw_component" id="iw_comp1754476998710">
+   <!--ls:begin[component-1754476998710]--><style>#iw_comp1754476998710{}</style><div class="instagram">
+   <div class="container">
+      <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/votemiamidade/?utm_source=ig_embed&amp;utm_campaign=loading" data-instgrm-version="14" style=" background:#FFF; border:0; border-radius:3px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:1120px; min-width:326px; padding:0; width:99.375%; width:-webkit-calc(100% - 2px); width:calc(100% - 2px);">
+         <div style="padding:16px;"><a href="https://www.instagram.com/votemiamidade/?utm_source=ig_embed&amp;utm_campaign=loading" style=" background:#FFFFFF; line-height:0; padding:0 0; text-align:center; text-decoration:none; width:100%;" target="_blank">
+               <div style=" display: flex; flex-direction: row; align-items: center;">
+                  <div style="background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 40px; margin-right: 14px; width: 40px;"></div>
+                  <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center;">
+                     <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 100px;"></div>
+                     <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 60px;"></div>
+                  </div>
+               </div>
+               <div style="padding: 19% 0;"></div>
+               <div style="display:block; height:50px; margin:0 auto 12px; width:50px;"><svg xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" width="50px" height="50px" viewBox="0 0 60 60" version="1.1">
+                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <g transform="translate(-511.000000, -20.000000)" fill="#000000">
+                           <g>
+                              <path d="M556.869,30.41 C554.814,30.41 553.148,32.076 553.148,34.131 C553.148,36.186 554.814,37.852 556.869,37.852 C558.924,37.852 560.59,36.186 560.59,34.131 C560.59,32.076 558.924,30.41 556.869,30.41 M541,60.657 C535.114,60.657 530.342,55.887 530.342,50 C530.342,44.114 535.114,39.342 541,39.342 C546.887,39.342 551.658,44.114 551.658,50 C551.658,55.887 546.887,60.657 541,60.657 M541,33.886 C532.1,33.886 524.886,41.1 524.886,50 C524.886,58.899 532.1,66.113 541,66.113 C549.9,66.113 557.115,58.899 557.115,50 C557.115,41.1 549.9,33.886 541,33.886 M565.378,62.101 C565.244,65.022 564.756,66.606 564.346,67.663 C563.803,69.06 563.154,70.057 562.106,71.106 C561.058,72.155 560.06,72.803 558.662,73.347 C557.607,73.757 556.021,74.244 553.102,74.378 C549.944,74.521 548.997,74.552 541,74.552 C533.003,74.552 532.056,74.521 528.898,74.378 C525.979,74.244 524.393,73.757 523.338,73.347 C521.94,72.803 520.942,72.155 519.894,71.106 C518.846,70.057 518.197,69.06 517.654,67.663 C517.244,66.606 516.755,65.022 516.623,62.101 C516.479,58.943 516.448,57.996 516.448,50 C516.448,42.003 516.479,41.056 516.623,37.899 C516.755,34.978 517.244,33.391 517.654,32.338 C518.197,30.938 518.846,29.942 519.894,28.894 C520.942,27.846 521.94,27.196 523.338,26.654 C524.393,26.244 525.979,25.756 528.898,25.623 C532.057,25.479 533.004,25.448 541,25.448 C548.997,25.448 549.943,25.479 553.102,25.623 C556.021,25.756 557.607,26.244 558.662,26.654 C560.06,27.196 561.058,27.846 562.106,28.894 C563.154,29.942 563.803,30.938 564.346,32.338 C564.756,33.391 565.244,34.978 565.378,37.899 C565.522,41.056 565.552,42.003 565.552,50 C565.552,57.996 565.522,58.943 565.378,62.101 M570.82,37.631 C570.674,34.438 570.167,32.258 569.425,30.349 C568.659,28.377 567.633,26.702 565.965,25.035 C564.297,23.368 562.623,22.342 560.652,21.575 C558.743,20.834 556.562,20.326 553.369,20.18 C550.169,20.033 549.148,20 541,20 C532.853,20 531.831,20.033 528.631,20.18 C525.438,20.326 523.257,20.834 521.349,21.575 C519.376,22.342 517.703,23.368 516.035,25.035 C514.368,26.702 513.342,28.377 512.574,30.349 C511.834,32.258 511.326,34.438 511.181,37.631 C511.035,40.831 511,41.851 511,50 C511,58.147 511.035,59.17 511.181,62.369 C511.326,65.562 511.834,67.743 512.574,69.651 C513.342,71.625 514.368,73.296 516.035,74.965 C517.703,76.634 519.376,77.658 521.349,78.425 C523.257,79.167 525.438,79.673 528.631,79.82 C531.831,79.965 532.853,80.001 541,80.001 C549.148,80.001 550.169,79.965 553.369,79.82 C556.562,79.673 558.743,79.167 560.652,78.425 C562.623,77.658 564.297,76.634 565.965,74.965 C567.633,73.296 568.659,71.625 569.425,69.651 C570.167,67.743 570.674,65.562 570.82,62.369 C570.966,59.17 571,58.147 571,50 C571,41.851 570.966,40.831 570.82,37.631"/>
+                           </g>
+                        </g>
+                     </g></svg></div>
+               <div style="padding-top: 8px;">
+                  <div style=" color:#3897f0; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:550; line-height:18px;">View this profile on Instagram</div>
+               </div>
+               <div style="padding: 12.5% 0;"></div>
+               <div style="display: flex; flex-direction: row; margin-bottom: 14px; align-items: center;">
+                  <div>
+                     <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(0px) translateY(7px);"></div>
+                     <div style="background-color: #F4F4F4; height: 12.5px; transform: rotate(-45deg) translateX(3px) translateY(1px); width: 12.5px; flex-grow: 0; margin-right: 14px; margin-left: 2px;"></div>
+                     <div style="background-color: #F4F4F4; border-radius: 50%; height: 12.5px; width: 12.5px; transform: translateX(9px) translateY(-18px);"></div>
+                  </div>
+                  <div style="margin-left: 8px;">
+                     <div style=" background-color: #F4F4F4; border-radius: 50%; flex-grow: 0; height: 20px; width: 20px;"></div>
+                     <div style=" width: 0; height: 0; border-top: 2px solid transparent; border-left: 6px solid #f4f4f4; border-bottom: 2px solid transparent; transform: translateX(16px) translateY(-4px) rotate(30deg)"></div>
+                  </div>
+                  <div style="margin-left: auto;">
+                     <div style=" width: 0px; border-top: 8px solid #F4F4F4; border-right: 8px solid transparent; transform: translateY(16px);"></div>
+                     <div style=" background-color: #F4F4F4; flex-grow: 0; height: 12px; width: 16px; transform: translateY(-4px);"></div>
+                     <div style=" width: 0; height: 0; border-top: 8px solid #F4F4F4; border-left: 8px solid transparent; transform: translateY(-4px) translateX(8px);"></div>
+                  </div>
+               </div>
+               <div style="display: flex; flex-direction: column; flex-grow: 1; justify-content: center; margin-bottom: 24px;">
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; margin-bottom: 6px; width: 224px;"></div>
+                  <div style=" background-color: #F4F4F4; border-radius: 4px; flex-grow: 0; height: 14px; width: 144px;"></div>
+               </div></a><p style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; line-height:17px; margin-bottom:0; margin-top:8px; overflow:hidden; padding:8px 0 7px; text-align:center; text-overflow:ellipsis; white-space:nowrap;"><a href="https://www.instagram.com/votemiamidade/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px;" target="_blank">Miami-Dade County Supervisor of Elections Office</a> (@<a href="https://www.instagram.com/votemiamidade/?utm_source=ig_embed&amp;utm_campaign=loading" style=" color:#c9c8cd; font-family:Arial,sans-serif; font-size:14px; font-style:normal; font-weight:normal; line-height:17px;" target="_blank">votemiamidade</a>) • Instagram photos and videos</p>
+         </div>
+      </blockquote><script async="" src="//www.instagram.com/embed.js"></script></div>
+</div><!--ls:end[component-1754476998710]-->
+  </div>
+  <div class="iw_component" id="iw_comp1754476998712">
+   <!--ls:begin[component-1754476998712]--><style>#iw_comp1754476998712{}</style><section id="sign-up" class="sign-up sign-up-container ">
+   <div class="container">
+      <div class="sign-up-wrapper">
+         <div class="sign-up-content">
+            <h2 class="sign-up-title">Stay connected with us</h2>
+            <div class="sign-up-description">Join our mailing list and stay up to date on election news.</div>
+         </div>
+         <div class="sign-up-fields">
+            <form id="sf-form" class="sf-form" action="/elections/home.pagesubmit=true&amp;componentID=1754476998712" method="post" name="subscribeForm"><input name="_clientID" type="hidden" value="110005224"><input name="_deExternalKey" type="hidden" value="58A69D49-0F4D-4BE6-B176-AE5CA511716E"><input name="_action" type="hidden" value="add/update"><input name="_returnXML" type="hidden" value="0"><input name="_successURL" type="hidden" value=""><input name="_errorURL" type="hidden" value=""><div class="form-field"><label class="form-label" for="sfEmail">Email *</label><input id="sfEmail" class="form-control" name="Email Address" required="" type="text"></div>
+               <div class="form-field"><label class="form-label" for="sfFirstName">First Name</label><input id="sfFirstName" class="form-control" name="First Name" type="text"></div>
+               <div class="form-field"><label class="form-label" for="sfLastName">Last Name</label><input id="sfLastName" class="form-control" name="Last Name" type="text"></div><button class="btn btn-primary white submit" type="submit">Sign Up!</button></form>
+         </div>
+      </div>
+   </div>
+</section><script src="https://www.miamidade.gov/resources/global-components/sign-up/js/sales-force-form.js"></script><!--ls:end[component-1754476998712]-->
+  </div>
+  <div class="iw_component" id="iw_comp1755180303070">
+   <!--ls:begin[component-1755180303070]--><style>#iw_comp1755180303070{}</style><div style="background-image: url(/);" class="mdc-custom__banner-full-width__container home-about">
+   <div class="mdc-custom__banner-full-width__tint"></div>
+   <div class="container">
+      <div class="mdc-custom__banner-full-width__text">
+         <h2>About the Office of the Supervisor of Elections</h2>
+         <div class="mdc-custom__banner-full-width__description">The Supervisor of Elections handles federal, state, county and municipal elections in Miami-Dade County. We also provide election services and assistance to municipalities, School Districts, Special Taxing Districts, Community Council Districts and Community Development Districts.<br /><br />Voting is one of our constitutional rights and key to our nation's democracy. With your vote, you exercise your right to be heard.</div>
+         <div class="mdc-custom__button mdc-custom__button--auto"><a href="/elections/about/home.page" class="mdc-custom__content__button btn btn-primary"><span>Learn More About the Office of the Supervisor of Elections</span></a><a href="/elections/about/document-requests.page" class="mdc-custom__content__button btn btn-primary"><span>Elections Document Requests</span></a></div>
+      </div>
+   </div>
+</div><!--ls:end[component-1755180303070]-->
+  </div>
+ </div>
+</main>
+<footer class="mdc-custom__footer"><!-- Add Footer Component Here -->
+ <div class="iw_component" id="iw_comp1745583751553">
+  <!--ls:begin[component-1745583751553]--><style>#iw_comp1745583751553{}</style><div class="mdc-custom__footer__main">
+   <div class="container">
+      <div class="mdc-custom__footer__container">
+         <div class="mdc-custom__footer__item">
+            <div class="mdc-custom__footer__text"><h2 class="mdc-custom__footer__title">Office of the Supervisor of Elections</h2>
+<p>2700 NW 87th Avenue<br>Miami, Florida 33172<br>Phone: 305-499-VOTE (8683)</p>
+<h2 class="mdc-custom__footer__title">Office of the Supervisor of Elections Branch Office</h2>
+<p>Stephen P. Clark Center lobby area<br>111 NW 1st Street<br>Miami, Florida 33128</p></div>
+         </div>
+         <div class="mdc-custom__footer__item">
+            <div class="mdc-custom__footer__text"><h2 class="mdc-custom__footer__title">Featured Links</h2>
+<p><a href="https://www.votemiamidade.gov/elections/voters/special-needs.page">Voters with Special Needs</a></p>
+<p><a href="https://www.votemiamidade.gov/elections/data/current-precincts-districts-municipalities.page">Current Precincts, Districts and Municipalities</a></p>
+<p><a href="https://www.votemiamidade.gov/elections/voters/petitions.page">Petition Amendments, Initiatives and Referendums</a></p>
+<h2 class="mdc-custom__footer__title">Resources</h2>
+<p><a href="https://dos.fl.gov/elections/" target="_blank" rel="noopener">Florida Division of Elections</a></p>
+<p><a href="https://www.fec.state.fl.us/" target="_blank" rel="noopener">Florida Elections Commission</a></p>
+<p><a href="https://ethics.miamidade.gov/ethics/home.page" target="_blank" rel="noopener">Miami-Dade Commission on Ethics and Public Trust</a></p></div>
+         </div>
+         <div class="mdc-custom__footer__item">
+            <h2 class="mdc-custom__footer__title">Help and Support</h2>
+            <ul>
+               <li><a href="https://www.votemiamidade.gov/elections/privacy-and-security.page">Privacy Statement</a></li>
+               <li><a href="https://www.votemiamidade.gov/elections/ada-notice.page">ADA Notice</a></li>
+               <li><a href="https://www.votemiamidade.gov/elections/disclaimer.page">Disclaimer</a></li>
+            </ul>
+         </div>
+         <div class="mdc-custom__footer__item">
+            <div class="mdc-custom__footer__text"><p><a href="/elections/home.page"><img src="/resources-elections/images/elections-seal-border-white.png" width="174" height="174" alt="Elections Footer Logo"></a></p></div>
+            <div class="mdc-custom__footer__text"><p><a href="https://www.facebook.com/VoteMiamiDade/" target="_blank" rel="noopener"><img src="/resources-elections/images/icons/social-facebook.png" width="48" height="48" alt="Elections Facebook page"></a><a href="https://x.com/votemiamidade" target="_blank" rel="noopener"><img src="/resources-elections/images/icons/social-twitter.png" width="48" height="48" alt="Elections Twitter page"></a><a href="https://www.instagram.com/votemiamidade/" target="_blank" rel="noopener"><img src="/resources-elections/images/icons/social-instagram.png" width="48" height="48" alt="Elections Instagram page"></a><a href="https://www.youtube.com/playlist?list=PLTW1Yb4LHv7r2fx0mHY3RH9Kzf9OYLUm8" target="_blank" rel="noopener"><img src="/resources-elections/images/icons/social-youtube.png" width="48" height="48" alt="Elections Youtube page"></a></p></div>
+         </div>
+      </div>
+   </div>
+</div><div class="mdc-custom__copyright">
+   <div class="container">
+      <div class="mdc-custom__copyright__container">
+         <div class="mdc-custom__copyright__text"><span id="copyrightYear">©</span>Miami-Dade Supervisor of Elections. All rights reserved.</div><script type="text/javascript">
+			  			document.getElementById('copyrightYear').innerHTML += ' ' + new Date().getFullYear() + ' ';
+			  		</script><a href="/elections/home.page"><img alt="" class="mdc-custom__footer__logo" src="https://www.miamidade.gov/resources/global/images/md-logo-color.png"></a></div>
+   </div>
+</div><script>
+!function(w,d,s,t,a){if(w.amzn)return;w.amzn=a=function(){w.amzn.q.push([arguments,(new Date).getTime()])};a.q=[];a.version="0.0";s=d.createElement("script");s.src="https://c.amazon-adsystem.com/aat/amzn.js";s.id="amzn-pixel";s.async=true;t=d.getElementsByTagName("script")[0];t.parentNode.insertBefore(s,t)}(window,document);
+amzn("setRegion", "NA");
+amzn("addTag", "f9af2c7f-3177-41f7-8645-848b16bc696a");
+amzn("trackEvent", "PageView");
+</script><!--ls:end[component-1745583751553]-->
+ </div>
+</footer></div><!--ls:end[body]--><!--ls:begin[page_track]--><!--ls:end[page_track]--></body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "url": "https://uploads.rov.sbcounty.gov/ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf",
+  "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf",
+  "capturedAt": "2026-10-23T08:17:31.481Z",
+  "contentType": "application/pdf",
+  "rawHash": "7213bac898a622b0462ff3bc3e915222b9a28e6fc765bb997497d72f6db31b44",
+  "savedHash": "7213bac898a622b0462ff3bc3e915222b9a28e6fc765bb997497d72f6db31b44",
+  "redactions": 0,
+  "bytes": 430174,
+  "attempts": [
+    {
+      "url": "https://uploads.rov.sbcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://uploads.rov.sbcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://uploads.rov.sbcounty.gov/ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

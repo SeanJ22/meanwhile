@@ -1,0 +1,22 @@
+{
+  "url": "https://ocvote.gov/voting/voting-and-dropoff-locations-by-election",
+  "finalUrl": "https://ocvote.gov/voting/voting-and-dropoff-locations-by-election",
+  "capturedAt": "2026-10-23T08:14:37.207Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "9ee3d851f74ce6145040353cce2633726e0310458286d029017435c8ed95bb5f",
+  "savedHash": "9ee3d851f74ce6145040353cce2633726e0310458286d029017435c8ed95bb5f",
+  "redactions": 0,
+  "bytes": 22966,
+  "attempts": [
+    {
+      "url": "https://ocvote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://ocvote.gov/voting/voting-and-dropoff-locations-by-election",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

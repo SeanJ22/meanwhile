@@ -1,0 +1,33 @@
+[
+  {
+    "id": "vs07-pa-philadelphia-political-divisions",
+    "publisher": "Philadelphia City Commissioners / Philadelphia Office of Innovation and Technology",
+    "url": "https://atlas.phila.gov/",
+    "shape": "map-service",
+    "covers": [],
+    "boundaryLayer": true,
+    "scope": {
+      "state": "PA",
+      "ocdId": "ocd-division/country:us/state:pa/county:philadelphia/place:philadelphia",
+      "name": "Philadelphia",
+      "countyFips": "42101"
+    },
+    "electionDate": "2026-11-03",
+    "electionPageUrl": "https://vote.phila.gov/",
+    "model": "ASSIGNED",
+    "matchingUnit": "PRECINCT",
+    "extraction": {
+      "format": "json",
+      "dataUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=short_div_num%2Cdivision_num%2CCAST%28SUBSTRING%28division_num%2C1%2C2%29+AS+INTEGER%29+AS+ward%2CCAST%28SUBSTRING%28division_num%2C3%2C2%29+AS+INTEGER%29+AS+division&outSR=4326&returnGeometry=true&f=geojson",
+      "columns": {
+        "precinct": "division",
+        "ward": "ward"
+      }
+    },
+    "access": {
+      "status": "open",
+      "checkedAt": "2026-10-23T09:34:04.500Z",
+      "detail": "Current official Atlas client names Political_Divisions. Metadata supports SQL and maxRecordCount2000; full WGS84 GeoJSON has all1703 server-counted polygons. Server SQL derives integer ward and division from canonical division_num, matching all1703 native polling assignments and correcting the contradictory short_div_num13 on canonical1301."
+    }
+  }
+]

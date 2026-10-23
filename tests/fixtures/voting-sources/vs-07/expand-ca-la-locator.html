@@ -1,0 +1,508 @@
+
+
+
+<!DOCTYPE html>
+<html dir="auto" lang="en">
+<head id="Head1" runat="server"><script src="/erly-Fleaue-all-thee-that-speake-of-my-He-hums-E" async></script>
+    <title>LA County Vote Centers - Los Angeles County RR/CC</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="application-name" content="LA Vote" />
+    <meta name="msapplication-config" content="ieconfig.xml" />
+    <link rel="shortcut icon" href="/css/WebsiteTemplates/v2/images/county_seal.png" />
+    <link rel="stylesheet" type="text/css" href="/css/bundle.sitelocator.min.css?v=14.0" />
+    
+    <link rel="stylesheet" href="/css/site_locator.css?v=13.60" />
+    <link href="/Responsive-2.2.5/css/responsive.dataTables.css" rel="stylesheet" />
+    <link href="/DataTables-1.10.21/css/jquery.dataTables.css" rel="stylesheet" />
+
+    <!-- Mobile -->
+    <link rel="stylesheet" media="screen and (min-width: 48em) and (max-width: 88.1875em)" href="/css/WebsiteTemplates/v2/css/m/master.css?v=3" />
+    <link rel="stylesheet" media="screen and (max-width: 47.9375em)" href="/css/WebsiteTemplates/v2/css/m/master.css?v=2" />
+    <link rel="stylesheet" media="screen and (min-width: 48em) and (max-width: 88.1875em)" href="/css/WebsiteTemplates/v2/css/m/tablet.css?v=31" />
+    <link rel="stylesheet" media="screen and (max-width: 47.9375em)" href="/css/WebsiteTemplates/v2/css/m/phone.css?v=30" />
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Open+Sans:wght@400;700&display=swap">
+    <script type="text/javascript" src="/lib/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="/css/WebsiteTemplates/v2/js/master.js"></script>
+    <script type="text/javascript" src="/css/WebsiteTemplates/v2/js/assets.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            //ASSETS.SectionHover();
+            ASSETS.MegaNavigation.Construct();
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            const queryString = window.location.search;
+            $.urlParams = function (name) {
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(queryString);
+                if (results == null) {
+                    return null;
+                }
+                else {
+                    return decodeURI(results[1]) || 0;
+                }
+            }
+            const lang = $.urlParams('culture');
+            //var parsedUrl = new URL(window.location.href);
+           // var lang = parsedUrl.searchParams.get("culture");
+            document.getElementById("body").setAttribute("dir", "auto");
+            if (lang == "fa") {
+                document.getElementById("body").setAttribute("dir", "rtl");
+            }
+            if (lang == "hy") {
+                document.getElementById("titleRow").setAttribute("style", "font-size:37px");
+                document.getElementById("vLogo").setAttribute("style", "height:44px; width: 44px");
+            }
+        });
+    </script>
+</head>
+
+<div id="project">
+    <!-- Accessibility - Skip to Content -->
+    <style>
+        .acc_nav_skip { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        .acc_nav_skip:focus, .acc_nav_skip:active { position: fixed; left: 0; top: 0; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; padding: 10px 20px; background: #003471; color: #fff; font-weight: bold; text-decoration: underline; z-index: 10000; outline: 3px solid #ffc527; }
+    </style>
+    <a class="acc_nav_skip" href="#main_content">Skip to Content</a>
+
+    <!-- Header -->
+    <div id="header">
+        <div id="top" class="row">
+            <div id="brand" class="base m_span">
+                <div class="m_pad">
+                        <a class="fill" href="/locations/vc" aria-label="Logo - Home">
+                            <div class="m_margin_align_c">
+                                <div class="base">
+                                    <div class='sfContentBlock'>
+                                        <img title="Los Angeles County RR/CC" alt="Los Angeles County RR/CC" src="/css/WebsiteTemplates/v2/images/county_seal.png" width="60" height="60" />
+                                    </div>
+                                </div>
+                                <div id="txt" class="base margin_l single">
+                                    <div class='sfContentBlock'>
+                                        <p>Los Angeles County</p>
+                                        <p id="titleLine"><strong>Registrar-Recorder/County Clerk</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <!-- Responsive -->
+            <div class="m_d_toggle">
+                <div id="primary_nav" class="right">
+                    <div class='sfContentBlock'>
+                        <ul>
+                            <li class="primary"><a class="mega_nav_control" href="https://lavote.gov" aria-label="Go to Lavote site">LAVote.gov</a></li>
+                            <li class="primary"><a href="https://lavote.gov/about-us/background" aria-label="Navigate to About Us">About Us</a></li>
+                            <li class="primary"><a href="https://lavote.gov/contact-us/contact-us" aria-label="Navigate to Contact">Contact</a></li>
+                                <li id="button_language" class="image_nav n_disp" onmouseenter="ASSETS.MegaNavigation.LanguageSelection.Open(this);"><a href="#" aria-label="Language" onclick="ASSETS.MegaNavigation.LanguageSelection.Open(this);return false;"><img class="swap" src="/css/WebsiteTemplates/images/icon_language.png" alt="Icon - Language" title="Language" width="40" height="40" /><span id="current_language"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Language selection -->
+                <div id="language_selection" class="hide m_span">
+                    <div class="m_toggle">
+                        <div id="m_popup_header" class="row">
+                            <div class="base">
+                                <h2>Select language</h2>
+                            </div>
+                            <div class="right">
+                                <button type="button" class="btn pad" aria-label="Close language selection" onclick="ASSETS.MegaNavigation.LanguageSelection.Close();" style="background:none;border:none;cursor:pointer;">
+                                    <img title="Close" alt="" src="/css/WebsiteTemplates/images/icon_close_white.png" width="40" height="40" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row n_disp" id="languages">
+                    </div>
+                </div>
+            <div class="m_toggle">
+                <div id="m_primary_nav" class="row">
+                    <div id="m_primary_nav_btn" class="row">
+                        <div class="base btn" onclick="MASTER.Content.Toggle('#m_primary_nav_items');" role="button" tabindex="0" aria-label="Toggle navigation menu" onkeydown="if(event.key==='Enter'||event.key===' '){MASTER.Content.Toggle('#m_primary_nav_items');event.preventDefault();}">
+                            <img class="m_pad" src="/css/WebsiteTemplates/v2/images/m/icon_nav_primary.png?v=2" alt="Icon - Mobile Primary Navigation" title="Mobile Primary Navigation" style="padding-left:8px;" />
+                        </div>
+                            <div class="right">
+                                <div id="m_button_language" class="base btn pad_t margin_r" onclick="ASSETS.MegaNavigation.LanguageSelection.Open(null);" role="button" tabindex="0" aria-label="Open language selection" onkeydown="if(event.key==='Enter'||event.key===' '){ASSETS.MegaNavigation.LanguageSelection.Open(null);event.preventDefault();}">
+                                    <img src="/css/WebsiteTemplates/images/icon_language.png" alt="Icon - Language" title="Language" width="40" height="40" />
+                                </div>
+                            </div>
+                    </div>
+                    <div id="m_primary_nav_items" class="hide row">
+
+                        <div class='sfContentBlock'>
+                            <ul>
+                                <li><a href="https://lavote.gov">LAVote.gov</a></li>
+                                <li><a href="https://lavote.gov/about-us/background">About Us</a></li>
+                                <li><a href="https://lavote.gov/contact-us/contact-us">Contact</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Mega navigation -->
+        </div>
+        <div id="titleRow" class="row">
+            <div class="base marg_l">
+                <img src="/css/WebsiteTemplates/v2/images/VSAP Logo - V.png" alt="Icon &mdash; LA COUNTY VOTE CENTERS" title="LA COUNTY VOTE CENTERS" id="vLogo" />
+            </div>
+            <div class="base" id="mobileHeading">
+                        <span class="titleText m_w electionTitle">LA COUNTY VOTE CENTERS</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="body">
+        <span id="main_content" tabindex="-1"></span>
+        <div class="main_content m_w" id="main" role="main">
+            
+
+
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=__SOURCE_CREDENTIAL_REDACTED__&amp;libraries=geometry,places"></script>
+<script src="/js/markerclusterer-v2.min.js?v=1"></script>
+<script src="/js/SiteLocator.js?v=6.8"></script>
+<script src="/DataTables-1.10.21/js/jquery.dataTables.js"></script>
+<script src="/js/dataTables.scrollResize.min.js"></script>
+<script src="/Responsive-2.2.5/js/dataTables.responsive.js"></script>
+<body style="margin: 0; padding: 0px;height:100%" onload="initialize()">
+    <div id="leftDiv">
+        <div id="topLeftDivContent">
+            <!-- Address Search -->
+            <p class="addressText">ENTER YOUR ADDRESS</p>
+            <form id="addr" class="marg_b" onsubmit="if (this.address.value == '' || this.address.value == 'Search Address…') { alert('Please enter an Address to Search'); this.address.focus(); } return false;">
+                <div id="txt_wrp" class="m_marg_b" style="display:flex;flex-flow:row nowrap;">
+                    <input type="text" id="address" name="address" placeholder="Enter a location" style="flex-grow:1;" aria-label="address search" class="searchBox txt" value='Search Address…' onfocus="if(this.value== 'Search Address…') this.value=''" autocomplete="street-address" />
+                    <div class="r searchIcon">
+                        <input type="image" id="submit" aria-label="search icon" class="dropShadow" name="submit" src="/image/icon_search.jpg" />
+                    </div>
+                </div>
+            </form>
+                <div id="filterVotingPeriod">
+                    <div id="wordFilters">
+                        <b>FILTERS</b>
+                    </div>
+                    <div style="margin-top: -2px;border-bottom:2px solid #13b5ea;"></div>
+                    <div id="filterDiv" tabindex="0">
+                        <div id="DaysOpenText">Days Open</div>
+                        <div id="DaysCheckboxes">
+                            <!-- populated dynamically by buildDaysFilterCheckboxes() in SiteLocator.js -->
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div style="background-color : #fff;padding-top: 16px;" class="m_remove">
+            <div id="closestLocations" class="n_disp">
+                <div></div>
+                <b>LOCATIONS</b>
+            </div>
+            <div id="blueBorder" style="margin-top:-2px;border-bottom:2px solid #13b5ea;" class="n_disp"></div>
+        </div>
+        <div id="resize_wrapper" class="m_remove">
+            <table id="InfoTable">
+                <thead class="n_disp">
+                    <tr>
+                        <th>Results</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="landing_link" class="m_remove centered">
+                <div id="listLink">
+                    <a href="/locations-list/vc?id=4348&culture=en" aria-label="Return to Vote Centers Page" class="bottomLink">View Vote Center List</a>
+                    <span class="bottomLink"> | </span>
+                    <a href="/locations/vbm/?id=4348&culture=en" target="_blank" rel="noopener noreferrer" aria-label="Vote by Mail Dropoff Map (opens in new tab)" class="bottomLink">View Drop Box Map</a>
+                </div>
+                <!-- append it to languaged div from _layoutSitelocator view-->
+                <div id="langUrl" class="n_disp">
+                    <div>
+                        <ul class="sflanguagesVerticalList">
+                                        <li class="sflanguageItem sflang_en">
+                                            <a href="/locations/vc?id=4348&culture=en" class="sflanguageLnk" lang="en" id="langName"><span>English</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_es">
+                                            <a href="/locations/vc?id=4348&culture=es" class="sflanguageLnk" lang="es" id="langName"><span>espa&#xF1;ol</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_zh">
+                                            <a href="/locations/vc?id=4348&culture=zh" class="sflanguageLnk" lang="zh" id="langName"><span>&#x4E2D;&#x6587;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_hy">
+                                            <a href="/locations/vc?id=4348&culture=hy" class="sflanguageLnk" lang="hy" id="langName"><span>&#x570;&#x561;&#x575;&#x565;&#x580;&#x565;&#x576;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_fa">
+                                            <a href="/locations/vc?id=4348&culture=fa" class="sflanguageLnk" lang="fa" id="langName"><span>&#x641;&#x627;&#x631;&#x633;&#x6CC;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_fil">
+                                            <a href="/locations/vc?id=4348&culture=fil" class="sflanguageLnk" lang="fil" id="langName"><span>Filipino</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_hi">
+                                            <a href="/locations/vc?id=4348&culture=hi" class="sflanguageLnk" lang="hi" id="langName"><span>&#x939;&#x93F;&#x928;&#x94D;&#x926;&#x940;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_ja">
+                                            <a href="/locations/vc?id=4348&culture=ja" class="sflanguageLnk" lang="ja" id="langName"><span>&#x65E5;&#x672C;&#x8A9E;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_km">
+                                            <a href="/locations/vc?id=4348&culture=km" class="sflanguageLnk" lang="km" id="langName"><span>&#x1781;&#x17D2;&#x1798;&#x17C2;&#x179A;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_ko">
+                                            <a href="/locations/vc?id=4348&culture=ko" class="sflanguageLnk" lang="ko" id="langName"><span>&#xD55C;&#xAD6D;&#xC5B4;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_ru">
+                                            <a href="/locations/vc?id=4348&culture=ru" class="sflanguageLnk" lang="ru" id="langName"><span>&#x440;&#x443;&#x441;&#x441;&#x43A;&#x438;&#x439;</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_vi">
+                                            <a href="/locations/vc?id=4348&culture=vi" class="sflanguageLnk" lang="vi" id="langName"><span>Ti&#x1EBF;ng Vi&#x1EC7;t</span></a>
+                                        </li>
+                                        <li class="sflanguageItem sflang_th">
+                                            <a href="/locations/vc?id=4348&culture=th" class="sflanguageLnk" lang="th" id="langName"><span>&#xE44;&#xE17;&#xE22;</span></a>
+                                        </li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+
+    <div id="mobileClosestLocations" class="divInfoTable base n_disp">
+        <div id="mobileClosestText" class="n_disp">
+            <div id="txtClosest">CLOSEST LOCATIONS</div>
+            <div style="margin-top: -2px;border-bottom:2px solid #13b5ea;"></div>
+        </div>
+        <table id="m_InfoTable"></table>
+    </div>
+    <!-- Results  -->
+    <div id="mapMobile">
+        <div id="map_canvas" class="base sideBySide m_pad" role="application" aria-label="Interactive map showing vote center and ballot drop-off locations">
+        </div>
+    </div>
+
+    <div class="m_tog centered smallerFont">
+            <p class="m_remove">Wait time updated approximately every half-hour</p> <span id="dateNow" class="m_remove">Last retrieved: </span>
+            <a href="/locations-list/vc?id=4348" aria-label="Return to Vote Centers Page">View Vote Center List</a>
+            <span> | </span>
+            <a href="/locations/vbm/?id=4348&culture=en" target="_blank" rel="noopener noreferrer" aria-label="Vote by Mail Dropoff Map (opens in new tab)">View Drop Box Map</a>
+    </div>
+    <input id="id_type" type="hidden" value="3" />
+    <input id="election_id" type="hidden" value="4348" />
+    <input id="default_zoom" type="hidden" value="9" />
+    <input id="kml_url" type="hidden" value="https://lavote.net/mvc/gis/lacounty_boundary.kmz?v=1" />
+    <input id="center_lat" type="hidden" value="34.269530000" />
+    <input id="center_lon" type="hidden" value="-118.290440000" />
+    <input id="time_now" type="hidden" value="10/22/2026 11:58:29&#x202F;PM" />
+    <input id="election_date" type="hidden" value="2026-11-03" />
+    <input id="addressString" type="hidden" value="Search Address…" />
+    <input id="checkWaitTimeOn" type="hidden" />
+    <input id="checkSecondWaveFilterToggleOff" type="hidden" value="value" />
+    <input id="hoursML" type="hidden" value="Hours" />
+    <input id="LastRetrieved" type="hidden" value="Last retrieved" />
+    <input id="RefreshData" type="hidden" value="refresh data" />
+    <input id="ClosedText" type="hidden" value="Closed" />
+    <input id="ToHere" type="hidden" value="To here" />
+    <input id="FromHere" type="hidden" value="From here" />
+    <input id="NoUpdate" type="hidden" value="No Update" />
+    <input id="Blue" type="hidden" value=" Wait Time unavailable" />
+    <input id="Green" type="hidden" value="15 min or less" />
+    <input id="LightGreen" type="hidden" value="16 - 30 min" />
+    <input id="Yellow" type="hidden" value="31 - 45 min" />
+    <input id="Orange" type="hidden" value="46-60 min" />
+    <input id="Red" type="hidden" value="Over 1 hour" />
+    <input id="Directions" type="hidden" value="Directions" />
+    <input id="EstimatedWait" type="hidden" value="Estimated Wait" />
+    <input id="AddInfoML" type="hidden" value="Additional Info" />
+</body>
+<script>
+    $(document).ready(function () {
+        // $('#resize_wrapper').css('top', '7.2em'); //no filters showing
+        // $('#resize_wrapper').css('top', '12.3em'); //only waititme filter showing
+        $('#resize_wrapper').css('top', '15.1em'); //all filters showing //16.4
+        /**temp for display 4259 with no filters due to election overlap */
+        //start
+        if ($('#election_id').val() == "4259") {
+            $('#resize_wrapper').css('top', '7em');
+            // $('#legend').hide();
+            $('#wordFilters').hide();
+            $('#filterDiv').hide();
+        }
+        //end
+
+
+
+
+        //$('#legend').hide();
+        var platform = MobileDetect();
+        //window.onresize = function (event) {
+        //    if (platform == "Desktop") {
+        //        console.log("hello");
+        //        if ($('#leftDiv').width() <= "398") {
+        //            $('#legend').css("left", "44%");
+        //        } else {
+        //            $('#legend').css("left", "25%");
+        //        }
+        //    }
+        //};
+        // map display setting for safari
+        if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+            if (platform == "Desktop") {
+                var height = $('#project').height() - $('#header').height();
+                $('#body').height(height);
+                $('#header').css({ "display": "table", "width": "100%" });
+            }
+        }
+        $('#languages').removeClass('n_disp');
+        $('#langUrl').removeClass('n_disp');
+        $('#languages').append($('#langUrl'));
+
+        const queryString = window.location.search;
+        $.urlParams = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(queryString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        }
+        const add = $.urlParams('add');
+        $('#filterDiv :checkbox +label').css("color", "white");
+        //if (add && $('#checkWaitTimeOn').val()) {
+        //    $('#filterVotingPeriod').addClass("n_disp");
+        //} else {
+        //    if (!$('#checkWaitTimeOn').val()) $('#filterVotingPeriod').removeClass("n_disp");
+        //}
+    });
+    $('#filterDiv :checkbox').change(function () {
+        //checkboxClicked = true;
+        if (this.checked) {
+            $(this).parent().addClass("selectedCheckbox");
+            $('label[for="' + this.id + '"] span').show();
+            $('label[for="' + this.id + '"]').css('color', 'white');
+        } else {
+            $(this).parent().removeClass("selectedCheckbox");
+            $('label[for="' + this.id + '"]').css('color', 'grey');
+            $('label[for="' + this.id + '"] span').hide();
+        }
+        ForceCheck(this.id);
+        if (!$('#checkWaitTimeOn').val()) FilterVoteCenters();
+        FilterVoteCenters();
+    });
+    $('.filterOptions').click(function (event) {
+        if ($('#checkWaitTimeOn').val()) {
+            $('#done').removeClass('n_disp');
+        }
+        var boxClicked = event.target.querySelector('input');
+        if (boxClicked) {
+            if ($(this).hasClass("selectedCheckbox")) {
+                $(this).removeClass("selectedCheckbox");
+                boxClicked.checked = false;
+                $('label[for="' + boxClicked.id + '"]').css('color', 'grey');
+                $('label[for="' + boxClicked.id + '"] span').hide();
+            } else {
+                $(this).addClass("selectedCheckbox");
+                boxClicked.checked = true;
+                $('label[for="' + boxClicked.id + '"]').css('color', 'white');
+                $('label[for="' + boxClicked.id + '"] span').show();
+            }
+            ForceCheck(boxClicked.id);
+            if (!$('#checkWaitTimeOn').val()) FilterVoteCenters();
+            FilterVoteCenters();
+        }
+    });
+    function legendToggle(id) {
+        var element = document.getElementById(id);
+        if (element.id == "legendArrowDown") {
+            $('#legendArrowUp').removeClass('n_disp');
+            $('#legendArrowDown').addClass('n_disp');
+            $('#smallWait').addClass('n_disp');
+            $('#mediumWait').addClass('n_disp');
+            $('#longWait').addClass('n_disp');
+            $('#xlongWait').addClass('n_disp');
+            $('#xxlongWait').addClass('n_disp');
+            $('#noUpdate').addClass('n_disp');
+
+        } else {
+            $('#legendArrowDown').removeClass('n_disp');
+            $('#legendArrowUp').addClass('n_disp');
+            $('#smallWait').removeClass('n_disp');
+            $('#mediumWait').removeClass('n_disp');
+            $('#longWait').removeClass('n_disp');
+            $('#xlongWait').removeClass('n_disp');
+            $('#xxlongWait').removeClass('n_disp');
+            $('#noUpdate').removeClass('n_disp');
+        }
+    }
+
+</script>
+        </div>
+    </div>
+    <div id="footer" class="n_disp">
+        <div id="footer_top" class="row">
+            <div class="m_w main_content">
+                <div class="m_pad">
+                    <div class="base icons">
+                        <a href="https://twitter.com/lacountyrrcc" target="_blank" rel="noopener noreferrer" aria-label="Twitter (opens in new tab)"><img src="/css/WebsiteTemplates/v2/images/icon_twitter.png" title="Twitter" alt="" /></a>
+                        <a href="https://www.facebook.com/LACountyRRCC" target="_blank" rel="noopener noreferrer" aria-label="Facebook (opens in new tab)"><img src="/css/WebsiteTemplates/v2/images/icon_facebook.png" title="Facebook" alt="" /></a>
+                        <a href="https://www.youtube.com/user/lacountyrrcc" target="_blank" rel="noopener noreferrer" aria-label="YouTube (opens in new tab)"><img src="/css/WebsiteTemplates/v2/images/icon_youtube.png" title="YouTube" alt="" /></a>
+                        <a href="https://www.yelp.com/biz/los-angeles-county-registrar-recorder-county-clerk-norwalk" target="_blank" rel="noopener noreferrer" aria-label="Yelp (opens in new tab)"><img src="/css/WebsiteTemplates/v2/images/icon_yelp.png" title="Yelp" alt="" /></a>
+                        <a href="https://instagram.com/lacountyrrcc" target="_blank" rel="noopener noreferrer" aria-label="Instagram (opens in new tab)"><img src="/css/WebsiteTemplates/v2/images/icon_instagram.png" title="Instagram" alt="" /></a>
+                    </div>
+                    <div class="scroll_up r">
+                        <a href="#main_content" aria-label="Back to top">
+                            <img title="Back to Top" alt="" src="/css/WebsiteTemplates/v2/images/icon_back_to_top.png" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m_w main_content">
+            <div id="cols" class="m_rows row">
+                <div class="m_el_align_c">
+                    <div class="base col m_w">
+                        <p class="hd">Do you need help?</p>
+                        <div class="single">
+                            <p>1-800-815-2666</p>
+                            <p>12400 Imperial Hwy. Norwalk, CA 90650</p>
+                            <p><img src="/css/WebsiteTemplates/v2/images/county_seal.png" alt="Los Angeles County RR/CC" title="Los Angeles County RR/CC" width="120" height="120" /></p>
+                        </div>
+                    </div>
+                    <div class="base col m_w">
+                        <p class="hd">Services</p>
+                        <div class="single">
+                            <p><a href="https://lavote.gov/home/voting-elections/voter-registration/register-to-vote/register" aria-label="Link to Voter Registration Page">Voter Registration</a></p>
+                            <p><a href="https://lavote.gov/home/voting-elections/voting-options/e-sample-ballot/sample-ballot" aria-label="Link to Voting Options Page">Voting Options</a></p>
+                            <p><a href="https://lavote.gov/home/voting-elections/current-elections/election-results/live-results" aria-label="Link to Election Resources Page">Election Resources</a></p>
+                            <p><a href="https://lavote.gov/home/voting-elections/voting-options/vote-by-mail/new-vote-by-mail" aria-label="Link to Vote By Mail Page">Vote By Mail</a></p>
+                        </div>
+                    </div>
+                    <div class="base col m_w">
+                        <p class="hd">Other Info</p>
+                        <div class="single">
+                            <p><a href="https://lavote.gov/about-us/background" aria-label="Link to About US page">About Us</a></p>
+                            <p><a href="https://lavote.gov/news-room/news-releases" aria-label="Link to Newsroom page">Newsroom</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <input id="culture_info" type="hidden" value="" />
+    <input id="platform_version" type="hidden" value="" />
+</div>
+<script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=1&cb=1708116003" async></script></html>
+<script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-53922337-1', 'auto');
+    ga('send', 'pageview');
+</script>

@@ -1,0 +1,27 @@
+{
+  "url": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+  "finalUrl": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+  "capturedAt": "2026-10-23T08:16:09.148Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "88dc10bbcfa6fd24bd2f32fa40d6740367f90fde62911f6919796907fd7b774d",
+  "savedHash": "88dc10bbcfa6fd24bd2f32fa40d6740367f90fde62911f6919796907fd7b774d",
+  "redactions": 0,
+  "bytes": 320839,
+  "attempts": [
+    {
+      "url": "https://locator.lavote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://locator.lavote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /locations-list/vc: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

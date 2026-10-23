@@ -1,0 +1,27 @@
+{
+  "url": "https://www.yuba.gov/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+  "finalUrl": "https://www.yuba.gov/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+  "capturedAt": "2026-10-23T08:11:26.619Z",
+  "contentType": "application/pdf",
+  "rawHash": "b8a4b9953cad17be6859cca339f40aa47a555c68f03184288f1bc122eef1d4ac",
+  "savedHash": "b8a4b9953cad17be6859cca339f40aa47a555c68f03184288f1bc122eef1d4ac",
+  "redactions": 0,
+  "bytes": 85833,
+  "attempts": [
+    {
+      "url": "https://www.yuba.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://www.yuba.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.yuba.gov/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

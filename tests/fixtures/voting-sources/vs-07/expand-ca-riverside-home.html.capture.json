@@ -1,0 +1,22 @@
+{
+  "url": "https://voteinfo.net/",
+  "finalUrl": "https://voteinfo.net/",
+  "capturedAt": "2026-10-23T08:13:45.563Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "826ec0602c9bea2538b19437a159cd3c5c25a785159f4bd27af108eea50d0bc5",
+  "savedHash": "826ec0602c9bea2538b19437a159cd3c5c25a785159f4bd27af108eea50d0bc5",
+  "redactions": 0,
+  "bytes": 139632,
+  "attempts": [
+    {
+      "url": "https://voteinfo.net/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://voteinfo.net/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

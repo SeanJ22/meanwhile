@@ -1,0 +1,32 @@
+{
+  "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0?f=json",
+  "finalUrl": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0?f=json",
+  "capturedAt": "2026-10-23T08:23:53.700Z",
+  "contentType": "application/json; charset=utf-8",
+  "rawHash": "497012e77822b59b6513e2f990a0681be7891e477bfafaf880fba7aec4b7e4d6",
+  "savedHash": "497012e77822b59b6513e2f990a0681be7891e477bfafaf880fba7aec4b7e4d6",
+  "redactions": 0,
+  "bytes": 16421,
+  "attempts": [
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "browser-ua",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0?f=json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

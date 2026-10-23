@@ -1,0 +1,27 @@
+{
+  "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/jimu-core/init.js",
+  "finalUrl": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/jimu-core/init.js",
+  "capturedAt": "2026-10-23T08:15:01.570Z",
+  "contentType": "application/javascript",
+  "rawHash": "27191066e1c163adb2e10b34e3a2992d53207a646a2e79225610bd97aca6fa13",
+  "savedHash": "27191066e1c163adb2e10b34e3a2992d53207a646a2e79225610bd97aca6fa13",
+  "redactions": 0,
+  "bytes": 62334,
+  "attempts": [
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /ElectionWaitTimes/cdn/10/jimu-core/init.js: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/jimu-core/init.js",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

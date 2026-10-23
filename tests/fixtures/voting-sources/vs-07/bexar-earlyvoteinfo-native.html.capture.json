@@ -1,0 +1,27 @@
+{
+  "url": "https://maps.bexar.org/earlyvoteinfo/",
+  "finalUrl": "https://maps.bexar.org/earlyvoteinfo/",
+  "capturedAt": "2026-10-23T08:25:51.234Z",
+  "contentType": "text/html",
+  "rawHash": "1333ba25b99396e39d8435fde271717315e910ac2c5c6ba11a8bb35939aa559d",
+  "savedHash": "1333ba25b99396e39d8435fde271717315e910ac2c5c6ba11a8bb35939aa559d",
+  "redactions": 0,
+  "bytes": 3377,
+  "attempts": [
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /earlyvoteinfo/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://maps.bexar.org/earlyvoteinfo/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

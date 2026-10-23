@@ -1,0 +1,22 @@
+{
+  "url": "https://ocvote.gov/press-releases/november-3-2026-general-election-public-service-announcement",
+  "finalUrl": "https://ocvote.gov/press-releases/november-3-2026-general-election-public-service-announcement",
+  "capturedAt": "2026-10-23T08:17:28.796Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "193b22bc08abb0e0b9dd14712a3cd35528c0ba8bf272929ed4961ead140cfe87",
+  "savedHash": "193b22bc08abb0e0b9dd14712a3cd35528c0ba8bf272929ed4961ead140cfe87",
+  "redactions": 0,
+  "bytes": 22497,
+  "attempts": [
+    {
+      "url": "https://ocvote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://ocvote.gov/press-releases/november-3-2026-general-election-public-service-announcement",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

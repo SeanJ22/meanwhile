@@ -1,0 +1,27 @@
+{
+  "url": "https://vote.santaclaracounty.gov/",
+  "finalUrl": "https://vote.santaclaracounty.gov/home",
+  "capturedAt": "2026-10-23T08:16:24.770Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "4a22e0c75a3623f95ebb41f075aa405f1a2eef523d9f318507e2cf9780328fda",
+  "savedHash": "4a22e0c75a3623f95ebb41f075aa405f1a2eef523d9f318507e2cf9780328fda",
+  "redactions": 0,
+  "bytes": 87567,
+  "attempts": [
+    {
+      "url": "https://vote.santaclaracounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://vote.santaclaracounty.gov/",
+      "route": "direct",
+      "outcome": "HTTP 301"
+    },
+    {
+      "url": "https://vote.santaclaracounty.gov/home",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0?f=json",
+  "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0?f=json",
+  "capturedAt": "2026-10-23T08:11:27.791Z",
+  "contentType": "application/json; charset=utf-8",
+  "rawHash": "54f9f25eb1ef755fbbb6d6439a6540c64e54519d480f07d00921d8ab1fb5b73a",
+  "savedHash": "54f9f25eb1ef755fbbb6d6439a6540c64e54519d480f07d00921d8ab1fb5b73a",
+  "redactions": 0,
+  "bytes": 9473,
+  "attempts": [
+    {
+      "url": "https://services.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services.arcgis.com/robots.txt",
+      "route": "browser-ua",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0?f=json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

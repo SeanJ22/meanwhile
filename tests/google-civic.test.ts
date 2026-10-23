@@ -8,7 +8,11 @@ import { GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_SCOPE, civicStateScope, GOOGLE_C
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { refreshGoogleCivic } from "../lib/sources/google-civic/refresh.ts";
+import { refreshGoogleCivic, countyCivicProbeTargets, probeCountyCivicCoverage } from "../lib/sources/google-civic/refresh.ts";
+import { readCountyCivicCoverage } from "../lib/sources/google-civic/coverage.ts";
+import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import type { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { readRawCaptureText, type RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
@@ -112,17 +116,79 @@ test("national refresh visits every state, records missing inventories and publi
   assert.ok(next.confirmed);
 });
 
-test("VS-01 background refresh sends no public or private addresses to Google", async () => {
+test("county refresh probes each public election office once and saves only yes/no and counts", async () => {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), requests: URL[] = [];
-  const registration = (async (state: string) => ({ kind: "PROMOTED", value: { divisions: [], governments: [
-    { id: `government:US-${state}:cog:public-office-fixture`, officeAddress: `${state} public office fixture`, associations: [], bodyIds: [] },
-  ] } })) as unknown as typeof readRegistrationProjection;
-  const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
-    fetchImpl: (async (url: URL) => { requests.push(url); return new Response(fixture("elections")); }) as unknown as typeof fetch } });
+  const stateId = "ocd-division/country:us/state:mi";
+  // Controlled county/office envelopes test route selection; all returned site rows are the saved source fixture.
+  const divisions = ["26065", "26161", "26139"].map((geoid, index) => ({ ocdId: `${stateId}/county:protocol-${index}`, divisionType: "county", geoid }));
+  const bodies = [{ ocdId: divisions[0].ocdId, name: "Protocol Board of Elections", officeAddress: "Protocol public election office A" },
+    { ocdId: divisions[0].ocdId, name: "Protocol Board of Elections", officeAddress: "Protocol duplicate office" },
+    { ocdId: divisions[1].ocdId, name: "Protocol County Clerk Elections", officeAddress: "Protocol public election office B" },
+    { ocdId: divisions[2].ocdId, name: "Protocol County Commission", officeAddress: "Protocol general government office" }];
+  const registration = (async (state: string) => state === "MI" ? { kind: "PROMOTED", value: { divisions, bodies, governments: [] } } : { kind: "NOT_RECORDED" }) as unknown as typeof readRegistrationProjection;
+  const result = await refreshGoogleCivic({ store, vault, registration, votingSites: async () => null, reviewedRegistry: async () => null,
+    readOptions: { apiKey: "private-test-key", now: () => AT, fetchImpl: (async (url: URL) => {
+      requests.push(url);
+      return url.pathname.endsWith("elections") ? new Response(fixture("elections")) : url.searchParams.get("address")!.endsWith("A")
+        ? new Response(rawMi) : new Response("provider address echo must not be held", { status: 404 });
+    }) as unknown as typeof fetch } });
   assert.ok(result.outcome.promoted);
-  assert.equal(requests.length, 1);
-  assert.ok(requests.every(url => url.pathname.endsWith("elections") && !url.searchParams.has("address")));
-  assert.ok(result.coverage.every(row => row.checked === 0 && row.loaded === 0 && row.reason?.includes("live for a reader")));
+  const probes = requests.filter(url => url.pathname.endsWith("voterinfo"));
+  assert.equal(probes.length, 2);
+  assert.ok(probes.every(url => url.searchParams.get("electionId") === "12000"));
+  const report = result.coverage.find(row => row.state === "MI")!;
+  assert.equal(report.governments, 3); assert.equal(report.withoutAddress, 1); assert.equal(report.checked, 2); assert.equal(report.unavailable, 1);
+  const count = JSON.parse(rawMi);
+  assert.deepEqual(report.counties, [
+    { countyFips: "26065", available: true, pollingLocations: count.pollingLocations?.length ?? 0, earlyVoteSites: count.earlyVoteSites?.length ?? 0, dropOffLocations: count.dropOffLocations?.length ?? 0 },
+    { countyFips: "26161", available: false, pollingLocations: 0, earlyVoteSites: 0, dropOffLocations: 0 },
+  ]);
+  const saved = JSON.stringify(result.candidate);
+  for (const transient of ["Protocol public election office", "Protocol duplicate office", "Protocol general government office", "private-test-key", "provider address echo", JSON.parse(rawMi).normalizedInput.line1, JSON.parse(rawMi).pollingLocations[0].address.locationName]) assert.ok(!saved.includes(transient), transient);
+  assert.equal((await vault.list("")).length, 1, "only the elections catalog is vaulted");
+  const held = await readCountyCivicCoverage(store, "MI");
+  assert.equal(held.get("26065")?.available, true); assert.equal(held.get("26161")?.available, false);
+  assert.equal((await readCountyCivicCoverage(store, "MI", "2028-11-07")).size, 0);
+  const tomorrowRequests: URL[] = [];
+  const tomorrow = new Date(Date.parse(AT) + 86_400_000).toISOString();
+  const next = await refreshGoogleCivic({ store, vault, registration, votingSites: async () => null, reviewedRegistry: async () => null,
+    readOptions: { apiKey: "private-test-key", now: () => tomorrow, fetchImpl: (async (url: URL) => {
+      tomorrowRequests.push(url); return new Response(url.pathname.endsWith("elections") ? fixture("elections") : rawMi);
+    }) as unknown as typeof fetch } });
+  assert.ok(next.outcome.promoted || next.outcome.confirmed);
+  assert.equal(tomorrowRequests.filter(url => url.pathname.endsWith("voterinfo")).length, 2, "the following daily pass remeasures every available county office");
+  assert.equal((await readCountyCivicCoverage(store, "MI")).get("26161")?.available, true, "the following pass updates the existing no-site sample");
+  assert.equal((await vault.list("")).length, 1, "the next pass still holds no voterinfo response");
+});
+
+test("provider outages and different elections remain unmeasured rather than becoming a no", async () => {
+  const target = { countyFips: "26065", address: "Protocol public election office" };
+  await assert.rejects(probeCountyCivicCoverage(target, "12000", { apiKey: "private-test-key", fetchImpl: (async () => new Response("", { status: 403 })) as typeof fetch }), /403/);
+  await assert.rejects(probeCountyCivicCoverage(target, "2000", { apiKey: "private-test-key", fetchImpl: (async () => new Response(rawMi)) as typeof fetch }), /different election/);
+});
+
+test("the saved official North Carolina directory supplies one public election-office probe address in each of its 100 counties", async () => {
+  const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
+  const directory = doors.find(door => door.id === "vs07-nc-county-election-offices")!;
+  assert.ok(directory);
+  const reference = JSON.parse(readFileSync("data/derived/registration/nc.json", "utf8")) as { divisions: [string, string, string, string][] };
+  const divisions = reference.divisions.filter(([, kind]) => kind === "county").map(([ocdId, , geoid, label]) => ({ ocdId, geoid, label, divisionType: "county" }));
+  const normalize = (name: string) => name.toLowerCase().replace(/\s+county$/, "").replace(/[^a-z0-9]/g, "");
+  const counties = new Map(divisions.map(division => [normalize(division.label), division]));
+  const html = readFileSync("tests/fixtures/voting-sources/vs-07/nc-offices-native.html");
+  const read = await readVotingSource(directory, { now: () => AT,
+    fetch: (async input => new Response(String(input).endsWith("/robots.txt") ? "User-agent: *\\nAllow: /" : html,
+      { headers: { "content-type": "text/html" } })) as typeof fetch,
+    resolveScope: name => { const county = counties.get(normalize(name)); return county ? { state: "NC", name: county.label, ocdId: county.ocdId, countyFips: county.geoid } : null; },
+  });
+  assert.equal(read.contacts?.length, 100);
+  assert.equal(read.sites.length, 0, "an election office directory does not assert that its offices are voting sites");
+  const registration = { divisions, bodies: [], governments: [] } as unknown as Parameters<typeof countyCivicProbeTargets>[0];
+  const holding = { jurisdictions: read.contacts!.map(contact => ({ ocdId: contact.scope.ocdId, office: contact.office })) } as VotingSitesFile;
+  const inventory = countyCivicProbeTargets(registration, holding);
+  assert.equal(inventory.counties, 100); assert.equal(inventory.targets.length, 100);
+  assert.equal(inventory.targets.find(target => target.countyFips === "37001")?.address, "1128 S. MAIN STREET GRAHAM, NC 27253");
+  assert.equal(new Set(inventory.targets.map(target => target.countyFips)).size, 100);
 });
 
 test("a resumed national pass starts with states that have no completed source check", async () => {

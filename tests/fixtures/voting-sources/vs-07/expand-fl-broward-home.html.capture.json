@@ -1,0 +1,22 @@
+{
+  "url": "https://browardvotes.gov/",
+  "finalUrl": "https://browardvotes.gov/",
+  "capturedAt": "2026-10-23T08:14:38.843Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "2e6dd77c0b862ea7cc2c57cc3fe18707fdae0399db0e04ed4b080a4f9c9cecc6",
+  "savedHash": "2e6dd77c0b862ea7cc2c57cc3fe18707fdae0399db0e04ed4b080a4f9c9cecc6",
+  "redactions": 0,
+  "bytes": 226776,
+  "attempts": [
+    {
+      "url": "https://browardvotes.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://browardvotes.gov/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

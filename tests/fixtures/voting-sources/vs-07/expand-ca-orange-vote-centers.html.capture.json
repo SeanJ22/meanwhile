@@ -1,0 +1,22 @@
+{
+  "url": "https://ocvote.gov/elections/vote-center-locations",
+  "finalUrl": "https://ocvote.gov/elections/vote-center-locations",
+  "capturedAt": "2026-10-23T08:13:44.427Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "47dc6789737efb8d2bca13aa77bc79aafc84b953950c02f90d381dfa6da06a29",
+  "savedHash": "47dc6789737efb8d2bca13aa77bc79aafc84b953950c02f90d381dfa6da06a29",
+  "redactions": 0,
+  "bytes": 54594,
+  "attempts": [
+    {
+      "url": "https://ocvote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://ocvote.gov/elections/vote-center-locations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

@@ -1,0 +1,2576 @@
+[
+  {
+    "id": "vs07-ca-san-diego-vote-centers-map",
+    "url": "https://geo.sandag.org/server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0",
+    "finalUrl": "https://geo.sandag.org/server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0",
+    "capturedAt": "2026-10-23T08:07:15.966Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-vote-centers-map.html",
+    "rawHash": "7f43d357578bc9b02ff3d021a7f23ae64c962d9b3854c242d01aa2576e51a0a7",
+    "savedHash": "7f43d357578bc9b02ff3d021a7f23ae64c962d9b3854c242d01aa2576e51a0a7",
+    "redactions": 0,
+    "bytes": 9391,
+    "attempts": [
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://geo.sandag.org/server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-ca-san-diego-vote-centers",
+    "url": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html",
+    "capturedAt": "2026-10-23T08:07:15.960Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-vote-centers.html",
+    "rawHash": "6460690f9ee79f27f81a1d425d62363750b3b7d7d540aeb0e567912cfb857a54",
+    "savedHash": "6460690f9ee79f27f81a1d425d62363750b3b7d7d540aeb0e567912cfb857a54",
+    "redactions": 0,
+    "bytes": 72308,
+    "attempts": [
+      {
+        "url": "https://www.sdvote.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-ca-san-diego-drop-boxes",
+    "url": "https://www.sdvote.com/content/rov/en/elections/ballot-drop-box-locations.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/ballot-drop-box-locations.html",
+    "capturedAt": "2026-10-23T08:07:15.963Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-drop-boxes.html",
+    "rawHash": "bbc6326e4af37ea82a0d9580b76e443575be7d03bf8a21a8f3b2fed4bd33d361",
+    "savedHash": "bbc6326e4af37ea82a0d9580b76e443575be7d03bf8a21a8f3b2fed4bd33d361",
+    "redactions": 0,
+    "bytes": 73801,
+    "attempts": [
+      {
+        "url": "https://www.sdvote.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sdvote.com/content/rov/en/elections/ballot-drop-box-locations.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-nc-statewide-early-pdf",
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+    "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+    "capturedAt": "2026-10-23T08:07:15.929Z",
+    "contentType": "application/pdf",
+    "file": "vs07-nc-statewide-early-pdf.pdf",
+    "rawHash": "b3df13064c9c3a5a4537bb1acdd0d84e690e251b206df18f330aea9bc33e1506",
+    "savedHash": "b3df13064c9c3a5a4537bb1acdd0d84e690e251b206df18f330aea9bc33e1506",
+    "redactions": 0,
+    "bytes": 252179,
+    "attempts": [
+      {
+        "url": "https://s3.amazonaws.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://s3.amazonaws.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://s3.amazonaws.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-ca-san-diego-drop-boxes-map",
+    "url": "https://geo.sandag.org/server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0",
+    "finalUrl": "https://geo.sandag.org/server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0",
+    "capturedAt": "2026-10-23T08:07:17.641Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-drop-boxes-map.html",
+    "rawHash": "4b10b6b47189f0af151aad1f1437c3c939404be4e76e5672a8b4ea3ebff18d60",
+    "savedHash": "4b10b6b47189f0af151aad1f1437c3c939404be4e76e5672a8b4ea3ebff18d60",
+    "redactions": 0,
+    "bytes": 11198,
+    "attempts": [
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://geo.sandag.org/server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-tx-bexar-early-pdf",
+    "url": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours",
+    "capturedAt": "2026-10-23T08:07:17.649Z",
+    "contentType": "application/pdf",
+    "file": "vs07-tx-bexar-early-pdf.pdf",
+    "rawHash": "38376bc0ce1f586a3cb80cb1fe1d97e33b18dd411a8c0ab71c5cb8f4401e0603",
+    "savedHash": "38376bc0ce1f586a3cb80cb1fe1d97e33b18dd411a8c0ab71c5cb8f4401e0603",
+    "redactions": 0,
+    "bytes": 143948,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-tx-bexar-early-map",
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0",
+    "capturedAt": "2026-10-23T08:07:17.645Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "vs07-tx-bexar-early-map.html",
+    "rawHash": "f55f3ff22f82a95950c9f072796b62ce0e0b104d221eda35fc814b25c0ae19e6",
+    "savedHash": "f55f3ff22f82a95950c9f072796b62ce0e0b104d221eda35fc814b25c0ae19e6",
+    "redactions": 0,
+    "bytes": 7415,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-tx-bexar-election-day-map",
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0",
+    "capturedAt": "2026-10-23T08:07:17.647Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "vs07-tx-bexar-election-day-map.html",
+    "rawHash": "aa3a89db5634ac70f68c16ef4f080cc865ad9ca5ba12faabdd3f188c03762676",
+    "savedHash": "aa3a89db5634ac70f68c16ef4f080cc865ad9ca5ba12faabdd3f188c03762676",
+    "redactions": 0,
+    "bytes": 7478,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "vs07-tx-bexar-election-day-pdf",
+    "url": "https://elections.bexar.gov/DocumentCenter/View/1713/Election-Day-Vote-Centers",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1713/Election-Day-Vote-Centers",
+    "capturedAt": "2026-10-23T08:07:19.107Z",
+    "contentType": "application/pdf",
+    "file": "vs07-tx-bexar-election-day-pdf.pdf",
+    "rawHash": "82c881d5d2ef580323d1a029c8e33771fe041cee275302111c9d25fce1643c47",
+    "savedHash": "82c881d5d2ef580323d1a029c8e33771fe041cee275302111c9d25fce1643c47",
+    "redactions": 0,
+    "bytes": 212205,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/DocumentCenter/View/1713/Election-Day-Vote-Centers",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "sd-election-page-native",
+    "url": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+    "capturedAt": "2026-10-23T08:07:19.116Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "sd-election-page-native.html",
+    "rawHash": "ca1d0e66ae27f76ded792dd498c91642dfb3609712cf9ee3e2c69ba9085c1c5a",
+    "savedHash": "ca1d0e66ae27f76ded792dd498c91642dfb3609712cf9ee3e2c69ba9085c1c5a",
+    "redactions": 0,
+    "bytes": 40148,
+    "attempts": [
+      {
+        "url": "https://www.sdvote.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "nc-linking-page-native",
+    "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "finalUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "capturedAt": "2026-10-23T08:07:19.113Z",
+    "contentType": "text/html; charset=UTF-8",
+    "file": "nc-linking-page-native.html",
+    "rawHash": "720c69fccfd6b2de5dbfd530ff79cd7bc4522483e54ad48491cec4bbe104f51b",
+    "savedHash": "720c69fccfd6b2de5dbfd530ff79cd7bc4522483e54ad48491cec4bbe104f51b",
+    "redactions": 0,
+    "bytes": 87615,
+    "attempts": [
+      {
+        "url": "https://www.ncsbe.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "ca-county-offices-native",
+    "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "finalUrl": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "capturedAt": "2026-10-23T08:07:20.600Z",
+    "contentType": "text/html; charset=UTF-8",
+    "file": "ca-county-offices-native.html",
+    "rawHash": "f7c792431c6bbb4be3d17bcca4b84e07e88120c4a9c460fd270af31ccd587de8",
+    "savedHash": "f7c792431c6bbb4be3d17bcca4b84e07e88120c4a9c460fd270af31ccd587de8",
+    "redactions": 0,
+    "bytes": 93320,
+    "attempts": [
+      {
+        "url": "https://www.sos.ca.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "bexar-election-page-native",
+    "url": "https://elections.bexar.gov/163/Election-Information",
+    "finalUrl": "https://elections.bexar.gov/163/Election-Information",
+    "capturedAt": "2026-10-23T08:07:20.610Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "bexar-election-page-native.html",
+    "rawHash": "6e72c59bc633d8fc800fe2d57682018459c5fbc289357997d3acdb39a52daa76",
+    "savedHash": "9e1da8e29df1405058bfb91e234d423ceedc9c9c8f84c2c56c82f680735f4868",
+    "redactions": 1,
+    "bytes": 144504,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/163/Election-Information",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "sd-vote-map-app-native",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/b3cb0808081a40808324b9ae9be37e49/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/b3cb0808081a40808324b9ae9be37e49/data?f=json",
+    "capturedAt": "2026-10-23T08:07:20.603Z",
+    "contentType": "application/json;charset=utf-8",
+    "file": "sd-vote-map-app-native.json",
+    "rawHash": "16c5528f1c2fd52912704bc8dd1c1a446e97a96897973e7edcd30ce9e12e13ec",
+    "savedHash": "16c5528f1c2fd52912704bc8dd1c1a446e97a96897973e7edcd30ce9e12e13ec",
+    "redactions": 0,
+    "bytes": 133321,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/b3cb0808081a40808324b9ae9be37e49/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "sd-drop-map-app-native",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/ab3d24dcf7e74ccc9c1be49e9fec623b/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/ab3d24dcf7e74ccc9c1be49e9fec623b/data?f=json",
+    "capturedAt": "2026-10-23T08:07:20.606Z",
+    "contentType": "application/json;charset=utf-8",
+    "file": "sd-drop-map-app-native.json",
+    "rawHash": "a80a4e4e41216e38050512aebc1e92c13825008c31808885ecbdee622dcdac81",
+    "savedHash": "a80a4e4e41216e38050512aebc1e92c13825008c31808885ecbdee622dcdac81",
+    "redactions": 0,
+    "bytes": 54075,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/ab3d24dcf7e74ccc9c1be49e9fec623b/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "bexar-map-app-native",
+    "url": "https://maps.bexar.org/ElectionWaitTimes/",
+    "finalUrl": "https://maps.bexar.org/ElectionWaitTimes/",
+    "capturedAt": "2026-10-23T08:07:21.847Z",
+    "contentType": "text/html",
+    "file": "bexar-map-app-native.html",
+    "rawHash": "366de3f1f5cd1babd794d469e949a7c88dbfc621bf40d4a28a0e4ec82375d108",
+    "savedHash": "366de3f1f5cd1babd794d469e949a7c88dbfc621bf40d4a28a0e4ec82375d108",
+    "redactions": 0,
+    "bytes": 5017,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /ElectionWaitTimes/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/ElectionWaitTimes/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "yuba-election-page-native",
+    "url": "https://www.yuba.gov/departments/elections/upcoming_election.php",
+    "finalUrl": "https://www.yuba.gov/departments/elections/upcoming_election.php",
+    "capturedAt": "2026-10-23T08:07:21.852Z",
+    "contentType": "text/html; charset=UTF-8",
+    "file": "yuba-election-page-native.html",
+    "rawHash": "458ec3aa81056eeebcfd2491d319bf5ccb8dcd39c8371996c2e80972702ec47e",
+    "savedHash": "458ec3aa81056eeebcfd2491d319bf5ccb8dcd39c8371996c2e80972702ec47e",
+    "redactions": 0,
+    "bytes": 178236,
+    "attempts": [
+      {
+        "url": "https://www.yuba.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://www.yuba.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /departments/elections/upcoming_election.php: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://www.yuba.gov/departments/elections/upcoming_election.php",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "phila-list-page-native",
+    "url": "https://vote.phila.gov/news/2026/10/14/2026-general-election-polling-place-list/",
+    "finalUrl": "https://vote.phila.gov/news/2026/10/14/2026-general-election-polling-place-list/",
+    "capturedAt": "2026-10-23T08:07:21.849Z",
+    "contentType": "text/html",
+    "file": "phila-list-page-native.html",
+    "rawHash": "c8d3059b55fa984c03bb87268e5fa4654988f2b02cb80ec73a990be9782e00fa",
+    "savedHash": "c8d3059b55fa984c03bb87268e5fa4654988f2b02cb80ec73a990be9782e00fa",
+    "redactions": 0,
+    "bytes": 32152,
+    "attempts": [
+      {
+        "url": "https://vote.phila.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://vote.phila.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /news/2026/10/14/2026-general-election-polling-place-list/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://vote.phila.gov/news/2026/10/14/2026-general-election-polling-place-list/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "id": "pima-election-page-native",
+    "url": "https://www.pima.gov/3199/Pima-Votes",
+    "finalUrl": "https://www.pima.gov/pima-votes",
+    "capturedAt": "2026-10-23T08:07:21.854Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "pima-election-page-native.html",
+    "rawHash": "4f1d76ab792771b88239d82aff4d57c379488684e203e7a934597d71ba3e5dfb",
+    "savedHash": "633e2c4236164fcb75635645b85b29f6095d8098b4ae7e3c508ad345c73b00cd",
+    "redactions": 6,
+    "bytes": 1120486,
+    "attempts": [
+      {
+        "url": "https://www.pima.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.pima.gov/3199/Pima-Votes",
+        "route": "direct",
+        "outcome": "HTTP 301"
+      },
+      {
+        "url": "https://www.pima.gov/pima-votes",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "status": 200
+  },
+  {
+    "url": "https://vote.phila.gov/robots.txt",
+    "finalUrl": "https://vote.phila.gov/robots.txt",
+    "file": "read-068c881db9a33e76.html",
+    "status": 200,
+    "contentType": "text/html",
+    "capturedAt": "2026-10-23T08:30:58.826Z",
+    "rawHash": "068c881db9a33e76c0963365b51f8326539a16df0392c8469cc9ccd583d40c9b",
+    "savedHash": "068c881db9a33e76c0963365b51f8326539a16df0392c8469cc9ccd583d40c9b",
+    "redactions": 0
+  },
+  {
+    "url": "https://vote.phila.gov/",
+    "finalUrl": "https://vote.phila.gov/",
+    "file": "phila-home-native.html",
+    "status": 200,
+    "contentType": "text/html",
+    "capturedAt": "2026-10-23T08:30:58.826Z",
+    "rawHash": "b05ccbbd505c3dd1e414441c3bba62bdc3829eb654c84446c40cb33b59f7a8f9",
+    "savedHash": "b05ccbbd505c3dd1e414441c3bba62bdc3829eb654c84446c40cb33b59f7a8f9",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/robots.txt",
+    "finalUrl": "https://services.arcgis.com/robots.txt",
+    "file": "read-82e45382e7d625da.bin",
+    "status": 200,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-23T08:30:58.826Z",
+    "rawHash": "82e45382e7d625da9fd553fe7ffad1cc3723573f619e00b822f856bfa7919749",
+    "savedHash": "82e45382e7d625da9fd553fe7ffad1cc3723573f619e00b822f856bfa7919749",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+    "file": "phila-polling-ids-native.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:30:58.826Z",
+    "rawHash": "b6dabae67590047180de4491c8863014b0280c544291d640eabbeb60b358d56f",
+    "savedHash": "b6dabae67590047180de4491c8863014b0280c544291d640eabbeb60b358d56f",
+    "redactions": 0
+  },
+  {
+    "url": "https://www.sdvote.com/robots.txt",
+    "finalUrl": "https://www.sdvote.com/robots.txt",
+    "file": "read-fd9badb44b10f045.bin",
+    "status": 200,
+    "contentType": "text/plain;charset=iso-8859-1",
+    "capturedAt": "2026-10-23T08:31:08.150Z",
+    "rawHash": "fd9badb44b10f045093f4879c7f96197a45c8a6514da2879a4b444cc2f3868b4",
+    "savedHash": "fd9badb44b10f045093f4879c7f96197a45c8a6514da2879a4b444cc2f3868b4",
+    "redactions": 0
+  },
+  {
+    "url": "https://elections.bexar.gov/robots.txt",
+    "finalUrl": "https://elections.bexar.gov/robots.txt",
+    "file": "read-5b62a1edb7fa94b7.bin",
+    "status": 200,
+    "contentType": "text/plain; charset=utf-8",
+    "capturedAt": "2026-10-23T08:31:11.236Z",
+    "rawHash": "5b62a1edb7fa94b783cd675a6c9aebb3c155136845b36c14eb49d5e420646311",
+    "savedHash": "5b62a1edb7fa94b783cd675a6c9aebb3c155136845b36c14eb49d5e420646311",
+    "redactions": 0
+  },
+  {
+    "url": "https://elections.bexar.gov/163/Election-Information",
+    "finalUrl": "https://elections.bexar.gov/163/Election-Information",
+    "file": "read-f64ddea0a3e2e3ea.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-23T08:31:11.236Z",
+    "rawHash": "f64ddea0a3e2e3ea2bb6577ec8290a85c97e119aa0115eac69d0516213cbe442",
+    "savedHash": "e1e4e845e59a56e610dfefc36583098ccb474dd548707f9e77055d3df5039e0a",
+    "redactions": 1
+  },
+  {
+    "url": "https://www.yuba.gov/robots.txt",
+    "finalUrl": "https://www.yuba.gov/robots.txt",
+    "file": "read-62504121370ff148.html",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-23T08:31:18.601Z",
+    "rawHash": "62504121370ff14817e32465eabea2646732a2d6ded8629782332923f89cd392",
+    "savedHash": "62504121370ff14817e32465eabea2646732a2d6ded8629782332923f89cd392",
+    "redactions": 0
+  },
+  {
+    "url": "https://www.yuba.gov/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+    "finalUrl": "https://www.yuba.gov/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+    "file": "yuba-polling-native.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "capturedAt": "2026-10-23T08:31:18.601Z",
+    "rawHash": "b8a4b9953cad17be6859cca339f40aa47a555c68f03184288f1bc122eef1d4ac",
+    "savedHash": "b8a4b9953cad17be6859cca339f40aa47a555c68f03184288f1bc122eef1d4ac",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+    "file": "read-9a47e661d4eef6ab.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "9a47e661d4eef6ab719eafd69e7f35c4b76947190705a6d1df9143c7c1945e51",
+    "savedHash": "9a47e661d4eef6ab719eafd69e7f35c4b76947190705a6d1df9143c7c1945e51",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C30%2C31%2C32%2C33%2C34%2C1%2C2%2C3%2C4%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C46%2C47%2C48%2C49%2C50%2C51%2C52%2C53%2C54%2C55%2C56%2C57%2C58%2C59%2C60%2C61%2C62%2C63%2C64%2C65%2C66%2C67%2C68%2C69%2C70%2C71%2C72%2C73%2C74%2C75%2C76%2C77%2C78%2C79%2C80%2C81%2C82%2C83%2C84%2C85%2C86%2C87%2C88%2C89%2C90%2C91%2C92%2C93%2C94%2C95%2C96%2C97%2C98%2C99%2C100%2C101%2C102%2C103%2C104%2C105%2C106%2C107%2C108%2C109%2C110%2C111%2C112%2C113%2C114%2C115%2C116%2C117%2C118%2C119%2C120%2C121%2C122%2C123%2C124%2C125%2C126%2C127%2C128%2C129%2C130%2C131%2C132%2C133%2C134%2C135%2C136%2C137%2C138%2C139%2C140%2C141%2C142%2C143%2C144%2C145%2C146%2C147%2C148%2C149%2C150%2C151%2C152%2C153%2C154%2C155%2C156%2C157%2C158%2C159%2C160%2C161%2C162%2C163%2C164%2C165%2C166%2C167%2C168%2C169%2C170%2C171%2C172%2C173%2C174%2C175%2C176%2C177%2C178%2C179%2C180%2C181%2C182%2C183%2C184%2C185%2C186%2C187%2C188%2C189%2C190%2C191%2C192%2C193%2C194%2C195%2C196%2C197%2C198%2C199%2C200%2C201%2C202%2C203%2C204%2C205%2C206%2C207%2C208%2C209%2C210%2C211%2C212%2C213%2C214%2C215%2C216%2C217%2C218%2C219%2C220%2C221%2C222%2C223%2C224%2C225%2C226%2C227%2C228%2C229%2C230%2C231%2C232%2C233%2C234%2C235%2C236%2C237%2C238%2C239%2C240%2C241%2C242%2C243%2C244%2C245%2C246%2C247%2C248%2C249%2C250&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%2C25%2C26%2C27%2C28%2C29%2C30%2C31%2C32%2C33%2C34%2C1%2C2%2C3%2C4%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C46%2C47%2C48%2C49%2C50%2C51%2C52%2C53%2C54%2C55%2C56%2C57%2C58%2C59%2C60%2C61%2C62%2C63%2C64%2C65%2C66%2C67%2C68%2C69%2C70%2C71%2C72%2C73%2C74%2C75%2C76%2C77%2C78%2C79%2C80%2C81%2C82%2C83%2C84%2C85%2C86%2C87%2C88%2C89%2C90%2C91%2C92%2C93%2C94%2C95%2C96%2C97%2C98%2C99%2C100%2C101%2C102%2C103%2C104%2C105%2C106%2C107%2C108%2C109%2C110%2C111%2C112%2C113%2C114%2C115%2C116%2C117%2C118%2C119%2C120%2C121%2C122%2C123%2C124%2C125%2C126%2C127%2C128%2C129%2C130%2C131%2C132%2C133%2C134%2C135%2C136%2C137%2C138%2C139%2C140%2C141%2C142%2C143%2C144%2C145%2C146%2C147%2C148%2C149%2C150%2C151%2C152%2C153%2C154%2C155%2C156%2C157%2C158%2C159%2C160%2C161%2C162%2C163%2C164%2C165%2C166%2C167%2C168%2C169%2C170%2C171%2C172%2C173%2C174%2C175%2C176%2C177%2C178%2C179%2C180%2C181%2C182%2C183%2C184%2C185%2C186%2C187%2C188%2C189%2C190%2C191%2C192%2C193%2C194%2C195%2C196%2C197%2C198%2C199%2C200%2C201%2C202%2C203%2C204%2C205%2C206%2C207%2C208%2C209%2C210%2C211%2C212%2C213%2C214%2C215%2C216%2C217%2C218%2C219%2C220%2C221%2C222%2C223%2C224%2C225%2C226%2C227%2C228%2C229%2C230%2C231%2C232%2C233%2C234%2C235%2C236%2C237%2C238%2C239%2C240%2C241%2C242%2C243%2C244%2C245%2C246%2C247%2C248%2C249%2C250&outFields=*&returnGeometry=false",
+    "file": "read-a04a1f4e08e12019.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "a04a1f4e08e120199fa457c216658cdd94813be8c39f7bbe7894cdfdc81cb2e3",
+    "savedHash": "a04a1f4e08e120199fa457c216658cdd94813be8c39f7bbe7894cdfdc81cb2e3",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=251%2C252%2C253%2C254%2C255%2C256%2C1698%2C257%2C258%2C259%2C260%2C261%2C262%2C263%2C264%2C265%2C266%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C274%2C275%2C276%2C277%2C278%2C279%2C280%2C281%2C282%2C283%2C284%2C285%2C286%2C287%2C288%2C289%2C290%2C291%2C292%2C293%2C294%2C295%2C296%2C297%2C298%2C299%2C300%2C301%2C302%2C303%2C304%2C305%2C306%2C307%2C308%2C309%2C310%2C311%2C312%2C313%2C314%2C315%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323%2C324%2C325%2C326%2C327%2C328%2C329%2C330%2C331%2C332%2C333%2C334%2C335%2C336%2C337%2C338%2C339%2C340%2C341%2C342%2C343%2C344%2C345%2C346%2C347%2C348%2C349%2C350%2C351%2C352%2C353%2C354%2C355%2C356%2C357%2C358%2C359%2C360%2C361%2C362%2C363%2C364%2C365%2C366%2C367%2C368%2C369%2C370%2C371%2C372%2C373%2C374%2C375%2C376%2C377%2C378%2C379%2C380%2C381%2C382%2C383%2C384%2C385%2C386%2C387%2C388%2C389%2C390%2C391%2C392%2C393%2C394%2C395%2C396%2C397%2C398%2C399%2C400%2C401%2C402%2C403%2C404%2C405%2C406%2C407%2C408%2C409%2C410%2C411%2C412%2C413%2C414%2C415%2C416%2C417%2C418%2C419%2C420%2C421%2C422%2C423%2C424%2C425%2C426%2C427%2C428%2C429%2C430%2C431%2C432%2C433%2C434%2C435%2C436%2C437%2C438%2C439%2C440%2C441%2C442%2C443%2C444%2C445%2C446%2C447%2C448%2C449%2C450%2C451%2C452%2C453%2C454%2C455%2C456%2C457%2C458%2C459%2C460%2C461%2C462%2C463%2C464%2C465%2C466%2C467%2C468%2C469%2C470%2C471%2C472%2C473%2C474%2C475%2C476%2C477%2C478%2C479%2C480%2C481%2C482%2C483%2C484%2C485%2C486%2C487%2C488%2C489%2C490%2C491%2C492%2C493%2C494%2C495%2C496%2C497%2C498%2C499&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=251%2C252%2C253%2C254%2C255%2C256%2C1698%2C257%2C258%2C259%2C260%2C261%2C262%2C263%2C264%2C265%2C266%2C267%2C268%2C269%2C270%2C271%2C272%2C273%2C274%2C275%2C276%2C277%2C278%2C279%2C280%2C281%2C282%2C283%2C284%2C285%2C286%2C287%2C288%2C289%2C290%2C291%2C292%2C293%2C294%2C295%2C296%2C297%2C298%2C299%2C300%2C301%2C302%2C303%2C304%2C305%2C306%2C307%2C308%2C309%2C310%2C311%2C312%2C313%2C314%2C315%2C316%2C317%2C318%2C319%2C320%2C321%2C322%2C323%2C324%2C325%2C326%2C327%2C328%2C329%2C330%2C331%2C332%2C333%2C334%2C335%2C336%2C337%2C338%2C339%2C340%2C341%2C342%2C343%2C344%2C345%2C346%2C347%2C348%2C349%2C350%2C351%2C352%2C353%2C354%2C355%2C356%2C357%2C358%2C359%2C360%2C361%2C362%2C363%2C364%2C365%2C366%2C367%2C368%2C369%2C370%2C371%2C372%2C373%2C374%2C375%2C376%2C377%2C378%2C379%2C380%2C381%2C382%2C383%2C384%2C385%2C386%2C387%2C388%2C389%2C390%2C391%2C392%2C393%2C394%2C395%2C396%2C397%2C398%2C399%2C400%2C401%2C402%2C403%2C404%2C405%2C406%2C407%2C408%2C409%2C410%2C411%2C412%2C413%2C414%2C415%2C416%2C417%2C418%2C419%2C420%2C421%2C422%2C423%2C424%2C425%2C426%2C427%2C428%2C429%2C430%2C431%2C432%2C433%2C434%2C435%2C436%2C437%2C438%2C439%2C440%2C441%2C442%2C443%2C444%2C445%2C446%2C447%2C448%2C449%2C450%2C451%2C452%2C453%2C454%2C455%2C456%2C457%2C458%2C459%2C460%2C461%2C462%2C463%2C464%2C465%2C466%2C467%2C468%2C469%2C470%2C471%2C472%2C473%2C474%2C475%2C476%2C477%2C478%2C479%2C480%2C481%2C482%2C483%2C484%2C485%2C486%2C487%2C488%2C489%2C490%2C491%2C492%2C493%2C494%2C495%2C496%2C497%2C498%2C499&outFields=*&returnGeometry=false",
+    "file": "read-ea203002dc3e7d30.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "ea203002dc3e7d309101133e998c67d912ed7d4115b3183314373b8a5d01f94e",
+    "savedHash": "ea203002dc3e7d309101133e998c67d912ed7d4115b3183314373b8a5d01f94e",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=500%2C501%2C502%2C503%2C504%2C505%2C506%2C507%2C508%2C509%2C510%2C511%2C512%2C513%2C514%2C515%2C516%2C517%2C518%2C519%2C520%2C521%2C522%2C523%2C524%2C525%2C526%2C527%2C528%2C529%2C530%2C531%2C532%2C533%2C534%2C535%2C536%2C537%2C538%2C539%2C540%2C541%2C542%2C543%2C544%2C545%2C546%2C547%2C548%2C549%2C550%2C551%2C552%2C553%2C554%2C555%2C556%2C557%2C558%2C559%2C560%2C561%2C562%2C563%2C564%2C565%2C566%2C567%2C568%2C569%2C570%2C571%2C572%2C573%2C574%2C575%2C576%2C577%2C578%2C579%2C580%2C581%2C582%2C583%2C584%2C585%2C586%2C587%2C588%2C589%2C590%2C591%2C592%2C593%2C594%2C595%2C596%2C597%2C598%2C599%2C600%2C601%2C602%2C603%2C604%2C605%2C606%2C607%2C608%2C609%2C610%2C611%2C612%2C613%2C614%2C615%2C616%2C617%2C618%2C619%2C620%2C621%2C622%2C623%2C624%2C625%2C626%2C627%2C628%2C629%2C630%2C631%2C632%2C633%2C634%2C635%2C636%2C637%2C638%2C639%2C640%2C641%2C642%2C643%2C644%2C645%2C646%2C647%2C648%2C649%2C650%2C651%2C652%2C653%2C654%2C655%2C656%2C657%2C658%2C659%2C660%2C661%2C662%2C663%2C664%2C665%2C666%2C667%2C668%2C669%2C670%2C671%2C672%2C673%2C674%2C675%2C676%2C677%2C678%2C679%2C680%2C681%2C682%2C683%2C684%2C685%2C686%2C687%2C688%2C689%2C690%2C691%2C692%2C693%2C694%2C695%2C696%2C697%2C698%2C699%2C700%2C701%2C702%2C703%2C704%2C705%2C706%2C707%2C708%2C709%2C710%2C711%2C712%2C713%2C714%2C715%2C716%2C717%2C718%2C719%2C720%2C721%2C722%2C723%2C724%2C725%2C726%2C727%2C728%2C729%2C730%2C731%2C732%2C733%2C734%2C735%2C736%2C737%2C738%2C739%2C740%2C741%2C742%2C743%2C744%2C745%2C747%2C748%2C749%2C750&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=500%2C501%2C502%2C503%2C504%2C505%2C506%2C507%2C508%2C509%2C510%2C511%2C512%2C513%2C514%2C515%2C516%2C517%2C518%2C519%2C520%2C521%2C522%2C523%2C524%2C525%2C526%2C527%2C528%2C529%2C530%2C531%2C532%2C533%2C534%2C535%2C536%2C537%2C538%2C539%2C540%2C541%2C542%2C543%2C544%2C545%2C546%2C547%2C548%2C549%2C550%2C551%2C552%2C553%2C554%2C555%2C556%2C557%2C558%2C559%2C560%2C561%2C562%2C563%2C564%2C565%2C566%2C567%2C568%2C569%2C570%2C571%2C572%2C573%2C574%2C575%2C576%2C577%2C578%2C579%2C580%2C581%2C582%2C583%2C584%2C585%2C586%2C587%2C588%2C589%2C590%2C591%2C592%2C593%2C594%2C595%2C596%2C597%2C598%2C599%2C600%2C601%2C602%2C603%2C604%2C605%2C606%2C607%2C608%2C609%2C610%2C611%2C612%2C613%2C614%2C615%2C616%2C617%2C618%2C619%2C620%2C621%2C622%2C623%2C624%2C625%2C626%2C627%2C628%2C629%2C630%2C631%2C632%2C633%2C634%2C635%2C636%2C637%2C638%2C639%2C640%2C641%2C642%2C643%2C644%2C645%2C646%2C647%2C648%2C649%2C650%2C651%2C652%2C653%2C654%2C655%2C656%2C657%2C658%2C659%2C660%2C661%2C662%2C663%2C664%2C665%2C666%2C667%2C668%2C669%2C670%2C671%2C672%2C673%2C674%2C675%2C676%2C677%2C678%2C679%2C680%2C681%2C682%2C683%2C684%2C685%2C686%2C687%2C688%2C689%2C690%2C691%2C692%2C693%2C694%2C695%2C696%2C697%2C698%2C699%2C700%2C701%2C702%2C703%2C704%2C705%2C706%2C707%2C708%2C709%2C710%2C711%2C712%2C713%2C714%2C715%2C716%2C717%2C718%2C719%2C720%2C721%2C722%2C723%2C724%2C725%2C726%2C727%2C728%2C729%2C730%2C731%2C732%2C733%2C734%2C735%2C736%2C737%2C738%2C739%2C740%2C741%2C742%2C743%2C744%2C745%2C747%2C748%2C749%2C750&outFields=*&returnGeometry=false",
+    "file": "read-66d60eb97b4b8cce.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "66d60eb97b4b8cce35179d7600e84013747f03e947eb3eba5e3524863575e1fc",
+    "savedHash": "66d60eb97b4b8cce35179d7600e84013747f03e947eb3eba5e3524863575e1fc",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=751%2C752%2C753%2C754%2C755%2C756%2C757%2C758%2C759%2C760%2C761%2C762%2C763%2C764%2C765%2C766%2C767%2C768%2C769%2C770%2C771%2C772%2C773%2C774%2C775%2C776%2C777%2C778%2C779%2C780%2C781%2C782%2C783%2C784%2C785%2C786%2C787%2C788%2C789%2C790%2C791%2C792%2C793%2C794%2C795%2C796%2C797%2C798%2C799%2C800%2C801%2C802%2C803%2C805%2C806%2C807%2C808%2C809%2C810%2C811%2C812%2C813%2C814%2C815%2C816%2C817%2C818%2C819%2C820%2C821%2C822%2C823%2C824%2C825%2C826%2C827%2C828%2C829%2C830%2C831%2C832%2C833%2C834%2C835%2C836%2C837%2C838%2C839%2C840%2C841%2C842%2C843%2C844%2C845%2C846%2C847%2C848%2C849%2C850%2C851%2C852%2C853%2C854%2C855%2C856%2C857%2C858%2C859%2C860%2C861%2C862%2C863%2C864%2C865%2C866%2C867%2C868%2C869%2C870%2C871%2C872%2C873%2C874%2C875%2C876%2C877%2C878%2C879%2C880%2C881%2C882%2C883%2C884%2C885%2C886%2C887%2C888%2C889%2C890%2C891%2C892%2C893%2C894%2C895%2C896%2C897%2C898%2C899%2C900%2C901%2C902%2C903%2C904%2C905%2C906%2C907%2C908%2C909%2C910%2C911%2C912%2C913%2C914%2C915%2C916%2C917%2C918%2C919%2C920%2C921%2C922%2C923%2C924%2C925%2C926%2C927%2C928%2C929%2C930%2C931%2C932%2C933%2C746%2C934%2C935%2C936%2C937%2C938%2C939%2C940%2C941%2C942%2C943%2C944%2C945%2C946%2C947%2C948%2C804%2C949%2C950%2C951%2C952%2C953%2C954%2C955%2C956%2C957%2C958%2C959%2C960%2C961%2C962%2C963%2C964%2C965%2C966%2C967%2C968%2C969%2C970%2C971%2C972%2C973%2C974%2C975%2C976%2C977%2C978%2C979%2C980%2C981%2C982%2C983%2C984%2C985%2C986%2C987%2C988%2C989%2C990%2C1699%2C991%2C992%2C993%2C994%2C995%2C996%2C997%2C998&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=751%2C752%2C753%2C754%2C755%2C756%2C757%2C758%2C759%2C760%2C761%2C762%2C763%2C764%2C765%2C766%2C767%2C768%2C769%2C770%2C771%2C772%2C773%2C774%2C775%2C776%2C777%2C778%2C779%2C780%2C781%2C782%2C783%2C784%2C785%2C786%2C787%2C788%2C789%2C790%2C791%2C792%2C793%2C794%2C795%2C796%2C797%2C798%2C799%2C800%2C801%2C802%2C803%2C805%2C806%2C807%2C808%2C809%2C810%2C811%2C812%2C813%2C814%2C815%2C816%2C817%2C818%2C819%2C820%2C821%2C822%2C823%2C824%2C825%2C826%2C827%2C828%2C829%2C830%2C831%2C832%2C833%2C834%2C835%2C836%2C837%2C838%2C839%2C840%2C841%2C842%2C843%2C844%2C845%2C846%2C847%2C848%2C849%2C850%2C851%2C852%2C853%2C854%2C855%2C856%2C857%2C858%2C859%2C860%2C861%2C862%2C863%2C864%2C865%2C866%2C867%2C868%2C869%2C870%2C871%2C872%2C873%2C874%2C875%2C876%2C877%2C878%2C879%2C880%2C881%2C882%2C883%2C884%2C885%2C886%2C887%2C888%2C889%2C890%2C891%2C892%2C893%2C894%2C895%2C896%2C897%2C898%2C899%2C900%2C901%2C902%2C903%2C904%2C905%2C906%2C907%2C908%2C909%2C910%2C911%2C912%2C913%2C914%2C915%2C916%2C917%2C918%2C919%2C920%2C921%2C922%2C923%2C924%2C925%2C926%2C927%2C928%2C929%2C930%2C931%2C932%2C933%2C746%2C934%2C935%2C936%2C937%2C938%2C939%2C940%2C941%2C942%2C943%2C944%2C945%2C946%2C947%2C948%2C804%2C949%2C950%2C951%2C952%2C953%2C954%2C955%2C956%2C957%2C958%2C959%2C960%2C961%2C962%2C963%2C964%2C965%2C966%2C967%2C968%2C969%2C970%2C971%2C972%2C973%2C974%2C975%2C976%2C977%2C978%2C979%2C980%2C981%2C982%2C983%2C984%2C985%2C986%2C987%2C988%2C989%2C990%2C1699%2C991%2C992%2C993%2C994%2C995%2C996%2C997%2C998&outFields=*&returnGeometry=false",
+    "file": "read-f932ddc75d021fd0.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "f932ddc75d021fd0bb4d419a2976b712ac094821714416a2f13d29d39448faf6",
+    "savedHash": "f932ddc75d021fd0bb4d419a2976b712ac094821714416a2f13d29d39448faf6",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=999%2C1000%2C1001%2C1002%2C1003%2C1700%2C1004%2C1005%2C1701%2C1006%2C1007%2C1008%2C1009%2C1702%2C1010%2C1011%2C1012%2C1013%2C1014%2C1015%2C1016%2C1017%2C1018%2C1019%2C1020%2C1021%2C1022%2C1023%2C1024%2C1025%2C1026%2C1027%2C1028%2C1029%2C1030%2C1031%2C1032%2C1033%2C1034%2C1035%2C1036%2C1037%2C1038%2C1039%2C1040%2C1041%2C1042%2C1043%2C1044%2C1045%2C1046%2C1047%2C1048%2C1049%2C1050%2C1051%2C1052%2C1053%2C1054%2C1055%2C1056%2C1057%2C1058%2C1059%2C1060%2C1061%2C1062%2C1063%2C1064%2C1065%2C1066%2C1067%2C1068%2C1069%2C1070%2C1071%2C1072%2C1073%2C1074%2C1075%2C1076%2C1077%2C1078%2C1079%2C1080%2C1081%2C1082%2C1083%2C1697%2C1084%2C1085%2C1086%2C1087%2C1088%2C1089%2C1090%2C1091%2C1092%2C1093%2C1094%2C1095%2C1096%2C1097%2C1098%2C1099%2C1100%2C1101%2C1102%2C1103%2C1104%2C1105%2C1106%2C1107%2C1108%2C1109%2C1110%2C1111%2C1112%2C1113%2C1114%2C1115%2C1116%2C1117%2C1118%2C1119&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=999%2C1000%2C1001%2C1002%2C1003%2C1700%2C1004%2C1005%2C1701%2C1006%2C1007%2C1008%2C1009%2C1702%2C1010%2C1011%2C1012%2C1013%2C1014%2C1015%2C1016%2C1017%2C1018%2C1019%2C1020%2C1021%2C1022%2C1023%2C1024%2C1025%2C1026%2C1027%2C1028%2C1029%2C1030%2C1031%2C1032%2C1033%2C1034%2C1035%2C1036%2C1037%2C1038%2C1039%2C1040%2C1041%2C1042%2C1043%2C1044%2C1045%2C1046%2C1047%2C1048%2C1049%2C1050%2C1051%2C1052%2C1053%2C1054%2C1055%2C1056%2C1057%2C1058%2C1059%2C1060%2C1061%2C1062%2C1063%2C1064%2C1065%2C1066%2C1067%2C1068%2C1069%2C1070%2C1071%2C1072%2C1073%2C1074%2C1075%2C1076%2C1077%2C1078%2C1079%2C1080%2C1081%2C1082%2C1083%2C1697%2C1084%2C1085%2C1086%2C1087%2C1088%2C1089%2C1090%2C1091%2C1092%2C1093%2C1094%2C1095%2C1096%2C1097%2C1098%2C1099%2C1100%2C1101%2C1102%2C1103%2C1104%2C1105%2C1106%2C1107%2C1108%2C1109%2C1110%2C1111%2C1112%2C1113%2C1114%2C1115%2C1116%2C1117%2C1118%2C1119&outFields=*&returnGeometry=false",
+    "file": "read-05b956390dcad770.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "05b956390dcad77094471d0efadc62a81afec6a7e11f83ea8a4aa208912236af",
+    "savedHash": "05b956390dcad77094471d0efadc62a81afec6a7e11f83ea8a4aa208912236af",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1120%2C1121%2C1122%2C1123%2C1124%2C1125%2C1126%2C1127%2C1128%2C1129%2C1130%2C1131%2C1132%2C1133%2C1134%2C1135%2C1136%2C1137%2C1138%2C1139%2C1140%2C1141%2C1142%2C1143%2C1144%2C1145%2C1146%2C1147%2C1148%2C1149%2C1150%2C1151%2C1152%2C1153%2C1154%2C1155%2C1156%2C1157%2C1158%2C1159%2C1160%2C1161%2C1162%2C1163%2C1164%2C1165%2C1166%2C1167%2C1168%2C1169%2C1170%2C1171%2C1172%2C1173%2C1174%2C1175%2C1176%2C1177%2C1178%2C1179%2C1180%2C1181%2C1182%2C1183%2C1184%2C1185%2C1186%2C1187%2C1188%2C1189%2C1190%2C1191%2C1192%2C1193%2C1194%2C1195%2C1196%2C1197%2C1198%2C1199%2C1200%2C1201%2C1202%2C1203%2C1204%2C1205%2C1206%2C1207%2C1208%2C1209%2C1210%2C1211%2C1212%2C1213%2C1214%2C1215%2C1216%2C1217%2C1218%2C1219%2C1220%2C1221%2C1222%2C1223%2C1224%2C1225%2C1226%2C1227%2C1228%2C1229%2C1230%2C1231%2C1232%2C1233%2C1234%2C1235%2C1236%2C1237%2C1238%2C1239%2C1240%2C1241%2C1242%2C1243%2C1244&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1120%2C1121%2C1122%2C1123%2C1124%2C1125%2C1126%2C1127%2C1128%2C1129%2C1130%2C1131%2C1132%2C1133%2C1134%2C1135%2C1136%2C1137%2C1138%2C1139%2C1140%2C1141%2C1142%2C1143%2C1144%2C1145%2C1146%2C1147%2C1148%2C1149%2C1150%2C1151%2C1152%2C1153%2C1154%2C1155%2C1156%2C1157%2C1158%2C1159%2C1160%2C1161%2C1162%2C1163%2C1164%2C1165%2C1166%2C1167%2C1168%2C1169%2C1170%2C1171%2C1172%2C1173%2C1174%2C1175%2C1176%2C1177%2C1178%2C1179%2C1180%2C1181%2C1182%2C1183%2C1184%2C1185%2C1186%2C1187%2C1188%2C1189%2C1190%2C1191%2C1192%2C1193%2C1194%2C1195%2C1196%2C1197%2C1198%2C1199%2C1200%2C1201%2C1202%2C1203%2C1204%2C1205%2C1206%2C1207%2C1208%2C1209%2C1210%2C1211%2C1212%2C1213%2C1214%2C1215%2C1216%2C1217%2C1218%2C1219%2C1220%2C1221%2C1222%2C1223%2C1224%2C1225%2C1226%2C1227%2C1228%2C1229%2C1230%2C1231%2C1232%2C1233%2C1234%2C1235%2C1236%2C1237%2C1238%2C1239%2C1240%2C1241%2C1242%2C1243%2C1244&outFields=*&returnGeometry=false",
+    "file": "read-eb49f854f255ae73.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "eb49f854f255ae737321ded8a11be01257b5919fb268c468c96ded1bcd2d0a47",
+    "savedHash": "eb49f854f255ae737321ded8a11be01257b5919fb268c468c96ded1bcd2d0a47",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257%2C1258%2C1259%2C1260%2C1261%2C1262%2C1263%2C1264%2C1265%2C1266%2C1267%2C1268%2C1269%2C1270%2C1271%2C1272%2C1273%2C1703%2C1274%2C1275%2C1276%2C1277%2C1278%2C1279%2C1280%2C1281%2C1282%2C1283%2C1284%2C1285%2C1286%2C1287%2C1288%2C1289%2C1290%2C1291%2C1292%2C1293%2C1294%2C1295%2C1296%2C1297%2C1298%2C1299%2C1300%2C1301%2C1302%2C1303%2C1304%2C1305%2C1306%2C1307%2C1308%2C1309%2C1310%2C1311%2C1312%2C1313%2C1314%2C1315%2C1316%2C1317%2C1318%2C1319%2C1320%2C1321%2C1322%2C1323%2C1324%2C1325%2C1326%2C1327%2C1328%2C1329%2C1330%2C1331%2C1332%2C1333%2C1334%2C1335%2C1336%2C1337%2C1338%2C1339%2C1340%2C1341%2C1342%2C1343%2C1344%2C1345%2C1346%2C1347%2C1348%2C1349%2C1350%2C1351%2C1352%2C1353%2C1354%2C1355%2C1356%2C1357%2C1358%2C1359%2C1360%2C1361%2C1362%2C1363%2C1364%2C1365%2C1366%2C1367%2C1368&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1245%2C1246%2C1247%2C1248%2C1249%2C1250%2C1251%2C1252%2C1253%2C1254%2C1255%2C1256%2C1257%2C1258%2C1259%2C1260%2C1261%2C1262%2C1263%2C1264%2C1265%2C1266%2C1267%2C1268%2C1269%2C1270%2C1271%2C1272%2C1273%2C1703%2C1274%2C1275%2C1276%2C1277%2C1278%2C1279%2C1280%2C1281%2C1282%2C1283%2C1284%2C1285%2C1286%2C1287%2C1288%2C1289%2C1290%2C1291%2C1292%2C1293%2C1294%2C1295%2C1296%2C1297%2C1298%2C1299%2C1300%2C1301%2C1302%2C1303%2C1304%2C1305%2C1306%2C1307%2C1308%2C1309%2C1310%2C1311%2C1312%2C1313%2C1314%2C1315%2C1316%2C1317%2C1318%2C1319%2C1320%2C1321%2C1322%2C1323%2C1324%2C1325%2C1326%2C1327%2C1328%2C1329%2C1330%2C1331%2C1332%2C1333%2C1334%2C1335%2C1336%2C1337%2C1338%2C1339%2C1340%2C1341%2C1342%2C1343%2C1344%2C1345%2C1346%2C1347%2C1348%2C1349%2C1350%2C1351%2C1352%2C1353%2C1354%2C1355%2C1356%2C1357%2C1358%2C1359%2C1360%2C1361%2C1362%2C1363%2C1364%2C1365%2C1366%2C1367%2C1368&outFields=*&returnGeometry=false",
+    "file": "read-aba3d5f74dd0e4d9.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "aba3d5f74dd0e4d9a857a5ae99c278c6d439206a312a4850c89932720772fac6",
+    "savedHash": "aba3d5f74dd0e4d9a857a5ae99c278c6d439206a312a4850c89932720772fac6",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1369%2C1370%2C1371%2C1372%2C1373%2C1374%2C1375%2C1376%2C1377%2C1378%2C1379%2C1380%2C1381%2C1382%2C1383%2C1384%2C1385%2C1386%2C1387%2C1388%2C1389%2C1390%2C1391%2C1392%2C1393%2C1394%2C1395%2C1396%2C1397%2C1398%2C1399%2C1400%2C1401%2C1402%2C1403%2C1404%2C1405%2C1406%2C1407%2C1408%2C1409%2C1410%2C1411%2C1412%2C1413%2C1414%2C1415%2C1416%2C1417%2C1418%2C1419%2C1420%2C1421%2C1422%2C1423%2C1424%2C1425%2C1426%2C1427%2C1428%2C1429%2C1430%2C1431%2C1432%2C1433%2C1434%2C1435%2C1436%2C1437%2C1438%2C1439%2C1440%2C1441%2C1442%2C1443%2C1444%2C1445%2C1446%2C1447%2C1448%2C1449%2C1450%2C1451%2C1452%2C1453%2C1454%2C1455%2C1456%2C1457%2C1458%2C1459%2C1460%2C1461%2C1462%2C1463%2C1464%2C1465%2C1466%2C1467%2C1468%2C1469%2C1470%2C1471%2C1472%2C1473%2C1474%2C1475%2C1476%2C1477%2C1478%2C1479%2C1480%2C1481%2C1482%2C1483%2C1484%2C1485%2C1486%2C1487%2C1488%2C1489%2C1490%2C1491%2C1492%2C1493&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1369%2C1370%2C1371%2C1372%2C1373%2C1374%2C1375%2C1376%2C1377%2C1378%2C1379%2C1380%2C1381%2C1382%2C1383%2C1384%2C1385%2C1386%2C1387%2C1388%2C1389%2C1390%2C1391%2C1392%2C1393%2C1394%2C1395%2C1396%2C1397%2C1398%2C1399%2C1400%2C1401%2C1402%2C1403%2C1404%2C1405%2C1406%2C1407%2C1408%2C1409%2C1410%2C1411%2C1412%2C1413%2C1414%2C1415%2C1416%2C1417%2C1418%2C1419%2C1420%2C1421%2C1422%2C1423%2C1424%2C1425%2C1426%2C1427%2C1428%2C1429%2C1430%2C1431%2C1432%2C1433%2C1434%2C1435%2C1436%2C1437%2C1438%2C1439%2C1440%2C1441%2C1442%2C1443%2C1444%2C1445%2C1446%2C1447%2C1448%2C1449%2C1450%2C1451%2C1452%2C1453%2C1454%2C1455%2C1456%2C1457%2C1458%2C1459%2C1460%2C1461%2C1462%2C1463%2C1464%2C1465%2C1466%2C1467%2C1468%2C1469%2C1470%2C1471%2C1472%2C1473%2C1474%2C1475%2C1476%2C1477%2C1478%2C1479%2C1480%2C1481%2C1482%2C1483%2C1484%2C1485%2C1486%2C1487%2C1488%2C1489%2C1490%2C1491%2C1492%2C1493&outFields=*&returnGeometry=false",
+    "file": "read-0156587222f81d83.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "0156587222f81d833a429420aecbd878242c416ac6df3a2097646210f8d2fb18",
+    "savedHash": "0156587222f81d833a429420aecbd878242c416ac6df3a2097646210f8d2fb18",
+    "redactions": 0
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1494%2C1495%2C1496%2C1497%2C1498%2C1499%2C1500%2C1501%2C1502%2C1503%2C1504%2C1505%2C1506%2C1507%2C1508%2C1509%2C1510%2C1511%2C1512%2C1513%2C1514%2C1515%2C1516%2C1517%2C1518%2C1519%2C1520%2C1521%2C1522%2C1523%2C1524%2C1525%2C1526%2C1527%2C1528%2C1529%2C1530%2C1531%2C1532%2C1533%2C1534%2C1535%2C1536%2C1537%2C1538%2C1539%2C1540%2C1541%2C1542%2C1543%2C1544%2C1545%2C1546%2C1547%2C1548%2C1549%2C1550%2C1551%2C1552%2C1553%2C1554%2C1555%2C1556%2C1557%2C1558%2C1559%2C1560%2C1561%2C1562%2C1563%2C1564%2C1565%2C1566%2C1567%2C1568%2C1569%2C1570%2C1571%2C1572%2C1573%2C1574%2C1575%2C1576%2C1577%2C1578%2C1579%2C1580%2C1581%2C1582%2C1583%2C1584%2C1585%2C1586%2C1587%2C1588%2C1589%2C1590%2C1591%2C1592%2C1593%2C1594%2C1595%2C1596%2C1597%2C1598%2C1599%2C1600%2C1601%2C1602%2C1603%2C1604%2C1605%2C1606%2C1607%2C1608%2C1609%2C1610%2C1611%2C1612%2C1613%2C1614%2C1615%2C1616%2C1617%2C1618%2C1619%2C1620%2C1621%2C1622%2C1623%2C1624%2C1625%2C1626%2C1627%2C1628%2C1629%2C1630%2C1631%2C1632%2C1633%2C1634%2C1635%2C1636%2C1637%2C1638%2C1639%2C1640%2C1641%2C1642%2C1643%2C1644%2C1645%2C1646%2C1647%2C1648%2C1649%2C1650%2C1651%2C1652%2C1653%2C1654%2C1655%2C1656%2C1657%2C1658%2C1659%2C1660%2C1661%2C1662%2C1663%2C1664%2C1665%2C1666%2C1667%2C1668%2C1669%2C1670%2C1671%2C1672%2C1673%2C1674%2C1675%2C1676%2C1677%2C1678%2C1679%2C1680%2C1681%2C1682%2C1683%2C1684%2C1685%2C1686%2C1687%2C1688%2C1689%2C1690%2C1691%2C1692%2C1693%2C1694%2C1695%2C1696&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1494%2C1495%2C1496%2C1497%2C1498%2C1499%2C1500%2C1501%2C1502%2C1503%2C1504%2C1505%2C1506%2C1507%2C1508%2C1509%2C1510%2C1511%2C1512%2C1513%2C1514%2C1515%2C1516%2C1517%2C1518%2C1519%2C1520%2C1521%2C1522%2C1523%2C1524%2C1525%2C1526%2C1527%2C1528%2C1529%2C1530%2C1531%2C1532%2C1533%2C1534%2C1535%2C1536%2C1537%2C1538%2C1539%2C1540%2C1541%2C1542%2C1543%2C1544%2C1545%2C1546%2C1547%2C1548%2C1549%2C1550%2C1551%2C1552%2C1553%2C1554%2C1555%2C1556%2C1557%2C1558%2C1559%2C1560%2C1561%2C1562%2C1563%2C1564%2C1565%2C1566%2C1567%2C1568%2C1569%2C1570%2C1571%2C1572%2C1573%2C1574%2C1575%2C1576%2C1577%2C1578%2C1579%2C1580%2C1581%2C1582%2C1583%2C1584%2C1585%2C1586%2C1587%2C1588%2C1589%2C1590%2C1591%2C1592%2C1593%2C1594%2C1595%2C1596%2C1597%2C1598%2C1599%2C1600%2C1601%2C1602%2C1603%2C1604%2C1605%2C1606%2C1607%2C1608%2C1609%2C1610%2C1611%2C1612%2C1613%2C1614%2C1615%2C1616%2C1617%2C1618%2C1619%2C1620%2C1621%2C1622%2C1623%2C1624%2C1625%2C1626%2C1627%2C1628%2C1629%2C1630%2C1631%2C1632%2C1633%2C1634%2C1635%2C1636%2C1637%2C1638%2C1639%2C1640%2C1641%2C1642%2C1643%2C1644%2C1645%2C1646%2C1647%2C1648%2C1649%2C1650%2C1651%2C1652%2C1653%2C1654%2C1655%2C1656%2C1657%2C1658%2C1659%2C1660%2C1661%2C1662%2C1663%2C1664%2C1665%2C1666%2C1667%2C1668%2C1669%2C1670%2C1671%2C1672%2C1673%2C1674%2C1675%2C1676%2C1677%2C1678%2C1679%2C1680%2C1681%2C1682%2C1683%2C1684%2C1685%2C1686%2C1687%2C1688%2C1689%2C1690%2C1691%2C1692%2C1693%2C1694%2C1695%2C1696&outFields=*&returnGeometry=false",
+    "file": "read-d70bae7f14ba759d.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:23.626Z",
+    "rawHash": "d70bae7f14ba759d164768cbb04f97dfccdf4a1d53ebc4088ae4a0eefe406a3c",
+    "savedHash": "d70bae7f14ba759d164768cbb04f97dfccdf4a1d53ebc4088ae4a0eefe406a3c",
+    "redactions": 0
+  },
+  {
+    "url": "https://www.pima.gov/robots.txt",
+    "finalUrl": "https://www.pima.gov/robots.txt",
+    "file": "read-5b070e93aa21b332.bin",
+    "status": 200,
+    "contentType": "text/plain; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:31.814Z",
+    "rawHash": "5b070e93aa21b3328307a100a4e880ccaedbbc5fbd7954d490086c9614860156",
+    "savedHash": "5b070e93aa21b3328307a100a4e880ccaedbbc5fbd7954d490086c9614860156",
+    "redactions": 0
+  },
+  {
+    "url": "https://www.pima.gov/pima-votes",
+    "finalUrl": "https://www.pima.gov/pima-votes",
+    "file": "pima-election-page-native.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:31.814Z",
+    "rawHash": "870a3076bafb47d5a81086723db2fb5958fab4591e06fe01247389d5ccf01075",
+    "savedHash": "633e2c4236164fcb75635645b85b29f6095d8098b4ae7e3c508ad345c73b00cd",
+    "redactions": 6
+  },
+  {
+    "url": "https://services2.arcgis.com/robots.txt",
+    "finalUrl": "https://services2.arcgis.com/robots.txt",
+    "file": "read-82e45382e7d625da.bin",
+    "status": 200,
+    "contentType": "text/plain",
+    "capturedAt": "2026-10-23T08:37:31.814Z",
+    "rawHash": "82e45382e7d625da9fd553fe7ffad1cc3723573f619e00b822f856bfa7919749",
+    "savedHash": "82e45382e7d625da9fd553fe7ffad1cc3723573f619e00b822f856bfa7919749",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&returnIdsOnly=true",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&returnIdsOnly=true",
+    "file": "read-eb3ab273213ddd9f.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:31.814Z",
+    "rawHash": "eb3ab273213ddd9fa16c9655bb260c35052b5d8bfdd5b2a90413fb802c09da8a",
+    "savedHash": "eb3ab273213ddd9fa16c9655bb260c35052b5d8bfdd5b2a90413fb802c09da8a",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C16%2C17%2C18%2C19%2C20%2C21%2C24%2C25%2C26%2C27%2C28%2C30%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C46%2C47%2C48%2C50%2C51%2C52%2C53%2C54%2C55%2C56%2C57%2C58%2C59%2C60%2C61%2C65%2C66%2C67%2C69%2C70%2C71%2C72%2C73%2C74%2C75%2C76%2C77%2C78%2C79%2C80%2C81%2C82%2C84%2C85%2C86%2C87%2C88%2C89%2C90%2C91%2C93%2C94%2C96%2C97%2C98%2C99%2C100%2C101%2C102%2C103%2C104%2C105%2C106%2C107%2C108%2C110%2C111%2C112%2C113%2C114%2C116%2C117%2C118%2C119%2C120%2C121%2C122%2C123%2C124%2C125%2C126%2C212%2C218%2C219%2C311%2C319%2C329%2C365%2C366%2C367%2C368%2C369%2C370%2C371%2C372%2C275%2C293%2C344&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C16%2C17%2C18%2C19%2C20%2C21%2C24%2C25%2C26%2C27%2C28%2C30%2C31%2C32%2C33%2C34%2C35%2C36%2C37%2C38%2C39%2C40%2C41%2C42%2C43%2C44%2C45%2C46%2C47%2C48%2C50%2C51%2C52%2C53%2C54%2C55%2C56%2C57%2C58%2C59%2C60%2C61%2C65%2C66%2C67%2C69%2C70%2C71%2C72%2C73%2C74%2C75%2C76%2C77%2C78%2C79%2C80%2C81%2C82%2C84%2C85%2C86%2C87%2C88%2C89%2C90%2C91%2C93%2C94%2C96%2C97%2C98%2C99%2C100%2C101%2C102%2C103%2C104%2C105%2C106%2C107%2C108%2C110%2C111%2C112%2C113%2C114%2C116%2C117%2C118%2C119%2C120%2C121%2C122%2C123%2C124%2C125%2C126%2C212%2C218%2C219%2C311%2C319%2C329%2C365%2C366%2C367%2C368%2C369%2C370%2C371%2C372%2C275%2C293%2C344&outFields=*&returnGeometry=false",
+    "file": "pima-2026-vote-centers-native.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:31.814Z",
+    "rawHash": "11bc096dda7b61ffcca385531cbf207364f67c24da3d1c07cfff84f0050d6bd7",
+    "savedHash": "11bc096dda7b61ffcca385531cbf207364f67c24da3d1c07cfff84f0050d6bd7",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&returnIdsOnly=true",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&returnIdsOnly=true",
+    "file": "read-3da78a7142a93077.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:36.486Z",
+    "rawHash": "3da78a7142a93077559e9d0430ec8073f31e4c8204c292be94db1720bad98655",
+    "savedHash": "3da78a7142a93077559e9d0430ec8073f31e4c8204c292be94db1720bad98655",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&objectIds=1%2C2%2C4%2C5%2C7%2C8%2C9%2C10%2C11%2C12%2C16%2C17%2C19%2C42%2C73%2C104&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&objectIds=1%2C2%2C4%2C5%2C7%2C8%2C9%2C10%2C11%2C12%2C16%2C17%2C19%2C42%2C73%2C104&outFields=*&returnGeometry=false",
+    "file": "pima-2026-early-voting-native.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:36.486Z",
+    "rawHash": "bfefd1d60f443ede9dcd6c9f4c5996ea8f3bab67438173f679a84b47b7339d69",
+    "savedHash": "bfefd1d60f443ede9dcd6c9f4c5996ea8f3bab67438173f679a84b47b7339d69",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0/query?f=json&where=1%3D1&returnIdsOnly=true",
+    "file": "read-7115ffc12af876db.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:39.865Z",
+    "rawHash": "7115ffc12af876db61b65cc09d8b0b81bde86cd846bb1cbdc50902b7f8ef19e6",
+    "savedHash": "7115ffc12af876db61b65cc09d8b0b81bde86cd846bb1cbdc50902b7f8ef19e6",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0/query?f=json&where=1%3D1&objectIds=1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9&outFields=*&returnGeometry=false",
+    "file": "pima-2026-drop-boxes-native.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:39.865Z",
+    "rawHash": "b8fb0f9b8f363d12b3105ea5af123aa80a9d9101586a238580565ccc6f3f4a1d",
+    "savedHash": "b8fb0f9b8f363d12b3105ea5af123aa80a9d9101586a238580565ccc6f3f4a1d",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/mobileVotingSites/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&returnIdsOnly=true",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/mobileVotingSites/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&returnIdsOnly=true",
+    "file": "read-133dc7b74a035840.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:43.023Z",
+    "rawHash": "133dc7b74a035840b5f7de6c5888713f1f1ce1c865d1ccabd029326c76eb3f5e",
+    "savedHash": "133dc7b74a035840b5f7de6c5888713f1f1ce1c865d1ccabd029326c76eb3f5e",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/mobileVotingSites/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&objectIds=4%2C7%2C8%2C9&outFields=*&returnGeometry=false",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/mobileVotingSites/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&objectIds=4%2C7%2C8%2C9&outFields=*&returnGeometry=false",
+    "file": "read-04a0e8ced6bf5beb.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:37:43.023Z",
+    "rawHash": "04a0e8ced6bf5bebfe3dc102dc78f44ac4f6f0247e97a03c6f41c7c21247d39c",
+    "savedHash": "04a0e8ced6bf5bebfe3dc102dc78f44ac4f6f0247e97a03c6f41c7c21247d39c",
+    "redactions": 0
+  },
+  {
+    "url": "https://www.pima.gov/pima-votes",
+    "finalUrl": "https://www.pima.gov/pima-votes",
+    "file": "read-4e75465dd73ec0fb.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "capturedAt": "2026-10-23T08:50:38.778Z",
+    "rawHash": "4e75465dd73ec0fb6d39cda15f876b29cf2b93c066ff17ee6ee58c164bcd7589",
+    "savedHash": "4e75465dd73ec0fb6d39cda15f876b29cf2b93c066ff17ee6ee58c164bcd7589",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&returnIdsOnly=true",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&returnIdsOnly=true",
+    "file": "read-711e15284fb6e146.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:50:38.778Z",
+    "rawHash": "711e15284fb6e146db8c94f34d3bd3499cdf97c2f2a8e7b3febcfd55bb77fec7",
+    "savedHash": "711e15284fb6e146db8c94f34d3bd3499cdf97c2f2a8e7b3febcfd55bb77fec7",
+    "redactions": 0
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&returnIdsOnly=true",
+    "finalUrl": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&returnIdsOnly=true",
+    "file": "read-d3c464717e90964e.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "capturedAt": "2026-10-23T08:50:43.590Z",
+    "rawHash": "d3c464717e90964e6c555a7c8c8d38b648053670d6917a8801646bb500afb80e",
+    "savedHash": "d3c464717e90964e6c555a7c8c8d38b648053670d6917a8801646bb500afb80e",
+    "redactions": 0
+  },
+  {
+    "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/config.json",
+    "finalUrl": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/config.json",
+    "capturedAt": "2026-10-23T08:15:02.045Z",
+    "contentType": "application/json",
+    "rawHash": "9f2bee58a6e033b2ee725e8caa691a4a569442e6d3be9131bdafdcac12b253b9",
+    "savedHash": "9f2bee58a6e033b2ee725e8caa691a4a569442e6d3be9131bdafdcac12b253b9",
+    "redactions": 0,
+    "bytes": 230854,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /ElectionWaitTimes/cdn/10/config.json: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/config.json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-config-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/ElectionControl/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/ElectionControl/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:15:48.652Z",
+    "contentType": "application/json; charset=UTF-8",
+    "rawHash": "5f7881322ab2a59f12866a7818e97cf6b8672d732b7faeb5baabbf347ebb25d1",
+    "savedHash": "5f7881322ab2a59f12866a7818e97cf6b8672d732b7faeb5baabbf347ebb25d1",
+    "redactions": 0,
+    "bytes": 1574,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/ElectionControl/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/ElectionControl/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-control-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:15:48.930Z",
+    "contentType": "application/json; charset=UTF-8",
+    "rawHash": "c8bed81ed857868b20276cb8312134450b48b2965b4049c0f4c7c8c149e6f2dd",
+    "savedHash": "c8bed81ed857868b20276cb8312134450b48b2965b4049c0f4c7c8c149e6f2dd",
+    "redactions": 0,
+    "bytes": 127839,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-day-rows-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:15:47.484Z",
+    "contentType": "application/json; charset=UTF-8",
+    "rawHash": "34519d795d490ee22492e187e7953c7ce714243c3717db748b5aaeb74d7f1eb9",
+    "savedHash": "34519d795d490ee22492e187e7953c7ce714243c3717db748b5aaeb74d7f1eb9",
+    "redactions": 0,
+    "bytes": 31835,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-early-rows-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://elections.bexar.gov/166/Early-Voting",
+    "finalUrl": "https://elections.bexar.gov/166/Early-Voting",
+    "capturedAt": "2026-10-23T08:25:52.522Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "f345a5d85274e109917d247f4293d560a53e4d32d7e7c9c69c3474271430c6f4",
+    "savedHash": "40af772376cf3d5433cba7ddc2f6016c606acc675a60f8684bb61dc91e8b682b",
+    "redactions": 1,
+    "bytes": 121031,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/166/Early-Voting",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-early-voting-page-native.html",
+    "status": 200
+  },
+  {
+    "url": "https://maps.bexar.org/earlyvoteinfo/",
+    "finalUrl": "https://maps.bexar.org/earlyvoteinfo/",
+    "capturedAt": "2026-10-23T08:25:51.234Z",
+    "contentType": "text/html",
+    "rawHash": "1333ba25b99396e39d8435fde271717315e910ac2c5c6ba11a8bb35939aa559d",
+    "savedHash": "1333ba25b99396e39d8435fde271717315e910ac2c5c6ba11a8bb35939aa559d",
+    "redactions": 0,
+    "bytes": 3377,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /earlyvoteinfo/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/earlyvoteinfo/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-earlyvoteinfo-native.html",
+    "status": 200
+  },
+  {
+    "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/jimu-core/init.js",
+    "finalUrl": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/jimu-core/init.js",
+    "capturedAt": "2026-10-23T08:15:01.570Z",
+    "contentType": "application/javascript",
+    "rawHash": "27191066e1c163adb2e10b34e3a2992d53207a646a2e79225610bd97aca6fa13",
+    "savedHash": "27191066e1c163adb2e10b34e3a2992d53207a646a2e79225610bd97aca6fa13",
+    "redactions": 0,
+    "bytes": 62334,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /ElectionWaitTimes/cdn/10/jimu-core/init.js: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/jimu-core/init.js",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-init-native.js",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/1dfb1b284d6a48d8ba6b2a0f99680a88/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/1dfb1b284d6a48d8ba6b2a0f99680a88/data?f=json",
+    "capturedAt": "2026-10-23T08:16:22.322Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "7c134fd081b4b6066dd5487e190ce32a6693d8133ad673e5f73bf07b1dd01f50",
+    "savedHash": "7c134fd081b4b6066dd5487e190ce32a6693d8133ad673e5f73bf07b1dd01f50",
+    "redactions": 0,
+    "bytes": 34676,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/1dfb1b284d6a48d8ba6b2a0f99680a88/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "bexar-webmap-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "finalUrl": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "capturedAt": "2026-10-23T08:25:08.547Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "797f43fe14a4281654d1efa5f56e1a0b6e18aca3ea8147d3d21b5a187d5fd7f3",
+    "savedHash": "797f43fe14a4281654d1efa5f56e1a0b6e18aca3ea8147d3d21b5a187d5fd7f3",
+    "redactions": 0,
+    "bytes": 93318,
+    "attempts": [
+      {
+        "url": "https://www.sos.ca.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-county-offices.html",
+    "status": 200
+  },
+  {
+    "url": "https://locator.lavote.gov/locations-list/vbm?id=4348&culture=en",
+    "finalUrl": "https://locator.lavote.gov/locations-list/vbm?id=4348&culture=en",
+    "capturedAt": "2026-10-23T08:16:07.934Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "46847c9b59c05c6e347ab4340347083a44abfb76efbe1304f4f00260d44924a8",
+    "savedHash": "46847c9b59c05c6e347ab4340347083a44abfb76efbe1304f4f00260d44924a8",
+    "redactions": 0,
+    "bytes": 155884,
+    "attempts": [
+      {
+        "url": "https://locator.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://locator.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /locations-list/vbm: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://locator.lavote.gov/locations-list/vbm?id=4348&culture=en",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-la-drop-box-list.html",
+    "status": 200
+  },
+  {
+    "url": "https://locator.lavote.gov/locations/vc?culture=en",
+    "finalUrl": "https://locator.lavote.gov/locations/vc?culture=en",
+    "capturedAt": "2026-10-23T08:14:38.861Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "c602188dfdbb209ec43fcc8b6905759eaa256d878315ea083859aee03642eca5",
+    "savedHash": "a8c7485d6022f83777ed6c544f1847d1084287aa64eb93d5ddb2e0180f2748c6",
+    "redactions": 1,
+    "bytes": 30524,
+    "attempts": [
+      {
+        "url": "https://locator.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://locator.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /locations/vc: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://locator.lavote.gov/locations/vc?culture=en",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-la-locator.html",
+    "status": 200
+  },
+  {
+    "url": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+    "finalUrl": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+    "capturedAt": "2026-10-23T08:16:09.148Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "88dc10bbcfa6fd24bd2f32fa40d6740367f90fde62911f6919796907fd7b774d",
+    "savedHash": "88dc10bbcfa6fd24bd2f32fa40d6740367f90fde62911f6919796907fd7b774d",
+    "redactions": 0,
+    "bytes": 320839,
+    "attempts": [
+      {
+        "url": "https://locator.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://locator.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /locations-list/vc: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://locator.lavote.gov/locations-list/vc?id=4348&culture=en",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-la-vote-center-list.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about",
+    "finalUrl": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about",
+    "capturedAt": "2026-10-23T08:13:46.060Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "db3d141f643248ac1af542812a711b59c02ff10cc39171e7ea434367b7746b20",
+    "savedHash": "db3d141f643248ac1af542812a711b59c02ff10cc39171e7ea434367b7746b20",
+    "redactions": 0,
+    "bytes": 150090,
+    "attempts": [
+      {
+        "url": "https://www.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://www.lavote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /home/voting-elections/voting-options/voting-in-person/about: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-la-voting-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://ocvote.gov/press-releases/november-3-2026-general-election-public-service-announcement",
+    "finalUrl": "https://ocvote.gov/press-releases/november-3-2026-general-election-public-service-announcement",
+    "capturedAt": "2026-10-23T08:17:28.796Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "193b22bc08abb0e0b9dd14712a3cd35528c0ba8bf272929ed4961ead140cfe87",
+    "savedHash": "193b22bc08abb0e0b9dd14712a3cd35528c0ba8bf272929ed4961ead140cfe87",
+    "redactions": 0,
+    "bytes": 22497,
+    "attempts": [
+      {
+        "url": "https://ocvote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://ocvote.gov/press-releases/november-3-2026-general-election-public-service-announcement",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-orange-current-notice.html",
+    "status": 200
+  },
+  {
+    "url": "https://ocvote.gov/elections/ballot-drop-box-locations",
+    "finalUrl": "https://ocvote.gov/elections/ballot-drop-box-locations",
+    "capturedAt": "2026-10-23T08:13:44.058Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "bbb61b0b7f6e51c7cbfb6ef08728b7021bd319810c07a273e3838cd4d31b3470",
+    "savedHash": "bbb61b0b7f6e51c7cbfb6ef08728b7021bd319810c07a273e3838cd4d31b3470",
+    "redactions": 0,
+    "bytes": 48943,
+    "attempts": [
+      {
+        "url": "https://ocvote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://ocvote.gov/elections/ballot-drop-box-locations",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-orange-drop-boxes.html",
+    "status": 200
+  },
+  {
+    "url": "https://ocvote.gov/voting/voting-and-dropoff-locations-by-election",
+    "finalUrl": "https://ocvote.gov/voting/voting-and-dropoff-locations-by-election",
+    "capturedAt": "2026-10-23T08:14:37.207Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "9ee3d851f74ce6145040353cce2633726e0310458286d029017435c8ed95bb5f",
+    "savedHash": "9ee3d851f74ce6145040353cce2633726e0310458286d029017435c8ed95bb5f",
+    "redactions": 0,
+    "bytes": 22966,
+    "attempts": [
+      {
+        "url": "https://ocvote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://ocvote.gov/voting/voting-and-dropoff-locations-by-election",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-orange-election.html",
+    "status": 200
+  },
+  {
+    "url": "https://ocvote.gov/elections/vote-center-locations",
+    "finalUrl": "https://ocvote.gov/elections/vote-center-locations",
+    "capturedAt": "2026-10-23T08:13:44.427Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "47dc6789737efb8d2bca13aa77bc79aafc84b953950c02f90d381dfa6da06a29",
+    "savedHash": "47dc6789737efb8d2bca13aa77bc79aafc84b953950c02f90d381dfa6da06a29",
+    "redactions": 0,
+    "bytes": 54594,
+    "attempts": [
+      {
+        "url": "https://ocvote.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://ocvote.gov/elections/vote-center-locations",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-orange-vote-centers.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/36fbbfa307414869b12171a2fc30a089/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/36fbbfa307414869b12171a2fc30a089/data?f=json",
+    "capturedAt": "2026-10-23T08:19:21.986Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "9e77df38ce1b41e4ec6c5776cd2244a4ff1f385f93b3790bb76430ba596f3895",
+    "savedHash": "9e77df38ce1b41e4ec6c5776cd2244a4ff1f385f93b3790bb76430ba596f3895",
+    "redactions": 0,
+    "bytes": 7828,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/36fbbfa307414869b12171a2fc30a089/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-drop-app.json",
+    "status": 200
+  },
+  {
+    "url": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/Nov%203%20Dropoff_Sites_November_General%202026_ENG.pdf",
+    "finalUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/Nov%203%20Dropoff_Sites_November_General%202026_ENG.pdf",
+    "capturedAt": "2026-10-23T08:16:08.252Z",
+    "contentType": "application/pdf",
+    "rawHash": "112e8f97b538cd912ceabb2b5f732bfbf1ffa48e557114cb3453601196a98216",
+    "savedHash": "112e8f97b538cd912ceabb2b5f732bfbf1ffa48e557114cb3453601196a98216",
+    "redactions": 0,
+    "bytes": 160324,
+    "attempts": [
+      {
+        "url": "https://voteinfo.net/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/Nov%203%20Dropoff_Sites_November_General%202026_ENG.pdf",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-drop-boxes.pdf",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/9833a4f89d97406a81c1b57354dbe263/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/9833a4f89d97406a81c1b57354dbe263/data?f=json",
+    "capturedAt": "2026-10-23T08:20:25.543Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "6f48e9e0f00eedbebba4a52e63d5547bb9bb05fab7dcee2ddf17ffc6f798ecf1",
+    "savedHash": "6f48e9e0f00eedbebba4a52e63d5547bb9bb05fab7dcee2ddf17ffc6f798ecf1",
+    "redactions": 0,
+    "bytes": 34755,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/9833a4f89d97406a81c1b57354dbe263/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-drop-map.json",
+    "status": 200
+  },
+  {
+    "url": "https://voteinfo.net/november-3-2026-general-election",
+    "finalUrl": "https://voteinfo.net/november-3-2026-general-election",
+    "capturedAt": "2026-10-23T08:14:38.896Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "143354f59bc250529417246964c7e9439b92dba1f8d29a0cc4da10d02cb69d91",
+    "savedHash": "143354f59bc250529417246964c7e9439b92dba1f8d29a0cc4da10d02cb69d91",
+    "redactions": 0,
+    "bytes": 125337,
+    "attempts": [
+      {
+        "url": "https://voteinfo.net/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://voteinfo.net/november-3-2026-general-election",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-election.html",
+    "status": 200
+  },
+  {
+    "url": "https://voteinfo.net/",
+    "finalUrl": "https://voteinfo.net/",
+    "capturedAt": "2026-10-23T08:13:45.563Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "826ec0602c9bea2538b19437a159cd3c5c25a785159f4bd27af108eea50d0bc5",
+    "savedHash": "826ec0602c9bea2538b19437a159cd3c5c25a785159f4bd27af108eea50d0bc5",
+    "redactions": 0,
+    "bytes": 139632,
+    "attempts": [
+      {
+        "url": "https://voteinfo.net/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://voteinfo.net/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-home.html",
+    "status": 200
+  },
+  {
+    "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=2&f=json",
+    "finalUrl": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=2&f=json",
+    "capturedAt": "2026-10-23T08:23:50.114Z",
+    "contentType": "application/json; charset=utf-8",
+    "rawHash": "429f1a9ce28bafe73d0fa2f39ccadc5dec35d5289dec430a37cc90bce5ca0de3",
+    "savedHash": "429f1a9ce28bafe73d0fa2f39ccadc5dec35d5289dec430a37cc90bce5ca0de3",
+    "redactions": 0,
+    "bytes": 10813,
+    "attempts": [
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=2&f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-layer-excerpt.json",
+    "status": 200
+  },
+  {
+    "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+    "finalUrl": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+    "capturedAt": "2026-10-23T08:27:57.101Z",
+    "contentType": "application/json; charset=utf-8",
+    "rawHash": "af7ed35efa167df750f5b7e588e18d285f701a7b6a0a142f6fc11fb1d2beeb84",
+    "savedHash": "af7ed35efa167df750f5b7e588e18d285f701a7b6a0a142f6fc11fb1d2beeb84",
+    "redactions": 0,
+    "bytes": 532737,
+    "attempts": [
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-layer-full.json",
+    "status": 200
+  },
+  {
+    "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0?f=json",
+    "finalUrl": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0?f=json",
+    "capturedAt": "2026-10-23T08:23:53.700Z",
+    "contentType": "application/json; charset=utf-8",
+    "rawHash": "497012e77822b59b6513e2f990a0681be7891e477bfafaf880fba7aec4b7e4d6",
+    "savedHash": "497012e77822b59b6513e2f990a0681be7891e477bfafaf880fba7aec4b7e4d6",
+    "redactions": 0,
+    "bytes": 16421,
+    "attempts": [
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-layer-metadata.json",
+    "status": 200
+  },
+  {
+    "url": "https://countyofriverside.maps.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+    "finalUrl": "https://countyofriverside.maps.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+    "capturedAt": "2026-10-23T08:25:11.854Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "4aa84b80a063a6c232b90b1db955a1ba792850b0b03bb21da99cd43e6b9a1658",
+    "savedHash": "4aa84b80a063a6c232b90b1db955a1ba792850b0b03bb21da99cd43e6b9a1658",
+    "redactions": 0,
+    "bytes": 15826,
+    "attempts": [
+      {
+        "url": "https://countyofriverside.maps.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://countyofriverside.maps.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-vote-app-official.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+    "capturedAt": "2026-10-23T08:19:21.218Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "4aa84b80a063a6c232b90b1db955a1ba792850b0b03bb21da99cd43e6b9a1658",
+    "savedHash": "4aa84b80a063a6c232b90b1db955a1ba792850b0b03bb21da99cd43e6b9a1658",
+    "redactions": 0,
+    "bytes": 15826,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-vote-app.json",
+    "status": 200
+  },
+  {
+    "url": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/Nov%203%20VC_Sites_November_General%202026.pdf",
+    "finalUrl": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/Nov%203%20VC_Sites_November_General%202026.pdf",
+    "capturedAt": "2026-10-23T08:16:09.163Z",
+    "contentType": "application/pdf",
+    "rawHash": "312a612916f858112a157dd1935a22994b70668ee129cff10ea057a8ea88cdcd",
+    "savedHash": "312a612916f858112a157dd1935a22994b70668ee129cff10ea057a8ea88cdcd",
+    "redactions": 0,
+    "bytes": 206354,
+    "attempts": [
+      {
+        "url": "https://voteinfo.net/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://voteinfo.net/sites/g/files/aldnop371/files/2026-10/Nov%203%20VC_Sites_November_General%202026.pdf",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-vote-centers.pdf",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/9142ab9bb01e4d18a21984df0cc2ff8b/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/9142ab9bb01e4d18a21984df0cc2ff8b/data?f=json",
+    "capturedAt": "2026-10-23T08:20:26.329Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "23788c9e935e969f890b9bf83fdb37e51343b9511bc494c3ed6d36f86b8a86c5",
+    "savedHash": "23788c9e935e969f890b9bf83fdb37e51343b9511bc494c3ed6d36f86b8a86c5",
+    "redactions": 0,
+    "bytes": 56763,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/9142ab9bb01e4d18a21984df0cc2ff8b/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-riverside-vote-map.json",
+    "status": 200
+  },
+  {
+    "url": "https://uploads.rov.sbcounty.gov/ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf",
+    "finalUrl": "https://uploads.rov.sbcounty.gov/ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf",
+    "capturedAt": "2026-10-23T08:17:31.481Z",
+    "contentType": "application/pdf",
+    "rawHash": "7213bac898a622b0462ff3bc3e915222b9a28e6fc765bb997497d72f6db31b44",
+    "savedHash": "7213bac898a622b0462ff3bc3e915222b9a28e6fc765bb997497d72f6db31b44",
+    "redactions": 0,
+    "bytes": 430174,
+    "attempts": [
+      {
+        "url": "https://uploads.rov.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://uploads.rov.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://uploads.rov.sbcounty.gov/ROV/News/2026/1103/PublicNotice_MailBallot_DropOffLocations.pdf",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-sanbernardino-drop-boxes.pdf",
+    "status": 200
+  },
+  {
+    "url": "https://elections.sbcounty.gov/voting/mailballotdropoff/",
+    "finalUrl": "https://elections.sbcounty.gov/voting/mailballotdropoff/",
+    "capturedAt": "2026-10-23T08:16:25.506Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "d7f87e7b4b1d1cfaae7d5f06b7e2ddd268a826d5715bac9b306f8734f21cd980",
+    "savedHash": "d7f87e7b4b1d1cfaae7d5f06b7e2ddd268a826d5715bac9b306f8734f21cd980",
+    "redactions": 0,
+    "bytes": 172118,
+    "attempts": [
+      {
+        "url": "https://elections.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.sbcounty.gov/voting/mailballotdropoff/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-sanbernardino-drop-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://elections.sbcounty.gov/elections/2026/1103/",
+    "finalUrl": "https://elections.sbcounty.gov/elections/2026/1103/",
+    "capturedAt": "2026-10-23T08:16:24.288Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "1d07ea7a3efe5dbaf8d41db774aaae7d8922d899bd60fc2d4e0749e421b6d782",
+    "savedHash": "1d07ea7a3efe5dbaf8d41db774aaae7d8922d899bd60fc2d4e0749e421b6d782",
+    "redactions": 0,
+    "bytes": 193779,
+    "attempts": [
+      {
+        "url": "https://elections.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.sbcounty.gov/elections/2026/1103/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-sanbernardino-election.html",
+    "status": 200
+  },
+  {
+    "url": "https://elections.sbcounty.gov/voting/ppl/2026/1103/",
+    "finalUrl": "https://elections.sbcounty.gov/voting/ppl/2026/1103/",
+    "capturedAt": "2026-10-23T08:17:29.529Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "179952bab862a50172e4bfa8fcf63932bb957513f9ad89e60ef3c16b8cea90a2",
+    "savedHash": "179952bab862a50172e4bfa8fcf63932bb957513f9ad89e60ef3c16b8cea90a2",
+    "redactions": 0,
+    "bytes": 173909,
+    "attempts": [
+      {
+        "url": "https://elections.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.sbcounty.gov/voting/ppl/2026/1103/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-sanbernardino-lookup.html",
+    "status": 200
+  },
+  {
+    "url": "https://uploads.rov.sbcounty.gov/rov/News/2026/1103/PublicNotice_PollingPlaceCentralCount.pdf",
+    "finalUrl": "https://uploads.rov.sbcounty.gov/rov/News/2026/1103/PublicNotice_PollingPlaceCentralCount.pdf",
+    "capturedAt": "2026-10-23T08:17:31.485Z",
+    "contentType": "application/pdf",
+    "rawHash": "95e4d73ac3fd43f3ea53599b416279d5ca8ae38c4ef9d0087ad22d7a87890b4f",
+    "savedHash": "95e4d73ac3fd43f3ea53599b416279d5ca8ae38c4ef9d0087ad22d7a87890b4f",
+    "redactions": 0,
+    "bytes": 180271,
+    "attempts": [
+      {
+        "url": "https://uploads.rov.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://uploads.rov.sbcounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /rov/News/2026/1103/PublicNotice_PollingPlaceCentralCount.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://uploads.rov.sbcounty.gov/rov/News/2026/1103/PublicNotice_PollingPlaceCentralCount.pdf",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-sanbernardino-polling.pdf",
+    "status": 200
+  },
+  {
+    "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf?VersionId=5Iy0_sZw_o1xdvINgbZftCLUOEanSesP",
+    "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf?VersionId=5Iy0_sZw_o1xdvINgbZftCLUOEanSesP",
+    "capturedAt": "2026-10-23T08:23:49.758Z",
+    "contentType": "application/pdf",
+    "rawHash": "6f5fdb29e4c6aca46d25fab58d815399d464e9db84efab13fd252cddf9a99059",
+    "savedHash": "6f5fdb29e4c6aca46d25fab58d815399d464e9db84efab13fd252cddf9a99059",
+    "redactions": 0,
+    "bytes": 316286,
+    "attempts": [
+      {
+        "url": "https://files.santaclaracounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://files.santaclaracounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf?VersionId=5Iy0_sZw_o1xdvINgbZftCLUOEanSesP",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-santaclara-drop-boxes.pdf",
+    "status": 200
+  },
+  {
+    "url": "https://vote.santaclaracounty.gov/vote-mail/official-ballot-drop-box-sites-and-early-voting-information",
+    "finalUrl": "https://vote.santaclaracounty.gov/vote-mail/official-ballot-drop-box-sites-and-early-voting-information",
+    "capturedAt": "2026-10-23T08:17:32.712Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "cea0c39face63a0d90d16acd9c52a5e2792beeb07429200879050fd647cb7b27",
+    "savedHash": "cea0c39face63a0d90d16acd9c52a5e2792beeb07429200879050fd647cb7b27",
+    "redactions": 0,
+    "bytes": 135577,
+    "attempts": [
+      {
+        "url": "https://vote.santaclaracounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://vote.santaclaracounty.gov/vote-mail/official-ballot-drop-box-sites-and-early-voting-information",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-santaclara-drop-list.html",
+    "status": 200
+  },
+  {
+    "url": "https://vote.santaclaracounty.gov/",
+    "finalUrl": "https://vote.santaclaracounty.gov/home",
+    "capturedAt": "2026-10-23T08:16:24.770Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "4a22e0c75a3623f95ebb41f075aa405f1a2eef523d9f318507e2cf9780328fda",
+    "savedHash": "4a22e0c75a3623f95ebb41f075aa405f1a2eef523d9f318507e2cf9780328fda",
+    "redactions": 0,
+    "bytes": 87567,
+    "attempts": [
+      {
+        "url": "https://vote.santaclaracounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://vote.santaclaracounty.gov/",
+        "route": "direct",
+        "outcome": "HTTP 301"
+      },
+      {
+        "url": "https://vote.santaclaracounty.gov/home",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-santaclara-home.html",
+    "status": 200
+  },
+  {
+    "url": "https://vote.santaclaracounty.gov/vote-person/official-vote-center-list-and-schedule",
+    "finalUrl": "https://vote.santaclaracounty.gov/vote-person/official-vote-center-list-and-schedule",
+    "capturedAt": "2026-10-23T08:17:27.446Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "5ef8fc709bcba43e3c25118becaf28fa03958e8934d4f9c3287c196536bbfdd9",
+    "savedHash": "5ef8fc709bcba43e3c25118becaf28fa03958e8934d4f9c3287c196536bbfdd9",
+    "redactions": 0,
+    "bytes": 119734,
+    "attempts": [
+      {
+        "url": "https://vote.santaclaracounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://vote.santaclaracounty.gov/vote-person/official-vote-center-list-and-schedule",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-ca-santaclara-vote-list.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.alleghenycounty.us/Government/Elections/Pre-Election-Day-Voting-Options/Voting-Events-Calendar",
+    "finalUrl": "https://www.alleghenycounty.us/Government/Elections/Pre-Election-Day-Voting-Options/Voting-Events-Calendar",
+    "capturedAt": "2026-10-23T08:13:57.054Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "c4b1b307576ee624b9ee1fbacfd2658ab282cb007f0c1975392f9cca4735420a",
+    "savedHash": "9b6d5fd30ba888deb649be2117ab50bd26e55f0342464ff4e78e093a5d3c329c",
+    "redactions": 1,
+    "bytes": 294356,
+    "attempts": [
+      {
+        "url": "https://www.alleghenycounty.us/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.alleghenycounty.us/Government/Elections/Pre-Election-Day-Voting-Options/Voting-Events-Calendar",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-east-allegheny-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+    "finalUrl": "https://boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+    "capturedAt": "2026-10-23T08:13:56.684Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "91abc32abcf7e188f43ad203f458b3720a27d063bb99868d230fc8357e5ad4fc",
+    "savedHash": "91abc32abcf7e188f43ad203f458b3720a27d063bb99868d230fc8357e5ad4fc",
+    "redactions": 0,
+    "bytes": 48759,
+    "attempts": [
+      {
+        "url": "https://boe.cuyahogacounty.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-east-cuyahoga-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+    "finalUrl": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+    "capturedAt": "2026-10-23T08:13:55.193Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "ddd76bb6aa17d22ab66b579821ee97384637cd9a606658e4d6d8617f1f76cf9c",
+    "savedHash": "ddd76bb6aa17d22ab66b579821ee97384637cd9a606658e4d6d8617f1f76cf9c",
+    "redactions": 0,
+    "bytes": 24348,
+    "attempts": [
+      {
+        "url": "https://vote.franklincountyohio.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://vote.franklincountyohio.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /voters/absentee-and-early-voting: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-east-franklin-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections",
+    "finalUrl": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections",
+    "capturedAt": "2026-10-23T08:13:57.219Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "098c0bdf9c46d0781534ee8b3b669a34dfde222956df1d8086cb5dfd90cc8806",
+    "savedHash": "098c0bdf9c46d0781534ee8b3b669a34dfde222956df1d8086cb5dfd90cc8806",
+    "redactions": 0,
+    "bytes": 339614,
+    "attempts": [
+      {
+        "url": "https://www.fultoncountyga.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-east-fulton-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.gwinnettcounty.com/departments/elections/absenteevoting-civilians/advancevoting",
+    "finalUrl": "https://www.gwinnettcounty.com/government/departments/elections",
+    "capturedAt": "2026-10-23T08:13:55.797Z",
+    "contentType": "text/html;charset=UTF-8",
+    "rawHash": "5bad16f2ee95599750d9e1cc68a38be298fe3304b764d8d6c68c512ab5665457",
+    "savedHash": "5bad16f2ee95599750d9e1cc68a38be298fe3304b764d8d6c68c512ab5665457",
+    "redactions": 0,
+    "bytes": 174455,
+    "attempts": [
+      {
+        "url": "https://www.gwinnettcounty.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.gwinnettcounty.com/departments/elections/absenteevoting-civilians/advancevoting",
+        "route": "direct",
+        "outcome": "HTTP 301"
+      },
+      {
+        "url": "https://www.gwinnettcounty.com/government/departments/elections",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-east-gwinnett-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://vote.nyc/elections",
+    "finalUrl": "https://vote.nyc/elections",
+    "capturedAt": "2026-10-23T08:13:56.944Z",
+    "contentType": "text/html; charset=UTF-8",
+    "rawHash": "8f6f72cbd47b185c0344bf72b322a74723b764efe7c09f2c70ad78a9349455fc",
+    "savedHash": "8f6f72cbd47b185c0344bf72b322a74723b764efe7c09f2c70ad78a9349455fc",
+    "redactions": 0,
+    "bytes": 75562,
+    "attempts": [
+      {
+        "url": "https://vote.nyc/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://vote.nyc/elections",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-east-nyc-page.html",
+    "status": 200
+  },
+  {
+    "url": "https://browardvotes.gov/",
+    "finalUrl": "https://browardvotes.gov/",
+    "capturedAt": "2026-10-23T08:14:38.843Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "2e6dd77c0b862ea7cc2c57cc3fe18707fdae0399db0e04ed4b080a4f9c9cecc6",
+    "savedHash": "2e6dd77c0b862ea7cc2c57cc3fe18707fdae0399db0e04ed4b080a4f9c9cecc6",
+    "redactions": 0,
+    "bytes": 226776,
+    "attempts": [
+      {
+        "url": "https://browardvotes.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://browardvotes.gov/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-fl-broward-home.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.votemiamidade.gov/",
+    "finalUrl": "https://www.votemiamidade.gov/elections/home.page",
+    "capturedAt": "2026-10-23T08:14:38.344Z",
+    "contentType": "text/html;charset=UTF-8",
+    "rawHash": "0729dcc1ce32471b79c5c1aee9d0ecc0d8cc4f41c7d9e94c3bef851ea31d458a",
+    "savedHash": "0729dcc1ce32471b79c5c1aee9d0ecc0d8cc4f41c7d9e94c3bef851ea31d458a",
+    "redactions": 0,
+    "bytes": 90625,
+    "attempts": [
+      {
+        "url": "https://www.votemiamidade.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://www.votemiamidade.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://www.votemiamidade.gov/",
+        "route": "direct",
+        "outcome": "HTTP 301"
+      },
+      {
+        "url": "https://www.votemiamidade.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /elections/home.page: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://www.votemiamidade.gov/elections/home.page",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-fl-miami-home.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.votepalmbeach.gov/",
+    "finalUrl": "https://www.votepalmbeach.gov/",
+    "capturedAt": "2026-10-23T08:14:39.825Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "be71e30396ceb6a62c61c82f7b8330784e565350c24d9d9a72669fb3cf944d36",
+    "savedHash": "dd6310c99844634119e06e1806c5dade44dd2f06167ec08f2ce8b28e8a6633a3",
+    "redactions": 1,
+    "bytes": 133081,
+    "attempts": [
+      {
+        "url": "https://www.votepalmbeach.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.votepalmbeach.gov/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-fl-palmbeach-home.html",
+    "status": 200
+  },
+  {
+    "url": "https://app.harrisvotes.com/js/polling-map.js",
+    "finalUrl": "https://app.harrisvotes.com/js/polling-map.js",
+    "capturedAt": "2026-10-23T08:14:38.639Z",
+    "contentType": "application/javascript",
+    "rawHash": "3098a6e8b0b37f95b42c462ec2987bbea5a4f480c48c617ee12ca57c3d54203c",
+    "savedHash": "3098a6e8b0b37f95b42c462ec2987bbea5a4f480c48c617ee12ca57c3d54203c",
+    "redactions": 0,
+    "bytes": 7452,
+    "attempts": [
+      {
+        "url": "https://app.harrisvotes.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://app.harrisvotes.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /js/polling-map.js: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://app.harrisvotes.com/js/polling-map.js",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-tx-harris-map.js",
+    "status": 200
+  },
+  {
+    "url": "https://app.harrisvotes.com/WaitTimes?lang=en-US",
+    "finalUrl": "https://app.harrisvotes.com/WaitTimes?lang=en-US",
+    "capturedAt": "2026-10-23T08:13:46.043Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "21cf890fc9c31e229b879674a777a22c401d5b416d5991d22123d4d76f30e88a",
+    "savedHash": "21cf890fc9c31e229b879674a777a22c401d5b416d5991d22123d4d76f30e88a",
+    "redactions": 0,
+    "bytes": 47030,
+    "attempts": [
+      {
+        "url": "https://app.harrisvotes.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://app.harrisvotes.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /WaitTimes: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://app.harrisvotes.com/WaitTimes?lang=en-US",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-tx-harris-voting-map.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.tarrantcountytx.gov/en/elections.html",
+    "finalUrl": "https://www.tarrantcountytx.gov/en/elections.html",
+    "capturedAt": "2026-10-23T08:14:38.032Z",
+    "contentType": "text/html;charset=utf-8",
+    "rawHash": "069ea0066456df9d529caaf76c307935958e5fbcd16389cfe58c97feba80d599",
+    "savedHash": "069ea0066456df9d529caaf76c307935958e5fbcd16389cfe58c97feba80d599",
+    "redactions": 0,
+    "bytes": 379257,
+    "attempts": [
+      {
+        "url": "https://www.tarrantcountytx.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.tarrantcountytx.gov/en/elections.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "expand-tx-tarrant-home.html",
+    "status": 200
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0?f=json",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0?f=json",
+    "capturedAt": "2026-10-23T08:11:27.791Z",
+    "contentType": "application/json; charset=utf-8",
+    "rawHash": "54f9f25eb1ef755fbbb6d6439a6540c64e54519d480f07d00921d8ab1fb5b73a",
+    "savedHash": "54f9f25eb1ef755fbbb6d6439a6540c64e54519d480f07d00921d8ab1fb5b73a",
+    "redactions": 0,
+    "bytes": 9473,
+    "attempts": [
+      {
+        "url": "https://services.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services.arcgis.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "phila-polling-metadata-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://content.civicplus.com/api/assets/az-pimacounty/f9990a8f-8ccc-45cf-9893-90bb2dd56e96",
+    "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f9990a8f-8ccc-45cf-9893-90bb2dd56e96",
+    "capturedAt": "2026-10-23T08:44:20.551Z",
+    "contentType": "application/pdf",
+    "rawHash": "2e7f124e60570fab60544ed6d49f0359355a65c708adfbbf800d3fc376a356ea",
+    "savedHash": "2e7f124e60570fab60544ed6d49f0359355a65c708adfbbf800d3fc376a356ea",
+    "redactions": 0,
+    "bytes": 105305,
+    "attempts": [
+      {
+        "url": "https://content.civicplus.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://content.civicplus.com/api/assets/az-pimacounty/f9990a8f-8ccc-45cf-9893-90bb2dd56e96",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "pima-2026-centers-official.pdf",
+    "status": 200
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:25:44.132Z",
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "b8fb0f9b8f363d12b3105ea5af123aa80a9d9101586a238580565ccc6f3f4a1d",
+    "bytes": 6927,
+    "file": "pima-2026-drop-boxes-native.json",
+    "status": 200,
+    "savedHash": "b8fb0f9b8f363d12b3105ea5af123aa80a9d9101586a238580565ccc6f3f4a1d"
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:25:45.435Z",
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "bfefd1d60f443ede9dcd6c9f4c5996ea8f3bab67438173f679a84b47b7339d69",
+    "bytes": 23958,
+    "file": "pima-2026-early-voting-native.json",
+    "status": 200,
+    "savedHash": "bfefd1d60f443ede9dcd6c9f4c5996ea8f3bab67438173f679a84b47b7339d69"
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=%28ELECTION+%3D+%272026+General%27%29+OR+%28ELECTION+%3D+%27All%27%29&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:25:44.745Z",
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "11bc096dda7b61ffcca385531cbf207364f67c24da3d1c07cfff84f0050d6bd7",
+    "bytes": 79265,
+    "file": "pima-2026-vote-centers-native.json",
+    "status": 200,
+    "savedHash": "11bc096dda7b61ffcca385531cbf207364f67c24da3d1c07cfff84f0050d6bd7"
+  },
+  {
+    "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+    "capturedAt": "2026-10-23T08:29:19.242Z",
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "0e8f07a2123c758c3af8e6bcb8b860d7c9e4a000d0d2039b8c255fc82980655d",
+    "bytes": 90121,
+    "file": "pima-all-vote-centers-native.json",
+    "status": 200,
+    "savedHash": "0e8f07a2123c758c3af8e6bcb8b860d7c9e4a000d0d2039b8c255fc82980655d"
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+    "capturedAt": "2026-10-23T08:08:39.486Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "ebf550d6b0362b0a1f17c0fe20c85b75dd673661edda02507419b0474ad06f10",
+    "savedHash": "ebf550d6b0362b0a1f17c0fe20c85b75dd673661edda02507419b0474ad06f10",
+    "redactions": 0,
+    "bytes": 169841,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "pima-app-config-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/a5bbf1e622654da194d92f3d6742e4ca/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/a5bbf1e622654da194d92f3d6742e4ca/data?f=json",
+    "capturedAt": "2026-10-23T08:11:02.059Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "11f5c5a86163d2b8a141c78a7a46992d4dda0a068327cf60ea92db28a20d7c19",
+    "savedHash": "11f5c5a86163d2b8a141c78a7a46992d4dda0a068327cf60ea92db28a20d7c19",
+    "redactions": 0,
+    "bytes": 136047,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/a5bbf1e622654da194d92f3d6742e4ca/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "pima-early-webmap-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/293fac439fd04a0695b46807118d6665/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/293fac439fd04a0695b46807118d6665/data?f=json",
+    "capturedAt": "2026-10-23T08:35:13.266Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "d1ad6b560de2e5c6a6a23243d93a695e5e6355726f5de382e5740a54ec88598b",
+    "savedHash": "d1ad6b560de2e5c6a6a23243d93a695e5e6355726f5de382e5740a54ec88598b",
+    "redactions": 0,
+    "bytes": 44723,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/293fac439fd04a0695b46807118d6665/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "pima-mobile-webmap-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://recorder.pima.gov/EarlyVotingSites",
+    "finalUrl": "https://recorder.pima.gov/EarlyVotingSites",
+    "capturedAt": "2026-10-23T08:44:18.820Z",
+    "contentType": "text/html; charset=utf-8",
+    "rawHash": "2c033e34f4923173b5eb32a78595c92f787f14ad64ce42b329766f45b48e4abe",
+    "savedHash": "2c033e34f4923173b5eb32a78595c92f787f14ad64ce42b329766f45b48e4abe",
+    "redactions": 0,
+    "bytes": 79681,
+    "attempts": [
+      {
+        "url": "https://recorder.pima.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://recorder.pima.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /EarlyVotingSites: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://recorder.pima.gov/EarlyVotingSites",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "pima-recorder-early-native.html",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/1ab372663c0c44d4bd6a12cda4a1ad1e/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/1ab372663c0c44d4bd6a12cda4a1ad1e/data?f=json",
+    "capturedAt": "2026-10-23T08:10:59.704Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "faba6bdcb72ad8b6942dc7147442a9f7e2051bf9d9b018695c092c7cff2251c5",
+    "savedHash": "faba6bdcb72ad8b6942dc7147442a9f7e2051bf9d9b018695c092c7cff2251c5",
+    "redactions": 0,
+    "bytes": 68403,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/1ab372663c0c44d4bd6a12cda4a1ad1e/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "pima-vote-webmap-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/VoteCen_NOV2026/FeatureServer/1?f=json",
+    "finalUrl": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/VoteCen_NOV2026/FeatureServer/1?f=json",
+    "capturedAt": "2026-10-23T08:39:37.005Z",
+    "contentType": "application/json; charset=utf-8",
+    "rawHash": "63223759eb7d13c9ae3cc37a7b023c2c348a7c328516255d326c5dfa385158bd",
+    "savedHash": "63223759eb7d13c9ae3cc37a7b023c2c348a7c328516255d326c5dfa385158bd",
+    "redactions": 0,
+    "bytes": 11891,
+    "attempts": [
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /1vIhDJwtG5eNmiqX/arcgis/rest/services/VoteCen_NOV2026/FeatureServer/1: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/VoteCen_NOV2026/FeatureServer/1?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "sd-current-center-metadata.json",
+    "status": 200
+  },
+  {
+    "url": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0?f=json",
+    "finalUrl": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0?f=json",
+    "capturedAt": "2026-10-23T08:39:36.143Z",
+    "contentType": "application/json; charset=utf-8",
+    "rawHash": "46eff768ce74929c620a201201b365b1d24a25655e2f527cd4892c22b63d046f",
+    "savedHash": "46eff768ce74929c620a201201b365b1d24a25655e2f527cd4892c22b63d046f",
+    "redactions": 0,
+    "bytes": 12555,
+    "attempts": [
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://services1.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "sd-current-drop-metadata.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/48c3784195df4b928269bc1e7c7c7d2a/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/48c3784195df4b928269bc1e7c7c7d2a/data?f=json",
+    "capturedAt": "2026-10-23T08:11:26.997Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "fd73ea5cf70ef9b9b578bae4f57c956cfd4aeddd102fc5ef3d8995b44021db3f",
+    "savedHash": "fd73ea5cf70ef9b9b578bae4f57c956cfd4aeddd102fc5ef3d8995b44021db3f",
+    "redactions": 0,
+    "bytes": 34210,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/48c3784195df4b928269bc1e7c7c7d2a/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "sd-drop-webmap-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/a3d57e9aa0504df29fa4c8ded225ad80/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/a3d57e9aa0504df29fa4c8ded225ad80/data?f=json",
+    "capturedAt": "2026-10-23T08:11:27.339Z",
+    "contentType": "application/json;charset=utf-8",
+    "rawHash": "28c8fe0e930ee973451de30ff0d7198bdd808554210293d0288bb93f67265057",
+    "savedHash": "28c8fe0e930ee973451de30ff0d7198bdd808554210293d0288bb93f67265057",
+    "redactions": 0,
+    "bytes": 69620,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/a3d57e9aa0504df29fa4c8ded225ad80/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ],
+    "file": "sd-vote-webmap-native.json",
+    "status": 200
+  },
+  {
+    "url": "https://www.ncsbe.gov/voting/vote-person-election-day",
+    "finalUrl": "https://www.ncsbe.gov/voting/vote-person-election-day",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "capturedAt": "2026-10-23T09:37:03.995Z",
+    "file": "nc-election-day-hours-native.html",
+    "rawHash": "0a8f07ba3769041376d3f59f4b78871d0a3a3d9cf6a1a27cc38862e0b0c7cf10",
+    "savedHash": "0a8f07ba3769041376d3f59f4b78871d0a3a3d9cf6a1a27cc38862e0b0c7cf10",
+    "storage": "RAW",
+    "redactions": []
+  }
+]

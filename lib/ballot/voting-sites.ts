@@ -62,7 +62,8 @@ export interface VotingSite {
   kinds?: SiteKind[];
   precincts?: string[];
   assignments?: { precinct: string; ward?: string; name?: string; room?: string | null; locationNotes?: string; source: VotingSource }[];
-  schedules?: { kind: SiteKind; days?: string; hours?: string; electionDate?: string; source: VotingSource }[];
+  /** `date` is this schedule row's published calendar day, separate from its election date. */
+  schedules?: { kind: SiteKind; date?: string; days?: string; hours?: string; electionDate?: string; source: VotingSource }[];
   /** In the authority's own words, or null; never filled in with the jurisdiction's current election. */
   election: string | null;
   /** Assigned wards or districts in the authority's own words; null where it does not say, never inferred. */
@@ -125,7 +126,7 @@ export function mergeVotingSiteRows(earlier: VotingSite, later: VotingSite): Vot
   }
   const schedules = new Map<string, NonNullable<VotingSite["schedules"]>[number]>();
   for (const schedule of [...(earlier.schedules ?? []), ...(later.schedules ?? [])]) {
-    const key = JSON.stringify([schedule.kind, schedule.days, schedule.electionDate]), prior = schedules.get(key);
+    const key = JSON.stringify([schedule.kind, schedule.date, schedule.days, schedule.electionDate]), prior = schedules.get(key);
     if (!prior || sourceWins(prior.source, schedule.source)) schedules.set(key, schedule);
     if (prior && prior.hours !== schedule.hours && prior.source.url !== schedule.source.url) {
       const kept = schedules.get(key)!;

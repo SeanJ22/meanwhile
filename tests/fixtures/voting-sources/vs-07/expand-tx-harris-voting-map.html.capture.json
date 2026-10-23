@@ -1,0 +1,27 @@
+{
+  "url": "https://app.harrisvotes.com/WaitTimes?lang=en-US",
+  "finalUrl": "https://app.harrisvotes.com/WaitTimes?lang=en-US",
+  "capturedAt": "2026-10-23T08:13:46.043Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "21cf890fc9c31e229b879674a777a22c401d5b416d5991d22123d4d76f30e88a",
+  "savedHash": "21cf890fc9c31e229b879674a777a22c401d5b416d5991d22123d4d76f30e88a",
+  "redactions": 0,
+  "bytes": 47030,
+  "attempts": [
+    {
+      "url": "https://app.harrisvotes.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://app.harrisvotes.com/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /WaitTimes: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://app.harrisvotes.com/WaitTimes?lang=en-US",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

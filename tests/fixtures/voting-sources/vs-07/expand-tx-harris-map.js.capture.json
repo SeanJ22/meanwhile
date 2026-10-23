@@ -1,0 +1,27 @@
+{
+  "url": "https://app.harrisvotes.com/js/polling-map.js",
+  "finalUrl": "https://app.harrisvotes.com/js/polling-map.js",
+  "capturedAt": "2026-10-23T08:14:38.639Z",
+  "contentType": "application/javascript",
+  "rawHash": "3098a6e8b0b37f95b42c462ec2987bbea5a4f480c48c617ee12ca57c3d54203c",
+  "savedHash": "3098a6e8b0b37f95b42c462ec2987bbea5a4f480c48c617ee12ca57c3d54203c",
+  "redactions": 0,
+  "bytes": 7452,
+  "attempts": [
+    {
+      "url": "https://app.harrisvotes.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://app.harrisvotes.com/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /js/polling-map.js: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://app.harrisvotes.com/js/polling-map.js",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

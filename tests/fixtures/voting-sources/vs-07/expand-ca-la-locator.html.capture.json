@@ -1,0 +1,27 @@
+{
+  "url": "https://locator.lavote.gov/locations/vc?culture=en",
+  "finalUrl": "https://locator.lavote.gov/locations/vc?culture=en",
+  "capturedAt": "2026-10-23T08:14:38.861Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "c602188dfdbb209ec43fcc8b6905759eaa256d878315ea083859aee03642eca5",
+  "savedHash": "a8c7485d6022f83777ed6c544f1847d1084287aa64eb93d5ddb2e0180f2748c6",
+  "redactions": 1,
+  "bytes": 30524,
+  "attempts": [
+    {
+      "url": "https://locator.lavote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://locator.lavote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /locations/vc: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://locator.lavote.gov/locations/vc?culture=en",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

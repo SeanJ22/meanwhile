@@ -1,0 +1,22 @@
+{
+  "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+  "finalUrl": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+  "capturedAt": "2026-10-23T08:25:08.547Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "797f43fe14a4281654d1efa5f56e1a0b6e18aca3ea8147d3d21b5a187d5fd7f3",
+  "savedHash": "797f43fe14a4281654d1efa5f56e1a0b6e18aca3ea8147d3d21b5a187d5fd7f3",
+  "redactions": 0,
+  "bytes": 93318,
+  "attempts": [
+    {
+      "url": "https://www.sos.ca.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import type { SiteKind, VotingOfficeContact, VotingRule, VotingSite, VotingSourc
 export type VotingDoorShape = "file" | "list-page" | "address-lookup" | "identity-locked-lookup" | "county-directory" | "vendor-platform" | "map-service" | "json";
 export type VotingPlatform = "voterfocus" | "voterview" | "where-to-vote" | "civix" | "power-bi";
 export const isVotingSiteKind = (kind: VotingSourceDoor["covers"][number]): kind is SiteKind => kind !== "CANDIDATE_LIST" && kind !== "BALLOT_MEASURES";
-export type VotingColumn = "id" | "name" | "address" | "room" | "kind" | "days" | "hours" | "precinct" | "town" | "countyName" | "countyFips" | "countySubdivisionGeoid" | "ward" | "districtOcdIds" | "tribalNation" | "reservation" | "aiannhGeoid" | "locationNotes" | "accessibilityNotes" | "rules" | "phone" | "email" | "officeName" | "officeAddress" | "lastUpdated" | "election" | "lat" | "lng";
+export type VotingColumn = "id" | "name" | "address" | "room" | "kind" | "date" | "days" | "hours" | "precinct" | "town" | "countyName" | "countyFips" | "countySubdivisionGeoid" | "ward" | "districtOcdIds" | "tribalNation" | "reservation" | "aiannhGeoid" | "locationNotes" | "accessibilityNotes" | "rules" | "phone" | "email" | "officeName" | "officeAddress" | "lastUpdated" | "election" | "lat" | "lng";
 export interface VotingDoorScope {
   state: string;
   ocdId: string;
@@ -38,6 +38,8 @@ export interface VotingExtraction {
     within?: { pattern: string; group?: number; fields?: Record<string, { pattern: string; group: number }> } };
   splitRows?: { column: string; pattern: string; alignedColumns?: string[]; alignedPattern?: string };
   filters?: Record<string, string>;
+  /** The current official map's ArcGIS definitionExpression, applied to IDs and every batch. */
+  where?: string;
   /** Regex capture groups applied to a named input column; data configuration only. */
   transforms?: Partial<Record<VotingColumn, { column: string; pattern: string; group: number }>>;
   pdfTop?: number;
@@ -99,6 +101,8 @@ export interface VotingSourceAttempt { url: string; route: "direct" | "browser-u
 interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
 export interface VotingSourceRead {
   doorId: string;
+  /** Configured sections acquired together from the same source. */
+  doorIds?: string[];
   contacts?: VotingSourceContact[];
   sites: VotingSite[];
   boundaries?: VotingBoundary[];
@@ -107,7 +111,7 @@ export interface VotingSourceRead {
   sources: VotingSource[];
   blanks: VotingSourceBlank[];
   attempts: VotingSourceAttempt[];
-  rawBodies: { url: string; contentType: string; bytes: Uint8Array }[];
+  rawBodies: import("./voting-source-fetch.ts").VotingCapture[];
   fileTitle?: string;
   fileUpdatedAt?: string;
   publicationMessage?: string;

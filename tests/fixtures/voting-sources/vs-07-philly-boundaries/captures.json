@@ -1,0 +1,67 @@
+[
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/Political_Divisions/FeatureServer/0?f=json",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/Political_Divisions/FeatureServer/0?f=json",
+    "file": "political-divisions-metadata.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "285c0d4e0cb369e52453e2036f8a73ecc5a90e00b4e84122774eda571e1a3869",
+    "capturedAt": "2026-10-23T09:31:19.994Z"
+  },
+  {
+    "url": "https://atlas.phila.gov/assets/index-BE7Gx29W.js",
+    "finalUrl": "https://atlas.phila.gov/assets/index-BE7Gx29W.js",
+    "file": "atlas-political-divisions-link-extract.json",
+    "status": 200,
+    "contentType": "text/javascript",
+    "sha256": "8859d65b43b43a6ea485ec380ba2de90b69981da7312d78e142c3c071e21af34",
+    "capturedAt": "2026-10-23T09:31:21.322Z",
+    "rawHash": "ff32f79d65914da835cf125dacb4560e7db8e25fee1b2b17ff62136edab54cb9",
+    "storage": "DERIVED_LINK_EXTRACT"
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json",
+    "file": "political-divisions-count.json",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "70c9bd6c526eb83b4e2f1061ef2a9abd1d7fdeee1b08e0ab2a91a52d476980e8",
+    "capturedAt": "2026-10-23T09:32:14.211Z"
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "file": "political-divisions-all.geojson",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "8555f5a537eb82cd7fdd8d257d58d8a4f7a7666d7ab05c8df0cae53cf9c812a4",
+    "capturedAt": "2026-10-23T09:32:15.939Z"
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?where=objectid%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query?where=objectid%3D1&outFields=*&outSR=4326&returnGeometry=true&f=geojson",
+    "file": "polling-place-native-point.geojson",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "9e16b6483e59055769f67caa8308f9720b007bbe094d95b348268796593b75a1",
+    "capturedAt": "2026-10-23T09:36:24.826Z"
+  },
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=short_div_num%2Cdivision_num%2CCAST%28SUBSTRING%28division_num%2C1%2C2%29+AS+INTEGER%29+AS+ward%2CCAST%28SUBSTRING%28division_num%2C3%2C2%29+AS+INTEGER%29+AS+division&outSR=4326&returnGeometry=true&f=geojson",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=short_div_num%2Cdivision_num%2CCAST%28SUBSTRING%28division_num%2C1%2C2%29+AS+INTEGER%29+AS+ward%2CCAST%28SUBSTRING%28division_num%2C3%2C2%29+AS+INTEGER%29+AS+division&outSR=4326&returnGeometry=true&f=geojson",
+    "file": "political-divisions-normalized-all.geojson",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "584c0c517b97ff5739ae2863ed8b957b27c84e806d7f4c1ccea6749da70d1b23",
+    "capturedAt": "2026-10-23T09:38:33.203Z"
+  },
+  {
+    "url": "https://atlas.phila.gov/",
+    "finalUrl": "https://atlas.phila.gov/",
+    "file": "atlas-root-native.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "sha256": "72f633ef026d9fd02f4fc33dc492315ff0c325b8ed3f5f7446f16817b73acdd0",
+    "capturedAt": "2026-10-23T09:41:08.940Z"
+  }
+]

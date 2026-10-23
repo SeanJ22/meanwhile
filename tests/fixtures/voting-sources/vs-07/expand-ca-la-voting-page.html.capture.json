@@ -1,0 +1,27 @@
+{
+  "url": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about",
+  "finalUrl": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about",
+  "capturedAt": "2026-10-23T08:13:46.060Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "db3d141f643248ac1af542812a711b59c02ff10cc39171e7ea434367b7746b20",
+  "savedHash": "db3d141f643248ac1af542812a711b59c02ff10cc39171e7ea434367b7746b20",
+  "redactions": 0,
+  "bytes": 150090,
+  "attempts": [
+    {
+      "url": "https://www.lavote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://www.lavote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /home/voting-elections/voting-options/voting-in-person/about: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.lavote.gov/home/voting-elections/voting-options/voting-in-person/about",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

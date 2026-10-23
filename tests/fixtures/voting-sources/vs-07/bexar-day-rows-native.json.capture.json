@@ -1,0 +1,27 @@
+{
+  "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+  "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+  "capturedAt": "2026-10-23T08:15:48.930Z",
+  "contentType": "application/json; charset=UTF-8",
+  "rawHash": "c8bed81ed857868b20276cb8312134450b48b2965b4049c0f4c7c8c149e6f2dd",
+  "savedHash": "c8bed81ed857868b20276cb8312134450b48b2965b4049c0f4c7c8c149e6f2dd",
+  "redactions": 0,
+  "bytes": 127839,
+  "attempts": [
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

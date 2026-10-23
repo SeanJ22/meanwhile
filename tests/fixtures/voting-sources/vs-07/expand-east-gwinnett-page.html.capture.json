@@ -1,0 +1,27 @@
+{
+  "url": "https://www.gwinnettcounty.com/departments/elections/absenteevoting-civilians/advancevoting",
+  "finalUrl": "https://www.gwinnettcounty.com/government/departments/elections",
+  "capturedAt": "2026-10-23T08:13:55.797Z",
+  "contentType": "text/html;charset=UTF-8",
+  "rawHash": "5bad16f2ee95599750d9e1cc68a38be298fe3304b764d8d6c68c512ab5665457",
+  "savedHash": "5bad16f2ee95599750d9e1cc68a38be298fe3304b764d8d6c68c512ab5665457",
+  "redactions": 0,
+  "bytes": 174455,
+  "attempts": [
+    {
+      "url": "https://www.gwinnettcounty.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.gwinnettcounty.com/departments/elections/absenteevoting-civilians/advancevoting",
+      "route": "direct",
+      "outcome": "HTTP 301"
+    },
+    {
+      "url": "https://www.gwinnettcounty.com/government/departments/elections",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

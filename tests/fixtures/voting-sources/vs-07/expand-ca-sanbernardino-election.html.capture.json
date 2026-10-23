@@ -1,0 +1,22 @@
+{
+  "url": "https://elections.sbcounty.gov/elections/2026/1103/",
+  "finalUrl": "https://elections.sbcounty.gov/elections/2026/1103/",
+  "capturedAt": "2026-10-23T08:16:24.288Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "1d07ea7a3efe5dbaf8d41db774aaae7d8922d899bd60fc2d4e0749e421b6d782",
+  "savedHash": "1d07ea7a3efe5dbaf8d41db774aaae7d8922d899bd60fc2d4e0749e421b6d782",
+  "redactions": 0,
+  "bytes": 193779,
+  "attempts": [
+    {
+      "url": "https://elections.sbcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://elections.sbcounty.gov/elections/2026/1103/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

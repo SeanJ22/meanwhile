@@ -1,0 +1,22 @@
+{
+  "url": "https://voteinfo.net/november-3-2026-general-election",
+  "finalUrl": "https://voteinfo.net/november-3-2026-general-election",
+  "capturedAt": "2026-10-23T08:14:38.896Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "143354f59bc250529417246964c7e9439b92dba1f8d29a0cc4da10d02cb69d91",
+  "savedHash": "143354f59bc250529417246964c7e9439b92dba1f8d29a0cc4da10d02cb69d91",
+  "redactions": 0,
+  "bytes": 125337,
+  "attempts": [
+    {
+      "url": "https://voteinfo.net/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://voteinfo.net/november-3-2026-general-election",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

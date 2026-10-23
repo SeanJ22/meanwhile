@@ -1,0 +1,22 @@
+{
+  "url": "https://elections.bexar.gov/166/Early-Voting",
+  "finalUrl": "https://elections.bexar.gov/166/Early-Voting",
+  "capturedAt": "2026-10-23T08:25:52.522Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "f345a5d85274e109917d247f4293d560a53e4d32d7e7c9c69c3474271430c6f4",
+  "savedHash": "40af772376cf3d5433cba7ddc2f6016c606acc675a60f8684bb61dc91e8b682b",
+  "redactions": 1,
+  "bytes": 121031,
+  "attempts": [
+    {
+      "url": "https://elections.bexar.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://elections.bexar.gov/166/Early-Voting",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

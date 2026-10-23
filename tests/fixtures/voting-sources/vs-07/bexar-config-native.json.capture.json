@@ -1,0 +1,27 @@
+{
+  "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/config.json",
+  "finalUrl": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/config.json",
+  "capturedAt": "2026-10-23T08:15:02.045Z",
+  "contentType": "application/json",
+  "rawHash": "9f2bee58a6e033b2ee725e8caa691a4a569442e6d3be9131bdafdcac12b253b9",
+  "savedHash": "9f2bee58a6e033b2ee725e8caa691a4a569442e6d3be9131bdafdcac12b253b9",
+  "redactions": 0,
+  "bytes": 230854,
+  "attempts": [
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /ElectionWaitTimes/cdn/10/config.json: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://maps.bexar.org/ElectionWaitTimes/cdn/10/config.json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

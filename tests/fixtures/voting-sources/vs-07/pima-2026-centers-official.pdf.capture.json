@@ -1,0 +1,22 @@
+{
+  "url": "https://content.civicplus.com/api/assets/az-pimacounty/f9990a8f-8ccc-45cf-9893-90bb2dd56e96",
+  "finalUrl": "https://content.civicplus.com/api/assets/az-pimacounty/f9990a8f-8ccc-45cf-9893-90bb2dd56e96",
+  "capturedAt": "2026-10-23T08:44:20.551Z",
+  "contentType": "application/pdf",
+  "rawHash": "2e7f124e60570fab60544ed6d49f0359355a65c708adfbbf800d3fc376a356ea",
+  "savedHash": "2e7f124e60570fab60544ed6d49f0359355a65c708adfbbf800d3fc376a356ea",
+  "redactions": 0,
+  "bytes": 105305,
+  "attempts": [
+    {
+      "url": "https://content.civicplus.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://content.civicplus.com/api/assets/az-pimacounty/f9990a8f-8ccc-45cf-9893-90bb2dd56e96",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

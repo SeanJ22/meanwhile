@@ -1,0 +1,27 @@
+{
+  "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf?VersionId=5Iy0_sZw_o1xdvINgbZftCLUOEanSesP",
+  "finalUrl": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf?VersionId=5Iy0_sZw_o1xdvINgbZftCLUOEanSesP",
+  "capturedAt": "2026-10-23T08:23:49.758Z",
+  "contentType": "application/pdf",
+  "rawHash": "6f5fdb29e4c6aca46d25fab58d815399d464e9db84efab13fd252cddf9a99059",
+  "savedHash": "6f5fdb29e4c6aca46d25fab58d815399d464e9db84efab13fd252cddf9a99059",
+  "redactions": 0,
+  "bytes": 316286,
+  "attempts": [
+    {
+      "url": "https://files.santaclaracounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://files.santaclaracounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://files.santaclaracounty.gov/exjcpb1296/2026-09/e148-november-3-2026-general-election-drop-location-9.2.26.pdf?VersionId=5Iy0_sZw_o1xdvINgbZftCLUOEanSesP",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

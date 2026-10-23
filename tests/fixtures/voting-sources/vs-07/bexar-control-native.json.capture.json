@@ -1,0 +1,27 @@
+{
+  "url": "https://maps.bexar.org/arcgis/rest/services/EL/ElectionControl/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+  "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/ElectionControl/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+  "capturedAt": "2026-10-23T08:15:48.652Z",
+  "contentType": "application/json; charset=UTF-8",
+  "rawHash": "5f7881322ab2a59f12866a7818e97cf6b8672d732b7faeb5baabbf347ebb25d1",
+  "savedHash": "5f7881322ab2a59f12866a7818e97cf6b8672d732b7faeb5baabbf347ebb25d1",
+  "redactions": 0,
+  "bytes": 1574,
+  "attempts": [
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://maps.bexar.org/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/ElectionControl/MapServer/0/query: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://maps.bexar.org/arcgis/rest/services/EL/ElectionControl/MapServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
+import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement } from "../ballot/voting-source-replacement-contract.ts";
 
 import { candidateChangeSet, canonicalCivicDataJson } from "./changes.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
@@ -232,6 +233,17 @@ export async function verifySourceScopedCandidateProjection(
     if (sourceIssue) return fail(verifierId, sourceIssue);
   }
 
+  const replacement = candidate.recordClass === "VOTING_SITE" && votingSourceReplacement(candidate.normalizedPayload);
+  if (replacement) {
+    if (!predecessor && proofStore) {
+      const pointer = await proofStore.readPromotionIdentity(candidate.recordClass, candidate.scope);
+      if (pointer) predecessor = await proofStore.readCandidate(pointer.versionId);
+    }
+    const { verifyVotingSourceReplacement } = await import("../ballot/voting-source-replacement.ts");
+    const issue = await verifyVotingSourceReplacement(candidate, predecessor?.candidate ?? null);
+    if (issue) return fail(VOTING_SOURCE_REPLACEMENT_VERIFIER, issue);
+  }
+
   const store = candidateReadOnlyStore(candidate, observedAt, predecessor);
   if (candidate.recordClass === "MEETING") {
     const partition = contract as MeetingPartitionContract;
@@ -251,10 +263,13 @@ export async function verifySourceScopedCandidateProjection(
             `${"detail" in result ? result.detail : "projection mismatch"}.`,
         );
   }
-  return verifyRoutineReaderProjection(contract, {
+  const verification = await verifyRoutineReaderProjection(contract, {
     store,
     now: observedAt,
     expectedVersionId: candidate.id,
     scope: candidate.scope,
   });
+  return replacement && verification.status === "PASS"
+    ? pass(VOTING_SOURCE_REPLACEMENT_VERIFIER, `Complete saved official sources reconstruct the exact scoped successor. ${verification.detail}`)
+    : verification;
 }

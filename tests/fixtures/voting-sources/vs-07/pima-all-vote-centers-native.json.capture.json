@@ -1,0 +1,7 @@
+{
+  "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+  "capturedAt": "2026-10-23T08:29:19.242Z",
+  "contentType": "application/json; charset=utf-8",
+  "sha256": "0e8f07a2123c758c3af8e6bcb8b860d7c9e4a000d0d2039b8c255fc82980655d",
+  "bytes": 90121
+}

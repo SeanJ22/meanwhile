@@ -1,0 +1,22 @@
+{
+  "url": "https://www.tarrantcountytx.gov/en/elections.html",
+  "finalUrl": "https://www.tarrantcountytx.gov/en/elections.html",
+  "capturedAt": "2026-10-23T08:14:38.032Z",
+  "contentType": "text/html;charset=utf-8",
+  "rawHash": "069ea0066456df9d529caaf76c307935958e5fbcd16389cfe58c97feba80d599",
+  "savedHash": "069ea0066456df9d529caaf76c307935958e5fbcd16389cfe58c97feba80d599",
+  "redactions": 0,
+  "bytes": 379257,
+  "attempts": [
+    {
+      "url": "https://www.tarrantcountytx.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.tarrantcountytx.gov/en/elections.html",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

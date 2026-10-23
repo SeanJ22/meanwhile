@@ -1,0 +1,4488 @@
+%PDF-1.6%‚„œ”
+1 0 obj<</Lang(en-US)/Metadata 2 0 R/OpenAction 5 0 R/PageLayout/SinglePage/Pages 3 0 R/Type/Catalog/ViewerPreferences<</Direction/L2R>>>>endobj2 0 obj<</Length 8148/Subtype/XML/Type/Metadata>>stream
+<?xpacket begin="Ôªø" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 10.0-c000 25.G.ef72e4e, 2025/06/27-18:54:05        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+            xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+            xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#"
+            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:pdf="http://ns.adobe.com/pdf/1.3/"
+            xmlns:ExtensisFontSense="http://www.extensis.com/meta/FontSense/">
+         <xmp:CreateDate>2026-09-09T07:35:10-05:00</xmp:CreateDate>
+         <xmp:MetadataDate>2026-09-09T07:35:10-05:00</xmp:MetadataDate>
+         <xmp:ModifyDate>2026-09-09T07:35:10-05:00</xmp:ModifyDate>
+         <xmp:CreatorTool>Adobe InDesign 21.5 (Windows)</xmp:CreatorTool>
+         <xmpMM:InstanceID>uuid:80c9dac5-16d4-459e-941c-f2f172cc85ba</xmpMM:InstanceID>
+         <xmpMM:OriginalDocumentID>xmp.did:F77F117407206811871FFD8E0D8BD3B4</xmpMM:OriginalDocumentID>
+         <xmpMM:DocumentID>xmp.id:bbfe3532-dc17-0f47-b631-47a472b3f386</xmpMM:DocumentID>
+         <xmpMM:RenditionClass>proof:pdf</xmpMM:RenditionClass>
+         <xmpMM:DerivedFrom rdf:parseType="Resource">
+            <stRef:instanceID>xmp.iid:0c04211f-a375-3f46-b0ef-ebcb3dac9128</stRef:instanceID>
+            <stRef:documentID>xmp.did:1957511e-fc25-4854-a5d2-74acd7b1cd07</stRef:documentID>
+            <stRef:originalDocumentID>xmp.did:F77F117407206811871FFD8E0D8BD3B4</stRef:originalDocumentID>
+            <stRef:renditionClass>default</stRef:renditionClass>
+         </xmpMM:DerivedFrom>
+         <xmpMM:History>
+            <rdf:Seq>
+               <rdf:li rdf:parseType="Resource">
+                  <stEvt:action>converted</stEvt:action>
+                  <stEvt:parameters>from application/x-indesign to application/pdf</stEvt:parameters>
+                  <stEvt:softwareAgent>Adobe InDesign 21.5 (Windows)</stEvt:softwareAgent>
+                  <stEvt:changed>/</stEvt:changed>
+                  <stEvt:when>2026-09-09T07:35:10-05:00</stEvt:when>
+               </rdf:li>
+            </rdf:Seq>
+         </xmpMM:History>
+         <dc:format>application/pdf</dc:format>
+         <pdf:Producer>Adobe PDF Library 18.0</pdf:Producer>
+         <pdf:Trapped>False</pdf:Trapped>
+         <ExtensisFontSense:slug>
+            <rdf:Bag>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>ITC Lubalin Graph Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.031</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>467589655</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>LubalinGraphStd-DemiOblique</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>467589655</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>ITC Lubalin Graph Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.031</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2327927456</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>LubalinGraphStd-Demi</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2327927456</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times New Roman MT</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>001.000</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>31680</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>254184</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>PostScript</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2664951386</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesNewRomanMT-Cond</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2664951386</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times New Roman MT</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>001.000</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>33113</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>247528</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>PostScript</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>3445048248</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesNewRomanMT-BoldCond</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>3445048248</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times LT Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.050</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2774354800</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesLTStd-Roman</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2774354800</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Helvetica Neue LT Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.020</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>1911993744</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>HelveticaNeueLTStd-Roman</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>1911993744</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+            </rdf:Bag>
+         </ExtensisFontSense:slug>
+      </rdf:Description>
+   </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="r"?>
+endstreamendobj5 0 obj<</D[6 0 R/Fit]/S/GoTo>>endobj3 0 obj<</Count 1/Kids[6 0 R]/Type/Pages>>endobj6 0 obj<</ArtBox[36.0 36.0 936.0 1332.0]/BleedBox[36.0 36.0 936.0 1332.0]/Contents 7 0 R/CropBox[0.0 0.0 972.0 1368.0]/MediaBox[0.0 0.0 972.0 1368.0]/Parent 3 0 R/Resources<</ColorSpace<</CS0 8 0 R>>/ExtGState<</GS0 9 0 R/GS1 10 0 R>>/Font<</T1_0 11 0 R/T1_1 12 0 R/T1_2 13 0 R/T1_3 14 0 R/T1_4 15 0 R/T1_5 16 0 R/T1_6 17 0 R>>/ProcSet[/PDF/Text]>>/TrimBox[36.0 36.0 936.0 1332.0]/Type/Page/PieceInfo<</InDesign<</DocumentID<FEFF0078006D0070002E006400690064003A00310039003500370035003100310065002D0066006300320035002D0034003800350034002D0061003500640032002D003700340061006300640037006200310063006400300037>/LastModified<FEFF0044003A00320030003200360030003900300039003100320033003500310030005A>/NumberofPages 1/OriginalDocumentID<FEFF0078006D0070002E006400690064003A00460037003700460031003100370034003000370032003000360038003100310038003700310046004600440038004500300044003800420044003300420034>/PageTransformationMatrixList<</0[1.0 0.0 0.0 1.0 0.0 0.0]>>/PageUIDList<</0 214>>/PageWidthList<</0 900.0>>>>>>>>endobj7 0 obj<</Length 74857>>stream
+BT
+0 0 0 1 k
+/GS0 gs
+/T1_0 1 Tf
+-0.083 Tc 0.111 Tw 8 0 0 8 72 1290.2881 Tm
+[(L)-99 (i)-93 (n)-95.4 (e)-82.9 ( 11)-40.4 (2)-65.3 (-)]TJ
+0.034 Tc -0.034 Tw 4.15 0 Td
+(EV)Tj
+0 Tc 0 Tw 1.244 0 Td
+(-)Tj
+-0.001 Tc 0.001 Tw 0.384 0 Td
+(26)Tj
+/T1_1 1 Tf
+0 Tc 0 Tw 22 0 0 22 478.7403 1280.1821 Tm
+( )Tj
+0.345 0 Td
+( )Tj
+0.022 Tc 0.023 Tw -9.554 -1.227 Td
+[(N)36.1 (O)41.8 (V)8.8 (E)-1.7 (MB)12.9 (ER)7 ( G)-1.3 (EN)17.5 (ER)3.8 (A)6.3 (L)]TJ
+0.015 Tc 0.03 Tw 10.936 0 Td
+( ELECTION)Tj
+0 Tc 0 Tw ( )Tj
+0.015 Tc -0.015 Tw 5.81 0 Td
+(20)Tj
+0 Tc 0 Tw (2)Tj
+1.753 0 Td
+(6)Tj
+0.03 Tw 30 0 0 30 377.7016 1217.1821 Tm
+(POLL SITE LIST)Tj
+42 0 0 42 267.3922 1169.1821 Tm
+(RICHMOND COUNTY)Tj
+/T1_2 1 Tf
+0 Tw 16.367 0 0 16.367 710.9557 1284.2323 Tm
+(\()Tj
+0.03 Tw 0.41 0 Td
+(SUBJECT TO CHANG)Tj
+0 Tw (E)Tj
+10.83 0 Td
+(\))Tj
+ET
+0 0 0 1 K
+0.4 w 
+q 1 0 0 1 72 1096.2241 cm
+0 0 m
+9.088 0 l
+S
+Q
+q 1 0 0 1 91.08 1096.2241 cm
+0 0 m
+35.691 0 l
+S
+Q
+q 1 0 0 1 213.0126 1096.2241 cm
+0 0 m
+45.987 0 l
+S
+Q
+BT
+/T1_3 1 Tf
+22 0 0 22 96.9562 1118.974 Tm
+(61)Tj
+12 0 0 12 118.9562 1124.974 Tm
+(st)Tj
+16 0 0 16 126.9601 1122.4041 Tm
+( )Tj
+0.063 Tw 14 0 0 14 131.9601 1118.974 Tm
+[(Assembly )0.5 (District)]TJ
+/T1_4 1 Tf
+0 Tw 8 0 0 8 72 1097.024 Tm
+(ED)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+0.048 Tw 2.385 0 Td
+[(SITE )0.5 (N)18 (AME)]TJ
+0 Tw /Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.027 Tw 15.242 0 Td
+[(SITE )0.6 (ADDRESS)]TJ
+/T1_5 1 Tf
+0.048 Tw 7.75 0 0 7.75 72 1082.634 Tm
+(001)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (57 )0.6 (HUBERT )0.5 (H. )0.5 (HUMPHREY)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.168 0 Td
+[(140 )0.5 (PALMA )0.6 (DRIVE)]TJ
+-16.63 -1.439 Td
+(002)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (57 )0.6 (HUBERT )0.5 (H. )0.5 (HUMPHREY)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.168 0 Td
+[(140 )0.5 (PALMA )0.6 (DRIVE)]TJ
+-16.63 -1.439 Td
+(003)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (57 )0.6 (HUBERT )0.5 (H. )0.5 (HUMPHREY)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.168 0 Td
+[(140 )0.5 (PALMA )0.6 (DRIVE)]TJ
+-16.63 -1.439 Td
+(004)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (57 )0.6 (HUBERT )0.5 (H. )0.5 (HUMPHREY)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.168 0 Td
+[(140 )0.5 (PALMA )0.6 (DRIVE)]TJ
+-16.63 -1.439 Td
+(005)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(GERARD )0.6 (CARTER )0.5 (COMMUNITY )0.6 (CTR)]TJ
+-0.152 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 15.888 0 Td
+[(230 )0.5 (BROAD )0.6 (ST)]TJ
+-18.35 -1.439 Td
+(006)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(GERARD )0.6 (CARTER )0.5 (COMMUNITY )0.6 (CTR)]TJ
+-0.152 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 15.888 0 Td
+[(230 )0.5 (BROAD )0.6 (ST)]TJ
+-18.35 -1.439 Td
+(007)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(GERARD )0.6 (CARTER )0.5 (COMMUNITY )0.6 (CTR)]TJ
+-0.152 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 15.888 0 Td
+[(230 )0.5 (BROAD )0.6 (ST)]TJ
+-18.35 -1.439 Td
+(008)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(CENTRAL )0.6 (FAMILY )0.5 (LIFE)]TJ
+-0.101 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...............)Tj
+0.048 Tw 13.574 0 Td
+[(59 )0.5 (WRIGHT )0.6 (STREET)]TJ
+0 Tw -16.036 -1.439 Td
+(009)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (65 )0.5 (ACAD )0.6 (OF )0.5 (INNOVATIVE )0.5 (LEARN)]TJ
+0.05 Tw 13.338 0 Td
+(.......)Tj
+0.048 Tw 1.531 0 Td
+[(155 )0.5 (ST )0.5 (PAULS )0.6 (AVE)]TJ
+0 Tc 0 Tw -17.331 -1.439 Td
+(010)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (65 )0.5 (ACAD )0.6 (OF )0.5 (INNOVATIVE )0.5 (LEARN)]TJ
+0.05 Tw 13.338 0 Td
+(.......)Tj
+0.048 Tw 1.531 0 Td
+[(155 )0.5 (ST )0.6 (PAULS )0.5 (AVE)]TJ
+0 Tc -17.331 -1.439 Td
+(011)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (16 )0.6 (JOHN )0.5 (J. )0.5 (DRISCOLL)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...........)Tj
+0.048 Tw 13.022 0 Td
+[(80 )0.5 (MONROE )0.6 (AVENUE)]TJ
+0 Tw -15.484 -1.439 Td
+(012)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(BRIGHTON )0.5 (HTS )0.5 (REFORMED )0.5 (CH)]TJ
+-0.009 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 13.262 0 Td
+[(320 )0.6 (ST )0.5 (MARKS )0.5 (PLACE)]TJ
+0 Tc 0 Tw -15.724 -1.439 Td
+(013)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(BRIGHTON )0.5 (HTS )0.5 (REFORMED )0.5 (CH)]TJ
+-0.009 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 13.262 0 Td
+[(320 )0.6 (ST )0.5 (MARKS )0.5 (PLACE)]TJ
+0 Tc -15.724 -1.439 Td
+(014)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(RICHMOND )0.6 (TERRACE )0.6 (COMM )0.5 (CTR)]TJ
+-0.058 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 16.242 0 Td
+[(71 )0.5 (JERSEY )0.6 (ST)]TJ
+-18.704 -1.439 Td
+(015)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (31 )0.6 (WILLIAM )0.5 (T. )0.6 (DAVIS)]TJ
+-0.148 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 13.22 0 Td
+[(55 )0.5 (LAYTON )0.6 (AVENUE)]TJ
+-15.682 -1.439 Td
+(016)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (61 )0.6 (WILLIAM )0.5 (A. )0.6 (MORRIS)]TJ
+-0.138 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 11.292 0 Td
+[(445 )0.5 (CASTLETON )0.6 (AVENUE)]TJ
+-13.754 -1.439 Td
+(017)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (61 )0.6 (WILLIAM )0.5 (A. )0.6 (MORRIS)]TJ
+-0.138 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 11.292 0 Td
+[(445 )0.5 (CASTLETON )0.6 (AVENUE)]TJ
+-13.754 -1.439 Td
+(018)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(CASSIDY/LAFAYETTE )0.5 (SR )0.6 (CTR)]TJ
+0.024 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 13.522 0 Td
+[(125 )0.5 (CASSIDY )0.6 (PLACE)]TJ
+-15.984 -1.439 Td
+(019)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (40)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....................................)Tj
+0.048 Tw 11.428 0 Td
+[(91 )0.5 (HENDERSON )0.6 (AVENUE)]TJ
+-13.89 -1.439 Td
+(020)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (40)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....................................)Tj
+0.048 Tw 11.428 0 Td
+[(91 )0.5 (HENDERSON )0.6 (AVENUE)]TJ
+-13.89 -1.439 Td
+(021)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(WALKER )0.6 (PARK )0.5 (CLUB)]TJ
+0.015 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 12.646 0 Td
+[(50 )0.5 (DELAFIELD )0.6 (PLACE)]TJ
+-15.108 -1.439 Td
+(022)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (18 )0.6 (JOHN )0.5 (G. )0.5 (WHITTIER)]TJ
+-0.106 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 15.136 0 Td
+[(221 )0.5 (BROADWAY)]TJ
+-17.598 -1.439 Td
+(023)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (18 )0.6 (JOHN )0.5 (G. )0.5 (WHITTIER)]TJ
+-0.106 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 15.136 0 Td
+[(221 )0.5 (BROADWAY)]TJ
+-17.598 -1.439 Td
+(024)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (18 )0.6 (JOHN )0.5 (G. )0.5 (WHITTIER)]TJ
+-0.106 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 15.136 0 Td
+[(221 )0.5 (BROADWAY)]TJ
+-17.598 -1.439 Td
+(025)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (27 )0.6 (ANNING )0.5 (S. )0.5 (PRALL)]TJ
+0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.711 0 Td
+[(11 )0.5 (CLOVE )0.6 (LAKES )0.5 (PLACE)]TJ
+-14.173 -1.439 Td
+(026)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (30 )0.6 (WESTERLEIGH)]TJ
+-0.141 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..........)Tj
+0.048 Tw 11.24 0 Td
+[(200 )0.5 (WARDWELL )0.6 (AVENUE)]TJ
+-13.702 -1.439 Td
+(027)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (19 )0.6 (THE )0.5 (CURTIS )0.5 (SCHOOL)]TJ
+-0.148 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.158 0 Td
+[(780 )0.5 (POST )0.6 (AVENUE)]TJ
+-16.62 -1.439 Td
+(028)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (19 )0.6 (THE )0.5 (CURTIS )0.6 (SCHOOL)]TJ
+-0.148 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.158 0 Td
+[(780 )0.5 (POST )0.6 (AVENUE)]TJ
+-16.62 -1.439 Td
+(029)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (19 )0.6 (THE )0.5 (CURTIS )0.6 (SCHOOL)]TJ
+-0.148 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.158 0 Td
+[(780 )0.5 (POST )0.6 (AVENUE)]TJ
+-16.62 -1.439 Td
+(030)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (20 )0.6 (PORT )0.5 (RICHMOND)]TJ
+0.028 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.908 0 Td
+[(161 )0.5 (PARK )0.6 (AVENUE)]TJ
+-16.37 -1.439 Td
+(031)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PORT )0.5 (RICHMOND )0.5 (HS)]TJ
+0 Tw 8.538 0 Td
+(....................)Tj
+0.048 Tw 5.237 0 Td
+[(85 )0.5 (ST )0.6 (JOSEPHS )0.5 (AVE)]TJ
+-16.237 -1.439 Td
+(032)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PORT )0.5 (RICHMOND )0.5 (HS)]TJ
+0 Tw 8.538 0 Td
+(....................)Tj
+0.048 Tw 5.237 0 Td
+[(85 )0.5 (ST )0.6 (JOSEPHS )0.5 (AVE)]TJ
+-16.237 -1.439 Td
+(033)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PORT )0.5 (RICHMOND )0.5 (HS)]TJ
+0 Tw 8.538 0 Td
+(....................)Tj
+0.048 Tw 5.237 0 Td
+[(85 )0.5 (ST )0.6 (JOSEPHS )0.5 (AVE)]TJ
+-16.237 -1.439 Td
+(034)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PORT )0.5 (RICHMOND )0.5 (HS)]TJ
+0 Tw 8.538 0 Td
+(....................)Tj
+0.048 Tw 5.237 0 Td
+[(85 )0.5 (ST )0.6 (JOSEPHS )0.5 (AVE)]TJ
+-16.237 -1.439 Td
+(035)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (44 )0.6 (THOMAS )0.5 (C. )0.5 (BROWN)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 12.98 0 Td
+[(80 )0.5 (MAPLE )0.6 (PARKWAY)]TJ
+-15.442 -1.439 Td
+(036)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (44 )0.6 (THOMAS )0.5 (C. )0.6 (BROWN)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 12.98 0 Td
+[(80 )0.5 (MAPLE )0.6 (PARKWAY)]TJ
+-15.442 -1.439 Td
+(037)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (44 )0.6 (THOMAS )0.5 (C. )0.6 (BROWN)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 12.98 0 Td
+[(80 )0.5 (MAPLE )0.6 (PARKWAY)]TJ
+-15.442 -1.439 Td
+(038)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (22 )0.6 (GRANITEVILLE)]TJ
+-0.131 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...............)Tj
+0.048 Tw 12.574 0 Td
+[(1860 )0.5 (FOREST )0.6 (AVENUE)]TJ
+-15.036 -1.439 Td
+(039)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (22 )0.6 (GRANITEVILLE)]TJ
+-0.131 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...............)Tj
+0.048 Tw 12.574 0 Td
+[(1860 )0.5 (FOREST )0.6 (AVENUE)]TJ
+-15.036 -1.439 Td
+(040)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(041)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ALL )0.5 (SAINTS )0.6 (EPISCOPAL )0.6 (CH)]TJ
+-0.088 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 13.324 0 Td
+[(2329 )0.5 (VICTORY )0.6 (BLVD)]TJ
+-15.786 -1.439 Td
+(042)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(043)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(044)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(045)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (19 )0.6 (THE )0.5 (CURTIS )0.5 (SCHOOL)]TJ
+-0.148 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.158 0 Td
+[(780 )0.5 (POST )0.6 (AVENUE)]TJ
+-16.62 -1.439 Td
+(046)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (27 )0.6 (ANNING )0.5 (S. )0.5 (PRALL)]TJ
+0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.711 0 Td
+[(11 )0.5 (CLOVE )0.6 (LAKES )0.5 (PLACE)]TJ
+-14.173 -1.439 Td
+(047)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ON )0.5 (YOUR )0.6 (MARK )0.5 (INC)]TJ
+-0.086 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 10.802 0 Td
+[(475 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+-13.264 -1.439 Td
+(048)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (61 )0.6 (WILLIAM )0.5 (A. )0.6 (MORRIS)]TJ
+-0.138 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 11.292 0 Td
+[(445 )0.5 (CASTLETON )0.6 (AVENUE)]TJ
+-13.754 -1.439 Td
+(049)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (22 )0.6 (GRANITEVILLE)]TJ
+-0.131 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...............)Tj
+0.048 Tw 12.574 0 Td
+[(1860 )0.5 (FOREST )0.6 (AVENUE)]TJ
+-15.036 -1.439 Td
+(050)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(051)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (57 )0.6 (HUBERT )0.5 (H. )0.5 (HUMPHREY)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.168 0 Td
+[(140 )0.5 (PALMA )0.6 (DRIVE)]TJ
+ET
+q 1 0 0 1 285.6 1096.2241 cm
+0 0 m
+9.088 0 l
+S
+Q
+q 1 0 0 1 304.68 1096.2241 cm
+0 0 m
+35.692 0 l
+S
+Q
+q 1 0 0 1 426.6126 1096.2241 cm
+0 0 m
+45.987 0 l
+S
+Q
+BT
+/T1_3 1 Tf
+0 Tw 22 0 0 22 308.5132 1118.974 Tm
+(62)Tj
+12 0 0 12 330.5132 1124.974 Tm
+(nd)Tj
+16 0 0 16 342.5132 1122.4041 Tm
+( )Tj
+0.063 Tw 14 0 0 14 347.5132 1118.974 Tm
+[(Assembly )0.5 (District)]TJ
+/T1_4 1 Tf
+0 Tw 8 0 0 8 285.6 1097.024 Tm
+(ED)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+0.048 Tw 2.385 0 Td
+[(SITE )0.5 (N)18 (AME)]TJ
+0 Tw /Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.027 Tw 15.242 0 Td
+[(SITE )0.6 (ADDRESS)]TJ
+/T1_5 1 Tf
+-0.02 Tc 0.048 Tw 7.75 0 0 7.75 285.6 1082.634 Tm
+(001)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.5 (HELP )0.6 (OF )0.5 (CHRISTIANS)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 13.978 0 Td
+[(23 )0.5 (SUMMIT )0.5 (STREET)]TJ
+-16.44 -1.439 Td
+(002)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (PAUL\222S )0.5 (UNITED )0.6 (METHODIST )0.5 (CH)]TJ
+0.02 Tw 13.868 0 Td
+(......)Tj
+0.048 Tw 1.468 0 Td
+[(7558 )0.5 (AMBOY )0.5 (RD)]TJ
+-17.798 -1.439 Td
+(003)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (PAUL\222S )0.5 (UNITED )0.6 (METHODIST )0.5 (CH)]TJ
+0.02 Tw 13.868 0 Td
+(......)Tj
+0.048 Tw 1.468 0 Td
+[(7558 )0.5 (AMBOY )0.5 (RD)]TJ
+0.02 Tw -17.798 -1.439 Td
+(004)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (6 )0.5 (CPL )0.5 (ALLAN )0.6 (F. )0.5 (KIVLEHAN )0.5 (SCHOOL)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.124 0 Td
+[(555 )0.5 (PAGE )0.6 (AVE)]TJ
+-0.02 Tc -18.586 -1.439 Td
+(005)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.5 (HELP )0.6 (OF )0.5 (CHRISTIANS)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 13.978 0 Td
+[(23 )0.5 (SUMMIT )0.5 (STREET)]TJ
+-16.44 -1.439 Td
+(006)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.5 (HELP )0.6 (OF )0.5 (CHRISTIANS)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 13.978 0 Td
+[(23 )0.5 (SUMMIT )0.5 (STREET)]TJ
+0.02 Tw -16.44 -1.439 Td
+(007)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (6 )0.5 (CPL )0.5 (ALLAN )0.6 (F. )0.5 (KIVLEHAN )0.5 (SCHOOL)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.124 0 Td
+[(555 )0.5 (PAGE )0.6 (AVE)]TJ
+-0.02 Tc 0.02 Tw -18.586 -1.439 Td
+(008)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (3 )0.5 (THE )0.5 (MARGARET )0.5 (GIOIOSA )0.6 (SCHOOL)]TJ
+-0.089 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.917 0 Td
+[(80 )0.5 (S )0.6 (GOFF )0.5 (AVE)]TJ
+-0.02 Tc 0.02 Tw -18.379 -1.439 Td
+(009)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (3 )0.5 (THE )0.5 (MARGARET )0.5 (GIOIOSA )0.6 (SCHOOL)]TJ
+-0.089 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.917 0 Td
+[(80 )0.5 (S )0.6 (GOFF )0.5 (AVE)]TJ
+-0.02 Tc 0.02 Tw -18.379 -1.439 Td
+(010)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (3 )0.5 (THE )0.5 (MARGARET )0.5 (GIOIOSA )0.6 (SCHOOL)]TJ
+-0.089 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.917 0 Td
+[(80 )0.5 (S )0.6 (GOFF )0.5 (AVE)]TJ
+-0.02 Tc 0.02 Tw -18.379 -1.439 Td
+(011)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (3 )0.5 (THE )0.5 (MARGARET )0.5 (GIOIOSA )0.6 (SCHOOL)]TJ
+-0.089 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.917 0 Td
+[(80 )0.5 (S )0.6 (GOFF )0.5 (AVE)]TJ
+-0.02 Tc -18.379 -1.439 Td
+(012)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (7 )0.5 (ELIAS )0.6 (BERNSTEIN)]TJ
+-0.074 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..........)Tj
+0.048 Tw 11.308 0 Td
+[(1270 )0.5 (HUGUENOT )0.5 (AVENUE)]TJ
+-13.77 -1.439 Td
+(013)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (7 )0.5 (ELIAS )0.6 (BERNSTEIN)]TJ
+-0.074 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..........)Tj
+0.048 Tw 11.308 0 Td
+[(1270 )0.5 (HUGUENOT )0.5 (AVENUE)]TJ
+-13.77 -1.439 Td
+(014)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (7 )0.5 (ELIAS )0.6 (BERNSTEIN)]TJ
+-0.074 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..........)Tj
+0.048 Tw 11.308 0 Td
+[(1270 )0.5 (HUGUENOT )0.5 (AVENUE)]TJ
+-13.77 -1.439 Td
+(015)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (55 )0.5 (HENRY )0.5 (M. )0.5 (BOEHM)]TJ
+0.046 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.446 0 Td
+[(54 )0.5 (OSBORNE )0.5 (STREET)]TJ
+-15.908 -1.439 Td
+(016)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (55 )0.5 (HENRY )0.5 (M. )0.5 (BOEHM)]TJ
+0.046 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.446 0 Td
+[(54 )0.5 (OSBORNE )0.5 (STREET)]TJ
+-15.908 -1.439 Td
+(017)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (55 )0.5 (HENRY )0.5 (M. )0.5 (BOEHM)]TJ
+0.046 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.446 0 Td
+[(54 )0.5 (OSBORNE )0.5 (STREET)]TJ
+-15.908 -1.439 Td
+(018)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (55 )0.5 (HENRY )0.5 (M. )0.5 (BOEHM)]TJ
+0.046 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.446 0 Td
+[(54 )0.5 (OSBORNE )0.5 (STREET)]TJ
+-15.908 -1.439 Td
+(019)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (36 )0.5 (J.C. )0.5 (DRUMGOOLE)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 14.166 0 Td
+[(255 )0.5 (IONIA )0.5 (AVENUE)]TJ
+-16.628 -1.439 Td
+(020)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (36 )0.5 (J.C. )0.5 (DRUMGOOLE)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 14.166 0 Td
+[(255 )0.5 (IONIA )0.5 (AVENUE)]TJ
+-16.628 -1.439 Td
+(021)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (36 )0.5 (ANNEX)]TJ
+-0.027 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 10.2 0 Td
+[(200 )0.5 (JEFFERSON )0.5 (BOULEVARD)]TJ
+-12.662 -1.439 Td
+(022)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (42 )0.5 (ELTINGVILLE)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.716 0 Td
+[(380 )0.5 (GENESEE )0.5 (AVENUE)]TJ
+-15.178 -1.439 Td
+(023)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (42 )0.5 (ELTINGVILLE)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.716 0 Td
+[(380 )0.5 (GENESEE )0.5 (AVENUE)]TJ
+-15.178 -1.439 Td
+(024)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(THE )0.5 (ELKS)]TJ
+0.02 Tw 3.978 0 Td
+(................................)Tj
+0.048 Tw 7.538 0 Td
+[(3250 )0.5 (RICHMOND )0.5 (AVENUE)]TJ
+-13.978 -1.439 Td
+(025)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (42 )0.5 (ELTINGVILLE)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.716 0 Td
+[(380 )0.5 (GENESEE )0.5 (AVENUE)]TJ
+-15.178 -1.439 Td
+(026)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (42 )0.5 (ELTINGVILLE)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.716 0 Td
+[(380 )0.5 (GENESEE )0.5 (AVENUE)]TJ
+-15.178 -1.439 Td
+(027)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (32 )0.5 (THE )0.5 (GIFFORD )0.5 (SCHOOL)]TJ
+-0.14 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 12.476 0 Td
+[(32 )0.5 (ELVERTON )0.5 (AVENUE)]TJ
+-14.938 -1.439 Td
+(028)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (32 )0.5 (THE )0.5 (GIFFORD )0.5 (SCHOOL)]TJ
+-0.14 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 12.476 0 Td
+[(32 )0.5 (ELVERTON )0.5 (AVENUE)]TJ
+-14.938 -1.439 Td
+(029)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (32 )0.5 (THE )0.5 (GIFFORD )0.5 (SCHOOL)]TJ
+-0.14 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 12.476 0 Td
+[(32 )0.5 (ELVERTON )0.5 (AVENUE)]TJ
+-14.938 -1.439 Td
+(030)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (53 )0.5 (BAY )0.5 (TERRACE)]TJ
+0.01 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.936 0 Td
+[(330 )0.5 (DURANT )0.5 (AVENUE)]TJ
+-15.398 -1.439 Td
+(031)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(RICHMOND )0.5 (TOWN )0.6 (LIBRARY)]TJ
+-0.143 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 13.144 0 Td
+[(200 )0.5 (CLARKE )0.5 (AVENUE)]TJ
+-15.606 -1.439 Td
+(032)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (53 )0.5 (BAY )0.5 (TERRACE)]TJ
+0.01 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.936 0 Td
+[(330 )0.5 (DURANT )0.5 (AVENUE)]TJ
+-15.398 -1.439 Td
+(033)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (37)]TJ
+-0.055 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............................................)Tj
+0.048 Tw 12.86 0 Td
+[(15 )0.5 (FAIRFIELD )0.5 (STREET)]TJ
+-15.322 -1.439 Td
+(034)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (37)]TJ
+-0.055 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............................................)Tj
+0.048 Tw 12.86 0 Td
+[(15 )0.5 (FAIRFIELD )0.5 (STREET)]TJ
+-15.322 -1.439 Td
+(035)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(THE )0.5 (TIDES )0.5 (AT )0.5 (CHARLESTON)]TJ
+-0.11 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 15.742 0 Td
+[(15 )0.5 (TIDES )0.5 (LANE)]TJ
+-18.204 -1.439 Td
+(036)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (62)]TJ
+-0.055 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................................)Tj
+0.048 Tw 10.9 0 Td
+[(644 )0.5 (BLOOMINGDALE )0.6 (ROAD)]TJ
+-13.362 -1.439 Td
+(037)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (62)]TJ
+-0.055 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................................)Tj
+0.048 Tw 10.9 0 Td
+[(644 )0.5 (BLOOMINGDALE )0.6 (ROAD)]TJ
+-13.362 -1.439 Td
+(038)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (62)]TJ
+-0.055 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................................)Tj
+0.048 Tw 10.9 0 Td
+[(644 )0.5 (BLOOMINGDALE )0.6 (ROAD)]TJ
+-13.362 -1.439 Td
+(039)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (56 )0.5 (THE )0.5 (LOUIS )0.5 (DESARIO )0.5 (SCHOOL)]TJ
+-0.103 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 14.668 0 Td
+[(250 )0.5 (KRAMER )0.5 (AVE)]TJ
+-17.13 -1.439 Td
+(040)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (56 )0.5 (THE )0.5 (LOUIS )0.5 (DESARIO )0.5 (SCHOOL)]TJ
+-0.103 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 14.668 0 Td
+[(250 )0.5 (KRAMER )0.5 (AVE)]TJ
+-17.13 -1.439 Td
+(041)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (75 )0.5 (FRANK )0.5 (D. )0.6 (PAULO)]TJ
+-0.154 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 13.51 0 Td
+[(455 )0.5 (HUGUENOT )0.5 (AVE)]TJ
+-15.972 -1.439 Td
+(042)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (75 )0.5 (FRANK )0.5 (D. )0.6 (PAULO)]TJ
+-0.154 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 13.51 0 Td
+[(455 )0.5 (HUGUENOT )0.5 (AVE)]TJ
+-15.972 -1.439 Td
+(043)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (36 )0.5 (J.C. )0.5 (DRUMGOOLE)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 14.166 0 Td
+[(255 )0.5 (IONIA )0.5 (AVENUE)]TJ
+-16.628 -1.439 Td
+(044)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+-17.224 -1.439 Td
+(045)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(THE )0.5 (ELKS)]TJ
+0.02 Tw 3.978 0 Td
+(................................)Tj
+0.048 Tw 7.538 0 Td
+[(3250 )0.5 (RICHMOND )0.5 (AVENUE)]TJ
+-13.978 -1.439 Td
+(046)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (42 )0.5 (ELTINGVILLE)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.716 0 Td
+[(380 )0.5 (GENESEE )0.5 (AVENUE)]TJ
+-15.178 -1.439 Td
+(047)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+-17.224 -1.439 Td
+(048)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (42 )0.5 (ELTINGVILLE)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 12.716 0 Td
+[(380 )0.5 (GENESEE )0.5 (AVENUE)]TJ
+-15.178 -1.439 Td
+(049)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+-17.224 -1.439 Td
+(050)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (56 )0.5 (THE )0.5 (LOUIS )0.5 (DESARIO )0.5 (SCHOOL)]TJ
+-0.103 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 14.668 0 Td
+[(250 )0.5 (KRAMER )0.5 (AVE)]TJ
+-17.13 -1.439 Td
+(051)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (62)]TJ
+-0.055 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................................)Tj
+0.048 Tw 10.9 0 Td
+[(644 )0.5 (BLOOMINGDALE )0.6 (ROAD)]TJ
+-13.362 -1.439 Td
+(052)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (56 )0.5 (THE )0.5 (LOUIS )0.5 (DESARIO )0.5 (SCHOOL)]TJ
+-0.103 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 14.668 0 Td
+[(250 )0.5 (KRAMER )0.5 (AVE)]TJ
+-17.13 -1.439 Td
+(053)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (75 )0.5 (FRANK )0.5 (D. )0.6 (PAULO)]TJ
+-0.154 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 13.51 0 Td
+[(455 )0.5 (HUGUENOT )0.5 (AVE)]TJ
+-15.972 -1.439 Td
+(054)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (75 )0.5 (FRANK )0.5 (D. )0.6 (PAULO)]TJ
+-0.154 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...................)Tj
+0.048 Tw 13.51 0 Td
+[(455 )0.5 (HUGUENOT )0.5 (AVE)]TJ
+-15.972 -1.439 Td
+(055)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+-17.224 -1.439 Td
+(056)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+0 Tc -17.224 -1.439 Td
+(057)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SAINT )0.5 (ANTHONY\222S )0.5 (CHURCH)]TJ
+0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 13.324 0 Td
+[(4055 )0.5 (VICTORY )0.6 (BLVD)]TJ
+-0.02 Tc -15.786 -1.439 Td
+(058)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (23 )0.5 (RICHMONDTOWN)]TJ
+0.02 Tw 9.268 0 Td
+(.....................)Tj
+0.048 Tw 4.856 0 Td
+[(30 )0.5 (NATICK )0.5 (STREET)]TJ
+-16.586 -1.439 Td
+(059)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(RICHMOND )0.5 (TOWN )0.6 (LIBRARY)]TJ
+-0.143 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 13.144 0 Td
+[(200 )0.5 (CLARKE )0.5 (AVENUE)]TJ
+-15.606 -1.439 Td
+(060)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (23 )0.5 (RICHMONDTOWN)]TJ
+0.02 Tw 9.268 0 Td
+(.....................)Tj
+0.048 Tw 4.856 0 Td
+[(30 )0.5 (NATICK )0.5 (STREET)]TJ
+-16.586 -1.439 Td
+(061)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (23 )0.5 (RICHMONDTOWN)]TJ
+0.02 Tw 9.268 0 Td
+(.....................)Tj
+0.048 Tw 4.856 0 Td
+[(30 )0.5 (NATICK )0.5 (STREET)]TJ
+-16.586 -1.439 Td
+(062)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (56 )0.5 (THE )0.5 (LOUIS )0.5 (DESARIO )0.5 (SCHOOL)]TJ
+-0.103 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 14.668 0 Td
+[(250 )0.5 (KRAMER )0.5 (AVE)]TJ
+0 1 0 0 k
+/GS1 gs
+0.02 Tw -17.13 -1.439 Td
+(063)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.03 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (6 )0.5 (CPL )0.5 (ALLAN )0.6 (F. )0.5 (KIVLEHAN )0.5 (SCHOOL)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.124 0 Td
+[(555 )0.5 (PAGE )0.6 (AVE)]TJ
+-0.02 Tc -18.586 -1.439 Td
+(064)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (PAUL\222S )0.5 (UNITED )0.6 (METHODIST )0.5 (CH)]TJ
+0.02 Tw 13.868 0 Td
+(......)Tj
+0.048 Tw 1.468 0 Td
+[(7558 )0.5 (AMBOY )0.5 (RD)]TJ
+0 0 0 1 k
+/GS0 gs
+-17.798 -1.439 Td
+(065)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+0 1 0 0 k
+/GS1 gs
+-17.224 -1.439 Td
+(066)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.5 (HELP )0.6 (OF )0.5 (CHRISTIANS)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 13.978 0 Td
+[(23 )0.5 (SUMMIT )0.5 (STREET)]TJ
+-16.44 -1.439 Td
+(067)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (4 )0.5 (MAURICE )0.6 (WOLLIN)]TJ
+-0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 14.762 0 Td
+[(200 )0.5 (NEDRA )0.5 (LANE)]TJ
+ET
+/GS0 gs
+q 1 0 0 1 499.05 1096.2241 cm
+0 0 m
+9.088 0 l
+S
+Q
+q 1 0 0 1 518.13 1096.2241 cm
+0 0 m
+35.692 0 l
+S
+Q
+q 1 0 0 1 640.0626 1096.2241 cm
+0 0 m
+45.987 0 l
+S
+Q
+BT
+0 0 0 1 k
+/T1_3 1 Tf
+0 Tc 0 Tw 22 0 0 22 522.9652 1118.974 Tm
+(63)Tj
+12 0 0 12 544.9652 1124.974 Tm
+(rd)Tj
+16 0 0 16 554.9611 1122.4041 Tm
+( )Tj
+0.063 Tw 14 0 0 14 559.9611 1118.974 Tm
+[(Assembly )0.5 (District)]TJ
+/T1_4 1 Tf
+0 Tw 8 0 0 8 499.05 1097.024 Tm
+(ED)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+0.048 Tw 2.385 0 Td
+[(SITE )0.5 (N)18 (AME)]TJ
+0 Tw /Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.027 Tw 15.242 0 Td
+[(SITE )0.6 (ADDRESS)]TJ
+/T1_5 1 Tf
+0 Tw 7.75 0 0 7.75 499.05 1082.634 Tm
+(001)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (14 )0.6 (CORNELIUS )0.5 (VANDERBILT)]TJ
+-0.105 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.043 0 Td
+[(100 )0.6 (TOMPKINS )0.5 (AVE)]TJ
+0 Tc 0 Tw -16.505 -1.439 Td
+(002)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (14 )0.6 (CORNELIUS )0.5 (VANDERBILT)]TJ
+-0.105 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.043 0 Td
+[(100 )0.6 (TOMPKINS )0.5 (AVE)]TJ
+0 Tc -16.505 -1.439 Td
+(003)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(NEW )0.5 (LANE )0.6 (SHORES)]TJ
+0 Tw 8.038 0 Td
+(...............................)Tj
+0.048 Tw 7.954 0 Td
+[(70 )0.5 (NEW )0.6 (LANE)]TJ
+-18.454 -1.439 Td
+(004)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (13 )0.6 (M.L. )0.5 (LINDEMEYER)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 12.032 0 Td
+[(191 )0.5 (VERMONT )0.6 (AVENUE)]TJ
+-14.494 -1.439 Td
+(005)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (13 )0.6 (M.L. )0.5 (LINDEMEYER)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 12.032 0 Td
+[(191 )0.5 (VERMONT )0.6 (AVENUE)]TJ
+-14.494 -1.439 Td
+(006)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (13 )0.6 (M.L. )0.5 (LINDEMEYER)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 12.032 0 Td
+[(191 )0.5 (VERMONT )0.6 (AVENUE)]TJ
+-14.494 -1.439 Td
+(007)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (13 )0.6 (M.L. )0.5 (LINDEMEYER)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 12.032 0 Td
+[(191 )0.5 (VERMONT )0.6 (AVENUE)]TJ
+0 Tw -14.494 -1.439 Td
+(008)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc 0 Tw -17.932 -1.439 Td
+(009)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc -17.932 -1.439 Td
+(010)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ON )0.5 (YOUR )0.6 (MARK )0.5 (INC)]TJ
+-0.086 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 10.802 0 Td
+[(475 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+-13.264 -1.439 Td
+(011)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (35 )0.6 (THE )0.5 (CLOVE )0.5 (VALLEY )0.6 (SCHOOL)]TJ
+-0.043 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 15.752 0 Td
+[(60 )0.5 (FOOTE )0.6 (AVE)]TJ
+-18.214 -1.439 Td
+(012)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (35 )0.6 (THE )0.5 (CLOVE )0.5 (VALLEY )0.6 (SCHOOL)]TJ
+-0.043 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 15.752 0 Td
+[(60 )0.5 (FOOTE )0.6 (AVE)]TJ
+-18.214 -1.439 Td
+(013)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ON )0.5 (YOUR )0.6 (MARK )0.5 (INC)]TJ
+-0.086 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 10.802 0 Td
+[(475 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+-13.264 -1.439 Td
+(014)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (27 )0.6 (ANNING )0.5 (S. )0.5 (PRALL)]TJ
+0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.711 0 Td
+[(11 )0.5 (CLOVE )0.6 (LAKES )0.5 (PLACE)]TJ
+-14.173 -1.439 Td
+(015)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (61 )0.6 (WILLIAM )0.5 (A. )0.6 (MORRIS)]TJ
+-0.138 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 11.292 0 Td
+[(445 )0.5 (CASTLETON )0.6 (AVENUE)]TJ
+-13.754 -1.439 Td
+(016)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (27 )0.6 (ANNING )0.5 (S. )0.5 (PRALL)]TJ
+0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.711 0 Td
+[(11 )0.5 (CLOVE )0.6 (LAKES )0.5 (PLACE)]TJ
+-14.173 -1.439 Td
+(017)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (27 )0.6 (ANNING )0.5 (S. )0.5 (PRALL)]TJ
+0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.711 0 Td
+[(11 )0.5 (CLOVE )0.6 (LAKES )0.5 (PLACE)]TJ
+-14.173 -1.439 Td
+(018)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (27 )0.6 (ANNING )0.5 (S. )0.5 (PRALL)]TJ
+0.03 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.711 0 Td
+[(11 )0.5 (CLOVE )0.6 (LAKES )0.5 (PLACE)]TJ
+-14.173 -1.439 Td
+(019)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (29 )0.6 (BARDWELL)]TJ
+-0.057 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 10.354 0 Td
+[(1581 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+-12.816 -1.439 Td
+(020)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (35 )0.6 (THE )0.5 (CLOVE )0.5 (VALLEY )0.6 (SCHOOL)]TJ
+-0.043 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 15.752 0 Td
+[(60 )0.5 (FOOTE )0.6 (AVE)]TJ
+-18.214 -1.439 Td
+(021)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (29 )0.6 (BARDWELL)]TJ
+-0.057 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 10.354 0 Td
+[(1581 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+-12.816 -1.439 Td
+(022)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(TODT )0.5 (HILL )0.6 (COMM )0.5 (CTR)]TJ
+-0.004 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 13.168 0 Td
+[(255 )0.5 (WESTWOOD )0.6 (AVE)]TJ
+-15.63 -1.439 Td
+(023)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (54 )0.6 (CHARLES )0.5 (W. )0.5 (LENG)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.636 0 Td
+[(1060 )0.5 (WILLOWBROOK )0.6 (RD)]TJ
+-14.098 -1.439 Td
+(024)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUSAN )0.5 (E. )0.6 (WAGNER )0.5 (HS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................)Tj
+0.048 Tw 14.97 0 Td
+[(50 )0.5 (BRIELLE )0.6 (AVE)]TJ
+-17.432 -1.439 Td
+(025)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (54 )0.6 (CHARLES )0.5 (W. )0.5 (LENG)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.636 0 Td
+[(1060 )0.5 (WILLOWBROOK )0.6 (RD)]TJ
+-14.098 -1.439 Td
+(026)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (54 )0.6 (CHARLES )0.5 (W. )0.5 (LENG)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.636 0 Td
+[(1060 )0.5 (WILLOWBROOK )0.6 (RD)]TJ
+0 Tw -14.098 -1.439 Td
+(027)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(CASTLETON )0.5 (HILL )0.6 (MORAVIAN )0.5 (CH)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 14.124 0 Td
+[(1657 )0.5 (VICTORY )0.6 (BLVD)]TJ
+0 Tc -16.586 -1.439 Td
+(028)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ALL )0.5 (SAINTS )0.6 (EPISCOPAL )0.6 (CH)]TJ
+-0.088 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 13.324 0 Td
+[(2329 )0.5 (VICTORY )0.6 (BLVD)]TJ
+-15.786 -1.439 Td
+(029)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (29 )0.6 (BARDWELL)]TJ
+-0.057 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 10.354 0 Td
+[(1581 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+0 Tw -12.816 -1.439 Td
+(030)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(CASTLETON )0.5 (HILL )0.5 (MORAVIAN )0.5 (CH)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 14.124 0 Td
+[(1657 )0.5 (VICTORY )0.6 (BLVD)]TJ
+0 Tc -16.586 -1.439 Td
+(031)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (30 )0.6 (WESTERLEIGH)]TJ
+-0.141 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..........)Tj
+0.048 Tw 11.24 0 Td
+[(200 )0.5 (WARDWELL )0.6 (AVENUE)]TJ
+-13.702 -1.439 Td
+(032)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(033)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ALL )0.5 (SAINTS )0.6 (EPISCOPAL )0.6 (CH)]TJ
+-0.088 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 13.324 0 Td
+[(2329 )0.5 (VICTORY )0.6 (BLVD)]TJ
+-15.786 -1.439 Td
+(034)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUSAN )0.5 (E. )0.6 (WAGNER )0.5 (HS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................)Tj
+0.048 Tw 14.97 0 Td
+[(50 )0.5 (BRIELLE )0.6 (AVE)]TJ
+-17.432 -1.439 Td
+(035)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUSAN )0.5 (E. )0.6 (WAGNER )0.5 (HS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................)Tj
+0.048 Tw 14.97 0 Td
+[(50 )0.5 (BRIELLE )0.6 (AVE)]TJ
+-17.432 -1.439 Td
+(036)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUMMERFIELD )0.6 (UMC)]TJ
+-0.091 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 13.856 0 Td
+[(104 )0.5 (HARBOR )0.6 (ROAD)]TJ
+-16.318 -1.439 Td
+(037)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUMMERFIELD )0.6 (UMC)]TJ
+-0.091 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 13.856 0 Td
+[(104 )0.5 (HARBOR )0.6 (ROAD)]TJ
+-16.318 -1.439 Td
+(038)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUMMERFIELD )0.6 (UMC)]TJ
+-0.091 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....................)Tj
+0.048 Tw 13.856 0 Td
+[(104 )0.5 (HARBOR )0.6 (ROAD)]TJ
+-16.318 -1.439 Td
+(039)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (44 )0.6 (THOMAS )0.5 (C. )0.6 (BROWN)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 12.98 0 Td
+[(80 )0.5 (MAPLE )0.6 (PARKWAY)]TJ
+0 Tw -15.442 -1.439 Td
+(040)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(STATEN )0.5 (ISLND )0.6 (SCH )0.5 (OF )0.5 (CIVIC )0.5 (LEADERSHIP)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.636 0 Td
+[(280 )0.5 (REGIS )0.5 (DR)]TJ
+0 Tc 0 Tw -19.098 -1.439 Td
+(041)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(STATEN )0.5 (ISLND )0.6 (SCH )0.5 (OF )0.5 (CIVIC )0.5 (LEADERSHIP)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.636 0 Td
+[(280 )0.5 (REGIS )0.5 (DR)]TJ
+0 Tc 0 Tw -19.098 -1.439 Td
+(042)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(STATEN )0.5 (ISLND )0.6 (SCH )0.5 (OF )0.5 (CIVIC )0.5 (LEADERSHIP)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.636 0 Td
+[(280 )0.5 (REGIS )0.5 (DR)]TJ
+0 Tc 0 Tw -19.098 -1.439 Td
+(043)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.05 Tc 0.048 Tw 2.462 0 Td
+[(STATEN )0.5 (ISLND )0.6 (SCH )0.5 (OF )0.5 (CIVIC )0.5 (LEADERSHIP)]TJ
+-0.099 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.636 0 Td
+[(280 )0.5 (REGIS )0.5 (DR)]TJ
+0 Tc 0 Tw -19.098 -1.439 Td
+(044)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(JEROME )0.5 (PARKER )0.5 (CAMPUS )0.5 (CSI )0.6 (HS )0.5 (SCH)]TJ
+-0.106 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 16.257 0 Td
+[(100 )0.6 (ESSEX )0.5 (DR)]TJ
+0 Tc 0 Tw -18.719 -1.439 Td
+(045)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(JEROME )0.5 (PARKER )0.5 (CAMPUS )0.5 (CSI )0.6 (HS )0.5 (SCH)]TJ
+-0.106 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 16.257 0 Td
+[(100 )0.6 (ESSEX )0.5 (DR)]TJ
+0 Tc 0 Tw -18.719 -1.439 Td
+(046)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (58 )0.5 (SPACE )0.5 (SHUTTLE )0.5 (COLUMBIA )0.5 (SCH)]TJ
+-0.054 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.819 0 Td
+[(77 )0.5 (MARSH )0.5 (AVE)]TJ
+0 Tc 0 Tw -18.281 -1.439 Td
+(047)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (58 )0.5 (SPACE )0.5 (SHUTTLE )0.5 (COLUMBIA )0.5 (SCH)]TJ
+-0.054 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.819 0 Td
+[(77 )0.5 (MARSH )0.5 (AVE)]TJ
+0 Tc -18.281 -1.439 Td
+(048)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (72 )0.6 (ROCCO )0.5 (LAURIE)]TJ
+-0.076 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 12.084 0 Td
+[(33 )0.5 (FERNDALE )0.6 (AVENUE)]TJ
+0 Tw -14.546 -1.439 Td
+(049)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.5 (58 )0.5 (SPACE )0.5 (SHUTTLE )0.5 (COLUMBIA )0.5 (SCH)]TJ
+-0.054 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 15.819 0 Td
+[(77 )0.5 (MARSH )0.5 (AVE)]TJ
+0 Tc -18.281 -1.439 Td
+(050)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (37)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........................................)Tj
+0.048 Tw 12.5 0 Td
+[(15 )0.5 (FAIRFIELD )0.6 (STREET)]TJ
+-14.962 -1.439 Td
+(051)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SAINT )0.5 (ANTHONY\222S )0.5 (CHURCH)]TJ
+0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 13.324 0 Td
+[(4055 )0.5 (VICTORY )0.6 (BLVD)]TJ
+-15.786 -1.439 Td
+(052)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.6 (OF )0.5 (PITY)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 11.136 0 Td
+[(1616 )0.5 (RICHMOND )0.6 (AVENUE)]TJ
+-13.598 -1.439 Td
+(053)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.6 (OF )0.5 (PITY)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 11.136 0 Td
+[(1616 )0.5 (RICHMOND )0.6 (AVENUE)]TJ
+-13.598 -1.439 Td
+(054)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.6 (OF )0.5 (PITY)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 11.136 0 Td
+[(1616 )0.5 (RICHMOND )0.6 (AVENUE)]TJ
+-13.598 -1.439 Td
+(055)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.6 (OF )0.5 (PITY)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 11.136 0 Td
+[(1616 )0.5 (RICHMOND )0.6 (AVENUE)]TJ
+-13.598 -1.439 Td
+(056)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.6 (OF )0.5 (PITY)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 11.136 0 Td
+[(1616 )0.5 (RICHMOND )0.6 (AVENUE)]TJ
+-13.598 -1.439 Td
+(057)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(OUR )0.5 (LADY )0.6 (OF )0.5 (PITY)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 11.136 0 Td
+[(1616 )0.5 (RICHMOND )0.6 (AVENUE)]TJ
+-13.598 -1.439 Td
+(058)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (72 )0.6 (ROCCO )0.5 (LAURIE)]TJ
+-0.076 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 12.084 0 Td
+[(33 )0.5 (FERNDALE )0.6 (AVENUE)]TJ
+-14.546 -1.439 Td
+(059)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (54 )0.6 (CHARLES )0.5 (W. )0.5 (LENG)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.636 0 Td
+[(1060 )0.5 (WILLOWBROOK )0.6 (RD)]TJ
+-14.098 -1.439 Td
+(060)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (54 )0.6 (CHARLES )0.5 (W. )0.6 (LENG)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.636 0 Td
+[(1060 )0.5 (WILLOWBROOK )0.6 (RD)]TJ
+-14.098 -1.439 Td
+(061)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (69 )0.6 (DANIEL )0.5 (D. )0.5 (TOMPKINS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 13.178 0 Td
+[(144 )0.5 (KEATING )0.6 (PLACE)]TJ
+-15.64 -1.439 Td
+(062)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (69 )0.6 (DANIEL )0.5 (D. )0.5 (TOMPKINS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 13.178 0 Td
+[(144 )0.5 (KEATING )0.6 (PLACE)]TJ
+-15.64 -1.439 Td
+(063)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (69 )0.6 (DANIEL )0.5 (D. )0.5 (TOMPKINS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 13.178 0 Td
+[(144 )0.5 (KEATING )0.6 (PLACE)]TJ
+0 Tw -15.64 -1.439 Td
+(064)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.025 Tc 0.048 Tw 2.462 0 Td
+[(JEROME )0.5 (PARKER )0.5 (CAMPUS )0.5 (CSI )0.6 (HS )0.5 (SCH)]TJ
+-0.106 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 16.257 0 Td
+[(100 )0.6 (ESSEX )0.5 (DR)]TJ
+0 Tc -18.719 -1.439 Td
+(065)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (23 )0.6 (RICHMONDTOWN)]TJ
+-0.037 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.824 0 Td
+[(30 )0.5 (NATICK )0.6 (STREET)]TJ
+-16.286 -1.439 Td
+(066)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (54 )0.6 (CHARLES )0.5 (W. )0.5 (LENG)]TJ
+-0.064 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.636 0 Td
+[(1060 )0.5 (WILLOWBROOK )0.6 (RD)]TJ
+-14.098 -1.439 Td
+(067)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (13 )0.6 (M.L. )0.5 (LINDEMEYER)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 12.032 0 Td
+[(191 )0.5 (VERMONT )0.6 (AVENUE)]TJ
+-14.494 -1.439 Td
+(068)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (72 )0.6 (ROCCO )0.5 (LAURIE)]TJ
+-0.076 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 12.084 0 Td
+[(33 )0.5 (FERNDALE )0.6 (AVENUE)]TJ
+-14.546 -1.439 Td
+(069)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (61 )0.6 (WILLIAM )0.5 (A. )0.6 (MORRIS)]TJ
+-0.138 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 11.292 0 Td
+[(445 )0.5 (CASTLETON )0.6 (AVENUE)]TJ
+-13.754 -1.439 Td
+(070)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SAINT )0.5 (ANTHONY\222S )0.5 (CHURCH)]TJ
+0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 13.324 0 Td
+[(4055 )0.5 (VICTORY )0.6 (BLVD)]TJ
+0 1 0 0 k
+/GS1 gs
+-15.786 -1.439 Td
+(071)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (72 )0.6 (ROCCO )0.5 (LAURIE)]TJ
+-0.076 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 12.084 0 Td
+[(33 )0.5 (FERNDALE )0.6 (AVENUE)]TJ
+0 0 0 1 k
+/GS0 gs
+-14.546 -1.439 Td
+(072)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.5 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(073)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.6 (FAMILY)]TJ
+-0.069 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......................)Tj
+0.048 Tw 11.876 0 Td
+[(366 )0.5 (WATCHOGUE )0.6 (ROAD)]TJ
+-14.338 -1.439 Td
+(074)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (37)]TJ
+-0.025 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........................................)Tj
+0.048 Tw 12.5 0 Td
+[(15 )0.5 (FAIRFIELD )0.6 (STREET)]TJ
+-14.962 -1.439 Td
+(075)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ON )0.5 (YOUR )0.6 (MARK )0.5 (INC)]TJ
+-0.086 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 10.802 0 Td
+[(475 )0.5 (VICTORY )0.6 (BOULEVARD)]TJ
+ET
+q 1 0 0 1 712.71 1096.2241 cm
+0 0 m
+9.088 0 l
+S
+Q
+q 1 0 0 1 731.79 1096.2241 cm
+0 0 m
+35.691 0 l
+S
+Q
+q 1 0 0 1 853.7227 1096.2241 cm
+0 0 m
+45.987 0 l
+S
+Q
+BT
+/T1_3 1 Tf
+0 Tw 22 0 0 22 737.0002 1118.974 Tm
+(64)Tj
+12 0 0 12 759.0002 1124.974 Tm
+(th)Tj
+16 0 0 16 768.3362 1122.4041 Tm
+( )Tj
+0.063 Tw 14 0 0 14 773.3362 1118.974 Tm
+[(Assembly )0.5 (District)]TJ
+/T1_4 1 Tf
+0 Tw 8 0 0 8 712.71 1097.024 Tm
+(ED)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+0.048 Tw 2.385 0 Td
+[(SITE )0.5 (N)18 (AME)]TJ
+0 Tw /Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.027 Tw 15.242 0 Td
+[(SITE )0.6 (ADDRESS)]TJ
+/T1_5 1 Tf
+0.048 Tw 7.75 0 0 7.75 712.7101 1082.634 Tm
+(001)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+-13.942 -1.439 Td
+(002)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+-13.942 -1.439 Td
+(003)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+-13.942 -1.439 Td
+(004)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (24 )0.6 (MYRA )0.5 (S. )0.5 (BARNES)]TJ
+-0.074 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.094 0 Td
+[(225 )0.5 (CLEVELAND )0.6 (AVENUE)]TJ
+-13.556 -1.439 Td
+(005)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+-13.942 -1.439 Td
+(006)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (24 )0.6 (MYRA )0.5 (S. )0.5 (BARNES)]TJ
+-0.074 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 11.094 0 Td
+[(225 )0.5 (CLEVELAND )0.6 (AVENUE)]TJ
+-13.556 -1.439 Td
+(007)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (53 )0.6 (BAY )0.5 (TERRACE)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.................)Tj
+0.048 Tw 12.616 0 Td
+[(330 )0.5 (DURANT )0.6 (AVENUE)]TJ
+-15.078 -1.439 Td
+(008)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (53 )0.6 (BAY )0.5 (TERRACE)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.................)Tj
+0.048 Tw 12.616 0 Td
+[(330 )0.5 (DURANT )0.6 (AVENUE)]TJ
+-15.078 -1.439 Td
+(009)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (50 )0.6 (FRANK )0.5 (HANKINSON)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 11.886 0 Td
+[(200 )0.5 (ADELAIDE )0.6 (AVENUE)]TJ
+-14.348 -1.439 Td
+(010)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (50 )0.6 (FRANK )0.5 (HANKINSON)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 11.886 0 Td
+[(200 )0.5 (ADELAIDE )0.6 (AVENUE)]TJ
+-14.348 -1.439 Td
+(011)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (50 )0.6 (FRANK )0.5 (HANKINSON)]TJ
+-0.18 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 11.886 0 Td
+[(200 )0.5 (ADELAIDE )0.6 (AVENUE)]TJ
+-14.348 -1.439 Td
+(012)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(NEW )0.5 (DORP )0.6 (HIGH )0.5 (SCHOOL)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 12.931 0 Td
+[(465 )0.5 (NEW )0.6 (DORP )0.5 (LANE)]TJ
+-15.393 -1.439 Td
+(013)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(NEW )0.5 (DORP )0.6 (HIGH )0.5 (SCHOOL)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 12.931 0 Td
+[(465 )0.5 (NEW )0.6 (DORP )0.5 (LANE)]TJ
+-15.393 -1.439 Td
+(014)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(NEW )0.5 (DORP )0.6 (HIGH )0.5 (SCHOOL)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 12.931 0 Td
+[(465 )0.5 (NEW )0.6 (DORP )0.5 (LANE)]TJ
+-15.393 -1.439 Td
+(015)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(STATEN )0.6 (ISLAND )0.5 (TECH )0.6 (HS)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 12.48 0 Td
+[(485 )0.5 (CLAWSON )0.6 (STREET)]TJ
+-14.942 -1.439 Td
+(016)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(STATEN )0.6 (ISLAND )0.5 (TECH )0.6 (HS)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 12.48 0 Td
+[(485 )0.5 (CLAWSON )0.6 (STREET)]TJ
+-14.942 -1.439 Td
+(017)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(STATEN )0.6 (ISLAND )0.5 (TECH )0.6 (HS)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 12.48 0 Td
+[(485 )0.5 (CLAWSON )0.6 (STREET)]TJ
+-14.942 -1.439 Td
+(018)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(STATEN )0.6 (ISLAND )0.5 (TECH )0.6 (HS)]TJ
+0.038 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 12.48 0 Td
+[(485 )0.5 (CLAWSON )0.6 (STREET)]TJ
+-14.942 -1.439 Td
+(019)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SUSAN )0.5 (E. )0.6 (WAGNER )0.5 (HS)]TJ
+-0.096 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......................)Tj
+0.048 Tw 14.97 0 Td
+[(50 )0.5 (BRIELLE )0.6 (AVE)]TJ
+-17.432 -1.439 Td
+(020)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (23 )0.6 (RICHMONDTOWN)]TJ
+-0.037 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.824 0 Td
+[(30 )0.5 (NATICK )0.6 (STREET)]TJ
+-16.286 -1.439 Td
+(021)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(STATEN )0.6 (ISLAND )0.5 (ACADEMY)]TJ
+-0.111 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 12.837 0 Td
+[(715 )0.5 (TODT )0.6 (HILL )0.5 (ROAD)]TJ
+-15.299 -1.439 Td
+(022)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (2 )0.6 (GEORGE )0.5 (L. )0.5 (EGBERT)]TJ
+-0.054 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 12.178 0 Td
+[(333 )0.5 (MIDLAND )0.6 (AVENUE)]TJ
+-14.64 -1.439 Td
+(023)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (2 )0.6 (GEORGE )0.5 (L. )0.5 (EGBERT)]TJ
+-0.054 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 12.178 0 Td
+[(333 )0.5 (MIDLAND )0.6 (AVENUE)]TJ
+-14.64 -1.439 Td
+(024)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (CHRISTOPHERS )0.5 (CHURCH)]TJ
+-0.163 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.012 0 Td
+[(136 )0.5 (MIDLAND )0.6 (AVE)]TJ
+-16.474 -1.439 Td
+(025)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SAINT )0.5 (CHRISTOPHER )0.5 (SCHOOL)]TJ
+0.003 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.......)Tj
+0.048 Tw 14.47 0 Td
+[(15 )0.5 (LISBON )0.6 (PLACE)]TJ
+-16.932 -1.439 Td
+(026)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(BERRY )0.6 (COMMUNITY )0.5 (CTR)]TJ
+-0.007 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 14.064 0 Td
+[(211 )0.5 (JEFFERSON )0.6 (ST)]TJ
+-16.526 -1.439 Td
+(027)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (CHRISTOPHERS )0.5 (CHURCH)]TJ
+-0.163 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.012 0 Td
+[(136 )0.5 (MIDLAND )0.6 (AVE)]TJ
+-16.474 -1.439 Td
+(028)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(IS )0.5 (2 )0.6 (GEORGE )0.5 (L. )0.5 (EGBERT)]TJ
+-0.054 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(........)Tj
+0.048 Tw 12.178 0 Td
+[(333 )0.5 (MIDLAND )0.6 (AVENUE)]TJ
+-14.64 -1.439 Td
+(029)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (52 )0.6 (JOHN )0.5 (C. )0.5 (THOMPSON)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.012 0 Td
+[(450 )0.5 (BUEL )0.6 (AVENUE)]TJ
+-16.474 -1.439 Td
+(030)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (52 )0.6 (JOHN )0.5 (C. )0.5 (THOMPSON)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.012 0 Td
+[(450 )0.5 (BUEL )0.6 (AVENUE)]TJ
+-16.474 -1.439 Td
+(031)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (11 )0.6 (THOMAS )0.5 (DONGAN )0.6 (SCH)]TJ
+0.04 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.512 0 Td
+[(51 )0.5 (JEFFERSON )0.6 (ST)]TJ
+-16.974 -1.439 Td
+(032)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (11 )0.6 (THOMAS )0.5 (DONGAN )0.6 (SCH)]TJ
+0.04 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.512 0 Td
+[(51 )0.5 (JEFFERSON )0.6 (ST)]TJ
+-16.974 -1.439 Td
+(033)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (11 )0.6 (THOMAS )0.5 (DONGAN )0.6 (SCH)]TJ
+0.04 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.512 0 Td
+[(51 )0.5 (JEFFERSON )0.6 (ST)]TJ
+0 Tw -16.974 -1.439 Td
+(034)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.07 Tc 0.048 Tw 7.285 0 0 7.75 731.7901 714.684 Tm
+[(THE )0.5 (MICHAEL )0.5 (J. )0.5 (PETRIDES )0.6 (SCH-BLDG )0.6 (K )0.5 (GYM)]TJ
+-0.084 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(....)Tj
+0.048 Tw 16.951 0 Td
+[(715 )0.5 (OCEAN )0.5 (TERR)]TJ
+0 Tc 0 Tw 7.75 0 0 7.75 712.7101 703.5341 Tm
+(035)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc -17.932 -1.439 Td
+(036)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.6 (ROSARY )0.5 (PAR. )0.5 (CTR)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.............)Tj
+0.048 Tw 13.772 0 Td
+[(44 )0.5 (BIONIA )0.6 (AVENUE)]TJ
+0 Tw -16.234 -1.439 Td
+(037)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc 0 Tw -17.932 -1.439 Td
+(038)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc -17.932 -1.439 Td
+(039)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(STATEN )0.6 (ISLAND )0.5 (ACADEMY)]TJ
+-0.111 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(......)Tj
+0.048 Tw 12.837 0 Td
+[(715 )0.5 (TODT )0.6 (HILL )0.5 (ROAD)]TJ
+-15.299 -1.439 Td
+(040)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(SOUTH )0.6 (BEACH )0.5 (COMMUNITY )0.6 (CTR)]TJ
+-0.12 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 14.304 0 Td
+[(155 )0.5 (NORWAY )0.6 (AVE)]TJ
+-16.766 -1.439 Td
+(041)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.6 (ROSARY )0.5 (PAR. )0.5 (CTR)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.............)Tj
+0.048 Tw 13.772 0 Td
+[(44 )0.5 (BIONIA )0.6 (AVENUE)]TJ
+-16.234 -1.439 Td
+(042)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.6 (ROSARY )0.5 (PAR. )0.5 (CTR)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.............)Tj
+0.048 Tw 13.772 0 Td
+[(44 )0.5 (BIONIA )0.6 (AVENUE)]TJ
+-16.234 -1.439 Td
+(043)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(HOLY )0.6 (ROSARY )0.5 (PAR. )0.5 (CTR)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.............)Tj
+0.048 Tw 13.772 0 Td
+[(44 )0.5 (BIONIA )0.6 (AVENUE)]TJ
+0 Tw -16.234 -1.439 Td
+(044)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.01 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.6 (39 )0.5 (FRANCIS )0.5 (J. )0.5 (MURPHY )0.5 (JR)]TJ
+-0.007 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 12.692 0 Td
+[(99 )0.6 (MACFARLAND )0.5 (AVE)]TJ
+0 Tc 0 Tw -15.154 -1.439 Td
+(045)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.01 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.6 (39 )0.5 (FRANCIS )0.5 (J. )0.5 (MURPHY )0.5 (JR)]TJ
+-0.007 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 12.692 0 Td
+[(99 )0.6 (MACFARLAND )0.5 (AVE)]TJ
+0 Tc 0 Tw -15.154 -1.439 Td
+(046)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.01 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.6 (39 )0.5 (FRANCIS )0.5 (J. )0.5 (MURPHY )0.5 (JR)]TJ
+-0.007 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 12.692 0 Td
+[(99 )0.6 (MACFARLAND )0.5 (AVE)]TJ
+0 Tc 0 Tw -15.154 -1.439 Td
+(047)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.01 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.6 (39 )0.5 (FRANCIS )0.5 (J. )0.5 (MURPHY )0.5 (JR)]TJ
+-0.007 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 12.692 0 Td
+[(99 )0.6 (MACFARLAND )0.5 (AVE)]TJ
+0 Tc -15.154 -1.439 Td
+(048)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (52 )0.6 (JOHN )0.5 (C. )0.5 (THOMPSON)]TJ
+-0.012 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(............)Tj
+0.048 Tw 14.012 0 Td
+[(450 )0.5 (BUEL )0.6 (AVENUE)]TJ
+0 Tw -16.474 -1.439 Td
+(049)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc -17.932 -1.439 Td
+(050)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (CHRISTOPHERS )0.5 (CHURCH)]TJ
+-0.163 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.012 0 Td
+[(136 )0.5 (MIDLAND )0.6 (AVE)]TJ
+-16.474 -1.439 Td
+(051)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(TODT )0.6 (HILL )0.5 (COMM )0.5 (CTR)]TJ
+-0.004 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(..............)Tj
+0.048 Tw 13.168 0 Td
+[(255 )0.5 (WESTWOOD )0.6 (AVE)]TJ
+0 Tw -15.63 -1.439 Td
+(052)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc 0 Tw -17.932 -1.439 Td
+(053)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc -17.932 -1.439 Td
+(054)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+-13.942 -1.439 Td
+(055)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+-13.942 -1.439 Td
+(056)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (23 )0.6 (RICHMONDTOWN)]TJ
+-0.037 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(................)Tj
+0.048 Tw 13.824 0 Td
+[(30 )0.5 (NATICK )0.6 (STREET)]TJ
+0 Tw -16.286 -1.439 Td
+(057)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc 0 Tw -17.932 -1.439 Td
+(058)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.01 Tc 0.048 Tw 2.462 0 Td
+[(PS )0.6 (39 )0.5 (FRANCIS )0.5 (J. )0.5 (MURPHY )0.5 (JR)]TJ
+-0.007 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(...)Tj
+0.048 Tw 12.692 0 Td
+[(99 )0.6 (MACFARLAND )0.5 (AVE)]TJ
+0 Tc -15.154 -1.439 Td
+(059)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(PS )0.5 (8 )0.6 (SHIRLEE )0.5 (SOLOMON)]TJ
+-0.066 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 11.48 0 Td
+[(112 )0.5 (LINDENWOOD )0.6 (ROAD)]TJ
+0 Tw -13.942 -1.439 Td
+(060)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+-0.04 Tc 0.048 Tw 2.462 0 Td
+[(PS/IS )0.5 (48 )0.5 (WILLIAM )0.6 (G. )0.5 (WILCOX )0.5 (SCHOOL)]TJ
+-0.05 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.....)Tj
+0.048 Tw 15.47 0 Td
+[(1050 )0.6 (TARGEE )0.6 (ST)]TJ
+0 Tc -17.932 -1.439 Td
+(061)Tj
+/Span<</ActualText<FEFF0009>>> BDC 
+( )Tj
+EMC 
+2.462 0 Td
+[(ST )0.5 (CHRISTOPHERS )0.5 (CHURCH)]TJ
+-0.163 Tw /Span<</ActualText<FEFF002E>>> BDC 
+( )Tj
+EMC 
+(.........)Tj
+0.048 Tw 14.012 0 Td
+[(136 )0.5 (MIDLAND )0.6 (AVE)]TJ
+ET
+q
+0 0 972 1368 re
+W n
+/CS0 CS 0  SCN
+1.25 w 
+/GS1 gs
+q 1 0 0 1 15 1332 cm
+0 0 m
+-15 0 l
+942 0 m
+957 0 l
+0 -1296 m
+-15 -1296 l
+942 -1296 m
+957 -1296 l
+21 21 m
+21 36 l
+21 -1317 m
+21 -1332 l
+921 21 m
+921 36 l
+921 -1317 m
+921 -1332 l
+S
+Q
+1  SCN
+0.25 w 
+q 1 0 0 1 15 1332 cm
+0 0 m
+-15 0 l
+942 0 m
+957 0 l
+0 -1296 m
+-15 -1296 l
+942 -1296 m
+957 -1296 l
+21 21 m
+21 36 l
+21 -1317 m
+21 -1332 l
+921 21 m
+921 36 l
+921 -1317 m
+921 -1332 l
+S
+Q
+0  SCN
+1.25 w 
+q 1 0 0 1 491 1360.5 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 480 1360.5 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 486 1366.5 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 489 1360.5 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+h
+S
+Q
+1  SCN
+0.25 w 
+q 1 0 0 1 491 1360.5 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 480 1360.5 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 486 1366.5 cm
+0 0 m
+0 -12 l
+S
+Q
+/CS0 cs 1  scn
+q 1 0 0 1 489 1360.5 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+f
+Q
+0  SCN
+q 1 0 0 1 483 1360.5 cm
+0 0 m
+6 0 l
+S
+Q
+q 1 0 0 1 486 1363.5 cm
+0 0 m
+0 -6 l
+S
+Q
+1.25 w 
+q 1 0 0 1 491 7.5 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 480 7.5 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 486 13.5 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 489 7.5 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+h
+S
+Q
+1  SCN
+0.25 w 
+q 1 0 0 1 491 7.5 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 480 7.5 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 486 13.5 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 489 7.5 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+f
+Q
+0  SCN
+q 1 0 0 1 483 7.5 cm
+0 0 m
+6 0 l
+S
+Q
+q 1 0 0 1 486 10.5 cm
+0 0 m
+0 -6 l
+S
+Q
+1.25 w 
+q 1 0 0 1 12.5 684 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 1.5 684 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 7.5 690 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 10.5 684 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+h
+S
+Q
+1  SCN
+0.25 w 
+q 1 0 0 1 12.5 684 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 1.5 684 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 7.5 690 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 10.5 684 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+f
+Q
+0  SCN
+q 1 0 0 1 4.5 684 cm
+0 0 m
+6 0 l
+S
+Q
+q 1 0 0 1 7.5 687 cm
+0 0 m
+0 -6 l
+S
+Q
+1.25 w 
+q 1 0 0 1 969.5 684 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 958.5 684 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 964.5 690 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 967.5 684 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+h
+S
+Q
+1  SCN
+0.25 w 
+q 1 0 0 1 969.5 684 cm
+0 0 m
+0 -2.761 -2.239 -5 -5 -5 c
+-7.761 -5 -10 -2.761 -10 0 c
+-10 2.761 -7.761 5 -5 5 c
+-2.239 5 0 2.761 0 0 c
+h
+S
+Q
+q 1 0 0 1 958.5 684 cm
+0 0 m
+12 0 l
+S
+Q
+q 1 0 0 1 964.5 690 cm
+0 0 m
+0 -12 l
+S
+Q
+q 1 0 0 1 967.5 684 cm
+0 0 m
+0 -1.657 -1.343 -3 -3 -3 c
+-4.657 -3 -6 -1.657 -6 0 c
+-6 1.657 -4.657 3 -3 3 c
+-1.343 3 0 1.657 0 0 c
+f
+Q
+0  SCN
+q 1 0 0 1 961.5 684 cm
+0 0 m
+6 0 l
+S
+Q
+q 1 0 0 1 964.5 687 cm
+0 0 m
+0 -6 l
+S
+Q
+BT
+0.4 w 
+/T1_6 1 Tf
+0 Tw 1 Tr 6 0 0 6 46 6 Tm
+(Poll Site List Nov General 2026 Election Day - Richmond.indd   1)Tj
+ET
+Q
+BT
+/CS0 cs 1  scn
+/T1_6 1 Tf
+0 Tw 6 0 0 6 46 6 Tm
+(Poll Site List Nov General 2026 Election Day - Richmond.indd   1)Tj
+ET
+q
+0 0 972 1368 re
+W n
+BT
+/CS0 CS 0  SCN
+0.4 w 
+/GS1 gs
+1 Tr 6 0 0 6 879 6 Tm
+(09.09.26   07:35:10)Tj
+ET
+Q
+BT
+6 0 0 6 879 6 Tm
+(09.09.26   07:35:10)Tj
+ET
+
+endstreamendobj11 0 obj<</BaseFont/IWIGSI+HelveticaNeueLTStd-Roman/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 18 0 R/LastChar 110/Subtype/Type1/ToUnicode 19 0 R/Type/Font/Widths[278 0 0 0 0 0 0 0 0 0 0 0 0 389 0 0 0 556 556 0 0 0 556 0 0 0 0 0 0 0 0 0 0 0 0 0 0 611 0 0 0 0 0 0 556 0 0 0 0 0 0 0 0 0 611 0 0 0 0 0 0 0 0 0 0 0 0 0 0 537 0 0 0 222 0 0 0 0 556]>>endobj12 0 obj<</BaseFont/IWIGSI+LubalinGraphStd-Demi/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 20 0 R/LastChar 89/Subtype/Type1/ToUnicode 21 0 R/Type/Font/Widths[300 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 580 0 580 0 0 0 580 0 0 0 0 0 0 0 0 0 0 780 600 760 740 580 0 780 740 340 0 0 560 960 800 780 600 0 640 520 600 700 740 0 0 680]>>endobj13 0 obj<</BaseFont/GTEUQM+LubalinGraphStd-DemiOblique/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 22 0 R/LastChar 85/Subtype/Type1/ToUnicode 23 0 R/Type/Font/Widths[300 0 0 0 0 0 0 0 360 360 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 780 600 760 0 580 0 780 740 0 540 0 0 0 800 780 0 0 0 520 600 700]>>endobj14 0 obj<</BaseFont/GTEUQM+TimesLTStd-Roman/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 24 0 R/LastChar 121/Subtype/Type1/ToUnicode 25 0 R/Type/Font/Widths[250 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 500 500 500 500 0 500 0 0 0 0 0 0 0 0 0 0 722 0 0 722 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 500 444 500 444 0 0 500 278 0 0 278 778 500 0 0 0 333 389 278 0 0 0 0 500]>>endobj15 0 obj<</BaseFont/GTEUQM+TimesNewRomanMTStd-BoldCond/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 26 0 R/LastChar 84/Subtype/Type1/ToUnicode 27 0 R/Type/Font/Widths[190 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 542 0 0 594 542 0 0 0 292 0 0 0 740 594 0 0 0 594 448 542]>>endobj16 0 obj<</BaseFont/GTEUQM+TimesNewRomanMTStd-Cond/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 28 0 R/LastChar 146/Subtype/Type1/ToUnicode 29 0 R/Type/Font/Widths[190 0 0 0 0 0 0 0 0 0 0 0 0 292 250 281 448 448 448 448 448 448 448 448 448 448 0 0 0 0 0 0 0 594 542 542 646 542 542 646 646 292 344 646 542 740 646 594 542 0 594 448 542 646 594 792 646 594 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 250]>>endobj17 0 obj<</BaseFont/GTEUQM+MinionPro-Regular/Encoding/WinAnsiEncoding/FirstChar 32/FontDescriptor 30 0 R/LastChar 121/Subtype/Type1/Type/Font/Widths[227 0 0 0 0 0 0 0 0 0 0 0 0 356 228 0 480 480 480 480 0 480 480 480 0 480 228 0 0 0 0 0 0 0 0 0 735 568 0 715 0 0 0 0 538 0 743 0 563 0 621 474 0 0 0 0 0 0 0 0 0 0 0 0 0 439 0 423 528 425 0 0 534 268 0 0 253 819 547 510 0 0 371 367 305 0 463 0 0 459]>>endobj30 0 obj<</Ascent 989/CapHeight 651/CharSet(/space/hyphen/period/zero/one/two/three/five/six/seven/nine/colon/D/E/G/L/N/P/R/S/a/c/d/e/h/i/l/m/n/o/r/s/t/v/y)/Descent -360/Flags 34/FontBBox[-290 -360 1684 989]/FontFamily(Minion Pro)/FontFile3 31 0 R/FontName/GTEUQM+MinionPro-Regular/FontStretch/Normal/FontWeight 400/ItalicAngle 0/StemV 80/Type/FontDescriptor/XHeight 437>>endobj31 0 obj<</Filter/FlateDecode/Length 3717/Subtype/Type1C>>stream
+Hâ|TiTSgæóò‹®4åƒÎ—{mÓ≠c’qDY¥:≠é¥ bÖj€H¢Ñ%ì¿%%	Kp√%`¿∞à ÄZ\–v∆e*nS©†N≈m⁄ÈÈÃ{ô/sfnËü˛ò3Á;Á9˜˘∂˜yÔ˚ºéçÚ√pü¥2ÓwÒÎ¢gEk¥NªV«ÕâQoÕLSÍ|ã,O„¸ƒQ¸d˝y'K*ˇµMè¯	„NMàƒ¸p¸«ˇ,„2rtö≠…6$22x∂CFpﬁŒ¡åòÕŒ¡y#8ü]™‚6´ŸÿΩAùÆgWiì8]ßS‘™πÏ“¥4v‰j=´SÎ’:£oÚg©¨Fœ™5ÜdµéU
+ã[5¬yùZ≈tJï:]©Ke9ﬂ /Ëñˇä’hY·.6^´Ò±XÉ0©gïZUêp7%âÀ‘tµ~n–äÿ∏ú5¡™‘[0&√±q"lÇF·ÿª86√Ê`XÜÖ`X(éEaÿr?léEã∞X?ÏcKƒ∞©B∞uXñÜïa˜Ò \Ö?ÛãıÎÛäT¢⁄QcF9≈b•¯â$A‚%R§"iº¥Ùä—≠c¸∆Ñçy>6al≠øÿ?ŸøÌ≠—oYOñ^‡__¿úzAƒO^Î-˛˜ZÇèVêh	™@K†BÃKº]§Ô|ÃÎc0¬êèÒ>Ê€)0 ï±êx	øE"Ë;âr$ª‚ƒê-ë!≥¸*åÅƒLz\«Z<˙∫‘TΩ.5Ÿe02s3ˇ†	oy€üâ†`8ÄD3„–
+4ÕÎAë0fv√
+òs◊√b4ì)I!ˇZáf†)à’£ô!Ûµ¬Ã¸éëïÁ\]Y8(˚E¸¯	«â`Ga≈ä?DƒeÆÕ˛}Æ‘@úﬂ-Óÿ]n˝òÚíƒ2´%∏@ëA»J˚xÀMæ~,‚ÉÅ%◊§õä‚iÙë¶¿oƒœﬂúÓ}B˝¥Ëè°Î6nKIWƒ,<ö%>Uﬂﬁsãæ€ëæ`MdÙR&a]lLlú‘¿è!úùU5ÌRôπã˜\ÑÓ«õÂ∑¯R>p≤Ót˚%∫ª=5zÈJUêñqh≈∂.ªãñﬂæÚÁ-A3÷/èŸÏ>∂ç±8,%ñ¬¸ì©ƒ¥€\ûªœ$5◊ú…<KﬂÅòª÷∑·À–ÉÃB>–pÿuhˇim≠ÛXuÌÂêıõtiú‚≥5bô˘"t]Å†>KE |ˇX>≥˘s$Ïí»‘ˇ©∞B,Bm∫*Æ<÷V›Nﬁ≥&Ù}eTÿáõ=µF&Ø¬Rí_êõóo*…€m∂YjvIwÌo7û•ªÀn÷˜tHØ_p_πFıØ~Ç∆gl‹±K≠ ∑.„'üÅyPo√+≤ò°ØÆ7ú<x Ÿd/LL*¯$7ióÙöçƒà£–‹ß≥`4¯¸ cåÍg≥åyô
+óä¸Æ=2bï>|q‰Ü7‡__Ê≤’25ÆÊ˝m¥¨“Ë1ÚÁ˚ÃŒ¿s¸ly2;,"ΩÅí¢œ≠	˘q“…óΩÚií˜Pî#i
+Z‚»ù(Øπ[ı
+6¡Á/‡≥I2ªW†∑	oÑÏß"∞˙,GæèFœö“∑¯µµÂŒ£ÃÕ÷A%>˝Z?…ñ.Æª^u¥á∫Áò k(ò4NaJ!_◊£_ÖfïËã3ôFç9ôOË{⁄Î|¿¸Ï{Xºwƒ˚|ôj0§héÈ=ó´πI,ï)Û.˙u•≠¸Éf‰É|¿Qª–ìZ‚AaE— ˚.f)\P®»Ä<˛VwıÛ‡ÍŸg‡OΩHÓK<ØËçûSè‰4ÚõJû⁄[]ÂP8™ÍmÌÙÕ´fm'ÛÕ∆∂yS)4b—GQ)µ˜≤üJ›\3¥ûgÁÑÒiÉ‹»◊@iJ ÷lœínÀ‰,ø•íÀúŸLNM·ës¨{I<q.´a N+˘¿dµÑ–s K“∏gœ	≈}…ù„∆}LMfUf•≤¡6±¯¢ıVÂçë»[8‚aAEqÂùB,¥¯öOn‰x#Qy‚{ìT∂ù-‡8èZÒéøÛÔàÜ?Ä92$o,B<*åPöÕYπä‹Ã¥ç‚√‡=ò
+—0Js^ﬁOA2„∂[nX/∑Lr§.9A£ËC¡
+;Q"LGoC∆7˝G˜…/Ò¥PDoπÌZ•BvØ¥ôp„Bˆ"ﬁ·‰ŒMŸ©æÃk≠‘Ï©Œbr™¨á{(û!*m±+‹hG<*tX√(ÔT°$·Ö
+éO29Ú“~B»§©‘Ω√8<V¯•‰>Ïåºs8…˜¥Êrí€E.ìÌSÈ^Æ|SÖJä	ÔæDåfpísEG-áu“C˙=EQ  Çä?)NSXu¶u≈RÚ‹ƒ rÉ”zQZ‹P|˛9Â¬êÕ/Òü‡ßKÜˆtñ7* ;\5ó˜Jeﬂó∫¡tn{F™˙¥Ø‰Øœ
+
+‰è8‚Æµ¢(‘ß;¬bY$Ëóõ±Á€(!ÓfWó‘ñÓ/õÙ∫ÊÕW@RÚ◊7∂ùU5(ìbúÀÈÖ¡§{Ø≥B∞ï„àÕM˜ﬂﬁÑ0$_îº:%√a3	÷ùg©œqCet7	qøÖ‰!˘√cëôvCuF£æﬁXøµ+ΩSys{ìÙÆßª{ê∫∂≠3©^QßN¨å¢Q'Ò$åíÔÙN#¬Ú#}Ú∏âEˆ|ª /‘Ct4s˘çâ≠—-âù´€3ÔIKú’•N⁄;íPB/w:l
+{≈¡Ú˙˛◊Iãﬂë§Jg≤t)ñ¥¨zg+ˇœf¸⁄CHˇVƒœ·À˛Àdπ5uÂq‹4Œı±¡í¶≥Ω∑ﬁ€Œ¨≥≥£SÌk∂¥‚Z™`@*HxIîóÚHBBﬁOVíê‰I($ÿÂa+Ç†î*≤µZÿ’u∫ùvvÌÿ∫Á:«ôÓˇŸˇœ˜˜˝úﬂÔw~Á«7-X√µ!¨˘Ã)OÅ¯˚cw!Œìì_îP˜E3≈‚ÒπŸ~õ˚d^EñõBÔªN˘+.k´ŸoƒÃ˛~”(_˘ˆ¡¸’Ó…∏jﬂ®ÚW¯ÙÂÎÀè	…Ì$W™ª	üé±¬·Æe6}(Ã78É∆™#jî≠„¸LFã{…vYô´å8ÆO:]°¿™5ZΩØ
+(⁄[<Mm6“ŸÁÚyΩX≥ª’ŸI|vπ‡#J	d ¯ ñV->óÖ˘4ıÀ‡ï°û“^„–0√⁄‡È2∂Òˇ‚W+ãkƒıÿ9ë*‰Î∑S]Ó+]]å+“›ÅèØ∞ÜWÿ4Ÿ¸¸úR]>qb˜§÷Êfnj+Çî…eØ≥üØÀSÁ“z(Ø™‘+"Nß®D‘·å“√˚Ò◊ÓÌÑ17«Ê∆HÓ-›Ç‰óM∏~”/¨"˝¶!ΩÍ∫1√ﬂAMÑ¢[ÆÚœ6r
+mf˚Nˇ 
+µá’fL
+ÓZÌuú◊â^ºê≥™ºQC†W±Ö^[ã_iÓq\
+SÛ!N‡UÃu›˜˙l/Ñˆ‹‡+•E™""9~nÖ;Ñ'ÜGU≈›˜s≥¥Q=ƒä¿¨∞ÈËü˘%EgT"‚P‹u¯j=∑⁄‡ãÓãçXªÕÓÏƒø9|ÔΩåÙ ú≤ WÚqé8w£˚ñ⁄#$äÉ+¸ôÀ¬åzJc±(…Û«“ÍO´≠cû ∏_6ËfaõÇı(s#l⁄˝r §⁄Õé€8¸¿m«Øæüû^XTL¬o¡i]äJhfê€ñ÷#¯31-)VRãç√⁄Ùç†ˇì·éab±Ø ñBÔÉ$ìÂòÖ. `ú‚kˇây¯‰ﬁH–¸^_wOPÊ´®î  *ª•ä˘‚7?‡@≤√Ï∏É√« Oô≠Õ419æih¨=ä£êh∂y≤∞!4~ùúç/ØkL6ΩJtGk2,åf¡Í®Kƒüï≠É>◊@ö¡ÿt£QÛSfF‡…ox´OáÒqá…∂à√t8k&ÆB¨”»Iâ∫º∫\ÜM)ÚÉB‚¨TØ3o∂¨Z¶îk∞Uêß»‘ÊôòlÃ≠…8Å$£E¿ò¿¢ »bPn·ºU®˛`∏gÑò|H°àıË˙ô“ HcÊ¡3@GΩÁ|3Ÿ?<‹"¸π)Ù8®ØM› ~ºŸﬁ2›…¿sXmw÷aˇ}rf_πXß¨ y„íôZ°∆V≤lù–»êMud´5—Ã∏ñ≠◊…¬HyÀY ˆèã›π	Îé	f”s«I› M∞Üæáçﬂ≥°ãNÁÔE/@±à˝7Ù‹Ò#‹≤ﬂÖ€ﬂ¯mß•¸Gìª—f¥#3Áhl⁄0r¶?ˇú‚Ói¿{?˝ÒÎpﬁ<0€œY@(œ”eô0ò5ŸkpfÀFJj`ø√ Tê◊ì¡u_0@¥5[‘-oﬁaq’7€±ó∑≥g•Dò‚d…›≈∞æﬁ«ö]Çƒ◊l¯3;Î¸˙¶KòS^È* ˆ§§⁄´ÙfıYUØ4?URQòí;w[Iä≠ú"WbìÜT∑OT_%VN~∑î:–GÂvà.ç„·û‡ßÉ¢‘íãﬁ“Õ¬ü√¨2]v5ƒ78fMïABHJ[W)Ë˛/hnjÙ›‚¿QöIN|®,∑8Kh,jﬂ†h¡’fs]$πn9˝ÅüuÓÖŸ0öMãi%H¢fÕΩZ(K:ª∑¯ΩÚª¢5Ò_Uπ‡ún¬¸ËîLõúÊK«&6Å¢∆—6¨'j˛˛å∏ﬂs”Âöj¬∏µH/˙¶üı'¯6≥™mg”íı¿&∞©IØ;#?íè∂T$ÓÖ∂ﬂháÏÓ	'7OfLnmWZ‡8˙ıär‘4h≠ÍZ≠I^]\ïßêúS`5z£QÖK{•ü¥xÌv≤e⁄7ªﬂYÇ±}˜_Îôu9Ø91Æ∫ï¥yZ‡NoKk»Ö‹ŸïPõ∑ms√∂≠˝["[È™óhˇ ´ú>˚
+endstreamendobj28 0 obj<</Ascent 920/CapHeight 682/CharSet(/space/hyphen/period/slash/zero/one/two/three/four/five/six/seven/eight/nine/A/B/C/D/E/F/G/H/I/J/K/L/M/N/O/P/R/S/T/U/V/W/X/Y/quoteright)/Descent -250/Flags 34/FontBBox[-147 -250 1000 920]/FontFamily(Times New Roman MT Std)/FontFile3 32 0 R/FontName/GTEUQM+TimesNewRomanMTStd-Cond/FontStretch/Condensed/FontWeight 400/ItalicAngle 0/StemV 80/Type/FontDescriptor/XHeight 461>>endobj29 0 obj<</Filter/FlateDecode/Length 405>>stream
+Hâ\íÕjÎ0Ö˜~
+-€EÒﬂL[É	§IYÙáÊﬁpÏIjhd£8ãº}u|J5$˛å4˙£IWõı∆˜ìKﬂ¬–nmr˚ﬁw¡N√9¥ÊvvË}íÆÎ€È˚k˛oèÕò§±x{9Mv‹¯˝ê‘µKﬂ„‚i
+wµÏÜù]'ÈkË,Ù˛‡Æ˛Ø∂◊.›û«Ò”éÊ'óπ≈¬u∂è=7„Ks4óŒe7õ.Æ˜”Â&÷¸Ó¯wÕÛwŒ0Ì–ŸilZç?XRgÒY∏˙)>ãƒ|˜gΩ¨X∂€∑MHÍõ≥,æ"Ø…k#˘¸Dé÷%˜óÿ_Ê‰\êpI.¡B∞í|KæﬂëÔ¿˜‰{pEÆ"]ó–%p	]ó–%p	]ó–%p	]ó–%p	]2ªñ‰%¯Å¸ ^ëW`ˆJ–+aØΩˆJ–+eØΩRfVdVfVdVfVdVfVdVfVdVfVdVfVdVfVdÆp~ëÂ’|Èﬂ∑ãÎèSÍ~f´=á«jÂyû0IΩ∑üiá—≈*¸í/ ¢Û»D
+endstreamendobj32 0 obj<</Filter/FlateDecode/Length 3523/Subtype/Type1C>>stream
+HâtS{P◊Œ≤Ç±≤≥”ö8ª´”[≠§PΩ*™E@Eº HL"Å¨≠yﬁ £(·qETôÇıQΩ±ÉN’RÅ†^_•
+¢Ω◊ˆ∑x“π˜ÑvÓLˇËÏÃŸsvœ˘æﬂ˜˚æCà\]DApkT´"7ÜœWÈÙZÛz≠uìQØ6Ñ´îÕ¬£A3πEê¬[Æ¬LOÕA%Ø≥^/ê~”ÑêÈ«gN€È%rq)àµ!∆‘ì.1…¬ø∑lôÔÁ∏xÔÎ„„ÀØ‘„¥º2√l—ÍÕ|®!ﬁhJ5ö‘≠∆õ_ôí¬O3Û&≠YkJs~¸÷{ø£®í¥|∏—`¥d§jÒéﬂ tFüöˇ'8ì≤x¨ãü∆ÎÃºö∑ò‘≠^m⁄…˛‘§M‘·zMZØ3º-“[ÈÕG‡™^m–™ˇ„lHH–≈k'?ZìtÒIº^ù¡c≈ƒà◊ö,j¸6b0üº€§3ktÒN2≥˜¢’Jï≥Ç˜yç6A$"#râ§û¢Ÿ”D~îh.n≤(\! ’à:D˜àYD4—‡"rY‚íÂÚ@Lâ˜àüπF∏>î,óTë$i §6RüR=n°n%nø∏orˇ«˜)ŸS^{¨(ıˆ4OOMRvcﬂÓ∫
+˘é|JP7ÉP&ÅaÒË"ŒÖ„ Â ∑OŒAÅö:Á9WR!E›¬p)¥z¡¸sÙé{ÇñÈm<ﬂ{Qv9˛À8]™Y«“ıÜZK[WXQ)//˚»öö°é2rRTëÉD§â[ íÅ¥AîFb∞\ à> ƒ0}å—õÃz˝SSS√ë¶&sÉ:Zü6k%
+·§í'bî¸k¨§átŒ%“‹¶âMDÛ(DèäõaîA€!opy:$XAÎãê»âﬁFEÏËˆú|vÌ~5
+@KQí~Œ:ølàÇ©¨¥–>±‘J¿˙áb8< ÿH4kŸÅ,…ÅÚCeïÚ√ÂÈ1úc3µ’f⁄R¿⁄ ’NmI?‹≈Io	ÌÉt>˛ìN&òMŸ:9⁄I¬N∞\zTˆ<‰é∑ohg≥5dO’©∂n˘Õ ≈ŸÄàyHÃ!w$ìÿ‡%Õ=+¸¯ΩåªI˜¬<f`zA€ú`ôø&rª.˝¸6π%#”ö|f˜UxÛÂK`™o}ÿƒ—è:œ5v\í›Sv+Ç£∂.‘≥˜J.?ŸxZ~±}ÛÍ†Xï:'≠OÉ¿~Ai%ÍN¡V¨±¯oı Õjp¨ó¯S∞ßüA[Iÿw%≈§4˜ü¬5,ÔﬁU1DL(òwPπÊÔBÆH,[Æ^¬∆ÓÍTÀwgf•%^0\Åy7¿oXüü–¨zÆmL‰Éÿ†¯ı’gÜ!ÍâXòç˚ã+—:Ñ>ó!≈ ¢∞USøÖ‡ÒKË=øøil…;Ÿ˝≈-†á)‡Y6U†«Ã—c«™ö‰◊⁄ó#ô∑>*rU¸cò◊ZT_zúìñß	éA‚aäXXÑÎD7H%Ú´˛TÚ˝—5CrxìD
+«ÛŒ¨…¨Ã<Í’qsm/lËçÓ°áË[‡/zh≈Ì˙’≤˘˝¡„œÔåh/œ`ÈÅÆúºpEv=˙¡¨πk¬≤Ù≠∞™ÅÒèﬁØôøˆô:œ….∑ùÓ˙¶=fu∏iKîÜ•á∂3‡‚{b{ò,<.Vπz«ïëæ˙_µ≤“‹(:ø∂ÕO rT‹ëÀåÓΩyÍÚe∑ßO€¡<d† 
+ë»c-b–4˛;ˇŒ∂€[N∞≈˚ìQ‡\úœèg@<fRç∆Ω|≠Ê>»Üõ.vıµ/FÛ≠˚ú¥Ω–±mB∏’´<êápâÜP00D∂!wIŸÆ‚èÛd∆Ã<5q∂ùä…)yj‡PÑ@íI“/Qà„Å$hwF˙Vπ¬q∆26 WîT±∏±Ôí}∞œôåúBª≠æ™ÀjÕ®Å≠6ª◊F@5æ\Èä ;ˆÄn≤Q7ãe+déD* ;'S•Ä}“‰ÿ˙oë◊g\1EÁÅ{≈ô€=≤/Dª!é)≠9T\+‹È«—yÔoﬁ‚óë]\ö∆“çA±ÆtdPimUQµ|¯˙:ü®®%Êåíä]ú4'´u‚≠ØpÖ1˚ﬁ˙•∞w"_‚î}{ÛrLÒßóÀ—2$E~(ôÄ«y„_‹Ó˙˘<óY&Y∑Bé<á v_xÉ£áG{Çê{9WCJüb•ÕÇ√)ÒÁË∆[jù˙Ï6ÍFQuN¿§º¨ú,ØñÇ0|qiH‰ËXı¯£<÷?Ü©hÆ-9&áŸè∞â—HÂèÔó¨ˇ¨“Ç/lÉÆ6®k√?ç¿;=&ƒaxáí§Ô€®;≈ï÷'√äÃúäXõEuÇ¬ˆw…údu¬R˘ªd‹'Â8»/™ªﬁT¿ŸaèçT•ôÂHD“cP,5ÿú7∑“©ª˝ø≥Åh‚Ìw˛+öñ'¢«Öœù§ëÙ’_ô¿aŒïπ+1'±SŸádê	4u›Æ_≥Ûd€»¿R]ZòπíÙ8Êâ¢Ó6lŸX2Ÿ≥¨VxháÛ≠^«±#∑GvT”˝Jhƒûdí˙ÇO≤m÷ÿ≥Â(âë≠A±¿†Y∆—¬@ﬂëØ{9à°æ´:ÚkGY6ÍR¡AãJÜ∂S:ç:sõÒQ∞| z7Z —Øû<^ã‹*8˚§UNy_⁄âW#ê?"∆ô}∆@> $WÊ§ˇ&%∏¿VuW&$Pˇ™´Ë+¯ÀÂ”‘Üq±ú~∏º‘j95ÌtF≥,õ…¢é8‰bô®@∂·pàÿ‘®ëãÙ¥Ö∞P,Z(Ì9moQ,^®∆¡t8%né!:¥≤8‹úçõnŒÂ=Õ◊%˚Œ)9ˇ5˘ûÁ<Ô˜æø˜îXe–à’YG„l\ŸËæ´eH¯ΩïAC]:r¡˘(A«$Á[…yã¡uó&ãålåπ\ƒ≥ÄƒIJ«†[\YºX5Ω6E®öìCñ˛YÕ†QŒqã(¢h\†Ô
+*πv¸J@2&ªV«e–°J¥¡¥∑–P’‰T’[õÈì∫÷={K˜ÌŒımÌá®6ò~O≈+–m÷5 Ë<{√îÄ§GTπÓ“'
+ÊÒå!ùx◊oãŒ}áÜÚ:0G5Í+L¥∂¨¸sk8∆Ü›6/}+å¿<Hºﬂ—:p0Ü√˘:SÁ1ii}≥cã
+kp!eùtƒÈ∫)F DƒZê¥â÷√V©Ò^i‘ÆZ4]ÜU∫
+O€∫´OR&KÛ*m>5_Ç¸ú˝∂(k¬û{˘ÂâG‘˘ﬁ¡¨#Ëi‰7r(ïiˆ´˘Lí‡≥P?eó¬&˛&U ï∆iÀVY√13uÏ]°ƒ#Óπ≥ÂØ†,Rºö?@	u™*	∆r3_x˘…^ôØYtÍ`Õ{]Í€®êeÍK◊ΩÄC	ñ}ˆ4üB®T +B_Q˛oiøÀ›Ot≥ñq˙:$∑ ¸å7R—=9≥OG'>ëí„ê„uOq¨Ñ’è Ö<ö%êä”p⁄úä5*àú˘Á@BX/πÙ&.∆ül«3»#…y
+≈*q4{z‡ö¿R\»%†˘Ú`TÆª–iˆ*a /~òëãGÒ\5nÈÉ’=¡ü0^èê‚†àç<Ï·∂)!ÍƒÇµÀ> à+fÍ[vÑ7ƒıì–;¡≥ı¢M±π(%ç2J¡N˙ÖE◊≤ß/NÒèÁ∆èÈ«I~<[ÖªDWR·¬ÛQ|ô>¡∂M™58Ó—`ƒ:êÕ›÷–Æº”∑n…≤ıkﬂRGÎΩ¡Èﬁôù£7˚-õìçt‰nÈëz{≥ß„l¡êRˆ‰ﬂ±/˚ãæﬁÊUg,Ïﬂx1jgß°´õÓ;ﬂ3@vÍ‡ìèqL#aN!#-ﬁ_VŒîl=ï®|„É˜f¥Áû›¢ñç^ ˘k›ô¸®ÓÇñùõÈ¥‹úÙ¯wo¿ú*U©»º ÚF¥±êÄtvV,Ú€“±éùKÎ‘,,ôÒbV:^◊Ÿ1¶uIó3FÕˆ4B
+4∆p\&öuê%ÛÜˇCx-Ã…{ _Ô¬"âÓp¨–ÜY˙Œ°KRá&!<5%y—äƒ WÒ24‚‰ÖËi,	∆q3]¸7‰„;^ˆ–%™ˆV∑‹ô∞9ÙB¡I…7`
+?ÓπÂ‰.5í¡ågêœi(≠∞kLj,≈MæÄO¢Ãlm˝!˙w»'Nñ)¨‹¨ùˇRˆ0<¢ﬁjßñÕÇ§–sÖS
+3¯X≤¡Öb)ó‡ÚˇSªﬂŒı‘É.[[µ;h£≈∞üj~h
+±yçß©ª•…FünkÓ#ÒÃ:WÌbÏy›X¶à≈ßÑWâ‰_ß™ùõç˛“’‘=)/ÅG\Ñõ)Åﬂ˘•ÚyêJUŸ´[öË6∂Ÿ'@ñl—+≠L÷I5ºçYúÑmª6È¨1§s(œ¢urtSÉ›·QÅöåƒTúKµ7îi∆` .È á∂’π∂_≈â–´Äπ)Âø‚hº™‰f]¥≤∆⁄d6VËUBÁã–¨|	<üh8ﬂq”ÕˆMdÔfÕ≈ïSM•O√jsçÌ0ÌnjÇó:V;åÌ·<¨¿)d-ó'áyö\´≥˚Èh=YÆhsÉ¸ç!üuΩ‚ïœöE˛A˝/¿ ZZx¥
+endstreamendobj26 0 obj<</Ascent 918/CapHeight 682/CharSet(/space/A/D/E/I/M/N/R/S/T)/Descent -250/Flags 34/FontBBox[-149 -250 1006 918]/FontFamily(Times New Roman MT Std)/FontFile3 33 0 R/FontName/GTEUQM+TimesNewRomanMTStd-BoldCond/FontStretch/Condensed/FontWeight 700/ItalicAngle 0/StemV 124/Type/FontDescriptor/XHeight 461>>endobj27 0 obj<</Filter/FlateDecode/Length 273>>stream
+Hâ\ëÕj√0«Ô~
+€Cqí&áÇ	å¶Éˆ¡≤=@b+ôaqå„ÚˆìÌ“¡∂~B˙…Ê◊∂içˆ¿ﬂ›";Ù0j£ÆÀÊ$¬Äì6,/@iÈÔQºÂ‹[∆I‹Ì´«π5„¬Ñ ˛A…’ªOj»¯õSË¥ô‡uÌé¿ªÕ⁄ú—x»†ÆA·Hç^z˚⁄œ< N≠¢ºˆ˚â4üªE(búßa‰¢pµΩD◊õ	ô»»jœd5C£˛ÂÛ,…ÜQ~˜éâ"g9& <29‚2q∏J\æ$æn7ÅoâoƒUôÒ9Ò9pÍI.vü åH/	è˝ÂÊ≠ü;Ó∂’?b§
+á˝
+0 £®Ñf
+endstreamendobj33 0 obj<</Filter/FlateDecode/Length 1297/Subtype/Type1C>>stream
+HâtìLg«Ô
+wØø÷eúóÕ√Ùl—9TÑMì≠Û«Í¬©˘°‘ˆj´•mÆ8@ën"±J´pî∞,!⁄°(*àDçâ…f≤ü&Ãl331—9ì-{ﬂ˙ﬁ{[∑%˛a.yÔ}ﬁ<ﬂœÛ|ü{è¶RM”ss-k7‰ΩiqU»˛èÂ™Mﬁ
+´'œR∞øµ⁄Î∂ØÒzÏâ4•”hf*ö=É«p€”‡”ÖzÁe¥·ï—ŸL$ç2$`f˙£5^ü™∏v:““+≤%÷úER÷í%Y“*ªwá,™˛Ä\·ó÷{l^≈ÁU¨Ÿû)≠rª•§Ã/)≤_V*áœ±ñ˛K±8e)œÎÒTüL2û!\^è‰s€^¿IZìà7)iNr˘%´P¨vπ¬™ÏñºéCyßãÙ´»v…Âë$msfa¶îO∫ˆ$´«.Y˛Ált8\69yXÂtŸúRÖUïà„Á6Y	X…€K`ä¥kè‚Ú€]∂D1Ê‚-â≤%ªÏ†(ö<‘äöOS)*ì¶ñ®ÈdŒTïOç–}êæbXhh6Ë)ü§‹¥¥å°Gc4YÁç•¥§¢¶xæﬁƒ¬6|É«ff‡K¯*Å~ËÏ∂‰ö1âY4Œ'v8u⁄ÿ¢¡y1t∞*≠f‡tÑ{ÄNj|E˚æ.ˇ]º
+˝ö rOpÆ~€óΩø÷y`ñ
+34∞≥yo¥Wá¬·SœmöŸû\Ê∞⁄^Ÿ ®ıAŸ§¬OÆÅ%<~É˝60!÷8‘¢©1ÙWL’“~Ü&X 3πÓœ‚f^ùJπ®wÄíö ¢l∞·k∏ÆÄπo√\&rÓM~ÄΩ|Z›{\ºT™a
+OÔ«ØñïôjkΩ5€”ù¡»ÑhLÄbpøSµ«wµBœU·¥Ú¢RÃß7Doã–Ó4ü-ù#hï≈‘é≤˜õLpp¿˝À÷ÜEn—≠,wF7CùÅbAoE5ïõ€L*ÚÅAË`å∏´Eã˝#4•t%må∑Üw;2µ“⁄JåD5P≤∑˜≤àéÅÀ'µ°C&aﬁ3Ÿd-# ﬁ§r¥˘òø\–;¡∂:u{3Qf%î=£":∞H»ú`a)z¬ÑÙ([T_m!)«5P
+\P#Ô“Œ∂ô4l¯u}sà≈s—&1ÒïÒ-Ì◊ÑC‹Wçéy¡®=G“sT0≠,Ò√C _B+º\e;¢çGƒ·BÜ!ü§∏∂zKàT[©Å≠Õ5}£≤Ñ ·L”áì|xı8ñ˜C2Ó˘p˜˝¢ÒªÍ#∑‹"NÖuÃùﬁã∑Ó	èÔ·wM∏óÂ~"5C'•Çeu{∂&Êtä¿’»5÷ı∏√¿’,˜ˇü≈GÿﬂOÀs0#ÔX.˙Y£Tãs±¥ì˜≥∫·óè∑Ùrﬂ°‰„@ÖQYwc∞æ⁄S~~M:˜`˛Ô·‘ÇÓÌ#€ƒ+Eê-∂NÈWé™6a}yIæâª≥tÂ}òV#™∏£õËàDµœØŸæMáÜª˜‡¥’ÂÁEÓ∑ç7±·LÒËî⁄Æ∫æA·˙ÖÛ◊&øZçS{L‰¢≈Aå>•¡l‚:[õπ|5Û•Œëæ?”ıÎ‰
+⁄âØs»k⁄◊wE@ ¶ûqb*B.÷:=à◊±Fˇ©∏π7DX8yXø’ÍNƒÕ›8x6û';Ùë£SßA„Ù÷F44ì¸¥ˇ0 >aê
+endstreamendobj24 0 obj<</Ascent 898/CapHeight 662/CharSet(/space/one/two/three/four/six/A/D/b/c/d/e/h/i/l/m/n/r/s/t/y)/Descent -218/Flags 34/FontBBox[-168 -218 1000 898]/FontFamily(Times LT Std)/FontFile3 34 0 R/FontName/GTEUQM+TimesLTStd-Roman/FontStretch/Normal/FontWeight 400/ItalicAngle 0/StemV 84/Type/FontDescriptor/XHeight 450>>endobj25 0 obj<</Filter/FlateDecode/Length 325>>stream
+Hâ\íœnÉ0∆Ôy
+€C•4¥Böh'qÿçÌhb:§¢@º˝l\u“"ÅëøœF6QYù*◊MΩá¡‘8A€9pn¡ \⁄9µM¿vf∫ﬂñ∑ÈØ"2◊Û8a_πvPy—%«)Ã∞z≤√◊*zCÁÆ∞˙*Î5DıÕ˚Ï—MCQÄ≈ñ
+Ω4˛µÈ¢≈∂©,ÂªiﬁêÁOÒ9{ÑdπoÂcÃ`qÙç¡–∏+™<¶S@˛LßPËÏø|r∑]ZÛ›ï',éc
+*ﬂm¶@ú'Ã;·s*ú2kaMúä7eo*öî5ZÍhÆ£•éÊ:Z4z—ÏÖ˜Ã·ÛQ¯»\
+óÃ'·ÛY¯LúIØå{e“+„^ôÙ ∏W&5)pÓS‡1—6·±sÅ∆ø¨|ô;Oºs¯¯+¸‡Å\¸®_ ;Ôû
+endstreamendobj34 0 obj<</Filter/FlateDecode/Length 2335/Subtype/Type1C>>stream
+HâlS	PgÓqË˘âq«]ze⁄LwåV ààöDåD%*ÇÇ r…ÂÃ» √‡Ã»á(r√!r -áa	äÁ‚±jI$´<vÒX]≥ïÏ.ïçØÕœVmœXqk´∂∫Îuøˇ˝Ô{ﬂ˜ﬁˇãßÑH$öª)l„ˆê¿≈ajçRjP,Ÿ¶’$§Ÿc,œàx7'~ﬁ,{„¥ü≥v%˘˜fÛ˛øÈû˜∆ü\àvoëˇzmz¶NΩ;…¿-[ÂıÅª›ÆtÿUvª ”aW8¨c}ïó√
+—ÂûûÀ9Ö6Q…ÖfÍJçûÛO€•’•ku	•¬ÉÛIMÂ–zNß‘+uˆEWN≠Á8É.A°‘$ËR8≠äPßiôÈJnΩÄ‡!$ÏVò:•ÇSßqÜ$%∑›#‘Éê”\BöÇ{ùΩU•RÔR:5	ôú¿Á≥w)uÜ·´`t\Ú^ùZØPÔ2®µi˙_¿”4 ˇ√B´„‘˚T>MØT˛7ºIìËÁ±‘74ÃÓºœ)î*Ç	·"&Êƒ|ÇXHÎ≈ÑøàúAÑŒ ¢¬UË8@ƒm—jëNÙÕümbëxª¯ûìªSã”4πíº/Ÿ,ÈA(Òñ¸˜DÇ]pAlq‚ã_OK†_•Ò®&·πs¯"vg˙öñƒ:˛a|	?B€ˇ∞›ìrRãÌÂ"£‘èƒ0”∫míu∆⁄s,ˇ=:`≈~ûdjΩb±‘1}ñ=Ït$ÚQïÑî»•ñqæÌéû=ÛZxãŒ≠$¶bÉH¿6ê√g'ü˝$ße7=W,â∆ã5ÚñBÚRkœ¯3fv,çXøÏ}˚‚2èó!iN?ˇÏ∫¸ÒûÚ5K‡œÙòµ£∞ﬂ‰<ö\Á£ì≠KÙˆê+ØÏdÃÜÌé«ÖÌ∞f=Å˘0˜√	GYÍ·Wß:O]í•áiøÂ©xŒ.π≠àÏ≤ùº˚åπ”±t]¥g+m…Ä’£|àQT˜‹Û©`¶Ú!q¸ıtπ˙Í	X=Ö∞ﬂ(ç$∞ûìVâ4ßãw:ç¢æÁPÒTÃo{πé∆ÖÑn∆q2¨öráô‡€+nÉÏ„Ò∑C3Úí√‰M ˝;0‡€ÂåÒ ˝Sœª0πsG¿:ø;‡}Ω¶Ω¶ÜmÔËØÓc§º»“ëC¸F∏b◊óõ®Á/√õË∏Úú⁄î€ÿ 9◊(¡äÈ<í˙ß).ıÉ.”îUb.u6AT à±ú¨-o®¨gœ¿$ÿ$Cã…™ú˙d≥Lï\™íõ†MÁB∫¿wëˆz¸√SìÀèSºD‘D£+H‡⁄=à 70‡ ¬,nìPßMh‚`mæèl:mÃ3Ø-íS∞ç•õ-Mg¡ÂJz¸9˘X`˚G+exóZ∂DÁÍìKÛ{˘7ø /€∞Q46	∆'ba¢ﬂ“®=⁄À<Î_‡·o∆$F∫ı'ÿïfZıØÙxñ?}±˛’⁄√Ay	\ñZ£≥¢r¢s›Ã®¨™∆R≈[24¨Ùq˛-ûÏuLà˘˘‡IG®UÒÎôïæ„Ç¬wˇz|‡be¶¶ö≠⁄[µ˜»ûcV∑kcSõÏhÓqMãºQk€Õ`;{a/º¸≈Ê˚æ<íK¨4DõqæëüŸÂ†Ì“˘åìT3<ü¢wPËˇıW`Ãªy˛ ŸÛ)õ±‘ZXå;iøBKÛêåEØ®F:®Vø¶ä=Qw≤¶!û¡NÓ·9,’å„·„‡ùÅÅŒ£r´Ñ B≈õŒ4û;‚&É¥^@˝¢é1PNâyw¢UÜ¯MÀˇèÜ`c£ò≥o√»f5˛uƒÛ«WÅ\Öy«kX|‹È'çÉùóô{5~—áX·vÛÃ•Wì∏=	Aìbﬁl£#ÁWﬁñA4˙¨ﬁƒ≥∑F•D&ΩÍwπ]D¨CD˘k”)Ëì¸ÇÌÚlHµ°®JSÂÑ¢sCÉ∂nÊr´¬è≈Qhç©0™PÿëÑ§ﬁB—Ÿµ#∆6#º=ÂrwÍ√IÍûp¿Úmﬂä¬#_…®ø†¢Ú¶”é,∑ld≠Ø∑60çM•¡,ŒFg,ñSnˇ¶M)˝=≠≠›]{€4IŸ)&π˚EÉ†ÊáIqã+Ï≥IB ≥™Ø ¯ÔPë5<+<'‹AæÓpY=3Xeéeß˜†∞Ã‹‡"πî_%‰Œ©/qy4	ˆ˜∑Û®Ûè“~öí]•uù%ï%[œÀ‡™<sil‰à¬_é5h≥°8∂Xàl(±,µ|\ï®ØµOhÚ≠≤‡ÔF[Ã%ëÖZ⁄c%„ïı¥  ›…˘ÒÔ†≠˙˘…}©'73€SbÉŸoQÅï§ÏÃä…é…uŒB÷ÍöWÚ„öSüŸÂ˛$lò§NﬂJgÁ∆ÿã'Ÿ–éÚú∆Oe–á~wºπáπvtwãïhÌûBï}áBòMEûÌ¨2Ãﬁ–π3Xô¥3J~œQn¬^.÷QÆ¢ˆu9Ω≈ˇ¯¡ønˇ.„ì‘Á„ìt®π8,_ +∞°´∫bLF’√^‘;|°]N}ﬁ^ìtÇiohÍ¯‘ÿ¢V™çbÿíøóî§∫£åëôQfg3≤Æ˝eò“ﬁ¸÷ >∞mø—Â˜7ÇÍA˝Mt=un¬◊4USoë˚$TOQqa¡˛¨‘Ê8ÊΩxˇPüÀ™I,’y5ôÏÕl÷ß»∂≈ò’ãLè/Ê…ÕJâ=Î’y∏™¢ºé)Î:e:Õå>8˘¯zRWTKı`bîTµÏnñkº<|:ca´pbÚG¯YΩ¢ˇ ‡ ˇ—ﬂ˜ì¯V&˜ìãêÑfV|ueduuuÖàçàçä¿˚¡'¥pæπ∫¨∂£~ñ~ÄyukXã∆™˜≤˚nﬂ7Ò¯ªöô¯a˚˜∞®¯o¯V˚|´åõÅxÇ~kÅp=˚r˚˜ëàíÑõò¶Æå¢åö˚b}òâ•Üór˜˚äôlª/|{c˚Wp~lùp]âeÖ®q¢kΩ÷∑Õ˜æ˜.¯,ö¥üçòç}ô˘*ô˚vï˜sã˜öì¸|åß
+ﬂ¯à˜˘ R1å%
+endstreamendobj22 0 obj<</Ascent 1017/CapHeight 719/CharSet(/space/parenleft/parenright/A/B/C/E/G/H/J/N/O/S/T/U)/Descent -281/Flags 98/FontBBox[-169 -281 1273 1017]/FontFamily(ITC Lubalin Graph Std)/FontFile3 35 0 R/FontName/GTEUQM+LubalinGraphStd-DemiOblique/FontStretch/Normal/FontWeight 600/ItalicAngle -10/StemV 124/Type/FontDescriptor/XHeight 534>>endobj23 0 obj<</Filter/FlateDecode/Length 296>>stream
+Hâ\ëœj√0∆Ô~
+◊Cqí&¥Ö(]9ÏÀˆ ©≠tÜ≈1Nz»€OäJ3ÿ˙˘˚ê%}¨ükÔ&–Ôq0N–9o#é√-Ñ^ùWi÷ôÈ~[N”∑Ai7Û8a_˚nPe	˙Éí„gx:ÿ·Ç+•ﬂ¢≈Ë¸ûæéÕ
+ts·{Ù$PU`±#£ó6º∂=Ç^dÎ⁄RﬁMÛö4/>ÁÄê-˜Tä1É≈1¥cÎØ® ÑVÂôV•–€˘¥Ÿ•3ﬂmTe∆èìÑÒNx«ºﬁÁÈ¬à3·åy#ºa.ÑÊ≠ñY<sˆÃ¬Êìâ˘,LóÖxÏY‰¬9≥¯S‡O›´ÁÔ—‡—;sãë⁄∂åjÈw y|L3H≈[˝
+0 @ê
+endstreamendobj35 0 obj<</Filter/FlateDecode/Length 1665/Subtype/Type1C>>stream
+HâúTP◊ﬂΩª}ëlRñEp/›58B¢!ÒW"êsƒí(¸Å¶8«›w∏w¸<.6—ÿt‘$òËP4X0´†$äRF"äù¶È‘4”åi“émm3â w/ﬂõNﬂÿâ˘ß3ùùy˚æÔΩÔèœÁÛ}èe,&ÜeŸ¥Ç“ßV?;Áô˙
+á◊„+–uU%A◊CÀ‘Zœ 
+ØgcΩ;¶K¨n≥ºò`“ÔK1˚lñ»w;8Ω·˝µı€‚˛ñ»òçÄ∂ë›íÔØk÷<ïUAe^÷‚EsçÒ1cÃöœUÊ?Ú»ºÿ8_y¬ÂØPïíÊ@P≠(À}NøVÁ◊A’ï©<·ı*±@ES™÷`,./ÕW<≈°5áK≠uh5äﬂMÉ™Ês=~ü√´î6◊©náSUÚß¢—e¢“C≥h™KÒ¯î`ï™¨ ,…Täh._Pq¯\JÈ#Ætª=‘›X¨u4+¥¬;Ωù™t–øüÜ—îÍzÕpyúFö@¶2E¶cÛˇ´ı&æ3•!◊√ˆ#î≤Pq©nÜaÈ«ƒ≥Ã˝&f6√d∞ÃÜyòeöò{©PÃ”L!≥â9¡
+ÏQìdj0≥fü˘úe∫%ÃÕ‡÷scÖ€ÜÙÎC,‹ì¨ø)äæB‡U<'b.º¡¡5Ç
+ã`—ùqQRõC.RõËßEcÜÜ≈GßÛëÚFˆ3òiÜ/;≈√`Í”>‡>ª11r H¡‚"| Ì’∏¢ãøƒ•ê]hç˘¿´†ò¡¶_ˇ¸‹¿¨F‰ö–Ù8öêYΩÁ¶@Òd@^/˜¬äÖ`«ÏQ+m€◊È@Æ›Ñ„@wF	Éz]2|@Ñ¶}@∏•gÈ◊9‹Lëp$x*⁄BÖA√Ñì‰≠Øπ\r~ÇÉ◊H∑¬=NéAïà?!0~¡m'¸¬m@ê¿4XXJË!∞ÕÇÈBSW2\%é¥úëá˙˚ŒÓ:€qµ˙£'[Ö„{NéÓæ¥ÎÏ¶!ÁÎa˜⁄◊WKx9ñ˛
+YD≥Á÷[ƒÀ‰‡·°.π;¥s„Vﬂ÷∫∞¶Ö¨ç5µ;™%;i@ã¯
+·»ëmoÀ˚w˙^ÆŸZ€ËıµXõºÆÌ5R·?	√L¯74·4ê?YË∆#ÉzX<MZà–ø)ü;ø>Øg±Ñ∞îjÛ|ï‹ú˛´9ÁñYF˛Í¯áA÷∑0˚w2¶{Iñ+KBÒ±	HÍñaF7ƒítÂìäÇôWnÛP|Ï¿”)IÏä§	¡Æd˝ yº⁄HÀÉ™.“yãC9v
+H(ì=V√E°◊‡‚”9Ñø€ÏËÄ8¿çÒ`Kºä–’Ô£(qqÏ% ÊØô+a b``:-0•n@™ÙnﬂÊPè,ÔiÌæÂµBÈw~Ô¶Â‹H©˝‡")ô˘K‰ÏeeÛZ¥bE%ÿ0*§~3ßqY“&„Ä#¸0EI·Ÿ €7ÎüÎy"ˆPyT<£ü$˘~ıS]dÏ‰NÇÌ!^¥S#∂sbjÁΩÂ∂ˇâ©N‡1=âz+%r “1]ü∆O¡OE·*&◊}˛($I∆¸ˆ=˘É”ÌCª/~§'§¸†ÄBƒü˚∑∏õµT≠1Æï öO∂…<pÑﬁb ¯Œl¶˝p]¸°cî¡7uç√ÁÔh ÔA…!c†C[¥öÅ
+‘J/§lÏH”Î‡~≥.µä†¬Z»µ_ÜGQÅ%∏ABÆ√,tªeÉ‚„JÒ~∞âì¢•Ïó©ppÔHñ ÈãôòT/cJyd1U‚1;Ò≥†
+∆†4ÉíÚ∂~Ih÷^†˜—çU0Dh„Á¯ı`”	í¡ÚwªÂ›ÁC√Œ~◊ë≤é5kˆ¨ÏhølŸı~Ô∞$>Ï\ΩYûÙA)óFΩ∑8πwÉÂ{÷IáÒÆ˘gÖ{W™ÔTº~ÎÈ–≈ÊñYWº∏⁄]$U⁄;[eamÎæ≠=Ø¥∆û= w≥∑Ùôuü˛Ò&iJ3ä:ı\tî8±ﬁ∞:op7…£—¿ÌŒú¢ìoCRL∏è>p˙°Hπh∏Dä´-Óó\>o™œ_Æî\ûΩΩ!πı7mG€˙F·´îKì⁄öíÍY¸6ú≥„ô˜ûK-∏ó>æ‹9|^;”5⁄˛˚1òòÍ>¸ÀHy'ÆﬂC∞∂+n“pΩir”∂'Mä‰ãˇ` =zä±
+endstreamendobj20 0 obj<</Ascent 1017/CapHeight 719/CharSet(/space/zero/two/six/A/B/C/D/E/G/H/I/L/M/N/O/P/R/S/T/U/V/Y)/Descent -280/Flags 34/FontBBox[-169 -280 1240 1017]/FontFamily(ITC Lubalin Graph Std)/FontFile3 36 0 R/FontName/IWIGSI+LubalinGraphStd-Demi/FontStretch/Normal/FontWeight 600/ItalicAngle 0/StemV 124/Type/FontDescriptor/XHeight 534>>endobj21 0 obj<</Filter/FlateDecode/Length 332>>stream
+Hâ\“ÕäÉ0{ûbé€C—™Èà∞ÿ<ÏÎÓÿdÏ
+k—|˚ùqJV–¸$˘'cTV« uDÔa05N–vŒá[0ºvNm∞ùôÓoÀ”ÙçW◊Û8a_πvPy—MéSò·ÈŸ\©Ë-Xùª¬”WYØ ™oﬁˇ`ènÇä,∂Ù°ó∆ø6=B¥î≠+KÛ›4Ø©Êo≈ÁÏíÂ}#aÃ`qÙç¡–∏+™<¶´Ä¸LW°–ŸÛI*eó÷|7AÂ	/écTûä”≈â8ao≈[r∂YLY÷dº&K≈);gl-÷Ïùx«ﬁã˜ÏÉ¯¿.≈%˚(>≤O‚˚,¶ÊZ2kŒ¨%èÊ<ZÚhŒ£%èÊ<ZÚhŒ£e_ö˜•%|h˜”·„£.√£7Êµe˘ñ~p':áèø≈®äoı+¿ ,Œ¢¨
+endstreamendobj36 0 obj<</Filter/FlateDecode/Length 2189/Subtype/Type1C>>stream
+HâúU{T◊üïù;>ÍXqf›ïäÒmHZÇFA¨–e≤∞∞∏ª Iµ⁄VM’V-æçÄÚ™R¢ÇàÇ4QÅ	©}‰Mh@m˝Üﬁ==ΩË©ßÙúû=ÁÓ‹;˜˚˝æÔwﬂ•Fi4]ƒÍàòàÈd&l÷Ùpá!#9∆eöπÿúfUﬂÀä®QtZe¬xºWÍ¥]ˇ‹E+∂1 é±gu#ûîá
+„‘l“lµg‰8¨í]Ú‹¿Äwg®„O‘1ppò!ø=gŒ‹ÅÒmyë…ûdñcrú.söSéH7⁄vá¡e6ÕíŸlÚ êSvòùfGñ∫*[ù≤Av9&sö¡ë*€-$–ev§\V{∫¡&«Êdò-£YB#ÀbÉï∞8Ã&Ÿö.ªíÕÚ™Y1≥‰(¬ïÓíÈ&9ˆ5‚
+ã≈J¬’≈4CéL2|3⁄hv∏‰ﬂN`rJ¶√Í4Yç*çsñ<$°<†·ˇóÎˇ$~ìR=§Ÿa1*î¸él2[(JC~‘Xä‚(jEM“RSáQ3µîøñöGQ>‰¨®H*ö∫´ô≠˘X”3lÀ∞GÀ=ˆhΩ¥â⁄_h?•G–KÈch⁄∆¯0Àò
+¶gx 66(Ω2˙6xjï˝QÓv„¡>∫ñqÍƒΩóq£ƒÅg¬déî+º˙Ñ’ÎûŒÊ´´© ä@PÍïı¸_7∑.o—∫vii∏f[ΩFä]π%&H¿ÒL¿Ô¢˛≠O∏|”ﬁ.vvT\iîöØ∏÷%∏=!ûØ*,?zFˆƒ˘£µbMM^ 	ÈdjQäE¿âåµ¿ñì¶∑d&ÂD£π∏“%eVTûÿB@J¯x6i0≥0ÇkS¶¡J>/c`!Ã¶π‹ªıykü ﬁæœ1è'˚bû\§›‹Qﬂ‹.∂4¨_±Ú√$≥E¬ø≈ªhåÇ`ÖïàT«√†a„&Õ«Ä˜Äs˝â<é≈’¥%vc\∏∞§ÙΩ∆üÍ/ﬁ≥›·-``¯¡ÿ0ès‰˛ÍgYÃÉ≠4ñ›=|Ht[Á˝∂Îù_¥D.
+]*±ùÖO˝ u˜¡y@û{°◊ıÔ«W·*wû´Q2º·*‚r3x∑“K„m˝	aì;óF‹Eå†Óis˛%£Zô^ÄvC2èó¢o`']ÑXô(CˆåÇµ†Ö`Çˇtc'ÅéÀ=·_£∂Ê=µó§g?π~]¯:±}AÖûª|£¨≤ı¶p=´!°Z_±~ıØ„D|£.wnÇ%óøÉNWÏ ;%ù ;∞1]»ÿÍ»Ã”o≤€v•àa® k˘/I∆’’ÖYß•“M“SÖ¥|€∆\}∂›Tî*Ü ∂)&¬ø è—ÛLPVÅñ´Á∫˙ìî|û,kÆ>îπ=ø,@ƒÎèâœ‚˝ŒMø≥X
+ÔxlËa&¯=É)%Ïá¬÷ÖòEÃ˚æ/û|b◊É§?HlÂ`ÂcîM˛ëÁSR˘∑§l)˚Í˚[…ÉªR[G˘£oÑ'©=awÙù°A«˝D¸-‚cÙï;w!√ŸHµN4ËV”ˆ5ó•∫¯#Kñ	—Ÿ¶D˝™¯®üáã2b_	˝¬Ä}ÕNò≤Nx+%`√∫i8¢¡Ùõ»ûY‰u™ªq’C<lg>Ë¶dA11<t≤$Äˆ†π™˛Ì hﬁÌè8å¸ìÁØû!büEºËÛ˝s_SΩ-Ø\‚.îo.uù¥á©BK–#òkKù~WúÍ∑.4Lz±uÓ4'A ûIzÆÍÒwµiñ∏4<hf@.íúB i‘ @Á°ÏSBx\!]§»∫¡lU«
+"{ÀpXô] 3%W›qÅx±nµsa<`ã“Àˇw8b±ﬂ†r¨‚í,òHñM$;¢J6+éWqà´–	ˆºÇÓù≤ù¿˜˜¯Ø»∂„«πãpúRD„„Ø© (˛÷πKËkî⁄Ì4ò¡Î~ßv≈.Ú?≥•ÓV4éÙ˛P(∫Sh‡€πô‰aùÊ»‰≤ê=˝fÃ§€íq^ÛàÅM‰+à-D˚x$I†”†å{Òº¡´o"ˆ"K‰J/Ù,åá1ê?|Ìßdò¿uü$∑˜Á7≥ˇòπ◊r∞ÈäT_˜I€g◊{ﬂﬁ±¢N_˜ﬁæe‚b‹ÀC∆LÂô“åeŸáSíÖîèR7fÍ]∂´»æØr¬˛!Î™B¸íúCÔ@º Q
+(å≤}Êöá∞L¢Å˙ÕÌgœÑŒÙˆòK˙K1ë{óà¯»ç> sΩ∞ˇÔÃπ B«©‹y»dåπÊTá>cC“NÉ»‚˘0¬óTıƒN%º«@ƒﬁDëd`eB_ YN©˜X2PWrë1T] n¡ªÁ;‡o8öŒJ	’´ãcãás≈±áñﬂÆ’U6Èπ“¶c\ë,ƒNF\±ë©I˚–Z3S¸Ò»e•´ÕR]J›GW6ÁJöÛ⁄së	ñ(=gâ06¥
+Ø8a49M™t}@y(¥ÚàÔõLRÀt∑‚L†û˜πù™µÍâ¯à›û^Øº[’ñô°~–M¸ê±Ï49m˙tWJ˛—d9\ô)m:S˚*ﬁ$+'R·gÃ¬É¥¨‘Øi¸<Ô∂x∑˝hS£‘‘|†ıæ /âI[œRz>µ∏∂ﬂä´†äªÕu˜˚ü~IP™0∫çt˜<QôCwêïZµ	¡‡Ó•·-ƒf9ú ú&^ÕÉ2Ó∂2vÒ\7D¡s˙.â(√®·Qˇ÷ÔÜﬂ<ﬂXœEV¸fFÊÖÔÅø?≥˛ñF‰ó⁄ô?„Ê˝éûÕˆ;w!;Ñì2Ö„;◊w>Óæ7D~Üã ê ·
+endstreamendobj18 0 obj<</Ascent 952/CapHeight 714/CharSet(/space/hyphen/one/two/six/E/L/V/e/i/n)/Descent -214/Flags 32/FontBBox[-166 -214 1076 952]/FontFamily(Helvetica Neue LT Std)/FontFile3 37 0 R/FontName/IWIGSI+HelveticaNeueLTStd-Roman/FontStretch/Normal/FontWeight 400/ItalicAngle 0/StemV 84/Type/FontDescriptor/XHeight 517>>endobj19 0 obj<</Filter/FlateDecode/Length 278>>stream
+Hâ\ëœjÑ0∆Ôyä9Óñ®≠¬ÇE∑‡°®Ìh2⁄@ç!∆ÉoﬂI"[h ô_òÔ3^∑M´ï˛n—°ÉQiiq]6+úîfiR	w‹¬)Êﬁ0NÊn_Œ≠Vñ¿?(π:ª√ÈI.û≥≠“úæÍÓº€å˘¡µÉ™
+$éÙ–Ko^˚Å€•ïîWnøêÁOÒπÑ,‹”XåX$Æ¶h{=!+Zîœ¥*ÜZ˛Àßám≈woYôyqíP n"7ƒi`
+ƒY‰Ãsπ ~ÃS Æ#◊ƒy‘‰^SDM·5≈5Ú’Û-Ú-yT„À•©¬}b≥ñ∆F˙˜ù+ç˜ﬂ1ãr˘Õ~ c÷Ü›
+endstreamendobj37 0 obj<</Filter/FlateDecode/Length 951/Subtype/Type1C>>stream
+HâlQoL[UøØ•∑®‰M®KËu¬&ìÑÖö*,¸áÅñ9∂’G˚`iææQk4Àñ} GeâÀ>,[>ˇÖÄö°f…Êt≤ôºàŸK Édô	39∑‹gÊ+—onŒ=øsŒÔósÓ·PéqG⁄è¥∑˙€üoìF∆$Mäá§RWü_Ì{M	ãëlM	ustg-ŒXﬁ∫æ’Â†E;®7fÎb≤eÖvqïï—∏*◊»ıuuñ≠Ø⁄∂5§∫™™ö4Üîâ¯„QM
+GI{$®®£ä*jR»KGF»69JT)*©cŸ‡£¶à%"—T1$ÖEı-¢í.9¢hÒQâ¥TºiH∂tU)D‰—éK‰∞◊Ô%ΩñzD#b$D˙±{Â†¥ãqbıÙ_vPR5—zKF%√'T9íÉö¨D¢ˇàGƒ∞Ù?](*ë≠	F,˘HTí˛M∑Ü⁄ºï-˛æ,ÿOB“ ≤áxTÄ\®ÌF˚–‘Ç:P ≥˛u£^$°3Ë6˜
+‚‚‹åŸJlØìDäﬁKqñ-MŸ9t<”kéc8ÀÆ	ÃÁ∞éadÅ9Â4q`€≥0¶WÖ¨«≤àgÀ<ã¿È4óÇY{
+N0õf≥òø8Fì?rpŸ∞Õ:0yßÊÌΩÓVË2ìÜìOËÙ[ùõ3`fÕ∆¯ÏØ˜›˙ç~_˘°7X^£gOwmœ˚Ï•\‘MÑßW÷ÁWøŒ]˘ÊÓwêˇ4Ï,ˇâ=…ˆ÷V:U¬ü‘·é-z¡ÁÃÕkÆ?‡ö/‹˚™©Ê@S•˜Ìï’´w6<.
+2Ï¿y™ÈˆòõzY7;¬ ?a}0Ë±X≠◊¿Ω	E˜Y±ØGÈz&>t 7y	ˆCô€EoÕâùÁ<¸d"÷ç•π•˚R!=ì6À Aùi”	1∫+mû¬|"ù·cÁ√iìœÿ"n4ée±ÇËñkîf2·9Ï˙åòòΩI:J1$ˇ8 aæŸÀß√nù˚tRkvZuB€{«‰f7sÙß◊ŒzhÜ¸§^fùnˆL√¨“√™ìKCΩróo æ‰1w@©ÀG∑V›wØw4LzxS∞ñs!é‹¢a_,4ËÖZl¿Q°ˆYc{q«Ùì±Çõ|l∏~æYh¿<^O-n~ˇÂ@W	€4`›	vqâ7æÓ*ô¿Æ˘Âù¸ª”ô¿4>è· ‘ÔSÊoÁù˙„∆t·)˙@¯KÄ oæÿ≠
+endstreamendobj9 0 obj<</AIS false/BM/Normal/CA 1.0/OP true/OPM 1/SA true/SMask/None/Type/ExtGState/ca 1.0/op true>>endobj10 0 obj<</AIS false/BM/Normal/CA 1.0/OP false/OPM 1/SA true/SMask/None/Type/ExtGState/ca 1.0/op false>>endobj8 0 obj[/Separation/All/DeviceGray<</C0[1.0]/C1[0.0]/Domain[0 1]/FunctionType 2/N 1.0/Range[0.0 1.0]>>]endobj38 0 obj<</CreationDate(D:20260909073510-05'00')/Creator(Adobe InDesign 21.5 \(Windows\))/ModDate(D:20260909073510-05'00')/Producer(Adobe PDF Library 18.0)/Trapped/False>>endobjxref
+0 39
+0000000000 65535 f
+0000000016 00000 n
+0000000163 00000 n
+0000008428 00000 n
+0000000000 00000 f
+0000008388 00000 n
+0000008479 00000 n
+0000009496 00000 n
+0000108348 00000 n
+0000108125 00000 n
+0000108235 00000 n
+0000084405 00000 n
+0000084769 00000 n
+0000085110 00000 n
+0000085434 00000 n
+0000085832 00000 n
+0000086144 00000 n
+0000086635 00000 n
+0000106416 00000 n
+0000106741 00000 n
+0000103395 00000 n
+0000103739 00000 n
+0000100931 00000 n
+0000101278 00000 n
+0000097785 00000 n
+0000098115 00000 n
+0000095739 00000 n
+0000096059 00000 n
+0000091229 00000 n
+0000091655 00000 n
+0000087045 00000 n
+0000087426 00000 n
+0000092130 00000 n
+0000096402 00000 n
+0000098510 00000 n
+0000101644 00000 n
+0000104141 00000 n
+0000107089 00000 n
+0000108460 00000 n
+trailer
+<</Size 39/Root 1 0 R/Info 38 0 R/ID[<454F544A5F9F7045B7ABCC30694FD265><3952628090F3874BA9D3458610399D65>]>>
+startxref
+108640
+%%EOF
+1 0 obj<</Lang(en-US)/Metadata 2 0 R/OpenAction 39 0 R/PageLayout/SinglePage/PageMode/UseThumbs/Pages 3 0 R/Type/Catalog/ViewerPreferences<</Direction/L2R>>>>endobj2 0 obj<</Length 10193/Subtype/XML/Type/Metadata>>stream
+<?xpacket begin="Ôªø" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 9.1-c001 79.675d0f7, 2023/06/11-19:21:16        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+            xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+            xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#"
+            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:pdf="http://ns.adobe.com/pdf/1.3/"
+            xmlns:ExtensisFontSense="http://www.extensis.com/meta/FontSense/">
+         <xmp:CreateDate>2026-09-09T07:35:10-05:00</xmp:CreateDate>
+         <xmp:MetadataDate>2026-09-09T07:36:04-05:00</xmp:MetadataDate>
+         <xmp:ModifyDate>2026-09-09T07:36:04-05:00</xmp:ModifyDate>
+         <xmp:CreatorTool>Adobe InDesign 21.5 (Windows)</xmp:CreatorTool>
+         <xmpMM:InstanceID>uuid:458fed22-4d5c-4324-8ef7-5bc1b2dbd0ce</xmpMM:InstanceID>
+         <xmpMM:OriginalDocumentID>xmp.did:F77F117407206811871FFD8E0D8BD3B4</xmpMM:OriginalDocumentID>
+         <xmpMM:DocumentID>xmp.id:bbfe3532-dc17-0f47-b631-47a472b3f386</xmpMM:DocumentID>
+         <xmpMM:RenditionClass>proof:pdf</xmpMM:RenditionClass>
+         <xmpMM:DerivedFrom rdf:parseType="Resource">
+            <stRef:instanceID>xmp.iid:0c04211f-a375-3f46-b0ef-ebcb3dac9128</stRef:instanceID>
+            <stRef:documentID>xmp.did:1957511e-fc25-4854-a5d2-74acd7b1cd07</stRef:documentID>
+            <stRef:originalDocumentID>xmp.did:F77F117407206811871FFD8E0D8BD3B4</stRef:originalDocumentID>
+            <stRef:renditionClass>default</stRef:renditionClass>
+         </xmpMM:DerivedFrom>
+         <xmpMM:History>
+            <rdf:Seq>
+               <rdf:li rdf:parseType="Resource">
+                  <stEvt:action>converted</stEvt:action>
+                  <stEvt:parameters>from application/x-indesign to application/pdf</stEvt:parameters>
+                  <stEvt:softwareAgent>Adobe InDesign 21.5 (Windows)</stEvt:softwareAgent>
+                  <stEvt:changed>/</stEvt:changed>
+                  <stEvt:when>2026-09-09T07:35:10-05:00</stEvt:when>
+               </rdf:li>
+            </rdf:Seq>
+         </xmpMM:History>
+         <dc:format>application/pdf</dc:format>
+         <pdf:Producer>Adobe PDF Library 18.0</pdf:Producer>
+         <pdf:Trapped>False</pdf:Trapped>
+         <ExtensisFontSense:slug>
+            <rdf:Bag>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>ITC Lubalin Graph Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.031</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>467589655</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>LubalinGraphStd-DemiOblique</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>467589655</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>ITC Lubalin Graph Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.031</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2327927456</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>LubalinGraphStd-Demi</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2327927456</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times New Roman MT</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>001.000</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>31680</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>254184</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>PostScript</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2664951386</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesNewRomanMT-Cond</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2664951386</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times New Roman MT</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>001.000</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>33113</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>247528</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>PostScript</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>3445048248</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesNewRomanMT-BoldCond</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>3445048248</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times LT Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.050</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2774354800</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesLTStd-Roman</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2774354800</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Helvetica Neue LT Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.020</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>1911993744</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>HelveticaNeueLTStd-Roman</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>1911993744</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+            </rdf:Bag>
+         </ExtensisFontSense:slug>
+      </rdf:Description>
+   </rdf:RDF>
+</x:xmpmeta>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                           
+<?xpacket end="w"?>
+endstreamendobj38 0 obj<</CreationDate(D:20260909073510-05'00')/Creator(Adobe InDesign 21.5 \(Windows\))/ModDate(D:20260909073604-05'00')/Producer(Adobe PDF Library 18.0)/Trapped/False>>endobj39 0 obj<</D[6 0 R/Fit]/S/GoTo>>endobjxref
+0 3
+0000000000 65535 f
+0000109577 00000 n
+0000109744 00000 n
+38 2
+0000120015 00000 n
+0000120195 00000 n
+trailer
+<</Size 40/Root 1 0 R/Info 38 0 R/ID[<454F544A5F9F7045B7ABCC30694FD265><9C2100FD1335164A8494DE6A5B2F4873>]/Prev 108640>>
+startxref
+120236
+%%EOF
+2 0 obj<</Length 10193/Subtype/XML/Type/Metadata>>stream
+<?xpacket begin="Ôªø" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 9.1-c001 79.675d0f7, 2023/06/11-19:21:16        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+            xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+            xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#"
+            xmlns:stEvt="http://ns.adobe.com/xap/1.0/sType/ResourceEvent#"
+            xmlns:dc="http://purl.org/dc/elements/1.1/"
+            xmlns:pdf="http://ns.adobe.com/pdf/1.3/"
+            xmlns:ExtensisFontSense="http://www.extensis.com/meta/FontSense/">
+         <xmp:CreateDate>2026-09-09T07:35:10-05:00</xmp:CreateDate>
+         <xmp:MetadataDate>2026-09-10T23:39:43-05:00</xmp:MetadataDate>
+         <xmp:ModifyDate>2026-09-10T23:39:43-05:00</xmp:ModifyDate>
+         <xmp:CreatorTool>Adobe InDesign 21.5 (Windows)</xmp:CreatorTool>
+         <xmpMM:InstanceID>uuid:9a9db532-ba25-444d-9c33-e5b809e7be5c</xmpMM:InstanceID>
+         <xmpMM:OriginalDocumentID>xmp.did:F77F117407206811871FFD8E0D8BD3B4</xmpMM:OriginalDocumentID>
+         <xmpMM:DocumentID>xmp.id:bbfe3532-dc17-0f47-b631-47a472b3f386</xmpMM:DocumentID>
+         <xmpMM:RenditionClass>proof:pdf</xmpMM:RenditionClass>
+         <xmpMM:DerivedFrom rdf:parseType="Resource">
+            <stRef:instanceID>xmp.iid:0c04211f-a375-3f46-b0ef-ebcb3dac9128</stRef:instanceID>
+            <stRef:documentID>xmp.did:1957511e-fc25-4854-a5d2-74acd7b1cd07</stRef:documentID>
+            <stRef:originalDocumentID>xmp.did:F77F117407206811871FFD8E0D8BD3B4</stRef:originalDocumentID>
+            <stRef:renditionClass>default</stRef:renditionClass>
+         </xmpMM:DerivedFrom>
+         <xmpMM:History>
+            <rdf:Seq>
+               <rdf:li rdf:parseType="Resource">
+                  <stEvt:action>converted</stEvt:action>
+                  <stEvt:parameters>from application/x-indesign to application/pdf</stEvt:parameters>
+                  <stEvt:softwareAgent>Adobe InDesign 21.5 (Windows)</stEvt:softwareAgent>
+                  <stEvt:changed>/</stEvt:changed>
+                  <stEvt:when>2026-09-09T07:35:10-05:00</stEvt:when>
+               </rdf:li>
+            </rdf:Seq>
+         </xmpMM:History>
+         <dc:format>application/pdf</dc:format>
+         <pdf:Producer>Adobe PDF Library 18.0</pdf:Producer>
+         <pdf:Trapped>False</pdf:Trapped>
+         <ExtensisFontSense:slug>
+            <rdf:Bag>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>ITC Lubalin Graph Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.031</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>467589655</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>LubalinGraphStd-DemiOblique</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>467589655</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>ITC Lubalin Graph Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.031</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2327927456</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>LubalinGraphStd-Demi</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2327927456</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times New Roman MT</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>001.000</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>31680</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>254184</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>PostScript</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2664951386</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesNewRomanMT-Cond</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2664951386</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times New Roman MT</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>001.000</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>33113</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>247528</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>PostScript</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>3445048248</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesNewRomanMT-BoldCond</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>3445048248</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Times LT Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.050</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>2774354800</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>TimesLTStd-Roman</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>2774354800</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+               <rdf:li rdf:parseType="Resource">
+                  <ExtensisFontSense:Family>Helvetica Neue LT Std</ExtensisFontSense:Family>
+                  <ExtensisFontSense:Version>2.020</ExtensisFontSense:Version>
+                  <ExtensisFontSense:OutlineFileSize>0</ExtensisFontSense:OutlineFileSize>
+                  <ExtensisFontSense:KerningChecksum>0</ExtensisFontSense:KerningChecksum>
+                  <ExtensisFontSense:Foundry>Adobe Systems</ExtensisFontSense:Foundry>
+                  <ExtensisFontSense:FontKind>OpenType - PS</ExtensisFontSense:FontKind>
+                  <ExtensisFontSense:Checksum>1911993744</ExtensisFontSense:Checksum>
+                  <ExtensisFontSense:PostScriptName>HelveticaNeueLTStd-Roman</ExtensisFontSense:PostScriptName>
+                  <ExtensisFontSense:FontSense_1.2_Checksum>1911993744</ExtensisFontSense:FontSense_1.2_Checksum>
+               </rdf:li>
+            </rdf:Bag>
+         </ExtensisFontSense:slug>
+      </rdf:Description>
+   </rdf:RDF>
+</x:xmpmeta>
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                           
+<?xpacket end="w"?>
+endstreamendobj6 0 obj<</ArtBox[36.0 36.0 936.0 1332.0]/BleedBox[36.0 36.0 936.0 1332.0]/Contents 40 0 R/CropBox[0.0 0.0 972.0 1368.0]/LastModified(D:20260910233943-05'00')/MediaBox[0.0 0.0 972.0 1368.0]/Parent 3 0 R/PieceInfo<</InDesign<</DocumentID(˛ˇ x m p . d i d : 1 9 5 7 5 1 1 e - f c 2 5 - 4 8 5 4 - a 5 d 2 - 7 4 a c d 7 b 1 c d 0 7)/LastModified(˛ˇ D : 2 0 2 6 0 9 0 9 1 2 3 5 1 0 Z)/NumberofPages 1/OriginalDocumentID(˛ˇ x m p . d i d : F 7 7 F 1 1 7 4 0 7 2 0 6 8 1 1 8 7 1 F F D 8 E 0 D 8 B D 3 B 4)/PageTransformationMatrixList<</0[1.0 0.0 0.0 1.0 0.0 0.0]>>/PageUIDList<</0 214>>/PageWidthList<</0 900.0>>>>>>/Resources<</ColorSpace<</CS0 8 0 R>>/ExtGState<</GS2 41 0 R/GS3 42 0 R/GS7 43 0 R>>/Font<</T1_0 11 0 R/T1_1 12 0 R/T1_2 13 0 R/T1_3 14 0 R/T1_4 15 0 R/T1_5 16 0 R/T1_6 17 0 R>>/ProcSet[/PDF/Text/ImageB/ImageC/ImageI]>>/TrimBox[36.0 36.0 936.0 1332.0]/Type/Page>>endobj38 0 obj<</CreationDate(D:20260909073510-05'00')/Creator(Adobe InDesign 21.5 \(Windows\))/ModDate(D:20260910233943-05'00')/Producer(Adobe PDF Library 18.0)/Trapped/False>>endobj40 0 obj<</Filter/FlateDecode/Length 16004>>stream
+Hâƒó]o€ ÜÔı+t)]x≥ﬂ@ÄñK	%
+m√hã‚4Hä†…A€§H˚Ô;‰.%)õK”Œ¡±dzﬁŸŸy∏3≥ˇöΩπ9ä˘ﬂÃËº˙èÕˇ1ª.gWîP+ÊÂß%å±y˘kˆ¶d≠˛^~ôŸ⁄‘Œü3Ó(·÷¬ÛÔ≥?-≤ÂïsãØS,~áüä»≈ÁÂïÂƒ-Êå-Ø$Ö'|y•ã´Â_ÊÂXÇ
+Y≠uæ˝:≠¿®"ΩE“ª†´„CÊL¶zÇ∞NÂû2ø©˙K[h	Á≤+‰∫ªRïÊ≥¿y-Üi,1í
+ê[»óÂA>˜Íñ°’DàG!,0ÚÒqQ-wñr£	ìºí*“&ƒ˝R¿˘R2bwK?”Â#f±ª^≤*Òi±4ã˘MıP,“˝í¢™áLì%Dÿöıô
+ÎwñWL#do˘yö•´rõÔªâ:K5ËÙig—´i•$Jıµú>±û°CÂ]⁄¬ü9ÌÍÛkYy˛d¿á0Ü 4 ág|á<ÀÊ«môŒ≥Ì±ÙjÈóÅÆ÷cLªñ™ÿÆ6ª|øûØÚ€}˘p⁄ê…∏… ÌB4˝W√(qJôÍíÑãÍE©‹˝yÅ√æ§4DkÕz“„Ìı†8/Û˘jìÏoZ°ÙΩXêjÍ˙§^vA·$qú€yÈ%i9c°˙T%Ö:]F6ˇÙ˝Tï>¬æ‰¸W˝˚˜ôÉÍT›o≥„I…™á-àæœÑ"⁄±Ægƒ	Æ€ÜRgM«ä3Ô#X^°Ä†8VxD∑ÄâS∫Ç•ƒ^%í‚ÌØ+M0‰Úl¯„gìΩê9∞≠éî)0‰DRŸ;6⁄sñ^≈K∞F—é!˘Ò„Û˜ø}˚ﬂ|I·‹Øø˛¯˘ÔØü~v^7ŸØÏ‘(C¡I∫ˆÇ7«˛ˆ˚¸Ì€˘õ‰”œˇ¸ˆ≠¸¸ﬂüÛ∑_>˘B)uÔﬁΩõ]ØW'7ñ’†∞´∞Åt∑™6!mªªJ–±ØV;î.®XªtL(∏?@NMoo≠Ä™ƒM[‚_˝HLzë¨◊Ez<û†¯˝T)U>•P2TÌ´˛R/ÌPã‡	—òÌ`o‡H÷±µ=∂∂É≠Î‰R’1?}r·@◊⁄‹^ßEÈümH¯º›6E˙0)ˇ‹DZ•“È*8
+fQ∂™ëa≥™i2f∫‚ˇu2èµúRb-ÔÓôIÍ7vH≤]‚˜Ω.∂w·Õ∫ÄÃ0"-Éﬂ4˛–∞œlXö‡"Co£√íë∞x<>Mâ‡ÓDOº =‰2≤MvqÅ∑—!≈HrH;úÑâ	*ˆâú|rÿg:,xMvë°∑·a…HzX<ü∞–3O‘¿k{å@◊6øIã§X˚∞WIQ¶ÖﬂÕ*ﬂÌn˜€Ú!¸©,Fb´Æú≤W\ßÑà∫hÎlW0Ãã¡PÕxwª\Z◊EûÑm7∑ì®`4≤Üü;ú~Xÿg.,x=`ëÅ∑ëa…hX9Sƒ@5Û‘êÀh»˛ıò≈Ö›FÜcà!·H`T•Ìπ(⁄ Ü}F √ÇU∫/ã$Û°øOv€Ï¡Ô(€æè∏laLpˇÏ∑0≠	ó⁄Ÿ¯X+â∫naXBø'ô1◊Û°úﬂ‡}±ΩŸî≥"M7⁄wúu¬97ôrÿπÜB§ü€VÈõπD+ˇô¨ö∑1Ôül˜˚¸.)°aºiRÏO˘Só“'âÏ,7ATÛá‚)S!¥cŸÃ∑Ÿ—«ò4S≠˜}9ˇê6Æ≈©G1:ù v˘ÿ√H/4íwHË3	’!—á w1∆ÿâõŒ y¨^ÿº…7¯©7Ú!ﬂÏ˝ìaá	ı∏ ≥lÏ,Œ.Ù¶ëNBUäöiÕ]ÚÆ æÄqB°§bµgóÔã<=†˝m˙d˘Ré¿ˇß÷√¯ttÿeÁ¯®ÛÉ]\◊97e¿[§ÔÛbóÆ√0±ì∫À+∏Á˚ƒ6∫
+w4÷Wcƒj÷ï	NõﬁÄ&≈«∞„Cñ¨"J¢Ñ˜ãöÜ®òN¥ÌY<€^áÊ#[xîe€>öd[4Üc°0D+yÓjr:DÏr∏§b˚bª⁄@i	}F¯∂Êv„µ—<UèLh™§àö9ì°Î+‚**g∞†ÍÂ»∞–5“‚ò>LÒÆläû©öNyÜÃõ(òè˚~õe€$p*â∏NÓ∂«±√¸≈ -ÚÊ∫QÙ@!ªÇSº J®Ææôa≤‰!î‹˚ÿ‡ﬁ&⁄‹ÙtnÿÂ08løm¶≈K‰í@nó≈xt‚R"'¿Aˆ‚xú(å¥}≈ 3oâ=ùîÅ⁄*9ñY	nonèõôé≠ÌpZ€˙ıêE≈‹÷∂è«’V=ñÖ”J•:˜3;W«Â ∞é=D‹Æﬁd…˚‰!-ÀpÒ:°ßçÎd’ $/Õ˙âÄI?6Zf´€3=EDAÑY«ÙÚ¬¯Wµ·pµ; }Vñ[a®‹tT»„0)dﬁ42I«éUyÈeâhFw∑˘8
+çäia:Òo‡t9¢´Q˚uaÊÿ§˚5åqßÀP8ﬂÏ‘√xD™Üêaó√Ã∞˝-2¨5¨xAlÿÒ≥∏¡ÕOY◊Pc”©µ3k[ﬂ'Ÿ«4ø‹TB—»nØG÷Av	`µíPêœ∏ôfÑqY’Õ∂˝L÷¡&÷+ÍwµN°Ío”lQ·J'Ö>5.ŒßC¬.á1a˚Êh1Î£ˇêoˆ˛…Òü˜õmYn”±W1Fı•◊˛†i’è"√Æ÷w0¨{“8úaQ-?úá£v]‰…˙>yx\Êx•‰ƒtr»„08d˛j‹‚ÇnaCÇÁSCn¢°¡mé	~ner:5Ïr∂nΩLÇÎ)ûO˚âF«$9›«∏öŒ≠ÂoZÀ∏πçqz~ø›ﬂÑ˘>0;IñçÏl‚.≠¨≥˚'˙ö&*ô@Êq˝ÜDIﬁ)cMõŒÔRøŸ,˘òÜ˝?Ÿ◊® ñõs_””yaó√»∞}sŒıπOèeZdÈˆf3ˆ`Ivi—ƒj'MtúLAìé˜í=)Z¬\£úÜ1‰>)÷˜iñELä∆qDÀL¶Ö=¬¬ÊßöË|ÏÂ&/‚mQ6«Ô∏⁄‰˘®3V≥ªòIM∏≥pl"£Æ∫û±`D-Ñ¢⁄€∂±Å‹!?ñ1‘‡–*.ŒÕÃN«Ü]s√ˆ‡ÙãÉ3Æ« 9!{äÒË∞~4;h´¬∞ÜúõNÆÌpò[€˙ı®E≈‹b÷∂O¨≠Õ.zúŸSCt:1Ïrò∂o®Ò––yQ˙'≈vµŸÂ˚ı»˘É_bU 
+ÊÄÿ`ÎD“ﬁÓFçäÃYh¶¶∑e¶√@rHäè1–‡fGµ>1c”ô!è√»êyüêˇmsŸ∏4V¿ê–ısaÚ ß!∂æ·bGVÖVZ6wèczÿÑ˜
+2˚XZ0fÚ‘wüûWÏr8±ÿ~Bf±£)©≈ûûõ[Æà—º…¨òûŸ∂√·º∂≠'dµÌfJN€~ûõQ∏–hÍŒï[Nœ)v9úUl?!Øÿ—îÃbOœÕ-\=§:ßVMO-Ú8úYdﬁ¥D)õA&ﬂ%·Ÿä¯œÎˇ3_6Àç#7øœS¯∏{ÿ˚ªy§%Z‚E∫(JüRïIRµU;9d˜í◊»2õ-¢IöÕè±«U[ûïÅø–¯5@U~)fé1eCc%\≈∑≠!,f™—∞˘°Ëh≥*`Ávå9%œyjhé_íód
+V…˚„≠V3Û$'°yˆ”‘‘÷‘L‹ãbõ=èô‹<Ô˘‡`·†í∑ÿÙzl]¡ih]ÎèBqX◊~.ÆÆÔ|X∞k Ä˚Àh÷„¬í”¿∞Ω[Xˇ°Jä¨NØYûßs∑:Ná:î!ö≈BJa∏ß0Ê˜≤5´£C$ã}	–µ»û *⁄¿„à≈Îâ!≈i`»¸yÖÖŸ¡Ö—B
+K`	MT¨\—zZXr∂?ñ˘ã=Dr Úóπ/üä“u[)•ΩÛéC‚0‡ic¥Ô14*N”‚Ñ“∏wTÆTs“/IΩ;ñáã}´2ŸèÒÇìHËñ]O´+8Õ™kù‰πvì¨®œMÏÈsvﬁïœIﬁ¸ÔÓ8óüJ†Ü_Zp.’PJœ>∞q	¬ıŒ 8T€ÎaØŸÆ.´€õÛÎ()XπxL]Ál=+,9M€Á 
+ÆSYÿc]ea≠%ïã„±√≈◊„Bä”¥ê˘wÜZárXá
+I-!ã[dÙΩgâı®∞‰4+lˇùa◊°Ö=÷·¬ZxI»ZÃ-πöúdÖ¨€iê∆Ì¬ï⁄mÎR’ô˝„VÊsá√¡,jEXl4å˘fØò`û}05E§wf›n]œe–L(MD¥a˜Œ•÷√í”Ã∞}Üi~Qd≈¡¬"ˆpÃ#sòA
+˘ 1%·u¢˝4å3SP®\›cè∞2£0¿ﬂ÷-œôR{/ÛÚjK,O>ß6œy≤≈ßb¢x‰ËÈıÙê‚4<d^M»/Â•jŒqJ™œÕgY±õ= ~Ü÷0EÑ–44X*5aí˚ˆÅè£D«~b¸e`D,/yzM™—◊V8‡/≥ûñúÜÌ€jS¥9¡ó,œ≥‰‘|ò±¨™Ï<˜ç‰É…d0pK—ã„çWí-LﬂcöÏ∑w—Û¬í€%Á:OÎÊŒN=ì∞Ãq¶ZlÒzl]¡ih]Î∂≠1÷~®í"´”+êKg3¢C’eàf±–ÅARjîü•y∞Ç•	Ä¶ÌeOeïÜu3ò£®ÊÆõ…h=(,9ç
+€ﬂi14∏˚¥Ëy¨ö=≠%”"lr£]è)N”BÊmeI;z/èiU7üÌËqºúûèU:$têÅLJ"øMÄaaCIN©ˆÇ«≈€+à]©h∆$?%Õπ˜Uvµ%ñ÷üË´}`≠z†p¬ò†_ø}∫˝·€ßri‡_ø:;cz˚˛Âå88«Ã∑b∑—
+æc($Å!⁄3¸E0ñ)X˛Çx¨¡é˙óö˛çÉ]˝ØOåΩ˙¿/¡´B9{†îk—úX±Êh¥1Ñ_úG≠!w√ˇ√™∆P=p¡ú!‹∑ÇËª’ÎÎòIE„!¿C≈ê¸Ò«?ø˝˝˜ˇ6©ﬂˇˆ«üˇ˘ÌÎüV•=êhd^µÃ=ˇYùt?ßbúR,àdX´sÎ‹j=xtÛŒ–uö?SÛSr
+h?˜`"§/"¬·AçËVB∞t\ö·'§ç	≈~]√N-ØÓı◊˚…n	ñMÇΩ:±iÜEq´E+^&CïKÍIé÷xìjxõ∞Ωù®%l{€Qéi˛‹úµ|≤#ÕÊ¥:Käπ√Z§Dˇ≈—k)¬k∫àl§1Û¶û&A9â¸ÅJ≥Û]NßÃ>¬Á∫J”z®ô¥‘4%¬P7 DlnX4Ñˆ8◊Ì{…ˇg{ÃÂ6≥ÌÌ|ù÷«rüµfª£ÀJ#∞–Ùø%†∆âÑ˘ªÁ´aH∂3ˇÈ±¥˜kxçi3≠†b!Em¢˘âFö!yFﬂ+ÕËKÊeπæô‰·(⁄d±µv{c$∂»6ı[é^ÀQ X£†Ï ∏{ŒÌyÛ<±k÷ìù£>g◊<=6üBa√¿XÊ≥g™Å·X¿H!ôÊ≠ˆ]‚∏y∂∞K Íò(A˚ôêR∂óÒ–6§v¶rÕhò57gGZnA∫+RV]˚n<A°wO◊!∏Òtùñ5òFåf˜∆£∂‡ÜEC»aèf~óv	Êá›¶æ˝÷RI4ãHΩH§πÏ•E?ÿC;vºÒwyÃyfëc–+˚6mH∞TÊ˛ﬁö-pc—eº±F‹ﬁÏ˙h7ØSRí*µó¸êïYyNöL,CmFP	{Îhæ#0ˆì1çûb~Î£æßâÏnéw(üÏ6ys"`o¥º„ıºë‚ÿH‡!=v®Ã»<ú1r€
+0lëLq◊äi¥b¨π2ñ¯Q0èl4vòÅ;nˆXJ©cM7`ç$°F
+?
+È±cçÅFˆ38#øòÒ ò¿Æ=S∂_¨9=U{ôÂ©õ_iû%ˆtèiUúÎ4+Êí”É4$ì∞àˆr0/8ƒBˆà˚yì è·T˜éKô∂èó√%- ⁄,.È¯JSΩn¡Ò¿u∞uÕﬂZX¨Y◊|6∞ÆÛb\\%≈ΩkäÄaÕ dÿ·›°Ö∆Î∞aáŸ‡∞˚btL›ﬂHπ9$ Ÿ∑Ø›ŒéiQΩÿ¶g∑“«2=ûÊ¿ªÂR±3Ñ«∆è`<bsªÃ∑'ﬁœ€Ω.Çz3⁄ìê¢9Yy~,´¬ˆ¯s]•i˝:Xgyóù⁄Ä÷Äá>Ñ^hÃvX∆k,I§±iÒÈu‡uÕ?]Xº\◊|∂Æ¬"h∂ŒH»{Ø3Î±yö”‡<áè@sœsXÑœ”X–P:é_º?$ÄŸªO5ø%;m_]NXÊ“πì
+'â`äõ‡h5t(J{>∏ zT°¥ß√⁄€öïEñÑM+FGDÍZã6Äá5Ëaáw«ÔùˆX-"¢4qÀèn¿Ø´@ØkÓ≥Kä"˝Î\ZL‡íD±“24<°`ç¨ÁÉ‚ÜÕ}Ÿ’‡◊ÙÈ)≠Œe—ˆÑKû^ìjˇ.XWÆ€1∂0¨Ä;¥–kWª:+◊,ü_h∑õ‹À°∫}≠—ΩÔTIbnU·9,(¥àyÚï†â6g=§EzN”¿ZÉë·ÿÒÿ!… t»˛˝»ÜÈ¿!˚5‹ê–Bl∞RŒÓMNl¿kÄ√ı1më}>ªT∞æ∞˜}É~‘`Ëã_ìãE9ì6ΩU∂;û bò_ËfnÎbrÉ‰v2€±~øÇ
+—ïC«zM1tdñH¶ÔÌGm@k √Ô«,4Pá;¨!áïñ¡”1#–¡;ΩûñúFáÌ›¥g…πGÌê==ïï}>Œª#ÃÏ3QR1Ùn1¬©ˆ£èÃ§oçÆbﬂëªÎyM´∫˘&ô¡ä&ø˜≥4¨@;|∂–∏-7l>ˆ\Hv3ÆiÀ-ﬁÄ[W1ÄZ◊¸√òÖ≈lâuçÁÍ˙-§˚£∆56m¿k√-3…ÌzòºXxiU%ªY›RHáz€mÀÂ∆Ñ«™4ë±È{,in0çp—;6Á∂πÌ/UR‘Å¸`?ãîr¯Ë¯êd =dèG‡∫¸Úz’OyˆX%’ÀÏ„CE“æ68Tp–JiÓ9‚RD
+ÂüìEñ÷.O™œ°ìW$¶¬u5Œ6¿Ö5xaáw≠∂–XÔ’Ü=÷TVZVmL¬Eb-=æΩˇ3_.Õm„HøÁS¯∏sÑx<“cqMë.är÷ß≠⁄Ï£¶jrôÃeø∆~‚mä »&)©)1NrëÌtˇÙ˝*ÿÕCo#¥xﬁ◊sÛæÄfbÑë‘3	ŒÑ>Q⁄œ:˚Ô*: 7∫5◊›≠?•y˝)œ
+ﬂ¬õ:ÀöË`4Q“7:µ<¨I¿áæ@ÍπzÑÿ„ª@ƒ_q+FXïÓ)Í("IDd &ﬂfégÍ …fó÷EvÄali€õ´¢0+FˆTâ>ór‚∞ò†0pÒqú<ø¡µã¥ºP;M;G∫Ô}Ê~t#ÕÎÏF>°/I@ÚπBé<VH<i∆µû‹Ÿ(Â}QU˚º|⁄¶E÷Õhuïn/ ÑÌê√î‡j÷U|CEº°˘wCG;Snhø*∂°Ì–`E}¡¥+`√öpÿ·ª°£û´áá=V≈á•o®-≥ ~…
+¸ê$≤˚Çq¿7¿¢:ÊÓˇ†%§u^πñæŸUU±¥F3ãü‚ú%∏§^Aq¡∏·“éÆ∂<nôl[v⁄Ìœu∫œÍ∞3\†ßbföûäV¿á5	¸∞√œêxâAÏAGà˝n`ã£ÜÙu˘
+áä~CsO(ˆÛ3lØœÎ
+ Kz,™•∏¥ö)fq;≤GBROˆ±Pc˚≈gî0iG"Ì
+q∫ÂÓ¯tÃ ™°êÉΩQ&<4?Eh8WŸaM=ÏÉ¯QO›ƒ73ƒ27QÑ≈Q»$@î+@DíÜ»ﬁPÈ
+Ë_ŸÜ9Çıqˇµ2[:ÿÃ‘Jk´W[˘àßç!]8ü8,b¯+ètÑgóWeûpÂÒ;ÿ#˜˝O≠ kËaèœd˚ÙXÁ7ã}Æä"/W£ß'∏B/ö8‹2Ñ*ûÄƒDJDÆıïŸ∂v ã¥ºÄO'ú%2¿”˜√Cä◊—!Û0®d≈Û!@Ã_¬óçæÎæ©>ë,Å+`If	x@ª}UniI°mƒb+˙∂dVà+÷$D;Ñ§>ƒ,)Øy±ºñâπ%Õ¥_k„…˜û?®—Ãr1q∏! ƒ	Ví÷—{  ÏêeDx&aFFÅ]º;$I@áÏﬂ∑úQœÍ´∂øßòa•j¨r
+rvrXìÄ;º_÷Q≤;‹ìuXÈ∆¨É%N
+„—%+†*¿Õﬂ9Âh'74ø+·ÜB7‰lo<ñ°ÀÈhhXìÄ;xp⁄MÓa¢(™£_Ã∂Ÿ!≠Û™˚Â∞Ÿ¡8øtõ√©8gF	.…óP\0n⁄y~‰q†eR«ì€áqÂπN˜YMXΩ4loë‡!_!í$Dˆ†K3Lœ’G1i`«"üJp&¥¥v‰pm∏§åò6a\ÎÒÖçrEÊ±®™=4ámZ∏JSWÈˆ:.ô5Ihwö±´Ï∞&v¯9“èxâA˙az˙aø“/,Ê±'(W 8T$ö{B`p˙¸TßÂ≥É∆∫'˘íãj).≠Êöú %ıƒ`5∂_>¥$L⁄ëà“Ó¬ª„”1+´Ü@N¡û®çÍõü∫ü›HÛ:Ωë√è·G>u 8Ú∏ï·HÊ&ä∞0*ﬁóPΩD$I`àÏﬂw§û’Oûÿ˛û—+-ü=Ïä¬D=9≥9¨I@áﬁôı¥v∏ãñ∫å/zhæÃ3ÑΩëG÷åÔ!hXƒGä~CÛCöóædîÕÆ*ﬂ˛Áxnv«z≥[¬¬'Ê¶—D1∑Øûx–ˆZÌpèÃI2fâ‚#G˘
+˘öoö™~ÎûÊcÒÍ¶Ãˆ…â≥¥îaâ÷}√≥+d÷$√>„†ßú>!ﬂv˚™‹6’Á2HÃ%‰DOÙn…≈¯)“XI˙åHõ|„z°©≥¨πP”§f6í!¿…
+FíÑ¯"{N7ÀCPªS‰èuZø-#‘\9K@Z«ZÍQ¡!6&ñ#‚‰ ‹ïﬂ3‘ØMë÷œYò „•$ f∫üL¥.¨I‡ÖÓœ¨wO>`•õÚ∂+ï$>æ|Ö¯	—öﬂ€°⁄=ëÍ‹Wÿ}§2°í±Bd±&!∂ÿ¡GõÆÿÏ\’—Ø5€Ïê÷yÂ.πŸUU±¥ÕMTäsfî‡í|	\7\⁄±«uÜñIOn/¥√¯\ß˚¨-.ü‚·?ﬂŒºØé©Ñ]à'* ï˜#≈íÉ`∏…ÙÀπ[∆X¡#vÑ7/Öªg≥b◊X>1Ü¸µ»v›_oDµ2âøÄçQ8ÙŸÀMí$Åú«◊≥U$®¯8⁄O`/Èì€Êã”ó¥Ìâæ€® cÕÎ9;r84˛.«¬œ «2o≤mw≥}cÙ6˜f~Ñû∆ßújScÙ%î ($”RM\c≠≠{b˚«ÍÕïÌmH™∏M™Ÿ`ÀlË;zÖH	aXøÔNI;ß_(á÷˜lìCùÀ´§ØÑ≥–4¸"„æ´ô∏aM:ÏPkÖ≠{ª¨xÈUü|^‘ê#yZñ¢4jnƒ’,±1Ã«‘√∑C±çN5{\Á'Y4	íüè«˝>oh	¥B¶≠Ë‚–!I9dˇŒiG<kH<dWÍ!•À…ó5°hÚìL}	»Ë%Ü	°¯√óØ⁄ˇ˘˙°ï∑”Ô¡˙ÙùS0Ç%Ã$bl’∂\)Ã–PùﬁÙ»W£⁄ À_—jßìˆ⁄˛w	∆Õø?qrÑ-Kåú√@ñƒ™ªæöxgZ)oÎL0¸„üŒ–tÜÊAÎ÷êÛ÷P0¡IÜ,€sû Wùáèƒ{œê~˚ˆØØˇ¯˝øn‚˝Ì€ü¸ˆÂOß‚/§∫ŸìñPà°µ:°lª$áºîé,kÁZ¨5xë·=ﬁzå0∏óÙ∑–~≥%áâêæñÃ≥≥':çMÒ–•{ÊÃô`‚⁄nÎÏpUwAÂâ≠ÃHßEw¨¢:Jò:n(9æèæ0^wüú ó,Æ∫[n™∫Ãä¸Ë˛¸öñ€¨~ÃãfÒŒ§ßgÄÂá¡ˆr·c˚vyç∆ˆîR	âµr‰Àªbe˛“T˚óÁº<å∂¶æúAs¶,ÛB$÷ÄäEoƒäE~ÿ≥W9ã{,ÖãΩIxœê5ì0x∞r∞HÛl0ëCô}Ó€iwØ√ÆÇ*4(B#%ÿe`8ùiˆ§¶oîÄ∫h'öqË˙üª£ı=ˇLÄU¬xáe4∫cÌ#åE)!∆!O§[?Y¡\–sHë}ˆñ’KR§⁄ÊÚFç(±KNm»=ı A„ú…ÿNØÀÓ
+@VÔ´≤qΩÌ5+èó·I€U¢›€mèn(I7¥l¥”ˆ–Üˆë]o5“∆¢oTw,∂=2,JÅÜ=ﬁıƒ=8Ï±væ◊,Q`w«f€≥Cöt»·˝…œ€ÉCπ!ﬂÎÿ.Màëb⁄ÿæV⁄5‡a——Ñ®h"÷x9|ÃS;}~Œã"O˜›uüX¯„¶˙[˜Ûa≥´™b·ƒ8;0
+ÀTl˘•õç=&¥úz0üÍ©úx¬(Îß≈¥~ ¸Ñ’ê6Å$ëLq„!'˜CFä∑F?ﬁsw:√ô”¡"7’y†∞&ä”R—!Â—
+H±Êı¢;r® Ã[u¨]ŸMÎÁÓoyπYJ Í˛Õmø$ÊÙÛZ≈d$'ƒç"‚Ã™It¸–U›|”Tı[w·«ÍXdØiΩΩ–/·Ëås»Ò»!I8dÔõ•‘Ó%Ó≤Óõ¢zu?æ¶EëπKﬁñxJÃ„l”…YÍ-¿ñYH$9r ÏÜ¨F~∆≠Üü™ÍˇÃó€r£∫Ü_e_ŒïJg§Kb31+∂qû¨πŒÌ'ﬁÌ @Õ¡ñ∞víT≠*èWˇÌn>˙‘√ºPYˇ3ìÒ±œ ÑXcÊ·AƒääXèQ!Î!ä}è}Û/oûa±≠”7èlúæÙâ∂)2¢ï'ûL ˚@Ü˝Œ¬3˜¬ùœÂ˘’≠'neπ‘Pv±∑∆“©„«∞LÑ{‹&sE<Äfi6Kô±I_—øé˘[·ƒÂòÔÓ÷\úäéùS%`à\ Dˆ=AÕ∫\º≠S˝ â´ƒ™ÆÀ&≤ŸÚ¡hâ∞JN√∏—íÃöô‡1?E¥SôîÆ¸vy”ã∂Î:¯Z\'ß…È‰∞œ tX=’ÙX}XY}X¸dı¡E…¨Èf	˙ ˙ÊﬂÉ/,‡ûoâŒó>Œ@<T™qˆôÁ—M|>Ü7|æ‡†ÄE¬â¯Iàˆ!+Ü6C‰2 !≤Ôon›ÿ{Ï∂k™lY&à2^ˇ–3I4˚dåƒ˚ªKMYCD&'r¶€∏pöåíL≤a‰qö ˆ@~ ôö«xÊM·gﬁD}Ê¡%o¢Ì!≤}è}Û/™π∞«íÛÌ„+ŒW?Spp(J°á)«yVÿg -,h´}€•sÄÀ†ÀeWù‹Å∞kÎXpT.=Hz-D™õ
+	Üß9ú(ÜœÊ ]ÔE”æW’>®∆‡F‰∑#≈Å	¿!ó‹ê}_fJ:dáº>ˆÉ˙›m'«‚¸ãO/‚”ƒ≈Ep–6#FÑ≠&Ç⁄i∫åˆmÒvøVÔ/uUΩuôﬂØ88ô‡„àì	¿aü‰∞†π6˘πK¶ ]Ô˘Îπ®]6±»¨^@f,&c·—Bâ2¶fÈë≈ø˚‹?&ûî#¯Ró0¬Fìd8Á∏J¿Œs Œ≥˛ÆÇ
+x,7œ<¶ÿ<ŸÊR£Çûç√M'¿Ö}√ÇÔÇˆ»+b–ae =:˜Êf0uaN≥Á	bóﬁì¯‹Ò˛”~¨Ó^=RÏaó7Ì±h´Ûtg9Uu˛ßÏÎÓêÇ®fÇ0-Ÿzs˚Ï∂µ`˚¿u%# ≤iæL√"º∞mˇå4?Vh¬ùo„8˚LúÿÁ„ÇúÚó˙’‰Âπm∫däKŸÏ™Kﬁoü—ÏÃbÅH®	áYhÃö*XR•ô)˘1">˘a1|≤w.≥ÉõP¿Ùv‰lræ« næ˘◊‹tÅ7≤èæÈê:Ï¶ª”8·@‰Ã≥O–¿∞œM≠ªXÈùÍˇŸ;°4◊YÏûsEdˇƒ‚g(éTÎ*K π(Cdﬂ◊°†ÓlÄ∂ÄÖ¶|çE∆`®-‹ÇXf·ÈÜÜi$·÷¬∆É°w4\.gYr⁄o0ÆÕó¬˘zÔX»ÑÜÂ0ÔO¿˚ ÜáÍ¯∑KÊw~*è£+À.`“Ä…2&¬£”∞ﬁss´,¨X>ÓPc˙h;KU¿„rÿ⁄›°zΩ∫ØÆÚªìé+íiﬁ3	ò˘à˘Êﬂ≤ü≈Îm'æ}‰n‚K7n&p*jj«Q'√>òaAsm˙·U◊Û◊sQªA◊ƒ≥z©;Z"l¡—Z(¶fÈm©9!°eõ©'ÂÂK]Bõ,Ü>yúãRçÙTz»e <dˇ≈Ïc–!˚g»!G¿i8·Èç”M?On‚Û1∫â†πûNE˝rÿw)\Oªh\+ãà Ã~Ó&"`Cõ
+6 É©òú˝4£“Ωëy˝R’A≥M√)»îËâe	à˘x˘Ê_@+,∫Åïo˛)ﬂœ&Np¬≥ª¢I@
+˚`Ö_@+4¬Å<C{⁄ƒLb§êŸ»êÀ b»æ?Œ§Ï‚o’)wﬂÌ‹d{©´˜s,E∆(ZC$3vƒùâfIfçú
+Bw~C`wúäçcß¸“±K^øΩÁÓŒ°sO==ômı0Õ$MÄ˚Ù≈Ì)¬∑kÈçD±ã¶Õ€¬-'es<ªJlváÓªÍ∑√[¬›}<˘æ®õCyâ.÷ÖSO†f†\Ô$7QHÿ\>ã#{™ÏÏóxπ.^K˜:ÔÎÅÔ«=»p *(áò%@Ï{‹ÿwìÆ$∂◊7è@ÎÀû}Ó…a^Jû -ˆπ	.vÒìÆ&∑"c·3ê·÷‰¬åE∆»Â&ƒ»√O"ºñ⁄`d¡Èû¡)5Ÿ8ÅeæÿÁ0#å}¸S‘’©Ë2ªÌEÌêÊßÀµﬂÆö≤p_¿IóQΩDó£ÂΩº¶AgfñE»ä%%aúÛôñQ⁄eW4MÒoce±b ¨û'å<n‚ã<¸∫k9≠±EˆQdëÚÆÜB€·„¸’	»bü€ÿb˝E§åw…wvs∏∂Ì—˝cWØßó2ﬂäó*πÑ%’L‹…l™PÑj-ÃTÒ0òÛ,õ=Ä,ÎÔ#ò8›«¸OÜX[¢oœ‘ŒF.∑F.~
+ﬂµºVÒ"A]§{wô´2D¬+2Ä5	¿bü´O`ƒà˝ÊêÒÆ!’’nWπu)ø÷eÀ+[h∑ "ôçà÷H"n´“D@–ﬂ}tåA9≤Y¬BtŸ˝.ÍÛ>Ô^S}£wæé ◊
+61¡uèœ&¿Á{‹VñæáüRï+Y≠•oQìælcI
+MX&Üi™h¶ÿg@IbAQÙ}LÂˆ∆Ã^†¢L¶Ex\¿≈t\∞Ç˛=®K†N’,k®‘Æ.Û≤˛]«˛ûkÎ¢h;èÀ·Ë•ú YÄ»e ?dﬂ‰Âπu/‡π=TÁøˇÌ∑Ÿ√µé+µ¶öfƒp∆ß?Ω^j∑ÃL6µ¡≈ñMïÚF3©?ÂÆ≠Íø≠ó„ü˝=VL¿õeá®xXÿg -,®Æu?Óˆ.ãÍ∑ªJ ˆoÏµ±‘™a1äFÑ
+…õ
+¬kåJ"ÖúÂ 4”]juπ;ú™Û~>˝ñ¡QN2ñıÿDlæ« hæ˘W"s Êõo¿ÂÀ7√ípi*-«ô&ü«5Ò˘ÿDÖ»ÇCÌ°MÒÿ&∂ÉªEƒ∆Ó®pC.∞!˚Ø§Ë Ÿo`ÜÙ€ë¡Y»5ôÈÃ∞œ hXï‘BC∞a¡nÿ¡vpp2jzl´ˆClæ« hæ˘W"s Êõo¿ÂÀ∑√íöX•∆âf‡¬>ÄaAÈñ˙åwI‘’nWıØuYƒoô^¢&†KŸàhç$Ç
+6DhådÜÕ¬hE}ﬁÁ«"î›Ìö§b@g†C.»!˚ãßdó¡Óê◊«¬}˘N¬‚¸PÀÄVc¡A[8Ì4À¶Çêö3ÄﬁN”eTSó[y<VÔ/uUΩπWˆﬁ≠&π$Zç€à¶	¿aü‰∞  ùNåN Yÿ}"¿äxXπô~±g«∞Û=êÛÕ{n⁄v°ÔÛsYªÔˆÆ‚⁄Íty+œM,:ª–65túﬁä((jM3¢§Â˚êf…)¨#X∆§ÏRz+Ú∂<øv9_é˘ÓnüÑ€OH=Ã8Õ0√>®a¡7rå‹#áÏ∞p=' ≥rÄ'ûáá]>fáÌø]`‹#9,áuπ—π£ûπ˝GùL@˚Ù√Ì	ﬁæ˛XKo$ä}¸S‘’©pWA^øÓfÿÂßÀ’·ﬁ5eó¯¡}—Ï±◊]¬+8å6y/Ø©@¡ôôe¬WJ¬¯M1—2JªÏä¶)˛u/s=‡˝X¡´1√(T	ÿzÍ“≥Ó´í7√›‘VÔÁÿ*Ÿ“Œò ˛ˇ_.ΩçIøœß19§√~wiâc1#ëIÕ¿ßv∞è …e'ó˝˚â∑ËnR]-%¬6xÜSˇJ¨ó#∆Ë%ÛŒÙEõò≥…œïZ‘Pãß)„ŒRA%n‚∫“vMQtóZ®ÜøI{ÄfRÿ'|–≠@{<&äÁDyÎ¬	îißGxvx»%Å≤–ÒXj∂xï’∂8/E≥ÑZ_qsÕ†AΩ—£}E¶ßˆ§R„úIÎ¶ârœC^_ãzI“Õø’Ò‚∆W¢íÚ4Ù‹
+ƒ∞O2,(#3+‚Wo6uÑñõ≤XZfvfîiª:˜¢u
+JEÚ©`Iót÷Ò≥Ñ•Ÿ}.öjõÔ*;8Ö„9øπ‘#Å[j>P3<Ñﬂ7é2?Ñá9ãÂW7Mπt”‰ÛÁôÙZij–`oΩõ⁄_oêö%'*n‚“’v˚¢´+*2∏πp„t≥Ÿ
+–∞O6,hÛ2¥¿Tuª∫z˘ﬂ∞FÓéÕ≤≈1.µÁo⁄ù‡‚Ïˇ}·.Ä‰z≥âÄ¥ã@ÉÙ¸L™2©}-7]›ºfè˚Øq¢˝˙‘äá˝xÉ\∆ô∑f«W á\∏!˚wÓíƒX«&âÏoÍë»√ı	ÙÏõÙÑœ‡T„ò≥‚~|ü◊˘Mªzˇì Â˛eÒÚËgxXÂ=ámáùQÃÁ‹T1›ˇi†[ñ™Ñ◊∂…º€ÏÍßc1|≥˘•mRXœ|ﬂëô\ÅYÍë@,5xô’yeRS#¥86øUÍÈVPpıiÓOcM≠Ä
+˚$¿¬ÇaÛóÑÉöõ`Z*X∂≠ëÙ∏`«s∆¿Ó2QºAk)>Õ≤~†Mús=¥î≤˘\˚m‡◊vMQtó¬˝'Õ	†^ rI‡áÏ√J•z©èM‹ÛÊKxVVõ•LÏ~Æ ˚Á-'G;8lOÑ#Õ©ÈõQvv-©è˚‚kﬁƒ≤+∫O¸’∞\0ògps
+°¯√˜??ıˇÚÁ' 	}<{¯„S;ZÛ˛!¸i4Çœ“x>µÇù…KaSC•ôwvb¯ã”íYñø† ;PA¬øv¸oÏ∫~‚Uø¨¥±f‚ÅsÄÌ≠
+âõÿ%x0Ñ_V˚¡÷Ì—ØGCÕÉÖØ^JÛj(ò ^ˇ˚n+˚p∏
+
+ı`≠i˘èˇ¯ÛÔ¸7ÿ˛˛„Øˇ¸˛˝ØËeHHÖÑ‹´/ó Ä¥DtTlóTÃË
+ﬁ;\%_…◊7~I£Bˆäâ†-ª"dP˝Ã›O˘Å∞¸ùÇ…êcaÒoGÙ⁄!m*	üÑy#&ÿ“∂€¶h€IiÙ/Váã´$ºﬁ¨¡N0#£ø,ªcÂ∂¢?Ã‘Áõeﬁrf&ˆ√Lq±´Ó f_ƒ7ﬂ÷˚˙PWã∑Çô≠€eéa5ZW;7µøﬁêú»ò5giBQ≈C¢¨∂Eı≠Æ∑ó◊ÄôÂ˘qêdw,⁄	4ÏïÇ+ﬁ1‚V,Çá•˜‡3ì¬èÙÓXπz»)º?;Zº	:$XD)Ôß<„÷énv«ûê√^)Ë∞¢åÏ`(ÑÓ•…#9~?ÊMU¥Kˆ„˚†`Œ
+'Èqª&óÂ3 :˝˘{"ntX·ä}^Eå˘◊¢:W@J.êÄÒé=<¡ò˙§@LÌﬂø¸H—&’ó⁄/*æTxOÌ	”xßôgVÅÜΩR∞a≈G’1Ó¥ˆ∞daÌaÒ]µ«5,≤Ÿ»—Æ¬9•`DÇ°¸¥åwa˛tE”‰¬¢èËÒôwi=\zaÁ'∆
+áéù
+ÿÙÁJ!Buñ±îYº∆éM^ue
+∫SÛt´√^) ±‚}	R£=!ƒäõb7∑BÙ^2≈Õ@–Ø@πºéôèÏ≤ê¡gHÊKx¥É?ïUªx˙ÕÒsP RHAåµ7W–û∞9ñdn,Y$ïo°]ñ€ÇŒ
+nFa‰8˜x∂-Ïî¿ﬁù1ﬁ3,X@Ô‡Á"Á|ƒ∆◊¿Ü|®!˚wáFãˆƒŸ/@Ütw”û¡„d„bdÿ)ÅT≈∑ÿ‚ÎÊ9§≤+üvq≈‹ÏÍzø a¿S“[rº'jX@hR0∏∫úû™ïâ{eL€åi√…êWW¯)«DÈ…5Ë•.	ÏRÛw'Gäıƒ-5_J-’ﬁ«LZf¥:M7µ5Ïî¿ﬁù1ﬁ;,XJ´Ô„w°ŒN-SØÅ˘$–CˆmówE)€·4ÌÔÄÕ.≤ló–É◊)gßúdF
+/©·æéEÔœ§˝ﬂ1Õœ2U.Ç€ÏÛo0ªCvm◊EwZJJÕ¨A;%`√Ç˜ÁF8áã»aÈÌË‡ ‰ﬁ‡Ï‡Ról©˘˚C#õ KÌKÖ7„rpfJü∆õ[ÿƒÈud¡ªC£|¬6Q,7ëﬁéŒqæFr~r»'≤oèm^Öd
+Ú¯ñ?UEo∏E–˙•ƒœ-%Yˇ˙¨†∆⁄€[´ÌƒûÕ˛\&®,,ïn˙ñt<Áõ≤ÿÔO◊‹ex6cVÒq¬âlzÿ)<∑!!CMπŸÍj€’ﬂ™•Ë§ùCgò2<s‰HaágF'ßäe‡§c∞ôúÂ+#π*Ô Õz·¡I®ù»Ò5»•.	‹RÛ∑∫eæ…∑≈·e!8Œ˘\ßt∞ê{ÌàÅ:Óô∞º«ñ⁄ìPqPZ®-§¥<6…Æﬁv√¡≥ﬂágMùo/ÉkPI39!÷@Üù†aA9[HÁ©®õß"5,6—ß«¢ÈñVûVsï√GfRí√vYˇ˙’πÇVqpp{˛Í•î!µCπæ‘◊fYØÙK8	ÖS#AπA‰ì Ÿ?Z–	>$XHioá◊˚ì‚4Ï‘Ù∞S>,hª∏vÌö≤ÌÍÁ]—¥√ìc≥Ÿ-ÌõFŒΩHŒ ß…—ˆ
+1ÛŒ®J∆§ìgπrx4KÓ26Æÿx…	Ω≥ƒ#Xb›Êeu,<h7ª∫ﬁ/<≤Y\ˆ’J†˝FÔÕ‰E—0IÊ•ƒ¬a¬ÌÀˆq∏û˜˘Ê
+#ÿn!Ï”h3k`¬N	§∞ ∫^Û2ÿ‘á√±*ªó»Ækñ∂√lnëÑÙ3ı∫HCÌo=•}ﬂ±b—˛€£3gÈ
+Xô^≥˚≠¯¸∫»ÈÜªàŒz¡`0é‰Ï
+‰∞œÎ‡∞˝˚∂Db¨cGƒˆ"ﬂ÷-ú}Z»”sk√N	»∞‡É÷jÿß=d¢X∂àLƒ7o"@i˘ –Ø0uI¿óö?Gx:“˚≠ﬁU±‡"ªnWû°£,•«≈\◊T∂gAäŸqÕ§7nbø®_Ü‚KÂJg!µ«c±ßÉÉkPp7Œ9ô≠Å;%¿√Ç√Gå;à7 ƒnÑ«`fÃ»êØ¡˘$ Dˆ¡0¡Õ+Ø<>€÷’S>åÚe√Øõs›L2ôÒLSÉvB≥ÃI=PŸ)&¥õ¶¨o[V§aû´qˆI±;Ïî >ä1ÏV,Âá’7Ñ`¨>πæ‘%^j˛QËH!'‡R˚•ÿRÌhŸπü9Ë˚&Ûß—ß÷`áù&Ø¢?pr}OÛÓhÙ·T–Ìäa%€ÏÚ0 ›8üãÆ)∑E;B˝Âqø}
+˚Lû^Kß§S3·9ËvNnq|ˆD‡{WJb¡,h,‘ö	ÿLZÆCFı¶»„>–M3í˛~7óZ™aGïz⁄»Á∂ö¿û/^‰·π˝u∏;@ı˙˚[πﬂó˘!^!ˇgø\z€6Ç |◊Ø‡±mˆÕ›ﬁXJ	ïJ¢J“u|*
+«m8ö-˙Ô;‰Ú·°Di)∂,âúÕÏ«yëˆbú~püzöÆGo!áå&éj_ﬁ2—ó˜»d≈Ä™Ë‘Z≠v≠Â^&_°’∞Ñ
+√Lõ…z∂=£ßÎpO!I◊W.Ñ,Õ£Ï™Nÿ(´∆E6ö÷á¶W0¶eËÌØaÂ ßˆŒÆ'¯	S.ç{KYœÆ´tªäˆß◊cŸ©aÂ‹ÍÜ`8AdÛúÏƒ^FvF5êùX~DvbEèÏ< 7,€_(⁄5S ∆Fœ"åMºƒÉq1∆
+c cÕG‘`eàÂ™mØv
+æ»¶GFÚyÀz\ÂÎhªpº¢8Z,7W#Å1ò®_C¥≤ ¯∫jòÖ—Ü—S™∫êé)¨⁄éEE∫(\¥	<≤ÓZñFã£ÎtÜºmùíN¡ı áÚÙ¢H\(?-£8©f∫Ÿ\lWE›U«˜O∆ù™&L[+ºù.5‡¯‰û∆ÈÜ-ı^¥L’ ∑iv]µ}Û87Bs⁄ÙK…¶¿ÜlzPCÚO>Ô¯y€ç;H˛úi85ÏqÉÂUBÂmÛçOı áûùßø;¨p<l·\z∞è
+¶õ&'≈êMvH˛…—˘y€ëCÚÁÄCµb¿∂…¥ËZùúÇ6⁄Aô◊äMÏrñ∞.‘∑Y¥çõ°Ù}çusëÌíˆ˚—Ñix‡¿9Ãí!óÍHH}çíL9}bÖ”h°+±∏µ.Møç≤Û⁄Ø‹„KÜÇ}î2÷6E5`lÛæÿ¬≥„hÄ.ñ˜Üã’&`k(1 vçSO=ã.6Ò¸xC‚ã¸cΩ	kKB∂Õ5ú0≤y_d·˘Ò4D…˚√Ej~lá∞¬∂™îÏ⁄ÆôÇ+6zzjÍ)Ïjdäª»ﬁß…∂òjàEínvy∫ãÔ‡í	3e°ﬁ~¶à∞0Øˆ5¸(Iâ0b/r©h=B],◊„({´§ºmØv
+ê»f/A•WÇ"ª¸Mìé†UΩ_Æ÷ÎU¥q±æ#Ì≈8˝‡>Áqí¶Î±†’°3ÁÑ	√á£⁄ó∑Uñ"y∏äx8˙««®É´(¢Ï›rÈ>ÁÖGí¬nÀmª´¢S∞≈F=í+‰EùíI∂ ãtó,≥ºπrë≈…Hb0j™¨J.ÖÏı∂‘‡ŒllZbmó\ÛX-ö´ª;Ñ∂ZjM”2õÇ≤È…È¢pæ'êv5≠t≥9{-ã¿ﬁ!RIx»B__Up^eû!y¥çûjåÇ@∂ˆ£ÂJ’Âdôói⁄«v¥ö2A¨Tm_T|
+xÿËYıõx!u0Æ°ää∆îT¨ÈQSèR¶¡ä¶g*1ddÛ,∆»¬A<’a$?0R<øgJ%Îz¶úÄmœËÈÚ€Sh[S«ë¨≤µ
+ò•Ît3~¢’˙P6DÛê{˚k®% ò=núíPÔG wa≠W€≈r€Uﬂ,çGª¶ÑÕU€vM57d”írj~ﬁv–ê¸fHÒ»`BwÕRO¡ıÄÜj\‘Q¨‚H-äÙr4.¬•â‘åoO!E µ±ßA»®a«Àı^º¢ﬁ∑Q±än
+e∂\ßßh®ÑŸˆ¡p
+~»Ê9}[x}p0™Å>àÂGÙA¨¯»9G¬"JÔö°ô06⁄#Ãºc.eı¬:|o≥h7–ﬂ◊|7Ÿ.π™Øç_Xe2X!óÍHH}IDÖ+úŒ]Xta∑ÏÎYÎﬂDÒ€(k6LÖVï·IG(bm¶ùÇ-≤ÈQ{ë¸ì7L?oªÜâ‰«4L§Ë—0è&%<D!€Æ©È‡∞—≥ .6ÒBÍÓ`\CÖ+å©ºXÛ+Ï™*TMW’l
+æ»¶Gb"˘ºp|‚$[ÂE∫KñYﬁ\π»‚d$1¶≈°daPf)üßØ•ﬂ?/œiHR"åË ‡äÎ´ESNuWNó≈ÏÔYi ~ ≤&¯r3ªú›œﬁºÀyÁ◊´~ÅL¡mxöÆ?Õﬁƒ9‚‘Úx;óUoe„”lŒJèÓfVÚÍªUaıùs∆≠Æ%‹g'’\/%õÎú˙Tæã˙˚ú	∫KÛ –nƒl#g⁄í9Dë«ppﬂÖßÓºe®nà*º<h|Œ‡%§dºqÊ™~]œÊ°ªQ:ﬂâ±Rn¬{}≈âUJïö3Täp
+=piŒ Oï?•åW÷›◊◊ﬁ≠Œ›¡ºwüËÍ(âêpØyÅ+“›®)Ì¸◊A˝›…Tïé≥" _™ÓÏªœùÛ˚è¬˜|òU.^ói˙ı˙˛Ièˆè.›DRûlÂÇÓESYzçFwÀ”™äÁı)} ü˜0'|ÆÁ2ÑVËÍˇÎ√˝˙p?˚aN¯p[Õ+˜^Î◊«˙πs ömµÑj=◊&¨§à?pø¯RÓ∏ˇŒﬁÏ7/(˛®LS8YûIµnÌ>ﬂ›˘Ì∑õ`}˚ı[∞˝¸OÓÊ˛ÊÀÔwß\ÀªõÎo∑üÔÉ≈ÔˇÛ ªΩ˛Î”Á˚è‰ˆ˛„« Xªï˝“Ì¿Ö'¸ı„;!^ õ√i‹1°m¸°ñ¿~8h¯£P?2˙ @P≠Ûø  tÆ48
+endstreamendobj41 0 obj<</OP false/Type/ExtGState/op false>>endobj42 0 obj<</OP true/OPM 1/SA true/Type/ExtGState/op true>>endobj43 0 obj<</OP true/Type/ExtGState/op true>>endobjxref
+0 1
+0000000000 65535 f
+2 1
+0000120510 00000 n
+6 1
+0000130781 00000 n
+38 1
+0000131662 00000 n
+40 4
+0000131842 00000 n
+0000147918 00000 n
+0000147972 00000 n
+0000148038 00000 n
+trailer
+<</Size 44/Root 1 0 R/Info 38 0 R/ID[<454F544A5F9F7045B7ABCC30694FD265><0AD39F824C2AD04FB4C52375D9A16C3B>]/Prev 120236>>
+startxref
+148090
+%%EOF

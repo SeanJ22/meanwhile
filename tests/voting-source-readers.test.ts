@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { applyVotingChangeNotices, arcgisVotingRows, fingerprintVotingPlatform, parseVotingCapture, readVotingSource, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
-import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
+import type { VotingSourceDoor, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 const fixture = (name: string) => new Uint8Array(readFileSync(`tests/fixtures/voting-sources/${name}`));
 const primaryDoor = JSON.parse(readFileSync("tests/fixtures/voting-sources/nc-primary-door.json", "utf8")) as VotingSourceDoor;
 const NC: VotingSourceDoor = { id: "nc-early", publisher: "North Carolina State Board of Elections", url: "https://vt.ncsbe.gov/OSSite?handler=StatewideList", shape: "file", covers: ["EARLY_VOTING"], scope: { state: "NC", ocdId: "ocd-division/country:us/state:nc", name: "North Carolina" }, electionDate: "2026-11-03", electionPageUrl: "https://vt.ncsbe.gov/EVSite/", extraction: { format: "tsv", headers: ["election", "county", "flag", "name", "street", "cityStateZip", "day", "hours"], columns: { name: "name", address: ["street", "cityStateZip"], days: "day", hours: "hours", election: "election" } } };
@@ -19,7 +19,31 @@ test("real statewide early-voting file retains every site's published day and ho
   assert.ok(elmira.schedules?.some(schedule => schedule.days === "10/15/2026" && schedule.hours === "8:00AM - 7:30PM"));
   assert.ok(elmira.schedules?.some(schedule => schedule.days === "10/18/2026" && schedule.hours === "Closed"));
   assert.ok(elmira.schedules?.some(schedule => schedule.days === "10/31/2026"));
+  assert.equal(elmira.schedules?.length, 17);
+  assert.deepEqual(elmira.schedules?.map(schedule => schedule.date),
+    Array.from({ length: 17 }, (_, day) => `2026-10-${String(day + 15).padStart(2, "0")}`));
+  assert.ok(elmira.schedules?.every(schedule => schedule.electionDate === "2026-11-03"));
   assert.ok(sites.every(s => s.kind === "EARLY_VOTING" && s.electionDate === "2026-11-03"));
+});
+
+test("schedule dates come from the published row without treating ranges or election dates as individual days", async () => {
+  const rows = await parseVotingCapture({ url: NC.url, contentType: "text/tab-separated-values", bytes: fixture("nc-early-voting-2026-excerpt.tsv") }, NC);
+  const row = rows[0]!;
+  // Reuse a saved official location; these alternate date envelopes exercise parsing only.
+  const parsed = (day: string) => votingRowsToSites([{ ...row, day }], NC, source).sites[0]!.schedules![0]!;
+  assert.equal(parsed("Thursday, October 15, 2026").date, "2026-10-15");
+  assert.equal(parsed("2026-10-15").date, "2026-10-15");
+  for (const day of ["10/15/2026 - 10/31/2026", "October 15–31, 2026", "Monday through Friday", "10/32/2026", ""]) {
+    assert.equal(parsed(day).date, undefined, day);
+    assert.equal(parsed(day).electionDate, "2026-11-03");
+  }
+  const dateColumn = { ...NC, extraction: { ...NC.extraction, columns: { ...NC.extraction!.columns, date: "day", days: "unpublished" } } };
+  const mapped = votingRowsToSites([row], dateColumn, source).sites[0]!.schedules![0]!;
+  assert.equal(mapped.date, "2026-10-15");
+  assert.equal(mapped.days, undefined);
+  const merged = votingRowsToSites(rows, dateColumn, source).sites[0]!.schedules!;
+  assert.equal(merged.length, 17, "separately dated rows survive a shared site and absent display-day field");
+  assert.equal(new Set(merged.map(schedule => schedule.date)).size, 17);
 });
 
 test("official rendered HTML tables retain early voting, drop boxes and publisher return rules", async () => {
@@ -55,6 +79,19 @@ test("identity-locked and unrequested address routes send no request", async () 
 
 const ncPage = () => new Response(fixture("nc-early-voting-2026-excerpt.tsv"), { headers: { "content-type": "text/tab-separated-values" } });
 const plain = { headers: { "content-type": "text/plain" } };
+
+test("an expired geocoding slot preserves parsed official sites and stops further coordinate calls", async () => {
+  let calls = 0;
+  const runtime: VotingSourceRuntime = {
+    fetch: async input => String(input).endsWith("/robots.txt") ? new Response("User-agent: *\nAllow: /", plain) : ncPage(),
+    geocode: async () => { calls++; runtime.deadlineMs = Date.now() - 1; return null; },
+  };
+  const read = await readVotingSource(NC, runtime);
+  assert.equal(calls, 1);
+  assert.equal(read.sites.length, 8);
+  assert.ok(read.sites.every(site => site.schedules?.length === 17));
+  assert.ok(read.sites.every(site => site.lat === null && site.lng === null));
+});
 
 test("rulings §2: a robots.txt that disallows the page is recorded as evidence and the public page is still read", async () => {
   const requests: string[] = [];

@@ -1,0 +1,87 @@
+{
+  "capturedOn": "2026-10-23",
+  "mapDiscoveryOnly": true,
+  "readerSources": "The current November3 official PDFs; no map address is silently substituted.",
+  "conflicts": [
+    {
+      "kind": "early",
+      "name": "Las Palmas",
+      "map": [
+        {
+          "NAME": "Las Palmas Branch Library",
+          "ADDRESS": "515 Castroville Rd",
+          "CITY": "SAN ANTONIIO",
+          "ZIP": "78923"
+        }
+      ],
+      "datedPdf": [
+        {
+          "name": "LAS PALMAS LIBRARY",
+          "street": "515 CASTROVILLE RD",
+          "town": "SAN ANTONIO",
+          "zip": "78237"
+        }
+      ]
+    },
+    {
+      "kind": "early",
+      "name": "Leon Valley",
+      "map": [
+        {
+          "NAME": "Leon Valley Conference Center",
+          "ADDRESS": "6421 Evers Rd.",
+          "CITY": "LEON VALLEY",
+          "ZIP": "78238"
+        }
+      ],
+      "datedPdf": [
+        {
+          "name": "LEON VALLEY CONFERENCE CENTER",
+          "street": "6421 EVERS RD",
+          "town": "LEON VALLEY",
+          "zip": "78240"
+        }
+      ]
+    },
+    {
+      "kind": "election-day",
+      "name": "Las Palmas",
+      "map": [
+        {
+          "NAME": "Las Palmas Branch Lirary",
+          "ADDRESS": "515 CASTROVILLE RD",
+          "CITY": "SAN ANTONIO",
+          "ZIP": "78237"
+        }
+      ],
+      "datedPdf": [
+        {
+          "name": "LAS PALMAS LIBRARY",
+          "street": "515 CASTROVILLE RD",
+          "town": "SAN ANTONIO",
+          "zip": "78237"
+        }
+      ]
+    },
+    {
+      "kind": "election-day",
+      "name": "Leon Valley",
+      "map": [
+        {
+          "NAME": "Leon Valley Conference Center",
+          "ADDRESS": "6427 EVERS RD",
+          "CITY": "LEON VALLEY",
+          "ZIP": "78240"
+        }
+      ],
+      "datedPdf": [
+        {
+          "name": "LEON VALLEY CONFERENCE CENTER",
+          "street": "6421 EVERS RD",
+          "town": "LEON VALLEY",
+          "zip": "78240"
+        }
+      ]
+    }
+  ]
+}

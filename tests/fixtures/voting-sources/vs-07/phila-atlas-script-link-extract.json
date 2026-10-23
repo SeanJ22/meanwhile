@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://atlas.phila.gov/assets/index-BE7Gx29W.js",
+  "rawHash": "ff32f79d65914da835cf125dacb4560e7db8e25fee1b2b17ff62136edab54cb9",
+  "capturedAt": "2026-10-23T08:10:06.120Z",
+  "derivation": "Exact link-bearing snippet from the native public official client script. The complete bundled application code is not a voting-list fixture.",
+  "snippet": "s[0],d.lat=d.geometry.coordinates[1])}),this.pollingPlaces=a)}else{let a=\"https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/POLLING_PLACES/FeatureServer/0/query\",d={returnGeometry:!0,where:`precinct = '${e}'`,outSR:4326,outFields:\"*\",inSr:4326,geometryType:\"esriGeometryPoint\",f:\"geojson\"};const k=await axios.get(a,{params:d});if(k.status===200){let nt=await k.data;this.pollingPlaces=nt}}}cat"
+}

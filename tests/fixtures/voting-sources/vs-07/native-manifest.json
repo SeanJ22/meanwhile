@@ -1,0 +1,531 @@
+[
+  {
+    "id": "vs07-ca-san-diego-vote-centers-map",
+    "url": "https://geo.sandag.org/server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0",
+    "finalUrl": "https://geo.sandag.org/server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0",
+    "capturedAt": "2026-10-23T08:07:15.966Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-vote-centers-map.html",
+    "rawHash": "7f43d357578bc9b02ff3d021a7f23ae64c962d9b3854c242d01aa2576e51a0a7",
+    "savedHash": "7f43d357578bc9b02ff3d021a7f23ae64c962d9b3854c242d01aa2576e51a0a7",
+    "redactions": 0,
+    "bytes": 9391,
+    "attempts": [
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://geo.sandag.org/server/rest/services/Hosted/Vote_Centers_2026_11_03/FeatureServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-ca-san-diego-vote-centers",
+    "url": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html",
+    "capturedAt": "2026-10-23T08:07:15.960Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-vote-centers.html",
+    "rawHash": "6460690f9ee79f27f81a1d425d62363750b3b7d7d540aeb0e567912cfb857a54",
+    "savedHash": "6460690f9ee79f27f81a1d425d62363750b3b7d7d540aeb0e567912cfb857a54",
+    "redactions": 0,
+    "bytes": 72308,
+    "attempts": [
+      {
+        "url": "https://www.sdvote.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-ca-san-diego-drop-boxes",
+    "url": "https://www.sdvote.com/content/rov/en/elections/ballot-drop-box-locations.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/ballot-drop-box-locations.html",
+    "capturedAt": "2026-10-23T08:07:15.963Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-drop-boxes.html",
+    "rawHash": "bbc6326e4af37ea82a0d9580b76e443575be7d03bf8a21a8f3b2fed4bd33d361",
+    "savedHash": "bbc6326e4af37ea82a0d9580b76e443575be7d03bf8a21a8f3b2fed4bd33d361",
+    "redactions": 0,
+    "bytes": 73801,
+    "attempts": [
+      {
+        "url": "https://www.sdvote.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sdvote.com/content/rov/en/elections/ballot-drop-box-locations.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-nc-statewide-early-pdf",
+    "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+    "finalUrl": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+    "capturedAt": "2026-10-23T08:07:15.929Z",
+    "contentType": "application/pdf",
+    "file": "vs07-nc-statewide-early-pdf.pdf",
+    "rawHash": "b3df13064c9c3a5a4537bb1acdd0d84e690e251b206df18f330aea9bc33e1506",
+    "savedHash": "b3df13064c9c3a5a4537bb1acdd0d84e690e251b206df18f330aea9bc33e1506",
+    "redactions": 0,
+    "bytes": 252179,
+    "attempts": [
+      {
+        "url": "https://s3.amazonaws.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://s3.amazonaws.com/robots.txt",
+        "route": "browser-ua",
+        "outcome": "HTTP 403"
+      },
+      {
+        "url": "https://s3.amazonaws.com/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt CANNOT_TELL for /dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf: robots.txt answered HTTP 403 to this client \u2014 a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://s3.amazonaws.com/dl.ncsbe.gov/One-Stop_Early_Voting/2026/Early_Voting_Site_List_November_2026.pdf",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-ca-san-diego-drop-boxes-map",
+    "url": "https://geo.sandag.org/server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0",
+    "finalUrl": "https://geo.sandag.org/server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0",
+    "capturedAt": "2026-10-23T08:07:17.641Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "vs07-ca-san-diego-drop-boxes-map.html",
+    "rawHash": "4b10b6b47189f0af151aad1f1437c3c939404be4e76e5672a8b4ea3ebff18d60",
+    "savedHash": "4b10b6b47189f0af151aad1f1437c3c939404be4e76e5672a8b4ea3ebff18d60",
+    "redactions": 0,
+    "bytes": 11198,
+    "attempts": [
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://geo.sandag.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://geo.sandag.org/server/rest/services/Hosted/Ballot_Drop_Boxes_2026_11_03/FeatureServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-tx-bexar-early-pdf",
+    "url": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours",
+    "capturedAt": "2026-10-23T08:07:17.649Z",
+    "contentType": "application/pdf",
+    "file": "vs07-tx-bexar-early-pdf.pdf",
+    "rawHash": "38376bc0ce1f586a3cb80cb1fe1d97e33b18dd411a8c0ab71c5cb8f4401e0603",
+    "savedHash": "38376bc0ce1f586a3cb80cb1fe1d97e33b18dd411a8c0ab71c5cb8f4401e0603",
+    "redactions": 0,
+    "bytes": 143948,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-tx-bexar-early-map",
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0",
+    "capturedAt": "2026-10-23T08:07:17.645Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "vs07-tx-bexar-early-map.html",
+    "rawHash": "f55f3ff22f82a95950c9f072796b62ce0e0b104d221eda35fc814b25c0ae19e6",
+    "savedHash": "f55f3ff22f82a95950c9f072796b62ce0e0b104d221eda35fc814b25c0ae19e6",
+    "redactions": 0,
+    "bytes": 7415,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsEarly/MapServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-tx-bexar-election-day-map",
+    "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0",
+    "finalUrl": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0",
+    "capturedAt": "2026-10-23T08:07:17.647Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "vs07-tx-bexar-election-day-map.html",
+    "rawHash": "aa3a89db5634ac70f68c16ef4f080cc865ad9ca5ba12faabdd3f188c03762676",
+    "savedHash": "aa3a89db5634ac70f68c16ef4f080cc865ad9ca5ba12faabdd3f188c03762676",
+    "redactions": 0,
+    "bytes": 7478,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/arcgis/rest/services/EL/PollingLocationsElectionDay/MapServer/0",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "vs07-ca-yuba-polling-places",
+    "url": "https://www.yuba.gov/departments/elections/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+    "capturedAt": "2026-10-23T08:07:19.110Z",
+    "error": "Error: Source returned HTTP 404",
+    "attempts": [
+      {
+        "url": "https://www.yuba.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://www.yuba.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /departments/elections/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://www.yuba.gov/departments/elections/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      }
+    ]
+  },
+  {
+    "id": "vs07-tx-bexar-election-day-pdf",
+    "url": "https://elections.bexar.gov/DocumentCenter/View/1713/Election-Day-Vote-Centers",
+    "finalUrl": "https://elections.bexar.gov/DocumentCenter/View/1713/Election-Day-Vote-Centers",
+    "capturedAt": "2026-10-23T08:07:19.107Z",
+    "contentType": "application/pdf",
+    "file": "vs07-tx-bexar-election-day-pdf.pdf",
+    "rawHash": "82c881d5d2ef580323d1a029c8e33771fe041cee275302111c9d25fce1643c47",
+    "savedHash": "82c881d5d2ef580323d1a029c8e33771fe041cee275302111c9d25fce1643c47",
+    "redactions": 0,
+    "bytes": 212205,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/DocumentCenter/View/1713/Election-Day-Vote-Centers",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "sd-election-page-native",
+    "url": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+    "finalUrl": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+    "capturedAt": "2026-10-23T08:07:19.116Z",
+    "contentType": "text/html;charset=utf-8",
+    "file": "sd-election-page-native.html",
+    "rawHash": "ca1d0e66ae27f76ded792dd498c91642dfb3609712cf9ee3e2c69ba9085c1c5a",
+    "savedHash": "ca1d0e66ae27f76ded792dd498c91642dfb3609712cf9ee3e2c69ba9085c1c5a",
+    "redactions": 0,
+    "bytes": 40148,
+    "attempts": [
+      {
+        "url": "https://www.sdvote.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sdvote.com/content/rov/en/elections/election-information.html",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "nc-linking-page-native",
+    "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "finalUrl": "https://www.ncsbe.gov/results-data/polling-place-data",
+    "capturedAt": "2026-10-23T08:07:19.113Z",
+    "contentType": "text/html; charset=UTF-8",
+    "file": "nc-linking-page-native.html",
+    "rawHash": "720c69fccfd6b2de5dbfd530ff79cd7bc4522483e54ad48491cec4bbe104f51b",
+    "savedHash": "720c69fccfd6b2de5dbfd530ff79cd7bc4522483e54ad48491cec4bbe104f51b",
+    "redactions": 0,
+    "bytes": 87615,
+    "attempts": [
+      {
+        "url": "https://www.ncsbe.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.ncsbe.gov/results-data/polling-place-data",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "ca-county-offices-native",
+    "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "finalUrl": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+    "capturedAt": "2026-10-23T08:07:20.600Z",
+    "contentType": "text/html; charset=UTF-8",
+    "file": "ca-county-offices-native.html",
+    "rawHash": "f7c792431c6bbb4be3d17bcca4b84e07e88120c4a9c460fd270af31ccd587de8",
+    "savedHash": "f7c792431c6bbb4be3d17bcca4b84e07e88120c4a9c460fd270af31ccd587de8",
+    "redactions": 0,
+    "bytes": 93320,
+    "attempts": [
+      {
+        "url": "https://www.sos.ca.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.sos.ca.gov/elections/voting-resources/county-elections-offices",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "bexar-election-page-native",
+    "url": "https://elections.bexar.gov/163/Election-Information",
+    "finalUrl": "https://elections.bexar.gov/163/Election-Information",
+    "capturedAt": "2026-10-23T08:07:20.610Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "bexar-election-page-native.html",
+    "rawHash": "6e72c59bc633d8fc800fe2d57682018459c5fbc289357997d3acdb39a52daa76",
+    "savedHash": "9e1da8e29df1405058bfb91e234d423ceedc9c9c8f84c2c56c82f680735f4868",
+    "redactions": 1,
+    "bytes": 144504,
+    "attempts": [
+      {
+        "url": "https://elections.bexar.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://elections.bexar.gov/163/Election-Information",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "sd-vote-map-app-native",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/b3cb0808081a40808324b9ae9be37e49/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/b3cb0808081a40808324b9ae9be37e49/data?f=json",
+    "capturedAt": "2026-10-23T08:07:20.603Z",
+    "contentType": "application/json;charset=utf-8",
+    "file": "sd-vote-map-app-native.json",
+    "rawHash": "16c5528f1c2fd52912704bc8dd1c1a446e97a96897973e7edcd30ce9e12e13ec",
+    "savedHash": "16c5528f1c2fd52912704bc8dd1c1a446e97a96897973e7edcd30ce9e12e13ec",
+    "redactions": 0,
+    "bytes": 133321,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/b3cb0808081a40808324b9ae9be37e49/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "sd-drop-map-app-native",
+    "url": "https://www.arcgis.com/sharing/rest/content/items/ab3d24dcf7e74ccc9c1be49e9fec623b/data?f=json",
+    "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/ab3d24dcf7e74ccc9c1be49e9fec623b/data?f=json",
+    "capturedAt": "2026-10-23T08:07:20.606Z",
+    "contentType": "application/json;charset=utf-8",
+    "file": "sd-drop-map-app-native.json",
+    "rawHash": "a80a4e4e41216e38050512aebc1e92c13825008c31808885ecbdee622dcdac81",
+    "savedHash": "a80a4e4e41216e38050512aebc1e92c13825008c31808885ecbdee622dcdac81",
+    "redactions": 0,
+    "bytes": 54075,
+    "attempts": [
+      {
+        "url": "https://www.arcgis.com/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.arcgis.com/sharing/rest/content/items/ab3d24dcf7e74ccc9c1be49e9fec623b/data?f=json",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "bexar-map-app-native",
+    "url": "https://maps.bexar.org/ElectionWaitTimes/",
+    "finalUrl": "https://maps.bexar.org/ElectionWaitTimes/",
+    "capturedAt": "2026-10-23T08:07:21.847Z",
+    "contentType": "text/html",
+    "file": "bexar-map-app-native.html",
+    "rawHash": "366de3f1f5cd1babd794d469e949a7c88dbfc621bf40d4a28a0e4ec82375d108",
+    "savedHash": "366de3f1f5cd1babd794d469e949a7c88dbfc621bf40d4a28a0e4ec82375d108",
+    "redactions": 0,
+    "bytes": 5017,
+    "attempts": [
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://maps.bexar.org/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /ElectionWaitTimes/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://maps.bexar.org/ElectionWaitTimes/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "yuba-election-page-native",
+    "url": "https://www.yuba.gov/departments/elections/upcoming_election.php",
+    "finalUrl": "https://www.yuba.gov/departments/elections/upcoming_election.php",
+    "capturedAt": "2026-10-23T08:07:21.852Z",
+    "contentType": "text/html; charset=UTF-8",
+    "file": "yuba-election-page-native.html",
+    "rawHash": "458ec3aa81056eeebcfd2491d319bf5ccb8dcd39c8371996c2e80972702ec47e",
+    "savedHash": "458ec3aa81056eeebcfd2491d319bf5ccb8dcd39c8371996c2e80972702ec47e",
+    "redactions": 0,
+    "bytes": 178236,
+    "attempts": [
+      {
+        "url": "https://www.yuba.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://www.yuba.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /departments/elections/upcoming_election.php: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://www.yuba.gov/departments/elections/upcoming_election.php",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "phila-list-page-native",
+    "url": "https://vote.phila.gov/news/2026/10/14/2026-general-election-polling-place-list/",
+    "finalUrl": "https://vote.phila.gov/news/2026/10/14/2026-general-election-polling-place-list/",
+    "capturedAt": "2026-10-23T08:07:21.849Z",
+    "contentType": "text/html",
+    "file": "phila-list-page-native.html",
+    "rawHash": "c8d3059b55fa984c03bb87268e5fa4654988f2b02cb80ec73a990be9782e00fa",
+    "savedHash": "c8d3059b55fa984c03bb87268e5fa4654988f2b02cb80ec73a990be9782e00fa",
+    "redactions": 0,
+    "bytes": 32152,
+    "attempts": [
+      {
+        "url": "https://vote.phila.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 404"
+      },
+      {
+        "url": "https://vote.phila.gov/robots.txt",
+        "route": "direct",
+        "outcome": "robots.txt NO_ROBOTS for /news/2026/10/14/2026-general-election-polling-place-list/: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence \u2014 recorded as evidence; the public page is still read"
+      },
+      {
+        "url": "https://vote.phila.gov/news/2026/10/14/2026-general-election-polling-place-list/",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  },
+  {
+    "id": "pima-election-page-native",
+    "url": "https://www.pima.gov/3199/Pima-Votes",
+    "finalUrl": "https://www.pima.gov/pima-votes",
+    "capturedAt": "2026-10-23T08:07:21.854Z",
+    "contentType": "text/html; charset=utf-8",
+    "file": "pima-election-page-native.html",
+    "rawHash": "4f1d76ab792771b88239d82aff4d57c379488684e203e7a934597d71ba3e5dfb",
+    "savedHash": "633e2c4236164fcb75635645b85b29f6095d8098b4ae7e3c508ad345c73b00cd",
+    "redactions": 6,
+    "bytes": 1120486,
+    "attempts": [
+      {
+        "url": "https://www.pima.gov/robots.txt",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      },
+      {
+        "url": "https://www.pima.gov/3199/Pima-Votes",
+        "route": "direct",
+        "outcome": "HTTP 301"
+      },
+      {
+        "url": "https://www.pima.gov/pima-votes",
+        "route": "direct",
+        "outcome": "HTTP 200"
+      }
+    ]
+  }
+]

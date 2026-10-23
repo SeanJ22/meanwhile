@@ -65,6 +65,7 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
   };
   enqueue({ ...root }, []);
   while (queue.length) {
+    if (runtime.deadlineMs !== undefined && Date.now() >= runtime.deadlineMs) break;
     const { source, linkingCaptures } = queue.shift()!;
     runtime.discoverySeen?.add(pageAddress(source.url)!.url);
     let capture: ClassifiedVotingSource["capture"] = null;

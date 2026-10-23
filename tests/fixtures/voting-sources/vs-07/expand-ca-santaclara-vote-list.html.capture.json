@@ -1,0 +1,22 @@
+{
+  "url": "https://vote.santaclaracounty.gov/vote-person/official-vote-center-list-and-schedule",
+  "finalUrl": "https://vote.santaclaracounty.gov/vote-person/official-vote-center-list-and-schedule",
+  "capturedAt": "2026-10-23T08:17:27.446Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "5ef8fc709bcba43e3c25118becaf28fa03958e8934d4f9c3287c196536bbfdd9",
+  "savedHash": "5ef8fc709bcba43e3c25118becaf28fa03958e8934d4f9c3287c196536bbfdd9",
+  "redactions": 0,
+  "bytes": 119734,
+  "attempts": [
+    {
+      "url": "https://vote.santaclaracounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://vote.santaclaracounty.gov/vote-person/official-vote-center-list-and-schedule",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

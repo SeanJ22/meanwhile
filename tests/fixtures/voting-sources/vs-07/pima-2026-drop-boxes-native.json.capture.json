@@ -1,0 +1,7 @@
+{
+  "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0/query?f=json&where=1%3D1&outFields=*&returnGeometry=false",
+  "capturedAt": "2026-10-23T08:25:44.132Z",
+  "contentType": "application/json; charset=utf-8",
+  "sha256": "b8fb0f9b8f363d12b3105ea5af123aa80a9d9101586a238580565ccc6f3f4a1d",
+  "bytes": 6927
+}

@@ -1,0 +1,22 @@
+{
+  "url": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+  "finalUrl": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+  "capturedAt": "2026-10-23T08:08:39.486Z",
+  "contentType": "application/json;charset=utf-8",
+  "rawHash": "ebf550d6b0362b0a1f17c0fe20c85b75dd673661edda02507419b0474ad06f10",
+  "savedHash": "ebf550d6b0362b0a1f17c0fe20c85b75dd673661edda02507419b0474ad06f10",
+  "redactions": 0,
+  "bytes": 169841,
+  "attempts": [
+    {
+      "url": "https://www.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.arcgis.com/sharing/rest/content/items/21445fb10f884caea0aac1ecba764599/data?f=json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

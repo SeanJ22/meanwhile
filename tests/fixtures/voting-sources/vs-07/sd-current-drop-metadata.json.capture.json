@@ -1,0 +1,32 @@
+{
+  "url": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0?f=json",
+  "finalUrl": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0?f=json",
+  "capturedAt": "2026-10-23T08:39:36.143Z",
+  "contentType": "application/json; charset=utf-8",
+  "rawHash": "46eff768ce74929c620a201201b365b1d24a25655e2f527cd4892c22b63d046f",
+  "savedHash": "46eff768ce74929c620a201201b365b1d24a25655e2f527cd4892c22b63d046f",
+  "redactions": 0,
+  "bytes": 12555,
+  "attempts": [
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "browser-ua",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://services1.arcgis.com/1vIhDJwtG5eNmiqX/arcgis/rest/services/24_HR_BDB_NOV2026/FeatureServer/0?f=json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+  "finalUrl": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+  "capturedAt": "2026-10-23T08:27:57.101Z",
+  "contentType": "application/json; charset=utf-8",
+  "rawHash": "af7ed35efa167df750f5b7e588e18d285f701a7b6a0a142f6fc11fb1d2beeb84",
+  "savedHash": "af7ed35efa167df750f5b7e588e18d285f701a7b6a0a142f6fc11fb1d2beeb84",
+  "redactions": 0,
+  "bytes": 532737,
+  "attempts": [
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "browser-ua",
+      "outcome": "HTTP 403"
+    },
+    {
+      "url": "https://services1.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt CANNOT_TELL for /pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query: robots.txt answered HTTP 403 to this client — a wall in front of the robots document, not a rule. Recorded as unread; the page's own answer decides — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://services1.arcgis.com/pWmBUdSlVpXStHU6/arcgis/rest/services/Voting_Hours_Calculated_Test/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

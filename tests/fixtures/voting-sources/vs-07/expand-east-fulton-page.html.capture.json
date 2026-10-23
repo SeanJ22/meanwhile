@@ -1,0 +1,22 @@
+{
+  "url": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections",
+  "finalUrl": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections",
+  "capturedAt": "2026-10-23T08:13:57.219Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "098c0bdf9c46d0781534ee8b3b669a34dfde222956df1d8086cb5dfd90cc8806",
+  "savedHash": "098c0bdf9c46d0781534ee8b3b669a34dfde222956df1d8086cb5dfd90cc8806",
+  "redactions": 0,
+  "bytes": 339614,
+  "attempts": [
+    {
+      "url": "https://www.fultoncountyga.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

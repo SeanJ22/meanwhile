@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bexar County Early Vote Information</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="\resources\electionsearches.css">
+	<link rel="stylesheet" href="https://js.arcgis.com/3.17/esri/css/esri.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+	
+	<script src="https://js.arcgis.com/3.17/"></script>
+	<script src="https://maps.bexar.org/electionsResources/js/earlyvotemap.min.js"></script>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8X7H69VBBY"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'G-8X7H69VBBY');
+</script>
+</head>
+<body>
+<h1>Early Vote Information</h1>
+
+<div id="noEvBox">
+	<p class="headline">There is no early voting going on at this time.</p>
+	<p>Visit the <a href="https://www.bexar.org/elections" target="_parent">Elections website</a> for information on the next upcoming election.</p>
+	<p><strong>Other Election Resources:</strong></p>
+	<ul>
+		<li><a href="https://www.bexar.org/votercheck" target="_parent">Voter Registration Check</a>: Check to see if you are registered to vote</li>
+		<li><a href="https://www.bexar.org/calendar.aspx?CID=59,46,76,60" target="_parent">Elections Calendar</a>: View the election schedule to keep up with every election</li>
+		<li><a href="https://www.bexar.org/list.aspx" target="_parent">Email Notifications</a>: Sign up to receive email notifications about Elections news and events</li>
+	</ul>
+</div>
+
+<p class="errorMsg" id="evInfoError" style="display: none;">Early Vote information could not be loaded.  Please refresh the page to try again.  If the error persists, please contact the Elections Department for assistance at 210-335-VOTE (8683).</p>
+<div class="evBox">
+	<p><span class="headline">Early Vote for <span id="elecDate"></span> <span id="elecDescrip"></span></span></p>
+	<p id="evInfoLoad" class="loadAnim" style="display: none;"><img alt="" src="https://www.bexar.org/DocumentCenter/View/8972"> Loading Early Vote Information</p>
+	<p class="subhead2 details"><span id="evStart"></span> - <span id="evEnd"></span></p>
+</div>
+
+<a name="map"></a>
+<p class="errorMsg" id="evSiteError" style="display: none;">Early Vote sites could not be loaded.  Please refresh the page to try again.  If the error persists, please contact the Elections Department for assistance at 210-335-VOTE (8683).</p>
+<div class="evBox">
+	<p class="subhead2">Early Vote Locations</p>
+	<div id="mapBox"></div>
+	<div id="evSitesBox" class="details">
+		<p id="evSiteLoad" class="loadAnim" style="display: none;"><img alt="" src="https://www.bexar.org/DocumentCenter/View/8972"> Loading Early Vote Site Information</p>
+		<ul id="evSites">
+		</ul>
+	</div>
+	<p>Sites and hours subject to change.</p>
+</div>
+<p>For more information contact the office of the Bexar County Elections Administrator, Michele Carew, at 210-335-VOTE (8683)</p>
+	
+</body>
+</html>

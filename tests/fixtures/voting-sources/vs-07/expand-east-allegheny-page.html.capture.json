@@ -1,0 +1,22 @@
+{
+  "url": "https://www.alleghenycounty.us/Government/Elections/Pre-Election-Day-Voting-Options/Voting-Events-Calendar",
+  "finalUrl": "https://www.alleghenycounty.us/Government/Elections/Pre-Election-Day-Voting-Options/Voting-Events-Calendar",
+  "capturedAt": "2026-10-23T08:13:57.054Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "c4b1b307576ee624b9ee1fbacfd2658ab282cb007f0c1975392f9cca4735420a",
+  "savedHash": "9b6d5fd30ba888deb649be2117ab50bd26e55f0342464ff4e78e093a5d3c329c",
+  "redactions": 1,
+  "bytes": 294356,
+  "attempts": [
+    {
+      "url": "https://www.alleghenycounty.us/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.alleghenycounty.us/Government/Elections/Pre-Election-Day-Voting-Options/Voting-Events-Calendar",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "url": "https://www.votepalmbeach.gov/",
+  "finalUrl": "https://www.votepalmbeach.gov/",
+  "capturedAt": "2026-10-23T08:14:39.825Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "be71e30396ceb6a62c61c82f7b8330784e565350c24d9d9a72669fb3cf944d36",
+  "savedHash": "dd6310c99844634119e06e1806c5dade44dd2f06167ec08f2ce8b28e8a6633a3",
+  "redactions": 1,
+  "bytes": 133081,
+  "attempts": [
+    {
+      "url": "https://www.votepalmbeach.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://www.votepalmbeach.gov/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

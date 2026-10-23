@@ -1,0 +1,22 @@
+{
+  "url": "https://ocvote.gov/elections/ballot-drop-box-locations",
+  "finalUrl": "https://ocvote.gov/elections/ballot-drop-box-locations",
+  "capturedAt": "2026-10-23T08:13:44.058Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "bbb61b0b7f6e51c7cbfb6ef08728b7021bd319810c07a273e3838cd4d31b3470",
+  "savedHash": "bbb61b0b7f6e51c7cbfb6ef08728b7021bd319810c07a273e3838cd4d31b3470",
+  "redactions": 0,
+  "bytes": 48943,
+  "attempts": [
+    {
+      "url": "https://ocvote.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://ocvote.gov/elections/ballot-drop-box-locations",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

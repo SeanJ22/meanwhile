@@ -1,0 +1,27 @@
+{
+  "url": "https://vote.phila.gov/",
+  "finalUrl": "https://vote.phila.gov/",
+  "capturedAt": "2026-10-23T08:20:45.791Z",
+  "contentType": "text/html",
+  "rawHash": "b05ccbbd505c3dd1e414441c3bba62bdc3829eb654c84446c40cb33b59f7a8f9",
+  "savedHash": "b05ccbbd505c3dd1e414441c3bba62bdc3829eb654c84446c40cb33b59f7a8f9",
+  "redactions": 0,
+  "bytes": 61801,
+  "attempts": [
+    {
+      "url": "https://vote.phila.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://vote.phila.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://vote.phila.gov/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

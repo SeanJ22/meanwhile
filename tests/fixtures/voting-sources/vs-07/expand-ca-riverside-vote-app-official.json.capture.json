@@ -1,0 +1,22 @@
+{
+  "url": "https://countyofriverside.maps.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+  "finalUrl": "https://countyofriverside.maps.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+  "capturedAt": "2026-10-23T08:25:11.854Z",
+  "contentType": "application/json;charset=utf-8",
+  "rawHash": "4aa84b80a063a6c232b90b1db955a1ba792850b0b03bb21da99cd43e6b9a1658",
+  "savedHash": "4aa84b80a063a6c232b90b1db955a1ba792850b0b03bb21da99cd43e6b9a1658",
+  "redactions": 0,
+  "bytes": 15826,
+  "attempts": [
+    {
+      "url": "https://countyofriverside.maps.arcgis.com/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://countyofriverside.maps.arcgis.com/sharing/rest/content/items/be7049d584f940a0a14e98695a410ffb/data?f=json",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

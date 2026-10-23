@@ -1,0 +1,22 @@
+{
+  "url": "https://vote.santaclaracounty.gov/vote-mail/official-ballot-drop-box-sites-and-early-voting-information",
+  "finalUrl": "https://vote.santaclaracounty.gov/vote-mail/official-ballot-drop-box-sites-and-early-voting-information",
+  "capturedAt": "2026-10-23T08:17:32.712Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "cea0c39face63a0d90d16acd9c52a5e2792beeb07429200879050fd647cb7b27",
+  "savedHash": "cea0c39face63a0d90d16acd9c52a5e2792beeb07429200879050fd647cb7b27",
+  "redactions": 0,
+  "bytes": 135577,
+  "attempts": [
+    {
+      "url": "https://vote.santaclaracounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://vote.santaclaracounty.gov/vote-mail/official-ballot-drop-box-sites-and-early-voting-information",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

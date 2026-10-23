@@ -1,0 +1,27 @@
+{
+  "url": "https://recorder.pima.gov/EarlyVotingSites",
+  "finalUrl": "https://recorder.pima.gov/EarlyVotingSites",
+  "capturedAt": "2026-10-23T08:44:18.820Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "2c033e34f4923173b5eb32a78595c92f787f14ad64ce42b329766f45b48e4abe",
+  "savedHash": "2c033e34f4923173b5eb32a78595c92f787f14ad64ce42b329766f45b48e4abe",
+  "redactions": 0,
+  "bytes": 79681,
+  "attempts": [
+    {
+      "url": "https://recorder.pima.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://recorder.pima.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /EarlyVotingSites: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://recorder.pima.gov/EarlyVotingSites",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

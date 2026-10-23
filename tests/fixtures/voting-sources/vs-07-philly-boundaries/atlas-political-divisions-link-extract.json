@@ -1,0 +1,7 @@
+{
+  "sourceUrl": "https://atlas.phila.gov/assets/index-BE7Gx29W.js",
+  "rawHash": "ff32f79d65914da835cf125dacb4560e7db8e25fee1b2b17ff62136edab54cb9",
+  "capturedAt": "2026-10-23T09:31:21.322Z",
+  "derivation": "Exact link-bearing snippet from the native current official Atlas client; full native script retained only in temporary execution workspace. Polygons are captured as native GeoJSON.",
+  "snippet": "!0,cartoSql:`SELECT *, ST_AsGeoJSON(the_geom) FROM political_divisions WHERE ST_Intersects(the_geom, ${e})`});d&&(this.divisions=d)}else{let e=\"https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query\",a={returnGeometry:!0,where:\"1=1\",outSR:4326,outFields:\"*\",inSr:4326,geometryType:\"esriGeometryPoint\",spatialRel:\"esriSpatialRelWithin\",f:\"geojson\",geometry:JSON.stringify({x:i.geometry.coordinates[0],y:i.geometry.coordinates[1],spatialReference:{wkid:4326}})};const d=await axios.get(e,{params:a});d.status===200&&(thi"
+}

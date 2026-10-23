@@ -1,0 +1,7 @@
+{
+  "url": "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0/query?f=json&where=Election+%3D+%272026+General%27&outFields=*&returnGeometry=false",
+  "capturedAt": "2026-10-23T08:25:45.435Z",
+  "contentType": "application/json; charset=utf-8",
+  "sha256": "bfefd1d60f443ede9dcd6c9f4c5996ea8f3bab67438173f679a84b47b7339d69",
+  "bytes": 23958
+}

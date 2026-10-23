@@ -1,0 +1,37 @@
+{
+  "url": "https://www.votemiamidade.gov/",
+  "finalUrl": "https://www.votemiamidade.gov/elections/home.page",
+  "capturedAt": "2026-10-23T08:14:38.344Z",
+  "contentType": "text/html;charset=UTF-8",
+  "rawHash": "0729dcc1ce32471b79c5c1aee9d0ecc0d8cc4f41c7d9e94c3bef851ea31d458a",
+  "savedHash": "0729dcc1ce32471b79c5c1aee9d0ecc0d8cc4f41c7d9e94c3bef851ea31d458a",
+  "redactions": 0,
+  "bytes": 90625,
+  "attempts": [
+    {
+      "url": "https://www.votemiamidade.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://www.votemiamidade.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.votemiamidade.gov/",
+      "route": "direct",
+      "outcome": "HTTP 301"
+    },
+    {
+      "url": "https://www.votemiamidade.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /elections/home.page: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://www.votemiamidade.gov/elections/home.page",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

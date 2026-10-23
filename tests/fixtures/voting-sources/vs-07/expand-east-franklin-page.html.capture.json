@@ -1,0 +1,27 @@
+{
+  "url": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+  "finalUrl": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+  "capturedAt": "2026-10-23T08:13:55.193Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "ddd76bb6aa17d22ab66b579821ee97384637cd9a606658e4d6d8617f1f76cf9c",
+  "savedHash": "ddd76bb6aa17d22ab66b579821ee97384637cd9a606658e4d6d8617f1f76cf9c",
+  "redactions": 0,
+  "bytes": 24348,
+  "attempts": [
+    {
+      "url": "https://vote.franklincountyohio.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 404"
+    },
+    {
+      "url": "https://vote.franklincountyohio.gov/robots.txt",
+      "route": "direct",
+      "outcome": "robots.txt NO_ROBOTS for /voters/absentee-and-early-voting: robots.txt answered HTTP 404: the host serves no robots document. Nothing to record beyond its absence — recorded as evidence; the public page is still read"
+    },
+    {
+      "url": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

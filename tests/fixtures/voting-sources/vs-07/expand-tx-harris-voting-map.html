@@ -1,0 +1,901 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+<script type="text/javascript">!function(T,l,y){var S=T.location,u="script",k="instrumentationKey",D="ingestionendpoint",C="disableExceptionTracking",E="ai.device.",I="toLowerCase",b="crossOrigin",w="POST",e="appInsightsSDK",t=y.name||"appInsights";(y.name||T[e])&&(T[e]=t);var n=T[t]||function(d){var g=!1,f=!1,m={initialize:!0,queue:[],sv:"4",version:2,config:d};function v(e,t){var n={},a="Browser";return n[E+"id"]=a[I](),n[E+"type"]=a,n["ai.operation.name"]=S&&S.pathname||"_unknown_",n["ai.internal.sdkVersion"]="javascript:snippet_"+(m.sv||m.version),{time:function(){var e=new Date;function t(e){var t=""+e;return 1===t.length&&(t="0"+t),t}return e.getUTCFullYear()+"-"+t(1+e.getUTCMonth())+"-"+t(e.getUTCDate())+"T"+t(e.getUTCHours())+":"+t(e.getUTCMinutes())+":"+t(e.getUTCSeconds())+"."+((e.getUTCMilliseconds()/1e3).toFixed(3)+"").slice(2,5)+"Z"}(),iKey:e,name:"Microsoft.ApplicationInsights."+e.replace(/-/g,"")+"."+t,sampleRate:100,tags:n,data:{baseData:{ver:2}}}}var h=d.url||y.src;if(h){function a(e){var t,n,a,i,r,o,s,c,p,l,u;g=!0,m.queue=[],f||(f=!0,t=h,s=function(){var e={},t=d.connectionString;if(t)for(var n=t.split(";"),a=0;a<n.length;a++){var i=n[a].split("=");2===i.length&&(e[i[0][I]()]=i[1])}if(!e[D]){var r=e.endpointsuffix,o=r?e.location:null;e[D]="https://"+(o?o+".":"")+"dc."+(r||"services.visualstudio.com")}return e}(),c=s[k]||d[k]||"",p=s[D],l=p?p+"/v2/track":config.endpointUrl,(u=[]).push((n="SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details)",a=t,i=l,(o=(r=v(c,"Exception")).data).baseType="ExceptionData",o.baseData.exceptions=[{typeName:"SDKLoadFailed",message:n.replace(/\./g,"-"),hasFullStack:!1,stack:n+"\nSnippet failed to load ["+a+"] -- Telemetry is disabled\nHelp Link: https://go.microsoft.com/fwlink/?linkid=2128109\nHost: "+(S&&S.pathname||"_unknown_")+"\nEndpoint: "+i,parsedStack:[]}],r)),u.push(function(e,t,n,a){var i=v(c,"Message"),r=i.data;r.baseType="MessageData";var o=r.baseData;return o.message='AI (Internal): 99 message:"'+("SDK LOAD Failure: Failed to load Application Insights SDK script (See stack for details) ("+n+")").replace(/\"/g,"")+'"',o.properties={endpoint:a},i}(0,0,t,l)),function(e,t){if(JSON){var n=T.fetch;if(n&&!y.useXhr)n(t,{method:w,body:JSON.stringify(e),mode:"cors"});else if(XMLHttpRequest){var a=new XMLHttpRequest;a.open(w,t),a.setRequestHeader("Content-type","application/json"),a.send(JSON.stringify(e))}}}(u,l))}function i(e,t){f||setTimeout(function(){!t&&m.core||a()},500)}var e=function(){var n=l.createElement(u);n.src=h;var e=y[b];return!e&&""!==e||"undefined"==n[b]||(n[b]=e),n.onload=i,n.onerror=a,n.onreadystatechange=function(e,t){"loaded"!==n.readyState&&"complete"!==n.readyState||i(0,t)},n}();y.ld<0?l.getElementsByTagName("head")[0].appendChild(e):setTimeout(function(){l.getElementsByTagName(u)[0].parentNode.appendChild(e)},y.ld||0)}try{m.cookie=l.cookie}catch(p){}function t(e){for(;e.length;)!function(t){m[t]=function(){var e=arguments;g||m.queue.push(function(){m[t].apply(m,e)})}}(e.pop())}var n="track",r="TrackPage",o="TrackEvent";t([n+"Event",n+"PageView",n+"Exception",n+"Trace",n+"DependencyData",n+"Metric",n+"PageViewPerformance","start"+r,"stop"+r,"start"+o,"stop"+o,"addTelemetryInitializer","setAuthenticatedUserContext","clearAuthenticatedUserContext","flush"]),m.SeverityLevel={Verbose:0,Information:1,Warning:2,Error:3,Critical:4};var s=(d.extensionConfig||{}).ApplicationInsightsAnalytics||{};if(!0!==d[C]&&!0!==s[C]){method="onerror",t(["_"+method]);var c=T[method];T[method]=function(e,t,n,a,i){var r=c&&c(e,t,n,a,i);return!0!==r&&m["_"+method]({message:e,url:t,lineNumber:n,columnNumber:a,error:i}),r},d.autoExceptionInstrumented=!0}return m}(y.cfg);(T[t]=n).queue&&0===n.queue.length&&n.trackPageView({})}(window,document,{
+src: "https://az416426.vo.msecnd.net/scripts/b/ai.2.min.js",
+cfg: { 
+    connectionString: 'InstrumentationKey=569c5c0d-6815-4a98-8146-82fd87887a0f;IngestionEndpoint=https://southcentralus-3.in.applicationinsights.azure.com/;LiveEndpoint=https://southcentralus.livediagnostics.monitor.azure.com/'
+}});
+    </script>    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta property="og:title" content="Harris Votes - Vote Centers" />
+    <meta property="og:image" content="https://harrisvotes.com/lib/Unify/assets/img/voteyourway.jpg" />
+
+    <title>Find your nearest Vote Center by entering an address below - Election Division</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,300,600&subset=cyrillic,latin" />
+    <link rel="stylesheet" href="/css/bootstrap.css" />
+    <link rel="stylesheet" href="/css/esri-leaflet-geocoder.css" crossorigin="">
+    <link rel="stylesheet" href="/css/leaflet.css" crossorigin="" />
+    <link rel="stylesheet" href="/css/polling-map.css?nocache=639283220259862013" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.79.0/dist/L.Control.Locate.min.css" />
+    <style>
+        .input-icons i {
+            position: absolute;
+        }
+
+        .input-icons {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .icon {
+            padding-top: 15px;
+            padding-right: 20px;
+            padding-left: 5px;
+            min-width: 10px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-right: 10px;
+            padding-left: 10px;
+            border-top-style: hidden;
+            background-color: #d3dae5;
+            color: #555;
+            border: 1px solid #ccc;
+            transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+            text-align: left;
+        }
+
+        .fa-triangle-exclamation-pro .input-field:before {
+	       font-family: 'Font Awesome 6 Pro';
+	       content: "\f071";
+           font-weight: 900; /* <-- add this */
+           padding-right: 5px;    
+        }
+
+        .fa-triangle-exclamation-free .input-field:before {
+            font-family: 'Font Awesome 6 free';
+            content: "\f071";
+            font-weight: 900; /* <-- add this */
+            padding-right: 5px;
+        }
+
+        .fa-location-pro .input-field:before {
+	       font-family: 'Font Awesome 6 Pro';
+	       content: "\f601";
+           font-weight: 900; /* <-- add this */
+           padding-right: 5px;    
+        }
+
+        .fa-location-free .input-field:before {
+            font-family: 'Font Awesome 6 free';
+            content: "\f601";
+            font-weight: 900; /* <-- add this */
+            padding-right: 5px;
+        }
+        /*
+            input[type=search]::-webkit-search-cancel-button {
+            -webkit-appearance: searchfield-cancel-button;
+        }*/
+        .map-tabs > i, .map-tabs > a{
+            font-weight: 300;
+            border: 1px solid #337ab7;
+            padding: 10px;
+            border-radius: 4px;
+            width: 47px;
+        }
+
+        .map-tabs > i:hover, .map-tabs > a:hover {
+            background: #eeeeee;
+            color: #337ab7;
+        }
+
+    </style>
+
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/angular.min.js"></script>
+    <script src="/js/bootbox.min.js"></script>
+    <script src="/js/site.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        });
+
+        $('div.polling-location').on('click', function (e) {
+            $('div.polling-location').addClass("polling-location-focused");
+        });
+
+         var esriMapApiKey =  'AAPKefcd64cc93f9469e864fab162cd7be22AGiE_ewt_5MfvyUOZeEJpPHgtGPqJtVlEIdSjuhAbVl1OBSgjXhoKRvxxuO5P4lI';
+
+        // Google Analytics
+        //(function (i, s, o, g, r, a, m) {
+        //    i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        //        (i[r].q = i[r].q || []).push(arguments)
+        //    }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        //        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        //})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        //ga('create', '', 'auto');
+        //ga('send', 'pageview');
+
+    </script>
+
+        <!-- Google Tag Manager -->
+        <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                        })(window,document,'script','dataLayer','GTM-WGM72SN');</script>
+        <!-- End Google Tag Manager -->
+</head>
+<body>
+
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WGM72SN"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    <div ng-app="HarrisVotesApp" style="height: 100%;">
+        <div ng-controller="MapController as vm" class="flex-container">
+            <div class="search-box col-xs-12 col-md-4">
+                <div class="search-form">
+                    <div class="row">
+                        <div class="col-xs-9">
+                                <label class="control-label">November 03, 2026 - General and Special Elections</label>
+                            <div style="font-weight: bold; -webkit-text-stroke: 0.4px;">Find your nearest Vote Center by entering an address below</div>
+                            <p class="text-danger"><strong><small>Vote centers are not final, as locations are confirmed they'll be added to the map</small></strong>
+</p>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <input class="form-control input-sm" id="searchQuery" type="text" autocomplete="off" placeholder="Enter an address" value="" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
+                            <div class="row text-center poll-type-switch ng-cloak" style="display: flex; align-items: center;">
+                                <div class="col-xs-4 form-group">
+                                    <label class="control-label" for="{{ vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+                                        Early Voting
+                                    </label>
+                                </div>
+                                <div class="col-xs-4 form-group">
+                                    <label class="switch">
+                                        <input type="checkbox" id="poll-toggle" value="true" ng-model="vm.ShowElectionDay" ng-change="vm.TogglePartySwitch(vm.ShowElectionDay);">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+                                <div class="col-xs-4 form-group">
+                                    <label class="control-label" for="{{ !vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+                                        Election Day
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-3 col-md-3 text-center map-tabs">
+                            <i class="fa-solid fa-clock text-primary" title="Hours of Operation" data-toggle="modal" data-target="#hrsOfOpModal"></i>
+                            <br />
+                            <span style="font-size: 11px;font-weight: 700;">Hours of Operation</span>
+                        </div>
+                        <div class="col-xs-3 col-md-3 text-center map-tabs">
+                            <a href="https://appfiles.harrisvotes.com/harrisvotes/prd/docs/VotingInfo/EarlyVotingPDFMaps/EarlyVotingMap.pdf" target="_blank" class="fa-solid fa-map text-primary" title="Early Voting Locations PDF"></a>
+                            <br />
+                            <span style="font-size: 11px;font-weight: 700;">Early Voting Locations PDF</span>
+                        </div>
+                        <div class="col-xs-3 col-md-3 text-center map-tabs">
+                            <a href="https://appfiles.harrisvotes.com/harrisvotes/prd/docs/VotingInfo/VoteCenters_en-US.pdf" target="_blank" class="fa-solid fa-file-alt text-primary" title="Election Day Locations pdf"></a>
+                            <br />
+                            <span style="font-size: 11px;font-weight: 700;">Election Day Locations pdf</span>
+                        </div>
+                        <div class="col-xs-3 col-md-3 text-center map-tabs">
+                            <a href="https://harrisvotes.com/Election-Workers/VC-Recruitment" 
+                                target="_blank" class="fa-solid fa-building-circle-check text-primary" title="Become a Vote Center"></a>
+                            <br />
+                            <span style="font-size: 11px;font-weight: 700;">Become a Vote Center</span>
+                        </div>
+                    </div>
+                    <div class="row hidden-md hidden-lg">
+                        <div class="col-xs-3 hidden-md hidden-lg text-center map-tabs" id="list-tab">
+                            <i class="fa-solid fa-list-ol text-primary" ng-click="vm.ShowMap(false);"></i>
+                            <br />
+                            <span style="font-size: 10px;">
+                                View List
+                            </span>
+                        </div>
+                        <div class="hidden col-xs-3 hidden-md hidden-lg text-center map-tabs" id="map-tab">
+                            <i class="fa-solid fa-map-marker-alt text-primary" ng-click="vm.ShowMap(true);"></i>
+                            <br />
+                            <span style="font-size: 10px;">
+                                View Map
+                            </span>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row form-group">
+                        <div class="col-xs-12 col-sm-6">
+                            <label class="control-label">Select Vote Center type to display:</label>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <select id="ddServiceType" class="form-control input" ng-model="vm.ServiceType" ng-options="type.value as (type.text | decoded) for type in vm.ServiceTypes" ng-change="vm.GetPollingLocations(true);">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hidden-xs hidden-sm" id="polling-locations-list">
+                    <div ng-cloak ng-show="vm.Locations.length == 0" class="aligned-row polling-location">
+                        <div class="col-xs-12">
+                            Vote centers will be available soon.
+                        </div>
+                    </div>
+                    <div ng-cloak ng-show="vm.Locations.length > 0">
+                        <div class="aligned-row polling-location" select-div style="" ng-repeat="location in vm.Locations" ng-click="vm.ShowMarkerPopup($index, location.Latitude, location.Longitude, location.PollCode);">
+                            <div ng-cloak class="col-xs-8 small">
+                                <strong>
+                                    <span>{{ vm.PageIndex * vm.PageSize + $index + 1 }}.</span>
+                                </strong>
+                                <span ng-bind-html="location.ListingContent"></span>
+                            </div>
+                            <div class="col-xs-2 text-right">
+                                <div ng-show="(true && !vm.ShowElectionDay) || (false && vm.ShowElectionDay)">
+                                    <i tabindex="0" class="fa {{ location.MapMarkerIcon }}" bs-popover data-toggle="popover" data-trigger="focus" data-content="<span class='small'>{{ location.WaitTimeStatusText }}</span>"></i>
+                                </div>
+                            </div>
+                            <div class="col-xs-2">
+                                <i tabindex="1" role="button" class="fa-solid fa-exclamation-circle red location-notes" bs-popover ng-show="location.NotesTranslation" data-toggle="popover" data-trigger="focus" data-content="<span class='text-danger small'><strong>Note:</strong> {{ location.NotesTranslation }}</span>"></i>
+                            </div>
+                            <div class="col-xs-12 collapse fade pl-details">
+                                <div class="small pl-details-{{$index}}" style="margin-top: 10px;">
+                                    <span>Line Count: {{ location.VotersInLine }}</span>
+                                    <br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row paging-nav">
+                    <div ng-cloak ng-show="vm.Locations.length > 0" class="col-xs-12 text-center" style="padding-bottom: 10px;">
+                        <strong>Displaying {{ vm.PageIndex * vm.PageSize + $index + 1 }} - {{ Math.min(vm.LocationCount, (vm.PageIndex + 1) * vm.PageSize) }} of {{ vm.LocationCount }}</strong>
+                    </div>
+                    <div class="col-xs-6 text-center">
+                        <button class="btn btn-sm btn-primary" ng-click="vm.PreviousPage();" ng-disabled="vm.PageIndex == 0">Previous {{ vm.PageSize }}</button>
+                    </div>
+                    <div class="col-xs-6 text-center">
+                        <button class="btn btn-sm btn-primary" ng-click="vm.NextPage();" ng-disabled="((vm.PageIndex * vm.PageSize) + vm.Locations.length) >= vm.LocationCount">Next {{ vm.PageSize }}</button>
+                    </div>
+                </div>
+            </div>
+            <div id="div-map"></div>
+            <div class="row mobile-paging-nav">
+                <div ng-cloak ng-show="vm.Locations.length > 0" class="col-xs-12 text-center" style="padding-bottom: 10px;">
+                    <strong>Displaying {{ vm.PageIndex * vm.PageSize + $index + 1 }} - {{ Math.min(vm.LocationCount, (vm.PageIndex + 1) * vm.PageSize) }} of {{ vm.LocationCount }}</strong>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <button class="btn btn-sm btn-primary" ng-click="vm.PreviousPage();" ng-disabled="vm.PageIndex == 0">Previous {{ vm.PageSize }}</button>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <button class="btn btn-sm btn-primary" ng-click="vm.NextPage();" ng-disabled="((vm.PageIndex * vm.PageSize) + vm.Locations.length) >= vm.LocationCount">Next {{ vm.PageSize }}</button>
+                </div>
+            </div>
+
+            <div class="modal fade" id="initialModal" role="dialog" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog" style="background-color: #fff;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Find your nearest Vote Center by entering an address below</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="search-form" style="padding: 0;">
+                            <label class="control-label">Which day would you like to vote on?</label>
+                            <div class="row text-center poll-type-switch" style="display: flex; align-items: center;">
+                                <div class="col-xs-4 form-group">
+                                    <label class="control-label" for="{{ vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+                                        Early Voting
+                                    </label>
+                                </div>
+                                <div class="col-xs-4 form-group">
+                                    <div>
+                                        <label class="switch">
+                                            <input type="checkbox" id="poll-toggle" value="true" ng-model="vm.ShowElectionDay" ng-change="vm.TogglePartySwitch(vm.ShowElectionDay);">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-xs-4 form-group">
+                                    <label class="control-label" for="{{ vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+                                        Election Day
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-xs btn-primary" style="width: 75px;" type="button" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="hrsOfOpModal" role="dialog" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog" style="background-color: #fff;">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Hours of Operation</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h3>
+<p>
+	<strong>Early Voting (OCT 19 - 30)</strong><br>
+	October 19, 2026 -- 7AM - 7PM<br>
+	October 20, 2026 -- 7AM - 7PM<br>
+	October 21, 2026 -- 7AM - 7PM<br>
+	October 22, 2026 -- 7AM - 7PM<br>
+	October 23, 2026 -- 7AM - 7PM<br>
+	October 24, 2026 -- 7AM - 7PM<br>
+	October 25, 2026 -- 12PM - 7PM<br>
+	October 26, 2026 -- 7AM - 7PM<br>
+	October 27, 2026 -- 7AM - 7PM<br>
+	October 28, 2026 -- 7AM - 7PM<br>
+	October 29, 2026 -- 7AM - 7PM<br>
+	October 30, 2026 -- 7AM - 7PM<br>
+</p>
+<p>
+	<strong>Election Day</strong><br>
+	November 3, 2026&nbsp;-- 7AM - 7PM
+</p>
+</h3>
+                        <div class="text-center">
+                            <button class="btn btn-xs btn-primary" style="width: 75px;" type="button" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/leaflet.js" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+
+    <!-- Load Esri Leaflet from CDN -->
+
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="/js/esri-leaflet.js" crossorigin=""></script>
+
+    <!-- Load Esri Leaflet Vector from CDN -->
+    <script src="/js/esri-leaflet-vector.js" crossorigin=""></script>
+
+    <script src="/js/esri-leaflet-geocoder.js" crossorigin=""></script>
+
+    <script src="https://kit.fontawesome.com/3240ab16ae.js" crossorigin="anonymous"></script>
+
+    <script src="/js/polling-map.js?nocache=639283220259862835"></script>
+    <script src="/js/angular-sanitize.min.js?nocache=639283220259862867"></script>
+    <script src="/lib/bootstrap-geocoder/bootstrap-geocoder.js?nocache=639283220259862896"></script>
+    <script src="/js/angular-cookies.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script type="text/javascript">
+        
+        window.FontAwesomeKitConfig ||        
+            document.write("<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css' crossorigin=''>" +
+                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/brands.min.css' crossorigin=''>" +
+                "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/solid.min.css' crossorigin=''>");
+    </script>
+
+    <script>
+        var mapPin = null;
+        var defaultZipCode = "77002";
+        var defaultElectionCode = "";
+
+        var app = angular.module('HarrisVotesApp', ['ngSanitize', 'ngCookies']);
+
+        app.filter('decoded', function () {
+            "use strict";
+
+            function htmlDecode(input) {
+                var e = document.createElement('div');
+                e.innerHTML = input;
+                return e.childNodes[0].nodeValue;
+            }
+
+            return function (input) {
+                return htmlDecode(input);
+            }
+        });
+
+        app.directive('bsPopover', function () {
+            return function (scope, element) {
+                element.popover({ placement: 'left', html: true, container: 'body' });
+
+                $('#polling-locations-list').scroll(function () {
+                    angular.element('[data-toggle="popover"]').popover('hide');
+                });
+            };
+        });
+
+        app.directive('selectDiv', function () {
+            return function (scope, element) {
+                $('div.polling-location').on('mouseover', function () {
+                    $('div.polling-location').removeClass('polling-location-focused');
+                    $(this).addClass('polling-location-focused');
+                });
+
+                $('div.polling-location').on('click', function () {
+                    if ($(this).children('.pl-details').hasClass('in')) {
+                        return;
+                    }
+
+                    $('div.polling-location').children('.pl-details').removeClass('in').hide();
+                    //$(this).children('.pl-details').addClass('in').hide().slideDown();
+                })
+            };
+        });
+
+        app.controller('MapController', ['$http', '$timeout', '$filter', '$scope', '$cookies', function ($http, $timeout, $filter, $scope, $cookies) {
+            $scope.Math = window.Math;
+            var vm = this;
+            vm.WriteCookie = function (name, cookie) {
+                //$cookies.put(name, cookie, { expires: "Fri, 30 Oct 2026 03:13:45 UTC"});
+                document.cookie = ''+name+'='+cookie+'; expires=Fri, 30 Oct 2026 03:13:45 UTC; path=/; samesite=none; Secure';
+            }
+
+            vm.ReadCookie = function (name) {
+                if ($cookies.get(name)) {
+                    return $cookies.get(name);
+                }
+            }
+
+            
+
+            vm.ZipCode = "";
+            vm.ElectionCode = '1126';
+            vm.Locations = [];
+            vm.ServiceType = 0;
+            vm.ServiceTypes = [
+                { text: 'All Locations', value: 0 },
+                { text: 'Ballot Dropoff Locations', value: 2 },
+            ];
+            vm.LocationCount = 0;
+            vm.PageIndex = 0;
+            vm.PageSize = 50;
+            vm.ShowElectionDay = false;
+            vm.LoadingCount = 0;
+
+           var $ctrl = $('input#searchQuery');
+           const queryString = window.location.search;
+           const urlParams = new URLSearchParams(queryString);
+           const electionParam = urlParams.get('electionCode')
+           const zipParam = urlParams.get('zipCode')
+           const isRedirect = zipParam !== null && zipParam !== undefined && zipParam.length > 0;
+
+            vm.initMap = function () {
+                vm.ZipCode = defaultZipCode;
+        
+                 const options = {
+                     enableHighAccuracy: true,
+                     timeout: 5000,
+                     maximumAge: 0
+                 };
+
+                 if ($('input#searchQuery').val().trim().length === 0) {
+                       if (navigator && navigator.geolocation) {
+                             navigator.geolocation.getCurrentPosition(vm.SetPosition, vm.CatchError, options);
+                        }
+                 }
+
+                else{
+                        if(isRedirect)
+                            vm.InitMapRedirect(zipParam);
+                }
+          };
+
+          vm.InitMapRedirect = function(zipParam){
+                 vm.ZipCode = zipParam;
+                 GetGeoCodingFromZip(vm.ZipCode);
+           }
+
+           vm.ResetDefaultMap = function(){
+                 vm.Latitude ='';
+                 vm.Longitude ='';
+                 vm.GetPollingLocations(true);
+           }
+
+           vm.SetPosition = function (position) {
+                vm.Latitude = position.coords.latitude;
+                vm.Longitude = position.coords.longitude;
+                if(isRedirect || vm.LoadingCount > 0)
+                    $('input#searchQuery').attr('placeholder', 'Use current location');
+                //GetAddress(position);
+                //$('#divMessage').html('<small>Displaying locations closest to your current location.</small>');
+                vm.ZipCode = '';
+                vm.GetPollingLocations(true);
+                vm.LoadingCount ++;
+           }
+
+          vm.CatchError = function (error) {
+                var errorMessage = "";
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'User denied the request for geolocation.';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information is unavailable.';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'The request to get user location timed out.';
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        errorMessage = 'An unknown error occurred.';
+                        break;
+                }
+
+
+                //bootbox.alert(errorMessage);
+                HandleInvalidOrBlockAddr(true);
+                var message = 'Displaying locations closest to zip code {zip_code}.';
+                $('#btnZipCodeSearch').css("border-top-right-radius", "3px").css("border-bottom-right-radius", "3px");
+                $('#btnUseCurrentLocation').hide();
+          }
+
+
+           $('#searchQuery').on('click', function (e) {
+                 this.focus();
+                 if($('.input-icons').length === 0)     {                  
+                      //$( "<div class=\"input-icons\"><i class=\"fal fa-location-arrow fa-sm icon\"></i><input class=\"input-field input-sm\" id =\"current\" type=\"text\" autocomplete=\"off\" placeholder ='Use current location' /></div>" ).insertAfter(this);
+                    if(window.FontAwesomeKitConfig)
+                        $("<div class=\"fa-location-pro input-icons\"><label class=\"input-field input-sm\" id =\"current\">Use current location</label></div>" ).insertAfter(this);
+                    else
+                        $("<div class=\"fa-location-free input-icons\"><label class=\"input-field input-sm\" id =\"current\">Use current location</label></div>").insertAfter(this);
+                 }
+
+                   
+           });
+
+          $('#searchQuery').on('keydown', function (e) {
+             RemoveUseCurrentCtrl();
+          });
+
+
+           $(document).on('click', '#current', function(){
+              $('#searchQuery').val('');
+              RemoveUseCurrentCtrl();
+              vm.initMap();
+           });
+
+
+
+            vm.ShowMarkerPopup = function (index, latitude, longitude, pollCode) {
+                //locationMarkers[index].openPopup();
+                map.panTo(locationMarkers[index].getLatLng());
+
+                GetNearByLocations(index, latitude, longitude, pollCode);
+            };
+
+            vm.TogglePartySwitch = function (showElectionDay) {
+                vm.WriteCookie("showElectionDay", showElectionDay);
+
+                if (!showElectionDay) {
+                    if ($('.party-switch').css("display") == "block") {
+                        $('.party-switch').animate({ height: 'toggle', opacity: 0 });
+                    }
+                }
+                else {
+                    if ($('.party-switch').css("display") == "none") {
+                        $('.party-switch').animate({ height: 'toggle', opacity: 1 });
+                    }
+                }
+
+                vm.GetPollingLocations(true);
+            }
+
+
+            vm.ShowMap = function (isShowMap) {
+                if (isShowMap) {
+                    $('#polling-locations-list').toggleClass('hidden-xs hidden-sm');
+                    $('#polling-locations-list').hide();
+                    $('#div-map').toggleClass('hidden-xs hidden-sm');
+                    $('#div-map').show();
+                    $('#list-tab').toggleClass('hidden');
+                    $('#map-tab').toggleClass('hidden');
+                }
+                else {
+                    $('#polling-locations-list').toggleClass('hidden-xs hidden-sm');
+                    $('#polling-locations-list').show();
+                    $('#div-map').toggleClass('hidden-xs hidden-sm');
+                    $('#div-map').hide();
+                    $('#list-tab').toggleClass('hidden');
+                    $('#map-tab').toggleClass('hidden');
+                }
+            }
+            vm.PreviousPage = function () {
+                vm.PageIndex = vm.PageIndex == 0 ? 0 : vm.PageIndex - 1;
+                vm.GetPollingLocations(false);
+            }
+
+            vm.NextPage = function () {
+                vm.PageIndex = vm.PageIndex < vm.LocationCount / vm.PageSize ? vm.PageIndex + 1 : vm.PageIndex;
+                vm.GetPollingLocations(false);
+            }
+
+            var searchControl = BootstrapGeocoder.search({
+                inputTag: 'searchQuery',
+                placeholder: 'Enter an address',
+                title: 'Enter an address to search for vote centers',
+                zoomToResult: false,
+                collapseAfterResult: false,
+                searchBounds: L.latLngBounds(L.latLng(29.1, -96.2), L.latLng(30.5, -94.6))
+            }).addTo(map);
+
+            searchControl.on('results', function (data) {
+                if (data.results != null && data.results.length > 0) {
+                    vm.Latitude = data.results[0].latlng.lat;
+                    vm.Longitude = data.results[0].latlng.lng;
+                    vm.ZipCode = "";
+                    $('input#searchQuery').val(data.results[0].text);
+                    RemoveUseCurrentCtrl();
+                    vm.GetPollingLocations(true);
+                }
+                else {
+                   HandleInvalidOrBlockAddr(false);
+                    //bootbox.alert({
+                    //    message: "<span style=\"font-size: 12px;\">The selected address is too far outside of Harris County. Please try an address closer to Harris County.</span>",
+                    //    title: "Oops!",
+                    //    buttons: { ok: { className: 'btn btn-xs btn-primary' } }
+                    //});
+                }
+            });
+
+
+            vm.GetPollingLocations = function (isNewSearch) {
+                $('#loadingMask').removeClass("hidden");
+
+                    mapPin = L.divIcon({ className: 'fa fa-map-pin fa-xl pin-dem', iconAnchor: [9, 24], popupAnchor: [0, -24] });
+                carPin = L.divIcon({ className: 'fa fa-car orange-car', iconAnchor: [9, 24], popupAnchor: [0, -24] });
+
+                ResetMarkers();
+
+                if ((!true && !vm.ShowElectionDay) || (!false && vm.ShowElectionDay)) {
+                    markerCheck = markerBang = markerMinus = mapPin;
+                    markerCarGreen = markerCarYellow = markerCarRed = carPin;
+                }
+
+                if (isNewSearch) {
+                    vm.PageIndex = 0;
+                }
+
+               // alert(vm.Latitude + ',' + vm.Longitude + ',' + vm.ZipCode);
+                var data = $.param({
+                    latitude: vm.Latitude,
+                    longitude: vm.Longitude,
+                    zipCode: vm.ZipCode,
+                    isElectionDay: vm.ShowElectionDay,
+                    serviceType: vm.ServiceType,
+                    electionCode: vm.ElectionCode,
+                    pageIndex: vm.PageIndex,
+                    pageSize: vm.PageSize,
+                    language: 'en-US'                   
+                });
+
+                var config = {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }
+
+                $('#polling-locations-list').scrollTop(0);
+
+                $http.post('/Map/GetPollingLocations', data, config)
+                    .then(function success(response) {
+                        $timeout(function () {
+                            ClearMarkers();
+                            vm.Locations = response.data.locations;
+                            vm.LocationCount = response.data.totalCount;
+                            var locationMarker = null;
+                            var count = 0;
+                            var marker;
+                            CreateMarkers(vm.Locations);
+                            vm.Locations.splice(-1, 1);
+
+                            //vm.ShowMap(response.data.locations[0]);
+                            $('#loadingMask').addClass("hidden");
+                        });
+                    },function (response) {
+                        HandleError(response);
+                    });
+            };
+
+
+
+            GetAddress = function (position)
+            {
+                   var lat = position.coords.latitude;
+                   var lng = position.coords.longitude;
+                   var pos = {lat: lat, lng: lng };
+
+                   L.esri.Geocoding
+                     .reverseGeocode({
+                        apikey: esriMapApiKey
+                   })
+                   .latlng(pos)
+
+                  .run(function (error, result) {
+                      if (error) {
+                          console.log(err);
+                          return;
+                      }
+
+            // $('input#searchQuery').val(result.address.Match_addr);
+            //layerGroup.clearLayers();
+
+            //marker = L.marker(result.latlng).addTo(layerGroup);
+
+            //const lngLatString = `${Math.round(result.latlng.lng * 100000) / 100000}, ${Math.round(result.latlng.lat * 100000) / 100000}`;
+
+            //marker.bindPopup(`<b>${lngLatString}</b><p>${result.address.Match_addr}</p>`);
+            //marker.openPopup();
+                 });
+             }
+
+             GetGeoCodingFromZip = function (zipParam)
+             {
+                     L.esri.Geocoding.geocode({apikey: esriMapApiKey})
+                                     .within(L.latLngBounds(L.latLng(29.1, -96.2), L.latLng(30.5, -94.6)))
+                                     .region('Texas').postal(zipParam)
+                                     .run(function (err, results, response) {
+                                           if (err) {
+                                             console.log(err);
+                                           return;
+                                     }
+                                    //console.log(results);
+                                    vm.Latitude  = results.results[0].latlng.lat;
+                                    vm.Longitude =  results.results[0].latlng.lng;
+                                    vm.GetPollingLocations(true);
+                });
+             }
+
+
+            vm.initMap();
+
+            $(document).ready(function () {
+
+             if (!vm.ReadCookie("showElectionDay")) {
+                    //$('#initialModal').modal('show');
+                    vm.WriteCookie("showElectionDay", vm.ShowElectionDay);
+                }
+
+                // Fix up the tooltip text on the searchQuery box
+                var el = document.getElementById("searchQuery");
+                let a = document.createElement('span');
+                a.innerHTML = el.title;
+                el.title = a.textContent;
+
+                GetNearByLocations = function (index, latitude, longitude, pollCode) {
+                    if ((!true && !vm.ShowElectionDay) || (!false && vm.ShowElectionDay)) {
+                        markerCheck = markerBang = markerMinus = mapPin;
+                        markerCarGreen = markerCarYellow = markerCarRed = carPin;
+                    }
+
+                    var data = $.param({
+                        latitude: latitude,
+                        longitude: longitude,
+                        isElectionDay: vm.ShowElectionDay,
+                        pollCode: pollCode,
+                        electionCode: vm.ElectionCode,
+                        language: 'en-US'
+                    });
+
+                    var config = {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8;',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    }
+
+                    if ($('.pl-details-' + index).children('i').length == 0) {
+                        var jqXHR = $.ajax({
+                            type: 'post',
+                            url: '/Map/GetNearbyLocations',
+                            data: data,
+                            dataType: 'html'
+                        });
+
+                        jqXHR.done(function (data) {
+                            $('.pl-details-' + index).append(data);
+
+                            var oldContent = locationMarkers[index].getPopup()._content;
+                            locationMarkers[index].getPopup()._content = oldContent + "<span class=\"nearby-locations\">" + data + "</span>";
+                        });
+
+                        jqXHR.fail(function () {
+                            bootbox.alert("Unable to retrieve nearby vote centers.");
+                        });
+
+                        jqXHR.always(function () {
+                            $('.pl-details-' + index).parent().addClass("in").hide().slideDown();
+                            locationMarkers[index].openPopup();
+                        })
+                    }
+                    else {
+                        $('.pl-details-' + index).parent().addClass("in").hide().slideDown();
+                        locationMarkers[index].openPopup();
+                    }
+                };
+
+               HandleInvalidOrBlockAddr = function(isBlocked){
+                    var $ctrl = $('input#searchQuery');
+                    RemoveUseCurrentCtrl();
+                    if (window.FontAwesomeKitConfig)
+                        $("<div class=\"fa-triangle-exclamation-pro input-icons\"><label class=\"input-field input-sm\" id =\"current\">Could not retrieve current location</label></div>" ).insertAfter($ctrl);
+                    else
+                        $("<div class=\"fa-triangle-exclamation-free input-icons\"><label class=\"input-field input-sm\" id =\"current\">Could not retrieve current location</label></div>").insertAfter($ctrl);
+                    
+                    if(isBlocked)
+                        vm.ResetDefaultMap();
+                };
+
+              RemoveUseCurrentCtrl = function(){
+                     if($('.input-icons').length > 0)
+                        $(".input-icons").remove();
+               }
+
+            });
+        }]);
+
+        $(document).ready(function () {
+            $('#fldZipCode').keypress(function (key) {
+                if (key.charCode < 48 || key.charCode > 57) return false;
+            });
+
+            var locationSearchHeight = $('#location-search').height();
+
+            $('#locationList').css("margin-top", locationSearchHeight - 12 + 'px');
+        });
+    </script>
+    <!-- Begin TVSquared Page Visits Tracking Code -->
+    <script type="text/javascript">
+        var _tvq = window._tvq = window._tvq || [];
+        (function () {
+            var u = (("https:" == document.location.protocol) ?
+                "https://collector-16561.us.tvsquared.com/"
+                :
+                "http://collector-16561.us.tvsquared.com/");
+            _tvq.push(['setSiteId', "TV-8136453681-1"]);
+            _tvq.push(['setTrackerUrl', u + 'tv2track.php']);
+            _tvq.push([function () {
+                this.deleteCustomVariable(5, 'page')
+            }]);
+            _tvq.push(['trackPageView']);
+            var d = document,
+                g = d.createElement('script'),
+                s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript';
+            g.defer = true;
+            g.async = true;
+            g.src = u + 'tv2track.js';
+            s.parentNode.insertBefore(g, s);
+        })();
+    </script>
+    <!-- End TVSquared Tracking Code -->
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "url": "https://elections.sbcounty.gov/voting/mailballotdropoff/",
+  "finalUrl": "https://elections.sbcounty.gov/voting/mailballotdropoff/",
+  "capturedAt": "2026-10-23T08:16:25.506Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "d7f87e7b4b1d1cfaae7d5f06b7e2ddd268a826d5715bac9b306f8734f21cd980",
+  "savedHash": "d7f87e7b4b1d1cfaae7d5f06b7e2ddd268a826d5715bac9b306f8734f21cd980",
+  "redactions": 0,
+  "bytes": 172118,
+  "attempts": [
+    {
+      "url": "https://elections.sbcounty.gov/robots.txt",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    },
+    {
+      "url": "https://elections.sbcounty.gov/voting/mailballotdropoff/",
+      "route": "direct",
+      "outcome": "HTTP 200"
+    }
+  ]
+}

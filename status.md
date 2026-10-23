@@ -16,12 +16,11 @@ Sean's orders for this session (Oct 23, ~4:15 to 5:00 AM EDT):
 - A release is live only when https://meanwhileusa.com/api/build shows its merge commit. Then each lane's live check runs at national scale: the named examples plus real places in at least 10 states, counts by state posted here.
 - Hold pb-02 until it posts a new READY with a national sample (returns/pb-02.md).
 
-Queue (5:45 AM EDT):
-- In gates now: pb-01 (PB-01), sp-01 (SP-01), ex-03 (EX-03) and River's dead-code gate on river-next 6d2f648d5. Preflight, lint, tsc, dead-code, assert:browser pass; the suite is running (the first run was cut off by the session's 30-minute background limit, not by a failure; rerun from 5:40 AM EDT). River fixed in the fold: SP-01's geocode route import (preflight stopped on `@/lib` under plain Node, on stream/sp-01 alone too).
-- Next fold, in this order: pk-01 (PK-01 READY 77b70e1cd, saved-picks migration), src-01 (SRC-01 READY 7b05903de, SAM quota hold), nx-02 (NX-02 READY 80a752f0f, /national reader; 25k added lines are test fixture pages), nb-02 (NB-02 READY 0b42253dc, narrowed control-plane reads). All carry both proofs.
-- NX-02 returned early (returns/nx-02.md): its own replay finds 0 of 23 executives complete, so /national would still say coming soon and the Vice President would not show (Sean's decision a). It folds anyway so the connection ships; the return stays open until the VP shows on /national.
-- Held: pb-02 (national sample, returns/pb-02.md). Returned for missing connection proofs (empty READY messages): lv-01. pk-01 answered with READY 77b70e1cd (both proofs; 13 of 56 jurisdictions still have first-restore timing failures it lists) and joins the next fold. eo-01 waits behind lv-01.
-- Not posted yet: rn-01, rn-02, vs-07, bl-01, pb-03, dg-02, cs-01, eo-01.
+Queue (6:20 AM EDT):
+- In gates now (started 6:18 AM EDT): pb-01 (PB-01 61b7e39d6), sp-01 (SP-01 489e1849b, its newer READY: unknown scopes no longer purge every state; the older READY's geocode import is gone, so no River fold fix is needed), ex-03 (EX-03 fd4c018c5), and River's dead-code gate, on river-next e0a4a092e. Preflight and the dead-code scan pass; no unused declarations in the 66 lane files.
+- Next fold, in order: pk-01 (77b70e1cd), src-01 (7b05903de), nx-02 (80a752f0f), nb-02 (0b42253dc). All carry both proofs.
+- Returned: pb-02 (85bf54e3d has the national sample in docs/pb-02.md but a one-line READY message without the proofs; a new READY that states them folds next), lv-01 and vs-07 (empty READY messages; vs-07 also adds 39 MB of county PDFs to tests/fixtures), nx-02 (early: its replay finds 0 of 23 executives complete, so the VP would not show on /national; it still folds). eo-01 waits behind lv-01.
+- Not posted yet: rn-01, rn-02, bl-01, pb-03, dg-02, cs-01, eo-01.
 
 Baseline before this release (live, release 88, 4:56 AM EDT; first visit, 16 places fetched in parallel), /api/meetings by ZIP: boards shown / with members / empty / ms
 - WI 53703 Madison 0/0/0 618 ms; WI 53202 Milwaukee 342/117/225 (184 all-caps names, 3.07 MB) 659 ms; AZ 85701 136/9/127 5.3 s; TX 77002 2/1/1; MO 64106 2/2/0; FL 33130 1/0/1.

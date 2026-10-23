@@ -1,11 +1,23 @@
 # River status
 
-build_state: RELEASE 90 (CAL-01-FX, PB-03, PK-01, SRC-01, NX-02-FX, NB-02, DG-02) PR #800 OPEN, run-full-ci + auto-merge; river 5130d339c (tested 1885b95f4, gates 9 of 9, 9,545 pass; main merged after gates, tree identical); production release 89 (/api/build 1e353d4)
+build_state: RELEASE 90 LIVE (/api/build a462d38 from 10:24 AM EDT): CAL-01-FX, PB-03, PK-01, SRC-01, NX-02-FX, NB-02, DG-02; live checks in progress
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
 lock: session_012UDbgz3sjA8QN2m7CY78QS
 heartbeat: 2026-10-23T13:53:58Z
+
+## Release 90 live checks (Oct 23, from 10:24 AM EDT)
+
+Live from 10:24 AM EDT (/api/build a462d38). Gates 9 of 9 on 1885b95f4 (9,545 pass); river 5130d339c (main merged after gates, tree identical).
+
+WIN: the Vice President is back. /national shows JD Vance, Donald J. Trump and the Cabinet (Rubio, Bessent, Hegseth and the rest), 165 whitehouse.gov source links, Vance's card citing whitehouse.gov/administration/jd-vance/, 1.7 s. Place lists in 12 states (AZ 85016, CA 94110, FL 33130, GA 30303, IL 60602, NH 03301, NJ 07102, NY 10007, OH 43215, PA 17101, TX 75201, WA 98101) show no White House holder. returns/nx-02.md closes. Leftover: the sidebar link still reads "National government, coming soon" (lib/national/link.ts:2, NATIONAL_LINK_LABEL); River fixes the label in the next fold.
+
+PK-01 first restore, Sean's 13 states (after SP-01 and PK-01 live): all under 3 s, none goes back to SP-01. AZ 2,100 ms, CA 2,301, ID 1,647, KY 1,763, MA 1,608, MD 1,641, MI 1,718, MT 1,911, NC 2,205, ND 1,500, NH 1,608, NV 1,571, TX 1,642. Longest part: the private picks read (505 to 712 ms) or the page HTML (554 to 805 ms). Note: the ballot pages are held 24 h at the edge right now (SP-01's open bug), which helps these times. The check saved 13 test pick lists in production, as PK-01's check is built to.
+
+PB-03: named places pass on the live answer: 99559 Main Governing Board under Lower Kuskokwim School District (2 members); 85641 one Vail Governing Board (6 members); 35801 City Council under Huntsville city (2 members), no "Huntsville city governing" label. 36602 shows "Board of Commissioners" under Mobile city (0 members). Oregon FAILS: 97204, 97301, 97401, 97701 all 0 boards (PB-03's table: 79 held, 0 shown); returned (returns/pb-03.md).
+
+Still to run on release 90 (need the runner to follow a462d38 and complete a pass): CAL-01-FX (no ROUTINE_CHILD_TIMED_OUT; publish-now cursor past 2026-10-13T22:24:35Z; calendar doors moving in AZ, NH, NJ and 10+ states), SRC-01 (a new PROMOTED candidate per source on its next scheduled run; a CT card's money reason; SAM after 8 PM EDT), DG-02 (outcomes by state), NB-02 (cp_vital_signs bytes vs 4,707,316,127 at 07:00 UTC).
 
 ## Release 89 live checks (Oct 23, 8:37 to 9:05 AM EDT)
 

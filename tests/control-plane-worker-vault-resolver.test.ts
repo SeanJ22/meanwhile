@@ -64,12 +64,39 @@ const record = (artifact: Artifact, partial = false): ArtifactRecord => ({
 /** The two control-plane reads the resolver makes, from fixed rows in log order. */
 function repos(records: readonly ArtifactRecord[], roles: Readonly<Record<string, string>> = {}): ControlPlaneRepositories {
   return {
-    artifacts: { readAll: async () => records },
+    artifacts: { readAll: async () => records,
+      keysWhere: async (_path: readonly string[], id: string) => [...new Set(records.filter(row => row.artifactId === id).map(row => row.workItemId))].sort(),
+      readWhere: async (key: string, _path: readonly string[], id: string) => records.filter(row => row.workItemId === key && row.artifactId === id) },
     attempts: { mustRead: async (id: string) => ({ id, revision: 1, value: { id, worker: { role: roles[id] ?? "ACQUIRER" } } }) },
   } as unknown as ControlPlaneRepositories;
 }
 
 const hold = (store: DurableEvidenceStore, artifact: Artifact) => putArtifact(store, PROJECT, artifact, new TextEncoder().encode(BODY));
+
+test("normal vault resolution reads only the requested artifact, including later acquisitions", async t => {
+  const store = await vault(t), artifact = capture(1);
+  await hold(store, artifact);
+  const records = Array.from({ length: 2000 }, (_, n) => ({ ...record(capture(2)),
+    artifactId: `other-${n}`, workItemId: `other-work-${n}` }));
+  const repository = repos(records);
+  let received = 0;
+  repository.artifacts.readAll = async () => { throw new Error("whole artifact log read"); };
+  const read = repository.artifacts.readWhere;
+  repository.artifacts.readWhere = async (...args) => {
+    const rows = await read(...args); received += Buffer.byteLength(JSON.stringify(rows)); return rows;
+  };
+  const resolver = workerVaultResolver(repository, store, PROJECT);
+  await assert.rejects(resolver(artifact.id), /WORKER_ARTIFACT_MISSING_OR_PARTIAL/);
+  records.push(record(artifact));
+  assert.equal((await resolver(artifact.id)).text, BODY);
+  const before = Buffer.byteLength(JSON.stringify(records));
+  assert.ok(received < before / 100);
+  t.diagnostic(`vault artifact response bytes: ${before} -> ${received}`);
+  received = 0;
+  assert.equal((await researchVaultResolver(repository, store, PROJECT)(artifact.id)).artifact.attemptId, artifact.attemptId);
+  assert.ok(received < before / 100);
+  t.diagnostic(`research artifact response bytes: ${before} -> ${received}`);
+});
 
 test('Detective captures remain readable with the original redirect and acquisition date', async t => {
   const store=await vault(t);

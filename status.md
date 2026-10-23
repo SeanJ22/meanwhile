@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on it from 17:44 UTC); RELEASE 93 (BL-21-FX) PR #803 OPEN: gates 9 of 9 on 5ddf41bb8 (9,634 pass, 0 fail, 6 skipped; 2:25 to 3:13 PM EDT), river 739e03665 (main merged, tree identical), run-full-ci + auto-merge; RELEASE 94 candidate river-next 97819bc62 (RN-02 on river) in pnpm gates from 3:16 PM EDT
+build_state: RELEASE 93 LIVE (/api/build 3fc035eeb from 3:39 PM EDT) and FAILING ITS LIVE CHECK: /ballot lost Election Day dates and election offices in every state (BL-21-FX returned). Revert waiting on Sean. RELEASE 94 candidate river-next 97819bc62 (RN-02) in pnpm gates from 3:58 PM EDT
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,13 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## Release 93 live check (Oct 23, from 3:39 PM EDT): FAILED, readers lost election dates
+
+- Release 93 (BL-21-FX) live at 3:39 PM EDT (/api/build 3fc035eeb). BL-21-FX deleted the built-in election-dates table and the national navigation read; /ballot now reads only each state's own navigation record, and the runner has not published any yet (its navigation tasks wait for a worker slot; runner starved, returns/rn-01.md).
+- What readers lost: /ballot?zip=85003 (Phoenix) showed "The next election: November 3rd, 2026" with 12 dated deadlines on release 90; on release 93 it shows no Election Day line, 0 deadlines, and "AZ voting information · Still gathering: election office, voter registration, ...". The same empty card in 16 ZIPs in 15 states and DC (AZ 85653 and 85701, CA 90012, TX 78701, FL 33130, NY 10007, PA 19147, NC 28203, GA 30303, OH 43215, MI 48226, WA 98101, CO 80202, WI 53703, MN 55401, NH 03301, DC 20001). Marana 85653 shows none of the three promised office phone lines.
+- Returned to ballot-parity (returns/ballot-parity.md): keep what readers had until the state's own record exists.
+- NEEDS SEAN: rulings §160 says "If new code fails, the release is reverted." River tried to revert BL-21-FX on river (git revert -m 1 5ddf41bb8, giving release 92's tree byte for byte, already gated and live this afternoon) and ship it as release 94; the session's permission check refused the revert as a change to a shared branch. One word from Sean, "revert 93", and River ships the revert (CI about 20 minutes, then deploy). Until then every /ballot page has no election dates, 11 days before the election, unless the runner publishes the 51 state navigation records first.
 
 ## Release 92 live checks (Oct 23, from 1:46 PM EDT)
 

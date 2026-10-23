@@ -11,7 +11,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "../lib/civic-data/types.ts";
 import {
   MEETING_READER_SERVING_WINDOW_CONTRACT,
-  meetingReaderServingWindowAt,
+  meetingHeldWindowAt,
 } from "../lib/meetings/constants.ts";
 
 const FIRST = "2026-09-08T00:00:00.000Z";
@@ -113,7 +113,7 @@ function meetingSnapshot(version: string, changed: boolean): MeetingSnapshot {
 }
 
 function meetingCandidate(version: string, changed: boolean): RoutineCandidate {
-  const servingWindow = meetingReaderServingWindowAt(version);
+  const servingWindow = meetingHeldWindowAt(version);
   assert.ok(servingWindow);
   return meetingsCandidate({
     snapshot: meetingSnapshot(version, changed),

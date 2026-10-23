@@ -62,20 +62,3 @@ export function inventoryStreamlineSitemap(input) {
     entries, excluded, nextAction: "Acquire each dated page and verify subject, meeting date, and document links from its content." };
 }
 `;
-
-export const STREAMLINE_BOUNDARY_TEST_SOURCE = String.raw`test("rejects wrong roots, partial XML, entities, and off-publisher routes", () => {
-  const wrap = loc => '<urlset><url><loc>' + loc + '</loc></url></urlset>';
-  const args = xml => ({xml, subjectId:"test-subject", publisherOrigin:"https://example.gov"});
-  assert.throws(() => inventoryStreamlineSitemap(args('<sitemapindex></sitemapindex>')));
-  assert.throws(() => inventoryStreamlineSitemap(args('<urlset><url></urlset>')));
-  assert.throws(() => inventoryStreamlineSitemap(args('<urlset><url><loc>https://example.gov/2026-01-01-board</loc><lastmod></url></urlset>')));
-  assert.throws(() => inventoryStreamlineSitemap(args('<!DOCTYPE x><urlset></urlset>')));
-  assert.equal(inventoryStreamlineSitemap(args(wrap('https://elsewhere.gov/2026-01-01-board'))).datedPageCount, 0);
-  assert.equal(inventoryStreamlineSitemap(args(wrap('https://example.gov/2026-02-29-board'))).datedPageCount, 0);
-  const repeated = '<url><loc>https://example.gov/2024-02-29-board?a=1&amp;b=2</loc></url>';
-  const inventory = inventoryStreamlineSitemap(args('<urlset>' + repeated + repeated + '</urlset>'));
-  assert.equal(inventory.datedPageCount, 1);
-  assert.equal(inventory.entries[0].spans.length, 2);
-  assert.equal(inventory.entries[0].sourceUrl, 'https://example.gov/2024-02-29-board?a=1&b=2');
-});
-`;

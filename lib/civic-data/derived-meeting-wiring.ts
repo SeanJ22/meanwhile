@@ -10,12 +10,7 @@ import {
   type DerivedVersionEntry,
   type DerivedVersionPlan,
 } from "./derived-authority.ts";
-import {
-  civicDataReadNotInitialized,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "./read-model.ts";
+import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { DATA_DOOR_KINDS, DOOR_KIND_SPECS, dataDoorConfig, isDataDoorKind, type DataDoorKind } from "./derived-door-kinds.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, derivedRequestedUrl } from "./derived-door.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
@@ -144,10 +139,6 @@ export async function readDerivedMeetingWiring(
   }
   installed = result;
   return result;
-}
-
-export function derivedMeetingWiringReadState(): CivicDataReadResult<DerivedWiringProjection> {
-  return installed ?? civicDataReadNotInitialized(DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, "The meeting-source wiring has not been read for this process.");
 }
 
 export function familyMembers(projection: DerivedWiringProjection, state: string): readonly DerivedWiringRecord[] {

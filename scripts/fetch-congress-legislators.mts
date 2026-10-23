@@ -63,11 +63,11 @@ export async function refreshCongressDirectory(input: {
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
       const projection = withChamberDirectories(federalDirectoryForState(normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now),state),state,[],prior);
-      const candidate = await federalDirectoryCandidate({state,acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection,changes:changesFrom(prior,projection)});
+      const candidate = await federalDirectoryCandidate({state,acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection,prior:latest ?? prior,changes:changesFrom(prior,projection)});
       const outcome = await processRegisteredManualCandidate(store,contractId,candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
-      latest = projection;
+      latest = candidate.readModel as FederalDirectoryReadModel;
     }
 
     for (const [chamber,url] of Object.entries(CHAMBER_DIRECTORY_URLS)) {
@@ -77,10 +77,10 @@ export async function refreshCongressDirectory(input: {
           headers:{accept:"application/xml"},validate:bytes=>{parseChamberDirectory({body:new TextDecoder().decode(bytes),finalUrl:url,retrievedAt:clock()},state);} });
         const capture = {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:new TextDecoder("utf-8",{fatal:true}).decode(held.bytes),retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
         const projection = withChamberDirectories(latest!,state,[capture],latest);
-        const candidate = await federalDirectoryCandidate({state,acquisitions:[...acquisitions,capture],vault,retrievedAt:held.retrievedAt,projection,changes:changesFrom(prior,projection)});
+        const candidate = await federalDirectoryCandidate({state,acquisitions:[...acquisitions,capture],vault,retrievedAt:held.retrievedAt,projection,prior:latest,changes:changesFrom(prior,projection)});
         const outcome = await processRegisteredManualCandidate(store,contractId,candidate,clock());
         if (!outcome.promoted && !outcome.confirmed) throw Error(`Chamber contact publication ${outcome.candidate.state}: ${outcome.candidate.failureDetail}`);
-        acquisitions.push(capture); latest=projection; finalReceipt={candidate,outcome};
+        acquisitions.push(capture); latest=candidate.readModel as FederalDirectoryReadModel; finalReceipt={candidate,outcome};
       } catch(error) { console.error(`${chamber} directory: contacts retained; ${error instanceof Error ? error.message : String(error)}`); }
     }
 

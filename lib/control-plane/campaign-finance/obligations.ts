@@ -19,9 +19,7 @@ import type {
 export const PROJECT = "we-the-people";
 /** The runtime provider uses this scoped ballot/data-door path. Historical
  * proving obligations below remain the rollout way back until live acceptance. */
-export { ballotFinanceObligations, ballotFinanceScheduledId, type BallotFinanceInputs } from "./ballot-obligations.ts";
-
-export const PIMA_BODY_ID = "ocd-division/country:us/state:az/county:pima#governing";
+export { ballotFinanceObligations,   } from "./ballot-obligations.ts";
 
 export const AZ_PIMA_ELECTION_ID = "az-2026-11-03";
 export const AZ_PIMA_ELECTION_DATE = "2026-11-03";
@@ -264,7 +262,7 @@ export const AZ_LOCAL_ROUTES: readonly PlannedRoute[] = [
     note:
       "HTTP 200, 109 KB — an SPA shell. The filing vocabulary and the money are not in the served " +
       "HTML. A 200 that carries no record is not a walked route; it is a wall wearing a success code.",
-    citation: "lib/funding/state-vocabulary.ts — the AZ refusal, collected 2026-08-19",
+    citation: "data/campaign-finance/filing-regimes.json — the AZ refusal, collected 2026-08-19",
     permission: "CANNOT_TELL",
     transport: "REACHABLE",
     rung: 2,
@@ -280,7 +278,7 @@ export const AZ_LOCAL_ROUTES: readonly PlannedRoute[] = [
       "equivalent in the g20 session. A guessed report endpoint (/Reporting/GetNEWTableData) returned " +
       "HTTP 404 at rung 7, and a guessed path is not a finding either way; the app's REAL endpoint is " +
       "unknown until rung 6 observes it.",
-    citation: "lib/funding/state-vocabulary.ts — the AZ refusal, rung 6",
+    citation: "data/campaign-finance/filing-regimes.json — the AZ refusal, rung 6",
     permission: "CANNOT_TELL",
     transport: null,
     rung: 6,

@@ -59,7 +59,7 @@ import {
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { projectionKey } from "./projection-key.ts";
-import { invalidateReaderCache, readerCacheScopeForPublication, type ReaderCachePurger } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
@@ -2152,7 +2152,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw error;
     }
     if (eventRows[0]) {
-      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
       return { kind: "CONFIRMED", versionId: id, at };
     }
     const [pointerRows, candidateRows] = await this.db.batch([
@@ -2182,7 +2181,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
-      await invalidateReaderCache(readerCacheScopeForPublication(input.scope), this.cacheOptions.purge);
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
     }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
@@ -2210,7 +2208,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     this.assertCandidateMutationAuthority(record.candidate);
     const candidate = record.candidate;
     const key = projectionKey(candidate.recordClass, candidate.scope);
-    const [prior] = await this.db.select({ currentVersionId: civicDataPromotions.currentVersionId })
+    const needsGeography = readerPublicationNeedsGeography(candidate.scope, candidate.recordClass);
+    const [prior] = await this.db.select({ currentVersionId: civicDataPromotions.currentVersionId,
+      ...(needsGeography ? { payload: civicDataPromotions.payload } : {}), })
       .from(civicDataPromotions)
       .where(eq(civicDataPromotions.key, key))
       .limit(1);
@@ -2292,7 +2292,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
-    await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope), this.cacheOptions.purge);
+    const previousModel = needsGeography && prior?.payload ? await this.loadPayload(prior.payload, candidate.scope) : null;
+    await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope, {
+      recordClass: candidate.recordClass, readModels: [candidate.readModel, previousModel],
+    }), this.cacheOptions.purge);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,

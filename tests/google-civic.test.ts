@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { civicElectionRows, civicLookupFromRaw } from "../lib/sources/google-civic/model.ts";
 import { civicCandidate } from "../lib/sources/google-civic/publication.ts";
 import { lookupCivicAddress, readCivicApi } from "../lib/sources/google-civic/acquisition.ts";
-import { GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_SCOPE, civicStateScope, GOOGLE_CIVIC_STATES } from "../lib/sources/google-civic/targets.ts";
+import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, civicStateScope, GOOGLE_CIVIC_STATES } from "../lib/sources/google-civic/targets.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
@@ -49,7 +49,7 @@ test("only a provider district OCD id joins; a missing or unknown id retains its
 });
 
 test("one national contract schedules every state and keeps its source distinct from certified lists", () => {
-  const contracts = ROUTINE_SOURCE_CONTRACTS.filter(row => row.sourceId === GOOGLE_CIVIC_CONTRACT_ID);
+  const contracts = ROUTINE_SOURCE_CONTRACTS.filter(row => row.sourceId === GOOGLE_CIVIC_SOURCE_ID);
   assert.equal(contracts.length, 1);
   assert.equal(contracts[0].fanOut, true);
   assert.deepEqual(contracts[0].readerProjection?.consumers, ["ballot", "voting-sites", "Admin"]);
@@ -107,7 +107,7 @@ test("national refresh visits every state, records missing inventories and publi
   const { rawCapture } = result.candidate.normalizedPayload as { rawCapture: RawCaptureRef };
   assert.deepEqual(await vault.list(""), [rawCapture.vaultKey], "one catalog response is stored once for every state marker");
   assert.equal(await readRawCaptureText(vault, rawCapture), fixture("elections"));
-  const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_CONTRACT_ID, await civicCandidate(vault, GOOGLE_CIVIC_SCOPE,
+  const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_SOURCE_ID, await civicCandidate(vault, GOOGLE_CIVIC_SCOPE,
     { formatVersion: 1, kind: "CATALOG", checkedAt: AT, rows: civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"])), coverage: result.coverage }, fixture("elections"), "elections"), AT);
   assert.ok(next.confirmed);
 });
@@ -128,7 +128,7 @@ test("VS-01 background refresh sends no public or private addresses to Google", 
 test("a resumed national pass starts with states that have no completed source check", async () => {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), visited: string[] = [];
   const rows = civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"]));
-  await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_CONTRACT_ID,
+  await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_SOURCE_ID,
     await civicCandidate(vault, civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: AT, rows, coverage: [] }, fixture("elections"), "elections"), AT);
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
   await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,

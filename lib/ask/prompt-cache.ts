@@ -163,14 +163,3 @@ export function cacheCallLine(callerKey: AskCallerKey, usage: CacheUsage): strin
     `write=${usage.cacheCreationInputTokens} uncached=${usage.inputTokens}`
   );
 }
-
-export function cacheReportLines(ledger: CacheLedger): string[] {
-  const rates = cacheHitRates(ledger);
-  if (rates.length === 0) return ["ask:cache · no calls recorded"];
-  return rates.map(
-    (r) =>
-      `ask:cache · ${r.callerKey} · ${r.callsWithCacheRead}/${r.calls} calls read a cached ` +
-      `prefix (${(r.hitRate * 100).toFixed(1)}%) · ${r.cacheReadInputTokens} read · ` +
-      `${r.cacheCreationInputTokens} written · ${r.uncachedInputTokens} uncached`,
-  );
-}

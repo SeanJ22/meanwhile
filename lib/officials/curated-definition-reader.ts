@@ -1,5 +1,3 @@
-import { formFor } from "./body-form.ts";
-import { definitionsForBody } from "./body-definitions.ts";
 import { blurbForTitle, officeTypeForTitle } from "./office-blurbs.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readTranslations } from "../translate/projection-reader.ts";
@@ -10,21 +8,6 @@ function originalDefinition(record: TextTranslation | null) {
   const citation=record?.curatedOrigin?.citation;
   return record ? citation ? {text:record.text,basis:citation.basis,basisUrl:citation.url,readOn:citation.readOn ?? ""}
     : {text:record.text,basis:record.label,basisUrl:record.sourceUrl,readOn:record.retrievedAt} : null;
-}
-/** Same layering and body-identity rules, original text and citations as the static selector. */
-export async function readCuratedBodyDefinitions(input: Parameters<typeof definitionsForBody>[0], options: PromotedCivicDataReadOptions = {}) {
-  const legacy=definitionsForBody(input), jurisdiction=jurisdictionFromOcdId(input.ocdId);
-  if(!input.ocdId || !jurisdiction)return legacy;
-  const stateOcd=`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
-  const records=await readTranslations([stateOcd,input.ocdId],options);
-  const classRecord=legacy.classKey ? textTranslationFor(records,{kind:"BODY_CLASS",subjectId:`body_class:${jurisdiction.usps}:${legacy.classKey}`,ocdId:stateOcd}) : null;
-  const bodyRecord=textTranslationFor(records,{kind:"BODY",subjectId:`body:${input.bodyId}`,ocdId:input.ocdId});
-  const formKey=formFor(input).formKey;
-  const formRecord=formKey ? textTranslationFor(records,{kind:"BODY_CLASS",subjectId:`body_class:${jurisdiction.usps}:form:${formKey}`,ocdId:stateOcd}) : null;
-  // A shared form cannot replace this body's own charter explanation.
-  const formValue=formRecord?.curatedOrigin && formRecord.text===legacy.formDefinition?.text ? originalDefinition(formRecord) : null;
-  return {...legacy,classDefinition:originalDefinition(classRecord) ?? legacy.classDefinition,
-    formDefinition:originalDefinition(bodyRecord) ?? formValue ?? legacy.formDefinition};
 }
 export async function readCuratedOfficeBlurb(title: string, divisionOcdId: string | null, options: PromotedCivicDataReadOptions = {}) {
   const legacy=blurbForTitle(title,divisionOcdId), key=officeTypeForTitle(title,divisionOcdId), jurisdiction=jurisdictionFromOcdId(divisionOcdId);

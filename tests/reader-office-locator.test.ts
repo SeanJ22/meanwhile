@@ -45,13 +45,3 @@ test("a postal contact box never starts a street geocoder; actual office streets
   assert.deepEqual(await locate("12 Post Office Road, Randolph, NJ 07869"),{lat:40.8,lng:-74.5});
   assert.equal(addresses.length,2);
 });
-
-test("a server's public-office points are reused without another request and retain their short lifetime",async()=>{
-  let now=0,calls=0;
-  const locate=createOfficeLocator((async()=>{calls++;return Response.json({match:false})})as typeof fetch,()=>now);
-  locate.prime({"100 Public Office Street":{lat:32,lng:-110},"P.O. Box 25":{lat:32,lng:-110},"Invalid":{lat:Infinity,lng:0}});
-  assert.deepEqual(await locate("100 Public Office Street"),{lat:32,lng:-110});assert.equal(calls,0);
-  assert.equal(await locate("P.O. Box 25"),null);assert.equal(calls,0);
-  assert.equal(await locate("Invalid"),null);assert.equal(calls,1);
-  now=30000;assert.equal(await locate("100 Public Office Street"),null);assert.equal(calls,2);
-});

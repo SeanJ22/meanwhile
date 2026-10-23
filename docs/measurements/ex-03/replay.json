@@ -1,0 +1,58 @@
+{
+  "upstream": "BA-01 promoted state ballots; EX-02 source discovery; RN-01 standing task admission",
+  "downstream": "plain-english-translations publication -> readerBallotSourcesForDivisions -> summaryForContest -> /ballot",
+  "production": {
+    "readerProject": "tiny-hill-13996172",
+    "readerBranch": "br-delicate-lab-ax02xuo5",
+    "ballotVersion": "official-ballot-authorities:8c5006dc9a7e8ceb95dc33188642a354",
+    "controlProject": "withered-sunset-39821877",
+    "controlBranch": "br-tiny-frog-aeufpjeq"
+  },
+  "first": {
+    "at": "2026-10-23T06:49:34.629Z",
+    "alPublished": 4,
+    "proposedZipBallotCards": 4,
+    "currentLiveZipCards": 0,
+    "currentLiveMapCards": 4,
+    "recordedModelResponses": 8,
+    "liveUrl": "https://meanwhileusa.com/ballot?zip=35203",
+    "liveMapUrl": "https://meanwhileusa.com/ballot?state=AL&lat=33.52&lng=-86.8",
+    "akMeasuresReachingWriter": 2,
+    "akFound": {
+      "ak-doe-2026-general-measure-2": [
+        "https://ltgov.alaska.gov/newsroom/2026/07/lt-governor-nancy-dahlstrom-to-host-ballot-measure-public-hearings/"
+      ],
+      "ak-doe-2026-general-measure-3": [
+        "https://ltgov.alaska.gov/newsroom/2026/07/lt-governor-nancy-dahlstrom-to-host-ballot-measure-public-hearings/"
+      ]
+    }
+  },
+  "tomorrow": {
+    "at": "2026-10-24T08:45:00.000Z",
+    "scheduled": true,
+    "alReused": 4,
+    "additionalModelRequests": 0,
+    "akMeasuresReachingWriter": 2,
+    "akFound": {
+      "ak-doe-2026-general-measure-2": [
+        "https://ltgov.alaska.gov/newsroom/2026/07/lt-governor-nancy-dahlstrom-to-host-ballot-measure-public-hearings/"
+      ],
+      "ak-doe-2026-general-measure-3": [
+        "https://ltgov.alaska.gov/newsroom/2026/07/lt-governor-nancy-dahlstrom-to-host-ballot-measure-public-hearings/"
+      ]
+    },
+    "additionalSearches": 0
+  },
+  "boundary": "Production SELECTs and public GET only. All writes local. Saved production model results replayed; no model request or live publication.",
+  "inputs": {
+    "production-al-authority.json": "8e895d5f3d4c8a2d3afaf292ff777f6af2e2c56287cd4db73ff8f8a3e6205d9e",
+    "production-al-events.json": "1199ee5e45b6632fbca77d96b7a45088c10453897496e9b5299faea96d3f115e",
+    "production-al-ballots.json": "f4bdb1f3775d14157465082a12607d977a8e39c76a942aef9c50ff549c4efd4d",
+    "production-al-translations.json": "c432222dc28d134df3b65c95b4dd33339ec364476840aef857707baea6225a2f",
+    "production-ak-parts.json": "9d86b6d75710515eb5a70ac73e50e0c9a6ca787be006a97acf9d29ecb78ce846",
+    "production-ak-door.json": "d707230b06219af9fbd29307551bdb7c13fa24a3dfd601ff9d91455637d76882",
+    "ak-hearing.html": "3ecf838da067d15612418096b66d0fdc71ac5da43e120961b1ee05128abf6c3c",
+    "ak-notice-224503.html": "ec8629fcb5fcba29f7e4be5db1806fc6866eaddb9c3722d66e8692b0b9046fe0",
+    "ak-notice-224508.html": "4616469811031fc3453b3cf151e066d79433ac1134b3767d6eac793d7afbcbab"
+  }
+}

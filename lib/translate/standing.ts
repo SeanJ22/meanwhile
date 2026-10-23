@@ -5,7 +5,8 @@ import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { translationHash, translationScope, translationSourceNames } from "./records.ts";
+import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
+import { translationHash, translationScope } from "./records.ts";
 import { runMeasureTranslation } from "./runtime.ts";
 import { runTextTranslation } from "./text-runtime.ts";
 
@@ -121,12 +122,12 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       if (duplicates.some(record => JSON.stringify(record) !== JSON.stringify(measure))) {
         deferred.push({ subjectId: contest.id, reason: "Held measure records disagree." }); continue;
       }
-      const sourceUrls = new Set([measure?.sourceUrl, official?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl,
+      const sourceUrls = new Set([contest.measureTextUrl, measure?.sourceUrl, official?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance?.sourceUrl,
         ...(input.foundSources?.get(contest.id) ?? [])].filter(Boolean));
-      const designation = official?.officialNumber;
-      const namedDesignation = designation && /[a-z]/i.test(designation) && /\d/.test(designation) ? designation : null;
+      const labels = measureLabels({ title: contest.title, officialNumber: official?.officialNumber,
+        questionText: official?.questionText, analysisText: analysis?.text });
       const candidates = pages.filter(capture => sourceUrls.has(capture.evidence.canonicalUrl) &&
-        ([contest.title, official?.questionText, analysis?.text, namedDesignation].some(value => translationSourceNames(capture.evidence.text, value)) ||
+        (capture.evidence.canonicalUrl === contest.measureTextUrl || pageNamesMeasure(capture.evidence.text, labels) ||
           measure && (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash) &&
         (!measure || (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash ||
           Date.parse(capture.evidence.retrievedAt) >= Date.parse(measure.writtenAt)))
@@ -165,8 +166,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         batchPriority: { now: input.now, electionAt: [ballot.election?.date ?? ""] },
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
           state: jurisdictionFromOcdId(contest.ocdId)!.usps,
-          sourceQuote: [contest.title, official?.questionText, analysis?.text, namedDesignation]
-            .find(value => translationSourceNames(primary.evidence.text, value)) ?? primary.evidence.text,
+          sourceQuote: labels.find(value => pageNamesMeasure(primary.evidence.text, [value])) ?? primary.evidence.text,
           prior: measure ? { ...measure, parts: measure.parts.filter(part => part.number) } : null } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
         versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };

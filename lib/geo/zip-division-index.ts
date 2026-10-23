@@ -1,5 +1,5 @@
 import { ocdStateCode } from "../ocd/state-of.ts";
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { GeographySelection } from "../census-geography/selection.ts";
@@ -35,8 +35,6 @@ export const ZIP_RESIDENT_SHARE_SHOWN = 0.05;
 /** At this share a division holds the whole ZIP; below it the ZIP is split. */
 const WHOLE_ZIP_SHARE = 0.995;
 const STATEWIDE = /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/;
-
-export const ZIP_DIVISIONS_DIR = ["data", "derived", "zip-divisions"] as const;
 /** A shard's name: the ZIP's first two digits. */
 export const zipShardOf = (zip: string): string => zip.slice(0, 2);
 const SHARD_FILE = /^\d{2}\.json$/;
@@ -141,20 +139,6 @@ export function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, 
   lowestByState.set(st, read);
   while (lowestByState.size > 4) lowestByState.delete(lowestByState.keys().next().value!);
   return read;
-}
-
-/** Every indexed ZIP, read synchronously from a repository root: for scripts and build-time checks, never a request path. */
-export function readAllZipDivisions(root: string): Map<string, ZipDivisionEntry> {
-  const out = new Map<string, ZipDivisionEntry>();
-  const dir = join(/* turbopackIgnore: true */ root, "data", "derived", "zip-divisions");
-  for (const file of readdirSync(dir).filter((f) => SHARD_FILE.test(f)).sort()) {
-    const shard = JSON.parse(readFileSync(join(dir, file), "utf8")) as Shard;
-    for (const zip of Object.keys(shard.zips)) {
-      const entry = shardEntry(shard, zip);
-      if (entry !== null) out.set(zip, entry);
-    }
-  }
-  return out;
 }
 
 /** The shard files of an index directory, by name: for trace and manifest checks. */

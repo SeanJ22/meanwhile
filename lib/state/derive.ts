@@ -12,7 +12,6 @@ import type { CoverageSummary, Seat } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 
 import { bodyScopeKey } from "./body-scope.ts";
-import { ALL_DISTRICT_TYPES } from "./reducer.ts";
 import type { BodyType, UiState } from "./types.ts";
 
 /**
@@ -224,11 +223,6 @@ export function computeStats(input: {
     officials: coverage ? allOfficialRows(coverage).length : 0,
     coverageAnswered: coverage !== null,
   };
-}
-
-/** District types currently switched on, for the overlay registry. */
-export function activeDistrictTypes(ui: UiState) {
-  return ALL_DISTRICT_TYPES.filter((t) => ui.filters.districtTypes.includes(t));
 }
 
 /**

@@ -4,7 +4,7 @@
  * close it; nothing here holds a lock. No function here reads a clock.
  */
 
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
 import { fingerprint } from "../control-plane/ids.ts";
@@ -275,16 +275,6 @@ export function introducedIssues(
   return { introduced: all.filter((i) => !baseline.has(issueKey(i))), preExisting: baseline.size };
 }
 
-export class MethodStoreUnreadable extends Error {
-  readonly path: string;
-
-  constructor(path: string, detail: string) {
-    super(`METHOD STORE UNREADABLE at ${path}: ${detail}. Nothing was written.`);
-    this.name = "MethodStoreUnreadable";
-    this.path = path;
-  }
-}
-
 /** Write a JSON document by temp file and rename, so a reader never sees half a document. The pid keeps racing writers' temp paths apart. */
 export function atomicWriteJson(path: string, value: unknown): number {
   const body = `${JSON.stringify(value, null, 2)}\n`;
@@ -293,17 +283,4 @@ export function atomicWriteJson(path: string, value: unknown): number {
   writeFileSync(tmp, body, "utf8");
   renameSync(tmp, path);
   return Buffer.byteLength(body, "utf8");
-}
-
-export function readCandidateStore(path: string): CandidateStore {
-  if (!existsSync(path)) return emptyCandidateStore();
-  const parsed = JSON.parse(readFileSync(path, "utf8")) as CandidateStore;
-  if (!Array.isArray(parsed?.candidates)) {
-    throw new MethodStoreUnreadable(path, "parsed, but it is not a candidate store (no candidates array)");
-  }
-  return parsed;
-}
-
-export function writeCandidateStore(path: string, store: CandidateStore, stamp: string): number {
-  return atomicWriteJson(path, { ...store, updatedOn: stamp });
 }

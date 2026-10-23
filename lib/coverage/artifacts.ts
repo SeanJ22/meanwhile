@@ -10,10 +10,6 @@ export function heldStatesForDomain(root: string, domain: string): StateIdentity
   return US_JURISDICTIONS.filter(state => held.has(state.slug));
 }
 
-export function rosterFile(state: Pick<StateIdentity, "fips">): string {
-  return `officeholders-${state.fips}.json`;
-}
-
 export const NAME_BY_USPS: Readonly<Record<string, string>> = Object.fromEntries(
   US_STATES.map(state => [state.code.toUpperCase(), state.name]),
 );
@@ -33,14 +29,3 @@ export function deriveArtifacts(root: string) {
     geometryStates: heldStatesForDomain(root, "geo"),
   };
 }
-
-// Keep this literal build-time branch so the checkout is never traced into a production route.
-const held = process.env.NODE_ENV === "production"
-  ? { states: [], rosters: [], ballotFiles: [], geometryStates: [] }
-  : deriveArtifacts(process.cwd());
-export const HELD_ROSTER_STATES = held.states;
-export const ROSTER_FILES: readonly string[] = held.rosters;
-export const BALLOT_FILES: readonly { file: string; state: string }[] = held.ballotFiles;
-export const HELD_GEOMETRY_FIPS = held.geometryStates.map(state => state.fips);
-export const SLUG_BY_FIPS: Readonly<Record<string, string>> = Object.fromEntries(US_JURISDICTIONS.map(state => [state.fips, state.slug]));
-export const USPS_BY_FIPS: Readonly<Record<string, string>> = Object.fromEntries(US_JURISDICTIONS.map(state => [state.fips, state.usps]));

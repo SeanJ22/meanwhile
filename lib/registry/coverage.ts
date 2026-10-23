@@ -98,7 +98,7 @@ export function stateLegislatorCoverageAuthority(
   };
 }
 
-export { WIRED_STATUSES } from "./coverage-client.ts";
+;
 
 /**
  * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is

@@ -9,10 +9,6 @@ export function translationScope(ocdId: string): string {
   if (!jurisdictionFromOcdId(ocdId)) throw new Error("Translation must name one US place or district.");
   return `${TRANSLATION_SCOPE}:${ocdId}`;
 }
-export function isTranslationScope(scope: string): boolean {
-  const ocdId = scope.slice(TRANSLATION_SCOPE.length + 1);
-  return scope.startsWith(`${TRANSLATION_SCOPE}:`) && Boolean(jurisdictionFromOcdId(ocdId));
-}
 export const translationHash = (text: string) => createHash("sha256").update(text).digest("hex");
 
 /** Replay visible source text under the same whitespace/entity rules as §3. */
@@ -120,8 +116,4 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
     numbers.add(part.number);
   }
   return null;
-}
-
-export function translationIsCurrent(row: TranslationRecord, sourceHash: string): boolean {
-  return row.sourceHash === sourceHash && translationRecordIssue(row) === null;
 }

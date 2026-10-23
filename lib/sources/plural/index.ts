@@ -8,14 +8,11 @@ import { parse as parseYaml } from "yaml";
 import { nativePersonIdFromUrl } from "../../officials/people-identity.ts";
 import { officeIdentity } from "../../officials/office-identity.ts";
 import { PLURAL_STATES } from "./targets.ts";
-export { PLURAL_STATES } from "./targets.ts";
-
+;
 
 const SOURCE_NAME = "plural";
 
 const SOURCE_ORG = "Plural Open States (CC-0)";
-
-export type PluralState = (typeof PLURAL_STATES)[number];
 
 export function bulkUrl(state: string): string {
   return `https://data.openstates.org/people/current/${state.toLowerCase()}.csv`;
@@ -494,6 +491,5 @@ export function normalize(
   return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched,
     ...(endedMemberships.length ? {endedMemberships:[...new Map(endedMemberships.map(row=>[row.id,row])).values()]} : {}) };
 }
-
 
 export { SOURCE_ORG, SOURCE_NAME, CHAMBER_TITLE };

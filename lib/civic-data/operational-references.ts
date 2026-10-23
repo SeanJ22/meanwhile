@@ -204,15 +204,6 @@ export function installedOperationalReferenceRegistries(states?: Iterable<string
   return structuredClone(Object.fromEntries(Object.entries(held).filter(([state]) => !wanted || wanted.has(state))));
 }
 
-export function requiredOperationalReferenceBundle(): OperationalReferenceBundle {
-  if (installedBundle === null) {
-    throw new Error(
-      "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: preload the canonical promoted jurisdiction reference before building standing obligations.",
-    );
-  }
-  return structuredClone(installedBundle);
-}
-
 export function requiredOperationalJurisdictionRegistry(state: string): JurisdictionRegistry {
   const key = state.toLowerCase();
   if (!hasReviewedRegistry(key)) {

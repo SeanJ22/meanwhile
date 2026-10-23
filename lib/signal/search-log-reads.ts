@@ -1,40 +1,4 @@
-import { and, eq, sql, type SQL } from "drizzle-orm";
 
-import { searchLog } from "../db/schema.ts";
-
-/**
- * The only door into the search log for anything that aggregates. Our own automated traffic must never
- * be in anything sold, so the filter is not a convention: it is the only exported way to build a query
- * against this table, `tests/search-log-exclusion.test.ts` asserts no other module reads `search_log`,
- * and every aggregate reports the ORGANIC count and says so in words.
- *
- * `UNKNOWN` (rows predating the marker, or declaring automation without a usable run id) is excluded, not
- * merged into organic: an undercount stated honestly beats an overcount.
- */
-
-/** The classes an aggregate may count. Exactly one. */
-export const COUNTABLE_RUN_CLASSES = ["ORGANIC"] as const;
-
-/**
- * The predicate every sold read carries. Nothing else in this repo may write
- * `eq(searchLog.runClass, ...)` — the guard test enforces it.
- */
-export const ORGANIC_ONLY: SQL = eq(searchLog.runClass, "ORGANIC");
-
-/** The same predicate as raw SQL, for the scripts that hand-write queries. */
-export const ORGANIC_ONLY_SQL = "run_class = 'ORGANIC'";
-
-/**
- * Add the exclusion to a caller's own conditions.
- *
- * The exclusion is always the FIRST condition and cannot be dropped by the
- * caller — there is no parameter that turns it off, because a parameter that
- * turns it off is a parameter someone will pass.
- */
-export function organicOnly(...conditions: Array<SQL | undefined>): SQL {
-  const kept = conditions.filter((c): c is SQL => c !== undefined);
-  return kept.length === 0 ? ORGANIC_ONLY : (and(ORGANIC_ONLY, ...kept) as SQL);
-}
 
 export interface RunClassCensus {
   organic: number;
@@ -43,22 +7,6 @@ export interface RunClassCensus {
   /** The author using his own product — excluded, and named rather than hidden. */
   author: number;
   total: number;
-}
-
-/**
- * The run-class census. Deliberately not filtered: it describes the whole table, including our own
- * traffic, and is a report, not a sold number. Every class appears, so the parts sum to `total`.
- */
-export function runClassCensusQuery(): SQL {
-  return sql`
-    SELECT
-      COUNT(*) FILTER (WHERE run_class = 'ORGANIC')   AS organic,
-      COUNT(*) FILTER (WHERE run_class = 'SYNTHETIC') AS synthetic,
-      COUNT(*) FILTER (WHERE run_class = 'UNKNOWN')   AS unknown,
-      COUNT(*) FILTER (WHERE run_class = 'AUTHOR')    AS author,
-      COUNT(*)                                        AS total
-    FROM search_log
-  `;
 }
 
 /**

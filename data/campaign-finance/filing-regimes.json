@@ -187,7 +187,7 @@
             "name": "See The Money (Arizona Secretary of State)",
             "url": "https://seethemoney.az.gov/",
             "isVendorPlatform": false,
-            "note": "HTTP 200, 109,107 B on 2026-08-26 — a single-page-app shell. The custodian is resolved; the records are not served in the HTML, which is a transport fact and not an absence. lib/funding/state-vocabulary.ts, the AZ refusal."
+            "note": "HTTP 200, 109,107 B on 2026-08-26 — a single-page-app shell. The custodian is resolved; the records are not served in the HTML, which is a transport fact and not an absence."
           }
         }
       ],

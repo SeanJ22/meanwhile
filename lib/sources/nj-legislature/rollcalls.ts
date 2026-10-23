@@ -7,7 +7,6 @@ import type { StateMemberVote, StateRollCall, StateVotePosition } from "../legis
 import { njSecondTuesday } from "./roster.ts";
 
 export const NJ_VOTING_RECORDS_INDEX_URL = "https://www.njleg.state.nj.us/api/votingRecords";
-export const NJ_VOTING_RECORDS_PAGE_URL = "https://www.njleg.state.nj.us/voting-records";
 export const NJ_MEMBER_REQUEST_CONCURRENCY = 8;
 
 export interface NjVotingSession {

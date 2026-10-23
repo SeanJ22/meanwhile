@@ -49,16 +49,6 @@ export type GeographyType =
   | "place"
   | "county_subdivision";
 
-export const GEOGRAPHY_TYPES: readonly GeographyType[] = [
-  "congressional_district",
-  "county",
-  "cbsa",
-  "state_leg_upper",
-  "state_leg_lower",
-  "place",
-  "county_subdivision",
-];
-
 /** Admin's five primary groupings, in the order Admin renders them. */
 export const PRIMARY_GROUPING_TYPES: readonly GeographyType[] = [
   "congressional_district",
@@ -101,14 +91,6 @@ export interface GeographyRef extends GeographyKey {
 
 /** What an overlap `fraction` measures. `unknown` when no reliable share exists. */
 export type FractionBasis = "area" | "population" | "housing" | "block" | "unknown";
-
-export const FRACTION_BASES: readonly FractionBasis[] = [
-  "area",
-  "population",
-  "housing",
-  "block",
-  "unknown",
-];
 
 export interface ZctaOverlap {
   readonly zcta5: Zcta5;
@@ -174,8 +156,6 @@ export type LookupStatus =
   | { readonly kind: "NOT_IN_COVERAGE"; readonly note: string }
   /** The dataset exists but this (type, version) scope has no active published version yet. */
   | { readonly kind: "NOT_YET_PUBLISHED"; readonly note: string };
-
-export const LOOKUP_STATUS_KINDS = ["OK", "UNKNOWN", "NOT_IN_COVERAGE", "NOT_YET_PUBLISHED"] as const;
 
 export interface ResponseEnvelope {
   readonly publishedVersion: string;
@@ -273,15 +253,4 @@ export interface CensusGeographyLookup {
    * rather than dropping them). Never filters by PO-box labels.
    */
   reconcilePostalZips(zips: readonly UspsZip[]): Promise<readonly PostalZipReconciliation[]>;
-}
-
-/** A well-formed five-digit code (ZCTA or ZIP), leading zeros allowed. */
-export const FIVE_DIGIT = /^\d{5}$/;
-
-export function isFiveDigit(value: string): boolean {
-  return FIVE_DIGIT.test(value);
-}
-
-export function isGeographyType(value: string): value is GeographyType {
-  return (GEOGRAPHY_TYPES as readonly string[]).includes(value);
 }

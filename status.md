@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 98 (main 5a09ea42d, live 1:07 PM EDT; the jit fix). Reader checks pass. QUEUED, each its own release: 99 = 0051 contract budget (RV-0051 178151d61, gating), 100 = reader pool error handler (RV-POOL 207b50f5e)
+build_state: LIVE FOR READERS: release 99 (main 388d02c51, live 1:59 PM EDT); 0051 applied in production. NEXT: release 100 = reader pool error handler (RV-POOL, gating on river-next c125bfa59), then batches A (CL-01 + RV-TOOLS + RIVER-KEYS-FX), B (SO-01 + DB-01), C (PT-01), D (RB-A5 + RB-A8)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T17:09:28Z
+heartbeat: 2026-10-24T18:00:37Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,19 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 2:00 PM EDT: release 99 live, migration 0051 applied
+- Release 99 (PR #809, RV-0051 only) live 1:59 PM EDT: /api/build 388d02c51.
+- Sean's checks on meanwhileusa.com in Chromium at 2:00 PM EDT, all pass:
+  - /ballot?zip=85701: 200, renders, 0 console errors.
+  - /ballot?zip=03255: 200, renders, 0 console errors.
+  - Ask on the 85701 ballot: /api/ask/grounded 200, grounded answer with sources.
+  - /api/meetings?zip=85701: 200.
+  - /api/meetings?zip=60602: 200.
+  - /national: 200, renders.
+- 0051 (RB-A1) is in the production reader database (read-only check at 2:01 PM EDT): reader_resolve_id, zip_place and place_page exist; entity_place has boundary_year with key (entity_id, place_id, boundary_year); journal 52 of 52. All 35 ids that reactions, Speak your mind and demand signals point at resolve through reader_resolve_id (35 of 35). Reacting to a renamed candidate works again on release 97's code.
+- Release 100 (RV-POOL, reader pool error handler alone) gating on river-next c125bfa59. The tsc gate fails fast inside direct `pnpm gates` runs (stale .next route types; `river.mjs test` clears .next); tsc alone on c125bfa59 passes. Batches from here are gated through `river.mjs test`.
+- New READYs: PT-01 660cb878f, RB-A5 f7ab065e3, RB-A8 df6af132c; earlier SO-01 64ea93bb5, DB-01 befe7b6f1, CL-01 88af51ae2. Queue (one batch gating at a time, each its own release): 100 RV-POOL; A CL-01 + RV-TOOLS + RIVER-KEYS-FX (pre-folded on 100; CL-01's duplicate jit edit resolved to River's live version); B SO-01 + DB-01; C PT-01; D RB-A5 + RB-A8. RB-A4 isn't READY (its lane is finishing it); now that 0051 is live, it can fold once its migration agrees with 0051's boundary_year (NOT NULL DEFAULT 0).
 
 ### Release 98 live, 1:07 PM EDT: readers have the site back on release 97's features
 - /api/build shows 5a09ea42d (PR #808 merge commit) from 1:07 PM EDT.

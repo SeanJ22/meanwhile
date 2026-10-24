@@ -96,4 +96,3 @@ export const addressWords = (value: string): string =>
     .split(" ")
     .map((word) => USPS_WORDS[word] ?? word)
     .join(" ");
-

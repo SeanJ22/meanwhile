@@ -165,6 +165,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",
     // Rebuilding the entity_place key and indexing 593k external ids takes about 1.7s at production size.
     contractStatementTimeoutMs: 10_000 },

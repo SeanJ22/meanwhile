@@ -8,7 +8,7 @@ import {
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
 } from "../state-rollcalls/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
-import { CENSUS_GEO_REQUIRED_VERSIONS } from "../census-geography/publication.ts";
+import { CENSUS_GEO_PARSER_VERSION, CENSUS_GEO_REQUIRED_VERSIONS } from "../census-geography/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
@@ -380,7 +380,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     scope: "US:zcta-geography-overlaps",
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/census-geography-refresh.mts"] },
     childTimeoutMs: 20 * 60_000,
-    parserNormalizerVersion: "census-geography-overlaps/1",
+    parserNormalizerVersion: CENSUS_GEO_PARSER_VERSION,
     cadence: { description: "monthly vintage check; missing election plans retry every six hours", defaultEveryMs: 30 * DAY,
       requiredScopeVersions: CENSUS_GEO_REQUIRED_VERSIONS },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
@@ -496,6 +496,24 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       `Versioned known-source government listings may move ${target.jurisdiction}'s registration after validation. An unavailable or incomplete release leaves that state's prior GOOD registration live and cannot affect another state.`,
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
+    bootstrapFixturePaths: [],
+  })),
+  ...REGISTRATION_TARGETS.map((target): RoutineSourceContract => ({
+    id: `place-map-${target.state.toLowerCase()}`,
+    sourceId: "census-geography-relationships",
+    recordClass: "CENSUS_GEOGRAPHY",
+    scope: `US-${target.state}:place-map`,
+    acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/place-map-refresh.mts", `--state=${target.state}`] },
+    parserNormalizerVersion: CENSUS_GEO_PARSER_VERSION,
+    cadence: { description: "monthly Census boundary and ZIP membership check", defaultEveryMs: 30 * DAY },
+    retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "census-geography-relationships" },
+    validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `place-map-${target.state.toLowerCase()}`, consumers: ["lib/place-map/read.ts"] },
+    lkgBehavior: "A failed source update leaves the state's existing place ids, boundary years and ZIP memberships available.",
+    autoPromotable: true,
+    classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: [],
   })),
   {

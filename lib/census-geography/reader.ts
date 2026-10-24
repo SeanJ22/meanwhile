@@ -44,13 +44,14 @@ function bootstrapDataset(): CivicDataBootstrap<BuiltDataset> {
 
 export async function readCensusGeographyProjection(
   options: PromotedCivicDataReadOptions = {},
+  scope: string = CENSUS_GEO_SCOPE,
 ): Promise<CivicDataReadResult<BuiltDataset>> {
   const now = options.now ?? new Date().toISOString();
   return readPromotedOrBootstrap<BuiltDataset>({
     ...options,
     now,
     recordClass: CENSUS_GEO_RECORD_CLASS,
-    scope: CENSUS_GEO_SCOPE,
+    scope,
     // Reference geography has no freshness cadence: a promoted pointer never
     // expires on a clock, so it is never withheld as "stale".
     maxAgeMs: options.maxAgeMs ?? CENSUS_GEO_MAX_AGE_MS,

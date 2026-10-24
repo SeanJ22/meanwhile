@@ -21,7 +21,6 @@ export interface NationalShelf {
   readonly congress: FederalDirectoryReadModel;
   readonly federalByState: ReadonlyMap<string, FederalDirectoryReadModel>;
   readonly president: OfficeholderSet | null;
-  readonly zipPlaces: ReadonlyMap<string, ZipDivisionEntry>;
   readonly version: string;
 }
 
@@ -151,9 +150,8 @@ export function readNationalPresident(store?: () => Promise<CivicDataReadStore>)
 }
 
 export const readNationalShelf = serverReaderValue("national", () => readerMemory(async (): Promise<NationalShelf> => {
-  const [canonical, places, president] = await Promise.all([
+  const [canonical, president] = await Promise.all([
     readCanonicalShelf(REGISTRY_STATES.map(state => ({ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) }))),
-    readZipPlaces(),
     readNationalPresident(),
   ]);
   const reads = await readPromotedCivicDataBatch<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", REGISTRY_STATES.map(federalDirectoryScope), { store: canonical });
@@ -174,5 +172,5 @@ export const readNationalShelf = serverReaderValue("national", () => readerMemor
     roster: { ...first.roster, scope: "us", officeholders: values.flatMap(value => value.roster.officeholders), divisions: values.flatMap(value => value.roster.divisions), unmatched: values.flatMap(value => value.roster.unmatched) },
     directory: { ...first.directory, counts: {}, byMember: Object.assign({}, ...values.map(value => value.directory.byMember)), committees: Object.assign({}, ...values.map(value => value.directory.committees)) },
   };
-  return national.value = { congress, federalByState, president, zipPlaces: places, version: versions.join("|") };
+  return national.value = { congress, federalByState, president, version: versions.join("|") };
 }));

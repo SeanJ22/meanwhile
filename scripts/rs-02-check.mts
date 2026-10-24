@@ -299,7 +299,7 @@ if (arg("child")) {
   const memoryPresidentIds = [...new Set(shelf.president?.officeholders.map(person => person.id) ?? [])].sort();
   const national = {
     members: new Set(shelf.congress.roster.officeholders.map(row => row.id)).size,
-    jurisdictions: shelf.federalByState.size, zipPlaces: shelf.zipPlaces.size,
+    jurisdictions: shelf.federalByState.size,
     president: shelf.president?.officeholders.map(row => row.name) ?? [],
     presidentHeld: memoryPresidentIds.length > 0,
     presidentStatus: memoryPresidentIds.length ? "HELD" : "NOT_RECORDED",
@@ -308,7 +308,7 @@ if (arg("child")) {
     membersWithoutHeldOffice: shelf.congress.roster.officeholders.filter(row => !shelf.congress.directory.byMember[row.id.replace(/^congress:/, "")]?.districtOffices.length).map(row => ({ id: row.id, name: row.name })),
     errors: [] as string[],
   };
-  if (national.members < 500 || national.jurisdictions < 50 || national.zipPlaces < 40_000) national.errors.push("National shelf is incomplete");
+  if (national.members < 500 || national.jurisdictions < 50) national.errors.push("National shelf is incomplete");
   if (memoryPresidentIds.join("|") !== canonicalPresidentIds.join("|")) national.errors.push("The in-memory President holding does not match the canonical current records");
   const requested = arg("states")?.toUpperCase().split(",");
   const probes = (arg("probes") ? JSON.parse(await readFile(resolve(arg("probes")!), "utf8")) as Probe[] : PROBES).filter(probe => !requested || requested.includes(probe.state));
@@ -344,6 +344,6 @@ if (arg("child")) {
     if (slowest) console.log(`Slowest ${kind}: ${slowest.state} ${slowest.zip}, ${slowest.usableMs} ms; state information ${slowest.stateMs} ms`);
   }
   console.log(`${results.filter(result => result.errors.length === 0).length} of ${results.length} states passed the data-handler checks`);
-  console.log(`National shelf: ${national.members} members, ${national.zipPlaces} ZIPs; ${national.errors.join("; ") || "PASS"}`);
+  console.log(`National shelf: ${national.members} members, ${national.jurisdictions} jurisdictions; ${national.errors.join("; ") || "PASS"}`);
   if (national.errors.length || results.some(result => result.errors.length)) process.exitCode = 1;
 }

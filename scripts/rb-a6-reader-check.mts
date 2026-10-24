@@ -15,17 +15,24 @@ try {
     const started = performance.now();
     const response = await page.goto(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`, { waitUntil: "domcontentloaded" });
     assert.equal(response?.status(), 200);
-    await page.getByText(/election/i).first().waitFor({ state: "visible" });
+    await page.getByRole("heading", { name: /voting information|the next election/i }).first().waitFor({ state: "visible" });
     writeFileSync(`.scratch/rb-a6-reader/${zip}-first.txt`, await page.locator("body").innerText());
     if (zip === "85003") await page.getByText(/November 3(?:rd)?,? 2026/).first().waitFor({ state: "visible" });
     const text = await page.locator("body").innerText();
     assert.ok(text.length > 1000, "The reader has usable ballot content");
     const date = text.match(/[^\n]*November 3(?:rd)?,? 2026[^\n]*/)?.[0] ?? null;
     if (zip === "85003") assert.ok(date?.includes("November 3"), "Phoenix keeps its Election Day");
+    const readyMs = Math.round(performance.now() - started);
+    const navigation = await page.evaluate(() => {
+      const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;
+      return { requestStart: nav.requestStart, responseStart: nav.responseStart, responseEnd: nav.responseEnd,
+        domContentLoaded: nav.domContentLoadedEventEnd };
+    });
+    const electionOffice = text.match(/[^\n]*(?:Secretary of State|Elections Division|Bureau of Commissions|Department of State)[^\n]*/g) ?? [];
+    assert.ok(electionOffice.length > 0, `${zip} keeps its election office`);
     await page.screenshot({ path: `.scratch/rb-a6-reader/${zip}.png`, fullPage: false });
     writeFileSync(`.scratch/rb-a6-reader/${zip}.txt`, text);
-    results.push({ zip, status: response!.status(), readyMs: Math.round(performance.now() - started), chars: text.length, election: date,
-      electionOffice: text.match(/[^\n]*(?:Secretary of State|Elections Division|Bureau of Commissions)[^\n]*/g) ?? [] });
+    results.push({ zip, status: response!.status(), readyMs, navigation, chars: text.length, election: date, electionOffice });
     console.log(JSON.stringify(results.at(-1)));
     await page.close();
   }
@@ -35,3 +42,4 @@ try {
 }
 writeFileSync(".scratch/rb-a6-reader/results.json", JSON.stringify({ observedAt: new Date().toISOString(), runId: browser.runId,
   browser: "Google Chrome for Testing", writesBlocked: browser.writesBlocked.count, results }, null, 2) + "\n");
+assert.ok(results.every(result => result.readyMs <= 3000), "Every reader page is usable within three seconds");

@@ -1,17 +1,23 @@
 {
-  "observedAt": "2026-10-24T09:28:31.485Z",
-  "runId": "rb-a6-reader@2026-10-24T09:28:26.254Z",
+  "observedAt": "2026-10-24T22:47:25.790Z",
+  "runId": "rb-a6-reader@2026-10-24T22:47:18.421Z",
   "browser": "Google Chrome for Testing",
   "writesBlocked": 0,
   "results": [
     {
       "zip": "85003",
       "status": 200,
-      "readyMs": 1632,
-      "chars": 49653,
-      "election": "November 3rd, 2026",
+      "readyMs": 1563,
+      "navigation": {
+        "requestStart": 80.29999999888241,
+        "responseStart": 425.90000000037253,
+        "responseEnd": 522.2999999988824,
+        "domContentLoaded": 972.2999999988824
+      },
+      "chars": 50170,
+      "election": "Election Day: November 3rd, 2026",
       "electionOffice": [
-        "Elections Division, Office of the Secretary of State, Phoenix, AZ",
+        "Elections Division, Office of the Secretary of State, Phoenix, AZ · 602/542-8683",
         "Secretary of State",
         "Secretary of StateSTATE",
         "“Vote Alex Kolodin for Arizona Secretary of State in November 2026! Your Conservative Candidate for AZ's Chief of Elections.”",
@@ -21,21 +27,34 @@
     {
       "zip": "19147",
       "status": 200,
-      "readyMs": 1573,
-      "chars": 7372,
-      "election": null,
+      "readyMs": 2455,
+      "navigation": {
+        "requestStart": 9.299999998882413,
+        "responseStart": 758,
+        "responseEnd": 2154.2999999988824,
+        "domContentLoaded": 2156.4000000003725
+      },
+      "chars": 8872,
+      "election": "Election Day: November 3rd, 2026",
       "electionOffice": [
-        "Bureau of Commissions, Elections and Legislation, Department of State, Harrisburg, PA"
+        "Department of State · 1-877-868-3772",
+        "The statewide Candidate Database linked by the Pennsylvania Department of State returned an Incapsula page stating “Request unsuccessful.” The saved response supplied no candidate list. The Department states: “To obtain electronic copies of nomination petitions, please visit the Candidate Database or email your request to ra-elections@pa.gov.”"
       ]
     },
     {
       "zip": "98101",
       "status": 200,
-      "readyMs": 1017,
-      "chars": 10234,
-      "election": null,
+      "readyMs": 1373,
+      "navigation": {
+        "requestStart": 20.700000001117587,
+        "responseStart": 228.30000000074506,
+        "responseEnd": 1019.6000000014901,
+        "domContentLoaded": 1027.5
+      },
+      "chars": 13515,
+      "election": "Election Day: November 3rd, 2026",
       "electionOffice": [
-        "Elections Division, Office of the Secretary of State, Olympia, WA"
+        "Washington Secretary of State Elections Division · 800-448-4881"
       ]
     }
   ]

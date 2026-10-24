@@ -1,6 +1,7 @@
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { createHash } from "node:crypto";
 import type { Query } from "../facts/publish.ts";
+import { meetingEntityId } from "../facts/meeting-read.ts";
 import type { RetainedSourceResponse } from "../civic-data/retained-meeting-bytes.ts";
 import {
   censusAddressQuery,
@@ -138,6 +139,25 @@ export async function placePublishedMeetingPins(input: {
     (input.previous ?? []).map((meeting) => [meeting.id, meeting]),
   );
   const saved = new Map<string, MeetingPinLocation>();
+  const unresolved=input.meetings.filter(meeting=>{
+    if(meeting.location||meeting.mapPin)return false;
+    const prior=previous.get(meeting.id);
+    return !prior?.mapPin||prior.bodyId!==meeting.bodyId||prior.mapPin.publishedLocation!==(meeting.venueGap?.publishedText??null)
+      ||Boolean(prior.online)!==Boolean(meeting.online);
+  });
+  if(input.query&&unresolved.length)try {
+    const owners=new Map(unresolved.flatMap(meeting=>[meeting.id,...meeting.mergedMeetingIds??[]].map(id=>[id,meeting] as const)));
+    const rows=await input.query("SELECT entity_id,value FROM fact WHERE field='map_pin' AND status='live' AND entity_id=ANY($1::text[])",
+      [[...owners.keys()].map(meetingEntityId)]);
+    for(const row of rows) {
+      const pin=row.value as MeetingPinLocation|null;
+      if(!pin||!Number.isFinite(pin.lat)||!Number.isFinite(pin.lng)||!pin.bodyId||!pin.address||!pin.matchedAddress||
+        !["MEETING","BODY_OFFICE","GOVERNMENT_OFFICE"].includes(pin.basis))continue;
+      saved.set(`${pin.basis}:${pin.bodyId}:${pin.address}`,pin);
+      const owner=owners.get(String(row.entity_id).slice("meeting:".length));
+      if(owner&&!previous.get(owner.id)?.mapPin)previous.set(owner.id,{...owner,mapPin:{...pin,meetingId:owner.id}});
+    }
+  } catch(error){held.push(`Saved meeting points could not be read: ${error instanceof Error?error.message:String(error)}`);}
   for (const meeting of [...(input.previous ?? []), ...input.meetings])
     if (meeting.mapPin)
       saved.set(

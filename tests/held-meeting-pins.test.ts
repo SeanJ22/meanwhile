@@ -7,6 +7,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { readSittingFacts,withSittingFacts } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 
 const NOW="2026-10-24T18:00:00.000Z",OLD="2026-10-13T01:48:06.116Z";
 const DIVISION="ocd-division/country:us/state:az/school_district:sunnyside_unified_district",BODY=`${DIVISION}#board`;
@@ -61,6 +62,11 @@ test("the automatic fact pass restores a carried online office pin, places a hel
     const next=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:nextAt,clock:()=>Date.parse(nextAt),deadlineMs:Date.parse(nextAt)+60000,
       fetchImpl:async()=>{throw new Error("a saved point must not be geocoded again");}});
     assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+    const calendar=await placePublishedMeetingPins({meetings:originals.map(meeting=>({...meeting,provenance:{...meeting.provenance,collectedAt:nextAt}})),
+      query:db.query,clock:()=>nextAt,fetchImpl:async()=>{throw new Error("the calendar publisher must reuse the already-published point");}});
+    assert.equal(calendar.responses.length,0);assert.deepEqual(calendar.held,[]);
+    assert.equal(calendar.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(calendar.meetings[1].mapPin?.basis,"MEETING");
+    assert.equal(calendar.meetings[0].mapPin?.coordinateCheckedAt,NOW);
     assert.deepEqual((await db.query("SELECT payload FROM civic_data_promotions WHERE key='MEETING:held'"))[0].payload,JSON.parse(JSON.stringify({meetings:originals})),"calendar bytes and timestamps do not change");
     assert.deepEqual((await db.query("SELECT DISTINCT field FROM fact WHERE entity_id LIKE 'meeting:%'")),[{field:"map_pin"}]);
     assert.ok(read[0].fieldSources?.mapPin.sourceUrl?.startsWith("https://geocoding.geo.census.gov/"));

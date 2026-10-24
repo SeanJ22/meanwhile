@@ -6,11 +6,13 @@ ZIP delivery areas and Census ZCTAs are separate tables. Each association is key
 
 resolveId reads one existing entity or exact alias, accepts raw and fec-prefixed FEC ids, congressional person keys and raw meeting ids, returns null for an unknown id and raises on ambiguous aliases. Reconciliation reuses the held FEC target crosswalk; an exact source target takes precedence over another source's native-id spelling. It adds vote_event identities for House/Senate roll-call keys and measure_provision identities for measure fragments. Saved aliases survive source refreshes. A missing congressional person uses the existing importer's congress-api id, so a later import reuses it. Future-id tests cover all Speak subject kinds, new FEC crosswalks, later Congresses and new measure fragments. The ordinary scheduled fact-maintenance pass invokes the same reconciliation and reports its resolved count in the existing runner log. Reader event writers are unchanged. The candidate target lookup also retains previously accepted keys through their exact saved entity when a later ballot renames a ticket, within the same state.
 
+The existing River step-id parser now recognizes RB-A1 through RB-A11, so the shared lane and its downstream rebuild lanes retain their step ids when folded.
+
 ## Production connections
 
 Reader: tiny-hill-13996172 / br-delicate-lab-ax02xuo5 / neondb / readonly. SELECT allowed, INSERT/UPDATE/DELETE denied. Real data: 104,047 place entities and 56 reaction rows. Snapshot at 2026-10-24T08:55:19.116856+00:00.
 
-Control plane: withered-sunset-39821877 / br-tiny-frog-aeufpjeq / neondb / wtp_cp_release_readonly. SELECT allowed, INSERT/UPDATE/DELETE denied. Real data at 2026-10-24T09:06:21.683415+00:00: 161,846 work items and 328,791 box findings. No production writes were made.
+Control plane: withered-sunset-39821877 / br-tiny-frog-aeufpjeq / neondb / wtp_cp_release_readonly. SELECT allowed, INSERT/UPDATE/DELETE denied. Real data at 2026-10-24T09:06:21.683415+00:00: 161,846 work items and 328,791 box findings. All production database queries used the specified read-only roles.
 
 ## Focused checks
 

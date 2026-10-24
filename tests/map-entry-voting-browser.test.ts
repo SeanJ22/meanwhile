@@ -137,6 +137,21 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
           const wasSelected = await page.locator(`.wtp-vote-pin[data-site-id="${place.state}-1"]`).getAttribute("data-selected") === "true";
           await page.locator(`[data-voting-site="${place.state}-1"] .voting-site-head`).click();
           await page.waitForFunction(({ id, selected }) => document.querySelector<HTMLElement>(`.wtp-vote-pin[data-site-id="${id}"]`)?.dataset.selected === String(selected), { id: `${place.state}-1`, selected: !wasSelected });
+          // A pin press must survive the popup's capture-phase outside handler,
+          // then bring the selected row back from outside the panel's viewport.
+          if (viewport.width >= 600) {
+            if (!wasSelected) await page.locator(`[data-voting-site="${place.state}-1"] .voting-site-head`).click();
+            await page.locator(".mw-pop[data-pop=vote]").evaluate(panel => { panel.scrollTop = 0; });
+            await page.locator(`.wtp-vote-pin[data-site-id="${place.state}-1"] .wtp-vote-pin-dot`).click();
+            await page.waitForFunction(id => {
+              const panel = document.querySelector(".mw-pop[data-pop=vote]");
+              const row = document.querySelector(`[data-voting-site="${id}"]`);
+              if (!panel || !row || row.getAttribute("data-selected") !== "true") return false;
+              const p = panel.getBoundingClientRect(), r = row.querySelector(".voting-site-head")!.getBoundingClientRect();
+              return r.top >= p.top && r.bottom <= p.bottom;
+            }, `${place.state}-1`, { timeout: 1000 });
+            assert.equal(await page.getByLabel("Your street address or ZIP").count(), 1);
+          }
         }
       }
       assert.deepEqual(requests.filter(url => /\/api\/(meetings|reader\/state)|\/geo\/reader-zips\//.test(url)), readsBefore, "voting answers must not reload the meeting or ZIP view");

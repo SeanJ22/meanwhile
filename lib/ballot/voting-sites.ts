@@ -28,6 +28,7 @@ export interface VotingOfficeContact {
   phone?: string;
   email?: string;
   address?: string;
+  hours?: string;
   url?: string;
 }
 
@@ -252,6 +253,9 @@ export interface VotingSitesAnswer {
   googleFallback?: { available: boolean; requested: boolean; reason?: VotingFallbackReason; label?: string; message?: string };
   /** Transient Google results must disappear from an open panel within 24 hours. */
   expiresAt?: string;
+
+  /** Request-only office contacts for an answer without sites; never part of a saved voting projection. */
+  electionOffices?: (VotingOfficeContact & { sources: (VotingSource & { checkedAt: string })[] })[];
 }
 
 export function modelSentence(j: VotingJurisdiction): string {

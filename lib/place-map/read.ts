@@ -50,7 +50,10 @@ export async function placesForCode(query: Query, kind: "zip" | "zcta", code: st
   const normalized = rows.length === 1 && "memberships" in rows[0] ? rows[0].memberships : rows.map(membership);
   if (!Array.isArray(normalized)) throw new Error("The place map lookup could not be read");
   const memberships = selected(normalized as PlaceMembership[], selection);
-  return { memberships, states: [...new Set(memberships.filter(row => row.layer === "state").flatMap(row => row.state ? [row.state] : []))].sort() };
+  // Local Census districts establish a border ZIP's state even when the old
+  // sampled state row missed its sliver. A shared tribal area's filing state
+  // cannot establish another state for that ZIP.
+  return { memberships, states: [...new Set(memberships.filter(row => row.layer !== "aiannh").flatMap(row => row.state ? [row.state] : []))].sort() };
 }
 
 /** One GiST query, then the registry's exact polygon test. County attachments

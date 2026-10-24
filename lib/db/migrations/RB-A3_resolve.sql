@@ -1,4 +1,6 @@
-CREATE OR REPLACE FUNCTION reader_resolve_id(any_id text) RETURNS text LANGUAGE plpgsql STABLE AS $$
+DROP FUNCTION reader_resolve_id(text);
+--> statement-breakpoint
+CREATE FUNCTION reader_resolve_id(any_id text) RETURNS text LANGUAGE plpgsql STABLE AS $$
 DECLARE matches text[]; exact_id text;
 BEGIN
   SELECT id INTO exact_id FROM entity WHERE id=any_id;

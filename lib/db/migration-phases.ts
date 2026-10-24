@@ -84,6 +84,11 @@ const CONTRACT_RULES: readonly {
     test: (s) => /\bDROP\s+TABLE\b/i.test(s),
   },
   {
+    rule: "drop-function",
+    why: "A callable the live build uses stops existing; its replacement runs after the dependent code and schema deploy.",
+    test: (s) => /\bDROP\s+FUNCTION\b/i.test(s),
+  },
+  {
     rule: "drop-default",
     why: "A write that omits the column stops landing and starts failing. This is the 0011/0014 shape.",
     test: (s) => /\bDROP\s+DEFAULT\b/i.test(s),

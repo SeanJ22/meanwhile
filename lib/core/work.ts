@@ -115,6 +115,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
     async finish(claim: WorkRow): Promise<boolean> {
       const [saved] = await query(`UPDATE work_row SET
         status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'ready' END,
+        refusal = NULL,
         done_at = CASE WHEN content_version = lease_version THEN $3::timestamptz ELSE done_at END,
         not_before = CASE WHEN content_version <> lease_version THEN $3::timestamptz ELSE not_before END,
         lease_owner = NULL, lease_until = NULL, lease_version = NULL

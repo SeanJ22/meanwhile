@@ -22,6 +22,7 @@ export function WorkCounts() {
   const rows = reading.kind === "ready" ? reading.data.rows : [];
   const { page, pager } = usePager(rows, 12);
   return <Card title="Work by hour">
+    <p className={s.meta}>Last 24 hours</p>
     <select className={s.select} value={state} aria-label="State for hourly work counts" onChange={event => choose(event.target.value)}>
       <option value="">Every state</option>
       {REGISTRY_STATES.map(code => <option key={code} value={code.toLowerCase()}>{v.index.get(`st:${code.toLowerCase()}`)?.name ?? code}</option>)}

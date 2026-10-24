@@ -32,9 +32,9 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   // RB-A2: complete Texas source acquisition, native map import and
-  // Census publication on a production-data copy peaked at 3,437,907,968
+  // Census publication on a production-data copy peaked at 3,696,275,456
   // bytes (2026-10-24, Node 24.19), plus 5%, rounded up to MiB.
-  "place-map-refresh.mts": 3443,
+  "place-map-refresh.mts": 3702,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,

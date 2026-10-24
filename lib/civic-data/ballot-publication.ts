@@ -36,10 +36,14 @@ const SUMMARY_FIELDS = ["kind", "family", "state", "inputHash", "inputStamp", "a
 const publicationLogKey = (state: BallotState, family: BallotPublicationFamily = "ballot-contests") =>
   family === "ballot-navigation" ? `ballot-navigation-publication:${requireBallotState(state)}` : `ballot-publication:${requireBallotState(state)}`;
 
-/** Due state files already hold source evidence; publish them before network work spends the pass's budget. */
-export function ballotPublicationLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
-  const publication = (job: T) => parseStateBallotContractId(job.task.id)?.family === "ballot-contests";
-  return [...jobs.filter(publication), ...jobs.filter(job => !publication(job))];
+/**
+ * Election work leads the pass, after the pass is ordered by how long its work is owed: a due state ballot file already
+ * holds its source evidence, and a due state's voting sites tell readers where to vote before a fixed date. Memory goes
+ * in launch order and the overdue meeting backlog holds it to the pass deadline, so work queued behind it never starts.
+ */
+export function electionLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
+  const election = (job: T) => ["ballot-contests", "voting-sites"].includes(parseStateBallotContractId(job.task.id)?.family ?? "");
+  return [...jobs.filter(election), ...jobs.filter(job => !election(job))];
 }
 
 export function ballotPublicationHasNoInput(report: BallotPublicationResult): boolean {

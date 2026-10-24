@@ -39,9 +39,11 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
         SELECT id,'place',name,state FROM jsonb_to_recordset($1::jsonb) AS p(id text,name text,state char(2))
         ON CONFLICT(id) DO NOTHING`, [JSON.stringify(places)]);
       const aliases = places.flatMap(place => place.aliases.map(alias => ({ entity_id: place.id, ...alias })));
-      await query(`INSERT INTO entity_external_id(entity_id,scheme,value)
+      await query(`INSERT INTO entity_external_id AS held(entity_id,scheme,value)
         SELECT entity_id,scheme,value FROM jsonb_to_recordset($1::jsonb) AS a(entity_id text,scheme text,value text)
-        ON CONFLICT(scheme,value) DO NOTHING`, [JSON.stringify(aliases)]);
+        ON CONFLICT(scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id
+        WHERE held.entity_id IS DISTINCT FROM EXCLUDED.entity_id
+          AND EXISTS(SELECT 1 FROM entity e WHERE e.id=held.entity_id AND e.kind='place')`, [JSON.stringify(aliases)]);
     });
     await batches(map.boundaries, async boundaries => {
       const rows = boundaries.map(b => ({ place_id: b.placeId, boundary_year: b.boundaryYear, layer: b.layer, version: b.version,

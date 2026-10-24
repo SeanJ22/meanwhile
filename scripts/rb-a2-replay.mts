@@ -3,7 +3,6 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { performance } from "node:perf_hooks";
 import { gzipSync, gunzipSync } from "node:zlib";
-import { PGlite } from "@electric-sql/pglite";
 import { neon } from "@neondatabase/serverless";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { memoryLockManager } from "../lib/control-plane/repository/memory.ts";
@@ -12,7 +11,7 @@ import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts"
 import { placesForCode } from "../lib/place-map/read.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-import { identitySourceTables, identityEventTables, readerIdentityMigration } from "../tests/helpers/reader-identity-db.ts";
+import { openMapCopy } from "./lib/rb-a2-copy.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 
 const root = process.cwd(), output = process.env.RB_A2_OUTPUT ?? "/tmp/rb-a2-replay";
@@ -42,15 +41,9 @@ for (const state of states) {
       await writeFile(path, gzipSync(JSON.stringify(map)));
     }
     const sourcePeakMiB = Math.round(process.resourceUsage().maxRSS / 1024);
-    const db = new PGlite();
+    const db = await openMapCopy(`replay_${state.toLowerCase()}`);
     try {
-      await db.exec(await readFile(join(root, "lib/db/migrations/0035_r1_fact_store.sql"), "utf8"));
-      await identitySourceTables(db);
-      await identityEventTables(db);
-      await db.exec(readerIdentityMigration());
-      await db.exec(await readFile(join(root, "lib/db/migrations/RB-A2_place_boundaries.sql"), "utf8"));
-      const query: Query = async (text, params = []) => (await db.query(text, [...params])).rows as Record<string, unknown>[];
-      const transaction = <T,>(work: (query: Query) => Promise<T>) => db.transaction(tx => work(async (text, params = []) => (await tx.query(text, [...params])).rows as Record<string, unknown>[]));
+      const { query, transaction } = db;
       const held = await production("SELECT id,kind,name,state FROM entity WHERE kind='place' AND (state=$1 OR id='ocd-division/country:us')", [state]);
       await query(`INSERT INTO entity(id,kind,name,state) SELECT id,kind,name,state FROM jsonb_to_recordset($1::jsonb) AS e(id text,kind text,name text,state char(2))`, [JSON.stringify(held)]);
       const governments = await production("SELECT id,kind,name,state FROM entity WHERE id=ANY($1::text[])", [map.entityPlaces?.map(p => p.entityId) ?? []]);
@@ -70,7 +63,7 @@ for (const state of states) {
         worstMs = Math.max(worstMs, performance.now() - start);
         if (!result.memberships.length) throw new Error(`Imported ZIP ${zip} cannot be read`);
         const ids = new Set(result.memberships.map(m => m.placeId));
-        for (const id of baseline.get(zip)?.ids ?? []) if ((ocdStateCode(id)?.toUpperCase() === state || id === 'ocd-division/country:us') && !ids.has(id)) missing.push({ zip, id });
+        for (const id of baseline.get(zip)?.ids ?? []) if ((!ocdStateCode(id) || ocdStateCode(id)?.toUpperCase() === state) && !ids.has(id)) missing.push({ zip, id });
       }
       for (const zip of baseline.keys()) if (!codes.includes(zip)) missing.push({ zip, id: 'entire ZIP' });
       if (missing.length) throw new Error(`Legacy memberships missing: ${JSON.stringify(missing.slice(0, 8))} (${missing.length} total)`);

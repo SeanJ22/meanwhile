@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 96's deploy (38b470355; Sean rolled back at 12:09 PM EDT). /ballot, /national, meetings work. NOT LIVE: release 97 (broke reader DB reads 11:48 to 12:09 PM EDT). NEXT: release 98 = the jit fix alone (PR #808, 1 line vs main)
+build_state: LIVE FOR READERS: release 96's deploy (38b470355, rolled back 12:09 PM EDT). NEXT: release 98 = jit fix alone (PR #808, CI last test job running, auto-merge on). QUEUED behind it, each its own release: 99 = 0051 contract budget (RV-0051 178151d61, gating), 100 = reader pool error handler (RV-POOL 207b50f5e)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T16:41:51Z
+heartbeat: 2026-10-24T17:00:57Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 1:00 PM EDT
+- Live: release 96's deploy (/api/build 38b470355). Readers have /ballot (dates, offices), /national, place answers, meetings (checked 12:30 PM EDT). Reactions, Speak your mind and Ask work on release 96's code; release 96 doesn't call reader_resolve_id.
+- Release 98 (PR #808, the jit line alone): admission, verify, both builds green; "test (affected)" running since 12:30 PM EDT; auto-merge on. River runs Sean's checks on meanwhileusa.com within 5 minutes of /api/build showing its merge commit.
+- 0051 (RB-A1) can't apply as shipped. The runtime contract stops every statement at 1 s (scripts/apply-migrations.mts RUNTIME_CONTRACT_SQL_SETTINGS). 0051 rebuilds the entity_place key (183,755 rows), re-checks entity kinds (271,422 rows) and indexes entity_external_id (593,062 rows). Timed on a local Postgres 16 copy of the schema at production row counts: 1.7 s (index 1.29 s, key 0.36 s). That is why it failed at 12:02 PM EDT. Production still has no reader_resolve_id, zip_place or place_page. The file is established and can't be rewritten. Fix RV-0051 (178151d61): a contract can declare its own statement budget in lib/db/migration-phases.ts; 0051 gets 10 s, and the 250 ms lock wait stays. Readers' reads of entity and entity_place wait about 2 s once while it runs. 26 migration tests pass. Full gates running from 12:56 PM EDT. It ships alone as release 99 after 98 is live, then the runner applies 0051 after deploy.
+- Reader pool error handler RV-POOL (207b50f5e, Sean's item 2): the pool and each connection now have error listeners. A refused or dropped connection fails its own read (route answers 503) instead of crashing the function; the next read reconnects. New test fails without it, passes with it. Ships alone as release 100 after 99.
+- RB-A4: dropped per Sean (its lane is finishing it). River won't touch stream/rb-a4; it folds when RB-A4 posts READY, after 0051 is live. Its boundary_year column must agree with 0051's (NOT NULL DEFAULT 0).
+- SO-01 (last push 6 h ago) and DB-01 (8 h ago): no new READY yet. Sean told them to post READY; River folds each in a small batch and runs live checks after release.
+- Next small batch after 100: CL-01 6c3578d48 (Raleigh's duplicate Deborah K. Ross card), RV-TOOLS 2645e12d5, RIVER-KEYS-FX 33a304632 (reopens Cochise's 2 held doors, cochise:ballot-box-table and legacy:cochise:vote-center-pdf). Then check Cochise's 5 drop boxes (85603) and Wheeling 60090 on the live site, with counts by state.
 
 ### Live for readers, 12:45 PM EDT (Sean's orders 12:40 PM EDT)
 - Live: release 96's deploy (/api/build 38b470355). Sean rolled back at 12:09 PM EDT. Readers have /ballot (dates, offices), /national, place answers, meetings.

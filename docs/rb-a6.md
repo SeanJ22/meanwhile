@@ -25,11 +25,13 @@ Production reads use only `readonly` on tiny-hill-13996172 / br-delicate-lab-ax0
 
 ## Remaining work
 
+Paused at Sean's request. The dependency wait and twenty-minute polling are stopped. This remains WIP, with no RB-A6 READY pushed. The last completed build was the 7:10 PM Eastern build against RB-A2 READY `78a2a9f14`; the latest dependency check still found no RB-A2 integration entry or containment in `origin/river`. Resume with a fresh fetch, then follow the remaining steps below.
+
 Owned by RB-A6:
 
 - Rerun every check after River contains RB-A2. All nine `pnpm gates` checks pass on snapshot `43229fd4a`: 9,646 cases passed, none failed, five existing cases skipped, with all 1,348 file summaries complete. Both production builds and the bundle check pass. Current combined snapshot `6822b4af5` builds with all reader traces passing and passes all 131 related Admin, identity, map and owed-list cases in 14 complete file summaries. Earlier incomplete runs are not counted as passes.
 - The owed test and production replay now reuse the existing `placeBoundaryMigration` lookup instead of hardcoding RB-A2's unnumbered filename. This follows River's migration numbering without retaining duplicate migrations. Both passed after execution returned. The refreshed replay covers all ten states, including repeat map imports and the controlled next pass; the 6:50 PM Eastern build also passed.
-- Follow `stream/rb-a2` on each fetch. Current merged dependency: READY `78a2a9f14` (5:44 PM Eastern), merged and built after command access returned at 6:41 PM Eastern. That READY is not yet listed in River's integration record. The twenty-minute fetch/build cycle has resumed. Builds through 1:50 PM Eastern passed; scheduled builds could not run during the execution outage that began at 2:10 PM Eastern. GitHub connector monitoring continued during that outage. This dependency wait does not authorize READY.
+- Follow `stream/rb-a2` on each fetch when work resumes. Current merged dependency: READY `78a2a9f14` (5:44 PM Eastern), merged and built after command access returned at 6:41 PM Eastern. That READY was not listed in River's integration record at the last check. Builds through 1:50 PM Eastern passed; scheduled builds could not run during the execution outage that began at 2:10 PM Eastern. GitHub connector monitoring continued during that outage, and builds resumed after recovery. This dependency wait does not authorize READY.
 - After River folds RB-A2, merge `origin/river`, rerun every check, and push `READY: RB-A6` with the production connections, every-state counts and next-pass evidence.
 - Keep checking River's return and status until RB-A6 passes its live check. The first automatic production pass remains part of that live check.
 

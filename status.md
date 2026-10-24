@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 94 LIVE (revert of BL-21-FX; /api/build b518e4d8d from 9:11 PM EDT): /ballot dates and election offices back as on release 92. RELEASE 95 candidate river-next f3baca176 (RN-02 on the revert) in pnpm gates from 9:05 PM EDT
+build_state: RELEASE 94 LIVE (revert of BL-21-FX; /api/build b518e4d8d from 9:11 PM EDT). RELEASE 95 (RN-02) PR #805 OPEN: gates 9 of 9 on f3baca176 (9,630 pass, 0 fail, 6 skipped; 9:05 to 9:37 PM EDT), river 43742857f (main merged, tree identical), run-full-ci + auto-merge
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,10 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## RN-02 live check, owed once release 95 is live (plus real places in 10+ states, counts by state)
+- Runner: voting-sites, registration, legistar-members (oregonmetro) and ballot-navigation tasks launch instead of deferring "Reader repair waits for the next pass" / "Waiting for a worker slot"; ROUTINE CIVIC DATA SUPERVISOR FAILED counts drop; reader-repair failures (READER_READBACK_REPAIR_FAILED) gone.
+- Readers: the Next meeting card and /api/meetings exact meeting IDs RN-02 named (San Diego County Oct 27 9 AM PDT legistar:sdcounty:2042; Galveston Oct 26 9:30 AM CDT); then release 92's owed data (Tucson 153 sites, CA/NC/NY/PA/TX sites, Portland 13 Metro boards).
 
 ## Release 94 live check (Oct 23, 9:11 to 9:20 PM EDT): PASS, the revert restored what release 92 showed
 

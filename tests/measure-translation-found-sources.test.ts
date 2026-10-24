@@ -1,3 +1,4 @@
+import { measureDraft } from "./helpers/measure-translation.ts";
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -149,7 +150,7 @@ test("an explainer written from a found page publishes and attaches to its exact
       const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: measure[field as "whatItDoes"], quote: measure[field as "whatItDoes"] }));
       return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 100, output_tokens: 50 },
         content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: request.tools[0].name === "write_measure_translation"
-          ? { measure, sentences } : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) } }] };
+          ? measureDraft(measure, sentences) : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) } }] };
     } };
   const without = await runMeasureTranslationPass(base);
   assert.equal(without.checkedAfter, 0);
@@ -190,7 +191,7 @@ test("the ballot's verified full-text URL supplies a capture when its filing pag
       const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: measure[field as "whatItDoes"], quote: measure[field as "whatItDoes"] }));
       return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 100, output_tokens: 50 },
         content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: request.tools[0].name === "write_measure_translation"
-          ? { measure, sentences } : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) } }] };
+          ? measureDraft(measure, sentences) : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) } }] };
     } };
   const first = await runMeasureTranslationPass(base);
   assert.equal(first.checkedAfter, 1, JSON.stringify(first));

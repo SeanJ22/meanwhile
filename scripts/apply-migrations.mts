@@ -37,6 +37,13 @@ export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
 // journalled DO statement must release them inside the reader query deadline.
 export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;
 
+/** A migration may declare a longer statement budget; the lock wait stays bounded either way. */
+export function runtimeContractSqlSettings(tag?: string): readonly string[] {
+  const budget = tag === undefined ? undefined : declaredPhase(tag)?.contractStatementTimeoutMs;
+  return budget === undefined ? RUNTIME_CONTRACT_SQL_SETTINGS
+    : [RUNTIME_CONTRACT_SQL_SETTINGS[0], `SET LOCAL statement_timeout = '${budget}ms'`];
+}
+
 /** Migrations have their own clock. Asking for them never waits for DDL and
  * repeated cycle boundaries cannot hammer a failed migration or overlap it. */
 export function runtimeContractRetry(input: {
@@ -331,7 +338,7 @@ export async function applyMigrations(args: string[], options: { beforeContract?
           END IF;
         END ${delimiter};`;
         const results = await sql.transaction((transaction) => [
-          ...(PRODUCTION && PHASE === "contract" ? RUNTIME_CONTRACT_SQL_SETTINGS.map(statement => transaction.query(statement)) : []),
+          ...(PRODUCTION && PHASE === "contract" ? runtimeContractSqlSettings(entry.tag).map(statement => transaction.query(statement)) : []),
           transaction`SELECT pg_advisory_xact_lock(1835360622, 1)`,
           transaction.query(apply),
           transaction`SELECT EXISTS (SELECT 1 FROM drizzle.__drizzle_migrations

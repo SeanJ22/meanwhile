@@ -4090,5 +4090,17 @@
     "tested_sha": "f3baca176655d68b9008969f6ff22ceac53ff2f0",
     "gates": "pass",
     "at": "2026-10-24T01:38:00Z"
+  },
+  {
+    "lane": "river-ci",
+    "steps": [
+      "CI-POPPLER"
+    ],
+    "ready_sha": "21ae9bcfb663794953b07a9d7977b228cab67c2d",
+    "merge_sha": "21ae9bcfb663794953b07a9d7977b228cab67c2d",
+    "river_sha": "21ae9bcfb663794953b07a9d7977b228cab67c2d",
+    "tested_sha": "21ae9bcfb663794953b07a9d7977b228cab67c2d",
+    "gates": "pass",
+    "at": "2026-10-24T02:42:52Z"
   }
 ]

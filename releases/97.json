@@ -1,0 +1,43 @@
+{
+  "n": 97,
+  "branch": "release/97",
+  "river_sha": "59b7c55771d4e28cdfdaeadb4c29bd6e6ba83ba0",
+  "tested_sha": "166fa32ab0c8213c98b1f150735bf932d3f8e3ee",
+  "steps": [
+    "RV-TOOLS",
+    "RN-03",
+    "RB-A1",
+    "BL-21-FX",
+    "RN-01",
+    "BL-01",
+    "LV-01",
+    "RIVER-KEYS",
+    "MT-01",
+    "SRC-01",
+    "CL-01",
+    "PB-02",
+    "MD-01"
+  ],
+  "lanes": [
+    "river-tools",
+    "rn-03",
+    "rb-a1",
+    "ballot-parity-fx",
+    "rn-01-fx",
+    "bl-01",
+    "lv-01",
+    "river-keys",
+    "mt-01",
+    "src-01",
+    "cl-01",
+    "pb-02",
+    "md-01"
+  ],
+  "integration_from": 314,
+  "integration_count": 328,
+  "pr": {
+    "number": 807,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/807"
+  },
+  "at": "2026-10-24T15:25:33Z"
+}

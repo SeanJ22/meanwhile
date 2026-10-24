@@ -1,3 +1,4 @@
+import { fixtureCodeRows } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
@@ -73,18 +74,19 @@ test("one set of point source rows answers current representation and the select
 test("ZIP ballots retain every selected race including fringe membership without adding a point's other districts", async () => {
   const base = state("AZ"), county = `${base}/county:pima`, district = `${base}/sldl:20`, fringe = `${base}/sldl:21`;
   let calls = 0;
-  installPlaceMapQuery(async sql => {if(sql.includes("FROM zip_location"))return [];calls++;return [
+  installPlaceMapQuery(async sql => {if(sql.includes("FROM zip_location"))return [];calls++;return fixtureCodeRows([
+    row(base,"AZ","state","state:2023"),
     row(county,"AZ","county","county:2020"),
     row(district,"AZ","sldl","sldl:2024",{partial:true}),
     row(fringe,"AZ","sldl","sldl:2024",{partial:true,fringe:true}),
-  ];});
+  ]);});
   try {
     await withPlaceMapReads(async () => {
       const entry = await readZipPlace("85701");
-      assert.deepEqual(entry?.ids,[county,district]);
+      assert.deepEqual(entry?.ids,[base,county,district]);
       assert.deepEqual(entry?.partial,[district]);
       assert.deepEqual(entry?.fringe,[fringe]);
-      assert.deepEqual(await divisionIdsForZipArea("85701",[`${base}/sldl:1`]),[county,district,fringe]);
+      assert.deepEqual(await divisionIdsForZipArea("85701",[`${base}/sldl:1`]),[base,county,district,fringe]);
     });
     assert.equal(calls,1);
   } finally { installPlaceMapQuery(undefined); }

@@ -37,6 +37,12 @@ const row = (id:string, extra:Record<string,unknown>={}) => {
     partial:false,fringe:false,county_attachment:false,host_county_id:null,...extra};
 };
 
+export const fixtureCodeRows=(rows:readonly Record<string,unknown>[])=>[{memberships:rows.map(row=>({
+  placeId:row.place_id,name:row.name,state:row.state,layer:row.layer,boundaryYear:row.boundary_year,version:row.version,
+  share:row.share??null,shareBasis:row.share_basis??"unknown",partial:row.partial??false,fringe:row.fringe??false,
+  countyAttachment:row.county_attachment??false,hostCountyId:row.host_county_id??null,
+}))}];
+
 /** Acquired seed data supplies rows to the new map interface in isolated reader tests. */
 export function fixturePlaceMapQuery(fallback?: Query): Query {
   const run:Query=async (sql,params=[]) => {
@@ -50,17 +56,22 @@ export function fixturePlaceMapQuery(fallback?: Query): Query {
       }).map((zip:string)=>({zip})));
     }
     if(sql.includes("FROM zip_place m")&&sql.includes("m.zip=ANY")){
-      return (await Promise.all((params[0] as string[]).map(async zip=>(await run("FROM zip_place m WHERE m.zip=$1",[zip])).map(row=>({...row,zip}))))).flat();
+      return (await Promise.all((params[0] as string[]).map(async zip=>(await run("SELECT AS memberships FROM zip_place m WHERE m.zip=$1",[zip])).map(row=>({...row,zip}))))).flat();
     }
     if (sql.includes("FROM zip_place m") && /m\.zip=\$1/.test(sql)) {
       const zip=String(params[0]), area=postalArea(zip), code=area?.zcta ?? zip;
+      const answer=(rows:readonly Record<string,unknown>[])=>{
+        const states=[...new Set(rows.flatMap(value=>value.state ? [String(value.state)] : []))];
+        const roots=states.map(state=>row(`ocd-division/country:us/${state==='DC'?'district':['PR','GU','VI','AS','MP'].includes(state)?'territory':'state'}:${state.toLowerCase()}`,{layer:'state'}));
+        const all=[...roots,...rows];return sql.includes('AS memberships')?fixtureCodeRows(all):all;
+      };
       const shard=shardOf(code.slice(0,2));
-      if(!shard)return [];
+      if(!shard)return answer([]);
       const entry=legacyZipEntry(shard,code);
-      if(!entry)return [];
+      if(!entry)return answer([]);
       const ids=zipNeedsAddress(zip)?entry.ids.filter(isTownOrCountyDivision):[...entry.ids,...entry.fringe??[]];
       const seedRows=ids.map(id=>row(id,{partial:entry.partial.includes(id)||zipNeedsAddress(zip)&&id.split('/').length>3,fringe:entry.fringe?.includes(id)??false}));
-      if(zipNeedsAddress(zip))return seedRows;
+      if(zipNeedsAddress(zip))return answer(seedRows);
       const installed=currentReaderAuthorityEdge()?.censusDistricts;
       const census=installed ? await installed.slice(code) : area?.state === "AZ"
         ? (await import("./ballot-district-fixtures.ts")).azDistrictSlice(code) : undefined;
@@ -69,7 +80,7 @@ export function fixturePlaceMapQuery(fallback?: Query): Query {
         return id&&overlap?[row(id,{version:container.ref.version,partial:!overlap.whole,share:overlap.fraction})]:[];
       }):[];
       const replaced=new Set(censusRows.map(value=>`${value.state}/${value.layer}`));
-      return [...seedRows.filter(value=>!replaced.has(`${value.state}/${value.layer}`)),...censusRows];
+      return answer([...seedRows.filter(value=>!replaced.has(`${value.state}/${value.layer}`)),...censusRows]);
     }
     if (sql.includes("WITH candidates AS MATERIALIZED") && sql.includes("place_boundary")) {
       const point=[Number(params[0]),Number(params[1])] as [number,number];
@@ -111,5 +122,5 @@ export async function entryForCensusFixture(slice:Slice<CodeSlice>,zip:string,se
     if(!id||!overlap)return [];
     return [row(id,{version:container.ref.version,share:overlap.fraction,partial:!overlap.whole})];
   }):[];
-  return placeEntry(await placesForCode(async()=>rows,'zip',zip,selection));
+  return placeEntry(await placesForCode(async()=>fixtureCodeRows(rows),'zip',zip,selection));
 }

@@ -1,3 +1,4 @@
+import { fixtureCodeRows } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { GET } from "../app/api/reader/places/route.ts";
@@ -6,7 +7,7 @@ import { installFactReader } from "../lib/facts/db.ts";
 import { fixtureZipLocation } from "./helpers/zip-location.ts";
 
 test("published-place discovery returns indexed county ZIPs and deduplicates shared counties", async () => {
-  const query = async (sql:string) => sql.includes("FROM zip_location") ? [{...fixtureZipLocation("85701")!}] : sql.includes("SELECT DISTINCT m.zip") ? [{zip:"85701"}] : sql.includes("FROM zip_place m") ? [{zip:"85701",place_id:"ocd-division/country:us/state:az/county:pima",name:"Pima County",state:"AZ",layer:"county",version:"county:2020",boundary_year:2020,partial:false,fringe:false}] : [
+  const query = async (sql:string) => sql.includes("FROM zip_location") ? [{...fixtureZipLocation("85701")!}] : sql.includes("SELECT DISTINCT m.zip") ? [{zip:"85701"}] : sql.includes("FROM zip_place m") ? [{zip:"85701",...fixtureCodeRows([{place_id:"ocd-division/country:us/state:az",name:"Arizona",state:"AZ",layer:"state",version:"state:2026",boundary_year:2026,partial:false,fringe:false},{place_id:"ocd-division/country:us/state:az/county:pima",name:"Pima County",state:"AZ",layer:"county",version:"county:2020",boundary_year:2020,partial:false,fringe:false}])[0]}] : [
     { place_id: "ocd-division/country:us/state:az/county:pima" },
     { place_id: "ocd-division/country:us/state:az/county:pima#board" },
     { place_id: "ocd-division/country:us/state:az/place:tucson" },

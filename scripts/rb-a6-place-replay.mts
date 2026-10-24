@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { PGlite } from "@electric-sql/pglite";
+import { placeBoundaryMigration } from "../tests/helpers/reader-identity-db.ts";
 import { indexedZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { buildStatePlaceMap } from "../lib/place-map/build.ts";
@@ -44,7 +45,7 @@ for (const [state, zip] of [["AZ", "85701"], ["CA", "94553"], ["CO", "80012"], [
       CREATE TABLE blank(entity_id text,field text,stage text,reason text,next_try_at timestamptz,PRIMARY KEY(entity_id,field));
       CREATE TABLE zip_place(zip text,place_id text,share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year int,PRIMARY KEY(zip,place_id,boundary_year));
       CREATE TABLE zcta_place(zcta text,place_id text,share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year int,PRIMARY KEY(zcta,place_id,boundary_year));`);
-    await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
+    await db.exec(placeBoundaryMigration());
     const query: Query = async (text, params = []) => (await db.query<Record<string, unknown>>(text, [...params])).rows;
     const transaction = <T,>(work: (query: Query) => Promise<T>) => db.transaction(tx => work(async (text, params = []) => (await tx.query<Record<string, unknown>>(text, [...params])).rows));
     await loadStatePlaceMap({ transaction }, map);

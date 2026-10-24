@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { actionText, executiveActionStore } from "../lib/officials/executive-actions.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
-import { currentStatewideExecutives } from "../lib/officials/statewide-executives.ts";
+import { currentStatewideExecutives } from "../lib/registry/runtime-read-model.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import { installExecutiveActions, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";

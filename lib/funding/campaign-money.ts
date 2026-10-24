@@ -1,8 +1,7 @@
-import { currentStatewideExecutives } from "../officials/statewide-executives.ts";
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
 import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
-import { getRegistryRuntimeReadModel, selectedRegistryStates, currentBodyRosters, currentRosterMemberReaderDisposition } from "../registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, selectedRegistryStates, currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "../registry/runtime-read-model.ts";
 import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
 import { currentBallotPeopleProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";

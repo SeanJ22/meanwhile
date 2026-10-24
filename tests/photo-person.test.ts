@@ -5,7 +5,7 @@ import { photoForPerson } from "../lib/photos/person.ts";
 import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
-import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
+import { STATEWIDE_EXECUTIVES, statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import { indexByOfficeholderId } from "../lib/officials/lookup.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -36,5 +36,12 @@ test("a canonical person and its declared source aliases use one portrait withou
     assert.equal(card.photoUrl,executive.holder.photoUrl);
     assert.equal(card.fieldSources?.photoUrl.sourceUrl,executive.holder.fieldSources?.photoUrl?.sourceUrl ?? executive.sourceUrl);
     assert.equal(card.id,person.id);assert.equal(card.personId,person.personId);
+    const alias={...executive,holder:{...executive.holder,id:'statewide:nh/source-alias',photoUrl:null,
+      nativeIds:{reader:[person.personId!]}}};
+    withRegistryRuntimeProjection({...runtime,statewideExecutives:[alias,executive]},['NH'],()=>{
+      const holders=statewideExecutivesFor([executive.stateOcdId]);
+      assert.deepEqual(holders.map(holder=>holder.id),[alias.holder.id,executive.holder.id]);
+      assert.deepEqual(holders.map(holder=>holder.photoUrl),[executive.holder.photoUrl,executive.holder.photoUrl]);
+    });
   }));
 });

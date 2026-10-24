@@ -4,6 +4,7 @@ import { readStateAuthorityProjection } from "../civic-data/state-reader.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
+import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { currentReaderAuthorityEdge, reportReaderStateFailure } from "./runtime-edge.ts";
 import { readStateRegistryRuntimeProjection } from "../civic-data/read-model.ts";
 import { combineStateRegistries, withStateRegistryFacts } from "./state-composition.ts";
@@ -99,6 +100,10 @@ export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
 /** The published roster and its identity decisions, without loading card composition. */
 export function currentBodyRosters(): readonly BodyRoster[] {
   return getRegistryRuntimeReadModel().bodyRosters;
+}
+
+export function currentStatewideExecutives(): readonly StatewideExecutive[] {
+  return getRegistryRuntimeReadModel().statewideExecutives;
 }
 
 export function currentRosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {

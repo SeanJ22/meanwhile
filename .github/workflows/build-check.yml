@@ -322,6 +322,11 @@ jobs:
         if: success() && needs.admission.outputs.tier == 'yes' && needs.admission.outputs.needs_browser == 'true'
         timeout-minutes: 5
         run: corepack pnpm run assert:browser
+      # Agenda PDFs are read with Poppler's pdftotext, which deploy/runner/install.sh installs on the runner.
+      - name: Install the runner's PDF tools
+        if: success() && needs.admission.outputs.tier == 'yes'
+        timeout-minutes: 5
+        run: sudo apt-get install -y --no-install-recommends poppler-utils
       - name: Test
         if: success() && needs.admission.outputs.tier == 'yes'
         timeout-minutes: 60

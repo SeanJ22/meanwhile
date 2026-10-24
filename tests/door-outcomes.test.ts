@@ -13,6 +13,7 @@ import {
   stateJurisdictionOf,
 } from "../lib/civic-data/outcome-partitions.ts";
 import { sittingWindowSourceIds, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
+import { installOutcomeRepairSelection, readerRepairContractHandoff, routineReaderRepairDomains } from "../lib/civic-data/reader-repair-protocol.ts";
 import { authorityFor, installDoorHosts } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
@@ -82,6 +83,36 @@ afterEach(() => {
 });
 
 describe("DB-22: outcome contracts are built from doors", () => {
+  it("hands a newly registered outcome to a child with an older door snapshot and refuses crossed identities", () => {
+    assert.equal(refreshOutcomePartitions([DEMO]).refreshed, true);
+    const [selected] = OUTCOME_PARTITION_CONTRACTS;
+    const handed = readerRepairContractHandoff([selected!]);
+    assert.deepEqual(handed, [selected]);
+    refreshOutcomePartitions([]);
+    installOutcomeRepairSelection([selected!]);
+    assert.deepEqual(OUTCOME_PARTITION_CONTRACTS, [selected]);
+    assert.deepEqual(DOOR_OUTCOME_POINTERS.map(pointer => [pointer.contractId, pointer.scope]), [[selected!.id, selected!.scope]]);
+    for (const invalid of [{ ...selected!, scope: "another-door" }, { ...selected!, bodyId: "another-board" },
+      { ...selected!, tenant: { ...selected!.tenant, sourceId: "another-source" } }]) {
+      assert.throws(() => installOutcomeRepairSelection([invalid]), /READER_REPAIR_OUTCOME_SELECTION_INVALID/);
+      assert.deepEqual(OUTCOME_PARTITION_CONTRACTS, [selected], "a bad handoff leaves the exact prior selection intact");
+    }
+  });
+
+  it("repairs encoded outcome scopes in bounded children of their exact registered state", () => {
+    const second = door({ doorId: "meetings:legistar:second", bodyIds: ["ocd-division/country:us/state:az/county:second#governing"] });
+    const california = door({ doorId: "meetings:legistar:california", ocdId: "ocd-division/country:us/state:ca/county:demo",
+      bodyIds: ["ocd-division/country:us/state:ca/county:demo#governing"] });
+    assert.equal(refreshOutcomePartitions([DEMO, second, california]).refreshed, true);
+    const domains = routineReaderRepairDomains(OUTCOME_PARTITION_CONTRACTS);
+    assert.equal(domains.length, 2);
+    const az = OUTCOME_PARTITION_CONTRACTS.filter(contract => contract.tenant.jurisdiction === "US-AZ");
+    assert.equal(az.length, 2);
+    assert.deepEqual(domains.find(domain => domain.contracts.some(contract => contract.id === az[0]!.id))?.contracts, az);
+    assert.equal(domains.find(domain => domain.contracts.some(contract => contract.id === OUTCOME_PARTITION_CONTRACTS[2]!.id))?.contracts.length, 1);
+    assert.match(az[0]!.scope, /%253Aaz/);
+  });
+
   it("builds one contract per Legistar door that holds outcomes, in its own scope under the door-outcomes authority", () => {
     const { contracts, skipped } = buildOutcomePartitions([DEMO]);
     assert.deepEqual(skipped, []);

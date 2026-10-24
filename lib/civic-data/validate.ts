@@ -5,6 +5,7 @@ import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 import { sameOffice } from "../officials/office-identity.ts";
+import { meetingDoorRemovalCheck } from "../doors/meeting-door-removal.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
@@ -324,6 +325,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
+
+  const suspendedDoor = meetingDoorRemovalCheck(candidate);
+  if (suspendedDoor !== null) return suspendedDoor;
 
   const reclassified = retirementAuthorized ? retirementBallotReclassificationCheck(candidate) : null;
   if (reclassified !== null) return reclassified;

@@ -543,6 +543,8 @@ export interface StateRetirementEvidence {
 
 /** `readModel` is the bounded projection Reader consumes; Reader never queries staging rows. */
 export interface RoutineCandidate {
+  /** A new attempt of the exact same captured version; the prior attempt remains immutable. */
+  readonly retryOfCandidateId?: string;
   readonly id: string;
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;

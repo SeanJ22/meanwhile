@@ -1,10 +1,14 @@
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
+import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
+import { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
+export { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
 import { pathToFileURL } from "node:url";
 import { readFile } from "node:fs/promises";
 import { withRetainedSourceResponse } from "./lib/retained-source-replay.ts";
 
 import {
   agendaDocumentStore,
+  canonicalAgendaDocument,
   retrieveAgendaDocument,
   AgendaDocumentStore,
   type AgendaDocument,
@@ -25,7 +29,6 @@ import {
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
-import { ROUTINE_SAME_DOMAIN_CHILD_GAP_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { calendarReadOrder } from "../lib/civic-data/state-calendars.ts";
 import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
@@ -77,9 +80,10 @@ import { makeLegistarSource } from "../lib/sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { activeWiring, installMeetingDoors, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
-import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
-import { installDoorRecords } from "../lib/doors/meeting-doors.ts";
+import { ensureMeetingDoors, installDoorRecords, installMeetingWiring } from "../lib/doors/meeting-doors.ts";
 import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
+import { hostsOfConfig } from "../lib/doors/seed-meetings.ts";
+import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
@@ -158,7 +162,12 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
     .map((arg) => arg.slice("--only-partition=".length));
   const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
   if (handed && flags.length > 0) throw new Error("MEETING_PARTITION_SELECTION_AMBIGUOUS");
-  const requested = handed ? readContractHandoff<string>(args) : flags;
+  if (handed) {
+    const contracts = readContractHandoff<MeetingPartitionContract>(args);
+    installMeetingPartitionSelection(contracts);
+    return contracts;
+  }
+  const requested = flags;
   if (requested.length === 0 || requested.some((id) => typeof id !== "string" || !id)) throw new Error("MEETING_PARTITION_REQUIRED");
   if (new Set(requested).size !== requested.length) throw new Error("MEETING_PARTITION_NAMED_TWICE");
   return requested.map((id) => {
@@ -224,36 +233,6 @@ export class AgendaRedirectRefused extends Error {
 }
 
 const AGENDA_REDIRECT_LIMIT = 5;
-
-export function readOncePerRun(base: typeof fetch): typeof fetch & { readonly distinctReads: () => number } {
-  type Held = { readonly status: number; readonly statusText: string; readonly headers: [string, string][]; readonly bytes: Uint8Array };
-  const reads = new Map<string, Promise<Held>>();
-  const wrapped = (async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url = String(input instanceof Request ? input.url : input);
-    let read = reads.get(url);
-    if (!read) {
-      read = (async () => {
-        const response = await base(input, init);
-        return {
-          status: response.status,
-          statusText: response.statusText,
-          headers: [...response.headers.entries()],
-          bytes: new Uint8Array(await response.arrayBuffer()),
-        };
-      })();
-      reads.set(url, read);
-    }
-    const held = await read;
-    const nullBody = held.status === 204 || held.status === 205 || held.status === 304;
-    return new Response(nullBody ? null : held.bytes.slice(), {
-      status: held.status,
-      statusText: held.statusText,
-      headers: held.headers,
-    });
-  }) as typeof fetch & { readonly distinctReads: () => number };
-  Object.defineProperty(wrapped, "distinctReads", { value: () => reads.size });
-  return wrapped;
-}
 
 export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -439,97 +418,101 @@ export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocument
   const freshForMs = meetings.some(meeting => Math.abs(Date.parse(meeting.startsAt) - nowMs) <= clock.windowMs)
     ? clock.hotEveryMs : clock.baseEveryMs;
 
-  for (const meeting of ordered) {
-    try {
-      const url = documentUrlFor(meeting);
-      const saved = store.latestFor(meeting.id);
-      const savedAt = saved ? Date.parse(saved.retrievedAt) : Number.NaN;
-      const sourcePostedAt = meeting.postedAt ? Date.parse(meeting.postedAt) : Number.NaN;
-      if (saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
-        savedAt <= nowMs && nowMs - savedAt < freshForMs && !(sourcePostedAt > savedAt)) {
-        reusedFresh++;
-        readableMeetingIds.push(meeting.id);
-        continue;
-      }
-      const viaNoticePage = readThroughNoticePage(meeting);
-      if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
-        noticePagesRefused++;
-        continue;
-      }
-      let override = url && url !== meeting.agendaUrl ? url : null;
-      let fromPortal = false;
-      let fromVendor = false;
-      if (url !== null && readsThroughPortal(meeting, url)) {
-        let portalLink: string | null = null;
-        let portalFailure: string | null = null;
-        try {
-          portalLink = await portalAgendaLinkFor(meeting, fetchImpl, store);
-        } catch (error) {
-          portalFailure = error instanceof Error ? error.message : String(error);
+  try {
+    for (const meeting of ordered) {
+      try {
+        const url = documentUrlFor(meeting);
+        const saved = store.latestFor(meeting.id);
+        const savedAt = saved ? Date.parse(saved.retrievedAt) : Number.NaN;
+        const sourcePostedAt = meeting.postedAt ? Date.parse(meeting.postedAt) : Number.NaN;
+        if (saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
+          savedAt <= nowMs && nowMs - savedAt < freshForMs && !(sourcePostedAt > savedAt)) {
+          reusedFresh++;
+          readableMeetingIds.push(meeting.id);
+          continue;
         }
-        if (portalLink) {
-          override = portalLink;
-          fromPortal = true;
-        } else {
-          // The other public route to the same agenda: the vendor's own file.
-          fromVendor = true;
-          console.log(
-            `  agenda for ${meeting.id} read from the vendor's file: its portal detail page ` +
-              (portalFailure === null ? "links no agenda yet" : `could not be read (${portalFailure})`),
+        const viaNoticePage = readThroughNoticePage(meeting);
+        if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
+          noticePagesRefused++;
+          continue;
+        }
+        let override = url && url !== meeting.agendaUrl ? url : null;
+        let fromPortal = false;
+        let fromVendor = false;
+        if (url !== null && readsThroughPortal(meeting, url)) {
+          let portalLink: string | null = null;
+          let portalFailure: string | null = null;
+          try {
+            portalLink = await portalAgendaLinkFor(meeting, fetchImpl, store);
+          } catch (error) {
+            portalFailure = error instanceof Error ? error.message : String(error);
+          }
+          if (portalLink) {
+            override = portalLink;
+            fromPortal = true;
+          } else {
+            // The other public route to the same agenda: the vendor's own file.
+            fromVendor = true;
+            console.log(
+              `  agenda for ${meeting.id} read from the vendor's file: its portal detail page ` +
+                (portalFailure === null ? "links no agenda yet" : `could not be read (${portalFailure})`),
+            );
+          }
+        }
+        const doc = await retrieveAgendaDocument(
+          meeting,
+          override ? { fetchImpl, held: store, urlOverride: override } : { fetchImpl, held: store },
+        );
+        if (!doc) continue;
+        if (fromPortal) readViaPortal++;
+        if (fromVendor) readFromVendor++;
+        if (doc.extraction === "failed") {
+          failedExtractions++;
+          console.warn(
+            `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
           );
         }
-      }
-      const doc = await retrieveAgendaDocument(
-        meeting,
-        override ? { fetchImpl, held: store, urlOverride: override } : { fetchImpl, held: store },
-      );
-      if (!doc) continue;
-      if (fromPortal) readViaPortal++;
-      if (fromVendor) readFromVendor++;
-      if (doc.extraction === "failed") {
-        failedExtractions++;
-        console.warn(
-          `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
+
+        const alreadyOnAnotherMeeting = store.isUrlOnAnotherMeeting(
+          doc.documentUrl,
+          doc.meetingId,
         );
-      }
+        if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
+          landingPages++;
+          continue;
+        }
 
-      const alreadyOnAnotherMeeting = store.isUrlOnAnotherMeeting(
-        doc.documentUrl,
-        doc.meetingId,
-      );
-      if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
-        landingPages++;
-        continue;
-      }
+        if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
+          noticePagesRefused++;
+          if (url !== null) noticePageRefusedThisRun.add(url);
+          continue;
+        }
 
-      if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
-        noticePagesRefused++;
-        if (url !== null) noticePageRefusedThisRun.add(url);
-        continue;
-      }
+        if (doc.extraction === "failed" && store.latestFor(doc.meetingId)) {
+          failedOverHeld++;
+          continue;
+        }
 
-      if (doc.extraction === "failed" && store.latestFor(doc.meetingId)) {
-        failedOverHeld++;
-        continue;
-      }
+        if (doc.extraction !== "failed" && doc.text) readableMeetingIds.push(doc.meetingId);
 
-      if (doc.extraction !== "failed" && doc.text) readableMeetingIds.push(doc.meetingId);
-
-      const result = store.append(doc);
-      if (!result.stored) unchanged++;
-      else {
-        stored++;
-        if (result.revised) revised++;
+        const result = store.append(doc);
+        if (!result.stored) unchanged++;
+        else {
+          stored++;
+          if (result.revised) revised++;
+        }
+      } catch (error) {
+        if (error instanceof AgendaRedirectRefused) {
+          redirectsRefused++;
+          console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
+          continue;
+        }
+        failed++;
+        console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
       }
-    } catch (error) {
-      if (error instanceof AgendaRedirectRefused) {
-        redirectsRefused++;
-        console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
-        continue;
-      }
-      failed++;
-      console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
     }
+  } finally {
+    fetchImpl.close();
   }
 
   console.log(
@@ -674,10 +657,10 @@ export async function promoteDerivedMeetingFamily(
     await publishVenuePins(store, partition.id, census.package);
     for (const read of facts ? reads.filter(row => row.ok) : []) {
       await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        read.freshMeetings, read.acquisitions, candidate.id, generatedAt);
+        read.freshMeetings, read.acquisitions, outcome.candidate.candidate.id, generatedAt);
     }
   }
-  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
+  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: outcome.candidate.candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
     held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
@@ -721,6 +704,8 @@ export async function readHeldMeetingCliOptions(args: readonly string[], depende
   readonly query: Query;
 }): Promise<Omit<MeetingIngestOptions, "initialResponse" | "store">> {
   if (args[0] !== "composite") return {};
+  // The state program receives the parent's exact contracts; its normal selection validates that handoff.
+  if (args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg))) return {};
   const selected = args.filter(arg => arg.startsWith("--only-partition="));
   if (selected.length === 0) throw new Error("INGEST_EXACT_PARTITION_REQUIRED");
   if (selected.length > 1) return {}; // The state program loads its shared dependencies once.
@@ -823,7 +808,8 @@ async function executeMeetingIngest(args: readonly string[], options: MeetingIng
   const diagnosticState = name === "composite" ? null : requireRegistryState(
     args.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
   );
-  if (!options.partition) {
+  const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
+  if (!options.partition && !handed) {
     const doors = await ensureMeetingDoors();
     if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
   }
@@ -838,6 +824,13 @@ async function executeMeetingIngest(args: readonly string[], options: MeetingIng
     : [diagnosticState!];
   if (selectedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
   const state = selectedStates[0]!;
+  if (handed) {
+    const wiring = partitions.flatMap(partition => partition.wiring ? [partition.wiring] : []);
+    installMeetingWiring(wiring, [...new Set(partitions.flatMap(partition => [
+      partition.acquisitionFailureDomain.replace(/^meeting-upstream:/, "").split("/")[0]!,
+      ...(partition.wiring ? hostsOfConfig(partition.wiring.config, [partition.wiring.noticeUrl]) : []),
+    ]))]);
+  }
   return withRegistryRuntimeStates([state], async () => {
     if (name !== "composite") {
       await preloadCanonicalMeetingDependencies({ sourceName: name, state });
@@ -868,16 +861,14 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
   };
   const results: MeetingIngestResult[] = [];
   const lastStartMs = passDeadlineFromEnv() - STANDING_PARTITION_ACQUISITION_TIMEOUT_MS;
-  const lastEnded = new Map<string, number>();
   const ordered = calendarReadOrder(partitions);
   for (const [index, partition] of ordered.entries()) {
-    const gapEndsMs = (lastEnded.get(partition.acquisitionFailureDomain) ?? Number.NEGATIVE_INFINITY) + ROUTINE_SAME_DOMAIN_CHILD_GAP_MS;
-    if (Math.max(Date.now(), gapEndsMs) >= lastStartMs) {
+    if (Date.now() >= lastStartMs) {
       for (const owed of ordered.slice(index)) console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: owed.id })}`);
       break;
     }
-    if (gapEndsMs > Date.now()) await new Promise(resolve => setTimeout(resolve, gapEndsMs - Date.now()));
     agendaDocumentStore.clear();
+    clearPromotedReadModelCache();
     try {
       if (partition.derivedFamily !== null) {
         const outcome = await promoteDerivedMeetingFamily(store, partition, prepare,
@@ -896,7 +887,6 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
       console.log(`RCD_MEETING_PARTITION_UNREAD=${JSON.stringify({ partitionId: partition.id,
         detail: (error instanceof Error ? error.stack ?? error.message : String(error)).split("\n").slice(0, 8).join(" | ") })}`);
     }
-    lastEnded.set(partition.acquisitionFailureDomain, Date.now());
     console.log("RCD_PROGRESS=" + JSON.stringify({ key: partition.id, records: 1 }));
   }
   if (results.length === 1 && partitions.length === 1) return results[0]!;
@@ -1509,6 +1499,7 @@ export async function promoteMeetingPartition(
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
+  snapshot = { ...snapshot, agendaDocuments: snapshot.agendaDocuments.map(canonicalAgendaDocument) };
   validateSnapshot(snapshot);
   const base = candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts);
   const clocked = sourceResponse ? { ...base, retrieval: { ...base.retrieval, retrievedAt: sourceResponse.retrievedAt,
@@ -1716,7 +1707,7 @@ export async function promoteMeetingPartitions(input: {
     );
     if (outcome.promoted || outcome.confirmed) {
       await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }

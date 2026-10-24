@@ -21,7 +21,8 @@
     "tasklist",
     "taskkill.exe",
     "openssl",
-    "pwsh"
+    "pwsh",
+    "pdftotext"
   ],
   "ignoreExportsUsedInFile": true
 }

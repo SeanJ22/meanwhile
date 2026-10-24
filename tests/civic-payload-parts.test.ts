@@ -61,7 +61,7 @@ test("a large registry plus one new state writes only new state records and smal
   const freshReader = new CivicPayloadParts(memory.io);
   assert.deepEqual(await freshReader.load(stored), next, "canonical typed readers get the complete exact JSON");
   assert.deepEqual(await freshReader.load(before), candidate, "the previous immutable edition still reads");
-  assert.ok(memory.reads.every(hashes => hashes.length <= 8));
+  assert.ok(memory.reads.every(hashes => hashes.length <= 64));
 });
 
 test("identical evidence and reader payloads share parts, and unchanged values write nothing", async () => {
@@ -251,4 +251,20 @@ test("required state roots share one immutable part even when empty or below the
     assert.equal(memory.writes.length, writes, "an unchanged small state writes no duplicate part");
     assert.deepEqual(partitionCivicPayload(candidate, ["id"]), { value: candidate, parts: [] }, "other families retain inline storage");
   }
+});
+
+
+test("a long held agenda reads its text chunks in bounded requests instead of one round trip per 64 KiB", async () => {
+  const text = Array.from({ length: 512 }, (_, index) => `${index}:` + "Official agenda text ".repeat(500)).join("\n");
+  const plan = partitionCivicPayload({ documents: [{ id: "one", text }] });
+  const parts = new Map(plan.parts.map(part => [part.hash, part.payload]));
+  const requests: string[][] = [];
+  const loader = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async hashes => {
+    requests.push([...hashes]);
+    const result = hashes.map(hash => ({ hash, payload: parts.get(hash) }));
+    assert.ok(Buffer.byteLength(JSON.stringify(result)) < 16 * 1024 * 1024);
+    return result;
+  } });
+  assert.deepEqual(await loader.load(plan.value), { documents: [{ id: "one", text }] });
+  assert.ok(requests.length < 20, `${requests.length} requests for one 5 MiB agenda`);
 });

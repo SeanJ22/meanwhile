@@ -31,8 +31,10 @@ export function routineReceiptFields(
   candidate: { readonly id: string },
   outcome: PromotionOutcome,
 ): Omit<RoutineRunnerReceipt, "source" | "structuralReleaseContract"> {
+  if (!outcome.confirmed && candidate.id !== outcome.candidate.candidate.id &&
+    candidate.id !== outcome.candidate.candidate.retryOfCandidateId) throw new Error("ROUTINE_RECEIPT_CANDIDATE_MISMATCH");
   return {
-    candidateId: outcome.confirmed ? outcome.candidate.candidate.id : candidate.id,
+    candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,
     decision: outcome.candidate.receipt?.decision ?? null,
@@ -279,7 +281,7 @@ export async function durableRoutineRunnerReceiptIssue(
     let expected = expectedTask;
     if (/^legistar-members:[a-z0-9_-]+$/.test(expected.id)) {
       const query = factReader();
-      if (!query || expectedOutcome !== "SUCCESS") return "The tenant fact check is unavailable";
+      if (!query) return "The tenant fact check is unavailable";
       return await legistarMemberReceiptIssue(query, receipt, expected.id);
     }
     if (receipt.source !== expected.id && receipt.source !== expected.registeredContractId) {

@@ -10,10 +10,12 @@ const echo = ROUTINE_SOURCE_TASKS.find(task => task.id === "epa-echo")!;
 const at = Date.parse("2026-10-01T08:00:00.000Z"), hour = 3_600_000;
 test("ECHO's repeat failures move its next attempt later, cap at one day, and success resets it", async () => {
   const store = new MemoryRoutineDataStore();
+  let lastCandidate: ReturnType<typeof failedAcquisitionCandidate> | undefined;
   for (let index = 0; index < 7; index++) {
     const time = new Date(at + index * hour).toISOString();
     const candidate = failedAcquisitionCandidate({ sourceId: echo.sourceId, recordClass: echo.recordClass, scope: echo.scope,
       requestedUrl: echo.requestedUrl, attemptedAt: time, failureDetail: "PUBLISHER_UNAVAILABLE: EPA row has no native facility ID or name.", parserVersion: echo.parserVersion });
+    lastCandidate = candidate;
     await processRegisteredRoutineCandidate(store, echo.id, candidate, time);
     const clock = await store.clock(echo.sourceId, echo.recordClass, echo.scope, echo.parserVersion);
     assert.equal(clock.failureStreak, index + 1);
@@ -23,11 +25,14 @@ test("ECHO's repeat failures move its next attempt later, cap at one day, and su
     assert.equal(routineTaskDue(echo, clock, Date.parse(time) + delay), true);
   }
   const clock = await store.clock(echo.sourceId, echo.recordClass, echo.scope, echo.parserVersion);
-  const latest = await store.latestCandidate(echo.sourceId, echo.recordClass, echo.scope);
+  assert.ok(lastCandidate);
   const recheckedAt = new Date(at + 6 * hour + 60_000).toISOString();
-  await store.recordRecheck(latest!.id, recheckedAt, "RECHECKED_UNCHANGED: same EPA refusal, held values unchanged.");
+  const retried = await processRegisteredRoutineCandidate(store, echo.id, lastCandidate, recheckedAt);
+  assert.notEqual(retried.candidate.candidate.id, lastCandidate.id);
+  assert.equal(retried.candidate.candidate.retryOfCandidateId, lastCandidate.id);
+  assert.equal((await store.events(lastCandidate.id)).length, 1, "the terminal failed attempt remains immutable");
   const rechecked = await store.clock(echo.sourceId, echo.recordClass, echo.scope, echo.parserVersion);
-  assert.equal(rechecked.failureStreak, 8, "rechecking the same held candidate is another failure too");
+  assert.equal(rechecked.failureStreak, 8, "an immutable retry of the same failed candidate is another failure too");
   assert.equal(rechecked.lastAttemptedAt, recheckedAt);
   const succeeded = { ...clock, lastSucceededObservedAt: new Date(at + 7 * hour).toISOString() };
   assert.equal(failureRetryMs(echo.retryMs, succeeded), hour, "a success cancels the entire old streak");

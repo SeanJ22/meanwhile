@@ -490,8 +490,13 @@ test("unreadable state ballots are failed holdings, never empty civic population
   const states = ["AZ", "NJ"];
   const keys = new Set(states.map(state => `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`));
   const originalFetch = neonConfig.fetchFunction;
+  const originalDatabaseUrl = process.env.DATABASE_URL;
+  if (!originalDatabaseUrl?.trim()) process.env.DATABASE_URL = "postgresql://fixture:fixture@canonical-reader.invalid/fixture";
   assert.ok(originalFetch, "the fixture canonical transport is installed");
-  t.after(() => { neonConfig.fetchFunction = originalFetch; });
+  t.after(() => { neonConfig.fetchFunction = originalFetch;
+    if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+    else process.env.DATABASE_URL = originalDatabaseUrl;
+  });
   let unreadableQueries = 0;
   neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const request = JSON.parse(String(init?.body)) as { query?: string; params?: unknown[]; queries?: { query: string; params: unknown[] }[] };

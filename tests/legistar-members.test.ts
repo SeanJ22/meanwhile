@@ -6,7 +6,7 @@ import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { legistarMemberRosters, makeLegistarMembersReader } from "../lib/sources/legistar/members.ts";
 import { memberProbe } from "../lib/sources/legistar/members-model.ts";
 import { legistarMembersPackage, publishLegistarMembers } from "../lib/sources/legistar/members-publication.ts";
-import { legistarMemberTasks, legistarMemberClocks, legistarMemberReceiptIssue } from "../lib/sources/legistar/members-tasks.ts";
+import { legistarMemberTasks, legistarMemberClocks, legistarMemberReceiptIssue, recordLegistarMemberFailure } from "../lib/sources/legistar/members-tasks.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { loadLegistarMembers, saveLegistarMembers, saveLegistarReading } from "../lib/sources/legistar/members-cache.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
@@ -134,6 +134,14 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
   const national = { readCandidateSummary: () => { throw new Error("National candidate read"); },
     readPromotionIdentity: () => { throw new Error("National pointer read"); } } as unknown as DurableReceiptStore;
   assert.equal(await durableRoutineRunnerReceiptIssue(receipt, legistarMemberTasks(["pima"])[0], national, "SUCCESS"), null);
+  const failedAt = "2026-10-14T09:00:00.000Z";
+  const failure = await recordLegistarMemberFailure(db.query, receipt.source, failedAt, "HTTP 503 from the tenant's public roster");
+  assert.equal(await durableRoutineRunnerReceiptIssue(failure, legistarMemberTasks(["pima"])[0], national, "HELD"), null);
+  assert.equal(failure.lastKnownGoodVersion, second.versionId);
+  const afterFailure = (await legistarMemberClocks(db.query, [receipt.source])).get(receipt.source)!;
+  assert.equal(afterFailure.lastAttemptedAt, failedAt);
+  assert.equal(afterFailure.lastSucceededAt, later);
+  assert.match((await legistarMemberReceiptIssue(db.query, { ...failure, candidateId: "invented" }, receipt.source))!, /differs/);
   const expired = { ...raw, offices: raw.offices.map(row => ({ ...row, OfficeRecordEndDate: "2026-10-12T00:00:00" })) };
   await publishLegistarMembers({ ...input, raw: expired, now: later });
   assert.equal((await readFactRosters(db.query, rows.map(row => row.bodyId))).rosters.length, 0);

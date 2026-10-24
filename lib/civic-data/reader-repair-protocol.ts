@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import type { RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionSourceContract } from "./manual-contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionOfId, observableRoutineContracts, type MeetingPartitionContract } from "./meeting-partitions.ts";
@@ -9,6 +11,9 @@ import {
 import type { ReaderReadbackRepairOutcome } from "./reader-verification.ts";
 import type { RoutineCivicDataReaderReadbackReference } from "../control-plane/owner-surface.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
+import { DOOR_OUTCOMES_SOURCE_ID, DOOR_MINUTES_OUTCOMES_SOURCE_ID, OUTCOME_PARTITION_CONTRACTS, outcomePartitionId,
+  type OutcomePartitionContract } from "./outcome-partitions.ts";
+import { outcomePartitionScope, setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
 
 export const ROUTINE_READER_REPAIR_PREFIX = "RCD_READER_REPAIR=";
 export const ROUTINE_READER_CHILD_CONCURRENCY = 4;
@@ -16,18 +21,55 @@ export const ROUTINE_READER_SINGLE_TIMEOUT_MS = 2 * 60_000;
 export const ROUTINE_READER_MEETING_TIMEOUT_MS = 5 * 60_000;
 /** Bound a domain's query and output size; every domain gets its own killable child. */
 export const ROUTINE_READER_MEETING_BATCH_SIZE = 256;
+export const ROUTINE_READER_CONTRACT_BATCH_SIZE = 32;
 
 export type ReaderRepairContract = RoutineSourceContract | ManualProductionSourceContract;
 
-/** The isolated repair child uses its parent's complete selection for both typed reads and evidence-write identity. */
-export function installMeetingReaderRepairSelection(contracts: readonly MeetingPartitionContract[]): void {
+/** Dynamic outcome contracts must travel with the pass that selected them, just like calendar partitions. */
+export function readerRepairContractHandoff(contracts: readonly ReaderRepairContract[]): readonly (string | OutcomePartitionContract)[] {
+  const outcomes = new Map(OUTCOME_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
+  return contracts.map(contract => outcomes.get(contract.id) ?? contract.id);
+}
+
+export function installOutcomeRepairSelection(contracts: readonly OutcomePartitionContract[]): void {
+  const ids = new Set<string>(), scopes = new Set<string>();
+  for (const contract of contracts) {
+    const identity = contract && typeof contract.doorId === "string" ? meetingPartitionOfId(contract.doorId) : null;
+    const source = contract?.kind === "legistar" ? DOOR_OUTCOMES_SOURCE_ID : contract?.kind === "legistar-insite" ? DOOR_MINUTES_OUTCOMES_SOURCE_ID : null;
+    if (!identity || source === null || identity.source !== contract.kind || identity.bodyId !== contract.bodyId ||
+        contract.id !== outcomePartitionId(contract.doorId) || contract.scope !== outcomePartitionScope(contract.doorId) ||
+        contract.recordClass !== "MEETING_OUTCOME" || contract.sourceId !== source ||
+        contract.wiring?.bodyId !== contract.bodyId || contract.tenant?.contractId !== contract.id ||
+        contract.tenant.scope !== contract.scope || contract.tenant.sourceId !== source || contract.tenant.recordClass !== "MEETING_OUTCOME" ||
+        !/^[a-z0-9-]+$/.test(contract.tenant.slug) || contract.readerProjection?.id !== `door-outcomes:${contract.doorId}` ||
+        ids.has(contract.id) || scopes.has(contract.scope)) throw new Error("READER_REPAIR_OUTCOME_SELECTION_INVALID");
+    ids.add(contract.id); scopes.add(contract.scope);
+  }
+  OUTCOME_PARTITION_CONTRACTS.splice(0, OUTCOME_PARTITION_CONTRACTS.length, ...contracts);
+  setDoorOutcomePointers(contracts.map(contract => ({ contractId: contract.id, scope: contract.scope, recordClass: "MEETING_OUTCOME",
+    slug: contract.tenant.slug, kind: contract.kind })));
+}
+
+/** The state roster and ballot publishers also update their own state's holder/candidacy join. */
+function readerRepairSourcePointers(tasks: readonly Pick<ReaderRepairContract, "recordClass" | "scope">[]): ReadonlySet<string> {
+  const pointers = new Set(tasks.map(task => `${task.recordClass}:${task.scope}`));
+  for (const task of tasks) {
+    if (task.recordClass !== "STATE_LEGISLATOR" && task.recordClass !== "BALLOT_CANDIDACY") continue;
+    for (const state of statesForRegistryDivisions([task.scope])) pointers.add(`REGISTRY_RUNTIME_BINDING:US-${state}:reader-registry-runtime`);
+  }
+  return pointers;
+}
+
+/** Isolated calendar and repair children use the parent's exact selection even when the published registry changes. */
+export function installMeetingPartitionSelection(contracts: readonly MeetingPartitionContract[]): void {
   if (contracts.length === 0) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
   const ids = new Set<string>(), scopes = new Set<string>();
   for (const contract of contracts) {
     const identity = contract && typeof contract.id === "string" ? meetingPartitionOfId(contract.id) : null;
-    if (!identity || contract.recordClass !== "MEETING" || contract.sourceId !== "meetings-public-bodies" ||
+    if (!identity || contract.recordClass !== "MEETING" || contract.sourceId !== (identity.source === "derived" ? "meetings-derived-routes" : "meetings-public-bodies") ||
         identity.source !== contract.meetingSource || identity.bodyId !== contract.bodyId || identity.scope !== contract.scope ||
-        !contract.readerProjection?.id || ids.has(contract.id) || scopes.has(contract.scope)) {
+        !contract.readerProjection?.id || ids.has(contract.id) || scopes.has(contract.scope) ||
+        (contract.wiring !== null && (contract.wiring?.bodyId !== contract.bodyId || contract.wiring?.ocdId !== contract.ocdId))) {
       throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
     }
     ids.add(contract.id); scopes.add(contract.scope);
@@ -51,26 +93,62 @@ export interface RoutineReaderRepairDomain {
   readonly timeoutMs: number;
 }
 
+/** Unchanged pointers can be repaired immediately. A source and its dependent registry join settle first. */
+export function readerRepairDomainPhases(domains: readonly RoutineReaderRepairDomain[],
+  sources: readonly Pick<ReaderRepairContract, "recordClass" | "scope">[]) {
+  const pointers = readerRepairSourcePointers(sources);
+  const early: RoutineReaderRepairDomain[] = [], late: RoutineReaderRepairDomain[] = [];
+  for (const domain of domains) {
+    const after = domain.contracts.filter(contract => pointers.has(`${contract.recordClass}:${contract.scope}`));
+    const before = domain.contracts.filter(contract => !pointers.has(`${contract.recordClass}:${contract.scope}`));
+    if (before.length) early.push({ ...domain, contracts: before, id: after.length ? `${domain.id}:before-sources` : domain.id });
+    if (after.length) late.push({ ...domain, contracts: after, id: before.length ? `${domain.id}:after-sources` : domain.id });
+  }
+  return { early, late };
+}
+
 export function routineReaderRepairDomains(
   contracts: readonly ReaderRepairContract[] = [
     ...observableRoutineContracts(),
     ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   ],
 ): readonly RoutineReaderRepairDomain[] {
+  return batchReaderRepairContracts(contracts, new Map(MEETING_PARTITION_CONTRACTS.map(contract => [contract.id, contract])));
+}
+
+/** The selected calendar objects remain authoritative even when the registry changes during a source phase. */
+function batchReaderRepairContracts(contracts: readonly ReaderRepairContract[],
+  partitions: ReadonlyMap<string, MeetingPartitionContract>): readonly RoutineReaderRepairDomain[] {
   const ids = contracts.map(({ id }) => id);
   if (new Set(ids).size !== ids.length) throw new Error("ROUTINE_READER_CONTRACT_ID_DUPLICATE");
-  const meetingIds = new Set(MEETING_PARTITION_CONTRACTS.map(({ id }) => id));
+  const meetingIds = new Set(partitions.keys());
   const meetingContracts = contracts.filter((contract) => meetingIds.has(contract.id));
   const applicable = contracts.filter((contract) => contract.readerProjection !== null);
   const singles = applicable.filter((contract) => !meetingIds.has(contract.id));
-  const domains: RoutineReaderRepairDomain[] = singles.map((contract) => ({
-    id: `reader-readback:${contract.id}`,
-    mode: "SINGLE",
-    contracts: [contract],
-    timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
-  }));
+  const domains: RoutineReaderRepairDomain[] = [];
+  const outcomes = new Map(OUTCOME_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
+  const singlesByState = new Map<string, ReaderRepairContract[]>();
+  for (const contract of singles) {
+    const outcome = outcomes.get(contract.id);
+    const states = outcome?.recordClass === contract.recordClass && outcome.scope === contract.scope
+      ? statesForRegistryDivisions([outcome.tenant.jurisdiction, outcome.wiring.ocdId ?? "", outcome.bodyId])
+      : statesForRegistryDivisions([contract.scope]);
+    const national = states.length === 0 &&
+      (/^US(?::|$)/.test(contract.scope) || /^[a-z0-9-]+:national$/.test(contract.scope)) &&
+      !/(?:^|:)\d{5}(?::|$)/.test(contract.scope) && !/^national-place:\d{5}/.test(contract.id);
+    // Explicit national programs share startup too. ZIPs and ambiguous state scopes stay isolated.
+    const key = states.length === 1 ? states[0]! : national ? "US" : `unscoped:${contract.id}`;
+    const selected = singlesByState.get(key) ?? [];
+    selected.push(contract); singlesByState.set(key, selected);
+  }
+  for (const [state, selected] of singlesByState) {
+    for (let at = 0; at < selected.length; at += ROUTINE_READER_CONTRACT_BATCH_SIZE) {
+      const batch = selected.slice(at, at + ROUTINE_READER_CONTRACT_BATCH_SIZE);
+      domains.push({ id: batch.length === 1 ? `reader-readback:${batch[0]!.id}` : `reader-readback:contracts:${state}:${at / ROUTINE_READER_CONTRACT_BATCH_SIZE}`,
+        mode: "SINGLE", contracts: batch, timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS });
+    }
+  }
   const meetingsByState = new Map<string, ReaderRepairContract[]>();
-  const partitions = new Map(MEETING_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
   for (const contract of meetingContracts) {
     const partition = partitions.get(contract.id)!;
     const states = statesForRegistryDivisions([partition.derivedFamily ?? "", partition.ocdId ?? "", partition.bodyId]);
@@ -94,6 +172,47 @@ export function routineReaderRepairDomains(
     throw new Error("ROUTINE_READER_DOMAIN_DENOMINATOR_INVALID");
   }
   return domains;
+}
+
+/** No source publication means there is no payload to decode in a child. Inspect those identities in bulk
+ * after the phase's sources settle; a failed or malformed read leaves the full selection for the child. */
+export async function planRoutineReaderRepair(
+  store: Pick<RoutineDataStore, "readPromotionIdentities">,
+  domains: readonly RoutineReaderRepairDomain[],
+): Promise<{ readonly domains: readonly RoutineReaderRepairDomain[]; readonly noPromotion: readonly RoutineCivicDataReaderReadbackReference[] }> {
+  const contracts = domains.flatMap(domain => domain.contracts);
+  if (new Set(contracts.map(contract => contract.id)).size !== contracts.length) throw new Error("ROUTINE_READER_CONTRACT_ID_DUPLICATE");
+  const groups = new Map<ReaderRepairContract["recordClass"], Set<string>>();
+  for (const contract of contracts) {
+    const scopes = groups.get(contract.recordClass) ?? new Set<string>();
+    scopes.add(contract.scope); groups.set(contract.recordClass, scopes);
+  }
+  const absent = new Set<string>();
+  for (const [recordClass, scopes] of groups) {
+    try {
+      const rows = await store.readPromotionIdentities(recordClass, [...scopes]);
+      if (rows.some(row => row.recordClass !== recordClass || !scopes.has(row.scope) || row.key !== `${recordClass}:${row.scope}`) ||
+        new Set(rows.map(row => row.key)).size !== rows.length) continue;
+      const held = new Set(rows.map(row => row.scope));
+      for (const scope of scopes) if (!held.has(scope)) absent.add(`${recordClass}:${scope}`);
+    } catch { /* The child retains the exact contract and produces its own diagnostic; an outage is never absence. */ }
+  }
+  const noPromotion = contracts.filter(contract => absent.has(`${contract.recordClass}:${contract.scope}`)).map(contract => ({
+    contractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    projectionId: contract.readerProjection!.id, disposition: "NO_PROMOTION" as const, receipt: null,
+  }));
+  if (noPromotion.length === 0) return { noPromotion, domains };
+  const selected = contracts.filter(contract => !absent.has(`${contract.recordClass}:${contract.scope}`));
+  const original = new Map(domains.flatMap(domain => domain.contracts.map(contract => [contract.id, domain] as const)));
+  const partitions = new Map(domains.filter(domain => domain.mode === "MEETING_AGGREGATE")
+    .flatMap(domain => domain.contracts.map(contract => [contract.id, contract as MeetingPartitionContract] as const)));
+  // Removing missing pointers leaves sparse children. Repack the remaining exact selection within the same
+  // state, mode and batch bounds; source phases remain separate because each invocation has its own selection.
+  return { noPromotion, domains: batchReaderRepairContracts(selected, partitions).map(domain => ({
+    ...domain,
+    id: `reader-readback:inventory:${domain.mode}:${createHash("sha256").update(JSON.stringify(domain.contracts.map(contract => contract.id))).digest("hex")}`,
+    timeoutMs: Math.min(...domain.contracts.map(contract => original.get(contract.id)!.timeoutMs)),
+  })) };
 }
 
 export interface RoutineReaderRepairRecord {

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 102 (main 4ae2e14e6). NEXT: release 103 (SO-01 + RN-03, PR #813, CI). GATING: RV-VOTE alone (voting sites can never get a worker; river-next ebae79d1f). DB-01 batch paused behind it. Returned: PT-01
+build_state: LIVE FOR READERS: release 103 (main d3416a24f, live 5:50 PM EDT; SO-01 + RN-03). GATING: RV-VOTE alone (river-next ebae79d1f). NEXT: DB-01 4c5b40e39; PT-01 returned (River takes it 6:30 PM EDT)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T21:36:00Z
+heartbeat: 2026-10-24T21:51:25Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 103 live, 5:50 PM EDT
+- /api/build d3416a24f (PR #813 merge commit). Sean's checks in Chromium at 5:51 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 (435 id fields, up from 409) and 60602 200, /national 200.
+- SO-01 live: /api/representation for Arizona has no "Actions"; Kris Mayes and the governor's official contact engage@az.gov are present (before 103: "Actions" and no Mayes).
+- RN-03 live: voting and registration input changes refresh once and then keep the real source clock.
 
 ### Why polling places stopped refreshing, and the fix (RV-VOTE), 5:50 PM EDT
 - Cause (River helper; real code and production records, read-only):

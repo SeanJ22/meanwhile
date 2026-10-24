@@ -27,7 +27,7 @@ Production reads use only `readonly` on tiny-hill-13996172 / br-delicate-lab-ax0
 
 Owned by RB-A6:
 
-- Complete the full checks after River contains RB-A2. The current production build and 32 affected owed-list, map, retained-identity and River cases pass. The preceding combined branch passed 127 related cases, lint, TypeScript and the unused-code check. Full runs stopped for the edit-path replacement and later dependency changes are not passing full runs.
+- Complete the full checks after River contains RB-A2. The current production build and 58 affected owed-list, map, retained-identity, River and ZIP-certainty cases pass. The preceding combined branch passed 127 related cases, lint, TypeScript and the unused-code check. Full runs stopped for the edit-path replacement and later dependency changes are not passing full runs.
 - Follow `stream/rb-a2` on each fetch. Current merged dependency: `5ba76fa0c` (includes RB-A1 READY `5bde46615`, RB-A2’s source-topology fixes and its measured refresh-memory reservation). River has not recorded or contained RB-A2 yet.
 - After River folds RB-A2, merge `origin/river`, rerun every check, and push `READY: RB-A6` with the production connections, every-state counts and next-pass evidence.
 - Keep checking River's return and status until RB-A6 passes its live check. The first automatic production pass remains part of that live check.
@@ -37,3 +37,5 @@ The branch was cut from `origin/river` at `21ae9bcfb`. This is built work in pro
 Test-runner lesson: a restricted execution sandbox reported a test file without its individual test cases. The same checklist file reports all eight cases in a network-permitted run. The canonical affected run then reported all 127 cases and complete file timing summaries. Use the network-permitted execution context for the full suite and verify actual case summaries; do not accept a file-only report as the case result.
 
 Fresh checkout setup: run the pinned `pnpm install --frozen-lockfile` before checks. Its postinstall creates ignored `data/derived/place-reference` files. Linking another checkout's dependencies omitted those files and caused the Box tests to fail with `ENOENT`; the same publication case passed in the isolated checkout after the normal install. The incomplete run is not a passing suite.
+
+The sampled-geometry test uses an edge-only fixture context so published production Census relationships cannot replace the fixture when a database URL is present. Without that context, a whole-ZIP published House district made its deliberately unqualified fixture fail. All 26 cases pass with the assigned read-only production URL after isolating the intended inputs; reader behavior is unchanged.

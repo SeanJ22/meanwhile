@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test, { after } from "node:test";
+import test from "node:test";
 import { door, decide } from "../lib/core/door.ts";
 import { publishClaim, type PublishInput } from "../lib/facts/publish.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -20,18 +20,8 @@ const input = (over: Partial<PublishInput> = {}): PublishInput => ({
   copy: { id: 1, finalUrl: "https://example.gov/council", text: "", fetchedAt: now, isArchive: false }, ...over,
 });
 
-// Keep one WASM runtime alive for the file; destroying repeated instances can hit V8's JIT teardown assertion.
-const shared = factDb();
-after(async () => { await (await shared).pg.close(); });
-async function reset() {
-  const db = await shared;
-  const tables = await db.query("SELECT tablename FROM pg_tables WHERE schemaname='public'");
-  const names = tables.map(row => '"' + String(row.tablename).replaceAll('"', '""') + '"');
-  await db.pg.exec(`TRUNCATE ${names.join(",")} RESTART IDENTITY CASCADE`);
-}
-
 async function seeded() {
-  const db = await shared;
+  const db = await factDb();
   await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Example City Council','AZ')", [input().entity.id]);
   await db.query(`INSERT INTO entity(id,kind,name,state) VALUES('place-one','place','First district','AZ'),('place-two','place','Second district','AZ')`);
   await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,'place-one'),($1,'place-two')", [input().entity.id]);
@@ -64,7 +54,7 @@ test("both lanes reach the existing place card with their own saved field source
     const sources = districtCardSources([], [], card.officeContact?.provenance, card.fieldSources);
     assert.deepEqual(sources.filter(source => source.what === "Name" || source.what === "Office address").map(source => [source.what, source.provenance.sourceUrl]),
       [["Name", "https://example.gov/council"], ["Office address", "https://news.example/council"]]);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("an existing canonical id wins over another source's alias without merging people", async () => {
@@ -79,7 +69,7 @@ test("an existing canonical id wins over another source's alias without merging 
     }
     assert.deepEqual((await db.query("SELECT entity_id FROM fact ORDER BY entity_id")).map(row => row.entity_id), ["ocd-person/one", "ocd-person/two"]);
     assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE kind='person'"))[0]!.n, 2);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("an official field publishes without reading or searching the page text, and an exact repeat changes nothing", async () => {
@@ -97,7 +87,7 @@ test("an official field publishes without reading or searching the page text, an
     assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
     assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id"), [{ place_id: "place-one" }, { place_id: "place-two" }]);
     assert.deepEqual(await db.query("SELECT state,step,n::int FROM count_hour"), [{ state: "AZ", step: "door_official", n: 1 }]);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("a newer official value replaces OTHER and a repeat of a losing fact creates no second row", async () => {
@@ -113,7 +103,7 @@ test("a newer official value replaces OTHER and a repeat of a losing fact create
     await door(db, other, clocks, now, { purge });
     assert.deepEqual(await db.query("SELECT * FROM fact ORDER BY id"), before);
     assert.equal((await db.query("SELECT value FROM fact WHERE status='live'"))[0]!.value, input().value);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("Open States and Legistar API fields, and a portal linked by government, use the fast lane", async () => {
@@ -128,7 +118,7 @@ test("Open States and Legistar API fields, and a portal linked by government, us
       sourceField: { record: { Phone: "520-555-0123" }, key: "Phone" } }, clocks, now, { purge });
     assert.equal((outcome as { decision: string }).decision, "PUBLISH");
     assert.equal((await db.query("SELECT value FROM fact WHERE field='portal_phone'"))[0]!.value, "520-555-0123");
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("a campaign or advocacy site cannot publish a fact about someone else, and refusal is recorded once", async () => {
@@ -142,7 +132,7 @@ test("a campaign or advocacy site cannot publish a fact about someone else, and 
     assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 0);
     assert.deepEqual(await publishClaim(db, claim, clocks, now), { blank: "CAMPAIGN_OTHER_SUBJECT" });
     assert.equal((await db.query("SELECT attempts FROM blank"))[0]!.attempts, 1);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("nonofficial claims use clocks.ts; a failed quote leaves the old caller its blank", async () => {
@@ -153,7 +143,7 @@ test("nonofficial claims use clocks.ts; a failed quote leaves the old caller its
         fetchedAt: new Date(now.getTime() - 48 * 3_600_000) } });
     assert.equal((await door(db, claim, clocks, now, { purge }) as { decision: string }).decision, "PUBLISH");
     assert.deepEqual(await publishClaim(db, { ...claim, quote: "invented words" }, clocks, now), { blank: "QUOTE_NOT_ON_SAVED_COPY" });
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("a hunter's claim is checked against its saved copy even when it cites a government page", async () => {
@@ -162,7 +152,7 @@ test("a hunter's claim is checked against its saved copy even when it cites a go
     const claim = input({ acquisition: "hunter", quote: "invented words" });
     assert.deepEqual(await door(db, claim, clocks, now), { refused: "QUOTE_NOT_ON_SAVED_COPY" });
     assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 0);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("an unchanged saved fact replays after its freshness window without refreshing it or opening a blank", async () => {
@@ -175,7 +165,7 @@ test("an unchanged saved fact replays after its freshness window without refresh
     assert.deepEqual(await door(db, claim, clocks, new Date(now.getTime() + 900 * 3_600_000), { purge }), { decision: "CONFIRM", factId: 1 });
     assert.deepEqual(await db.query("SELECT * FROM fact"), before);
     assert.deepEqual(await db.query("SELECT * FROM blank"), []);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("a real later observation of the same source bytes advances its checked date once and adds no delivery", async () => {
@@ -190,7 +180,7 @@ test("a real later observation of the same source bytes advances its checked dat
     await door(db, claim, clocks, new Date(next.getTime() + 3_600_000), { purge });
     assert.deepEqual(await db.query("SELECT * FROM fact"), before);
     assert.deepEqual(await db.query("SELECT n::int FROM count_hour"), [{ n: 1 }]);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("an official field does not wait for another claim's refusal handoff", { timeout: 5_000 }, async () => {
@@ -206,7 +196,7 @@ test("an official field does not wait for another claim's refusal handoff", { ti
     assert.equal((await door(db, input(), clocks, now, { purge }) as { decision: string }).decision, "PUBLISH");
     release();
     assert.deepEqual(await failed, { refused: "QUOTE_NOT_ON_SAVED_COPY" });
-  } finally { release(); await reset(); }
+  } finally { release(); await db.pg.close(); }
 });
 
 test("one call creates the board a government names and publishes its fact under that board", async () => {
@@ -223,7 +213,7 @@ test("one call creates the board a government names and publishes its fact under
     assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE name='Planning Commission'"))[0]!.n, 1);
     await door(db, { ...claim, subjectId: "unheld-board", board: { governmentId: "az:city:example", name: "Planning Commission" } }, clocks, now, { purge });
     assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 1);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("board-creation metadata cannot redirect an already resolved subject", async () => {
@@ -234,7 +224,7 @@ test("board-creation metadata cannot redirect an already resolved subject", asyn
     assert.equal((outcome as { decision: string }).decision, "PUBLISH");
     assert.deepEqual(await db.query("SELECT entity_id FROM fact"), [{ entity_id: input().entity.id }]);
     assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE name='Planning Commission'"))[0]!.n, 0);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("an API and a government-linked portal can name an unheld board through the same official lane", async () => {
@@ -253,7 +243,7 @@ test("an API and a government-linked portal can name an unheld board through the
       assert.equal((outcome as { decision: string }).decision, "PUBLISH");
       assert.equal((await db.query("SELECT e.name FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.id=$1", [(outcome as { factId: number }).factId]))[0]!.name, name);
     }
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("the door resolves a native id through RB-A1 without changing any saved id", async () => {
@@ -264,7 +254,7 @@ test("the door resolves a native id through RB-A1 without changing any saved id"
     assert.equal((await door(db, { ...claim, subjectId: "BodyId:123" }, clocks, now, { purge }) as { decision: string }).decision, "PUBLISH");
     assert.equal((await db.query("SELECT entity_id FROM fact"))[0]!.entity_id, input().entity.id);
     assert.deepEqual(await db.query("SELECT entity_id,value FROM entity_external_id"), [{ entity_id: input().entity.id, value: "BodyId:123" }]);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("a held official source with an older source label replays unchanged and still outranks a later news claim", async () => {
@@ -278,7 +268,7 @@ test("a held official source with an older source label replays unchanged and st
     const claim = input({ provenance: "NEWS", value: "520-555-0199", valueText: "520-555-0199", quote: "Call 520-555-0199",
       copy: { ...input().copy, id: 2, finalUrl: "https://news.example/council", text: "Example City Council Arizona Call 520-555-0199" } });
     assert.equal((await door(db, claim, clocks, now, { purge }) as { decision: string }).decision, "KEEP_CURRENT");
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });
 
 test("all source ranks are respected, newest wins within a rank, and every conflicting system value flags the owner", () => {
@@ -319,5 +309,5 @@ test("the next hour accepts a changed official field and Admin reads both lanes 
     for (const state of ["AK", "CA", "LA", "MT", "ND", "NE", "VT", "WY"])
       assert.ok(reading.hours?.some(row => row.state === state && row.hour === next.toISOString()), state);
     assert.equal(reading.hours?.find(row => row.state === "AZ" && row.hour < now.toISOString())?.official, null);
-  } finally { await reset(); }
+  } finally { await db.pg.close(); }
 });

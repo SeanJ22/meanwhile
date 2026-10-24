@@ -18,6 +18,7 @@ import { readFactStore } from '../lib/facts/admin-read.ts';
 import { districtCardSources } from '../lib/officials/card-sources.ts';
 import type { RegistryRuntimeReadModel } from '../lib/registry/runtime-data-plane.ts';
 const dir=process.argv[2]??'.scratch/rb-a3';
+const wallClock=process.argv.includes('--wall-clock');
 const snapshot=JSON.parse(readFileSync(`${dir}/snapshots/AZ.json`,'utf8')) as FactSnapshot;
 const db=await openFactCopy(snapshot);
 try {
@@ -36,30 +37,39 @@ try {
  assert.equal(record.BodyName,'City Council');
  const gov=readFileSync(`${dir}/mesa-gov.txt`,'utf8');
  const address=/20 E\. Main Street\nMesa, AZ 85201/.exec(gov)![0];
- // Keep the scheduler clock after both real captures and inside one hourly bucket.
+ // Controlled runs stay after the captures in one hour; wall-clock runs use the real minute timer.
  const capturedAt=Math.max(...captures.map(held=>Date.parse(held.capture.observedAt)));
- const now=new Date(Math.ceil(capturedAt/3_600_000)*3_600_000+5*60_000);
+ const now=wallClock?new Date():new Date(Math.ceil(capturedAt/3_600_000)*3_600_000+5*60_000);
  const official=await door(db,{subjectId:id,field:'name',fieldKind:'officeholder',value:record.BodyName,valueText:record.BodyName,quote:'',
   provenance:'OFFICIAL',producedBy:'rb-a3-copy-api',acquisition:'loader',costUsd:0,...captures[0],sourceField:{record,key:'BodyName'}},factClocks(null),now,{purge:async()=>({purged:true})});
  assert.equal('decision' in official&&official.decision,'PUBLISH');
  const repos=createMemoryRepositories(),store=new MemoryRoutineDataStore();
  for(const held of captures)await repos.artifacts.append(held.record.workItemId,held.record.artifactId,held.record,held.record.recordedAt);
- let at=now.getTime();const passes:unknown[]=[];
+ let at=wallClock?Date.now():now.getTime();const passes:unknown[]=[];const startedAt:string[]=[];
  const scheduler=new IndependentRuntimeLaneScheduler([publishNowLane(async()=>{
+  startedAt.push(new Date(at).toISOString());
   passes.push(await publishBoxFindings({repos,store,facts:db,vault,fetch:async()=>{throw Error('Both source copies are saved inside their clocks');},
    clocks:factClocks(null),now:new Date(at).toISOString(),limit:10,audit:false,purge:async()=>({purged:true})}));
  })]);
+ const nextTick=async()=>{
+  if(!wallClock){at+=PUBLISH_NOW_INTERVAL_MS;assert.deepEqual(scheduler.tick(at),['publish-now']);await scheduler.waitForIdle();return;}
+  await new Promise<void>((resolve,reject)=>{const timer=setInterval(()=>{
+   at=Date.now();if(scheduler.tick(at).length){clearInterval(timer);void scheduler.waitForIdle().then(resolve,reject);}
+  },250);});
+ };
  assert.deepEqual(scheduler.tick(at),['publish-now']);await scheduler.waitForIdle();
  await indexReportedFinding(repos.boxFindings,{workItemId:captures[1].record.workItemId,attemptId:'copy-hunter',obligationId:`hunt:packet:${id}`,missionPart:null,
   finding:{subjectId:id,field:'district.address',value:address,exactQuote:address,sourceUrl:sources[1].url,artifactIds:[captures[1].record.artifactId],subjectHint:null,index:0}},new Date(at).toISOString());
  assert.deepEqual(scheduler.tick(at+PUBLISH_NOW_INTERVAL_MS-1),[]);
- at+=PUBLISH_NOW_INTERVAL_MS;assert.deepEqual(scheduler.tick(at),['publish-now']);await scheduler.waitForIdle();
+ await nextTick();
  const [checked]=await db.query("SELECT id,value,quote_start FROM fact WHERE entity_id=$1 AND field='office_address' AND status='live'",[id]);
  assert.equal(checked?.value,address);assert.equal(typeof checked?.quote_start,'number');
  const unchanged=()=>db.query(`SELECT jsonb_build_object('facts',(SELECT jsonb_agg(f) FROM fact f),'sources',(SELECT jsonb_agg(s) FROM source_copy s),
   'counts',(SELECT jsonb_agg(c) FROM count_hour c),'queue',(SELECT jsonb_agg(q) FROM rebuild_queue q)) value`);
- const before=await unchanged();at+=PUBLISH_NOW_INTERVAL_MS;assert.deepEqual(scheduler.tick(at),['publish-now']);await scheduler.waitForIdle();
+ const before=await unchanged();await nextTick();
  assert.deepEqual(await unchanged(),before);
+ assert.equal(startedAt.length,3);
+ for(let i=1;i<startedAt.length;i++)assert(Date.parse(startedAt[i])-Date.parse(startedAt[i-1])>=PUBLISH_NOW_INTERVAL_MS);
  const facts=await readBodyFacts(db.query,[id],true);
  const runtime:RegistryRuntimeReadModel={formatVersion:1,registry:JSON.parse(readFileSync(`${dir}/mesa-runtime.json`,'utf8')),
   bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],officialPhotos:{photos:[]},rosterPhotos:{},
@@ -77,7 +87,7 @@ try {
  writeFileSync(`${dir}/mesa-copy-meetings.json`,JSON.stringify(projected));
  const admin=await readFactStore(async statements=>Promise.all(statements.map(s=>db.query(s.text,s.params))),now);
  writeFileSync(`${dir}/copy-admin-hours.json`,JSON.stringify(admin.hours));
- const report={observedAt:new Date().toISOString(),clockStart:now.toISOString(),official,checked,nextRun:{intervalMs:PUBLISH_NOW_INTERVAL_MS,passes,repeatUnchanged:true},sources:sources.map(s=>s.url),subject:id,
+ const report={observedAt:new Date().toISOString(),clockStart:now.toISOString(),official,checked,nextRun:{intervalMs:PUBLISH_NOW_INTERVAL_MS,mode:wallClock?'wall-clock timer':'controlled clock',startedAt,passes,repeatUnchanged:true},sources:sources.map(s=>s.url),subject:id,
   reader:{name:generated.name,address:generated.officeContact?.address,bodiesRetained:baseline.coverage.bodies.length,meetingsRetained:baseline.meetings.length,seatsRetained:baseline.coverage.seats.length+baseline.stateResponse.value.coverage.seats.length},
   counts:await db.query('SELECT state,hour,step,n::int FROM count_hour ORDER BY state,hour,step'),queue:await db.query('SELECT place_id FROM rebuild_queue ORDER BY place_id')};
  writeFileSync(`${dir}/connections.json`,JSON.stringify(report,null,2));console.log(JSON.stringify(report));

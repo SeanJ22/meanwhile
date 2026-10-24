@@ -10,7 +10,7 @@ import { recordCost } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { ceilingPermits, readIntents, RESEARCH_INTENT_LOG_KEY } from "../control-plane/scheduler/research-policy.ts";
 import { readSpendWindow } from "../control-plane/spend-window.ts";
-import { canonicalModelId, MODELS, MODEL_TIERS, activeModelTierFor, modelRequestFields } from "../models.ts";
+import { canonicalModelId, MODELS, MODEL_TIERS, modelRequestFields } from "../models.ts";
 import { readLookReview, type LookReviewDeps, type LookScreenshot } from "./look-review.ts";
 
 export const LOOK_MODEL = MODELS.haiku.model;
@@ -21,8 +21,7 @@ const PROMPT_TOKENS = 3_000;
 
 /** A worst-case price for one review of `screens` screenshots, before it is sent. */
 export function lookReviewBoundUsd(screens: number, model: string = LOOK_MODEL): number {
-  const m = MODELS[activeModelTierFor(model) ?? "opus"];
-  return ((screens * TOKENS_PER_SCREEN + PROMPT_TOKENS) * m.inputUsdPerMillion + LOOK_MAX_TOKENS * m.outputUsdPerMillion) / 1_000_000;
+  return modelRequestBoundFor(model, screens * TOKENS_PER_SCREEN + PROMPT_TOKENS, LOOK_MAX_TOKENS)?.usd ?? Number.POSITIVE_INFINITY;
 }
 
 export interface LookSpendFacts {
@@ -102,6 +101,7 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
   options: LookCallOptions = {}): NonNullable<LookReviewDeps["callModel"]> {
   const batched = batchEnabledForJob("background-worker-audit", "AUDIT_SAMPLE", options.env ?? process.env);
   return async ({ prompt, schema, images }) => {
+    const jobId = `look-review:${randomUUID()}`;
     const content = [
       ...images.flatMap((img: LookScreenshot) => [
         { type: "text", text: `Screen: ${img.label}` },
@@ -156,7 +156,7 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
         const bound = modelRequestBoundFor(requestedModel, images.length * TOKENS_PER_SCREEN + PROMPT_TOKENS, LOOK_MAX_TOKENS);
         const usd = priceMeteredUsage(canonicalModelId(model), metering, "1h").usd;
         const entry = costEntryWithModel({
-          attemptId, workItemId: "look-review", routeTaskId: null, routeId: "look-review", source: "api.anthropic.com",
+          attemptId, workItemId: jobId, routeTaskId: null, routeId: "look-review", source: "api.anthropic.com",
           jurisdiction: null, project: "pilot-health", role: "VALIDATOR", requestedModel, servedModel: served,
           ...(bound && usd === null ? { modelRequestBound: bound } : {}),
           resultKind: resultKind ?? (status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`), recordedAt,

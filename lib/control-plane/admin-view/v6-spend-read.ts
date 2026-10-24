@@ -196,6 +196,8 @@ const titleCase = (slug: string) => slug.replace(/^(city|town|county|village|bor
   .replace(/\b([a-z])/g, (m) => m.toUpperCase()).replace(/\b(Of|And|The)\b/g, (m) => m.toLowerCase());
 
 export function workName(work: string, jurisdiction: string | null): string {
+  if (/^ask(?::|-|$)/.test(work)) return "Ask question";
+  if (/^look-review(?::|-|$)/.test(work)) return "Site review";
   if (/^scout-prewarm/.test(work) || /#?scout:prewarm/.test(work)) return "Hourly prompt-cache warm-up (no place)";
   const family = /#([a-z0-9:_-]+?)(?:-\d+)?$/.exec(work)?.[1];
   const jur = jurisdiction ?? /(?:^|:)([a-z]{2}:[a-z_]+:[a-z0-9-]+)/.exec(work)?.[1] ?? null;

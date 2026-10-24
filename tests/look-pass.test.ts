@@ -31,6 +31,8 @@ const url = (key: string) => `/shot/${key}`;
 it("look-review climbs only for an invalid answer and accepts a valid red review on any tier", async () => {
   for (const failures of [0, 1, 2]) {
     const repos = createMemoryRepositories(), sent: string[] = [];
+    const jobs = new Set<string>(), append = repos.costs.append.bind(repos.costs);
+    repos.costs.append = (...args) => { jobs.add(args[0]); return append(...args); };
     await repos.adminConfig.put("current", { apiFallback: { enabled: false }, updatedAt: AT,
       fleetSpendCeiling: { rollingCeilingUsd: 100, decidedAt: AT, decidedBy: "session", receiptId: "test", previousUsd: 10 } } as AdminConfig, AT);
     const raw = JSON.stringify({ screens: [{ label: "ballot", answers, verdict: "red", element: "A small date label" }] });
@@ -40,7 +42,12 @@ it("look-review climbs only for an invalid answer and accepts a valid red review
     }, { env: { WTP_BACKGROUND_WORKER_BATCH: "0" } });
     assert.equal(await call({ prompt: "p", schema: {}, images: [{ label: "ballot", mediaType: "image/png", base64: "AAAA" }] }), raw);
     assert.deepEqual(sent, ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"].slice(0, failures + 1));
-    assert.equal((await repos.costs.read("look-review")).length, sent.length);
+    assert.equal(jobs.size, 1, "all rungs of one review belong to the same spend job");
+    const firstJob = [...jobs][0];
+    assert.equal((await repos.costs.read(firstJob)).length, sent.length);
+    await call({ prompt: "p", schema: {}, images: [{ label: "ballot", mediaType: "image/png", base64: "AAAA" }] });
+    assert.equal(jobs.size, 2, "a second review has its own spend job");
+    assert.equal((await repos.costs.read(firstJob)).length, failures + 1);
   }
 });
 const emptyQueue = { items: [], counts: { queued: 0, sent: 0, opened: 0, refused: 0 } } as unknown as Parameters<typeof v6FixesView>[0];
@@ -121,6 +128,9 @@ describe("FE-21: every deploy is looked at on the live site", () => {
 
 describe("FE-21: the reviewer runs only under the owner's spend controls", () => {
   const config = (ceiling: number) => ({ value: { apiFallback: { enabled: false }, updatedAt: AT, fleetSpendCeiling: { rollingCeilingUsd: ceiling, decidedAt: AT, decidedBy: "session", receiptId: "r1", previousUsd: 10 } } });
+  it("a long Haiku review cannot be admitted using its cheaper short-prompt price", () => {
+    assert.equal(lookSpendDecision({ adminConfigRow: config(0.08), intentLog: [], windowUsd: 0 }, 64).ok, false);
+  });
   it("refuses with no room under the rolling ceiling, unmeasured spend, an unreadable setting or a pause", () => {
     // With no dial set, the fallback ceiling is in force, the same as for research.
     assert.equal(lookSpendDecision({ adminConfigRow: null, intentLog: [], windowUsd: 0 }, 8).ok, resolveRollingCeiling(null).rollingCeilingUsd > lookReviewBoundUsd(8));

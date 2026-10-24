@@ -164,6 +164,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed." },
+  "RB-A1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy." },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },
   "0046_ck01_audit_flags": { phase: "expand", why: "Adds nullable owner flag metadata and indexes and permits null fact_id for a named legacy reader record. Every old writer still supplies fact_id and keeps working; apply before code that uses the new columns." },

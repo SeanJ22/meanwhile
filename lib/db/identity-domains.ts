@@ -59,6 +59,17 @@ const nonIdentifying = (...names: string[]): Record<string, ColumnDomain> =>
 
 /** Every table, every column. */
 export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
+  count_hour: {
+    storeClass: "OPERATIONAL",
+    columns: nonIdentifying("state", "hour", "step", "n"),
+  },
+  line_keeper_run: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("hour", "checked_at", "problems", "bytes_read"),
+      oldest: { space: "NON_IDENTIFYING", why: "One waiting count and oldest timestamp per state; no row identifiers or reader data." },
+    },
+  },
   saved_ballot_picks: {
     storeClass: "READER_COLLECTION",
     columns: {

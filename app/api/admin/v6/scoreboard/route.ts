@@ -33,7 +33,7 @@ import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-rea
 import { readLineReport } from "@/lib/control-plane/line-keeper/report.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
 import { keeperStatus } from "@/lib/control-plane/line-keeper/model.ts";
-import { keeperVital } from "@/lib/control-plane/line-keeper/admin.ts";
+import { readVitalSigns } from "@/lib/control-plane/admin-view/vital-signs-read.ts";
 import { readFactStore } from "@/lib/facts/admin-read.ts";
 import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
@@ -55,9 +55,9 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,pipeline]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null]);
+      const [keeper,pipeline,vital]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,url?attempt(()=>readVitalSigns(neon(url),observedAt)):null]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
-        data:buildScoreboard({lineKeeper:keeper,observedAt,vital:keeperVital(keeper),places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
+        data:buildScoreboard({lineKeeper:keeper,observedAt,vital,places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
           learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:null,readiness:readinessCounts({})}),
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
@@ -69,7 +69,7 @@ export async function GET(request: NextRequest) {
     let doorUnreadable=0;
     const doorList = opened ? await attempt(async () => await listDoors(opened.doors).then(r=>{doorUnreadable=r.unreadable;return r.doors;})) : null;
     const keeperRead=attempt(async()=>url?readLineReport(neon(url)):null);
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks, vital] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ doors:doorList??[], unreadable:doorUnreadable, saves: [], observedAt }).counts : null)),
@@ -106,6 +106,7 @@ export async function GET(request: NextRequest) {
       attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
       // The last deploys' look passes (a week's worth), for the look row.
       attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
+      attempt(async () => (url ? readVitalSigns(neon(url), observedAt) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -120,7 +121,7 @@ export async function GET(request: NextRequest) {
       doorNumbers,
       flow,
       factStore,
-      vital: keeperVital(keeper),
+      vital,
       lineKeeper: keeper,
       observedAt,
       audit,

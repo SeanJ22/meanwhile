@@ -6,6 +6,8 @@ CREATE TABLE IF NOT EXISTS count_hour (
   PRIMARY KEY (state,hour,step)
 );
 --> statement-breakpoint
+INSERT INTO count_hour(state,hour,step,n) VALUES('US',statement_timestamp(),'counter start',0);
+--> statement-breakpoint
 CREATE FUNCTION count_state(scope text) RETURNS text LANGUAGE sql IMMUTABLE AS $$
   SELECT CASE WHEN candidate=ANY(ARRAY['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','PR','VI','AS','GU','MP','US']) THEN candidate ELSE 'US' END
   FROM (SELECT upper(coalesce(
@@ -71,7 +73,9 @@ BEGIN
     IF OLD IS NOT DISTINCT FROM NEW THEN RETURN NEW; END IF;
     IF (before_row.state,before_row.family,before_row.stage) IS NOT DISTINCT FROM
       (after_row.state,after_row.family,after_row.stage) THEN
-      PERFORM count_hour_add(after_row.state,after_row.family,after_row.stage,0,0,0,1);
+      IF (to_jsonb(OLD)->'value',OLD.entity_id,OLD.field) IS DISTINCT FROM (to_jsonb(NEW)->'value',NEW.entity_id,NEW.field) THEN
+        PERFORM count_hour_add(after_row.state,after_row.family,after_row.stage,0,0,0,1);
+      END IF;
       RETURN NEW;
     END IF;
   END IF;
@@ -83,11 +87,14 @@ END $$;
 CREATE TRIGGER count_hour_fact AFTER INSERT OR UPDATE OR DELETE ON fact FOR EACH ROW EXECUTE FUNCTION count_fact_write();
 --> statement-breakpoint
 INSERT INTO count_hour(state,hour,step,n)
- SELECT count_state(d.state),date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(d.family,d.stage,'stock in')::text,count(*)
+ SELECT count_state(d.state),statement_timestamp(),'v1:'||jsonb_build_array(d.family,d.stage,'stock in')::text,count(*)
  FROM fact f CROSS JOIN LATERAL count_fact_dimension(to_jsonb(f)) d GROUP BY 1,3;
 --> statement-breakpoint
 CREATE FUNCTION count_pointer_write() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
+  IF TG_OP='UPDATE' THEN
+    IF (OLD.scope,OLD.record_class,OLD.current_version_id) IS NOT DISTINCT FROM (NEW.scope,NEW.record_class,NEW.current_version_id) THEN RETURN NEW; END IF;
+  END IF;
   IF TG_OP <> 'INSERT' THEN
     PERFORM count_hour_add(OLD.scope,OLD.record_class,'published sets',-1,0,1);
   END IF;
@@ -101,7 +108,7 @@ CREATE TRIGGER count_hour_pointer AFTER INSERT OR UPDATE OR DELETE ON civic_data
  FOR EACH ROW EXECUTE FUNCTION count_pointer_write();
 --> statement-breakpoint
 INSERT INTO count_hour(state,hour,step,n)
- SELECT count_state(scope),date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(record_class,'published sets','stock in')::text,count(*)
+ SELECT count_state(scope),statement_timestamp(),'v1:'||jsonb_build_array(record_class,'published sets','stock in')::text,count(*)
  FROM civic_data_promotions GROUP BY 1,3;
 
 --> statement-breakpoint
@@ -142,5 +149,5 @@ CREATE TRIGGER count_hour_subject AFTER INSERT OR UPDATE OR DELETE ON entity
  FOR EACH ROW EXECUTE FUNCTION count_subject_write();
 --> statement-breakpoint
 INSERT INTO count_hour(state,hour,step,n)
- SELECT count_state(state),date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(kind,'subjects','stock in')::text,count(*)
+ SELECT count_state(state),statement_timestamp(),'v1:'||jsonb_build_array(kind,'subjects','stock in')::text,count(*)
  FROM entity GROUP BY 1,3;

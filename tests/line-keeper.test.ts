@@ -66,7 +66,7 @@ test('every fact state and new pointer family agrees with direct SQL through ins
     assert.equal(counts.find(c=>c.family==='NEW_FAMILY')!.total,1);
     assert.equal(counts.find(c=>c.family==='FUTURE_FAMILY')!.state,'CA');
     assert.equal(counts.find(c=>c.family==='MEETING')!.state,'AZ','real production pointer scopes keep their state through encoding');
-    assert.equal(counts.find(c=>c.family==='NEW_FAMILY')!.incoming,1,'baseline invents no writer activity');
+    assert.equal(counts.find(c=>c.family==='NEW_FAMILY')!.observedIn,1,'baseline invents no writer activity');
     const before=JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows);
     await db.exec(`BEGIN; INSERT INTO fact(entity_id,field,status) VALUES('az:body','name','live'); ROLLBACK;`);
     assert.equal(JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows),before);
@@ -186,5 +186,25 @@ test('RB-A1 work rows feed the same counters and oldest ages through scheduling,
     rows=await readCounts(query(db),window.from,window.through,expired);
     assert.ok(rows.filter(r=>r.family==='read').every(r=>r.total===0),'removing a row cancels its future clock changes too');
     assert.ok((await db.query<{n:number}>('SELECT n FROM count_hour')).rows.every(r=>Number(r.n)>=0),'the shared nonnegative CountHour contract holds');
+  }finally{await db.close();}
+});
+
+
+test('a partial first hour stays unmeasured and unchanged checks never count as new information',async()=>{
+  const db=await readerDatabase();
+  try {
+    const now=new Date().toISOString(),window=countWindow(new Date(Date.parse(now)+3_600_000).toISOString());
+    let rows=await readCounts(query(db),window.from,window.through,now);
+    assert.equal(rows.find(r=>r.stage==='fact:live')!.incoming,null);
+    assert.equal(rows.find(r=>r.stage==='fact:live')!.closedTotal,1);
+    const before=JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows);
+    await db.exec(`UPDATE fact SET value=value; UPDATE civic_data_promotions SET current_version_id=current_version_id;`);
+    assert.equal(JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows),before);
+    await db.exec(`ALTER TABLE fact ADD COLUMN checked_at timestamptz; UPDATE fact SET checked_at=now();`);
+    assert.equal(JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows),before);
+    const fullFrom=new Date(Date.parse(window.through)).toISOString(),fullThrough=new Date(Date.parse(fullFrom)+3_600_000).toISOString();
+    rows=await readCounts(query(db),fullFrom,fullThrough,fullThrough);
+    assert.equal(rows.find(r=>r.stage==='fact:live')!.incoming,0);
+    assert.equal(rows.find(r=>r.stage==='fact:live')!.outgoing,0);
   }finally{await db.close();}
 });

@@ -9,9 +9,26 @@ import {
   HOUR_COSTS_SQL, VITAL_COUNTERS, composeVitalSignsRow, controlPlaneByCaller, costPerFact, formatVitalSignsLine,
   readHourCosts, writeVitalSignsRow,
 } from "../lib/control-plane/vital-signs.ts";
+import { readVitalSigns } from "../lib/control-plane/admin-view/vital-signs-read.ts";
 
 const HOUR = "2020-02-03T05:00:00.000Z";
 const AT = Date.parse("2020-02-03T05:20:00Z");
+
+test("Admin keeps the runner readings after the line inventory is retired, without crediting unmeasured delivery", async () => {
+  let query = "";
+  let params: readonly unknown[] = [];
+  const rows = await readVitalSigns({ query: async (text, values = []) => {
+    query = text; params = values;
+    return [{ hour: HOUR, facts_live: null, cost_per_fact_usd: null, neon_bytes_read: "800000000",
+      rounds_finished: 4, rounds_killed: 1, paid_jobs_ended_empty: 2, paid_jobs_ended: 3 }];
+  } }, "2020-02-03T06:05:00Z");
+  assert.match(query, /FROM cp_vital_signs WHERE hour >=/);
+  assert.doesNotMatch(query, /cp_owner_snapshots/);
+  assert.deepEqual(params, ["2020-02-03T06:00:00.000Z"]);
+  assert.deepEqual([rows[0].factsLive, rows[0].factsLiveConfirmed, rows[0].costPerFactUsd], [null, false, null]);
+  assert.deepEqual([rows[0].roundsFinished, rows[0].roundsKilled, rows[0].paidJobsEndedEmpty], [4, 1, 2]);
+  assert.deepEqual([rows[0].neonGb, rows[0].neonAtLeast, rows[0].overNeonTarget], [0.8, true, true]);
+});
 
 test("the hour row sums every process's counts, keeps control-plane bytes apart, and leaves uncounted facts unknown", () => {
   const dir = mkdtempSync(join(tmpdir(), "vital-signs-"));

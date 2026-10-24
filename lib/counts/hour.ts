@@ -1,3 +1,4 @@
+import { countLabel } from "./labels.ts";
 /** Shared by every writer and the hourly observer. Families are data, so new ones need no allowlist. */
 export interface HourCount {
   readonly hour: string;
@@ -5,10 +6,12 @@ export interface HourCount {
   readonly family: string;
   readonly stage: string;
   readonly total: number;
-  readonly closedTotal: number;
-  readonly incoming: number;
-  readonly outgoing: number;
-  readonly changed: number;
+  readonly closedTotal: number | null;
+  readonly incoming: number | null;
+  readonly outgoing: number | null;
+  readonly changed: number | null;
+  readonly observedIn?: number;
+  readonly observedOut?: number;
 }
 export interface OldestWaiting {
   readonly state: string;
@@ -25,20 +28,24 @@ export interface CountProblem {
   readonly owner: string;
   readonly next: string;
 }
-export const COUNT_HOUR_SQL = `WITH parsed AS (
+export const COUNT_HOUR_SQL = `WITH coverage AS (
+  SELECT min(hour) AS start FROM count_hour WHERE step='counter start'
+), parsed AS (
   SELECT state,hour,n,CASE WHEN step LIKE 'v1:%' THEN substring(step FROM 4)::jsonb
-    ELSE jsonb_build_array('Other facts',step,'events') END AS dimension FROM count_hour
+    ELSE jsonb_build_array('Other facts',step,'events') END AS dimension FROM count_hour WHERE step<>'counter start'
 ), counters AS (
   SELECT state,hour,dimension->>0 AS family,dimension->>1 AS stage,dimension->>2 AS metric,n FROM parsed
 )
 SELECT $1::timestamptz AS hour,state,family,stage,
   coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
     FILTER (WHERE hour <= $3::timestamptz),0)::bigint AS total,
-  coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
-    FILTER (WHERE hour < $2::timestamptz),0)::bigint AS closed_total,
-  coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS incoming,
-  coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS outgoing,
-  coalesce(sum(n) FILTER (WHERE metric='changed' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS changed
+  CASE WHEN (SELECT start FROM coverage) <= $2::timestamptz THEN coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
+    FILTER (WHERE hour < $2::timestamptz),0)::bigint ELSE NULL END AS closed_total,
+  CASE WHEN (SELECT start FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS incoming,
+  coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS observed_in,
+  CASE WHEN (SELECT start FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS outgoing,
+  coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS observed_out,
+  CASE WHEN (SELECT start FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric='changed' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS changed
 FROM counters GROUP BY state,family,stage ORDER BY state,family,stage`;
 
 
@@ -57,17 +64,24 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
     const before = old.get(key);
     const age = row.oldestAt === null ? null : Date.parse(at) - Date.parse(row.oldestAt);
     if(row.count>0&&row.oldestAt===null) {
-      problems.push({key:`count-age:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${row.family}`,
+      problems.push({key:`count-age:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
         says:"Waiting work has no recorded starting time.",owner:row.owner,next:"Restore the waiting time on this work list."});
       continue;
     }
-    const growing = before !== undefined && row.count > before.closedTotal;
-    const flat = row.count > 0 && age !== null && age >= 3_600_000 && (now?.outgoing ?? 0) === 0;
-    if (!growing && !flat) continue;
-    problems.push({key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${row.family}`,
-      says:growing ? `${row.count.toLocaleString("en-US")} items are waiting; the pile grew since the previous hour.`
-        : `${row.count.toLocaleString("en-US")} items are waiting and none moved on in the last hour.`,
-      owner:row.owner,next:"Repair the blocked handoff and check the same records on the live page."});
+    const growing=before?.closedTotal!==null&&before?.closedTotal!==undefined&&row.count>before.closedTotal;
+    const partialGrowth=(now?.observedIn??0)>(now?.observedOut??0);
+    const aged=row.count>0&&age!==null&&age>=3_600_000;
+    const expired=row.stage==='work list:EXPIRED'&&row.count>0;
+    const flat=aged&&now?.outgoing===0;
+    const unknownFlow=aged&&(now?.outgoing===null||now===undefined);
+    if(!growing&&!partialGrowth&&!flat&&!unknownFlow&&!expired)continue;
+    const says=expired?`${row.count.toLocaleString("en-US")} worker leases expired and the work is still waiting.`:
+      growing?`${row.count.toLocaleString("en-US")} items are waiting; the pile grew since the previous hour.`:
+      partialGrowth?`${row.count.toLocaleString("en-US")} items are waiting; more came in than moved on in the recorded part of this hour.`:
+      flat?`${row.count.toLocaleString("en-US")} items are waiting and none moved on in the last full hour.`:
+      `${row.count.toLocaleString("en-US")} items are waiting; the oldest has waited at least an hour.`;
+    problems.push({key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
+      says,owner:expired?"the runner":row.owner,next:"Repair the blocked handoff and check the same records on the live page."});
   }
   return problems;
 }

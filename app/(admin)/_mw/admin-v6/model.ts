@@ -661,7 +661,7 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
-/** One full hour from the independent line keeper (Now). A number nobody recorded is null and shows "—". */
+/** One full hour from the runner's vital signs (Now). A number nobody recorded is null and shows "—". */
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;

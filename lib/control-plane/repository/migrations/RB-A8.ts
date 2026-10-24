@@ -172,7 +172,7 @@ export function countHourMigrationDefinition(): string {
 CREATE TRIGGER count_hour_${table} AFTER INSERT OR UPDATE OR DELETE ON ${table}
   FOR EACH ROW EXECUTE FUNCTION count_control_write('${kind}');
 INSERT INTO count_hour(state,hour,step,n)
- SELECT d.state,date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(d.family,d.stage,'stock in')::text,count(*)
+ SELECT d.state,statement_timestamp(),'v1:'||jsonb_build_array(d.family,d.stage,'stock in')::text,count(*)
  FROM ${table} w CROSS JOIN LATERAL count_control_dimensions(w.value,'${kind}') d GROUP BY d.state,d.family,d.stage
  ON CONFLICT(state,hour,step) DO UPDATE SET n=count_hour.n+excluded.n;`).join("\n") + `
 DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname='wtp_cp_release_readonly') THEN

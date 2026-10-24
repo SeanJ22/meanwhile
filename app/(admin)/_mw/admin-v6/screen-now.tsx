@@ -147,7 +147,7 @@ function IsItWorking() {
   const hours = board?.vital ?? null;
   const last = hours?.[0] ?? null, before = hours?.[1] ?? null;
   const rows: readonly { readonly name: string; readonly says: string; readonly of: (h: NonNullable<typeof last>) => { readonly text: string; readonly bad?: boolean } }[] = [
-    { name: "Facts live", says: "New or changed facts that reach reader views. Higher is better.", of: (h) => ({ text: orDash(h.factsLive, n=>`${count(n)}${h.factsLiveConfirmed?" confirmed":""}`) }) },
+    { name: "Facts marked live", says: "New or changed facts reported by writers. Counts alone do not prove delivery to a reader.", of: (h) => ({ text: orDash(h.factsLive, n=>`${count(n)}${h.factsLiveConfirmed?" confirmed":""}`) }) },
     { name: "Cost per fact", says: "Money spent divided by facts live. Lower is better.", of: (h) => ({ text: orDash(h.costPerFactUsd, (n) => (n >= 1 ? usd(n) : `$${n.toFixed(4)}`)) }) },
     { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: `${h.neonAtLeast&&h.neonGb!==null?"at least ":""}${gb(h.neonGb)}`, bad: h.overNeonTarget === true }) },
     { name: "Research rounds", says: "Finished, against killed by the watchdog.", of: (h) => ({ text: h.roundsFinished === null || h.roundsKilled === null ? "—" : `${count(h.roundsFinished)} finished · ${count(h.roundsKilled)} killed` }) },

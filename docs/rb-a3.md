@@ -16,12 +16,13 @@ Remaining work, in dependency order:
 
 - RB-A3: build against each newest RB-A1 tip. RB-A1 `5bde46615` is merged into this stream, and the door uses its `resolveId` for native ids and saved aliases. READY still requires the RB-A1 integration entry and ancestry on River.
 - RB-A3: replace the current subject/place-link filing with RB-A4's service-map implementation once it lands.
-- RB-A3: finish the full check set on the combined code, including source families, Admin and the build. Focused door, Box, fact-store and cache checks are running as the implementation changes.
-- RB-A3: complete the production deployment and automatic post-deploy pass after the copied-data connections and controlled next-run proof below. The approved local copy replay preserved all 31,627 sampled values. Counts for every state and territory are in `docs/measurements/rb-a3/replay.json`; 25 regions reached 1,000 and the other 31 supplied all available fact rows, so the required minimum remains open.
+- RB-A3: repeat the complete checks after merging River. All nine checks pass on `8649ec050`, including the full source-family suite, Admin and both builds.
+- RB-A3: complete the required per-state replay minimum. The approved local copy preserved all 31,627 sampled values. Counts for every state and territory are in `docs/measurements/rb-a3/replay.json`; 25 regions reached 1,000 and the other 31 supplied all available rows at their capture times, so the minimum remains open.
 - RB-A3: repeat the current-frontend Chrome and Admin checks after the final combined build. The copied-data checks below pass. The Browser app has no control tool here, so these use the repository’s guarded Google Chrome for Testing 151 harness with writes blocked and certificate validation enabled.
 - RB-A3: merge River after its RB-A1 fold, rerun every check, push READY and continue checking River returns until the lane passes its live check.
+- River: deploy the combined code and perform the automatic production pass and live check after READY. The two copied-data connections and real minute-timer proof below pass.
 
-`docs/measurements/rb-a3/production-counts.json` records the read-only aggregate baseline for all 50 states, DC and five US territories. Thirty-one have fewer than 1,000 live facts. The latest aggregate read at 13:22 UTC (9:22 AM Eastern) still has 31 regions below the minimum and seven with none: AS, GU, LA, MP, NE, PR and VT. North Dakota now holds 31; Montana holds nine. These shortfalls must not be presented as 1,000 replayed facts.
+`docs/measurements/rb-a3/production-counts.json` records the read-only aggregate baseline for all 50 states, DC and five US territories. `latest-counts.json` records the fresh read at 14:23 UTC (10:23 AM Eastern): 31 regions remain below the minimum and six have none: AS, GU, LA, MP, NE and PR. North Dakota now holds 31, Vermont five and Montana nine. These shortfalls must not be presented as 1,000 replayed facts.
 
 No READY has been declared. No production database writes, release or changes to `meanwhile-signal` have been made.
 
@@ -54,6 +55,10 @@ The same script's `--wall-clock` run also passed on the approved local copy: the
 
 ## Current check results
 
+All nine checks pass on `8649ec050`: lint, type checking, dead code, the pinned Chrome check, the complete suite, the read-only database shipping check, the default build, all 16 bundle checks and the standalone build. Preflight passes too. The suite registered 9,660 tests across 1,349 files: 9,658 passed, none failed and two were skipped. `measurements/rb-a3/checks.json` records this run. These checks must run again after the required River merge.
+
+Chrome then displayed the real-timer copy's address and government source on today's production frontend, and both field sources on the updated local frontend, with no page errors. The updated local Admin shows 57 rows and Arizona's one official field and one checked claim in the 10:00 AM Eastern hour. The updated Sources and Admin screenshots use this real-timer data. All browser mutation methods were blocked; the local server was stopped after inspection.
+
 Both default and standalone builds passed, including their trace/bundle checks. The first full run registered 9,656 tests: 9,644 passed, ten failed and two were skipped. Its ten failures exposed legacy claim adapters that had not selected the checked lane, the restored queue’s old fixture expectation, and the Admin select’s missing theme class. Focused reruns after those repairs pass: 48 publication/identity/cache checks, 45 roster/Box/carton checks, 20 identity/door/migration checks, and the five meeting checks. The complete suite must pass on the final combined commit; this first run is not reported as passing.
 
 The initial schema check refused the working-tree restoration of RB-A1 as a modified migration. The restored file’s Git blob is `bf73638c86f3273d80608c407d19ea32d3d1afeb`, identical to `origin/stream/rb-a1`; the merge base has no RB-A1 migration. After that restoration was committed and the repair moved to `RB-A3_resolve`, the read-only shipping check passed: 51 established migrations applied, with the three new lane migrations pending in their proper phases. The first attempted commit/push was blocked by automatic approval review on the same immutability concern; byte comparison and the committed restoration resolved it before the branch was pushed.
@@ -68,7 +73,7 @@ The second full run was stopped when the migration dry-run tests caught that `RB
 
 The final subject review found that optional board-creation metadata could redirect a subject that had already resolved. Creation now runs only for a missing subject. A newly created board saves the incoming id as its existing `body-alias` relation, so a repeat resolves directly. The same official-source predicate handles government pages, held APIs and government-linked portals for both creation and publication. All 18 focused door checks pass, including known-id preservation, API/portal creation and the new alias.
 
-The full source sweep also caught production-host literals in the two new Chrome helpers. They now import the existing `PUBLIC_SITE_ORIGIN` constant; all seven origin checks pass. The running suite’s recorded failure is retained, and the complete checks still need to pass on the final combined commit.
+The full source sweep also caught production-host literals in the two new Chrome helpers. They now import the existing `PUBLIC_SITE_ORIGIN` constant; all seven origin checks pass, including in the complete passing run.
 
 The next completed full run passed preflight and eight of nine checks, including both builds and the read-only database check. Its suite registered 9,646 tests: 9,642 passed, two failed and two were skipped. One failure was the corrected origin sweep. The other was V8's `ThreadIsolation::UnregisterWasmAllocation` assertion while repeatedly closing and recreating the door test's local PostgreSQL WASM runtime; the cgroup recorded no out-of-memory event.
 

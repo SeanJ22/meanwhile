@@ -1,6 +1,6 @@
 {
-  "observedAt": "2026-10-24T11:29:38.171Z",
-  "clockStart": "2026-10-24T12:05:00.000Z",
+  "observedAt": "2026-10-24T14:14:45.285Z",
+  "clockStart": "2026-10-24T14:12:44.887Z",
   "official": {
     "decision": "PUBLISH",
     "factId": 2017
@@ -12,6 +12,12 @@
   },
   "nextRun": {
     "intervalMs": 60000,
+    "mode": "wall-clock timer",
+    "startedAt": [
+      "2026-10-24T14:12:44.908Z",
+      "2026-10-24T14:13:45.055Z",
+      "2026-10-24T14:14:45.222Z"
+    ],
     "passes": [
       {
         "looked": 0,
@@ -102,13 +108,13 @@
   "counts": [
     {
       "state": "AZ",
-      "hour": "2026-10-24T12:00:00.000Z",
+      "hour": "2026-10-24T14:00:00.000Z",
       "step": "door_checked",
       "n": 1
     },
     {
       "state": "AZ",
-      "hour": "2026-10-24T12:00:00.000Z",
+      "hour": "2026-10-24T14:00:00.000Z",
       "step": "door_official",
       "n": 1
     }
@@ -137,13 +143,15 @@
       "status": 200,
       "addressVisible": true,
       "governmentSourceVisible": true,
-      "pageErrors": []
+      "pageErrors": [],
+      "observedAt": "2026-10-24T14:18:13Z"
     },
     "updatedLocalReader": {
       "status": 200,
       "bothSourcesLinked": true,
       "officials": 27,
-      "mode": "production standalone build"
+      "mode": "production standalone build",
+      "observedAt": "2026-10-24T14:18:13Z"
     },
     "localAdmin": {
       "rows": 57,
@@ -151,8 +159,10 @@
         "official": 1,
         "checked": 1
       },
-      "hour": "2026-10-24T12:00:00.000Z",
-      "mode": "production standalone build"
+      "hour": "2026-10-24T14:00:00.000Z",
+      "mode": "production standalone build",
+      "observedAt": "2026-10-24T14:18:13Z"
     }
-  }
+  },
+  "code": "8649ec050"
 }

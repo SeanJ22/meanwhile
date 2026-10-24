@@ -39,7 +39,8 @@ export function verifiedCensusVenuePoint(
     !components.state
   )
     return null;
-  const folded = usps(published);
+  const query = censusAddressQuery(published);
+  const folded = usps(query);
   const street = usps(
     [
       house,
@@ -52,7 +53,6 @@ export function verifiedCensusVenuePoint(
   );
   if (!hasWords(folded, usps(components.city)))
     return null;
-  const query = censusAddressQuery(published);
   const foldedQuery = usps(query);
   const stateTail = /\b([a-z]{2})(?:\s+\d{5}(?:\s+\d{4})?)?$/.exec(
     foldedQuery,
@@ -70,12 +70,25 @@ export function verifiedCensusVenuePoint(
   const publishedZip =
     [...foldedQuery.matchAll(zipPattern)].at(-1)?.[1] ??
     /\b(\d{5})(?:-\d{4})?\s*$/.exec(query)?.[1];
-  if (publishedZip && components.zip !== publishedZip) return null;
   const echoed=(response as {result?:{input?:{address?:{address?:string}}}})?.result?.input?.address?.address;
+  const confirmed=typeof echoed==="string"&&usps(echoed)===foldedQuery;
+  const exactStreet=hasWords(folded,street);
+  // A unique native response may canonicalize a delivery ZIP while repeating the complete physical street and city.
+  if(publishedZip&&components.zip!==publishedZip&&!(confirmed&&exactStreet))return null;
+  const sourceDirection=new RegExp(`^${house} (n|s|e|w|ne|nw|se|sw) `).exec(folded)?.[1];
   const namedStreet=hasWords(folded,usps([house,components.streetName].join(" ")))
-    ||hasWords(folded,usps([house,components.preDirection,components.streetName].filter(Boolean).join(" ")));
+    ||hasWords(folded,usps([house,components.preDirection,components.streetName].filter(Boolean).join(" ")))
+    ||Boolean(!components.preDirection&&sourceDirection&&hasWords(folded,usps([house,sourceDirection,components.streetName].join(" "))));
+  const prefix=usps([house,components.preDirection].filter(Boolean).join(" "))+" ";
+  const suffix=" "+usps(components.suffixType??"")+" ";
+  const sourceName=folded.startsWith(prefix)&&folded.includes(suffix)
+    ? folded.slice(prefix.length).split(suffix,1)[0].split(" ").filter(word=>!['jr','sr'].includes(word)):[];
+  const canonicalName=usps(components.streetName).split(" ");
+  const initialedStreet=sourceName.length>1&&sourceName.length===canonicalName.length&&
+    sourceName.at(-1)===canonicalName.at(-1)&&sourceName.every((word,index)=>word===canonicalName[index]||
+      canonicalName[index].length===1&&word.startsWith(canonicalName[index]));
   // Census may supply an omitted directional or canonical road type. Require its exact input and the source's ZIP.
-  if(!hasWords(folded,street)&&!(publishedZip&&typeof echoed==="string"&&usps(echoed)===foldedQuery&&namedStreet))return null;
+  if(!exactStreet&&!(publishedZip&&components.zip===publishedZip&&confirmed&&(namedStreet||initialedStreet)))return null;
   const lat = match.coordinates?.y;
   const lng = match.coordinates?.x;
   if (

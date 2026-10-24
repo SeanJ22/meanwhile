@@ -238,6 +238,7 @@ export async function placePublishedMeetingPins(input: {
   >();
   const locate = (
     address: MeetingPinAddress,
+    meeting: Meeting,
   ): Promise<{
     lat: number;
     lng: number;
@@ -245,7 +246,13 @@ export async function placePublishedMeetingPins(input: {
     url: string;
     at: string;
   } | null> => {
-    const query = censusAddressQuery(address.geocodingAddress??address.address);
+    const publishedQuery = censusAddressQuery(address.geocodingAddress??address.address);
+    const street = streetKeyOf(publishedQuery);
+    const city = /^(?:city|town|village|borough|municipality)(?:\s+(?:and|&)\s+county)?\s+of\s+(.+)$/i.exec(meeting.jurisdiction)?.[1];
+    const state = meetingStateOf(meeting.bodyId??meeting.ocdId);
+    // A source's municipal name supplies locality for a street-only address; a county name does not name a city.
+    const query = city&&state&&street?.index===0&&street.length===publishedQuery.length
+      ? `${publishedQuery}, ${city}, ${state}` : publishedQuery;
     if (
       !isOfficeStreetAddress(query) ||
       query.length < 3 ||
@@ -274,7 +281,7 @@ export async function placePublishedMeetingPins(input: {
         if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov")
           return null;
         const point = verifiedCensusVenuePoint(
-          address.geocodingAddress??address.address,
+          query,
           JSON.parse(new TextDecoder().decode(bytes)),
         );
         if (!point) return null;
@@ -388,7 +395,7 @@ export async function placePublishedMeetingPins(input: {
           placedCount++;
           return withPublishedPin(meeting, pin);
         }
-        const point = await locate(address);
+        const point = await locate(address,meeting);
         if (!point) continue;
         const pin: MeetingPinLocation = {
           ...publishedAddress,

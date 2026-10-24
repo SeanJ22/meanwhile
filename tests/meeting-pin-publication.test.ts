@@ -184,7 +184,7 @@ test("publication tries source text, board office, then government office and sa
       return response(address === GOVERNMENT ? GOVERNMENT_GEO : missing);
     },
   });
-  assert.deepEqual(requests, ["Room 301", BOARD, GOVERNMENT]);
+  assert.deepEqual(requests, [BOARD, GOVERNMENT]);
   assert.equal(result.meetings[0].mapPin?.basis, "GOVERNMENT_OFFICE");
   assert.equal(result.meetings[0].location, null);
   const next = await placePublishedMeetingPins({
@@ -657,4 +657,52 @@ test("a confirmed Census road spelling keeps the published house, street name, c
   }
   const unbound=structuredClone(response);delete unbound.result.input;
   assert.equal(verifiedCensusVenuePoint(published,unbound),null,"an unbound provider copy cannot declare a road spelling change");
+});
+
+
+test("a room number on the line before a published street is never its house number",()=>{
+  assert.equal(censusAddressQuery("City & County Building, Council Committee Room, Room 391\r\n1437 Bannock Street"),"1437 Bannock Street");
+  assert.equal(censusAddressQuery("Cathy Reynolds City Council Chamber\r\n1437 Bannock Street, Room 450"),"1437 Bannock Street");
+});
+
+
+test("a written house number uses the same published street in the Census query",()=>{
+ const published="Metro Headquarters, One Gateway Plaza, 3rd Floor Gateway Plaza Conference Room, Los Angeles, CA 90012";
+ const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-gateway-census.json",import.meta.url),"utf8"));
+ assert.equal(censusAddressQuery(published),"1 Gateway Plaza Gateway Plaza Conference Room, Los Angeles, CA 90012");
+ assert.ok(verifiedCensusVenuePoint(published,response));
+ assert.equal(verifiedCensusVenuePoint(published.replace("One","Two"),response),null);
+});
+
+test("a street-only municipal address uses its published city and state without changing the fact",async()=>{
+ const source={...meeting("1437 Bannock Street"),jurisdiction:"CITY AND COUNTY OF DENVER",
+   bodyId:"ocd-division/country:us/state:co/place:denver#governing",ocdId:"ocd-division/country:us/state:co/place:denver"};
+ const requests:string[]=[];
+ const first=await placePublishedMeetingPins({meetings:[source],offices:new Map(),fetchImpl:async input=>{
+   requests.push(new URL(String(input)).searchParams.get("address")!);
+   return response(geo("1437","BANNOCK","DENVER","CO","80202"));
+ }});
+ assert.deepEqual(requests,["1437 Bannock Street, DENVER, CO"]);
+ assert.equal(first.meetings[0].mapPin?.address,"1437 Bannock Street");
+ assert.equal(source.venueGap?.publishedText,"1437 Bannock Street");
+ assert.equal(first.meetings[0].mapPin?.basis,"MEETING");
+ const next=await placePublishedMeetingPins({meetings:[source],previous:first.meetings,offices:new Map(),fetchImpl:async()=>{throw Error("A saved point must not request Census again");}});
+ assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
+ const county=await placePublishedMeetingPins({meetings:[{...source,jurisdiction:"COUNTY OF DENVER"}],offices:new Map(),fetchImpl:async input=>{
+   assert.equal(new URL(String(input)).searchParams.get("address"),"1437 Bannock Street");
+   return response(geo("1437","BANNOCK","DENVER","CO","80202"));
+ }});
+ assert.equal(county.meetings[0].mapPin,undefined,"a county name cannot invent the meeting city");
+});
+
+
+test("a native Census copy keeps the physical street while canonicalizing a delivery ZIP or initialed street name",()=>{
+ const rows=JSON.parse(readFileSync(new URL("./fixtures/mt01-census-canonical-forms.json",import.meta.url),"utf8")) as {query:string;response:unknown}[];
+ for(const row of rows){
+  assert.ok(verifiedCensusVenuePoint(row.query,row.response),row.query);
+  const unbound=structuredClone(row.response) as {result:{input?:unknown}}; delete unbound.result.input;
+  assert.equal(verifiedCensusVenuePoint(row.query,unbound),null);
+  for(const changed of [row.query.replace(/^\d+/,"999"),row.query.replace("Mobile","Other City").replace("Portland","Other City").replace("Morrison","Other City"),row.query.replace("Government","Different").replace("King","Different").replace("Alameda","Different")])
+   assert.equal(verifiedCensusVenuePoint(changed,row.response),null,changed);
+ }
 });

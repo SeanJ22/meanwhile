@@ -48,6 +48,9 @@ async function queryWithDeadline(pool: Pool, statements: readonly Statement[], d
   finally { clearTimeout(timer); }
 }
 
+const readerConnectionError = (error: Error) =>
+  console.error(`Reader database connection failed: ${error.message}`);
+
 /** A caller already holding a read-only connection can supply it; undefined restores the configured socket pool. */
 export function installReaderDatabaseQuery(query: ReadOnlyQuery | null | undefined): void {
   installed = query;
@@ -60,9 +63,16 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   if (!connectionString) return null;
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   neonConfig.webSocketConstructor ??= globalThis.WebSocket;
-  const pool = serverReaderValue(`database-pool:${connectionString}`, () => new Pool({
-    connectionString, max: 4, allowExitOnIdle: true,
-    options: "-c default_transaction_read_only=on",
-  }));
+  const pool = serverReaderValue(`database-pool:${connectionString}`, () => {
+    const created = new Pool({
+      connectionString, max: 4, allowExitOnIdle: true,
+      options: "-c default_transaction_read_only=on",
+    });
+    // A dropped or refused connection fails only the read using it. An unheard error
+    // event would end the function and every other reader it is serving.
+    created.on("error", readerConnectionError);
+    created.on("connect", client => client.on("error", readerConnectionError));
+    return created;
+  });
   return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs));
 }

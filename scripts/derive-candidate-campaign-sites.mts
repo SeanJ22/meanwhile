@@ -196,7 +196,6 @@ async function main(): Promise<void> {
     state, approvals: [], prior, profiles: null, now, readCaptures,
   })).plan;
   prior = null;
-  await finish(pass.candidate);
   let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
   try {
     const ballotRead = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true, now });
@@ -221,10 +220,17 @@ async function main(): Promise<void> {
   if(profiles && !("unreadable" in profiles)) for(const subject of subjects.values())
     sites.set(subject.candidacyId,[...sites.get(subject.candidacyId) ?? [],...subject.readerKeys.flatMap(key=>profiles.links[key]?.campaign?.url ? [profiles.links[key].campaign!.url] : [])]);
   for(const record of plan?.records ?? [])sites.set(record.candidacyId,[...sites.get(record.candidacyId) ?? [],record.campaign.url]);
+  let publishedPortrait=false;
   if (plan) await publishCandidatePortraits({
     plan, sites, subjects: [...subjects.values()], now,
-    onPublished: published => finish(derivedCampaignSitesCandidate(state, published, now)),
+    onPublished: async published => {
+      await finish(derivedCampaignSitesCandidate(state, published, now));
+      publishedPortrait=true;
+    },
   });
+  // A portrait publication already includes the site's held facts. A failed
+  // campaign-link pass cannot replace that result or mark its child as failed.
+  if (!publishedPortrait) await finish(pass.candidate);
 }
 
 

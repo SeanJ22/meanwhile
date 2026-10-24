@@ -7,6 +7,7 @@ import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
 import { debtStateMigrationDefinition, stampDebtStates } from "../lib/control-plane/repository/migrations/DT-01.ts";
+import { reopenHeldDoors, reopenHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 const MIGRATIONS = [
@@ -14,6 +15,8 @@ const MIGRATIONS = [
     definition: controlReadsMigrationDefinition, apply: async (sql: Sql) => { await expandControlReads(sql); return "control reads"; } },
   { id: "DT-01_expand", source: "lib/control-plane/repository/migrations/DT-01.ts", declarations: [] as readonly string[],
     definition: debtStateMigrationDefinition, apply: async (sql: Sql) => `${await stampDebtStates(sql)} debt(s) given their state` },
+  { id: "RIVER-KEYS_expand", source: "lib/control-plane/repository/migrations/RIVER-KEYS.ts", declarations: [] as readonly string[],
+    definition: reopenHeldDoorsMigrationDefinition, apply: async (sql: Sql) => `${await reopenHeldDoors(sql)} held door(s) reopened` },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {

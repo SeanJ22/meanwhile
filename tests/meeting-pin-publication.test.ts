@@ -544,3 +544,9 @@ test("online-only source text retains a published join link while hybrid street 
     null,
   );
 });
+
+
+test("a room number before a street address is excluded from the Census query",()=>{
+  assert.equal(censusAddressQuery("Community Room #1004 - 1300 West Broward Boulevard, Fort Lauderdale, FL 33312"),
+    "1300 West Broward Boulevard, Fort Lauderdale, FL 33312");
+});

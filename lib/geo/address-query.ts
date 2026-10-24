@@ -7,7 +7,7 @@ export function censusAddressQuery(published: string): string {
     .replace(/&amp;/gi, "&")
     .replace(/Hawai[‘’']i/gi, "Hawaii");
   const street =
-    /\b\d+[a-z]?(?:-\d+)?\s+(?:[\w.'’-]+\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?/i.exec(
+    /\b\d+[a-z]?(?:-\d+)?\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?/i.exec(
       text,
     );
   const bare = /(?:^|[\r\n,;:]|\bat\s+)\s*(\d+\s+[a-z][\s\S]*)/i.exec(

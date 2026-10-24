@@ -8,7 +8,7 @@ export function publishedOnlineAccess(location: string): OnlineAccess | null {
     /\b(?:hybrid|in[- ]person|city hall|courthouse|chambers|boardroom)\b/i.test(
       location,
     ) ||
-    /\b\d+\s+(?:[\w.'’-]+\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|way|highway|hwy|parkway|pkwy|plaza)\b/i.test(
+    /\b\d+\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|way|highway|hwy|parkway|pkwy|plaza)\b/i.test(
       location,
     )
   )

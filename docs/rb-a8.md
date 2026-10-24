@@ -17,6 +17,14 @@ The actual reader adapter also connects through the production pooled endpoint w
 
 A local replay uses only the counter input projections captured at 5:56 AM EDT on October 24: 8 facts, 4 entities, 4 published sets, 4 doors, 12 findings and 20 work-list segments. It is not a whole-database clone. An injected waiting pile becomes an owned fix and a daily-brief item. The retired 65,062,742-byte inventory row is deleted, and the configured spending ceiling stays unchanged.
 
+## Reader preservation after RB-A1 deployment
+
+Read-only production SQL at 2:42 PM EDT, after migration 0051 was applied, resolves all 60 stored event references: 56 reactions, one Ask and three demand signals, with zero unresolved references. No Speak posts are stored. Chrome still selects the Tucson Parks Commission and Audit Committee after that migration.
+
+The Phoenix 85003 reader check remains open. Before RB-A8 was deployed, Chrome showed two dated items rather than the six in the release-96 baseline. Waiting another 15 seconds left two items, with no page errors. The October 5 registration deadline disappeared and the page now says it is still gathering that deadline. The election date, election-office contact and campaign-finance office remain visible. This is a current production reader regression, not a passing preservation check.
+
+Owner: River / the ballot-navigation reader. In `app/ballot/page.tsx`, the `!navigation.has(set.election.state)` condition suppresses `builtInElectionDatesFor` as soon as any state navigation is published. The native calendar reads only `info.dates`, so a partial publication drops previously visible dates. River must address this in the reader release before RB-A8 can pass its live preservation check. The A8 counts code does not change that reader path.
+
 ## Next-run proof
 
 With the clock advanced to the configured :05 boundary, the same observer runs at 2:05 PM and 3:05 PM EDT, October 24. Work eligible at 2:02 PM becomes a stored Admin fix owned by diggers and a stored daily-brief item at the first tick, three minutes later. Both invocations complete; the two saved checkpoints total 332 bytes. The real copied reader inputs are unchanged. With a waiting pile in all 57 buckets, five invocations retain three checkpoints totalling 8,901 bytes. Direct SQL equals every stock dimension on both databases in all 57 buckets. Focused coverage includes future due boundaries and leases while the runner is stopped, refusal, rollback, archival, new families, missing waiting times, and a missing or late keeper. These are controlled-clock scheduling checks. An actual deployed hourly invocation and River's Chrome live check remain owed after integration.

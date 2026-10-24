@@ -1,23 +1,26 @@
 {
-  "observedAt": "2026-10-24T18:45:50.942508+00:00",
-  "commit": "3d483f027",
-  "node": "v24.19.0",
+  "observedAt": "2026-10-24T21:28:11.618257+00:00",
+  "testedCommit": "1bdca4f7e",
+  "riverCommit": "720bc77b6",
+  "a1FoldedReady": "1d6df41d9",
+  "latestA1Documentation": "3a8b176aa",
+  "latestA1Delta": "Six lines in docs/rb-a1.md; no application or test change. Merged and build passed.",
   "preflight": "PASS",
   "gates": [
     {
       "id": "lint",
       "status": "PASS",
-      "seconds": 95
+      "seconds": 103
     },
     {
       "id": "tsc",
       "status": "PASS",
-      "seconds": 84
+      "seconds": 60
     },
     {
       "id": "dead-code",
       "status": "PASS",
-      "seconds": 7
+      "seconds": 5
     },
     {
       "id": "assert:browser",
@@ -27,7 +30,7 @@
     {
       "id": "test",
       "status": "PASS",
-      "seconds": 1800
+      "seconds": 2742
     },
     {
       "id": "db:gate",
@@ -37,24 +40,51 @@
     {
       "id": "build",
       "status": "PASS",
-      "seconds": 73
+      "seconds": 199
     },
     {
       "id": "test:bundle",
       "status": "PASS",
-      "seconds": 1
+      "seconds": 2
     },
     {
       "id": "build:standalone",
       "status": "PASS",
-      "seconds": 18
+      "seconds": 37
     }
   ],
-  "suite": {
-    "registered": 9806,
-    "passed": 9804,
+  "tests": {
+    "registered": 9829,
+    "passed": 9824,
     "failed": 0,
-    "skipped": 2
+    "suites": 42,
+    "skipped": 5,
+    "todo": 0,
+    "cancelled": 0
   },
-  "note": "Full combined implementation after the RB-A1 fold and River contract-budget update. Copy-adapter refinements have separate static checks."
+  "postbuildChecks": {
+    "files": [
+      "tests/deploy-paths.test.ts",
+      "tests/reader-last-mile-trace.test.ts"
+    ],
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0
+  },
+  "bundleTests": {
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0
+  },
+  "remainingSkippedFiles": [
+    "tests/acquisition-repair-profile.test.ts",
+    "tests/acquisition-repair-roster.test.ts"
+  ],
+  "environment": {
+    "node": "v24.19.0",
+    "browser": "Chromium 1234 / Google Chrome for Testing 151.0.7922.34",
+    "productionDatabaseRole": "readonly",
+    "productionWrites": false
+  },
+  "note": "The full test run started with no .next output. Its three build-dependent skips are covered by test:bundle and the 17 passing postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing."
 }

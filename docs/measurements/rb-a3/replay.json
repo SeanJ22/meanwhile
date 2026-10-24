@@ -1,8 +1,9 @@
 {
-  "observedAt": "2026-10-24T20:17:11.627Z",
+  "observedAt": "2026-10-24T21:11:26.118Z",
   "states": [
     {
       "state": "AK",
+      "stateName": "Alaska",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -26,11 +27,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Alaska"
+      "preserved": 1000
     },
     {
       "state": "AL",
+      "stateName": "Alabama",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -54,11 +55,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Alabama"
+      "preserved": 1000
     },
     {
       "state": "AR",
+      "stateName": "Arkansas",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -82,11 +83,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Arkansas"
+      "preserved": 1000
     },
     {
       "state": "AS",
+      "stateName": "American Samoa",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -109,11 +110,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "American Samoa"
+      "preserved": 1000
     },
     {
       "state": "AZ",
+      "stateName": "Arizona",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -141,11 +142,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Arizona"
+      "preserved": 1000
     },
     {
       "state": "CA",
+      "stateName": "California",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -169,11 +170,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "California"
+      "preserved": 1000
     },
     {
       "state": "CO",
+      "stateName": "Colorado",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -197,11 +198,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Colorado"
+      "preserved": 1000
     },
     {
       "state": "CT",
+      "stateName": "Connecticut",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -225,11 +226,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Connecticut"
+      "preserved": 1000
     },
     {
       "state": "DC",
+      "stateName": "District of Columbia",
       "selected": 1000,
       "existingFactValues": 13,
       "legacyReaderValues": 987,
@@ -252,11 +253,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "District of Columbia"
+      "preserved": 1000
     },
     {
       "state": "DE",
+      "stateName": "Delaware",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -280,11 +281,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Delaware"
+      "preserved": 1000
     },
     {
       "state": "FL",
+      "stateName": "Florida",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -308,11 +309,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Florida"
+      "preserved": 1000
     },
     {
       "state": "GA",
+      "stateName": "Georgia",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -336,11 +337,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Georgia"
+      "preserved": 1000
     },
     {
       "state": "GU",
+      "stateName": "Guam",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -362,11 +363,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Guam"
+      "preserved": 1000
     },
     {
       "state": "HI",
+      "stateName": "Hawaii",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -390,11 +391,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Hawaii"
+      "preserved": 1000
     },
     {
       "state": "IA",
+      "stateName": "Iowa",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -417,11 +418,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Iowa"
+      "preserved": 1000
     },
     {
       "state": "ID",
+      "stateName": "Idaho",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -445,11 +446,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Idaho"
+      "preserved": 1000
     },
     {
       "state": "IL",
+      "stateName": "Illinois",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -473,11 +474,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Illinois"
+      "preserved": 1000
     },
     {
       "state": "IN",
+      "stateName": "Indiana",
       "selected": 1000,
       "existingFactValues": 70,
       "legacyReaderValues": 930,
@@ -500,11 +501,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Indiana"
+      "preserved": 1000
     },
     {
       "state": "KS",
+      "stateName": "Kansas",
       "selected": 1000,
       "existingFactValues": 36,
       "legacyReaderValues": 964,
@@ -527,11 +528,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Kansas"
+      "preserved": 1000
     },
     {
       "state": "KY",
+      "stateName": "Kentucky",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -555,11 +556,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Kentucky"
+      "preserved": 1000
     },
     {
       "state": "LA",
+      "stateName": "Louisiana",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -582,11 +583,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Louisiana"
+      "preserved": 1000
     },
     {
       "state": "MA",
+      "stateName": "Massachusetts",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -609,11 +610,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Massachusetts"
+      "preserved": 1000
     },
     {
       "state": "MD",
+      "stateName": "Maryland",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -637,11 +638,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Maryland"
+      "preserved": 1000
     },
     {
       "state": "ME",
+      "stateName": "Maine",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -665,11 +666,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Maine"
+      "preserved": 1000
     },
     {
       "state": "MI",
+      "stateName": "Michigan",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -692,11 +693,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Michigan"
+      "preserved": 1000
     },
     {
       "state": "MN",
+      "stateName": "Minnesota",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -720,11 +721,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Minnesota"
+      "preserved": 1000
     },
     {
       "state": "MO",
+      "stateName": "Missouri",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -748,11 +749,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Missouri"
+      "preserved": 1000
     },
     {
       "state": "MP",
+      "stateName": "Northern Mariana Islands",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -775,11 +776,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Northern Mariana Islands"
+      "preserved": 1000
     },
     {
       "state": "MS",
+      "stateName": "Mississippi",
       "selected": 1000,
       "existingFactValues": 36,
       "legacyReaderValues": 964,
@@ -803,11 +804,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Mississippi"
+      "preserved": 1000
     },
     {
       "state": "MT",
+      "stateName": "Montana",
       "selected": 1000,
       "existingFactValues": 9,
       "legacyReaderValues": 991,
@@ -830,11 +831,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Montana"
+      "preserved": 1000
     },
     {
       "state": "NC",
+      "stateName": "North Carolina",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -858,11 +859,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "North Carolina"
+      "preserved": 1000
     },
     {
       "state": "ND",
+      "stateName": "North Dakota",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -885,11 +886,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "North Dakota"
+      "preserved": 1000
     },
     {
       "state": "NE",
+      "stateName": "Nebraska",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -912,11 +913,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Nebraska"
+      "preserved": 1000
     },
     {
       "state": "NH",
+      "stateName": "New Hampshire",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -941,11 +942,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "New Hampshire"
+      "preserved": 1000
     },
     {
       "state": "NJ",
+      "stateName": "New Jersey",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -971,11 +972,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "New Jersey"
+      "preserved": 1000
     },
     {
       "state": "NM",
+      "stateName": "New Mexico",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -999,11 +1000,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "New Mexico"
+      "preserved": 1000
     },
     {
       "state": "NV",
+      "stateName": "Nevada",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1027,11 +1028,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Nevada"
+      "preserved": 1000
     },
     {
       "state": "NY",
+      "stateName": "New York",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1055,11 +1056,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "New York"
+      "preserved": 1000
     },
     {
       "state": "OH",
+      "stateName": "Ohio",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1083,11 +1084,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Ohio"
+      "preserved": 1000
     },
     {
       "state": "OK",
+      "stateName": "Oklahoma",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1111,11 +1112,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Oklahoma"
+      "preserved": 1000
     },
     {
       "state": "OR",
+      "stateName": "Oregon",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1138,11 +1139,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Oregon"
+      "preserved": 1000
     },
     {
       "state": "PA",
+      "stateName": "Pennsylvania",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1166,11 +1167,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Pennsylvania"
+      "preserved": 1000
     },
     {
       "state": "PR",
+      "stateName": "Puerto Rico",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -1192,11 +1193,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Puerto Rico"
+      "preserved": 1000
     },
     {
       "state": "RI",
+      "stateName": "Rhode Island",
       "selected": 1000,
       "existingFactValues": 62,
       "legacyReaderValues": 938,
@@ -1220,11 +1221,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Rhode Island"
+      "preserved": 1000
     },
     {
       "state": "SC",
+      "stateName": "South Carolina",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1248,11 +1249,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "South Carolina"
+      "preserved": 1000
     },
     {
       "state": "SD",
+      "stateName": "South Dakota",
       "selected": 1000,
       "existingFactValues": 55,
       "legacyReaderValues": 945,
@@ -1276,11 +1277,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "South Dakota"
+      "preserved": 1000
     },
     {
       "state": "TN",
+      "stateName": "Tennessee",
       "selected": 1000,
       "existingFactValues": 8,
       "legacyReaderValues": 992,
@@ -1304,11 +1305,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Tennessee"
+      "preserved": 1000
     },
     {
       "state": "TX",
+      "stateName": "Texas",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1332,11 +1333,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Texas"
+      "preserved": 1000
     },
     {
       "state": "UT",
+      "stateName": "Utah",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1360,11 +1361,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Utah"
+      "preserved": 1000
     },
     {
       "state": "VA",
+      "stateName": "Virginia",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1388,11 +1389,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Virginia"
+      "preserved": 1000
     },
     {
       "state": "VI",
+      "stateName": "U.S. Virgin Islands",
       "selected": 1000,
       "existingFactValues": 2,
       "legacyReaderValues": 998,
@@ -1415,11 +1416,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "U.S. Virgin Islands"
+      "preserved": 1000
     },
     {
       "state": "VT",
+      "stateName": "Vermont",
       "selected": 1000,
       "existingFactValues": 0,
       "legacyReaderValues": 1000,
@@ -1442,11 +1443,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Vermont"
+      "preserved": 1000
     },
     {
       "state": "WA",
+      "stateName": "Washington",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1470,11 +1471,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Washington"
+      "preserved": 1000
     },
     {
       "state": "WI",
+      "stateName": "Wisconsin",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1498,11 +1499,11 @@
       "equivalentGovernmentSourceValues": 60,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Wisconsin"
+      "preserved": 1000
     },
     {
       "state": "WV",
+      "stateName": "West Virginia",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1526,11 +1527,11 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "West Virginia"
+      "preserved": 1000
     },
     {
       "state": "WY",
+      "stateName": "Wyoming",
       "selected": 1000,
       "existingFactValues": 100,
       "legacyReaderValues": 900,
@@ -1554,12 +1555,14 @@
       "equivalentGovernmentSourceValues": 0,
       "failures": [],
       "zero": false,
-      "preserved": 1000,
-      "stateName": "Wyoming"
+      "preserved": 1000
     }
   ],
   "zeroStates": [],
-  "implementationCommit": "b2abb7d00",
+  "zeroStateNames": [],
+  "implementationCommit": "1bdca4f7e",
+  "riverCommit": "720bc77b6",
+  "a1Commit": "1d6df41d9",
   "totalSelected": 56000,
   "totalPreserved": 56000,
   "byTable": {
@@ -1567,6 +1570,5 @@
     "civic_data_promotions": 51795,
     "civic_data_candidates": 14
   },
-  "zeroStateNames": [],
   "smallerStates": []
 }

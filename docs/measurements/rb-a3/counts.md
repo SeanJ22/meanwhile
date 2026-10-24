@@ -1,6 +1,6 @@
 # Reader-value replay by state
 
-Observed 2026-10-24T20:17:11.627Z. 56,000 of 56,000 selected values preserved in local production copies. Every repeat is unchanged. Identity, place and source context is excluded from these counts.
+Observed 2026-10-24T21:11:26.118Z. 56,000 of 56,000 selected values preserved in local production copies. Every repeat is unchanged. Identity, place and source context is excluded from these counts.
 
 States or territories with zero total reader values: **none**. Regions with fewer than 1,000 total selected values: **none**.
 

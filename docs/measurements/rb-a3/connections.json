@@ -1,0 +1,155 @@
+{
+  "observedAt": "2026-10-24T11:29:38.171Z",
+  "clockStart": "2026-10-24T12:05:00.000Z",
+  "official": {
+    "decision": "PUBLISH",
+    "factId": 2017
+  },
+  "checked": {
+    "id": 2018,
+    "value": "20 E. Main Street\nMesa, AZ 85201",
+    "quote_start": 1443
+  },
+  "nextRun": {
+    "intervalMs": 60000,
+    "passes": [
+      {
+        "looked": 0,
+        "deferred": 0,
+        "published": 0,
+        "publishedByRoute": {},
+        "handed": 0,
+        "refused": 0,
+        "seats": {
+          "flagged": 0
+        },
+        "labels": {
+          "flagged": 0,
+          "moved": 0,
+          "cut": 0,
+          "renamed": 0
+        },
+        "errorExamples": [],
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {}
+      },
+      {
+        "looked": 1,
+        "deferred": 0,
+        "published": 1,
+        "publishedByRoute": {
+          "office contacts": 1
+        },
+        "handed": 0,
+        "refused": 0,
+        "seats": {
+          "flagged": 0
+        },
+        "labels": {
+          "flagged": 0,
+          "moved": 0,
+          "cut": 0,
+          "renamed": 0
+        },
+        "errorExamples": [],
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {
+          "ocd-division/country:us/state:az/place:mesa#governing": {
+            "published": 1,
+            "refused": 0,
+            "waiting": 0
+          }
+        }
+      },
+      {
+        "looked": 0,
+        "deferred": 0,
+        "published": 0,
+        "publishedByRoute": {},
+        "handed": 0,
+        "refused": 0,
+        "seats": {
+          "flagged": 0
+        },
+        "labels": {
+          "flagged": 0,
+          "moved": 0,
+          "cut": 0,
+          "renamed": 0
+        },
+        "errorExamples": [],
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {}
+      }
+    ],
+    "repeatUnchanged": true
+  },
+  "sources": [
+    "https://webapi.legistar.com/v1/mesa/Bodies?$filter=BodyActiveFlag%20eq%201",
+    "https://www.mesaaz.gov/Government/Mayor-City-Council"
+  ],
+  "subject": "ocd-division/country:us/state:az/place:mesa#governing",
+  "reader": {
+    "name": "City Council",
+    "address": "20 E. Main Street\nMesa, AZ 85201",
+    "bodiesRetained": 33,
+    "meetingsRetained": 36,
+    "seatsRetained": 9
+  },
+  "counts": [
+    {
+      "state": "AZ",
+      "hour": "2026-10-24T12:00:00.000Z",
+      "step": "door_checked",
+      "n": 1
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-24T12:00:00.000Z",
+      "step": "door_official",
+      "n": 1
+    }
+  ],
+  "queue": [
+    {
+      "place_id": "ocd-division/country:us"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az/place:mesa"
+    }
+  ],
+  "chrome": {
+    "productionBaseline": {
+      "at": "2026-10-24T11:26:51.798Z",
+      "url": "https://meanwhileusa.com/?zip=85201",
+      "status": 200,
+      "bodies": 33,
+      "meetings": 36,
+      "officials": 27
+    },
+    "currentReaderWithCopiedFacts": {
+      "status": 200,
+      "addressVisible": true,
+      "governmentSourceVisible": true,
+      "pageErrors": []
+    },
+    "updatedLocalReader": {
+      "status": 200,
+      "bothSourcesLinked": true,
+      "officials": 27
+    },
+    "localAdmin": {
+      "rows": 57,
+      "AZ": {
+        "official": 1,
+        "checked": 1
+      }
+    }
+  }
+}

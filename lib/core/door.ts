@@ -104,7 +104,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const copy = input.capture ? await saveCaptureCopy(query, input.capture) : input.copy;
     const official = isOfficialUrl(copy.finalUrl, entity.hosts) || isSourceApiUrl(copy.finalUrl)
       || isOfficialSource(copy.finalUrl, input.linkingPage);
-    const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : "loader");
+    const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
     const fast = official && acquisition === "loader";
     const provenance = input.provenance === "OWNER" ? "OWNER" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
     const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;

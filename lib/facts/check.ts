@@ -20,6 +20,8 @@ export interface SavedCopy {
 export interface CheckEntity {
   readonly id: string;
   readonly fullName: string;
+  /** Published spellings retained under this same subject id. */
+  readonly names?: readonly string[];
   readonly stateName: string | null;
   /** Registered official hosts for this entity and its parents. */
   readonly hosts: readonly string[];
@@ -117,7 +119,8 @@ function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
   const text = copyText(copy);
   if (entity.externalIds.some(id => boundedIndexOf(text, id) !== -1)) return true;
   const lower = text.toLowerCase();
-  const named = [entity.fullName, placeCore(entity.fullName)].some(name => name !== "" && boundedIndexOf(lower, name.toLowerCase()) !== -1);
+  const named = [entity.fullName, ...entity.names ?? []].flatMap(name => [name, placeCore(name)])
+    .some(name => name !== "" && boundedIndexOf(lower, name.toLowerCase()) !== -1);
   const code = entity.stateName === null ? null : stateCodeOf(entity.stateName);
   return named && (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1 ||
     code !== null && boundedIndexOf(text, code) !== -1);

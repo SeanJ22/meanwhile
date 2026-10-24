@@ -156,11 +156,11 @@ export async function publishBodyRoster(facts: FactDb & { readonly query: Query 
   const named = body.name === null && division ? bodyNameFromPage(text, division.label) : null;
   const own = named && division ? named.split(new RegExp(division.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).join(" ").replace(/\s+/g, " ").trim() : "";
   const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
-    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id, nameFromPage: !(named && own) }, input.clocks, input.now);
-  if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id,
+    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id, acquisition: "walker", nameFromPage: !(named && own) }, input.clocks, input.now);
+  if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id, acquisition: "walker",
     facts: [{ field: "name", value: named, quote: own }] }, input.clocks, input.now);
   const schedule = input.schedule;
-  if (schedule) await publishBodyFacts(facts, { bodyId: body.id, capture: schedule.capture, producedBy: `held-schedule:${schedule.capture.evidence.artifactId}`,
+  if (schedule) await publishBodyFacts(facts, { bodyId: body.id, capture: schedule.capture, producedBy: `held-schedule:${schedule.capture.evidence.artifactId}`, acquisition: "walker",
     facts: [["meeting_cadence", schedule.schedule.cadence], ["agenda_url", schedule.schedule.agendaUrl]].flatMap(([field, value]) =>
       value ? [{ field: field as "meeting_cadence" | "agenda_url", value, quote: value }] : []) }, input.clocks, input.now);
   return tally;

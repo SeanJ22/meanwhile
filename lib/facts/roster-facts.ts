@@ -4,7 +4,7 @@ import { boundedIndexOf, normalizeText, type CheckEntity, type FieldKind, type S
 import { captureProvenance } from "./capture.ts";
 import { ensureEntity, resolvePerson } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome } from "./publish.ts";
+import { openBlank, publishClaim, type Clocks, type FactDb, type PublishInput, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
@@ -37,6 +37,7 @@ interface RosterFactsInput {
   /** Every member row on the page was read, so a member it no longer lists has left. */
   readonly complete: boolean;
   readonly producedBy: string;
+  readonly acquisition?: PublishInput["acquisition"];
   readonly purge?: ReaderCachePurger;
   /** False when the caller publishes the body's name itself from this page. */
   readonly nameFromPage?: boolean;
@@ -75,13 +76,13 @@ function bodyNameAsGiven(pageText: string, name: string): { readonly name: strin
 
 /** A governing board with no verified name takes the one its own saved page writes for it; a page that does not name it leaves the name open. */
 export async function publishBodyNameFromPage(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
-  input: { readonly entity: CheckEntity; readonly copy: SavedCopy; readonly provenance: ReturnType<typeof captureProvenance>; readonly producedBy: string; readonly purge?: ReaderCachePurger },
+  input: { readonly entity: CheckEntity; readonly copy: SavedCopy; readonly provenance: ReturnType<typeof captureProvenance>; readonly producedBy: string; readonly acquisition?: PublishInput["acquisition"]; readonly purge?: ReaderCachePurger },
   clocks: Clocks, now: Date): Promise<PublishOutcome | null> {
   if ((await db.query("SELECT 1 FROM fact WHERE entity_id = $1 AND field = 'name' AND status = 'live' LIMIT 1", [input.entity.id])).length) return null;
   const found = governingBodyNameOn(input.copy.text, input.entity.id) ?? bodyNameAsGiven(input.copy.text, input.entity.fullName);
   if (!found) return null;
   return publishClaim(db, { entity: input.entity, field: "name", fieldKind: "officeholder", provenance: input.provenance, value: found.name, valueText: found.name,
-    quote: found.quote, copy: input.copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge });
+    quote: found.quote, copy: input.copy, producedBy: input.producedBy, acquisition: input.acquisition ?? "walker", costUsd: 0 }, clocks, now, { purge: input.purge });
 }
 
 /** One saved roster page becomes facts, each on its own: who sits on the body, their title, contacts and term. */
@@ -131,7 +132,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };
     const claim = async (entity: CheckEntity, field: string, fieldKind: FieldKind, value: unknown, valueText: string, sourceField: string) => {
       const quote = member.fieldSources?.[sourceField]?.quote ?? valueText;
-      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge }),
+      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, acquisition: input.acquisition ?? "walker", costUsd: 0 }, clocks, now, { purge: input.purge }),
         member.recordId, sourceField);
     };
     await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name");
@@ -162,13 +163,14 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     tally.departed = gone.length;
     if (gone.length) await invalidateReaderCache(readerCacheScopeForPublication(body.state ?? body.id), input.purge);
   }
-  if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, purge: input.purge }, clocks, now);
+  if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge: input.purge }, clocks, now);
   return tally;
 }
 
 /** Facts about a body itself (its name, schedule, agenda link, office address and phone), each in the page's own words. */
 export async function publishBodyFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+    readonly acquisition?: PublishInput["acquisition"];
     readonly purge?: ReaderCachePurger;
     readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url" | "office_address" | "office_phone"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
@@ -180,9 +182,9 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
     const out: PublishOutcome[] = [];
     for (const { field, value, quote } of input.facts) {
       out.push(await publishClaim(db, { entity, field, fieldKind: field === "name" ? "officeholder" : field.startsWith("office_") ? "contact" : "meeting", provenance, value, valueText: quote, quote, copy,
-        producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge }));
+        producedBy: input.producedBy, acquisition: input.acquisition ?? "walker", costUsd: 0 }, clocks, now, { purge }));
     }
-    if (!input.facts.some(row => row.field === "name")) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy, purge }, clocks, now);
+    if (!input.facts.some(row => row.field === "name")) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge }, clocks, now);
     return out;
   }, input.purge);
 }

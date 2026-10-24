@@ -86,7 +86,8 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   };
   const claim = async (field: string, value: unknown, valueText: string, quote: string = valueText) =>
     count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote, copy,
-      producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
+      acquisition: field === "location" ? "walker" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };

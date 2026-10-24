@@ -2111,7 +2111,7 @@ export function bodySubject(
     rosterGaps: [...projectedBodyRoster(body).gaps],
     representationNote: representationNoteForClaim(claim),
     meetings,
-    sources: [...districtCardSources(roster, meetings, body.officeContact?.provenance), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
+    sources: [...districtCardSources(roster, meetings, body.officeContact?.provenance, body.fieldSources), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // Every section renders for every body: content, or its own absence line.
     bodyCard: {
       /* A body with no division has a null `divisionType` and gets no class definition. */

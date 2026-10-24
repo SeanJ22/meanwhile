@@ -5,6 +5,10 @@ import { publishClaim, type PublishInput } from "../lib/facts/publish.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { readFactStore } from "../lib/facts/admin-read.ts";
+import { readBodyFacts } from "../lib/facts/registry-overlay.ts";
+import { stateCoverage } from "../lib/reader/coverage.ts";
+import { districtCardSources } from "../lib/officials/card-sources.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 
 const now = new Date("2026-10-24T08:00:00Z");
 const clocks = factClocks(null);
@@ -26,6 +30,47 @@ async function seeded() {
     (2,'https://news.example/council','https://news.example/council',$1,$2,'second')`, [now.toISOString(), "a".repeat(64)]);
   return db;
 }
+
+test("both lanes reach the existing place card with their own saved field sources", async () => {
+  const db = await seeded();
+  try {
+    await door(db, input({ field: "name", fieldKind: "officeholder", value: "Example City Council", valueText: "Example City Council" }), clocks, now, { purge });
+    const address = "20 Main Street";
+    await door(db, input({ field: "office_address", value: address, valueText: address, quote: address, provenance: "NEWS", acquisition: "hunter",
+      copy: { ...input().copy, id: 2, finalUrl: "https://news.example/council", text: `Example City Council Arizona ${address}` } }), clocks, now, { purge });
+    const provenance = { sourceUrl: null, sourceOrg: "Census", collectedAt: now.toISOString(), verifiedAt: null };
+    const runtime: RegistryRuntimeReadModel = { formatVersion: 1,
+      registry: { generatedAt: now.toISOString(), bodies: [{ id: input().entity.id, ocdId: "place-one", name: null, bodyClass: "GOVERNING",
+        bodyOrigin: "DERIVED_FROM_DIVISION_TYPE", coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null,
+        meetingCadence: null, homepageUrl: null, demandCount: 0, sourceDataset: "DERIVED", provenance }],
+      divisions: [{ ocdId: "place-one", label: "Example", divisionType: "place", tier: "local", state: "AZ", parentOcdId: null,
+        lsad: null, funcstat: null, classfp: null, geoid: null, canonicalOcdId: null, canonicalMatch: "none", sourceDataset: "TIGER_CB2023", provenance }] },
+      bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+      officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
+    const facts = await readBodyFacts(db.query, [input().entity.id], true);
+    const card = stateCoverage({ state: "AZ", registry: runtime, version: "test" }, ["place-one"], 0, 0, [], facts).bodies[0]!;
+    assert.equal(card.name, "Example City Council");
+    assert.equal(card.officeContact?.address, address);
+    const sources = districtCardSources([], [], card.officeContact?.provenance, card.fieldSources);
+    assert.deepEqual(sources.filter(source => source.what === "Name" || source.what === "Office address").map(source => [source.what, source.provenance.sourceUrl]),
+      [["Name", "https://example.gov/council"], ["Office address", "https://news.example/council"]]);
+  } finally { await db.pg.close(); }
+});
+
+test("an existing canonical id wins over another source's alias without merging people", async () => {
+  const db = await seeded();
+  try {
+    await db.pg.exec(`INSERT INTO entity(id,kind,name,state) VALUES('ocd-person/one','person','First person','AL'),
+      ('ocd-person/two','person','Second person','AL');
+      INSERT INTO entity_external_id(entity_id,scheme,value) VALUES('ocd-person/two','campaign-person:AL','ocd-person/one')`);
+    for (const id of ["ocd-person/one", "ocd-person/two"]) {
+      const { entity: _entity, ...claim } = input();
+      assert.equal((await door(db, { ...claim, subjectId: id }, clocks, now, { purge }) as { decision: string }).decision, "PUBLISH");
+    }
+    assert.deepEqual((await db.query("SELECT entity_id FROM fact ORDER BY entity_id")).map(row => row.entity_id), ["ocd-person/one", "ocd-person/two"]);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE kind='person'"))[0]!.n, 2);
+  } finally { await db.pg.close(); }
+});
 
 test("an official field publishes without reading or searching the page text, and an exact repeat changes nothing", async () => {
   const db = await seeded();

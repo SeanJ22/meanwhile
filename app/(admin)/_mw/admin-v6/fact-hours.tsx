@@ -14,7 +14,7 @@ export function FactHours({ hours }: { readonly hours: readonly FactDoorHour[] |
   return <Card title="Facts published, by state and hour">
     <p className={s.meta}>New and replacement facts. Sending the same fact again adds nothing.</p>
     {hours === null ? <span className={s.big}>—</span> : <>
-      <label>Hour <select value={selected ?? ""} onChange={event => setHour(event.target.value)}>
+      <label>Hour <select className={s.select} value={selected ?? ""} onChange={event => setHour(event.target.value)}>
         {available.map(at => <option key={at} value={at}>{mst(at)}</option>)}
       </select></label>
       <div className={s.tableWrap}><table className={s.table}>

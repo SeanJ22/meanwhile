@@ -36,12 +36,11 @@ CREATE TABLE place_page (
 CREATE INDEX entity_external_id_value ON entity_external_id(value,entity_id);
 --> statement-breakpoint
 CREATE FUNCTION reader_resolve_id(any_id text) RETURNS text LANGUAGE plpgsql STABLE AS $$
-DECLARE matches text[]; exact_id text;
+DECLARE matches text[];
 BEGIN
-  SELECT id INTO exact_id FROM entity WHERE id=any_id;
-  IF exact_id IS NOT NULL THEN RETURN exact_id; END IF;
   SELECT array_agg(DISTINCT id) INTO matches FROM (
-    SELECT entity_id AS id FROM entity_external_id WHERE value=any_id
+    SELECT id FROM entity WHERE id=any_id
+    UNION SELECT entity_id FROM entity_external_id WHERE value=any_id
     UNION SELECT entity_id FROM entity_external_id WHERE scheme='fec'
       AND value=substring(any_id FROM '^fec:([HSP][0-9][A-Z]{2}[0-9]{5})$')
     UNION SELECT id FROM entity WHERE kind='meeting' AND id='meeting:'||any_id

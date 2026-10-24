@@ -89,7 +89,7 @@ async function publishDetails(input: HeldSubjectPublicationInput): Promise<HeldS
   }
   for (const fact of [...extracted.facts, ...committees, ...statements, ...bodies]) facts.push({ field: fact.field, outcome: await publishClaim(db, {
     entity, field: fact.field, fieldKind: fact.fieldKind, value: fact.value, valueText: fact.valueText, quote: fact.quote,
-    provenance, copy, producedBy: "held-subject-digger", costUsd: 0,
+    provenance, copy, producedBy: "held-subject-digger", acquisition: "walker", costUsd: 0,
   }, clocks, now, { purge: input.purge }) });
   const rosterIdentityGaps: string[] = [], shownMemberIds = new Map<string, string>();
   let rosterRows = extracted.rosterRows;
@@ -118,7 +118,7 @@ async function publishDetails(input: HeldSubjectPublicationInput): Promise<HeldS
   }
   const roster = subject.subjectKind === "body" && rosterRows.length ? await publishRosterFacts(db, {
     body: { id, name: subject.bodyName, state, parentId: subject.divisionIds[0] ?? null }, capture,
-    complete: extracted.completeRoster && !rosterIdentityGaps.length, producedBy: "held-subject-digger", purge: input.purge,
+    complete: extracted.completeRoster && !rosterIdentityGaps.length, producedBy: "held-subject-digger", acquisition: "walker", purge: input.purge,
     shownMemberIds,
     members: rosterRows.map(row => ({ recordId: `held-roster:${fingerprint([id, nameKey(row.name), row.office])}`,
       fields: { ...row } })),
@@ -135,7 +135,7 @@ async function publishDetails(input: HeldSubjectPublicationInput): Promise<HeldS
     }
     if (photo) facts.push({ field: "portrait", outcome: await publishClaim(db, { entity, field: "portrait", fieldKind: "portrait",
       value: photo, valueText: extracted.portraitImageUrl, quote: extracted.portraitImageUrl, provenance, copy,
-      producedBy: "held-subject-digger", costUsd: 0 }, clocks, now, { purge: input.purge }) });
+      producedBy: "held-subject-digger", acquisition: "walker", costUsd: 0 }, clocks, now, { purge: input.purge }) });
   }
   const membershipHeld = subject.subjectKind === "official" && subject.bodyId
     ? (await db.query(`SELECT 1 FROM fact WHERE entity_id=$1 AND field=$2 AND status='live' LIMIT 1`, [subject.bodyId, `member:${id}`])).length > 0 : false;

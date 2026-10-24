@@ -68,6 +68,7 @@ export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
   name: "Name", officeTitle: "Office", partyLabel: "Party", birthDate: "Birth date",
   termNote: "Term wording", termStart: "Term start date", termEnd: "Term end date",
   email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
+  homepageUrl: "Official site", officeAddress: "Office address", officePhone: "Office phone",
   campaignUrl: "Campaign website", photoUrl: "Portrait", social: "Social accounts",
   districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
   title: "Meeting title", bodyName: "Public body", startsAt: "Meeting date and time", endsAt: "Meeting end time",
@@ -109,11 +110,13 @@ export function districtCardSources(
   meetings: Meeting[],
   /** The saved page that states a body's office address and phone, when the card shows them. */
   officeContact?: Provenance | null,
+  fields?: Readonly<Record<string, Provenance>>,
 ): CardSource[] {
   const entries: CardSource[] = [
     { what: "This district's boundary, type and label", provenance: BOUNDARY_PROVENANCE },
   ];
-  if (officeContact) entries.push({ what: "The body's office address and phone", provenance: officeContact });
+  if (officeContact && !fields?.officeAddress && !fields?.officePhone) entries.push({ what: "The body's office address and phone", provenance: officeContact });
+  for (const [field, provenance] of Object.entries(fields ?? {})) entries.push({ what: fieldSourceLabel(field), provenance });
 
   for (const holder of representation) {
     const source = holderSource(holder, `Who represents it — ${holder.name}`);

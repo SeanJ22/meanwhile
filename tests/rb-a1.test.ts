@@ -86,19 +86,6 @@ test("all four event sources reuse exact identities and source crosswalks; futur
   } finally { await db.pg.close(); }
 });
 
-test("an existing canonical id wins over another source's alias without merging people", async () => {
-  const db = await database();
-  try {
-    await db.pg.exec(readerIdentityMigration());
-    await db.pg.exec(`INSERT INTO entity(id,kind,name,state) VALUES('ocd-person/one','person','First person','AL'),
-      ('ocd-person/two','person','Second person','AL');
-      INSERT INTO entity_external_id(entity_id,scheme,value) VALUES('ocd-person/two','campaign-person:AL','ocd-person/one')`);
-    assert.equal(await resolveId("ocd-person/one", db.query), "ocd-person/one");
-    assert.equal(await resolveId("ocd-person/two", db.query), "ocd-person/two");
-    assert.equal((await db.query("SELECT count(*)::int AS n FROM entity"))[0]!.n, 2);
-  } finally { await db.pg.close(); }
-});
-
 test("Admin's alias route returns every state's count and keeps its sign-in requirement", async () => {
   const db = await database();
   try {

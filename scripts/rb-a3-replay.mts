@@ -4,20 +4,7 @@ import { join, resolve } from "node:path";
 import { door } from "../lib/core/door.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { FieldKind, Provenance } from "../lib/facts/check.ts";
-import { factDb } from "../tests/helpers/fact-db.ts";
-
-type Row = Record<string, unknown>;
-interface Snapshot {
-  readonly state: string;
-  readonly capturedAt: string;
-  readonly facts: readonly Row[] | null;
-  readonly entities: readonly Row[] | null;
-  readonly sourceCopies: readonly Row[] | null;
-  readonly hosts: readonly Row[] | null;
-  readonly externalIds: readonly Row[] | null;
-  readonly places: readonly Row[] | null;
-  readonly texts?: Readonly<Record<string, string>>;
-}
+import { openFactCopy, type FactSnapshot } from "./rb-a3-copy.mts";
 
 const directory = process.argv[2];
 if (!directory) throw new Error("Usage: node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/rb-a3-replay.mts <local-snapshot-directory> [report.json]");
@@ -37,20 +24,11 @@ for (const state of baseline.counts) {
     report.push({ state: state.state, available: state.live_facts, replayed: 0, unchanged: 0, missingCopy: true });
     continue;
   }
-  const snapshot = JSON.parse(readFileSync(file, "utf8")) as Snapshot;
+  const snapshot = JSON.parse(readFileSync(file, "utf8")) as FactSnapshot;
   assert.equal(snapshot.state, state.state);
-  const db = await factDb();
+  const db = await openFactCopy(snapshot);
   try {
-    const entities = snapshot.entities ?? [], facts = snapshot.facts ?? [], copies = snapshot.sourceCopies ?? [];
-    // Insert all permanent ids first, then restore their exact parent references.
-    await db.query(`INSERT INTO entity(id,kind,name,state,created_at)
-      SELECT id,kind,name,state,created_at FROM jsonb_populate_recordset(NULL::entity,$1::jsonb)`, [JSON.stringify(entities)]);
-    await db.query(`UPDATE entity e SET parent_id=p.parent_id
-      FROM jsonb_populate_recordset(NULL::entity,$1::jsonb) p WHERE e.id=p.id`, [JSON.stringify(entities)]);
-    await db.query("INSERT INTO source_copy SELECT * FROM jsonb_populate_recordset(NULL::source_copy,$1::jsonb)", [JSON.stringify(copies)]);
-    for (const [table, rows] of [["entity_host", snapshot.hosts], ["entity_external_id", snapshot.externalIds], ["entity_place", snapshot.places]] as const)
-      await db.query(`INSERT INTO ${table} SELECT * FROM jsonb_populate_recordset(NULL::${table},$1::jsonb)`, [JSON.stringify(rows ?? [])]);
-    await db.query("INSERT INTO fact SELECT * FROM jsonb_populate_recordset(NULL::fact,$1::jsonb)", [JSON.stringify(facts)]);
+    const facts = snapshot.facts ?? [], copies = snapshot.sourceCopies ?? [];
     const sources = new Map(copies.map(copy => [Number(copy.id), copy]));
     let unchanged = 0, unavailable = 0;
     for (const fact of facts) {

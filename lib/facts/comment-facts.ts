@@ -27,7 +27,7 @@ export async function publishCommentFacts(db: FactDb & { readonly query: Query }
   const provenance = captureProvenance(input.capture, entity.hosts);
   const out: PublishOutcome[] = [];
   const claim = (field: string, value: unknown, valueText: string, quote: string) =>
-    publishClaim(db, { entity, field, fieldKind: "comment_rule", provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now);
+    publishClaim(db, { entity, field, fieldKind: "comment_rule", provenance, value, valueText, quote, copy, producedBy: input.producedBy, acquisition: "walker", costUsd: 0 }, clocks, now);
   const quoteOf = (field: string) => text(input.reading.fieldSources?.[field]?.quote);
   for (const [from, field] of FIELDS) {
     const value = text(input.reading.fields[from]);

@@ -9,7 +9,7 @@ import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
 import type { Clocks } from "../../facts/publish.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
-import { CAMPAIGN_SITE_LEAD, slotVersion } from "../../facts/finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, FINDING_SLOTS_VERSION } from "../../facts/finding-slots.ts";
 import { pageCopy } from "../../facts/source-copy.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
@@ -515,7 +515,7 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   for (const finding of leads) {
     const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
     if (subject === undefined) {
-      await holdBoxFinding(repos.boxFindings, finding.id, { class: "campaign sites", reason: "CANDIDACY_ON_NO_BALLOT", slots: slotVersion("campaign sites") }, options.now);
+      await holdBoxFinding(repos.boxFindings, finding.id, { class: "campaign sites", reason: "CANDIDACY_ON_NO_BALLOT", slots: FINDING_SLOTS_VERSION }, options.now);
       continue;
     }
     const scouted = await boxLead(repos, finding, subject, options, windowHours);

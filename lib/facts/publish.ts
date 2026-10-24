@@ -54,14 +54,13 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
     ), own AS MATERIALIZED (
       SELECT id, value, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
     ) SELECT f.id, f.value, f.provenance_kind, f.status, f.held_reason,
-      coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at,
-      (SELECT final_url FROM source_copy WHERE id = f.source_copy_id) AS source_url
+      coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at
       FROM own f`, [c.entity.id, c.field]);
     const row = head?.status === "live" ? head : undefined;
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
-    const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string), sourceUrl: row.source_url as string } : null,
-      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, c.field);
+    const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
+      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {
       if (row!.provenance_kind !== "OWNER" && (row!.provenance_kind === c.provenance || c.provenance === "OFFICIAL" || c.provenance === "FILING")) {
         await query(`UPDATE fact SET checked_at=$2,source_copy_id=$3,quote=$4,quote_start=$5,second_copy_id=$6,provenance_kind=$7,value_text=$8 WHERE id=$1`,

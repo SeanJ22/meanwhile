@@ -9,20 +9,18 @@ import { section3Record } from "../control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
-import { boundedIndexOf, checkFact, isOwnUrl, pageNamesEntity, linkQuote, normalizeText, type FieldKind } from "./check.ts";
+import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { looksLikeNameCell, splitPersonTitle } from "../hunt/roster-page.ts";
 import { isPlainSentence, OTHER_NOTICE, schedulePhrase } from "../hunt/page-rules.ts";
 import { readPassCursor, writePassCursor } from "./db.ts";
 import { bodyNamed, canonicalSubject, ensureGoverningBody, learnOfficialHost, officeNamed, splitSubject } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOT_VERSIONS, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, slotVersion, type FindingSlot } from "./finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, otherOffice, COMMENT_SUMMARY_LEAD, SITE_WALK_LEAD, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
-import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
+import { nameKey, publishBodyNameFromPage, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
-import { pageCopy, saveCaptureCopy } from "./source-copy.ts";
+import { saveCaptureCopy } from "./source-copy.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
-import { seatIn, seatQuoteOnPage, seatTitleIn } from "./seat-evidence.ts";
-export { seatIn } from "./seat-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 
@@ -119,6 +117,30 @@ const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey
 /** These blanks can change without a software release. Source recovery and missing entities keep their own retry. */
 const recoverableBlank = (reason: string) => /^(?:SOURCE_BLOCKED:|ELECTION_FIELD_PUBLICATION_HELD$|SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE$|SUBJECT_HAS_NO_DIVISION$|NAME_IS_NOT_ON_A_GOVERNMENT$|STATE_NOT_IN_THE_FACT_STORE$|COPY_OUTSIDE_FRESHNESS_WINDOW$)/.test(reason);
 
+// A supervisor of a kind of work is staff ("Maintenance Supervisor", "Road Supervisor"); a bare "Supervisor", "Town Supervisor" or "Supervisor Rex Scott, District 1" is a seat.
+const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|public works|works|water|sewer|wastewater|sanitation|solid waste|landfill|utilit(?:y|ies)|park|parks|recreation|facilit(?:y|ies)|building|grounds|cemetery|fleet|equipment|shop|garage|transportation|bus|custodial|food service|nutrition|cafeteria|library|operations|field|crew|shift|plant|program|department|dept|office|it|technology|payroll|billing|collections|records|dispatch|animal control|code enforcement|inspection|election|elections|youth|school|district office)\\s+supervisors?";
+const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
+const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
+const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
+const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b/i;
+const TERM_LINE = /\bterms?\s*(?:expires?|ends?|:|\()|\bterm of office\b|\b(?:elected|appointed) (?:to|in|for) /i;
+const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b/i;
+const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
+
+/** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
+export function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
+  const council = bodyId.endsWith("#governing"), board = bodyId.endsWith("#board");
+  // A lettered or numbered seat is a seat held, whatever office the holder also fills ("Seat E - Secretary/Treasurer" is a school board member).
+  const seated = (council || board) && SEAT_MARKER.test(words);
+  if (STAFF_TITLE.test(words) && !seated) return null;
+  // On a council or a board, the district, ward or seat a person holds is a seat on its own ("Annie Williams, District 1"), and a school board's plain "Member" is a member.
+  // A county board's "Chairman" is a seat on it, unless the words put that chair on a committee, department or authority.
+  const chairs = council && /\b(?:vice[- ]?)?chair(?:man|woman|person)?\b/i.test(words) && !/\b(?:committee|department|commission|authority|library|hospital|district board)\b/i.test(words);
+  // A term served is a seat held: staff do not serve terms ("Term: October 2023 - October 2026", "Term Expires 3/28").
+  const numbered = (council || board) && (SEAT_NUMBER.test(words) || TERM_LINE.test(words)) || board && /\bmember\b/i.test(words) || chairs;
+  if (!numbered && !COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
+  return { ward: council || board ? WARD.exec(words)?.[1] ?? null : null };
+}
 
 interface LiveMember { readonly factId: number; readonly bodyId: string; readonly name: string; readonly words: string; readonly producedBy: string }
 
@@ -140,8 +162,8 @@ async function reviewBoxSeats(query: Query): Promise<{ readonly flagged: number 
   const members = bodies.length ? await liveMembers(query, bodies) : [];
   let flagged = 0;
   for (const member of members.filter(row => row.producedBy === "box")) {
-    const seat = seatIn(member.words, member.bodyId, member.name);
-    if (!seat || seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId, other.name)?.ward === seat.ward)) {
+    const seat = seatIn(member.words, member.bodyId);
+    if (!seat || seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
       flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
@@ -287,7 +309,7 @@ export async function publishBoxFindings(input: {
   }
   // A packet's findings count toward its government; any other finding toward its own subject.
   const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
-  const rows = await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: input.now, limit: input.limit });
+  const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, limit: input.limit });
   const deferred = new Set<string>(), settled = new Set<string>();
   const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
   // Preparing a whole page must leave time to check its sources and publish. Otherwise the same untouched rows can consume every pass in metadata lookups.
@@ -296,7 +318,7 @@ export async function publishBoxFindings(input: {
     : preparationStartedMs + Math.max(0, input.deadlineMs - preparationStartedMs) / 3;
   const retryAt = (reason: string) => recoverableBlank(reason) ? { retryAt: new Date(now.getTime() + 60 * 60_000).toISOString() } : {};
   const wait = (row: BoxFinding, slotClass: string, reason: string) =>
-    holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: slotVersion(slotClass), ...retryAt(reason) }, input.now);
+    holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION, ...retryAt(reason) }, input.now);
   const hold = async (row: BoxFinding, slotClass: string, reason: string) => {
     await wait(row, slotClass, reason);
     report.waitingByClass[slotClass] = (report.waitingByClass[slotClass] ?? 0) + 1;
@@ -310,7 +332,7 @@ export async function publishBoxFindings(input: {
     if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: row.id, stage, detail });
     // A programming, source or database failure is its own retry, never a refusal of the finding's truth.
     await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "failed", reason: `${stage}: ${detail}`,
-      class: slotOfRow(row)?.class ?? "other", slots: slotVersion(slotOfRow(row)?.class ?? "other"), retryAt: new Date(now.getTime() + 5 * 60_000).toISOString() }, input.now);
+      slots: FINDING_SLOTS_VERSION, retryAt: new Date(now.getTime() + 5 * 60_000).toISOString() }, input.now);
   };
   // A verified page publishes at once. Only a refusal waits for the other saved pages, any of which may prove the fact.
   const sources = new Map<string, { left: number; best: PublishOutcome | null }>();
@@ -326,7 +348,7 @@ export async function publishBoxFindings(input: {
     const claim = await takeBoxFinding(repos.boxFindings, row.id, PUBLISHER, input.now, new Date(now.getTime() + 120_000).toISOString());
     if (!claim) return;
     if ("blank" in outcome) {
-      if (!await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank, class: route, slots: slotVersion(route), ...retryAt(outcome.blank) }, input.now)) return;
+      if (!await finishBoxFinding(repos.boxFindings, row.id, claim.token, { state: "refused", reason: outcome.blank, slots: FINDING_SLOTS_VERSION, ...retryAt(outcome.blank) }, input.now)) return;
       settled.add(row.id);
       report.refused++; place(row).refused++;
       report.failuresByReason[outcome.blank] = (report.failuresByReason[outcome.blank] ?? 0) + 1;
@@ -357,7 +379,7 @@ export async function publishBoxFindings(input: {
     if (Date.now() >= preparationDeadlineMs) { for (const pending of orderedRows.slice(index)) deferred.add(pending.id); break; }
     report.looked++;
     try {
-    if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, slotVersion(slotOfRow(row)?.class ?? "other"), input.now);
+    if (row.state === "refused") await reopenBoxFinding(repos.boxFindings, row.id, FINDING_SLOTS_VERSION, input.now);
     if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
     const raw = findingFact(row);
     if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
@@ -448,14 +470,6 @@ export async function publishBoxFindings(input: {
     const people = group.filter(entry => entry.slot.class === "rosters" || entry.slot.class === "contacts");
     const forOffice: typeof ready = [];
     if (people.length) {
-      // An official page about a different government cannot put its officials on this government's board.
-      const jurisdiction = people.some(entry => entry.slot.class === "rosters") ? await readCheckEntity(facts.query, body.parentId ?? body.id) : null;
-      const copy = pageCopy({ finalUrl: read.capture.evidence.canonicalUrl, body: read.capture.evidence.text,
-        contentType: "text/html", fetchedAt: read.capture.observedAt });
-      if (jurisdiction && !isOwnUrl(copy.finalUrl, jurisdiction.hosts) && !pageNamesEntity(jurisdiction, copy)) {
-        for (const { finding, slot } of people) await settle(finding.row, { blank: "PAGE_NOT_ABOUT_ENTITY" }, slot.class);
-        continue;
-      }
       const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
       const known = [...people.filter(e => e.slot.slot === "member_name").map(e => splitPersonTitle(String(e.finding.value)).name), ...seated];
       const titled = new Map<string, { title: string; quote: string }>();
@@ -493,19 +507,8 @@ export async function publishBoxFindings(input: {
         const member = members.get(recordId);
         if (member && member.fields.office === undefined) { member.fields.office = title; member.fieldSources.office = quoteOf(quote); }
       }
-      const unseated = new Set<string>();
-      for (const member of members.values()) {
-        const name = String(member.fields.name);
-        const words = [member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n");
-        const quote = seatQuoteOnPage(read.capture.evidence.text, name, body.id, words);
-        const namesSeat = people.some(entry => entry.slot.slot === "member_name" && nameKey(splitPersonTitle(String(entry.finding.value)).name) === nameKey(name));
-        if (quote) {
-          member.fieldSources.name = quoteOf(quote);
-          const title = seatTitleIn(quote, body.id, name);
-          if (title && member.fields.office === undefined) { member.fields.office = title; member.fieldSources.office = quoteOf(quote); }
-        }
-        else if (namesSeat || !seated.some(held => nameKey(held) === nameKey(name))) unseated.add(member.recordId);
-      }
+      const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
+        !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));
       const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()].filter(member => !unseated.has(member.recordId)),
         complete: false, producedBy: "box", purge: input.purge }, clocks, now);
       for (const { finding, slot } of people) {
@@ -595,5 +598,47 @@ export async function publishBoxFindings(input: {
     }
   }
   report.deferred = [...deferred].filter(id => !settled.has(id)).length;
+  try { await nameBoardsFromTheirPages(input); }
+  catch (error) {
+    report.failuresByReason.BOX_PUBLICATION_EXCEPTION = (report.failuresByReason.BOX_PUBLICATION_EXCEPTION ?? 0) + 1;
+    if (report.errorExamples.length < 5) report.errorExamples.push({ findingId: "board-names", stage: "BODY_NAMING", detail: sanitizedErrorDiagnostic(error).slice(0, 600) });
+  }
   return report;
+}
+
+const NAMING_PER_PASS = 20;
+const NAME_NOT_ON_PAGE_RETRY_MINUTES = 5 * 24 * 60;
+
+/** Bodies holding verified facts but no verified name: the page that supplied a fact is read again and names the board when it writes the name. */
+async function nameBoardsFromTheirPages(input: { readonly repos: Pick<ControlPlaneRepositories, "artifacts">; readonly facts: FactDb & { readonly query: Query };
+  readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly clocks: Clocks; readonly now: string; readonly purge?: ReaderCachePurger; readonly deadlineMs?: number }): Promise<number> {
+  const { facts } = input;
+  const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
+  if (outOfTime()) return 0;
+  const nameless = await facts.query(`SELECT e.id, (SELECT s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id WHERE f.entity_id = e.id AND f.status = 'live'
+        AND s.url ~ '^https?://' ORDER BY f.checked_at DESC, f.id DESC LIMIT 1) AS url
+    FROM entity e WHERE e.kind = 'body'
+      AND EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = e.id AND f.status = 'live')
+      AND NOT EXISTS (SELECT 1 FROM fact n WHERE n.entity_id = e.id AND n.field = 'name' AND n.status = 'live')
+      AND NOT EXISTS (SELECT 1 FROM blank b WHERE b.entity_id = e.id AND b.field = 'name' AND b.next_try_at > now())
+    ORDER BY e.id LIMIT $1`, [NAMING_PER_PASS]);
+  let named = 0;
+  for (const row of nameless) {
+    if (outOfTime()) break;
+    const id = String(row.id);
+    if (!row.url) continue;
+    const read = await fetchCapture({ url: String(row.url), repos: input.repos, vault: input.vault, fetch: input.fetch, now: input.now });
+    if ("error" in read) {
+      await openBlank(facts.query, { entityId: id, field: "name", stage: "ACQUIRE", reason: read.error.split(":")[0]!, detail: String(row.url), retryMinutes: input.clocks.retryMinutes("officeholder") });
+      continue;
+    }
+    const entity = await readCheckEntity(facts.query, id);
+    if (!entity) continue;
+    const copy = await facts.transaction(query => saveCaptureCopy(query, read.capture));
+    const outcome = await publishBodyNameFromPage(facts, { entity, copy, provenance: captureProvenance(read.capture, entity.hosts), producedBy: "box", purge: input.purge },
+      input.clocks, new Date(input.now));
+    if (outcome && "decision" in outcome && outcome.decision === "PUBLISH") named++;
+    else if (!outcome) await openBlank(facts.query, { entityId: id, field: "name", stage: "READ", reason: "NAME_NOT_ON_PAGE", detail: String(row.url), retryMinutes: NAME_NOT_ON_PAGE_RETRY_MINUTES });
+  }
+  return named;
 }

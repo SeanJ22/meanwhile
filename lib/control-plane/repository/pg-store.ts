@@ -948,9 +948,9 @@ export function pgAppendOnlyRepository<T>(
 // Alternate retries and new findings. Each branch is bounded before ranking, and a poison finding's own retry clock cannot pin a page.
 export const BOX_DUE_SQL = `WITH due AS (
     (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL
-      AND ((CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END) <> coalesce($1::jsonb ->> (CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END), $1::jsonb ->> 'other') OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+      AND ((value #>> '{waitingFor,slots}') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
-      AND (coalesce(CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END, '') <> coalesce($1::jsonb ->> (CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END), $1::jsonb ->> 'other') OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+      AND (coalesce(value #>> '{waitingFor,slots}', '') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 ORDER BY id LIMIT $3)
     UNION ALL (SELECT 1, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL ORDER BY id LIMIT $3)
   ) SELECT id, value FROM (SELECT *, row_number() OVER (PARTITION BY rank ORDER BY id) AS turn FROM due) fair
@@ -966,7 +966,7 @@ function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxReposit
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
-    due: async ({ slots, now, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [JSON.stringify(slots), now, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+    due: async ({ slots, now, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
     waitingFor: async (reason, limit, subjectIds) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit)), subjectIds ?? null]) as Record<string, unknown>[]),
     waitingUnder: async (reason, limit, governmentIds) => (await Promise.all([...new Set(governmentIds)].map(async id =>
       rows(await run("boxWaitingUnder", "PAGE", BOX_UNDER_SQL, [reason, Math.max(0, Math.trunc(limit)), id]) as Record<string, unknown>[])))).flat(),

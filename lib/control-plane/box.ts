@@ -6,7 +6,6 @@ import { completedWorkerResults } from "./repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
-import { slotFor, waitingForSlot } from "../facts/finding-slots.ts";
 
 /** References into the existing result and artifact stores, never another evidence store. */
 export interface BoxOrigin {
@@ -68,7 +67,7 @@ export const PUBLISHER = "fact-publisher";
 /** The Box's reads for builders, filtered and limited by the store rather than read whole. */
 interface BoxQueue {
   /** At most `limit` rows, sharing each pass between retries and findings never looked at. */
-  due(input: { readonly slots: Readonly<Record<string, number | string>>; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
+  due(input: { readonly slots: string; readonly now: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
   waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them, about any board of the given governments (`<government>`, `<government>#governing`, `#board`, `#body:<slug>`); at most `limit` per government. */
@@ -82,12 +81,9 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
   return { ...repo,
     due: async ({ slots, now, limit }) => {
       const parked = (row: BoxFinding) => row.state !== "waiting" || row.waitingFor !== undefined;
-      const version = (row: BoxFinding) => String(slots[row.refusal === "SEAT_NOT_IN_QUOTE" ? "rosters" : row.waitingFor?.class ?? "other"] ?? slots.other);
-      // The retired source hashes were one shared baseline. Moving to class versions must not replay every unchanged class once more.
-      const heldVersion = (row: BoxFinding) => /^[0-9a-f]{16}$/.test(row.waitingFor?.slots ?? "") ? "1" : row.waitingFor?.slots;
-      const due = (await rows()).filter(row => row.state === "waiting" && heldVersion(row) !== version(row) ||
+      const due = (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.slots !== slots ||
         row.state === "waiting" && row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now ||
-        row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && (heldVersion(row) !== version(row) || row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now) ||
+        row.state === "refused" && row.attempts.at(-1)?.builder === PUBLISHER && (row.waitingFor?.slots !== slots || row.waitingFor?.retryAt !== undefined && row.waitingFor.retryAt <= now) ||
         row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now);
       const retries = due.filter(parked), fresh = due.filter(row => !parked(row));
       return Array.from({ length: Math.max(retries.length, fresh.length) }, (_, index) => [retries[index], fresh[index]])
@@ -105,7 +101,6 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
 }
 
 const factValue = (value: string | number | boolean): string => String(value).replace(/\s+/g, " ").trim().toLowerCase();
-const quoteValue = (value: string | null): string => (value ?? "").normalize("NFC").replace(/\s+/g, " ").trim();
 
 /** The identity rows had before one row per fact: the quote, page and subject, or the origin where the old evidence is missing. */
 function legacyBoxFindingId(input: BoxInput): string {
@@ -133,34 +128,26 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
   const id = boxFindingId(input), legacyId = legacyBoxFindingId(input);
   for (;;) {
     // A row made before one row per fact is still the row for its fact; it keeps its id.
-    let held = await repo.read(id) ?? (input.fact && legacyId !== id ? await repo.read(legacyId) : null);
-    // An old quote-keyed row can be upgraded once; it cannot swallow another field or value from that sentence.
-    if (held && held.value.id !== id && held.value.fact && input.fact &&
-      (held.value.fact.field !== input.fact.field || factValue(held.value.fact.value) !== factValue(input.fact.value))) held = null;
+    const held = await repo.read(id) ?? (input.fact && legacyId !== id ? await repo.read(legacyId) : null);
     const at = held?.value.id ?? id;
     if (!held) {
       const next: BoxFinding = { id, subjectId: input.subjectId, exactQuote: input.exactQuote, sourceUrl: input.sourceUrl,
         origins: [input.origin], ...(input.fact ? { fact: input.fact } : {}), lastRecordedAt: input.origin.recordedAt,
-        state: "waiting", claim: null, attempts: [], generation: 0, publicationId: null, refusal: null,
-        ...(input.fact ? { waitingFor: waitingForSlot(slotFor(input.fact.field, input.fact.value, input.fact.recordClass, input.exactQuote ?? "", input.sourceUrl ?? "", input.subjectId)) } : {}) };
+        state: "waiting", claim: null, attempts: [], generation: 0, publicationId: null, refusal: null };
       try { return (await repo.put(id, next, now)).persisted.value; }
       catch (error) { if (error instanceof IdentityCollision) continue; throw error; }
     }
-    const elsewhere = input.sourceUrl !== null && (input.sourceUrl !== held.value.sourceUrl || input.exactQuote !== held.value.exactQuote);
+    const elsewhere = input.sourceUrl !== null && input.sourceUrl !== held.value.sourceUrl;
     const origin: BoxOrigin = elsewhere && !input.origin.source ? { ...input.origin, source: { exactQuote: input.exactQuote, sourceUrl: input.sourceUrl! } } : input.origin;
     const prior = held.value.origins.find(held => originId(held) === originId(origin));
-    const fact = held.value.fact ?? input.fact;
-    const waitingFor = fact ? waitingForSlot(slotFor(fact.field, fact.value, fact.recordClass, input.exactQuote ?? "", input.sourceUrl ?? "", input.subjectId)) : undefined;
-    const unaddressed = held.value.state === "waiting" && held.value.waitingFor === undefined && held.value.attempts.length === 0 && waitingFor !== undefined;
     const gains = !held.value.fact && input.fact !== undefined || held.value.lastRecordedAt === undefined;
-    const quotes = [held.value.exactQuote, ...held.value.origins.map(known => known.source?.exactQuote)].filter(quote => quote !== undefined);
-    const changed = input.fact !== undefined && held.value.fact !== undefined && factValue(input.fact.value) !== factValue(held.value.fact.value)
-      || !quotes.some(quote => quoteValue(input.exactQuote) === quoteValue(quote ?? null));
-    if (prior && (!origin.resultKey || prior.resultKey === origin.resultKey) && !gains && !changed && !unaddressed) return held.value;
-    const origins = prior ? held.value.origins.map(known => known === prior ? { ...origin, resultKey: origin.resultKey ?? known.resultKey } : known)
+    if (prior && (!origin.resultKey || prior.resultKey === origin.resultKey) && !gains) return held.value;
+    const origins = prior ? held.value.origins.map(known => known === prior ? { ...known, resultKey: origin.resultKey ?? known.resultKey } : known)
       : [...held.value.origins, origin];
-    const reopen = (changed || !held.value.fact && input.fact !== undefined) && (held.value.state === "waiting" || held.value.state === "refused" && held.value.attempts.at(-1)?.builder === PUBLISHER);
-    const next: BoxFinding = { ...held.value, ...(reopen ? { state: "waiting", refusal: null, waitingFor } : unaddressed ? { waitingFor } : {}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
+    const fact = held.value.fact ?? input.fact;
+    const newEvidence = !prior || gains;
+    const reopen = newEvidence && (held.value.state === "waiting" || held.value.state === "refused" && held.value.attempts.at(-1)?.builder === PUBLISHER);
+    const next: BoxFinding = { ...held.value, ...(reopen ? { state: "waiting", refusal: null, waitingFor: undefined } : {}), origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
       lastRecordedAt: origins.map(known => known.recordedAt).sort().at(-1)! };
     try { return (await repo.compareAndSet(at, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
@@ -186,8 +173,8 @@ export async function takeBoxFinding(repo: AggregateRepository<BoxFinding>, id: 
 
 export type BoxOutcome = { readonly state: "built"; readonly publicationId: string } |
   { readonly state: "built"; readonly buildResultId: string } |
-  { readonly state: "refused"; readonly reason: string; readonly class?: string; readonly slots?: string; readonly retryAt?: string } |
-  { readonly state: "failed"; readonly reason: string; readonly class?: string; readonly slots?: string; readonly retryAt?: string };
+  { readonly state: "refused"; readonly reason: string; readonly slots?: string; readonly retryAt?: string } |
+  { readonly state: "failed"; readonly reason: string; readonly slots?: string; readonly retryAt?: string };
 
 /** A finding with nowhere to go yet stays in the Box, saying what it waits for. */
 export async function holdBoxFinding(repo: AggregateRepository<BoxFinding>, id: string, waitingFor: NonNullable<BoxFinding["waitingFor"]>, now: string): Promise<void> {
@@ -223,7 +210,8 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
       publicationId: outcome.state === "built" && "publicationId" in outcome ? outcome.publicationId : null,
       ...(outcome.state === "built" && "buildResultId" in outcome ? { buildResultId: outcome.buildResultId } : {}),
       refusal: outcome.state === "refused" ? outcome.reason : null,
-      ...(outcome.state !== "built" && outcome.slots ? { waitingFor: { class: outcome.class ?? value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
+      ...(outcome.state === "refused" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
+      ...(outcome.state === "failed" && outcome.slots ? { waitingFor: { class: value.waitingFor?.class ?? "other", reason: outcome.reason, slots: outcome.slots, ...(outcome.retryAt ? { retryAt: outcome.retryAt } : {}) } } : {}),
       attempts: [...value.attempts, { ...value.claim, outcome: outcome.state, endedAt: now, detail }] };
     try { await repo.compareAndSet(id, held.revision, next, now); return true; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
@@ -233,15 +221,14 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
 /** A finding's field, value and the Scout origin that carried them; null when it names no field. */
 export function findingFact(row: BoxFinding): (BoxFact & { readonly origin: BoxOrigin }) | null {
   const own = row.origins.filter(o => !o.source);
-  const origin = own.find(o => o.reported) ?? own.find(o => o.kind === "SCOUT") ?? row.origins.find(o => o.kind === "SCOUT");
+  const origin = own.find(o => o.reported) ?? own.find(o => o.kind === "SCOUT");
   return origin && row.fact ? { origin, ...row.fact } : null;
 }
 
 /** The other pages that said the same fact: each with the quote and address it saw and the origin that carries its saved copy. */
 export function otherSources(row: BoxFinding): readonly { readonly origin: BoxOrigin; readonly exactQuote: string; readonly sourceUrl: string }[] {
-  const sourceKey = (url: string, quote: string | null) => canonicalJson([url, quote]);
-  const seen = new Set<string>(row.sourceUrl ? [sourceKey(row.sourceUrl, row.exactQuote)] : []);
-  return row.origins.flatMap(origin => origin.kind === "SCOUT" && origin.source?.exactQuote && !seen.has(sourceKey(origin.source.sourceUrl, origin.source.exactQuote)) && seen.add(sourceKey(origin.source.sourceUrl, origin.source.exactQuote))
+  const seen = new Set<string>(row.sourceUrl ? [row.sourceUrl] : []);
+  return row.origins.flatMap(origin => origin.kind === "SCOUT" && origin.source?.exactQuote && !seen.has(origin.source.sourceUrl) && seen.add(origin.source.sourceUrl)
     ? [{ origin, exactQuote: origin.source.exactQuote, sourceUrl: origin.source.sourceUrl }] : []);
 }
 

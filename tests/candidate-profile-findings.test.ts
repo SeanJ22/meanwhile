@@ -20,7 +20,7 @@ import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts
 import type { HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { CANDIDATE_PROFILE_LEAD, slotVersion } from "../lib/facts/finding-slots.ts";
+import { CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION } from "../lib/facts/finding-slots.ts";
 import { portraitBindingMatches } from "../lib/photos/binding.ts";
 import type { KnownRelease } from "../lib/sources/known-release.ts";
 
@@ -49,7 +49,7 @@ async function setup(pages: Readonly<Record<string, string>>) {
   const report = async (subjectId: string, field: string, value: string, sentence: string, sourceUrl: string) => {
     const row = await indexReportedFinding(repos.boxFindings, { workItemId: "wi-packet", attemptId: "at-packet", obligationId: "hunt:packet:ocd-division/country:us/state:oh/place:columbus",
       missionPart: null, finding: { subjectId, field, value, exactQuote: sentence, sourceUrl, artifactIds: [artifacts.get(sourceUrl)!.id], subjectHint: null, index: index++ } }, NOW);
-    await holdBoxFinding(repos.boxFindings, row.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: slotVersion("candidates") }, NOW);
+    await holdBoxFinding(repos.boxFindings, row.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: FINDING_SLOTS_VERSION }, NOW);
   };
   const stored = new Map<string, Uint8Array>();
   const portrait = { read: async () => png(), put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } };
@@ -130,7 +130,7 @@ test("a Scout's saved candidate finding, named in its own words, publishes the s
       cacheCreationInputTokens: 0, turns: 1, toolCalls: 1 }, usd: 0, elapsedMs: 1, artifactIds: [], methodCandidateIds: [], refusal: null, startedAt: NOW, recordedAt: NOW };
   await s.repos.scoutResults.append(result.obligationId, result.attemptId, result, NOW);
   const [row] = await indexScoutFindings(s.repos.boxFindings, result, NOW);
-  await holdBoxFinding(s.repos.boxFindings, row!.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: slotVersion("candidates") }, NOW);
+  await holdBoxFinding(s.repos.boxFindings, row!.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: FINDING_SLOTS_VERSION }, NOW);
   assert.deepEqual((await s.run()).published, { "CAN-16": 1 });
   assert.equal((await s.card())!.bio, "Jane Doe has taught in Columbus schools since 2004.");
 });

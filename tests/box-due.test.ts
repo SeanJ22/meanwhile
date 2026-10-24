@@ -15,7 +15,7 @@ test("the server's Box query alternates old and never-read findings, drains both
   }
   await put("a-retry", { state: "waiting", waitingFor: { slots: "current", retryAt: later } });
   await put("b-source-recovered", { state: "refused", attempts: [{ builder: "fact-publisher" }], waitingFor: { slots: "current", retryAt: later } });
-  const read = async (at: string) => (await pg.query<{ id: string; value: { waitingFor?: { slots: string } } }>(BOX_DUE_SQL, [JSON.stringify({ other: "current" }), at, 6])).rows;
+  const read = async (at: string) => (await pg.query<{ id: string; value: { waitingFor?: { slots: string } } }>(BOX_DUE_SQL, ["current", at, 6])).rows;
   const first = await read(now);
   assert.deepEqual(first.map(row => row.id), ["old-00", "new-00", "old-01", "new-01", "old-02", "new-02"]);
   for (const row of first) await pg.query("UPDATE cp_box_findings SET value = jsonb_build_object('state', 'waiting', 'waitingFor', jsonb_build_object('slots', 'current')) WHERE id = $1", [row.id]);

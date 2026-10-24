@@ -2,6 +2,8 @@
 
 READY on `stream/rb-a8`. River recorded RB-A1 (`5bde46615`) at 11:25 AM EDT on October 24; merged `origin/river` (`59b7c5577`) contains that exact commit. The combined code commit `c38165a10` passes all nine required checks. River's numbered RB-A1 migration and RIVER-KEYS migration precede RB-A8. Deployment, the actual hourly invocation and River's Chrome live check remain pending.
 
+A follow-up first-hour correction is being checked before a new READY. A pile arriving just after the hour closes now compares with the latest known closed stock when the preceding hour is unmeasured; growth uses the whole counted pile when ages are grouped by owner. Both reproductions pass, and the real-input copy turns work eligible at 1:02 PM into an owned fix at the 1:05 PM EDT tick. The complete combined checks are being rerun for this correction.
+
 Readers keep their current facts, civic payloads and identifiers. Writer transactions update `count_hour`; the observer reads counters and grouped oldest ages. Admin shows counts by state, kind, step and Eastern hour. Counting coverage starts after every hook and baseline is installed, so the first partial hour is unknown, and timestamp-only rechecks earn no movement. Doors have a unique source count plus a separate family breakdown, so a source serving two families still counts once in the source total.
 
 The production deploy initializer takes a first reading. The independent Netlify schedule is five minutes past every hour (Eastern: :05 in both EDT and EST). Each run updates the existing owned fix list and daily brief, removes `line-keeper:current`, and retains at most three small run checkpoints. Admin states when the keeper is late. No settings, budgets, publishing conditions or reader identifiers change.

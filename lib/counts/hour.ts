@@ -74,7 +74,9 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
         says:"Waiting work has no recorded starting time.",owner:row.owner,next:"Restore the waiting time on this work list."});
       continue;
     }
-    const growing=before?.closedTotal!==null&&before?.closedTotal!==undefined&&row.count>before.closedTotal;
+    const priorTotal=before?.closedTotal??now?.closedTotal;
+    const total=now?.total??row.count;
+    const growing=priorTotal!==null&&priorTotal!==undefined&&total>priorTotal;
     const partialGrowth=(now?.observedIn??0)>(now?.observedOut??0);
     const aged=row.count>0&&age!==null&&age>=3_600_000;
     const expired=row.stage==='work list:EXPIRED'&&row.count>0;
@@ -82,7 +84,7 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
     const unknownFlow=aged&&(now?.outgoing===null||now===undefined);
     if(!growing&&!partialGrowth&&!flat&&!unknownFlow&&!expired)continue;
     const says=expired?`${row.count.toLocaleString("en-US")} worker leases expired and the work is still waiting.`:
-      growing?`${row.count.toLocaleString("en-US")} items are waiting; the pile grew since the previous hour.`:
+      growing?`${total.toLocaleString("en-US")} items are waiting; the pile grew since the previous hour.`:
       partialGrowth?`${row.count.toLocaleString("en-US")} items are waiting; more came in than moved on in the recorded part of this hour.`:
       flat?`${row.count.toLocaleString("en-US")} items are waiting and none moved on in the last full hour.`:
       `${row.count.toLocaleString("en-US")} items are waiting; the oldest has waited at least an hour.`;

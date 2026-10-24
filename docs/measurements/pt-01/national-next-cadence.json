@@ -1,0 +1,106 @@
+{
+  "mode": "Controlled next-cadence pass on real production people and freshly acquired official photos; no production writes",
+  "measuredAt": "2026-10-24T10:49:26.563Z",
+  "sourceAcquiredAt": "2026-10-24T10:40:40.686Z",
+  "scheduledAt": "2026-10-24T11:40:40.686Z",
+  "contract": "people-portraits-us",
+  "due": true,
+  "people": 23,
+  "retained": 23,
+  "attempted": 0,
+  "gaps": 0,
+  "portraits": [
+    {
+      "id": "white-house:donald-j-trump",
+      "photoUrl": "/api/portraits/officials/ffa428b52c91b2a6059e9c69820bad5f2ca58b39b0e89531ee38375a83cda903.webp"
+    },
+    {
+      "id": "white-house:jd-vance",
+      "photoUrl": "/api/portraits/officials/92ea766839b53a60616edffcc0aba6014978cf11de2ea1057cad16f9b3de7444.webp"
+    },
+    {
+      "id": "white-house:scott-bessent",
+      "photoUrl": "/api/portraits/officials/3d369826512063b72b134c0d3605ea38aca7db09166968cc9520dad7d3319ed5.webp"
+    },
+    {
+      "id": "white-house:todd-blanche",
+      "photoUrl": "/api/portraits/officials/ea1e079238c978c411be434e54d22e6b69e4391a2c7ec21a9376fc7a7e150848.webp"
+    },
+    {
+      "id": "white-house:doug-burgum",
+      "photoUrl": "/api/portraits/officials/e68000ef4ba973a2837007279cc208162f588f4a88c99261ff41b331546ab09d.webp"
+    },
+    {
+      "id": "white-house:jay-clayton",
+      "photoUrl": "/api/portraits/officials/3aaf573bcf8cedfe361aa1fb2eb28edc48bcc9910d459845e257f2a61f4e2295.webp"
+    },
+    {
+      "id": "white-house:doug-collins",
+      "photoUrl": "/api/portraits/officials/2c6652e88a45de6ebd2178c53a596c5f7a96e3dcb907735d4eedd286388ce020.webp"
+    },
+    {
+      "id": "white-house:sean-duffy",
+      "photoUrl": "/api/portraits/officials/5377327140a2abfa168c500c42e2ad423bee8baf0ea648e40d3c7bc9207bcb67.webp"
+    },
+    {
+      "id": "white-house:jamieson-greer",
+      "photoUrl": "/api/portraits/officials/6eb59735b1c51ad4911118a110b06ecc17159a6faf4037583bd90ca5aff19284.webp"
+    },
+    {
+      "id": "white-house:pete-hegseth",
+      "photoUrl": "/api/portraits/officials/92e473319a99d111a93255f168a5532a343959a74cee4408ae00eb7c88916cdb.webp"
+    },
+    {
+      "id": "white-house:robert-f-kennedy-jr",
+      "photoUrl": "/api/portraits/officials/c1ddfa9f958c20436e49bd2f24729f89d730c7a3f2419035142b18d9d7c9ef9e.webp"
+    },
+    {
+      "id": "white-house:kelly-loeffler",
+      "photoUrl": "/api/portraits/officials/9af76c85dc43aae67595684d43e5b960922ff2b60e6526281b0ee3f572fde67b.webp"
+    },
+    {
+      "id": "white-house:howard-lutnick",
+      "photoUrl": "/api/portraits/officials/9405a653443dbdbb942d446a015b2e7248905b4947fa283963bf67f88cb15c6e.webp"
+    },
+    {
+      "id": "white-house:linda-mcmahon",
+      "photoUrl": "/api/portraits/officials/f18f64d7d9c1c116f575d74c18ec0924ea9379a621b917c6c9448dd35b84060f.webp"
+    },
+    {
+      "id": "white-house:markwayne-mullin",
+      "photoUrl": "/api/portraits/officials/3adce0ac3d6dbb25574e93d3d630caa6e5ea957146397a5e214de937926934ee.webp"
+    },
+    {
+      "id": "white-house:john-ratcliffe",
+      "photoUrl": "/api/portraits/officials/4dbb3fc6af14f447b14c95b21df01e0f153210f1c82b3547d07fce3e58f2de92.webp"
+    },
+    {
+      "id": "white-house:brooke-rollins",
+      "photoUrl": "/api/portraits/officials/29337be45741fb56e9a60af6e11df1c0ece79be3aaaeb1c1a1a3201e70a467e3.webp"
+    },
+    {
+      "id": "white-house:marco-rubio",
+      "photoUrl": "/api/portraits/officials/850031fa3aabc6939702c5ca20d3b6a89a824f996a3d19ce9089bc7f8b35073d.webp"
+    },
+    {
+      "id": "white-house:keith-sonderling",
+      "photoUrl": "/api/portraits/officials/67e7cf070672f70d600ae0b7321f671df8e2a8e00f87aaf1064df1dbfde2652e.webp"
+    },
+    {
+      "id": "white-house:scott-turner",
+      "photoUrl": "/api/portraits/officials/1bf70ae7d01f62e2dd33e6a32be5c79b1d1e011990debc5f86d4dc9fa7524768.webp"
+    },
+    {
+      "id": "white-house:russ-vought",
+      "photoUrl": "/api/portraits/officials/6118f9d46ac90fb525f7fc05f2c18ba10c9966b37c1b4ab22b1f2e2a667558d8.webp"
+    },
+    {
+      "id": "white-house:chris-wright",
+      "photoUrl": "/api/portraits/officials/9a277ae2593834b354ab3c10ee67193c0b12589397cd44ef385268e21e22543f.webp"
+    },
+    {
+      "id": "white-house:lee-zeldin",
+      "photoUrl": "/api/portraits/officials/d193bff54169f3af7613f4f36f93afd6348db9fae967e7f61928127e699393ae.webp"
+    }
+  ]
+}

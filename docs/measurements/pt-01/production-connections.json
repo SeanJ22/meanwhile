@@ -1,0 +1,55 @@
+{
+  "measuredAt": "2026-10-24T10:50:55.124Z",
+  "mode": "Real production holdings through combined CL-01/PT-01 reader selectors and production image HTTP reads. Chrome page comparison remains open.",
+  "readerMeasurement": "2026-10-24T10:28:17.296Z",
+  "proofs": [
+    {
+      "name": "Alma Hernandez",
+      "sourcePage": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312",
+      "sourceScope": "US-AZ:people:portraits:v1",
+      "sourcePersonId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+      "sourceReaderId": "plural:az:6dba6afa-b274-4273-b8c6-270d27214eee",
+      "candidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
+      "linkedPersonId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+      "personKeys": [
+        "az-legislature:1893",
+        "az-legislature:2033",
+        "az-legislature:2168",
+        "az-legislature:2312",
+        "ballot-az-pima:state-senate-20:hernandez-alma",
+        "ballot-az-pima:state-senate-20|Alma Hernandez",
+        "ocd-person/6dba6afa-b274-4273-b8c6-270d27214eee",
+        "ocd-person:6dba6afa-b274-4273-b8c6-270d27214eee",
+        "ocd-person:ocd-person/6dba6afa-b274-4273-b8c6-270d27214eee",
+        "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+        "plural:az:6dba6afa-b274-4273-b8c6-270d27214eee"
+      ],
+      "personPhoto": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+      "ballotPhoto": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+      "productionImageUrl": "https://meanwhileusa.com/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+      "httpStatus": 200,
+      "expectedHash": "sha256-0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c",
+      "observedHash": "sha256-0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c"
+    },
+    {
+      "name": "Sally Ann Gonzales",
+      "sourcePage": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2381",
+      "sourceScope": "US-AZ:people:portraits:v1",
+      "sourcePersonId": "az-legislature:2381",
+      "sourceReaderId": "az-legislature:2381",
+      "candidacyId": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+      "linkedPersonId": "az-legislature:2381",
+      "personKeys": [
+        "az-legislature:2381",
+        "ballot-az-pima:state-house-20:gonzales-sally-ann",
+        "ballot-az-pima:state-house-20|Sally Ann Gonzales"
+      ],
+      "personPhoto": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+      "ballotPhoto": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+      "productionImageUrl": "https://meanwhileusa.com/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+      "httpStatus": 200,
+      "expectedHash": "sha256-f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a",
+      "observedHash": "sha256-f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a"
+    }
+  ]
+}

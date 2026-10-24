@@ -157,6 +157,7 @@ test("scheduled portrait refresh keeps the last photo when both source routes fa
   const unavailable=async()=>{reads++;throw Error("Source temporarily unavailable");};
   const current=await publishCandidatePortraits({plan,subjects:[subject],now:"2026-10-01T01:00:00Z",capture:unavailable,commonsRuntime:{capture:unavailable}});
   assert.equal(reads,0,"the next hourly run retains a current portrait without another acquisition");
+  assert.deepEqual(current.portraits,plan.portraits);
   t.mock.method(console,"error",()=>{});
   const refreshed=await publishCandidatePortraits({plan,subjects:[subject],now:"2026-10-09T00:00:00Z",capture:unavailable,commonsRuntime:{capture:unavailable}});
   assert.equal(reads,1);

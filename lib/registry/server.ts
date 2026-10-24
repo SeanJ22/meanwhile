@@ -21,9 +21,9 @@ import {
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readStateGeometryText } from "../geo/state-geometry.ts";
-import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { rosterHoldersForBody } from "./body-rosters.ts";
-import { currentBodyRosters, currentRosterMemberReaderDisposition } from "./runtime-read-model.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "./runtime-read-model.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
 export { federalDirectoryAppliesToDivision } from "./representation-server.ts";

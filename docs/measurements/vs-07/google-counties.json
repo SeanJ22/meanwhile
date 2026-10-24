@@ -1,0 +1,720 @@
+{
+  "checkedAt": "2026-10-23T08:20:31.017Z",
+  "electionDate": "2026-11-03",
+  "readOnly": true,
+  "productionInventory": {
+    "project": "tiny-hill-13996172",
+    "branch": "br-delicate-lab-ax02xuo5",
+    "role": "readonly",
+    "version": "cv-e5ed0ba18b073e373fdf2b49d540fe16"
+  },
+  "scope": "North Carolina counties; other states remain unmeasured",
+  "officeSource": {
+    "url": "https://vt.ncsbe.gov/BOEInfo/",
+    "contacts": 100,
+    "sha256": "2290126c5c6db199d5a226a80477c72f7c6e0ee2537c09bb44294b79d1fe6380"
+  },
+  "counties": 100,
+  "addresses": 100,
+  "checked": 99,
+  "unavailable": 26,
+  "failed": 1,
+  "samples": [
+    {
+      "countyFips": "37001",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37003",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37005",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37007",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37009",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37011",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37013",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37015",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37017",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37019",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37021",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37023",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37025",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37027",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37029",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37031",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37033",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37035",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37037",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37039",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37041",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37043",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37045",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37047",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37049",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37051",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37053",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37055",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37057",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37059",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37061",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37063",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37065",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37067",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 14,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37069",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37071",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37073",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37075",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37077",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37079",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37081",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37083",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37085",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37087",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37089",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37091",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37093",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37095",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37097",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37099",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37101",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37103",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37105",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37107",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37109",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37111",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37113",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37115",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37117",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37119",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37121",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37123",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37125",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37127",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37129",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37131",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37133",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 5,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37135",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 6,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37137",
+      "available": true,
+      "pollingLocations": 0,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37139",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37141",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37143",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37145",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37147",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 6,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37149",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37151",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37153",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37155",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 6,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37157",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37159",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37161",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37163",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37165",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37167",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37169",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37171",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 4,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37173",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 2,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37175",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37177",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37179",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 9,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37181",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37183",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 18,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37185",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37187",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37189",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 6,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37191",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37193",
+      "available": true,
+      "pollingLocations": 0,
+      "earlyVoteSites": 3,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37197",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0
+    },
+    {
+      "countyFips": "37199",
+      "available": true,
+      "pollingLocations": 1,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 0
+    }
+  ],
+  "unmeasuredCountyFips": [
+    "37195"
+  ]
+}

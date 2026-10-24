@@ -16,8 +16,7 @@ import { resolveWithSuppression } from "@/lib/ballot/pick-tally";
 import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
 
 /**
- * The per-contest pick control. Picks are kept on this device and also sent
- * as ballot-pick events with their race to the reader event store.
+ * The per-contest control for the reader's private list.
  */
 
 export function PickControl({

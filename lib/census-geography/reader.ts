@@ -16,7 +16,7 @@ import {
   CENSUS_GEO_SOURCE_ID,
 } from "./publication.ts";
 
-export { CENSUS_GEO_SCOPE } from "./publication.ts";
+;
 
 /**
  * ~A century, in ms. Reference geography has no freshness cadence, so a promoted
@@ -92,12 +92,6 @@ export async function loadPublishedLookupState(
     return { lookup: createLookup(result.value, versionId), source: "bootstrap", versionId };
   }
   return { lookup: notYetPublishedLookup(result.kind), source: "unavailable", versionId: result.kind };
-}
-
-export async function loadPublishedLookup(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<CensusGeographyLookup> {
-  return (await loadPublishedLookupState(options)).lookup;
 }
 
 export function loadBootstrapLookup(): CensusGeographyLookup {

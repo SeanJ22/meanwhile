@@ -5,14 +5,12 @@
 import { hasTechnicalText, plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import type { ReactNode } from "react";
 
-import { plainCode, plainMeaning, plainText } from "@/lib/control-plane/plain-words.ts";
+import { plainCode, plainMeaning } from "@/lib/control-plane/plain-words.ts";
 
 export interface NeedsYou {
   readonly needed: boolean;
   readonly action?: string;
 }
-
-export const NEEDS_NOTHING: NeedsYou = { needed: false };
 
 /** `detail` is rendered only when there is something in it. */
 export function StatusBlock(props: {
@@ -71,63 +69,5 @@ export function Code({ raw, withMeaning }: { raw: string | null | undefined; wit
       </span>
       {means && <span className="plain-means"> {means}</span>}
     </>
-  );
-}
-
-export function Plain({ text }: { text: string | null | undefined }) {
-  return <>{plainText(text)}</>;
-}
-
-export function DefinedTile(props: {
-  readonly figure: string;
-  readonly label: string;
-  readonly means: string;
-  readonly needsYou: NeedsYou;
-  readonly children?: ReactNode;
-}) {
-  return (
-    <div className="rq-tile defined-tile">
-      <div className="rq-figure">{props.figure}</div>
-      <div className="rq-caption">
-        <span className="tile-label">{props.label}</span>
-        <span className="tile-means">{props.means}</span>
-        <span className={`tile-needs ${props.needsYou.needed ? "needs-yes" : "needs-no"}`}>
-          {props.needsYou.needed ? `Needs you: Yes — ${props.needsYou.action ?? "a decision from you"}` : "Needs you: No"}
-        </span>
-        {props.children}
-      </div>
-    </div>
-  );
-}
-
-export function Bar(props: {
-  readonly value: number;
-  readonly of: number;
-  readonly tone?: "ok" | "warn" | "bad" | "info" | "none";
-  readonly label?: string;
-  readonly title?: string;
-}) {
-  const of = props.of > 0 ? props.of : 1;
-  const pct = Math.max(0, Math.min(100, (props.value / of) * 100));
-  return (
-    <span className={`sbar sbar-${props.tone ?? "info"}`} title={props.title ?? `${props.value} of ${props.of}`}>
-      <span className="sbar-track">
-        <span className="sbar-fill" style={{ width: `${pct.toFixed(1)}%` }} />
-      </span>
-      {props.label && <span className="sbar-label">{props.label}</span>}
-    </span>
-  );
-}
-
-export function StackBar({ parts, total }: { parts: readonly { tone: string; value: number; label: string }[]; total: number }) {
-  const of = total > 0 ? total : 1;
-  return (
-    <span className="sbar sbar-stack" title={parts.map((p) => `${p.label}: ${p.value}`).join(" · ")}>
-      <span className="sbar-track">
-        {parts.map((p) => (
-          <span key={p.label} className={`sbar-seg seg-${p.tone}`} style={{ width: `${((p.value / of) * 100).toFixed(1)}%` }} />
-        ))}
-      </span>
-    </span>
   );
 }

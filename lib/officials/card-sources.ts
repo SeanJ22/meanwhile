@@ -171,9 +171,29 @@ export function personCardSources(
 
   entries.push(...fieldHolderSources(holder));
 
+  if (holder.executive) entries.push(...executiveCardSources(holder.executive));
+
   entries.push(...extra, ...moneyCardSources(sections.money ?? []), ...voteCardSources(sections.votes ?? []),
     ...actionCardSources(sections.actions ?? []));
 
+  return mergeSources(entries);
+}
+
+/** Executive facts use the card's existing Sources section, including exact per-source checked dates. */
+export function executiveCardSources(data: NonNullable<SeatHolder["executive"]>): CardSource[] {
+  const entries: CardSource[] = [];
+  const walk = (value: unknown, label: string): void => {
+    if (!value || typeof value !== "object") return;
+    if (Array.isArray(value)) { for (const row of value) walk(row, label); return; }
+    const row = value as Record<string, unknown>;
+    if (typeof row.sourceUrl === "string" && typeof row.collectedAt === "string") entries.push({
+      what: fieldSourceLabel(label), provenance: { sourceUrl: row.sourceUrl,
+        sourceOrg: typeof row.sourceOrg === "string" ? row.sourceOrg : new URL(row.sourceUrl).hostname,
+        collectedAt: row.collectedAt, verifiedAt: typeof row.checkedAt === "string" ? row.checkedAt : row.collectedAt },
+    });
+    for (const [key, child] of Object.entries(row)) if (child && typeof child === "object") walk(child, key === "records" ? "officialActions" : key);
+  };
+  walk(data, "National executive");
   return mergeSources(entries);
 }
 

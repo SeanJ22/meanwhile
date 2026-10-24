@@ -59,39 +59,3 @@ export function readRunProvenance(
     integrationRef,
   };
 }
-
-/** The two proof classes, one vocabulary, so nothing re-derives the strings. */
-export type ProofClass = "SESSION_MEASURED" | "INDEPENDENTLY_REPRODUCED";
-
-/**
- * The proof class of a passing run: `INDEPENDENTLY_REPRODUCED` only with a clean tree, integrated at run time, and not
- * `LOCAL_SESSION`. A record with no provenance is `SESSION_MEASURED`.
- */
-export function proofClassOf(provenance: RunProvenance | null | undefined): ProofClass {
-  if (!provenance) return "SESSION_MEASURED";
-  if (!provenance.workingTreeClean) return "SESSION_MEASURED";
-  if (provenance.integratedAtRunTime !== true) return "SESSION_MEASURED";
-  if (provenance.runClass === "LOCAL_SESSION") return "SESSION_MEASURED";
-  return "INDEPENDENTLY_REPRODUCED";
-}
-
-/** One sentence naming why the class is what it is. Quoted, never asserted. */
-export function proofClassReason(provenance: RunProvenance | null | undefined): string {
-  if (!provenance) {
-    return "the run record carries no provenance block, so nothing in it establishes that the " +
-      "run was separate from the implementing session's own observation";
-  }
-  const missing: string[] = [];
-  if (!provenance.workingTreeClean) missing.push("the working tree was not clean");
-  if (provenance.integratedAtRunTime === null) {
-    missing.push("no integration ref was resolvable, so integration could not be established");
-  } else if (!provenance.integratedAtRunTime) {
-    missing.push("the tested SHA was not yet in " + (provenance.integrationRef ?? "the integration branch"));
-  }
-  if (provenance.runClass === "LOCAL_SESSION") {
-    missing.push("the run was invoked by a local session, which is its own observation");
-  }
-  return missing.length === 0
-    ? `a clean tree already contained by ${provenance.integrationRef}, run as ${provenance.runClass}`
-    : missing.join("; ");
-}

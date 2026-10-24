@@ -53,12 +53,3 @@ export function ballotCandidateDisplayName(candidate: Pick<Candidacy, "givenName
     return suffixes.length ? `${name}, ${suffixes.map(surnameDisplayCase).join(", ")}` : name;
   }).join(" / ");
 }
-
-export function searchableSurname(filed: string): string {
-  const withoutSuffix = filed.replace(/,?\s*(JR|SR|II|III|IV)\.?\s*$/i, "").trim();
-  return surnameDisplayCase(withoutSuffix || filed);
-}
-
-export function searchableGiven(filed: string): string {
-  return surnameDisplayCase(filed.trim().split(/\s+/)[0] ?? filed);
-}

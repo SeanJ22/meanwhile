@@ -90,7 +90,6 @@ const READING_MEMO_MAX = 32;
 const readingMemo = new Map<string, { readonly at: number; readonly items: PlaceOwedItem[] }>();
 const memoKeyOf = (decision: ExpansionScopeDecision): string =>
   [decision.receiptId, decision.latestDecisionReceiptId ?? "", decision.decidedAt, decision.geography.type, decision.geography.geoid].join("|");
-export function clearPlaceReadingMemo(): void { readingMemo.clear(); }
 
 async function nationalPlaceContext(repos: ControlPlaneRepositories, zips: readonly string[]) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);

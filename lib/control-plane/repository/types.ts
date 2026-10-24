@@ -1,3 +1,4 @@
+import type { PlanningControls } from "../scheduler/state-planning.ts";
 import type { BoxRepository } from "../box.ts";
 import type { FieldManualSourceHint,FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
@@ -356,8 +357,11 @@ export function projectAggregate(value: unknown, projection: RecordProjection): 
 export function jsonTextAtPath(record: unknown, path: readonly string[]): string | null {
   let cursor: unknown = record;
   for (const segment of path) {
-    if (cursor === null || typeof cursor !== "object" || Array.isArray(cursor)) return null;
-    cursor = (cursor as Record<string, unknown>)[segment];
+    if (cursor === null || typeof cursor !== "object") return null;
+    if (Array.isArray(cursor)) {
+      if (!/^-?\d+$/.test(segment)) return null;
+      cursor = cursor.at(Number(segment));
+    } else cursor = (cursor as Record<string, unknown>)[segment];
   }
   if (cursor === null || cursor === undefined || typeof cursor === "object") return null;
   return String(cursor);
@@ -483,7 +487,7 @@ export interface ControlPlaneRepositories {
 
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
   readonly huntOrders: import("../hunt-orders.ts").HuntOrderRepository;
-  readonly planningControls?: import("../scheduler/state-planning.ts").PlanningControls;
+  readonly planningControls?: PlanningControls;
   readonly planningState?: string;
   readonly controlReadsBackfill?: import("./control-reads-backfill.ts").ControlReadsBackfill;
   readonly researchState: AggregateRepository<ResearchState>;

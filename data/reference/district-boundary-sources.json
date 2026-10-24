@@ -2840,6 +2840,9 @@
    "kindField": null,
    "kindValues": null,
    "where": null,
+   "excludeNames": [
+    "Washoe Rural"
+   ],
    "unmatched": "list"
   },
   {
@@ -2851,7 +2854,7 @@
    ],
    "title": "Washoe County Fire Protection Districts",
    "publisher": "Washoe County GIS",
-   "officialPage": null,
+   "officialPage": "https://tmfpd.us/wp-content/uploads/2025/10/Fire-Station-Map-2025.pdf",
    "format": "arcgis",
    "url": "https://wcgisweb.washoecounty.us/arcgis/rest/services/OpenData/OpenData/FeatureServer/126",
    "nameField": "District",
@@ -8041,6 +8044,26 @@
    "kindField": null,
    "kindValues": null,
    "where": "Primacy_Agency='OR'",
+   "unmatched": "skip"
+  },
+  {
+   "id": "or-metro-boundary-0e317b",
+   "state": "OR",
+   "countyFips": null,
+   "kinds": [
+    "other"
+   ],
+   "title": "Metro Boundary",
+   "publisher": "Oregon Metro (RLIS)",
+   "officialPage": "https://rlisdiscovery.oregonmetro.gov/",
+   "format": "arcgis",
+   "url": "https://services2.arcgis.com/McQ0OlIABe29rJJy/arcgis/rest/services/Metro_Boundary/FeatureServer/0",
+   "nameField": "FID",
+   "nameTemplate": "Metro",
+   "idField": null,
+   "kindField": null,
+   "kindValues": null,
+   "where": null,
    "unmatched": "skip"
   },
   {

@@ -51,10 +51,6 @@ export function parseScope(raw: string | string[] | undefined | null): MwScope {
   return SCOPE_ALL;
 }
 
-export function scopeState(scope: MwScope): string | null {
-  return scope.kind === "all" ? null : scope.state;
-}
-
 export function withScope(path: string, scope: MwScope, extra?: Readonly<Record<string, string | null | undefined>>): string {
   // A fragment belongs after the query, where the browser reads it: split it off first and put it back last.
   const hashAt = path.indexOf("#");
@@ -71,21 +67,4 @@ export function withScope(path: string, scope: MwScope, extra?: Readonly<Record<
   }
   const q = params.toString();
   return `${q === "" ? base : `${base}?${q}`}${fragment}`;
-}
-
-export const GEO_TYPE_WORDS: Readonly<Record<MwGeoType, string>> = {
-  zcta: "ZIP (Census ZCTA)",
-  county: "County",
-  congressional_district: "Congressional district",
-  cbsa: "Metropolitan area",
-  state_leg_upper: "State senate district",
-  state_leg_lower: "State house district",
-};
-
-/** A Census container's label as the owner reads it, e.g. "<Name> County", "CD 6". */
-export function geographyShortLabel(label: string): string {
-  return label
-    .replace(/^Arizona |^New Hampshire |^New Jersey |^[A-Z]{2} /, "")
-    .replace(/ \(119th Congress\)$/, "")
-    .replace(/Congressional District (\d+)/, "CD $1");
 }

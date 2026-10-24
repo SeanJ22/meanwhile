@@ -11,6 +11,24 @@ import { HUNT_STATES } from "../hunt-orders.ts";
 import type { ControlReadsBackfill } from "../repository/control-reads-backfill.ts";
 
 export const PLANNING_STATES=[...HUNT_STATES,"system"];
+/** Each state yields its source walks so all states receive planning turns in the same round. */
+export const STATE_PLANNING_WALK_MS = 2 * 60_000;
+/** A completed state moves behind states still owed a turn, including across a release restart. */
+export function planningStateOrder(states: readonly string[], finishedAt: ReadonlyMap<string, string | null>): string[] {
+  const time = (state: string) => {
+    const at = Date.parse(finishedAt.get(state) ?? "");
+    return Number.isFinite(at) ? at : Number.NEGATIVE_INFINITY;
+  };
+  return states.map((state, index) => ({ state, index })).sort((a, b) =>
+    (Math.sign(time(a.state) - time(b.state)) || 0) || a.index - b.index).map(row => row.state);
+}
+
+export const PLANNING_FINISHED_TIMES_SQL = `SELECT states.state, latest.finished_at
+  FROM unnest($1::text[]) AS states(state) LEFT JOIN LATERAL (
+    SELECT record #>> '{runtimeOutcome,finishedAt}' AS finished_at FROM cp_log_owner_digests
+    WHERE log_key='owner-digest:' || states.state AND record #>> '{runtimeOutcome,kind}'='FRESHNESS_CYCLE'
+    ORDER BY position DESC LIMIT 1
+  ) latest ON true`;
 export function planningStateOf(value:string):string|null {
   const state= /\/(?:state|district|territory):([a-z]{2})(?:\/|#|$)/i.exec(value)?.[1].toLowerCase()
     ?? /(?:^|:)government:US-([a-z]{2})(?:[:-]|$)/i.exec(value)?.[1].toLowerCase()

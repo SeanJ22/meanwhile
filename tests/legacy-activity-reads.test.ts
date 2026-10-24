@@ -88,10 +88,10 @@ test("the planning round asks Postgres only for complete saved pages at the held
   await pg.query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES('job',1,$1,$2)",
     [now, JSON.stringify({ ...createWorkItem({ project: "rn01", subject: "ocd-division/country:us/state:az/place:fixture", obligation: "Saved meeting page", why: "Catch-up", now }), id: "job" })]);
   const pages: [string, string, boolean][] = [["pima", "https://webapi.legistar.com/v1/Pima/Events?$top=1000", false], ["partial", "https://webapi.legistar.com/v1/pima/events", true],
-    ["avondale", "https://avondaleaz.api.civicclerk.com/v1/Events?$filter=x", false], ["other", "https://webapi.legistar.com/v1/tucson/events", false], ["wildcard", "https://webapi.legistar.com/v1/pimaXevents", false]];
+    ["civicclerk", "https://capaz.api.civicclerk.com/v1/Events?$filter=x", false], ["other", "https://webapi.legistar.com/v1/tucson/events", false], ["wildcard", "https://webapi.legistar.com/v1/pimaXevents", false]];
   for (const [id, canonicalUrl, partial] of pages) await pg.query("INSERT INTO cp_log_artifacts(log_key,record_id,position,recorded_at,record) VALUES('job',$1,$2,$3,$4)",
     [id, pages.findIndex(page => page[0] === id), now, JSON.stringify({ artifactId: id, workItemId: "job", partial, canonicalUrl })]);
   const sql: Sql = { query: async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows };
-  assert.deepEqual((await readLegacyActivityCaptures("az", sql, HELD_EVENT_URL_PREFIXES)).map(row => row.artifactId), ["pima", "avondale"]);
+  assert.deepEqual((await readLegacyActivityCaptures("az", sql, HELD_EVENT_URL_PREFIXES)).map(row => row.artifactId), ["pima", "civicclerk"]);
   assert.equal((await readLegacyActivityCaptures("az", sql)).length, pages.length);
 });

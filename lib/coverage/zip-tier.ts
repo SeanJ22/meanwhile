@@ -187,15 +187,6 @@ export function tierDistributionForOcdIds(
   };
 }
 
-/** The floor tier across the zips that resolve. */
-export function coverageTierForZips(zips: string[]): CoverageTierOrUnknown {
-  const tiers = zips
-    .map((z) => stampedRowForZip(z)?.tier)
-    .filter((t): t is CoverageTier => Boolean(t));
-  if (tiers.length === 0) return COVERAGE_TIER_UNKNOWN;
-  return tiers.reduce((lowest, t) => (RANK[t] < RANK[lowest] ? t : lowest));
-}
-
 /** The floor tier across the divisions that resolve; UNKNOWN when none do. */
 export function coverageTierForOcdIds(ocdIds: string[]): CoverageTierOrUnknown {
   const ledgerNow = loadLedger();

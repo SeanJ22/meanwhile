@@ -25,5 +25,3 @@ export function haversineKm(
 
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.min(1, Math.sqrt(a)));
 }
-
-export const kmToMiles = (km: number) => km * 0.621371;

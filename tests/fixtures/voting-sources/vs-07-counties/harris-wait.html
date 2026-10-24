@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us">
+<head>
+ <meta charset="utf-8" />
+ <title>Find your nearest Vote Center by entering an address below - Election Division</title>
+</head>
+<body>
+ <div ng-app="HarrisVotesApp">
+ <div ng-controller="MapController as vm">
+ <div>
+ <div>
+ <div>
+ <div>
+ <label>November 03, 2026 - General and Special Elections</label>
+ <div>Find your nearest Vote Center by entering an address below</div>
+ <p><strong><small>Vote centers are not final, as locations are confirmed they'll be added to the map</small></strong>
+</p>
+ </div>
+ <div>
+ </div>
+ </div>
+ <div>
+ <div>
+ </div>
+ </div>
+ <div>
+ <div>
+ <div>
+ <div>
+ <label for="{{ vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+ Early Voting
+ </label>
+ </div>
+ <div>
+ <label>
+ <span></span>
+ </label>
+ </div>
+ <div>
+ <label for="{{ !vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+ Election Day
+ </label>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div>
+ <div>
+ <i title="Hours of Operation"></i>
+ <br />
+ <span>Hours of Operation</span>
+ </div>
+ <div>
+ <a href="https://appfiles.harrisvotes.com/harrisvotes/prd/docs/VotingInfo/EarlyVotingPDFMaps/EarlyVotingMap.pdf" target="_blank" title="Early Voting Locations PDF"></a>
+ <br />
+ <span>Early Voting Locations PDF</span>
+ </div>
+ <div>
+ <a href="https://appfiles.harrisvotes.com/harrisvotes/prd/docs/VotingInfo/VoteCenters_en-US.pdf" target="_blank" title="Election Day Locations pdf"></a>
+ <br />
+ <span>Election Day Locations pdf</span>
+ </div>
+ <div>
+ <a href="https://harrisvotes.com/Election-Workers/VC-Recruitment" 
+ target="_blank" title="Become a Vote Center"></a>
+ <br />
+ <span>Become a Vote Center</span>
+ </div>
+ </div>
+ <div>
+ <div id="list-tab">
+ <i ng-click="vm.ShowMap(false);"></i>
+ <br />
+ <span>
+ View List
+ </span>
+ </div>
+ <div id="map-tab">
+ <i ng-click="vm.ShowMap(true);"></i>
+ <br />
+ <span>
+ View Map
+ </span>
+ </div>
+ </div>
+ <br />
+ <div>
+ <div>
+ <label>Select Vote Center type to display:</label>
+ </div>
+ <div>
+ <select id="ddServiceType" ng-model="vm.ServiceType" ng-options="type.value as (type.text | decoded) for type in vm.ServiceTypes" ng-change="vm.GetPollingLocations(true);">
+ </select>
+ </div>
+ </div>
+ </div>
+ <div id="polling-locations-list">
+ <div ng-cloak ng-show="vm.Locations.length == 0">
+ <div>
+ Vote centers will be available soon.
+ </div>
+ </div>
+ <div ng-cloak ng-show="vm.Locations.length > 0">
+ <div select-div ng-repeat="location in vm.Locations" ng-click="vm.ShowMarkerPopup($index, location.Latitude, location.Longitude, location.PollCode);">
+ <div ng-cloak>
+ <strong>
+ <span>{{ vm.PageIndex * vm.PageSize + $index + 1 }}.</span>
+ </strong>
+ <span ng-bind-html="location.ListingContent"></span>
+ </div>
+ <div>
+ <div ng-show="(true && !vm.ShowElectionDay) || (false && vm.ShowElectionDay)">
+ <i bs-popover></i>
+ </div>
+ </div>
+ <div>
+ <i bs-popover ng-show="location.NotesTranslation"></i>
+ </div>
+ <div>
+ <div>
+ <span>Line Count: {{ location.VotersInLine }}</span>
+ <br />
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div>
+ <div ng-cloak ng-show="vm.Locations.length > 0">
+ <strong>Displaying {{ vm.PageIndex * vm.PageSize + $index + 1 }} - {{ Math.min(vm.LocationCount, (vm.PageIndex + 1) * vm.PageSize) }} of {{ vm.LocationCount }}</strong>
+ </div>
+ <div>
+ Previous {{ vm.PageSize }}</button>
+ </div>
+ <div>
+ = vm.LocationCount">Next {{ vm.PageSize }}</button>
+ </div>
+ </div>
+ </div>
+ <div id="div-map"></div>
+ <div>
+ <div ng-cloak ng-show="vm.Locations.length > 0">
+ <strong>Displaying {{ vm.PageIndex * vm.PageSize + $index + 1 }} - {{ Math.min(vm.LocationCount, (vm.PageIndex + 1) * vm.PageSize) }} of {{ vm.LocationCount }}</strong>
+ </div>
+ <div>
+ Previous {{ vm.PageSize }}</button>
+ </div>
+ <div>
+ = vm.LocationCount">Next {{ vm.PageSize }}</button>
+ </div>
+ </div>
+ <div id="initialModal">
+ <div>
+ <div>
+ &times;</button>
+ <h4>Find your nearest Vote Center by entering an address below</h4>
+ </div>
+ <div>
+ <div>
+ <label>Which day would you like to vote on?</label>
+ <div>
+ <div>
+ <label for="{{ vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+ Early Voting
+ </label>
+ </div>
+ <div>
+ <div>
+ <label>
+ <span></span>
+ </label>
+ </div>
+ </div>
+ <div>
+ <label for="{{ vm.ShowElectionDay ? 'poll-toggle' : '' }}">
+ Election Day
+ </label>
+ </div>
+ </div>
+ </div>
+ <div>
+ OK</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div id="hrsOfOpModal">
+ <div>
+ <div>
+ &times;</button>
+ <h4>Hours of Operation</h4>
+ </div>
+ <div>
+ <h3>
+<p>
+ <strong>Early Voting (OCT 19 - 30)</strong><br>
+ October 19, 2026 -- 7AM - 7PM<br>
+ October 20, 2026 -- 7AM - 7PM<br>
+ October 21, 2026 -- 7AM - 7PM<br>
+ October 22, 2026 -- 7AM - 7PM<br>
+ October 23, 2026 -- 7AM - 7PM<br>
+ October 24, 2026 -- 7AM - 7PM<br>
+ October 25, 2026 -- 12PM - 7PM<br>
+ October 26, 2026 -- 7AM - 7PM<br>
+ October 27, 2026 -- 7AM - 7PM<br>
+ October 28, 2026 -- 7AM - 7PM<br>
+ October 29, 2026 -- 7AM - 7PM<br>
+ October 30, 2026 -- 7AM - 7PM<br>
+</p>
+<p>
+ <strong>Election Day</strong><br>
+ November 3, 2026&nbsp;-- 7AM - 7PM
+</p>
+</h3>
+ <div>
+ OK</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</body>
+</html>

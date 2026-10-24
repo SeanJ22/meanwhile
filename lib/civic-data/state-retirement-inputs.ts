@@ -226,10 +226,10 @@ export async function withRetirementSourceCursor<T>(client: CursorClient, read: 
         await client.query(`DECLARE ${cursor} NO SCROLL CURSOR FOR ${text}`, [...params]);
         try {
           while (true) {
-            const { rows } = await client.query(`FETCH FORWARD 1 FROM ${cursor}`);
+            const { rows } = await client.query(`FETCH FORWARD 128 FROM ${cursor}`);
             if (!rows.length) break;
-            if (rows.length !== 1) throw new Error("STATE_RETIREMENT_CURSOR_ROW_COUNT_INVALID");
-            await onRow(rows[0]);
+            if (rows.length > 128) throw new Error("STATE_RETIREMENT_CURSOR_ROW_COUNT_INVALID");
+            for (const row of rows) await onRow(row);
           }
         } finally { await client.query(`CLOSE ${cursor}`); }
       },
@@ -693,7 +693,7 @@ async function writeStateInput(path: string, emit: Emit, buffer: Buffer): Promis
 
 export async function prepareRetirementStateInputs(input: {
   readonly directory: string; readonly query: StateRetirementQuery; readonly streamRows: StateRetirementRows;
-  readonly origins: readonly StateRetirementOrigin[]; readonly env?: NodeJS.ProcessEnv;
+  readonly origins: readonly StateRetirementOrigin[]; readonly env?: NodeJS.ProcessEnv; readonly states?: readonly string[];
 }): Promise<{ readonly origins: readonly StateRetirementOrigin[]; readonly units: readonly StateRetirementUnit[]; readonly unassigned: readonly Row[] }> {
   await mkdir(temporaryPath(input.directory), { recursive: true, mode: 0o700 });
   const order = ["ballot-contests", "registry-runtime", "candidate-profiles", "candidate-corpus", "voting-sites", "candidate-campaign-sites-derived"];
@@ -717,6 +717,7 @@ export async function prepareRetirementStateInputs(input: {
       const receipts = await input.query("SELECT validation_receipt-'excludedFacts' AS receipt FROM civic_data_candidates WHERE id=$1", [origin.versionId]);
       const events = await input.query("SELECT sequence,state,at,detail FROM civic_data_candidate_events WHERE candidate_id=$1 AND (sequence<=4 OR detail LIKE 'UNCHANGED_CONFIRMATION_V1 %' OR detail LIKE 'UNCHANGED_CONFIRMATION_SOURCES_V1 %') ORDER BY sequence", [origin.versionId]);
       for (const state of states) {
+        if (input.states && !input.states.includes(state)) continue;
         const payload = splitPayload(origin.family, metadata, spool, origin.versionId, state);
         const normalizedMetadata = origin.family === "candidate-campaign-sites-derived" ? record({ ...fields(proof.normalizedMetadata),
           decisions: record(Object.fromEntries((proof.decisionFields as string[]).map(key => [key, members(spool, origin.versionId, state, `decision:${key}`)]))) })

@@ -2,7 +2,7 @@ import { nearestZcta } from "../geo/zcta.ts";
 import { stateForZip } from "../reader/national.ts";
 import { readStatePackage } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
-import { stateCoverage } from "../reader/coverage.ts";
+import { stateCoverage, withPlaceRegistry } from "../reader/coverage.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "../reader/location.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
@@ -744,7 +744,8 @@ export async function coverageAt(
     readStatePackage(state), readPlacePackage({ state, divisionIds: ids, bodyIds: territoryBodies(lat, lng, territory) }),
   ]);
   const meetings = heldMeetings.length ? heldMeetings : place.meetings;
-  const coverage = stateCoverage(bundle, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
-  return { ...coverage, governments: bindGovernmentBodies(place.governments, bundle.registry.registry.bodies),
+  const local = place.registry ? withPlaceRegistry(bundle, place.registry) : bundle;
+  const coverage = stateCoverage(local, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
+  return { ...coverage, governments: bindGovernmentBodies(place.governments, local.registry.registry.bodies),
     governmentInventoryUnavailableStates: place.registrationHeld ? [] : [state] };
 }

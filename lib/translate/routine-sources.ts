@@ -48,11 +48,11 @@ export async function loadRoutineMeasureSources(input: {
     const measure = ballot.measures?.find(row => row.contestId === contest.id);
     const analysis = ballot.measureAnalyses?.analyses.find(row => row.contestId === contest.id);
     const prior = ballot.measureRecords?.find(row => row.contestId === contest.id);
-    const citedUrls = [prior?.sourceUrl, measure?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance.sourceUrl];
+    const citedUrls = [contest.measureTextUrl, prior?.sourceUrl, measure?.provenance.sourceUrl, analysis?.analysisUrl, contest.provenance.sourceUrl];
     const labels = measureLabels({ title: contest.title, questionText: measure?.questionText, officialNumber: measure?.officialNumber, analysisText: analysis?.text });
     blanks.push({ contestId: contest.id, ocdId: contest.ocdId, title: contest.title, labels, designation: measure?.officialNumber ?? null,
       cited: new Set(citedUrls.filter((url): url is string => Boolean(url?.startsWith("https://")))), year: ballot.election.date?.slice(0, 4) ?? "",
-      priorUrl: prior?.sourceUrl ?? null });
+      priorUrl: prior?.sourceUrl ?? null, textUrl: contest.measureTextUrl ?? null });
     if (citedUrls.some(url => url?.startsWith("https://") && !isOfficialSource(url))) {
       for (const provenance of [contest.provenance, measure?.provenance]) {
         if (provenance?.doorId) doorIds.add(provenance.doorId);
@@ -145,7 +145,7 @@ export async function loadRoutineMeasureSources(input: {
   const discovered = new Map<string, string[]>();
   const named = (blank: MeasureBlank): boolean => [...blank.cited, ...(blank.priorUrl ? [blank.priorUrl] : [])].some(url => {
     const text = pages.get(url);
-    return text !== undefined && (url === blank.priorUrl || pageNamesMeasure(text, blank.labels));
+    return text !== undefined && (url === blank.priorUrl || url === blank.textUrl || pageNamesMeasure(text, blank.labels));
   });
   // The same measure appears in several ballot styles; it is one blank.
   const distinct = new Map<string, MeasureBlank>();
@@ -234,4 +234,5 @@ interface MeasureBlank {
   readonly cited: ReadonlySet<string>;
   readonly year: string;
   readonly priorUrl: string | null;
+  readonly textUrl: string | null;
 }

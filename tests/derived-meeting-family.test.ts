@@ -20,7 +20,7 @@ import type { ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
-import { meetingReaderServingWindowAt } from "../lib/meetings/constants.ts";
+import { meetingHeldWindowAt } from "../lib/meetings/constants.ts";
 import { coupledContracts, readBody, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
 
 const sha256 = (text: string): string => createHash("sha256").update(text).digest("hex");
@@ -283,7 +283,7 @@ test("a serving-window boundary crossed during collection uses the actual final 
   const evidence = next.build.removalEvidence.find(row => row.key === "meeting:ical:expires");
   assert.equal(evidence?.code, "OUTSIDE_REGISTERED_SERVING_WINDOW");
   if (evidence?.code !== "OUTSIDE_REGISTERED_SERVING_WINDOW") return;
-  assert.equal(evidence.lowerBound, meetingReaderServingWindowAt(readAt)?.lowerBound);
+  assert.equal(evidence.lowerBound, meetingHeldWindowAt(readAt)?.lowerBound);
   assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:expires"));
 });
 

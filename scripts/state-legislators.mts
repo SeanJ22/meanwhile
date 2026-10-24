@@ -145,6 +145,8 @@ async function main(): Promise<void> {
 
   const prior = await readOfficialStateLegislatorsProjection(target.jurisdiction,{store,now:retrievedAt,bypassCache:true});
   if (prior.kind === "STORE_UNREACHABLE") throw Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
+  const {publishRosterOfficePoints} = await import("../lib/officials/office-points-publication.ts");
+  const roster = await publishRosterOfficePoints(parsed.roster, prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null);
   const candidate = officialStateLegislatorsCandidate({
     priorRoster: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null,
     sourceId: target.sourceId,
@@ -157,7 +159,7 @@ async function main(): Promise<void> {
     term: parsed.term,
     expectedTerm: parsed.term,
     declaredTotal: parsed.roster.officeholders.length,
-    roster: parsed.roster,
+    roster,
     sourceAudit: {
       observedRecords: parsed.observedRecords,
       excludedRecords: "excludedRecords" in parsed

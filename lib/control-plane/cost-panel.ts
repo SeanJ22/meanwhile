@@ -453,22 +453,6 @@ export function costPanelOf(ledger: CostLedgerTotals, scouts: MeasuredSum, input
   };
 }
 
-
-/** "3.2 MB", "412 KB", "9 B". */
-export function bytesText(bytes: number): string {
-  if (bytes >= 1_048_576) return `${(bytes / 1_048_576).toFixed(1)} MB`;
-  if (bytes >= 1024) return `${Math.round(bytes / 1024)} KB`;
-  return `${bytes} B`;
-}
-
-/** "2 h 14 min", "38 min", "12 s". */
-export function durationText(ms: number): string {
-  const s = Math.round(ms / 1000);
-  if (s >= 3600) return `${Math.floor(s / 3600)} h ${Math.round((s % 3600) / 60)} min`;
-  if (s >= 60) return `${Math.round(s / 60)} min`;
-  return `${s} s`;
-}
-
 /**
  * Whether each role can reach a paid model, read from the executor that runs it.
  * `tests/cost-section-adm-c14.test.ts` re-derives this from the cited files.
@@ -719,18 +703,6 @@ export const MONTHLY_TOKEN_METRICS = [
   "outputTokens",
 ] as const;
 export type MonthlyTokenMetric = (typeof MONTHLY_TOKEN_METRICS)[number];
-
-/** Rendered beside the number. */
-export const MONTHLY_TOKEN_WORDS: Readonly<Record<MonthlyTokenMetric, string>> = {
-  requestCount: "Requests",
-  inputTokens: "Input tokens (whole prompt)",
-  uncachedInputTokens: "Uncached input (billed at full price)",
-  cacheCreationInputTokens: "Written to the cache",
-  cacheCreation5mInputTokens: "Written for 5 minutes",
-  cacheCreation1hInputTokens: "Written for 1 hour",
-  cacheReadInputTokens: "Read from the cache (a tenth of the price)",
-  outputTokens: "Output tokens",
-};
 
 /** The monthly window resets at 00:00 UTC on the 1st, so its reset is stamped in UTC beside the Eastern stamp. */
 export function utcStamp(iso: string): string {

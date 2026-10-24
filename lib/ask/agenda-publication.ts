@@ -630,23 +630,9 @@ function gapFor(args: {
  */
 const observationStore = new Map<string, PublisherAgendaObservation[]>();
 
-/** Record one reading. Newest wins at read time; nothing is overwritten. */
-export function recordPublisherAgendaObservation(
-  observation: PublisherAgendaObservation,
-): void {
-  const rows = observationStore.get(observation.meetingId) ?? [];
-  rows.push(observation);
-  observationStore.set(observation.meetingId, rows);
-}
-
 /** Every reading held for one sitting. */
 export function publisherAgendaObservationsFor(
   meetingId: string,
 ): readonly PublisherAgendaObservation[] {
   return observationStore.get(meetingId) ?? [];
-}
-
-/** Test seam, and the ingest reset. The suite must not inherit a reading. */
-export function resetPublisherAgendaObservations(): void {
-  observationStore.clear();
 }

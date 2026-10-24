@@ -6,7 +6,7 @@ import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStor
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
-import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
+import type { CandidateEvent, PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
@@ -127,7 +127,7 @@ function verifierIdFor(contract: ReaderContract): string {
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
-      if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") return "lib/outcomes/store.ts#readDoorOutcomeProjection";
+      if (contract.recordClass === "MEETING_OUTCOME" && ["door-outcomes", "door-minutes-outcomes"].includes(contract.sourceId)) return "lib/outcomes/store.ts#readDoorOutcomeProjection";
       return contract.recordClass === "MEETING"
         ? "lib/meetings/snapshot.ts#readMeetingPartitionProjection"
         : `unavailable:${contract.id}`;
@@ -446,7 +446,7 @@ export async function verifyRoutineReaderProjection(
           }
           return pass(verifierId, `The typed meetings Reader read partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
         }
-        if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
+        if (contract.recordClass === "MEETING_OUTCOME" && ["door-outcomes", "door-minutes-outcomes"].includes(contract.sourceId)) {
                     // A door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
           const { readDoorOutcomeProjection } = await import("../outcomes/store.ts");
           return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${contract.id} door outcomes`);
@@ -709,32 +709,38 @@ export async function repairRoutineReaderProjectionReadback(
 ): Promise<ReaderReadbackRepairOutcome> {
   const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
   const inspection = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
+  return repairInspectedReaderReadback(store, contract, inspection, now, normalizedVerifierCodeSha, options);
+}
+
+async function repairInspectedReaderReadback(
+  store: RoutineDataStore, contract: ReaderContract, inspection: ReaderReadbackInspection, now: string,
+  normalizedVerifierCodeSha: string | null, options: { readonly attestor?: ReaderVerifierClosureAttestor },
+  remainingPointerRetry = 1,
+): Promise<ReaderReadbackRepairOutcome> {
   if (inspection.outcome !== null) return inspection.outcome;
   if (inspection.promotion === null) throw new Error(`READER_REPAIR_PROMOTION_MISSING:${contract.id}`);
-  if (inspection.attestFrom !== undefined) {
-    const attested = await attestReaderProjectionReadback(
-      store,
-      contract,
-      inspection.promotion,
-      inspection.attestFrom,
-      now,
-      normalizedVerifierCodeSha,
-      options.attestor,
-    );
-    if (attested !== null) return { kind: "RECORDED", receipt: attested };
+  let receipt: ReaderProjectionReadbackReceipt | null = null;
+  let failed: { readonly error: unknown } | null = null;
+  try {
+    if (inspection.attestFrom !== undefined) {
+      receipt = await attestReaderProjectionReadback(store, contract, inspection.promotion, inspection.attestFrom,
+        now, normalizedVerifierCodeSha, options.attestor);
+    }
+    receipt ??= await recordRoutineReaderProjectionReadback(store, contract, inspection.promotion, now, normalizedVerifierCodeSha);
+  } catch (error) { failed = { error }; }
+  if (remainingPointerRetry > 0 && (failed !== null || receipt?.status === "FAIL")) {
+    // A concurrent publication is not evidence that either source version is invalid.
+    // Re-inspect once, and let the exact typed Reader and append guard verify the new pointer.
+    const current = await store.readPromotionIdentity(contract.recordClass, inspection.promotion.scope);
+    if (current?.versionId !== inspection.promotion.versionId) {
+      const latest = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
+      return repairInspectedReaderReadback(store, contract, latest, now, normalizedVerifierCodeSha, options, remainingPointerRetry - 1);
+    }
   }
-  const receipt = await recordRoutineReaderProjectionReadback(
-    store,
-    contract,
-    inspection.promotion,
-    now,
-    normalizedVerifierCodeSha,
-  );
+  if (failed !== null) throw failed.error;
   if (receipt === null) return { kind: "NOT_APPLICABLE", receipt: null };
   return { kind: "RECORDED", receipt };
 }
-
-export const MEETING_READER_EVENT_READ_CONCURRENCY = 8;
 export const MEETING_READER_EVIDENCE_WRITE_CONCURRENCY = 4;
 
 export type MeetingReaderReadbackRepairResult =
@@ -750,6 +756,60 @@ export type MeetingReaderReadbackRepairResult =
       readonly value: null;
       readonly error: string;
     };
+
+/** One state's bounded contract selection: inspect pointer identities and latest receipts together, then
+ * re-read only the versions that lack a current typed PASS. Actual verification still checks the live pointer. */
+export async function repairRoutineReaderProjectionReadbacks(
+  store: RoutineDataStore, contracts: readonly ReaderContract[], now = new Date().toISOString(),
+  verifierCodeSha: string | null = headSha(), options: { readonly attestor?: ReaderVerifierClosureAttestor;
+    readonly onResult?: (result: MeetingReaderReadbackRepairResult) => void } = {},
+): Promise<readonly MeetingReaderReadbackRepairResult[]> {
+  const normalizedSha = normalizeReaderCodeSha(verifierCodeSha);
+  const groups = new Map<RoutineRecordClass, string[]>();
+  if (new Set(contracts.map(contract => contract.id)).size !== contracts.length) throw new Error("READER_REPAIR_CONTRACT_IDENTITY_DUPLICATE");
+  for (const contract of contracts) {
+    const scopes = groups.get(contract.recordClass) ?? [];
+    scopes.push(contract.scope); groups.set(contract.recordClass, scopes);
+  }
+  const reads = await runBoundedWorkPool([...groups], 4, ([recordClass, scopes]) => store.readPromotionIdentities(recordClass, scopes));
+  const promotions = new Map<string, PromotedPointerIdentity>();
+  const errors = new Map<RoutineRecordClass, string>();
+  for (const read of reads) {
+    if (!read.ok) { errors.set([...groups.keys()][read.index]!, read.error); continue; }
+    for (const pointer of read.value) {
+      if (promotions.has(pointer.key)) throw new Error(`READER_REPAIR_PROMOTION_DUPLICATE:${pointer.key}`);
+      promotions.set(pointer.key, pointer);
+    }
+  }
+  let events: readonly CandidateEvent[] = [], eventError: string | null = null;
+  try { events = await readLatestReaderReadbacks(store, [...new Set([...promotions.values()].map(pointer => pointer.versionId))]); }
+  catch (error) { eventError = sanitizedErrorDiagnostic(error); }
+  const byCandidate = new Map<string, CandidateEvent[]>();
+  for (const event of events) {
+    const rows = byCandidate.get(event.candidateId) ?? [];
+    rows.push(event); byCandidate.set(event.candidateId, rows);
+  }
+  const results = await runBoundedWorkPool(contracts, 2, async contract => {
+    let result: MeetingReaderReadbackRepairResult;
+    try {
+      if (errors.has(contract.recordClass)) throw new Error(errors.get(contract.recordClass));
+      const promotion = promotions.get(`${contract.recordClass}:${contract.scope}`);
+      if (promotion && eventError) throw new Error(eventError);
+      const issue = promotion && promotionIdentityIssue(contract, promotion);
+      if (issue) throw new Error(issue);
+      const inspection = contract.readerProjection === null ? { outcome: { kind: "NOT_APPLICABLE" as const, receipt: null }, promotion: null }
+        : !promotion ? { outcome: { kind: "NO_PROMOTION" as const, receipt: null }, promotion: null }
+        : inspectReaderReadbackEvents(contract, promotion, byCandidate.get(promotion.versionId) ?? [], now, normalizedSha);
+      const value = await repairInspectedReaderReadback(store, contract, inspection, now, normalizedSha, options);
+      result = { contractId: contract.id, ok: true, value, error: null };
+    } catch (error) { result = { contractId: contract.id, ok: false, value: null, error: sanitizedErrorDiagnostic(error) }; }
+    options.onResult?.(result);
+    return result;
+  });
+  return results.map(result => result.ok ? result.value : {
+    contractId: contracts[result.index]!.id, ok: false, value: null, error: result.error,
+  });
+}
 
 export async function repairMeetingReaderProjectionReadbacks(
   store: RoutineDataStore,

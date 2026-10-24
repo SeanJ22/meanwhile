@@ -16,6 +16,13 @@ import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+
+/** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
+export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
+  return { ...state, registry: { ...state.registry, registry: place.registry,
+    bodyRosters: place.bodyRosters, rosterReaderDispositions: place.rosterReaderDispositions } };
+}
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
   "people" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
@@ -68,7 +75,8 @@ export function stateCoverage(
     if (known.has(fact.id) || !fields.name || !fields.provenance?.sourceUrl) return [];
     return [{ id: fact.id, ocdId: fact.division, name: fields.name, bodyClass: "UNCLASSIFIED", bodyOrigin: "SOURCED",
       coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null, meetingCadence: null,
-      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, provenance: fields.provenance }];
+      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, provenance: fields.provenance,
+      ...(fact.government ? { governmentName: fact.government } : {}) }];
   });
   const runtime = withStateRegistryFacts({ ...state.registry, registry: { ...state.registry.registry,
     bodies: [...state.registry.registry.bodies, ...acquired] } }, bodyFacts);

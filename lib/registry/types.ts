@@ -201,6 +201,8 @@ export interface Body {
   demandCount: number;
   sourceDataset: SourceDataset;
   provenance: RegistryProvenance;
+  /** The special district that owns this board, when the territory it serves is a city's or county's. */
+  governmentName?: string;
 }
 
 export interface Registry {

@@ -268,3 +268,32 @@ test("state promotion reads retain later stages and refusals without reading oth
     assert.ok(stamped.every(id => id.startsWith("az")));
   }finally{await db.close();}
 });
+
+test("planning starts with the oldest finished states and resumes the unfinished tail after a release", async () => {
+  const { planningStateOrder } = await import("../lib/control-plane/scheduler/state-planning.ts");
+  const states = ["ak", "al", "la", "tx", "wy", "system"];
+  const finished = new Map(states.map(state => [state, "2026-10-21T21:00:00.000Z"]));
+  finished.set("ak", "2026-10-23T07:00:00.000Z");
+  finished.set("al", "2026-10-23T07:30:00.000Z");
+  finished.set("system", "2026-10-21T19:00:00.000Z");
+  assert.deepEqual(planningStateOrder(states, finished), ["system", "la", "tx", "wy", "ak", "al"]);
+  finished.set("system", "2026-10-23T08:00:00.000Z");
+  finished.set("la", "2026-10-23T08:03:00.000Z");
+  assert.deepEqual(planningStateOrder(states, finished).slice(0, 2), ["tx", "wy"]);
+  assert.equal(planningStateOrder(["ak", "pr"], finished)[0], "pr", "never finished goes first");
+});
+
+test("source admission inherits only effective runner pause controls without reading work history", async () => {
+  const { readRunnerPauseIntents, RUNNER_PAUSE_INTENTS_SQL } = await import("../lib/control-plane/repository/pg-store.ts");
+  const { buildResearchIntent } = await import("../lib/control-plane/research-view.ts");
+  const { readIntents } = await import("../lib/control-plane/scheduler/research-policy.ts");
+  const repos = createMemoryRepositories();
+  for (const [action, at] of [["PAUSE_RUNNER", AT], ["DISPATCH", STOP], ["RESUME_RUNNER", STOP]] as const) {
+    const intent = buildResearchIntent(action, at, "owner", null, action);
+    await repos.researchIntents.append("level-1", intent.intentId, intent, at);
+  }
+  const controls = await readRunnerPauseIntents(repos);
+  assert.equal(controls.length, 2);
+  assert.equal(readIntents(controls).runnerPause.paused, false);
+  assert.doesNotMatch(RUNNER_PAUSE_INTENTS_SQL, /work_items|obligations|DISPATCH/);
+});

@@ -1,13 +1,4 @@
-import {
-  SCALE_BREAKS,
-  VERIFICATION_TIERS,
-  questionForRow,
-  valuesForScaleVersion,
-  type ReactionTargetType,
-  type ReactionValue,
-  type ScaleVersion,
-  type VerificationTier,
-} from "./reactions.ts";
+import { VERIFICATION_TIERS, questionForRow, valuesForScaleVersion, type ReactionTargetType, type ReactionValue, type ScaleVersion, type VerificationTier } from "./reactions.ts";
 
 /**
  * The aggregation contract: reactions in, per-division tier-split tallies out, with n stated at every
@@ -87,11 +78,6 @@ function emptyTiers(version: ScaleVersion): Record<VerificationTier, TierTally> 
       },
     ]),
   ) as Record<VerificationTier, TierTally>;
-}
-
-/** The recorded scale changes, carried with the aggregate that needs them. */
-export function scaleBreaksFor(targetType: ReactionTargetType) {
-  return SCALE_BREAKS.filter((b) => b.targetTypes.includes(targetType));
 }
 
 /**

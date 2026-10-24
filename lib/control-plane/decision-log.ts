@@ -16,11 +16,6 @@ export function baseIntentId(intentId: string): string {
   return id;
 }
 
-/** The id a resolution record for `intentId` carries. */
-export function resolvedIntentId(intentId: string): string {
-  return `${baseIntentId(intentId)}${RESOLVED_SUFFIX}`;
-}
-
 /** Is this record a resolution of a decision, not the decision itself? */
 export function isResolutionRecord(row: Pick<OwnerDecisionIntent, "intentId">): boolean {
   return row.intentId.endsWith(RESOLVED_SUFFIX);
@@ -69,16 +64,4 @@ function compareNewestFirst(a: OwnerDecisionIntent, b: OwnerDecisionIntent): num
   if (a.decidedAt !== b.decidedAt) return a.decidedAt < b.decidedAt ? 1 : -1;
   if (a.intentId === b.intentId) return 0;
   return a.intentId < b.intentId ? 1 : -1;
-}
-
-/**
- * The newest decision recorded about one subject (by `decidedAt`, never log
- * position), or null. A later decision supersedes an earlier one.
- */
-export function latestDecisionFor(
-  rows: readonly OwnerDecisionIntent[],
-  subjectId: string,
-): OwnerDecisionIntent | null {
-  const mine = collapseDecisionLog(rows).filter((r) => r.subjectId === subjectId);
-  return mine.length === 0 ? null : mine[0];
 }

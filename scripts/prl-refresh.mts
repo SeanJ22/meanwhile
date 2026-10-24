@@ -17,10 +17,25 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { isDirectModuleExecution } from "../lib/ops/main-module.ts";
 
 const ARCHIVES = ["profiles-state", "primary-rhetoric", "state-rhetoric", "statements-national", "newsletters", "press-releases", "floor-speeches"] as const;
-export async function refreshPrl(input: { archives: boolean; store: RoutineDataStore; archive: PrlArchiveStore; fetchImpl?: typeof fetch }) {
-  const contractId = input.archives ? "prl-archives" : "prl";
+async function failedPrlAttempt(store: RoutineDataStore, contractId: "prl" | "prl-archives", requestedUrl: string, detail: string) {
   const contract = requiredManualProductionContract(contractId);
+  const attemptedAt = new Date().toISOString();
+  return processRegisteredManualCandidate(store, contractId, failedAcquisitionCandidate({ sourceId: contract.sourceId,
+    recordClass: contract.recordClass, scope: contract.scope, requestedUrl, attemptedAt, failureDetail: detail,
+    parserVersion: contract.parserNormalizerVersion }), attemptedAt);
+}
+
+export async function refreshPrl(input: { archives: boolean; store: RoutineDataStore; archive?: PrlArchiveStore; fetchImpl?: typeof fetch;
+  resolveArchive?: () => PrlArchiveStore }) {
+  const contractId = input.archives ? "prl-archives" : "prl";
   const datasets: PrlDataset[] = (input.archives ? ARCHIVES : ["profiles-national"]).map(requiredPrlDataset);
+  let archive: PrlArchiveStore;
+  try { archive = input.archive ?? (input.resolveArchive ?? resolveS3ArchiveStore)(); }
+  catch (error) {
+    const failed = await failedPrlAttempt(input.store, contractId, datasets[0].url, error instanceof Error ? error.message : String(error));
+    printSourceRunnerReceipt(contractId, failed.candidate.candidate, failed);
+    return 2;
+  }
   const held = input.archives ? await readPrlArchiveProjection({ store: input.store, bypassCache: true }) : null;
   if (held && held.kind !== "PROMOTED" && held.kind !== "NOT_RECORDED") throw new Error("PRL_ARCHIVE_PRIOR_UNAVAILABLE");
   let projection: PrlArchiveProjection = held?.kind === "PROMOTED" ? held.value : { formatVersion: 1, datasets: {} };
@@ -28,10 +43,10 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
   const failures: string[] = [];
   for (const dataset of datasets) {
     try {
-      const prior = projection.datasets[dataset.id] ?? await readReceipt(input.archive, dataset.id);
-      const receipt = await ingestDataset({ dataset, archive: input.archive, now: Date.now(), priorReceipt: prior,
+      const prior = projection.datasets[dataset.id] ?? await readReceipt(archive, dataset.id);
+      const receipt = await ingestDataset({ dataset, archive, now: Date.now(), priorReceipt: prior,
         open: async () => {
-          const source = await openPrlSource(dataset, input.fetchImpl, input.archive,
+          const source = await openPrlSource(dataset, input.fetchImpl, archive,
             prior?.parserVersion === PRL_INGEST_PARSER_VERSION ? prior.sourceSha256 : undefined);
           if (source.outage) failures.push(`${dataset.id}: ${source.outage}`);
           return source;
@@ -51,16 +66,13 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
       last = await processRegisteredManualCandidate(input.store, contractId, candidate, checkedAt);
       if (!last.promoted) throw new Error(last.candidate.failureCode ?? "PRL_PUBLICATION_REFUSED");
       projection = next;
-      await writeReceipt(input.archive, receipt);
+      await writeReceipt(archive, receipt);
     } catch (error) {
       failures.push(`${dataset.id}: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
   if (failures.length) {
-    const attemptedAt = new Date().toISOString();
-    const candidate = failedAcquisitionCandidate({ sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
-      requestedUrl: datasets[0].url, attemptedAt, failureDetail: failures.join("; "), parserVersion: contract.parserNormalizerVersion });
-    last = await processRegisteredManualCandidate(input.store, contractId, candidate, attemptedAt);
+    last = await failedPrlAttempt(input.store, contractId, datasets[0].url, failures.join("; "));
   }
   if (!last) throw new Error("PRL_NO_SOURCE_ATTEMPT");
   printSourceRunnerReceipt(contractId, last.candidate.candidate, last);
@@ -73,5 +85,5 @@ if (isDirectModuleExecution(import.meta.url)) {
     throw new Error("Use --promote with --archives or --dataset=profiles-national through the registered source task.");
   }
   prepareProductionCivicDataWrite();
-  process.exitCode = await refreshPrl({ archives: args.includes("--archives"), store: new PostgresRoutineDataStore(), archive: resolveS3ArchiveStore() });
+  process.exitCode = await refreshPrl({ archives: args.includes("--archives"), store: new PostgresRoutineDataStore() });
 }

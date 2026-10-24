@@ -1,6 +1,7 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { reduceSourceReliability, type SourceReliability, type SourceReliabilityRow } from "../scheduler/scout-reliability.ts";
+import type { SamQuotaHold } from "../../federal-money/sam-quota.ts";
 
 /** The dispatcher's own reducer, so Admin and the runner never disagree about a source's backoff. */
 export const ADMIN_V6_RELIABILITY_CONTRACT = "admin-v6/reliability@1" as const;
@@ -15,12 +16,31 @@ export const RELIABILITY_SQL = `SELECT r.record->'result'->'source'->>'url' AS u
     AND a.value->>'outcome' = 'COMPLETED' AND a.value->>'endedAt' IS NOT NULL AND r.record->'result'->'source'->>'url' ~ '^https?://'`;
 
 /** Structurally `SourceReliabilityRow` in app/(admin)/_mw/admin-v6/model.ts. */
-export interface AdminV6SourceReliability extends SourceReliability { readonly state: "failing" | "recovering" | "healthy" }
+export interface AdminV6SourceReliability extends Omit<SourceReliability, "successes" | "failures" | "consecutiveFailures"> {
+  readonly state: "failing" | "recovering" | "healthy" | "waiting" | "due";
+  readonly successes: number | null;
+  readonly failures: number | null;
+  readonly consecutiveFailures: number | null;
+  readonly quota?: { readonly checkedAt: string; readonly retryAt: string; readonly active: boolean };
+}
+
+/** Routine SAM reads do not produce Scout rows. Its shared quota hold must still be visible. */
+export function withSamQuota(rows: readonly AdminV6SourceReliability[], hold: SamQuotaHold | null, now: string): readonly AdminV6SourceReliability[] {
+  if (!hold) return rows;
+  const source = "https://api.sam.gov";
+  const prior = rows.find(row => row.source === source);
+  const active = Date.parse(now) < Date.parse(hold.retryAt);
+  return [{ source, state: active ? "waiting" : "due", successes: prior?.successes ?? null,
+    failures: prior?.failures ?? null, consecutiveFailures: prior?.consecutiveFailures ?? null,
+    lastAttemptAt: prior && prior.lastAttemptAt > hold.checkedAt ? prior.lastAttemptAt : hold.checkedAt,
+    retryAt: hold.retryAt, detail: "SAM.gov's daily request allowance was reached.",
+    quota: { checkedAt: hold.checkedAt, retryAt: hold.retryAt, active } }, ...rows.filter(row => row.source !== source)];
+}
 
 export function reliabilityView(rows: readonly SourceReliabilityRow[]): readonly AdminV6SourceReliability[] {
   return reduceSourceReliability(rows)
     .map((s): AdminV6SourceReliability => ({ ...s, state: s.consecutiveFailures > 0 ? "failing" : s.failures > 0 ? "recovering" : "healthy" }))
-    .sort((a, b) => b.consecutiveFailures - a.consecutiveFailures || b.failures - a.failures || a.source.localeCompare(b.source))
+    .sort((a, b) => (b.consecutiveFailures ?? 0) - (a.consecutiveFailures ?? 0) || (b.failures ?? 0) - (a.failures ?? 0) || a.source.localeCompare(b.source))
     .slice(0, RELIABILITY_LIMIT);
 }
 

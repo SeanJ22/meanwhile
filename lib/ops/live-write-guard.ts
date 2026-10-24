@@ -4,6 +4,7 @@
 export const LIVE_WRITE_PATHS: readonly string[] = [
   "/api/log",
   "/api/events",
+  "/api/ballot/picks",
   "/api/reactions",
   "/api/feedback",
   "/api/ask",

@@ -32,7 +32,6 @@ function identifiedHeaders(): Record<string, string> {
   };
 }
 
-
 /** The DataTables request the portal answers: filters in the query string, and a body that includes `columns[N][data]`, the projection the action builds its result from. */
 /* The keys the action emits, as measured from a live response. */
 const AZ_DATATABLE_COLUMNS = [
@@ -165,7 +164,6 @@ const AZ_ROUTES: readonly RouteDescriptor[] = [
   },
 ];
 
-
 const NH_ROUTES: readonly RouteDescriptor[] = [
   {
     routeId: "nh-cfs-filing-entity-details",
@@ -253,10 +251,6 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
   },
 ];
 
-
-/** The records this provider schedules when no descriptor file has landed. `readerImpactAt` is null: campaign-finance staleness costs a reader today, so the default cadence applies. */
-export const AZ_PIMA_ELECTION_DATE = "2026-11-03";
-
 function builtInRecords(): ProvidedObligation[] {
   return [
     {
@@ -279,7 +273,6 @@ function builtInRecords(): ProvidedObligation[] {
     },
   ];
 }
-
 
 interface DescriptorFile {
   readonly records?: readonly ProvidedObligation[];

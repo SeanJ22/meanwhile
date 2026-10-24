@@ -2,7 +2,6 @@ import type { WorkerRole } from "../attempt.ts";
 import { fingerprint } from "../ids.ts";
 import { canonicalJson, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
-import type { MethodCandidate } from "../../method/candidate.ts";
 import { assertFleetResult } from "../workers/types.ts";
 import {
   PIPELINE_STAGES,
@@ -22,8 +21,6 @@ import {
   type VerificationCheck,
   type VerificationCheckName,
 } from "./types.ts";
-
-export const PROMOTION_PIPELINE_LOG = "promotion_pipeline";
 
 export interface PipelineContext {
   readonly workerResultById?: (id: string) => import("../workers/types.ts").WorkerResultRecord | null;
@@ -301,32 +298,6 @@ export function scoutedFromScoutResult(result: ScoutResult): ScoutedRecord[] {
       result.findings.map((f) => `${f.kind}: ${f.summary}`).join(" | "),
     ),
   ];
-}
-
-export function scoutedFromMethodCandidate(
-  candidate: MethodCandidate,
-  resultsByAttempt: ReadonlyMap<string, ScoutResult>,
-): ScoutedRecord | null {
-  if (candidate.lifecycle !== "VALIDATED" && candidate.lifecycle !== "PROPOSED") return null;
-  const result = resultsByAttempt.get(candidate.attemptId) ?? null;
-  const proposal = candidate.proposal;
-  const scoutCandidate = result?.candidates.find((c) => c.routeId === proposal.id) ?? null;
-  const itemId = methodCandidateItemId(candidate.id);
-  return {
-    formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
-    recordId: `${itemId}:scouted`,
-    itemId,
-    at: candidate.submittedAt,
-    actor: { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: candidate.attemptId },
-    stage: "SCOUTED",
-    source: { kind: "METHOD_CANDIDATE", candidateId: candidate.id, attemptId: candidate.attemptId, lifecycle: candidate.lifecycle, routeId: proposal.id },
-    recordClass: result?.recordClass ?? scoutCandidate?.recordClass ?? proposal.fields[0] ?? "unknown",
-    subjectId: result?.subjectId ?? proposal.outcome.jurisdiction,
-    canonicalUrl: scoutCandidate?.url ?? null,
-    artifactIds: scoutCandidate?.evidenceArtifactIds ?? [],
-    scoutAttemptId: candidate.attemptId,
-    summary: `method candidate ${candidate.id} (${candidate.lifecycle}): ${proposal.title}`,
-  };
 }
 
 export interface StageCounts {

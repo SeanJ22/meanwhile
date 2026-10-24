@@ -17,7 +17,7 @@ export async function loadPromotedMeasureBallots(state: string, options: Pick<He
   return Object.values(read.value.ballots);
 }
 
-function isChecked(ballot: BallotSet, work: MeasureWork, records: readonly TranslationRecord[]): boolean {
+export function isCheckedMeasureTranslation(ballot: BallotSet, work: MeasureWork, records: readonly TranslationRecord[]): boolean {
   return records.some(row => {
     if (row.kind !== "MEASURE" || row.subjectId !== work.subjectId || row.ocdId !== work.division || translationRecordIssue(row)) return false;
     const attached = withMeasureTranslations(ballot, [row]).measureRecords?.find(record => record.contestId === work.subjectId);
@@ -71,7 +71,7 @@ export async function runMeasureTranslationPass(input: MeasureTranslationProvide
         store: input.store, now: input.now, bypassCache: true,
       });
       const missing = [...work.values()].filter(row => !ballots.some(ballot =>
-        ballot.contests.some(contest => contest.id === row.subjectId && contest.ocdId === row.division) && isChecked(ballot, row, checked)));
+        ballot.contests.some(contest => contest.id === row.subjectId && contest.ocdId === row.division) && isCheckedMeasureTranslation(ballot, row, checked)));
       totalMeasures += work.size;
       checkedBefore += work.size - missing.length;
       checkedAfter += work.size - missing.length;

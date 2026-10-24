@@ -130,7 +130,7 @@ export function stateCalendarMemberResults(run: BoundedChildResult, memberIds: r
   return memberIds.map((id): StateCalendarMemberResult => {
     const ok = { id, signal: null, termination: "EXITED" as const, errorMessage: null, settlementErrorMessage: null };
     if (receipts.has(id)) return { id, run: { ...ok, status: 0, stdout: receipts.get(id)!, stderr: "" } };
-    if (unread.has(id)) return { id, run: { ...ok, status: 1, stdout: "", stderr: unread.get(id)!, errorMessage: `the read of ${id} stopped with an error` } };
+    if (unread.has(id)) return { id, run: { ...ok, status: 1, stdout: "", stderr: unread.get(id)!, errorMessage: `MEETING_PARTITION_READ_FAILED:${unread.get(id)!}` } };
     if (deferred.has(id)) return { id, owed: "not started before the pass deadline" };
     if (cutAtDeadline) return { id, owed: run.errorMessage! };
     if (ending !== null) return { id, owed: `the state's calendar program ended while reading ${ending}` };

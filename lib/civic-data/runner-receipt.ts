@@ -1,3 +1,4 @@
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { factReader } from "../facts/db.ts";
 import { legistarMemberReceiptIssue } from "../sources/legistar/members-tasks.ts";
 import { CANDIDATE_STATES, type CandidateDecision, type CandidateState } from "./types.ts";
@@ -30,8 +31,10 @@ export function routineReceiptFields(
   candidate: { readonly id: string },
   outcome: PromotionOutcome,
 ): Omit<RoutineRunnerReceipt, "source" | "structuralReleaseContract"> {
+  if (!outcome.confirmed && candidate.id !== outcome.candidate.candidate.id &&
+    candidate.id !== outcome.candidate.candidate.retryOfCandidateId) throw new Error("ROUTINE_RECEIPT_CANDIDATE_MISMATCH");
   return {
-    candidateId: outcome.confirmed ? outcome.candidate.candidate.id : candidate.id,
+    candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
     state: outcome.candidate.state,
     decision: outcome.candidate.receipt?.decision ?? null,
@@ -270,14 +273,15 @@ function readerRepairReprovesVersion(expected: ExpectedRoutineRunnerReceipt): bo
  */
 export async function durableRoutineRunnerReceiptIssue(
   receipt: RoutineRunnerReceipt,
-  expected: ExpectedRoutineRunnerReceipt,
+  expectedTask: ExpectedRoutineRunnerReceipt,
   store: DurableReceiptStore,
   expectedOutcome: "SUCCESS" | "HELD",
 ): Promise<string | null> {
   try {
+    let expected = expectedTask;
     if (/^legistar-members:[a-z0-9_-]+$/.test(expected.id)) {
       const query = factReader();
-      if (!query || expectedOutcome !== "SUCCESS") return "The tenant fact check is unavailable";
+      if (!query) return "The tenant fact check is unavailable";
       return await legistarMemberReceiptIssue(query, receipt, expected.id);
     }
     if (receipt.source !== expected.id && receipt.source !== expected.registeredContractId) {
@@ -288,6 +292,16 @@ export async function durableRoutineRunnerReceiptIssue(
     }
     const candidate = await store.readCandidateSummary(receipt.candidateId);
     if (candidate === null) return `candidate ${receipt.candidateId} is not durable`;
+    // A state translation clock covers its local measure divisions too. Its
+    // receipt names a real checked projection in that state, never a synthetic
+    // statewide explainer or a projection belonging to another state.
+    const translationState = /^measure-translations:([A-Z]{2})$/.exec(expected.id)?.[1];
+    const jurisdiction = US_JURISDICTIONS.find(row => row.usps === translationState);
+    if (jurisdiction && expected.recordClass === "CURATED_READER_RECORD" &&
+        expected.scope === `US:plain-english-translations:ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}` &&
+        candidate.candidate.scope.startsWith(`${expected.scope}/`)) {
+      expected = { ...expected, scope: candidate.candidate.scope };
+    }
     if (
       candidate.candidate.id !== receipt.candidateId ||
       candidate.candidate.sourceId !== expected.sourceId ||

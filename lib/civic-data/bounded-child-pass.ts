@@ -260,8 +260,11 @@ export async function runBoundedChildPass(
       activeRuns.set(index, activeRun);
     }
 
-    const gated = waiting().map((index) => domainFreeAt.get(failureDomains[index]!) ?? 0).filter((at) => at > Date.now());
+    const pending = waiting();
+    const gated = pending.map((index) => domainFreeAt.get(failureDomains[index]!) ?? 0).filter((at) => at > Date.now());
     if (activeRuns.size === 0 && gated.length === 0) {
+      // A host's gap can expire between dispatch and this clock read. Offer that waiting work again.
+      if (pending.length > 0) continue;
       throw new Error("BOUNDED_CHILD_DISPATCH_DEADLOCK");
     }
     const wake = gated.length > 0 && activeRuns.size < concurrency

@@ -145,10 +145,6 @@ export function findClaim(k: ClaimStore, id: string): LocatedClaim | null {
   return allClaims(k).find((c) => c.claim.id === id) ?? null;
 }
 
-export function isRetracted(c: MethodClaim): boolean {
-  return Boolean(c.retraction);
-}
-
 export interface DependencyFlag {
   /** The retracted claim id, or the retired route id. */
   upstream: string;

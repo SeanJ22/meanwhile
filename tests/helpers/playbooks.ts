@@ -26,7 +26,7 @@ export function askSnapshot(values: ReaderSettingsSnapshot["values"] = {}): Read
     })) };
 }
 /** Give each test its own published snapshot, as production gives each request one. */
-export const test: typeof nodeTest = Object.assign((...args: unknown[]) => {
+const test: typeof nodeTest = Object.assign((...args: unknown[]) => {
   const body = args.at(-1);
   if (typeof body === "function") args[args.length - 1] = (...input: unknown[]) => withAskSettings(askSnapshot(), () => body(...input));
   return (nodeTest as (...input: unknown[]) => unknown)(...args);

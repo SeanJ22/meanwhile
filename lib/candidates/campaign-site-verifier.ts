@@ -8,8 +8,6 @@ import type { PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 
 export const CAMPAIGN_SITE_VERIFIER_ID = "campaign-site-verifier/1";
 
-export const CURRENT_CYCLE = 2026;
-
 const CYCLE_WINDOW_CHARS = 100;
 
 export interface CampaignSiteIdentity {

@@ -5,9 +5,6 @@ import type { CapabilityGrant } from "../capability.ts";
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
 import { assertResearchResult, type AcquirerResult, type DetectiveResult, type AcquirerTaskSpec } from "./research-types.ts";
-
-/** One wire contract: the broker validates both sides of the disposable worker boundary. */
-export const WORKER_SCHEMA_VERSION = 1 as const;
 export const FLEET_ROLES = ["PARSER", "VALIDATOR", "ADVERSARIAL_AUDITOR", "ACQUIRER", "DETECTIVE"] as const;
 export type FleetRole = (typeof FLEET_ROLES)[number];
 export type ComputationRole = "PARSER" | "VALIDATOR" | "ADVERSARIAL_AUDITOR";

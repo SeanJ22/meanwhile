@@ -240,29 +240,3 @@ export async function divisionsForZip(zip: string, options: GeographyReadOptions
     ...held.filter(row => !layers.some(layer => layer.type === (row.censusLayer ?? row.divisionType))), ...divisions,
   ].map(d => [d.id, d])).values()];
 }
-
-/** Google resolves an address; ZIP-only callers still need the polygon union above.
- * Submitted addresses and API keys are never included in returned provenance. */
-export async function divisionsForAddress(address: string, apiKey: string, options: GeographyReadOptions = {}): Promise<{ id: string; label: string }[]> {
-  const endpoint = "https://www.googleapis.com/civicinfo/v2/divisionsByAddress";
-  const value = await readJson<{ divisions?: Record<string, { name: string }> }>(`${endpoint}?${new URLSearchParams({ address, key: apiKey })}`,
-    { ...options, capture: undefined });
-  return Object.entries(value.divisions ?? {}).map(([id, d]) => ({ id, label: d.name }));
-}
-
-/** All ZIP areas a congressional district, county or state touches. */
-export async function zipsForPlace(place: { type: "congressional_district" | "county" | "state"; state: string; geoid: string }, options: GeographyReadOptions = {}): Promise<string[]> {
-  const fips = stateFips(place.state);
-  if (!fips || !/^\d+$/.test(place.geoid)) throw new Error("A Census state and GEOID are required");
-  const source = place.type === "congressional_district" ? (await legislativeLayers(options)).find(l => l.type === "cd")?.url
-    : await layer("State_County", place.type === "state" ? /^States$/ : /^Counties$/, options);
-  if (!source) throw new Error("No source-qualified congressional plan for this purpose and date");
-  const areas = await query(source, { where: place.type === "state" ? `STATE='${fips}'` : `GEOID='${place.geoid}' AND STATE='${fips}'` }, options);
-  if (!areas.length) throw new Error("Census did not resolve the requested place");
-  const zipLayer = await layer("PUMA_TAD_TAZ_UGA_ZCTA", /^2020 Census ZIP Code Tabulation Areas$/, options);
-  const zips = (await savedResponses(areas.map(async area => {
-    if (!area.geometry) throw new Error("Census returned a place without its boundary");
-    return (await query(zipLayer, { ...spatial(area.geometry), returnGeometry: "false" }, options)).map(f => String(f.attributes.ZCTA5 ?? f.attributes.GEOID));
-  }))).flat();
-  return [...new Set(zips)].sort();
-}

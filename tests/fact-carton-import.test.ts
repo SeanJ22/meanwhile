@@ -149,7 +149,10 @@ test("office addresses and phones readers saw go live on the body's saved page; 
     held: { [agendaUrl]: page("Agenda Committee", "<p>City Clerk's Office, 255 W. Alameda St., Tucson, AZ 85701. Phone (520) 791-4213.</p>") },
     live: { [tcccUrl]: page("Tucson Convention Center Commission", "<p>Meetings are held downtown.</p>") },
   });
-  const carton = await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } }, "AZ");
+  await s.promote("rv-offices", "REGISTRY_RUNTIME_BINDING", ROSTER_SCOPE);
+  let payloadReads = 0;
+  const read = async () => { payloadReads++; return { versionId: "rv-offices", payload: { registry: { bodies } } }; };
+  const carton = await cartonOffices(s.facts.query, read, "AZ");
   assert.deepEqual(carton?.bodies.map(body => body.id), [AGENDA, TCCC, ADJUSTMENT], "only bodies that showed an office are carried");
   const report = await importCartonOffices({ ...carton!, ...s.common });
   assert.deepEqual(report, { rosters: 2, live: 2, confirmed: 0, blanks: 2, unreadable: [{ url: "https://unreachable.example.gov/baj", reason: "FETCH_FAILED:connect ECONNREFUSED" }] });
@@ -164,13 +167,34 @@ test("office addresses and phones readers saw go live on the body's saved page; 
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank ORDER BY entity_id"), [
     { entity_id: ADJUSTMENT, field: "office_phone", stage: "ACQUIRE", reason: "SOURCE_BLOCKED" },
     { entity_id: TCCC, field: "office_address", stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
-  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } }, "AZ"), null, "the carton is carried onto facts once");
+  assert.equal(await cartonOffices(s.facts.query, read, "AZ"), null, "the carton is carried onto facts once");
+  assert.equal(payloadReads, 1, "unchanged registry is skipped before reading the payload");
 });
 
 test("an office phone whose page cannot be read stays open as a SOURCE_BLOCKED blank after the carton is retired", async () => {
   const s = await setup({});
   await importCartonOffices({ state: "AZ", bodies: [BLOCKED_OFFICE], versionId: "rv-offices", ...s.common });
-  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies: [BLOCKED_OFFICE] } } }, "AZ"), null);
+  await s.promote("rv-offices", "REGISTRY_RUNTIME_BINDING", ROSTER_SCOPE);
+  assert.equal(await cartonOffices(s.facts.query, async () => { throw new Error("unchanged payload must not be read"); }, "AZ"), null);
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank"),
     [{ entity_id: ADJUSTMENT, field: "office_phone", stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }], "the phone readers saw is owed, not silently dropped");
+});
+
+test("a deadline yields between rosters and tomorrow's slice resumes without repeating the completed body", async () => {
+  const s = await setup({ held: { [TCCC_URL]: readFileSync(join(ROOT, "tests", "fixtures", "clerksboards", "b15.html"), "utf8") },
+    live: { [AGENDA_URL]: page("Agenda Committee", "<p>Dana Example Chair Rosa Sample Member</p>") } });
+  try {
+    await s.facts.query("CREATE TABLE IF NOT EXISTS pass_cursor (name text PRIMARY KEY, position text NOT NULL)");
+    await s.promote("slice-rosters", "REGISTRY_RUNTIME_BINDING", ROSTER_SCOPE);
+    const readCandidate = async () => ({ candidate: { readModel: { bodyRosters: ROSTERS } } });
+    const carton = await cartonRosters(s.facts.query, readCandidate, ROSTER_SCOPE);
+    let clock = 0;
+    const first = await importCartonRosters({ ...carton!, ...s.common, deadlineMs: 1, clockMs: () => clock++ });
+    assert.equal(first.rosters, 1);
+    assert.ok(await cartonRosters(s.facts.query, readCandidate, ROSTER_SCOPE), "partial import never stamps the whole state finished");
+    const next = await importCartonRosters({ ...carton!, ...s.common, now: "2026-09-09T12:00:00.000Z", deadlineMs: 1, clockMs: () => 0 });
+    assert.equal(next.rosters, 2);
+    assert.equal(next.confirmed, 0, "the first roster was not replayed");
+    assert.equal(await cartonRosters(s.facts.query, readCandidate, ROSTER_SCOPE), null);
+  } finally { await s.facts.pg.close(); }
 });

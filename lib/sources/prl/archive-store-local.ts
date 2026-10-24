@@ -2,12 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync, existsSync, statSync, readdirSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 
-import {
-  assertSafeObjectKey,
-  resolveS3ArchiveStore,
-  type PrlArchiveStore,
-  type PrlObjectMeta,
-} from "./archive-store.ts";
+import { assertSafeObjectKey, type PrlArchiveStore, type PrlObjectMeta } from "./archive-store.ts";
 
 /**
  * The on-disk archive store, for tests, measurement and manual runs only. It is
@@ -60,22 +55,5 @@ export class LocalFileArchiveStore implements PrlArchiveStore {
     };
     walk(this.root);
     return out.sort((a, b) => a.key.localeCompare(b.key));
-  }
-}
-
-/** The default on-disk root for the local store; override with `PRL_ARCHIVE_ROOT`. */
-export function defaultArchiveRoot(env: NodeJS.ProcessEnv = process.env): string {
-  return env.PRL_ARCHIVE_ROOT ?? join(process.cwd(), "data", "prl", "archive");
-}
-
-/**
- * Resolves an archive store for a non-routine caller: the Neon bucket when
- * configured, otherwise the durable local store.
- */
-export function resolvePrlArchiveStore(env: NodeJS.ProcessEnv = process.env): PrlArchiveStore {
-  try {
-    return resolveS3ArchiveStore(env);
-  } catch {
-    return new LocalFileArchiveStore(defaultArchiveRoot(env));
   }
 }

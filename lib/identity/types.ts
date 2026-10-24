@@ -56,27 +56,6 @@ export interface AzCandidateIdentity {
   committees: AzCommitteeLink[];
 }
 
-export interface AzIdentityRegistry {
-  formatVersion: 1;
-  state: "AZ";
-  cycle: number;
-  generatedAt: string;
-  generatedBy: string;
-  sources: { name: string; url: string | null; readAt: string; note: string }[];
-  /** Stated with their denominators. Never a bare count, never a percentage. */
-  denominators: {
-    contests: number;
-    candidates: number;
-    candidatesWithCanonicalCandidacyId: number;
-    candidatesWithoutCanonicalCandidacyId: number;
-    candidatesWithCommitteeIdentity: number;
-    nonFederalCandidates: number;
-    federalCandidates: number;
-  };
-  contests: AzContestIdentity[];
-  candidates: AzCandidateIdentity[];
-}
-
 /**
  * The four outcomes of reconciling ONE certified-lineup nominee against the
  * registry. There is no fifth, and in particular there is no "closest".

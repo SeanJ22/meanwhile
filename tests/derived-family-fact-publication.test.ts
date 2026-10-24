@@ -13,6 +13,7 @@ import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { retainingFetch, tracedResponses } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
@@ -43,6 +44,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       crosswalkRowId: "crosswalk", reviewedAt: anchor, verifiedAt: anchor },
   };
   const snapshots: { generatedAt: string; meetings: readonly unknown[] }[] = [], errors: string[] = [];
+  const acceptedCandidateId = `family:immutable-attempt:${disposition}`;
   let fetched = 0;
   // Run the production controller and fact-publication helper; isolate unrelated wiring, promotion and venue services.
   const run = runInNewContext(transpileModule(`${controllerFunction("publishPartitionFacts")}\n${controllerFunction("promoteDerivedMeetingFamily")}`, {
@@ -67,9 +69,9 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     normalizeFamilyMeetingCitations: (meetings: unknown[]) => meetings, retainPreviouslyVerifiedVenuePoints: (meetings: unknown[]) => meetings,
     placeMeetingsFromVerifiedVenues: (meetings: unknown[]) => ({ meetings, placedCount: 0 }),
     placeMeetingsFromCensusVenues: async ({ snapshot }: { snapshot: { meetings: unknown[] } }) => ({ meetings: snapshot.meetings, held: [], venueReferenceEvidence: [], package: null }),
-    derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async () => ({
-      promoted: disposition === "promoted" ? { versionId: "family" } : null, confirmed: disposition === "confirmed" ? { at: new Date().toISOString() } : null,
-      candidate: { receipt: { decision: "GOOD" }, failureDetail: null },
+    derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async (_store: MemoryRoutineDataStore, _partition: string, candidate: RoutineCandidate) => ({
+      promoted: disposition === "promoted" ? { versionId: acceptedCandidateId } : null, confirmed: disposition === "confirmed" ? { at: new Date().toISOString() } : null,
+      candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
     }),
     printMeetingPartitionReceipt: () => {}, publishVenuePins: async () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
   });
@@ -77,9 +79,10 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   assert.equal(fetched, 1);
   assert.deepEqual(snapshots.map(snapshot => [snapshot.generatedAt, snapshot.meetings.length]), [[anchor, 1]], "acquisition does not move the snapshot's reconciliation window");
   assert.deepEqual(errors, []);
-  const live = await db.query("SELECT f.field, f.checked_at, s.fetched_at FROM fact f JOIN source_copy s ON s.id=f.source_copy_id WHERE f.status='live' ORDER BY f.field");
+  const live = await db.query("SELECT f.field, f.checked_at, f.produced_by, s.fetched_at FROM fact f JOIN source_copy s ON s.id=f.source_copy_id WHERE f.status='live' ORDER BY f.field");
   assert.deepEqual(live.map(row => row.field), ["starts_at", "title"], "fresh acquired title and time pass the real fact checks");
   assert.ok(live.every(row => Date.parse(String(row.checked_at)) >= Date.parse(String(row.fetched_at))));
+  assert.ok(live.every(row => row.produced_by === acceptedCandidateId), "facts credit the accepted immutable attempt, including an unchanged confirmation");
   assert.ok(live.every(row => Date.parse(String(row.fetched_at)) > Date.parse(anchor)), "the copies really arrived after the snapshot anchor");
   assert.deepEqual(await db.query("SELECT reason FROM blank"), []);
 });

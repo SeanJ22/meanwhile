@@ -72,6 +72,7 @@ test("every Census government sits in exactly one state's file, every file is wh
 
   const pids = new Set<string>();
   for (const [code, s] of states) {
+    assert.equal(new Set(s.governments.map(g => g[1])).size, s.governments.length, `${code}: each operational government has one source territory record`);
     const text = readFileSync(join(DIR, `${code}.json`), "utf8");
     assert.equal(createHash("sha256").update(text).digest("hex"), index.states[code].sha256, `${code}.json matches its recorded sha256`);
     assert.equal(s.divisions.length, index.states[code].divisions);

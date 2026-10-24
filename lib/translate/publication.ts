@@ -30,7 +30,6 @@ export function translationPackage(input: {
 }
 
 /** One checked fact publishes through the existing Slide and typed readback. */
-export const measureTranslationPackage = translationPackage;
 export async function publishTranslation(store: RoutineDataStore, input: Parameters<typeof translationPackage>[0]) {
   const packet = translationPackage(input);
   for (;;) {
@@ -53,7 +52,6 @@ export async function publishTranslation(store: RoutineDataStore, input: Paramet
     }
   }
 }
-export const publishMeasureTranslation = publishTranslation;
 
-export { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
-export { readTranslationProjection, readTranslations, withMeasureTranslations } from "./projection-reader.ts";
+;
+export {  readTranslations, withMeasureTranslations } from "./projection-reader.ts";

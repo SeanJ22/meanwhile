@@ -66,6 +66,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   SELECT unnest($2::text[]) AS id
   UNION SELECT split_part(id,'#',1) FROM unnest($3::text[]) body(id) WHERE $9::boolean AND id LIKE 'ocd-division/%'
   UNION SELECT place_id FROM entity_place WHERE $9::boolean AND entity_id=ANY($3::text[])
+  UNION SELECT ep.place_id FROM entity_external_id x JOIN entity_place ep ON ep.entity_id=x.entity_id
+    WHERE $9::boolean AND x.scheme='body-alias' AND x.value=ANY($3::text[])
 ), named_places AS MATERIALIZED (
   SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
@@ -90,28 +92,43 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), runtime_registry AS MATERIALIZED (
   SELECT reader_payload_node(value->'registry') AS value FROM runtime_root
 ), runtime_bodies AS MATERIALIZED (
-  SELECT b.item,header.value FROM runtime_registry r,LATERAL reader_payload_members(r.value->'bodies') b,
-    LATERAL (SELECT reader_payload_node(b.item) AS value) header
-    WHERE header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR header.value->>'id'=ANY($3::text[]) OR $5::boolean
-      OR header.value->>'id' IN (SELECT id FROM owned WHERE kind='body')
+  SELECT DISTINCT ON (header.value->>'id') header.value AS item,header.value,b.ordinal_index
+    FROM runtime_registry r CROSS JOIN LATERAL reader_payload_members(r.value->'bodies') b
+    CROSS JOIN LATERAL (SELECT reader_payload_node(b.item) AS value) original
+    LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=original.value->>'id'
+    LEFT JOIN entity canonical ON canonical.id=alias.entity_id
+    CROSS JOIN LATERAL (SELECT CASE WHEN alias.entity_id IS NULL THEN original.value ELSE original.value || jsonb_build_object(
+      'id',alias.entity_id,'ocdId',coalesce((SELECT place_id FROM entity_place WHERE entity_id=alias.entity_id ORDER BY place_id LIMIT 1),original.value->>'ocdId')) END AS value) header
+    WHERE (header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR header.value->>'id'=ANY($3::text[]) OR $5::boolean
+      OR header.value->>'id' IN (SELECT id FROM owned WHERE kind='body'))
+      AND (alias.entity_id IS NULL OR canonical.state=$1::char(2))
+    ORDER BY header.value->>'id',alias.entity_id IS NOT NULL
 ), ancestors AS (
   SELECT id, parent_id FROM entity WHERE id=ANY(ARRAY(SELECT id FROM selected_places)) AND state=$1::char(2) AND id<>$4
   UNION
   SELECT p.id,p.parent_id FROM ancestors a JOIN entity p ON p.id=a.parent_id WHERE p.state=$1::char(2) AND p.id<>$4
-), linked_bodies AS MATERIALIZED (
-  -- A board filed on the state belongs to the one local government here that shares its website.
-  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_governments lg
-    CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
+), held_body_hosts AS MATERIALIZED (
+  SELECT DISTINCT bh.host FROM entity b JOIN entity_host bh ON bh.entity_id=b.id
+    WHERE b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
+), local_government_hosts AS MATERIALIZED (
+  SELECT lg.g,gh.host FROM local_governments lg
     JOIN entity_host gh ON gh.entity_id=lg.g->>'jurisdictionId'
-    JOIN entity_host bh ON bh.host=gh.host
+    JOIN held_body_hosts held ON held.host=gh.host
+    WHERE NOT EXISTS (SELECT 1 FROM entity_host o JOIN entity og ON og.id=o.entity_id AND og.kind='government' WHERE o.host=gh.host AND o.entity_id<>gh.entity_id)
+      AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
+), linked_bodies AS MATERIALIZED (
+  -- Check shared-site ownership once per government host, then attach its held boards.
+  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_government_hosts lg
+    CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
+    JOIN entity_host bh ON bh.host=lg.host
     JOIN entity b ON b.id=bh.entity_id AND b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
     WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places))
-      AND NOT EXISTS (SELECT 1 FROM entity_host o JOIN entity og ON og.id=o.entity_id AND og.kind='government' WHERE o.host=gh.host AND o.entity_id<>gh.entity_id)
-      AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
     ORDER BY b.id,a->>'divisionId'
 ), covered AS (
   SELECT id FROM ancestors
   UNION SELECT ep.entity_id FROM entity_place ep JOIN ancestors a ON a.id=ep.place_id
+  UNION SELECT g->>'id' FROM local_governments
+  UNION SELECT g->>'jurisdictionId' FROM local_governments WHERE g->>'jurisdictionId' IS NOT NULL
   UNION SELECT id FROM linked_bodies
 ), owned AS (
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN covered c ON c.id=e.id
@@ -121,11 +138,13 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), bodies AS MATERIALIZED (
   SELECT id,kind,name,parent_id,state FROM owned WHERE kind='body'
   UNION SELECT id,kind,name,parent_id,state FROM entity
-    WHERE (id=ANY($3::text[]) OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1::char(2) AND kind='body'
+    WHERE (id=ANY($3::text[]) OR id IN (SELECT x.entity_id FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=ANY($3::text[]))
+      OR id IN (SELECT value->>'id' FROM runtime_bodies) OR $5::boolean) AND state=$1::char(2) AND kind='body'
   UNION SELECT requested.id,'body',coalesce(r.value->>'name',requested.id),coalesce(r.value->>'ocdId',split_part(requested.id,'#',1)),$1
     FROM (SELECT unnest($3::text[]) AS id UNION SELECT value->>'id' FROM runtime_bodies) requested
     LEFT JOIN runtime_bodies r ON r.value->>'id'=requested.id
     WHERE NOT EXISTS (SELECT 1 FROM entity e WHERE e.id=requested.id)
+      AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=requested.id)
 ), body_facts AS MATERIALIZED (
   SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b
     CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=b.id AND status='live'
@@ -138,10 +157,12 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
       FROM fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'),'{}'::jsonb) AS person
   FROM body_facts f WHERE $8::text[] IS NULL AND f.field LIKE 'member:%'
 ), runtime_rosters AS MATERIALIZED (
-  SELECT CASE WHEN $8::text[] IS NULL THEN r.item ELSE (header.value-'members') || jsonb_build_object('members','[]'::jsonb) END AS item,
+  SELECT CASE WHEN $8::text[] IS NULL THEN header.value ELSE (header.value-'members') || jsonb_build_object('members','[]'::jsonb) END AS item,
     CASE WHEN $8::text[] IS NULL THEN header.value ELSE (header.value-'members') || jsonb_build_object('members','[]'::jsonb) END AS value
     FROM runtime_root root,LATERAL reader_payload_members(root.value->'bodyRosters') r,
-    LATERAL (SELECT reader_payload_node(r.item) AS value) header
+    LATERAL (SELECT reader_payload_node(r.item) AS original) source,
+    LATERAL (SELECT CASE WHEN x.entity_id IS NULL THEN source.original ELSE jsonb_set(source.original,'{bodyId}',to_jsonb(x.entity_id)) END AS value
+      FROM (SELECT (SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=source.original->>'bodyId') AS entity_id) x) header
     WHERE header.value->>'bodyId' IN (SELECT id FROM bodies)
 ), runtime_members AS MATERIALIZED (
   SELECT reader_payload_node(m.item) AS value FROM runtime_rosters r,LATERAL reader_payload_members(r.value->'members') m WHERE $8::text[] IS NULL
@@ -365,7 +386,7 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
       AND w.value ? 'publicationOutcome'),'[]'::jsonb) ELSE '[]'::jsonb END AS publication_attempts,
   CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
     || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(
-      'bodies',coalesce((SELECT jsonb_agg(reader_payload_value(b.item)) FROM runtime_bodies b),'[]'::jsonb),
+      'bodies',coalesce((SELECT jsonb_agg(reader_payload_value(b.item) ORDER BY b.ordinal_index) FROM runtime_bodies b),'[]'::jsonb),
       'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(d.item)) FROM runtime_divisions d WHERE d.value->>'ocdId' IN (SELECT id FROM runtime_division_ids)),'[]'::jsonb)),
       'bodyRosters',coalesce((SELECT jsonb_agg(reader_payload_value(item)) FROM runtime_rosters),'[]'::jsonb),
       'rosterReaderDispositions',CASE WHEN $8::text[] IS NULL THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item))
@@ -392,7 +413,7 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     (SELECT l.division FROM linked_bodies l WHERE l.id=b.id),
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
-    split_part(b.id,'#',1)))) FROM bodies b),'[]'::jsonb) AS entities,
+    split_part(b.id,'#',1)),'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
@@ -489,7 +510,8 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
     return { id, division: String(e.division), fields: fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
-      dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [] };
+      dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
+      ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
   const decoded = await parts.loadOwned({rows:row.meeting_rows,archived:row.archived_meetings ?? [],documents:row.archived_documents ?? []},row.parts as Record<string, unknown>) as {

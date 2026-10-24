@@ -9,7 +9,7 @@ import { readRecipe, type ReadDeps, type ReadResult } from "../data-business/rea
 import { daysBefore, periodOf, stateOfDivision } from "../data-business/slice.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CaptureFailures } from "../data-business/live.ts";
-import type { TotalsEntry } from "../data-business/types.ts";
+import type { CandidatePickTotal, TotalsEntry } from "../data-business/types.ts";
 
 export const CAPTURE_DAYS = 14;
 
@@ -43,6 +43,7 @@ export interface CaptureHealthView {
   readonly topics: Block<readonly TopicDay[]>;
   readonly readers: Block<readonly ReaderDay[]>;
   readonly districts: Block<{ readonly week: string; readonly rows: readonly DistrictRow[] }>;
+  readonly candidatePicks: Block<readonly CandidatePickTotal[]>;
   readonly failures: FailuresView;
 }
 
@@ -83,7 +84,7 @@ export async function readCaptureHealth(deps: ReadDeps, config: AdminConfig | nu
   const days = Array.from({ length: CAPTURE_DAYS }, (_, i) => daysBefore(from, -i));
   const gate: ReadDeps = { ...deps, switchOn: (recipe, audience) => switchOn(config, recipe, audience) };
   const ask = (recipe: string, grain: "day" | "week") => readRecipe({ recipe, slice: { from, to, grain }, audience: "admin" }, gate);
-  const [types, topics, readers, districts] = await Promise.all([ask("events-by-type", "day"), ask("topic-vs-free-form", "day"), ask("new-vs-returning", "day"), ask("usage-by-district", "week")]);
+  const [types, topics, readers, districts, candidatePicks] = await Promise.all([ask("events-by-type", "day"), ask("topic-vs-free-form", "day"), ask("new-vs-returning", "day"), ask("usage-by-district", "week"), ask("candidate-pick-totals", "day")]);
 
   const typeRows = totalsOf(types);
   const perType = new Map<string, Map<string, number>>();
@@ -115,6 +116,8 @@ export async function readCaptureHealth(deps: ReadDeps, config: AdminConfig | nu
         const back = readerRows.find((r) => r.period === day && r.label === "Returning readers")?.value ?? 0;
         return { day, readers: n + back, newReaders: n, returning: back };
       }) },
+    candidatePicks: candidatePicks.kind === "READ" && candidatePicks.body.shape === "picks"
+      ? { kind: "READ", rows: candidatePicks.body.rows } : unavailable(candidatePicks),
     districts: districtRows === null || latestWeek === null ? (districtRows === null ? unavailable(districts) : { kind: "READ", rows: { week: periodOf(to, "week"), rows: [] } })
       : { kind: "READ", rows: { week: latestWeek, rows: districtRows.filter((r) => r.period === latestWeek).map((r) => ({ label: r.label, state: (stateOfDivision(r.series) ?? "").toUpperCase(), events: r.value, readers: r.readers, percent: r.percent,
         ...(districts.kind === "READ" && districts.population ? { population: districts.population.find(denominator => denominator.place === r.series)?.fact ?? null } : {}) })) } },

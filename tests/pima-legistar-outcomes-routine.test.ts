@@ -23,7 +23,7 @@ import {
 } from "../lib/civic-data/runner-receipt.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { latestUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
-import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import { pimaLegistarOutcomesCandidate, retainVerifiedSittingRecords } from "../scripts/lib/held-legistar-outcomes.ts";
 import { readDoorOutcomeProjection, resetOutcomeSnapshotCache } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { findClient, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
@@ -116,6 +116,25 @@ function heldSeed(): OutcomeSnapshot {
   } as unknown as PersistedSittingOutcomes;
   return { generatedOn: "2026-08-29", generatedAt: "2026-08-30T05:40:12.819Z", tenants: ["pima"], sittings: [sitting] };
 }
+
+test("an omitted agenda header preserves its original GOOD evidence while a failed vote request leaves unrelated facts publishable", async () => {
+  const prior = heldSeed().sittings[0]!;
+  const fresh: PersistedSittingOutcomes = { ...prior, agenda: [{ ...prior.agenda[0]!, eventItemId: 333759, title: "New official item" }],
+    outcomes: [], rollCalls: [], voteRequestFailures: [{ eventItemId: 333759, reason: "HTTP503 on this item's votes route" }],
+    publication: { ...prior.publication, observedAt: "2026-09-25T18:00:00.000Z" } };
+  const retained = retainVerifiedSittingRecords(fresh, prior);
+  assert.deepEqual(retained.agenda.map(row => row.eventItemId), [333759, prior.agenda[0]!.eventItemId]);
+  assert.equal(retained.agenda[1], prior.agenda[0], "the missing record retains its exact original provenance");
+  assert.equal(retained.outcomes[0], prior.outcomes[0]);
+  assert.equal(retained.agenda[1]!.provenance.readOn, "2026-08-29");
+  const store = await storeHoldingSeed();
+  const outcome = await processRegisteredRoutineCandidate(store, CONTRACT_ID, pimaLegistarOutcomesCandidate({
+    snapshot: { ...heldSeed(), sittings: [retained] }, acquisitions: EVIDENCE,
+    retrievedAt: "2026-09-25T18:00:00.000Z", sourceThrough: "2026-09-25T18:00:00.000Z",
+  }), "2026-09-25T18:00:00.000Z");
+  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "independently verified additions were held");
+  assert.ok(outcome.candidate.candidate.excludedFacts?.some(fact => fact.code === "VOTE_REQUEST_FAILED" && fact.key?.endsWith(":333759")));
+});
 
 const EVIDENCE = [{
   source: CONTRACT_ID,
@@ -328,7 +347,7 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
   const promoted = await processRegisteredRoutineCandidate(memory, CONTRACT_ID, good, "2026-09-20T19:01:00.000Z");
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.promoted?.versionId, good.id);
-  assert.equal(promoted.readerReadback?.status, "PASS");
+  assert.equal(promoted.readerReadback?.status, "PASS", promoted.readerReadback?.detail);
 
   const failed = pimaLegistarOutcomesCandidate({
     snapshot: { ...snapshot, sittings: [{ ...snapshot.sittings[0]!, extraction: "REQUEST_FAILED", extractionNote: "seeded items timeout" }] },
@@ -371,7 +390,7 @@ test("the rolling routine window ends today where the Board sits and reaches bac
   const defaults = parsePimaOutcomeIngestArgs(["--promote", "--slug", "pima"]);
   assert.equal(defaults.from, null);
   assert.equal(defaults.to, null);
-  assert.equal(defaults.maxSittings, 40);
+  assert.equal(defaults.maxSittings, null);
   assert.equal(parsePimaOutcomeIngestArgs(["--dry-run", "--from", "2026-08-01", "--to", "2026-08-31"]).from, "2026-08-01");
 });
 
@@ -569,7 +588,7 @@ test("a refused sitting holds the pass even when a later sitting promotes, and t
   resetOutcomeSnapshotCache();
 });
 
-test("a dry run reads the events route and writes nothing", async () => {
+test("a dry run reads and parses the real items and votes, measures changes, and writes nothing", async () => {
   const store = await storeHoldingSeed();
   const before = await store.readPromotion("MEETING_OUTCOME", SCOPE);
   const client = findClient("pima");
@@ -585,9 +604,19 @@ test("a dry run reads the events route and writes nothing", async () => {
     log: (line) => lines.push(line),
   }));
   assert.equal(result.receiptLine, null);
-  assert.equal(result.exitCode, 0);
-  assert.equal(stub.requests.length, 1);
-  assert.ok(lines.some((line) => line.includes("would walk legistar:pima:1825 — NEW")));
+  assert.equal(result.exitCode, 2, "the fixture's asserted missing roll call remains named incomplete work");
+  assert.ok(result.measurement.failures.some(failure => failure.includes("asserts a roll call")));
+  assert.ok(stub.requests.length > 1);
+  assert.ok(stub.requests.some(url => url.includes("/eventitems")));
+  assert.ok(result.tally.items > 0);
+  assert.ok(result.tally.actedItems > 0);
+  assert.equal(result.measurement.requests, stub.requests.length);
+  assert.ok(result.measurement.factsFound > 0);
+  assert.ok(result.measurement.factsWouldAttach > 0);
+  assert.equal(result.measurement.readOnly, true);
+  assert.equal(result.measurement.dollars, 0);
+  assert.ok(result.measurement.peakMemoryBytes > 0);
+  assert.doesNotMatch(lines.join("\n"), /would walk/);
   assert.equal((await store.readPromotion("MEETING_OUTCOME", SCOPE))?.versionId, before?.versionId);
   resetOutcomeSnapshotCache();
 });

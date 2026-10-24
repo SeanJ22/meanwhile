@@ -1,0 +1,56 @@
+{
+  "checkedAt": "2026-10-23T08:39:36.473Z",
+  "electionDate": "2026-11-03",
+  "retained": "availability and counts only",
+  "scope": "Additional counties with official election-office addresses in registered source seeds",
+  "samples": [
+    {
+      "countyFips": "04003",
+      "available": true,
+      "pollingLocations": 0,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 5,
+      "officialSource": "https://www.cochise.az.gov/509/Voter-Information"
+    },
+    {
+      "countyFips": "06073",
+      "available": true,
+      "pollingLocations": 0,
+      "earlyVoteSites": 221,
+      "dropOffLocations": 154,
+      "officialSource": "https://www.sdvote.com/content/rov/en/elections/vote-center-locations.html"
+    },
+    {
+      "countyFips": "06115",
+      "available": true,
+      "pollingLocations": 0,
+      "earlyVoteSites": 1,
+      "dropOffLocations": 3,
+      "officialSource": "https://www.yuba.gov/Documents/Departments/Departments%20E%20to%20K/Elections/Upcoming%20Election/110326PollingPlaces.pdf?t=202610021835210"
+    },
+    {
+      "countyFips": "48029",
+      "available": true,
+      "pollingLocations": 0,
+      "earlyVoteSites": 58,
+      "dropOffLocations": 0,
+      "officialSource": "https://elections.bexar.gov/DocumentCenter/View/1712/Eearly-Vote-Locations-and-Hours"
+    },
+    {
+      "countyFips": "42101",
+      "available": false,
+      "pollingLocations": 0,
+      "earlyVoteSites": 0,
+      "dropOffLocations": 0,
+      "officialSource": "https://atlas.phila.gov/voting"
+    },
+    {
+      "countyFips": "04019",
+      "available": true,
+      "pollingLocations": 127,
+      "earlyVoteSites": 16,
+      "dropOffLocations": 150,
+      "officialSource": "https://experience.arcgis.com/experience/21445fb10f884caea0aac1ecba764599/"
+    }
+  ]
+}

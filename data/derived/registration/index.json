@@ -5,7 +5,7 @@
  "note": "Each state's divisions ([ocdId, layer, GEOID, Census name], and for a territory's county, county-subdivision and place divisions also [LSAD, FUNCSTAT, CLASSFP]) and governments ([Census id, jurisdiction id, name, type, division index or -1, how it paired or why it did not]). A government pairs by Census code where the Census gives one and by normalized name for school districts; a territory's governments are its divisions whose TIGER/Line status governs (A, B, C, G), with `<layer>:<GEOID>` as their Census id. Nothing unpaired is guessed. No body is minted here. Each state's generatedAt is the date its file last changed.",
  "counts": {
   "states": 56,
-  "governments": 93754,
+  "governments": 93753,
   "placedByStateFipsForABlankPostalCode": 13,
   "byTypeAndPairing": {
    "COUNTY SUBDIVISION GOVERNMENT:TIGER_FUNCSTAT": 14,
@@ -28,10 +28,10 @@
    "SCHOOL DISTRICT:SCHOOL_NAME_LOOSE": 3125,
    "SCHOOL DISTRICT:SCHOOL_NAME_NOT_FOUND": 1985,
    "SCHOOL DISTRICT:STATE_CODES_DISAGREE": 4,
-   "SPECIAL DISTRICT:BOUNDARY_SOURCE": 8709,
-   "SPECIAL DISTRICT:BOUNDARY_SOURCE_ONLY": 698,
+   "SPECIAL DISTRICT:BOUNDARY_SOURCE": 8710,
+   "SPECIAL DISTRICT:BOUNDARY_SOURCE_ONLY": 697,
    "SPECIAL DISTRICT:COUNTY_NAMED": 3274,
-   "SPECIAL DISTRICT:NO_CENSUS_GEOGRAPHY": 27572,
+   "SPECIAL DISTRICT:NO_CENSUS_GEOGRAPHY": 27571,
    "STATE:STATE": 56,
    "TOWNSHIP:COUSUB_FIPS": 16171,
    "TOWNSHIP:NO_DIVISION_FOR_FIPS": 9,
@@ -354,11 +354,11 @@
    "generatedAt": "2026-10-22"
   },
   "nv": {
-   "sha256": "608e6e63757f1bd54056503796f93a4d05c1e86e0f5d77c5d1684bbc130d16a0",
-   "divisions": 315,
-   "governments": 243,
-   "paired": 135,
-   "generatedAt": "2026-10-22"
+   "sha256": "0c0cb8dc67711037b450280bd26cfa0e459de06d4aa62a4007a3ef76979122dc",
+   "divisions": 314,
+   "governments": 242,
+   "paired": 134,
+   "generatedAt": "2026-10-23"
   },
   "ny": {
    "sha256": "2193f149df497904aba0af175fa452ca729788a577a3d3fcbb2fbc8670064271",
@@ -382,11 +382,11 @@
    "generatedAt": "2026-10-22"
   },
   "or": {
-   "sha256": "a23514e1d05efad1ed8ec944a022ae23290742230fa8386315446109a2e2a057",
-   "divisions": 1028,
+   "sha256": "0358109ab76e7ed4b1539b538a634c60622be221f9dfd7f32564aca42ebf5a16",
+   "divisions": 1029,
    "governments": 1541,
-   "paired": 667,
-   "generatedAt": "2026-10-22"
+   "paired": 668,
+   "generatedAt": "2026-10-23"
   },
   "pa": {
    "sha256": "4eb2cfbe51eef9c4347b5a62b0e7ed256a9147ffc5cc72c2e21efb003f7628b8",

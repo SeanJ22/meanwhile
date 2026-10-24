@@ -294,15 +294,3 @@ export const LEVEL_CLASS: Record<JurisdictionLevel, string> = {
   local: "lvl-local",
   school: "lvl-school",
 };
-
-export const LEVEL_LABEL: Record<JurisdictionLevel, string> = {
-  federal: "Federal",
-  state: "State",
-  local: "Local",
-  school: "School",
-};
-
-/** The level a display label names when it is a bare state name (the fleet's "Deployed in" pills). */
-export function levelOfLabel(label: string): JurisdictionLevel | null {
-  return displayNameOf(label).level;
-}

@@ -63,7 +63,7 @@ export function stateFromRegistryRuntimeContractId(id: string): RegistryState | 
 
 export function registryJurisdictions(value: unknown): string[] {
   if (typeof value !== "string") return [];
-  const state = /(?:\/(?:state|district|territory):|^US-|^(?:ballot-|curated:|roster:)?)([a-z]{2})(?=[-:/]|$)/i.exec(value)?.[1]?.toUpperCase();
+  const state = /(?:\/(?:state|district|territory):|^(?:government:)?US-|^(?:ballot-|curated:|roster:)?)([a-z]{2})(?=[-:/]|$)/i.exec(value)?.[1]?.toUpperCase();
   return state && REGISTRY_STATES.includes(state as typeof REGISTRY_STATES[number]) ? [state] : [];
 }
 

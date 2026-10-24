@@ -88,7 +88,7 @@ test("a program never started, or cut at the pass deadline, leaves its unread bo
 
 test("the runner launches one program per state and the program reads its boards in turn, loading the state once", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /const units = groupCalendarReadsByState\(runs, routineFailureDomainRotationSeed\(RUN_STARTED_AT\)\)/);
+  assert.match(runner, /const units = groupCongressReads\(groupCalendarReadsByState\(runs, routineFailureDomainRotationSeed\(RUN_STARTED_AT\)\)\)/);
   assert.match(runner, /capability: "STATE_CALENDARS", contract: unit\.id/);
   const ingest = readFileSync("scripts/ingest.ts", "utf8");
   assert.match(ingest, /async function readStateCalendars/);

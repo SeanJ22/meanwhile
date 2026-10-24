@@ -1,5 +1,6 @@
 import { sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { freezeDurableJson } from "../civic-data/durable-json.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { FEDERAL_MONEY_PARSER, federalMoneyScope, federalMoneyPartitionScope, type FederalMoneyPage, type FederalMoneyProjection, type FederalMoneySource, type FederalMoneyCursor, type FederalMoneyCheckpoint, type FederalMoneyCapture, type FederalMoneyCounts } from "./model.ts";
 import { FEDERAL_MONEY_CONFIG } from "./sources.ts";
@@ -39,14 +40,15 @@ export function federalMoneyCandidate(input: {
   readonly predecessorVersionId?: string | null;
   readonly retainedCaptures?: readonly FederalMoneyCapture[];
 }): RoutineCandidate {
-  const { projection, page, now } = input;
+  const { page, now } = input;
+  const projection = freezeDurableJson(input.projection);
   const source = projection.source;
   const scope = "partition" in projection ? federalMoneyPartitionScope(source, projection.state, projection.partition) : federalMoneyScope(source, projection.state);
   const readModelHash = sha256(canonicalCivicDataJson(projection));
   const hashes = new Set("records" in projection ? projection.records.map(row => row.provenance.rawHash) : []);
   const captures = [...new Map([...input.retainedCaptures ?? [], ...page.captures].filter(row => hashes.has(row.rawHash)).map(row => [row.rawHash, row])).values()];
-  const normalizedPayload: FederalMoneyEvidence = { captures, predecessorVersionId: input.predecessorVersionId ?? null,
-    incomingIds: page.facts.map(row => row.id), readModelHash };
+  const normalizedPayload: FederalMoneyEvidence = freezeDurableJson({ captures, predecessorVersionId: input.predecessorVersionId ?? null,
+    incomingIds: page.facts.map(row => row.id), readModelHash });
   const rawHash = sha256(captures.map(row => row.rawHash).join("\n"));
   const route = FEDERAL_MONEY_CONFIG[source].route;
   const records = "records" in projection ? [...projection.records, { state: projection.state }]

@@ -1,6 +1,7 @@
 import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { AcsNationalLoad, AcsLoadCounts } from "../sources/census-acs-population/national.ts";
@@ -45,9 +46,7 @@ function canonical(value: unknown): string {
 }
 
 export function normalizedHash(value: unknown): string {
-  const encoded = JSON.stringify(value);
-  if (encoded === undefined) throw new Error("NORMALIZED_VALUE_NOT_DURABLE_JSON");
-  return sha256(canonical(JSON.parse(encoded) as unknown));
+  return canonicalCivicDataHash(value, { durable: true });
 }
 
 function candidateId(sourceId: string, scope: string, rawHash: string, retrievedAt: string): string {
@@ -1212,7 +1211,7 @@ export function fecFundingCandidate(input: {
     identities: snapshot.candidates.map((row) => ({ subjectId: row.fecCandidateId, jurisdiction: "US", identifiers: { candidate_id: row.fecCandidateId, ...(row.principalCommitteeId ? { committee_id: row.principalCommitteeId } : {}) }, matchBasis: row.matchRoutes.every((route) => route === "bioguide-bridge" || route === "roster-person-reuse") ? "OFFICIAL_ID_CROSSWALK" as const : "EXACT_SCOPED_ID" as const, ambiguous: false, office: row.office, district: row.district ?? undefined })),
     temporal: { version: String(snapshot.cycle), expectedVersion: String(snapshot.cycle), sourceThrough, staleAtRetrieval: false },
     semantics: { factKind: "FEC-filed candidate/committee totals and itemized receipts", violations },
-    horizon: { kind: "OPEN_FACT_SET", query: `FEC House and Senate registrations for election ${snapshot.cycle}; optional receipt classes remain standing work`, returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
+    horizon: { kind: "OPEN_FACT_SET", query: `FEC House and Senate registrations for election ${snapshot.cycle}; prior verified filings retain their original periods and source dates; optional receipt classes remain standing work`, returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/funding/snapshot.ts", passed: snapshot.candidates.length > 0 && new Set(snapshot.candidates.map((row) => row.fecCandidateId)).size === snapshot.candidates.length, detail: `${snapshot.candidates.length} unique FEC candidate projections.` },

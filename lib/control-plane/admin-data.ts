@@ -11,14 +11,7 @@ import type { WorkItem } from "./work-item.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "./scheduler/research-policy.ts";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "./gateway/admin-config.ts";
 import { installMeetingClockFrom } from "../meetings/settings.ts";
-import {
-  assertAggregateOnly,
-  type CacheObservationRecord,
-  type OwnerDecisionIntent,
-  type OwnerDigestRecord,
-  type OwnerSnapshot,
-  type RunnerHeartbeat,
-} from "./owner-surface.ts";
+import { assertAggregateOnly, type OwnerDecisionIntent, type OwnerDigestRecord, type OwnerSnapshot, type RunnerHeartbeat } from "./owner-surface.ts";
 
 export const SNAPSHOT_ID = "current";
 export const RUNNER_ID = "pilot-runner";
@@ -111,14 +104,6 @@ export async function readHeartbeat(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<RunnerHeartbeat>> {
   return readAggregate(repos, "runner heartbeat", () => repos.runnerHeartbeat.read(RUNNER_ID));
-}
-
-export async function readCacheObservation(
-  repos: ControlPlaneRepositories,
-): Promise<ReadOutcome<CacheObservationRecord>> {
-  return readAggregate(repos, "organic prod-ask cache observation", () =>
-    repos.cacheObservations.read(CACHE_OBSERVATION_ID),
-  );
 }
 
 export async function readDigests(

@@ -72,37 +72,6 @@ export const CLAIM_SHAPES: readonly ClaimShape[] = [
   },
 ];
 
-/**
- * A sentence that QUOTES a claim in order to correct it; a sweep with no notion
- * of this would flag every recorded correction forever.
- */
-const CORRECTION_MARKERS =
-  /\bcorrected\s+\d{4}-\d{2}-\d{2}|\bthis\s+(?:read|said)\b|\bpreviously\s+read\b|\bused\s+to\s+(?:read|say)\b/i;
-
-export function isCorrectionNote(text: string): boolean {
-  return CORRECTION_MARKERS.test(text);
-}
-
-/**
- * Lines that MUST NOT be flagged: sentences this product is required to be
- * able to say, planted beside the defects.
- */
-export const KNOWN_GOOD: readonly string[] = [
-  "We haven't sourced a voting record for this person yet.",
-  "We haven't collected this person's voting record yet.",
-  "We haven't recorded this chamber's vote on this yet.",
-  "We haven't sourced who holds this seat yet",
-  "Nothing on this card has a source record yet.",
-  "We could not place this address on the map, so it has no pin.",
-  "We found no committee registered with the FEC for this candidacy.",
-  "Candidates who raise or spend under $5,000 don't have to register.",
-  /* Honest forms of a no-website statement: facts about a measurement or about us. */
-  "Two official enumerations record this district's website field as blank.",
-  "We have not found a website for this district.",
-  "No source we reached publishes a website for this body.",
-  "This district operates no schools and employs no staff.",
-];
-
 export interface ClaimHit {
   readonly shape: string;
   readonly why: string;

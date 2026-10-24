@@ -4,12 +4,7 @@ import { canonicalCivicDataJson } from "./changes.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import { crosswalkListIssues, crosswalkRowId, crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "./meeting-body-crosswalk.ts";
-import {
-  civicDataReadNotInitialized,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "./read-model.ts";
+import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 
 export const DERIVED_CROSSWALK_CONTRACT_ID = "meeting-body-crosswalk-derived" as const;
@@ -17,8 +12,6 @@ export const DERIVED_CROSSWALK_SOURCE_ID = "meeting-source-wiring" as const;
 export const DERIVED_CROSSWALK_RECORD_CLASS = "CURATED_READER_RECORD" as const;
 export const DERIVED_CROSSWALK_SCOPE = "US:meeting-body-crosswalk-derived" as const;
 const DERIVED_CROSSWALK_PARSER = "meeting-source-wiring/1" as const;
-
-export const AUTO_CROSSWALK_REVIEWER_PREFIX = "auto-crosswalk-reviewer@" as const;
 const REVIEWER = /^auto-crosswalk-reviewer@[0-9a-f]{12}$/;
 
 export interface DerivedCrosswalkProjection {
@@ -78,8 +71,6 @@ export interface AutoCrosswalkReview {
   readonly held: readonly AutoCrosswalkHold[];
 }
 
-const text = (value: unknown): value is string => typeof value === "string" && value.trim() !== "";
-
 export function derivedCrosswalkProjectionIssue(value: unknown): string | null {
   const v = value as Partial<DerivedCrosswalkProjection> | null;
   if (typeof v !== "object" || v === null || v.kind !== "meeting-body-crosswalk-derived" || v.formatVersion !== 1 || !Array.isArray(v.records)) {
@@ -109,10 +100,6 @@ export async function readDerivedMeetingBodyCrosswalk(
   }
   installed = result;
   return result;
-}
-
-export function derivedMeetingBodyCrosswalkReadState(): CivicDataReadResult<DerivedCrosswalkProjection> {
-  return installed ?? civicDataReadNotInitialized(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, "The automatic meeting-body crosswalk has not been read for this process.");
 }
 
 /** Everything that defines the connection, and nothing that moves with a re-read. */
@@ -338,8 +325,4 @@ export function composeCrosswalk(
     kept.push(row);
   }
   return { rows: [...reviewed, ...kept], automaticIds: new Set(kept.map((row) => row.id)), shadowed };
-}
-
-export function isAutomaticCrosswalkRow(row: Pick<MeetingBodyCrosswalkRow, "reviewedBy">): boolean {
-  return text(row.reviewedBy) && REVIEWER.test(row.reviewedBy);
 }

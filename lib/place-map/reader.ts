@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
-import { placesAtPoint, placesForCode } from "./read.ts";
+import { placesAtPoint, placesForCode, CURRENT_LOCAL_BOUNDARY_SQL } from "./read.ts";
 import type { PlaceMapResult } from "./types.ts";
 import { currentRepresentationSelection, type GeographySelection } from "../census-geography/selection.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
@@ -71,7 +71,7 @@ export async function readStateZipPlaces(input: string, selection: GeographySele
     b.county_attachment, b.host_county_id, m.share, m.share_basis, m.partial, m.fringe
     FROM zip_place m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.zip=ANY($1::text[]) ORDER BY m.zip,e.id,b.boundary_year`, [codes.map(row => String(row.zip))]);
+    WHERE m.zip=ANY($1::text[]) AND ${CURRENT_LOCAL_BOUNDARY_SQL} ORDER BY m.zip,e.id,b.boundary_year`, [codes.map(row => String(row.zip))]);
   const byCode = new Map<string, Record<string, unknown>[]>();
   for (const row of rows) { const code = String(row.zip), held = byCode.get(code) ?? []; held.push(row); byCode.set(code, held); }
   for (const [code, held] of byCode) {

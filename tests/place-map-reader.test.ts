@@ -6,6 +6,9 @@ import { readerRoute } from "../lib/api/reader-route.ts";
 import { readerLocation } from "../lib/reader/location.ts";
 import { readPointPlace, readZipPlace, withPlaceMapReads } from "../lib/place-map/reader.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { PGlite } from "@electric-sql/pglite";
+import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
+import type { Query } from "../lib/facts/publish.ts";
 
 const state = (code: string) => `ocd-division/country:us/state:${code.toLowerCase()}`;
 const row = (id: string, code: string, layer: string, version: string, extra: Record<string, unknown> = {}) => ({
@@ -84,4 +87,40 @@ test("ZIP ballots retain every selected race including fringe membership without
     });
     assert.equal(calls,1);
   } finally { installFactReader(undefined); }
+});
+
+test("the next map refresh changes point and ZIP membership while preserving the place's id and older boundaries", async () => {
+  const db = new PGlite(), county = `${state("AZ")}/county:fixture`;
+  try {
+    await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,name text,state char(2));
+      CREATE TABLE entity_external_id(entity_id text REFERENCES entity(id),scheme text,value text,PRIMARY KEY(scheme,value));
+      CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
+      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+    await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql","utf8"));
+    const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});
+    const map = (year:number,west:number,east:number,zip:string):StatePlaceMap => ({
+      places:[state("AZ"),county].map(id=>({id,name:id,state:"AZ",aliases:[]})),
+      boundaries:[{placeId:state("AZ"),layer:"state",boundaryYear:2023,version:"state:2023",geometry:square(-116,-110)},
+        {placeId:county,layer:"county",boundaryYear:year,version:`county:${year}`,geometry:square(west,east)}]
+        .map(value=>({...value,countyAttachment:false,hostCountyId:null,sourceUrls:["https://www.census.gov/"],checkedAt:`${year}-01-01T00:00:00Z`})),
+      zipEdges:[{code:zip,placeId:county,boundaryYear:year,share:1,shareBasis:"area",partial:false,fringe:false},
+        {code:zip,placeId:state("AZ"),boundaryYear:2023,share:1,shareBasis:"area",partial:false,fringe:false}],zctaEdges:[],
+    });
+    const query:Query=async(sql,params=[]) => (await db.query(sql,[...params])).rows as Record<string,unknown>[];
+    const transaction=<T,>(read:(query:Query)=>Promise<T>)=>db.transaction(tx=>read(async(sql,params=[]) => (await tx.query(sql,[...params])).rows as Record<string,unknown>[]));
+    installFactReader(query);
+    await loadStatePlaceMap({transaction},map(2023,-112,-110,"85701"));
+    await withPlaceMapReads(async()=>{
+      assert.ok((await readPointPlace(32,-111)).ids.includes(county));
+      assert.ok((await readZipPlace("85701"))?.ids.includes(county));
+    });
+    await loadStatePlaceMap({transaction},map(2026,-116,-114,"86001"));
+    await withPlaceMapReads(async()=>{
+      assert.ok(!(await readPointPlace(32,-111)).ids.includes(county),"a removed point membership cannot revive its older boundary");
+      assert.ok(!(await readZipPlace("85701"))?.ids.includes(county),"a removed ZIP membership cannot revive its older boundary");
+      assert.ok((await readZipPlace("86001"))?.ids.includes(county));
+    });
+    assert.equal((await query("SELECT count(*)::int n FROM entity WHERE id=$1",[county]))[0].n,1);
+    assert.equal((await query("SELECT count(*)::int n FROM place_boundary WHERE place_id=$1",[county]))[0].n,2);
+  } finally {installFactReader(undefined);await db.close();}
 });

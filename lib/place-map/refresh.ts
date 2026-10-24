@@ -3,7 +3,8 @@ import { join } from "node:path";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { loadRegistrationReference } from "../registration/reference.ts";
 import { readCensusGovernmentFacts } from "../registration/jurisdictions.ts";
-import { shardEntry, type ZipDivisionEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
+import { legacyZipEntry, type LegacyZipShard } from "./legacy.ts";
+import type { PlaceEntry } from "./reader.ts";
 import { acquireDataset } from "../census-geography/acquire.ts";
 import type { BuiltDataset } from "../census-geography/dataset.ts";
 import type { CensusSourceOptions } from "../census-geography/source-release.ts";
@@ -19,14 +20,14 @@ import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 
 /** Read only the legacy shards touching this state. Their source is explicitly
  * Census ZCTAs; the independent Census universe confirms each ZCTA row. */
-async function stateLegacy(root: string, state: string): Promise<Map<string, ZipDivisionEntry>> {
+async function stateLegacy(root: string, state: string): Promise<Map<string, PlaceEntry>> {
   const manifest = JSON.parse(await readFile(join(root, "data/derived/zip-divisions/index.json"), "utf8")) as { statesToShards: Record<string, string[]> };
-  const result = new Map<string, ZipDivisionEntry>();
+  const result = new Map<string, PlaceEntry>();
   for (const shard of manifest.statesToShards[state] ?? []) {
     if (!/^\d{2}$/.test(shard)) throw new Error("Invalid ZIP shard");
-    const data = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${shard}.json`), "utf8")) as ZipDivisionShard;
+    const data = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${shard}.json`), "utf8")) as LegacyZipShard;
     for (const zip of Object.keys(data.zips)) {
-      const entry = shardEntry(data, zip)!;
+      const entry = legacyZipEntry(data, zip)!;
       if ([...entry.ids, ...entry.fringe ?? []].some(id => id.includes(`:${state.toLowerCase()}/`) || id.endsWith(`:${state.toLowerCase()}`))) result.set(zip, entry);
     }
   }

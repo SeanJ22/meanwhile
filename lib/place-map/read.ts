@@ -10,6 +10,11 @@ const districtTypes: Readonly<Record<string, GeographyType>> = {
 const fields = `e.id AS place_id, e.name, e.state, b.layer, b.boundary_year, b.version,
   b.county_attachment, b.host_county_id`;
 
+/** Choose the current local boundary before testing membership. Older shapes
+ * remain held, but cannot return a place the newer boundary no longer covers. */
+export const CURRENT_LOCAL_BOUNDARY_SQL = `(b.layer IN ('cd','sldu','sldl') OR b.boundary_year=(
+  SELECT max(current.boundary_year) FROM place_boundary current WHERE current.place_id=b.place_id))`;
+
 function membership(row: Record<string, unknown>): PlaceMembership {
   return { placeId: String(row.place_id), name: String(row.name), state: row.state == null ? null : String(row.state),
     layer: String(row.layer), boundaryYear: Number(row.boundary_year), version: String(row.version),
@@ -37,7 +42,7 @@ export async function placesForCode(query: Query, kind: "zip" | "zcta", code: st
   const rows = await query(`SELECT ${fields}, m.share, m.share_basis, m.partial, m.fringe
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.${kind}=$1 ORDER BY e.id, b.boundary_year`, [code]);
+    WHERE m.${kind}=$1 AND ${CURRENT_LOCAL_BOUNDARY_SQL} ORDER BY e.id, b.boundary_year`, [code]);
   const memberships = selected(rows.map(membership), selection);
   return { memberships, states: [...new Set(memberships.flatMap(row => row.state ? [row.state] : []))].sort() };
 }
@@ -48,10 +53,10 @@ export async function placesAtPoint(query: Query, point: [number, number],
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!Number.isFinite(point[0]) || !Number.isFinite(point[1]) || Math.abs(point[0]) > 180 || Math.abs(point[1]) > 90) throw new Error("A geographic map point is required");
   const rows = await query(`WITH candidates AS MATERIALIZED (
-      SELECT b.* FROM place_boundary b WHERE b.bounds @> point($1::float8, $2::float8)
+      SELECT b.* FROM place_boundary b WHERE b.bounds @> point($1::float8, $2::float8) AND ${CURRENT_LOCAL_BOUNDARY_SQL}
     ) SELECT ${fields}, b.geometry, false AS partial FROM candidates b JOIN entity e ON e.id=b.place_id
     UNION ALL SELECT ${fields}, NULL AS geometry, true AS partial FROM place_boundary b
-      JOIN entity e ON e.id=b.place_id WHERE b.county_attachment
+      JOIN entity e ON e.id=b.place_id WHERE b.county_attachment AND ${CURRENT_LOCAL_BOUNDARY_SQL}
       AND b.host_county_id IN (SELECT place_id FROM candidates WHERE layer='county')`, point);
   const exact = rows.filter(row => row.geometry && contains(point, {
     properties: { ocdId: String(row.place_id), label: String(row.name) }, geometry: row.geometry as GeoFeature["geometry"],

@@ -7,12 +7,22 @@
 
 import { observeChange } from "./observed-rate.ts";
 import { feedDoorId, isDoorRecord, type DoorRepository } from "./registry.ts";
+import { doorPartitionIds } from "./mission-refresh.ts";
+import { meetingPartitionIdentity } from "../meetings/body-scope.ts";
 
 export type DoorOutcome = "SUCCESS" | "FAILURE";
 
-/** The door a routine task's read lands on: its meeting door (the task's own id) or its feed door. Null when it has neither. */
+/** The registry's stable door id survives a corrected body identity; match only the exact current body/source/route. */
 export async function taskDoorId(repo: DoorRepository, taskId: string): Promise<string | null> {
-  if ((await repo.read(taskId)) !== null) return taskId;
+  const direct = await repo.read(taskId);
+  if (direct !== null && isDoorRecord(direct.value) &&
+      (direct.value.meeting == null || doorPartitionIds(direct.value).includes(taskId))) return taskId;
+  const identity = meetingPartitionIdentity(taskId);
+  if (identity && identity.source !== "derived") {
+    const matches = (await repo.listWhere(["bodyIds", "0"], identity.bodyId)).filter(row =>
+      isDoorRecord(row.value) && row.value.status !== "SUSPENDED" && doorPartitionIds(row.value).includes(taskId));
+    return matches.length === 1 ? matches[0]!.id : null;
+  }
   const feed = feedDoorId(taskId);
   return (await repo.read(feed)) !== null ? feed : null;
 }

@@ -14,6 +14,7 @@ export function routeProcessExecutor(input: {
   readonly vault: VaultPut;
   readonly slots?: WorkerProcessSlots;
   readonly onStarted?: (pid: number) => void;
+  readonly deadlineMs?: number;
 }): DeclaredExecutor {
   const original: DeclaredExecutor = { lane: "DETERMINISTIC",
     workerFor: ({ holder }) => ({ role: "ACQUIRER", provider: "we-the-people",
@@ -27,8 +28,8 @@ export function routeProcessExecutor(input: {
       root: input.root, postgres: input.postgres, fileStoreRoot: input.fileStoreRoot,
       taskIds: [request.routeTaskId ?? request.obligation.obligation.id], modelEnabled: false,
       searchEnabled: false, ceilingUsd: 0, fundedSubjects: [],
-      routeDispatch: { input: { ...data, liveClock: Boolean(clock), maturity: maturity(request.obligation.obligation.routeId) }, route: input.route },
-    }, slots: input.slots, capacity: () => 1, onStarted: input.onStarted,
+      routeDispatch: { input: { ...data, liveClock: Boolean(clock), maturity: maturity(request.obligation.obligation.routeId) }, route: input.route, deadlineMs: input.deadlineMs },
+    }, deadlineMs: input.deadlineMs === undefined ? undefined : input.deadlineMs + 30_000, slots: input.slots, capacity: () => 1, onStarted: input.onStarted,
       transportFor: () => async () => { throw new Error("PLAIN_CODE_MODEL_CALL_REFUSED"); },
       route: { tool: async (name, args) => {
         if (name === "openOne") return input.openOne(...args as Parameters<OpenOne>);

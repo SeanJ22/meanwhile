@@ -5,6 +5,7 @@ import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 import { sameOffice } from "../officials/office-identity.ts";
+import { meetingDoorRemovalCheck } from "../doors/meeting-door-removal.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
@@ -13,7 +14,7 @@ import {
   MEETING_READER_SERVING_WINDOW_CONTRACT,
   MEETING_READER_SERVING_WINDOW_CONTRACT_V1,
   meetingLegacyServingWindowAt,
-  meetingReaderServingWindowAt,
+  meetingHeldWindowAt,
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
@@ -26,6 +27,8 @@ import {
 } from "../sources/event-identity.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import { registrationHeldReplayIsExact } from "../registration/held-evidence.ts";
+import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement } from "../ballot/voting-source-replacement-contract.ts";
+import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import type {
   CandidateDecision,
   CandidateState,
@@ -33,6 +36,7 @@ import type {
   AuditPullRemovalEvidence,
   MovedToFactStoreRemovalEvidence,
   FederalRepartitionRemovalEvidence,
+  VotingSourceReplacementRemovalEvidence,
   CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
@@ -322,6 +326,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
 
+  const suspendedDoor = meetingDoorRemovalCheck(candidate);
+  if (suspendedDoor !== null) return suspendedDoor;
+
   const reclassified = retirementAuthorized ? retirementBallotReclassificationCheck(candidate) : null;
   if (reclassified !== null) return reclassified;
 
@@ -342,6 +349,31 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
         row.targetScope !== candidate.scope && row.targetScope.startsWith(`${candidate.sourceId}:`) && Boolean(row.targetVersionId)));
     return result("COMPLETENESS_HORIZON_VALIDITY", valid ? "PASS" : "FAIL", valid ? "FEDERAL_RECORD_REPARTITIONED" : "FEDERAL_REPARTITION_UNPROVEN",
       valid ? "Every moved federal record is already held in its verified destination partition." : "Federal record removal has no verified destination partition.");
+  }
+
+  if (candidate.recordClass === "VOTING_SITE") {
+    const proof = votingSourceReplacement(candidate.normalizedPayload);
+    const checked = sourceChecks.some(check => check.passed &&
+      check.consumer === `${VOTING_SOURCE_REPLACEMENT_VERIFIER} (source-scoped pre-promotion)`);
+    const keys = new Set(evidence.map(row => row.key));
+    const previous = (prior?.candidate.readModel as VotingSitesFile | undefined)?.jurisdictions?.find(row => row.ocdId === proof?.jurisdictionId);
+    const current = (candidate.readModel as VotingSitesFile).jurisdictions?.find(row => row.ocdId === proof?.jurisdictionId);
+    const covered = new Set(proof?.replaceSourceUrls ?? []);
+    const valid = proof !== null && checked && candidate.sourceId === "voting-sites" &&
+      previous?.electionDate === proof.electionDate && current?.electionDate === proof.electionDate &&
+      keys.size === removed.length && evidence.length === removed.length && removed.every(delta => {
+        const row = evidence.find(row => row.key === delta.key);
+        if (row?.code !== "OFFICIAL_VOTING_SOURCE_REPLACED" || row.jurisdictionId !== proof.jurisdictionId || row.electionDate !== proof.electionDate) return false;
+        const site = previous.sites.find(site => delta.key === `site:${previous.ocdId}:${site.id}`);
+        if (!site || canonicalCivicDataHash(site) !== canonicalCivicDataHash(delta.before)) return false;
+        const sources = new Set(site.sources?.length ? site.sources.map(source => source.url) : [previous.sourceUrl]);
+        return sources.size > 0 && new Set(row.sourceUrls).size === row.sourceUrls.length && row.sourceUrls.length === sources.size &&
+          row.sourceUrls.every(url => sources.has(url) && covered.has(url));
+      });
+    return result("COMPLETENESS_HORIZON_VALIDITY", valid ? "PASS" : "FAIL",
+      valid ? "OFFICIAL_VOTING_SOURCE_REPLACED" : "VOTING_SOURCE_REPLACEMENT_UNPROVEN",
+      valid ? "Every retired site belongs entirely to the official source group replayed from saved bytes; independently published sites remain held." :
+        "Voting-site removal requires complete saved-source replay and exact prior jurisdiction, election, member and publisher evidence for every removed key.");
   }
 
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
@@ -377,8 +409,8 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
-  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence | FederalRepartitionRemovalEvidence>>();
-  const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence | FederalRepartitionRemovalEvidence | VotingSourceReplacementRemovalEvidence>>();
+  const registeredWindow = meetingHeldWindowAt(candidate.retrieval.retrievedAt);
     // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
   let currentMembers: ReadonlyMap<string, unknown> | null = null;
@@ -393,7 +425,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     if (row.code === "REMOVED_BY_AUDIT_PULL") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; an audit pull removes only curated Reader members.`);
     }
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED" || row.code === "OFFICIAL_VOTING_SOURCE_REPLACED") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry removal cannot prove it.`);
     }
     const before = object(delta.before);
@@ -508,7 +540,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED" || row.code === "OFFICIAL_VOTING_SOURCE_REPLACED") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);
@@ -915,9 +947,11 @@ export function validateRoutineCandidate(
       ((candidate.sourceId === "plural-openstates-votes" && candidate.normalization.parserVersion === "plural-votes/2") ||
        (candidate.sourceId === "legiscan" && candidate.normalization.parserVersion === "legiscan-votes/1"))) {
     checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_NEW_VOTES", "The source was checked successfully and added no votes. No absence is inferred."));
-  } else if (retirementAuthorized && lastKnownGood === null && !candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
-    checks.push(result("ABSENCE_VALIDITY", "PASS", "INITIAL_STATE_PARTITION_NO_ABSENCE_CLAIM",
-      "The pinned GOOD source has no held members for this initial state partition; no absence in the real world is asserted."));
+  } else if (retirementAuthorized && !candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0 &&
+      (lastKnownGood === null || (candidate.changeSet?.removed.length === 0 &&
+        (statePublicationPriorOf(lastKnownGood.candidate)?.members.size ?? civicRecordsFor(lastKnownGood.candidate.recordClass, lastKnownGood.candidate.readModel).length) === 0))) {
+    checks.push(result("ABSENCE_VALIDITY", "PASS", lastKnownGood === null ? "INITIAL_STATE_PARTITION_NO_ABSENCE_CLAIM" : "UNCHANGED_EMPTY_STATE_PARTITION_NO_ABSENCE_CLAIM",
+      "The pinned GOOD source has no held members to add to this empty state partition, and no held state fact is removed; no absence in the real world is asserted."));
   } else if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
     checks.push(result("ABSENCE_VALIDITY", "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE", "The query returned zero records but carries no competent bounded absence evidence."));
   } else if (!candidate.absence.claimsAbsence) {

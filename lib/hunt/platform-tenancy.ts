@@ -1,32 +1,5 @@
 import { defaultPlatformFingerprints, platformFingerprints, type PlatformFingerprint } from "../control-plane/platform-fingerprints.ts";
 import type { FieldManualEntry } from "../control-plane/field-manual.ts";
-/**
- * Is this body a tenant of a platform we already read? Detected by shape, in
- * increasing strength, and kept apart on the result:
- *
- *   1. LINKED: the body's own page links out to a vendor host.
- *   2. SERVED_BY: a vendor's markup fingerprint on the body's own domain
- *      (CivicPlus, Revize and Apptegy host under the customer's name).
- *   3. DERIVED_LEAD: a guessed tenant path answers. A lead, never a hit: a
- *      200 says a tenant of that name exists, not that it is this body's.
- */
-
-/** Every platform this project already has an adapter for. */
-export const KNOWN_PLATFORMS = defaultPlatformFingerprints().filter(p => p.haveAdapter);
-
-export type PlatformId = string;
-
-/**
- * Platforms we can recognise but have no adapter for: scoped work, a
- * different fact from publishing nothing machine-readable.
- */
-export const UNHANDLED_PLATFORMS = defaultPlatformFingerprints().filter(p => !p.haveAdapter);
-
-/**
- * Markup fingerprints for vendors that host under the customer's own domain,
- * which a link-out test cannot find.
- */
-export const MARKUP_FINGERPRINTS = defaultPlatformFingerprints().flatMap(p => p.markup.map(f => ({ ...f, platform: p.id })));
 
 export type TenancyStrength = "LINKED" | "SERVED_BY" | "DERIVED_LEAD";
 
@@ -104,51 +77,4 @@ export function detectTenancy(html: string, pageUrl: string, entries?: readonly 
   }
 
   return hits;
-}
-
-/** Candidate tenant slugs derived from a host, for the LEAD probe. */
-export function derivedSlugs(host: string): readonly string[] {
-  const bare = host.replace(/^www\./i, "").split(".")[0];
-  if (!bare || bare.length < 3) return [];
-  const out = new Set<string>([bare]);
-  /* `<place>township` → also `<place>`: a vendor slug is usually the place,
-   * not the place plus its form of government. */
-  for (const suffix of ["township", "borough", "county", "city", "town", "village", "sd", "usd"]) {
-    if (bare.endsWith(suffix) && bare.length > suffix.length + 2) out.add(bare.slice(0, -suffix.length));
-  }
-  return [...out];
-}
-
-export interface TenancyRow {
-  readonly body: string;
-  readonly url: string;
-  readonly hits: readonly TenancyHit[];
-}
-
-/**
- * A four-way split rather than a count: reachable now, on a platform we do
- * not handle, nothing machine-readable detected, and could not read.
- */
-export interface TenancySplit {
-  /** Bodies on a platform we already read. THE CHEAP COVERAGE. */
-  readonly reachableNow: number;
-  /** Bodies on a platform we recognise and have no adapter for. Scoped work. */
-  readonly unhandledPlatform: number;
-  /** Bodies where nothing machine-readable was detected. A hunt, not a build. */
-  readonly nothingDetected: number;
-  /** Bodies whose page could not be read at all; never a zero. */
-  readonly couldNotRead: number;
-}
-
-export function splitTenancy(rows: readonly TenancyRow[], unreadable: number): TenancySplit {
-  let reachableNow = 0;
-  let unhandledPlatform = 0;
-  let nothingDetected = 0;
-  for (const r of rows) {
-    const real = r.hits.filter((h) => h.strength !== "DERIVED_LEAD");
-    if (real.some((h) => h.haveAdapter)) reachableNow += 1;
-    else if (real.length > 0) unhandledPlatform += 1;
-    else nothingDetected += 1;
-  }
-  return { reachableNow, unhandledPlatform, nothingDetected, couldNotRead: unreadable };
 }

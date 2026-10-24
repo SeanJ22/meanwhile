@@ -39,14 +39,3 @@ export function sittingsOnSameLocalDay<T extends SittingLike & { timeZone?: stri
     .filter((m) => localDate(m) === day)
     .sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt));
 }
-
-export function emptySelectionState(
-  selection: AgendaSelection,
-  totalSittings: number,
-): "NO_MEETING_HELD" | "NO_UPCOMING_MEETING_HELD" | "NO_PAST_MEETING_HELD" | "NO_MEETING_HELD_ON_DATE" {
-  if (selection === "DATE") return "NO_MEETING_HELD_ON_DATE";
-  if (totalSittings === 0) return "NO_MEETING_HELD";
-  if (selection === "NEXT") return "NO_UPCOMING_MEETING_HELD";
-  if (selection === "LAST") return "NO_PAST_MEETING_HELD";
-  return "NO_MEETING_HELD";
-}

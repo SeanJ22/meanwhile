@@ -81,7 +81,7 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
     return { written: changed.length, confirmed: confirmed.length, movedPeople };
   });
-  if (outcome.written || outcome.confirmed) await invalidateReaderCache({ states: [state] }, options.purge);
+  if (outcome.written) await invalidateReaderCache({ states: [state] }, options.purge);
   if(outcome.movedPeople.length)options.onMoved?.(outcome.movedPeople);
   return {written:outcome.written,confirmed:outcome.confirmed};
 }

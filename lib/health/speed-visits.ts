@@ -9,7 +9,6 @@ import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts"
 /** The scheduler looks this often; a pass runs only when the last is older than `SPEED_VISITS_EVERY_MS`. */
 export const SPEED_VISITS_TICK_MS = 15 * 60_000;
 export const SPEED_VISITS_EVERY_MS = 6 * 3_600_000;
-export const SPEED_VISITS_SINGLETON_PORT = 49_374;
 
 /** Off unless WTP_SPEED_VISITS=on. */
 export function speedVisitsEnabled(env: Readonly<Record<string, string | undefined>>): boolean {

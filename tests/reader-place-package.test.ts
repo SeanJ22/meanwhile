@@ -796,3 +796,27 @@ test("a shared cold place failure reaches both readers without a second query", 
     assert.equal(reads, 1);
   } finally { installReaderDatabaseQuery(undefined); }
 });
+
+test("a special district's board on a city's territory reads under the district, not under the city", async () => {
+  const db = await factDb();
+  try {
+    await canonicalTables(db);
+    const al = "ocd-division/country:us/state:al", mobile = `${al}/place:mobile`, housing = "al:special:mobile-housing-authority";
+    const board = `${housing}#governing`, council = `${mobile}#governing`, at = "2026-10-20T12:00:00.000Z";
+    await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Alabama','AL',NULL),($2,'place','Mobile city','AL',$1),
+      ($3,'government','Mobile Housing Authority','AL',$2),($4,'body','Mobile Housing Authority governing board','AL',$3),($5,'body','City Council','AL',$2)`,
+    [al, mobile, housing, board, council]);
+    await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2),($3,$2)", [housing, mobile, board]);
+    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,$1,$1,$2,$3,'housing')", ["https://www.mobilehousing.org/board", at, "c".repeat(64)]);
+    for (const [entity, name] of [[board, "Board of Commissioners"], [council, "City Council"]]) await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'name',$2,$3,'live','OFFICIAL',1,$3,$4,'fixture')`, [entity, JSON.stringify(name), name, at]);
+    const result = await readPlacePackage({ state: "AL", divisionIds: [mobile] }, db.query);
+    assert.deepEqual(result.bodies.map(b => [b.id, b.division, b.government ?? null]).sort(), [[board, mobile, "Mobile Housing Authority"], [council, mobile, null]]);
+    const runtime: RegistryRuntimeReadModel = { formatVersion: 1, registry: { generatedAt: at, bodies: [], divisions: [{ ocdId: mobile, label: "Mobile city", divisionType: "place", tier: "local", state: "AL",
+      parentOcdId: al, lsad: null, funcstat: null, classfp: null, geoid: null, canonicalOcdId: null, canonicalMatch: "none", sourceDataset: "TIGER_CB2023",
+      provenance: { kind: "OFFICIAL", sourceUrl: "https://www2.census.gov/", sourceOrg: "Census", collectedAt: at, verifiedAt: at } }] }, bodyRosters: [], rosterReaderDispositions: [],
+      statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {}, officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
+    const coverage = stateCoverage({ state: "AL", registry: runtime, version: "fixture" }, [mobile], 0, 0, [], result.bodies);
+    assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["Board of Commissioners", "Mobile Housing Authority"], ["City Council", "Mobile city"]]);
+  } finally { await db.pg.close(); }
+});

@@ -1,5 +1,4 @@
-import { HUNT_STATES } from "../control-plane/hunt-orders.ts";
-import { controlPlaneUrlFromEnv, createPgRepositories, readPlanningIntents } from "../control-plane/repository/pg-store.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents, readSourceWorkStates } from "../control-plane/repository/pg-store.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { expansionScopesOf, type ExpansionScopeDecision } from "../control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../control-plane/expansion/runner-load.ts";
@@ -34,11 +33,11 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
   const connection = controlPlaneUrlFromEnv();
   if (!connection) return [...tasks];
   const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
-  const intents = readIntents([...(await readPlanningIntents(repos))]);
+  const intents = readIntents([...(await readRunnerPauseIntents(repos))]);
   if (intents.runnerPause.paused) return [...tasks];
   if (explicit === undefined) {
     const requested = new Map<string,NationalPlaceSendRequest>();
-    for (const state of HUNT_STATES) {
+    for (const state of await readSourceWorkStates(repos)) {
       const row=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
       if(row && !isAdminConfig(row.value)) throw new Error("The owner's place scope is unreadable");
       const scopes=expansionScopesOf(row?.value??null);

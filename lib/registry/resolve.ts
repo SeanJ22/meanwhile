@@ -2,8 +2,6 @@ import type { Body, Division } from "./types.ts";
 import { bodyIdsAtPoint, bodyIdsWithTerritory, type BodyTerritoryFile } from "./body-territory.ts";
 import { polygonContains } from "../geo/polygon.ts";
 
-
-
 export type Ring = [number, number][];
 export type Polygon = Ring[];
 
@@ -26,20 +24,11 @@ export function contains(point: [number, number], feature: GeoFeature): boolean 
   return polys.some((poly) => inPolygon(point, poly as Polygon));
 }
 
-
 let sweeps = 0;
 
 /** Sweeps run since the process started. Monotonic; read deltas, never totals. */
 export function sweepsRun(): number {
   return sweeps;
-}
-
-
-let candidatesTested = 0;
-
-/** Features given an exact point-in-polygon test. Monotonic; read deltas. */
-export function candidateFeaturesTested(): number {
-  return candidatesTested;
 }
 
 /** A feature's bounding box: [west, south, east, north]. */
@@ -69,7 +58,6 @@ export function boundingBoxOf(feature: GeoFeature): BoundingBox {
 
 const inBox = (point: [number, number], box: BoundingBox): boolean =>
   point[0] >= box[0] && point[0] <= box[2] && point[1] >= box[1] && point[1] <= box[3];
-
 
 const boxes = new WeakMap<GeoFeature[], BoundingBox[]>();
 
@@ -102,7 +90,6 @@ export function divisionIdsAt(point: [number, number], features: GeoFeature[]): 
     if (seen.has(ocdId)) continue;
     // The cheap test first. A point outside the box is outside the polygon.
     if (!inBox(point, featureBoxes[index])) continue;
-    candidatesTested += 1;
     if (!contains(point, feature)) continue;
 
     seen.add(ocdId);
@@ -111,7 +98,6 @@ export function divisionIdsAt(point: [number, number], features: GeoFeature[]): 
 
   return hits;
 }
-
 
 export function bodiesAt(
   point: [number, number],

@@ -16,6 +16,7 @@ import { RESEARCH_STATE_ID, type RunningScout } from "../scheduler/research-poli
 import { RUNNER_PROGRESS_HEARTBEAT_FIELDS } from "./runner-progress-read.ts";
 import { ROLE_WORDS } from "./v6-agents-read.ts";
 import { migrationOutcomeOf, PRODUCTION_MIGRATION_HEADLINE } from "../../db/migration-phases.ts";
+import { ROUTINE_DECISIONS_LOG_KEY, type RoutineLaunchDecision } from "../../civic-data/launch-decisions.ts";
 import type { UpdateCard } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { runnerCycleOf, type CycleHeartbeat, type RunnerCycle } from "../runner-standing.ts";
 import { MODELS, canonicalModelId, modelTierFor } from "../../models.ts";
@@ -126,6 +127,7 @@ export interface ScoutEvidence {
 }
 
 export interface V6WorkersSources {
+  readonly launchDecisions?: { readonly state: "READ"; readonly records: readonly unknown[] } | { readonly state: "UNREAD" };
   readonly readAt: string;
   readonly config: { readonly state: "READ"; readonly scopes: readonly ExpansionScopeDecision[]; readonly malformed: number }
     | { readonly state: "UNREAD"; readonly detail: string };
@@ -168,7 +170,7 @@ export function runningScoutsOf(research: unknown): readonly RunningScout[] | nu
 }
 
 export async function readV6WorkersSources(repos: ControlPlaneRepositories, readAt: string, scope: V6PlaceScope | null = null): Promise<V6WorkersSources> {
-  const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips] = await Promise.all([
+  const [config, heartbeat, research, sourceEvents, jobs, stateProgress, migration, scopeZips, launchDecisions] = await Promise.all([
     readAdminConfig(repos,scope && scope.kind!=="country"?scope.state:undefined),
     point<Partial<CycleHeartbeat>>(() => repos.runnerHeartbeat.readNarrowed(RUNNER_ID, { ...RUNNER_PROGRESS_HEARTBEAT_FIELDS, neonBytes: ["lastFullHour"] })),
     point<Record<string, unknown>>(() => repos.researchState.readNarrowed(scope && scope.kind!=="country"?`${RESEARCH_STATE_ID}:${scope.state}`:RESEARCH_STATE_ID, WORKERS_RESEARCH_FIELDS)),
@@ -195,6 +197,10 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
         .filter((row, index, rows) => rows.findIndex(other => other.writtenAt === row.writtenAt &&
           migrationOutcomeOf(other.migration)?.phase === migrationOutcomeOf(row.migration)?.phase) === index), () => ({ unread: true })),
     readAreaZips(scope),
+    (scope && scope.kind !== "country"
+      ? repos.ownerDigests.readRecentWhere(ROUTINE_DECISIONS_LOG_KEY, ["routineDecisionState"], scope.state.toLowerCase(), 2, { routineDecisions: true })
+      : repos.ownerDigests.readRecent(ROUTINE_DECISIONS_LOG_KEY, 4))
+      .then(records => ({ state: "READ" as const, records }), () => ({ state: "UNREAD" as const })),
   ]);
   const running = research.state === "READ" ? runningScoutsOf(research.value) : null;
   const scouts = running === null ? null : await Promise.all(running.map(async (scout): Promise<ScoutEvidence> => {
@@ -212,7 +218,7 @@ export async function readV6WorkersSources(repos: ControlPlaneRepositories, read
     readAt,
     config: config.kind === "STORE_UNREACHABLE" ? { state: "UNREAD", detail: config.detail }
       : { state: "READ", scopes: parsed?.scopes ?? [], malformed: parsed?.malformed ?? 0 },
-    heartbeat, research, sourceEvents, scouts, jobs, stateProgress, migration, scopeZips,
+    heartbeat, research, sourceEvents, scouts, jobs, stateProgress, migration, scopeZips, launchDecisions,
   };
 }
 
@@ -421,6 +427,7 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   const gauges = laneGauges(lanes);
   if (research !== null && gauges === null) unread.push("the queue counts");
   if (sources.sourceEvents.state === "UNREAD") unread.push("the recent source receipts");
+  if (sources.launchDecisions?.state === "UNREAD") unread.push("the source launch decisions");
   const started = hb && clock(hb.lastCycleStartedAt) ? hb.lastCycleStartedAt : null;
   const finished = hb && clock(hb.lastCycleFinishedAt) ? hb.lastCycleFinishedAt : null;
   const nextDue = hb && clock(hb.nextCycleDueAt) ? hb.nextCycleDueAt : null;
@@ -542,6 +549,23 @@ export function v6WorkersSection(input: { readonly scopeKey: string; readonly sc
   if (!binding.all && sends === null) missing.push("The runner's per-hunt reading of finished and unfinished tasks could not be read.");
 
   const events: (V6WorkerEvent & { iso: string })[] = [];
+  if (sources.launchDecisions?.state === "READ") {
+    const latest = new Map<string, RoutineLaunchDecision>();
+    for (const record of sources.launchDecisions.records) {
+      const rows = (record as { routineDecisions?: readonly RoutineLaunchDecision[] })?.routineDecisions;
+      if (!Array.isArray(rows)) continue;
+      for (const row of rows) if (row && clock(row.at) && text(row.taskId, 1000) && text(row.reason, 1000) &&
+        (row.action === "SKIP" || row.action === "DEFER") && (scope.kind === "country" || row.state === scope.state.toLowerCase()) &&
+        (!latest.has(row.taskId) || row.at > latest.get(row.taskId)!.at)) latest.set(row.taskId, row);
+    }
+    for (const row of [...latest.values()].sort((a, b) => b.at.localeCompare(a.at)).slice(0, WORKERS_EVENT_LIMIT)) {
+      const title = `${sourceName(row.sourceId)}${row.state === "system" ? "" : ` in ${row.state.toUpperCase()}`}`;
+      events.push({ iso: row.at, at: mstWords(row.at), kind: row.action === "DEFER" ? "Waiting" : "Next check",
+        text: `${title}: ${row.reason}.`, tone: row.action === "DEFER" ? "warn" : "info", applies });
+      if (row.action === "DEFER") waiting.push({ kind: "Waiting", title, why: row.reason,
+        nextTime: "Next routine pass", owner: "Workers", applies, actions: [] });
+    }
+  }
   for (const [, rows] of byTask) {
     const newest = rows[0], p = newest.row.p, stage = SOURCE_STAGE[p.stage];
     const same = rows.filter(x => x.row.p.stage === p.stage);

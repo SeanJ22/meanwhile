@@ -26,7 +26,3 @@ export function summaryPendingForBill(billUrl: string | null): boolean {
   if (!billUrl) return false;
   return getFederalVotesReadModel().billSummaries.pending.some((pending) => pending.billUrl === billUrl);
 }
-
-export function allBillSummaries(): BillSummariesFile {
-  return getFederalVotesReadModel().billSummaries;
-}

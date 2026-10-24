@@ -14,6 +14,8 @@ export interface DirectoryOffice {
   email?: string | null;
   lat: number | null;
   lng: number | null;
+  geocodedPoint?: import("./office-points-publication.ts").PublishedOfficePoint;
+  pointUnavailable?: import("./office-points-publication.ts").OfficePointUnavailable;
 }
 
 export interface DirectoryCommittee {
@@ -48,10 +50,6 @@ export interface DirectoryFile {
     { name: string; type: string; url: string | null; jurisdiction: string | null; jurisdictionSource: string | null }
   >;
   byMember: Record<string, MemberDirectoryEntry>;
-}
-
-export function directorySource(): DirectorySource {
-  return getFederalDirectoryFile().source;
 }
 
 /** One member's slice, joined by BIOGUIDE, never by name; a non-federal holder id returns null. */

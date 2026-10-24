@@ -1,4 +1,4 @@
-import { normalizedHash, sha256, failedAcquisitionCandidate } from "../../civic-data/candidate-builders.ts";
+import { normalizedHash, sha256 } from "../../civic-data/candidate-builders.ts";
 import { civicRecordsFor } from "../../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_PARSER_VERSION, GOOGLE_CIVIC_RECORD_CLASS, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
@@ -35,8 +35,4 @@ export async function civicCandidate(vault: EvidenceStore, scope: string, projec
     dependentChecks: [{ consumer: "elections catalog and Admin", passed: true, detail: "Separate attributed observations; unknown joins and publication dates remain explicit." }],
     normalizedPayload, readModel: projection, civicRecords: records,
   };
-}
-export function failureCandidate(scope: string, reason: string, at: string): RoutineCandidate {
-  return failedAcquisitionCandidate({ sourceId: GOOGLE_CIVIC_SOURCE_ID, recordClass: GOOGLE_CIVIC_RECORD_CLASS, scope,
-    requestedUrl: `${GOOGLE_CIVIC_API}voterinfo`, attemptedAt: at, failureDetail: reason, parserVersion: GOOGLE_CIVIC_PARSER_VERSION });
 }

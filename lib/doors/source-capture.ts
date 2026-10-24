@@ -7,6 +7,7 @@ import { pageDoorDraft, pageAddress } from "./page-doors.ts";
 import { upsertDerivedDoor } from "./registry.ts";
 import { VOTING_SOURCE_DOOR_KIND } from "../ballot/voting-source-publication.ts";
 import type { SourceDisposition } from "./source-content.ts";
+import { sourceTextWithoutNuls } from "./source-text.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "doors" | "artifacts" | "fieldManual">;
 interface SourceObservation {
@@ -20,6 +21,7 @@ interface SourceObservation {
 }
 
 export async function recordSourceObservation(repos: Repos, observation: SourceObservation, at: string, vault: Pick<CycleVault, "putBytes">) {
+  observation = sourceTextWithoutNuls(observation);
   const address = pageAddress(observation.url);
   if (!address) throw new Error("Source observation has no public URL");
   const { disposition } = observation;
@@ -56,6 +58,7 @@ export async function recordSourceObservation(repos: Repos, observation: SourceO
 
 export async function recordSourceDisposition(repos: Pick<ControlPlaneRepositories, "fieldManual">,
   observation: Pick<SourceObservation, "url" | "ocdId" | "state" | "names" | "disposition">, copyId: string | null, at: string) {
+  observation = sourceTextWithoutNuls(observation);
   const address = pageAddress(observation.url);
   if (!address) return;
   const { disposition } = observation;

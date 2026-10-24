@@ -10,6 +10,7 @@ import { federalDirectoryContractId, heldDirectoryCandidate, type FederalDirecto
 import { federalMemberVotesCandidate, federalRollCallsCandidate, FEDERAL_ROLLCALL_SCOPE, type HeldAcquisition } from "../lib/votes/data-plane.ts";
 import type { BillSummariesFile } from "../lib/votes/bill-summaries.ts";
 import type { VotesSnapshot } from "../lib/votes/types.ts";
+import {publishFederalDirectoryOfficePoints} from "../lib/officials/office-points-publication.ts";
 
 const NATIONAL_DIRECTORY_SCOPE = "US:current-congress-directory";
 
@@ -32,7 +33,9 @@ export async function splitHeldFederalPeople(input: { store: RoutineDataStore; n
     ...(result.promoted || result.confirmed ? {} : { refusal: result.candidate.failureCode ?? "REFUSED" }) }));
   const captures = (directory.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions;
   for (const { state, projection } of split.places) {
-    const candidate = heldDirectoryCandidate({ state, acquisitions: captures, retrievedAt: directory.retrieval.retrievedAt!, projection });
+    const prior = await store.readPromotion<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", `US-${state}:current-congress-directory`);
+    const saved = await publishFederalDirectoryOfficePoints(projection, prior?.payload ?? null);
+    const candidate = heldDirectoryCandidate({ state, acquisitions: captures, retrievedAt: directory.retrieval.retrievedAt!, projection:saved });
     outcome(candidate.scope, directory.id, await processRegisteredManualCandidate(store, federalDirectoryContractId(state), candidate, now()));
   }
   const acquisitions = (rollCalls.normalizedPayload as { acquisitions: HeldAcquisition[] }).acquisitions;

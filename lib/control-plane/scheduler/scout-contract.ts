@@ -196,7 +196,6 @@ export interface ScoutToolkit {
 
 /** The research tool names. `finish` is the executor's own. */
 export const SCOUT_RESEARCH_TOOLS = ["read_held", "fetch_public", "browse", "search", "report_finding", "legistar_events", ...SOURCE_API_TOOLS] as const;
-export type ScoutResearchTool = (typeof SCOUT_RESEARCH_TOOLS)[number];
 
 /** The prefix every public-source representation is wrapped in. Data, never instructions. */
 export const UNTRUSTED_CONTENT_HEADER =

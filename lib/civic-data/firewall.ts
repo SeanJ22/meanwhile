@@ -398,7 +398,7 @@ function expressionParts(source: string): string[] {
   return parts;
 }
 
-/** Only exempt destinations derived from the OS temp root, never names like 'tmp'. */
+/** Exempt complete path-confinement algorithms, never a filename or module-name exception. */
 function confinedTemporaryBindings(executable: string, files: Readonly<Record<string, string>>, importer: string): ReadonlySet<string> {
   const bindings = new Set<string>();
   for (const match of executable.matchAll(/\bimport\s*\{([^}]*)\}\s*from\s*["']([^"']+)["']/g)) {
@@ -414,7 +414,16 @@ function confinedTemporaryBindings(executable: string, files: Readonly<Record<st
       String.raw`if\(!target\.startsWith\(temporary\+sep\)\|\|!\(parent===root\|\|parent\.startsWith\(root\+sep\)\)\)\{thrownewError\("[^"\\]*"\);\}`,
       String.raw`constrepository=realpathSync\(process\.cwd\(\)\);if\(target===repository\|\|target\.startsWith\(repository\+sep\)\|\|parent===repository\|\|parent\.startsWith\(repository\+sep\)\)\{thrownewError\("[^"\\]*"\);\}returntarget;\}$`,
     ].join(""));
-    const name = proof.exec(source)?.[1];
+    const operational = new RegExp([
+      String.raw`^import\{existsSync,realpathSync\}from["']node:fs["'];import\{tmpdir\}from["']node:os["'];import\{dirname,resolve,sep\}from["']node:path["'];`,
+      String.raw`exportfunction([A-Za-z_$][\w$]*)\(value:string\):string\{consttarget=resolve\(value\);consttemporary=resolve\(tmpdir\(\)\);constroot=realpathSync\(tmpdir\(\)\);constpersistent="/var/lib/meanwhile";`,
+      String.raw`letancestor=target;while\(!existsSync\(ancestor\)\)ancestor=dirname\(ancestor\);constparent=realpathSync\(ancestor\);`,
+      String.raw`constinTemporary=target\.startsWith\(temporary\+sep\)&&\(parent===root\|\|parent\.startsWith\(root\+sep\)\);`,
+      String.raw`constinPersistent=\(target===persistent\|\|target\.startsWith\(persistent\+sep\)\)&&\(parent===persistent\|\|parent\.startsWith\(persistent\+sep\)\);`,
+      String.raw`if\(!inTemporary&&!inPersistent\)thrownewError\("WORKER_MEMORY_PATH_OUTSIDE_HOST_STATE"\);constrepository=realpathSync\(process\.cwd\(\)\);`,
+      String.raw`if\(target===repository\|\|target\.startsWith\(repository\+sep\)\|\|parent===repository\|\|parent\.startsWith\(repository\+sep\)\)\{thrownewError\("WORKER_MEMORY_PATH_INSIDE_REPOSITORY"\);\}returntarget;\}$`,
+    ].join(""));
+    const name = proof.exec(source)?.[1] ?? operational.exec(source)?.[1];
     if (name === undefined) continue;
     for (const { imported, local } of parseNamedBindings(match[1]!)) if (imported === name) bindings.add(local);
   }

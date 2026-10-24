@@ -1,5 +1,5 @@
 /**
- * The door registry's hand-wired meeting doors as every process reads them.
+ * The door registry's meeting doors as every process reads them.
  * The standing runner reads the registry itself and publishes its open and
  * shut meeting doors as one promoted version (`meeting-doors`), the same way
  * the derived meeting wiring is published. Every other process (a partition
@@ -54,9 +54,9 @@ export interface MeetingDoorsProjection {
 
 const sha256Hex = (value: string): string => createHash("sha256").update(value).digest("hex");
 
-/** A hand-wired meeting door that is in use: a meeting door of no derived family, open or shut. */
+/** Every meeting door in use, including family members. Wiring installation still keeps family acquisition separate. */
 export function isPublishedMeetingDoor(door: DoorRecord): boolean {
-  return door.meeting != null && (door.meeting.family ?? null) === null && door.status !== "SUSPENDED";
+  return door.meeting != null && door.status !== "SUSPENDED";
 }
 
 export function publishedDoor(door: DoorRecord): PublishedDoor {
@@ -98,8 +98,10 @@ function asRecord(door: PublishedDoor, at: string): DoorRecord {
 /** The version, authentic only as the registry records it was computed from. */
 export function meetingDoorsCandidate(rows: readonly { readonly revision: number; readonly updatedAt: string; readonly value: DoorRecord }[], attemptedAt: string): RoutineCandidate {
   const used = rows.filter((row) => isPublishedMeetingDoor(row.value));
+  // Suspensions are registry decisions, retained as exact inputs even though those doors are no longer in use.
+  const suspended = rows.filter(({ value }) => value.meeting != null && value.status === "SUSPENDED");
   const readModel = meetingDoorsProjection(used.map((row) => row.value));
-  const inputs: DerivedInputRef[] = used.map((row) => ({
+  const inputs: DerivedInputRef[] = [...used, ...suspended].map((row) => ({
     kind: "DOOR_RECORD" as const,
     doorId: row.value.doorId,
     revision: row.revision,
@@ -111,7 +113,7 @@ export function meetingDoorsCandidate(rows: readonly { readonly revision: number
   const retrievedAt = retrieval.retrievedAt ?? attemptedAt;
   const shapeIssue = meetingDoorsProjectionIssue(readModel);
   const normalized = sha256Hex(canonicalCivicDataJson(readModel));
-  const normalizedPayload = { readModel };
+  const normalizedPayload = { readModel, suspendedDoors: suspended.map(({ value }) => publishedDoor(value)).sort((a, b) => a.doorId.localeCompare(b.doorId)) };
   return {
     id: `cv-${sha256Hex(`${MEETING_DOORS_SOURCE_ID}\u001f${MEETING_DOORS_SCOPE}\u001f${retrieval.rawHash}\u001f${retrievedAt}\u001f${attemptedAt}\u001f${normalized}`).slice(0, 32)}`,
     sourceId: MEETING_DOORS_SOURCE_ID,
@@ -148,12 +150,12 @@ export function meetingDoorsCandidate(rows: readonly { readonly revision: number
     })),
     temporal: { version: MEETING_DOORS_SCOPE, expectedVersion: MEETING_DOORS_SCOPE, sourceThrough: retrievedAt, staleAtRetrieval: false },
     semantics: {
-      factKind: "the door registry's hand-wired meeting doors in use",
+      factKind: "the door registry's meeting doors in use",
       violations: shapeIssue === null ? [] : [`the version is not a doors version: ${shapeIssue}`],
     },
     horizon: {
       kind: "OPEN_FACT_SET",
-      query: "every open or shut hand-wired meeting door in the door registry",
+      query: "every open or shut meeting door in the door registry",
       returnedRecords: readModel.doors.length,
       declaredTotal: null,
       paginationComplete: false,
@@ -199,14 +201,19 @@ let pending: Promise<MeetingDoorsReady> | null = null;
 export function installDoorRecords(doors: readonly DoorRecord[], from = "the door registry", at = Date.now()): MeetingDoorsInstall {
   installed = { at, versionId: from };
   const rows: BodySourceWiring[] = wiringRowsFromDoors(doors);
-  installMeetingDoors(rows);
-  installDoorHosts(meetingDoorHosts(doors));
-  refreshLegistarClients();
-  refreshInSiteTenants();
+  installMeetingWiring(rows, meetingDoorHosts(doors));
   const partitions = refreshMeetingPartitions(rows);
   refreshCuratedBodyStatus(rows);
   const outcomes = refreshOutcomePartitions(doors);
   return { rows: rows.length, partitions, outcomes };
+}
+
+/** A calendar child installs only the exact state's wiring its parent handed it. */
+export function installMeetingWiring(rows: readonly BodySourceWiring[], hosts: readonly string[]): void {
+  installMeetingDoors(rows);
+  installDoorHosts(hosts);
+  refreshLegistarClients();
+  refreshInSiteTenants();
 }
 
 export type MeetingDoorsReady =

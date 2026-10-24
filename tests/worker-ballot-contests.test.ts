@@ -8,7 +8,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
-import { parseCivicRecords } from "../lib/control-plane/workers/parser.ts";
+import { parseLegistarEvents } from "../lib/control-plane/workers/parser.ts";
 import { type GeneralizedCivicExtractionContract, type WorkerEvidence, type WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import { type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
@@ -56,7 +56,7 @@ function fixture(names = ["Alice Adams", "Bob Baker", "Casey Clark"], pdf = fals
     extraction: { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: Object.fromEntries(["election", "office", "jurisdictionName", "candidateName"].map((field, index) => [field, { source: index, type: "STRING" as const }])) },
     verification: { required: false, authorities: [] } };
   const worker = { role: "PARSER" as const, instance: "fixture", provider: "deterministic", version: "2" };
-  const result = parseCivicRecords({ attemptId: "parsed", worker, evidence, contract });
+  const result = parseLegistarEvents({ attemptId: "parsed", worker, evidence, contract });
   assert.equal(result.verdict, "EXTRACTED");
   const parser = { id: "parsed", workItemId: "ballot", endedAt: now, result } as WorkerResultRecord;
   const plan = { contract, publication: { contractId: stateBallotContractId("ballot-contests", state), bodyId: "fixture-body" } } as AutonomousWorkPlan;
@@ -417,7 +417,7 @@ test("successive captures retain only receipt versions cited by current core or 
       methodVersion: 1, requiredFields: fields, completenessScope: "Every saved measure row", expectedSourceDate: null,
       extraction: { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: Object.fromEntries(fields.map((field, index) => [field, { source: index, type: "STRING" as const }])) },
       verification: { required: false, authorities: [] } };
-    const parsed = parseCivicRecords({ attemptId: "parsed", worker: { role: "PARSER", instance: "fixture", provider: "deterministic", version: "2" }, evidence, contract });
+    const parsed = parseLegistarEvents({ attemptId: "parsed", worker: { role: "PARSER", instance: "fixture", provider: "deterministic", version: "2" }, evidence, contract });
     assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed));
     const parser = { id: "parsed", workItemId: "measure", endedAt: now, result: parsed } as WorkerResultRecord;
     const plan = { contract, publication: { contractId: stateBallotContractId("ballot-contests", state), bodyId: "fixture-body" } } as AutonomousWorkPlan;

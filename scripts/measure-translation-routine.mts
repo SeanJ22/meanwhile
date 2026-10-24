@@ -45,8 +45,9 @@ if (!process.argv.includes("--manual-child")) {
   const store = new PostgresRoutineDataStore();
   const repos = await createPgRepositories(connection, now(), { skipBootstrap: true, planningState: state.toLowerCase() });
   let holdReason: string | null = null;
+  let ballots: Awaited<ReturnType<typeof loadPromotedMeasureBallots>> = [];
   try {
-    const ballots = await loadPromotedMeasureBallots(state, { store, now: now() });
+    ballots = await loadPromotedMeasureBallots(state, { store, now: now() });
     const subjects = ballots.flatMap(ballot => ballot.contests.filter(row => row.type === "MEASURE")
       .map(contest => ({ subjectId: contest.id, ocdId: contest.ocdId })));
     const queue = new ModelProviderQueue();
@@ -71,9 +72,9 @@ if (!process.argv.includes("--manual-child")) {
     console.log("MEASURE_TRANSLATION_RESULT=" + JSON.stringify({ state, ...result, sourceFailures: sources.failures, foundSources: Object.fromEntries(sources.discovered) }));
     // A failed save or an unreadable state ballot holds the run. A measure without saved official text
     // stays an open blank (listed in the result line above); every other measure and state continues.
-    holdReason = result.persistenceError ?? result.unreadable[0]?.reason ?? null;
+    holdReason = result.persistenceError ?? result.unreadable[0]?.reason ?? armed.closed?.reason ?? result.held[0]?.reason ?? null;
   } catch (error) { holdReason = error instanceof Error ? error.message : String(error); }
-  const receipt = await measureTranslationRoutineReceipt({ store, state, now: now(), holdReason });
+  const receipt = await measureTranslationRoutineReceipt({ store, state, ballots, now: now(), holdReason });
   console.log(receipt.line);
   if (receipt.holdReason) console.error(`MEASURE_TRANSLATION_HOLD ${receipt.holdReason}`);
   process.exitCode = receipt.exitCode;

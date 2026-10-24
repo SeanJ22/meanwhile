@@ -103,42 +103,6 @@ function htmlRows(text: string, tableIndex: number): RawCell[][] {
   }
   return rows;
 }
-
-// Visible fields create repair obligations; the parser must still prove each value against its source.
-export function rosterTableFieldOmissions(evidence: WorkerEvidence, shape: RecordExtractionShape): readonly string[] {
-  if (shape.format !== "HTML_TABLE" || shape.headerRows < 1) return [];
-  const rows = htmlRows(evidence.text, shape.tableIndex);
-  const headers = rows[shape.headerRows - 1];
-  const members = rows.slice(shape.headerRows);
-  if (!headers || !members.length) return [];
-  const omissions: string[] = [];
-  const phoneColumn = headers.findIndex(cell => /^(?:phone|office phone|contact phone|telephone)$/i.test(cell.value));
-  if (phoneColumn >= 0 && members.every(row => Boolean(row[phoneColumn]?.value.trim())) &&
-    !Object.entries(shape.fields).some(([name, field]) => name === "phone" && field.source === phoneColumn && field.attribute === undefined)) {
-    omissions.push("phone");
-  }
-  // Only literal addresses present in every selected row are mappable by the tabular publisher.
-  const emailColumn = headers.findIndex(cell => /^(?:e-?mail|(?:office|official) e-?mail)$/i.test(cell.value));
-  if (emailColumn >= 0 && members.every(row => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(row[emailColumn]?.value.trim() ?? "")) &&
-    !Object.entries(shape.fields).some(([name, field]) => name === "email" && field.source === emailColumn && field.attribute === undefined)) {
-    omissions.push("email");
-  }
-  // Keep the publisher's wording as a note. A term column alone does not
-  // establish current service, a start date, an end date, or a holdover rule.
-  const termColumn = headers.findIndex(cell => /^(?:term|term dates?|term ends?|term expires?|term expiration|term of office)$/i.test(cell.value));
-  if (termColumn >= 0 && members.every(row => Boolean(row[termColumn]?.value.trim())) &&
-    !Object.entries(shape.fields).some(([name, field]) => name === "termNote" && field.source === termColumn && field.attribute === undefined)) {
-    omissions.push("termNote");
-  }
-  const nameColumn = Object.entries(shape.fields).find(([name, field]) => name === "name" && typeof field.source === "number")?.[1].source;
-  if (typeof nameColumn === "number" && members.every(row => {
-    const anchors = [...(row[nameColumn]?.raw ?? "").matchAll(/<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1/gi)];
-    return anchors.length === 1 && Boolean(anchors[0]?.[2]);
-  }) && !Object.entries(shape.fields).some(([name, field]) => name === "websiteUrl" && field.source === nameColumn && field.attribute === "href")) {
-    omissions.push("websiteUrl");
-  }
-  return omissions;
-}
 interface XmlElement { name: string; parent: XmlElement | null; start: number; contentStart: number; contentEnd: number }
 /** Balanced XML structure only; no entity, document-type, network or script execution. */
 function xmlElements(text: string): XmlElement[] {

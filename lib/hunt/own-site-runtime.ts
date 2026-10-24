@@ -28,9 +28,9 @@ import type {SiteScope} from './site-findings.ts';
 /** Links hunters found that go to the front of one walk; the walk's own allowance decides how many it reaches. */
 const HANDED_LINKS_PER_WALK=25;
 export interface HuntSourceScope {jurisdictionId:string;governmentId:string|null;bodyId:string|null;name:string;state:string;website:string;knownOwnSite?:boolean;directorySeeds?:readonly string[];govClass?:string;}
-export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;prepareBody?:PrepareHuntBody;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
+export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:HuntSourceScope;open:OpenOne;vault:VaultPut;spaceOut:(host:string)=>Promise<void>;now:()=>string;root?:string;query?:Query;readHeld?:(ids:readonly string[])=>Promise<import('./place-plan.ts').PlaceCapture>;canRead?:()=>boolean;deadlineMs?:number;prepareBody?:PrepareHuntBody;readHeldPage?:(url:string)=>Promise<import('./site-findings.ts').SitePage|null>;}):RunWork{
  return async (job):Promise<WorkOutcome>=>{
-  const started=Date.now(),canRead=input.canRead??(()=>Date.now()-started<job.bound.maxWallMs);
+  const started=Date.now(),endsAt=Math.min(started+job.bound.maxWallMs,input.deadlineMs??Infinity),canRead=()=>Date.now()<endsAt && (input.canRead?.()??true);
   const selected=input.query ? null : readerQuery();
   const query:Query=input.query??(async(text,params=[])=>{if(!selected)throw new Error('HUNT_READER_DATABASE_UNCONFIGURED');return (await selected([{text,params}]))[0];});
   const reference=input.scope;
@@ -43,8 +43,8 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
   const governmentId=(row?.kind==='government' || row?.kind==='place'?String(row.id):typeof row?.parent_id==='string' && row.parent_id.startsWith('ocd-division/')?row.parent_id:reference.governmentId??reference.jurisdictionId);
   const scope:SiteScope={governmentId,govClass:reference.govClass,bodyId:row?.body_id?String(row.body_id):reference.bodyId??`${reference.jurisdictionId}#${/SCHOOL/.test(reference.govClass??'')?'board':'governing'}`,bodyName:row?.body_name?String(row.body_name):null,name:reference.name,state:reference.state,website:reference.website};
   const key=fieldManualEntryId('place-hunt',reference.jurisdictionId);
-  const prior=await input.repos.fieldManual.read(key);
-  const payload=prior?.value.payload as {website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}|undefined;
+  const prior=await input.repos.fieldManual.readNarrowed(key,{payload:["website","siteFrontier","frontier","read"]});
+  const payload=(prior?.value as {payload?:{website?:string;siteFrontier?:string[];frontier?:{url:string;checkedAt?:string}[];read?:{url:string;checkedAt?:string}[]}}|undefined)?.payload;
   if(payload?.website)scope.website=payload.website;
   let checked=0,findings=0;
   const readUrls=new Set<string>();
@@ -59,7 +59,7 @@ export function placeSourceExecutor(input:{repos:ControlPlaneRepositories;scope:
     }
     return null;
   };
-  const reader=placePageReader({open:input.open,vault:input.vault,spaceOut:input.spaceOut,now:input.now,attemptId:job.attemptId,workItemId:job.workItemId,routeId:job.obligation.obligation.routeId??'own-site-meetings',canRead,endsAt:started+job.bound.maxWallMs,websiteSize:websiteSizeForObligation(job.obligation.obligation,input.root),
+  const reader=placePageReader({open:input.open,vault:input.vault,spaceOut:input.spaceOut,now:input.now,attemptId:job.attemptId,workItemId:job.workItemId,routeId:job.obligation.obligation.routeId??'own-site-meetings',canRead,endsAt,websiteSize:websiteSizeForObligation(job.obligation.obligation,input.root),
    onArtifact:artifact=>recordArtifactMetadata(input.repos,{...artifact,workItemId:job.workItemId,attemptId:job.attemptId,routeTaskId:job.routeTaskId},input.now()).then(()=>undefined)});
   const readPage=async(url:string)=>{
    job.assertLeaseHealthy?.();

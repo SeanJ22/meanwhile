@@ -32,6 +32,8 @@ export interface DistrictBoundarySource {
   readonly kindField?: string | null;
   readonly kindValues?: Readonly<Record<string, DistrictKind>> | null;
   readonly where?: string | null;
+  /** Features supplied by a more authoritative registered layer. Excluded after reading, so source indexes stay stable. */
+  readonly excludeNames?: readonly string[];
   /**
    * "list": a feature naming no Census special district is still a district the official layer draws, listed by
    * the layer's own name. "skip": the layer also draws other providers (a city's or a company's water system), so
@@ -43,6 +45,11 @@ export interface DistrictBoundarySource {
 export interface DistrictBoundarySources {
   readonly formatVersion: 1;
   readonly sources: readonly DistrictBoundarySource[];
+}
+
+export function districtSourceName(source: DistrictBoundarySource, attributes: Readonly<Record<string, unknown>>): string | null {
+  const name = (source.nameTemplate ? source.nameTemplate.replace(/\{(\w+)\}/g, (_, field: string) => String(attributes[field] ?? "")) : String(attributes[source.nameField] ?? "")).trim();
+  return !name || source.excludeNames?.some(excluded => excluded.trim().toLowerCase() === name.toLowerCase()) ? null : name;
 }
 
 const GENERIC = new Set(["THE", "OF", "AND", "DISTRICT", "DIST", "DISTRICTS", "NO", "NUMBER", "NUM", "COUNTY", "CO", "SPECIAL", "AUTHORITY", "AUTH", "BOARD", "INC"]);

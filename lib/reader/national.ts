@@ -113,9 +113,20 @@ export function currentPresidentRoster(roster: OfficeholderSet): OfficeholderSet
   return { ...roster, officeholders: roster.officeholders.filter(holder => ids.has(holder.id)), divisions: links, unmatched: roster.unmatched.filter(row => ids.has(row.officeholderId)) };
 }
 
+/** §3: a national executive is live with the seat, the holder's name and the page it came from; every other fact attaches as it is verified. */
+export function liveNationalExecutiveRoster(roster: OfficeholderSet | null): OfficeholderSet | null {
+  if (!roster) return null;
+  const current = currentPresidentRoster(roster);
+  if (!current) return null;
+  const sourcePage = (url: string | null | undefined) => { try { return new URL(url ?? "").protocol === "https:"; } catch { return false; } };
+  const officeholders = current.officeholders.filter(person => person.name.trim() !== "" && sourcePage(person.provenance?.sourceUrl));
+  const ids = new Set(officeholders.map(person => person.id));
+  return { ...current, officeholders, divisions: current.divisions.filter(link => ids.has(link.officeholderId)),
+    unmatched: current.unmatched.filter(row => ids.has(row.officeholderId)) };
+}
+
 /** The national roster is deliberately resident in each server, independent of runner publication copies. */
 const national = serverReaderValue("national-current", () => ({ value: null as NationalShelf | null }));
-export const currentNationalShelf = (): NationalShelf | null => national.value;
 
 /** States read the national executives independently of Congress's national directory load. */
 const presidentSources = ["statewide-executive-sources", "wikidata-people"];

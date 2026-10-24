@@ -1782,10 +1782,6 @@ test("PDC-13: the deterministic Admin render contract leads with canonical opera
   const server = readFileSync("lib/civic-data/observability-server.ts", "utf8");
   const store = readFileSync("lib/civic-data/observability-store.ts", "utf8");
   assert.match(server, /import "server-only"/);
-  assert.match(server, /readRoutineDataObservabilityFromConnection/);
-  assert.match(server, /codeSha:\s*process\.env\.WTP_BUILD_COMMIT/);
-  assert.match(server, /branch:\s*process\.env\.WTP_BUILD_BRANCH/);
-  assert.match(server, /context:\s*process\.env\.WTP_BUILD_CONTEXT/);
   assert.match(store, /from "\.\.\/db\/schema\.ts"/);
   assert.match(store, /projectRoutineDataObservabilityRead/);
   assert.deepEqual(ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS, {

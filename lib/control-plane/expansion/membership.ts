@@ -41,7 +41,7 @@ export interface Territory {
 }
 
 /* The certain-overlap rule itself lives in `overlap.ts` (so Admin's Send preview can apply it alone); re-exported here. */
-export { OVERLAP_CERTAINTY_MARGIN, certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
+export {  certainlyOverlaps, type DivisionTerritory } from "./overlap.ts";
 
 export function unitShareKey(unit: Pick<CensusUnitTerritory, "method">): string | null {
   const m = /^(county|place|cousub|unsd|elsd|scsd) GEOID (\d+)/.exec(unit.method ?? "");

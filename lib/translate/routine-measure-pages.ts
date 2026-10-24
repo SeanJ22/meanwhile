@@ -9,7 +9,16 @@ export function measureLabels(input: {
   readonly analysisText?: string | null;
 }): readonly string[] {
   const designation = input.officialNumber && /[a-z]/i.test(input.officialNumber) && /\d/.test(input.officialNumber) ? input.officialNumber : null;
-  return [input.title, input.questionText, input.analysisText, designation].filter((value): value is string => Boolean(value?.trim()));
+  const labels = [input.title, input.questionText, input.analysisText, designation].filter((value): value is string => Boolean(value?.trim()));
+  // Ballots combine the designation and act title; election-office links often
+  // use only the designation, and the bill itself uses only its act title.
+  for (const label of designation ? [designation] : [input.title ?? ""]) {
+    const numbered = /^(ballot measure|proposition|prop\.?|(?:statewide )?(?:constitutional )?amendment|question|issue|measure|initiative|referendum)\s+(?:no\.?\s*|number\s+|#\s*)?([a-z0-9]+(?:-[a-z0-9]+)*)(?=$|[\s:—–])/i.exec(label);
+    if (numbered) labels.push(`${numbered[1]} ${numbered[2]}`, `${numbered[1]} No.${numbered[2]}`, `${numbered[1]} No. ${numbered[2]}`);
+  }
+  const act = (input.title ?? "").split(/\s+[—–]\s+/).slice(1).join(" — ").replace(/^[a-z0-9]+\s+-\s+/i, "").trim();
+  if (act) labels.push(act);
+  return [...new Set(labels)];
 }
 
 export const pageNamesMeasure = (text: string, labels: readonly string[]): boolean =>

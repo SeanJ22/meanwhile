@@ -54,6 +54,36 @@ async function seedHeld(store: MemoryRoutineDataStore, input: RoutineCandidate, 
   return { candidate, receipt };
 }
 
+test("an already-current state publishes its retirement proof once even when its reader payload is unchanged", async t => {
+  const directory = await mkdtemp(join(tmpdir(), "state-retirement-current-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const priorKey = process.env[STATE_RETIREMENT_KEY_ENV]; process.env[STATE_RETIREMENT_KEY_ENV] = "7".repeat(64);
+  t.after(() => { if (priorKey === undefined) delete process.env[STATE_RETIREMENT_KEY_ENV]; else process.env[STATE_RETIREMENT_KEY_ENV] = priorKey; });
+  const store = new MemoryRoutineDataStore(), cards = { [KAREN]: card("Same captured biography.") };
+  const source = manualProjectionCandidate(packageFor(cards, T1)), originScope = "US-AZ+US-NH+US-NJ:2026-supported-candidates";
+  const held = await seedHeld(store, source, T1, originScope);
+  const ordinary = await processRegisteredManualCandidate(store, "candidate-profiles:NH", manualProjectionCandidate(packageFor(cards, T2)), T2);
+  assert.ok(ordinary.promoted);
+  const sourcePayload = source.readModel as CandidateProfilesProjection;
+  const unit = { family: "candidate-profiles", state: "NH", originId: held.candidate.id, originScope,
+    originRecordClass: "CANDIDATE_PROFILE", originReadModelHash: source.normalization.normalizedHash!, promotedAt: T1,
+    candidate: held.candidate, receipt: held.receipt, normalizedMetadata: {},
+    payload: { cards: { ...sourcePayload.cards, cards: {}, hunts: [] }, links: { ...sourcePayload.links, links: {}, hunts: [] } },
+    members: Object.entries(sourcePayload.cards.cards).map(([key, value]) => ({ path: ["cards", "cards"], key, value })) };
+  const bytes = JSON.stringify(unit), file = join(directory, "unit.json"), sha256 = createHash("sha256").update(bytes).digest("hex");
+  await writeFile(file, bytes);
+  const seal = sealStateRetirementUnit({ fileSha256: sha256, originId: unit.originId, originScope, originRecordClass: unit.originRecordClass,
+    originReadModelHash: unit.originReadModelHash, state: "NH", contractId: "candidate-profiles:NH" });
+  const request = { file, sha256, seal, contractId: "candidate-profiles:NH", store, now: NOW };
+  assert.equal((await reconcileRetirementStateInput(request)).status, "PUBLISHED");
+  const after = await store.readPromotion("CANDIDATE_PROFILE", "US-NH:candidate-profiles"); assert.ok(after);
+  assert.notEqual(after.versionId, ordinary.promoted.versionId);
+  assert.deepEqual(after.payload, ordinary.promoted.payload, "the proof publication preserves the exact current reader facts");
+  assert.equal((await store.readCandidate(after.versionId))?.candidate.stateRetirement?.origin.versionId, held.candidate.id);
+  assert.equal((await reconcileRetirementStateInput(request)).status, "CURRENT");
+  assert.equal((await store.readPromotion("CANDIDATE_PROFILE", "US-NH:candidate-profiles"))?.versionId, after.versionId);
+});
+
 test("terminal replay carries a later national card after ordinary state publication while keeping newer state facts", async t => {
   const directory = await mkdtemp(join(tmpdir(), "state-retirement-merge-"));
   t.after(() => rm(directory, { recursive: true, force: true }));
@@ -199,7 +229,7 @@ function ballotPackage(names: readonly string[], at: string, complete = true): M
 }
 
 for (const family of ["ballot-contests", "candidate-profiles", "candidate-corpus", "voting-sites", "candidate-campaign-sites-derived"] as const)
-  test(`terminal ${family} initializes five empty territory buckets from the pinned GOOD source`, async t => {
+  test(`terminal ${family} initializes and refreshes five empty territory buckets without asserting absence`, async t => {
     const directory = await mkdtemp(join(tmpdir(), "state-retirement-empty-"));
     t.after(() => rm(directory, { recursive: true, force: true }));
     const oldKey = process.env[STATE_RETIREMENT_KEY_ENV]; process.env[STATE_RETIREMENT_KEY_ENV] = "3".repeat(64);
@@ -245,6 +275,19 @@ for (const family of ["ballot-contests", "candidate-profiles", "candidate-corpus
       assert.deepEqual(saved.temporal, JSON.parse(JSON.stringify(origin.candidate.temporal)));
       assert.equal(saved.absence.claimsAbsence, false);
       assert.ok(read.projection.receipt.checks.some(check => check.code === "STATE_RETIREMENT_INHERITED_GOOD_PROVENANCE_VALID"));
+      assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId, store, now: NOW })).status, "CURRENT");
+      // Model the legacy empty copy whose retirement proof was never saved.
+      const hasProof = store.hasStateRetirementProof.bind(store);
+      store.hasStateRetirementProof = async () => false;
+      try {
+        assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId, store, now: NOW })).status, "PUBLISHED");
+      } finally { store.hasStateRetirementProof = hasProof; }
+      const refreshed = (await store.readPromotion(source.recordClass, scope))!;
+      assert.notEqual(refreshed.versionId, read.projection.versionId);
+      assert.deepEqual(refreshed.payload, payload);
+      assert.ok(refreshed.receipt.checks.some(check => check.check === "ABSENCE_VALIDITY" && check.verdict === "PASS"));
+      if (saved.normalization.outputRecords === 0)
+        assert.ok(refreshed.receipt.checks.some(check => check.code === "UNCHANGED_EMPTY_STATE_PARTITION_NO_ABSENCE_CLAIM"));
       assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId, store, now: NOW })).status, "CURRENT");
     }
     assert.deepEqual(genericBallotProblems({ kind: "ballot-contests", ballots: {} }, "PR"), []);
@@ -363,6 +406,36 @@ for (const olderHeld of [false, true]) test(`terminal ballot replay keeps newer 
   assert.equal(released.contests.length, 2);
   assert.deepEqual(released.candidacies.map(row => row.id).sort(), completed.candidacies.map(row => row.id).sort());
   assert.deepEqual(released.filingCandidacies?.map(row => row.id), [earlier.id]);
+});
+
+test("terminal ballot replay preserves a later verified unopposed classification of the same source capture", async t => {
+  const directory = await mkdtemp(join(tmpdir(), "state-retirement-verified-ballot-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const oldKey = process.env[STATE_RETIREMENT_KEY_ENV]; process.env[STATE_RETIREMENT_KEY_ENV] = "9".repeat(64);
+  t.after(() => { if (oldKey === undefined) delete process.env[STATE_RETIREMENT_KEY_ENV]; else process.env[STATE_RETIREMENT_KEY_ENV] = oldKey; });
+  const store = new MemoryRoutineDataStore(), input = ballotPackage(["Current"], T1);
+  const current = structuredClone(input), currentBallot = (current.payload as GenericBallotProjection).ballots["NH:2026-general"];
+  currentBallot.contests[0].scopeNote = "Certified unopposed; state law excludes this race from the printed ballot.";
+  currentBallot.contests[0].provenance.quote += " | Certified candidate status: Unopposed.";
+  currentBallot.contests[0].provenance.verifiedAt = T2;
+  const newer = manualProjectionCandidate(current);
+  await seedHeld(store, newer, T2);
+  const incoming = manualProjectionCandidate(input), originScope = "US:state-election-ballots";
+  const origin = await seedHeld(store, incoming, T1, originScope), ballot = (incoming.readModel as GenericBallotProjection).ballots["NH:2026-general"];
+  const unit = { family: "ballot-contests", state: "NH", originId: origin.candidate.id, originRecordClass: "BALLOT_CANDIDACY",
+    originScope, originReadModelHash: incoming.normalization.normalizedHash!, promotedAt: T1, ...origin, normalizedMetadata: {},
+    payload: { kind: "ballot-contests", ballots: { "NH:2026-general": { ...ballot, contests: [], candidacies: [] } } },
+    members: [...ballot.contests.map(row => ({ path: ["ballots", "NH:2026-general", "contests"], key: row.id, value: row })),
+      ...ballot.candidacies.map(row => ({ path: ["ballots", "NH:2026-general", "candidacies"], key: row.id, value: row }))] };
+  const file = join(directory, "unit.json"), bytes = JSON.stringify(unit), sha256 = createHash("sha256").update(bytes).digest("hex");
+  await writeFile(file, bytes);
+  const seal = sealStateRetirementUnit({ fileSha256: sha256, originId: unit.originId, originRecordClass: unit.originRecordClass,
+    originScope, originReadModelHash: unit.originReadModelHash, state: "NH", contractId: "ballot-contests:NH" });
+  assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId: "ballot-contests:NH", store, now: NOW })).status, "PUBLISHED");
+  const result = (await store.readPromotion<GenericBallotProjection>("BALLOT_CANDIDACY", newer.scope))!.payload;
+  assert.deepEqual(result.ballots["NH:2026-general"].contests, currentBallot.contests);
+  assert.equal(result.ballots["NH:2026-general"].contests[0].provenance.collectedAt, T1);
+  assert.deepEqual((await store.readPromotion("BALLOT_CANDIDACY", originScope))!.payload, incoming.readModel);
 });
 
 test("terminal Arizona contest aliases retain the complete race and bind earlier candidates to its canonical ID", async t => {

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { after, test } from "./helpers/playbooks.ts";
+import test, { after } from "./helpers/playbooks.ts";
 
 import { installReaderValues, activateCanonicalFixture, installCanonicalMeetings } from "./helpers/canonical-reader-fixtures.ts";
 type PublishAuthorityValue = { readonly value: unknown; readonly versionId: string };

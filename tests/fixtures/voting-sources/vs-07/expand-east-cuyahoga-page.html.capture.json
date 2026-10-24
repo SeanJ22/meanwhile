@@ -1,0 +1,16 @@
+{
+  "url": "https://boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+  "finalUrl": "https://boe.cuyahogacounty.gov/elections/GetElectionById/269/",
+  "capturedAt": "2026-10-23T08:13:56.684Z",
+  "contentType": "text/html; charset=utf-8",
+  "rawHash": "91abc32abcf7e188f43ad203f458b3720a27d063bb99868d230fc8357e5ad4fc",
+  "savedHash": "a7c42c39898807fa1f201ca142eff02566b33673225575a2c22c3bd075b84c35",
+  "redactions": 0,
+  "bytes": 18174,
+  "storage": "TRIMMED_EXCERPT",
+  "excerpt": {
+    "of": "91abc32abcf7e188f43ad203f458b3720a27d063bb99868d230fc8357e5ad4fc",
+    "bytes": 48759,
+    "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+  }
+}

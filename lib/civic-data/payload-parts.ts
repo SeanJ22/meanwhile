@@ -20,6 +20,8 @@ function refsIn(value: unknown, into: Set<string>): Set<string> {
 
 /* Parts are immutable by hash, so the most recently read are kept, up to a fixed size. */
 const CACHED_PART_BYTES = 64 * 1024 * 1024;
+// Array groups are bounded at 256 KiB; 64 keeps ordinary requests near 16 MiB instead of one round trip per 64 KiB of agenda text.
+const READ_BATCH = 64;
 
 export class CivicPayloadParts {
   private readonly io: CivicPayloadPartIO;
@@ -120,8 +122,8 @@ export class CivicPayloadParts {
     };
     const resolve = async (values: readonly unknown[]): Promise<boolean> => {
       const hashes = [...values.reduce<Set<string>>((into, value) => refsIn(value, into), new Set())];
-      for (let at = 0; at < hashes.length; at += 8) {
-        const wanted = hashes.slice(at, at + 8), missing = wanted.filter(hash => !decoded.has(hash) && !pending.has(hash));
+      for (let at = 0; at < hashes.length; at += READ_BATCH) {
+        const wanted = hashes.slice(at, at + READ_BATCH), missing = wanted.filter(hash => !decoded.has(hash) && !pending.has(hash));
         if (missing.length) {
           const parts = preloaded === undefined ? await this.io.read(missing) : missing.flatMap(hash => {
             if (!Object.hasOwn(preloaded, hash)) return [];
@@ -143,7 +145,7 @@ export class CivicPayloadParts {
     }
   }
 
-  /** Reads parts eight at a time and assembles each as soon as its children are in. */
+  /** Reads parts in bounded batches and assembles each as soon as its children are in. */
   async load(input: unknown): Promise<unknown> {
     const decoded = new Map<string, unknown>();
     const build = (value: unknown): unknown => {
@@ -169,8 +171,8 @@ export class CivicPayloadParts {
     };
     const resolve = async (values: readonly unknown[]): Promise<void> => {
       const hashes = [...values.reduce<Set<string>>((into, value) => refsIn(value, into), new Set())].filter(hash => !decoded.has(hash));
-      for (let at = 0; at < hashes.length; at += 8) {
-        const wanted = hashes.slice(at, at + 8);
+      for (let at = 0; at < hashes.length; at += READ_BATCH) {
+        const wanted = hashes.slice(at, at + READ_BATCH);
         const parts = await this.read(wanted);
         if (wanted.some(hash => !parts.some(part => part.hash === hash))) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
         await resolve(parts.map(part => part.payload));

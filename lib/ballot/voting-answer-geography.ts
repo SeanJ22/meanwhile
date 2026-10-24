@@ -1,6 +1,5 @@
 import { parseCensusPoint } from "../geo/census-geocoder.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
-import type { Division } from "../registry/types.ts";
 import type { VotingReaderPlace } from "./voting-answer.ts";
 import { recordVotingFailure } from "./voting-errors.ts";
 import countyTimeZones from "../../data/reference/national_county_time_zones.json" with { type: "json" };
@@ -22,18 +21,6 @@ export function votingPlaceFromZip(ids: readonly string[]): VotingReaderPlace {
 /** A failed street match can still show the published sites for a supplied ZIP. */
 export function votingInputZip(address: string): string | null {
   return /(?:^|[,\s])(\d{5})(?:-\d{4})?\s*$/.exec(address)?.[1] ?? null;
-}
-
-export function votingPlaceFromDivisions(divisions: readonly Division[], precision: VotingReaderPlace["precision"], point: VotingReaderPlace["point"]): VotingReaderPlace {
-  return {
-    precision, point, divisionIds: divisions.map(d => d.ocdId), states: strings(divisions.flatMap(d => [d.state?.toUpperCase(), stateId(d.ocdId)])),
-    countyFips: strings(divisions.filter(d => d.divisionType === "county").map(d => d.geoid)),
-    countyNames: strings(divisions.filter(d => d.divisionType === "county").map(d => d.label)),
-    countySubdivisionGeoids: strings(divisions.filter(d => ["cousub", "county_subdivision"].includes(d.divisionType)).map(d => d.geoid)),
-    towns: strings(divisions.filter(d => ["place", "cousub", "county_subdivision"].includes(d.divisionType)).map(d => d.label)),
-    wards: strings(divisions.filter(d => d.divisionType === "ward").map(d => d.label)),
-    aiannhGeoids: strings(divisions.filter(d => /aiannh|tribal/.test(d.divisionType)).map(d => d.geoid)), precincts: [],
-  };
 }
 
 /** Only geographic attributes survive; the matched address and range endpoints do not. */

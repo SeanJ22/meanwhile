@@ -59,7 +59,7 @@ async function main() {
     printSourceRunnerReceipt(LEGISCAN_BULK_CONTRACT,marker.candidate,marker.outcome);
   } catch(error) {
     const failure=sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE",error instanceof Error?error.message:"LegiScan bulk unavailable");
-    const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:LEGISCAN_BULK_CONTRACT,requestedUrl:LEGISCAN_API,failure});
+    const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:LEGISCAN_BULK_CONTRACT,failure});
     console.log(failed.line);process.exitCode=2;
   }
 }

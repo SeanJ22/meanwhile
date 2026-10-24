@@ -25,7 +25,7 @@ import { pointInRings, type Ring } from "../lib/geo/polygon.ts";
 import { readCensusGovernmentFacts } from "../lib/registration/jurisdictions.ts";
 import { readBoundaryZip } from "../lib/geo/shapefile.ts";
 import type { ReferenceDivision, ReferenceGovernment, RegistrationReference } from "../lib/registration/reference.ts";
-import { DISTRICT_SOURCES_FILE, districtNameKey, type DistrictBoundarySource, type DistrictBoundarySources } from "../lib/registration/district-sources.ts";
+import { DISTRICT_SOURCES_FILE, districtNameKey, districtSourceName, type DistrictBoundarySource, type DistrictBoundarySources } from "../lib/registration/district-sources.ts";
 
 const ROOT = process.cwd();
 const arg = (name: string) => { const i = process.argv.indexOf(name); return i > 0 ? process.argv[i + 1] : undefined; };
@@ -188,7 +188,7 @@ async function geojsonFeatures(source: DistrictBoundarySource): Promise<{ attrib
 async function sourceFeatures(source: DistrictBoundarySource): Promise<DistrictFeature[]> {
   const raw = source.format === "geojson" ? await geojsonFeatures(source) : (await arcgisFeatures(source)).map(f => ({ ...f, polygons: esriPolygons(f.rings) }));
   return raw.flatMap((f, index) => {
-    const name = (source.nameTemplate ? source.nameTemplate.replace(/\{(\w+)\}/g, (_, field: string) => String(f.attributes[field] ?? "")) : String(f.attributes[source.nameField] ?? "")).trim();
+    const name = districtSourceName(source, f.attributes);
     const kindValue = source.kindField ? String(f.attributes[source.kindField] ?? "").trim() : null;
     const kind = kindValue === null ? source.kinds[0] : source.kindValues?.[kindValue] ?? null;
     if (!name || !kind || PLACEHOLDER.test(name.replace(/^.*\bcounty\s+/i, ""))) return [];

@@ -71,10 +71,6 @@ export function hasProducer(id: string): boolean {
 
 export const NO_PRODUCER_REASON = "No squad or door covers this item yet";
 
-export function isCoreItem(id: string): boolean {
-  return checklistItem(id)?.scoreAs === "core";
-}
-
 /** Applies now, applies only where a condition holds, or cannot be told. An unknown or unlisted trigger is unresolved, never dropped. */
 export function applicabilityOf(id: string): "applies" | "conditional" | "unresolved" {
   const trigger = checklistItem(id)?.trigger ?? "unknown";

@@ -51,7 +51,7 @@ export interface Officeholder {
   /** Exact publisher identifiers. Names are never identity aliases. */
   nativeIds?: Readonly<Record<string, readonly string[]>>;
   fecCandidateIds?: readonly string[];
-  offices?: readonly { id?: string; name?: string; address?: string; phone?: string; email?: string; sourceUrl: string; collectedAt: string }[];
+  offices?: readonly { id?: string; name?: string; address?: string; phone?: string; email?: string; sourceUrl: string; collectedAt: string; geocodedPoint?: import("./office-points-publication.ts").PublishedOfficePoint; pointUnavailable?: import("./office-points-publication.ts").OfficePointUnavailable }[];
   memberships?: readonly PersonMembership[];
   fieldSources?: Readonly<Record<string, Provenance>>;
   selectionMethod?: OfficeSelectionMethod;
@@ -84,6 +84,8 @@ export interface Officeholder {
   portraitCandidate?: PortraitCandidate;
   /** The member's social accounts, each with its kind, source page and collection time. Only what is held renders. */
   social?: SocialAccounts;
+  /** Official national executive facts, shared by every place and card. */
+  executive?: import("./national-executive.ts").NationalExecutiveData;
   /** The state and chamber the member's own current term states (item 7). */
   state?: string;
   chamber?: string;
@@ -175,14 +177,4 @@ export interface OfficeholderSet {
   divisions: OfficeholderDivision[];
   /** Seats the source described that could not be attached to a division, with the reason; reported, never dropped. */
   unmatched: { officeholderId: string; reason: string }[];
-}
-
-/** The contract an officials adapter implements. */
-export interface OfficialSource<Raw = unknown> {
-  readonly name: string;
-  /** The only step allowed to touch the network. */
-  fetch(): Promise<Raw[]>;
-  /** Pure. Drops nothing silently; anything unattachable lands in `unmatched`. */
-  normalize(raw: Raw[], collectedAt: string): OfficeholderSet;
-  upsert(set: OfficeholderSet): Promise<{ inserted: number; updated: number }>;
 }

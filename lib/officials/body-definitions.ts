@@ -489,7 +489,7 @@ export function bodyKindDefinitionFor(bodyId: string, ocdId: string | null): Def
 }
 
 /** The division-derivation predicate, re-exported from its own leaf module. */
-export { DERIVED_BODY_SUFFIX, isDivisionsOwnGovernment } from "./division-government.ts";
+export {  isDivisionsOwnGovernment } from "./division-government.ts";
 /* Re-exporting does not bring the name into THIS module's scope, and
    `definitionsForBody` gates all three division-derived layers on it. */
 import { isDivisionsOwnGovernment } from "./division-government.ts";
@@ -580,78 +580,4 @@ export function definitionsForBody(input: {
     // The note only makes sense beneath a description.
     unreadNote: classDefinition !== null && formDefinition === null ? CHARTER_UNREAD_LINE : null,
   };
-}
-
-/* A seat is not a body: seats resolve the same `ClassKey` space through their own entry point. */
-
-/** The division types that elect a seat rather than constituting a body. */
-export type SeatDivisionType = "cd" | "sldu" | "sldl";
-
-/** A statewide elected executive is named, since no geography is narrower than the state. */
-export type SeatKind = SeatDivisionType | "us_senate" | "governor";
-
-/** Which class describes this seat; total over `SeatKind`. */
-export function classKeyForSeat(kind: SeatKind): ClassKey {
-  switch (kind) {
-    case "cd":
-      return "congressional_district";
-    case "us_senate":
-      return "us_senate_seat";
-    case "sldu":
-      return "state_senate";
-    case "sldl":
-      return "state_house";
-    case "governor":
-      return "governor";
-  }
-}
-
-/** The whole answer for one seat: a complete shape with nulls where a class has no row. */
-export function definitionsForSeat(input: {
-  kind: SeatKind;
-  /** The seat's own division, or the state for a statewide office. */
-  ocdId: string | null;
-}): BodyDefinitions {
-  const classKey = classKeyForSeat(input.kind);
-  const state = input.ocdId?.match(/\/state:([a-z]{2})\b/)?.[1] ?? null;
-
-  const classDefinition =
-    CLASS_DEFINITIONS.find((r) => r.classKey === classKey && r.state === null)?.definition ??
-    (state
-      ? (CLASS_DEFINITIONS.find((r) => r.classKey === classKey && r.state === state)
-          ?.definition ?? null)
-      : null);
-
-  // A seat has no charter, so no unread-charter note.
-  return {
-    classDefinition,
-    formDefinition: null,
-    classKey,
-    unreadNote: null,
-  };
-}
-
-/** The class keys declared with no definition row anywhere. */
-export function classKeysWithNoRow(): ClassKey[] {
-  const declared: ClassKey[] = [
-    "school_district_independent",
-    "school_district_dependent",
-    "school_district_unclassified",
-    "county",
-    "municipality",
-    "township",
-    "state_house",
-    "state_senate",
-    "congressional_district",
-    "us_senate_seat",
-    "governor",
-  ];
-  const special: ReadonlySet<ClassKey> = new Set<ClassKey>([
-    // These two do not live in CLASS_DEFINITIONS — they are single constants.
-    "school_district_dependent",
-    "school_district_unclassified",
-  ]);
-  return declared.filter(
-    (key) => !special.has(key) && !CLASS_DEFINITIONS.some((r) => r.classKey === key),
-  );
 }

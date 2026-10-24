@@ -81,9 +81,6 @@ export interface BodyCoverageAudit {
   notes: string;
 }
 
-/** A body nobody has looked at yet. The default, and it is a real state. */
-export const NOT_ATTEMPTED_STATUS: CoverageStatus = "NOT_ATTEMPTED";
-
 export interface CoverageAuditFile {
   generatedAt: string;
   audits: BodyCoverageAudit[];
@@ -94,17 +91,4 @@ export function indexAudits(
   file: CoverageAuditFile,
 ): Map<string, BodyCoverageAudit> {
   return new Map(file.audits.map((a) => [a.bodyId, a]));
-}
-
-/**
- * Whether this body's `NO_SOURCE_FOUND`-shaped status is a finding or a gap.
- *
- * Deliberately takes the audit index rather than the body, because the answer
- * lives in the *absence* of a row and a body cannot carry its own absence.
- */
-export function wasLookedAt(
-  audits: Map<string, BodyCoverageAudit>,
-  bodyId: string,
-): boolean {
-  return audits.has(bodyId);
 }

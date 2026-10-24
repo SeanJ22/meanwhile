@@ -10,15 +10,15 @@ The Box remains in service until Phase D. No production rows have been changed.
 
 `state` is the postal state from RB-A1; national and system work uses US. `status` is ready, taken, done or refused. `sources` holds the shared source references, and `reports` holds repeat notes. A claim's stable key distinguishes separate people or seats within a multivalued field. Changed values or quotes retain the row id; unchanged reports preserve its place and backoff. Changed evidence during an active lease waits for that worker to release the claim before becoming available again.
 
-`work_in`, `work_done` and `work_refused` are the work list's `count_hour.step` values. The database trigger counts transitions in their transaction, including the detective row created by a refusal.
+`work_in`, `work_done` and `work_refused` are the work list's `count_hour.step` values. The database trigger counts transitions in their transaction, including the detective row created by a refusal. Outcome timestamps stay on the row so direct SQL can count every completion or refusal after changed evidence reopens it, including outcomes in different hours.
 
 ## Production copy verification
 
 Read-only Box export: 328,791 complete rows (742 MB source relation), captured October 24, 1:55–1:57 a.m. Arizona time. Source role: wtp_cp_release_readonly; project withered-sunset-39821877, branch br-tiny-frog-aeufpjeq. SHA-256: da80058267dc394af20e66d7b606b0799f05096017880861852ad7e8b93f964f. All writes stayed in local PostgreSQL 18.4.
 
-The actual RB-A1 and RB-A5 migrations applied cleanly. Feeding every copied report through add produced 243,681 distinct links or claims, plus one detective in the probe. Two hundred independent connections started claiming together: 200 claims, 200 distinct ids. The slowest of 20 measured claims was 20.76 ms, including indexed lease recovery. The plan uses work_row_claim_ready.
+The actual RB-A1 and RB-A5 migrations applied cleanly. Feeding every copied report through add produced 243,681 distinct links or claims, plus one detective in the probe. Two hundred independent connections started claiming together: 200 claims, 200 distinct ids. The slowest of 20 measured claims was 24.34 ms, including indexed lease recovery. The plan uses work_row_claim_ready.
 
-A child worker was killed with SIGKILL. Two timer-driven runs used the normal claim method; the second reclaimed and completed its row after its 1.5-second lease. Runs: 2026-10-24T09:18:10.073Z, 2026-10-24T09:18:11.070Z. This is scheduled behavior on the production copy; deployed queue scheduling remains for the connected rollout.
+A child worker was killed with SIGKILL. Two timer-driven runs used the normal claim method; the second reclaimed and completed its row after its 1.5-second lease. Runs: 2026-10-24T10:12:53.431Z, 2026-10-24T10:12:54.434Z. This is scheduled behavior on the production copy; deployed queue scheduling remains for the connected rollout.
 
 Counter totals matched direct SQL both by state and by hour. The authenticated local Admin Work screen rendered the copy's actual hourly query results in Eastern time. Its obsolete redirect to Queue was removed so these counts are reachable without the former work-row read. The Chrome screenshot is .scratch/rb-a5/admin-work.png.
 
@@ -35,26 +35,26 @@ Google Chrome for Testing 156 read meanwhileusa.com/ballot?zip=85003. The Novemb
 
 ## Counts by state
 
-After the concurrency and connection probes: 2026-10-24T09:56:17.517Z. Direct counts equal the hourly totals for all states.
+After the concurrency and connection probes: 2026-10-24T10:14:20.912Z. Direct counts equal the hourly totals for all states.
 
 | State | Rows in | Done | Refused |
 | --- | ---: | ---: | ---: |
 | AK | 11090 | 20 | 0 |
-| AL | 18669 | 29 | 0 |
-| AR | 14906 | 22 | 0 |
+| AL | 18669 | 28 | 0 |
+| AR | 14906 | 21 | 0 |
 | AS | 1 | 0 | 0 |
 | AZ | 20032 | 21 | 0 |
-| CA | 30724 | 23 | 1 |
+| CA | 30723 | 23 | 1 |
 | CO | 13584 | 12 | 0 |
 | CT | 22599 | 10 | 0 |
-| DC | 4013 | 1 | 0 |
+| DC | 4014 | 1 | 0 |
 | DE | 12635 | 12 | 0 |
-| FL | 19823 | 8 | 0 |
+| FL | 19823 | 9 | 0 |
 | GA | 25318 | 23 | 0 |
 | GU | 160 | 0 | 0 |
 | HI | 5158 | 3 | 0 |
 | IA | 7334 | 5 | 0 |
-| ID | 16780 | 19 | 0 |
+| ID | 16780 | 20 | 0 |
 | IL | 3389 | 4 | 0 |
 | IN | 5888 | 5 | 0 |
 | KS | 1711 | 2 | 0 |

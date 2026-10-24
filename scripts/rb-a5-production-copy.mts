@@ -145,7 +145,7 @@ try {
     assert.equal(await list.refuse(refused, "Repeated result"), false);
     assert.equal((await query("SELECT count(*)::int n FROM work_row WHERE id=$1", [`detect-${refused.id}`]))[0]!.n, 1);
     const direct = await query(`SELECT lower(state) state,
-      count(*)::int incoming, count(*) FILTER(WHERE status='done')::int done, count(*) FILTER(WHERE status='refused')::int refused
+      count(*)::int incoming, coalesce(sum(cardinality(done_times)),0)::int done, coalesce(sum(cardinality(refused_times)),0)::int refused
       FROM work_row GROUP BY 1 ORDER BY 1`);
     const counted = await query(`SELECT lower(state) AS state,sum(n) FILTER(WHERE step='work_in')::int incoming,
       coalesce(sum(n) FILTER(WHERE step='work_done'),0)::int done, coalesce(sum(n) FILTER(WHERE step='work_refused'),0)::int refused
@@ -153,8 +153,8 @@ try {
     assert.deepEqual(counted, direct);
     const directHours = await query(`WITH events AS (
       SELECT lower(state) AS state, date_trunc('hour',received_at) AS hour, 'work_in' AS step FROM work_row
-      UNION ALL SELECT lower(state), date_trunc('hour',done_at), 'work_done' FROM work_row WHERE done_at IS NOT NULL
-      UNION ALL SELECT lower(state), date_trunc('hour',refused_at), 'work_refused' FROM work_row WHERE refused_at IS NOT NULL
+      UNION ALL SELECT lower(state), date_trunc('hour',event_at), 'work_done' FROM work_row CROSS JOIN LATERAL unnest(done_times) AS events(event_at)
+      UNION ALL SELECT lower(state), date_trunc('hour',event_at), 'work_refused' FROM work_row CROSS JOIN LATERAL unnest(refused_times) AS events(event_at)
     ) SELECT state,hour,step,count(*)::int n FROM events GROUP BY 1,2,3 ORDER BY 1,2,3`);
     assert.deepEqual(await query("SELECT lower(state) AS state,hour,step,n::int FROM count_hour WHERE step IN ('work_in','work_done','work_refused') ORDER BY 1,2,3"), directHours);
     const admin = await workCounts(query, null, new Date());

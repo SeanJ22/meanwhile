@@ -64,10 +64,31 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.deepEqual(hours[0], { state: "az", hour: "2026-10-24T12:00:00.000Z", incoming: 2, done: 1, refused: 2 });
   assert.equal((await workCounts(query, "wy", at))[0]!.incoming, 0);
   await assert.rejects(workCounts(query, "invalid", at), /INVALID_STATE/);
+  await list.add({ ...input, value: "520-724-5555", quote: "Phone: 520-724-5555", sources: ["source-new"], source: { report: "six" } });
+  const [revised] = await list.claim("check", 1);
+  assert.ok(await list.refuse(revised!, "Changed claim is still unsupported"));
+  const [reopenedDetect] = await list.claim("detect", 1);
+  assert.equal(reopenedDetect!.id, detect!.id);
+  assert.deepEqual(reopenedDetect!.sources, ["source-new"], "the existing detective retains the new source evidence");
+  assert.ok(await list.finish(reopenedDetect!));
+  assert.equal((await query("select count(*)::int n from work_row where kind='detect'"))[0]!.n, 1);
   await list.add({ ...input, field: "member", claimKey: "seat-a", value: "Person A", source: { report: "seat-a" } });
   await list.add({ ...input, field: "member", claimKey: "seat-b", value: "Person B", source: { report: "seat-b" } });
   const members = await list.claim("check", 2);
   assert.deepEqual(members.map(row => row.value).sort(), ["Person A", "Person B"], "a multivalued field retains both claims");
+  assert.ok(await list.finish(members[0]!));
+  assert.ok(await list.finish(members[1]!));
+  const held = members[0]!;
+  const key = held.value === "Person A" ? "seat-a" : "seat-b";
+  at = new Date("2026-10-24T13:00:00Z");
+  await list.add({ ...input, field: "member", claimKey: key, value: "Updated name", source: { report: "updated-member" } });
+  const [reopened] = await list.claim("check", 1);
+  assert.equal(reopened!.id, held.id);
+  assert.ok(await list.finish(reopened!));
+  const direct = await query(`SELECT date_trunc('hour',event_at) AS hour,count(*)::int n FROM work_row
+    CROSS JOIN LATERAL unnest(done_times) AS events(event_at) GROUP BY 1 ORDER BY 1`);
+  const counters = await query("SELECT hour,n::int FROM count_hour WHERE step='work_done' AND state='AZ' ORDER BY hour");
+  assert.deepEqual(counters, direct, "a changed row finishing in a second hour preserves both completions for direct counts");
 });
 
 test("link reports share a row across subjects; claim ids survive changed values", () => {

@@ -116,7 +116,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const [saved] = await query(`UPDATE work_row SET
         status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'ready' END,
         refusal = NULL,
-        done_at = CASE WHEN content_version = lease_version THEN $3::timestamptz ELSE done_at END,
+        done_times = CASE WHEN content_version = lease_version THEN array_append(done_times,$3::timestamptz) ELSE done_times END,
         not_before = CASE WHEN content_version <> lease_version THEN $3::timestamptz ELSE not_before END,
         lease_owner = NULL, lease_until = NULL, lease_version = NULL
         WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status`, fenced(claim));
@@ -135,7 +135,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const [saved] = await query(`WITH refused AS (
         UPDATE work_row SET status = CASE WHEN content_version = lease_version THEN 'refused' ELSE 'ready' END,
           refusal = CASE WHEN content_version = lease_version THEN $4 ELSE NULL END,
-          refused_at = CASE WHEN content_version = lease_version THEN $3::timestamptz ELSE refused_at END,
+          refused_times = CASE WHEN content_version = lease_version THEN array_append(refused_times,$3::timestamptz) ELSE refused_times END,
           lease_owner = NULL, lease_until = NULL, lease_version = NULL
         WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING *
       ), detective AS (
@@ -144,6 +144,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
           jsonb_build_array(jsonb_build_object('workId',id,'reason',$4,'version',content_version)),sources,priority,$3,field,value,quote,$3
         FROM refused WHERE status = 'refused' AND kind <> 'detect'
         ON CONFLICT (id) DO UPDATE SET reports = work_row.reports || EXCLUDED.reports,
+          sources = (SELECT coalesce(jsonb_agg(DISTINCT item),'[]'::jsonb) FROM jsonb_array_elements(work_row.sources || EXCLUDED.sources) item),
           status = CASE WHEN work_row.status = 'taken' THEN 'taken' ELSE 'ready' END,
           content_version = work_row.content_version + 1, value = EXCLUDED.value, quote = EXCLUDED.quote,
           not_before = EXCLUDED.not_before, refusal = NULL

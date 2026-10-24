@@ -7,8 +7,8 @@ ALTER TABLE work_row
   ADD COLUMN content_version integer NOT NULL DEFAULT 1,
   ADD COLUMN lease_version integer,
   ADD COLUMN received_at timestamptz NOT NULL DEFAULT now(),
-  ADD COLUMN done_at timestamptz,
-  ADD COLUMN refused_at timestamptz;
+  ADD COLUMN done_times timestamptz[] NOT NULL DEFAULT '{}',
+  ADD COLUMN refused_times timestamptz[] NOT NULL DEFAULT '{}';
 --> statement-breakpoint
 UPDATE work_row SET status = CASE WHEN lease_until IS NOT NULL THEN 'taken' WHEN refusal IS NOT NULL THEN 'refused' ELSE 'ready' END;
 --> statement-breakpoint
@@ -29,7 +29,8 @@ BEGIN
   ELSE RETURN NEW;
   END IF;
   INSERT INTO count_hour(state, hour, step, n)
-    VALUES(NEW.state, date_trunc('hour', CASE event WHEN 'work_in' THEN NEW.received_at WHEN 'work_done' THEN NEW.done_at ELSE NEW.refused_at END), event, 1)
+    VALUES(NEW.state, date_trunc('hour', CASE event WHEN 'work_in' THEN NEW.received_at
+      WHEN 'work_done' THEN NEW.done_times[cardinality(NEW.done_times)] ELSE NEW.refused_times[cardinality(NEW.refused_times)] END), event, 1)
     ON CONFLICT (state, hour, step) DO UPDATE SET n = count_hour.n + 1;
   RETURN NEW;
 END $$;

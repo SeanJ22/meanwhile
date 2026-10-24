@@ -80,8 +80,14 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   const pin = input.meeting.mapPin!;
   const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
-  return publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
-    valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
+  for(;;)try{
+    return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
+      valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
+  }catch(error){
+    const conflict=error as {code?:string;constraint?:string}|null;
+    // A competing first publication won. Decide again against its committed point without geocoding again.
+    if(conflict?.code!=="23505"||conflict.constraint!=="fact_one_live")throw error;
+  }
 }
 
 /** An already-published sitting can gain its checked point independently of another calendar read. */

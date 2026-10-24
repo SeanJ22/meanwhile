@@ -632,3 +632,14 @@ test("a newly published physical point replaces an older office-reference pin",a
   ]);
   assert.deepEqual(read.location,physical);assert.equal(read.mapPin,undefined,"the meeting's own point takes precedence over an office reference");
 });
+
+test("Census rejects unusable published text with 400 and publication tries the board office; service errors remain visible",async()=>{
+  for(const status of [400,503]){
+    let requests=0;
+    const placed=await placePublishedMeetingPins({meetings:[meeting()],offices,clock:()=>NOW,fetchImpl:async()=>{
+      return ++requests===1?new Response("address rejected",{status}):response(BOARD_GEO);
+    }});
+    assert.equal(placed.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(requests,2);
+    assert.equal(placed.held.length,status===400?0:1);
+  }
+});

@@ -173,3 +173,33 @@ test("a Census result arriving at the pass deadline is saved once and reused by 
     assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
   }finally{await db.pg.close();}
 });
+
+test("an overlapping pin publisher keeps the winning live point and the following pass does no new geocoding",async()=>{
+  const db=await setup([online]),later=new Date(Date.parse(NOW)+60000).toISOString();
+  const collision=Object.assign(new Error('duplicate key value violates unique constraint "fact_one_live"'),{code:"23505",constraint:"fact_one_live"});
+  let collided=false,requests=0,winner:unknown;
+  const facts={...db,transaction:async<T>(work:Parameters<typeof db.transaction<T>>[0])=>{
+    let insert:{sql:string;params:readonly unknown[]}|undefined;
+    try{return await db.transaction(query=>work(async(sql,params=[])=>{
+      if(!collided&&sql.startsWith("INSERT INTO fact ")){collided=true;insert={sql,params};throw collision;}
+      return query(sql,params);
+    }));}catch(error){
+      if(error===collision&&insert){
+        const params=[...insert.params];winner={...JSON.parse(String(params[2])),coordinateCheckedAt:later};
+        params[2]=JSON.stringify(winner);params[10]=later;
+        // The other transaction commits its point before this failed transaction retries.
+        await db.query(insert.sql,params);
+      }
+      throw error;
+    }
+  }};
+  try{
+    const args={facts,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000};
+    const first=await publishHeldMeetingPins({...args,fetchImpl:async()=>{requests++;return new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")));}});
+    assert.equal(collided,true);assert.deepEqual(first,{considered:1,published:0,unplaced:0,failures:[]});
+    assert.deepEqual((await db.query("SELECT value FROM fact WHERE field='map_pin' AND status='live'")).map(row=>row.value),[winner]);
+    const next=await publishHeldMeetingPins({...args,now:later,clock:()=>Date.parse(later),deadlineMs:Date.parse(later)+60000,
+      fetchImpl:async()=>{throw Error("the concurrent winner must be reused");}});
+    assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});assert.equal(requests,1);
+  }finally{await db.pg.close();}
+});

@@ -114,7 +114,7 @@ export async function publishHeldMeetingPins(input: {
         considered++;
         if("blank" in outcome){unplaced++;return;}
         if(outcome.decision==="PUBLISH"||outcome.decision==="CONFIRM"){published++;placed.push(meeting);}
-        else failures.push(`${meeting.id}: ${outcome.decision}`);
+        else if(outcome.decision!=="KEEP_CURRENT")failures.push(`${meeting.id}: ${outcome.decision}`);
       } catch(error){failures.push(`${meeting.id}: ${error instanceof Error?error.message:String(error)}`);}
     });
   }

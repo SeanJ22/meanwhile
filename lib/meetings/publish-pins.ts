@@ -207,7 +207,7 @@ export async function placePublishedMeetingPins(input: {
         });
         const bytes = new Uint8Array(await response.arrayBuffer());
         if (!response.ok) {
-          held.push(`${address.address}: Census HTTP ${response.status}`);
+          if(response.status!==400)held.push(`${address.address}: Census HTTP ${response.status}`);
           return null;
         }
         const finalUrl = response.url || url.href;

@@ -366,7 +366,7 @@ export function normalizeWithDrops(
     /**
      * Why a future instance this adapter saw did not become a `Meeting`, or became one that still owes
      * something, keyed on canonical identity and recorded at the point of the decision. Two verdicts ride on a
-     * produced sitting: `CANCELED_BY_PUBLISHER` and `VENUE_NOT_RESOLVED`.
+     * produced canceled sitting: `CANCELED_BY_PUBLISHER`.
      */
     const withheldBy = new Map<string, { verdict: DispositionVerdict; because: string }>();
     /**
@@ -504,18 +504,6 @@ export function normalizeWithDrops(
         if (venueGap) {
           drops.unknownVenue++;
           keptButPlaceless += 1;
-          if (futureKey) {
-            withheldBy.set(futureKey, {
-              verdict: "VENUE_NOT_RESOLVED",
-              because: location
-                ? `${tenant.host} published the location "${location}". OURS: this ` +
-                  "publication resolves this source text with Census, then the board and government offices. " +
-                  "The sitting is published while its place is being resolved."
-                : `${tenant.host} Calendar.aspx published this sitting with an EMPTY ` +
-                  "location cell. OURS: we hold no place for it and will not invent one. " +
-                  "The sitting IS published, its place named as the publisher's own gap.",
-            });
-          }
         }
 
         const id = `${SOURCE_NAME}:${tenant.slug}:${row.insiteId ?? dedupeRef}`;

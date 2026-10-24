@@ -1,5 +1,10 @@
+import { US_JURISDICTIONS } from "../coverage/states.ts";
+import { censusAddressQuery } from "./address-query.ts";
+
 const words = (value: string): string =>
   value
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
     .replace(/Hawai[‘’' ]i/gi, "Hawaii")
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, " ")
@@ -111,8 +116,8 @@ interface CensusMatch {
 }
 
 /**
- * A Census street point is accepted only for one exact house/street/city/state match.
- * The ZIP is checked only when the published text carries one.
+ * A single Census match must repeat the published house, street and city.
+ * A state or ZIP the source states must agree; an omitted state is not a mismatch.
  */
 export function verifiedCensusVenuePoint(
   published: string,
@@ -143,10 +148,17 @@ export function verifiedCensusVenuePoint(
       .filter(Boolean)
       .join(" "),
   );
+  if (!hasWords(folded, street) || !hasWords(folded, usps(components.city)))
+    return null;
+  const query = censusAddressQuery(published);
+  const foldedQuery = usps(query);
+  const stateTail = /\b([a-z]{2})(?:\s+\d{5}(?:\s+\d{4})?)?$/.exec(
+    foldedQuery,
+  )?.[1];
   if (
-    !hasWords(folded, street) ||
-    !hasWords(folded, usps(components.city)) ||
-    !hasWords(folded, usps(components.state))
+    stateTail &&
+    US_JURISDICTIONS.some((state) => state.slug === stateTail) &&
+    stateTail !== components.state.toLowerCase()
   )
     return null;
   const zipPattern = new RegExp(
@@ -154,8 +166,8 @@ export function verifiedCensusVenuePoint(
     "g",
   );
   const publishedZip =
-    [...folded.matchAll(zipPattern)].at(-1)?.[1] ??
-    /\b(\d{5})(?:-\d{4})?\s*$/.exec(published)?.[1];
+    [...foldedQuery.matchAll(zipPattern)].at(-1)?.[1] ??
+    /\b(\d{5})(?:-\d{4})?\s*$/.exec(query)?.[1];
   if (publishedZip && components.zip !== publishedZip) return null;
   const lat = match.coordinates?.y;
   const lng = match.coordinates?.x;

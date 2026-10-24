@@ -191,8 +191,7 @@ test("(a) Pima County Legistar InSite, rooms left out: every grid sitting is pub
     [...new Set(unplaced.map((m) => m.venueGap?.publishedText))].sort(),
     ["1 E. Broadway, 4th Floor", "Board of Supervisors' Hearing Room"],
   );
-  // The adapter names its unresolved place; publication will try the source text and offices.
-  assert.ok(result.openObligations.some((d) => d.verdict === "VENUE_NOT_RESOLVED"));
+  assert.equal(result.meetings.filter(meeting=>meeting.venueGap).length,29);
 });
 
 test("(a) Mesa InSite, rooms left out: the tenant is read on the runner's own query, not skipped", async () => {

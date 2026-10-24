@@ -545,8 +545,19 @@ test("online-only source text retains a published join link while hybrid street 
   );
 });
 
+test("a room number before a street address is excluded from the Census query", () => {
+  assert.equal(
+    censusAddressQuery(
+      "Community Room #1004 - 1300 West Broward Boulevard, Fort Lauderdale, FL 33312",
+    ),
+    "1300 West Broward Boulevard, Fort Lauderdale, FL 33312",
+  );
+});
 
-test("a room number before a street address is excluded from the Census query",()=>{
-  assert.equal(censusAddressQuery("Community Room #1004 - 1300 West Broward Boulevard, Fort Lauderdale, FL 33312"),
-    "1300 West Broward Boulevard, Fort Lauderdale, FL 33312");
+test("an unambiguous published street and city can match without a stated state, while an explicit conflicting state is refused", () => {
+  assert.ok(verifiedCensusVenuePoint("1415 W Melody Ln, Bisbee", OWN_GEO));
+  assert.equal(
+    verifiedCensusVenuePoint("1415 W Melody Ln, Bisbee, CA 85603", OWN_GEO),
+    null,
+  );
 });

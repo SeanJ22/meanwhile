@@ -16,6 +16,10 @@ const meeting={id:"existing:meeting:id",bodyId:body.bodyId,bodyName:"Board",loca
 
 test("canonical governing and school board identities count as governing; source kinds retain their class",()=>{
   for(const suffix of ["governing","board"]) assert.equal(badgeFor(meeting,new Set([division]),"ADDRESS",null,bodyClassFromIdentity(`${division}#${suffix}`)),"GOVERNS");
+  for(const suffix of ["body:board-of-legislators","body:board-of-directors-regular-board-meeting","body:city-council"])
+    assert.equal(bodyClassFromIdentity(`${division}#${suffix}`,"body"),"GOVERNING");
+  assert.equal(bodyClassFromIdentity(`${division}#body:board-of-legislators-budget-committee`),"ADVISORY");
+  assert.equal(bodyClassFromIdentity(`${division}#body:board-of-health`,"body"),"body");
   assert.equal(bodyClassFromIdentity("body:one","executive agency"),"EXECUTIVE_AGENCY");
   assert.equal(bodyClassFromIdentity(`${division}#body:planning-commission`),"COMMISSION");
   assert.equal(bodyClassFromIdentity(`${division}#body:finance-committee`),"ADVISORY");

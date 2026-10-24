@@ -1,0 +1,241 @@
+{
+  "state": "UT",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://vote.utah.gov/current-election-information/",
+      "finalUrl": "https://vote.utah.gov/current-election-information/",
+      "publisher": "Utah Lieutenant Governor Elections Office"
+    },
+    {
+      "requestedUrl": "https://vote.utah.gov/additional-resources-for-voters/",
+      "finalUrl": "https://vote.utah.gov/additional-resources-for-voters/",
+      "publisher": "Utah Lieutenant Governor Elections Office"
+    },
+    {
+      "requestedUrl": "https://vote.utah.gov/",
+      "finalUrl": "https://vote.utah.gov/",
+      "publisher": "Utah Lieutenant Governor Elections Office"
+    },
+    {
+      "requestedUrl": "https://vote.utah.gov/wp-content/uploads/2026/01/2026-Candidate-Manual.pdf",
+      "finalUrl": "https://vote.utah.gov/wp-content/uploads/2026/01/2026-Candidate-Manual.pdf",
+      "publisher": "Utah Lieutenant Governor Elections Office"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://vote.utah.gov/",
+          "finalUrl": "https://vote.utah.gov/",
+          "publisher": "Utah Lieutenant Governor Elections Office",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:38:08.147293+00:00",
+          "httpStatus": 200,
+          "rawHash": "22a9aa0ab7364c781819d2626d1dc7f963cc593ff760a02134334bc6c019252f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://vote.utah.gov/additional-resources-for-voters/",
+          "finalUrl": "https://vote.utah.gov/additional-resources-for-voters/",
+          "publisher": "Utah Lieutenant Governor Elections Office",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:03.910012+00:00",
+          "httpStatus": 200,
+          "rawHash": "0f28f7e09cc676de2611d0a38f419e7fe79e81c79454c91655c85b9bcd06e6ce",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://vote.utah.gov/current-election-information/",
+          "finalUrl": "https://vote.utah.gov/current-election-information/",
+          "publisher": "Utah Lieutenant Governor Elections Office",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:00.852370+00:00",
+          "httpStatus": 200,
+          "rawHash": "8d4c472466f3b39e62d6a092b2cfe5b61698cef6339cc0fc0798e8369bd70196",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://vote.utah.gov/wp-content/uploads/2026/01/2026-Candidate-Manual.pdf",
+          "finalUrl": "https://vote.utah.gov/wp-content/uploads/2026/01/2026-Candidate-Manual.pdf",
+          "publisher": "Utah Lieutenant Governor Elections Office",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:51.989035+00:00",
+          "httpStatus": 200,
+          "rawHash": "eb7ebf91f9bb441c8728ffeb305bf33a2cffc03846f132942f1aa04d9346f30b",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:2aa31efb87860a49d6595cb0c0e0c84b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "registration_lookup",
+            "text": "https://votesearch.utah.gov/voter-search/search/search-by-voter/voter-info",
+            "quote": "Check Voter Registration Status",
+            "dates": [],
+            "url": "https://vote.utah.gov/current-election-information/",
+            "navigationUrl": "https://votesearch.utah.gov/voter-search/search/search-by-voter/voter-info",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:00.852370+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:49621035a71d9b2df460008028007ec5",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "registration_page",
+            "text": "https://vote.utah.gov/learn-about-registering-to-vote/",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://vote.utah.gov/current-election-information/",
+            "navigationUrl": "https://vote.utah.gov/learn-about-registering-to-vote/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:00.852370+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:67a79f072c1a45f96e4b1c77b6e4af35",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "election_office",
+            "text": "Lieutenant Governor’s Office",
+            "quote": "Contact the Lieutenant Governor’s Office through this form or call 801-538-1041 .",
+            "dates": [],
+            "url": "https://vote.utah.gov/additional-resources-for-voters/",
+            "navigationUrl": "https://vote.utah.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "801-538-1041",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:03.910012+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:744a027d9e8b162c5f0960682b229179",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "registration_deadline",
+            "text": "Registration Deadline October 23, 2026 by 5pm Same-Day Registration Available November 3 General Election Day Registration must be received by the county clerk by the deadline above. Voters may register in-person on Election Day with two forms of valid ID.",
+            "quote": "Registration Deadline October 23, 2026 by 5pm Same-Day Registration Available November 3 General Election Day Registration must be received by the county clerk by the deadline above. Voters may register in-person on Election Day with two forms of valid ID.",
+            "dates": [
+              "2026-10-23",
+              "2026-11-03"
+            ],
+            "url": "https://vote.utah.gov/current-election-information/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:00.852370+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:93e5c6a254b56f156c0c1aaf641d5a34",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "early_voting",
+            "text": "October 20, 2026 General Election in-person early voting can begin, contact county clerk for specific dates October 23, 2026 (5:00 p.m.) Last day a voter can register to vote for the General Election October 27, 2026 Financial disclosure report due October 27, 2026 Last day a voter may request an absentee ballot for the General Election October 30, 2026 (5:00 p.m.) General Election in-person early voting ends (a county may extend early voting until November 2nd)",
+            "quote": "October 20, 2026 General Election in-person early voting can begin, contact county clerk for specific dates October 23, 2026 (5:00 p.m.) Last day a voter can register to vote for the General Election October 27, 2026 Financial disclosure report due October 27, 2026 Last day a voter may request an absentee ballot for the General Election October 30, 2026 (5:00 p.m.) General Election in-person early voting ends (a county may extend early voting until November 2nd)",
+            "dates": [
+              "2026-10-20",
+              "2026-10-30",
+              "2026-11-02"
+            ],
+            "url": "https://vote.utah.gov/wp-content/uploads/2026/01/2026-Candidate-Manual.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:51.989035+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:997207b86a9bce2304bb960ec6ec0775",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Request Ballot By October 27, 2026 by 5pm",
+            "quote": "Request Ballot By October 27, 2026 by 5pm",
+            "dates": [
+              "2026-10-27"
+            ],
+            "url": "https://vote.utah.gov/current-election-information/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:00.852370+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:a3483d73335d5f12584ea69ad6468824",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "ballot_lookup",
+            "text": "https://votesearch.utah.gov/voter-search/search/search-by-address/candidates-and-issues",
+            "quote": "Learn about candidates & issues",
+            "dates": [],
+            "url": "https://vote.utah.gov/",
+            "navigationUrl": "https://votesearch.utah.gov/voter-search/search/search-by-address/candidates-and-issues",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:08.147293+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        },
+        {
+          "id": "election-field:f61e0fdc411c9ac2157b8d0789839f56",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "UT",
+            "divisionId": "ocd-division/country:us/state:ut",
+            "fieldKind": "polling_lookup",
+            "text": "https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote",
+            "quote": "How can I vote?",
+            "dates": [],
+            "url": "https://vote.utah.gov/",
+            "navigationUrl": "https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:08.147293+00:00",
+            "sourceOrg": "Utah Lieutenant Governor Elections Office"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -220,7 +220,8 @@ test("the runner's ballot child publishes only its state under exact authority a
     const run = spawnSync(command.executable, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
       "tests/fixtures/ballot-national/publish-child.mts", directory], { env: command.env, encoding: "utf8", timeout: 60_000 });
     assert.equal(run.status, 0, run.stderr + run.stdout);
-    const report = parseBallotPublicationResult(run.stdout)!;
+    const report = parseBallotPublicationResult(run.stdout);
+    assert.ok(report, run.stderr + run.stdout);
     assert.equal(report.status, "PUBLISHED");
     assert.equal(report.state, "TX");
     assert.equal(report.inputHash, await ballotInputHash(directory, "TX"));
@@ -296,4 +297,32 @@ test("every state has an independent ballot refresh task and failure domain", ()
     assert.equal(automaticRefreshContract(task.id), task.id);
   }
   assert.equal(automaticRefreshContract("ballot-contests"), null);
+});
+
+
+test("a changed state navigation source input is due independently of that state's ballot report", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "navigation-publication-input-"));
+  try {
+    const path = resolve(directory, "oh.json");
+    await writeFile(path, JSON.stringify({ state: "OH", electionDate: "2026-11-03" }));
+    const inputStamp = await ballotInputStamp(directory, "OH");
+    const navigation: BallotPublicationResult = { kind: "BALLOT_PUBLICATION", family: "ballot-navigation", state: "OH",
+      inputHash: await ballotInputHash(directory, "OH"), inputStamp, at: now, status: "PUBLISHED", versionId: "navigation-oh",
+      merged: ["oh.json"], skipped: [], reason: null };
+    const ballots: BallotPublicationResult = { kind: "BALLOT_PUBLICATION", state: "OH", inputHash: "a".repeat(64), inputStamp: "git:ballots",
+      at: now, status: "PUBLISHED", versionId: "ballots-oh", merged: ["oh.json"], skipped: [], reason: null };
+    const context = { cycleId: "navigation-cycle", testedSha: null };
+    const repos = await fixtureRepositories();
+    await recordBallotPublication(repos, ballots, context);
+    assert.equal(await readLatestBallotPublication(repos, "OH", "ballot-navigation"), null, "a ballot report is not a navigation report");
+    await recordBallotPublication(repos, navigation, context);
+    assert.equal((await readLatestBallotPublication(repos, "OH"))?.versionId, "ballots-oh");
+    const prior = await readLatestBallotPublicationSummary(repos, "OH", "ballot-navigation");
+    assert.deepEqual(await readLatestBallotPublication(repos, "OH", "ballot-navigation"), { ...navigation, heldContestCount: 0 });
+    const clock = { lastSucceededAt: now };
+    assert.equal(ballotPublicationDue("ballot-navigation-oh", inputStamp, prior, clock), false);
+    await writeFile(path, JSON.stringify({ state: "OH", electionDate: "2026-11-03", changed: true }));
+    assert.equal(ballotPublicationDue("ballot-navigation-oh", await ballotInputStamp(directory, "OH"), prior, clock), true);
+    assert.equal(ballotPublicationDue("state-people", inputStamp, null, undefined), false);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });

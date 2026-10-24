@@ -53,6 +53,8 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
       } catch (error) { robots.set(url.origin, { text: null, status: null, error: String(error), type: null }); }
     }
     const read = robots.get(url.origin)!;
+    robots.delete(url.origin); robots.set(url.origin, read);
+    if (robots.size > 16) robots.delete(robots.keys().next().value!);
     const permission = evaluatePermission({ robotsText: read.text, status: read.status, transportError: read.error, contentType: read.type }, url.href);
     // Evidence, never a refusal: what robots.txt said about this page is kept with the read, and the read goes on.
     const noted = `${url.origin}${url.pathname}|${permission.verdict}`;

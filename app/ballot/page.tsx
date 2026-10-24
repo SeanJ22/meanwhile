@@ -86,8 +86,10 @@ import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
+import { ballotNavigationFor, type BallotNavigation } from "@/lib/ballot/navigation";
 import { currentRegistrationLinks, registrationLinkFor } from "@/lib/ballot/registration-links";
 import { currentElectionOffices } from "@/lib/ballot/election-offices";
+import { electionFieldState } from "@/lib/civic-data/election-fields";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
@@ -114,9 +116,7 @@ import {
   settleCandidateProfilesRead,
   candidateProfilesReadState,
 } from "@/lib/civic-data/manual-read-models";
-import {
-  settleBallotNavigationRead,
-} from "@/lib/civic-data/curated-reader-read-model";
+import { readBallotNavigationProjection, settleBallotNavigationRead } from "@/lib/civic-data/curated-reader-read-model";
 import {
   FundingAbsence,
   FundingDisplay,
@@ -124,7 +124,7 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
-import { electionDatesFor } from "@/lib/ballot/election-dates";
+import { builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
   isUpcoming,
@@ -457,6 +457,12 @@ export default readerRoute("/ballot", async function BallotPage({
   let askOcdIds: string[] = [];
   const readerSelection = currentReaderSelection();
   const startRead = ballotAuxiliaryReads();
+  const navigationReads = new Map<string, ReturnType<typeof readBallotNavigationProjection>>();
+  const readNavigation = (state: string) => {
+    let read = navigationReads.get(state);
+    if (!read) { read = readBallotNavigationProjection(state); navigationReads.set(state, read); }
+    return read;
+  };
   const pointDivisionsRead = centroid ? place.state
     ? ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
     : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
@@ -468,7 +474,7 @@ export default readerRoute("/ballot", async function BallotPage({
   if (centroid && knownState) {
     startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
     startRead("federal-directory", settleFederalDirectoryRead);
-    startRead("ballot-navigation", async () => process.env.NODE_ENV === "production" ? settleBallotNavigationRead() : null);
+    void readNavigation(knownState).catch(() => undefined);
     if (knownState === "NH") startRead("nh-members", settleNhSeatHolders);
   }
   const zipEntry = readerData ? await readerData.entry() : undefined;
@@ -519,7 +525,23 @@ export default readerRoute("/ballot", async function BallotPage({
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
   const preload = (family: BallotAuxiliaryFamily, read: () => Promise<unknown>) =>
     auxiliaryPreloads.set(family, startRead(family, read));
-  if (centroid) preload("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
+  const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
+  // A state whose own record is published shows it; every other state keeps the national record and built-in dates.
+  const navigation = new Map<string, BallotNavigation>();
+  let nationalNavigationRead = false;
+  if (centroid) preload("ballot-navigation", async () => {
+    const results = await Promise.allSettled(navigationStates.map(async state => {
+      const read = await readNavigation(state);
+      if (read.kind === "NOT_RECORDED") return;
+      if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`Navigation ${state} is ${read.kind}`);
+      navigation.set(state, read.value.records.length ? ballotNavigationFor(state, read.value, read.metadata.versionId!, askOcdIds) : { offices: [], links: [], dates: [] });
+    }));
+    if (navigationStates.some(state => !navigation.has(state))) {
+      if (process.env.NODE_ENV === "production") await settleBallotNavigationRead();
+      nationalNavigationRead = true;
+    }
+    if (results.some(result => result.status === "rejected")) throw new Error("Some states' voting information is unavailable.");
+  });
   if (set && matched) {
     const candidateDetails = readerData ? primeBallotCandidateDetails(set,matched.contests) : Promise.resolve();
     void candidateDetails.catch(() => {});
@@ -636,10 +658,10 @@ export default readerRoute("/ballot", async function BallotPage({
 
   let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
   let electionOffices: ReturnType<typeof currentElectionOffices> = [];
-  if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
+  if (nationalNavigationRead) {
     try {
       registrationLinks = currentRegistrationLinks();
-      electionOffices = currentElectionOffices(askOcdIds);
+      electionOffices = currentElectionOffices(askOcdIds.filter(id => !navigation.has(electionFieldState(id) ?? "")));
     } catch {
       auxiliaryFailures.push("ballot-navigation");
       auxiliaryFailed.add("ballot-navigation");
@@ -658,8 +680,8 @@ export default readerRoute("/ballot", async function BallotPage({
     authorityAvailability.candidatePublications ? derivedBlurbFor(set!.election.state, candidateId) : null;
 
   const dates =
-    set && matched && matched.contests.length > 0
-      ? electionDatesFor(set.election.state)
+    set && matched && matched.contests.length > 0 && !navigation.has(set.election.state)
+      ? builtInElectionDatesFor(set.election.state)
       : null;
 
   const contestResolutions = new Map(await contestResolutionsRead);
@@ -731,7 +753,7 @@ export default readerRoute("/ballot", async function BallotPage({
     <>
 
       <OfficialFilings rows={filingRows} />
-      <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
+      <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds).filter(office => office.kind === "CAMPAIGN_FINANCE_OFFICE" || !navigation.has(office.state))} />
 
       {electionOffices.length > 0 && (
         <Card title="Your election offices" className="my-6 lg:max-w-3xl" attrs={{ "data-ballot-election-offices": "" }} sources={electionOffices.map(office => ({ what: "Election office contacts", provenance: { sourceUrl: office.url, sourceOrg: office.text, collectedAt: "", verifiedAt: null } }))}>
@@ -750,7 +772,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </Card>
       )}
       {[...new Set(askOcdIds.flatMap(id => ocdStateCode(id)?.toUpperCase() ?? []))]
-        .filter(state => !(dates && set?.election.state === state)).map(state => {
+        .filter(state => !navigation.has(state) && !(dates && set?.election.state === state)).map(state => {
           const registration = registrationLinkFor(state, registrationLinks);
           if (!registration) return null;
           return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
@@ -865,6 +887,62 @@ export default readerRoute("/ballot", async function BallotPage({
             </section>
           );
         })()}
+      {navigationStates.filter(state => navigation.has(state)).map(state => {
+        const info = navigation.get(state);
+        const calendar = electionDatesFor(state, info?.dates ?? [], set?.election.state === state ? set.election.date : "2026-11-03");
+        const registrationRequired = !calendar?.steps.some(step => step.label === "Voter registration" &&
+          /\b(?:do(?:es)?(?:\s+not|n['’]t)\s+require\s+(?:voter\s+)?registration|(?:voter\s+)?registration\s+is\s+not\s+required)\b/i.test(step.detail ?? ""));
+        const offices = info?.offices ?? [];
+        const links = info?.links ?? [];
+        const sources = [
+          ...offices.map(office => ({ what: "Election office", provenance: { sourceUrl: office.url, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: office.verifiedAt } })),
+          ...links.map(link => ({ what: link.label, provenance: { sourceUrl: link.sourceUrl, sourceOrg: link.sourceOrg, collectedAt: link.verifiedAt, verifiedAt: link.verifiedAt } })),
+          ...(calendar?.steps ?? []).map(step => ({ what: step.label, provenance: { sourceUrl: step.sourceUrl, sourceOrg: step.sourceOrg, collectedAt: step.collectedAt, verifiedAt: step.verifiedAt } })),
+        ];
+        return <section key={state} className="my-6 lg:max-w-3xl" aria-label={`${state} voting information`}>
+          <Card title={`${state} voting information`} attrs={{ "data-ballot-navigation": state }} sources={sources}
+            gaps={[
+              ...(!offices.length ? [{ id: `election-office:${state}`, label: "election office" }] : []),
+              ...(!links.some(link => link.purpose === "registration_page") ? [{ id: `registration-page:${state}`, label: "voter registration" }] : []),
+              ...(registrationRequired && !links.some(link => link.purpose === "registration_lookup") ? [{ id: `registration-lookup:${state}`, label: "registration status" }] : []),
+              ...(!links.some(link => link.purpose === "ballot_lookup") ? [{ id: `sample-ballot:${state}`, label: "sample-ballot lookup" }] : []),
+              ...["Voter registration", "Mail-ballot request", "Early voting"].flatMap(label => calendar?.steps.some(step => step.label === label)
+                ? [] : [{ id: `election-dates:${state}:${label}`, label: `${label.toLowerCase()} deadlines` }]),
+            ]}>
+            {offices.map(office => <p key={`${office.divisionId}:${office.phone}`} className="mt-2" data-ballot-election-offices>
+              <a href={office.navigationUrl ?? office.url}>{office.text}</a>
+              {office.phone && <> · <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a></>}
+            </p>)}
+            {links.length > 0 && <div className="mt-3 flex flex-wrap gap-3">
+              {links.map(link => <a key={`${link.purpose}:${link.url}`} href={link.url} target="_blank" rel="noreferrer"
+                data-leaves-app data-registration-pill={link.purpose === "registration_lookup" ? true : undefined}
+                data-navigation-kind={link.purpose} className="voting-open-button"
+                aria-label={`${link.label} — opens the official site in a new tab`}>
+                {link.label}<span aria-hidden="true" className="ml-1.5">↗</span>
+              </a>)}
+            </div>}
+            {calendar && <>
+              <h3 className="mt-4 font-semibold">Election Day: {formatDateMDY(calendar.electionDay)}</h3>
+              <AddToCalendar event={{ id: `election-day-${state}-${calendar.electionDay}`, title: `Election Day — vote (${state})`,
+                allDayDate: calendar.electionDay, description: `Your ballot, with sources: found via ${PRODUCT_NAME}.` }} />
+              <ul className="mt-3 space-y-3">
+                {calendarableSteps(calendar.steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
+                  <p className="font-semibold">{step.label}</p>
+                  {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
+                    {formatDateMDY(step.date.replaceAll(" – ", ", "))}
+                  </p>}
+                  <p className="t-body">{step.detail}</p>
+                  {window && upcoming && !window.end && <AddToCalendar event={{
+                    id: `ballot-${state}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
+                    title: `${step.label} (${state})`, allDayDate: window.start,
+                    description: step.detail ?? undefined,
+                  }} />}
+                </li>)}
+              </ul>
+            </>}
+          </Card>
+        </section>;
+      })}
 
       {!centroid && !zip && (
         <p className="mt-6 t-body text-muted lg:max-w-2xl">

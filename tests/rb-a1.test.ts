@@ -100,8 +100,8 @@ test("Admin's alias route returns every state's count and keeps its sign-in requ
       assert.equal(response.status, 200);
       const { counts } = await response.json() as { counts: readonly AliasCount[] };
       assert.equal(counts.length, ALIAS_STATES.length);
-      assert.equal(counts.find(row => row.state === "AZ").n, 1);
-      assert.equal(counts.find(row => row.state === "WY").n, 0);
+      assert.equal(counts.find(row => row.state === "AZ")!.n, 1);
+      assert.equal(counts.find(row => row.state === "WY")!.n, 0);
       assert.equal((await aliasesGET(new NextRequest(`https://${ADMIN_HOST}/api/admin/v6/data/aliases`, {
         headers: { host: ADMIN_HOST },
       }))).status, 401);

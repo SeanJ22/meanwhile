@@ -1,0 +1,32 @@
+{
+  "measuredAt": "2026-10-24T16:30:11.785499+00:00",
+  "revision": "b7f207221",
+  "mode": "Actual branch handler and provided pooled readonly production connection; controlled HTTP verification, Chrome acceptance pending",
+  "before": {
+    "revision": "e06499c95",
+    "stateEndpoints": 10,
+    "status": 503,
+    "cause": "08P01 unsupported startup parameter in options: jit"
+  },
+  "connection": {
+    "role": "readonly",
+    "transaction_read_only": "on",
+    "jit": "off"
+  },
+  "after": {
+    "stateEndpoints": 10,
+    "ballotPages": 10,
+    "statuses": [
+      200
+    ],
+    "visiblePhotoPairs": 25,
+    "photoMismatches": 0,
+    "maxSeconds": 2.832590037
+  },
+  "publicObservation": {
+    "build": "96b6ea5e758f1ef0b21251135e17e0f168919c8e",
+    "state": "AZ",
+    "zip": "85701",
+    "status": 503
+  }
+}

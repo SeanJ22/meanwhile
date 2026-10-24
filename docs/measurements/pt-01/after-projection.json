@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T13:13:42.876Z",
+  "measuredAt": "2026-10-24T15:52:51.219Z",
   "mode": "reader projection on production holdings",
   "counts": [
     {
@@ -288,7 +288,7 @@
       "state": "CO",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 5
+      "withoutPhoto": 6
     },
     {
       "state": "CO",
@@ -444,13 +444,13 @@
       "state": "FL",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 248
+      "withoutPhoto": 251
     },
     {
       "state": "FL",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 831
+      "withoutPhoto": 851
     },
     {
       "state": "FL",
@@ -624,7 +624,7 @@
       "state": "IA",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 35
+      "withoutPhoto": 36
     },
     {
       "state": "IA",
@@ -654,13 +654,13 @@
       "state": "ID",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 5
+      "withoutPhoto": 6
     },
     {
       "state": "ID",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 25
+      "withoutPhoto": 26
     },
     {
       "state": "ID",
@@ -708,7 +708,7 @@
       "state": "IL",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 5
+      "withoutPhoto": 6
     },
     {
       "state": "IL",
@@ -1212,7 +1212,7 @@
       "state": "MS",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 4
     },
     {
       "state": "MS",
@@ -1674,7 +1674,7 @@
       "state": "OK",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 2
     },
     {
       "state": "OK",
@@ -1716,7 +1716,7 @@
       "state": "OR",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 3
+      "withoutPhoto": 4
     },
     {
       "state": "OR",
@@ -2346,7 +2346,7 @@
       "state": "WY",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 1
+      "withoutPhoto": 3
     },
     {
       "state": "WY",
@@ -2974,7 +2974,7 @@
     {
       "state": "IL",
       "scope": "US-IL:people:portraits:v1",
-      "version": "cv-ab5216ac3ed34e45a92086633e7dd7f9"
+      "version": "cv-d4affcdfa444bf591cf6dc7736c5615e"
     },
     {
       "state": "IL",
@@ -3049,7 +3049,7 @@
     {
       "state": "KS",
       "scope": "US-KS:people:portraits:v1",
-      "version": "cv-1a5962d5fc1cc90e01f45c0846dce112"
+      "version": "cv-ee10d27fb953640815dbadaf32da69fb"
     },
     {
       "state": "KY",
@@ -3154,7 +3154,7 @@
     {
       "state": "MA",
       "scope": "US-MA:people:portraits:v1",
-      "version": "cv-284abbce8f35e3c498e07a17687ad041"
+      "version": "cv-fa9d8ce495aab25f532f69610f8ecc54"
     },
     {
       "state": "MD",
@@ -4760,7 +4760,7 @@
       "personKeys": [
         "congress:L000585",
         "il-sbe-2026-us-house-16-c95e4f89dfa68c40",
-        "il-sbe-2026-us-house-16|DARIN LaHOOD"
+        "il-sbe-2026-us-house-16|Darin LaHOOD"
       ]
     },
     {
@@ -4773,7 +4773,7 @@
       "personKeys": [
         "congress:S001225",
         "il-sbe-2026-us-house-17-6381750c9af62d40",
-        "il-sbe-2026-us-house-17|ERIC Sorensen"
+        "il-sbe-2026-us-house-17|Eric Sorensen"
       ]
     },
     {
@@ -5073,7 +5073,7 @@
       "personPhoto": "/api/portraits/officials/7d115c39dbf3c24244f64a96fb508efc4adc419a73816b2ff7a29eb3c48ca54d.webp",
       "personKeys": [
         "ballot-mt-2026:united-states-representative-2:troy-downing",
-        "ballot-mt-2026:united-states-representative-2|TROY Downing",
+        "ballot-mt-2026:united-states-representative-2|Troy Downing",
         "congress:D000634"
       ]
     },
@@ -5249,7 +5249,7 @@
       "personKeys": [
         "congress:S001218",
         "nm-sos:nm-2026-11-03:united-states-representative-district-1:melanie-ann-stansbury-dem",
-        "nm-sos:nm-2026-11-03:united-states-representative-district-1|MELANIE ANN Stansbury"
+        "nm-sos:nm-2026-11-03:united-states-representative-district-1|Melanie Ann Stansbury"
       ]
     },
     {
@@ -5342,7 +5342,7 @@
       "personKeys": [
         "congress:B001317",
         "ok-2026-general-united-states-representative-district-02-b5f06980fdc67f40",
-        "ok-2026-general-united-states-representative-district-02|JOSH Brecheen"
+        "ok-2026-general-united-states-representative-district-02|Josh Brecheen"
       ]
     },
     {
@@ -5355,7 +5355,7 @@
       "personKeys": [
         "congress:L000491",
         "ok-2026-general-united-states-representative-district-03-6519bf2ff4fa0ecd",
-        "ok-2026-general-united-states-representative-district-03|FRANK D. Lucas"
+        "ok-2026-general-united-states-representative-district-03|Frank D. Lucas"
       ]
     },
     {
@@ -5393,9 +5393,9 @@
       "personPhoto": "/api/portraits/officials/d32affa7a3c8fede71ebf36f5f2d97d3f7657d55b1d744c88dd2df0f640aa946.webp",
       "personKeys": [
         "pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
-        "pa-dos:pa-2026-general:governor-lieutenant-governor|JOSH SHAPIRO AND AUSTIN Davis",
         "pa-dos:pa-2026-general:governor-lieutenant-governor|Josh Shapiro",
         "pa-dos:pa-2026-general:governor-lieutenant-governor|Josh Shapiro / Austin Davis",
+        "pa-dos:pa-2026-general:governor-lieutenant-governor|Josh Shapiro And Austin Davis",
         "plural:pa:ac7497c7-0a0d-495f-98ce-75dedbfeb0c7"
       ]
     },
@@ -5409,7 +5409,7 @@
       "personKeys": [
         "congress:B001296",
         "pa-dos:pa-2026-general:candidate:95ea821b7c6fbc52e398",
-        "pa-dos:pa-2026-general:cd-2|BRENDAN F Boyle"
+        "pa-dos:pa-2026-general:cd-2|Brendan F Boyle"
       ]
     },
     {
@@ -5422,7 +5422,7 @@
       "personKeys": [
         "congress:M001223",
         "ri-sos-2026-general-representative-in-congress-district-2-seth-michael-magaziner-democrat",
-        "ri-sos-2026-general-representative-in-congress-district-2|SETH MICHAEL Magaziner"
+        "ri-sos-2026-general-representative-in-congress-district-2|Seth Michael Magaziner"
       ]
     },
     {
@@ -5435,7 +5435,7 @@
       "personKeys": [
         "plural:ri:dd5636ac-e9a1-4d98-8f21-6376b8977706",
         "ri-sos-2026-general-representative-in-general-assembly-4-rebecca-michele-kislak-democrat",
-        "ri-sos-2026-general-representative-in-general-assembly-4|REBECCA MICHELE Kislak"
+        "ri-sos-2026-general-representative-in-general-assembly-4|Rebecca Michele Kislak"
       ]
     },
     {
@@ -5513,7 +5513,7 @@
       "personKeys": [
         "congress:G000589",
         "tx-sos-2026-u-s-representative-district-5-4f771a2add81a2ca",
-        "tx-sos-2026-u-s-representative-district-5|LANCE Gooden"
+        "tx-sos-2026-u-s-representative-district-5|Lance Gooden"
       ]
     },
     {
@@ -5526,7 +5526,7 @@
       "personKeys": [
         "plural:tx:d73f10ee-69f2-4ca8-ac00-405c453a62d7",
         "tx-sos-2026-governor-ea61899fbddd1f30",
-        "tx-sos-2026-governor|GREG Abbott"
+        "tx-sos-2026-governor|Greg Abbott"
       ]
     },
     {
@@ -5565,7 +5565,7 @@
       "personKeys": [
         "congress:B001318",
         "vt-sos-2026-us-house-at-large:becca-balint:democratic",
-        "vt-sos-2026-us-house-at-large|BECCA Balint"
+        "vt-sos-2026-us-house-at-large|Becca Balint"
       ]
     },
     {
@@ -5578,7 +5578,7 @@
       "personKeys": [
         "plural:vt:2cb218ea-52a4-4d1f-9732-217940ba260e",
         "vt-sos-2026-lieutenant-governor:john-s-rodgers:republican",
-        "vt-sos-2026-lieutenant-governor|JOHN S. Rodgers"
+        "vt-sos-2026-lieutenant-governor|John S. Rodgers"
       ]
     },
     {
@@ -5643,7 +5643,7 @@
       "personKeys": [
         "congress:C001047",
         "wv-sos-2026-general-f61445944dfa80a2-276f7f1c0d63",
-        "wv-sos-2026-general-f61445944dfa80a2|SHELLEY MOORE Capito"
+        "wv-sos-2026-general-f61445944dfa80a2|Shelley Moore Capito"
       ]
     },
     {
@@ -5656,7 +5656,7 @@
       "personKeys": [
         "congress:M001235",
         "wv-sos-2026-general-df2749b30e55292b-76996a1870f1",
-        "wv-sos-2026-general-df2749b30e55292b|RILEY Moore"
+        "wv-sos-2026-general-df2749b30e55292b|Riley Moore"
       ]
     }
   ]

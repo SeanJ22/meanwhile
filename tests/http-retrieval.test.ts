@@ -199,6 +199,8 @@ test("http: entity decoding covers decimal AND hex, which is how ’ reached a r
   assert.equal(decodeEntities("&lt;tag&gt;"), "<tag>");
   assert.equal(decodeEntities("Andr&#233; Jacque"), "André Jacque");
   assert.equal(decodeEntities("Andr&#xe9; Jacque"), "André Jacque");
+  assert.equal(decodeEntities("Ren&eacute; Lopez"), "René Lopez");
+  assert.equal(decodeEntities("Lea M&aacute;rquez Peterson"), "Lea Márquez Peterson");
   assert.equal(decodeEntities("&#1114112; &#xD800;"), "&#1114112; &#xD800;");
 });
 

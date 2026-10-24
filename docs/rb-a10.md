@@ -4,6 +4,8 @@ Owner: RB-A10. Branch: stream/rb-a10, cut from river 21ae9bcfb. Current dependen
 
 Dependency check, October 24 at 3:13 PM Eastern: A2’s READY is not listed in `board/river integration.md`; the scheduled standalone build against it passes. RB-A10 remains active for the required River fold, merge, complete recheck and READY handoff.
 
+The preliminary full suite on frozen commit a25375091 passes: 9,784 tests registered, 9,782 passed, zero failed, and two existing roster/profile capture-fixture skips. Shard 1 passes 4,682 checks and shard 2 passes 5,100. No source acquisition ran alongside the timed browser cases. These results cover A10’s current integrated code; every required check still runs again after A2’s River fold and the required merge.
+
 Reader and Admin memberships and typed-ZIP display points now use the place map. Coordinate and postal imports stream the captured national files and retain only the requested state’s rows; the shared decoder also rejects incomplete captures. The recurring state import writes `zip_location` from the acquired Census and postal coordinates; reader requests and browser startup query those imported rows. The old server ZIP coordinate and postal-file modules and browser shard projection are deleted. Known postal destinations retain their metadata even when they have no display coordinate. Typed ZIPs that cross a state line read every touched state’s boards and calendars. The request shares the point result and raw rows across current-representation and election-year selections. Nearest-centroid lookup and the second resolver-geometry pass are deleted. The acquired ZIP seed decoder remains only in the map import and isolated test fixtures; no reader loads a seed shard.
 
 Remaining work, owned by RB-A10:

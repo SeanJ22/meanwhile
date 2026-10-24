@@ -5,7 +5,7 @@ import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { getRegistryRuntimeReadModel, selectedRegistryStates } from "../registry/runtime-read-model.ts";
 import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
-import { currentGenericBallotProjection } from "../ballot/generic-projection.ts";
+import { currentBallotPeopleProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { directFundingTargetPlan } from "./target-authorities.ts";
 import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
@@ -48,7 +48,7 @@ function bridgeIndex() {
   const rosters: NonNullable<ReturnType<typeof currentStatePeopleProjection>>["roster"][] = [];
   for (const state of selectedRegistryStates()) {
     try {
-      const ballot = currentGenericBallotProjection(state);
+      const ballot = currentBallotPeopleProjection(state);
       inputs.push(ballot); ballots.push(...Object.values(ballot.ballots));
     } catch { /* A person page can read before this state's ballot is held. */ }
     const roster = currentStatePeopleProjection(`US-${state}`)?.roster;

@@ -54,6 +54,27 @@ test("unpaired candidates, ambiguous pairings and different divisions never disa
   assert.ok(withCandidateTickets(noPairs).candidacies.every(row => !row.ticket), "matching parties alone cannot create a ticket");
 });
 
+test("regional board seats for different constituent towns retain every contest and candidate", () => {
+  const pack = JSON.parse(readFileSync("data/ballot/2026-general/nj.json", "utf8"));
+  const raw = Object.values(pack.ballots)[0] as BallotWithTickets;
+  const regional = raw.contests.filter(row => /west_morris_regional_school_district|hanover_park_regional_school_district/.test(row.ocdId));
+  assert.equal(regional.length, 5);
+  const view = withCandidateTickets(raw);
+  for (const contest of regional) {
+    assert.deepEqual(view.contests.find(row => row.id === contest.id), contest, contest.scopeNote ?? contest.id);
+    assert.deepEqual(view.candidacies.filter(row => row.contestId === contest.id).map(row => row.id),
+      raw.candidacies.filter(row => row.contestId === contest.id).map(row => row.id));
+  }
+});
+
+test("an already joint office title retains the authority's wording", () => {
+  const raw = fixture();
+  raw.contests[0].title = "Governor & Lt Governor";
+  const view = withCandidateTickets(raw);
+  assert.equal(view.contests[0].title, raw.contests[0].title);
+  assert.equal(ballotCandidateDisplayName(view.candidacies[0]), "A Lead / B Mate");
+});
+
 test("Arizona, Colorado and Wisconsin official ticket records reach the division-filtered reader", () => {
   for (const name of ["az", "co", "wi"]) {
     const file = JSON.parse(readFileSync(`data/ballot/2026-general/${name}.json`, "utf8"));

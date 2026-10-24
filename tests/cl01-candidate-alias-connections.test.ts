@@ -10,6 +10,7 @@ import { getSingleCandidateTargetIds } from "../lib/ballot/uncontested.ts";
 import { withCandidateTickets } from "../lib/ballot/tickets.ts";
 import { displayFor } from "../lib/questionnaire/candidacy-display.ts";
 import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import { currentBallotPeopleProjection, currentGenericBallotProjection, readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import type { BallotSet, Candidacy, Contest } from "../lib/ballot/types.ts";
 import { getStoredReaction } from "../lib/reactions/client.ts";
@@ -41,6 +42,23 @@ const ballot: BallotSet = { election: { id: "general", date: "2026-11-03", state
 };
 
 const view = withCandidateTickets(ballot);
+
+test("the published source holding stays intact while the person view resolves duplicate source aliases", async () => {
+  const source = { kind: "ballot-contests" as const, ballots: { "AZ:general": ballot } };
+  installManualValue(stateBallotContractId("ballot-contests", "AZ"), source, "test:cl01-source-and-person-views");
+  const read = await readGenericBallotProjection("AZ");
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("The published ballot fixture was not read.");
+  assert.deepEqual(read.value, source);
+  assert.deepEqual(currentGenericBallotProjection("AZ"), source, "current and asynchronous reads expose the same exact source holding");
+  const people = currentBallotPeopleProjection("AZ");
+  assert.equal(people.ballots["AZ:general"].candidacies.length, 1);
+  const choice = people.ballots["AZ:general"].candidacies[0];
+  for (const alias of [oldLead, oldJoint, "second-source:hobbs"]) assert.ok(choice.aliases?.includes(alias));
+  assert.equal(choice.ticket?.runningMate.id, mateId);
+  assert.equal(currentBallotPeopleProjection("AZ"), people, "repeated person reads reuse the same derived view");
+  assert.deepEqual(currentGenericBallotProjection("AZ"), source, "projecting people never mutates the published source holding");
+});
 
 test("legacy Ask subjects resolve to their own person and running mates retain separate evidence", () => {
   const inventory = ballotAskInventory(view, view.contests, id => view.generalLineup?.contests.find(row => row.contestId === id)?.nominees ?? []);

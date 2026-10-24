@@ -9,6 +9,7 @@ export type BallotWithTickets = BallotSet;
 const nameKey = (name: string) => name.normalize("NFKC").toLocaleLowerCase("en-US")
   .replace(/[.’']/g, "").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const personName = (candidate: Candidacy) => ballotCandidateDisplayName({ ...candidate, ticket: undefined });
+const jointOffice = /governor\s*(?:and|&|\/)\s*(?:lieutenant|lt\.?)\s*governor|president\s*(?:and|&|\/)\s*vice\s*president/i;
 const sources = (...rows: readonly (readonly Provenance[])[]) => [...new Map(rows.flat().map(row =>
   [JSON.stringify(row), row])).values()];
 
@@ -49,7 +50,7 @@ function raceOffice(contest: Contest): string {
 function inlineTicket(candidate: Candidacy, contest: Contest): Candidacy {
   if (candidate.ticket) return { ...candidate, ticket: { ...candidate.ticket, runningMate: { ...candidate.ticket.runningMate,
     aliases: [...new Set([...ballotCandidateAliases(candidate.ticket.runningMate), ...candidate.runningMateAliases ?? []])] } } };
-  if (!/governor\s*(?:and|&|\/)\s*(?:lieutenant|lt\.?)\s*governor|president\s*(?:and|&|\/)\s*vice\s*president/i.test(contest.title)) return candidate;
+  if (!jointOffice.test(contest.title)) return candidate;
   const published = candidate.givenName.trim() ? `${candidate.givenName} ${candidate.familyName}` : candidate.familyName;
   const names = published.split(/\s*\/\s*|\s+and\s+|\s*&\s*|\r?\n+/i)
     .map(name => ballotCandidateDisplayName({ givenName: "", familyName: name.trim() }));
@@ -73,7 +74,11 @@ export function withCandidateTickets(set: BallotSet): BallotSet {
   const contests: Contest[] = [], contestById = new Map<string, Contest>();
   const raceGroups = new Map<string, Contest[]>();
   for (const contest of set.contests) {
-    const race = JSON.stringify([contest.electionId, contest.ocdId, raceOffice(contest), /unexpired|special/i.test(contest.title)]);
+    // A shared board/division can elect separate seats for its constituent towns.
+    // The published scope and term are part of the race, not interchangeable sources.
+    const race = JSON.stringify([contest.electionId, contest.ocdId, raceOffice(contest),
+      contest.scopeNote?.replace(/\s+/g, " ").trim().toLocaleLowerCase("en-US") || null,
+      contest.voteFor, contest.termYears, /unexpired|special/i.test(contest.title)]);
     const group = raceGroups.get(race) ?? [];
     const kept = contest.type === "CANDIDACY" ? group.find(row => row.type === contest.type &&
       sameSeatDiscriminators(row.title, contest.title, row.ocdId)) : undefined;
@@ -163,11 +168,15 @@ export function withCandidateTickets(set: BallotSet): BallotSet {
   for (const contest of contests) {
     const mates = [...new Set(candidacies.filter(row => row.contestId === contest.id && row.ticket)
       .map(row => row.ticket!.runningMate.office).filter((office): office is string => Boolean(office)))];
-    if (mates.length === 1 && !contest.title.includes(mates[0])) contest.title += ` / ${mates[0]}`;
+    if (mates.length === 1 && !jointOffice.test(contest.title) &&
+        !contest.title.toLocaleLowerCase("en-US").includes(mates[0].toLocaleLowerCase("en-US")))
+      contest.title += ` / ${mates[0]}`;
   }
   return { ...set, contests: contests.filter(row => !suppressed.has(row.id)), candidacies,
-    ...(set.filingCandidacies ? { filingCandidacies: set.filingCandidacies.map(row => ({ ...row,
-      contestId: contestById.get(row.contestId)?.id ?? row.contestId, aliases: ballotCandidateAliases(row) })) } : {}),
+    ...(set.filingCandidacies ? { filingCandidacies: set.filingCandidacies.map(row => {
+      const contestId = contestById.get(row.contestId)?.id ?? row.contestId;
+      return contestId === row.contestId ? row : { ...row, contestId, aliases: ballotCandidateAliases(row) };
+    }) } : {}),
     ...(set.generalLineup ? { generalLineup: { ...set.generalLineup, contests: contests.filter(row => !suppressed.has(row.id) &&
       set.generalLineup!.contests.some(lineup => contestById.get(lineup.contestId)?.id === row.id)).map(contest => ({
         contestId: contest.id, nominees: candidacies.filter(row => row.contestId === contest.id).map(row => ({

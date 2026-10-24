@@ -70,6 +70,8 @@ export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
   email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
   campaignUrl: "Campaign website", photoUrl: "Portrait", portraitImage: "Portrait image", social: "Social accounts",
   districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
+  officeJurisdictionOcdId: "Area served", contactScope: "Who the office serves", state: "State", chamber: "Chamber",
+  selectionMethod: "How they took office", selectionMethodSourceUrl: "How they took office", executive: "National executive record",
   title: "Meeting title", bodyName: "Public body", startsAt: "Meeting date and time", endsAt: "Meeting end time",
   timeZone: "Time zone", status: "Meeting status", location: "Meeting place", online: "Online attendance",
   agendaUrl: "Agenda", videoUrl: "Meeting recording", minutesUrl: "Meeting minutes",
@@ -100,7 +102,13 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
 }
 
 function fieldHolderSources(holder: SeatHolder): CardSource[] {
-  return Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${fieldSourceLabel(field)}`, provenance }));
+  const entries = Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${fieldSourceLabel(field)}`, provenance }));
+  for (const sourceHolder of holder.sourceHolders ?? []) {
+    const source = holderSource(sourceHolder, "Who they are, their office and how to reach them");
+    if (source) entries.push(source);
+    entries.push(...fieldHolderSources(sourceHolder));
+  }
+  return entries;
 }
 
 /** Every record behind a district or division battlecard: the boundary, the representatives and the sittings. */

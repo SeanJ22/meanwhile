@@ -3,7 +3,6 @@ import { candidateOwnKind, hostOf } from "@/lib/officials/verification";
 import { VisibleCard } from "@/components/ballot/visible-card";
 import { personInitials } from "@/lib/officials/person-name";
 import { personCardSources } from "@/lib/officials/card-sources";
-import { ballotHolderSources } from "@/lib/ballot/held-holder";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
@@ -88,7 +87,7 @@ export function CandidateCard({
 
         <CandidatePortraitSources card={card} />
         {holder && <CardSourcesContribution id={`candidate-held-person:${holder.id}`}
-          sources={[holder, ...ballotHolderSources(holder)].flatMap(person => personCardSources(person))} />}
+          sources={personCardSources(holder)} />}
         {card?.bio && (
           <> <p className="mt-1 t-body leading-relaxed text-paper-dim">
             &ldquo;{card.bio}&rdquo;{" "}

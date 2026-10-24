@@ -50,7 +50,7 @@ Each jurisdiction was read separately from Reader project `tiny-hill-13996172`, 
 | NM | 0 | 0 | 43 | 2 |
 | NV | 0 | 0 | 46 | 0 |
 | NY | 0 | 0 | 169 | 2 |
-| OH | 0 | 0 | 98 | 7 |
+| OH | 0 | 0 | 98 | 6 |
 | OK | 0 | 0 | 57 | 0 |
 | OR | 0 | 0 | 65 | 0 |
 | PA | 0 | 0 | 168 | 3 |
@@ -68,7 +68,9 @@ Each jurisdiction was read separately from Reader project `tiny-hill-13996172`, 
 | WI | 0 | 0 | 87 | 2 |
 | WV | 0 | 0 | 78 | 0 |
 | WY | 0 | 0 | 40 | 0 |
-| Total | 178 | 0 | 4074 | 89 |
+| Total | 178 | 0 | 4074 | 88 |
+
+These are [current reader counts](measurements/cl-01/current-reader-counts.json), including retention choices and the existing official withdrawal filter: 19,847 choices before and 19,669 after. The earlier total of 89 tickets included one withdrawn Ohio ticket. There are 88 current tickets; the 89th held ticket, Ron Ula / Michael C. Lehnerd, remains in filing history with both separate people and all their aliases. The official Cuyahoga candidate-list capture records their October 15 withdrawal. Every one of the 89 held ticket records has two distinct named members. No two separate current choices in one canonical contest resolve to the same verified held person.
 
 40,030 person and source keys resolve; zero earlier raw/displayed keys are missing. The 18 candidate targets already used by 30 production reaction/demand records all resolve. Existing Speak posts retain their submitted subject IDs, and Ask resolves those aliases to the correct person.
 
@@ -113,7 +115,7 @@ The raw ballot accessor again returns the exact published holding. Person and ti
 
 Ticket assertions now check the displayed pair, two distinct person IDs and the exact official pairing source. Reader assertions resolve each historical nominee alias to exactly one visible choice and check its own card's filing source. Original contest and candidate count/hash assertions remain in place.
 
-Verification after merging `origin/river` at `bd77dcb0f`: all seven returned suites pass, plus the ticket, alias and scheduled-refresh suites (83 distinct checks, zero skipped; the final changed Wisconsin and reader suites were rerun together, 32/32). TypeScript, changed-file lint, the existing dead-code check and diff whitespace checks pass. The unchanged worker/publication suites additionally pass 23/23. The production-snapshot recount remains 178 duplicates before, zero after, 4,074 linked candidacies and 89 tickets, with no original key or existing activity target missing.
+Verification after merging `origin/river` at `bd77dcb0f`: all seven returned suites pass, plus the ticket, alias and scheduled-refresh suites (83 distinct checks, zero skipped; the final changed Wisconsin and reader suites were rerun together, 32/32). TypeScript, changed-file lint, the existing dead-code check and diff whitespace checks pass. The unchanged worker/publication suites additionally pass 23/23. The production-snapshot recount remains 178 duplicates before, zero after, 4,074 linked candidacies and 88 current tickets, with no original key or existing activity target missing.
 
 Google Chrome comparison of meanwhileusa.com and the repaired branch at Morristown `07960` retains all 22 contest IDs and 53 choices. None of the original candidate aliases, biographies, candidate links or source links are missing; no candidate changes race. All five allocated regional-board seats remain separate. The live page's first visible contests took 1.824 seconds; the cold development branch took 5.842 seconds, recorded above three seconds and not a production speed pass. No page errors occurred; four event writes were blocked. [Mendham live](measurements/cl-01/nj-mendham-live.png) · [Mendham repaired branch](measurements/cl-01/nj-mendham-branch.png).
 
@@ -139,3 +141,23 @@ Current focused checks: 71 returned-ballot/schedule checks and 38 office/seat/pe
 The subsequent River return (`fix:98f6f83c`) is repaired with its two original assertions intact. The page explicitly passes the source contest's seat count into the checked incumbency input. An unresolved card/filing relationship no longer joins their corpora: each ID retains its own sourced statements, and Ask can answer from the card itself. The prior CL-01 assertions that incorrectly combined a party-conflict card and filing were restored to upstream's expectations. Production Hourihan's current single-card, joint-card and filing aliases remain reconciled by the newer official list; the superseded disagreement does not affect her current biography or corpus.
 
 The ID-only money-slice fixture again runs without adding names. Missing display-name fields yield no invented name alias, while existing IDs remain usable. Given-name initials remain as filed. The returned checks plus related identity, name and first-read money tests pass 47/47, with full TypeScript, changed-file lint and the existing dead-code check passing. `origin/river` was fetched and merged for this repair; at that check it still pointed to `bd77dcb0f`, so River's pending BL-01 integration and its carried name-casing fixes remain part of the combined release check.
+
+## Raleigh and preservation of merged source records
+
+River folded READY `16159c59d` into the release 97 candidate and cleared the return. Its combined ballot check passed 359 tests. River also found Deborah K. Ross twice in Raleigh's “Who governs here?” on release 96. Actual Chrome confirms two rows under NC-2: one rich card with her portrait, and one incomplete card incorrectly describing state-representative powers.
+
+Both held records identify Bioguide `R000305`. The official Congress source supplies a current federal House membership for NC-2 but calls the office “Representative”; the directory calls it “U.S. Representative.” The shared holder merge now interprets a bare chamber title only from its unique selected current federal membership. Exact native-person and place checks still apply. Explicit state offices, an ended or wrong-chamber membership, a missing identity and a conflicting division remain separate.
+
+The merge retains all original source records, memberships, social accounts and aliases. The existing ballot source-record helper moved to `lib/officials/held-sources.ts`; its old export and repeated ballot-only source collection were deleted. All person, district and body Sources can now retain the original records behind a merged person, including alternate portrait citations. Agreement on an ISO date's year or month preserves the already-held day and its actual source; conflicting dates keep the normal source precedence. The ballot projection uses the same date-refinement rule when it reads those original records again.
+
+The [56-state production replay](measurements/cl-01/federal-source-preservation.json) removes 342 duplicate federal rows (881 rows to 539) with zero duplicates afterward and zero wrong native-person, office or division joins. All 8,669 original identity keys, 616 portrait records, 3,264 card source URLs, 1,715 social-account records, 2,818 memberships, 6,631 term values and 1,850 contact values remain accessible. This includes all 78 alternate portraits whose different source URLs must remain available. Reprojecting every newly merged holder onto the ballot yields zero office, native-ID, date, portrait or source regressions. The candidate recount remains 178 duplicate choices before, zero after, 4,074 held-person links and 88 current tickets in all 56 jurisdictions.
+
+A read-only replay of NC package `11e4ac9153d5af0046a567de95722e072ba4ec935d590149d920eb5b7e59649f` returns one `congress:R000305`, retaining the full January 3, 2025 term start, four source memberships, three social accounts, phone and both API aliases. Chrome on the branch retains all nine distinct people while reducing ten rows to nine. Ross's rich card retains its contact, money, votes, statements and exact original image citation. [Live duplicate](measurements/cl-01/nc-ross-live-before.png) · [Branch single entry](measurements/cl-01/nc-ross-branch.png).
+
+Chrome also reproduced an enabled, hydrated “Who governs here?” click being discarded while coverage was loading. The first resolved ZIP was resetting the reader's open intent. It now preserves that first click; changing to a different resolved ZIP still closes the old place's card. The same delayed-read reproduction now opens one Ross entry with one click, an untouched load stays closed, and an actual second-tab ZIP change from 27601 to 27701 closes the old card. The original failed reproduction is retained. [One-click result](measurements/cl-01/nc-one-click-branch.png).
+
+At Tampa 33602, Chrome and the held current federal membership independently establish Kathy Castor's FL-14 card. She appears once, her selected portrait decodes, and her own Sources retains both `https://www.congress.gov/img/member/c001066_200.jpg` and `https://castor.house.gov/images/kathy_castor.jpg`. [Original portrait source](measurements/cl-01/fl-castor-original-portrait-source.png) · [Current portrait source](measurements/cl-01/fl-castor-current-portrait-source.png).
+
+The connected identity, original return, card-source, ballot-money and representation checks pass 102/102; full TypeScript, changed-file lint, the existing Knip check and whitespace checks pass. These Chrome results use a branch development server and read-only production holdings, with production geographic and portrait assets passed through locally. They are not deployed-live or production-speed claims. River's deployed check of the full CL-01 branch, the next automatic production pass and its explicit CL-01 live-check pass remain pending.
+
+River's subsequent full-check finding on held empty funding answers is also repaired on this branch: the ballot only inspects a settled answer's kind when the answer exists. The unchanged `pdc-reader-remaining-repairs` test reproduces the prior false campaign-money gap and now passes; partial holdings still contribute their existing gap, and positive alias-aware funding remains available.

@@ -671,16 +671,16 @@ function MapEntryInner() {
     ],
   );
 
-  /* The who-governs card answers once per resolved area; panning never re-expands it. */
+  /* A different resolved ZIP closes the old card; initial coverage keeps the reader's click. */
   const shownAreaKey = useRef<string | null>(null);
   useEffect(() => {
     if (!current) return;
     // Only a typed-zip view counts as a new area (lib/state/derive.ts#noticeShouldExpand).
     const viewKind = current.viewKey.startsWith("zip:") ? "zip" : "settled";
     if (noticeShouldExpand(viewKind, current.zip, shownAreaKey.current)) {
+      const previousAreaKey = shownAreaKey.current;
       shownAreaKey.current = current.zip;
-
-      setNoticeCollapsed(true);
+      if (previousAreaKey !== null) setNoticeCollapsed(true);
     }
   }, [current]);
 

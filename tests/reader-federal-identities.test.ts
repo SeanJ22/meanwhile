@@ -8,9 +8,11 @@ import type { FederalDirectoryReadModel } from "../lib/officials/federal-directo
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
 import { stateMemberDirectories, zipMemberDirectories } from "../lib/reader/member-directories.ts";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
-import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { indexByDivision, type SeatHolder } from "../lib/officials/lookup.ts";
 import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { civicDataReadNotInitialized } from "../lib/civic-data/read-model.ts";
+import { heldPersonSources } from "../lib/officials/held-sources.ts";
+import { personCardSources } from "../lib/officials/card-sources.ts";
 
 const ROOT = "ocd-division/country:us/state:fl", AT = "2026-10-12T00:00:00.000Z";
 function person(id: string, name: string, bioguides: string[], source = "https://www.senate.gov/member", collectedAt = AT): Officeholder {
@@ -62,6 +64,200 @@ test("Congress directory identity stays canonical when source-native people sort
     assert.ok(personIdentityKeys(holder).has(api.id));
     assert.ok(personIdentityKeys(holder).has(canonical.id));
   }
+});
+
+test("the held Deborah Ross federal membership joins both NC-2 sources without losing the portrait, terms or aliases", () => {
+  const root = "ocd-division/country:us/state:nc", district = `${root}/cd:2`;
+  const canonical: Officeholder = { ...person("congress:R000305", "Deborah K. Ross", ["R000305"],
+    "https://raw.githubusercontent.com/unitedstates/congress-legislators/d5af3d2d2490f8c6532c9490b1f47a76cacca699/legislators-current.yaml",
+    "2026-10-09T21:09:30.926Z"), state: "NC", chamber: "house", officeTitle: "U.S. Representative",
+    termStart: "2025-01-03", termEnd: "2027-01-03", birthDate: "1963-06-20", websiteUrl: "https://ross.house.gov",
+    social: [{ platform: "x", url: "https://x.com/RepDeborahRoss", accountKind: "OFFICIAL", sourceUrl: "https://github.com/unitedstates/congress-legislators", collectedAt: AT }],
+    photo: { url: "/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+      sourceUrl: "https://www.congress.gov/img/member/r000305_200.jpg", collectedAt: "2026-10-11T22:20:37.981Z",
+      attribution: "Portrait: https://api.congress.gov/v3/member/R000305?format=json", license: null } };
+  canonical.memberships = ["2021", "2023", "2025"].map(year => ({ id: `${canonical.id}:rep:NC:2:${year}-01-03`,
+    personId: canonical.id, officeId: "US:rep:NC:2", jurisdiction: "US", chamber: "rep", district: "2",
+    termStart: `${year}-01-03`, termEnd: `${Number(year) + 2}-01-03`, sourceUrl: canonical.provenance.sourceUrl! }));
+  const api: Officeholder = { ...person("congress-api:nc:R000305", canonical.name, ["R000305"],
+    "https://api.congress.gov/v3/member/R000305?format=json", "2026-10-14T21:52:11.806Z"),
+    personId: "congress-api:R000305", state: "NC", chamber: "house", officeTitle: "Representative", termEnd: "",
+    phone: "(202) 225-3032", nativeIds: { bioguide: ["R000305"], reader: ["congress-api:nc:R000305", "congress-api:R000305"] } };
+  api.memberships = [{ id: "congress-api:nc:R000305:house:2:2025", personId: api.personId!,
+    officeId: "congress-office:NC:us_representative:2", jurisdiction: "US-NC", level: "FEDERAL", chamber: "house", current: true,
+    divisionId: district, officeTitle: "Representative", district: "2", termStart: "2025", sourceUrl: api.provenance.sourceUrl! }];
+  const federalRoster = { ...roster([canonical]), scope: "NC",
+    divisions: [{ officeholderId: canonical.id, ocdId: district, bodyId: null }] };
+  const sourceRoster = { ...roster([api]), scope: "NC", divisions: [{ officeholderId: api.id, ocdId: district,
+    membershipId: api.memberships![0].id, bodyId: null }] };
+  const state = packageFor([], []);
+  const value = { ...state, state: "NC", federal: { ...state.federal!, roster: federalRoster }, people: sourceRoster, legislativePeople: sourceRoster,
+    registry: { ...state.registry, registry: { ...state.registry.registry,
+      divisions: [{ ...state.registry.registry.divisions[0], ocdId: district, label: "NC-2", divisionType: "cd", tier: "national" as const }] } } };
+  const inputs = structuredClone([canonical, api]);
+  const coverage = stateCoverage(value, [district], 35.77, -78.64);
+  const representatives = coverage.seats.find(seat => seat.ocdId === district)!.representatives;
+  assert.equal(representatives.length, 1);
+  const holder = representatives[0];
+  assert.equal(holder.id, canonical.id);
+  assert.equal(holder.officeTitle, canonical.officeTitle);
+  assert.deepEqual(holder.fieldSources?.officeTitle, canonical.provenance);
+  assert.equal(holder.photoUrl, canonical.photo!.url);
+  assert.equal(holder.fieldSources?.photoUrl?.sourceUrl, canonical.photo!.sourceUrl);
+  assert.equal(holder.fieldSources?.portraitImage?.sourceUrl, canonical.photo!.sourceUrl);
+  assert.equal(holder.birthDate, canonical.birthDate);
+  assert.deepEqual(holder.fieldSources?.birthDate, canonical.provenance);
+  assert.equal(holder.termStart, canonical.termStart);
+  assert.deepEqual(holder.fieldSources?.termStart, canonical.provenance);
+  assert.equal(holder.termEnd, canonical.termEnd);
+  assert.deepEqual(holder.fieldSources?.termEnd, canonical.provenance);
+  assert.equal(holder.phone, api.phone);
+  assert.equal(holder.fieldSources?.phone?.sourceUrl, api.provenance.sourceUrl);
+  assert.equal(holder.provenance?.sourceUrl, api.provenance.sourceUrl);
+  assert.deepEqual(holder.social, canonical.social);
+  assert.deepEqual(holder.memberships?.map(row => row.id).sort(), [...canonical.memberships!, ...api.memberships!].map(row => row.id).sort());
+  for (const key of [canonical.id, api.id, api.personId!]) assert.ok(personIdentityKeys(holder).has(key), key);
+  assert.deepEqual([canonical, api], inputs, "composition does not rewrite the held source records");
+
+  const primary = indexByDivision([federalRoster]).get(district)![0], additional = indexByDivision([sourceRoster]).get(district)![0];
+  const [reversed] = scopedHolders([additional], [primary]);
+  assert.equal(reversed.officeTitle, canonical.officeTitle);
+  assert.deepEqual(reversed.fieldSources?.officeTitle, canonical.provenance);
+  assert.equal(reversed.photoUrl, canonical.photo!.url);
+  assert.deepEqual(reversed.fieldSources?.photoUrl, primary.fieldSources?.photoUrl);
+  assert.deepEqual(reversed.fieldSources?.portraitImage, primary.fieldSources?.portraitImage);
+  assert.deepEqual(reversed.social, canonical.social);
+  assert.equal(reversed.termStart, canonical.termStart);
+  assert.deepEqual(reversed.fieldSources?.termStart, canonical.provenance);
+  assert.deepEqual(reversed.memberships?.map(row => row.id).sort(), holder.memberships?.map(row => row.id).sort());
+  for (const key of [canonical.id, api.id, api.personId!]) assert.ok(personIdentityKeys(reversed).has(key), key);
+  for (const explicitStateTitle of ["State Representative", "State Senator"]) {
+    assert.equal(scopedHolders([primary], [{ ...additional, officeTitle: explicitStateTitle }]).length, 2,
+      "even a shared native alias and membership cannot turn an explicit state office into the federal office");
+  }
+  for (const invalid of [
+    { ...additional, nativeIds: undefined },
+    { ...additional, officeJurisdictionOcdId: `${root}/cd:3` },
+    { ...additional, memberships: additional.memberships!.map(row => ({ ...row, current: false })) },
+    { ...additional, memberships: additional.memberships!.map(row => ({ ...row, level: "STATE" as const })) },
+    { ...additional, memberships: additional.memberships!.map(row => ({ ...row, chamber: "senate" })) },
+  ]) assert.equal(scopedHolders([primary], [invalid]).length, 2, "the native id, division and current federal role are all required");
+});
+
+test("a bare Senator title uses only its selected current federal Senate membership", () => {
+  for (const [canonicalName, apiName] of [["Zed Reader", "Aaron Reader"], ["Aaron Reader", "Zed Reader"]]) {
+    const canonical = person("congress:Z000001", canonicalName, ["Z000001"]);
+    const api: Officeholder = { ...person("congress-api:fl:Z000001", apiName, ["Z000001"], "https://www.congress.gov/member/fixture"),
+      officeTitle: "Senator", memberships: [{ id: "api:senate:current", personId: "congress-api:fl:Z000001", officeId: "us-senate:FL",
+        jurisdiction: "US-FL", level: "FEDERAL", chamber: "senate", current: true, divisionId: ROOT,
+        officeTitle: "Senator", sourceUrl: "https://www.senate.gov/member" }] };
+    const sources = roster([api]);
+    sources.divisions[0].membershipId = api.memberships![0].id;
+    const value = packageFor([canonical], [api]);
+    const coverage = stateCoverage({ ...value, people: sources, legislativePeople: sources }, [ROOT], 25, -80);
+    assert.equal(coverage.senators.length, 1);
+    assert.equal(coverage.senators[0].id, canonical.id);
+    assert.equal(coverage.senators[0].officeTitle, canonical.officeTitle);
+    assert.deepEqual(coverage.senators[0].fieldSources?.officeTitle, canonical.provenance);
+    assert.equal(coverage.senators[0].memberships?.[0].officeTitle, api.officeTitle, "the publisher's raw role title stays held");
+    assert.ok(personIdentityKeys(coverage.senators[0]).has(api.id));
+  }
+});
+
+test("compatible held ISO date precision survives either source order with its own field source", () => {
+  for (const field of ["termStart", "termEnd", "birthDate"] as const) {
+    for (const [short, full] of [["2025", "2025-01"], ["2025", "2025-01-03"], ["2025-01", "2025-01-03"]]) {
+      const precise = { ...person("congress:Z000001", "Date Reader", ["Z000001"],
+        "https://raw.githubusercontent.com/unitedstates/congress-legislators/held.yaml"), [field]: full };
+      const coarse = { ...person("congress-api:fl:Z000001", precise.name, ["Z000001"],
+        "https://api.congress.gov/v3/member/Z000001?format=json", "2026-10-14T00:00:00Z"), [field]: short };
+      const [preciseHolder, coarseHolder] = indexByDivision([roster([precise, coarse])]).get(ROOT)!;
+      for (const [first, second] of [[preciseHolder, coarseHolder], [coarseHolder, preciseHolder]]) {
+        const result = scopedHolders([first], [second]);
+        assert.equal(result.length, 1);
+        assert.equal(result[0][field], full, `${field}: ${short} / ${full}`);
+        assert.deepEqual(result[0].fieldSources?.[field], precise.provenance);
+      }
+    }
+  }
+});
+
+test("different held ISO dates retain normal source precedence even when the older date has more detail", () => {
+  for (const field of ["termStart", "termEnd", "birthDate"] as const) {
+    for (const [older, newer] of [["2023-01-03", "2025"], ["2025-01-03", "2025-02"], ["2025-01-03", "2025-01-04"]]) {
+      const prior = { ...person("congress:Z000001", "Date Reader", ["Z000001"],
+        "https://raw.githubusercontent.com/unitedstates/congress-legislators/held.yaml"), [field]: older };
+      const current = { ...person("congress-api:fl:Z000001", prior.name, ["Z000001"],
+        "https://api.congress.gov/v3/member/Z000001?format=json", "2026-10-14T00:00:00Z"), [field]: newer };
+      const [priorHolder, currentHolder] = indexByDivision([roster([prior, current])]).get(ROOT)!;
+      for (const [first, second] of [[priorHolder, currentHolder], [currentHolder, priorHolder]]) {
+        const result = scopedHolders([first], [second]);
+        assert.equal(result.length, 1);
+        assert.equal(result[0][field], newer, `${field}: ${older} / ${newer}`);
+        assert.deepEqual(result[0].fieldSources?.[field], current.provenance);
+      }
+    }
+  }
+});
+
+test("absent incoming dates and contacts keep the source that actually supplied each retained field in both orders", () => {
+  const contacts = { sourceUrl: "https://www.senate.gov/fixture-contact-page", sourceOrg: "Controlled official contact fixture",
+    collectedAt: AT, verifiedAt: AT };
+  const canonical: Officeholder = { ...person("congress:Z000001", "Source Reader", ["Z000001"],
+    "https://raw.githubusercontent.com/unitedstates/congress-legislators/held.yaml"),
+    termEnd: "2027-01-03", birthDate: "1966-08-20", email: "fixture@senate.gov", contactFormUrl: "https://www.senate.gov/fixture-contact-form",
+    fieldSources: { phone: contacts, email: contacts, contactFormUrl: contacts } };
+  const api: Officeholder = { ...person("congress-api:fl:Z000001", canonical.name, ["Z000001"],
+    "https://api.congress.gov/v3/member/Z000001?format=json", "2026-10-14T00:00:00Z"),
+    termEnd: "", birthDate: null, phone: null, email: "", contactFormUrl: null, websiteUrl: "" };
+  const [canonicalHolder, apiHolder] = indexByDivision([roster([canonical, api])]).get(ROOT)!;
+  const snapshots = structuredClone([canonicalHolder, apiHolder]);
+  for (const [first, second] of [[canonicalHolder, apiHolder], [apiHolder, canonicalHolder]]) {
+    const [merged] = scopedHolders([first], [second]);
+    assert.deepEqual(merged.provenance, api.provenance, "the overall record can advance independently of a retained field");
+    for (const field of ["termEnd", "birthDate", "phone", "email", "contactFormUrl", "websiteUrl"] as const) {
+      assert.equal(merged[field], canonical[field], field);
+      assert.deepEqual(merged.fieldSources?.[field], canonical.fieldSources?.[field] ?? canonical.provenance, field);
+    }
+  }
+  const updated = { ...apiHolder, phone: "202-555-0199", fieldSources: { phone: api.provenance } };
+  for (const [first, second] of [[canonicalHolder, updated], [updated, canonicalHolder]]) {
+    const [merged] = scopedHolders([first], [second]);
+    assert.equal(merged.phone, updated.phone);
+    assert.deepEqual(merged.fieldSources?.phone, api.provenance, "a winning incoming contact updates its value and source together");
+  }
+  assert.deepEqual([canonicalHolder, apiHolder], snapshots, "source pinning never changes either held input record");
+});
+
+test("both held portraits and their exact image sources stay accessible through repeated merges in either order", () => {
+  const oldImage = "https://www.senate.gov/fixture-first-portrait.jpg", newImage = "https://office.example.gov/fixture-second-portrait.jpg";
+  const prior: Officeholder = { ...person("congress:Z000001", "Portrait Reader", ["Z000001"]),
+    photo: { url: "/api/portraits/officials/fixture-first.webp", sourceUrl: oldImage, attribution: "Controlled first portrait fixture", collectedAt: AT, license: null } };
+  const current: Officeholder = { ...person("congress-api:fl:Z000001", prior.name, ["Z000001"],
+    "https://office.example.gov/member", "2026-10-14T00:00:00Z"),
+    photo: { url: "/api/portraits/officials/fixture-second.webp", sourceUrl: newImage, attribution: "Controlled second portrait fixture", collectedAt: "2026-10-14T00:00:00Z", license: null } };
+  const originals = indexByDivision([roster([prior, current])]).get(ROOT)!;
+  const snapshots = structuredClone(originals);
+  for (const [first, second] of [originals, [...originals].reverse()]) {
+    const initial = scopedHolders([first], [second]);
+    assert.equal(initial.length, 1);
+    let merged = initial[0];
+    for (let repeat = 0; repeat < 3; repeat++) {
+      const sources = heldPersonSources(merged);
+      assert.deepEqual(sources, [first, second]);
+      assert.equal(sources[0], first, "the original source record is retained");
+      assert.equal(sources[1], second, "a merged copy is never stored as another source record");
+      assert.ok(sources.every(source => source.sourceHolders === undefined), "source records stay flat");
+      assert.deepEqual(new Set(sources.map(source => source.photoUrl)), new Set([prior.photo!.url, current.photo!.url]));
+      assert.deepEqual(new Set(sources.map(source => source.fieldSources?.portraitImage.sourceUrl)), new Set([oldImage, newImage]));
+      const cardSources = personCardSources(merged).flatMap(source => source.details ?? [source]);
+      for (const image of [oldImage, newImage]) assert.ok(cardSources.some(source => source.provenance.sourceUrl === image && source.what.includes("Portrait image")), image);
+      const again = scopedHolders([merged], [first, second, merged]);
+      assert.equal(again.length, 1);
+      merged = again[0];
+    }
+  }
+  assert.deepEqual(originals, snapshots, "retaining the source records never changes their held fields");
 });
 
 test("a source-native record naming two held Congress identities never selects either directory arbitrarily", () => {

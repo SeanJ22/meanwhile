@@ -1,11 +1,27 @@
 # River status
 
-build_state: RELEASE 95 LIVE (RN-02 on the BL-21-FX revert; 16eead35c from 10:20 PM EDT) and FAILING ITS LIVE CHECK: reader repair failures 1,250 to 1,316 per pass (RN-02 returned); readers unharmed in the sample (boards up in IL, MN, WI, AZ; /ballot dates kept). No candidate; waiting for READYs
+build_state: RELEASE 95 LIVE (16eead35c). River session session_01KQeVtrq9c4dWXSpaNnogn3 from 4:40 AM EDT Oct 24. Folding RV-REPAIR (the meeting-outcome reader-repair fix) on river-next 39c3037f4; gates running. RIVER-KEYS (Sean's key-like-page order) building on stream/river-keys
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
 heartbeat: 2026-10-24T08:40:45Z
+
+## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+Sean's orders (4:40 AM EDT): Job 1 fix the meeting-outcome repairs release 95 broke; Job 2 publish key-like official pages from a cleaned copy (never hold, never ask); fold order: RV-REPAIR, RIVER-KEYS, MT-01, RN-03, DB-01, SO-01, CL-01, PT-01, MD-01, RB-A1, then RB-A2/A3/A5/A8, RB-A6/A4/A10, RB-A7, RB-A9, RB-A11. Standing order (Oct 24 ~4:50 AM EDT): a lane sent back with no new READY in 60 minutes, or silent for 2 hours, River finishes it on its own branch, marks it READY with the lane's id and folds it; what was fixed and why goes here.
+
+Plan (owner · next action):
+- RV-REPAIR · River · gates on river-next 39c3037f4, then promote and ship as release 96.
+- RIVER-KEYS · River (helper building stream/river-keys) · READY, then fold second.
+- MT-01, RN-03, DB-01, SO-01, CL-01, PT-01, MD-01, RB-A1..A11 · their lanes · no branch has work ahead of river yet (stream/rb-a1 exists, 0 ahead); River checks every 20 minutes.
+- RN-02's return: its repair-failure half is RV-REPAIR; the named meetings (San Diego legistar:sdcounty:2042, Galveston) are rechecked after release 96.
+
+### RV-REPAIR (Job 1), 4:55 AM EDT
+Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSelection filled OUTCOME_PARTITION_CONTRACTS but not RUNTIME_ROUTINE_CONTRACTS, and lib/civic-data/store.ts registeredMutationContract looks only there, so every outcome readback in a repair child was refused. Fix (stream/river-repair, READY ba769a4ed): one installOutcomePartitions in lib/civic-data/outcome-partitions.ts that moves the outcome list, runtime contracts, door pointers and sitting windows together; refreshOutcomePartitions and installOutcomeRepairSelection both call it; the repair side keeps its validation; the old copy is deleted. The child gets the sitting windows too (same function), so it sees what its parent sees.
+- Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
+- Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
+- Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
 
 ## Waiting on Sean (from FX-01's returns/sean.md on stream/fx-01-fx, Oct 23 ~12:10 PM EDT)
 

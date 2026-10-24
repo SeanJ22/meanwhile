@@ -2,12 +2,12 @@ import assert from 'node:assert/strict';
 import { readFileSync,writeFileSync } from 'node:fs';
 import { launchGuarded } from './browser.mts';
 import { signSession,ADMIN_SESSION_COOKIE } from '../lib/control-plane/admin-auth.ts';
-import { ADMIN_ORIGIN } from '../lib/ops/origins.ts';
+import { ADMIN_ORIGIN,PUBLIC_SITE_ORIGIN } from '../lib/ops/origins.ts';
 import { buildScoreboard } from '../lib/control-plane/admin-view/scoreboard-read.ts';
 const dir=process.argv[2]??'.scratch/rb-a3',base=process.env.RB_A3_COPY_BASE??'http://localhost:3107';
 if(!/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(base))throw Error('The writable copy UI must be local');
 const currentReader=process.argv.includes('--current-reader');
-const readerBase=currentReader?'https://meanwhileusa.com':base;
+const readerBase=currentReader?PUBLIC_SITE_ORIGIN:base;
 const prefix=currentReader?'current-reader':'copy';
 const browser=await launchGuarded({label:'rb-a3-copy-reader-and-admin',blockWrites:true,headless:true,args:['--no-sandbox'],proxy:{server:'http://proxy:8080',bypass:'localhost,127.0.0.1'}});
 try {

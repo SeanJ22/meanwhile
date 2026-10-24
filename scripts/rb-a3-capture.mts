@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { launchGuarded } from "./browser.mts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
 
 const directory = process.argv[2] ?? ".scratch/rb-a3";
@@ -34,7 +35,7 @@ try {
       writeFileSync(`${directory}/mesa-meetings.json`, text);
     })());
   });
-  const response = await page.goto("https://meanwhileusa.com/?zip=85201", { waitUntil: "domcontentloaded", timeout: 30_000 });
+  const response = await page.goto(`${PUBLIC_SITE_ORIGIN}/?zip=85201`, { waitUntil: "domcontentloaded", timeout: 30_000 });
   assert.equal(response?.status(), 200);
   await page.getByRole("button", { name: "Skip", exact: true }).click({ timeout: 15_000 }).catch(() => {});
   await page.getByRole("button", { name: "Who governs here?", exact: true }).click();

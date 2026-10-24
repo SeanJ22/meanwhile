@@ -1,10 +1,10 @@
 {
   "mode": "Controlled next-cadence pass on real production people and freshly acquired official photos; no production writes",
-  "measuredAt": "2026-10-24T12:15:31.150Z",
+  "measuredAt": "2026-10-24T14:32:05.944Z",
   "sourceAcquiredAt": "2026-10-24T10:40:40.686Z",
   "scheduledAt": "2026-10-24T11:40:40.686Z",
-  "passAt": "2026-10-24T12:15:30.850Z",
-  "elapsedSinceAcquiredMs": 5690164,
+  "passAt": "2026-10-24T14:32:05.682Z",
+  "elapsedSinceAcquiredMs": 13884996,
   "contract": "people-portraits-us",
   "due": true,
   "people": 23,

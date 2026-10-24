@@ -34,8 +34,25 @@ export async function readLegacyStateMemberships(root: string, state: string): P
   return result;
 }
 
+/** ZIP identity is independent of the states touched by its older sampled
+ * map. Read only prefixes requested by this state's Census source rows. */
+export async function knownPostalZips(root: string, requested: ReadonlySet<string>): Promise<Set<string>> {
+  const prefixes = new Map<string, string[]>(), result = new Set<string>();
+  for (const code of requested) {
+    if (!/^\d{5}$/.test(code)) throw new Error("Invalid source ZCTA code");
+    const prefix = code.slice(0, 2), codes = prefixes.get(prefix) ?? []; codes.push(code); prefixes.set(prefix, codes);
+  }
+  for (const [prefix, codes] of prefixes) {
+    let shard: ZipDivisionShard;
+    try { shard = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${prefix}.json`), "utf8")); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") continue; throw error; }
+    for (const code of codes) if (Object.hasOwn(shard.zips, code)) result.add(code);
+  }
+  return result;
+}
+
 /** Only one state's held Census payload crosses the database connection. */
-async function heldStateDataset(query: Query, state: string): Promise<BuiltDataset | undefined> {
+export async function heldStateDataset(query: Query, state: string): Promise<BuiltDataset | undefined> {
   const [row] = await query(`SELECT jsonb_build_object('formatVersion',1,'builtAt',p.payload->>'builtAt','coverage',$1::text,
     'zctaUniverse','[]'::jsonb,'scopes',coalesce(jsonb_agg(s.scope),'[]'::jsonb)) AS dataset
     FROM civic_data_promotions p CROSS JOIN LATERAL (
@@ -79,6 +96,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   const legacyZctas = new Set(dataset.zctaUniverse);
   // The source index and the Census tabulation are distinct from postal aliases.
   const zctas = new Set([...legacyZctas, ...dataset.scopes.flatMap(s => s.groupings.flatMap(g => g.overlaps.map(o => o.zcta5)))]);
+  const knownZips = await knownPostalZips(root, zctas);
   const acquiredEdges = await currentGrfPlaceEdges(fips, shapes.places, options);
   const specialShapes = boundaries.filter(boundary => boundary.layer === "district" && boundary.geometry);
   if (specialShapes.length) acquiredEdges.push(...await acquireBoundaryOverlaps(specialShapes, zctas, options));
@@ -89,7 +107,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   const map = buildStatePlaceMap({ registration, scopes: dataset.scopes, legacyZips, legacyZctas, boundaries, acquiredEdges,
     additionalPlaces: shapes.places, censusFacts: readCensusGovernmentFacts(root, [state]).byPid,
     geographicDistricts: geographicDistricts.map(d => ({ ...d, governmentId: governmentIds.get(d.pid) })),
-    postalLinks,
+    postalLinks, knownZips,
     crossStateZctas,
     sourceCounties: new Map(sources.sources.map(source => [source.id, source.countyFips])), checkedAt: dataset.builtAt });
   return { map:{...map,zipLocations:await stateZipLocations(root,state,dataset.builtAt)}, dataset };

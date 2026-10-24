@@ -8,7 +8,7 @@ import { memoryLockManager } from "../lib/control-plane/repository/memory.ts";
 import { acquireStateBoundaries } from "../lib/place-map/acquire.ts";
 import { currentGrfPlaceEdges } from "../lib/place-map/grf-edges.ts";
 import { buildStatePlaceMap } from "../lib/place-map/build.ts";
-import { readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
+import { readLegacyStateMemberships, knownPostalZips } from "../lib/place-map/refresh.ts";
 import { statePostalLinks } from "../lib/place-map/postal-links.ts";
 import type { StatePlaceMap } from "../lib/place-map/load.ts";
 import { censusTigerArchive } from "../lib/census-geography/tiger-source.ts";
@@ -64,6 +64,7 @@ for (const state of process.argv.slice(2).filter(arg => !arg.startsWith("--"))) 
   const edges = metadataOnly ? [] : (await currentGrfPlaceEdges(fips, [...held.places, ...shapes.places], options)).filter(e => tribal.has(e.placeId));
   const crossStateZctas = new Set(held.zctaEdges.filter(e => e.boundaryYear === 2026 && e.share === null && e.partial).map(e => e.code));
   const update = buildStatePlaceMap({ registration, scopes: [], legacyZips: legacy, legacyZctas: new Set(held.zctaEdges.map(e => e.code)),
+    knownZips: await knownPostalZips(process.cwd(), new Set(held.zctaEdges.map(edge => edge.code))),
     boundaries: [...held.boundaries, ...shapes.boundaries, ...await heldSpecialDistrictBoundaries(process.cwd(), registration)], additionalPlaces: [...held.places, ...shapes.places], acquiredEdges: [...held.zctaEdges, ...edges],
     postalLinks: await statePostalLinks(process.cwd(), state), crossStateZctas, checkedAt: new Date().toISOString() });
   const places = new Map(held.places.map(p => [p.id, p]));

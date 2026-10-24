@@ -43,6 +43,7 @@ export function buildStatePlaceMap(input: {
   readonly legacyZips: ReadonlyMap<string, PlaceEntry>;
   /** Codes confirmed by the source Census ZCTA file, independently of USPS. */
   readonly legacyZctas: ReadonlySet<string>;
+  readonly knownZips?: ReadonlySet<string>;
   readonly boundaries: readonly PlaceBoundary[];
   readonly additionalPlaces?: readonly MapPlace[];
   readonly acquiredEdges?: readonly MapEdge[];
@@ -88,9 +89,10 @@ export function buildStatePlaceMap(input: {
     target.set(identity, previous ? { ...edge, share: edge.share ?? previous.share, shareBasis: edge.share === null ? previous.shareBasis : edge.shareBasis,
       partial: edge.partial && previous.partial, fringe: edge.fringe && previous.fringe } : edge);
   };
+  const knownZip = (code: string) => input.legacyZips.has(code) || input.knownZips?.has(code);
   for (const edge of input.acquiredEdges ?? []) {
     addEdge(zctaEdges, edge);
-    if (input.legacyZips.has(edge.code)) addEdge(zipEdges, edge);
+    if (knownZip(edge.code)) addEdge(zipEdges, edge);
   }
   for (const scope of input.scopes) {
     if (scope.type === "cbsa") continue;
@@ -113,7 +115,7 @@ export function buildStatePlaceMap(input: {
         addEdge(zctaEdges, edge);
         // Census supplies ZCTA membership. Only a separately held postal ZIP
         // establishes a ZIP row of the same code.
-        if (input.legacyZips.has(overlap.zcta5)) addEdge(zipEdges, edge);
+        if (knownZip(overlap.zcta5)) addEdge(zipEdges, edge);
       }
     }
   }

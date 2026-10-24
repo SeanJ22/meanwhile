@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
-import { ballotHolderSources, mergeBallotPersonHolders } from "../lib/ballot/held-holder.ts";
+import { mergeBallotPersonHolders } from "../lib/ballot/held-holder.ts";
+import { heldPersonSources } from "../lib/officials/held-sources.ts";
 import { indexByOfficeholderId } from "../lib/officials/lookup.ts";
 import { personCardSources } from "../lib/officials/card-sources.ts";
 import { syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
@@ -39,10 +40,29 @@ test("a Congress source slot keeps its native person key for records while all s
   assert.ok(merged.personAliases.includes(api.id));
   assert.ok(merged.personAliases.includes(merged.id));
   assert.equal(merged.phone, api.phone);
-  assert.deepEqual(ballotHolderSources(merged), [api]);
+  assert.deepEqual(heldPersonSources(merged), [api]);
   assert.deepEqual(mergeBallotPersonHolders([merged]), merged);
   const conflict = mergeBallotPersonHolders([{ ...api, nativeIds: { bioguide: ["H001104", "S001230"] } }])!;
   assert.equal(conflict.id, api.id, "conflicting native keys never select an arbitrary person");
+});
+
+test("the ballot preserves held date precision after flattening the person's source records", () => {
+  const full = holder("person-rich", { termStart: "2025-01-03", termEnd: "2027-01-03", birthDate: "1963-06-20" });
+  const newer = holder("person-fresh", { provenance: newSource, termStart: "2025", termEnd: "2027", birthDate: "1963-06" });
+  for (const records of [[full, newer], [newer, full]]) {
+    const merged = mergeBallotPersonHolders(records)!;
+    for (const field of ["termStart", "termEnd", "birthDate"] as const) {
+      assert.equal(merged[field], full[field]);
+      assert.deepEqual(merged.fieldSources?.[field], oldSource);
+    }
+    assert.deepEqual(mergeBallotPersonHolders([merged]), merged);
+  }
+  const changed = { ...newer, termStart: "2024", termEnd: "2028-02", birthDate: "1963-07" };
+  const contradictory = mergeBallotPersonHolders([full, changed])!;
+  for (const field of ["termStart", "termEnd", "birthDate"] as const) {
+    assert.equal(contradictory[field], changed[field]);
+    assert.deepEqual(contradictory.fieldSources?.[field], newSource);
+  }
 });
 
 test("a verified empty office slot cannot replace its person's held portrait and contact", () => {
@@ -56,7 +76,7 @@ test("a verified empty office slot cannot replace its person's held portrait and
   assert.equal(merged.phone, rich.phone);
   assert.equal(merged.fieldSources?.photoUrl.sourceUrl, oldSource.sourceUrl);
   assert.deepEqual(new Set(merged.nativeIds?.reader), new Set([empty.id, rich.id, "old-person-card"]));
-  assert.deepEqual(ballotHolderSources(merged), [empty, rich]);
+  assert.deepEqual(heldPersonSources(merged), [empty, rich]);
   assert.deepEqual([empty, rich], before);
   assert.deepEqual(mergeBallotPersonHolders([merged]), merged, "repeated reads retain the same complement and aliases");
 });
@@ -76,7 +96,7 @@ test("newer sourced fields supplement the rich person while every source stays a
   assert.equal(merged.fieldSources?.photoUrl.sourceUrl, oldSource.sourceUrl);
   assert.deepEqual(merged.memberships, rich.memberships);
   assert.equal(merged.social?.length, 2);
-  assert.deepEqual(new Set(ballotHolderSources(merged).map(row => row.provenance?.sourceUrl)), new Set([oldSource.sourceUrl, newSource.sourceUrl]));
+  assert.deepEqual(new Set(heldPersonSources(merged).map(row => row.provenance?.sourceUrl)), new Set([oldSource.sourceUrl, newSource.sourceUrl]));
   assert.equal(mergeBallotPersonHolders([]), null);
 });
 
@@ -99,8 +119,8 @@ test("a newer reference cannot replace current official member fields and the me
   assert.equal(merged.photoUrl, reference.photoUrl, "complementary portrait remains available");
   assert.equal(merged.fieldSources?.websiteUrl.sourceUrl, currentUrl);
   assert.equal(merged.fieldSources?.phone.sourceUrl, currentUrl);
-  assert.equal(ballotHolderSources(merged)[0].websiteUrl, priorUrl, "the source record keeps its published alternative");
-  assert.equal(ballotHolderSources(merged)[1].websiteUrl, null, "the original record is not edited");
+  assert.equal(heldPersonSources(merged)[0].websiteUrl, priorUrl, "the source record keeps its published alternative");
+  assert.equal(heldPersonSources(merged)[1].websiteUrl, null, "the original record is not edited");
   assert.deepEqual(mergeBallotPersonHolders([merged]), merged);
 });
 

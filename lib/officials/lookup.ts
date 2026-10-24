@@ -13,6 +13,8 @@ import type {
 } from "./types.ts";
 
 export interface SeatHolder {
+  /** Original held records behind a merged person, including alternate portraits and their sources. */
+  readonly sourceHolders?: readonly SeatHolder[];
   fieldSources?: Record<string, Provenance>;
   id: string;
   personId?: string;

@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T20:55:43Z
+heartbeat: 2026-10-24T20:56:57Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 5:00 PM EDT
+- Live: release 102 (4ae2e14e6, 4:54 PM EDT). Reader checks pass. The first supervisor digest on 102 is owed to confirm meeting calendar failures drop.
+- Gating: batch C (RN-03 + SO-01), re-run with SO-01's new dependency installed.
+- DB-01: no new READY by its 4:55 PM EDT window. Per the standing order a River helper is fixing its 6 failures on stream/db-01 (classify civic_data_clock_versions; shell select rule on the Admin Money hour select; the registry payload-part read's TypeError; the Admin Money and view tests), keeping DB-01's readers-unchanged proofs, then READY: DB-01 and the next batch.
+- Voting: voting-sites:AZ and :IL still deferred on worker memory (last checked 3:25 PM EDT pass). Cochise's 5 drop boxes and Wheeling 60090 aren't live yet.
+- Queue: C (gating) RN-03 + SO-01; D PT-01; E RB-A2 + RB-A5 + RB-A8; DB-01 when River's fix is READY; RB-A4 after RB-A3.
 
 ### Release 102 live, 4:54 PM EDT
 - /api/build 4ae2e14e6 (PR #812 merge commit). Sean's checks in Chromium at 4:55 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200 (598 id fields, up from 584), /national 200.

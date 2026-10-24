@@ -7,11 +7,10 @@ import {
   normalizeWithDrops,
   type LegistarEventWithClient,
 } from "../lib/sources/legistar/index.ts";
+import { publishedOnlineAccess } from "../lib/meetings/published-online.ts";
 import { groupByVenue } from "../lib/meetings/venues.ts";
 import { describeStatus } from "../lib/sources/legistar/client.ts";
 import {
-  findVenue,
-  isPlaceless,
   LEGISTAR_CLIENTS,
 } from "../lib/sources/legistar/client-registry.ts";
 import type {
@@ -150,61 +149,27 @@ test("a virtual meeting is KEPT, with no place and no invented pin (D18)", () =>
   );
 });
 
-test("a virtual meeting is never a pin", () => {
+test("an online meeting retains its attendance type before publication places its office pin", () => {
   const virtual = EVENTS.find((e) => e.EventLocation === "Virtual Meeting")!;
   const { meetings } = normalizeWithDrops(wrap([virtual]), NOW);
   // groupByVenue is the one gate that decides what becomes a marker.
   assert.deepEqual(groupByVenue(meetings), [], "no venue, therefore no pin");
 });
 
-test("coordinates only ever come from the curated venue table", () => {
-  const { meetings } = normalizeWithDrops(wrap(EVENTS), NOW);
-  const known = LEGISTAR_CLIENTS[0].venues;
-
-  // An online meeting has no coordinates, so it is checked apart from the venue-table loop.
-  const online = meetings.filter((m) => m.location === null);
-  assert.ok(online.length > 0, "the fixture still contains a virtual meeting");
-  for (const meeting of online) assert.equal(meeting.online?.joinUrl, null);
-
-  for (const meeting of meetings.filter((m) => m.location !== null)) {
-    assert.ok(
-      known.some(
-        (v) => v.lat === meeting.location!.lat && v.lng === meeting.location!.lng,
-      ),
-      `${meeting.location!.name} has coordinates from outside the venue table`,
-    );
+test("the adapter preserves source location text for publication without a hand-built match", () => {
+  const {meetings}=normalizeWithDrops(wrap(EVENTS),NOW);
+  for(const meeting of meetings){
+    assert.equal(meeting.location,null);
+    const event=EVENTS.find(event=>meeting.id===`legistar:pima:${event.EventId}`)!;
+    if(meeting.online)assert.equal(meeting.online.label,event.EventLocation);
+    else assert.equal(meeting.venueGap?.publishedText,event.EventLocation);
   }
-});
-
-test("every venue in the table cites where its address and coordinates came from", () => {
-  for (const client of LEGISTAR_CLIENTS) {
-    for (const venue of client.venues) {
-      assert.ok(
-        venue.addressSourceUrl.startsWith("https://"),
-        `${venue.name} must cite an address source`,
-      );
-      assert.ok(
-        venue.coordinateSourceUrl.startsWith("https://"),
-        `${venue.name} must cite a coordinate source`,
-      );
-      assert.equal(venue.verifiedAt, null);
-    }
-  }
-});
-
-test("venue matching survives inconsistent punctuation", () => {
-  const client = LEGISTAR_CLIENTS[0];
-  // The API sends "Board of Supervisors' Hearing Room"; the table spells it
-  // without the apostrophe. Both must resolve to one room.
-  assert.ok(findVenue(client, "Board of Supervisors' Hearing Room"));
-  assert.ok(findVenue(client, "board of supervisors hearing room"));
-  assert.equal(findVenue(client, "Council Chambers"), undefined);
 });
 
 test("placeless venues are recognised regardless of case", () => {
-  assert.ok(isPlaceless("Virtual Meeting"));
-  assert.ok(isPlaceless("virtual meeting"));
-  assert.equal(isPlaceless("Board of Supervisors' Hearing Room"), false);
+  assert.ok(publishedOnlineAccess("Virtual Meeting"));
+  assert.ok(publishedOnlineAccess("virtual meeting"));
+  assert.equal(publishedOnlineAccess("Board of Supervisors' Hearing Room"), null);
 });
 
 test("cancellation is only claimed on an explicit word", () => {

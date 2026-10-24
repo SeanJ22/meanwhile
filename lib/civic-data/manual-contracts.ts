@@ -464,7 +464,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     readerProjection: { id: "reviewed-venue-resolutions", consumers: ["meetings acquisition adapters", "map"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["lib/meetings/venue-cache.ts"],
-    lkgBehavior: "Pins are promoted by the meeting passes themselves from automatic Census matches (BX-09). A bad address, coordinate, scope key, or source receipt holds only venue resolutions and leaves their prior GOOD version available to meeting acquisition.",
+    lkgBehavior: "Existing verified venue references remain available to their adapters. New Census points are saved with the meeting and its fact-store fields during publication; this reference pointer never holds a meeting back.",
   },
   {
     id: "meeting-body-crosswalk",

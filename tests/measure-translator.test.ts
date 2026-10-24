@@ -1,4 +1,4 @@
-import { measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
+import { decodedMeasurePassages, measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
 import { fixturePlaybooks } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -74,7 +74,7 @@ test("a whole source used as a binding quote is sent once, before the measure co
   for (const request of requests) {
     assert.deepEqual(cacheTtlOrderProblems(request), []);
     const blocks = request.messages[0].content as { text: string; cache_control?: { ttl: string } }[];
-    assert.equal(JSON.parse(blocks[0].text).sourcePassages.map((row: { text: string }) => row.text).join(""), text);
+    assert.equal(decodedMeasurePassages(blocks[0].text).map(row => row.text).join(""), text);
     assert.equal(blocks[0].cache_control?.ttl, "5m");
     const context = measureRequestContext(request);
     assert.equal("sourceQuote" in context.subject, false);

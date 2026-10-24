@@ -32,7 +32,7 @@ export function translationPlaybook(entries: readonly RolePlaybookEntry[]): Tran
   if (writerBook.error || checkerBook.error) throw new Error(writerBook.error ?? checkerBook.error);
   const writerModel = MODELS.haiku.model, checkerModel = MODELS.sonnet.model;
   return { writerText: writerBook.text, checkerText: checkerBook.text, writerModel, checkerModel,
-    version: translationHash(JSON.stringify([writerBook.version, checkerBook.version, writerModel, checkerModel, "measure-passages/1"])) };
+    version: translationHash(JSON.stringify([writerBook.version, checkerBook.version, writerModel, checkerModel, "measure-passages/2"])) };
 }
 
 async function loadTranslationPlaybook(repos: FieldManualRepos) {

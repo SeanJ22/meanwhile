@@ -389,3 +389,6 @@ One line per batch folded into river.
 - 2026-10-24T17:39:44Z · river-0051 · RV-0051 · ready 178151d61 · river f227d227c · pnpm gates on 178151d61: 8 of 9 (tsc out of memory beside a parallel typecheck; tsc rerun alone passes), tests 9,774 pass · release 99 PR #809
 - 2026-10-24T16:10:35Z · river-hotfix · RV-JIT · ready dfb076b40 · river dfb076b40 · one line (reader pool startup option); 57 reader-database tests; CI on release 98 PR #808, live 1:07 PM EDT
 - 2026-10-24T18:24:19Z · river-pool · RV-POOL · ready f2537568e · river d143c070c · pnpm gates on c125bfa59: tests 9,775 pass; tsc, build, build:standalone OOM at the default 2 GB heap, pass with CI's 4 GB · release 100 PR #810
+- 2026-10-24T19:10:38Z · cl-01 · CL-01 · ready 88af51ae2 · river e2ee3657a · pnpm gates pass on c09c1e606 (9 of 9, 9,780 tests) · release 101 PR #811
+- 2026-10-24T19:10:38Z · river-tools · RV-TOOLS · ready 2645e12d5 · river e2ee3657a · pnpm gates pass on c09c1e606 (9 of 9, 9,780 tests) · release 101 PR #811
+- 2026-10-24T19:10:38Z · river-keys · RIVER-KEYS · ready 33a304632 · river e2ee3657a · pnpm gates pass on c09c1e606 (9 of 9, 9,780 tests) · release 101 PR #811

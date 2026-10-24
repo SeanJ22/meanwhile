@@ -4318,5 +4318,41 @@
     "tested_sha": "c125bfa59",
     "gates": "pass (tsc/build/build:standalone rerun with CI's 4 GB heap)",
     "at": "2026-10-24T18:24:19Z"
+  },
+  {
+    "lane": "cl-01",
+    "steps": [
+      "CL-01"
+    ],
+    "ready_sha": "88af51ae2",
+    "merge_sha": "c09c1e606",
+    "river_sha": "e2ee3657a",
+    "tested_sha": "c09c1e606",
+    "gates": "pass",
+    "at": "2026-10-24T19:10:38Z"
+  },
+  {
+    "lane": "river-tools",
+    "steps": [
+      "RV-TOOLS"
+    ],
+    "ready_sha": "2645e12d5",
+    "merge_sha": "c09c1e606",
+    "river_sha": "e2ee3657a",
+    "tested_sha": "c09c1e606",
+    "gates": "pass",
+    "at": "2026-10-24T19:10:38Z"
+  },
+  {
+    "lane": "river-keys",
+    "steps": [
+      "RIVER-KEYS"
+    ],
+    "ready_sha": "33a304632",
+    "merge_sha": "c09c1e606",
+    "river_sha": "e2ee3657a",
+    "tested_sha": "c09c1e606",
+    "gates": "pass",
+    "at": "2026-10-24T19:10:38Z"
   }
 ]

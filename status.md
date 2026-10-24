@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T19:12:32Z
+heartbeat: 2026-10-24T19:33:15Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Meeting calendars failing per pass: cause found, fix READY (RV-MEET), 3:35 PM EDT
+- What readers lose: about 200 public bodies a pass (Granicus, CivicPlus, PrimeGov calendars) never publish fresh meetings. Digest code MEETING_PARTITION_READ_FAILED / FINAL_ROUTE_NOT_REGISTERED.
+- Cause, proven on real production doors (read-only replay): a meeting read records every successful fetch while the source is in scope as that read's sources (lib/sources/acquisition-trace.ts captureSourceAcquisitions). The release cache those three adapters use stores copies in Netlify Blobs on the runner, through the same global fetch (lib/control-plane/evidence/netlify-store.ts boundedFetch). So the first recorded "source" is the vault's own api.netlify.com manifest request, which source authority refuses (lib/civic-data/source-authority.ts authorityFor; lib/civic-data/promotion.ts:269). The digest redacted the URL, which hid this.
+- It didn't start in release 95: the same boards failed before as RECEIPT_COUNT_INVALID "observed 0", 45 to 52 a pass in release 94. RN-02 gave the failure its own name, and release 95 ran about 4 times as many tasks a pass.
+- Fix RV-MEET (stream/river-meet READY 6be91744f, River's helper): the vault's fetch runs outside the source scope (`outsideSourceAcquisition`, +6/-1 in 2 files). A read's sources are only what the publisher sent.
+- Proof: 3 real boards fail on current river with the exact production error and publish with the fix: Peoria County IL zoning appeals (156 meetings), Barrington Hills IL plan commission (49), Adams County CO planning (6). Replay of the doors that failed in the 2:17 PM EDT pass, current river failing vs fix published, by state: AZ 12/12, CO 23/23, CT 11/11, IL 13/13, MO 2/2, NC 7/7, OH 4/4, PA 6/6, TX 53/48, VA 26/26, WA 12/12, WI 7/6; total 176/170. The 6 left fail on their own publishers (Blanco x3 and Brownsville TX return 404, Round Rock TX and Appleton WI return 0 meetings). New test fails without the fix, passes with it; 327 related tests and tsc pass.
+- Next: gates as its own batch right after batch B (ahead of PT-01). After release, the next digest's MEETING_PARTITION_READ_FAILED count must drop.
+- Open, not fixed here: the meeting byte-retaining fetch (lib/civic-data/retained-meeting-bytes.ts retainingFetch) still keeps vault responses against each read's 16 MB allowance.
 
 ### Release 100 live, 3:11 PM EDT
 - /api/build 2d0b664ce (PR #810 merge commit). A broken reader connection now fails only its own read (503); the function keeps serving.

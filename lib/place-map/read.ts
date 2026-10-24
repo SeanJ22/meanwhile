@@ -9,9 +9,6 @@ const districtTypes: Readonly<Record<string, GeographyType>> = {
 };
 const fields = `e.id AS place_id, e.name, e.state, b.layer, b.boundary_year, b.version,
   b.county_attachment, b.host_county_id`;
-// A point outside a newer local shape cannot fall back to its older shape.
-export const CURRENT_LOCAL_BOUNDARY_SQL = `(b.layer IN ('cd','sldu','sldl') OR b.boundary_year=(
-  SELECT max(current.boundary_year) FROM place_boundary current WHERE current.place_id=b.place_id))`;
 
 /** Choose the current local boundary before testing membership. Older shapes
  * remain held, but cannot return a place the newer boundary no longer covers. */

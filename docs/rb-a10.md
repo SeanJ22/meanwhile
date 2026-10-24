@@ -1,6 +1,6 @@
 # Switch readers to the place map
 
-Owner: RB-A10. Branch: stream/rb-a10, cut from river 21ae9bcfb. Current dependency: RB-A2 0b2f5ae52, including RB-A1. Work in progress; no READY claim.
+Owner: RB-A10. Branch: stream/rb-a10, cut from river 21ae9bcfb. Current dependency: RB-A2 3b392c823, including RB-A1. Work in progress; no READY claim.
 
 Reader and Admin memberships and typed-ZIP display points now use the place map. The recurring state import writes `zip_location` from the acquired Census and postal coordinates; reader requests and browser startup query those imported rows. The old server ZIP coordinate and postal-file modules and browser shard projection are deleted. Known postal destinations retain their metadata even when they have no display coordinate. Typed ZIPs that cross a state line read every touched state’s boards and calendars. The request shares the point result and raw rows across current-representation and election-year selections. Nearest-centroid lookup and the second resolver-geometry pass are deleted. The acquired ZIP seed decoder remains only in the map import and isolated test fixtures; no reader loads a seed shard.
 
@@ -26,7 +26,7 @@ Both checks used current official map rows imported into disposable local Postgr
 
 Concord also returned five additional board IDs. The ballot-scope endpoint includes held elections, so its total is not presented as the current ballot page's race count. All comparisons preserve the baseline IDs themselves.
 
-The statewide New Hampshire replay still reports three old Newfound Area School District memberships at ZIPs 03266, 03241 and 03264. Current Census polygons show no overlap and current memberships include Pasquaney School District. The Newfound ID remains held. Preservation remains open; the missing memberships have not been silently accepted as a pass or reintroduced as current governing claims.
+The first statewide New Hampshire replay exposed three held Newfound ZIP memberships suppressed by an extra global year filter in RB-A10. That filter is removed from ZIP reads: the provider retains unreplaced ZIP evidence. Point reads select the current local polygon before intersection, and district election plans still use selection.ts. The full replay is rerunning against the newest provider.
 
 The additive seed has 42,883 source rows, including known postal destinations with no coordinates. Migration verification now sizes its committed-file read for the actual migration, retaining exact byte comparison; all 21 migration tests pass after that fix.
 

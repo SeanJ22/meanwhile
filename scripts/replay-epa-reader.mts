@@ -25,7 +25,7 @@ import {FederalMoneyBenchmarkStore} from "./lib/federal-money-benchmark-store.mt
 import {installOpenDataReaderSql,installOpenDataReplayMap,installOpenDataReplayVault,normalOpenDataPage} from "./lib/open-data-replay-reader.mts";
 import {createEpaReplayVault} from "./lib/epa-held-spool.mts";
 import {compressedReplayVault} from "./lib/open-data-replay-vault.mts";
-import {stateForZip} from "../lib/reader/national.ts";
+import {stateForZip} from "../lib/place-map/reader.ts";
 
 const args=new Map(process.argv.slice(2).map(arg=>{const at=arg.indexOf("=");return[arg.slice(0,at),arg.slice(at+1)];}));
 const cache=resolve(args.get("--cache")??".scratch/src01-epa"),vaultRoot=resolve(args.get("--vault")!),nativeConnectionFile=args.get("--native-postgres-file");

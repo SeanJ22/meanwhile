@@ -97,3 +97,32 @@ test("the shared reader preserves an explicitly installed read-only query and it
     assert.equal(readerDatabaseQuery(1800), null);
   } finally { installReaderDatabaseQuery(undefined); }
 });
+
+test("a broken reader connection fails its own read and leaves the function serving the next one", async () => {
+  const originalUrl = process.env.DATABASE_URL, originalConnect = Pool.prototype.connect, originalError = console.error;
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@reader-broken.invalid/fixture";
+  const logged: string[] = [];
+  console.error = (line: string) => { logged.push(line); };
+  const pools: Pool[] = [];
+  let fail = true;
+  const client = Object.assign(new Client(), { release() {} });
+  client.query = (async () => ({ command: "SELECT", rowCount: 1, oid: 0, fields: [], rows: [{ selected: "next" }] })) as typeof client.query;
+  Pool.prototype.connect = (async function (this: Pool) {
+    pools.push(this);
+    if (fail) throw new Error("unsupported startup parameter");
+    this.emit("connect", client);
+    return client;
+  }) as typeof Pool.prototype.connect;
+  try {
+    await assert.rejects(readerDatabaseQuery(1800)!([statement]), /unsupported startup parameter/);
+    assert.doesNotThrow(() => pools[0].emit("error", new Error("terminating connection due to administrator command")));
+    fail = false;
+    assert.deepEqual(await readerDatabaseQuery(1800)!([statement]), [[{ selected: "next" }]]);
+    assert.doesNotThrow(() => client.emit("error", new Error("Connection terminated unexpectedly")));
+    assert.deepEqual(logged, ["Reader database connection failed: terminating connection due to administrator command",
+      "Reader database connection failed: Connection terminated unexpectedly"]);
+  } finally {
+    Pool.prototype.connect = originalConnect; console.error = originalError;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl;
+  }
+});

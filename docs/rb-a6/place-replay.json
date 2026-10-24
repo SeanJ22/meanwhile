@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-24T10:50:37.242Z",
+  "observedAt": "2026-10-24T22:45:21.372Z",
   "productionRoles": [
     "readonly",
     "wtp_cp_release_readonly"
@@ -10,18 +10,18 @@
       "state": "AZ",
       "zip": "85701",
       "memberships": 5,
-      "productionEntities": 428,
-      "owed": 3705,
-      "held": 624,
-      "missing": 3081,
+      "productionEntities": 433,
+      "owed": 3796,
+      "held": 689,
+      "missing": 3107,
       "stale": 3,
-      "stuck": 578,
+      "stuck": 589,
       "nextPass": {
-        "owed": 3705,
-        "held": 624,
-        "missing": 3081,
+        "owed": 3796,
+        "held": 689,
+        "missing": 3107,
         "stale": 3,
-        "stuck": 578
+        "stuck": 589
       },
       "heldExample": {
         "entityId": "az:county:county-of-pima#board-of-adjustment-district-1",
@@ -46,18 +46,18 @@
       "state": "CA",
       "zip": "94553",
       "memberships": 17,
-      "productionEntities": 727,
-      "owed": 9407,
-      "held": 3338,
-      "missing": 6069,
+      "productionEntities": 826,
+      "owed": 10183,
+      "held": 3769,
+      "missing": 6414,
       "stale": 0,
-      "stuck": 595,
+      "stuck": 600,
       "nextPass": {
-        "owed": 9407,
-        "held": 3338,
-        "missing": 6069,
+        "owed": 10183,
+        "held": 3769,
+        "missing": 6414,
         "stale": 0,
-        "stuck": 595
+        "stuck": 600
       },
       "heldExample": {
         "entityId": "ca:city:city-of-martinez#governing",
@@ -106,18 +106,18 @@
       "state": "CO",
       "zip": "80012",
       "memberships": 10,
-      "productionEntities": 193,
-      "owed": 1464,
-      "held": 465,
-      "missing": 999,
-      "stale": 6,
-      "stuck": 86,
+      "productionEntities": 243,
+      "owed": 1832,
+      "held": 647,
+      "missing": 1185,
+      "stale": 0,
+      "stuck": 115,
       "nextPass": {
-        "owed": 1464,
-        "held": 465,
-        "missing": 999,
+        "owed": 1832,
+        "held": 647,
+        "missing": 1185,
         "stale": 0,
-        "stuck": 86
+        "stuck": 115
       },
       "heldExample": {
         "entityId": "meeting:legistar-insite:derived-state-co-county-arapahoe-body-arapahoe-county-board-of-health:1425727",
@@ -142,50 +142,34 @@
       "state": "FL",
       "zip": "32601",
       "memberships": 4,
-      "productionEntities": 15,
-      "owed": 51,
-      "held": 2,
-      "missing": 49,
+      "productionEntities": 16,
+      "owed": 60,
+      "held": 3,
+      "missing": 57,
       "stale": 0,
       "stuck": 0,
       "nextPass": {
-        "owed": 51,
-        "held": 2,
-        "missing": 49,
+        "owed": 60,
+        "held": 3,
+        "missing": 57,
         "stale": 0,
         "stuck": 0
       },
       "heldExample": {
-        "entityId": "fl:county:county-of-alachua#governing",
-        "entityName": "Alachua County governing",
+        "entityId": "fl:county:county-of-alachua#body:alachua-county-arts-council",
+        "entityName": "Alachua County Arts Council",
         "kind": "body",
-        "field": "meeting_cadence",
-        "label": "Meeting calendar",
+        "field": "name",
+        "label": "Board or commission name",
         "blank": null,
         "facts": [
           {
-            "id": 2257814,
+            "id": 2748895,
             "stale": false,
-            "value": "second and fourth Tuesday of each month",
-            "status": "held",
-            "checkedAt": "2026-10-23T12:41:28.488+00:00",
-            "sourceUrl": "http://www.alachuacounty.us/Depts/BOCC"
-          },
-          {
-            "id": 2257816,
-            "stale": false,
-            "value": "second and fourth Tuesday of each month",
-            "status": "held",
-            "checkedAt": "2026-10-23T12:41:28.488+00:00",
-            "sourceUrl": "http://www.alachuacounty.us/Depts/BOCC/Pages/BOCC.aspx"
-          },
-          {
-            "id": 2257818,
-            "stale": false,
-            "value": "second and fourth Tuesday of each month",
+            "value": "Alachua County Arts Council",
             "status": "live",
-            "checkedAt": "2026-10-23T12:41:28.488+00:00",
-            "sourceUrl": "https://www.alachuacounty.us/Depts/BOCC"
+            "checkedAt": "2026-10-24T17:40:31.876+00:00",
+            "sourceUrl": "https://www.alachuacounty.us/Arts-Council"
           }
         ]
       }
@@ -230,18 +214,18 @@
       "state": "IL",
       "zip": "60602",
       "memberships": 5,
-      "productionEntities": 354,
-      "owed": 3882,
-      "held": 1777,
-      "missing": 2105,
+      "productionEntities": 465,
+      "owed": 5061,
+      "held": 2329,
+      "missing": 2732,
       "stale": 0,
-      "stuck": 131,
+      "stuck": 205,
       "nextPass": {
-        "owed": 3882,
-        "held": 1777,
-        "missing": 2105,
+        "owed": 5061,
+        "held": 2329,
+        "missing": 2732,
         "stale": 0,
-        "stuck": 131
+        "stuck": 205
       },
       "heldExample": {
         "entityId": "government:US-IL:cog:145624#body:budget-forum",
@@ -339,14 +323,14 @@
       "memberships": 4,
       "productionEntities": 71,
       "owed": 490,
-      "held": 154,
-      "missing": 336,
+      "held": 201,
+      "missing": 289,
       "stale": 0,
       "stuck": 24,
       "nextPass": {
         "owed": 490,
-        "held": 154,
-        "missing": 336,
+        "held": 201,
+        "missing": 289,
         "stale": 0,
         "stuck": 24
       },
@@ -354,20 +338,19 @@
         "entityId": "meeting:legistar-insite:derived-state-nj-county-bergen-governing:1409378",
         "entityName": "BOARD OF COUNTY COMMISSIONERS",
         "kind": "meeting",
-        "field": "starts_at",
-        "label": "Meeting date and time",
+        "field": "location",
+        "label": "Where to attend",
         "blank": null,
         "facts": [
           {
-            "id": 2646526,
+            "id": 2753983,
             "stale": false,
             "value": {
-              "startsAt": "2026-07-01T00:00:00-04:00",
-              "timeZone": "America/New_York",
-              "precision": "MINUTE"
+              "name": "Commissioner Public Meeting Room",
+              "address": null
             },
             "status": "live",
-            "checkedAt": "2026-10-24T09:39:04.209+00:00",
+            "checkedAt": "2026-10-24T20:07:37.522+00:00",
             "sourceUrl": "https://cobergennj.legistar.com/View.ashx?M=IC&ID=1409378&GUID=CE20022C-1050-4D1D-81DF-35878DA77F98"
           }
         ]
@@ -379,14 +362,14 @@
       "memberships": 16,
       "productionEntities": 93,
       "owed": 682,
-      "held": 138,
-      "missing": 544,
+      "held": 167,
+      "missing": 515,
       "stale": 0,
       "stuck": 42,
       "nextPass": {
         "owed": 682,
-        "held": 138,
-        "missing": 544,
+        "held": 167,
+        "missing": 515,
         "stale": 0,
         "stuck": 42
       },
@@ -394,20 +377,19 @@
         "entityId": "meeting:legistar-insite:derived-state-tx-county-brazoria-body-tax-resale-committee:1456036",
         "entityName": "Tax Resale Committee",
         "kind": "meeting",
-        "field": "starts_at",
-        "label": "Meeting date and time",
+        "field": "location",
+        "label": "Where to attend",
         "blank": null,
         "facts": [
           {
-            "id": 2403824,
+            "id": 2752002,
             "stale": false,
             "value": {
-              "startsAt": "2026-10-27T14:00:00-05:00",
-              "timeZone": "America/Chicago",
-              "precision": "MINUTE"
+              "name": "Commissioners Courtroom",
+              "address": null
             },
             "status": "live",
-            "checkedAt": "2026-10-24T07:44:18.018+00:00",
+            "checkedAt": "2026-10-24T18:24:51.265+00:00",
             "sourceUrl": "https://brazoriacountytx.legistar.com/Calendar.aspx"
           }
         ]
@@ -417,18 +399,18 @@
       "state": "WI",
       "zip": "53703",
       "memberships": 4,
-      "productionEntities": 1617,
-      "owed": 19988,
-      "held": 6972,
-      "missing": 13016,
+      "productionEntities": 1802,
+      "owed": 21347,
+      "held": 7589,
+      "missing": 13758,
       "stale": 0,
-      "stuck": 1096,
+      "stuck": 1153,
       "nextPass": {
-        "owed": 19988,
-        "held": 6972,
-        "missing": 13016,
+        "owed": 21347,
+        "held": 7589,
+        "missing": 13758,
         "stale": 0,
-        "stuck": 1096
+        "stuck": 1153
       },
       "heldExample": {
         "entityId": "government:US-WI:cog:209777#body:affirmative-action-commission",

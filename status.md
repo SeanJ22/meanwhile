@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 102 (main 4ae2e14e6, live 4:54 PM EDT; RV-MEET, MT-01, RB-A1 doc). GATING: batch C (RN-03 953466400 + SO-01 05012c722, river-next 0fd58dd5a; re-run after installing SO-01's new 'entities' dependency)
+build_state: LIVE FOR READERS: release 102 (main 4ae2e14e6). NEXT: release 103 (SO-01 + RN-03, PR #813, CI). GATING: batch D = DB-01 4c5b40e39 alone (river-next 1c99a381e). Returned: PT-01 (conflict with SO-01, River takes it at 6:30 PM EDT)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T21:13:15Z
+heartbeat: 2026-10-24T21:34:23Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Meeting calendars after release 102, 5:40 PM EDT
+- First full supervisor pass on 102 (5:32 PM EDT): 148 source tasks promoted, 62 held their last good copy, MEETING_PARTITION_READ_FAILED 0 (195 to 339 a pass all day before). Total supervisor failures 10 (4 RECEIPT_COUNT_INVALID, 4 CHILD_EXIT_CONTRADICTED_PARTITION_RECEIPT, 1 PUBLICATION_INPUT_CLOCK_UNREAD, 1 MEETING_PIN_PUBLICATION_FAILED: Census rejects a Carmel-by-the-Sea council address written as a description).
+- Granicus, CivicPlus and PrimeGov meeting doors that published since 5:00 PM EDT: 57 (CO 9, FL 8, AZ 8, MA 6, CT 3, CA 2, MN 1, plus 20 whose ids carry no state).
+- Not yet re-read since 102: the three replay examples (Peoria County zoning appeals, Barrington Hills plan commission, Adams County CO planning); their last failures predate 4:54 PM EDT. River checks them when they come due.
+- PT-01 returned (returns/pt-01.md): it conflicts with SO-01 in lib/officials/statewide-executives.ts (SO-01's statewideHolder vs PT-01's inline portrait step) and carries an old copy of lib/reader/database.ts. River does the merge at 6:30 PM EDT if the lane hasn't.
+- Batch D gating: DB-01 4c5b40e39 alone.
 
 ### River finished DB-01 on its branch, 5:30 PM EDT (standing order: no READY within 60 minutes of the return)
 - What: merged river 720bc77b6 into stream/db-01 (no conflicts), fixed its 6 failing tests and two production bugs, READY: DB-01 4c5b40e39 (fast-forward from befe7b6f1).

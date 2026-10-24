@@ -18,6 +18,7 @@ NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: o
 
 ## Release 95 live check (RN-02), 11:50 PM EDT: FAILED, returned
 - Supervisor passes on 16eead35c: 1300 (03:05 UTC) and 1316 (03:30 UTC) failures, READER_READBACK_REPAIR_FAILED=1250 ("PERMANENT_RUNTIME_AUTHORITY_REFUSED: candidate does not identify exactly one registered production contract", meetings-outcomes readbacks), READER_REPAIR_CHILD_EXIT_NONZERO=65 (store.appendEvidence failed). Release 94 passes had 11 to 56. RN-02 returned (returns/rn-02.md).
+- 1:10 AM EDT Oct 24: steady, not worsening. Every reader-repair pass on 16eead35c fails the same way: 928 (879 repair) at 03:56 UTC, 1340 (1273) at 04:22, 1329 (1263) at 04:48; the routine cycles between them complete. Still waiting on an RN-02 READY (returns/rn-02.md) or Sean on "revert 95".
 - Meetings by ZIP unchanged from the 10:25 PM baseline (Tucson 241/93 upcoming, Concord 9, 0 in the other 16); San Diego 92101 and Galveston 77550 still 0 (RN-02's named meetings not live). Boards rose: IL 60602 0 to 109, MN 55401 0 to 15, WI 53703 253 to 419, AZ 85701 136 to 139.
 - Release 92 data still not delivered (Tucson 345, 0 sites in 10 states, Portland 0 Metro boards). The scheduler reports overdue voting-sites and registration tasks as "not due" (voting-sites:AZ last attempted 00:11 UTC, 1-hour retry, "not due" at 03:35 UTC; registration-or last attempted Oct 10); added to returns/rn-01.md.
 - /ballot dates kept (85003 12 deadlines).

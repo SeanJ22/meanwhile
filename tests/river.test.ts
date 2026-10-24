@@ -109,6 +109,7 @@ test("a READY message carries both connection proofs or names the ones it lacks"
   assert.deepEqual(missingProofs("READY: PB-01\n\nFeeds into: reader body cards.\n\nControlled next/tomorrow scheduler replays preserve the roster."), []);
   assert.deepEqual(missingProofs("READY: SRC-01\n\nConnection proof 1 — upstream to reader.\n\nConnection proof 2 — next configured run."), []);
   assert.deepEqual(missingProofs("READY: RB-A1\n\nConnection proof 1: reader copy.\n\nNext-run proof: the same reconciliation ran again unchanged."), []);
+  assert.deepEqual(missingProofs("READY: CL-01\n\nTwo connection proofs on real production data.\n\nNext-run proof: the scheduled task republishes."), []);
   assert.deepEqual(missingProofs("READY: EX-03\n\nTomorrow proof: the scheduled pass is due."), ["connected end to end"]);
   assert.deepEqual(missingProofs("READY: PK-01\n\nWhat PK-01 feeds: BL-01's ballot controls.\n\nTomorrow-clock connection proof: the next poll syncs."), []);
   assert.deepEqual(missingProofs("READY: NX-02\n\nFeeds: NationalSection.\n\nNext scheduled-run proof: due at the boundary."), []);

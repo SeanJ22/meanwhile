@@ -1,6 +1,6 @@
 {
-  "measuredAt": "2026-10-24T13:29:14.809Z",
-  "revision": "47aefba1a",
+  "measuredAt": "2026-10-24T14:03:22.102Z",
+  "revision": "aa30384a6",
   "mode": "Built branch HTTP state and ballot HTML diagnostics on read-only production holdings. These are not Chrome checks. Person links use exact identity keys; normalized display names locate rendered image alt text only.",
   "rows": [
     {
@@ -10,12 +10,12 @@
         {
           "path": "/api/reader/state?state=AZ&zip=85701",
           "status": 200,
-          "seconds": 2.5316575690000005
+          "seconds": 2.027874596
         },
         {
           "path": "/ballot?zip=85701",
           "status": 200,
-          "seconds": 2.4116067580000005
+          "seconds": 2.1170382500000002
         }
       ],
       "connections": [
@@ -32,6 +32,45 @@
             {
               "id": "statewide:az/governor",
               "photoUrl": "/officials/statewide-az-governor.jpg"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Adrian Fontes",
+          "candidacyId": "ballot-az-pima:secretary-of-state:fontes-adrian",
+          "personId": "plural:45ff1caf-0d6b-4915-9e34-5f4694907a07",
+          "ballotPhoto": "/officials/statewide-az-secretary-of-state.jpg",
+          "officials": [
+            {
+              "id": "statewide:az/secretary-of-state",
+              "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Walter \"Les\" Presmyk",
+          "candidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
+          "personId": "statewide:az/state-mine-inspector",
+          "ballotPhoto": "/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg",
+          "officials": [
+            {
+              "id": "statewide:az/state-mine-inspector",
+              "photoUrl": "/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Adelita Grijalva",
+          "candidacyId": "ballot-az-pima:us-house-7:grijalva-adelita",
+          "personId": "congress:G000606",
+          "ballotPhoto": "/api/portraits/officials/a18282cbcc1a49ca1c2947ad7c93f422514884be5d9a5ebf37fd7a685c025176.webp",
+          "officials": [
+            {
+              "id": "congress:G000606",
+              "photoUrl": "/api/portraits/officials/a18282cbcc1a49ca1c2947ad7c93f422514884be5d9a5ebf37fd7a685c025176.webp"
             }
           ],
           "samePhoto": true
@@ -74,6 +113,19 @@
             }
           ],
           "samePhoto": true
+        },
+        {
+          "name": "Kevin Thompson",
+          "candidacyId": "ballot-az-pima:corporation-commissioner:thompson",
+          "personId": "statewide:az/corporation-commissioner/thompson",
+          "ballotPhoto": "/officials/statewide-az-corporation-commissioner-thompson.jpg",
+          "officials": [
+            {
+              "id": "statewide:az/corporation-commissioner/thompson",
+              "photoUrl": "/officials/statewide-az-corporation-commissioner-thompson.jpg"
+            }
+          ],
+          "samePhoto": true
         }
       ]
     },
@@ -84,12 +136,12 @@
         {
           "path": "/api/reader/state?state=AK&zip=99501",
           "status": 200,
-          "seconds": 0.8563209489999999
+          "seconds": 0.649243136
         },
         {
           "path": "/ballot?zip=99501",
           "status": 200,
-          "seconds": 0.9211658470000003
+          "seconds": 0.8316639759999999
         }
       ],
       "connections": [
@@ -115,12 +167,12 @@
         {
           "path": "/api/reader/state?state=CO&zip=80202",
           "status": 200,
-          "seconds": 0.5875309649999999
+          "seconds": 0.7124435670000002
         },
         {
           "path": "/ballot?zip=80202",
           "status": 200,
-          "seconds": 1.0553107069999996
+          "seconds": 1.0938237200000003
         }
       ],
       "connections": [
@@ -146,12 +198,12 @@
         {
           "path": "/api/reader/state?state=NH&zip=03301",
           "status": 200,
-          "seconds": 1.7292722350000003
+          "seconds": 1.7326609119999994
         },
         {
           "path": "/ballot?zip=03301",
           "status": 200,
-          "seconds": 2.020533931
+          "seconds": 1.9148771080000007
         }
       ],
       "connections": [
@@ -167,6 +219,32 @@
             }
           ],
           "samePhoto": true
+        },
+        {
+          "name": "Maggie Goodlander",
+          "candidacyId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
+          "personId": "congress:G000604",
+          "ballotPhoto": "/api/portraits/officials/a9ef6179c4d38327cf035d2aa14ceff29cbf7ad7f2fad3726ace150501c44ada.webp",
+          "officials": [
+            {
+              "id": "congress:G000604",
+              "photoUrl": "/api/portraits/officials/a9ef6179c4d38327cf035d2aa14ceff29cbf7ad7f2fad3726ace150501c44ada.webp"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": " Tara Reardon",
+          "candidacyId": "nh-2026-general:state-senator-district-15:tara-reardon",
+          "personId": "plural:db4dc6cd-8c68-487f-a1e3-dd80995ba786",
+          "ballotPhoto": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg",
+          "officials": [
+            {
+              "id": "nh-general-court:11461",
+              "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
+            }
+          ],
+          "samePhoto": true
         }
       ]
     },
@@ -177,12 +255,12 @@
         {
           "path": "/api/reader/state?state=NY&zip=10007",
           "status": 200,
-          "seconds": 1.0823307019999993
+          "seconds": 0.9001904900000008
         },
         {
           "path": "/ballot?zip=10007",
           "status": 200,
-          "seconds": 1.0628659099999986
+          "seconds": 1.0886200800000005
         }
       ],
       "connections": [
@@ -208,12 +286,12 @@
         {
           "path": "/api/reader/state?state=WI&zip=53703",
           "status": 200,
-          "seconds": 0.5791418010000016
+          "seconds": 0.601424414000001
         },
         {
           "path": "/ballot?zip=53703",
           "status": 200,
-          "seconds": 1.139046883000001
+          "seconds": 1.493165454
         }
       ],
       "connections": [
@@ -233,6 +311,19 @@
             }
           ],
           "samePhoto": true
+        },
+        {
+          "name": " Renuka Mayadev",
+          "candidacyId": "wi-ba01-representative-to-the-assembly-district-77-sldl-77-candidate-renuka-mayadev",
+          "personId": "plural:8b54c039-be1b-4320-89f8-415ac1afa698",
+          "ballotPhoto": "/api/portraits/officials/ae14404bada884f35e4b7253c3b09ef10559460017579d82bb6d5d0211605cd8.webp",
+          "officials": [
+            {
+              "id": "plural:wi:8b54c039-be1b-4320-89f8-415ac1afa698",
+              "photoUrl": "/api/portraits/officials/ae14404bada884f35e4b7253c3b09ef10559460017579d82bb6d5d0211605cd8.webp"
+            }
+          ],
+          "samePhoto": true
         }
       ]
     },
@@ -243,12 +334,12 @@
         {
           "path": "/api/reader/state?state=ME&zip=04330",
           "status": 200,
-          "seconds": 0.5563524230000003
+          "seconds": 0.7792823769999996
         },
         {
           "path": "/ballot?zip=04330",
           "status": 200,
-          "seconds": 0.8255086520000005
+          "seconds": 0.8263718419999987
         }
       ],
       "connections": [
@@ -264,6 +355,32 @@
             }
           ],
           "samePhoto": true
+        },
+        {
+          "name": "Michael H. Lemelin",
+          "candidacyId": "me-sos-2026-sr-53:2",
+          "personId": "plural:feb330d7-8122-4547-b38a-38279732a9ce",
+          "ballotPhoto": "/api/portraits/officials/34e6c9c8a7e1096fbf9c8da91fb0d682f3c32f47b96e3be521d71c2e65d735a4.webp",
+          "officials": [
+            {
+              "id": "plural:me:feb330d7-8122-4547-b38a-38279732a9ce",
+              "photoUrl": "/api/portraits/officials/34e6c9c8a7e1096fbf9c8da91fb0d682f3c32f47b96e3be521d71c2e65d735a4.webp"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Alicia Carol Collins",
+          "candidacyId": "me-sos-2026-sr-61:1",
+          "personId": "plural:4bc2b129-52c1-4dfd-99af-dd38f620183a",
+          "ballotPhoto": "/api/portraits/officials/0263ec54a61efa6f59b9337d57c08ff6ff321149ce53c39fe821cb43a2e2d4bf.webp",
+          "officials": [
+            {
+              "id": "plural:me:4bc2b129-52c1-4dfd-99af-dd38f620183a",
+              "photoUrl": "/api/portraits/officials/0263ec54a61efa6f59b9337d57c08ff6ff321149ce53c39fe821cb43a2e2d4bf.webp"
+            }
+          ],
+          "samePhoto": true
         }
       ]
     },
@@ -274,12 +391,12 @@
         {
           "path": "/api/reader/state?state=OR&zip=97204",
           "status": 200,
-          "seconds": 0.430012329000001
+          "seconds": 0.46583437699999924
         },
         {
           "path": "/ballot?zip=97204",
           "status": 200,
-          "seconds": 0.7371261599999998
+          "seconds": 0.715283405000002
         }
       ],
       "connections": [
@@ -312,6 +429,19 @@
             }
           ],
           "samePhoto": true
+        },
+        {
+          "name": " Lisa Reynolds",
+          "candidacyId": "ballot-or-2026:state-senate-17:lisa-reynolds",
+          "personId": "plural:53afaba4-8ddc-4784-87c3-aaede576ac44",
+          "ballotPhoto": "/api/portraits/officials/a9c1b484a24bb44f0c83980148d0ed9f2b6b7355030ba86da69829330232f0ab.webp",
+          "officials": [
+            {
+              "id": "plural:or:53afaba4-8ddc-4784-87c3-aaede576ac44",
+              "photoUrl": "/api/portraits/officials/a9c1b484a24bb44f0c83980148d0ed9f2b6b7355030ba86da69829330232f0ab.webp"
+            }
+          ],
+          "samePhoto": true
         }
       ]
     },
@@ -322,12 +452,12 @@
         {
           "path": "/api/reader/state?state=SD&zip=57104",
           "status": 200,
-          "seconds": 0.620720100999999
+          "seconds": 0.5975769629999995
         },
         {
           "path": "/ballot?zip=57104",
           "status": 200,
-          "seconds": 0.8689904569999999
+          "seconds": 0.8749109290000014
         }
       ],
       "connections": [
@@ -353,12 +483,12 @@
         {
           "path": "/api/reader/state?state=VT&zip=05602",
           "status": 200,
-          "seconds": 0.6592678870000018
+          "seconds": 0.6221132450000004
         },
         {
           "path": "/ballot?zip=05602",
           "status": 200,
-          "seconds": 0.9438295370000014
+          "seconds": 0.9216780099999996
         }
       ],
       "connections": [
@@ -390,5 +520,8 @@
         }
       ]
     }
-  ]
+  ],
+  "linkedStateCandidateRecordsExamined": 331,
+  "visibleCardBallotPairs": 25,
+  "mismatches": 0
 }

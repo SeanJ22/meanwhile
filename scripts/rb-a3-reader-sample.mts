@@ -8,6 +8,7 @@ import { isOfficialUrl } from "../lib/facts/check.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
 import { pageLinksSource, isOfficialSource, SOURCE_AUTHORITIES, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
 import { decide } from "../lib/core/door.ts";
+import { extractPdfText } from "../lib/meetings/agenda-documents.ts";
 
 type Row = Record<string, unknown>;
 interface Family { recordClass: string; path: string[]; kind: string; fields: string[] }
@@ -40,7 +41,7 @@ export interface ReaderSampleValue {
   canonicalId?: string;
 }
 export interface ReaderSample { state: string; capturedAt: string; values: ReaderSampleValue[]; families: Row[];
-  copies: Record<string, { file: string; observedAt: string; sha256: string }>; context?: Row; copyFailures?: Row[] }
+  copies: Record<string, { file: string; observedAt: string; sha256: string; rawFile?: string; rawSha256?: string }>; context?: Row; copyFailures?: Row[] }
 
 export interface HeldApiDoor { body_ids: string[]; api_base: string; portal_base: string | null }
 export interface MeetingSourceHosts { body_ids: string[]; kind: string; hosts: string[] }
@@ -246,8 +247,12 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
       if (existsSync(metadataFile)) { copies[url] = JSON.parse(readFileSync(metadataFile, "utf8")); continue; }
       const response = await fetch(url, { signal: AbortSignal.timeout(30_000) }).catch(() => null);
       if (!response?.ok) { copyFailures.push({ url, reason: response ? `HTTP_${response.status}` : "FETCH_FAILED" }); continue; }
-      const text = await response.text(), file = `pages/${name}.txt`;
-      const metadata = { file, observedAt: new Date().toISOString(), sha256: createHash("sha256").update(text).digest("hex") };
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      const pdf = /pdf/i.test(response.headers.get("content-type") ?? "") || new TextDecoder().decode(bytes.subarray(0, 5)) === "%PDF-";
+      const text = pdf ? await extractPdfText(bytes) : new TextDecoder().decode(bytes), file = `pages/${name}.txt`;
+      const metadata = { file, observedAt: new Date().toISOString(), sha256: createHash("sha256").update(text).digest("hex"),
+        ...(pdf ? { rawFile: `pages/${name}.pdf`, rawSha256: createHash("sha256").update(bytes).digest("hex") } : {}) };
+      if (metadata.rawFile) writeFileSync(resolve(directory, metadata.rawFile), bytes, { mode: 0o600 });
       writeFileSync(resolve(directory, file), text, { mode: 0o600 });
       writeFileSync(metadataFile, JSON.stringify(metadata), { mode: 0o600 });
       copies[url] = metadata;

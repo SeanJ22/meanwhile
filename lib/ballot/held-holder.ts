@@ -3,6 +3,7 @@ import type { Provenance } from "../sources/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { nativePersonIdFromUrl, personIdentityKeys } from "../officials/people-identity.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
+import { heldPersonSources, morePreciseHeldDate } from "../officials/held-sources.ts";
 
 export interface BallotPersonHolder extends SeatHolder {
   readonly personAliases: readonly string[];
@@ -27,7 +28,11 @@ function withOfficialMemberPage(holder: SeatHolder): SeatHolder {
     fieldSources: { ...holder.fieldSources, ...(provenance ? { websiteUrl: provenance } : {}) } };
 }
 
-function prefers(right: SeatHolder, left: SeatHolder, field: string): boolean {
+function prefers(right: SeatHolder, left: SeatHolder, field: (typeof fields)[number]): boolean {
+  if (field === "termStart" || field === "termEnd" || field === "birthDate") {
+    if (morePreciseHeldDate(right[field], left[field])) return true;
+    if (morePreciseHeldDate(left[field], right[field])) return false;
+  }
   const rightOfficial = official(fieldSource(right, field)), leftOfficial = official(fieldSource(left, field));
   return rightOfficial !== leftOfficial ? rightOfficial : checkedAt(right, field) > checkedAt(left, field);
 }
@@ -46,7 +51,7 @@ function complementary(left: unknown, right: unknown): unknown {
 /** Combine records already linked to the same candidate by the verified person graph.
  * This function performs no name, office, district or party matching. */
 export function mergeBallotPersonHolders(verified: readonly SeatHolder[]): BallotPersonHolder | null {
-  const sourceHolders = [...new Map(verified.flatMap(ballotHolderSources).map(holder => [JSON.stringify(holder), holder])).values()];
+  const sourceHolders = [...new Map(verified.flatMap(heldPersonSources).map(holder => [JSON.stringify(holder), holder])).values()];
   if (!sourceHolders.length) return null;
   const holders = sourceHolders.map(withOfficialMemberPage);
   // A populated person card supplies the identity; an empty reusable office slot
@@ -80,8 +85,4 @@ export function mergeBallotPersonHolders(verified: readonly SeatHolder[]): Ballo
     social: complementary(canonical.social ?? [], ranked.flatMap(holder => holder.social ?? [])) as SeatHolder["social"],
     executive: ranked.reduce<SeatHolder["executive"]>((value, holder) => complementary(value, holder.executive) as SeatHolder["executive"], canonical.executive),
   };
-}
-
-export function ballotHolderSources(holder: SeatHolder): readonly SeatHolder[] {
-  return (holder as Partial<BallotPersonHolder>).sourceHolders ?? [holder];
 }

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-24T16:00:05.326Z",
+  "role": "readonly",
+  "observed": [
+    {
+      "options": "-c default_transaction_read_only=on -c jit=off",
+      "error": "unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter",
+      "code": "08P01"
+    },
+    {
+      "options": "-c default_transaction_read_only=on",
+      "result": [
+        {
+          "current_user": "readonly",
+          "readonly": "on"
+        }
+      ]
+    }
+  ]
+}

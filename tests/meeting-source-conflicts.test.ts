@@ -6,6 +6,7 @@ import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.
 import type { Meeting } from "../lib/sources/types.ts";
 import { PIMA } from "./helpers/meeting-body-fixtures.ts";
 import { collapseDuplicateSittings } from "../lib/sources/composite/index.ts";
+import { withSittingFacts } from "../lib/facts/meeting-read.ts";
 const at = "2026-10-05T12:00:00Z";
 const meeting = (id: string, extra: Partial<Meeting> = {}): Meeting => ({ id, bodyId: "body", bodyName: "Board", jurisdiction: "County", title: "Meeting", ocdId: "ocd-division/country:us/state:az/county:example", startsAt: "2026-10-06T18:00:00Z", timeZone: "UTC", location: null, agendaUrl: null, status: "SCHEDULED", provenance: { kind: "OFFICIAL", sourceUrl: `https://office.gov/${id}`, sourceOrg: "Clerk", collectedAt: at, verifiedAt: at }, ...extra });
 test("CP-18: two doors with different times merge, retaining the official value, other useful fields, and the losing value", () => {
@@ -67,4 +68,59 @@ test("CP-18: exact collapse never joins different canonical bodies or conceals a
   assert.equal(mergeReaderSittings(exact.rows).rows.length, 2, "the first record still represents both doors; the later portal sitting stays separate");
   const sameInstant = collapseDuplicateSittings([a, meeting("calendar:1"), meeting("portal:2")], mergeDuplicateSittingFields);
   assert.equal(mergeReaderSittings(sameInstant.rows).rows.length, 2, "two catalogue entries from the same source remain distinct");
+});
+
+test("an empty newer calendar location cannot erase another door's published point or its source", () => {
+  const location = {name:"Board Room",address:"2150 Webster Street, Oakland, CA 94612",lat:37.81,lng:-122.26};
+  const placed = meeting("api:1",{location});
+  for (const text of [null,"-","-   Boone NC 28607"]) {
+    const empty = meeting("calendar:1",{provenance:{...placed.provenance,collectedAt:"2026-10-05T13:00:00Z"},
+      venueGap:{kind:text===null?"NOT_STATED_BY_PUBLISHER":"STATED_NOT_PLACED",publishedText:text,publisher:"Clerk"}});
+    const [read] = mergeReaderSittings([placed,empty]).rows;
+    assert.deepEqual(read.location,location);
+    assert.equal(read.fieldSources?.location.sourceUrl,placed.provenance.sourceUrl);
+    assert.deepEqual(read.mergedMeetingIds,[placed.id,empty.id].sort());
+    const [factRead] = withSittingFacts([read],[{meetingId:empty.id,field:"location",value:{name:text??"-",address:null},source:empty.provenance}]);
+    assert.deepEqual(factRead.location,location);
+    assert.equal(factRead.fieldSources?.location.sourceUrl,placed.provenance.sourceUrl);
+  }
+});
+
+test("a repeated street keeps its point across abbreviation and missing ZIP, while changed streets and online attendance replace it", () => {
+  const placed = meeting("api:1",{location:{name:"Town Council Chambers",address:"1500 Blowing Rock Road, Boone, NC",lat:36.2,lng:-81.66}});
+  const source = {...placed.provenance,collectedAt:"2026-10-05T13:00:00Z"};
+  const text = "Council Chambers - 1500 Blowing Rock Rd  Boone NC 28607";
+  const fresh = meeting("calendar:1",{provenance:source,venueGap:{kind:"STATED_NOT_PLACED",publishedText:text,publisher:"Clerk"}});
+  const [merged] = mergeReaderSittings([placed,fresh]).rows;
+  assert.equal(merged.location?.lat,placed.location?.lat);
+  assert.equal(merged.location?.address,text);
+  assert.equal(merged.fieldSources?.location.collectedAt,source.collectedAt);
+  const [factRead] = withSittingFacts([placed],[{meetingId:placed.id,field:"location",value:{name:text,address:null},source}]);
+  assert.equal(factRead.location?.lat,placed.location?.lat);
+  assert.equal(factRead.location?.name,text);
+  for (const other of [text.replace("1500","1600"),text.replace("Boone NC","Boone CA")]) {
+    const [changed] = mergeReaderSittings([placed,{...fresh,venueGap:{...fresh.venueGap!,publishedText:other}}]).rows;
+    assert.equal(changed.location,null);
+    assert.equal(changed.venueGap?.publishedText,other);
+  }
+  const [online] = mergeReaderSittings([placed,{...fresh,venueGap:undefined,online:{label:"Virtual",joinUrl:null}}]).rows;
+  assert.equal(online.location,null);
+  assert.equal(online.online?.label,"Virtual");
+});
+
+test("two routes returning the same source ID produce one target with the current time, retained point and all aliases",()=>{
+  const prior = meeting("ical:board:1",{location:{name:"Council Room",address:"1500 Blowing Rock Road, Boone, NC",lat:36.2,lng:-81.66},
+    agendaUrl:"https://office.gov/agenda",mergedMeetingIds:["ical:board:1","portal:board:1"]});
+  const current = meeting(prior.id,{startsAt:"2026-10-07T19:00:00Z",title:"Rescheduled meeting",
+    provenance:{...prior.provenance,collectedAt:"2026-10-05T14:00:00Z"},
+    venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:"Clerk"}});
+  const merged = mergeReaderSittings([prior,current]);
+  assert.equal(merged.rows.length,1);assert.equal(merged.collapsed,1);
+  assert.equal(merged.rows[0].id,prior.id);assert.equal(merged.rows[0].startsAt,current.startsAt);
+  assert.equal(merged.rows[0].agendaUrl,prior.agendaUrl);assert.deepEqual(merged.rows[0].location,prior.location);
+  assert.deepEqual(merged.rows[0].mergedMeetingIds,prior.mergedMeetingIds);
+  assert.equal(merged.aliases.get("portal:board:1"),prior.id);
+  assert.deepEqual(mergeReaderSittings([current,prior]).rows,merged.rows);
+  assert.equal(mergeReaderSittings([prior,{...current,id:"ical:board:2"}]).rows.length,2,"distinct source IDs remain separate sittings");
+  assert.equal(mergeReaderSittings([prior,{...current,bodyId:"other-body"}]).rows.length,2,"another board never supplies the same target");
 });

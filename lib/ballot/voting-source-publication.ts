@@ -7,7 +7,7 @@ import { upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
 import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
 import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
-import { assertVotingEvidenceCanPublish } from "./voting-source-evidence.ts";
+import { savedVotingCopy } from "./voting-source-evidence.ts";
 import { sourceTextWithoutNuls } from "../doors/source-text.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
@@ -177,10 +177,10 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
   };
 }
 
-/** Save original bytes with the publication, atomically, in the standing data system. */
-export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">): Promise<VotingRawCapture[]> {
-  assertVotingEvidenceCanPublish(read.rawBodies);
-  return read.rawBodies.map(body => ({ url: body.url, ...(body.requestedUrl ? { requestedUrl: body.requestedUrl } : {}), contentType: body.contentType,
+/** Save each source's copy with the publication, atomically, in the standing data system. A key-like string is blanked in the copy; the page still publishes. */
+export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">, at = new Date().toISOString()): Promise<VotingRawCapture[]> {
+  const copies = await Promise.all(read.rawBodies.map(body => savedVotingCopy(body, at)));
+  return copies.map(body => ({ url: body.url, ...(body.requestedUrl ? { requestedUrl: body.requestedUrl } : {}), contentType: body.contentType,
     rawHash: createHash("sha256").update(body.bytes).digest("hex"), byteLength: body.bytes.byteLength,
     ...(body.derivation ? { derivation: body.derivation } : {}),
     savedDocument: { encoding: "gzip-base64", body: gzipSync(body.bytes).toString("base64") } }));
@@ -188,6 +188,7 @@ export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBod
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {
   read = sourceTextWithoutNuls(read);
+  // Fetched bodies are the cleaned copies, so a rotating key alone is never a change.
   const hash = createHash("sha256").update(read.rawBodies.map(body => createHash("sha256").update(body.bytes).digest("hex")).join("\n")).digest("hex");
   const address = pageAddress(door.url)!;
   const old = (await repo.listWhere(["config", "url"], address.url)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&

@@ -10,6 +10,7 @@ import { LEGISTAR_TENANT_SQL } from "../../doors/legistar-tenant.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
+import { SHARED_WORK_DDL } from "./migrations/RB-A1.ts";
 
 export const BOOTSTRAP_VERSION = 34;
 export const CP_MIGRATIONS_DDL = `CREATE TABLE IF NOT EXISTS cp_migrations (
@@ -681,6 +682,7 @@ END $$;`,
   SPEND_HOLDS_MOVE_DDL,
   VITAL_SIGNS_TABLE_DDL,
   ...CONTROL_READS_EXPAND_DDL,
+  ...SHARED_WORK_DDL,
 
   ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,

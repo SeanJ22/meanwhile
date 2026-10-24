@@ -1,0 +1,23 @@
+{
+  "firstFailure": {
+    "state": "AL",
+    "id": "ocd-person/3a34e1e8-4cab-43c5-b20f-4bf49c557397",
+    "name": "A. P. Hoffman",
+    "seat": "al:special:south-central-alabama-regional-housing-authority#governing",
+    "division": "al:special:south-central-alabama-regional-housing-authority",
+    "apiStatus": 400
+  },
+  "cause": "The money people SQL used the body government ID as its division. The existing government entity_place and parent point to the canonical Alabama state place.",
+  "beforeTargets": 414,
+  "afterTargets": 416,
+  "personAndSeatKeysPreserved": true,
+  "fixedDivisions": [
+    {
+      "id": "ocd-person/3a34e1e8-4cab-43c5-b20f-4bf49c557397",
+      "name": "A. P. Hoffman",
+      "seat": "al:special:south-central-alabama-regional-housing-authority#governing",
+      "before": "al:special:south-central-alabama-regional-housing-authority",
+      "after": "ocd-division/country:us/state:al"
+    }
+  ]
+}

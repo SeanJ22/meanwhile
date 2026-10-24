@@ -8,6 +8,17 @@ const batch: ReaderEventBatchInput = { batchId: "batch-1", continuityKey: "anony
   { id: "event-2", type: "REACTION", occurredAt: "2026-09-28T06:59:00Z", zip: "85635", topic: "water", cardId: "funding:committee:1", reaction: "agree" },
 ] };
 
+test("each pick, clear and unsure event is filed under its race and elections topic", () => {
+  for (const choice of ["PICKED", "UNSURE", "BLANK"] as const) {
+    const prepared = prepareReaderEventBatch({ ...batch, events: [{ id: "pick-1", type: "BALLOT_PICK", occurredAt: "2026-10-23T12:00:00Z",
+      ballotPick: { contestId: "ca-sos-retention-evans", candidateIds: choice === "PICKED" ? ["YES"] : [], choice } }] });
+    assert.equal(prepared.body.events[0].cardId, "ca-sos-retention-evans");
+    assert.equal(prepared.body.events[0].cardKind, "CONTEST");
+    assert.equal(prepared.body.events[0].topic, "elections-voting");
+    assert.ok(prepared.aggregates.some(row => row.topic === "elections-voting" && row.type === "BALLOT_PICK"));
+  }
+});
+
 test("history preserves exact event time and card context, scrubs text and rolls counts by UTC day/week", () => {
   const prepared = prepareReaderEventBatch(batch);
   assert.equal(prepared.body.events[0]!.occurredAt, "2026-09-28T06:59:00.000Z");

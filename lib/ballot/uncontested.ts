@@ -1,9 +1,6 @@
 import { readerBallotSourceForTargetId, readerBallotSourcesForDivisions, type RegisteredBallotSource } from "./reader-sources.ts";
-
-interface Candidacy {
-  id: string;
-  contestId: string;
-}
+import { ballotCandidateAliases } from "./tickets.ts";
+import type { Candidacy } from "./types.ts";
 
 async function addSingleCandidateTargets(
   ids: Set<string>,
@@ -18,7 +15,7 @@ async function addSingleCandidateTargets(
   }
   const complete = new Set(data.contests.filter(contest => contest.candidateListComplete).map(contest => contest.id));
   for (const [contestId, list] of byContest) {
-    if (complete.has(contestId) && list.length === 1) ids.add(list[0]!.id);
+    if (complete.has(contestId) && list.length === 1) for (const id of ballotCandidateAliases(list[0]!)) ids.add(id);
   }
 
   for (const contest of data.generalLineup?.contests ?? []) {

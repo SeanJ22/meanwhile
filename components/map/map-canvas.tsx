@@ -989,7 +989,7 @@ export function MapCanvas({
       zoom: focus.zoom ?? 13,
     };
 
-    if (prefersReducedMotion()) map.jumpTo(options, { instant: true });
+    if (focus.key.startsWith("vote:") || prefersReducedMotion()) map.jumpTo(options, { instant: true });
     else map.flyTo({ ...options, duration: 900, essential: true });
   }, [focus]);
 

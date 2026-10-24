@@ -1,0 +1,3781 @@
+{
+  "status": "READER_DEADLINE_EXCEEDED_INTERRUPTED",
+  "scope": "Complete real EPA national manifest; selected normal reader locations",
+  "productionWrites": 0,
+  "sourceRows": 3229311,
+  "publishedRows": 3229294,
+  "rejectedRows": 17,
+  "references": 55806,
+  "vaultRoot": "/workspace/meanwhile/.scratch/src01-epa/national-reader-vault-national-fc8b79c7-5f7b-4a48-ab7b-b623f31ba1e0",
+  "artifactRoots": [
+    "/tmp/src-01-epa-encoded-8a71679e-0d28-4a1d-b015-4069e601db2b",
+    "/workspace/src01-scratch/epa-encoded-8a71679e-0d28-4a1d-b015-4069e601db2b"
+  ],
+  "artifactEncoding": "gzip-level1",
+  "manifestSha256": "2f4266f42b4a4eb58059310e20b0ec91f2747ba1e6760b03718d2054031d1a1e",
+  "states": [
+    {
+      "state": "LA",
+      "sourceRows": 73528,
+      "publishedRows": 73528,
+      "rejectedRows": 0
+    },
+    {
+      "state": "QC",
+      "sourceRows": 38,
+      "publishedRows": 38,
+      "rejectedRows": 0
+    },
+    {
+      "state": "SW",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "GA",
+      "sourceRows": 173643,
+      "publishedRows": 173643,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NY",
+      "sourceRows": 160767,
+      "publishedRows": 160767,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NN",
+      "sourceRows": 40,
+      "publishedRows": 40,
+      "rejectedRows": 0
+    },
+    {
+      "state": "CT",
+      "sourceRows": 25152,
+      "publishedRows": 25152,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MI",
+      "sourceRows": 66169,
+      "publishedRows": 66169,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MH",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "SN",
+      "sourceRows": 3,
+      "publishedRows": 3,
+      "rejectedRows": 0
+    },
+    {
+      "state": "SK",
+      "sourceRows": 5,
+      "publishedRows": 5,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MB",
+      "sourceRows": 8,
+      "publishedRows": 8,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MP",
+      "sourceRows": 395,
+      "publishedRows": 395,
+      "rejectedRows": 0
+    },
+    {
+      "state": "XI",
+      "sourceRows": 3,
+      "publishedRows": 3,
+      "rejectedRows": 0
+    },
+    {
+      "state": "JA",
+      "sourceRows": 7,
+      "publishedRows": 7,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MO",
+      "sourceRows": 61866,
+      "publishedRows": 61865,
+      "rejectedRows": 1
+    },
+    {
+      "state": "SC",
+      "sourceRows": 36588,
+      "publishedRows": 36588,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AB",
+      "sourceRows": 27,
+      "publishedRows": 27,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AZ",
+      "sourceRows": 24352,
+      "publishedRows": 24352,
+      "rejectedRows": 0
+    },
+    {
+      "state": "ID",
+      "sourceRows": 17208,
+      "publishedRows": 17208,
+      "rejectedRows": 0
+    },
+    {
+      "state": "CS",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AK",
+      "sourceRows": 15525,
+      "publishedRows": 15524,
+      "rejectedRows": 1
+    },
+    {
+      "state": "MT",
+      "sourceRows": 21402,
+      "publishedRows": 21402,
+      "rejectedRows": 0
+    },
+    {
+      "state": "SD",
+      "sourceRows": 8664,
+      "publishedRows": 8664,
+      "rejectedRows": 0
+    },
+    {
+      "state": "CA",
+      "sourceRows": 690454,
+      "publishedRows": 690454,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MS",
+      "sourceRows": 16743,
+      "publishedRows": 16743,
+      "rejectedRows": 0
+    },
+    {
+      "state": "FR",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "TX",
+      "sourceRows": 171750,
+      "publishedRows": 171749,
+      "rejectedRows": 1
+    },
+    {
+      "state": "FL",
+      "sourceRows": 167580,
+      "publishedRows": 167579,
+      "rejectedRows": 1
+    },
+    {
+      "state": "OK",
+      "sourceRows": 35651,
+      "publishedRows": 35651,
+      "rejectedRows": 0
+    },
+    {
+      "state": "TN",
+      "sourceRows": 48262,
+      "publishedRows": 48261,
+      "rejectedRows": 1
+    },
+    {
+      "state": "UNRESOLVED",
+      "sourceRows": 62208,
+      "publishedRows": 62200,
+      "rejectedRows": 8
+    },
+    {
+      "state": "CZ",
+      "sourceRows": 2,
+      "publishedRows": 2,
+      "rejectedRows": 0
+    },
+    {
+      "state": "WV",
+      "sourceRows": 46420,
+      "publishedRows": 46420,
+      "rejectedRows": 0
+    },
+    {
+      "state": "DE",
+      "sourceRows": 4343,
+      "publishedRows": 4343,
+      "rejectedRows": 0
+    },
+    {
+      "state": "XH",
+      "sourceRows": 12,
+      "publishedRows": 12,
+      "rejectedRows": 0
+    },
+    {
+      "state": "DM",
+      "sourceRows": 4,
+      "publishedRows": 4,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NJ",
+      "sourceRows": 74020,
+      "publishedRows": 74020,
+      "rejectedRows": 0
+    },
+    {
+      "state": "ME",
+      "sourceRows": 13128,
+      "publishedRows": 13127,
+      "rejectedRows": 1
+    },
+    {
+      "state": "BC",
+      "sourceRows": 28,
+      "publishedRows": 28,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MD",
+      "sourceRows": 38691,
+      "publishedRows": 38691,
+      "rejectedRows": 0
+    },
+    {
+      "state": "FJ",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "OR",
+      "sourceRows": 25116,
+      "publishedRows": 25116,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AP",
+      "sourceRows": 2,
+      "publishedRows": 2,
+      "rejectedRows": 0
+    },
+    {
+      "state": "VA",
+      "sourceRows": 49168,
+      "publishedRows": 49168,
+      "rejectedRows": 0
+    },
+    {
+      "state": "GU",
+      "sourceRows": 799,
+      "publishedRows": 799,
+      "rejectedRows": 0
+    },
+    {
+      "state": "PA",
+      "sourceRows": 100464,
+      "publishedRows": 100464,
+      "rejectedRows": 0
+    },
+    {
+      "state": "PQ",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NV",
+      "sourceRows": 12535,
+      "publishedRows": 12535,
+      "rejectedRows": 0
+    },
+    {
+      "state": "WY",
+      "sourceRows": 11289,
+      "publishedRows": 11288,
+      "rejectedRows": 1
+    },
+    {
+      "state": "NH",
+      "sourceRows": 28401,
+      "publishedRows": 28401,
+      "rejectedRows": 0
+    },
+    {
+      "state": "RI",
+      "sourceRows": 10278,
+      "publishedRows": 10278,
+      "rejectedRows": 0
+    },
+    {
+      "state": "TT",
+      "sourceRows": 10,
+      "publishedRows": 10,
+      "rejectedRows": 0
+    },
+    {
+      "state": "IL",
+      "sourceRows": 108313,
+      "publishedRows": 108312,
+      "rejectedRows": 1
+    },
+    {
+      "state": "MW",
+      "sourceRows": 4,
+      "publishedRows": 4,
+      "rejectedRows": 0
+    },
+    {
+      "state": "CN",
+      "sourceRows": 8,
+      "publishedRows": 8,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NB",
+      "sourceRows": 2,
+      "publishedRows": 2,
+      "rejectedRows": 0
+    },
+    {
+      "state": "IA",
+      "sourceRows": 22725,
+      "publishedRows": 22725,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AR",
+      "sourceRows": 22403,
+      "publishedRows": 22403,
+      "rejectedRows": 0
+    },
+    {
+      "state": "GM",
+      "sourceRows": 71,
+      "publishedRows": 71,
+      "rejectedRows": 0
+    },
+    {
+      "state": "WI",
+      "sourceRows": 57392,
+      "publishedRows": 57392,
+      "rejectedRows": 0
+    },
+    {
+      "state": "GB",
+      "sourceRows": 6,
+      "publishedRows": 6,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NC",
+      "sourceRows": 67412,
+      "publishedRows": 67412,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AL",
+      "sourceRows": 58122,
+      "publishedRows": 58122,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NM",
+      "sourceRows": 27976,
+      "publishedRows": 27976,
+      "rejectedRows": 0
+    },
+    {
+      "state": "OH",
+      "sourceRows": 63611,
+      "publishedRows": 63611,
+      "rejectedRows": 0
+    },
+    {
+      "state": "PR",
+      "sourceRows": 10135,
+      "publishedRows": 10135,
+      "rejectedRows": 0
+    },
+    {
+      "state": "HI",
+      "sourceRows": 9915,
+      "publishedRows": 9915,
+      "rejectedRows": 0
+    },
+    {
+      "state": "UT",
+      "sourceRows": 48739,
+      "publishedRows": 48739,
+      "rejectedRows": 0
+    },
+    {
+      "state": "ND",
+      "sourceRows": 11908,
+      "publishedRows": 11908,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MN",
+      "sourceRows": 73105,
+      "publishedRows": 73105,
+      "rejectedRows": 0
+    },
+    {
+      "state": "UM",
+      "sourceRows": 7,
+      "publishedRows": 7,
+      "rejectedRows": 0
+    },
+    {
+      "state": "NE",
+      "sourceRows": 14569,
+      "publishedRows": 14569,
+      "rejectedRows": 0
+    },
+    {
+      "state": "CY",
+      "sourceRows": 1,
+      "publishedRows": 1,
+      "rejectedRows": 0
+    },
+    {
+      "state": "WA",
+      "sourceRows": 46849,
+      "publishedRows": 46849,
+      "rejectedRows": 0
+    },
+    {
+      "state": "FM",
+      "sourceRows": 2,
+      "publishedRows": 2,
+      "rejectedRows": 0
+    },
+    {
+      "state": "VI",
+      "sourceRows": 1498,
+      "publishedRows": 1498,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AS",
+      "sourceRows": 231,
+      "publishedRows": 231,
+      "rejectedRows": 0
+    },
+    {
+      "state": "KY",
+      "sourceRows": 40619,
+      "publishedRows": 40618,
+      "rejectedRows": 1
+    },
+    {
+      "state": "XF",
+      "sourceRows": 415,
+      "publishedRows": 415,
+      "rejectedRows": 0
+    },
+    {
+      "state": "GE",
+      "sourceRows": 366,
+      "publishedRows": 366,
+      "rejectedRows": 0
+    },
+    {
+      "state": "ON",
+      "sourceRows": 65,
+      "publishedRows": 65,
+      "rejectedRows": 0
+    },
+    {
+      "state": "AT",
+      "sourceRows": 4,
+      "publishedRows": 4,
+      "rejectedRows": 0
+    },
+    {
+      "state": "XX",
+      "sourceRows": 78,
+      "publishedRows": 78,
+      "rejectedRows": 0
+    },
+    {
+      "state": "DC",
+      "sourceRows": 3954,
+      "publishedRows": 3954,
+      "rejectedRows": 0
+    },
+    {
+      "state": "MA",
+      "sourceRows": 51609,
+      "publishedRows": 51609,
+      "rejectedRows": 0
+    },
+    {
+      "state": "VT",
+      "sourceRows": 13088,
+      "publishedRows": 13088,
+      "rejectedRows": 0
+    },
+    {
+      "state": "KS",
+      "sourceRows": 43154,
+      "publishedRows": 43154,
+      "rejectedRows": 0
+    },
+    {
+      "state": "CO",
+      "sourceRows": 79856,
+      "publishedRows": 79856,
+      "rejectedRows": 0
+    },
+    {
+      "state": "IN",
+      "sourceRows": 58345,
+      "publishedRows": 58345,
+      "rejectedRows": 0
+    }
+  ],
+  "compactProof": {
+    "logicalReferences": 0,
+    "uniqueBodies": 0,
+    "rows": 0,
+    "beforeBytes": 0,
+    "afterBytes": 0,
+    "allPublicRowsEqual": true,
+    "allInterpretedCellsRoundTrip": true
+  },
+  "deadlines": {
+    "sqlMs": 1800,
+    "pageMs": 3000
+  },
+  "jit": "off, matching production reader startup options",
+  "clocks": [
+    {
+      "label": "initial",
+      "at": "2026-10-23T13:36:19.897Z",
+      "due": true,
+      "version": "cv-ef03f0a5d8f7e20a091b11b977d66586",
+      "confirmed": false,
+      "publishMs": 14857.114544999999,
+      "typedReader": "PASS",
+      "heldArtifacts": 55806,
+      "heldArtifactBytes": 9697325867
+    },
+    {
+      "label": "tomorrow",
+      "at": "2026-10-24T13:36:19.897Z",
+      "due": false,
+      "version": "cv-ef03f0a5d8f7e20a091b11b977d66586",
+      "confirmed": false,
+      "publishMs": 0.0007159999804571271,
+      "typedReader": "PASS",
+      "heldArtifacts": 55806,
+      "heldArtifactBytes": 9697325867
+    }
+  ],
+  "readers": [
+    {
+      "state": "LA",
+      "zip": "70001",
+      "id": "epa-echo:110003306100",
+      "label": "initial",
+      "apiElapsedMs": 1337.3696330000093,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1337.1795370000036,
+          "sqlMs": 838.3481260000117,
+          "sqlStatements": 1,
+          "sqlBytes": 15299,
+          "artifactRequests": 26,
+          "artifactBytes": 20105164,
+          "artifactLocalGetMs": 174.20639300004405,
+          "artifactReplayDecodeHashMs": 69.20069800000056
+        }
+      ],
+      "apiTotalRows": 7342,
+      "recordId": "epa-echo:110003306100",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110003306100",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a2a1d188f8e5256731a06633e735a77ef77adead0be8bd7109e0a104d0258867"
+    },
+    {
+      "state": "GA",
+      "zip": "30002",
+      "id": "epa-echo:110070154433",
+      "label": "initial",
+      "apiElapsedMs": 1772.932323999994,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1772.8826750000007,
+          "sqlMs": 589.3864839999878,
+          "sqlStatements": 1,
+          "sqlBytes": 22416,
+          "artifactRequests": 55,
+          "artifactBytes": 66930470,
+          "artifactLocalGetMs": 406.9430719999509,
+          "artifactReplayDecodeHashMs": 196.70299299994076
+        }
+      ],
+      "apiTotalRows": 15628,
+      "recordId": "epa-echo:110070154433",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070154433",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "bd3c9eba5d7d01ebae34b4432dcad8f5429581855a20477a47e030be6845b968"
+    },
+    {
+      "state": "NY",
+      "zip": "06390",
+      "id": "epa-echo:110072103254",
+      "label": "initial",
+      "apiElapsedMs": 778.3256210000109,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 778.2940260000032,
+          "sqlMs": 606.7646620000014,
+          "sqlStatements": 1,
+          "sqlBytes": 12364,
+          "artifactRequests": 14,
+          "artifactBytes": 8939214,
+          "artifactLocalGetMs": 39.666600000011385,
+          "artifactReplayDecodeHashMs": 23.561203000004753
+        }
+      ],
+      "apiTotalRows": 1037,
+      "recordId": "epa-echo:110072103254",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072103254",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "6a0d07994e04a10a1e371cb8da831fcbe80f5471c41d0c6ed922659f5450abe4"
+    },
+    {
+      "state": "CT",
+      "zip": "06001",
+      "id": "epa-echo:110000314972",
+      "label": "initial",
+      "apiElapsedMs": 1159.8066420000105,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1159.7688590000034,
+          "sqlMs": 569.7752200000104,
+          "sqlStatements": 1,
+          "sqlBytes": 18245,
+          "artifactRequests": 38,
+          "artifactBytes": 30834865,
+          "artifactLocalGetMs": 185.58114500003285,
+          "artifactReplayDecodeHashMs": 90.24117300007492
+        }
+      ],
+      "apiTotalRows": 3870,
+      "recordId": "epa-echo:110000314972",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110000314972",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f553720e3646c99801ea69d4e6dc3ef0566eeccabc0d49638b854f0b10c01932"
+    },
+    {
+      "state": "MI",
+      "zip": "48001",
+      "id": "epa-echo:110045416055",
+      "label": "initial",
+      "apiElapsedMs": 679.7715200000093,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 679.7471530000039,
+          "sqlMs": 546.1896509999933,
+          "sqlStatements": 1,
+          "sqlBytes": 10896,
+          "artifactRequests": 8,
+          "artifactBytes": 6379302,
+          "artifactLocalGetMs": 42.30421899999783,
+          "artifactReplayDecodeHashMs": 16.12993500000448
+        }
+      ],
+      "apiTotalRows": 981,
+      "recordId": "epa-echo:110045416055",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110045416055",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7538f6a93415e7b1e2bc8e095d5a7ddac7733bfd7c5b455c9c7306323e4e9bd9"
+    },
+    {
+      "state": "MP",
+      "zip": "96950",
+      "id": "epa-echo:110013025074",
+      "label": "initial",
+      "apiElapsedMs": 558.1798489999928,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 558.1521170000051,
+          "sqlMs": 529.1161109999957,
+          "sqlStatements": 1,
+          "sqlBytes": 10634,
+          "artifactRequests": 7,
+          "artifactBytes": 1106534,
+          "artifactLocalGetMs": 7.987815999993472,
+          "artifactReplayDecodeHashMs": 2.8104439999733586
+        }
+      ],
+      "apiTotalRows": 384,
+      "recordId": "epa-echo:110013025074",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110013025074",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7a69096ffea45dc66e16a86be85c454e6cb16e6e8341325588187ac00ce34c1a"
+    },
+    {
+      "state": "MO",
+      "zip": "63001",
+      "id": "epa-echo:110070388911",
+      "label": "initial",
+      "apiElapsedMs": 1105.3657070000045,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1105.3063829999883,
+          "sqlMs": 521.4250890000112,
+          "sqlStatements": 1,
+          "sqlBytes": 17249,
+          "artifactRequests": 34,
+          "artifactBytes": 28178863,
+          "artifactLocalGetMs": 172.17718600004446,
+          "artifactReplayDecodeHashMs": 73.56643500001519
+        }
+      ],
+      "apiTotalRows": 3636,
+      "recordId": "epa-echo:110070388911",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070388911",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "caa1581a2f95e816465db91bb13b1f11286c6d3b8bfdf04c3d15b2b697e4a7b8"
+    },
+    {
+      "state": "SC",
+      "zip": "29001",
+      "id": "epa-echo:110002179053",
+      "label": "initial",
+      "apiElapsedMs": 620.8645200000028,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 620.8405290000082,
+          "sqlMs": 558.4790800000046,
+          "sqlStatements": 1,
+          "sqlBytes": 10163,
+          "artifactRequests": 5,
+          "artifactBytes": 3631151,
+          "artifactLocalGetMs": 15.11648400001286,
+          "artifactReplayDecodeHashMs": 11.128390000012587
+        }
+      ],
+      "apiTotalRows": 482,
+      "recordId": "epa-echo:110002179053",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110002179053",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "12e7d65981032e41ef8daecbaa84921151645ba856880d8d6266390357c13d91"
+    },
+    {
+      "state": "AZ",
+      "zip": "85001",
+      "id": "epa-echo:110035777157",
+      "label": "initial",
+      "apiElapsedMs": 925.7890410000109,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 925.6011290000024,
+          "sqlMs": 538.4567079999979,
+          "sqlStatements": 1,
+          "sqlBytes": 16276,
+          "artifactRequests": 30,
+          "artifactBytes": 19218525,
+          "artifactLocalGetMs": 148.99305100005586,
+          "artifactReplayDecodeHashMs": 48.14059800002724
+        }
+      ],
+      "apiTotalRows": 8485,
+      "recordId": "epa-echo:110035777157",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110035777157",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f552c1ed10c83a5e43e3d38980b0a0baa801edd38fdfb267700b1b9b3ee7276b"
+    },
+    {
+      "state": "ID",
+      "zip": "83201",
+      "id": "epa-echo:110043460670",
+      "label": "initial",
+      "apiElapsedMs": 597.6991370000032,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 597.6632680000039,
+          "sqlMs": 545.5662829999928,
+          "sqlStatements": 1,
+          "sqlBytes": 10403,
+          "artifactRequests": 6,
+          "artifactBytes": 2394523,
+          "artifactLocalGetMs": 10.733028999966336,
+          "artifactReplayDecodeHashMs": 5.756093000003602
+        }
+      ],
+      "apiTotalRows": 636,
+      "recordId": "epa-echo:110043460670",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110043460670",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "d05a1fa01eec0d8fc017a888db210e582979fde5af86ea332df6c5d03c9ddb7c"
+    },
+    {
+      "state": "AK",
+      "zip": "99501",
+      "id": "epa-echo:110003038365",
+      "label": "initial",
+      "apiElapsedMs": 595.2706270000053,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 594.9709760000114,
+          "sqlMs": 525.5048850000021,
+          "sqlStatements": 1,
+          "sqlBytes": 10901,
+          "artifactRequests": 8,
+          "artifactBytes": 3502787,
+          "artifactLocalGetMs": 19.72689000000537,
+          "artifactReplayDecodeHashMs": 9.14804999998887
+        }
+      ],
+      "apiTotalRows": 1677,
+      "recordId": "epa-echo:110003038365",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110003038365",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "ab3b79d6b49fd533b09c56c7317f55263c9a2021dfa4e374d90ed15381726833"
+    },
+    {
+      "state": "MT",
+      "zip": "59001",
+      "id": "epa-echo:110070875759",
+      "label": "initial",
+      "apiElapsedMs": 598.3718329999974,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 598.3296619999892,
+          "sqlMs": 540.2604579999897,
+          "sqlStatements": 1,
+          "sqlBytes": 10162,
+          "artifactRequests": 5,
+          "artifactBytes": 656926,
+          "artifactLocalGetMs": 31.992334000009578,
+          "artifactReplayDecodeHashMs": 18.282875999997486
+        }
+      ],
+      "apiTotalRows": 88,
+      "recordId": "epa-echo:110070875759",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070875759",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "310131c24e1253602c9c621f766e5fc06c6b51eb0baa8755177cd55cf015b160"
+    },
+    {
+      "state": "SD",
+      "zip": "57001",
+      "id": "epa-echo:110039204517",
+      "label": "initial",
+      "apiElapsedMs": 601.6075240000064,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 601.59745999999,
+          "sqlMs": 535.9769899999956,
+          "sqlStatements": 1,
+          "sqlBytes": 11624,
+          "artifactRequests": 11,
+          "artifactBytes": 2070999,
+          "artifactLocalGetMs": 24.881445999984862,
+          "artifactReplayDecodeHashMs": 6.558038000002853
+        }
+      ],
+      "apiTotalRows": 125,
+      "recordId": "epa-echo:110039204517",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110039204517",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7191c6d4c8b56765ac3299f83698c40a45b9e37fc812d5f09c519b892dc618bb"
+    },
+    {
+      "state": "CA",
+      "zip": "90001",
+      "id": "epa-echo:110066234319",
+      "label": "initial",
+      "apiElapsedMs": 17693.308187000002,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 17693.285977000007,
+          "sqlMs": 541.0564349999913,
+          "sqlStatements": 1,
+          "sqlBytes": 81677,
+          "artifactRequests": 296,
+          "artifactBytes": 401652187,
+          "artifactLocalGetMs": 6342.708122000055,
+          "artifactReplayDecodeHashMs": 3039.166851999893
+        }
+      ],
+      "apiTotalRows": 106013,
+      "recordId": "epa-echo:110066234319",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110066234319",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "62fb1c9d5422986a4878c05b4bfdd141311b5dff72ddc0863235e19ac68586e1"
+    },
+    {
+      "state": "MS",
+      "zip": "38601",
+      "id": "epa-echo:110010708797",
+      "label": "initial",
+      "apiElapsedMs": 728.8348209999967,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 728.8242279999977,
+          "sqlMs": 690.3406649999961,
+          "sqlStatements": 1,
+          "sqlBytes": 10406,
+          "artifactRequests": 6,
+          "artifactBytes": 2415842,
+          "artifactLocalGetMs": 8.314569000009215,
+          "artifactReplayDecodeHashMs": 5.608338000020012
+        }
+      ],
+      "apiTotalRows": 264,
+      "recordId": "epa-echo:110010708797",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110010708797",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "51d06ffd4d7b970dfd5a842944f092fb8f5ccc0c61d8ef2ac98ed80c806ee696"
+    },
+    {
+      "state": "TX",
+      "zip": "73344",
+      "id": "epa-echo:110010923867",
+      "label": "initial",
+      "apiElapsedMs": 846.0745820000011,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 846.0594899999996,
+          "sqlMs": 522.5731170000072,
+          "sqlStatements": 1,
+          "sqlBytes": 13584,
+          "artifactRequests": 19,
+          "artifactBytes": 17630879,
+          "artifactLocalGetMs": 106.40943499999412,
+          "artifactReplayDecodeHashMs": 50.434805000026245
+        }
+      ],
+      "apiTotalRows": 5920,
+      "recordId": "epa-echo:110010923867",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110010923867",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "bc2781b368b6d9bbbef8dd1a9dabb8298f0493ccccaf1d69643e9ce220894755"
+    },
+    {
+      "state": "FL",
+      "zip": "32003",
+      "id": "epa-echo:110015724509",
+      "label": "initial",
+      "apiElapsedMs": 865.7016660000081,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 865.6791949999897,
+          "sqlMs": 531.5653690000036,
+          "sqlStatements": 1,
+          "sqlBytes": 14084,
+          "artifactRequests": 21,
+          "artifactBytes": 20373724,
+          "artifactLocalGetMs": 105.58243799996853,
+          "artifactReplayDecodeHashMs": 55.7735890000622
+        }
+      ],
+      "apiTotalRows": 5392,
+      "recordId": "epa-echo:110015724509",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110015724509",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a8f34d90ea47df24c9540ea34f2704ea1d3c89e3ca466800b1b1784a04a32a22"
+    },
+    {
+      "state": "OK",
+      "zip": "73001",
+      "id": "epa-echo:110071362183",
+      "label": "initial",
+      "apiElapsedMs": 545.3170079999982,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 545.3060110000079,
+          "sqlMs": 526.4134829999966,
+          "sqlStatements": 1,
+          "sqlBytes": 9915,
+          "artifactRequests": 4,
+          "artifactBytes": 1110410,
+          "artifactLocalGetMs": 4.459214999995311,
+          "artifactReplayDecodeHashMs": 2.3997959999978775
+        }
+      ],
+      "apiTotalRows": 201,
+      "recordId": "epa-echo:110071362183",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071362183",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "0efdfff07c4d069e6b867665b84c2413fbd67ef8549cf74014fe6ce461075973"
+    },
+    {
+      "state": "TN",
+      "zip": "37010",
+      "id": "epa-echo:110069577112",
+      "label": "initial",
+      "apiElapsedMs": 1002.9598960000003,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1002.9441380000062,
+          "sqlMs": 734.3096109999897,
+          "sqlStatements": 1,
+          "sqlBytes": 15064,
+          "artifactRequests": 25,
+          "artifactBytes": 14967331,
+          "artifactLocalGetMs": 87.55032000002393,
+          "artifactReplayDecodeHashMs": 40.86290800003917
+        }
+      ],
+      "apiTotalRows": 1202,
+      "recordId": "epa-echo:110069577112",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110069577112",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5bfc2e674ecfc38cc068e9e8a353e48a14c369e79e00d026eb891e0fa9856598"
+    },
+    {
+      "state": "WV",
+      "zip": "24701",
+      "id": "epa-echo:110070639291",
+      "label": "initial",
+      "apiElapsedMs": 711.7427909999969,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 711.726536999995,
+          "sqlMs": 577.5751919999893,
+          "sqlStatements": 1,
+          "sqlBytes": 11878,
+          "artifactRequests": 12,
+          "artifactBytes": 7445309,
+          "artifactLocalGetMs": 47.337077999996836,
+          "artifactReplayDecodeHashMs": 29.45946699997876
+        }
+      ],
+      "apiTotalRows": 1169,
+      "recordId": "epa-echo:110070639291",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070639291",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "1003fafbf49eb2a54afa1d230e59695f6a36813eb33d902380b931eba5779df1"
+    },
+    {
+      "state": "DE",
+      "zip": "19701",
+      "id": "epa-echo:110001135227",
+      "label": "initial",
+      "apiElapsedMs": 1550.1915799999988,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1550.1763490000012,
+          "sqlMs": 583.6760419999919,
+          "sqlStatements": 1,
+          "sqlBytes": 17520,
+          "artifactRequests": 35,
+          "artifactBytes": 25999867,
+          "artifactLocalGetMs": 396.0761449999409,
+          "artifactReplayDecodeHashMs": 289.5145670000056
+        }
+      ],
+      "apiTotalRows": 2815,
+      "recordId": "epa-echo:110001135227",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110001135227",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f7b2a1c312bc727072390f0bd85992c3c6a5e9276e377d22511bac1ce5ae0f5d"
+    },
+    {
+      "state": "NJ",
+      "zip": "07001",
+      "id": "epa-echo:110007953740",
+      "label": "initial",
+      "apiElapsedMs": 3974.6111399999936,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 3974.596365999998,
+          "sqlMs": 584.2803510000085,
+          "sqlStatements": 1,
+          "sqlBytes": 53589,
+          "artifactRequests": 182,
+          "artifactBytes": 208554086,
+          "artifactLocalGetMs": 1074.4370970000164,
+          "artifactReplayDecodeHashMs": 591.6105240000761
+        }
+      ],
+      "apiTotalRows": 23370,
+      "recordId": "epa-echo:110007953740",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110007953740",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "c8442470dd9fc722a2458954bc9d84f96d47f7f0c6ce9e5098d203f94bffc0a5"
+    },
+    {
+      "state": "ME",
+      "zip": "03579",
+      "id": "epa-echo:110070541249",
+      "label": "initial",
+      "apiElapsedMs": 549.6208599999954,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 549.6105709999974,
+          "sqlMs": 533.6051670000015,
+          "sqlStatements": 1,
+          "sqlBytes": 10642,
+          "artifactRequests": 7,
+          "artifactBytes": 588040,
+          "artifactLocalGetMs": 4.453845000010915,
+          "artifactReplayDecodeHashMs": 1.5854679999756627
+        }
+      ],
+      "apiTotalRows": 43,
+      "recordId": "epa-echo:110070541249",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070541249",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "84485757036f07540caea0a50e5675e62f2afb0d8fd3a20dfcc4abd64a7619dd"
+    },
+    {
+      "state": "MD",
+      "zip": "20588",
+      "id": "epa-echo:110051875324",
+      "label": "initial",
+      "apiElapsedMs": 1039.6852650000073,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1039.6702869999863,
+          "sqlMs": 518.4685920000193,
+          "sqlStatements": 1,
+          "sqlBytes": 17262,
+          "artifactRequests": 34,
+          "artifactBytes": 29747327,
+          "artifactLocalGetMs": 169.3592349999817,
+          "artifactReplayDecodeHashMs": 75.61617300001672
+        }
+      ],
+      "apiTotalRows": 7825,
+      "recordId": "epa-echo:110051875324",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110051875324",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7661f81654414b97bb9cadb77541575615052b296ecb4d0e32d6050b5c701696"
+    },
+    {
+      "state": "OR",
+      "zip": "97001",
+      "id": "epa-echo:110070625070",
+      "label": "initial",
+      "apiElapsedMs": 523.0747160000028,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 523.0645779999904,
+          "sqlMs": 512.9325060000119,
+          "sqlStatements": 1,
+          "sqlBytes": 10401,
+          "artifactRequests": 6,
+          "artifactBytes": 122894,
+          "artifactLocalGetMs": 4.085263999993913,
+          "artifactReplayDecodeHashMs": 0.6806440000073053
+        }
+      ],
+      "apiTotalRows": 16,
+      "recordId": "epa-echo:110070625070",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070625070",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "ff987244e1f6a90b68a654a28ede20943a73cb31eb0aec2b8d92b94d5d65a9ba"
+    },
+    {
+      "state": "VA",
+      "zip": "20101",
+      "id": "epa-echo:110005287634",
+      "label": "initial",
+      "apiElapsedMs": 991.235606000002,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 991.2177089999896,
+          "sqlMs": 512.3182380000071,
+          "sqlStatements": 1,
+          "sqlBytes": 18491,
+          "artifactRequests": 39,
+          "artifactBytes": 28803914,
+          "artifactLocalGetMs": 180.7647350001207,
+          "artifactReplayDecodeHashMs": 80.2167859999754
+        }
+      ],
+      "apiTotalRows": 4256,
+      "recordId": "epa-echo:110005287634",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110005287634",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "71f1908b017797a9f9b2e48d8b153e6ad8ee69eee352e61a15211be0b157f81e"
+    },
+    {
+      "state": "GU",
+      "zip": "96540",
+      "id": "epa-echo:110071726902",
+      "label": "initial",
+      "apiElapsedMs": 553.5364330000011,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 553.5257289999863,
+          "sqlMs": 534.2890039999911,
+          "sqlStatements": 1,
+          "sqlBytes": 9670,
+          "artifactRequests": 3,
+          "artifactBytes": 1173356,
+          "artifactLocalGetMs": 5.090381999965757,
+          "artifactReplayDecodeHashMs": 2.8304100000241306
+        }
+      ],
+      "apiTotalRows": 790,
+      "recordId": "epa-echo:110071726902",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071726902",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "ca3ff2a03de9296781d0a851b3ef1305fcc3656acffa8d8e66352146c685d2f6"
+    },
+    {
+      "state": "PA",
+      "zip": "15001",
+      "id": "epa-echo:110007797134",
+      "label": "initial",
+      "apiElapsedMs": 771.1533750000235,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 771.136857000005,
+          "sqlMs": 485.8082770000037,
+          "sqlStatements": 1,
+          "sqlBytes": 14558,
+          "artifactRequests": 23,
+          "artifactBytes": 15949024,
+          "artifactLocalGetMs": 111.15741200000048,
+          "artifactReplayDecodeHashMs": 38.40401500000735
+        }
+      ],
+      "apiTotalRows": 2946,
+      "recordId": "epa-echo:110007797134",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110007797134",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "74897621bcc68329b1d7c28495082fc8d915d49658dcc5933f353e13883884e0"
+    },
+    {
+      "state": "NV",
+      "zip": "89001",
+      "id": "epa-echo:110049178698",
+      "label": "initial",
+      "apiElapsedMs": 546.5399170000164,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 546.5290170000226,
+          "sqlMs": 539.0103729999973,
+          "sqlStatements": 1,
+          "sqlBytes": 9668,
+          "artifactRequests": 3,
+          "artifactBytes": 29844,
+          "artifactLocalGetMs": 3.262963999994099,
+          "artifactReplayDecodeHashMs": 0.2182289999909699
+        }
+      ],
+      "apiTotalRows": 9,
+      "recordId": "epa-echo:110049178698",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110049178698",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "1ddf4b6bf8a00bdee396ef23f4f613c136a642dcfee85554cb04796641acb75b"
+    },
+    {
+      "state": "WY",
+      "zip": "82001",
+      "id": "epa-echo:110010732396",
+      "label": "initial",
+      "apiElapsedMs": 577.6221519999963,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 577.6118929999939,
+          "sqlMs": 478.52793400001246,
+          "sqlStatements": 1,
+          "sqlBytes": 11881,
+          "artifactRequests": 12,
+          "artifactBytes": 6225727,
+          "artifactLocalGetMs": 28.308748000010382,
+          "artifactReplayDecodeHashMs": 16.12887500008219
+        }
+      ],
+      "apiTotalRows": 780,
+      "recordId": "epa-echo:110010732396",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110010732396",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "edcd354423fc73bd5cc5bb201e08e5de01bb729223277ba7f35701069e300c34"
+    },
+    {
+      "state": "NH",
+      "zip": "03031",
+      "id": "epa-echo:110072001702",
+      "label": "initial",
+      "apiElapsedMs": 1120.9966079999867,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1120.9809400000086,
+          "sqlMs": 562.0697759999894,
+          "sqlStatements": 1,
+          "sqlBytes": 16288,
+          "artifactRequests": 30,
+          "artifactBytes": 33069494,
+          "artifactLocalGetMs": 204.6176980000455,
+          "artifactReplayDecodeHashMs": 87.55594200003543
+        }
+      ],
+      "apiTotalRows": 7413,
+      "recordId": "epa-echo:110072001702",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072001702",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "6fca769aa31a7981511c2caa869427692cf433188f65e2d26ea981d42854d7b5"
+    },
+    {
+      "state": "RI",
+      "zip": "02802",
+      "id": "epa-echo:110007825684",
+      "label": "initial",
+      "apiElapsedMs": 1622.427555000002,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1622.4071469999908,
+          "sqlMs": 503.0020899999945,
+          "sqlStatements": 1,
+          "sqlBytes": 22667,
+          "artifactRequests": 56,
+          "artifactBytes": 55105599,
+          "artifactLocalGetMs": 382.23571199993603,
+          "artifactReplayDecodeHashMs": 182.93945300002815
+        }
+      ],
+      "apiTotalRows": 10172,
+      "recordId": "epa-echo:110007825684",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110007825684",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "06a1ed6594537bf782327c798e36d8039cda6129d3d2952976ffd7e9efe3b99c"
+    },
+    {
+      "state": "IL",
+      "zip": "60001",
+      "id": "epa-echo:110006168244",
+      "label": "initial",
+      "apiElapsedMs": 1054.4308020000171,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1054.4085799999884,
+          "sqlMs": 607.4409840000153,
+          "sqlStatements": 1,
+          "sqlBytes": 14814,
+          "artifactRequests": 24,
+          "artifactBytes": 15263762,
+          "artifactLocalGetMs": 165.11808200011728,
+          "artifactReplayDecodeHashMs": 66.03389399993466
+        }
+      ],
+      "apiTotalRows": 2544,
+      "recordId": "epa-echo:110006168244",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110006168244",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "8e2140ee01db1b5002a890227bf3934c546b49104dcecd237f748e2d1e8eb721"
+    },
+    {
+      "state": "IA",
+      "zip": "50001",
+      "id": "epa-echo:110011726711",
+      "label": "initial",
+      "apiElapsedMs": 854.173563999997,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 854.1554270000197,
+          "sqlMs": 716.9321669999918,
+          "sqlStatements": 1,
+          "sqlBytes": 11383,
+          "artifactRequests": 10,
+          "artifactBytes": 6062176,
+          "artifactLocalGetMs": 43.23381099992548,
+          "artifactReplayDecodeHashMs": 24.781768999964697
+        }
+      ],
+      "apiTotalRows": 265,
+      "recordId": "epa-echo:110011726711",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110011726711",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "6263b82d8fbd6bf4e8db8cfb734d533d27e640b138ac0727a3ef5235943e943f"
+    },
+    {
+      "state": "AR",
+      "zip": "71601",
+      "id": "epa-echo:110040755439",
+      "label": "initial",
+      "apiElapsedMs": 809.61503299998,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 809.5877359999868,
+          "sqlMs": 748.9274350000196,
+          "sqlStatements": 1,
+          "sqlBytes": 10415,
+          "artifactRequests": 6,
+          "artifactBytes": 1555781,
+          "artifactLocalGetMs": 15.63096199996653,
+          "artifactReplayDecodeHashMs": 10.689982999989297
+        }
+      ],
+      "apiTotalRows": 340,
+      "recordId": "epa-echo:110040755439",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110040755439",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "b13a266ec0d8caed3d56cc8b522a6257eedb34320453a2dbf95340060dcabcc5"
+    },
+    {
+      "state": "WI",
+      "zip": "53001",
+      "id": "epa-echo:110013072968",
+      "label": "initial",
+      "apiElapsedMs": 1098.1285479999788,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1098.1020679999783,
+          "sqlMs": 848.288922000007,
+          "sqlStatements": 1,
+          "sqlBytes": 13607,
+          "artifactRequests": 19,
+          "artifactBytes": 15693405,
+          "artifactLocalGetMs": 80.3448610000778,
+          "artifactReplayDecodeHashMs": 45.05605300000752
+        }
+      ],
+      "apiTotalRows": 940,
+      "recordId": "epa-echo:110013072968",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110013072968",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "20276e6c81a18f2be3f07bb56b671b1a5e2ed510deb3df1f21812423e6bd0969"
+    },
+    {
+      "state": "NC",
+      "zip": "27006",
+      "id": "epa-echo:110072323701",
+      "label": "initial",
+      "apiElapsedMs": 852.5776679999835,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 852.5634830000054,
+          "sqlMs": 711.008759999997,
+          "sqlStatements": 1,
+          "sqlBytes": 11880,
+          "artifactRequests": 12,
+          "artifactBytes": 9513637,
+          "artifactLocalGetMs": 34.83912200003397,
+          "artifactReplayDecodeHashMs": 25.174288000067463
+        }
+      ],
+      "apiTotalRows": 1521,
+      "recordId": "epa-echo:110072323701",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072323701",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "60f17367cfe913e7851ca5cde0c0f0a328856b04b11eeb75217ece76da0bed33"
+    },
+    {
+      "state": "AL",
+      "zip": "35004",
+      "id": "epa-echo:110070866423",
+      "label": "initial",
+      "apiElapsedMs": 768.7207530000014,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 768.7043959999864,
+          "sqlMs": 495.5981969999848,
+          "sqlStatements": 1,
+          "sqlBytes": 13583,
+          "artifactRequests": 19,
+          "artifactBytes": 16209540,
+          "artifactLocalGetMs": 81.88225299993064,
+          "artifactReplayDecodeHashMs": 44.113482999877306
+        }
+      ],
+      "apiTotalRows": 2422,
+      "recordId": "epa-echo:110070866423",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070866423",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "cf041a6861177bc3e505d483fe877dc3d833b2a92089d7e322266a068ae2c0ec"
+    },
+    {
+      "state": "NM",
+      "zip": "86515",
+      "id": "epa-echo:110032620885",
+      "label": "initial",
+      "apiElapsedMs": 527.8233769999933,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 527.8111009999993,
+          "sqlMs": 494.57877500000177,
+          "sqlStatements": 1,
+          "sqlBytes": 12109,
+          "artifactRequests": 13,
+          "artifactBytes": 1478600,
+          "artifactLocalGetMs": 11.003061999916099,
+          "artifactReplayDecodeHashMs": 4.499897000059718
+        }
+      ],
+      "apiTotalRows": 284,
+      "recordId": "epa-echo:110032620885",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110032620885",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a352af60696fcfec9624e392abd59dd99087afe76643dd2fc848e93d800aa781"
+    },
+    {
+      "state": "OH",
+      "zip": "43001",
+      "id": "epa-echo:110070624589",
+      "label": "initial",
+      "apiElapsedMs": 851.995556000009,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 851.9796410000126,
+          "sqlMs": 491.39035299999523,
+          "sqlStatements": 1,
+          "sqlBytes": 13845,
+          "artifactRequests": 20,
+          "artifactBytes": 19793291,
+          "artifactLocalGetMs": 128.79857499996433,
+          "artifactReplayDecodeHashMs": 51.119287000008626
+        }
+      ],
+      "apiTotalRows": 1046,
+      "recordId": "epa-echo:110070624589",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070624589",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "8e8b4b6e11fc9c86ce5d42ce35ddb867904e72faeb34e60ca7d6a6c97d364af1"
+    },
+    {
+      "state": "PR",
+      "zip": "00601",
+      "id": "epa-echo:110052483273",
+      "label": "initial",
+      "apiElapsedMs": 524.6609380000154,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 524.6496629999892,
+          "sqlMs": 482.8749170000083,
+          "sqlStatements": 1,
+          "sqlBytes": 9918,
+          "artifactRequests": 4,
+          "artifactBytes": 2786779,
+          "artifactLocalGetMs": 11.079190999997081,
+          "artifactReplayDecodeHashMs": 7.730077000014717
+        }
+      ],
+      "apiTotalRows": 947,
+      "recordId": "epa-echo:110052483273",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110052483273",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "66a272308d0b65a4a019790f00de1744e4d4ebc5aa4736641d58fa694f2b28fd"
+    },
+    {
+      "state": "HI",
+      "zip": "96701",
+      "id": "epa-echo:110039083997",
+      "label": "initial",
+      "apiElapsedMs": 661.2610479999857,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 661.2439789999917,
+          "sqlMs": 476.41031599999405,
+          "sqlStatements": 1,
+          "sqlBytes": 11874,
+          "artifactRequests": 12,
+          "artifactBytes": 8940966,
+          "artifactLocalGetMs": 90.57473600003868,
+          "artifactReplayDecodeHashMs": 23.782029999943916
+        }
+      ],
+      "apiTotalRows": 5102,
+      "recordId": "epa-echo:110039083997",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110039083997",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "db9484ac77dffdee32b9faf860943432121c872b565806f2d35a527a29a7d913"
+    },
+    {
+      "state": "UT",
+      "zip": "82930",
+      "id": "epa-echo:110071951413",
+      "label": "initial",
+      "apiElapsedMs": 515.8448009999993,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 515.8341819999914,
+          "sqlMs": 487.2875219999987,
+          "sqlStatements": 1,
+          "sqlBytes": 10887,
+          "artifactRequests": 8,
+          "artifactBytes": 826248,
+          "artifactLocalGetMs": 13.928219000052195,
+          "artifactReplayDecodeHashMs": 3.1705710000533145
+        }
+      ],
+      "apiTotalRows": 195,
+      "recordId": "epa-echo:110071951413",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071951413",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a941733355d83aafd73bd024fade75492434e53a0c916dc31c8fb4b70a4c639b"
+    },
+    {
+      "state": "ND",
+      "zip": "58001",
+      "id": "epa-echo:110072161540",
+      "label": "initial",
+      "apiElapsedMs": 532.8464399999939,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 532.8349429999944,
+          "sqlMs": 473.3500639999984,
+          "sqlStatements": 1,
+          "sqlBytes": 11626,
+          "artifactRequests": 11,
+          "artifactBytes": 3095240,
+          "artifactLocalGetMs": 17.836632000020472,
+          "artifactReplayDecodeHashMs": 8.767683999991277
+        }
+      ],
+      "apiTotalRows": 167,
+      "recordId": "epa-echo:110072161540",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072161540",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "88d0b9c5144e3544f0ce8f689dc83872425621e808f3327784a274d1557b6ac9"
+    },
+    {
+      "state": "MN",
+      "zip": "55001",
+      "id": "epa-echo:110008739641",
+      "label": "initial",
+      "apiElapsedMs": 1351.895925000019,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1351.8801530000055,
+          "sqlMs": 478.3368999999948,
+          "sqlStatements": 1,
+          "sqlBytes": 20944,
+          "artifactRequests": 49,
+          "artifactBytes": 43665940,
+          "artifactLocalGetMs": 361.58153999992646,
+          "artifactReplayDecodeHashMs": 112.58109499985585
+        }
+      ],
+      "apiTotalRows": 5658,
+      "recordId": "epa-echo:110008739641",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110008739641",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "8167dd44c4c839650f73685e23522aa8d1ea41068105e373058de57a1f4edc6c"
+    },
+    {
+      "state": "NE",
+      "zip": "68001",
+      "id": "epa-echo:110041346638",
+      "label": "initial",
+      "apiElapsedMs": 513.047952999972,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 513.0372930000012,
+          "sqlMs": 479.765476999979,
+          "sqlStatements": 1,
+          "sqlBytes": 10648,
+          "artifactRequests": 7,
+          "artifactBytes": 1614157,
+          "artifactLocalGetMs": 10.368668999959482,
+          "artifactReplayDecodeHashMs": 3.9506460000993684
+        }
+      ],
+      "apiTotalRows": 192,
+      "recordId": "epa-echo:110041346638",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110041346638",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "df3f8c0fc33142a994a8a6e0f627bd4f8f0b07845cde4600d10448ead75cab6a"
+    },
+    {
+      "state": "WA",
+      "zip": "98001",
+      "id": "epa-echo:110064091129",
+      "label": "initial",
+      "apiElapsedMs": 1079.1917470000044,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1079.174853000004,
+          "sqlMs": 474.22146699999576,
+          "sqlStatements": 1,
+          "sqlBytes": 18229,
+          "artifactRequests": 38,
+          "artifactBytes": 33690574,
+          "artifactLocalGetMs": 223.6412540000747,
+          "artifactReplayDecodeHashMs": 89.1327839998994
+        }
+      ],
+      "apiTotalRows": 7999,
+      "recordId": "epa-echo:110064091129",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110064091129",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7ca388b2a120c278d5bd8eeb586b9804366be7ba50f9f2ddc0e76984315f686b"
+    },
+    {
+      "state": "VI",
+      "zip": "00801",
+      "id": "epa-echo:110001915385",
+      "label": "initial",
+      "apiElapsedMs": 515.7836410000164,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 515.7697939999925,
+          "sqlMs": 486.45794000002206,
+          "sqlStatements": 1,
+          "sqlBytes": 10166,
+          "artifactRequests": 5,
+          "artifactBytes": 1633187,
+          "artifactLocalGetMs": 6.60814800002845,
+          "artifactReplayDecodeHashMs": 3.6943090000131633
+        }
+      ],
+      "apiTotalRows": 956,
+      "recordId": "epa-echo:110001915385",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110001915385",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "d265e589f2d0d36370f0f5ab34d7e43013de0d011f6131955ba8ef13a24d07e5"
+    },
+    {
+      "state": "AS",
+      "zip": "96799",
+      "id": "epa-echo:110071729677",
+      "label": "initial",
+      "apiElapsedMs": 502.43711199998506,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 502.42327999998815,
+          "sqlMs": 477.44200199999614,
+          "sqlStatements": 1,
+          "sqlBytes": 9914,
+          "artifactRequests": 4,
+          "artifactBytes": 686097,
+          "artifactLocalGetMs": 6.540746999991825,
+          "artifactReplayDecodeHashMs": 3.6217479999759234
+        }
+      ],
+      "apiTotalRows": 232,
+      "recordId": "epa-echo:110071729677",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071729677",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5f8cf84c0c3899760bbcb26070d6203dec251b04772cd4f1cc99638e813fe748"
+    },
+    {
+      "state": "KY",
+      "zip": "40003",
+      "id": "epa-echo:110072085909",
+      "label": "initial",
+      "apiElapsedMs": 768.7219909999985,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 768.7014569999883,
+          "sqlMs": 572.9996050000191,
+          "sqlStatements": 1,
+          "sqlBytes": 12362,
+          "artifactRequests": 14,
+          "artifactBytes": 9065377,
+          "artifactLocalGetMs": 63.080877000058535,
+          "artifactReplayDecodeHashMs": 23.438758000003872
+        }
+      ],
+      "apiTotalRows": 998,
+      "recordId": "epa-echo:110072085909",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072085909",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "c562c7647c2417e6aa386735ae819757bb6944d0be4cd08c0c21cf02e6af5639"
+    },
+    {
+      "state": "DC",
+      "zip": "20001",
+      "id": "epa-echo:110071345964",
+      "label": "initial",
+      "apiElapsedMs": 1488.9636040000187,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1488.9439540000167,
+          "sqlMs": 488.70411399999284,
+          "sqlStatements": 1,
+          "sqlBytes": 25337,
+          "artifactRequests": 67,
+          "artifactBytes": 56116246,
+          "artifactLocalGetMs": 346.0661989997607,
+          "artifactReplayDecodeHashMs": 168.22312199987937
+        }
+      ],
+      "apiTotalRows": 13386,
+      "recordId": "epa-echo:110071345964",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071345964",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "b057b6f0c00674914e7dc440c0f19b866c297d8e45911dfcf9bb2a59e424d53f"
+    },
+    {
+      "state": "MA",
+      "zip": "01001",
+      "id": "epa-echo:110003501700",
+      "label": "initial",
+      "apiElapsedMs": 1370.030739000009,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1370.0086870000232,
+          "sqlMs": 671.839043999993,
+          "sqlStatements": 1,
+          "sqlBytes": 17517,
+          "artifactRequests": 35,
+          "artifactBytes": 31045255,
+          "artifactLocalGetMs": 258.3229129999527,
+          "artifactReplayDecodeHashMs": 125.36997199998586
+        }
+      ],
+      "apiTotalRows": 4576,
+      "recordId": "epa-echo:110003501700",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110003501700",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "adf25c914bde836c518c5821cb97c487943bc9a943a6ac76d07f7362bb4094fd"
+    },
+    {
+      "state": "VT",
+      "zip": "05001",
+      "id": "epa-echo:110005294680",
+      "label": "initial",
+      "apiElapsedMs": 728.0905959999945,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 728.080145999993,
+          "sqlMs": 546.0481840000139,
+          "sqlStatements": 1,
+          "sqlBytes": 12383,
+          "artifactRequests": 14,
+          "artifactBytes": 6864496,
+          "artifactLocalGetMs": 53.30563900011475,
+          "artifactReplayDecodeHashMs": 27.366030000004685
+        }
+      ],
+      "apiTotalRows": 1573,
+      "recordId": "epa-echo:110005294680",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110005294680",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "47ab7877a63c49ae733741aca7f5ab8a6df488270f511f79879db20a5a2c5341"
+    },
+    {
+      "state": "KS",
+      "zip": "66002",
+      "id": "epa-echo:110039404944",
+      "label": "initial",
+      "apiElapsedMs": 989.7602950000146,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 989.7427380000008,
+          "sqlMs": 651.8267429999833,
+          "sqlStatements": 1,
+          "sqlBytes": 13590,
+          "artifactRequests": 19,
+          "artifactBytes": 13486122,
+          "artifactLocalGetMs": 136.4904309998965,
+          "artifactReplayDecodeHashMs": 50.56315499992343
+        }
+      ],
+      "apiTotalRows": 272,
+      "recordId": "epa-echo:110039404944",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110039404944",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f0d5d52ae647fde18a0abc720ea84e8f225c222dd1bdfc208a68460472de470a"
+    },
+    {
+      "state": "CO",
+      "zip": "80001",
+      "id": "epa-echo:110041909227",
+      "label": "initial",
+      "apiElapsedMs": 1953.2801900000195,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1953.2614410000097,
+          "sqlMs": 727.3044759999902,
+          "sqlStatements": 1,
+          "sqlBytes": 24599,
+          "artifactRequests": 64,
+          "artifactBytes": 58958680,
+          "artifactLocalGetMs": 451.3757900001074,
+          "artifactReplayDecodeHashMs": 198.79421400016872
+        }
+      ],
+      "apiTotalRows": 16058,
+      "recordId": "epa-echo:110041909227",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110041909227",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5ce937d288b847748499f510eb712527424c19ac36cd4fdd735726541462148e"
+    },
+    {
+      "state": "IN",
+      "zip": "46001",
+      "id": "epa-echo:110070108760",
+      "label": "initial",
+      "apiElapsedMs": 652.9434079999919,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 652.839948000008,
+          "sqlMs": 578.7577260000107,
+          "sqlStatements": 1,
+          "sqlBytes": 10649,
+          "artifactRequests": 7,
+          "artifactBytes": 3769136,
+          "artifactLocalGetMs": 21.14053199996124,
+          "artifactReplayDecodeHashMs": 13.856348000001162
+        }
+      ],
+      "apiTotalRows": 1323,
+      "recordId": "epa-echo:110070108760",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070108760",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5255326c53eb7977d035d50c4680fa3adcab40004e8faf6e63d851c8b9a691dc"
+    },
+    {
+      "state": "LA",
+      "zip": "70001",
+      "id": "epa-echo:110003306100",
+      "label": "tomorrow",
+      "apiElapsedMs": 1294.7694840000186,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1294.748132000008,
+          "sqlMs": 814.2517749999824,
+          "sqlStatements": 1,
+          "sqlBytes": 15299,
+          "artifactRequests": 26,
+          "artifactBytes": 20105164,
+          "artifactLocalGetMs": 159.3735330000054,
+          "artifactReplayDecodeHashMs": 72.24099899985595
+        }
+      ],
+      "apiTotalRows": 7342,
+      "recordId": "epa-echo:110003306100",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110003306100",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a2a1d188f8e5256731a06633e735a77ef77adead0be8bd7109e0a104d0258867"
+    },
+    {
+      "state": "GA",
+      "zip": "30002",
+      "id": "epa-echo:110070154433",
+      "label": "tomorrow",
+      "apiElapsedMs": 1903.2147819999955,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1903.1962539999804,
+          "sqlMs": 641.541292000009,
+          "sqlStatements": 1,
+          "sqlBytes": 22416,
+          "artifactRequests": 55,
+          "artifactBytes": 66930470,
+          "artifactLocalGetMs": 414.705665000045,
+          "artifactReplayDecodeHashMs": 207.08553400007077
+        }
+      ],
+      "apiTotalRows": 15628,
+      "recordId": "epa-echo:110070154433",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070154433",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "bd3c9eba5d7d01ebae34b4432dcad8f5429581855a20477a47e030be6845b968"
+    },
+    {
+      "state": "NY",
+      "zip": "06390",
+      "id": "epa-echo:110072103254",
+      "label": "tomorrow",
+      "apiElapsedMs": 809.6083550000039,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 809.586123999994,
+          "sqlMs": 632.3893519999983,
+          "sqlStatements": 1,
+          "sqlBytes": 12364,
+          "artifactRequests": 14,
+          "artifactBytes": 8939214,
+          "artifactLocalGetMs": 39.53995200005011,
+          "artifactReplayDecodeHashMs": 25.233955000003334
+        }
+      ],
+      "apiTotalRows": 1037,
+      "recordId": "epa-echo:110072103254",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072103254",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "6a0d07994e04a10a1e371cb8da831fcbe80f5471c41d0c6ed922659f5450abe4"
+    },
+    {
+      "state": "CT",
+      "zip": "06001",
+      "id": "epa-echo:110000314972",
+      "label": "tomorrow",
+      "apiElapsedMs": 1119.754878000007,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1119.7366439999896,
+          "sqlMs": 544.6430809999874,
+          "sqlStatements": 1,
+          "sqlBytes": 18245,
+          "artifactRequests": 38,
+          "artifactBytes": 30834865,
+          "artifactLocalGetMs": 201.193830000062,
+          "artifactReplayDecodeHashMs": 82.40312400000403
+        }
+      ],
+      "apiTotalRows": 3870,
+      "recordId": "epa-echo:110000314972",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110000314972",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f553720e3646c99801ea69d4e6dc3ef0566eeccabc0d49638b854f0b10c01932"
+    },
+    {
+      "state": "MI",
+      "zip": "48001",
+      "id": "epa-echo:110045416055",
+      "label": "tomorrow",
+      "apiElapsedMs": 690.880199999985,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 690.8652399999846,
+          "sqlMs": 569.7092950000078,
+          "sqlStatements": 1,
+          "sqlBytes": 10896,
+          "artifactRequests": 8,
+          "artifactBytes": 6379302,
+          "artifactLocalGetMs": 45.31959200001438,
+          "artifactReplayDecodeHashMs": 16.12480299998424
+        }
+      ],
+      "apiTotalRows": 981,
+      "recordId": "epa-echo:110045416055",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110045416055",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7538f6a93415e7b1e2bc8e095d5a7ddac7733bfd7c5b455c9c7306323e4e9bd9"
+    },
+    {
+      "state": "MP",
+      "zip": "96950",
+      "id": "epa-echo:110013025074",
+      "label": "tomorrow",
+      "apiElapsedMs": 1034.4286640000064,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1034.3891160000057,
+          "sqlMs": 984.9018530000176,
+          "sqlStatements": 1,
+          "sqlBytes": 10634,
+          "artifactRequests": 7,
+          "artifactBytes": 1106534,
+          "artifactLocalGetMs": 16.25806900006137,
+          "artifactReplayDecodeHashMs": 4.105534000002081
+        }
+      ],
+      "apiTotalRows": 384,
+      "recordId": "epa-echo:110013025074",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110013025074",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7a69096ffea45dc66e16a86be85c454e6cb16e6e8341325588187ac00ce34c1a"
+    },
+    {
+      "state": "MO",
+      "zip": "63001",
+      "id": "epa-echo:110070388911",
+      "label": "tomorrow",
+      "apiElapsedMs": 1658.5939760000037,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1658.5753160000022,
+          "sqlMs": 744.2018519999983,
+          "sqlStatements": 1,
+          "sqlBytes": 17249,
+          "artifactRequests": 34,
+          "artifactBytes": 28178863,
+          "artifactLocalGetMs": 221.3434460000135,
+          "artifactReplayDecodeHashMs": 96.76145499997074
+        }
+      ],
+      "apiTotalRows": 3636,
+      "recordId": "epa-echo:110070388911",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070388911",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "caa1581a2f95e816465db91bb13b1f11286c6d3b8bfdf04c3d15b2b697e4a7b8"
+    },
+    {
+      "state": "SC",
+      "zip": "29001",
+      "id": "epa-echo:110002179053",
+      "label": "tomorrow",
+      "apiElapsedMs": 798.3512950000004,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 798.3376649999991,
+          "sqlMs": 727.9780860000174,
+          "sqlStatements": 1,
+          "sqlBytes": 10163,
+          "artifactRequests": 5,
+          "artifactBytes": 3631151,
+          "artifactLocalGetMs": 17.31637500002398,
+          "artifactReplayDecodeHashMs": 8.703560000052676
+        }
+      ],
+      "apiTotalRows": 482,
+      "recordId": "epa-echo:110002179053",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110002179053",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "12e7d65981032e41ef8daecbaa84921151645ba856880d8d6266390357c13d91"
+    },
+    {
+      "state": "AZ",
+      "zip": "85001",
+      "id": "epa-echo:110035777157",
+      "label": "tomorrow",
+      "apiElapsedMs": 1184.1562369999883,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1184.138134000008,
+          "sqlMs": 801.3577839999925,
+          "sqlStatements": 1,
+          "sqlBytes": 16276,
+          "artifactRequests": 30,
+          "artifactBytes": 19218525,
+          "artifactLocalGetMs": 132.88848899988807,
+          "artifactReplayDecodeHashMs": 55.96936499993899
+        }
+      ],
+      "apiTotalRows": 8485,
+      "recordId": "epa-echo:110035777157",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110035777157",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f552c1ed10c83a5e43e3d38980b0a0baa801edd38fdfb267700b1b9b3ee7276b"
+    },
+    {
+      "state": "ID",
+      "zip": "83201",
+      "id": "epa-echo:110043460670",
+      "label": "tomorrow",
+      "apiElapsedMs": 864.1369290000002,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 864.1244280000101,
+          "sqlMs": 821.3599910000048,
+          "sqlStatements": 1,
+          "sqlBytes": 10403,
+          "artifactRequests": 6,
+          "artifactBytes": 2394523,
+          "artifactLocalGetMs": 13.17623799998546,
+          "artifactReplayDecodeHashMs": 7.039990000019316
+        }
+      ],
+      "apiTotalRows": 636,
+      "recordId": "epa-echo:110043460670",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110043460670",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "d05a1fa01eec0d8fc017a888db210e582979fde5af86ea332df6c5d03c9ddb7c"
+    },
+    {
+      "state": "AK",
+      "zip": "99501",
+      "id": "epa-echo:110003038365",
+      "label": "tomorrow",
+      "apiElapsedMs": 890.1259000000136,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 890.111647999991,
+          "sqlMs": 783.229668999993,
+          "sqlStatements": 1,
+          "sqlBytes": 10901,
+          "artifactRequests": 8,
+          "artifactBytes": 3502787,
+          "artifactLocalGetMs": 31.704295999952592,
+          "artifactReplayDecodeHashMs": 19.757386999961454
+        }
+      ],
+      "apiTotalRows": 1677,
+      "recordId": "epa-echo:110003038365",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110003038365",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "ab3b79d6b49fd533b09c56c7317f55263c9a2021dfa4e374d90ed15381726833"
+    },
+    {
+      "state": "MT",
+      "zip": "59001",
+      "id": "epa-echo:110070875759",
+      "label": "tomorrow",
+      "apiElapsedMs": 895.5134750000143,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 895.5006629999843,
+          "sqlMs": 872.5235420000099,
+          "sqlStatements": 1,
+          "sqlBytes": 10162,
+          "artifactRequests": 5,
+          "artifactBytes": 656926,
+          "artifactLocalGetMs": 4.952770000032615,
+          "artifactReplayDecodeHashMs": 1.7916390000318643
+        }
+      ],
+      "apiTotalRows": 88,
+      "recordId": "epa-echo:110070875759",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070875759",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "310131c24e1253602c9c621f766e5fc06c6b51eb0baa8755177cd55cf015b160"
+    },
+    {
+      "state": "SD",
+      "zip": "57001",
+      "id": "epa-echo:110039204517",
+      "label": "tomorrow",
+      "apiElapsedMs": 627.1603900000046,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 627.1340490000148,
+          "sqlMs": 584.2152420000057,
+          "sqlStatements": 1,
+          "sqlBytes": 11624,
+          "artifactRequests": 11,
+          "artifactBytes": 2070999,
+          "artifactLocalGetMs": 12.313916000013705,
+          "artifactReplayDecodeHashMs": 5.457548000034876
+        }
+      ],
+      "apiTotalRows": 125,
+      "recordId": "epa-echo:110039204517",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110039204517",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7191c6d4c8b56765ac3299f83698c40a45b9e37fc812d5f09c519b892dc618bb"
+    },
+    {
+      "state": "CA",
+      "zip": "90001",
+      "id": "epa-echo:110066234319",
+      "label": "tomorrow",
+      "apiElapsedMs": 8840.474525999976,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 8840.457204000006,
+          "sqlMs": 611.1510230000131,
+          "sqlStatements": 1,
+          "sqlBytes": 81677,
+          "artifactRequests": 296,
+          "artifactBytes": 401652187,
+          "artifactLocalGetMs": 2410.648130000047,
+          "artifactReplayDecodeHashMs": 1093.3850739999034
+        }
+      ],
+      "apiTotalRows": 106013,
+      "recordId": "epa-echo:110066234319",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110066234319",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "62fb1c9d5422986a4878c05b4bfdd141311b5dff72ddc0863235e19ac68586e1"
+    },
+    {
+      "state": "MS",
+      "zip": "38601",
+      "id": "epa-echo:110010708797",
+      "label": "tomorrow",
+      "apiElapsedMs": 613.0168600000034,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 613.0033879999828,
+          "sqlMs": 571.0851640000183,
+          "sqlStatements": 1,
+          "sqlBytes": 10406,
+          "artifactRequests": 6,
+          "artifactBytes": 2415842,
+          "artifactLocalGetMs": 13.566309999965597,
+          "artifactReplayDecodeHashMs": 6.014768000022741
+        }
+      ],
+      "apiTotalRows": 264,
+      "recordId": "epa-echo:110010708797",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110010708797",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "51d06ffd4d7b970dfd5a842944f092fb8f5ccc0c61d8ef2ac98ed80c806ee696"
+    },
+    {
+      "state": "TX",
+      "zip": "73344",
+      "id": "epa-echo:110010923867",
+      "label": "tomorrow",
+      "apiElapsedMs": 831.4366600000067,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 831.4192779999867,
+          "sqlMs": 539.4570119999989,
+          "sqlStatements": 1,
+          "sqlBytes": 13584,
+          "artifactRequests": 19,
+          "artifactBytes": 17630879,
+          "artifactLocalGetMs": 109.80817499995464,
+          "artifactReplayDecodeHashMs": 46.236049999977695
+        }
+      ],
+      "apiTotalRows": 5920,
+      "recordId": "epa-echo:110010923867",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110010923867",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "bc2781b368b6d9bbbef8dd1a9dabb8298f0493ccccaf1d69643e9ce220894755"
+    },
+    {
+      "state": "FL",
+      "zip": "32003",
+      "id": "epa-echo:110015724509",
+      "label": "tomorrow",
+      "apiElapsedMs": 901.5733419999888,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 901.5548410000047,
+          "sqlMs": 555.1604769999976,
+          "sqlStatements": 1,
+          "sqlBytes": 14084,
+          "artifactRequests": 21,
+          "artifactBytes": 20373724,
+          "artifactLocalGetMs": 114.93977099991753,
+          "artifactReplayDecodeHashMs": 61.41669400004321
+        }
+      ],
+      "apiTotalRows": 5392,
+      "recordId": "epa-echo:110015724509",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110015724509",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a8f34d90ea47df24c9540ea34f2704ea1d3c89e3ca466800b1b1784a04a32a22"
+    },
+    {
+      "state": "OK",
+      "zip": "73001",
+      "id": "epa-echo:110071362183",
+      "label": "tomorrow",
+      "apiElapsedMs": 543.8991720000049,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 543.8858409999812,
+          "sqlMs": 510.7510820000025,
+          "sqlStatements": 1,
+          "sqlBytes": 9915,
+          "artifactRequests": 4,
+          "artifactBytes": 1110410,
+          "artifactLocalGetMs": 11.723329000000376,
+          "artifactReplayDecodeHashMs": 2.9656340000219643
+        }
+      ],
+      "apiTotalRows": 201,
+      "recordId": "epa-echo:110071362183",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071362183",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "0efdfff07c4d069e6b867665b84c2413fbd67ef8549cf74014fe6ce461075973"
+    },
+    {
+      "state": "TN",
+      "zip": "37010",
+      "id": "epa-echo:110069577112",
+      "label": "tomorrow",
+      "apiElapsedMs": 838.2529780000041,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 838.2355079999834,
+          "sqlMs": 490.81370599998627,
+          "sqlStatements": 1,
+          "sqlBytes": 15064,
+          "artifactRequests": 25,
+          "artifactBytes": 14967331,
+          "artifactLocalGetMs": 119.95041000001947,
+          "artifactReplayDecodeHashMs": 52.53149399996619
+        }
+      ],
+      "apiTotalRows": 1202,
+      "recordId": "epa-echo:110069577112",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110069577112",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5bfc2e674ecfc38cc068e9e8a353e48a14c369e79e00d026eb891e0fa9856598"
+    },
+    {
+      "state": "WV",
+      "zip": "24701",
+      "id": "epa-echo:110070639291",
+      "label": "tomorrow",
+      "apiElapsedMs": 684.4496530000179,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 684.431270000001,
+          "sqlMs": 543.296497000003,
+          "sqlStatements": 1,
+          "sqlBytes": 11878,
+          "artifactRequests": 12,
+          "artifactBytes": 7445309,
+          "artifactLocalGetMs": 53.09807800000999,
+          "artifactReplayDecodeHashMs": 21.75537500003702
+        }
+      ],
+      "apiTotalRows": 1169,
+      "recordId": "epa-echo:110070639291",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070639291",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "1003fafbf49eb2a54afa1d230e59695f6a36813eb33d902380b931eba5779df1"
+    },
+    {
+      "state": "DE",
+      "zip": "19701",
+      "id": "epa-echo:110001135227",
+      "label": "tomorrow",
+      "apiElapsedMs": 1068.8619780000008,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1068.845239999995,
+          "sqlMs": 607.1598910000175,
+          "sqlStatements": 1,
+          "sqlBytes": 17520,
+          "artifactRequests": 35,
+          "artifactBytes": 25999867,
+          "artifactLocalGetMs": 164.02066699997522,
+          "artifactReplayDecodeHashMs": 85.72423500011791
+        }
+      ],
+      "apiTotalRows": 2815,
+      "recordId": "epa-echo:110001135227",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110001135227",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f7b2a1c312bc727072390f0bd85992c3c6a5e9276e377d22511bac1ce5ae0f5d"
+    },
+    {
+      "state": "NJ",
+      "zip": "07001",
+      "id": "epa-echo:110007953740",
+      "label": "tomorrow",
+      "apiElapsedMs": 4730.278690999985,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 4730.216191999993,
+          "sqlMs": 496.3736220000137,
+          "sqlStatements": 1,
+          "sqlBytes": 53589,
+          "artifactRequests": 182,
+          "artifactBytes": 208554086,
+          "artifactLocalGetMs": 1448.9772620002332,
+          "artifactReplayDecodeHashMs": 686.3847800000804
+        }
+      ],
+      "apiTotalRows": 23370,
+      "recordId": "epa-echo:110007953740",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110007953740",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "c8442470dd9fc722a2458954bc9d84f96d47f7f0c6ce9e5098d203f94bffc0a5"
+    },
+    {
+      "state": "ME",
+      "zip": "03579",
+      "id": "epa-echo:110070541249",
+      "label": "tomorrow",
+      "apiElapsedMs": 506.2438050000055,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 506.2282290000003,
+          "sqlMs": 486.6757950000174,
+          "sqlStatements": 1,
+          "sqlBytes": 10642,
+          "artifactRequests": 7,
+          "artifactBytes": 588040,
+          "artifactLocalGetMs": 7.086576000001514,
+          "artifactReplayDecodeHashMs": 1.5076610000105575
+        }
+      ],
+      "apiTotalRows": 43,
+      "recordId": "epa-echo:110070541249",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070541249",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "84485757036f07540caea0a50e5675e62f2afb0d8fd3a20dfcc4abd64a7619dd"
+    },
+    {
+      "state": "MD",
+      "zip": "20588",
+      "id": "epa-echo:110051875324",
+      "label": "tomorrow",
+      "apiElapsedMs": 1184.9494570000097,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1184.927709999989,
+          "sqlMs": 601.4372169999988,
+          "sqlStatements": 1,
+          "sqlBytes": 17262,
+          "artifactRequests": 34,
+          "artifactBytes": 29747327,
+          "artifactLocalGetMs": 189.22539699997287,
+          "artifactReplayDecodeHashMs": 96.26526199982618
+        }
+      ],
+      "apiTotalRows": 7825,
+      "recordId": "epa-echo:110051875324",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110051875324",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7661f81654414b97bb9cadb77541575615052b296ecb4d0e32d6050b5c701696"
+    },
+    {
+      "state": "OR",
+      "zip": "97001",
+      "id": "epa-echo:110070625070",
+      "label": "tomorrow",
+      "apiElapsedMs": 616.9709180000063,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 616.959777000011,
+          "sqlMs": 600.4393580000033,
+          "sqlStatements": 1,
+          "sqlBytes": 10401,
+          "artifactRequests": 6,
+          "artifactBytes": 122894,
+          "artifactLocalGetMs": 8.426724999997532,
+          "artifactReplayDecodeHashMs": 0.86640100000659
+        }
+      ],
+      "apiTotalRows": 16,
+      "recordId": "epa-echo:110070625070",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070625070",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "ff987244e1f6a90b68a654a28ede20943a73cb31eb0aec2b8d92b94d5d65a9ba"
+    },
+    {
+      "state": "VA",
+      "zip": "20101",
+      "id": "epa-echo:110005287634",
+      "label": "tomorrow",
+      "apiElapsedMs": 1501.2590110000165,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1501.2435609999811,
+          "sqlMs": 869.2352600000158,
+          "sqlStatements": 1,
+          "sqlBytes": 18491,
+          "artifactRequests": 39,
+          "artifactBytes": 28803914,
+          "artifactLocalGetMs": 218.5186030001496,
+          "artifactReplayDecodeHashMs": 109.80476800003089
+        }
+      ],
+      "apiTotalRows": 4256,
+      "recordId": "epa-echo:110005287634",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110005287634",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "71f1908b017797a9f9b2e48d8b153e6ad8ee69eee352e61a15211be0b157f81e"
+    },
+    {
+      "state": "GU",
+      "zip": "96540",
+      "id": "epa-echo:110071726902",
+      "label": "tomorrow",
+      "apiElapsedMs": 572.9469180000015,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 572.9351409999945,
+          "sqlMs": 545.2592379999987,
+          "sqlStatements": 1,
+          "sqlBytes": 9670,
+          "artifactRequests": 3,
+          "artifactBytes": 1173356,
+          "artifactLocalGetMs": 7.763195999985328,
+          "artifactReplayDecodeHashMs": 3.27908499998739
+        }
+      ],
+      "apiTotalRows": 790,
+      "recordId": "epa-echo:110071726902",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071726902",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "ca3ff2a03de9296781d0a851b3ef1305fcc3656acffa8d8e66352146c685d2f6"
+    },
+    {
+      "state": "PA",
+      "zip": "15001",
+      "id": "epa-echo:110007797134",
+      "label": "tomorrow",
+      "apiElapsedMs": 912.9898669999966,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 912.9713570000022,
+          "sqlMs": 543.4394319999847,
+          "sqlStatements": 1,
+          "sqlBytes": 14558,
+          "artifactRequests": 23,
+          "artifactBytes": 15949024,
+          "artifactLocalGetMs": 121.94100000002072,
+          "artifactReplayDecodeHashMs": 69.53155700003845
+        }
+      ],
+      "apiTotalRows": 2946,
+      "recordId": "epa-echo:110007797134",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110007797134",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "74897621bcc68329b1d7c28495082fc8d915d49658dcc5933f353e13883884e0"
+    },
+    {
+      "state": "NV",
+      "zip": "89001",
+      "id": "epa-echo:110049178698",
+      "label": "tomorrow",
+      "apiElapsedMs": 562.2544929999858,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 562.2402069999953,
+          "sqlMs": 548.5683029999782,
+          "sqlStatements": 1,
+          "sqlBytes": 9668,
+          "artifactRequests": 3,
+          "artifactBytes": 29844,
+          "artifactLocalGetMs": 6.946213000017451,
+          "artifactReplayDecodeHashMs": 0.2679379999754019
+        }
+      ],
+      "apiTotalRows": 9,
+      "recordId": "epa-echo:110049178698",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110049178698",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "1ddf4b6bf8a00bdee396ef23f4f613c136a642dcfee85554cb04796641acb75b"
+    },
+    {
+      "state": "WY",
+      "zip": "82001",
+      "id": "epa-echo:110010732396",
+      "label": "tomorrow",
+      "apiElapsedMs": 598.7621079999954,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 598.74994899999,
+          "sqlMs": 499.4315270000079,
+          "sqlStatements": 1,
+          "sqlBytes": 11881,
+          "artifactRequests": 12,
+          "artifactBytes": 6225727,
+          "artifactLocalGetMs": 27.314496999955736,
+          "artifactReplayDecodeHashMs": 17.83886999997776
+        }
+      ],
+      "apiTotalRows": 780,
+      "recordId": "epa-echo:110010732396",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110010732396",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "edcd354423fc73bd5cc5bb201e08e5de01bb729223277ba7f35701069e300c34"
+    },
+    {
+      "state": "NH",
+      "zip": "03031",
+      "id": "epa-echo:110072001702",
+      "label": "tomorrow",
+      "apiElapsedMs": 1248.8449630000105,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1248.7951950000133,
+          "sqlMs": 598.8909219999914,
+          "sqlStatements": 1,
+          "sqlBytes": 16288,
+          "artifactRequests": 30,
+          "artifactBytes": 33069494,
+          "artifactLocalGetMs": 196.2164809999813,
+          "artifactReplayDecodeHashMs": 109.64823499988415
+        }
+      ],
+      "apiTotalRows": 7413,
+      "recordId": "epa-echo:110072001702",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072001702",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "6fca769aa31a7981511c2caa869427692cf433188f65e2d26ea981d42854d7b5"
+    },
+    {
+      "state": "RI",
+      "zip": "02802",
+      "id": "epa-echo:110007825684",
+      "label": "tomorrow",
+      "apiElapsedMs": 1684.8239749999775,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1684.8065750000242,
+          "sqlMs": 545.9304769999871,
+          "sqlStatements": 1,
+          "sqlBytes": 22667,
+          "artifactRequests": 56,
+          "artifactBytes": 55105599,
+          "artifactLocalGetMs": 387.38765600009356,
+          "artifactReplayDecodeHashMs": 184.88860299999942
+        }
+      ],
+      "apiTotalRows": 10172,
+      "recordId": "epa-echo:110007825684",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110007825684",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "06a1ed6594537bf782327c798e36d8039cda6129d3d2952976ffd7e9efe3b99c"
+    },
+    {
+      "state": "IL",
+      "zip": "60001",
+      "id": "epa-echo:110006168244",
+      "label": "tomorrow",
+      "apiElapsedMs": 1235.3670090000087,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1235.3510060000117,
+          "sqlMs": 724.2755940000061,
+          "sqlStatements": 1,
+          "sqlBytes": 14814,
+          "artifactRequests": 24,
+          "artifactBytes": 15263762,
+          "artifactLocalGetMs": 174.8574310000986,
+          "artifactReplayDecodeHashMs": 83.29328100004932
+        }
+      ],
+      "apiTotalRows": 2544,
+      "recordId": "epa-echo:110006168244",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110006168244",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "8e2140ee01db1b5002a890227bf3934c546b49104dcecd237f748e2d1e8eb721"
+    },
+    {
+      "state": "IA",
+      "zip": "50001",
+      "id": "epa-echo:110011726711",
+      "label": "tomorrow",
+      "apiElapsedMs": 757.4672460000147,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 757.4562999999907,
+          "sqlMs": 652.4097879999899,
+          "sqlStatements": 1,
+          "sqlBytes": 11383,
+          "artifactRequests": 10,
+          "artifactBytes": 6062176,
+          "artifactLocalGetMs": 32.26544899996952,
+          "artifactReplayDecodeHashMs": 17.097161999961827
+        }
+      ],
+      "apiTotalRows": 265,
+      "recordId": "epa-echo:110011726711",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110011726711",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "6263b82d8fbd6bf4e8db8cfb734d533d27e640b138ac0727a3ef5235943e943f"
+    },
+    {
+      "state": "AR",
+      "zip": "71601",
+      "id": "epa-echo:110040755439",
+      "label": "tomorrow",
+      "apiElapsedMs": 755.20026100002,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 755.1862010000041,
+          "sqlMs": 712.2030659999873,
+          "sqlStatements": 1,
+          "sqlBytes": 10415,
+          "artifactRequests": 6,
+          "artifactBytes": 1555781,
+          "artifactLocalGetMs": 16.243159000005107,
+          "artifactReplayDecodeHashMs": 4.924125000019558
+        }
+      ],
+      "apiTotalRows": 340,
+      "recordId": "epa-echo:110040755439",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110040755439",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "b13a266ec0d8caed3d56cc8b522a6257eedb34320453a2dbf95340060dcabcc5"
+    },
+    {
+      "state": "WI",
+      "zip": "53001",
+      "id": "epa-echo:110013072968",
+      "label": "tomorrow",
+      "apiElapsedMs": 965.4858789999853,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 965.4670530000003,
+          "sqlMs": 571.534707999992,
+          "sqlStatements": 1,
+          "sqlBytes": 13607,
+          "artifactRequests": 19,
+          "artifactBytes": 15693405,
+          "artifactLocalGetMs": 175.14055599999847,
+          "artifactReplayDecodeHashMs": 53.720319000130985
+        }
+      ],
+      "apiTotalRows": 940,
+      "recordId": "epa-echo:110013072968",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110013072968",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "20276e6c81a18f2be3f07bb56b671b1a5e2ed510deb3df1f21812423e6bd0969"
+    },
+    {
+      "state": "NC",
+      "zip": "27006",
+      "id": "epa-echo:110072323701",
+      "label": "tomorrow",
+      "apiElapsedMs": 1242.199408000015,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1242.185394,
+          "sqlMs": 642.7063619999972,
+          "sqlStatements": 1,
+          "sqlBytes": 11880,
+          "artifactRequests": 12,
+          "artifactBytes": 9513637,
+          "artifactLocalGetMs": 101.2500660000951,
+          "artifactReplayDecodeHashMs": 42.20110000006389
+        }
+      ],
+      "apiTotalRows": 1521,
+      "recordId": "epa-echo:110072323701",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072323701",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "60f17367cfe913e7851ca5cde0c0f0a328856b04b11eeb75217ece76da0bed33"
+    },
+    {
+      "state": "AL",
+      "zip": "35004",
+      "id": "epa-echo:110070866423",
+      "label": "tomorrow",
+      "apiElapsedMs": 840.8792720000201,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 840.8645639999886,
+          "sqlMs": 580.9311160000216,
+          "sqlStatements": 1,
+          "sqlBytes": 13583,
+          "artifactRequests": 19,
+          "artifactBytes": 16209540,
+          "artifactLocalGetMs": 81.18229900006554,
+          "artifactReplayDecodeHashMs": 44.25581399994553
+        }
+      ],
+      "apiTotalRows": 2422,
+      "recordId": "epa-echo:110070866423",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070866423",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "cf041a6861177bc3e505d483fe877dc3d833b2a92089d7e322266a068ae2c0ec"
+    },
+    {
+      "state": "NM",
+      "zip": "86515",
+      "id": "epa-echo:110032620885",
+      "label": "tomorrow",
+      "apiElapsedMs": 546.777762999991,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 546.7630739999877,
+          "sqlMs": 499.99940399997286,
+          "sqlStatements": 1,
+          "sqlBytes": 12109,
+          "artifactRequests": 13,
+          "artifactBytes": 1478600,
+          "artifactLocalGetMs": 18.608868000039365,
+          "artifactReplayDecodeHashMs": 3.8994170000078157
+        }
+      ],
+      "apiTotalRows": 284,
+      "recordId": "epa-echo:110032620885",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110032620885",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a352af60696fcfec9624e392abd59dd99087afe76643dd2fc848e93d800aa781"
+    },
+    {
+      "state": "OH",
+      "zip": "43001",
+      "id": "epa-echo:110070624589",
+      "label": "tomorrow",
+      "apiElapsedMs": 738.5623190000188,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 738.5473669999919,
+          "sqlMs": 481.22042200001306,
+          "sqlStatements": 1,
+          "sqlBytes": 13845,
+          "artifactRequests": 20,
+          "artifactBytes": 19793291,
+          "artifactLocalGetMs": 78.01789499996812,
+          "artifactReplayDecodeHashMs": 44.0663399999612
+        }
+      ],
+      "apiTotalRows": 1046,
+      "recordId": "epa-echo:110070624589",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070624589",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "8e8b4b6e11fc9c86ce5d42ce35ddb867904e72faeb34e60ca7d6a6c97d364af1"
+    },
+    {
+      "state": "PR",
+      "zip": "00601",
+      "id": "epa-echo:110052483273",
+      "label": "tomorrow",
+      "apiElapsedMs": 545.1593839999987,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 545.1406159999897,
+          "sqlMs": 488.0476109999872,
+          "sqlStatements": 1,
+          "sqlBytes": 9918,
+          "artifactRequests": 4,
+          "artifactBytes": 2786779,
+          "artifactLocalGetMs": 11.328347999980906,
+          "artifactReplayDecodeHashMs": 7.685249999980442
+        }
+      ],
+      "apiTotalRows": 947,
+      "recordId": "epa-echo:110052483273",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110052483273",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "66a272308d0b65a4a019790f00de1744e4d4ebc5aa4736641d58fa694f2b28fd"
+    },
+    {
+      "state": "HI",
+      "zip": "96701",
+      "id": "epa-echo:110039083997",
+      "label": "tomorrow",
+      "apiElapsedMs": 718.3836849999789,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 718.2971229999966,
+          "sqlMs": 502.34707400001935,
+          "sqlStatements": 1,
+          "sqlBytes": 11874,
+          "artifactRequests": 12,
+          "artifactBytes": 8940966,
+          "artifactLocalGetMs": 75.1410549999855,
+          "artifactReplayDecodeHashMs": 32.62755399997695
+        }
+      ],
+      "apiTotalRows": 5102,
+      "recordId": "epa-echo:110039083997",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110039083997",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "db9484ac77dffdee32b9faf860943432121c872b565806f2d35a527a29a7d913"
+    },
+    {
+      "state": "UT",
+      "zip": "82930",
+      "id": "epa-echo:110071951413",
+      "label": "tomorrow",
+      "apiElapsedMs": 640.2756349999981,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 640.261445000011,
+          "sqlMs": 593.5533099999884,
+          "sqlStatements": 1,
+          "sqlBytes": 10887,
+          "artifactRequests": 8,
+          "artifactBytes": 826248,
+          "artifactLocalGetMs": 20.02296700005536,
+          "artifactReplayDecodeHashMs": 5.116191000008257
+        }
+      ],
+      "apiTotalRows": 195,
+      "recordId": "epa-echo:110071951413",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071951413",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "a941733355d83aafd73bd024fade75492434e53a0c916dc31c8fb4b70a4c639b"
+    },
+    {
+      "state": "ND",
+      "zip": "58001",
+      "id": "epa-echo:110072161540",
+      "label": "tomorrow",
+      "apiElapsedMs": 725.3478630000027,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 725.3270629999752,
+          "sqlMs": 604.4812749999983,
+          "sqlStatements": 1,
+          "sqlBytes": 11626,
+          "artifactRequests": 11,
+          "artifactBytes": 3095240,
+          "artifactLocalGetMs": 61.79348600003868,
+          "artifactReplayDecodeHashMs": 9.58617699999013
+        }
+      ],
+      "apiTotalRows": 167,
+      "recordId": "epa-echo:110072161540",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072161540",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "88d0b9c5144e3544f0ce8f689dc83872425621e808f3327784a274d1557b6ac9"
+    },
+    {
+      "state": "MN",
+      "zip": "55001",
+      "id": "epa-echo:110008739641",
+      "label": "tomorrow",
+      "apiElapsedMs": 1695.4395530000038,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1695.4241420000035,
+          "sqlMs": 636.011817999999,
+          "sqlStatements": 1,
+          "sqlBytes": 20944,
+          "artifactRequests": 49,
+          "artifactBytes": 43665940,
+          "artifactLocalGetMs": 347.1681620000745,
+          "artifactReplayDecodeHashMs": 173.95966499994393
+        }
+      ],
+      "apiTotalRows": 5658,
+      "recordId": "epa-echo:110008739641",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110008739641",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "8167dd44c4c839650f73685e23522aa8d1ea41068105e373058de57a1f4edc6c"
+    },
+    {
+      "state": "NE",
+      "zip": "68001",
+      "id": "epa-echo:110041346638",
+      "label": "tomorrow",
+      "apiElapsedMs": 526.1150020000059,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 526.104072999995,
+          "sqlMs": 492.3850499999826,
+          "sqlStatements": 1,
+          "sqlBytes": 10648,
+          "artifactRequests": 7,
+          "artifactBytes": 1614157,
+          "artifactLocalGetMs": 8.679529999993974,
+          "artifactReplayDecodeHashMs": 4.577507000009064
+        }
+      ],
+      "apiTotalRows": 192,
+      "recordId": "epa-echo:110041346638",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110041346638",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "df3f8c0fc33142a994a8a6e0f627bd4f8f0b07845cde4600d10448ead75cab6a"
+    },
+    {
+      "state": "WA",
+      "zip": "98001",
+      "id": "epa-echo:110064091129",
+      "label": "tomorrow",
+      "apiElapsedMs": 1062.4672300000093,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1062.4484900000098,
+          "sqlMs": 505.44827399999485,
+          "sqlStatements": 1,
+          "sqlBytes": 18229,
+          "artifactRequests": 38,
+          "artifactBytes": 33690574,
+          "artifactLocalGetMs": 160.81013600010192,
+          "artifactReplayDecodeHashMs": 94.81422799982829
+        }
+      ],
+      "apiTotalRows": 7999,
+      "recordId": "epa-echo:110064091129",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110064091129",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "7ca388b2a120c278d5bd8eeb586b9804366be7ba50f9f2ddc0e76984315f686b"
+    },
+    {
+      "state": "VI",
+      "zip": "00801",
+      "id": "epa-echo:110001915385",
+      "label": "tomorrow",
+      "apiElapsedMs": 548.7471000000078,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 548.7321219999867,
+          "sqlMs": 482.5553190000064,
+          "sqlStatements": 1,
+          "sqlBytes": 10166,
+          "artifactRequests": 5,
+          "artifactBytes": 1633187,
+          "artifactLocalGetMs": 15.594338000024436,
+          "artifactReplayDecodeHashMs": 9.665554000035627
+        }
+      ],
+      "apiTotalRows": 956,
+      "recordId": "epa-echo:110001915385",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110001915385",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "d265e589f2d0d36370f0f5ab34d7e43013de0d011f6131955ba8ef13a24d07e5"
+    },
+    {
+      "state": "AS",
+      "zip": "96799",
+      "id": "epa-echo:110071729677",
+      "label": "tomorrow",
+      "apiElapsedMs": 546.40169899998,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 546.390206000011,
+          "sqlMs": 525.5875409999862,
+          "sqlStatements": 1,
+          "sqlBytes": 9914,
+          "artifactRequests": 4,
+          "artifactBytes": 686097,
+          "artifactLocalGetMs": 6.056553000002168,
+          "artifactReplayDecodeHashMs": 3.4052620000438765
+        }
+      ],
+      "apiTotalRows": 232,
+      "recordId": "epa-echo:110071729677",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071729677",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5f8cf84c0c3899760bbcb26070d6203dec251b04772cd4f1cc99638e813fe748"
+    },
+    {
+      "state": "KY",
+      "zip": "40003",
+      "id": "epa-echo:110072085909",
+      "label": "tomorrow",
+      "apiElapsedMs": 710.8985590000229,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 710.883176000003,
+          "sqlMs": 464.41114499999094,
+          "sqlStatements": 1,
+          "sqlBytes": 12362,
+          "artifactRequests": 14,
+          "artifactBytes": 9065377,
+          "artifactLocalGetMs": 142.66166699992027,
+          "artifactReplayDecodeHashMs": 27.330820000031963
+        }
+      ],
+      "apiTotalRows": 998,
+      "recordId": "epa-echo:110072085909",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110072085909",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "c562c7647c2417e6aa386735ae819757bb6944d0be4cd08c0c21cf02e6af5639"
+    },
+    {
+      "state": "DC",
+      "zip": "20001",
+      "id": "epa-echo:110071345964",
+      "label": "tomorrow",
+      "apiElapsedMs": 1435.5818290000025,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1435.5412959999812,
+          "sqlMs": 486.49660199999926,
+          "sqlStatements": 1,
+          "sqlBytes": 25337,
+          "artifactRequests": 67,
+          "artifactBytes": 56116246,
+          "artifactLocalGetMs": 352.27850300015416,
+          "artifactReplayDecodeHashMs": 152.1769619998813
+        }
+      ],
+      "apiTotalRows": 13386,
+      "recordId": "epa-echo:110071345964",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071345964",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "b057b6f0c00674914e7dc440c0f19b866c297d8e45911dfcf9bb2a59e424d53f"
+    },
+    {
+      "state": "MA",
+      "zip": "01001",
+      "id": "epa-echo:110003501700",
+      "label": "tomorrow",
+      "apiElapsedMs": 936.1022050000029,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 936.0853059999936,
+          "sqlMs": 480.05010199997923,
+          "sqlStatements": 1,
+          "sqlBytes": 17517,
+          "artifactRequests": 35,
+          "artifactBytes": 31045255,
+          "artifactLocalGetMs": 140.99740200006636,
+          "artifactReplayDecodeHashMs": 76.70541400002548
+        }
+      ],
+      "apiTotalRows": 4576,
+      "recordId": "epa-echo:110003501700",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110003501700",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "adf25c914bde836c518c5821cb97c487943bc9a943a6ac76d07f7362bb4094fd"
+    },
+    {
+      "state": "VT",
+      "zip": "05001",
+      "id": "epa-echo:110005294680",
+      "label": "tomorrow",
+      "apiElapsedMs": 621.0412639999995,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 621.0089560000051,
+          "sqlMs": 494.3070149999985,
+          "sqlStatements": 1,
+          "sqlBytes": 12383,
+          "artifactRequests": 14,
+          "artifactBytes": 6864496,
+          "artifactLocalGetMs": 45.499498000048334,
+          "artifactReplayDecodeHashMs": 18.685139999899548
+        }
+      ],
+      "apiTotalRows": 1573,
+      "recordId": "epa-echo:110005294680",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110005294680",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "47ab7877a63c49ae733741aca7f5ab8a6df488270f511f79879db20a5a2c5341"
+    },
+    {
+      "state": "KS",
+      "zip": "66002",
+      "id": "epa-echo:110039404944",
+      "label": "tomorrow",
+      "apiElapsedMs": 737.2095780000091,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 737.193030000024,
+          "sqlMs": 516.4781660000153,
+          "sqlStatements": 1,
+          "sqlBytes": 13590,
+          "artifactRequests": 19,
+          "artifactBytes": 13486122,
+          "artifactLocalGetMs": 67.60546599997906,
+          "artifactReplayDecodeHashMs": 38.08615000004647
+        }
+      ],
+      "apiTotalRows": 272,
+      "recordId": "epa-echo:110039404944",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110039404944",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "f0d5d52ae647fde18a0abc720ea84e8f225c222dd1bdfc208a68460472de470a"
+    },
+    {
+      "state": "CO",
+      "zip": "80001",
+      "id": "epa-echo:110041909227",
+      "label": "tomorrow",
+      "apiElapsedMs": 1544.9233179999865,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1544.9051899999904,
+          "sqlMs": 500.190466,
+          "sqlStatements": 1,
+          "sqlBytes": 24599,
+          "artifactRequests": 64,
+          "artifactBytes": 58958680,
+          "artifactLocalGetMs": 321.213517999975,
+          "artifactReplayDecodeHashMs": 171.3245300000126
+        }
+      ],
+      "apiTotalRows": 16058,
+      "recordId": "epa-echo:110041909227",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110041909227",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5ce937d288b847748499f510eb712527424c19ac36cd4fdd735726541462148e"
+    },
+    {
+      "state": "IN",
+      "zip": "46001",
+      "id": "epa-echo:110070108760",
+      "label": "tomorrow",
+      "apiElapsedMs": 745.1894279999542,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 745.1239879999775,
+          "sqlMs": 665.0971990000107,
+          "sqlStatements": 1,
+          "sqlBytes": 10649,
+          "artifactRequests": 7,
+          "artifactBytes": 3769136,
+          "artifactLocalGetMs": 28.26326999993762,
+          "artifactReplayDecodeHashMs": 13.291831000009552
+        }
+      ],
+      "apiTotalRows": 1323,
+      "recordId": "epa-echo:110070108760",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110070108760",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "5255326c53eb7977d035d50c4680fa3adcab40004e8faf6e63d851c8b9a691dc"
+    }
+  ],
+  "failures": [],
+  "database": {
+    "read": 179536363,
+    "written": 33942387,
+    "requests": 154,
+    "statements": 169,
+    "largestRead": 33303217,
+    "largestWrite": 33227575,
+    "databasePeakRssBytes": 0,
+    "databaseElapsedMs": 81081.13192699998,
+    "largestLatencyMs": 2570.3813100000007,
+    "databaseProxyPeakRssBytes": 0
+  },
+  "originalStatus": "RUNNING",
+  "interrupted": {
+    "reason": "Stopped after real dense-place normal GET deadlines failed; replaced by bounded cursor reader proof. Remaining clocks were not completed in this obsolete eager reader run.",
+    "measuredFailures": [
+      {
+        "state": "CA",
+        "zip": "90001",
+        "label": "initial",
+        "pageMs": 17693.285977000007,
+        "sqlMs": 541.0564349999913
+      },
+      {
+        "state": "NJ",
+        "zip": "07001",
+        "label": "initial",
+        "pageMs": 3974.596365999998,
+        "sqlMs": 584.2803510000085
+      },
+      {
+        "state": "CA",
+        "zip": "90001",
+        "label": "tomorrow",
+        "pageMs": 8840.457204000006,
+        "sqlMs": 611.1510230000131
+      },
+      {
+        "state": "NJ",
+        "zip": "07001",
+        "label": "tomorrow",
+        "pageMs": 4730.216191999993,
+        "sqlMs": 496.3736220000137
+      }
+    ]
+  }
+}

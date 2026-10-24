@@ -214,6 +214,8 @@ export interface Meeting {
    * location. A virtual meeting is never given its body's home coordinates.
    */
   location: MeetingLocation | null;
+  /** Resolved and saved by the publisher. An office pin does not change where a reader can attend. */
+  mapPin?: import("../meetings/pin-location.ts").MeetingPinLocation;
   /**
    * Present exactly when the meeting is held online. Set together with a null
    * `location` and never with `venueGap`.

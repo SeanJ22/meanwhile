@@ -29,6 +29,45 @@ export class CivicPayloadParts {
   private cachedBytes = 0;
   constructor(io: CivicPayloadPartIO) { this.io = io; }
 
+  async node(value: unknown): Promise<unknown> {
+    if (!isCivicPayloadPart(value)) return value;
+    const part = (await this.read([value.$civicPayloadPart]))[0];
+    if (!part) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+    return part.payload;
+  }
+
+  async path(value: unknown, keys: readonly string[]): Promise<unknown> {
+    for (const key of keys) {
+      const node = await this.node(value) as Node;
+      const object = node?.kind === "object" ? node.value : node;
+      value = (object as Record<string, unknown>)?.[key];
+    }
+    return value;
+  }
+
+  async *rows(value: unknown): AsyncGenerator<unknown> {
+    const node = await this.node(value) as Node;
+    if (Array.isArray(node)) { yield* node; return; }
+    if (node?.kind !== "array") throw new Error("CIVIC_PAYLOAD_ARRAY_INVALID");
+    const order = JSON.parse(await this.load(node.order) as string) as number[];
+    const remaining = new Map<number, number>();
+    for (const group of order) remaining.set(group, (remaining.get(group) ?? 0) + 1);
+    const held = new Map<number, { rows: unknown[]; position: number }>();
+    try {
+      for (const group of order) {
+        let chunk = held.get(group);
+        if (!chunk) {
+          chunk = { rows: await this.load(node.groups![group]) as unknown[], position: 0 };
+          this.cached.clear(); this.cachedBytes = 0;
+          held.set(group, chunk);
+        }
+        yield chunk.rows[chunk.position++];
+        remaining.set(group, remaining.get(group)! - 1);
+        if (remaining.get(group) === 0) held.delete(group);
+      }
+    } finally { this.cached.clear(); this.cachedBytes = 0; }
+  }
+
   private remember(part: Part): void {
     const size = civicPayloadBytes(part.payload);
     if (size > CACHED_PART_BYTES / 8 || this.cached.has(part.hash)) return;
@@ -120,7 +159,7 @@ export class CivicPayloadParts {
       pending.delete(hash);
       visiting.delete(hash);
     };
-    const resolve = async (values: readonly unknown[]): Promise<void> => {
+    const resolve = async (values: readonly unknown[]): Promise<boolean> => {
       const hashes = [...values.reduce<Set<string>>((into, value) => refsIn(value, into), new Set())];
       for (let at = 0; at < hashes.length; at += READ_BATCH) {
         const wanted = hashes.slice(at, at + READ_BATCH), missing = wanted.filter(hash => !decoded.has(hash) && !pending.has(hash));
@@ -136,8 +175,9 @@ export class CivicPayloadParts {
         }
         for (const hash of wanted) await resolvePart(hash);
       }
+      return hashes.length > 0;
     };
-    try { await resolve([input]); return build(input); }
+    try { return await resolve([input]) ? build(input) : input; }
     finally {
       pending.clear(); decoded.clear(); visiting.clear();
       if (preloaded) for (const hash of Object.keys(preloaded)) delete preloaded[hash];

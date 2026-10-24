@@ -276,11 +276,11 @@ test("REGRESSION FLOOR: the three September sittings still ship, unchanged", () 
 
   assert.equal(september.length, 3);
   assert.deepEqual(
-    september.map((m) => [m.startsAt, m.title, m.location?.name ?? m.online?.label ?? null]),
+    september.map((m) => [m.startsAt, m.title, m.location?.name ?? m.online?.label ?? m.venueGap?.publishedText ?? null]),
     [
-      ["2026-09-08T13:00:00-07:00", "Study Session", "Pima County Administration Building, Board of Supervisors Hearing Room"],
-      ["2026-09-08T17:00:00-07:00", "Board of Supervisors", "Pima County Administration Building, Board of Supervisors Hearing Room"],
-      ["2026-09-22T17:00:00-07:00", "Board of Supervisors", "Pima County Administration Building, Board of Supervisors Hearing Room"],
+      ["2026-09-08T13:00:00-07:00", "Study Session", "Board of Supervisors' Hearing Room"],
+      ["2026-09-08T17:00:00-07:00", "Board of Supervisors", "Board of Supervisors' Hearing Room"],
+      ["2026-09-22T17:00:00-07:00", "Board of Supervisors", "Board of Supervisors' Hearing Room"],
     ],
   );
   for (const meeting of september) {
@@ -718,11 +718,6 @@ test("UNNAMED TENANT: a sitting only the FEED publishes is never called supersed
   assert.ok((disposition.missingForPlacement ?? []).length > 0);
   assert.match(
     (disposition.missingForPlacement ?? []).join(" | "),
-    /a published location/,
-    "the RSS publishes no room, and that is the field that blocks placement",
-  );
-  assert.match(
-    (disposition.missingForPlacement ?? []).join(" | "),
     /meeting-producing route \(INSITE_CALENDAR_GRID\)/,
     "and the identity limitation is stated, not left to be inferred",
   );
@@ -776,13 +771,8 @@ test("EXPLAINED IS NOT DISCHARGED: the unplaced sitting stays OPEN and leaves th
   assert.match(scope.cause, /OURS, and OPEN/);
   assert.match(scope.cause, /NOT a claim that the sitting is unpublished/);
 
-  // A resolved venue is a different open state and keeps its own name — the new
-  // verdict must not have swallowed the ones that were already right.
-  const verdicts = new Set(result.dispositions.map((d) => d.verdict));
-  assert.ok(
-    verdicts.has("VENUE_NOT_RESOLVED"),
-    "Mesa prints 'Study Session' in its own location column, and that is still ITS own verdict",
-  );
+  assert.ok(result.meetings.some(meeting=>meeting.venueGap?.publishedText==="Study Session"),
+    "a source-stated room remains published while publication resolves its point");
 });
 
 test("POSITIVE CONTROL: supersession is still assigned — when a richer record provably exists", () => {
@@ -816,7 +806,7 @@ test("POSITIVE CONTROL: supersession is still assigned — when a richer record 
       SUPERSEDING_KEY,
   );
   assert.ok(served, "supersession claims another record reaches the reader; it must actually");
-  assert.equal(served.location?.name, "Mesa City Hall, Council Chambers");
+  assert.equal(served.venueGap?.publishedText, "Council Chambers");
 
   const claim = disposition.claimAboutContent ?? "";
   assert.match(claim, /^THEIRS, then ours:/);

@@ -204,6 +204,7 @@ export function updateMarkerIcon(
 
   element.dataset.concluded = String(concluded);
   element.dataset.venueKind = venue.kind ?? "PHYSICAL";
+  element.dataset.pinBasis = venue.pinBasis ?? "MEETING";
   element.dataset.meetingIds = JSON.stringify(venue.meetings.map(meeting => meeting.id));
   element.dataset.joinUrls = JSON.stringify(venue.kind === "ONLINE_ONLY" ? venue.meetings.map(meeting => meeting.online?.joinUrl ?? null) : []);
 

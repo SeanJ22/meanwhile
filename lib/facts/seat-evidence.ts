@@ -4,13 +4,14 @@ import { isOfficeTitle, looksLikeNameCell } from "../hunt/roster-page.ts";
 
 // A supervisor of a kind of work is staff; county supervisors, a Town Supervisor and numbered supervisory districts are seats.
 const JOB_SUPERVISOR = "(?:maintenance|road|roads|highway|street|streets|bridge|public works|works|water|sewer|wastewater|sanitation|solid waste|landfill|utilit(?:y|ies)|park|parks|recreation|facilit(?:y|ies)|building|grounds|cemetery|fleet|equipment|shop|garage|transportation|bus|custodial|food service|nutrition|cafeteria|library|operations|field|crew|shift|plant|program|department|dept|office|it|technology|payroll|billing|collections|records|dispatch|animal control|code enforcement|inspection|election|elections|youth|school|district office)\\s+supervisors?";
-const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|purchasing|procurement|administrative head|teacher|principal|counselor|custodian|paraprofessional|specialist|technician|captain|officer|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
+const STAFF_TITLE = new RegExp(`\\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff|purchasing|procurement|administrative head|teacher|principal|counselor|custodian|paraprofessional|social worker|nurse|psychologist|librarian|specialist|technician|captain|officer|${JOB_SUPERVISOR}|supervisors? of (?:maintenance|roads?|highways?|streets?|public works|operations|parks))\\b`, "i");
 const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
 const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard (?:members?|clerk|secretary|treasurer)\b|\bmember of the board\b/i;
-const SEAT_NUMBER = /\b(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?\d+|seat\s+[a-f]|at[- ]large)\b(?![\w@])/i;
+// A seat number sits on its word's own line and has one or two digits: "School District 145" is a district's name, "District\n722 Mill Bay Rd." an address.
+const SEAT_NUMBER = /\b(?:(?<!school[ \t])(?:district|ward|seat|position|place|zone)[ \t]*(?:no\.?[ \t]*)?\d{1,2}(?!\d)|seat[ \t]+[a-f]|at[- ]large)\b(?![\w@])/i;
 const TERM_LINE = /\bterms?\s*(?:expires?|ends?|:|\(|[-–]\s*\d{1,2}\/\d{2,4})|\bterm of office\b|\b(?:elected|appointed) (?:to|in|for) /i;
-const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)\s*(?:no\.?\s*)?\d+|seat\s+[a-f])\b(?![\w@])/i;
-const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
+const SEAT_MARKER = /\b(?:(?:seat|position|place|zone|ward)[ \t]*(?:no\.?[ \t]*)?\d{1,2}(?!\d)|seat[ \t]+[a-f])\b(?![\w@])/i;
+const WARD = /\b(?:ward|district)[ \t]*(?:no\.?[ \t]*)?(\d{1,2})(?!\d)\b/i;
 const ROSTER_HEADER = /\bname\s+seat\s+seat expires\b|\bdistrict\s+member\b/i;
 
 /** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
@@ -58,6 +59,14 @@ const FORMER = /\b(former|past|previous|late|retired|deceased)\s+(?:\w+\s+){0,2}
 /** Read this person's seat from a contiguous passage of the same saved page. A page-wide menu is not a person's title. */
 export function seatQuoteOnPage(page: string, name: string, bodyId: string, original: string): string | null {
   if (!looksLikeNameCell(name)) return null;
+  // A library's, hospital's or museum's own board page seats nobody on another body ("Board of Trustees – Gypsy Jackson Memorial Library" is not Homedale's council).
+  const otherBody = /\b(library|hospital|museum|foundation)\b/i.exec(visibleText(/<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(page)?.[1] ?? ""))?.[1];
+  if (otherBody && !bodyId.toLowerCase().includes(otherBody.toLowerCase())) return null;
+  // A name the page writes only inside a longer word ("<a>Brian Schneide</a>r") is not that person's name.
+  const last = (name.trim().split(/[\s-]+/).at(-1) ?? "").replace(/[^\p{L}]/gu, "");
+  // Inline markup joins letters on screen; any other tag separates them.
+  const glued = page.replace(/<\/?(?:a|span|b|strong|em|i|u|font|small|sup|sub|mark)\b[^>]*>/gi, "").replace(/<[^>]*>/g, " ");
+  if (last.length > 2 &&new RegExp(`${last}(?=\\p{L})`, "iu").test(glued) && !new RegExp(`${last}(?!\\p{L})`, "iu").test(glued)) return null;
   const text = visibleText(page), normalized = normalizeText(text);
   const hasName = (words: string) => boundedIndexOf(normalizeText(words).toLowerCase(), normalizeText(name).toLowerCase()) >= 0;
   const headings = [...page.matchAll(/<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi)]

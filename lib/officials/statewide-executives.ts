@@ -2,6 +2,7 @@ import type { SeatHolder } from "./lookup.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import { selectStatewideExecutives, statewideHolder } from "./statewide-selection.ts";
+import { photoForPerson } from "../photos/person.ts";
 
 /** Statewide elected executives, curated from each state's own site and attached by the state OCD prefix, since no district elects them. */
 
@@ -403,7 +404,7 @@ export function statewideExecutivesFor(ocdIds: string[]): SeatHolder[] {
   const holders: SeatHolder[] = [];
   for (const executive of currentStatewideExecutives()) {
     if (!states.has(executive.stateOcdId)) continue;
-    holders.push(statewideHolder(executive));
+    holders.push(statewideHolder(executive, photoForPerson));
   }
   return holders;
 }

@@ -1,3 +1,5 @@
+import { ensureGoverningBody } from "../core/door.ts";
+export { ensureGoverningBody } from "../core/door.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -289,7 +291,7 @@ interface GovernmentRef { readonly id: string; readonly state: string | null; re
 export interface BodyRef { readonly id: string; readonly name: string; readonly state: string | null; readonly parentId: string | null }
 
 /** The government a finding is about, with the place it sits on; the first of the given ids that is one. A dependent school system the fact store lacks is added on its district's place when that place is held. */
-async function governmentAt(query: Query, ids: readonly (string | null)[]): Promise<GovernmentRef | null> {
+export async function governmentAt(query: Query, ids: readonly (string | null)[]): Promise<GovernmentRef | null> {
   for (const id of ids.flatMap(row => row ? [row.split("#")[0]!] : [])) {
     const [government] = await query(`SELECT g.id, g.name, g.state, g.parent_id FROM entity g JOIN entity p ON p.id = g.parent_id
       WHERE g.id = $1 AND g.kind = 'government' AND p.kind = 'place'`, [id]);
@@ -367,40 +369,7 @@ async function governmentContext(query: Query, id: string): Promise<GoverningCon
     school: /:(?:school|depschool):|school_district:|:nces:/.test(id), special: /:special:/.test(id), county: /:county:|\/county:[^/]+$/.test(id) };
 }
 
-/** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
-export async function ensureGoverningBody(query: Query, subjectId: string): Promise<BodyRef | null> {
-  const subject = await canonicalSubject(query, subjectId);
-  if (subject !== subjectId) {
-    const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [subject]);
-    if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
-  }
-  const { root } = splitSubject(subject);
-  const kind = /^[a-z]{2}:(city|county|special|school|depschool):/.exec(root)?.[1]
-    ?? (/^ocd-division\/.*\/school_district:[^/]+$/.test(root) ? "school" : /^ocd-division\/.*\/county:[^/]+$/.test(root) ? "county" : /^ocd-division\/.*\/place:[^/]+$/.test(root) ? "city" : undefined);
-  const government = kind ? await governmentAt(query, [root]) : null;
-  if (!kind || !government) return null;
-  const school = kind === "school" || kind === "depschool";
-  const name = `${government.name} ${school ? "school board" : "governing board"}`;
-  const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1 AND (id LIKE '%#governing' OR id LIKE '%#board') ORDER BY id LIMIT 1", [government.id]);
-  if (held) {
-    if (String(held.name).endsWith(" governing")) {
-      await query("UPDATE entity SET name=$2 WHERE id=$1 AND name=$3", [held.id, name, held.name]);
-      held.name = name;
-    }
-    await placeBody(query, String(held.id), government.placeId);
-    return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
-  }
-  const id = `${government.id}${school ? "#board" : "#governing"}`;
-  const bodyId = await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
-  if (bodyId !== id) {
-    const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [bodyId]);
-    return { id: bodyId, name: String(held!.name), state: held!.state as string | null, parentId: held!.parent_id as string | null };
-  }
-  await placeBody(query, bodyId, government.placeId);
-  return { id: bodyId, name, state: government.state, parentId: government.id };
-}
-
-async function placeBody(query: Query, id: string, place: string): Promise<void> {
+export async function placeBody(query: Query, id: string, place: string): Promise<void> {
   await query(`DELETE FROM entity_place WHERE entity_id = $1
     AND place_id ~ '${BARE_ROOT}'`, [id]);
   if (localPlace(place)) await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place]);

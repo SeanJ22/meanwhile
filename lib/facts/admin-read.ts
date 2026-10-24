@@ -1,13 +1,35 @@
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import type { ScoreboardRow } from "../../app/(admin)/_mw/admin-v6/model.ts";
+import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
+
+export interface FactDoorHour {
+  readonly state: string;
+  readonly hour: string;
+  readonly official: number | null;
+  readonly checked: number | null;
+}
 
 export interface FactStoreReading {
   readonly blanks: readonly { readonly stage: string; readonly reason: string; readonly n: number }[];
+  readonly hours?: readonly FactDoorHour[];
 }
 
-export async function readFactStore(query: ReadOnlyQuery): Promise<FactStoreReading> {
-  const [blanks] = await query([{text:`SELECT stage,reason,count(*)::int AS n FROM blank GROUP BY 1,2 ORDER BY 3 DESC LIMIT 50`,params:[]}]);
-  return { blanks: blanks!.map(r => ({stage:String(r.stage),reason:String(r.reason),n:Number(r.n)})) };
+export async function readFactStore(query: ReadOnlyQuery, now = new Date()): Promise<FactStoreReading> {
+  const [blanks, hours] = await query([
+    {text:`SELECT stage,reason,count(*)::int AS n FROM blank GROUP BY 1,2 ORDER BY 3 DESC LIMIT 50`,params:[]},
+    {text:`WITH started AS (SELECT min(hour) AS hour FROM count_hour WHERE step IN ('door_official','door_checked'))
+      SELECT regions.state,hours.hour,
+        CASE WHEN hours.hour >= (SELECT hour FROM started) THEN coalesce(sum(c.n) FILTER(WHERE c.step='door_official'),0)::text END AS official,
+        CASE WHEN hours.hour >= (SELECT hour FROM started) THEN coalesce(sum(c.n) FILTER(WHERE c.step='door_checked'),0)::text END AS checked
+      FROM unnest($1::text[]) AS regions(state)
+      CROSS JOIN generate_series(date_trunc('hour',$2::timestamptz)-interval '23 hours',date_trunc('hour',$2::timestamptz),interval '1 hour') AS hours(hour)
+      LEFT JOIN count_hour c ON c.state=regions.state AND c.hour=hours.hour AND c.step IN ('door_official','door_checked')
+      GROUP BY regions.state,hours.hour ORDER BY hours.hour DESC,regions.state`,
+      params:[[...REGISTRY_STATES.map(state => state.toLowerCase()), "system"],now.toISOString()]},
+  ]);
+  return { blanks: blanks!.map(r => ({stage:String(r.stage),reason:String(r.reason),n:Number(r.n)})),
+    hours: (hours ?? []).map(row => ({ state:String(row.state), hour:new Date(row.hour as string | Date).toISOString(),
+      official:row.official === null ? null : Number(row.official), checked:row.checked === null ? null : Number(row.checked) })) };
 }
 
 const STAGE_WORDS: Readonly<Record<string, string>> = {

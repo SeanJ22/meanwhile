@@ -243,7 +243,8 @@ test("only a changed live fact clears its state's answers after commit; confirma
   assert.equal((await publishClaim(tracked, claim(), clocks, NOW, { purge }) as { decision: string }).decision, "PUBLISH");
   assert.equal((await publishClaim(tracked, claim(), clocks, NOW, { purge }) as { decision: string }).decision, "CONFIRM");
   assert.deepEqual(purges, [["reader-state:AZ"]]);
-  assert.ok("blank" in await publishClaim(tracked, { ...claim(), quote: "not on the page" }, clocks, NOW, { purge }));
+  assert.ok("blank" in await publishClaim(tracked, { ...claim(), provenance: "NEWS",
+    copy: { ...claim().copy, finalUrl: "https://news.example/" }, quote: "not on the page" }, clocks, NOW, { purge }));
   const failing: FactDb = { transaction: work => db.transaction(async query => { await work(query); throw new Error("commit failed"); }) };
   await assert.rejects(publishClaim(failing, claim(), clocks, NOW, { purge }), /commit failed/);
   assert.equal(purges.length, 1);

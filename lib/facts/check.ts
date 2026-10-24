@@ -29,8 +29,9 @@ export interface CheckEntity {
 export interface Claim {
   readonly entity: CheckEntity;
   readonly fieldKind: FieldKind;
-  /** A campaign site describing anyone but itself is OTHER. */
   readonly provenance: Provenance;
+  /** The subject whose campaign or advocacy site this is, established during acquisition. */
+  readonly sourceSubjectId?: string;
   /** The value exactly as written on the page. */
   readonly valueText: string;
   readonly quote: string;
@@ -84,11 +85,11 @@ export function isOfficialUrl(url: string, entitySites: readonly string[]): bool
   return host === "gov" || host.endsWith(".gov") || entitySites.some(site => ownSite(url, site));
 }
 
-/** Judgment calls: matching one person across sources, an unofficial portrait, and anything a third party says about someone else. */
+/** Judgment calls: matching one person across sources and an unofficial portrait. */
 export function needsSecondSource(kind: FieldKind, provenance: Provenance, url: string): boolean {
   if (kind === "same_person_link") return true;
   if (kind === "portrait") return provenance !== "OFFICIAL" && provenance !== "CAMPAIGN" && provenance !== "OWNER" && hostOf(url) !== "commons.wikimedia.org";
-  return provenance === "OTHER";
+  return false;
 }
 
 function quoteHolds(copy: SavedCopy, quote: string, valueText: string, kind: FieldKind): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {

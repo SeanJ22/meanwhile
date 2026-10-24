@@ -33,12 +33,17 @@ interface CopyRow {
 
 /** One row per vault artifact: the key is the artifact id the vault resolves to its exact bytes. */
 async function saveCopy(query: Query, row: CopyRow): Promise<number> {
+  const key = `artifact:${row.artifactId}`;
+  const [existing] = await query("SELECT id FROM source_copy WHERE blob_key = $1", [key]);
+  if (existing) return Number(existing.id);
   const [saved] = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
-    ON CONFLICT (blob_key) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id`,
-  [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), `artifact:${row.artifactId}`,
+    ON CONFLICT (blob_key) DO NOTHING RETURNING id`,
+  [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), key,
     isArchive(row.finalUrl)]);
-  return Number(saved!.id);
+  if (saved) return Number(saved.id);
+  const [held] = await query("SELECT id FROM source_copy WHERE blob_key = $1", [key]);
+  return Number(held!.id);
 }
 
 export async function saveCaptureCopy(query: Query, capture: WorkerPublicationCapture): Promise<SavedCopy> {

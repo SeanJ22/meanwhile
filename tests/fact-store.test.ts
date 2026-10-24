@@ -91,7 +91,7 @@ test("newer and more official wins; Sean's value changes only through him", () =
   assert.equal(decide(official, { value: "B", provenance: "OFFICIAL", fetchedAt: at("2026-02-01") }), "PUBLISH");
   assert.equal(decide(official, { value: "B", provenance: "OFFICIAL", fetchedAt: at("2025-12-01") }), "KEEP_CURRENT");
   const owner = { value: "S", provenance: "OWNER" as const, fetchedAt: at("2026-01-01") };
-  assert.equal(decide(owner, { value: "B", provenance: "NEWS", fetchedAt: at("2026-03-01") }), "KEEP_CURRENT");
+  assert.equal(decide(owner, { value: "B", provenance: "NEWS", fetchedAt: at("2026-03-01") }), "FLAG_OWNER");
   assert.equal(decide(owner, { value: "B", provenance: "OFFICIAL", fetchedAt: at("2026-03-01") }), "FLAG_OWNER");
   assert.equal(decide(official, { value: "S", provenance: "OWNER", fetchedAt: at("2026-03-01") }), "PUBLISH");
 });
@@ -126,10 +126,11 @@ test("publishClaim writes one live fact alone, with its receipt, and queues its 
 
 test("a failing claim leaves a blank with its stage and reason; the next passing claim fills it", async () => {
   const db = await seeded();
-  assert.deepEqual(await publishClaim(db, claim({ quote: "Ned Beman Chairperson Ward 9" }), clocks, NOW), { blank: "QUOTE_NOT_ON_SAVED_COPY" });
+  const news = claim({ provenance: "NEWS", copy: boardCopy({ finalUrl: "https://news.example.com/tccc" }), quote: "Ned Beman Chairperson Ward 9" });
+  assert.deepEqual(await publishClaim(db, news, clocks, NOW), { blank: "QUOTE_NOT_ON_SAVED_COPY" });
   const [blank] = await db.query("SELECT stage, reason, detail, attempts FROM blank");
   assert.deepEqual({ ...blank,detail:undefined }, { stage:"CHECK",reason:"CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",detail:undefined,attempts:1 });
-  assert.deepEqual(JSON.parse(String(blank!.detail)),{sourceUrl:boardCopy().finalUrl,copyId:1,fieldKind:"officeholder",provenance:"OFFICIAL",value:"Ned Beman",valueText:"Ned Beman",quote:"Ned Beman Chairperson Ward 9",producedBy:"reader:clerksboards"});
+  assert.deepEqual(JSON.parse(String(blank!.detail)),{sourceUrl:news.copy.finalUrl,copyId:1,fieldKind:"officeholder",provenance:"NEWS",value:"Ned Beman",valueText:"Ned Beman",quote:"Ned Beman Chairperson Ward 9",producedBy:"reader:clerksboards"});
   await publishClaim(db, claim(), clocks, NOW);
   assert.equal((await db.query("SELECT count(*)::int AS n FROM blank"))[0]!.n, 0);
 });

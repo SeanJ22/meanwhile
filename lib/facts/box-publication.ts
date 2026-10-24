@@ -537,9 +537,10 @@ export async function publishBoxFindings(input: {
       const value = String(finding.value), quote = linkQuote(value, finding.exactQuote);
       if (slot.class === "official hosts") {
         const host = /^https?:\/\//i.test(value) ? value : `https://${value}`;
-        const checked = checkFact({ entity, fieldKind: kind, provenance, valueText: value, quote, copy }, now, clocks.windowHours);
-        if (checked.ok) await learnOfficialHost(facts.query, body.parentId ?? body.id, host);
-        await settle(finding.row, checked.ok ? { decision: "PUBLISH", factId: null } : { blank: checked.reason }, slot.class);
+        const published = await claim(`official_host:${new URL(host).hostname}`, host, value, quote);
+        if (!("blank" in published) && (published.decision === "PUBLISH" || published.decision === "CONFIRM"))
+          await learnOfficialHost(facts.query, body.parentId ?? body.id, host);
+        await settle(finding.row, published, slot.class);
         continue;
       }
       // A body the Box added is shown to readers once its name is on a saved page.

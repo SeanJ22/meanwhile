@@ -1,0 +1,232 @@
+{
+  "observedAt": "2026-10-24T08:56:00Z",
+  "project": "tiny-hill-13996172",
+  "branch": "br-delicate-lab-ax02xuo5",
+  "role": "readonly",
+  "counts": [
+    {
+      "state": "AK",
+      "live_facts": 1224
+    },
+    {
+      "state": "AL",
+      "live_facts": 1279
+    },
+    {
+      "state": "AR",
+      "live_facts": 461
+    },
+    {
+      "state": "AS",
+      "live_facts": 0
+    },
+    {
+      "state": "AZ",
+      "live_facts": 3539
+    },
+    {
+      "state": "CA",
+      "live_facts": 26061
+    },
+    {
+      "state": "CO",
+      "live_facts": 2797
+    },
+    {
+      "state": "CT",
+      "live_facts": 89745
+    },
+    {
+      "state": "DC",
+      "live_facts": 13
+    },
+    {
+      "state": "DE",
+      "live_facts": 132
+    },
+    {
+      "state": "FL",
+      "live_facts": 7653
+    },
+    {
+      "state": "GA",
+      "live_facts": 1273
+    },
+    {
+      "state": "GU",
+      "live_facts": 0
+    },
+    {
+      "state": "HI",
+      "live_facts": 37353
+    },
+    {
+      "state": "IA",
+      "live_facts": 177
+    },
+    {
+      "state": "ID",
+      "live_facts": 716
+    },
+    {
+      "state": "IL",
+      "live_facts": 6606
+    },
+    {
+      "state": "IN",
+      "live_facts": 68
+    },
+    {
+      "state": "KS",
+      "live_facts": 35
+    },
+    {
+      "state": "KY",
+      "live_facts": 98696
+    },
+    {
+      "state": "LA",
+      "live_facts": 0
+    },
+    {
+      "state": "MA",
+      "live_facts": 471
+    },
+    {
+      "state": "MD",
+      "live_facts": 772
+    },
+    {
+      "state": "ME",
+      "live_facts": 412
+    },
+    {
+      "state": "MI",
+      "live_facts": 2248
+    },
+    {
+      "state": "MN",
+      "live_facts": 1147
+    },
+    {
+      "state": "MO",
+      "live_facts": 5469
+    },
+    {
+      "state": "MP",
+      "live_facts": 0
+    },
+    {
+      "state": "MS",
+      "live_facts": 36
+    },
+    {
+      "state": "MT",
+      "live_facts": 0
+    },
+    {
+      "state": "NC",
+      "live_facts": 1469
+    },
+    {
+      "state": "ND",
+      "live_facts": 0
+    },
+    {
+      "state": "NE",
+      "live_facts": 0
+    },
+    {
+      "state": "NH",
+      "live_facts": 797
+    },
+    {
+      "state": "NJ",
+      "live_facts": 661
+    },
+    {
+      "state": "NM",
+      "live_facts": 1723
+    },
+    {
+      "state": "NV",
+      "live_facts": 1190
+    },
+    {
+      "state": "NY",
+      "live_facts": 1939
+    },
+    {
+      "state": "OH",
+      "live_facts": 1352
+    },
+    {
+      "state": "OK",
+      "live_facts": 1289
+    },
+    {
+      "state": "OR",
+      "live_facts": 777
+    },
+    {
+      "state": "PA",
+      "live_facts": 275
+    },
+    {
+      "state": "PR",
+      "live_facts": 0
+    },
+    {
+      "state": "RI",
+      "live_facts": 58
+    },
+    {
+      "state": "SC",
+      "live_facts": 117359
+    },
+    {
+      "state": "SD",
+      "live_facts": 55
+    },
+    {
+      "state": "TN",
+      "live_facts": 8
+    },
+    {
+      "state": "TX",
+      "live_facts": 5843
+    },
+    {
+      "state": "UT",
+      "live_facts": 218
+    },
+    {
+      "state": "VA",
+      "live_facts": 1052
+    },
+    {
+      "state": "VI",
+      "live_facts": 2
+    },
+    {
+      "state": "VT",
+      "live_facts": 0
+    },
+    {
+      "state": "WA",
+      "live_facts": 2921
+    },
+    {
+      "state": "WI",
+      "live_facts": 17397
+    },
+    {
+      "state": "WV",
+      "live_facts": 72
+    },
+    {
+      "state": "WY",
+      "live_facts": 164
+    }
+  ]
+}

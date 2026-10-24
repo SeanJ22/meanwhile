@@ -669,6 +669,7 @@ export interface ScoreboardVitalHour {
 
 export interface ScoreboardView {
   readonly lineKeeper?: string;
+  readonly factHours?: readonly import("../../../../lib/facts/admin-read.ts").FactDoorHour[] | null;
   readonly rows: readonly ScoreboardRow[];
   readonly byPlace: readonly ScoreboardPlaceRow[];
   readonly byFamily: readonly ScoreboardFamilyRow[];

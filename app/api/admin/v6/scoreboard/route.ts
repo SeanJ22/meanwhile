@@ -55,9 +55,10 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,pipeline]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null]);
+      const [keeper,pipeline,factStore]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,
+        attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query,now):null;})]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
-        data:buildScoreboard({lineKeeper:keeper,observedAt,vital:keeperVital(keeper),places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
+        data:buildScoreboard({lineKeeper:keeper,observedAt,factStore,vital:keeperVital(keeper),places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
           learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:keeper?.hours[0]?.gates??null,readiness:readinessCounts(keeper?.hours[0]?.readiness??{})}),
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
@@ -99,7 +100,7 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
       attempt(async () => (url ? readFlowWeek({control:neon(url),through:observedAt}) : null)),
       // Keep the existing blank reasons. Reader delivery comes from the hourly report.
-      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query) : null; }),
+      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query,now) : null; }),
       // One compact, independently maintained checkpoint supplies all hourly numbers.
       keeperRead,
       // The link sweep's dead links per surface, kept beside door health.

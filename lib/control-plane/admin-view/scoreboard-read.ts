@@ -604,6 +604,7 @@ export function buildScoreboard(r: ScoreboardReadings): ScoreboardView {
   const missions: ScoreboardMissionRow[] = places.flatMap((p) => (p.core === null ? [] : [{ label: p.label, startedAt: p.core.missionStart, coreLive: coreWords(p.core), withinHour: withinHour(p.core) }]));
   return {
     rows,
+    factHours: r.factStore?.hours ?? null,
     byPlace, byFamily, missions,
     flow: flowStages(r.flow),
     vital: r.vital ?? null,

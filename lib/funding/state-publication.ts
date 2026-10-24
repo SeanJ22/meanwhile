@@ -100,8 +100,9 @@ async function publishCampaignFinanceResource(state:string,resource:CampaignFina
     let after=0;
     for(;;){
       const previous=await options.facts.query(`SELECT f.id,e.parent_id,f.value->>'id' AS record_id FROM fact f JOIN entity e ON e.id=f.entity_id
-        WHERE e.state=$1 AND e.parent_id=ANY($2::text[]) AND f.field LIKE 'campaign-money:%' AND f.status='live' AND f.provenance_kind<>'OWNER'
-          AND f.value->>'resource'=$3 AND f.id>$4 ORDER BY f.id LIMIT 500`,[state,options.people.map(person=>person.id),resource.id,after]);
+        JOIN unnest($2::text[],$5::text[]) wanted(person_id,seat) ON e.parent_id=wanted.person_id AND f.value#>>'{person,seat}'=wanted.seat
+        WHERE e.state=$1 AND f.field LIKE 'campaign-money:%' AND f.status='live' AND f.provenance_kind<>'OWNER'
+          AND f.value->>'resource'=$3 AND f.id>$4 ORDER BY f.id LIMIT 500`,[state,options.people.map(person=>person.id),resource.id,after,options.people.map(person=>person.seat)]);
       if(!previous.length)break;
       const removed=previous.filter(row=>!active.get(String(row.record_id)));
       if(removed.length){

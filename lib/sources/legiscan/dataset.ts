@@ -74,6 +74,13 @@ export function sourcePersonIds(holder: Pick<Officeholder,"id"|"personId"|"nativ
 }
 /** Names, party, district and office title never participate in this crosswalk. */
 export function legiscanIdentityJoins(holders: readonly LegiscanIdentityHolder[], people: readonly Record<string, unknown>[]) {
+  const eligible=holders.flatMap(holder=>{
+    const sourceUrl=holder.provenance?.sourceUrl,ids=sourcePersonIds(holder);
+    if(holder.level!=="STATE"||!sourceUrl||!profileUrl(sourceUrl)||ids.length!==1)return [];
+    return [{sourceUrl,personId:ids[0],native:new Set(Object.entries(holder.nativeIds??{}).filter(([scheme])=>/^legiscan$/i.test(scheme)).flatMap(([,ids])=>ids)),
+      urls:[holder.websiteUrl,...(holder.profileUrls??[])].flatMap(raw=>{const normalized=profileUrl(raw);return normalized&&raw?[{raw,normalized}]:[];})}];
+  });
+  if(!eligible.length)return [];
   const matches = new Map<number, Map<string, LegiscanPersonJoin>>();
   for (const person of people) {
     if (!positiveId(person.people_id)) continue;
@@ -85,19 +92,15 @@ export function legiscanIdentityJoins(holders: readonly LegiscanIdentityHolder[]
     const urls = new Map([social.biography, official.website, personal.website, social.ballotpedia, social.votesmart,
       social.campaign, social.campaign_website, ballotpediaUrl, votesmartUrl]
       .flatMap(value => profileUrl(value) ? [[profileUrl(value)!, text(value)] as const] : []));
-    const candidates = new Map<string, LegiscanPersonJoin>();
-    for (const holder of holders) {
-      const sourceUrl = holder.provenance?.sourceUrl;
-      if (holder.level !== "STATE" || !sourceUrl || !profileUrl(sourceUrl)) continue;
-      const ids = sourcePersonIds(holder);
-      if (ids.length !== 1) continue;
-      const native = Object.entries(holder.nativeIds ?? {}).filter(([scheme]) => /^legiscan$/i.test(scheme)).flatMap(([, ids]) => ids).includes(String(person.people_id));
-      const originalUrl = [holder.websiteUrl, ...(holder.profileUrls ?? [])].find(value => profileUrl(value) !== null && urls.has(profileUrl(value)!));
-      const sharedUrl = profileUrl(originalUrl);
+    const candidates = matches.get(person.people_id) ?? new Map<string, LegiscanPersonJoin>();
+    for (const holder of eligible) {
+      const native = holder.native.has(String(person.people_id));
+      const originalUrl = holder.urls.find(value=>urls.has(value.normalized));
+      const sharedUrl = originalUrl?.normalized;
       if (!native && !sharedUrl) continue;
-      candidates.set(ids[0], { legiscanPeopleId: person.people_id, personId: ids[0], basis: native ? "NATIVE_ID" : "EXACT_MEMBER_PROFILE_URL",
-        sourceUrl, matchedUrl: native ? null : sharedUrl!,
-        openStatesProfileUrl: native ? null : originalUrl!, legiscanProfileUrl: native ? null : urls.get(sharedUrl!)! });
+      candidates.set(holder.personId, { legiscanPeopleId: person.people_id, personId: holder.personId, basis: native ? "NATIVE_ID" : "EXACT_MEMBER_PROFILE_URL",
+        sourceUrl:holder.sourceUrl, matchedUrl: native ? null : sharedUrl!,
+        openStatesProfileUrl: native ? null : originalUrl!.raw, legiscanProfileUrl: native ? null : urls.get(sharedUrl!)! });
     }
     matches.set(person.people_id, candidates);
   }

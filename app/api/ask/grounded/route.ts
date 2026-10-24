@@ -182,7 +182,8 @@ import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCa
 
 export const runtime = "nodejs";
 
-const MAX_BODY_BYTES = 16384;
+// Sixty subject refs plus place and conversation context fit without rejecting a full ballot.
+const MAX_BODY_BYTES = 65536;
 const MAX_QUESTION_CHARS = 400;
 
 let ipLimiter: SlidingWindowLimiter | null = null;
@@ -354,18 +355,18 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
+  const requestStarted = Date.now();
   const settingsStarted = performance.now();
   return withPublishedAskSettings(async () => {
     const settingsMs = performance.now() - settingsStarted;
     console.log(askModelStartupLine());
-    const response = await answerWithSettings(request);
+    const response = await answerWithSettings(request, requestStarted);
     response.headers.append("Server-Timing", `settings;dur=${Math.round(settingsMs)}`);
     return response;
   });
 });
 
-async function answerWithSettings(request: Request) {
-  const started = Date.now();
+async function answerWithSettings(request: Request, started: number) {
   const trace: AskTrace = emptyTrace();
 
   if (ripcordPulled("ripcord.askGrounded")) {

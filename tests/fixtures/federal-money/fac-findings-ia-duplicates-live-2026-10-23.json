@@ -1,0 +1,36 @@
+[
+  {
+    "report_id": "2016-06-CENSUS-0000064400",
+    "auditee_uei": "GSA_MIGRATION",
+    "audit_year": "2016",
+    "fac_accepted_date": "2016-12-14",
+    "award_reference": "AWARD-00002",
+    "reference_number": "2016-001",
+    "is_material_weakness": "N",
+    "is_modified_opinion": "N",
+    "is_other_findings": "N",
+    "is_other_matters": "N",
+    "prior_finding_ref_numbers": "N/A",
+    "is_questioned_costs": "N",
+    "is_repeat_finding": "N",
+    "is_significant_deficiency": "Y",
+    "type_requirement": "N"
+  },
+  {
+    "report_id": "2016-06-CENSUS-0000064400",
+    "auditee_uei": "GSA_MIGRATION",
+    "audit_year": "2016",
+    "fac_accepted_date": "2016-12-14",
+    "award_reference": "AWARD-00002",
+    "reference_number": "2016-001",
+    "is_material_weakness": "N",
+    "is_modified_opinion": "N",
+    "is_other_findings": "N",
+    "is_other_matters": "N",
+    "prior_finding_ref_numbers": "N/A",
+    "is_questioned_costs": "N",
+    "is_repeat_finding": "N",
+    "is_significant_deficiency": "Y",
+    "type_requirement": "N"
+  }
+]

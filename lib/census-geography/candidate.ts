@@ -1,5 +1,5 @@
 import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
-import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import type { BuiltDataset } from "./dataset.ts";
 import {
@@ -42,7 +42,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
 
   const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
-  const readModelHash = sha256(canonicalCivicDataJson(dataset));
+  const readModelHash = canonicalCivicDataHash(dataset);
   // A compact descriptor bound to the read model by its hash, never a second copy: the promotion response has a size cap.
   const normalizedPayload = {
     formatVersion: dataset.formatVersion,
@@ -80,7 +80,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
       // Digest via the civic-data canonical JSON — the exact function the
       // source-scoped verifier re-derives the read-model hash with.
       normalizedHash: readModelHash,
-      normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
+      normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload),
       inputRecords: groupings,
       outputRecords: groupings,
       droppedRecords: 0,

@@ -67,8 +67,8 @@ test("BAL-25: the loading skeleton hands over without moving the heading", () =>
 test("BAL-43: offices read top to bottom; current candidates and earlier filings share desktop columns", () => {
   const src = code(PAGE);
   assert.equal(src.split('className="ballot-office-list"').length - 1, 1);
-  assert.equal(src.split('className="ballot-candidate-grid mt-3.5"').length - 1, 3,
-    "nominees, current candidacies and earlier filings use the same card layout");
+  assert.equal(src.split('className="ballot-candidate-grid mt-3.5"').length - 1, 2,
+    "the unified current choices and earlier filings use the same card layout");
   assert.match(src, /data-earlier-filings=\{contest.id\}>[\s\S]*?className="ballot-candidate-grid mt-3.5"/,
     "earlier filings retain the same responsive grid inside their disclosure");
   assert.match(src, /className="ballot-office-list">\s*\{candidacyContests\.map\(/,

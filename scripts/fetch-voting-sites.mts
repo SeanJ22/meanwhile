@@ -17,8 +17,6 @@ import { heldVotingSiteCoordinates, votingSiteAddressKey, type VotingSitesFile }
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
-import { RestrictedDurabilityUnavailable } from "../lib/control-plane/evidence/durable-store.ts";
-import { VotingSourceDocumentHeld, votingOfficialLinkEvidence } from "../lib/ballot/voting-source-evidence.ts";
 import { cycleVault, VAULT_DIR, type CycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { pageAddress } from "../lib/doors/page-doors.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
@@ -26,7 +24,7 @@ import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDo
   saveVotingSourceDoor, holdVotingRawEvidence, combineVotingSourceReads } from "../lib/ballot/voting-source-publication.ts";
 import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
-import type { VotingDoorScope, VotingSourceBlank, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
+import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -176,7 +174,7 @@ function registeredElectionOfficeDoors(root: VotingSourceDoor, registry: Pick<Re
 }
 
 /** A publication retains its own read and official linking chain, never unrelated statewide captures. */
-export function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"] = []): Promise<VotingRawCapture[]> {
+export async function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"] = []): Promise<VotingRawCapture[]> {
   const bodyKey = (body: VotingSourceRead["rawBodies"][number]) => `${body.url}#${createHash("sha256").update(body.bytes).digest("hex")}`;
   const bodies = new Map(read.rawBodies.map(body => [bodyKey(body), body]));
   const links = new Set<string>();
@@ -190,9 +188,9 @@ export function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceR
   }
   const linked = (body: VotingSourceRead["rawBodies"][number]) => links.has(body.url) || Boolean(body.requestedUrl && links.has(body.requestedUrl));
   for (const capture of captures) if (linked(capture) || capture.url === door.url || capture.requestedUrl === door.url) bodies.set(bodyKey(capture), capture);
-  const saved = [...bodies.values()].map(body => linked(body)
-    ? votingOfficialLinkEvidence(body, read.sources[0]?.checkedAt ?? new Date().toISOString()) : body);
-  return holdVotingRawEvidence({ rawBodies: [...new Map(saved.map(body => [bodyKey(body), body])).values()] });
+  // A linking page held on an older saved door may still print its key; every copy is cleaned as it is saved.
+  const saved = await holdVotingRawEvidence({ rawBodies: [...bodies.values()] }, read.sources[0]?.checkedAt ?? new Date().toISOString());
+  return [...new Map(saved.map(body => [`${body.url}#${body.rawHash}`, body])).values()];
 }
 
 /** Register an address-only route from its fresh official link without querying it for a voter. */
@@ -218,20 +216,6 @@ export function votingReadHasFacts(door: VotingSourceDoor, read: VotingSourceRea
   if (read.sites.length || read.boundaries?.length || read.contacts?.length) return true;
   if (!read.sources.length || read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction")) return false;
   return Boolean(read.office || read.rules.length || read.publicationMessage || door.publication || door.shape === "address-lookup");
-}
-
-/** Keep the existing restricted-storage refusal local to its document, with a durable source note. */
-export async function recordVotingDiscoveryObservation(...args: Parameters<typeof recordSourceObservation>): Promise<void | "HELD"> {
-  try { await recordSourceObservation(...args); }
-  catch (error) {
-    if (!(error instanceof RestrictedDurabilityUnavailable)) throw error;
-    const [repos, observation, at, vault] = args;
-    await recordSourceObservation(repos, { ...observation, capture: null, disposition: {
-      kind: "SKIP", family: "voting", recordClass: "VOTING_SITE", belongs: true, quote: "",
-      reason: "This document requires encrypted restricted evidence storage. Other official files remain active.",
-    } }, at, vault);
-    return "HELD";
-  }
 }
 
 export async function refreshVotingSources(input: {
@@ -284,17 +268,6 @@ export async function refreshVotingSources(input: {
       const reads = new Map<string, VotingSourceRead>(), walked = new Set<string>();
       const evidenceSources = new Map<string, VotingSourceDoor>();
       const observations = new Map<string, "DOOR" | "EVIDENCE" | "SKIP">();
-      const heldDocuments = new Map<string, VotingSourceBlank>();
-      const holdDocument = (door: VotingSourceDoor, url: string) => {
-        const detail = "Source document requires encrypted restricted evidence storage; other official files remain active";
-        const blank: VotingSourceBlank = { id: `${door.id}:held-document`, doorId: door.id, scope: door.scope,
-          reason: "access", status: "open", owed: "Voting places from this held source document",
-          tried: [url, detail], next: ["Activate encrypted restricted evidence storage for this document", "Read the other official state and county files"] };
-        heldDocuments.set(url, blank);
-        const read = reads.get(door.id);
-        if (read) reads.set(door.id, { ...read, sites: [], rules: [], boundaries: [], contacts: [], sources: [], blanks: [...read.blanks, blank] });
-        console.error(JSON.stringify({ event: "voting_source_document_held", state, source: url, detail }));
-      };
       const geocodes = new Map<string, { lat: number; lng: number } | null>(heldVotingSiteCoordinates(held));
       let callbackFailure: unknown;
       const runtime: VotingSourceRuntime = {
@@ -396,14 +369,7 @@ export async function refreshVotingSources(input: {
           if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
           return;
         }
-        let acquisition: VotingRawCapture[];
-        try { acquisition = await votingSourceEvidence(door, read, captures); }
-        catch (error) {
-          if (!(error instanceof VotingSourceDocumentHeld)) throw error;
-          for (const mapping of mappings) holdDocument(mapping, error.url);
-          if (persistent) await recordVotingSourceRead(context.repos.doors, door, combineVotingSourceReads(mappings.flatMap(mapping => reads.get(mapping.id) ?? [])), at);
-          return;
-        }
+        const acquisition = await votingSourceEvidence(door, read, captures);
         if (persistent) await recordVotingSourceRead(context.repos.doors, door, read, at);
         if (await publishRead(publicationDoor, read, acquisition, at, mappings)) publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
       };
@@ -427,19 +393,17 @@ export async function refreshVotingSources(input: {
       runtime.onDiscoveredSource = async ({ source, disposition, capture, linkingCaptures }) => {
         const url = pageAddress(source.url)!.url;
         if (superseded.has(normalizeUrl(url))) {
-          const recorded = await recordVotingDiscoveryObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
+          await recordSourceObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
             names: [source.scope.name, source.publisher], capture, disposition: {
               kind: "SKIP", family: "voting", recordClass: "VOTING_SITE", belongs: true, quote: "",
               reason: "An official current-election file has replaced this older list and is already published",
             } }, now(), vault);
           observations.set(url, "SKIP");
-          if (recorded === "HELD") { holdDocument(source, url); return "HELD"; }
           return;
         }
-        const recorded = await recordVotingDiscoveryObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
+        await recordSourceObservation(context.repos, { url, ocdId: source.scope.ocdId, state,
           names: [source.scope.name, source.publisher], disposition, capture }, now(), vault);
-        observations.set(url, recorded === "HELD" ? "SKIP" : disposition.kind);
-        if (recorded === "HELD") { holdDocument(source, url); return "HELD"; }
+        observations.set(url, disposition.kind);
         if (disposition.kind === "EVIDENCE" && disposition.family === "voting") {
           const configured = stateDoors.filter(known => pageAddress(known.url)?.url === url);
           for (const target of configured.length ? configured : [source]) {
@@ -502,7 +466,7 @@ export async function refreshVotingSources(input: {
       const sourceDoors = [...doors.values(), ...evidenceSources.values()];
       const jurisdictions = held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) ?? [];
       const blanks = [...planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: sourceDoors, reads: [...reads.values()], jurisdictions, coverage }),
-        ...votingBoundaryBlanks(places, jurisdictions, sourceDoors), ...heldDocuments.values()];
+        ...votingBoundaryBlanks(places, jurisdictions, sourceDoors)];
       await persistVotingSourceBlanks({ repos: context.repos, blanks, electionDate: election.electionDate, now: now(), coverage });
       console.log(`${state}: ${[...observations.values()].filter(kind => kind === "DOOR").length} publishing doors, ${[...observations.values()].filter(kind => kind === "EVIDENCE").length} evidence captures, ${[...observations.values()].filter(kind => kind === "SKIP").length} skips, ${[...reads.values()].reduce((sum, read) => sum + read.sites.length, 0)} site observations, ${blanks.length} open place blanks`);
     }

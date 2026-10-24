@@ -1,0 +1,68 @@
+{
+  "kind": "Lossless closed replay member cache compression",
+  "startedAt": "2026-10-23T13:00:04.865125+00:00",
+  "level": 1,
+  "streamChunkBytes": 1048576,
+  "sourceOrReaderRuntimeChanged": false,
+  "epaTimedRun": "Continued unpaused; this bounded CPU/filesystem work remains included in its actual elapsed time",
+  "files": [
+    {
+      "originalFile": "US-2199-members.json",
+      "compressedFile": "US-2199-members.json.gz",
+      "originalBytes": 407475011,
+      "originalSha256": "08df570b7568cbc5240cae0dfee916094161012423b64c88cec6a309f026f7d5",
+      "verifiedDecompressedBytes": 407475011,
+      "verifiedDecompressedSha256": "08df570b7568cbc5240cae0dfee916094161012423b64c88cec6a309f026f7d5",
+      "compressedBytes": 59045648,
+      "compressedSha256": "2506f3047787b35e1985c9871ee2cf10a1a36c758df5735e296599dad8578791",
+      "originalRemovedOnlyAfterExactVerification": true
+    },
+    {
+      "originalFile": "NY-2188-members.json",
+      "compressedFile": "NY-2188-members.json.gz",
+      "originalBytes": 317760142,
+      "originalSha256": "30041d115a9e5f580f350a9174130a8ac9b06ae231b0bc67b14198587ef94e84",
+      "verifiedDecompressedBytes": 317760142,
+      "verifiedDecompressedSha256": "30041d115a9e5f580f350a9174130a8ac9b06ae231b0bc67b14198587ef94e84",
+      "compressedBytes": 44534332,
+      "compressedSha256": "4dae2d89a52e6053723b64ae41054d758c72a11389115616ebf50e310a67f12d",
+      "originalRemovedOnlyAfterExactVerification": true
+    },
+    {
+      "originalFile": "SC-2194-members.json",
+      "compressedFile": "SC-2194-members.json.gz",
+      "originalBytes": 244541690,
+      "originalSha256": "f3c01932636d9fe8e112519e1928de38f94c505e435557941d6540535a2f7656",
+      "verifiedDecompressedBytes": 244541690,
+      "verifiedDecompressedSha256": "f3c01932636d9fe8e112519e1928de38f94c505e435557941d6540535a2f7656",
+      "compressedBytes": 29496261,
+      "compressedSha256": "c5bce5f67488ab5c01854270b3fef85e02d7be42a8c8e56762943780241270b3",
+      "originalRemovedOnlyAfterExactVerification": true
+    },
+    {
+      "originalFile": "IL-2176-members.json",
+      "compressedFile": "IL-2176-members.json.gz",
+      "originalBytes": 140636775,
+      "originalSha256": "ad0e75c44ea5039c555852c279c3a70b73399697d5351f369c56d23dda4c2ee8",
+      "verifiedDecompressedBytes": 140636775,
+      "verifiedDecompressedSha256": "ad0e75c44ea5039c555852c279c3a70b73399697d5351f369c56d23dda4c2ee8",
+      "compressedBytes": 20872605,
+      "compressedSha256": "8e85ef20d35e2742b8929adb362228d2539e72494b3b5117b8efe1d2c31609d3",
+      "originalRemovedOnlyAfterExactVerification": true
+    },
+    {
+      "originalFile": "PA-2192-members.json",
+      "compressedFile": "PA-2192-members.json.gz",
+      "originalBytes": 139344351,
+      "originalSha256": "0dc9bd2aa27d9c990fe2f5de390e00e91db15e5147500460bad49c2120a077d1",
+      "verifiedDecompressedBytes": 139344351,
+      "verifiedDecompressedSha256": "0dc9bd2aa27d9c990fe2f5de390e00e91db15e5147500460bad49c2120a077d1",
+      "compressedBytes": 19343672,
+      "compressedSha256": "fff756cf04963346369f5601c73eeb63caf8f7686618f5d6207af159b8ba34a6",
+      "originalRemovedOnlyAfterExactVerification": true
+    }
+  ],
+  "freedBytes": 1076465451,
+  "elapsedMs": 16691,
+  "finishedAt": "2026-10-23T13:00:21.556638+00:00"
+}

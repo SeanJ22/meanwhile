@@ -298,6 +298,7 @@ export interface OwnerDigestRecord {
   readonly routineDecisions?: readonly import("../civic-data/launch-decisions.ts").RoutineLaunchDecision[];
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
+  readonly routineInput?: import("../civic-data/routine-input.ts").RoutineInput;
   readonly runtimeOutcome?:
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome
@@ -404,6 +405,7 @@ export interface RoutineCivicDataReaderReadbackReference {
 
 export interface RoutineCivicDataSupervisorOutcome {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
+  readonly ballotNavigationPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;

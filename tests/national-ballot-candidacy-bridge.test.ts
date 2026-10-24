@@ -109,9 +109,10 @@ test("same names in another office, division or numbered seat never become candi
   }
 });
 
-test("a duplicate name on one contest stays unresolved", () => {
+test("a same-name collision with two explicit person identities stays unresolved", () => {
   const duplicate = ballot("OH", "United States Senator", "Jon Husted");
-  duplicate.candidacies.push({ ...duplicate.candidacies[0], id: "ballot-candidacy:oh-other" });
+  duplicate.candidacies[0].personId = "person:one";
+  duplicate.candidacies.push({ ...duplicate.candidacies[0], id: "ballot-candidacy:oh-other", personId: "person:two" });
   const bridge = reconcileOfficialCandidacies({ bridge: registry.officialCandidacies, ballots: [duplicate] });
   const row = bridge.rows.find(row => row.holder.id === "congress:H001104")!;
   assert.equal(row.status, "IDENTITY_UNRESOLVED");
@@ -175,7 +176,8 @@ test("published national ballot rows are written to the promoted registry bridge
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:oh-incumbent"), []);
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:mi-incumbent"), ["congress:S001208"]);
   const duplicate = structuredClone(ballots[0]);
-  duplicate.candidacies.push({ ...duplicate.candidacies[0], id: "ballot-candidacy:oh-duplicate" });
+  duplicate.candidacies[0].personId = "person:one";
+  duplicate.candidacies.push({ ...duplicate.candidacies[0], id: "ballot-candidacy:oh-duplicate", personId: "person:two" });
   await publishOfficialBallotCandidacies({ store, ballots: [duplicate], sourceReceipt, now: "2026-10-13T12:02:00.000Z" });
   await installFederalDirectory(syntheticFederalDirectory());
   const ambiguous = await readRegistryRuntimeProjection(["OH", "MI"], { store, now: "2026-10-13T12:02:00.000Z", bypassCache: true });

@@ -455,7 +455,7 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
     assert.equal(calls, 1);
     assert.equal(cacheKey("First Question!"), cacheKey("first question"));
 
-    // A model answer off the list is NONE, not a route.
+    // An answer off the list fails all three tiers and cannot select a route.
     settings["ask.classifierDailyCap"] = 50;
     resetClassifierState();
     const rogue = (async () =>
@@ -464,8 +464,7 @@ test("the classifier is bounded: a ripcord, a ceiling, a cache, and no key means
         { status: 200 },
       )) as unknown as typeof fetch;
     assert.deepEqual(await classifyQuestion("something odd", { fetchImpl: rogue }), {
-      kind: "NONE",
-      ...labelledBy,
+      kind: "UNAVAILABLE", why: "error",
     });
 
     // An upstream failure is unavailable, never a guess.

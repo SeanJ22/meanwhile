@@ -1,3 +1,4 @@
+import { publishedOnlineAccess } from "../../meetings/published-online.ts";
 /**
  * @freshness-reads-here
  *
@@ -29,11 +30,8 @@ import type {
 
 import { fetchEvents, fetchEventItems } from "./client.ts";
 import {
-  findVenue,
-  isPlaceless,
   LEGISTAR_CLIENTS,
   resolveNativeBody,
-  venuesWithinRadius,
   type LegistarClient,
 } from "./client-registry.ts";
 import type { LegistarOutcomeRecord } from "./outcomes.ts";
@@ -264,9 +262,8 @@ export function normalizeWithDrops(
 
     const location = (event.EventLocation ?? "").trim();
 
-    // A meeting held online is kept: no building means no pin, but it is a real public meeting. `label` is the
-    // published string verbatim; no join link is published, so `joinUrl` is null.
-    const online = location && isPlaceless(location) ? { label: location, joinUrl: null } : null;
+    // Preserve online-only attendance and any join link stated by the publisher.
+    const online = publishedOnlineAccess(location);
     if (online) {
       drops.placeless++;
       // A-002: this TALLIES a meeting that is then PRODUCED below (D18), so it
@@ -274,12 +271,8 @@ export function normalizeWithDrops(
       keptButPlaceless += 1;
     }
 
-    const venue = online || !location ? null : findVenue(client, location) ?? null;
-    // No reviewed place never suppresses the sitting: no coordinates means no pin, but the sitting is
-    // published with `location: null` and its gap named (the room as written, `STATED_NOT_PLACED`, or the
-    // publisher's silence where `EventLocation` is blank, `NOT_STATED_BY_PUBLISHER`). Still counted as
-    // `unknownVenue`, a tally of a kept sitting.
-    const venueGap = !online && !venue ? unplacedVenueGap(location, client.publishingOrg) : null;
+    // The publication pass resolves this exact source text through Census and saves its point.
+    const venueGap = !online ? unplacedVenueGap(location, client.publishingOrg) : null;
     if (venueGap) {
       drops.unknownVenue++;
       keptButPlaceless += 1;
@@ -324,14 +317,7 @@ export function normalizeWithDrops(
       startsAt,
       ...(time ? {} : { startPrecision: "DAY" as const }),
       timeZone: client.timeZone,
-      location: venue
-        ? {
-            name: venue.name,
-            address: venue.address,
-            lat: venue.lat,
-            lng: venue.lng,
-          }
-        : null,
+      location: null,
       ...(online ? { online } : {}),
       ...(venueGap ? { venueGap } : {}),
       agendaUrl: event.EventAgendaFile,
@@ -417,10 +403,6 @@ export function makeLegistarSource(
 
     // Independent tenants have independent connection slots in client.ts.
     await Promise.all(clients.map(async client => {
-      // Skip a client whose reviewed venues all lie outside the query radius before spending a request on it; a
-      // client with none is read (see `venuesWithinRadius`).
-      if (!venuesWithinRadius(client.venues, query)) return;
-
       const bodyId = await resolveNativeBody(client, { signal: query.signal, fetchImpl });
       const events = await fetchEvents<LegistarEvent>(client.slug, { from, to, bodyId }, {
         signal: query.signal,

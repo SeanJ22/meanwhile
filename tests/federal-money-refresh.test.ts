@@ -96,7 +96,7 @@ test("real OpenFEMA sample publishes through registered fanout, native join and 
   assert.deepEqual(result.projection.counts, { loaded: 1, joined: 1, unjoined: 0 });
   const read = await readFederalMoneyPartition("openfema", leafScope, { store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.deepEqual(read.value.records[0].divisionIds, [county]);
+  if (read.kind === "PROMOTED") assert.deepEqual(read.value.records[0].divisionIds, ["ocd-division/country:us/state:ar", county]);
   const checkpoint = await readFederalMoneyCheckpoint("openfema", "AR", { store, now, bypassCache: true });
   assert.equal(checkpoint.kind, "PROMOTED");
   if (checkpoint.kind === "PROMOTED") assert.equal("records" in checkpoint.value, false);
@@ -167,12 +167,15 @@ test("same saved source is a successful unchanged check; outages preserve its st
   assert.equal(statuses.at(-1), "OUTAGE");
 });
 
-test("unfinished pages keep a durable continuation and source-native unmatched rows; native audit report links do not alter source bytes", async () => {
+test("unfinished pages keep a durable continuation and the publisher state while county association remains open", async () => {
   const store = new MemoryRoutineDataStore();
   let received: unknown;
   const first = await refreshFederalMoney({ source: "openfema", store, acquireOptions, states: ["AR"], identities: async () => ({ divisions: [], bodies: [], governments: [] }),
     acquire: async () => ({ ...fullPage, complete: false, continuation: { source: "openfema", phase: "declarations", offset: 1000 } }), now: () => now, maxRounds: 1 });
-  assert.deepEqual(first.projection.counts, { loaded: 1, joined: 0, unjoined: 1 });
+  assert.deepEqual(first.projection.counts, { loaded: 1, joined: 1, unjoined: 0 });
+  const firstRecord = (await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", leafScope))?.payload.records[0];
+  assert.deepEqual(firstRecord?.divisionIds, ["ocd-division/country:us/state:ar"]);
+  assert.deepEqual(firstRecord?.bodyIds, []);
   await refreshFederalMoney({ source: "openfema", store, acquireOptions, states: ["AR"], identities: async () => identities,
     acquire: async (_source, _state, options) => { received = options?.cursor; return fullPage; }, now: () => now, maxRounds: 1 });
   assert.deepEqual(received, { source: "openfema", phase: "declarations", offset: 1000 });
@@ -221,6 +224,22 @@ test("the next incremental pass overlaps the previous pass start, including upda
   let since: string | undefined;
   await refreshFederalMoney({ ...input, acquire: async (_source, _state, options) => { since = options?.since; return fullPage; } });
   assert.equal(since, now, "an update published after the initial page must remain eligible next pass");
+});
+
+// Production 2026-10-24: each OpenFEMA pass reached its deadline inside the first large states (FL, then GA),
+// so AL, AK, AZ, AR, CA, CO and CT were never requested at all.
+test("each scheduled pass starts with the states served longest ago, so a deadline inside one large state starves no other state", async t => {
+  let clock = Date.parse("2026-10-13T03:00:00.000Z");
+  t.mock.method(Date, "now", () => clock);
+  const store = new MemoryRoutineDataStore(), visited: string[] = [];
+  const input = { source: "openfema" as const, store, acquireOptions, states: ["AR", "OH", "TX"], identities: async () => identities, maxRunMs: 60_000,
+    now: () => new Date(clock).toISOString(),
+    acquire: async (_source: unknown, state: string) => {
+      visited.push(state); clock += 61_000;
+      return { facts: [], captures: [], complete: false, declaredTotal: 2000, continuation: { source: "openfema" as const, phase: "declarations" as const, offset: 1000 } };
+    } };
+  for (let pass = 0; pass < 4; pass++) await refreshFederalMoney(input);
+  assert.deepEqual(visited, ["AR", "OH", "TX", "AR"]);
 });
 
 test("a bounded national slice retains counts and continuation for a state it cannot visit", async () => {

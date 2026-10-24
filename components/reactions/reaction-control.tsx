@@ -36,6 +36,7 @@ import {
 interface ReactionControlProps {
   targetType: ReactionTargetType;
   targetId: string;
+  targetAliases?: readonly string[];
   /** The question in plain words — "Do you like this vote?" for votes. */
   prompt: string;
   context: ReactionViewContext | null;
@@ -51,6 +52,7 @@ interface ReactionControlProps {
 export function ReactionControl({
   targetType,
   targetId,
+  targetAliases = [],
   prompt,
   context,
   singleCandidateContest = false,
@@ -68,7 +70,7 @@ export function ReactionControl({
    */
   const stored = useSyncExternalStore(
     subscribeReactions,
-    () => getStoredReaction(targetType, targetId),
+    () => getStoredReaction(targetType, targetId, targetAliases),
     () => null,
   );
   const [override, setOverride] = useState<ReactionValue | null>(null);

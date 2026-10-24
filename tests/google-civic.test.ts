@@ -88,6 +88,20 @@ test("live lookup selects the November 3 election explicitly and never leaks inp
   assert.equal(failed.rows.length, 0);
 });
 
+test("a request-local public catalog prefetch is consumed once before sending the address to voterinfo", async () => {
+  const requests: URL[] = [];
+  const lookup = await lookupCivicAddress("private reader street", new Set(), {
+    apiKey: "private-test-key", now: () => AT,
+    electionCatalog: Promise.resolve({ raw: fixture("elections"), checkedAt: AT, status: 200 }),
+    fetchImpl: (async (url: URL) => { requests.push(url); return new Response(rawMi); }) as unknown as typeof fetch,
+  });
+  assert.equal(lookup.status, "AVAILABLE");
+  assert.equal(requests.length, 1);
+  assert.ok(requests[0].pathname.endsWith("voterinfo"));
+  assert.equal(requests[0].searchParams.get("address"), "private reader street");
+  assert.equal(requests[0].searchParams.get("electionId"), "12000");
+});
+
 test("provider Retry-After is honored on 429 and 5xx without small-government pacing", async () => {
   let requests = 0;
   const pauses: number[] = [];
@@ -97,6 +111,51 @@ test("provider Retry-After is honored on 429 and 5xx without small-government pa
       : requests === 2 ? new Response("", { status: 503, headers: { "retry-after": "2" } }) : new Response(fixture("elections"))) as typeof fetch });
   assert.deepEqual(pauses, [7000, 2000]);
   assert.equal(result.checkedAt, AT);
+});
+
+test("every HTTP failure logs its status and at most 300 body characters only on the server", async t => {
+  const logs: string[] = [];
+  t.mock.method(console, "error", (line: string) => logs.push(line));
+  let attempt = 0;
+  const statuses = [429, 503, 403];
+  await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, {
+    apiKey: "private-test-key", sleep: async () => {},
+    fetchImpl: async () => new Response(`provider failure private-test-key private reader street ${"x".repeat(500)}`, { status: statuses[attempt++] }),
+  }), /HTTP 403/);
+  const calls = logs.map(line => JSON.parse(line));
+  assert.deepEqual(calls.map(row => row.httpStatus), statuses);
+  assert.ok(calls.every(row => row.event === "google_civic_call_failed" && row.route === "voterinfo" && row.stage === "http" && row.body.length === 300));
+  assert.doesNotMatch(logs.join(""), /private-test-key|private reader street/);
+});
+
+test("unreadable JSON logs its successful HTTP status and body prefix without leaking them into the answer", async t => {
+  const logs: string[] = [];
+  t.mock.method(console, "error", (line: string) => logs.push(line));
+  const answer = await lookupCivicAddress("private reader street", new Set(), { apiKey: "private-test-key", electionId: "12000",
+    fetchImpl: async () => new Response(`not JSON private-test-key private reader street ${"y".repeat(500)}`),
+  });
+  const call = JSON.parse(logs[0]);
+  assert.equal(call.httpStatus, 200);
+  assert.equal(call.stage, "parse");
+  assert.equal(call.body.length, 300);
+  assert.doesNotMatch(logs.join(""), /private-test-key|private reader street/);
+  assert.doesNotMatch(JSON.stringify(answer), /not JSON|yyyy|private-test-key|private reader street/);
+});
+
+test("body and transport failures log the known HTTP status and available body, using null only without a response", async t => {
+  const logs: string[] = [];
+  t.mock.method(console, "error", (line: string) => logs.push(line));
+  let sent = false;
+  const stream = new ReadableStream({ pull(controller) {
+    if (!sent) { sent = true; controller.enqueue(new TextEncoder().encode("partial provider response")); }
+    else controller.error(new Error("connection interrupted"));
+  } });
+  await assert.rejects(readCivicApi("voterinfo", {}, { apiKey: "private-test-key", fetchImpl: async () => new Response(stream) }), /body could not be read/);
+  await assert.rejects(readCivicApi("voterinfo", {}, { apiKey: "private-test-key", fetchImpl: async () => { throw new Error("connection refused"); } }), /could not be reached/);
+  const calls = logs.map(line => JSON.parse(line));
+  assert.deepEqual(calls.map(row => [row.stage, row.httpStatus, row.body]), [
+    ["body", 200, "partial provider response"], ["transport", null, ""],
+  ]);
 });
 
 test("national refresh visits every state, records missing inventories and publishes a catalog without dropping covered rows", async () => {

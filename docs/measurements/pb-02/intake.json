@@ -1,0 +1,507 @@
+{
+  "productionWrites": 0,
+  "totals": {
+    "total": 208800,
+    "walker": 191629,
+    "meetingReaders": 0,
+    "wholeRecords": 1284,
+    "otherWaiting": 4738,
+    "due": 11149,
+    "dueTomorrow": 11149
+  },
+  "byState": [
+    {
+      "state": "AK",
+      "total": 8035,
+      "walker": 7068,
+      "meetingReaders": 0,
+      "wholeRecords": 67,
+      "otherWaiting": 471,
+      "due": 429,
+      "dueTomorrow": 429,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 7068,
+        "PUBLISHER": 429,
+        "NO_READER_FIELD": 471,
+        "TAKES_WHOLE_RECORDS_ONLY": 67
+      },
+      "dueFields": {
+        "GOV-02": 69,
+        "OFF-04": 142,
+        "OFF-09": 74,
+        "MTG-04": 49,
+        "OFF-02": 52,
+        "PAR-02": 27,
+        "OFF-06": 6,
+        "officeholder.name": 8,
+        "body.officeAddress": 1,
+        "homepageUrl": 1
+      }
+    },
+    {
+      "state": "AL",
+      "total": 16840,
+      "walker": 15499,
+      "meetingReaders": 0,
+      "wholeRecords": 158,
+      "otherWaiting": 113,
+      "due": 1070,
+      "dueTomorrow": 1070,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 15499,
+        "PUBLISHER": 1070,
+        "NO_READER_FIELD": 113,
+        "TAKES_WHOLE_RECORDS_ONLY": 158
+      },
+      "dueFields": {
+        "OFF-09": 177,
+        "GOV-02": 136,
+        "OFF-04": 406,
+        "MTG-04": 122,
+        "OFF-02": 173,
+        "PAR-02": 53,
+        "OFF-08": 2,
+        "body.officeAddress": 1
+      }
+    },
+    {
+      "state": "AR",
+      "total": 12546,
+      "walker": 10995,
+      "meetingReaders": 0,
+      "wholeRecords": 111,
+      "otherWaiting": 153,
+      "due": 1287,
+      "dueTomorrow": 1287,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 10995,
+        "NO_READER_FIELD": 149,
+        "PUBLISHER": 1287,
+        "TAKES_WHOLE_RECORDS_ONLY": 111,
+        "COMMENT_SUMMARY_TAKES_IT": 4
+      },
+      "dueFields": {
+        "MTG-04": 127,
+        "OFF-09": 326,
+        "PAR-02": 72,
+        "OFF-02": 124,
+        "GOV-02": 135,
+        "OFF-04": 503
+      }
+    },
+    {
+      "state": "AS",
+      "total": 1,
+      "walker": 1,
+      "meetingReaders": 0,
+      "wholeRecords": 0,
+      "otherWaiting": 0,
+      "due": 0,
+      "dueTomorrow": 0,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 1
+      },
+      "dueFields": {}
+    },
+    {
+      "state": "AZ",
+      "total": 22638,
+      "walker": 21130,
+      "meetingReaders": 0,
+      "wholeRecords": 97,
+      "otherWaiting": 496,
+      "due": 915,
+      "dueTomorrow": 915,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 21130,
+        "PUBLISHER": 915,
+        "NO_READER_FIELD": 494,
+        "TAKES_WHOLE_RECORDS_ONLY": 97,
+        "COMMENT_SUMMARY_TAKES_IT": 2
+      },
+      "dueFields": {
+        "GOV-02": 199,
+        "OFF-04": 264,
+        "OFF-09": 77,
+        "PAR-02": 160,
+        "OFF-02": 69,
+        "MTG-04": 146
+      }
+    },
+    {
+      "state": "CA",
+      "total": 34207,
+      "walker": 31290,
+      "meetingReaders": 0,
+      "wholeRecords": 146,
+      "otherWaiting": 1070,
+      "due": 1701,
+      "dueTomorrow": 1701,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 31290,
+        "NO_READER_FIELD": 1067,
+        "PUBLISHER": 1701,
+        "TAKES_WHOLE_RECORDS_ONLY": 146,
+        "NO_FACT_SLOT": 2,
+        "COMMENT_SUMMARY_TAKES_IT": 1
+      },
+      "dueFields": {
+        "PAR-02": 275,
+        "GOV-02": 207,
+        "MTG-04": 238,
+        "OFF-02": 112,
+        "OFF-04": 673,
+        "OFF-09": 195,
+        "body.officeAddress": 1
+      }
+    },
+    {
+      "state": "CO",
+      "total": 16076,
+      "walker": 15028,
+      "meetingReaders": 0,
+      "wholeRecords": 96,
+      "otherWaiting": 146,
+      "due": 806,
+      "dueTomorrow": 806,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 15028,
+        "PUBLISHER": 806,
+        "NO_READER_FIELD": 145,
+        "TAKES_WHOLE_RECORDS_ONLY": 96,
+        "COMMENT_SUMMARY_TAKES_IT": 1
+      },
+      "dueFields": {
+        "OFF-04": 272,
+        "OFF-09": 37,
+        "GOV-02": 120,
+        "PAR-02": 110,
+        "MTG-04": 219,
+        "OFF-02": 48
+      }
+    },
+    {
+      "state": "CT",
+      "total": 21027,
+      "walker": 19939,
+      "meetingReaders": 0,
+      "wholeRecords": 91,
+      "otherWaiting": 174,
+      "due": 823,
+      "dueTomorrow": 823,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 19939,
+        "PUBLISHER": 823,
+        "NO_READER_FIELD": 174,
+        "TAKES_WHOLE_RECORDS_ONLY": 91
+      },
+      "dueFields": {
+        "MTG-04": 56,
+        "OFF-04": 343,
+        "OFF-02": 22,
+        "GOV-02": 230,
+        "PAR-02": 41,
+        "OFF-09": 131
+      }
+    },
+    {
+      "state": "DC",
+      "total": 4347,
+      "walker": 3890,
+      "meetingReaders": 0,
+      "wholeRecords": 27,
+      "otherWaiting": 94,
+      "due": 336,
+      "dueTomorrow": 336,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 3890,
+        "NO_READER_FIELD": 82,
+        "PUBLISHER": 336,
+        "COMMENT_SUMMARY_TAKES_IT": 12,
+        "TAKES_WHOLE_RECORDS_ONLY": 27
+      },
+      "dueFields": {
+        "PAR-02": 80,
+        "OFF-04": 134,
+        "GOV-02": 32,
+        "OFF-02": 64,
+        "OFF-09": 12,
+        "MTG-04": 14
+      }
+    },
+    {
+      "state": "DE",
+      "total": 12879,
+      "walker": 11898,
+      "meetingReaders": 0,
+      "wholeRecords": 32,
+      "otherWaiting": 581,
+      "due": 368,
+      "dueTomorrow": 368,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 11898,
+        "NO_READER_FIELD": 574,
+        "PUBLISHER": 368,
+        "TAKES_WHOLE_RECORDS_ONLY": 32,
+        "COMMENT_SUMMARY_TAKES_IT": 7
+      },
+      "dueFields": {
+        "GOV-02": 97,
+        "OFF-04": 102,
+        "OFF-09": 56,
+        "MTG-04": 35,
+        "OFF-02": 42,
+        "PAR-02": 36
+      }
+    },
+    {
+      "state": "FL",
+      "total": 11765,
+      "walker": 9891,
+      "meetingReaders": 0,
+      "wholeRecords": 155,
+      "otherWaiting": 722,
+      "due": 997,
+      "dueTomorrow": 997,
+      "reasons": {
+        "PUBLISHER": 997,
+        "SITE_WALK_TAKES_IT": 9891,
+        "TAKES_WHOLE_RECORDS_ONLY": 155,
+        "NO_READER_FIELD": 697,
+        "COMMENT_SUMMARY_TAKES_IT": 25
+      },
+      "dueFields": {
+        "OFF-02": 112,
+        "OFF-09": 137,
+        "OFF-04": 236,
+        "GOV-02": 198,
+        "MTG-04": 208,
+        "PAR-02": 101,
+        "body.officeAddress": 2,
+        "OFF-06": 3
+      }
+    },
+    {
+      "state": "GA",
+      "total": 17131,
+      "walker": 15596,
+      "meetingReaders": 0,
+      "wholeRecords": 158,
+      "otherWaiting": 509,
+      "due": 868,
+      "dueTomorrow": 868,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 15596,
+        "PUBLISHER": 868,
+        "TAKES_WHOLE_RECORDS_ONLY": 158,
+        "NO_READER_FIELD": 478,
+        "COMMENT_SUMMARY_TAKES_IT": 31
+      },
+      "dueFields": {
+        "MTG-04": 215,
+        "OFF-04": 264,
+        "GOV-02": 120,
+        "PAR-02": 72,
+        "OFF-09": 91,
+        "OFF-02": 104,
+        "OFF-06": 1,
+        "body.officeAddress": 1
+      }
+    },
+    {
+      "state": "GU",
+      "total": 142,
+      "walker": 137,
+      "meetingReaders": 0,
+      "wholeRecords": 0,
+      "otherWaiting": 0,
+      "due": 5,
+      "dueTomorrow": 5,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 137,
+        "PUBLISHER": 5
+      },
+      "dueFields": {
+        "GOV-02": 3,
+        "OFF-09": 1,
+        "OFF-04": 1
+      }
+    },
+    {
+      "state": "HI",
+      "total": 5088,
+      "walker": 4907,
+      "meetingReaders": 0,
+      "wholeRecords": 17,
+      "otherWaiting": 54,
+      "due": 110,
+      "dueTomorrow": 110,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 4907,
+        "NO_READER_FIELD": 54,
+        "PUBLISHER": 110,
+        "TAKES_WHOLE_RECORDS_ONLY": 17
+      },
+      "dueFields": {
+        "GOV-02": 18,
+        "MTG-04": 13,
+        "OFF-02": 28,
+        "OFF-04": 50,
+        "OFF-09": 1
+      }
+    },
+    {
+      "state": "IA",
+      "total": 3989,
+      "walker": 3546,
+      "meetingReaders": 0,
+      "wholeRecords": 15,
+      "otherWaiting": 4,
+      "due": 424,
+      "dueTomorrow": 424,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 3546,
+        "PUBLISHER": 424,
+        "NO_READER_FIELD": 3,
+        "TAKES_WHOLE_RECORDS_ONLY": 15,
+        "COMMENT_SUMMARY_TAKES_IT": 1
+      },
+      "dueFields": {
+        "PAR-02": 30,
+        "MTG-04": 12,
+        "OFF-04": 305,
+        "OFF-02": 24,
+        "OFF-09": 24,
+        "GOV-02": 27,
+        "OFF-06": 2
+      }
+    },
+    {
+      "state": "ID",
+      "total": 9664,
+      "walker": 9087,
+      "meetingReaders": 0,
+      "wholeRecords": 58,
+      "otherWaiting": 87,
+      "due": 432,
+      "dueTomorrow": 432,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 9087,
+        "NO_READER_FIELD": 86,
+        "TAKES_WHOLE_RECORDS_ONLY": 58,
+        "PUBLISHER": 432,
+        "COMMENT_SUMMARY_TAKES_IT": 1
+      },
+      "dueFields": {
+        "OFF-02": 66,
+        "OFF-04": 123,
+        "MTG-04": 91,
+        "OFF-09": 36,
+        "GOV-02": 95,
+        "PAR-02": 21
+      }
+    },
+    {
+      "state": "IL",
+      "total": 3801,
+      "walker": 3582,
+      "meetingReaders": 0,
+      "wholeRecords": 6,
+      "otherWaiting": 36,
+      "due": 177,
+      "dueTomorrow": 177,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 3582,
+        "PUBLISHER": 177,
+        "NO_READER_FIELD": 36,
+        "TAKES_WHOLE_RECORDS_ONLY": 6
+      },
+      "dueFields": {
+        "OFF-09": 18,
+        "OFF-02": 23,
+        "GOV-02": 45,
+        "OFF-04": 57,
+        "MTG-04": 17,
+        "PAR-02": 17
+      }
+    },
+    {
+      "state": "IN",
+      "total": 6155,
+      "walker": 5827,
+      "meetingReaders": 0,
+      "wholeRecords": 27,
+      "otherWaiting": 25,
+      "due": 276,
+      "dueTomorrow": 276,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 5827,
+        "PUBLISHER": 276,
+        "NO_READER_FIELD": 25,
+        "TAKES_WHOLE_RECORDS_ONLY": 27
+      },
+      "dueFields": {
+        "OFF-02": 61,
+        "OFF-09": 26,
+        "OFF-04": 95,
+        "GOV-02": 43,
+        "PAR-02": 30,
+        "OFF-06": 2,
+        "MTG-04": 19
+      }
+    },
+    {
+      "state": "KS",
+      "total": 1637,
+      "walker": 1548,
+      "meetingReaders": 0,
+      "wholeRecords": 9,
+      "otherWaiting": 1,
+      "due": 79,
+      "dueTomorrow": 79,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 1548,
+        "PUBLISHER": 79,
+        "TAKES_WHOLE_RECORDS_ONLY": 9,
+        "NO_READER_FIELD": 1
+      },
+      "dueFields": {
+        "OFF-04": 23,
+        "MTG-04": 10,
+        "OFF-02": 11,
+        "OFF-09": 20,
+        "GOV-02": 14,
+        "PAR-02": 1
+      }
+    },
+    {
+      "state": "KY",
+      "total": 832,
+      "walker": 770,
+      "meetingReaders": 0,
+      "wholeRecords": 14,
+      "otherWaiting": 2,
+      "due": 46,
+      "dueTomorrow": 46,
+      "reasons": {
+        "SITE_WALK_TAKES_IT": 770,
+        "PUBLISHER": 46,
+        "TAKES_WHOLE_RECORDS_ONLY": 14,
+        "NO_READER_FIELD": 2
+      },
+      "dueFields": {
+        "OFF-02": 11,
+        "GOV-02": 8,
+        "OFF-04": 19,
+        "MTG-04": 4,
+        "OFF-09": 4
+      }
+    }
+  ],
+  "checks": [
+    "Every input passed real fresh intake and an unchanged re-report against an existing never-tried copy.",
+    "Live backlog identities were retained for queue counts, rather than deduplicating legacy rows.",
+    "Every row was checked against both listedBoxRepository.due and BOX_DUE_SQL today and tomorrow.",
+    "Unchanged next-day re-reports did not put any addressed row into due."
+  ]
+}

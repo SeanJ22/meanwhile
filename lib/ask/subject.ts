@@ -66,7 +66,8 @@ export function resolveSubjectRef(
   entities: readonly BindableEntity[],
 ): BindableEntity | null {
   if (ref.id) {
-    return entities.find((e) => e.id === ref.id) ?? null;
+    const matches = entities.filter((e) => e.id === ref.id || e.aliases?.includes(ref.id!));
+    return new Set(matches.map(entity => entity.id)).size === 1 ? matches[0] : null;
   }
   if (!ref.name) return null;
   const binding = bindNamedEntity(ref.name, entities);

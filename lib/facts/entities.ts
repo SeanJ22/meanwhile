@@ -8,16 +8,9 @@ import { hostOf, isOfficialUrl } from "./check.ts";
 import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
 import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
+import type { Entity } from "../core/shapes.ts";
 
-type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
-  | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
-
-interface EntityRow {
-  readonly id: string;
-  readonly kind: EntityKind;
-  readonly name: string;
-  readonly state: string | null;
-  readonly parentId: string | null;
+interface EntityRow extends Entity {
   /** The registered government a reviewed door names as a board's owner. */
   readonly government?: string | null;
 }

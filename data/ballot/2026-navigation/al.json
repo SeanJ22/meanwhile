@@ -1,0 +1,275 @@
+{
+  "state": "AL",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+      "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+      "publisher": "Alabama Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.alabama.gov/alabama-votes",
+      "finalUrl": "https://www.sos.alabama.gov/alabama-votes",
+      "publisher": "Alabama Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.alabama.gov/alabama-votes/faqs",
+      "finalUrl": "https://www.sos.alabama.gov/alabama-votes/faqs",
+      "publisher": "Alabama Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+      "finalUrl": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+      "publisher": "Alabama Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.alabama.gov/newsroom/secretary-state-wes-allen-announces-start-absentee-voting-alabama",
+      "finalUrl": "https://www.sos.alabama.gov/newsroom/secretary-state-wes-allen-announces-start-absentee-voting-alabama",
+      "publisher": "Alabama Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.sos.alabama.gov/alabama-votes",
+          "finalUrl": "https://www.sos.alabama.gov/alabama-votes",
+          "publisher": "Alabama Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:04.158914+00:00",
+          "httpStatus": 200,
+          "rawHash": "8fa0efdd4a2bacadf5654d6654185a882a5b56a41a67728918b0468276a107db",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.alabama.gov/alabama-votes/faqs",
+          "finalUrl": "https://www.sos.alabama.gov/alabama-votes/faqs",
+          "publisher": "Alabama Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:48.994113+00:00",
+          "httpStatus": 200,
+          "rawHash": "17879cef607d5e2a5c16f9839373575c17d125fba886b3b986ac8c579fb7ef10",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+          "finalUrl": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+          "publisher": "Alabama Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:53.417116+00:00",
+          "httpStatus": 200,
+          "rawHash": "2afe81fcf64042def02bef098ec1c46bca14f3b04b7dd6912e2937ec4d51cac8",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.alabama.gov/newsroom/secretary-state-wes-allen-announces-start-absentee-voting-alabama",
+          "finalUrl": "https://www.sos.alabama.gov/newsroom/secretary-state-wes-allen-announces-start-absentee-voting-alabama",
+          "publisher": "Alabama Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:39.256231+00:00",
+          "httpStatus": 200,
+          "rawHash": "ee69a91af03a28ec3667fe9d217ba75eeafc7f7ba50bbed2156774a6ee33ca68",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+          "finalUrl": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+          "publisher": "Alabama Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:28.636930+00:00",
+          "httpStatus": 200,
+          "rawHash": "5c2800a156f356c1150f95c8d606f543dd233e95ceb24f8e5f9a5ae7ef2a40db",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:01d44d6559b16378f9c11ea5021ab1ae",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "registration_deadline",
+            "text": "October 19 Voter registration deadline",
+            "quote": "NOVEMBER 3, 2026\nOctober 19 Voter registration deadline",
+            "dates": [
+              "2026-10-19"
+            ],
+            "url": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:28.636930+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:056060de405317139bbcea536f478d6d",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "registration_lookup",
+            "text": "https://myinfo.alabamavotes.gov/",
+            "quote": "Polling Place and Registration Status",
+            "dates": [],
+            "url": "https://www.sos.alabama.gov/alabama-votes/faqs",
+            "navigationUrl": "https://myinfo.alabamavotes.gov/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:48.994113+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:13a57c37bbb8d53ffe01d21a24cff3a9",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "ballot_lookup",
+            "text": "https://www.sos.alabama.gov/alabama-votes/2026-general-election-sample-ballots",
+            "quote": "View the 2026 General Election Sample Ballots",
+            "dates": [],
+            "url": "https://www.sos.alabama.gov/alabama-votes",
+            "navigationUrl": "https://www.sos.alabama.gov/alabama-votes/2026-general-election-sample-ballots",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.158914+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:382882f0ce090ccd5b17d51a8e8e5821",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "October 27 Last day to apply for an absentee ballot by mail October 29 Last day to apply for an absentee ballot in person",
+            "quote": "October 27 Last day to apply for an absentee ballot by mail October 29 Last day to apply for an absentee ballot in person",
+            "dates": [
+              "2026-10-27",
+              "2026-10-29"
+            ],
+            "url": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:28.636930+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:3a7c3f6ed0fd4fac4ad1222ac6f80083",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "early_voting",
+            "text": "Wes Allen, Alabama’s Secretary of State is reminding Alabama voters that absentee voting for the November 3, 2026 General Election begins today, Wednesday, September 9, 2026.",
+            "quote": "Wes Allen, Alabama’s Secretary of State is reminding Alabama voters that absentee voting for the November 3, 2026 General Election begins today, Wednesday, September 9, 2026.",
+            "dates": [
+              "2026-09-09"
+            ],
+            "url": "https://www.sos.alabama.gov/newsroom/secretary-state-wes-allen-announces-start-absentee-voting-alabama",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:39.256231+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:3df68ae777d824ec865817d6eb463bb1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "early_voting",
+            "text": "Absentee ballots being returned in-person must be received by the county absentee election manager by close of business on the day before the election, November 2, 2026.",
+            "quote": "Absentee ballots being returned in-person must be received by the county absentee election manager by close of business on the day before the election, November 2, 2026.",
+            "dates": [
+              "2026-11-02"
+            ],
+            "url": "https://www.sos.alabama.gov/newsroom/secretary-state-wes-allen-announces-start-absentee-voting-alabama",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:39.256231+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:a859fb969d7392d1934981d322bb93af",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "election_office",
+            "text": "Elections Division - Office of the Secretary of State",
+            "quote": "Elections Division - Office of the Secretary of State\n334-242-7210",
+            "dates": [],
+            "url": "https://www.sos.alabama.gov/sites/default/files/election-2026/2026-VoterGuide.pdf",
+            "navigationUrl": "https://www.sos.alabama.gov/alabama-votes",
+            "electionDate": "2026-11-03",
+            "phone": "334-242-7210",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:28.636930+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:bfc3e758307f6bd8080cc244fcacbc3c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "polling_lookup",
+            "text": "https://myinfo.alabamavotes.gov/",
+            "quote": "Find Your Polling Location",
+            "dates": [],
+            "url": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+            "navigationUrl": "https://myinfo.alabamavotes.gov/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:53.417116+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ebe13b023ca90f3f4a6347355d01d663",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AL",
+            "divisionId": "ocd-division/country:us/state:al",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+            "quote": "Voter Registration",
+            "dates": [],
+            "url": "https://www.sos.alabama.gov/alabama-votes",
+            "navigationUrl": "https://www.sos.alabama.gov/alabama-votes/voter/register-to-vote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.158914+00:00",
+            "sourceOrg": "Alabama Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

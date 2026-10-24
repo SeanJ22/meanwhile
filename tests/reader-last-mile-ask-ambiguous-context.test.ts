@@ -26,6 +26,10 @@ import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
+import { candidateKeysForState } from "../lib/ballot/person-keys.ts";
+import { getCandidateCorpus, positionsFor } from "../lib/candidates/positions.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 
 async function installCandidateProfiles(value: CandidateProfilesProjection, state = "AZ"): Promise<CandidateProfilesProjection> {
   installManualValue(stateBallotContractId("candidate-profiles", state), value, `test:candidate-profiles:${state}`);
@@ -183,4 +187,36 @@ test("Hourihan's exact card corpus answers while the unresolved party/candidacy 
   assert.ok(payload.records.some((record) => record.kind === "SOURCE_PASSAGE" && record.canonicalSubjectId === cardKey));
   assert.ok(payload.records.every((record) => record.canonicalSubjectId !== "ballot-az-pima:governor:hourihan-teri-ann"));
   assert.equal(payload.answer, null);
+});
+
+test("an unresolved card and its source filing each retain their own corpus without a cross-source identity join", async () => {
+  const filingKey = "ballot-az-pima:governor:hourihan-teri-ann";
+  assert.deepEqual(candidateKeysForState("AZ", HOURIHAN_CARD), [HOURIHAN_CARD]);
+  assert.ok(!candidateKeysForState("AZ", filingKey).includes(HOURIHAN_CARD));
+  assert.ok(!readerPersonKeys(filingKey).keys.includes(HOURIHAN_CARD));
+  const held = getCandidateCorpus("AZ");
+  const cardDocument = held.documents.find(document => document.candidateKey === HOURIHAN_CARD)!;
+  const filingText = hourihanText.replace("leaders who listen", "a government that answers questions");
+  const filingHash = createHash("sha256").update(filingText).digest("hex");
+  const filingDocument = { ...cardDocument, id: `${filingKey}@${filingHash}`, candidateKey: filingKey,
+    documentUrl: "https://example.test/filing-only-corpus/", contentHash: filingHash, text: filingText };
+  try {
+    installManualValue(stateBallotContractId("candidate-corpus", "AZ"), { ...held, documents: [...held.documents, filingDocument] }, "test:hourihan-separate-corpora");
+    await withReaderSelection({ states: ["AZ"], keys: new Set([filingKey, HOURIHAN_CARD]) }, async () => {
+      await Promise.all([readRegistryRuntimeProjection(["AZ"]), readGenericBallotProjection("AZ"),
+        readStateAuthorityProjection("candidate-publications", "AZ")]);
+      assert.ok(getCandidateCorpus("AZ").documents.some(document => document.id === filingDocument.id), "the source-keyed test capture was loaded");
+      assert.deepEqual(readerPersonKeys(filingKey), { status: "DIRECT", keys: [filingKey] });
+      for (const [key, ownUrl, withheldUrl] of [
+        [HOURIHAN_CARD, cardDocument.documentUrl, filingDocument.documentUrl],
+        [filingKey, filingDocument.documentUrl, cardDocument.documentUrl],
+      ]) {
+        const passages = positionsFor("AZ", key).flatMap(position => position.answer.kind === "MATCHED" ? position.answer.passages : []);
+        assert.ok(passages.some(passage => passage.documentUrl === ownUrl), `${key} keeps its own sourced words`);
+        assert.ok(passages.every(passage => passage.documentUrl !== withheldUrl), `${key} cannot inherit the unresolved relationship's words`);
+      }
+    });
+  } finally {
+    await installCandidateCorpus(held);
+  }
 });

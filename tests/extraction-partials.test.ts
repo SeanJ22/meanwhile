@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import type { StatedCount } from "../lib/extract/count-assertion.ts";
 import { extractRosterTables } from "../lib/extract/roster-table.ts";
+import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import {
   assertionCensus,
   cannotRun,
@@ -12,6 +14,17 @@ import {
   type ExtractResult,
 } from "../lib/extract/types.ts";
 import { parseRoster } from "../lib/hunt/wikipedia.ts";
+
+test("successive native election PDFs retain their text and page counts after extraction closes", async () => {
+  const bytes = readFileSync(new URL("./fixtures/cochise-2026-vote-centers.pdf", import.meta.url));
+  const source = "https://www.cochise.az.gov/elections/2026-vote-centers.pdf";
+  const first = await extractTextLayer(Uint8Array.from(bytes), source);
+  assert.equal(first.outcome, "EXTRACTED");
+  if (first.outcome !== "EXTRACTED") return;
+  assert.ok(Number(first.counts.pages) > 0);
+  assert.match(first.items.map(page => page.text).join(" "), /Cochise/i);
+  assert.deepEqual(await extractTextLayer(Uint8Array.from(bytes), source), first);
+});
 
 /**
  * Three silent-partial shapes, each of which returned some rows and a clean exit. Each test states the shape, not the

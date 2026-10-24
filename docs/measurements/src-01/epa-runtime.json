@@ -1,0 +1,160 @@
+{
+  "source": "epa-echo",
+  "productionWrites": 0,
+  "slowNationalObservation": {
+    "stage": "Full national source ingestion",
+    "implementation": "5f8e424242947140441a412b67333da4503486d75dc471030a6f34f56d0a69b0",
+    "source": "Official EPA ECHO archive: 445,388,175 bytes; SHA-256 116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+    "elapsedMs": 226100.00000000035,
+    "cpuMs": 100330,
+    "files": [
+      {
+        "databaseBytes": 390279168,
+        "rows": 174680
+      }
+    ],
+    "reason": "Stopped after its measured pace could not meet the 20-minute source deadline before any national publication; required optimization followed.",
+    "productionWrites": 0
+  },
+  "parserBoundedBenchmark": [
+    {
+      "mode": "parse",
+      "rows": 50000,
+      "gaps": 0,
+      "elapsedMs": 5277.3028030000005,
+      "cpuMs": 1976.173
+    },
+    {
+      "mode": "parse-normalize",
+      "rows": 50000,
+      "gaps": 0,
+      "elapsedMs": 8639.888143,
+      "cpuMs": 2590.604
+    }
+  ],
+  "artifactBoundedBenchmark": {
+    "rows": 3000,
+    "scope": "First 3,000 actual CA rows, same exact source binding, native facility identity and metric validation; local immutable artifact write",
+    "removedUnusedCandidateMs": 908.7358669999994,
+    "checkedArtifactMs": 218.58999399999993
+  },
+  "limits": "Bounded benchmarks diagnose cost. Only the complete national replay can establish national disk and deadline behavior.",
+  "failedFullNationalCompactSpool": {
+    "implementation": "9cbe95beb42781728a74323116e97167584a2815e61c1760d7938bc33d0eddf0",
+    "elapsedMs": 1332380,
+    "cpuMs": 863190,
+    "files": [
+      {
+        "rows": 2822030,
+        "databaseBytes": 4968345600
+      }
+    ],
+    "reason": "The actual national source exceeded its unchanged 20-minute parsing deadline before finishing the 3,229,311-row archive. Stopped before materialization and publication; required temp-index optimization follows.",
+    "productionWrites": 0
+  },
+  "priorCompactSpoolBoundedBenchmark": {
+    "implementation": "interned normalized+source column schemas; exact value arrays, no per-row deflate",
+    "archiveHash": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+    "state": "CA",
+    "rows": 50000,
+    "refs": 100000,
+    "elapsedMs": 4636.881831,
+    "totalCpuMs": 5013.661,
+    "appendCpuMs": 3130.888,
+    "appendWallMs": 2955.9551509999806,
+    "diskBytes": 95858688,
+    "rssBytes": 169066496,
+    "scope": "50000 actual CA rows; ingest only, no national extrapolation"
+  },
+  "finalMatchedNativeSpoolBenchmark": {
+    "implementation": "6e428fcbe46168717078c066836cef87471b2399a6dbcae769681bfd48ce33d8",
+    "change": "Build temporary membership indexes once before exposing reader partitions; avoid a per-append source-blob reference update.",
+    "archiveHash": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+    "scope": "matched first500000 actual full-national archive source rows in native order; no complete-universe or national timing claim",
+    "results": [
+      {
+        "mode": "baseline",
+        "sourceRows": 500000,
+        "facts": 500000,
+        "gaps": 0,
+        "refs": 990430,
+        "prefixHash": "ec587f9e4417ff6dad531462db84587416fd4c3e617546fc78c3c5dc7138c8e7",
+        "elapsedMs": 591215.326757,
+        "cpuMs": 326515.225,
+        "appendCpuMs": 208682.652,
+        "diskBytes": 881631280,
+        "rssBytes": 229228544,
+        "prepareAndFirstReader": {
+          "elapsedMs": 126.58848400006536,
+          "cpuMs": 67.862,
+          "rows": 1,
+          "hash": "672b23bc505253eb0cdc51970b85d488058f3dbd88f2a66066f9c2050d08081d",
+          "diskBytes": 878039040
+        },
+        "factBytesHash": "e7c20224365e81c9177953890aa2d76574c368b0811065e913988eeb0bb20f22",
+        "memberBindingsHash": "254dc8336f119e1bf90899474060a35fb4bd65acc020c7235febd2f59141c88b"
+      },
+      {
+        "mode": "deferred",
+        "sourceRows": 500000,
+        "facts": 500000,
+        "gaps": 0,
+        "refs": 990430,
+        "prefixHash": "ec587f9e4417ff6dad531462db84587416fd4c3e617546fc78c3c5dc7138c8e7",
+        "elapsedMs": 141535.62349100003,
+        "cpuMs": 84120.864,
+        "appendCpuMs": 32293.032,
+        "diskBytes": 821817920,
+        "rssBytes": 380149760,
+        "prepareAndFirstReader": {
+          "elapsedMs": 5593.2788539999165,
+          "cpuMs": 3891.64,
+          "rows": 1,
+          "hash": "672b23bc505253eb0cdc51970b85d488058f3dbd88f2a66066f9c2050d08081d",
+          "diskBytes": 881618944
+        },
+        "factBytesHash": "e7c20224365e81c9177953890aa2d76574c368b0811065e913988eeb0bb20f22",
+        "memberBindingsHash": "254dc8336f119e1bf90899474060a35fb4bd65acc020c7235febd2f59141c88b"
+      }
+    ]
+  },
+  "verificationInfrastructureFailure": {
+    "implementation": "6e428fcbe46168717078c066836cef87471b2399a6dbcae769681bfd48ce33d8",
+    "sourceRows": 3229311,
+    "sourceIngestMs": 545565,
+    "sourceIngestTempBytes": 5322023480,
+    "sourceIngestRssBytes": 334495744,
+    "stage": "California artifact materialization",
+    "failure": "database is locked",
+    "cause": "A concurrent verification-only read transaction on the live DELETE-journal temporary SQLite database blocked the producer commit. The snapshot connection closed; the producer was stopped. This is a verification infrastructure error, not a publisher failure.",
+    "liveReadInterval": {
+      "from": "2026-10-23T11:09:33.148Z",
+      "until": "2026-10-23T11:09:37.716Z"
+    },
+    "remedy": "Profile only stopped sidecar snapshots. The replay now stops immediately on an iterator exception, persists state references, and gives each run its own artifact root.",
+    "publishedRows": 0,
+    "productionWrites": 0
+  },
+  "serialFullArchiveProof": {
+    "sourceRows": 3229311,
+    "verifiedRows": 3229294,
+    "excludedRows": 17,
+    "references": 55806,
+    "sourceMs": 450365,
+    "materializationMs": 2475335,
+    "proofCompressionMs": 138704.7542599864,
+    "proofExactReadbackMs": 651669.5252149969,
+    "normalLocalMaterializationMs": 1684960.7205250168,
+    "sourcePlusNormalLocalMaterializationMs": 2135325.720525017,
+    "initialFullNationalPublicationAndReaders": "all native states passed functionally; every registered US jurisdiction reached actual GET, card renderer and grounded Ask adapter",
+    "readerLatency": "old raw133-cell artifact reader exceeded deadline; replaced by measured compact interpreted-cell artifacts",
+    "verificationPause": {
+      "at": "2026-10-23T12:34:24.857957+00:00",
+      "pids": [
+        205676,
+        217733
+      ],
+      "scope": "Paused during tomorrow reader repetitions to isolate final cold reader benchmarks. In-flight tomorrow timings excluded. Final native compact three-clock replay replaces this reader run. All full archive, source work and artifacts retained."
+    }
+  }
+}

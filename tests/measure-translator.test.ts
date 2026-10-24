@@ -51,12 +51,12 @@ test("an unsupported writer sentence or failed independent check never publishes
     await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
       transportFor: () => async request => {
         calls++;
-        if (calls === 1) return { ...response(request, { measure: failure === "identity" ? { ...measure, contestId: "other" } : measure,
+        if (request.tools[0].name === "write_measure_translation") return { ...response(request, { measure: failure === "identity" ? { ...measure, contestId: "other" } : measure,
           sentences: failure === "quote" ? [{ ...sentences[0], quote: "Invented benefit." }, ...sentences.slice(1)] : sentences }),
           ...(failure === "truncation" ? { stop_reason: "max_tokens" } : {}) };
         return response(request, { checked: checked.map((row, at) => ({ ...row, supported: failure !== "checker" || at !== 0 })) });
       } }));
-    assert.equal(calls, failure === "checker" ? 2 : 1);
+    assert.equal(calls, failure === "checker" ? 4 : 2);
   }
 });
 
@@ -135,7 +135,7 @@ test("the next translator start reads the latest Bank playbook and distinct allo
   } });
   assert.match(system, /Keep every material exception/);
   assert.match(system, /Preserve existing spending limits/);
-  assert.throws(() => translationPlaybook([...fixturePlaybooks(["MEASURE_WRITER"]), { ...entry, payload: { ...entry.payload as object, model: defaults.writerModel } }]), /distinct supported/);
+  assert.equal(translationPlaybook([...fixturePlaybooks(["MEASURE_WRITER"]), { ...entry, payload: { ...entry.payload as object, model: defaults.writerModel } }]).checkerModel, defaults.checkerModel);
 });
 
 test("a changed source is rewritten, an unchanged source costs nothing, and a failed check retains the last GOOD version and metered usage", async () => {
@@ -154,7 +154,7 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
   assert.equal((await run()).status, "REUSED"); assert.equal(calls, 2);
   rejectCheck = true;
   const changed = { ...evidence, text: `${source} The next review is in 2028.`, contentHash: `sha256-${translationHash(`${source} The next review is in 2028.`)}` };
-  const refused = await run(changed); assert.equal(refused.status, "HELD"); assert.equal(refused.usage.length, 2);
+  const refused = await run(changed); assert.equal(refused.status, "HELD"); assert.equal(refused.usage.length, 4);
   assert.deepEqual((await readTranslations([subject.ocdId], { store, now, bypassCache: true }))[0], first.record);
   rejectCheck = false;
   const rewritten = await run(changed); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
@@ -238,6 +238,24 @@ test("a rewrite cannot drop or move a prior reaction identity to another officia
     let calls = 0;
     await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject: { ...subject, prior }, now,
       transportFor: () => async request => { calls++; return response(request, { measure: { ...measure, parts }, sentences }); } }), /reaction identity/);
-    assert.equal(calls, 1, "unsupported identity rewrites stop before another paid model call");
+    assert.equal(calls, 2, "both writers must preserve the same reaction identity; no checker is bought for invalid parts");
   }
+});
+
+test("a failed Sonnet check buys a Sonnet rewrite and an Opus check, metering all four calls", async () => {
+  const requests: ModelRequest[] = [];
+  const repos = createMemoryRepositories();
+  const result = await translateMeasure({ repos, evidence, subject, now, transportFor: () => async request => {
+    requests.push(request);
+    return response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences }
+      : { checked: checked.map(row => ({ ...row, supported: requests.length > 2 })) });
+  } });
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
+  assert.match(requests[2].system[0].text, /Write|write/);
+  assert.equal(result.record.writerModel, "claude-sonnet-5-5");
+  assert.equal(result.record.checkerModel, "claude-opus-5-5");
+  assert.equal(result.record.subjectId, subject.contestId);
+  assert.equal(result.usage.length, 4);
+  assert.ok(result.usage.every(row => row.usd !== null));
+  assert.equal(translationRecordIssue({ ...result.record, checkerModel: `${result.record.writerModel}-20261024` })?.includes("independent checker"), true);
 });

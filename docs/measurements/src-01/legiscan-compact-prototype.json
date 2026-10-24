@@ -1,0 +1,49 @@
+{
+  "recordedAt": "2026-10-23T11:45:38.550Z",
+  "kind": "Read-only local native Postgres query of real publisher data already admitted through registered publication",
+  "productionWrites": 0,
+  "scope": "MA entire latest dataset; US first6206bills/40promotedparts of the older uncompressed pilot, not the entire US dataset",
+  "change": "One compact PART format stores sponsor dictionaries and derives repeated public fact provenance after complete canonical GOOD/hash validation",
+  "measurements": [
+    {
+      "state": "MA",
+      "parts": 36,
+      "rows": 8960,
+      "fullBytes": 31187580,
+      "compactBytes": 9983725,
+      "fieldBytes": {
+        "facts": 21123215,
+        "title": 616079,
+        "description": 1062714,
+        "sponsors": 2506203,
+        "texts": 1839592
+      },
+      "fullHashMs": 1102,
+      "compactHashMs": 390,
+      "dictionaryBytes": 8315642,
+      "dictionaryHashMs": 296,
+      "exactHydratedFacts": true,
+      "exactHydratedSponsors": true
+    },
+    {
+      "state": "US",
+      "parts": 40,
+      "rows": 6206,
+      "fullBytes": 40870795,
+      "compactBytes": 25805511,
+      "fieldBytes": {
+        "facts": 15009430,
+        "title": 370843,
+        "description": 1056680,
+        "sponsors": 19852151,
+        "texts": 1676123
+      },
+      "fullHashMs": 924,
+      "compactHashMs": 613,
+      "dictionaryBytes": 9792642,
+      "dictionaryHashMs": 201,
+      "exactHydratedFacts": true,
+      "exactHydratedSponsors": true
+    }
+  ]
+}

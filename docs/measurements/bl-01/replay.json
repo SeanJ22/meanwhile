@@ -1,0 +1,3454 @@
+{
+  "recordedAt": "2026-10-23T08:55:13.992066+00:00",
+  "base": "78f82a232dd1d0545a46835e7716032ff3807425",
+  "productionCopy": {
+    "reader": "br-polished-cherry-axfe5vxb",
+    "control": "br-weathered-lake-aeasp3p1"
+  },
+  "nationalInitialAcquisition": {
+    "seconds": 130.385300134,
+    "peakMiB": 1164.88671875,
+    "versions": [
+      {
+        "version": "cd:119",
+        "groups": 443,
+        "edges": 40147
+      },
+      {
+        "version": "county:2020",
+        "groups": 3232,
+        "edges": 46960
+      },
+      {
+        "version": "cbsa:2023",
+        "groups": 935,
+        "edges": 29974
+      },
+      {
+        "version": "sldu:2024",
+        "groups": 1963,
+        "edges": 48029
+      },
+      {
+        "version": "sldl:2024",
+        "groups": 4878,
+        "edges": 56878
+      },
+      {
+        "version": "cd:120",
+        "groups": 441,
+        "edges": 40423
+      },
+      {
+        "version": "sldu:2026",
+        "groups": 1958,
+        "edges": 48605
+      },
+      {
+        "version": "sldl:2026",
+        "groups": 4873,
+        "edges": 57899
+      }
+    ],
+    "promotedVersion": "cv-417ac06739403c6318d1e612d7ed5d39"
+  },
+  "nationalCompletePostgresPublication": {
+    "seconds": 115.746179102,
+    "peakMiB": 1213.58203125,
+    "promotedVersion": "cv-862147a287e1cbc1922e39902c49c1b8",
+    "receipt": {
+      "scope": "US:zcta-geography-overlaps",
+      "checks": [
+        {
+          "code": "AUTHORITY_AND_RAW_PROVENANCE_VALID",
+          "check": "SOURCE_AUTHENTICITY",
+          "detail": "U.S. Census Bureau; https://www2.census.gov/geo/docs/maps-data/data/rel2020/; raw 154ca530be70555259f7abc71a29d48202cfa38ff474d49389aba0e68611a597.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "SCHEMA_AND_DISPOSITION_VALID",
+          "check": "SCHEMA_PARSE_VALIDITY",
+          "detail": "18723/18723 records normalized; 0 explicitly dropped.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "IDENTITY_AND_JURISDICTION_EXACT",
+          "check": "IDENTITY_JURISDICTION_VALIDITY",
+          "detail": "18723 exact identity binding(s); no name-only inheritance.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "TEMPORAL_VERSION_VALID",
+          "check": "TEMPORAL_VALIDITY",
+          "detail": "cbsa:2023+cd:119+cd:120+county:2020+sldl:2024+sldl:2026+sldu:2024+sldu:2026; source through 2020.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "FACT_INTERPRETATION_VALID",
+          "check": "SEMANTIC_VALIDITY",
+          "detail": "ZCTA-to-geography overlaps for the exact built scopes (tabulated area shares where supplied; polygon-derived memberships carry unknown shares).",
+          "verdict": "PASS"
+        },
+        {
+          "code": "BOUNDED_UNIVERSE_RECONCILED",
+          "check": "COMPLETENESS_HORIZON_VALIDITY",
+          "detail": "18723/18723 rows and pagination ended.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "NO_ABSENCE_CLAIM",
+          "check": "ABSENCE_VALIDITY",
+          "detail": "The projection makes no absence claim.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "DEPENDENT_CONSUMERS_ACCEPT",
+          "check": "DEPENDENT_READ_MODEL_VALIDITY",
+          "detail": "lib/census-geography/lookup.ts, unavailable:census-geography-overlaps (source-scoped pre-promotion)",
+          "verdict": "PASS"
+        }
+      ],
+      "decision": "GOOD",
+      "sourceId": "census-geography-relationships",
+      "candidateId": "cv-862147a287e1cbc1922e39902c49c1b8",
+      "recordClass": "CENSUS_GEOGRAPHY",
+      "validatedAt": "2026-10-23T08:49:42.143Z",
+      "excludedFacts": [],
+      "contractVersion": 2
+    },
+    "readerReadback": {
+      "contractVersion": 2,
+      "kind": "READER_PROJECTION_READBACK",
+      "contractId": "census-geography-overlaps",
+      "sourceId": "census-geography-relationships",
+      "recordClass": "CENSUS_GEOGRAPHY",
+      "scope": "US:zcta-geography-overlaps",
+      "projectionId": "census-geography-zcta-overlaps",
+      "versionId": "cv-862147a287e1cbc1922e39902c49c1b8",
+      "pointerKey": "CENSUS_GEOGRAPHY:US:zcta-geography-overlaps",
+      "observedAt": "2026-10-23T08:50:10.150Z",
+      "evidenceKind": "TYPED_READER_READ_MODEL",
+      "verifierId": "unavailable:census-geography-overlaps",
+      "verifierCodeSha": "78f82a232dd1d0545a46835e7716032ff3807425",
+      "status": "PASS",
+      "detail": "The typed census-geography Reader read canonical version cv-862147a287e1cbc1922e39902c49c1b8."
+    }
+  },
+  "nationalUnchangedRefresh": {
+    "seconds": 77.954452035,
+    "peakMiB": 1237.390625,
+    "promotedVersion": "cv-5d0f1d563b5058e5676132e1eafe5271",
+    "receipt": {
+      "scope": "US:zcta-geography-overlaps",
+      "checks": [
+        {
+          "code": "AUTHORITY_AND_RAW_PROVENANCE_VALID",
+          "check": "SOURCE_AUTHENTICITY",
+          "detail": "U.S. Census Bureau; https://www2.census.gov/geo/docs/maps-data/data/rel2020/; raw 154ca530be70555259f7abc71a29d48202cfa38ff474d49389aba0e68611a597.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "SCHEMA_AND_DISPOSITION_VALID",
+          "check": "SCHEMA_PARSE_VALIDITY",
+          "detail": "18723/18723 records normalized; 0 explicitly dropped.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "IDENTITY_AND_JURISDICTION_EXACT",
+          "check": "IDENTITY_JURISDICTION_VALIDITY",
+          "detail": "18723 exact identity binding(s); no name-only inheritance.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "TEMPORAL_VERSION_VALID",
+          "check": "TEMPORAL_VALIDITY",
+          "detail": "cbsa:2023+cd:119+cd:120+county:2020+sldl:2024+sldl:2026+sldu:2024+sldu:2026; source through 2020.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "FACT_INTERPRETATION_VALID",
+          "check": "SEMANTIC_VALIDITY",
+          "detail": "ZCTA-to-geography overlaps for the exact built scopes (tabulated area shares where supplied; polygon-derived memberships carry unknown shares).",
+          "verdict": "PASS"
+        },
+        {
+          "code": "BOUNDED_UNIVERSE_RECONCILED",
+          "check": "COMPLETENESS_HORIZON_VALIDITY",
+          "detail": "18723/18723 rows and pagination ended.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "NO_ABSENCE_CLAIM",
+          "check": "ABSENCE_VALIDITY",
+          "detail": "The projection makes no absence claim.",
+          "verdict": "PASS"
+        },
+        {
+          "code": "DEPENDENT_CONSUMERS_ACCEPT",
+          "check": "DEPENDENT_READ_MODEL_VALIDITY",
+          "detail": "lib/census-geography/lookup.ts, unavailable:census-geography-overlaps (source-scoped pre-promotion)",
+          "verdict": "PASS"
+        }
+      ],
+      "decision": "GOOD",
+      "sourceId": "census-geography-relationships",
+      "candidateId": "cv-5d0f1d563b5058e5676132e1eafe5271",
+      "recordClass": "CENSUS_GEOGRAPHY",
+      "validatedAt": "2026-10-23T08:28:34.631Z",
+      "excludedFacts": [],
+      "contractVersion": 2
+    },
+    "readerReadback": null
+  },
+  "productionStateQueryComparison": [
+    {
+      "pass": 0,
+      "state": "AL",
+      "kind": "before",
+      "wallMs": 740.1143979999999,
+      "executionMs": 59.943,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 0,
+      "state": "AL",
+      "kind": "after",
+      "wallMs": 556.4073279999998,
+      "executionMs": 38.291,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 0,
+      "state": "CA",
+      "kind": "before",
+      "wallMs": 608.396385,
+      "executionMs": 60.056,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 0,
+      "state": "CA",
+      "kind": "after",
+      "wallMs": 551.0548220000001,
+      "executionMs": 60.872,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 0,
+      "state": "TX",
+      "kind": "before",
+      "wallMs": 584.5500849999999,
+      "executionMs": 62.776,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 0,
+      "state": "TX",
+      "kind": "after",
+      "wallMs": 247.97662699999955,
+      "executionMs": 41.443,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 1,
+      "state": "AL",
+      "kind": "after",
+      "wallMs": 261.3934710000003,
+      "executionMs": 37.54,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 1,
+      "state": "AL",
+      "kind": "before",
+      "wallMs": 489.12114500000007,
+      "executionMs": 58.27,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 1,
+      "state": "CA",
+      "kind": "after",
+      "wallMs": 243.687817,
+      "executionMs": 40.972,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 1,
+      "state": "CA",
+      "kind": "before",
+      "wallMs": 250.54747399999997,
+      "executionMs": 60.998,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 1,
+      "state": "TX",
+      "kind": "after",
+      "wallMs": 241.22018299999945,
+      "executionMs": 41.321,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 1,
+      "state": "TX",
+      "kind": "before",
+      "wallMs": 264.54719899999964,
+      "executionMs": 60.487,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 2,
+      "state": "AL",
+      "kind": "before",
+      "wallMs": 264.29697100000067,
+      "executionMs": 62.11,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 2,
+      "state": "AL",
+      "kind": "after",
+      "wallMs": 227.87043300000005,
+      "executionMs": 39.763,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 2,
+      "state": "CA",
+      "kind": "before",
+      "wallMs": 262.52725699999974,
+      "executionMs": 65.694,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 2,
+      "state": "CA",
+      "kind": "after",
+      "wallMs": 225.28693300000032,
+      "executionMs": 40.548,
+      "tempWrittenBlocks": 0
+    },
+    {
+      "pass": 2,
+      "state": "TX",
+      "kind": "before",
+      "wallMs": 266.5438400000003,
+      "executionMs": 60.784,
+      "tempWrittenBlocks": 4774
+    },
+    {
+      "pass": 2,
+      "state": "TX",
+      "kind": "after",
+      "wallMs": 236.6462959999999,
+      "executionMs": 40.624,
+      "tempWrittenBlocks": 0
+    }
+  ],
+  "readerReplay": [
+    {
+      "zip": "35801",
+      "day": "2026-10-23",
+      "queries": 7,
+      "contests": [
+        "al-2026-general-us-senate",
+        "al-2026-general-us-house-5",
+        "al-2026-general-governor",
+        "al-2026-general-lieutenant-governor",
+        "al-2026-general-attorney-general",
+        "al-2026-general-secretary-of-state",
+        "al-2026-general-state-treasurer",
+        "al-2026-general-state-auditor",
+        "al-2026-general-commissioner-of-agriculture-and-industries",
+        "al-2026-general-public-service-commission-place-1",
+        "al-2026-general-public-service-commission-place-2",
+        "al-2026-general-state-senate-7",
+        "al-2026-general-state-senate-8",
+        "al-2026-general-state-house-19",
+        "al-2026-general-state-house-20",
+        "al-2026-general-state-house-21",
+        "al-2026-general-state-house-53",
+        "al-2026-general-associate-justice-of-the-alabama-supreme-court-place-8",
+        "al-2026-general-associate-justice-of-the-alabama-supreme-court-place-7",
+        "al-2026-general-alabama-court-of-civil-appeals-place-4",
+        "al-2026-general-alabama-court-of-civil-appeals-place-5",
+        "al-2026-general-alabama-court-of-criminal-appeals-place-4",
+        "al-2026-general-alabama-court-of-criminal-appeals-place-5",
+        "al-ba01-2026-for-madison-county-sheriff",
+        "al-ba01-2026-for-madison-county-tax-assessor",
+        "al-ba01-2026-for-madison-county-tax-collector",
+        "al-ba01-2026-for-madison-county-coroner",
+        "al-ba01-2026-for-madison-county-license-director",
+        "al-2026-general-statewide-amendment-1",
+        "al-2026-general-statewide-amendment-2",
+        "al-2026-general-statewide-amendment-3",
+        "al-2026-general-statewide-amendment-4"
+      ],
+      "house": [
+        "al-2026-general-us-house-5"
+      ],
+      "stateSenate": [
+        "al-2026-general-state-senate-7",
+        "al-2026-general-state-senate-8"
+      ],
+      "stateHouse": [
+        "al-2026-general-state-house-19",
+        "al-2026-general-state-house-20",
+        "al-2026-general-state-house-21",
+        "al-2026-general-state-house-53"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "35801",
+      "day": "2026-10-24",
+      "queries": 7,
+      "contests": [
+        "al-2026-general-us-senate",
+        "al-2026-general-us-house-5",
+        "al-2026-general-governor",
+        "al-2026-general-lieutenant-governor",
+        "al-2026-general-attorney-general",
+        "al-2026-general-secretary-of-state",
+        "al-2026-general-state-treasurer",
+        "al-2026-general-state-auditor",
+        "al-2026-general-commissioner-of-agriculture-and-industries",
+        "al-2026-general-public-service-commission-place-1",
+        "al-2026-general-public-service-commission-place-2",
+        "al-2026-general-state-senate-7",
+        "al-2026-general-state-senate-8",
+        "al-2026-general-state-house-19",
+        "al-2026-general-state-house-20",
+        "al-2026-general-state-house-21",
+        "al-2026-general-state-house-53",
+        "al-2026-general-associate-justice-of-the-alabama-supreme-court-place-8",
+        "al-2026-general-associate-justice-of-the-alabama-supreme-court-place-7",
+        "al-2026-general-alabama-court-of-civil-appeals-place-4",
+        "al-2026-general-alabama-court-of-civil-appeals-place-5",
+        "al-2026-general-alabama-court-of-criminal-appeals-place-4",
+        "al-2026-general-alabama-court-of-criminal-appeals-place-5",
+        "al-ba01-2026-for-madison-county-sheriff",
+        "al-ba01-2026-for-madison-county-tax-assessor",
+        "al-ba01-2026-for-madison-county-tax-collector",
+        "al-ba01-2026-for-madison-county-coroner",
+        "al-ba01-2026-for-madison-county-license-director",
+        "al-2026-general-statewide-amendment-1",
+        "al-2026-general-statewide-amendment-2",
+        "al-2026-general-statewide-amendment-3",
+        "al-2026-general-statewide-amendment-4"
+      ],
+      "house": [
+        "al-2026-general-us-house-5"
+      ],
+      "stateSenate": [
+        "al-2026-general-state-senate-7",
+        "al-2026-general-state-senate-8"
+      ],
+      "stateHouse": [
+        "al-2026-general-state-house-19",
+        "al-2026-general-state-house-20",
+        "al-2026-general-state-house-21",
+        "al-2026-general-state-house-53"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "33139",
+      "day": "2026-10-23",
+      "queries": 8,
+      "contests": [
+        "fl-doe-2026-general-gov",
+        "fl-doe-2026-general-str-106",
+        "fl-doe-2026-general-str-113",
+        "fl-doe-2026-general-usr-24",
+        "fl-doe-2026-general-sts-36",
+        "fl-doe-2026-general-agr",
+        "fl-doe-2026-general-uss",
+        "fl-doe-2026-general-usr-25",
+        "fl-doe-2026-general-cfo",
+        "fl-doe-2026-general-usr-27",
+        "fl-doe-2026-general-atg",
+        "fl-miami-dade-2026-59c8676b83554eb558c4",
+        "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+        "fl-doe-2026-general-dca-3-90262",
+        "fl-doe-2026-general-dca-3-90301",
+        "fl-doe-2026-general-dca-3-90370",
+        "fl-doe-2026-general-dca-3-90307",
+        "fl-doe-2026-general-dca-3-90439",
+        "fl-doe-2026-general-scj-90484",
+        "fl-doe-2026-general-amendment-1",
+        "fl-doe-2026-general-amendment-2",
+        "fl-doe-2026-general-amendment-3",
+        "fl-miami-dade-2026-53cc5741c50c398a2879",
+        "fl-miami-dade-2026-172535ade4c43ada17da",
+        "fl-miami-dade-2026-c0188d9b8ed165b0e85e",
+        "fl-miami-dade-2026-0a66a56be6fb715bfa95",
+        "fl-miami-dade-2026-4d4cb4aeebd528ebcd9a",
+        "fl-miami-dade-2026-61dcc5507b517999f221",
+        "fl-miami-dade-2026-1465651684b5cdc3dced",
+        "fl-miami-dade-2026-ef56ffdda7eac2bcb1bb",
+        "fl-miami-dade-2026-709b96129c310337b251",
+        "fl-miami-dade-2026-883b2f4968d5756951e4",
+        "fl-miami-dade-2026-378ee002fa66fcf847a9"
+      ],
+      "house": [
+        "fl-doe-2026-general-usr-24",
+        "fl-doe-2026-general-usr-25",
+        "fl-doe-2026-general-usr-27"
+      ],
+      "stateSenate": [
+        "fl-doe-2026-general-sts-36"
+      ],
+      "stateHouse": [
+        "fl-doe-2026-general-str-106",
+        "fl-doe-2026-general-str-113"
+      ],
+      "retention": 6,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "33139",
+      "day": "2026-10-24",
+      "queries": 8,
+      "contests": [
+        "fl-doe-2026-general-gov",
+        "fl-doe-2026-general-str-106",
+        "fl-doe-2026-general-str-113",
+        "fl-doe-2026-general-usr-24",
+        "fl-doe-2026-general-sts-36",
+        "fl-doe-2026-general-agr",
+        "fl-doe-2026-general-uss",
+        "fl-doe-2026-general-usr-25",
+        "fl-doe-2026-general-cfo",
+        "fl-doe-2026-general-usr-27",
+        "fl-doe-2026-general-atg",
+        "fl-miami-dade-2026-59c8676b83554eb558c4",
+        "fl-miami-dade-2026-b9b3b43f3a2b3b58f590",
+        "fl-doe-2026-general-dca-3-90262",
+        "fl-doe-2026-general-dca-3-90301",
+        "fl-doe-2026-general-dca-3-90370",
+        "fl-doe-2026-general-dca-3-90307",
+        "fl-doe-2026-general-dca-3-90439",
+        "fl-doe-2026-general-scj-90484",
+        "fl-doe-2026-general-amendment-1",
+        "fl-doe-2026-general-amendment-2",
+        "fl-doe-2026-general-amendment-3",
+        "fl-miami-dade-2026-53cc5741c50c398a2879",
+        "fl-miami-dade-2026-172535ade4c43ada17da",
+        "fl-miami-dade-2026-c0188d9b8ed165b0e85e",
+        "fl-miami-dade-2026-0a66a56be6fb715bfa95",
+        "fl-miami-dade-2026-4d4cb4aeebd528ebcd9a",
+        "fl-miami-dade-2026-61dcc5507b517999f221",
+        "fl-miami-dade-2026-1465651684b5cdc3dced",
+        "fl-miami-dade-2026-ef56ffdda7eac2bcb1bb",
+        "fl-miami-dade-2026-709b96129c310337b251",
+        "fl-miami-dade-2026-883b2f4968d5756951e4",
+        "fl-miami-dade-2026-378ee002fa66fcf847a9"
+      ],
+      "house": [
+        "fl-doe-2026-general-usr-24",
+        "fl-doe-2026-general-usr-25",
+        "fl-doe-2026-general-usr-27"
+      ],
+      "stateSenate": [
+        "fl-doe-2026-general-sts-36"
+      ],
+      "stateHouse": [
+        "fl-doe-2026-general-str-106",
+        "fl-doe-2026-general-str-113"
+      ],
+      "retention": 6,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "70112",
+      "day": "2026-10-23",
+      "queries": 6,
+      "contests": [
+        "la-sos-2026-us-senate",
+        "la-sos-2026-us-house-2",
+        "la-sos-2026-amendment-1",
+        "la-sos-2026-amendment-10",
+        "la-sos-2026-amendment-2",
+        "la-sos-2026-amendment-3",
+        "la-sos-2026-amendment-4",
+        "la-sos-2026-amendment-5",
+        "la-sos-2026-amendment-6",
+        "la-sos-2026-amendment-7",
+        "la-sos-2026-amendment-8",
+        "la-sos-2026-amendment-9"
+      ],
+      "house": [
+        "la-sos-2026-us-house-2"
+      ],
+      "stateSenate": [],
+      "stateHouse": [],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "70112",
+      "day": "2026-10-24",
+      "queries": 6,
+      "contests": [
+        "la-sos-2026-us-senate",
+        "la-sos-2026-us-house-2",
+        "la-sos-2026-amendment-1",
+        "la-sos-2026-amendment-10",
+        "la-sos-2026-amendment-2",
+        "la-sos-2026-amendment-3",
+        "la-sos-2026-amendment-4",
+        "la-sos-2026-amendment-5",
+        "la-sos-2026-amendment-6",
+        "la-sos-2026-amendment-7",
+        "la-sos-2026-amendment-8",
+        "la-sos-2026-amendment-9"
+      ],
+      "house": [
+        "la-sos-2026-us-house-2"
+      ],
+      "stateSenate": [],
+      "stateHouse": [],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "63103",
+      "day": "2026-10-23",
+      "queries": 7,
+      "contests": [
+        "mo-sos-2026-auditor",
+        "mo-sos-2026-cd-1",
+        "mo-sos-2026-sldl-79",
+        "mo-sos-2026-sldl-78",
+        "mo-sos-2026-supreme-court-retention-paul-c-wilson",
+        "mo-sos-2026-amendment-3",
+        "mo-sos-2026-amendment-6",
+        "mo-sos-2026-amendment-7",
+        "mo-sos-2026-amendment-8",
+        "mo-sos-2026-proposition-a"
+      ],
+      "house": [
+        "mo-sos-2026-cd-1"
+      ],
+      "stateSenate": [],
+      "stateHouse": [
+        "mo-sos-2026-sldl-79",
+        "mo-sos-2026-sldl-78"
+      ],
+      "retention": 1,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "63103",
+      "day": "2026-10-24",
+      "queries": 7,
+      "contests": [
+        "mo-sos-2026-auditor",
+        "mo-sos-2026-cd-1",
+        "mo-sos-2026-sldl-79",
+        "mo-sos-2026-sldl-78",
+        "mo-sos-2026-supreme-court-retention-paul-c-wilson",
+        "mo-sos-2026-amendment-3",
+        "mo-sos-2026-amendment-6",
+        "mo-sos-2026-amendment-7",
+        "mo-sos-2026-amendment-8",
+        "mo-sos-2026-proposition-a"
+      ],
+      "house": [
+        "mo-sos-2026-cd-1"
+      ],
+      "stateSenate": [],
+      "stateHouse": [
+        "mo-sos-2026-sldl-79",
+        "mo-sos-2026-sldl-78"
+      ],
+      "retention": 1,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "28202",
+      "day": "2026-10-23",
+      "queries": 7,
+      "contests": [
+        "nc-sbe-2026-us-senate",
+        "nc-sbe-2026-us-house-of-representatives-district-12",
+        "nc-sbe-2026-nc-supreme-court-associate-justice-seat-01",
+        "nc-sbe-2026-nc-court-of-appeals-judge-seat-01",
+        "nc-sbe-2026-nc-court-of-appeals-judge-seat-02",
+        "nc-sbe-2026-nc-court-of-appeals-judge-seat-03",
+        "nc-sbe-2026-nc-state-senate-district-39",
+        "nc-sbe-2026-nc-state-senate-district-41",
+        "nc-sbe-2026-nc-house-of-representatives-district-088",
+        "nc-sbe-2026-nc-house-of-representatives-district-102",
+        "nc-local-2026-e3a563996d7aee616fdf",
+        "nc-local-2026-7043672c1fed02f56eff",
+        "nc-local-2026-a57601223a74f264eff6",
+        "nc-local-2026-a8f89a34677769d8a1b6",
+        "nc-local-2026-15a738593de735556386",
+        "nc-local-2026-0dfc6383464eaf10c679",
+        "nc-local-2026-4c94a0195ad44da62d2f",
+        "nc-local-2026-b25056539252dae91e9a",
+        "nc-local-2026-239d1c7b8b1da776c79e",
+        "nc-local-2026-790fb23614e3de45ca7e",
+        "nc-local-2026-1561c74456f50446cb8f",
+        "nc-local-2026-5b2cb791d48fbca92d4c",
+        "nc-local-2026-0f5c7f2134da5fdbf361",
+        "nc-local-2026-2c3ca85ee806e8445f09",
+        "nc-local-2026-6ac74de0484e7bc92ad0",
+        "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5",
+        "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit",
+        "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting",
+        "nc-local-measure-2026-housing-bonds",
+        "nc-local-measure-2026-neighborhood-improvement-bonds",
+        "nc-local-measure-2026-transportation-bonds"
+      ],
+      "house": [
+        "nc-sbe-2026-us-house-of-representatives-district-12"
+      ],
+      "stateSenate": [
+        "nc-sbe-2026-nc-state-senate-district-39",
+        "nc-sbe-2026-nc-state-senate-district-41"
+      ],
+      "stateHouse": [
+        "nc-sbe-2026-nc-house-of-representatives-district-088",
+        "nc-sbe-2026-nc-house-of-representatives-district-102"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "28202",
+      "day": "2026-10-24",
+      "queries": 7,
+      "contests": [
+        "nc-sbe-2026-us-senate",
+        "nc-sbe-2026-us-house-of-representatives-district-12",
+        "nc-sbe-2026-nc-supreme-court-associate-justice-seat-01",
+        "nc-sbe-2026-nc-court-of-appeals-judge-seat-01",
+        "nc-sbe-2026-nc-court-of-appeals-judge-seat-02",
+        "nc-sbe-2026-nc-court-of-appeals-judge-seat-03",
+        "nc-sbe-2026-nc-state-senate-district-39",
+        "nc-sbe-2026-nc-state-senate-district-41",
+        "nc-sbe-2026-nc-house-of-representatives-district-088",
+        "nc-sbe-2026-nc-house-of-representatives-district-102",
+        "nc-local-2026-e3a563996d7aee616fdf",
+        "nc-local-2026-7043672c1fed02f56eff",
+        "nc-local-2026-a57601223a74f264eff6",
+        "nc-local-2026-a8f89a34677769d8a1b6",
+        "nc-local-2026-15a738593de735556386",
+        "nc-local-2026-0dfc6383464eaf10c679",
+        "nc-local-2026-4c94a0195ad44da62d2f",
+        "nc-local-2026-b25056539252dae91e9a",
+        "nc-local-2026-239d1c7b8b1da776c79e",
+        "nc-local-2026-790fb23614e3de45ca7e",
+        "nc-local-2026-1561c74456f50446cb8f",
+        "nc-local-2026-5b2cb791d48fbca92d4c",
+        "nc-local-2026-0f5c7f2134da5fdbf361",
+        "nc-local-2026-2c3ca85ee806e8445f09",
+        "nc-local-2026-6ac74de0484e7bc92ad0",
+        "nc-sbe-2026-constitutional-amendment-maximum-income-tax-rate-of-3-5",
+        "nc-sbe-2026-constitutional-amendment-property-tax-levy-limit",
+        "nc-sbe-2026-constitutional-amendment-require-photo-id-for-voting",
+        "nc-local-measure-2026-housing-bonds",
+        "nc-local-measure-2026-neighborhood-improvement-bonds",
+        "nc-local-measure-2026-transportation-bonds"
+      ],
+      "house": [
+        "nc-sbe-2026-us-house-of-representatives-district-12"
+      ],
+      "stateSenate": [
+        "nc-sbe-2026-nc-state-senate-district-39",
+        "nc-sbe-2026-nc-state-senate-district-41"
+      ],
+      "stateHouse": [
+        "nc-sbe-2026-nc-house-of-representatives-district-088",
+        "nc-sbe-2026-nc-house-of-representatives-district-102"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "58501",
+      "day": "2026-10-23",
+      "queries": 8,
+      "contests": [
+        "nd-sos-2026-general:representative-in-congress",
+        "nd-sos-2026-general:state-senator-district-35",
+        "nd-sos-2026-general:state-representative-district-35",
+        "nd-sos-2026-general:secretary-of-state",
+        "nd-sos-2026-general:attorney-general",
+        "nd-sos-2026-general:agriculture-commissioner",
+        "nd-sos-2026-general:public-service-commissioner",
+        "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term",
+        "nd-sos-2026-general:tax-commissioner",
+        "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term",
+        "nd-sos-2026-general:justice-of-the-supreme-court-unexpired-8-year-term",
+        "nd-sos-2026-general:justice-of-the-supreme-court",
+        "nd-burleigh-general-2026-county-auditor",
+        "nd-burleigh-general-2026-county-commissioner",
+        "nd-burleigh-general-2026-county-official-newspaper",
+        "nd-burleigh-general-2026-county-recorder",
+        "nd-burleigh-general-2026-county-sheriff",
+        "nd-burleigh-general-2026-county-state-s-attorney",
+        "nd-south-central-general-2026-judge-10",
+        "nd-south-central-general-2026-judge-2",
+        "nd-south-central-general-2026-judge-6",
+        "nd-south-central-general-2026-judge-7",
+        "nd-south-central-general-2026-judge-8",
+        "nd-sos-2026-general:measure-1",
+        "nd-sos-2026-general:measure-2"
+      ],
+      "house": [
+        "nd-sos-2026-general:representative-in-congress"
+      ],
+      "stateSenate": [
+        "nd-sos-2026-general:state-senator-district-35"
+      ],
+      "stateHouse": [
+        "nd-sos-2026-general:state-representative-district-35"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "58501",
+      "day": "2026-10-24",
+      "queries": 8,
+      "contests": [
+        "nd-sos-2026-general:representative-in-congress",
+        "nd-sos-2026-general:state-senator-district-35",
+        "nd-sos-2026-general:state-representative-district-35",
+        "nd-sos-2026-general:secretary-of-state",
+        "nd-sos-2026-general:attorney-general",
+        "nd-sos-2026-general:agriculture-commissioner",
+        "nd-sos-2026-general:public-service-commissioner",
+        "nd-sos-2026-general:public-service-commissioner-unexpired-2-year-term",
+        "nd-sos-2026-general:tax-commissioner",
+        "nd-sos-2026-general:superintendent-of-public-instruction-unexpired-2-year-term",
+        "nd-sos-2026-general:justice-of-the-supreme-court-unexpired-8-year-term",
+        "nd-sos-2026-general:justice-of-the-supreme-court",
+        "nd-burleigh-general-2026-county-auditor",
+        "nd-burleigh-general-2026-county-commissioner",
+        "nd-burleigh-general-2026-county-official-newspaper",
+        "nd-burleigh-general-2026-county-recorder",
+        "nd-burleigh-general-2026-county-sheriff",
+        "nd-burleigh-general-2026-county-state-s-attorney",
+        "nd-south-central-general-2026-judge-10",
+        "nd-south-central-general-2026-judge-2",
+        "nd-south-central-general-2026-judge-6",
+        "nd-south-central-general-2026-judge-7",
+        "nd-south-central-general-2026-judge-8",
+        "nd-sos-2026-general:measure-1",
+        "nd-sos-2026-general:measure-2"
+      ],
+      "house": [
+        "nd-sos-2026-general:representative-in-congress"
+      ],
+      "stateSenate": [
+        "nd-sos-2026-general:state-senator-district-35"
+      ],
+      "stateHouse": [
+        "nd-sos-2026-general:state-representative-district-35"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "44111",
+      "day": "2026-10-23",
+      "queries": 8,
+      "contests": [
+        "oh-sos-2026-general-governor-and-lieutenant-governor",
+        "oh-sos-2026-general-attorney-general",
+        "oh-sos-2026-general-auditor-of-state",
+        "oh-sos-2026-general-secretary-of-state",
+        "oh-sos-2026-general-treasurer-of-state",
+        "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-1-2027",
+        "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-2-2027",
+        "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029",
+        "oh-ba01-representative-to-congress-district-7-cd-7",
+        "oh-ba01-representative-to-congress-district-11-cd-11",
+        "oh-ba01-state-senator-district-23-sldu-23",
+        "oh-ba01-state-representative-district-13-sldl-13",
+        "oh-ba01-state-representative-district-15-sldl-15",
+        "oh-ba01-state-representative-district-16-sldl-16",
+        "oh-ba01-cuyahoga-county-for-county-executive",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-28",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027",
+        "oh-sos-2026-general-issue-3"
+      ],
+      "house": [
+        "oh-ba01-representative-to-congress-district-7-cd-7",
+        "oh-ba01-representative-to-congress-district-11-cd-11"
+      ],
+      "stateSenate": [
+        "oh-ba01-state-senator-district-23-sldu-23"
+      ],
+      "stateHouse": [
+        "oh-ba01-state-representative-district-13-sldl-13",
+        "oh-ba01-state-representative-district-15-sldl-15",
+        "oh-ba01-state-representative-district-16-sldl-16"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "44111",
+      "day": "2026-10-24",
+      "queries": 8,
+      "contests": [
+        "oh-sos-2026-general-governor-and-lieutenant-governor",
+        "oh-sos-2026-general-attorney-general",
+        "oh-sos-2026-general-auditor-of-state",
+        "oh-sos-2026-general-secretary-of-state",
+        "oh-sos-2026-general-treasurer-of-state",
+        "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-1-2027",
+        "oh-sos-2026-general-justice-of-the-supreme-court-full-term-commencing-1-2-2027",
+        "oh-sos-2026-general-u-s-senator-unexpired-term-ending-1-3-2029",
+        "oh-ba01-representative-to-congress-district-7-cd-7",
+        "oh-ba01-representative-to-congress-district-11-cd-11",
+        "oh-ba01-state-senator-district-23-sldu-23",
+        "oh-ba01-state-representative-district-13-sldl-13",
+        "oh-ba01-state-representative-district-15-sldl-15",
+        "oh-ba01-state-representative-district-16-sldl-16",
+        "oh-ba01-cuyahoga-county-for-county-executive",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-9-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-10-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-11-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-full-term-commencing-2-12-2027",
+        "oh-ba01-ohio-court-of-appeals-for-judge-of-the-court-of-appeals-8th-district-unexpired-term-ending-12-31-28",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-1-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-2-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-3-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-4-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-5-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-6-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-7-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-1-10-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-general-division-full-term-commencing-2-9-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-8-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-domestic-relations-division-full-term-commencing-1-9-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-1-1-2027",
+        "oh-ba01-cuyahoga-county-for-judge-of-the-court-of-common-pleas-probate-division-full-term-commencing-2-9-2027",
+        "oh-sos-2026-general-issue-3"
+      ],
+      "house": [
+        "oh-ba01-representative-to-congress-district-7-cd-7",
+        "oh-ba01-representative-to-congress-district-11-cd-11"
+      ],
+      "stateSenate": [
+        "oh-ba01-state-senator-district-23-sldu-23"
+      ],
+      "stateHouse": [
+        "oh-ba01-state-representative-district-13-sldl-13",
+        "oh-ba01-state-representative-district-15-sldl-15",
+        "oh-ba01-state-representative-district-16-sldl-16"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "37203",
+      "day": "2026-10-23",
+      "queries": 7,
+      "contests": [
+        "tn-sos-2026-general-governor",
+        "tn-sos-2026-general-united-states-senate",
+        "tn-sos-2026-general-united-states-house-of-representatives-district-6",
+        "tn-sos-2026-general-united-states-house-of-representatives-district-7",
+        "tn-sos-2026-general-tennessee-senate-district-19",
+        "tn-sos-2026-general-tennessee-senate-district-21",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-51",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-56",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-58",
+        "tn-sos-2026-general-constitutional-amendment-1",
+        "tn-sos-2026-general-constitutional-amendment-2",
+        "tn-sos-2026-general-constitutional-amendment-3"
+      ],
+      "house": [
+        "tn-sos-2026-general-united-states-house-of-representatives-district-6",
+        "tn-sos-2026-general-united-states-house-of-representatives-district-7"
+      ],
+      "stateSenate": [
+        "tn-sos-2026-general-tennessee-senate-district-19",
+        "tn-sos-2026-general-tennessee-senate-district-21"
+      ],
+      "stateHouse": [
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-51",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-56",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-58"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "37203",
+      "day": "2026-10-24",
+      "queries": 7,
+      "contests": [
+        "tn-sos-2026-general-governor",
+        "tn-sos-2026-general-united-states-senate",
+        "tn-sos-2026-general-united-states-house-of-representatives-district-6",
+        "tn-sos-2026-general-united-states-house-of-representatives-district-7",
+        "tn-sos-2026-general-tennessee-senate-district-19",
+        "tn-sos-2026-general-tennessee-senate-district-21",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-51",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-56",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-58",
+        "tn-sos-2026-general-constitutional-amendment-1",
+        "tn-sos-2026-general-constitutional-amendment-2",
+        "tn-sos-2026-general-constitutional-amendment-3"
+      ],
+      "house": [
+        "tn-sos-2026-general-united-states-house-of-representatives-district-6",
+        "tn-sos-2026-general-united-states-house-of-representatives-district-7"
+      ],
+      "stateSenate": [
+        "tn-sos-2026-general-tennessee-senate-district-19",
+        "tn-sos-2026-general-tennessee-senate-district-21"
+      ],
+      "stateHouse": [
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-51",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-56",
+        "tn-sos-2026-general-tennessee-house-of-representatives-district-58"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "77005",
+      "day": "2026-10-23",
+      "queries": 47,
+      "contests": [
+        "tx-sos-2026-u-s-senator",
+        "tx-sos-2026-governor",
+        "tx-sos-2026-lieutenant-governor",
+        "tx-sos-2026-attorney-general",
+        "tx-sos-2026-comptroller-of-public-accounts",
+        "tx-sos-2026-commissioner-of-the-general-land-office",
+        "tx-sos-2026-commissioner-of-agriculture",
+        "tx-sos-2026-railroad-commissioner",
+        "tx-sos-2026-chief-justice-supreme-court",
+        "tx-sos-2026-justice-supreme-court-place-2-unexpired-term",
+        "tx-sos-2026-justice-supreme-court-place-7",
+        "tx-sos-2026-justice-supreme-court-place-8",
+        "tx-sos-2026-judge-court-of-criminal-appeals-place-3",
+        "tx-sos-2026-judge-court-of-criminal-appeals-place-4",
+        "tx-sos-2026-judge-court-of-criminal-appeals-place-9",
+        "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+        "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+        "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+        "tx-sos-2026-u-s-representative-district-7",
+        "tx-sos-2026-state-senator-district-13",
+        "tx-sos-2026-state-representative-district-134",
+        "tx-ba01-2026-county-48201-county_attorney_unexpired_term",
+        "tx-ba01-2026-county-48201-county_clerk",
+        "tx-ba01-2026-county-48201-county_judge",
+        "tx-ba01-2026-county-48201-county_treasurer",
+        "tx-ba01-2026-county-48201-district_clerk",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_1",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_2",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_3",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_4",
+        "tx-ba01-2026-district-judge-113",
+        "tx-ba01-2026-district-judge-157",
+        "tx-ba01-2026-district-judge-180",
+        "tx-ba01-2026-district-judge-182",
+        "tx-ba01-2026-district-judge-183",
+        "tx-ba01-2026-district-judge-184",
+        "tx-ba01-2026-district-judge-185",
+        "tx-ba01-2026-district-judge-189",
+        "tx-ba01-2026-district-judge-190",
+        "tx-ba01-2026-district-judge-208",
+        "tx-ba01-2026-district-judge-209",
+        "tx-ba01-2026-district-judge-228",
+        "tx-ba01-2026-district-judge-230",
+        "tx-ba01-2026-district-judge-232",
+        "tx-ba01-2026-district-judge-234",
+        "tx-ba01-2026-district-judge-245",
+        "tx-ba01-2026-district-judge-246",
+        "tx-ba01-2026-district-judge-247",
+        "tx-ba01-2026-district-judge-248",
+        "tx-ba01-2026-district-judge-257",
+        "tx-ba01-2026-district-judge-262",
+        "tx-ba01-2026-district-judge-263",
+        "tx-ba01-2026-district-judge-269",
+        "tx-ba01-2026-district-judge-270",
+        "tx-ba01-2026-district-judge-280",
+        "tx-ba01-2026-district-judge-281",
+        "tx-ba01-2026-district-judge-295",
+        "tx-ba01-2026-district-judge-308",
+        "tx-ba01-2026-district-judge-309",
+        "tx-ba01-2026-district-judge-310",
+        "tx-ba01-2026-district-judge-311",
+        "tx-ba01-2026-district-judge-312",
+        "tx-ba01-2026-district-judge-313",
+        "tx-ba01-2026-district-judge-314",
+        "tx-ba01-2026-district-judge-315",
+        "tx-ba01-2026-district-judge-482",
+        "tx-ba01-2026-district-judge-486",
+        "tx-ba01-2026-district-judge-495",
+        "tx-ba01-2026-district-judge-496",
+        "tx-ba01-2026-district-judge-497",
+        "tx-ba01-2026-district-judge-55"
+      ],
+      "house": [
+        "tx-sos-2026-u-s-representative-district-7"
+      ],
+      "stateSenate": [
+        "tx-sos-2026-state-senator-district-13"
+      ],
+      "stateHouse": [
+        "tx-sos-2026-state-representative-district-134"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "77005",
+      "day": "2026-10-24",
+      "queries": 47,
+      "contests": [
+        "tx-sos-2026-u-s-senator",
+        "tx-sos-2026-governor",
+        "tx-sos-2026-lieutenant-governor",
+        "tx-sos-2026-attorney-general",
+        "tx-sos-2026-comptroller-of-public-accounts",
+        "tx-sos-2026-commissioner-of-the-general-land-office",
+        "tx-sos-2026-commissioner-of-agriculture",
+        "tx-sos-2026-railroad-commissioner",
+        "tx-sos-2026-chief-justice-supreme-court",
+        "tx-sos-2026-justice-supreme-court-place-2-unexpired-term",
+        "tx-sos-2026-justice-supreme-court-place-7",
+        "tx-sos-2026-justice-supreme-court-place-8",
+        "tx-sos-2026-judge-court-of-criminal-appeals-place-3",
+        "tx-sos-2026-judge-court-of-criminal-appeals-place-4",
+        "tx-sos-2026-judge-court-of-criminal-appeals-place-9",
+        "tx-sos-2026-chief-justice-15th-court-of-appeals-district",
+        "tx-sos-2026-justice-15th-court-of-appeals-district-place-2",
+        "tx-sos-2026-justice-15th-court-of-appeals-district-place-3",
+        "tx-sos-2026-u-s-representative-district-7",
+        "tx-sos-2026-state-senator-district-13",
+        "tx-sos-2026-state-representative-district-134",
+        "tx-ba01-2026-county-48201-county_attorney_unexpired_term",
+        "tx-ba01-2026-county-48201-county_clerk",
+        "tx-ba01-2026-county-48201-county_judge",
+        "tx-ba01-2026-county-48201-county_treasurer",
+        "tx-ba01-2026-county-48201-district_clerk",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_1",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_2",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_3",
+        "tx-ba01-2026-county-48201-judge_probate_court_no_4",
+        "tx-ba01-2026-district-judge-113",
+        "tx-ba01-2026-district-judge-157",
+        "tx-ba01-2026-district-judge-180",
+        "tx-ba01-2026-district-judge-182",
+        "tx-ba01-2026-district-judge-183",
+        "tx-ba01-2026-district-judge-184",
+        "tx-ba01-2026-district-judge-185",
+        "tx-ba01-2026-district-judge-189",
+        "tx-ba01-2026-district-judge-190",
+        "tx-ba01-2026-district-judge-208",
+        "tx-ba01-2026-district-judge-209",
+        "tx-ba01-2026-district-judge-228",
+        "tx-ba01-2026-district-judge-230",
+        "tx-ba01-2026-district-judge-232",
+        "tx-ba01-2026-district-judge-234",
+        "tx-ba01-2026-district-judge-245",
+        "tx-ba01-2026-district-judge-246",
+        "tx-ba01-2026-district-judge-247",
+        "tx-ba01-2026-district-judge-248",
+        "tx-ba01-2026-district-judge-257",
+        "tx-ba01-2026-district-judge-262",
+        "tx-ba01-2026-district-judge-263",
+        "tx-ba01-2026-district-judge-269",
+        "tx-ba01-2026-district-judge-270",
+        "tx-ba01-2026-district-judge-280",
+        "tx-ba01-2026-district-judge-281",
+        "tx-ba01-2026-district-judge-295",
+        "tx-ba01-2026-district-judge-308",
+        "tx-ba01-2026-district-judge-309",
+        "tx-ba01-2026-district-judge-310",
+        "tx-ba01-2026-district-judge-311",
+        "tx-ba01-2026-district-judge-312",
+        "tx-ba01-2026-district-judge-313",
+        "tx-ba01-2026-district-judge-314",
+        "tx-ba01-2026-district-judge-315",
+        "tx-ba01-2026-district-judge-482",
+        "tx-ba01-2026-district-judge-486",
+        "tx-ba01-2026-district-judge-495",
+        "tx-ba01-2026-district-judge-496",
+        "tx-ba01-2026-district-judge-497",
+        "tx-ba01-2026-district-judge-55"
+      ],
+      "house": [
+        "tx-sos-2026-u-s-representative-district-7"
+      ],
+      "stateSenate": [
+        "tx-sos-2026-state-senator-district-13"
+      ],
+      "stateHouse": [
+        "tx-sos-2026-state-representative-district-134"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "84111",
+      "day": "2026-10-23",
+      "queries": 8,
+      "contests": [
+        "ut-ltgov-2026-cd-1",
+        "ut-ltgov-2026-sldu-9",
+        "ut-ltgov-2026-sldl-22",
+        "ut-ltgov-2026-sldl-24",
+        "ut-salt_lake-general-2026-county-council-at-large-a",
+        "ut-salt_lake-general-2026-county-district-attorney",
+        "ut-salt_lake-general-2026-county-auditor",
+        "ut-salt_lake-general-2026-county-clerk",
+        "ut-salt_lake-general-2026-county-sheriff",
+        "ut-ltgov-2026-retention-jill-m-pohlman",
+        "ut-ltgov-2026-retention-michele-m-christiansen-forster",
+        "ut-ltgov-2026-retention-david-ned-mortensen",
+        "ut-ltgov-2026-retention-john-david-luthy",
+        "ut-ltgov-2026-retention-ryan-m-harris",
+        "ut-ltgov-2026-retention-amy-jo-oliver",
+        "ut-ltgov-2026-retention-gregory-keith-orme",
+        "ut-general-2026-third-district-retention-matthew-david-bates",
+        "ut-general-2026-third-district-retention-charles-a-stormont",
+        "ut-general-2026-third-district-retention-coral-sanchez",
+        "ut-general-2026-third-district-retention-todd-shaughnessy",
+        "ut-general-2026-third-district-retention-susan-heather-eisenman",
+        "ut-general-2026-third-district-retention-steven-k-beck",
+        "ut-general-2026-third-district-retention-aaron-william-flater",
+        "ut-ltgov-2026-amendment-a",
+        "ut-ltgov-2026-amendment-b",
+        "ut-salt_lake-general-2026-special-bond-election"
+      ],
+      "house": [
+        "ut-ltgov-2026-cd-1"
+      ],
+      "stateSenate": [
+        "ut-ltgov-2026-sldu-9"
+      ],
+      "stateHouse": [
+        "ut-ltgov-2026-sldl-22",
+        "ut-ltgov-2026-sldl-24"
+      ],
+      "retention": 14,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "84111",
+      "day": "2026-10-24",
+      "queries": 8,
+      "contests": [
+        "ut-ltgov-2026-cd-1",
+        "ut-ltgov-2026-sldu-9",
+        "ut-ltgov-2026-sldl-22",
+        "ut-ltgov-2026-sldl-24",
+        "ut-salt_lake-general-2026-county-council-at-large-a",
+        "ut-salt_lake-general-2026-county-district-attorney",
+        "ut-salt_lake-general-2026-county-auditor",
+        "ut-salt_lake-general-2026-county-clerk",
+        "ut-salt_lake-general-2026-county-sheriff",
+        "ut-ltgov-2026-retention-jill-m-pohlman",
+        "ut-ltgov-2026-retention-michele-m-christiansen-forster",
+        "ut-ltgov-2026-retention-david-ned-mortensen",
+        "ut-ltgov-2026-retention-john-david-luthy",
+        "ut-ltgov-2026-retention-ryan-m-harris",
+        "ut-ltgov-2026-retention-amy-jo-oliver",
+        "ut-ltgov-2026-retention-gregory-keith-orme",
+        "ut-general-2026-third-district-retention-matthew-david-bates",
+        "ut-general-2026-third-district-retention-charles-a-stormont",
+        "ut-general-2026-third-district-retention-coral-sanchez",
+        "ut-general-2026-third-district-retention-todd-shaughnessy",
+        "ut-general-2026-third-district-retention-susan-heather-eisenman",
+        "ut-general-2026-third-district-retention-steven-k-beck",
+        "ut-general-2026-third-district-retention-aaron-william-flater",
+        "ut-ltgov-2026-amendment-a",
+        "ut-ltgov-2026-amendment-b",
+        "ut-salt_lake-general-2026-special-bond-election"
+      ],
+      "house": [
+        "ut-ltgov-2026-cd-1"
+      ],
+      "stateSenate": [
+        "ut-ltgov-2026-sldu-9"
+      ],
+      "stateHouse": [
+        "ut-ltgov-2026-sldl-22",
+        "ut-ltgov-2026-sldl-24"
+      ],
+      "retention": 14,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "94118",
+      "day": "2026-10-23",
+      "queries": 8,
+      "contests": [
+        "ca-sos-2026-general-governor",
+        "ca-sos-2026-general-lieutenant-governor",
+        "ca-sos-2026-general-secretary-of-state",
+        "ca-sos-2026-general-controller",
+        "ca-sos-2026-general-treasurer",
+        "ca-sos-2026-general-attorney-general",
+        "ca-sos-2026-general-insurance-commissioner",
+        "ca-sos-2026-general-superintendent-of-public-instruction",
+        "ca-sos-2026-general-united-states-representative-district-11",
+        "ca-sos-2026-general-state-assembly-member-district-19",
+        "ca-sf-2026-assessor-recorder",
+        "ca-sf-2026-public-defender",
+        "ca-sf-2026-board-education",
+        "ca-sf-2026-community-college-board",
+        "ca-sf-2026-community-college-board-partial",
+        "ca-sos-2026-general-retention-kelli-m-evans",
+        "ca-sos-2026-general-retention-joshua-groban",
+        "ca-sos-2026-general-retention-charles-a-smiley",
+        "ca-sos-2026-general-retention-kathleen-m-banke",
+        "ca-sos-2026-general-retention-monique-langhorne-wilson",
+        "ca-sos-2026-general-retention-therese-m-stewart",
+        "ca-sos-2026-general-retention-tara-m-desautels",
+        "ca-sos-2026-general-retention-ioana-petrou",
+        "ca-sos-2026-general-retention-victor-a-rodriguez",
+        "ca-sos-2026-general-retention-tracie-l-brown",
+        "ca-sos-2026-general-retention-mark-simons",
+        "ca-sos-2026-general-retention-danny-y-chou",
+        "ca-sos-2026-general-retention-gordon-burns",
+        "ca-sos-2026-general-proposition-1",
+        "ca-sos-2026-general-proposition-2",
+        "ca-sos-2026-general-proposition-3",
+        "ca-sos-2026-general-proposition-4",
+        "ca-sos-2026-general-proposition-5",
+        "ca-sos-2026-general-proposition-37",
+        "ca-sos-2026-general-proposition-38",
+        "ca-sos-2026-general-proposition-39",
+        "ca-sos-2026-general-proposition-40",
+        "ca-sos-2026-general-proposition-41",
+        "ca-sos-2026-general-proposition-42",
+        "ca-sos-2026-general-proposition-43",
+        "ca-sos-2026-general-proposition-44",
+        "ca-sos-2026-general-proposition-45",
+        "ca-sf-2026-proposition-a",
+        "ca-sf-2026-proposition-b",
+        "ca-sf-2026-proposition-c",
+        "ca-sf-2026-proposition-d",
+        "ca-sf-2026-proposition-e",
+        "ca-sf-2026-proposition-f",
+        "ca-sf-2026-proposition-g",
+        "ca-sf-2026-proposition-h",
+        "ca-sf-2026-proposition-i",
+        "ca-sf-2026-proposition-j",
+        "ca-sf-2026-regional-transit-measure"
+      ],
+      "house": [
+        "ca-sos-2026-general-united-states-representative-district-11"
+      ],
+      "stateSenate": [],
+      "stateHouse": [
+        "ca-sos-2026-general-state-assembly-member-district-19"
+      ],
+      "retention": 13,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "94118",
+      "day": "2026-10-24",
+      "queries": 8,
+      "contests": [
+        "ca-sos-2026-general-governor",
+        "ca-sos-2026-general-lieutenant-governor",
+        "ca-sos-2026-general-secretary-of-state",
+        "ca-sos-2026-general-controller",
+        "ca-sos-2026-general-treasurer",
+        "ca-sos-2026-general-attorney-general",
+        "ca-sos-2026-general-insurance-commissioner",
+        "ca-sos-2026-general-superintendent-of-public-instruction",
+        "ca-sos-2026-general-united-states-representative-district-11",
+        "ca-sos-2026-general-state-assembly-member-district-19",
+        "ca-sf-2026-assessor-recorder",
+        "ca-sf-2026-public-defender",
+        "ca-sf-2026-board-education",
+        "ca-sf-2026-community-college-board",
+        "ca-sf-2026-community-college-board-partial",
+        "ca-sos-2026-general-retention-kelli-m-evans",
+        "ca-sos-2026-general-retention-joshua-groban",
+        "ca-sos-2026-general-retention-charles-a-smiley",
+        "ca-sos-2026-general-retention-kathleen-m-banke",
+        "ca-sos-2026-general-retention-monique-langhorne-wilson",
+        "ca-sos-2026-general-retention-therese-m-stewart",
+        "ca-sos-2026-general-retention-tara-m-desautels",
+        "ca-sos-2026-general-retention-ioana-petrou",
+        "ca-sos-2026-general-retention-victor-a-rodriguez",
+        "ca-sos-2026-general-retention-tracie-l-brown",
+        "ca-sos-2026-general-retention-mark-simons",
+        "ca-sos-2026-general-retention-danny-y-chou",
+        "ca-sos-2026-general-retention-gordon-burns",
+        "ca-sos-2026-general-proposition-1",
+        "ca-sos-2026-general-proposition-2",
+        "ca-sos-2026-general-proposition-3",
+        "ca-sos-2026-general-proposition-4",
+        "ca-sos-2026-general-proposition-5",
+        "ca-sos-2026-general-proposition-37",
+        "ca-sos-2026-general-proposition-38",
+        "ca-sos-2026-general-proposition-39",
+        "ca-sos-2026-general-proposition-40",
+        "ca-sos-2026-general-proposition-41",
+        "ca-sos-2026-general-proposition-42",
+        "ca-sos-2026-general-proposition-43",
+        "ca-sos-2026-general-proposition-44",
+        "ca-sos-2026-general-proposition-45",
+        "ca-sf-2026-proposition-a",
+        "ca-sf-2026-proposition-b",
+        "ca-sf-2026-proposition-c",
+        "ca-sf-2026-proposition-d",
+        "ca-sf-2026-proposition-e",
+        "ca-sf-2026-proposition-f",
+        "ca-sf-2026-proposition-g",
+        "ca-sf-2026-proposition-h",
+        "ca-sf-2026-proposition-i",
+        "ca-sf-2026-proposition-j",
+        "ca-sf-2026-regional-transit-measure"
+      ],
+      "house": [
+        "ca-sos-2026-general-united-states-representative-district-11"
+      ],
+      "stateSenate": [],
+      "stateHouse": [
+        "ca-sos-2026-general-state-assembly-member-district-19"
+      ],
+      "retention": 13,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "48226",
+      "day": "2026-10-23",
+      "queries": 10,
+      "contests": [
+        "mi-sos-2026-general-governor-lieutenant-governor",
+        "mi-sos-2026-general-secretary-of-state",
+        "mi-sos-2026-general-attorney-general",
+        "mi-sos-2026-general-us-senate",
+        "mi-sos-2026-general-us-house-13",
+        "mi-sos-2026-general-state-senate-1",
+        "mi-sos-2026-general-state-house-1",
+        "mi-sos-2026-general-state-house-9",
+        "mi-sos-2026-general-state-board-of-education",
+        "mi-sos-2026-general-university-of-michigan-regent",
+        "mi-sos-2026-general-michigan-state-university-trustee",
+        "mi-sos-2026-general-wayne-state-university-governor",
+        "mi-sos-2026-general-supreme-court-justice",
+        "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+        "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+        "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+        "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+        "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+        "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+        "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+        "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+        "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+        "mi-sos-2026-general-proposal-2026-1",
+        "mi-sos-2026-general-proposal-2026-2"
+      ],
+      "house": [
+        "mi-sos-2026-general-us-house-13"
+      ],
+      "stateSenate": [
+        "mi-sos-2026-general-state-senate-1"
+      ],
+      "stateHouse": [
+        "mi-sos-2026-general-state-house-1",
+        "mi-sos-2026-general-state-house-9"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "48226",
+      "day": "2026-10-24",
+      "queries": 10,
+      "contests": [
+        "mi-sos-2026-general-governor-lieutenant-governor",
+        "mi-sos-2026-general-secretary-of-state",
+        "mi-sos-2026-general-attorney-general",
+        "mi-sos-2026-general-us-senate",
+        "mi-sos-2026-general-us-house-13",
+        "mi-sos-2026-general-state-senate-1",
+        "mi-sos-2026-general-state-house-1",
+        "mi-sos-2026-general-state-house-9",
+        "mi-sos-2026-general-state-board-of-education",
+        "mi-sos-2026-general-university-of-michigan-regent",
+        "mi-sos-2026-general-michigan-state-university-trustee",
+        "mi-sos-2026-general-wayne-state-university-governor",
+        "mi-sos-2026-general-supreme-court-justice",
+        "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_6_year_terms_3_positions",
+        "mi-ba01-1st_district_judge_of_court_of_appeals_incumbent_partial_term_ending_01_01_2031_1_position",
+        "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_6_year_terms_16_positions",
+        "mi-ba01-3rd_circuit_judge_of_circuit_court_non_incumbent_6_year_term_1_position",
+        "mi-ba01-3rd_circuit_judge_of_circuit_court_incumbent_partial_term_4_years_ending_01_01_2031_1_position",
+        "mi-ba01-wayne_judge_of_probate_court_non_incumbent_6_year_terms_3_positions_files_with_county",
+        "mi-ba01-36th_district_judge_of_district_court_incumbent_6_year_terms_6_positions",
+        "mi-ba01-36th_district_judge_of_district_court_non_incumbent_6_year_terms_3_positions",
+        "mi-ba01-36th_district_judge_of_district_court_incumbent_partial_term_ending_01_01_2031_3_positions",
+        "mi-sos-2026-general-proposal-2026-1",
+        "mi-sos-2026-general-proposal-2026-2"
+      ],
+      "house": [
+        "mi-sos-2026-general-us-house-13"
+      ],
+      "stateSenate": [
+        "mi-sos-2026-general-state-senate-1"
+      ],
+      "stateHouse": [
+        "mi-sos-2026-general-state-house-1",
+        "mi-sos-2026-general-state-house-9"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "57501",
+      "day": "2026-10-23",
+      "queries": 7,
+      "contests": [
+        "sd-sos-2026-general-united-states-senator",
+        "sd-sos-2026-general-united-states-representative-at-large",
+        "sd-sos-2026-general-governor-and-lieutenant-governor",
+        "sd-sos-2026-general-secretary-of-state",
+        "sd-sos-2026-general-attorney-general",
+        "sd-sos-2026-general-state-auditor",
+        "sd-sos-2026-general-state-treasurer",
+        "sd-sos-2026-general-commissioner-of-school-and-public-lands",
+        "sd-sos-2026-general-public-utilities-commissioner",
+        "sd-sos-2026-general-state-senator-24",
+        "sd-sos-2026-general-state-representative-24",
+        "sd-sos-2026-general-amendment-i",
+        "sd-sos-2026-general-amendment-j",
+        "sd-sos-2026-general-amendment-k",
+        "sd-sos-2026-general-amendment-l"
+      ],
+      "house": [
+        "sd-sos-2026-general-united-states-representative-at-large"
+      ],
+      "stateSenate": [
+        "sd-sos-2026-general-state-senator-24"
+      ],
+      "stateHouse": [
+        "sd-sos-2026-general-state-representative-24"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "57501",
+      "day": "2026-10-24",
+      "queries": 7,
+      "contests": [
+        "sd-sos-2026-general-united-states-senator",
+        "sd-sos-2026-general-united-states-representative-at-large",
+        "sd-sos-2026-general-governor-and-lieutenant-governor",
+        "sd-sos-2026-general-secretary-of-state",
+        "sd-sos-2026-general-attorney-general",
+        "sd-sos-2026-general-state-auditor",
+        "sd-sos-2026-general-state-treasurer",
+        "sd-sos-2026-general-commissioner-of-school-and-public-lands",
+        "sd-sos-2026-general-public-utilities-commissioner",
+        "sd-sos-2026-general-state-senator-24",
+        "sd-sos-2026-general-state-representative-24",
+        "sd-sos-2026-general-amendment-i",
+        "sd-sos-2026-general-amendment-j",
+        "sd-sos-2026-general-amendment-k",
+        "sd-sos-2026-general-amendment-l"
+      ],
+      "house": [
+        "sd-sos-2026-general-united-states-representative-at-large"
+      ],
+      "stateSenate": [
+        "sd-sos-2026-general-state-senator-24"
+      ],
+      "stateHouse": [
+        "sd-sos-2026-general-state-representative-24"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "10025",
+      "day": "2026-10-23",
+      "queries": 8,
+      "contests": [
+        "ny-boe:2026-general:governor-lieutenant-governor",
+        "ny-boe:2026-general:comptroller",
+        "ny-boe:2026-general:attorney-general",
+        "ny-boe:2026-general:cd:12",
+        "ny-boe:2026-general:cd:13",
+        "ny-boe:2026-general:sldu:30",
+        "ny-boe:2026-general:sldu:47",
+        "ny-boe:2026-general:sldl:67",
+        "ny-boe:2026-general:sldl:69",
+        "ny-2026-general:supreme-court-1",
+        "ny-2026-new-york-county-surrogate",
+        "ny-2026-new-york-county-civil-court",
+        "ny-2026-new-york-city-charter-proposal-1",
+        "ny-2026-new-york-city-charter-proposal-2",
+        "ny-2026-new-york-city-charter-proposal-3",
+        "ny-2026-new-york-city-charter-proposal-4",
+        "ny-2026-new-york-city-charter-proposal-5"
+      ],
+      "house": [
+        "ny-boe:2026-general:cd:12",
+        "ny-boe:2026-general:cd:13"
+      ],
+      "stateSenate": [
+        "ny-boe:2026-general:sldu:30",
+        "ny-boe:2026-general:sldu:47"
+      ],
+      "stateHouse": [
+        "ny-boe:2026-general:sldl:67",
+        "ny-boe:2026-general:sldl:69"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "10025",
+      "day": "2026-10-24",
+      "queries": 8,
+      "contests": [
+        "ny-boe:2026-general:governor-lieutenant-governor",
+        "ny-boe:2026-general:comptroller",
+        "ny-boe:2026-general:attorney-general",
+        "ny-boe:2026-general:cd:12",
+        "ny-boe:2026-general:cd:13",
+        "ny-boe:2026-general:sldu:30",
+        "ny-boe:2026-general:sldu:47",
+        "ny-boe:2026-general:sldl:67",
+        "ny-boe:2026-general:sldl:69",
+        "ny-2026-general:supreme-court-1",
+        "ny-2026-new-york-county-surrogate",
+        "ny-2026-new-york-county-civil-court",
+        "ny-2026-new-york-city-charter-proposal-1",
+        "ny-2026-new-york-city-charter-proposal-2",
+        "ny-2026-new-york-city-charter-proposal-3",
+        "ny-2026-new-york-city-charter-proposal-4",
+        "ny-2026-new-york-city-charter-proposal-5"
+      ],
+      "house": [
+        "ny-boe:2026-general:cd:12",
+        "ny-boe:2026-general:cd:13"
+      ],
+      "stateSenate": [
+        "ny-boe:2026-general:sldu:30",
+        "ny-boe:2026-general:sldu:47"
+      ],
+      "stateHouse": [
+        "ny-boe:2026-general:sldl:67",
+        "ny-boe:2026-general:sldl:69"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "30303",
+      "day": "2026-10-23",
+      "queries": 7,
+      "contests": [
+        "ga-sos-2026-u-s-senate",
+        "ga-sos-2026-governor",
+        "ga-sos-2026-lieutenant-governor",
+        "ga-sos-2026-secretary-of-state",
+        "ga-sos-2026-attorney-general",
+        "ga-sos-2026-agriculture-commissioner",
+        "ga-sos-2026-insurance-and-fire-safety-commissioner",
+        "ga-sos-2026-state-school-superintendent",
+        "ga-sos-2026-labor-commissioner",
+        "ga-sos-2026-public-service-commissioner-district-3",
+        "ga-sos-2026-public-service-commissioner-district-5",
+        "ga-sos-2026-u-s-house-of-representatives-district-5",
+        "ga-sos-2026-state-senate-district-36",
+        "ga-sos-2026-state-house-district-56",
+        "ga-sos-2026-state-house-district-58",
+        "ga-sos-2026-state-house-district-59",
+        "ga-fulton-2026-commission-chair",
+        "ga-fulton-2026-soil-water-supervisor",
+        "ga-sos-2026-constitutional-amendment-1",
+        "ga-sos-2026-constitutional-amendment-2",
+        "ga-sos-2026-constitutional-amendment-3",
+        "ga-fulton-2026-measure-f769882f8ba84ae7"
+      ],
+      "house": [
+        "ga-sos-2026-u-s-house-of-representatives-district-5"
+      ],
+      "stateSenate": [
+        "ga-sos-2026-state-senate-district-36"
+      ],
+      "stateHouse": [
+        "ga-sos-2026-state-house-district-56",
+        "ga-sos-2026-state-house-district-58",
+        "ga-sos-2026-state-house-district-59"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    },
+    {
+      "zip": "30303",
+      "day": "2026-10-24",
+      "queries": 7,
+      "contests": [
+        "ga-sos-2026-u-s-senate",
+        "ga-sos-2026-governor",
+        "ga-sos-2026-lieutenant-governor",
+        "ga-sos-2026-secretary-of-state",
+        "ga-sos-2026-attorney-general",
+        "ga-sos-2026-agriculture-commissioner",
+        "ga-sos-2026-insurance-and-fire-safety-commissioner",
+        "ga-sos-2026-state-school-superintendent",
+        "ga-sos-2026-labor-commissioner",
+        "ga-sos-2026-public-service-commissioner-district-3",
+        "ga-sos-2026-public-service-commissioner-district-5",
+        "ga-sos-2026-u-s-house-of-representatives-district-5",
+        "ga-sos-2026-state-senate-district-36",
+        "ga-sos-2026-state-house-district-56",
+        "ga-sos-2026-state-house-district-58",
+        "ga-sos-2026-state-house-district-59",
+        "ga-fulton-2026-commission-chair",
+        "ga-fulton-2026-soil-water-supervisor",
+        "ga-sos-2026-constitutional-amendment-1",
+        "ga-sos-2026-constitutional-amendment-2",
+        "ga-sos-2026-constitutional-amendment-3",
+        "ga-fulton-2026-measure-f769882f8ba84ae7"
+      ],
+      "house": [
+        "ga-sos-2026-u-s-house-of-representatives-district-5"
+      ],
+      "stateSenate": [
+        "ga-sos-2026-state-senate-district-36"
+      ],
+      "stateHouse": [
+        "ga-sos-2026-state-house-district-56",
+        "ga-sos-2026-state-house-district-58",
+        "ga-sos-2026-state-house-district-59"
+      ],
+      "retention": 0,
+      "geographyDueTomorrow": false
+    }
+  ],
+  "browser": {
+    "runId": "bl-01-ballot-production-copy@2026-10-23T08:50:29.681Z",
+    "chromium": "system substitute for absent pinned 1234",
+    "rows": [
+      {
+        "label": "desktop",
+        "usableMs": 2850.9393830000004,
+        "errors": [],
+        "retention": 13,
+        "overflow": false,
+        "yesSelected": "true"
+      },
+      {
+        "label": "mobile",
+        "usableMs": 1689.0314440000002,
+        "errors": [],
+        "retention": 13,
+        "overflow": false,
+        "yesSelected": "true"
+      }
+    ]
+  },
+  "allPublishedRows": [
+    {
+      "state": "AL",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:8c5006dc9a7e8ceb95dc33188642a354",
+      "sourceContests": 187,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 7,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 6,
+      "scopeCounts": {
+        "cd:120": 7,
+        "sldu:2026": 35,
+        "sldl:2026": 105
+      }
+    },
+    {
+      "state": "AK",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:682858c9dabbfd7892e48df1666e4bc3",
+      "sourceContests": 76,
+      "sourceRetention": 1,
+      "renderedRetention": 1,
+      "officialWording": 0,
+      "wordingGap": 1,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 20,
+        "sldl:2026": 40
+      }
+    },
+    {
+      "state": "AZ",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:e49233069fe04d820c5850a3affb0b14",
+      "sourceContests": 169,
+      "sourceRetention": 13,
+      "renderedRetention": 13,
+      "officialWording": 0,
+      "wordingGap": 13,
+      "congressionalContests": 9,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 9,
+        "sldu:2026": 30,
+        "sldl:2026": 30
+      }
+    },
+    {
+      "state": "AR",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:68a892a53d189900704d1e47e767912d",
+      "sourceContests": 179,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 4,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 4,
+        "sldu:2026": 35,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "CA",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:bd14738ab3af82492d37b9295c136468",
+      "sourceContests": 346,
+      "sourceRetention": 64,
+      "renderedRetention": 64,
+      "officialWording": 64,
+      "wordingGap": 0,
+      "congressionalContests": 52,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 4,
+      "scopeCounts": {
+        "cd:120": 52,
+        "sldu:2026": 40,
+        "sldl:2026": 80
+      }
+    },
+    {
+      "state": "CO",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:eff6a6b247afd561e988d599ad648260",
+      "sourceContests": 165,
+      "sourceRetention": 7,
+      "renderedRetention": 7,
+      "officialWording": 0,
+      "wordingGap": 7,
+      "congressionalContests": 14,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 8,
+        "sldu:2026": 35,
+        "sldl:2026": 65
+      }
+    },
+    {
+      "state": "CT",
+      "status": "PASS",
+      "versionId": "cv-9deed5a831c55fe771e40f199535ac01",
+      "sourceContests": 197,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 5,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 5,
+        "sldu:2026": 36,
+        "sldl:2026": 151
+      }
+    },
+    {
+      "state": "DE",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:f342d957bdeb05b5f142ac490e175d79",
+      "sourceContests": 77,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 21,
+        "sldl:2026": 41
+      }
+    },
+    {
+      "state": "DC",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:8c829cad4b5d4b704d5da5cf35164468",
+      "sourceContests": 16,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 8,
+        "sldl:2026": 0
+      }
+    },
+    {
+      "state": "FL",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:73c64fa37d807a4fbdfa184af482d058",
+      "sourceContests": 307,
+      "sourceRetention": 23,
+      "renderedRetention": 23,
+      "officialWording": 0,
+      "wordingGap": 23,
+      "congressionalContests": 28,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 28,
+        "sldu:2026": 40,
+        "sldl:2026": 120
+      }
+    },
+    {
+      "state": "GA",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:0997a374d64168e67ba0586f65f4d0cb",
+      "sourceContests": 279,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 14,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 4,
+      "scopeCounts": {
+        "cd:120": 14,
+        "sldu:2026": 56,
+        "sldl:2026": 180
+      }
+    },
+    {
+      "state": "HI",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:52133197cc07f394c6a19cb1ea7b8aac",
+      "sourceContests": 92,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 25,
+        "sldl:2026": 51
+      }
+    },
+    {
+      "state": "ID",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:87a16a25469c00ba29d3c55ef81461ba",
+      "sourceContests": 423,
+      "sourceRetention": 33,
+      "renderedRetention": 33,
+      "officialWording": 0,
+      "wordingGap": 33,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 35,
+        "sldl:2026": 35
+      }
+    },
+    {
+      "state": "IL",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:a581a18b9597ae828c5f8aa7e259a897",
+      "sourceContests": 166,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 17,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 17,
+        "sldu:2026": 59,
+        "sldl:2026": 118
+      }
+    },
+    {
+      "state": "IN",
+      "status": "PASS",
+      "versionId": "cv-27bb585ee924e04033bf46640e8a20e7",
+      "sourceContests": 142,
+      "sourceRetention": 3,
+      "renderedRetention": 3,
+      "officialWording": 3,
+      "wordingGap": 0,
+      "congressionalContests": 9,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 9,
+        "sldu:2026": 50,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "IA",
+      "status": "PASS",
+      "versionId": "cv-3a2fe23516cedca463fd7d57180795cc",
+      "sourceContests": 140,
+      "sourceRetention": 3,
+      "renderedRetention": 3,
+      "officialWording": 3,
+      "wordingGap": 0,
+      "congressionalContests": 4,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 4,
+        "sldu:2026": 50,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "KS",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:8ee7e763197c97a178007d1fb9c95c00",
+      "sourceContests": 248,
+      "sourceRetention": 63,
+      "renderedRetention": 63,
+      "officialWording": 0,
+      "wordingGap": 63,
+      "congressionalContests": 4,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 4,
+        "sldu:2026": 40,
+        "sldl:2026": 125
+      }
+    },
+    {
+      "state": "KY",
+      "status": "PASS",
+      "versionId": "cv-2d8a0a63db1003033a7932b18e539a07",
+      "sourceContests": 127,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 6,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 6,
+        "sldu:2026": 38,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "LA",
+      "status": "PASS",
+      "versionId": "cv-c0dfdac2d1dfa42baf240bb2757dbd33",
+      "sourceContests": 18,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 6,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 6,
+        "sldu:2026": 39,
+        "sldl:2026": 105
+      }
+    },
+    {
+      "state": "ME",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:b3d42b017e6b401f7caaf5eb2bff65cb",
+      "sourceContests": 278,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 35,
+        "sldl:2026": 151
+      }
+    },
+    {
+      "state": "MD",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:b0eeb87de33c5e6791bcfcd37ec03040",
+      "sourceContests": 336,
+      "sourceRetention": 2,
+      "renderedRetention": 2,
+      "officialWording": 2,
+      "wordingGap": 0,
+      "congressionalContests": 8,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 8,
+        "sldu:2026": 47,
+        "sldl:2026": 71
+      }
+    },
+    {
+      "state": "MA",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:ee816e64b7307c81793ac201d975524a",
+      "sourceContests": 232,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 9,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 9,
+        "sldu:2026": 40,
+        "sldl:2026": 160
+      }
+    },
+    {
+      "state": "MI",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:1bc3d6bc2a1bab0e1cff1fb7c9501af6",
+      "sourceContests": 340,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 13,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 13,
+        "sldu:2026": 38,
+        "sldl:2026": 110
+      }
+    },
+    {
+      "state": "MN",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:2c39a290da95f9a5c611b1ca2d8b4dc7",
+      "sourceContests": 392,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 8,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 8,
+        "sldu:2026": 67,
+        "sldl:2026": 134
+      }
+    },
+    {
+      "state": "MS",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:d1dd805762417a6f57a6b3a90dc0ebcd",
+      "sourceContests": 102,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 4,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 4,
+        "sldu:2026": 52,
+        "sldl:2026": 122
+      }
+    },
+    {
+      "state": "MO",
+      "status": "PASS",
+      "versionId": "cv-11d1398e01d16b713be09e913dfc4c86",
+      "sourceContests": 195,
+      "sourceRetention": 1,
+      "renderedRetention": 1,
+      "officialWording": 0,
+      "wordingGap": 1,
+      "congressionalContests": 8,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 8,
+        "sldu:2026": 34,
+        "sldl:2026": 163
+      }
+    },
+    {
+      "state": "MT",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:f196b02601ce2de89573df872c238988",
+      "sourceContests": 146,
+      "sourceRetention": 10,
+      "renderedRetention": 10,
+      "officialWording": 0,
+      "wordingGap": 10,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 50,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "NE",
+      "status": "PASS",
+      "versionId": "cv-c5c362e17b807b5af3e76ba59e2d9e10",
+      "sourceContests": 48,
+      "sourceRetention": 2,
+      "renderedRetention": 2,
+      "officialWording": 2,
+      "wordingGap": 0,
+      "congressionalContests": 3,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 3,
+        "sldu:2026": 49,
+        "sldl:2026": 0
+      }
+    },
+    {
+      "state": "NV",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:5e02188e7553db1be6e24f33715a02ee",
+      "sourceContests": 78,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 4,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 4,
+      "scopeCounts": {
+        "cd:120": 4,
+        "sldu:2026": 21,
+        "sldl:2026": 42
+      }
+    },
+    {
+      "state": "NH",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:050e8fb243da22ba238c9165d5010bce",
+      "sourceContests": 98,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 24,
+        "sldl:2026": 164
+      }
+    },
+    {
+      "state": "NJ",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:aff4ad6ae37283e2b2db5a62ecaf3ed8",
+      "sourceContests": 109,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 12,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 12,
+        "sldu:2026": 40,
+        "sldl:2026": 40
+      }
+    },
+    {
+      "state": "NM",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:b3482271bd93de7da4d27828bc8c0e5c",
+      "sourceContests": 255,
+      "sourceRetention": 43,
+      "renderedRetention": 43,
+      "officialWording": 0,
+      "wordingGap": 43,
+      "congressionalContests": 3,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 3,
+        "sldu:2026": 42,
+        "sldl:2026": 70
+      }
+    },
+    {
+      "state": "NY",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:82e6302e8476d19e7594827aa402f201",
+      "sourceContests": 268,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 26,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 12,
+      "scopeCounts": {
+        "cd:120": 26,
+        "sldu:2026": 63,
+        "sldl:2026": 150
+      }
+    },
+    {
+      "state": "NC",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:4b465aea1e7a9cb9d0accce31befca76",
+      "sourceContests": 561,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 14,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 14,
+        "sldu:2026": 50,
+        "sldl:2026": 120
+      }
+    },
+    {
+      "state": "ND",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:6ff2e72336477f94599ce43f6dac58ee",
+      "sourceContests": 409,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 4,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 47,
+        "sldl:2026": 48
+      }
+    },
+    {
+      "state": "OH",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:193695db0b6c7607bdbe1a0ab1e5f344",
+      "sourceContests": 223,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 15,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 15,
+        "sldu:2026": 33,
+        "sldl:2026": 99
+      }
+    },
+    {
+      "state": "OK",
+      "status": "PASS",
+      "versionId": "cv-fb8476648f098b6b94c1470de5ee02aa",
+      "sourceContests": 95,
+      "sourceRetention": 9,
+      "renderedRetention": 9,
+      "officialWording": 9,
+      "wordingGap": 0,
+      "congressionalContests": 5,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 6,
+      "scopeCounts": {
+        "cd:120": 5,
+        "sldu:2026": 48,
+        "sldl:2026": 101
+      }
+    },
+    {
+      "state": "OR",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:281121170afb987ba0a38f5ad4cb237d",
+      "sourceContests": 116,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 6,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 6,
+        "sldu:2026": 30,
+        "sldl:2026": 60
+      }
+    },
+    {
+      "state": "PA",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:6e1ac598f7de884e255b0ba0d77bc9b6",
+      "sourceContests": 188,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 16,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 17,
+        "sldu:2026": 50,
+        "sldl:2026": 203
+      }
+    },
+    {
+      "state": "RI",
+      "status": "PASS",
+      "versionId": "cv-728c362fee37f9add059d312f5e579e6",
+      "sourceContests": 126,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 38,
+        "sldl:2026": 75
+      }
+    },
+    {
+      "state": "SC",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:88406a98e6ea89ffccd03b48187191a9",
+      "sourceContests": 298,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 7,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 7,
+        "sldu:2026": 46,
+        "sldl:2026": 124
+      }
+    },
+    {
+      "state": "SD",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:225967f7f07dd70196ec651afd5ffd81",
+      "sourceContests": 89,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 35,
+        "sldl:2026": 37
+      }
+    },
+    {
+      "state": "TN",
+      "status": "PASS",
+      "versionId": "cv-a32b8b1c334fd37314f2b71ab9033c71",
+      "sourceContests": 129,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 9,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 9,
+        "sldu:2026": 33,
+        "sldl:2026": 99
+      }
+    },
+    {
+      "state": "TX",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:33558820262f64f5e080d64dd4740143",
+      "sourceContests": 1736,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 38,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 6,
+      "scopeCounts": {
+        "cd:120": 38,
+        "sldu:2026": 31,
+        "sldl:2026": 150
+      }
+    },
+    {
+      "state": "UT",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:8a036408a56c1a98eac50b28218c5787",
+      "sourceContests": 142,
+      "sourceRetention": 32,
+      "renderedRetention": 32,
+      "officialWording": 32,
+      "wordingGap": 0,
+      "congressionalContests": 4,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 4,
+        "sldu:2026": 29,
+        "sldl:2026": 75
+      }
+    },
+    {
+      "state": "VT",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:ddd1ca10ebf2d3b95de639bbd6d6265a",
+      "sourceContests": 140,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 16,
+        "sldl:2026": 109
+      }
+    },
+    {
+      "state": "VA",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:f4bfe85a2770b1475e9a031e9e6d0d22",
+      "sourceContests": 427,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 11,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 11,
+        "sldu:2026": 40,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "WA",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:4d74a668caa8ac338b1b24ca0e7fd82b",
+      "sourceContests": 156,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 10,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 5,
+      "scopeCounts": {
+        "cd:120": 10,
+        "sldu:2026": 49,
+        "sldl:2026": 49
+      }
+    },
+    {
+      "state": "WV",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:32e2f87f20488cde0b04ceb3c8efdadf",
+      "sourceContests": 196,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 2,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 2,
+        "sldu:2026": 17,
+        "sldl:2026": 100
+      }
+    },
+    {
+      "state": "WI",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:d16dd84fa6e8c228524a87de03bda68c",
+      "sourceContests": 195,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 8,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 8,
+        "sldu:2026": 33,
+        "sldl:2026": 99
+      }
+    },
+    {
+      "state": "WY",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:741d2db1b976983b883e2628e75f6e9c",
+      "sourceContests": 98,
+      "sourceRetention": 3,
+      "renderedRetention": 3,
+      "officialWording": 0,
+      "wordingGap": 3,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 3,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 31,
+        "sldl:2026": 62
+      }
+    },
+    {
+      "state": "PR",
+      "status": "FAILED",
+      "reason": "PR: real promoted ballot read\n+ actual - expected\n\n+ 'NOT_RECORDED'\n- 'PROMOTED'\n"
+    },
+    {
+      "state": "VI",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:5d99ce98118ecd7dfb7379f7c03edb6d",
+      "sourceContests": 10,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 0,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 0,
+        "sldl:2026": 0
+      }
+    },
+    {
+      "state": "AS",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:3e8f935f673f4f28487a984091d0e609",
+      "sourceContests": 18,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 0,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 0,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 0,
+        "sldl:2026": 0
+      }
+    },
+    {
+      "state": "GU",
+      "status": "FAILED",
+      "reason": "GU: real promoted ballot read\n+ actual - expected\n\n+ 'NOT_RECORDED'\n- 'PROMOTED'\n"
+    },
+    {
+      "state": "MP",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:787357255b4decc1842c7f7e0a57ce9f",
+      "sourceContests": 21,
+      "sourceRetention": 1,
+      "renderedRetention": 1,
+      "officialWording": 0,
+      "wordingGap": 1,
+      "congressionalContests": 0,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 1,
+      "scopeCounts": {
+        "cd:120": 1,
+        "sldu:2026": 0,
+        "sldl:2026": 0
+      }
+    }
+  ],
+  "allStatePages": [
+    {
+      "state": "AL",
+      "zip": "35801",
+      "status": "PASS",
+      "todayDrawn": 32,
+      "tomorrowDrawn": 32,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "AK",
+      "zip": "99501",
+      "status": "PASS",
+      "todayDrawn": 11,
+      "tomorrowDrawn": 11,
+      "contestIdsEqual": true,
+      "retentionOnPage": 1
+    },
+    {
+      "state": "AZ",
+      "zip": "85003",
+      "status": "PASS",
+      "todayDrawn": 83,
+      "tomorrowDrawn": 83,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "AR",
+      "zip": "72201",
+      "status": "PASS",
+      "todayDrawn": 21,
+      "tomorrowDrawn": 21,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "CA",
+      "zip": "94118",
+      "status": "PASS",
+      "todayDrawn": 53,
+      "tomorrowDrawn": 53,
+      "contestIdsEqual": true,
+      "retentionOnPage": 13
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "status": "PASS",
+      "todayDrawn": 55,
+      "tomorrowDrawn": 55,
+      "contestIdsEqual": true,
+      "retentionOnPage": 7
+    },
+    {
+      "state": "CT",
+      "zip": "06103",
+      "status": "PASS",
+      "todayDrawn": 11,
+      "tomorrowDrawn": 11,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "DE",
+      "zip": "19901",
+      "status": "PASS",
+      "todayDrawn": 14,
+      "tomorrowDrawn": 14,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "DC",
+      "zip": "20001",
+      "status": "PASS",
+      "todayDrawn": 8,
+      "tomorrowDrawn": 8,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "FL",
+      "zip": "33139",
+      "status": "PASS",
+      "todayDrawn": 33,
+      "tomorrowDrawn": 33,
+      "contestIdsEqual": true,
+      "retentionOnPage": 6
+    },
+    {
+      "state": "GA",
+      "zip": "30303",
+      "status": "PASS",
+      "todayDrawn": 22,
+      "tomorrowDrawn": 22,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "HI",
+      "zip": "96813",
+      "status": "PASS",
+      "todayDrawn": 29,
+      "tomorrowDrawn": 29,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "ID",
+      "zip": "83702",
+      "status": "PASS",
+      "todayDrawn": 46,
+      "tomorrowDrawn": 46,
+      "contestIdsEqual": true,
+      "retentionOnPage": 8
+    },
+    {
+      "state": "IL",
+      "zip": "62701",
+      "status": "PASS",
+      "todayDrawn": 12,
+      "tomorrowDrawn": 12,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "IN",
+      "zip": "46204",
+      "status": "PASS",
+      "todayDrawn": 14,
+      "tomorrowDrawn": 14,
+      "contestIdsEqual": true,
+      "retentionOnPage": 3
+    },
+    {
+      "state": "IA",
+      "zip": "50309",
+      "status": "PASS",
+      "todayDrawn": 17,
+      "tomorrowDrawn": 17,
+      "contestIdsEqual": true,
+      "retentionOnPage": 3
+    },
+    {
+      "state": "KS",
+      "zip": "66603",
+      "status": "PASS",
+      "todayDrawn": 22,
+      "tomorrowDrawn": 22,
+      "contestIdsEqual": true,
+      "retentionOnPage": 12
+    },
+    {
+      "state": "KY",
+      "zip": "40601",
+      "status": "PASS",
+      "todayDrawn": 11,
+      "tomorrowDrawn": 11,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "LA",
+      "zip": "70112",
+      "status": "PASS",
+      "todayDrawn": 12,
+      "tomorrowDrawn": 12,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "ME",
+      "zip": "04330",
+      "status": "PASS",
+      "todayDrawn": 13,
+      "tomorrowDrawn": 13,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "MD",
+      "zip": "21401",
+      "status": "PASS",
+      "todayDrawn": 22,
+      "tomorrowDrawn": 22,
+      "contestIdsEqual": true,
+      "retentionOnPage": 1
+    },
+    {
+      "state": "MA",
+      "zip": "02108",
+      "status": "PASS",
+      "todayDrawn": 16,
+      "tomorrowDrawn": 16,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "MI",
+      "zip": "48226",
+      "status": "PASS",
+      "todayDrawn": 24,
+      "tomorrowDrawn": 24,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "MN",
+      "zip": "55101",
+      "status": "PASS",
+      "todayDrawn": 30,
+      "tomorrowDrawn": 30,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "MS",
+      "zip": "39201",
+      "status": "PASS",
+      "todayDrawn": 3,
+      "tomorrowDrawn": 3,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "MO",
+      "zip": "63103",
+      "status": "PASS",
+      "todayDrawn": 10,
+      "tomorrowDrawn": 10,
+      "contestIdsEqual": true,
+      "retentionOnPage": 1
+    },
+    {
+      "state": "MT",
+      "zip": "59601",
+      "status": "PASS",
+      "todayDrawn": 14,
+      "tomorrowDrawn": 14,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "NE",
+      "zip": "68508",
+      "status": "PASS",
+      "todayDrawn": 15,
+      "tomorrowDrawn": 15,
+      "contestIdsEqual": true,
+      "retentionOnPage": 2
+    },
+    {
+      "state": "NV",
+      "zip": "89701",
+      "status": "PASS",
+      "todayDrawn": 13,
+      "tomorrowDrawn": 13,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "status": "PASS",
+      "todayDrawn": 33,
+      "tomorrowDrawn": 33,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "NJ",
+      "zip": "08608",
+      "status": "PASS",
+      "todayDrawn": 2,
+      "tomorrowDrawn": 2,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "NM",
+      "zip": "87501",
+      "status": "PASS",
+      "todayDrawn": 30,
+      "tomorrowDrawn": 30,
+      "contestIdsEqual": true,
+      "retentionOnPage": 6
+    },
+    {
+      "state": "NY",
+      "zip": "10025",
+      "status": "PASS",
+      "todayDrawn": 17,
+      "tomorrowDrawn": 17,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "NC",
+      "zip": "28202",
+      "status": "PASS",
+      "todayDrawn": 31,
+      "tomorrowDrawn": 31,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "ND",
+      "zip": "58501",
+      "status": "PASS",
+      "todayDrawn": 25,
+      "tomorrowDrawn": 25,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "OH",
+      "zip": "44111",
+      "status": "PASS",
+      "todayDrawn": 34,
+      "tomorrowDrawn": 34,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "OK",
+      "zip": "73102",
+      "status": "PASS",
+      "todayDrawn": 21,
+      "tomorrowDrawn": 21,
+      "contestIdsEqual": true,
+      "retentionOnPage": 9
+    },
+    {
+      "state": "OR",
+      "zip": "97301",
+      "status": "PASS",
+      "todayDrawn": 11,
+      "tomorrowDrawn": 11,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "PA",
+      "zip": "19107",
+      "status": "PASS",
+      "todayDrawn": 7,
+      "tomorrowDrawn": 7,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "RI",
+      "zip": "02903",
+      "status": "PASS",
+      "todayDrawn": 22,
+      "tomorrowDrawn": 22,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "SC",
+      "zip": "29201",
+      "status": "PASS",
+      "todayDrawn": 15,
+      "tomorrowDrawn": 15,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "SD",
+      "zip": "57501",
+      "status": "PASS",
+      "todayDrawn": 15,
+      "tomorrowDrawn": 15,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "TN",
+      "zip": "37203",
+      "status": "PASS",
+      "todayDrawn": 12,
+      "tomorrowDrawn": 12,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "TX",
+      "zip": "77005",
+      "status": "PASS",
+      "todayDrawn": 71,
+      "tomorrowDrawn": 71,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "UT",
+      "zip": "84111",
+      "status": "PASS",
+      "todayDrawn": 26,
+      "tomorrowDrawn": 26,
+      "contestIdsEqual": true,
+      "retentionOnPage": 14
+    },
+    {
+      "state": "VT",
+      "zip": "05602",
+      "status": "PASS",
+      "todayDrawn": 9,
+      "tomorrowDrawn": 9,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "VA",
+      "zip": "23219",
+      "status": "PASS",
+      "todayDrawn": 6,
+      "tomorrowDrawn": 6,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "WA",
+      "zip": "98501",
+      "status": "PASS",
+      "todayDrawn": 14,
+      "tomorrowDrawn": 14,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "WV",
+      "zip": "25301",
+      "status": "PASS",
+      "todayDrawn": 10,
+      "tomorrowDrawn": 10,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "status": "PASS",
+      "todayDrawn": 12,
+      "tomorrowDrawn": 12,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "WY",
+      "zip": "82001",
+      "status": "PASS",
+      "todayDrawn": 31,
+      "tomorrowDrawn": 31,
+      "contestIdsEqual": true,
+      "retentionOnPage": 3
+    },
+    {
+      "state": "PR",
+      "status": "FAILED",
+      "todayDrawn": 0,
+      "tomorrowDrawn": 0,
+      "reason": "NOT_RECORDED: no canonical BALLOT_CANDIDACY promotion at US-PR:state-election-ballots in the production copy."
+    },
+    {
+      "state": "VI",
+      "zip": "00802",
+      "status": "PASS",
+      "todayDrawn": 3,
+      "tomorrowDrawn": 3,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "AS",
+      "zip": "96799",
+      "status": "PASS",
+      "todayDrawn": 1,
+      "tomorrowDrawn": 1,
+      "contestIdsEqual": true,
+      "retentionOnPage": 0
+    },
+    {
+      "state": "GU",
+      "status": "FAILED",
+      "todayDrawn": 0,
+      "tomorrowDrawn": 0,
+      "reason": "NOT_RECORDED: no canonical BALLOT_CANDIDACY promotion at US-GU:state-election-ballots in the production copy."
+    },
+    {
+      "state": "MP",
+      "zip": "96950",
+      "status": "PASS",
+      "todayDrawn": 5,
+      "tomorrowDrawn": 5,
+      "contestIdsEqual": true,
+      "retentionOnPage": 1
+    }
+  ],
+  "allPublishedRowsSummary": {
+    "jurisdictions": 56,
+    "pass": 54,
+    "missingPublications": [
+      "PR",
+      "GU"
+    ],
+    "retention": 313,
+    "officialWording": 115,
+    "congressionalContestsNormalized": 441,
+    "stateTiersChecked": 112
+  },
+  "productionNorthDakotaReadback": [
+    {
+      "state": "ND",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:d62a2d40e60a7b4cb795894910325025",
+      "sourceContests": 409,
+      "sourceRetention": 0,
+      "renderedRetention": 0,
+      "officialWording": 0,
+      "wordingGap": 0,
+      "congressionalContests": 1,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 4,
+      "scopeCounts": {
+        "cd:120": 0,
+        "sldu:2026": 0,
+        "sldl:2026": 0
+      },
+      "ndHouse": [
+        "ocd-division/country:us/state:nd/cd:at-large"
+      ]
+    }
+  ],
+  "oldNewElectionPlanSelection": [
+    {
+      "state": "AL",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "CA",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "FL",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "LA",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "MO",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "NC",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "OH",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "TN",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "TX",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "UT",
+      "type": "congressional_district",
+      "before": null,
+      "after": "cd:120"
+    },
+    {
+      "state": "AL",
+      "type": "state_leg_upper",
+      "before": null,
+      "after": "sldu:2026"
+    },
+    {
+      "state": "MI",
+      "type": "state_leg_upper",
+      "before": null,
+      "after": "sldu:2026"
+    },
+    {
+      "state": "SD",
+      "type": "state_leg_upper",
+      "before": null,
+      "after": "sldu:2026"
+    },
+    {
+      "state": "SD",
+      "type": "state_leg_lower",
+      "before": null,
+      "after": "sldl:2026"
+    }
+  ],
+  "nationalEmptyEvidenceCacheRun": {
+    "seconds": 301.272006933,
+    "peakMiB": 1247.734375,
+    "versions": [
+      {
+        "version": "cd:119",
+        "groups": 443,
+        "edges": 40147
+      },
+      {
+        "version": "county:2020",
+        "groups": 3232,
+        "edges": 46960
+      },
+      {
+        "version": "cbsa:2023",
+        "groups": 935,
+        "edges": 29974
+      },
+      {
+        "version": "sldu:2024",
+        "groups": 1963,
+        "edges": 48029
+      },
+      {
+        "version": "sldl:2024",
+        "groups": 4878,
+        "edges": 56878
+      },
+      {
+        "version": "cd:120",
+        "groups": 441,
+        "edges": 40423
+      },
+      {
+        "version": "sldu:2026",
+        "groups": 1958,
+        "edges": 48605
+      },
+      {
+        "version": "sldl:2026",
+        "groups": 4873,
+        "edges": 57899
+      }
+    ],
+    "promotedVersion": "cv-cd43ba5da5b3faf8eedfd9a1ee0e35af"
+  },
+  "productionPrGuPointers": [],
+  "marylandFinalRows": [
+    {
+      "state": "MD",
+      "status": "PASS",
+      "versionId": "official-ballot-authorities:b0eeb87de33c5e6791bcfcd37ec03040",
+      "sourceContests": 336,
+      "sourceRetention": 2,
+      "renderedRetention": 2,
+      "officialWording": 2,
+      "wordingGap": 0,
+      "congressionalContests": 8,
+      "canonicalCongressionalCodes": true,
+      "stateTiersChecked": 2,
+      "scopeCounts": {
+        "cd:120": 8,
+        "sldu:2026": 47,
+        "sldl:2026": 71
+      }
+    }
+  ]
+}

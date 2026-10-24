@@ -123,7 +123,8 @@ export function MeetingPanel({
           </p>
           {/* Where the building is the title, the address stands alone. */}
           <p className="mt-1 t-body leading-snug text-muted">
-            {venue.kind === "ONLINE_ONLY" && <><MeetingStatusPill status="online" /> Body’s office: </>}
+            {venue.kind === "ONLINE_ONLY" && <MeetingStatusPill status="online" />}
+            {venue.pinBasis === "BODY_OFFICE" ? "Board’s office: " : venue.pinBasis === "GOVERNMENT_OFFICE" ? "Government’s office: " : "Published meeting location: "}
             {cardTitle.basis === "venue"
               ? (venue.address ?? "")
               : locationLine(venue.name, venue.address)}
@@ -233,7 +234,7 @@ export function MeetingPanel({
           </section>
         ))}
 
-        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: "Online-only pin at the body’s published office address", provenance: venue.officeAddressSource }] : []),
+        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])),
           ...offices.map(office => ({ what: `${office.name}: district office address`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "", collectedAt: office.collectedAt ?? "", verifiedAt: null } }))]} />
       </div>
     </aside>

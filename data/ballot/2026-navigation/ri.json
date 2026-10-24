@@ -1,0 +1,207 @@
+{
+  "state": "RI",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://vote.sos.ri.gov/",
+      "finalUrl": "https://vote.sos.ri.gov/",
+      "publisher": "Rhode Island Department of State"
+    },
+    {
+      "requestedUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+      "finalUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+      "publisher": "Rhode Island Department of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://vote.sos.ri.gov/",
+          "finalUrl": "https://vote.sos.ri.gov/",
+          "publisher": "Rhode Island Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:01.559506+00:00",
+          "httpStatus": 200,
+          "rawHash": "839ebad1606fb9d0464613be114feab1fc5797c2e2a94a924ebf89b3df3aab08",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+          "finalUrl": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+          "publisher": "Rhode Island Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:52.133661+00:00",
+          "httpStatus": 200,
+          "rawHash": "84cdc77757a51d81b68c8260d8ee73a0f10baade5b20e8e38d4317bf4098cf6e",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:3065b399fcc44c51f854f78c369f9776",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "polling_lookup",
+            "text": "https://vote.sos.ri.gov/#general-search",
+            "quote": "Find a Polling Place View Sample Ballot",
+            "dates": [],
+            "url": "https://vote.sos.ri.gov/",
+            "navigationUrl": "https://vote.sos.ri.gov/#general-search",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.559506+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:686d59e8aad68cdd7ff924be32541f84",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "registration_page",
+            "text": "https://vote.sos.ri.gov/Voter/RegisterToVote",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://vote.sos.ri.gov/",
+            "navigationUrl": "https://vote.sos.ri.gov/Voter/RegisterToVote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.559506+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:76c0117d7d4ad2d25df8b31d83d90007",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "ballot_lookup",
+            "text": "https://vote.sos.ri.gov/#general-search",
+            "quote": "Find a Polling Place View Sample Ballot",
+            "dates": [],
+            "url": "https://vote.sos.ri.gov/",
+            "navigationUrl": "https://vote.sos.ri.gov/#general-search",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.559506+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:9355672c8850dd028865576cc76ef472",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "registration_deadline",
+            "text": "Deadline to register to vote: Sunday, October 4",
+            "quote": "Deadline to register to vote: Sunday, October 4",
+            "dates": [
+              "2026-10-04"
+            ],
+            "url": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:52.133661+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:a42d817b4c6a8c501d32c5fac71ebdf8",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "early_voting",
+            "text": "Early voting and emergency mail ballot period: Wednesday, October 14 - Monday, November 2 (ends at 4 p.m.)",
+            "quote": "Early voting and emergency mail ballot period: Wednesday, October 14 - Monday, November 2 (ends at 4 p.m.)",
+            "dates": [
+              "2026-10-14",
+              "2026-11-02"
+            ],
+            "url": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:52.133661+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:bedc2ea59d2d1e93621e46b10d03e278",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Deadline to apply for a mail ballot: Tuesday, October 13",
+            "quote": "Deadline to apply for a mail ballot: Tuesday, October 13",
+            "dates": [
+              "2026-10-13"
+            ],
+            "url": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:52.133661+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:d3841a9578cf318e965df54d3b8b3d42",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "registration_lookup",
+            "text": "https://vote.sos.ri.gov/#personal-search",
+            "quote": "View/Update My Voter Record",
+            "dates": [],
+            "url": "https://vote.sos.ri.gov/",
+            "navigationUrl": "https://vote.sos.ri.gov/#personal-search",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.559506+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        },
+        {
+          "id": "election-field:d7273db67a406d3f853bac2560100bda",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "RI",
+            "divisionId": "ocd-division/country:us/state:ri",
+            "fieldKind": "election_office",
+            "text": "Rhode Island Department of State",
+            "quote": "Rhode Island Department of State",
+            "dates": [],
+            "url": "https://vote.sos.ri.gov/Forms/Elections/Guides/2026ElecCal.pdf",
+            "navigationUrl": "https://vote.sos.ri.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "401-222-2340",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:52.133661+00:00",
+            "sourceOrg": "Rhode Island Department of State"
+          }
+        }
+      ]
+    }
+  }
+}

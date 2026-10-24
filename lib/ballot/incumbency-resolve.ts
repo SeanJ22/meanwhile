@@ -57,11 +57,11 @@ export interface ContestIncumbencyResult {
 
 const committedHolderByKey = cache(
   async (ocdId: string, title: string, targetKey: string): Promise<SeatHolder | null> => {
-    const office = officeIdentity(title);
+    const office = officeIdentity(title, ocdId);
     if (!office || !standingChipMayAttach(title)) return null;
     const matches = readerPersonKeys(targetKey).keys.flatMap((key) => {
       const current = currentOfficialIdentity(key);
-      return current && current.divisions.includes(ocdId) && officeIdentity(current.officeTitle) === office
+      return current && current.divisions.includes(ocdId) && officeIdentity(current.officeTitle, ocdId) === office
         && sameSeatDiscriminators(title, current.officeTitle, ocdId) ? [current.id] : [];
     });
     const ids = [...new Set(matches)];
@@ -126,7 +126,7 @@ export async function contestIncumbency(
   const officeIsElected = standingChipMayAttach(contest.title);
 
   const registryHolders = officeIsElected ? (await holdersForSeat(contest.ocdId, contest.title)).filter(holder =>
-    officeIdentity(holder.officeTitle) === officeIdentity(contest.title) &&
+    officeIdentity(holder.officeTitle, contest.ocdId) === officeIdentity(contest.title, contest.ocdId) &&
     sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId)) : [];
   let holders: SeatHolderRef[] = registryHolders.map((h) => ({
     ...splitDisplayName(h.name),
@@ -147,7 +147,7 @@ export async function contestIncumbency(
     const resolved = await Promise.all(
       contest.candidates.map(async (c) => {
         const holder = await federalHolderFor(c.targetKey);
-        return holder === null || officeIdentity(holder.officeTitle) !== officeIdentity(contest.title) ||
+        return holder === null || officeIdentity(holder.officeTitle, contest.ocdId) !== officeIdentity(contest.title, contest.ocdId) ||
           !sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId) ? null : { display: c.display, holder };
       }),
     );

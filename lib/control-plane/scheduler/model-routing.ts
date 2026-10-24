@@ -46,13 +46,13 @@ export type StepRoute =
     };
 
 export const SCOUT_STEPS = {
-  /** The hunter's loop: one model for the whole job; a hunter is never moved to a dearer model. */
+  /** Start each hunt on Haiku; failed results climb one tier at a time. */
   "scout-research-loop": {
     kind: "MODEL",
     modelClass: "haiku",
     role: "SCOUT",
-    escalateTo: null,
-    why: "Hunting runs on Haiku for the whole job; facts are checked once, on the Slide, so a dearer model buys nothing.",
+    escalateTo: "sonnet",
+    why: "Start with Haiku; escalate only after the current attempt fails its existing check.",
   },
   /** HTML/JSON/PDF -> title, visible text, links, extracted text. Code, in scout-tools.ts. */
   "page-to-representation": {
@@ -82,13 +82,13 @@ export const SCOUT_STEPS = {
     escalateTo: "sonnet",
     why: "classification over a sanitized representation is the cheapest-class case; a failed standard escalates one class and is recorded",
   },
-  /** A sub-call that summarizes a representation for the owner. Sonnet, escalating to the frontier. */
+  /** A sub-call that summarizes a representation for the owner. Cheapest first. */
   summarization: {
     kind: "MODEL",
-    modelClass: "sonnet",
+    modelClass: "haiku",
     role: "SUB_STEP",
-    escalateTo: "frontier",
-    why: "summarization for a reader-facing owner surface needs Sonnet's standard; ambiguity escalates to the frontier and is recorded",
+    escalateTo: "sonnet",
+    why: "Start with Haiku; a failed summary escalates to Sonnet, then the frontier.",
   },
   /** Independent evidence context and machine verification remain mandatory; an inconclusive response can escalate through separate durable attempts. */
   "adversarial-audit": {
@@ -173,12 +173,8 @@ export function escalationTargetFor(
   from?: ModelClass,
 ): { readonly model: string; readonly modelClass: ModelClass; readonly effort: ModelEffort; readonly role: ModelRole } | null {
   const base = assertStepMayInvokeModel(step);
-  if (step === "scout-research-loop" && from !== undefined) {
-    const next = MODEL_CLASSES[MODEL_CLASSES.indexOf(from) + 1];
-    return next ? { ...base, model: MODEL_FOR_CLASS[next], modelClass: next } : null;
-  }
-  const up = assertStepMayInvokeModel(step, true);
-  return up.modelClass === base.modelClass ? null : up;
+  const next = MODEL_CLASSES[MODEL_CLASSES.indexOf(from ?? base.modelClass) + 1];
+  return next ? { ...base, model: MODEL_FOR_CLASS[next], modelClass: next } : null;
 }
 
 /**

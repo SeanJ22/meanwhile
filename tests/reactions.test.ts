@@ -344,9 +344,8 @@ test("the fourth button renders only where the answer is accepted", () => {
     "utf8",
   );
   assert.ok(
-    ballot.includes("lineup.nominees.length === 1") &&
-      ballot.includes("candidatesOf(set, contest).length === 1"),
-    "both candidate surfaces must derive the flag by counting the contest",
+    ballot.includes("contest.candidateListComplete === true && candidatesOf(set, contest).length === 1"),
+    "the unified candidate surface must count the complete contest",
   );
 
   assert.ok(

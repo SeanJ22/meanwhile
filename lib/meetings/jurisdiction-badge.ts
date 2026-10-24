@@ -1,7 +1,7 @@
 import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
 import { COULD_GOVERN_ACTION, COULD_GOVERN_TEXT } from "../ballot/could-govern.ts";
 import { readerGovernmentName } from "../text/reader-names.ts";
-import { BODY_CLASS_LABELS, governVerbMayAttach } from "../registry/body-class-labels.ts";
+import { BODY_CLASS_LABELS, bodyClassLong, governVerbMayAttach } from "../registry/body-class-labels.ts";
 import type { BodyClass, DivisionType } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 
@@ -69,7 +69,7 @@ export const BADGE_COPY: Readonly<Record<JurisdictionBadge, BadgeCopy>> = {
 export function badgeCopyFor(badge: JurisdictionBadge, bodyClass?: BodyClass | null): BadgeCopy {
   if (badge === "NOT_GOVERNING" && bodyClass) {
     const label = BODY_CLASS_LABELS[bodyClass];
-    return { label: label.long, detail: label.why };
+    return { label: bodyClassLong(bodyClass), detail: label?.why ?? BADGE_COPY.NOT_GOVERNING.detail };
   }
   return BADGE_COPY[badge];
 }

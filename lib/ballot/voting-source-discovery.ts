@@ -102,11 +102,8 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
       quote: source.title ?? "Precinct boundaries", reason: "The official election page links this precinct-boundary source" };
     const observation = { source, disposition, capture, linkingCaptures };
     sources.push(observation);
-    // Retain the source before publishing from it. A held document affects only this page.
-    if (await runtime.onDiscoveredSource?.(observation) === "HELD") {
-      skips.push({ url: source.url, reason: "Source document held for restricted evidence storage" });
-      continue;
-    }
+    // Retain the source's cleaned copy before publishing from it.
+    await runtime.onDiscoveredSource?.(observation);
     if (disposition.kind === "DOOR" && disposition.family === "voting") {
       doors.push(source);
       await runtime.onDiscoveredDoor?.(source, [...linkingCaptures, capture]);

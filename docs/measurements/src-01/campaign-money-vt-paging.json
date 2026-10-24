@@ -1,0 +1,122 @@
+{
+  "state": "VT",
+  "productionWrites": 0,
+  "kind": "actual-native-pagination-truncation",
+  "replayResult": "Financial publication blocked; per-person reason/API/card replay passes independently.",
+  "error": "The campaign API response is truncated or exceeds its denominator.",
+  "endpoints": [
+    {
+      "url": "https://api.campaignfinance.vermont.gov/api/PublicTransactionDetails/GetContributionsDetails",
+      "pages": [
+        {
+          "request": {
+            "pageNumber": 1,
+            "pageSize": 500
+          },
+          "httpStatus": 200,
+          "sha256": "9682d2285c9b7457857cc248f81533dc65dca17d50a50dacb5ed47acf3bced0d",
+          "byteLength": 791899,
+          "capturedAt": "2026-10-23T10:42:26.457Z",
+          "response": {
+            "items": 500,
+            "totalItems": 464695,
+            "pageNumber": 0,
+            "pageSize": 0
+          }
+        },
+        {
+          "request": {
+            "pageNumber": 20,
+            "pageSize": 500
+          },
+          "httpStatus": 200,
+          "sha256": "39b004f438d49a663153349d4d41a99a8e1b2f87ed60e109b881805fdabd6197",
+          "byteLength": 793590,
+          "capturedAt": "2026-10-23T10:42:38.734Z",
+          "response": {
+            "items": 500,
+            "totalItems": 464695,
+            "pageNumber": 0,
+            "pageSize": 0
+          }
+        },
+        {
+          "request": {
+            "pageNumber": 21,
+            "pageSize": 500
+          },
+          "httpStatus": 200,
+          "sha256": "58e19d0f7fde658a7bf583a4c00f258b9e67374c5136b3ec91579850dd0a9563",
+          "byteLength": 99,
+          "capturedAt": "2026-10-23T10:42:39.195Z",
+          "response": {
+            "items": 0,
+            "totalItems": 464695,
+            "pageNumber": 0,
+            "pageSize": 0
+          }
+        }
+      ],
+      "readRowsBeforeEmpty": 10000,
+      "declaredRows": 464695,
+      "complete": false
+    },
+    {
+      "url": "https://api.campaignfinance.vermont.gov/api/PublicTransactionDetails/GetExpenditureDetails",
+      "pages": [
+        {
+          "request": {
+            "pageNumber": 1,
+            "pageSize": 500
+          },
+          "httpStatus": 200,
+          "sha256": "71f3fb5fce818c45a8f18a617a42a55c927aea173c76268aaa51878c606c668f",
+          "byteLength": 854998,
+          "capturedAt": "2026-10-23T10:42:39.591Z",
+          "response": {
+            "items": 500,
+            "totalItems": 104528,
+            "pageNumber": 0,
+            "pageSize": 0
+          }
+        },
+        {
+          "request": {
+            "pageNumber": 20,
+            "pageSize": 500
+          },
+          "httpStatus": 200,
+          "sha256": "0a5584adb1289412dfc48d9e9864665af7c68d5071fcda94739d86a27ed01ec6",
+          "byteLength": 857171,
+          "capturedAt": "2026-10-23T10:42:52.702Z",
+          "response": {
+            "items": 500,
+            "totalItems": 104528,
+            "pageNumber": 0,
+            "pageSize": 0
+          }
+        },
+        {
+          "request": {
+            "pageNumber": 21,
+            "pageSize": 500
+          },
+          "httpStatus": 200,
+          "sha256": "a62e67e8c72ab18f8b5c332f8296e5a7a38e81bd6df639b2ef5252b8a5df1cd8",
+          "byteLength": 99,
+          "capturedAt": "2026-10-23T10:42:53.187Z",
+          "response": {
+            "items": 0,
+            "totalItems": 104528,
+            "pageNumber": 0,
+            "pageSize": 0
+          }
+        }
+      ],
+      "readRowsBeforeEmpty": 10000,
+      "declaredRows": 104528,
+      "complete": false
+    }
+  ],
+  "limitation": "These are retained real HTTP responses. They establish premature empty pages; no claim is made about the publisher backend cause."
+}

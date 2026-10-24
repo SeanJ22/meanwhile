@@ -134,7 +134,6 @@ const delay = (ms: number): Completion => signal => new Promise((resolve, reject
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
 
-process.env.WTP_ASK_HEDGE_MS = "off";
 delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
@@ -295,7 +294,7 @@ test("ROUTE: a model reading that never comes discards the speculative answer to
     assert.equal(result.payload.trace.interpretation.ran, false, "the deterministic reading stood in");
     assert.deepEqual([result.payload.trace.speculation?.delivered, result.payload.trace.speculation?.why], ["MODEL_READING", "model-reading-unavailable"]);
     assert.notEqual(result.payload.answer, SPECULATIVE.answer);
-    assert.deepEqual(result.calls.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE", "SYNTHESIZE"]);
+    assert.deepEqual(result.calls.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE", "INTERPRET", "INTERPRET", "SYNTHESIZE"]);
     assert.equal(result.calls[1].aborted, true);
   } finally {
     writerQueue = [];

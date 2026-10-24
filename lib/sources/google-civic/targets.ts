@@ -9,4 +9,3 @@ export const GOOGLE_CIVIC_API = "https://www.googleapis.com/civicinfo/v2/";
 export const GOOGLE_CIVIC_DOCS = "https://developers.google.com/civic-information/docs/v2/elections/voterInfoQuery";
 export const GOOGLE_CIVIC_STATES = Object.values(FIPS_TO_STATE).map(row => row.postal);
 export const civicStateScope = (state: string) => `${GOOGLE_CIVIC_SOURCE_ID}:US-${state.toUpperCase()}`;
-export const civicGovernmentScope = (id: string) => `${GOOGLE_CIVIC_SOURCE_ID}:${id}`;

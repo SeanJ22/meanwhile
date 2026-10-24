@@ -2,6 +2,7 @@ import type {RegistryRuntimeCarton} from "./runtime-data-plane.ts";
 import {CENSUS_PLACEHOLDER_BODY_ISSUE,isCensusPlaceholderDivision} from "./census-placeholders.ts";
 import {officialStateVoteScopeForOfficeholderId} from "../state-rollcalls/authority.ts";
 import {portraitBindingMatches} from "../photos/binding.ts";
+import {sameSourcedExecutivePerson} from "./candidacy-holder-identity.ts";
 
 function duplicate(values: readonly string[]): boolean {
   const seen = new Set<string>();
@@ -63,7 +64,16 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeCarton): s
     ? !row.candidacy?.candidacyId || !row.candidacy.contestId || !row.candidacy.divisionId || !row.candidacy.sourceUrl
     : row.candidacy !== null)) issues.push("OFFICIAL_CANDIDACY_STATUS_PAYLOAD_INVALID");
   if (bridgeRows.some((row) => !["RESOLVED", "NO_APPLICABLE_CANDIDACY", "IDENTITY_UNRESOLVED", "NOT_CHECKED"].includes(row.status))) issues.push("OFFICIAL_CANDIDACY_STATUS_INVALID");
-  if (duplicate(bridgeRows.filter((row) => row.status === "RESOLVED").map((row) => row.candidacy?.candidacyId ?? ""))) issues.push("OFFICIAL_CANDIDACY_ID_INVALID_OR_DUPLICATED");
+  const candidacyHolders = new Map<string, typeof bridgeRows>();
+  if (bridgeRows.filter(row => row.status === "RESOLVED").some(row => {
+    const candidacy = row.candidacy;
+    if (!candidacy?.candidacyId) return true;
+    const priorRows = candidacyHolders.get(candidacy.candidacyId) ?? [];
+    candidacyHolders.set(candidacy.candidacyId, [...priorRows, row]);
+    return priorRows.some(prior => !sameSourcedExecutivePerson(prior.holder, row.holder) ||
+      prior.candidacy?.electionId !== candidacy.electionId || prior.candidacy.divisionId !== candidacy.divisionId ||
+      prior.candidacy.contestId !== candidacy.contestId);
+  })) issues.push("OFFICIAL_CANDIDACY_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => row.status === "IDENTITY_UNRESOLVED" ? !row.unresolvedCandidacyIds.length : row.unresolvedCandidacyIds.length > 0)) issues.push("OFFICIAL_CANDIDACY_UNRESOLVED_SET_INVALID");
   const executiveIdSet = new Set(executiveIds);
   if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" && !executiveIdSet.has(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_UNRESOLVED");

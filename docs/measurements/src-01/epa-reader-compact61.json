@@ -1,0 +1,104 @@
+{
+  "status": "PASS",
+  "scope": "Complete real EPA national manifest; selected normal reader locations",
+  "productionWrites": 0,
+  "sourceRows": 3229311,
+  "publishedRows": 3229294,
+  "rejectedRows": 17,
+  "references": 55806,
+  "vaultRoot": "/workspace/meanwhile/.scratch/src01-epa/national-reader-vault-national-fc8b79c7-5f7b-4a48-ab7b-b623f31ba1e0",
+  "compactProof": {
+    "logicalReferences": 69,
+    "uniqueBodies": 69,
+    "rows": 43791,
+    "beforeBytes": 193805999,
+    "afterBytes": 65927411,
+    "allPublicRowsEqual": true,
+    "allInterpretedCellsRoundTrip": true
+  },
+  "deadlines": {
+    "sqlMs": 1800,
+    "pageMs": 3000
+  },
+  "jit": "off, matching production reader startup options",
+  "clocks": [
+    {
+      "label": "initial",
+      "at": "2026-10-23T12:32:33.465Z",
+      "due": true,
+      "version": "cv-2d2b2367af7850b7c5e9a9dd13410507",
+      "confirmed": false,
+      "publishMs": 27170.9492
+    }
+  ],
+  "readers": [
+    {
+      "state": "CT",
+      "zip": "00660",
+      "id": "epa-echo:110022872550",
+      "label": "initial",
+      "apiElapsedMs": 880.9050530000022,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 880.752284000002,
+          "sqlMs": 770.4619020000027,
+          "sqlStatements": 1,
+          "sqlBytes": 10891,
+          "artifactRequests": 8,
+          "artifactBytes": 4343431,
+          "artifactLocalGetMs": 25.18911300000036,
+          "artifactReplayDecodeHashMs": 0
+        }
+      ],
+      "apiTotalRows": 715,
+      "recordId": "epa-echo:110022872550",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110022872550",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "553ce7126e68d83b6a947680543525a3cb40e29a3d5afdb81a21803cfb2fd572"
+    },
+    {
+      "state": "CA",
+      "zip": "01702",
+      "id": "epa-echo:110071115320",
+      "label": "initial",
+      "apiElapsedMs": 1725.7606779999987,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 1725.7335929999972,
+          "sqlMs": 649.8012149999995,
+          "sqlStatements": 1,
+          "sqlBytes": 23885,
+          "artifactRequests": 61,
+          "artifactBytes": 61583980,
+          "artifactLocalGetMs": 296.24593500001356,
+          "artifactReplayDecodeHashMs": 0
+        }
+      ],
+      "apiTotalRows": 9666,
+      "recordId": "epa-echo:110071115320",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071115320",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "4cb5754d7c82e8613fc39e67fa0358460914f340c22b1834cfe9e2976e5fee15"
+    }
+  ],
+  "database": {
+    "read": 119827439,
+    "written": 33634210,
+    "requests": 38,
+    "statements": 50,
+    "largestRead": 33303217,
+    "largestWrite": 33227575,
+    "databasePeakRssBytes": 467075072,
+    "databaseElapsedMs": 17618.84291400001,
+    "largestLatencyMs": 2842.5801890000002,
+    "databaseProxyPeakRssBytes": 422457344
+  }
+}

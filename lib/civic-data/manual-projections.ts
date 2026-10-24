@@ -11,6 +11,7 @@ import { manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { specialDistrictBoundaryIssue } from "../registry/special-district-boundary.ts";
 import { publicRecordIssue } from "./public-record-contract.ts";
 import { governmentBudgetIssue } from "./government-budget-contract.ts";
+import { canonicalCongressionalDivision } from "../ocd/fips.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
@@ -30,6 +31,7 @@ import type { ManualPriorAuthority } from "./manual-prior-authority.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
+  manualRecordSourceUrls,
   reconcileSourceScopedMembers,
   type SourceScopedHeldFact,
   type SourceScopedMember,
@@ -192,13 +194,6 @@ function ballotProvenanceUrls(value: unknown): Set<string> {
     for (const child of Object.values(row)) if (child && typeof child === "object") pending.push(child);
   }
   return urls;
-}
-
-/** An official page's linked lookup is a fact on that page, not another acquired source. */
-function manualRecordSourceUrls(record: unknown): readonly string[] {
-  const row = object(record);
-  if (row?.kind === "ELECTION_FIELD") return [string(object(row.value)?.url)].filter(Boolean);
-  return [...directPositiveSourceUrls(record)];
 }
 
 function duplicateProblems(values: readonly string[], noun: string): string[] {
@@ -658,10 +653,25 @@ function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjecti
 }
 
 function genericBallotProjection(payload: ManualProjectionPayload, state?: string): BuiltProjection {
-  const value = payload as GenericBallotProjection;
+  const input = payload as GenericBallotProjection;
+  const districtProblems: string[] = [];
+  const canonicalDivision = <T extends { ocdId: string }>(row: T): T => {
+    if (!row.ocdId.includes("/cd:")) return row;
+    const ocdId = canonicalCongressionalDivision(row.ocdId);
+    if (!ocdId) {
+      districtProblems.push(`A ballot congressional division carries no seat: ${row.ocdId}`);
+      return row;
+    }
+    return { ...row, ocdId };
+  };
+  const value: GenericBallotProjection = { ...input, ballots: Object.fromEntries(Object.entries(input.ballots ?? {}).map(([key, ballot]) =>
+    [key, { ...ballot, contests: ballot.contests.map(canonicalDivision),
+      ...(ballot.heldContests ? { heldContests: ballot.heldContests.map(canonicalDivision) } : {}),
+      absences: ballot.absences.map(canonicalDivision) }])) };
+  payload = value;
   const ballots = Object.values(value?.ballots ?? {});
   const records = civicRecordsFor("BALLOT_CANDIDACY", value);
-  const problems = genericBallotProblems(value, state);
+  const problems = [...genericBallotProblems(value, state), ...districtProblems];
   return { payload, records, identities: ballots.flatMap(ballot => [
     ...[...ballot.contests, ...ballot.heldContests ?? []].map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),

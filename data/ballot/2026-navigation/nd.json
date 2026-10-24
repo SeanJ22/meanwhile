@@ -1,0 +1,230 @@
+{
+  "state": "ND",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+      "finalUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+      "publisher": "North Dakota Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.nd.gov/elections/voter/ballot-information",
+      "finalUrl": "https://www.sos.nd.gov/elections/voter/ballot-information",
+      "publisher": "North Dakota Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+      "finalUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+      "publisher": "North Dakota Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote",
+      "finalUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote",
+      "publisher": "North Dakota Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.legis.nd.gov/cencode/t16-1c07.pdf",
+      "finalUrl": "https://ndlegis.gov/cencode/t16-1c07.pdf",
+      "publisher": "North Dakota Legislative Branch"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://ndlegis.gov/cencode/t16-1c07.pdf",
+          "finalUrl": "https://ndlegis.gov/cencode/t16-1c07.pdf",
+          "publisher": "North Dakota Legislative Branch",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:45:23.664642+00:00",
+          "httpStatus": 200,
+          "rawHash": "ed00c51869aa5ce51ba9dc504733a256d4310a64f7d046b8fc1c88cdfd4f1b84",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nd.gov/elections/voter/ballot-information",
+          "finalUrl": "https://www.sos.nd.gov/elections/voter/ballot-information",
+          "publisher": "North Dakota Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:16.764195+00:00",
+          "httpStatus": 200,
+          "rawHash": "84a7edfad7e953b038bb944daafa8858d66abc27ba23f5f8267a3aa1764f1cf8",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+          "finalUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+          "publisher": "North Dakota Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:35:56.823376+00:00",
+          "httpStatus": 200,
+          "rawHash": "bfbba231833299e95431bdf44a38bf9daddbfbafc11e4b74059f53f410e6cd45",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote",
+          "finalUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote",
+          "publisher": "North Dakota Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:10.576223+00:00",
+          "httpStatus": 200,
+          "rawHash": "b719924588c10870161bc1fb62a652974e63c58ddd671ffe314f6d6b21723a9b",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+          "finalUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+          "publisher": "North Dakota Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:17.104545+00:00",
+          "httpStatus": 200,
+          "rawHash": "fe326dd329bd1d2e0fe446205f0327a411780df7dc6640743e71352a4b59858d",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:07ba72d2cc6c956967fe1ae7baf77675",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "early_voting",
+            "text": "Some communities offer early voting at certain dates and times prior to Election Day.",
+            "quote": "Some communities offer early voting at certain dates and times prior to Election Day.",
+            "dates": [],
+            "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/how-do-i-vote",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:10.576223+00:00",
+            "sourceOrg": "North Dakota Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:84db8a7f861203471112475e7844cf43",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "A completed application must be submitted to the appropriate election official in a timely manner so as to allow the applicant to receive, complete, and mail the absent voter's ballot before the day of the election.",
+            "quote": "A completed application must be submitted to the appropriate election official in a timely manner so as to allow the applicant to receive, complete, and mail the absent voter's ballot before the day of the election.",
+            "dates": [],
+            "url": "https://ndlegis.gov/cencode/t16-1c07.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:45:23.664642+00:00",
+            "sourceOrg": "North Dakota Legislative Branch"
+          }
+        },
+        {
+          "id": "election-field:9b9ac5c4f484ecea4f2a710ead770f0b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "registration_deadline",
+            "text": "North Dakota does not require voter registration, but you do need to have a valid form of identification that can be used for voting.",
+            "quote": "North Dakota does not require voter registration, but you do need to have a valid form of identification that can be used for voting.",
+            "dates": [],
+            "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.823376+00:00",
+            "sourceOrg": "North Dakota Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:c475cd7137c0fdc6a31715bd2404f126",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "election_office",
+            "text": "North Dakota Office of the Secretary of State",
+            "quote": "North Dakota Office of the Secretary of State",
+            "dates": [],
+            "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+            "navigationUrl": "https://www.sos.nd.gov/elections",
+            "electionDate": "2026-11-03",
+            "phone": "701-328-2900",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.823376+00:00",
+            "sourceOrg": "North Dakota Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:e8ab292f421916c7da2befd55dc72216",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "ballot_lookup",
+            "text": "https://www.sos.nd.gov/elections/voter/ballot-information",
+            "quote": "Find a sample ballot based on where you live by going to the My Voting Information portal and entering your address.",
+            "dates": [],
+            "url": "https://www.sos.nd.gov/elections/voter/ballot-information",
+            "navigationUrl": "https://www.sos.nd.gov/elections/voter/ballot-information",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:16.764195+00:00",
+            "sourceOrg": "North Dakota Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ee324f7013bcd63eaf7084565f88ec88",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+            "quote": "North Dakota does not require voter registration, but you do need to have a valid form of identification that can be used for voting.",
+            "dates": [],
+            "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+            "navigationUrl": "https://www.sos.nd.gov/elections/voter/voting-north-dakota",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.823376+00:00",
+            "sourceOrg": "North Dakota Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:fe2885b9cf4021caeb0264a5bd754ace",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ND",
+            "divisionId": "ocd-division/country:us/state:nd",
+            "fieldKind": "polling_lookup",
+            "text": "https://vip.sos.nd.gov/WhereToVote.aspx?tab=AddressandVotingTimes&ptlPKID=7&ptlhPKID=50",
+            "quote": "Polling Location – hours, address, mapping information",
+            "dates": [],
+            "url": "https://www.sos.nd.gov/elections/voter/voting-north-dakota/where-do-i-vote",
+            "navigationUrl": "https://vip.sos.nd.gov/WhereToVote.aspx?tab=AddressandVotingTimes&ptlPKID=7&ptlhPKID=50",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:17.104545+00:00",
+            "sourceOrg": "North Dakota Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

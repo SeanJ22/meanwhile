@@ -1,0 +1,402 @@
+{
+  "source": "legiscan-bulk",
+  "scope": "Read-only measurements on five actual canonical US /4 PART payloads; microbenchmarks do not establish page latency",
+  "capturedAt": "2026-10-23T12:29:11.339Z",
+  "sourceDataset": {
+    "state_id": 52,
+    "session_id": 2199,
+    "session_name": "119th Congress",
+    "dataset_hash": "6e3eef40545fe75a5332af43be7157d5",
+    "dataset_date": "2026-10-18"
+  },
+  "sourceArchiveHash": "a4a1dc0bb0693a2a9e6c1b3f4488ca9a1e63e41a1d9ab2cd7b7c63b863d8bddd",
+  "rows": [
+    {
+      "oldOwnedMs": 1.080042800000001,
+      "newOwnedMs": 0.3517512999999838,
+      "scope": "legiscan-bills:session:2199:6e3eef40545fe75a5332af43be7157d5:part:0:70d46473eef8e140107fdbde39a38b6dae7bb6ed9071d01caa7a8d4c792afb2f",
+      "bytes": 138197,
+      "hash": "f95931510ea648c20e9c08986068b35638e271a3e2c51bd9ea80755c68089075",
+      "oldMs": 3.052960400000006,
+      "newMs": 3.202739600000018
+    },
+    {
+      "oldOwnedMs": 0.5334927999999877,
+      "newOwnedMs": 0.2094222500000001,
+      "scope": "legiscan-bills:session:2199:6e3eef40545fe75a5332af43be7157d5:part:24:dad1816010f064ca6b1f0e0025485dda1d23857529b23c8decfdff28e09b83e3",
+      "bytes": 290552,
+      "hash": "a95cc53ac5c03dba91ae3a65146b7b363ccf12060da029ea66f41639616bad12",
+      "oldMs": 6.933352799999989,
+      "newMs": 5.4939812000000074
+    },
+    {
+      "oldOwnedMs": 0.6823700500000143,
+      "newOwnedMs": 0.16972185000000195,
+      "scope": "legiscan-bills:session:2199:6e3eef40545fe75a5332af43be7157d5:part:48:0d2de408443d0a9ae856695b90e1f589b5f6a29ae28f311d3467c83175d177e1",
+      "bytes": 323362,
+      "hash": "1eef1c52a426624be45e9253d321600e62179674d25d8a6efc42b5362d37598e",
+      "oldMs": 6.630675400000018,
+      "newMs": 4.395054399999981
+    },
+    {
+      "oldOwnedMs": 0.3825179500000047,
+      "newOwnedMs": 0.11339075000000207,
+      "scope": "legiscan-bills:session:2199:6e3eef40545fe75a5332af43be7157d5:part:72:2308bfa8eb4cf7c542ad46b5b8aee2837e6eace3da26eed337927798cab3ff17",
+      "bytes": 257270,
+      "hash": "ea76419a079770078a5642df5e2f2c4e6738d180ad7929f3be0db8865688c609",
+      "oldMs": 4.27536520000001,
+      "newMs": 3.119515200000001
+    },
+    {
+      "oldOwnedMs": 0.4721538500000008,
+      "newOwnedMs": 0.09726035000001047,
+      "scope": "legiscan-bills:session:2199:6e3eef40545fe75a5332af43be7157d5:part:96:5d371007325fc0b4a70f59a81f1e7aecab30b140c6cab8fbc96b20b56bfee52a",
+      "bytes": 250471,
+      "hash": "f08805038f40ca535580c35e6ea2e6557434c282bbc767fa2ef1791f60333c52",
+      "oldMs": 2.9420288000000028,
+      "newMs": 2.3366624000000003
+    }
+  ],
+  "comparison": {
+    "oldOwnedDecoderMs": 3.1505774500000086,
+    "newOwnedDecoderMs": 0.9415464999999984,
+    "sameObjectIdentity": true,
+    "sameCanonicalHashes": true,
+    "change": "After the existing reference discovery scan finds zero references, return the owned input directly; retain all missing/cycle/order checks for referenced payloads."
+  },
+  "rejectedPrototype": {
+    "change": "Per-call canonical object-key string/sort caching",
+    "reason": "Small inconsistent improvement on five actual PARTs; first small PART regressed. Generic hash was not changed."
+  },
+  "finalUSColdReceipt": {
+    "status": "PASS",
+    "parserVersion": "legiscan-bulk/4",
+    "elapsedMs": 2966,
+    "personId": "congress:A000055",
+    "personName": "Robert B. Aderholt",
+    "officeTitle": "U.S. Representative",
+    "visibleBills": 20,
+    "totalPersonBills": 170,
+    "firstBill": {
+      "id": "legiscan:bill:2160012",
+      "number": "HB10745",
+      "title": "Yaeli Martinez Child Protection Act",
+      "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+    },
+    "exactTitleAndLinkVisible": true,
+    "apiReaderElapsedMs": 2167,
+    "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; native binary PostgreSQL, two reader connections for two bounded batches (production maximum four); exact production-held identity supplied from saved readonly roster",
+    "measurementConditions": "Cold process and canonical cache; A complete, C driver/source quiet, D source/proxy stopped, EPA publisher/PGlite reader205676+217733 stopped; no shared checks or materializer benchmark",
+    "browser": "system Chromium substitute for pinned1234",
+    "runId": "src-01-legiscan-all-states@2026-10-23T12:30:58.891Z",
+    "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+  },
+  "priorUSColdAttempts": [
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 5945,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 4728,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T11:56:04.091Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 6112,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 5193,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T11:57:16.931Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 5245,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 4386,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T11:58:12.377Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 10532,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 7288,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T12:04:11.011Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 3594,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 2564,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T12:07:08.419Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 6157,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 3827,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T12:11:46.496Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 3873,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 3072,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T12:13:23.257Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 19207,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 13757,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T12:15:46.397Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    },
+    {
+      "status": "SLOW",
+      "parserVersion": "legiscan-bulk/4",
+      "elapsedMs": 4547,
+      "personId": "congress:A000055",
+      "personName": "Robert B. Aderholt",
+      "officeTitle": "U.S. Representative",
+      "visibleBills": 20,
+      "totalPersonBills": 170,
+      "firstBill": {
+        "id": "legiscan:bill:2160012",
+        "number": "HB10745",
+        "title": "Yaeli Martinez Child Protection Act",
+        "sourceUrl": "https://legiscan.com/US/bill/HB10745/2025"
+      },
+      "exactTitleAndLinkVisible": true,
+      "apiReaderElapsedMs": 3367,
+      "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; native binary PostgreSQL, two reader connections for two bounded batches (production maximum four); exact production-held identity supplied from saved readonly roster",
+      "browser": "system Chromium substitute for pinned1234",
+      "runId": "src-01-legiscan-all-states@2026-10-23T12:26:47.827Z",
+      "screenshot": "/workspace/meanwhile/.scratch/src01-legiscan/proofs/v4-us/legiscan-us-card.png"
+    }
+  ],
+  "publication": {
+    "rows": 19690,
+    "parts": 97,
+    "elapsedMs": 1097990,
+    "workerPeakRssBytes": 1486741504,
+    "normalRouteProof": {
+      "status": "PASS",
+      "route": "Actual readerRoute selection \u2192 canonical GOOD/hash shelf \u2192 /api/bills and state/person Ask; final locally replayed store read at each explicitly controlled clock",
+      "clocks": [
+        {
+          "kind": "INITIAL_SOURCE_PUBLICATION_READBACK",
+          "now": "2026-10-23T11:35:48.894Z",
+          "readerRows": 19690,
+          "distinctReaderIds": 19690,
+          "readerIdHash": "e2ee469ffc841adadd4be08d7e019379bef95e1aa3ce2de987b7f2cadc42d72e",
+          "personRows": 170,
+          "askStateMatched": 19690,
+          "askPersonMatched": 170,
+          "elapsedMs": 1014
+        },
+        {
+          "kind": "TOMORROW_CONTROLLED_REPLAY",
+          "now": "2026-10-24T11:35:48.894Z",
+          "readerRows": 19690,
+          "distinctReaderIds": 19690,
+          "readerIdHash": "e2ee469ffc841adadd4be08d7e019379bef95e1aa3ce2de987b7f2cadc42d72e",
+          "personRows": 170,
+          "askStateMatched": 19690,
+          "askPersonMatched": 170,
+          "elapsedMs": 988
+        },
+        {
+          "kind": "NEXT_WEEKLY_SCHEDULED_REPLAY",
+          "now": "2026-10-30T11:35:48.894Z",
+          "readerRows": 19690,
+          "distinctReaderIds": 19690,
+          "readerIdHash": "e2ee469ffc841adadd4be08d7e019379bef95e1aa3ce2de987b7f2cadc42d72e",
+          "personRows": 170,
+          "askStateMatched": 19690,
+          "askPersonMatched": 170,
+          "elapsedMs": 1769
+        }
+      ]
+    },
+    "memoryCapacity": {
+      "scope": "Memory-only calculations from the measured US registered-publication worker run, not observed production admission or a measurement of every future whole job workload. No scheduler, worker-slot or Admin settings changed.",
+      "measuredWorkerPeakRssBytes": 1486741504,
+      "measuredPeakPlus5PercentMiB": 1489,
+      "serverMiB": 8192,
+      "reserveMiB": 768,
+      "researchParentMiB": 2928,
+      "calculatedWorkersWithoutResearchParent": 4,
+      "calculatedWorkersWithResearchParent": 3,
+      "routineRunnerMapping": {
+        "scope": "Static runner mapping only. Recent production-host measurements and actual concurrent admission were not inspected; Admin settings and scheduler behavior are unchanged.",
+        "tableOverride": false,
+        "noHistoryFallbackMiB": 342,
+        "fallbackSource": "WORKER_ENTRY_PEAK_MIB.lease",
+        "recentMeasurementRule": "Largest of the last five completed job family peaks, plus 5% rounded up to MiB, replaces the table fallback; actual available memory, parent growth and existing reservations also affect admission.",
+        "productionHostHistoryInspected": false,
+        "sourceLocations": [
+          "scripts/routine-civic-data-runner.mts:302",
+          "lib/control-plane/workers/worker-slots.ts:10",
+          "lib/control-plane/workers/worker-slots.ts:16",
+          "lib/control-plane/workers/worker-slots.ts:170",
+          "lib/control-plane/workers/worker-slots.ts:281",
+          "lib/control-plane/workers/worker-slots.ts:360",
+          "lib/civic-data/contracts.ts:601",
+          "lib/civic-data/contracts.ts:633"
+        ],
+        "workerSlotsSha256": "97e66527ef6c6488d09d38372b0fce9c2d306e3662a5c16b18a2111d7c66db07",
+        "replayObservedRoutineAdmission": false,
+        "entries": [
+          "legiscan-bulk/legiscan-bulk.mts"
+        ]
+      }
+    }
+  },
+  "tests": {
+    "ownedPayloadParts": {
+      "passed": 14,
+      "failed": 0
+    },
+    "canonicalReader": {
+      "passed": 5,
+      "failed": 0
+    },
+    "legiscanBulk": {
+      "passed": 13,
+      "failed": 0
+    }
+  },
+  "productionPathEquivalence": {
+    "publicationHeldPeopleRows": 0,
+    "actualReplayCall": "scripts/replay-legiscan-all-states.mts: publishBulkCandidate(... people: state === US ? [] : held.people)",
+    "productionDefault": "scripts/legiscan-bulk.mts: US people defaults to []",
+    "promotedSessionJoinedRows": 0,
+    "promotedSessionUnjoinedRows": 19690,
+    "normalReaderPersonId": "congress:A000055",
+    "normalReaderPersonRows": 170,
+    "all170CarryExactSourceCongressIdWithUnjoinedPublishedSponsor": true,
+    "identityPath": "normalizeBill retains source bioguide_id as nativeIds.congress; reader joins against the exact current held congress identity",
+    "normalRouteClockRows": [
+      170,
+      170,
+      170
+    ]
+  }
+}

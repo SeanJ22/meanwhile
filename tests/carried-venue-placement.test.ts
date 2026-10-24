@@ -5,12 +5,12 @@ import test from "node:test";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
-import type { VenueEntry } from "../lib/meetings/venue-cache.ts";
+import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
+import type { MeetingPinBody } from "../lib/meetings/pin-location.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import {
-  placeCarriedFromReviewedVenue,
   promoteMeetingPartition,
   reconcileSuccessfulMeetingPartition,
 } from "../scripts/ingest.ts";
@@ -27,7 +27,7 @@ const NEXT_READ = "2026-09-24T21:14:38.903Z";
 
 const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
 
-const CHOLLA: VenueEntry = {
+const CHOLLA = {
   sourceId: "official-page-events",
   bodyOcdId: "ocd-division/country:us/state:az/school_district:tucson_unified_district",
   match: "Cholla High School South Gym",
@@ -86,7 +86,16 @@ const SEPT_26: Meeting = {
 };
 delete (SEPT_26 as { venueGap?: unknown }).venueGap;
 
-const venues = (...rows: VenueEntry[]) => () => rows;
+const offices = new Map<string, MeetingPinBody>([[PARTITION.bodyId, {
+  bodyId: PARTITION.bodyId, name: "Tucson Unified School District",
+  officeContact: {address: CHOLLA.address, phone: null, provenance: {
+    sourceUrl: CHOLLA.addressSourceUrl, sourceOrg: "Tucson Unified School District", collectedAt: LAST_LISTED, verifiedAt: null,
+  }},
+}]]);
+const geocoder: typeof fetch = async () => new Response(JSON.stringify({result: {addressMatches: [{
+  matchedAddress: "2001 W STARR PASS BLVD, TUCSON, AZ, 85713", coordinates: {x: CHOLLA.lng, y: CHOLLA.lat},
+  addressComponents: {streetName: "STARR PASS", preDirection: "W", suffixType: "BLVD", city: "TUCSON", state: "AZ", zip: "85713"},
+}]}}));
 
 function answered(at: string, rows: number): ChildRunReport {
   const bytes = `official-page-events tusd1-reconfiguration page read at ${at}`;
@@ -121,63 +130,54 @@ function partitionSnapshot(at: string, meetings: readonly Meeting[]): MeetingsSn
   };
 }
 
-function reconcile(reviewedVenues?: () => readonly VenueEntry[]) {
+function reconcile() {
   return reconcileSuccessfulMeetingPartition({
     sourceName: PARTITION.meetingSource,
     generatedAt: NEXT_READ,
     freshMeetings: [SEPT_26],
     freshAgendaDocuments: [],
     previous: partitionSnapshot(LAST_LISTED, [SEPT_23]),
-    ...(reviewedVenues ? { reviewedVenues } : {}),
   });
 }
 
-test("CARRIED-PLACE · (a) the measured case: the carried 23 September session is placed at the reviewed venue for its own words, and stays carried", () => {
-  assert.ok(PARTITION, "the Tucson Unified Reconfiguration partition is registered");
-  const reconciled = reconcile(venues(CHOLLA));
-  const row = reconciled.meetings.find(({ id }) => id === SEPT_23.id)!;
-  assert.deepEqual(row.location, { name: CHOLLA.name, address: CHOLLA.address, lat: CHOLLA.lat, lng: CHOLLA.lng });
-  assert.equal("venueGap" in row, false);
-  assert.deepEqual(row.carried, { source: "official-page-events", lastFreshAt: LAST_LISTED, reason: "UNEXPLAINED_DISAPPEARANCE" });
+test("a carried sitting gets its published board office pin during publication and stays carried", async () => {
+  const reconciled = reconcile();
+  const placed = await placePublishedMeetingPins({meetings: reconciled.meetings, offices, fetchImpl: geocoder});
+  const row = placed.meetings.find(({id}) => id === SEPT_23.id)!;
+  assert.equal(row.location, null);
+  assert.equal(row.mapPin?.basis, "BODY_OFFICE");
+  assert.equal(row.mapPin?.address, CHOLLA.address);
+  assert.deepEqual(row.venueGap, SEPT_23.venueGap);
+  assert.deepEqual(row.carried, {source: PARTITION.meetingSource, lastFreshAt: LAST_LISTED, reason: "UNEXPLAINED_DISAPPEARANCE"});
   assert.deepEqual(reconciled.carriedMeetingIds, [SEPT_23.id]);
-  const { location: _l, venueGap: _g, carried: _c, ...facts } = SEPT_23;
-  const { location: _l2, carried: _c2, ...carriedFacts } = row;
-  assert.deepEqual(carriedFacts, facts);
+  assert.equal(row.provenance, SEPT_23.provenance);
 });
 
-test("CARRIED-PLACE · (b) with no reviewed venue for its words, or no venues handed in, the carried row keeps its stated words and no pin", () => {
-  for (const [label, reconciled] of [
-    ["no matching venue", reconcile(venues({ ...CHOLLA, match: "Cholla High School North Gym" }))],
-    ["venues omitted", reconcile()],
-  ] as const) {
-    const row = reconciled.meetings.find(({ id }) => id === SEPT_23.id)!;
-    assert.equal(row.location, null, label);
-    assert.deepEqual(row.venueGap, SEPT_23.venueGap, label);
-  }
+test("a carried sitting without a matching published address keeps its source words and identity", async () => {
+  const reconciled = reconcile();
+  const placed = await placePublishedMeetingPins({meetings: reconciled.meetings, offices: new Map(), fetchImpl: geocoder});
+  const row = placed.meetings.find(({id}) => id === SEPT_23.id)!;
+  assert.equal(row.location, null);
+  assert.equal(row.mapPin, undefined);
+  assert.deepEqual(row.venueGap, SEPT_23.venueGap);
+  assert.equal(row.id, SEPT_23.id);
 });
 
-test("CARRIED-PLACE · (c) only the row's own division places it; unstated, online, placed and division-less rows are returned as they were", () => {
-  const elsewhere = { ...CHOLLA, bodyOcdId: "ocd-division/country:us/state:az/county:pima" };
-  assert.equal(placeCarriedFromReviewedVenue(SEPT_23, "official-page-events", venues(elsewhere)), SEPT_23);
-  assert.equal(placeCarriedFromReviewedVenue(SEPT_23, "ical", venues(CHOLLA)), SEPT_23);
-  const unstated: Meeting = { ...SEPT_23, venueGap: { kind: "NOT_STATED_BY_PUBLISHER", publishedText: null, publisher: "Tucson Unified School District" } };
-  const online: Meeting = { ...SEPT_23, online: { label: "Via Zoom Webinar", joinUrl: null } };
-  const placed: Meeting = { ...SEPT_26 };
-  const divisionless: Meeting = { ...SEPT_23, ocdId: null };
-  let read = 0;
-  const counted = () => { read += 1; return [CHOLLA]; };
-  for (const row of [unstated, online, placed, divisionless]) {
-    assert.equal(placeCarriedFromReviewedVenue(row, "official-page-events", counted), row);
-  }
-  assert.equal(read, 0, "the venue projection is read only for a row that needs it");
+test("the next publication reuses a carried sitting's saved office pin", async () => {
+  const reconciled = reconcile();
+  const placed = await placePublishedMeetingPins({meetings: reconciled.meetings, offices, fetchImpl: geocoder});
+  const next = await placePublishedMeetingPins({meetings: reconciled.meetings, previous: JSON.parse(JSON.stringify(placed.meetings)), offices,
+    fetchImpl: async () => {throw new Error("unchanged saved point must not be geocoded again");}});
+  assert.deepEqual(next.meetings, placed.meetings);
 });
 
-test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin", async (t) => {
+test("a promoted carried sitting serves its saved office pin to a reader", async (t) => {
   const store = new MemoryRoutineDataStore();
   const seeded = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(LAST_LISTED, [SEPT_23]));
   assert.equal(seeded.outcome.candidate.state, "PROMOTED", seeded.outcome.candidate.failureDetail ?? "");
-  const reconciled = reconcile(venues(CHOLLA));
-  const accepted = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(NEXT_READ, reconciled.meetings), [], reconciled.removalEvidence);
+  const reconciled = reconcile();
+  const placed = await placePublishedMeetingPins({meetings: reconciled.meetings, offices, fetchImpl: geocoder});
+  const accepted = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(NEXT_READ, placed.meetings), [], reconciled.removalEvidence);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
   const factReads: string[] = [];
   installFactReader(async text => {
@@ -191,6 +191,7 @@ test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, an
   assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;
-  assert.deepEqual(served.location, { name: CHOLLA.name, address: CHOLLA.address, lat: CHOLLA.lat, lng: CHOLLA.lng });
+  assert.equal(served.mapPin?.address, CHOLLA.address);
+  assert.equal(served.mapPin?.basis, "BODY_OFFICE");
   assert.equal(served.carried?.reason, "UNEXPLAINED_DISAPPEARANCE");
 });

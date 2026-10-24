@@ -6,7 +6,7 @@ import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import type { CardGap } from "@/lib/design/card-gaps";
 import { feedbackHref } from "@/lib/feedback/shape";
 import { useReaderCopy } from "@/hooks/use-reader-copy";
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { MapPin } from "lucide-react";
 
 import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
@@ -25,7 +25,7 @@ import {
 /**
  * Where can I vote? The address goes to `/api/voting-sites`; the sites drop on
  * the map as pins and list here with the sentence naming the jurisdiction's
- * voting model. The only link out is a site's directions handoff.
+ * voting model. Answers without sites lead with an election office contact.
  */
 
 export interface VotingSitesPanelProps {
@@ -186,6 +186,17 @@ export function VotingSitesPanel({
         <VotingLookupPending />
       )}
 
+      {state.kind === "answered" && state.answer.electionOffices?.map((office, index) => <div className="voting-office" data-voting-office key={`${office.name}-${index}`}>
+        <h3 className="voting-jurisdiction-name">{office.name}</h3>
+        {office.address && <p>{office.address}</p>}
+        {office.phone && <OfficePhone phone={office.phone} />}
+        {office.hours && <p className="whitespace-pre-line">Hours: {office.hours}</p>}
+        {office.url && <p><a className="voting-site-directions" href={office.url} target="_blank" rel="noreferrer noopener">Find your polling place</a></p>}
+        <CardSourcesContribution id={`voting-office:${index}`} sources={office.sources.map(source => ({ what: source.title ?? "Election office", provenance: {
+          sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt, verifiedAt: null,
+        } }))} />
+      </div>)}
+
       {state.kind === "answered" && !state.answer.match && !state.answer.outsideCoverage && (
         <p className="voting-panel-status">
           We could not turn that into a location. Try including the town and
@@ -210,7 +221,7 @@ export function VotingSitesPanel({
 
 
 /** The actual answered jurisdiction/site body shared by both panel entry paths. */
-export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
+export const VotingJurisdictionRecords = memo(function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
   const gaps = useMemo(() => votingAnswerGaps(answer), [answer]);
   return <>
       <CardGapsContribution id="voting-answer" gaps={gaps} />
@@ -243,7 +254,7 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
             {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
             {j.office && <div className="voting-office">
               <h4>Local election office: {j.office.name}</h4>
-              {j.office.phone && <p>Phone: <a href={`tel:${j.office.phone.replace(/[^+\d]/g, "")}`}>{j.office.phone}</a></p>}
+              {j.office.phone && <OfficePhone phone={j.office.phone} />}
               {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
               {j.office.address && <p>{j.office.address}</p>}
             </div>}
@@ -294,6 +305,13 @@ export function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite
           </article>
         ))}
   </>;
+});
+
+function OfficePhone({ phone }: { phone: string }) {
+  const numbers = phone.match(/(?:\+1[ .-]*)?(?:\(\d{3}\)|\d{3})[ ./-]*\d{3}[ .-]*\d{4}/g) ?? [phone];
+  return <p>Phone: {numbers.map((number, index) => <span key={`${number}-${index}`}>
+    {index > 0 && " · "}<a className="underline" href={`tel:${number.replace(/[^+\d]/g, "")}`}>{number}</a>
+  </span>)}</p>;
 }
 
 /** One contribution per answer avoids a separate card update for every missing site field. */
@@ -347,9 +365,13 @@ function SiteRow({
   selected: boolean;
   onSelect: () => void;
 }) {
+  const row = useRef<HTMLLIElement>(null);
+  useEffect(() => {
+    if (selected) row.current?.scrollIntoView({ block: "nearest" });
+  }, [selected]);
   const lastChecked = site.sources?.flatMap(source => source.checkedAt ? [source.checkedAt] : []).sort().at(-1) ?? checkedAt;
   return (
-    <li className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
+    <li ref={row} className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
       <button type="button" className="voting-site-head" onClick={onSelect}>
         <MapPin aria-hidden size={14} className="voting-site-icon" />
         <span className="voting-site-name">{site.name}</span>

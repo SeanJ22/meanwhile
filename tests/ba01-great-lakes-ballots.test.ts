@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
+import { ballotCandidateDisplayName } from "../lib/ballot/name-case.ts";
+import { ballotCandidatePeople } from "../lib/ballot/tickets.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 
 const read = (state: string): BallotSet => Object.values(JSON.parse(readFileSync(`data/ballot/2026-general/${state}.json`, "utf8")).ballots)[0] as BallotSet;
@@ -29,8 +31,17 @@ test("Minnesota's saved 55415 precinct sample matches all 41 races and every nam
     }
     const contest = ballot.contests.filter(row => row.title === office || row.title.endsWith(` — ${office}`));
     assert.equal(contest.length, 1, office);
-    const held = ballot.candidacies.filter(row => row.contestId === contest[0].id).map(row => `${row.givenName} ${row.familyName}`.trim());
-    assert.deepEqual(held.sort(), names.sort(), office);
+    const choices = ballot.candidacies.filter(row => row.contestId === contest[0].id);
+    const held = choices.map(ballotCandidateDisplayName);
+    const listed = office === "Governor & Lt Governor" ? names.map(name => name.replace(" and ", " / ")) : names;
+    assert.deepEqual(held.sort(), listed.sort(), office);
+    if (office === "Governor & Lt Governor") for (const choice of choices) {
+      assert.ok(choice.ticket, "the official joint choice retains both people");
+      const people = ballotCandidatePeople(choice);
+      assert.equal(people.length, 2);
+      assert.notEqual(people[0].id, people[1].id);
+      assert.ok(names.includes(people.map(ballotCandidateDisplayName).join(" and ")), "both names match the saved official specimen");
+    }
   }
 });
 

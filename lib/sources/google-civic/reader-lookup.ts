@@ -2,7 +2,7 @@ import { lookupCivicAddress, type CivicReadOptions } from "./acquisition.ts";
 import { GOOGLE_CIVIC_DOCS, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import type { CivicJson, CivicLookup } from "./model.ts";
 import { GOOGLE_VOTING_DATA_LABEL, type VotingReaderPlace } from "../../ballot/voting-answer.ts";
-import type { VotingFallbackReason, VotingJurisdiction, VotingSite } from "../../ballot/voting-sites.ts";
+import type { VotingFallbackReason, VotingJurisdiction, VotingSite, VotingSitesAnswer } from "../../ballot/voting-sites.ts";
 import { recordVotingFailure } from "../../ballot/voting-errors.ts";
 import { censusBatchPoints, type BatchAddress } from "../../geo/census-batch.ts";
 import { plausibleUsPoint } from "../../geo/census-geocoder.ts";
@@ -34,12 +34,12 @@ function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace,
       locationNotes: words(row.value.notes) || undefined,
       sources: row.sources.map(source => ({ publisher: `${source.sourceOrg} — ${GOOGLE_VOTING_DATA_LABEL}`, url: source.sourceUrl, checkedAt: source.collectedAt })) }];
   });
-  if (!sites.length && !lookup.electionOffices?.length) return [];
+  if (!sites.length) return [];
   return [{ ocdId: `${place.divisionIds.find(id => /\/county:/.test(id)) ?? `ocd-division/country:us/state:${lookup.state.toLowerCase()}`}#vip`,
     name: "Voting locations", state: lookup.state, model: "UNKNOWN", election: "November 3, 2026", electionDate: GOOGLE_CIVIC_ELECTION_DAY,
     sites, assignedSiteIds: place.precision === "ADDRESS" ? sites.filter(site => site.kind === "ELECTION_DAY").map(site => site.id) : [],
     sources: [{ publisher: "Google", title: GOOGLE_CIVIC_ATTRIBUTION, url: GOOGLE_CIVIC_DOCS, checkedAt: lookup.checkedAt },
-      ...(lookup.electionOffices ?? []).map(office => ({ publisher: office.name, title: "Election office", url: office.url, checkedAt: lookup.checkedAt }))],
+      ...(lookup.electionOffices ?? []).flatMap(office => office.url ? [{ publisher: office.name, title: "Election office", url: office.url, checkedAt: lookup.checkedAt }] : [])],
     sourceOrg: GOOGLE_CIVIC_ATTRIBUTION, sourceUrl: GOOGLE_CIVIC_DOCS, collectedAt: lookup.checkedAt, refusal: null }];
 }
 
@@ -56,7 +56,9 @@ async function placeWithCensus(jurisdictions: VotingJurisdiction[], unplaced: Ma
 }
 
 /** Request-only fallback after the held-source check. No cache, publication, or address retention. */
-export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<{ jurisdictions: VotingJurisdiction[]; reason?: VotingFallbackReason }> {
+export async function readGoogleVotingAnswer(address: string, place: VotingReaderPlace, options: CivicReadOptions = {}): Promise<{
+  jurisdictions: VotingJurisdiction[]; electionOffices: NonNullable<VotingSitesAnswer["electionOffices"]>; state: string | null; reason?: VotingFallbackReason;
+}> {
   const signal = options.signal ?? AbortSignal.timeout(2200);
   const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal });
   if (lookup.status === "OUTAGE") recordVotingFailure({ stage: "google-fallback", precision: place.precision, state: place.states[0] },
@@ -64,5 +66,9 @@ export async function readGoogleVotingAnswer(address: string, place: VotingReade
   const unplaced = new Map<string, BatchAddress>();
   const jurisdictions = civicVotingJurisdictions(lookup, place, unplaced);
   if (unplaced.size) await placeWithCensus(jurisdictions, unplaced, place, options.censusFetchImpl, signal);
-  return { jurisdictions, ...(jurisdictions.some(j => j.sites.length) ? {} : { reason: lookup.failureReason ?? "NO_DATA" }) };
+  const state = lookup.state && (!place.states.length || place.states.includes(lookup.state)) ? lookup.state : null;
+  const electionOffices = state
+    ? (lookup.electionOffices ?? []).map(office => ({ ...office,
+      sources: [{ publisher: "Google", title: GOOGLE_CIVIC_ATTRIBUTION, url: GOOGLE_CIVIC_DOCS, checkedAt: lookup.checkedAt }] })) : [];
+  return { jurisdictions, electionOffices, state, ...(jurisdictions.some(j => j.sites.length) ? {} : { reason: lookup.failureReason ?? "NO_DATA" }) };
 }

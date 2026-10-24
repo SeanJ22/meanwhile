@@ -33,7 +33,7 @@ export function ReaderPopup({
       const target = event.target as Element | null;
       if (!target || ref.current?.contains(target)) return;
       // Its own control toggles it; let that click do the closing.
-      if (target.closest(".mw-nav-wrap")) return;
+      if (target.closest(".mw-nav-wrap, .wtp-vote-pin")) return;
       // A press on the map, the sidebar or the header is using the app, not
       // dismissing a form mid-typing — except the map, which is "outside".
       if (target.closest(".sidebar, .mw-header")) return;

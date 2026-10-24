@@ -1,7 +1,7 @@
 import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
 import { electionFieldIssue, type PublishedElectionField } from "../civic-data/election-fields.ts";
 
-export type ElectionOffice = PublishedElectionField["value"];
+type ElectionOffice = PublishedElectionField["value"];
 
 export function currentElectionOffices(divisions: readonly string[]): readonly ElectionOffice[] {
   const lines = new Set<string>();

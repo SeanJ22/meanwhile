@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 96 LIVE (38b470355, 6:32 AM EDT). Job 1 first pass PASS (0 repair failures, 4,142 Reader PASS, 7:10 AM EDT). Batch 3 + CL-01 gating from 7:20 AM EDT. RIVER-KEYS and SRC-01 being finished by helpers
+build_state: RELEASE 96 LIVE (38b470355, 6:32 AM EDT). Job 1 DONE: 0 reader-repair failures on both repair passes (7:10, 7:33 AM EDT). Batch 3 + CL-01 gating from 7:20 AM EDT. RIVER-KEYS and SRC-01 being finished by helpers
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -23,7 +23,10 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
 
-### WIN, Job 1 (RV-REPAIR), first pass, 7:10 AM EDT
+### WIN, Job 1 (RV-REPAIR) DONE, 7:33 AM EDT
+- Second routine pass on 38b470355 (started 7:11, written 7:33 AM EDT): 0 Reader repair mechanism failures, 32 Reader PASS, 122 supervisor failures. Both reader-repair passes on release 96 are under 60 (0 and 0). Publish-now passes at 7:13 and 7:22 run no reader repair (0 Reader PASS) and are not counted.
+
+### Job 1 first pass, 7:10 AM EDT
 - First routine pass on release 96's code (38b470355, started 6:45, written 7:10 AM EDT): "4142 Reader PASS receipt(s) recorded; 1 Reader failure receipt(s); 0 Reader repair mechanism failure(s)". Supervisor failures 207 (release 95 passes: 1,476 to 1,746, with 1,308 to 1,311 repair failures and 0 to 91 Reader PASS). Meeting outcomes for all 3,831 Legistar boards are re-checked again instead of refused. Second qualifying pass due ~7:35 AM EDT.
 - CL-01 posted a new READY d4f23a337 at 7:02 AM EDT fixing the return (Morristown 22 contests back; 54 of 54 ballot tests on its tip). Folded into batch 3 at 7:20 AM EDT; River resolved clashes with BL-01, BL-21-FX and RB-A1 and kept initials ("S.K.", a quoted "BJ") as the official filing prints them (BL-01's given-name casing had turned them into words). 296 ballot tests pass. Gates restarted 7:20 AM EDT.
 

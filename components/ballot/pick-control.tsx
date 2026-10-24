@@ -12,7 +12,7 @@ import {
   togglePick,
 } from "@/lib/ballot/picks";
 import { DERIVED_PICK_LINE, conflictLine } from "@/lib/ballot/derived-picks";
-import { resolveWithSuppression } from "@/lib/ballot/pick-tally";
+import { resolveWithSuppression, type PickOption } from "@/lib/ballot/pick-tally";
 import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
 
 /**
@@ -21,16 +21,18 @@ import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
 
 export function PickControl({
   contestId,
+  contestAliases = [],
   contestTitle,
   voteFor,
   options,
   prominent = false,
 }: {
   contestId: string;
+  contestAliases?: readonly string[];
   contestTitle: string;
   voteFor: number;
   /** Connects a choice to the reader's own answer on the reaction control above. */
-  options: { id: string; label: string; reactionTargetId?: string }[];
+  options: PickOption[];
   prominent?: boolean;
 }) {
   const pick = useSyncExternalStore(
@@ -38,12 +40,12 @@ export function PickControl({
     useCallback(
       () =>
         JSON.stringify({
-          pick: getPick(contestId),
+          pick: getPick(contestId, contestAliases),
           // What a clear cleared, so a deleted derived pick does not return.
-          cleared: getSuppressedDerived()[contestId] ?? [],
-          unsure: getUnsure()[contestId] === true,
+          cleared: [contestId, ...contestAliases].map(id => getSuppressedDerived()[id]).find(Boolean) ?? [],
+          unsure: [contestId, ...contestAliases].some(id => getUnsure()[id] === true),
         }),
-      [contestId],
+      [contestId, contestAliases],
     ),
     () => JSON.stringify({ pick: null, cleared: [], unsure: false }),
   );
@@ -73,7 +75,7 @@ export function PickControl({
           .filter(
             (o) =>
               o.reactionTargetId &&
-              getStoredReaction("CANDIDATE", o.reactionTargetId) === "YES",
+              getStoredReaction("CANDIDATE", o.reactionTargetId, o.reactionTargetAliases) === "YES",
           )
           .map((o) => o.id)
           .sort()),
@@ -83,7 +85,7 @@ export function PickControl({
   );
   const yesChoiceIds = JSON.parse(yesKey) as string[];
 
-  const resolution = resolveWithSuppression(parsed, yesChoiceIds, voteFor, cleared);
+  const resolution = resolveWithSuppression(parsed, yesChoiceIds, voteFor, cleared, options);
   const selected = new Set(resolution.chosen);
   const labelOf = (id: string) =>
     options.find((o) => o.id === id)?.label ?? parsed?.labels?.[id] ?? id;
@@ -132,7 +134,7 @@ export function PickControl({
               type="button"
               aria-pressed={on}
               onClick={() =>
-                togglePick(contestId, contestTitle, option.id, option.label, voteFor)
+                togglePick(contestId, contestTitle, option.id, option.label, voteFor, option.aliases, contestAliases)
               }
               /* A measure's Yes/No uses green/red; a candidate pick stays neutral. */
               className={`reaction-choice ${
@@ -158,7 +160,7 @@ export function PickControl({
         <button
           type="button"
           aria-pressed={unsureHere}
-          onClick={() => markUnsure(contestId)}
+          onClick={() => markUnsure(contestId, contestAliases)}
           className="min-h-8 cursor-pointer px-1.5 t-caption text-muted underline decoration-dotted"
         >
           {unsureHere ? "not sure yet ✓" : "not sure"}
@@ -166,7 +168,7 @@ export function PickControl({
         {resolution.basis === "EXPLICIT" && (
           <button
             type="button"
-            onClick={() => clearPick(contestId)}
+            onClick={() => clearPick(contestId, contestAliases)}
             className="min-h-8 cursor-pointer px-1.5 t-caption text-muted underline decoration-dotted"
           >
             clear

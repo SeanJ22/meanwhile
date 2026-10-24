@@ -14,6 +14,11 @@
       "id": "RB-A1_expand",
       "phase": "expand",
       "hash": "c731d54639cf173a62ab083cc87a5ca62e30252549faf413c0c767d382ba07b2"
+    },
+    {
+      "id": "RIVER-KEYS_expand",
+      "phase": "expand",
+      "hash": "a8e2b42fe49d0fa7043605a75c91a4809abd3cc682e7993ef7c29c9462ef262f"
     }
   ]
 }

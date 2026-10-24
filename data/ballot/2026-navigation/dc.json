@@ -1,0 +1,303 @@
+{
+  "state": "DC",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.dcboe.org/contact",
+      "finalUrl": "https://www.dcboe.org/contact",
+      "publisher": "District of Columbia Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.dcboe.org/",
+      "finalUrl": "https://www.dcboe.org/",
+      "publisher": "District of Columbia Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+      "finalUrl": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+      "publisher": "District of Columbia Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.dcboe.org/voters/casting-your-vote/mail-ballot-request",
+      "finalUrl": "https://www.dcboe.org/voters/casting-your-vote/mail-ballot-request",
+      "publisher": "District of Columbia Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "publisher": "Federal Election Commission"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.dcboe.org/",
+          "finalUrl": "https://www.dcboe.org/",
+          "publisher": "District of Columbia Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:05.163265+00:00",
+          "httpStatus": 200,
+          "rawHash": "6483734b6d2927e95f133a72ab205b41ff2b273c50741f45a2d3194873987265",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.dcboe.org/contact",
+          "finalUrl": "https://www.dcboe.org/contact",
+          "publisher": "District of Columbia Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:49.822056+00:00",
+          "httpStatus": 200,
+          "rawHash": "a4aa19a9f16ea3ff436de7d7b7f8e2138b2ef25f7ca411cc613085261259f2d8",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+          "finalUrl": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+          "publisher": "District of Columbia Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:39.575604+00:00",
+          "httpStatus": 200,
+          "rawHash": "71503d08cdae36fb8343daaaae3e8831be9d861df29469417ae863ee61505d08",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.dcboe.org/voters/casting-your-vote/mail-ballot-request",
+          "finalUrl": "https://www.dcboe.org/voters/casting-your-vote/mail-ballot-request",
+          "publisher": "District of Columbia Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:38:37.858122+00:00",
+          "httpStatus": 200,
+          "rawHash": "f14b4cc7622d8b558f80c4ff20344de7b59b6e04a1cee988ed01c61f9ce4d77b",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:2ee64ee1600be68aaf6b91670ff7317a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "registration_page",
+            "text": "https://www.dcboe.org/voters/register-to-vote/register-update-voter-registration",
+            "quote": "Register/Update Voter Registration",
+            "dates": [],
+            "url": "https://www.dcboe.org/",
+            "navigationUrl": "https://www.dcboe.org/voters/register-to-vote/register-update-voter-registration",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:05.163265+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:45528da6201c834a1c3404e6e8706a92",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "election_office",
+            "text": "DC Board of Elections",
+            "quote": "DC Board of Elections\n(202) 727-2525",
+            "dates": [],
+            "url": "https://www.dcboe.org/contact",
+            "navigationUrl": "https://www.dcboe.org/",
+            "electionDate": "2026-11-03",
+            "phone": "(202) 727-2525",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:49.822056+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:45bf57e585dffc68520e7d27f10018fd",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "All active registered voters will be mailed a ballot.",
+            "quote": "All active registered voters will be mailed a ballot. However, DC voters who expect to be away from their DC residence during the election must request a Mail-In Ballot:",
+            "dates": [],
+            "url": "https://www.dcboe.org/voters/casting-your-vote/mail-ballot-request",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.858122+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:6e694d0b4ab8bc63371dfffd6bd735ad",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "registration_deadline",
+            "text": "Deadline for receipt of all voter registration applications",
+            "quote": "Tuesday, October 13, 2026\nDeadline for receipt of all voter registration applications\nexcept for those submitted in person at the Board or at voter registration agencies",
+            "dates": [
+              "2026-10-13"
+            ],
+            "url": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:39.575604+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:8a6f99ae8b5203ee2934909f6667a023",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "early_voting",
+            "text": "Early Vote Centers 8:30 am to 7:00 pm October 26 to November 1",
+            "quote": "Early Vote Centers 8:30 am to 7:00 pm October 26 to November 1",
+            "dates": [
+              "2026-10-26",
+              "2026-11-01"
+            ],
+            "url": "https://www.dcboe.org/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:05.163265+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:8baba7a531b77bf6605749c502bcf62a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "ballot_lookup",
+            "text": "https://dc.omniballot.us/sites/11/site/app/sb/sample-ballot",
+            "quote": "See a Copy of Your Ballot",
+            "dates": [],
+            "url": "https://www.dcboe.org/",
+            "navigationUrl": "https://dc.omniballot.us/sites/11/site/app/sb/sample-ballot",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:05.163265+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:ca93e18333fb9999eba07b261a66405b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "registration_lookup",
+            "text": "https://apps.dcboe.org/VRS",
+            "quote": "Check your Voter Registration Status",
+            "dates": [],
+            "url": "https://www.dcboe.org/",
+            "navigationUrl": "https://apps.dcboe.org/VRS",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:05.163265+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:d6735ce2066786530d947a3aeed57abb",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "polling_lookup",
+            "text": "https://dcgis.maps.arcgis.com/apps/instant/nearby/index.html?appid=763576faa0b1470ca0559c377cf3b497",
+            "quote": "Vote Center Locator Tool",
+            "dates": [],
+            "url": "https://www.dcboe.org/",
+            "navigationUrl": "https://dcgis.maps.arcgis.com/apps/instant/nearby/index.html?appid=763576faa0b1470ca0559c377cf3b497",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:05.163265+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:dd5b35ed781cacd8c3668c32d81b21ba",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Deadline for receipt of ballot requests from non-UOCAVA voters",
+            "quote": "Monday, October 19, 2026\nDeadline for receipt of ballot requests from non-UOCAVA voters",
+            "dates": [
+              "2026-10-19"
+            ],
+            "url": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:39.575604+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:e78997235f88444fd63ae518060a3b64",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "registration_deadline",
+            "text": "Period during which qualified electors may register and cast ballots at Early Vote Centers.",
+            "quote": "Monday, October 26, 2026 – Sunday, November 1, 2026\nPeriod during which qualified electors may register and cast ballots at Early Vote Centers.",
+            "dates": [
+              "2026-10-26",
+              "2026-11-01"
+            ],
+            "url": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:39.575604+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:f3657c1fc194aafdd42aaad7e9f83908",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "DC",
+            "divisionId": "ocd-division/country:us/district:dc",
+            "fieldKind": "registration_deadline",
+            "text": "qualified electors may register to vote and cast full ballots in person at Vote Centers.",
+            "quote": "TUESDAY, NOVEMBER 3, 2026 – GENERAL ELECTION DAY\nqualified electors may register to vote and cast full ballots in person at Vote Centers.",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.dcboe.org/getContentAsset/4d04f4a1-fb2a-4f8a-809f-d3f708f232df/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-Calendar-Version-09292026.pdf?language=en",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:39.575604+00:00",
+            "sourceOrg": "District of Columbia Board of Elections"
+          }
+        }
+      ]
+    }
+  }
+}

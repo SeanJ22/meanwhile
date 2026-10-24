@@ -1,0 +1,657 @@
+{
+  "productionWrites": 0,
+  "cohort": {
+    "rule": "every cp_box_findings row with a SEAT_NOT_IN_QUOTE attempt ended in the seven days before the read, any current state",
+    "readAt": "2026-10-24T12:54:09.785Z",
+    "since": "2026-10-17T12:54:09.785Z",
+    "findings": 1348,
+    "distinctPages": 874,
+    "pagesCaptured": 553
+  },
+  "seatReplay": {
+    "total": {
+      "findings": 1348,
+      "published": 179,
+      "refused": 1169,
+      "other": 0,
+      "sourceUnavailable": 216,
+      "readerNamesToday": 144,
+      "readerNamesTomorrow": 144,
+      "bodiesShown": 73
+    },
+    "reasons": {
+      "SEAT_NOT_IN_QUOTE": 846,
+      "PAGE_NOT_ABOUT_ENTITY": 79,
+      "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 218,
+      "NOT_A_PERSON": 26
+    },
+    "before": {
+      "refused": 1290,
+      "waiting": 8,
+      "built": 50
+    },
+    "byState": {
+      "AK": {
+        "findings": 85,
+        "published": 7,
+        "refused": 78,
+        "sourceUnavailable": 0,
+        "readerNames": 7,
+        "bodiesShown": 2,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 71,
+          "PAGE_NOT_ABOUT_ENTITY": 7
+        }
+      },
+      "AL": {
+        "findings": 262,
+        "published": 34,
+        "refused": 228,
+        "sourceUnavailable": 91,
+        "readerNames": 22,
+        "bodiesShown": 10,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 132,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 91,
+          "NOT_A_PERSON": 5
+        }
+      },
+      "AR": {
+        "findings": 106,
+        "published": 10,
+        "refused": 96,
+        "sourceUnavailable": 38,
+        "readerNames": 5,
+        "bodiesShown": 5,
+        "reasons": {
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 38,
+          "SEAT_NOT_IN_QUOTE": 55,
+          "PAGE_NOT_ABOUT_ENTITY": 3
+        }
+      },
+      "AZ": {
+        "findings": 173,
+        "published": 90,
+        "refused": 83,
+        "sourceUnavailable": 4,
+        "readerNames": 72,
+        "bodiesShown": 29,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 79,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 4
+        }
+      },
+      "CA": {
+        "findings": 143,
+        "published": 2,
+        "refused": 141,
+        "sourceUnavailable": 23,
+        "readerNames": 2,
+        "bodiesShown": 2,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 114,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 23,
+          "NOT_A_PERSON": 4
+        }
+      },
+      "CO": {
+        "findings": 78,
+        "published": 0,
+        "refused": 78,
+        "sourceUnavailable": 27,
+        "readerNames": 0,
+        "bodiesShown": 0,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 51,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 27
+        }
+      },
+      "CT": {
+        "findings": 117,
+        "published": 6,
+        "refused": 111,
+        "sourceUnavailable": 6,
+        "readerNames": 6,
+        "bodiesShown": 4,
+        "reasons": {
+          "PAGE_NOT_ABOUT_ENTITY": 62,
+          "SEAT_NOT_IN_QUOTE": 40,
+          "NOT_A_PERSON": 3,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 6
+        }
+      },
+      "DC": {
+        "findings": 11,
+        "published": 0,
+        "refused": 11,
+        "sourceUnavailable": 0,
+        "readerNames": 0,
+        "bodiesShown": 0,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 11
+        }
+      },
+      "DE": {
+        "findings": 15,
+        "published": 1,
+        "refused": 14,
+        "sourceUnavailable": 1,
+        "readerNames": 1,
+        "bodiesShown": 1,
+        "reasons": {
+          "NOT_A_PERSON": 1,
+          "SEAT_NOT_IN_QUOTE": 12,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 1
+        }
+      },
+      "FL": {
+        "findings": 85,
+        "published": 2,
+        "refused": 83,
+        "sourceUnavailable": 7,
+        "readerNames": 2,
+        "bodiesShown": 1,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 64,
+          "NOT_A_PERSON": 11,
+          "PAGE_NOT_ABOUT_ENTITY": 1,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 7
+        }
+      },
+      "GA": {
+        "findings": 57,
+        "published": 9,
+        "refused": 48,
+        "sourceUnavailable": 18,
+        "readerNames": 9,
+        "bodiesShown": 5,
+        "reasons": {
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 20,
+          "SEAT_NOT_IN_QUOTE": 28
+        }
+      },
+      "IA": {
+        "findings": 150,
+        "published": 7,
+        "refused": 143,
+        "sourceUnavailable": 0,
+        "readerNames": 7,
+        "bodiesShown": 4,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 141,
+          "PAGE_NOT_ABOUT_ENTITY": 2
+        }
+      },
+      "ID": {
+        "findings": 22,
+        "published": 5,
+        "refused": 17,
+        "sourceUnavailable": 1,
+        "readerNames": 5,
+        "bodiesShown": 4,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 15,
+          "SOURCE_BLOCKED:FETCH_FAILED:REPLAY_SOURCE_UNAVAILABLE": 1,
+          "NOT_A_PERSON": 1
+        }
+      },
+      "IL": {
+        "findings": 5,
+        "published": 2,
+        "refused": 3,
+        "sourceUnavailable": 0,
+        "readerNames": 2,
+        "bodiesShown": 2,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 3
+        }
+      },
+      "IN": {
+        "findings": 17,
+        "published": 2,
+        "refused": 15,
+        "sourceUnavailable": 0,
+        "readerNames": 2,
+        "bodiesShown": 2,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 13,
+          "PAGE_NOT_ABOUT_ENTITY": 1,
+          "NOT_A_PERSON": 1
+        }
+      },
+      "KS": {
+        "findings": 5,
+        "published": 1,
+        "refused": 4,
+        "sourceUnavailable": 0,
+        "readerNames": 1,
+        "bodiesShown": 1,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 4
+        }
+      },
+      "KY": {
+        "findings": 5,
+        "published": 1,
+        "refused": 4,
+        "sourceUnavailable": 0,
+        "readerNames": 1,
+        "bodiesShown": 1,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 2,
+          "PAGE_NOT_ABOUT_ENTITY": 2
+        }
+      },
+      "MD": {
+        "findings": 9,
+        "published": 0,
+        "refused": 9,
+        "sourceUnavailable": 0,
+        "readerNames": 0,
+        "bodiesShown": 0,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 9
+        }
+      },
+      "MN": {
+        "findings": 1,
+        "published": 0,
+        "refused": 1,
+        "sourceUnavailable": 0,
+        "readerNames": 0,
+        "bodiesShown": 0,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 1
+        }
+      },
+      "NM": {
+        "findings": 1,
+        "published": 0,
+        "refused": 1,
+        "sourceUnavailable": 0,
+        "readerNames": 0,
+        "bodiesShown": 0,
+        "reasons": {
+          "SEAT_NOT_IN_QUOTE": 1
+        }
+      },
+      "WY": {
+        "findings": 1,
+        "published": 0,
+        "refused": 1,
+        "sourceUnavailable": 0,
+        "readerNames": 0,
+        "bodiesShown": 0,
+        "reasons": {
+          "PAGE_NOT_ABOUT_ENTITY": 1
+        }
+      }
+    },
+    "falsePublishesRemoved": [
+      "AK Tania Silva-Johnson (school social worker; district street number read as a seat)",
+      "CT Majority Leader",
+      "CT Minority Leader",
+      "FL Community Development",
+      "FL Human Rights",
+      "FL Harry P. Leu Gardens",
+      "FL Urban Forest Management Plan",
+      "ID Brian Schneide (page writes Schneider)",
+      "ID Pam Gibbens- Vice (library board, name glued to title)"
+    ]
+  },
+  "nextScheduledRun": [
+    {
+      "state": "AK",
+      "finding": 85,
+      "value": "Kent Mitchell",
+      "now": "2026-10-24T12:55:01.915Z",
+      "tomorrow": "2026-10-25T12:55:01.915Z",
+      "readerToday": false,
+      "readerTomorrow": true,
+      "tomorrowTick": {
+        "looked": 1,
+        "published": 1
+      },
+      "earlierNamesKept": true
+    },
+    {
+      "state": "AL",
+      "finding": 262,
+      "value": "Amanda Baugh",
+      "now": "2026-10-24T12:56:33.520Z",
+      "tomorrow": "2026-10-25T12:56:33.520Z",
+      "readerToday": false,
+      "readerTomorrow": true,
+      "tomorrowTick": {
+        "looked": 92,
+        "published": 1
+      },
+      "earlierNamesKept": true
+    }
+  ],
+  "boardNaming": {
+    "fixed": {
+      "bodies": 101,
+      "visibleBefore": 0,
+      "perMinuteTick": [
+        11,
+        30,
+        48,
+        66,
+        81,
+        81,
+        81,
+        81,
+        81,
+        81
+      ],
+      "today": 81,
+      "tomorrow": 86,
+      "sameAsProduction": 76,
+      "tomorrowHeldBack": 5,
+      "tomorrowNamed": 5,
+      "tomorrowRequests": 5,
+      "byState": {
+        "AK": {
+          "bodies": 7,
+          "namedToday": 2,
+          "namedTomorrow": 2,
+          "nameNotOnPage": 3,
+          "otherBlank": 2
+        },
+        "AL": {
+          "bodies": 22,
+          "namedToday": 18,
+          "namedTomorrow": 18,
+          "nameNotOnPage": 3,
+          "otherBlank": 1
+        },
+        "AR": {
+          "bodies": 6,
+          "namedToday": 5,
+          "namedTomorrow": 5,
+          "nameNotOnPage": 1,
+          "otherBlank": 0
+        },
+        "AZ": {
+          "bodies": 55,
+          "namedToday": 51,
+          "namedTomorrow": 51,
+          "nameNotOnPage": 1,
+          "otherBlank": 3
+        },
+        "NJ": {
+          "bodies": 11,
+          "namedToday": 5,
+          "namedTomorrow": 10,
+          "nameNotOnPage": 0,
+          "otherBlank": 1
+        }
+      }
+    },
+    "withoutRestore": {
+      "today": 0,
+      "tomorrow": 0,
+      "pagesRead": 0
+    }
+  },
+  "handoffs": {
+    "rows": 587,
+    "readAt": "2026-10-24T13:00:40.968Z",
+    "publisherToday": {
+      "looked": 0,
+      "handed": 0,
+      "published": 0
+    },
+    "publisherTomorrow": {
+      "looked": 0,
+      "published": 0
+    },
+    "commentStillWaitingTomorrow": 50,
+    "walkBuilt": 519,
+    "governmentsWalked": 323,
+    "mismatches": 0,
+    "byState": {
+      "GA": {
+        "comment": 18,
+        "commentAtIntake": 18,
+        "commentInWriterQueue": 18,
+        "walk": 40,
+        "walkAtIntake": 40,
+        "walkBuiltByWalk": 39
+      },
+      "CT": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 46,
+        "walkAtIntake": 46,
+        "walkBuiltByWalk": 42
+      },
+      "CA": {
+        "comment": 2,
+        "commentAtIntake": 2,
+        "commentInWriterQueue": 2,
+        "walk": 47,
+        "walkAtIntake": 47,
+        "walkBuiltByWalk": 47
+      },
+      "AZ": {
+        "comment": 1,
+        "commentAtIntake": 1,
+        "commentInWriterQueue": 1,
+        "walk": 31,
+        "walkAtIntake": 31,
+        "walkBuiltByWalk": 31
+      },
+      "AL": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 69,
+        "walkAtIntake": 69,
+        "walkBuiltByWalk": 66
+      },
+      "CO": {
+        "comment": 2,
+        "commentAtIntake": 2,
+        "commentInWriterQueue": 2,
+        "walk": 36,
+        "walkAtIntake": 36,
+        "walkBuiltByWalk": 34
+      },
+      "AK": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 56,
+        "walkAtIntake": 56,
+        "walkBuiltByWalk": 54
+      },
+      "AR": {
+        "comment": 1,
+        "commentAtIntake": 1,
+        "commentInWriterQueue": 1,
+        "walk": 43,
+        "walkAtIntake": 43,
+        "walkBuiltByWalk": 41
+      },
+      "FL": {
+        "comment": 9,
+        "commentAtIntake": 9,
+        "commentInWriterQueue": 9,
+        "walk": 40,
+        "walkAtIntake": 40,
+        "walkBuiltByWalk": 39
+      },
+      "MT": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 2,
+        "walkAtIntake": 2,
+        "walkBuiltByWalk": 2
+      },
+      "MD": {
+        "comment": 1,
+        "commentAtIntake": 1,
+        "commentInWriterQueue": 1,
+        "walk": 7,
+        "walkAtIntake": 7,
+        "walkBuiltByWalk": 7
+      },
+      "DE": {
+        "comment": 7,
+        "commentAtIntake": 7,
+        "commentInWriterQueue": 7,
+        "walk": 26,
+        "walkAtIntake": 26,
+        "walkBuiltByWalk": 26
+      },
+      "ID": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 23,
+        "walkAtIntake": 23,
+        "walkBuiltByWalk": 23
+      },
+      "OR": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 4,
+        "walkAtIntake": 4,
+        "walkBuiltByWalk": 4
+      },
+      "DC": {
+        "comment": 8,
+        "commentAtIntake": 8,
+        "commentInWriterQueue": 8,
+        "walk": 5,
+        "walkAtIntake": 5,
+        "walkBuiltByWalk": 4
+      },
+      "OH": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 1,
+        "walkAtIntake": 1,
+        "walkBuiltByWalk": 1
+      },
+      "NM": {
+        "comment": 1,
+        "commentAtIntake": 1,
+        "commentInWriterQueue": 1,
+        "walk": 1,
+        "walkAtIntake": 1,
+        "walkBuiltByWalk": 1
+      },
+      "TX": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 3,
+        "walkAtIntake": 3,
+        "walkBuiltByWalk": 3
+      },
+      "IN": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 12,
+        "walkAtIntake": 12,
+        "walkBuiltByWalk": 11
+      },
+      "HI": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 7,
+        "walkAtIntake": 7,
+        "walkBuiltByWalk": 6
+      },
+      "KS": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 5,
+        "walkAtIntake": 5,
+        "walkBuiltByWalk": 5
+      },
+      "NY": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 2,
+        "walkAtIntake": 2,
+        "walkBuiltByWalk": 2
+      },
+      "IA": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 12,
+        "walkAtIntake": 12,
+        "walkBuiltByWalk": 12
+      },
+      "UT": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 2,
+        "walkAtIntake": 2,
+        "walkBuiltByWalk": 2
+      },
+      "IL": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 5,
+        "walkAtIntake": 5,
+        "walkBuiltByWalk": 5
+      },
+      "WY": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 2,
+        "walkAtIntake": 2,
+        "walkBuiltByWalk": 2
+      },
+      "KY": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 2,
+        "walkAtIntake": 2,
+        "walkBuiltByWalk": 2
+      },
+      "VT": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 5,
+        "walkAtIntake": 5,
+        "walkBuiltByWalk": 5
+      },
+      "MN": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 1,
+        "walkAtIntake": 1,
+        "walkBuiltByWalk": 1
+      },
+      "MA": {
+        "comment": 0,
+        "commentAtIntake": 0,
+        "commentInWriterQueue": 0,
+        "walk": 2,
+        "walkAtIntake": 2,
+        "walkBuiltByWalk": 2
+      }
+    }
+  }
+}

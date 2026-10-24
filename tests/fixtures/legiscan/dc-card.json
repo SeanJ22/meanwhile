@@ -1,0 +1,225 @@
+{
+  "capturedAt": "2026-10-23T09:14:15.917Z",
+  "source": "LegiScan session2198 and readonly production US-DC OpenStates roster",
+  "holder": {
+    "id": "plural:dc:860fa95b-c737-43bd-948d-1dd6dc1b734e",
+    "name": "Anita Bonds",
+    "officeTitle": "Councilmember",
+    "state": "DC",
+    "nativeIds": {
+      "plural": [
+        "860fa95b-c737-43bd-948d-1dd6dc1b734e"
+      ],
+      "reader": [
+        "plural:dc:860fa95b-c737-43bd-948d-1dd6dc1b734e",
+        "plural:860fa95b-c737-43bd-948d-1dd6dc1b734e"
+      ],
+      "ocd-person": [
+        "ocd-person/860fa95b-c737-43bd-948d-1dd6dc1b734e"
+      ],
+      "legacy_openstates": [
+        "DCL000021",
+        "DCL000041",
+        "DCL000029",
+        "DCL000049"
+      ]
+    }
+  },
+  "read": {
+    "bills": [
+      {
+        "id": "legiscan:bill:1905130",
+        "billId": 1905130,
+        "state": "DC",
+        "sessionId": 2198,
+        "sessionName": "26th Council",
+        "ocdId": "ocd-division/country:us/district:dc",
+        "fips": "11",
+        "number": "B26-0008",
+        "title": "Housing Capacity Preservation Amendment Act of 2025",
+        "description": "As introduced Bill 26-8 would clarify that review of new construction by the Historic Preservation Review Board shall not result in the reduction of housing units or density below what is permitted under zoning.",
+        "status": 1,
+        "statusLabel": "Introduced",
+        "statusDate": "2025-01-03",
+        "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+        "governmentUrl": "https://lims.dccouncil.gov/Legislation/B26-0008",
+        "governmentSourceOfficial": true,
+        "sponsors": [
+          {
+            "peopleId": 16442,
+            "name": "Brianne Nadeau",
+            "committee": false,
+            "nativeIds": {
+              "legiscan": [
+                "16442"
+              ],
+              "ocd-person": [
+                "ocd-person/4e806a33-bba3-4484-95f8-d723769b99f1"
+              ],
+              "votesmart": [
+                "72038"
+              ]
+            },
+            "officeholderId": "plural:dc:4e806a33-bba3-4484-95f8-d723769b99f1",
+            "joinReason": null
+          },
+          {
+            "peopleId": 14683,
+            "name": "Kenyan McDuffie",
+            "committee": false,
+            "nativeIds": {
+              "legiscan": [
+                "14683"
+              ],
+              "votesmart": [
+                "72072"
+              ]
+            },
+            "officeholderId": null,
+            "joinReason": "No held source identifier"
+          },
+          {
+            "peopleId": 15940,
+            "name": "Anita Bonds",
+            "committee": false,
+            "nativeIds": {
+              "legiscan": [
+                "15940"
+              ],
+              "ocd-person": [
+                "ocd-person/860fa95b-c737-43bd-948d-1dd6dc1b734e"
+              ],
+              "votesmart": [
+                "144344"
+              ]
+            },
+            "officeholderId": "plural:dc:860fa95b-c737-43bd-948d-1dd6dc1b734e",
+            "joinReason": null
+          },
+          {
+            "peopleId": 22082,
+            "name": "Christina Henderson",
+            "committee": false,
+            "nativeIds": {
+              "legiscan": [
+                "22082"
+              ],
+              "ocd-person": [
+                "ocd-person/43dcb6c4-0eb1-48c7-965b-4979eb747b5b"
+              ],
+              "votesmart": [
+                "195882"
+              ]
+            },
+            "officeholderId": "plural:dc:43dcb6c4-0eb1-48c7-965b-4979eb747b5b",
+            "joinReason": null
+          }
+        ],
+        "texts": [
+          {
+            "id": 3042047,
+            "date": "2025-01-03",
+            "type": "Introduced",
+            "url": "https://legiscan.com/DC/text/B26-0008/id/3042047",
+            "governmentUrl": "https://lims.dccouncil.gov/downloads/LIMS/56834/Introduction/B26-0008-Introduction.pdf",
+            "governmentSourceOfficial": true
+          }
+        ],
+        "facts": {
+          "id": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "number": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "session": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "jurisdiction": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "governmentLink": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "title": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "description": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "status": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "sponsors": {
+            "sourceUrl": "https://legiscan.com/DC/bill/B26-0008/2025",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2026-10-18"
+          },
+          "text:3042047": {
+            "sourceUrl": "https://legiscan.com/DC/text/B26-0008/id/3042047",
+            "sourceOrg": "LegiScan",
+            "kind": "REFERENCE",
+            "secondHand": true,
+            "collectedAt": "2026-10-23T09:14:20.351Z",
+            "verifiedAt": "2026-10-23T09:14:20.351Z",
+            "publishedAt": "2025-01-03"
+          }
+        }
+      }
+    ],
+    "complete": false,
+    "checkedAt": "2026-10-23T09:14:15.917Z"
+  }
+}

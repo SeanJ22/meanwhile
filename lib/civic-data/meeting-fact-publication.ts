@@ -27,8 +27,11 @@ export async function publishReadMeetingFacts(input: {
   for (const meeting of input.meetings) {
     const title = normalizeText(meeting.title);
     const states = (capture: WorkerPublicationCapture) => normalizeText(capture.evidence.text).includes(title);
-    const capture = captures.find(c => states(c) && sittingOnPage(c.evidence.text, meeting)) ?? captures.find(states) ?? captures[0]!;
-    const report = await publishMeetingFacts(input.facts, { meeting, capture, producedBy: input.producedBy }, input.clocks, now);
+    const calendarCaptures=captures.filter(c=>new URL(c.evidence.canonicalUrl).hostname!=="geocoding.geo.census.gov");
+    if(!calendarCaptures.length)continue;
+    const capture = calendarCaptures.find(c => states(c) && sittingOnPage(c.evidence.text, meeting)) ?? calendarCaptures.find(states) ?? calendarCaptures[0]!;
+    const pinCapture=captures.find(c=>c.evidence.canonicalUrl===meeting.mapPin?.coordinateSourceUrl);
+    const report = await publishMeetingFacts(input.facts, { meeting, capture,pinCapture, producedBy: input.producedBy }, input.clocks, now);
     tally.live += report.live; tally.confirmed += report.confirmed; tally.held += report.held; tally.blanks += report.blanks;
   }
   return { ...tally, unsaved };

@@ -5,8 +5,8 @@ import { gunzipSync } from "node:zlib";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { recordVotingDiscoveryObservation, votingScopeResolvers, votingSourceEvidence } from "../scripts/fetch-voting-sites.mts";
-import { VotingSourceDocumentHeld } from "../lib/ballot/voting-source-evidence.ts";
+import { votingScopeResolvers, votingSourceEvidence } from "../scripts/fetch-voting-sites.mts";
+import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import { combineVotingSourceReads, holdVotingRawEvidence, mergeVotingSourceRead } from "../lib/ballot/voting-source-publication.ts";
@@ -20,44 +20,46 @@ const door = (JSON.parse(readFileSync("data/reference/voting-source-doors.json",
   .find(row => row.url === "https://vip.sos.nd.gov/Precincts.aspx?eid=348")!;
 // Construct a protocol credential without putting a usable credential in the fixture tree.
 const credential = ["AI", "za"].join("") + "P".repeat(35);
-const restricted = new TextEncoder().encode(`<html><title>North Dakota polling places</title><script>const key='${credential}'</script></html>`);
 const clean = readFileSync("tests/fixtures/voting-sources/nd-2026-native.html");
+// The real North Dakota list with a Maps loader printing a key, as county pages do.
+const keyed = new TextEncoder().encode(`<main><h1>North Dakota polling places</h1>${clean}</main><script src="https://maps.googleapis.com/maps/api/js?key=${credential}"></script>`);
 
-test("a real restricted-store refusal holds that document, then the next official page is read and saved", async () => {
-  const root = await mkdtemp(join(tmpdir(), "voting-source-held-"));
+test("an official page printing a key is saved cleaned in the real vault and publishes, beside the next official page", async () => {
+  const root = await mkdtemp(join(tmpdir(), "voting-source-keyed-"));
   try {
     const repos = createMemoryRepositories(), vault = cycleVault(root);
-    const heldUrl = "https://vip.sos.nd.gov/held-polling-list";
+    const keyedUrl = "https://vip.sos.nd.gov/keyed-polling-list";
     const observed: string[] = [], published: string[] = [];
     const runtime: VotingSourceRuntime = {
       fetch: (async input => String(input).endsWith("/robots.txt") ? new Response("User-agent: *\nAllow: /", { headers: { "content-type": "text/plain" } })
-        : [heldUrl, door.url].includes(String(input)) ? new Response(String(input) === heldUrl ? restricted : `<main><h1>North Dakota polling places</h1>${clean}</main>`, { headers: { "content-type": "text/html" } })
+        : [keyedUrl, door.url].includes(String(input)) ? new Response(String(input) === keyedUrl ? keyed : `<main><h1>North Dakota polling places</h1>${clean}</main>`, { headers: { "content-type": "text/html" } })
         : new Response(null, { status: 404 })) as typeof fetch,
-      onDiscoveredSource: async (observation: Parameters<NonNullable<import("../lib/ballot/voting-source-types.ts").VotingSourceRuntime["onDiscoveredSource"]>>[0]) => {
+      onDiscoveredSource: async (observation: Parameters<NonNullable<VotingSourceRuntime["onDiscoveredSource"]>>[0]) => {
         observed.push(observation.source.url);
-        const result = await recordVotingDiscoveryObservation(repos, { url: observation.source.url, ocdId: door.scope.ocdId,
+        await recordSourceObservation(repos, { url: observation.source.url, ocdId: door.scope.ocdId,
           state: "ND", names: [door.scope.name], disposition: observation.disposition, capture: observation.capture }, at, vault);
-        if (result !== "HELD" && observation.disposition.kind === "EVIDENCE" && observation.disposition.family === "voting") {
+        if (observation.disposition.kind === "EVIDENCE" && observation.disposition.family === "voting") {
           const read = await readVotingSource(observation.source, { fetch: runtime.fetch, now: () => at });
           assert.equal(read.sites.length, 26);
           await holdVotingRawEvidence(read);
           published.push(observation.source.url);
         }
-        return result;
       },
       onDiscoveredDoor: async (source: VotingSourceDoor) => { published.push(source.url); },
     };
-    const held = await discoverVotingDoors({ ...door, url: heldUrl }, runtime);
-    assert.equal(held.skips.length, 1);
-    assert.equal(published.length, 0, "the restricted page cannot publish before storage is checked");
+    const first = await discoverVotingDoors({ ...door, url: keyedUrl }, runtime);
+    assert.ok(published.includes(keyedUrl), "the page that printed a key publishes from its cleaned copy");
+    assert.ok(first.doors.length + first.evidence.length);
     const next = await discoverVotingDoors(door, runtime);
     assert.ok(observed.includes(door.url));
     assert.ok(published.includes(door.url), "the next independently saved official page is still usable");
     assert.ok(next.doors.length + next.evidence.length);
-    const notes = JSON.stringify((await repos.fieldManual.list()).map(row => row.value));
-    assert.match(notes, /encrypted restricted evidence storage/);
-    assert.equal(notes.includes(credential), false);
-    assert.equal([...vault.ledger.values()].some(value => value.canonicalUrl === heldUrl), false);
+    assert.equal(JSON.stringify((await repos.fieldManual.list()).map(row => row.value)).includes(credential), false);
+    const saved = [...vault.ledger.values()].find(value => value.canonicalUrl === keyedUrl);
+    assert.equal(saved?.tier, "SANITIZED_DERIVED");
+    const body = await vault.readBack(saved!.key);
+    assert.equal(body!.includes(credential), false);
+    assert.match(body!, /North Dakota polling places/);
     assert.ok([...vault.ledger.values()].some(value => value.canonicalUrl === door.url));
     assert.ok((await readdir(root)).length);
   } finally { await rm(root, { recursive: true, force: true }); }
@@ -65,16 +67,18 @@ test("a real restricted-store refusal holds that document, then the next officia
 
 test("an unrelated storage failure still fails the source run", async () => {
   const repos = createMemoryRepositories();
-  await assert.rejects(recordVotingDiscoveryObservation(repos, { url: door.url, state: "ND", ocdId: door.scope.ocdId,
+  await assert.rejects(recordSourceObservation(repos, { url: door.url, state: "ND", ocdId: door.scope.ocdId,
     names: [door.scope.name], disposition: { kind: "EVIDENCE", family: "voting", recordClass: "VOTING_SITE", belongs: true, quote: "", reason: "Protocol" },
     capture: { contentType: "text/html", bytes: clean } }, at, { putBytes: async () => { throw new Error("disk unavailable"); } }), /disk unavailable/);
 });
 
-test("restricted voting documents stay held; official linking pages use a traced sanitized derivative", async () => {
-  const body = { url: door.url, contentType: "text/html", bytes: restricted };
-  await assert.rejects(holdVotingRawEvidence({ rawBodies: [body] }), error => error instanceof VotingSourceDocumentHeld && error.url === door.url);
+test("voting documents that print a key are saved cleaned; official linking pages use a traced sanitized derivative", async () => {
+  const [document] = await holdVotingRawEvidence({ rawBodies: [{ url: door.url, contentType: "text/html", bytes: keyed }] }, at);
+  const documentCopy = gunzipSync(Buffer.from(document!.savedDocument!.body, "base64")).toString("utf8");
+  assert.equal(documentCopy.includes(credential), false);
+  assert.deepEqual(document!.derivation?.redactionsByClass, { google_api_key: 1 });
   const read = await readVotingSource(door, { fetch: (async () => new Response(clean, { headers: { "content-type": "text/html" } })) as typeof fetch, now: () => at });
-  const linking = { ...door, officialLinkingPage: { url: "https://elections.example.gov/link", html: new TextDecoder().decode(restricted) } };
+  const linking = { ...door, officialLinkingPage: { url: "https://elections.example.gov/link", html: new TextDecoder().decode(keyed) } };
   const evidence = await votingSourceEvidence(linking, read);
   const page = evidence.find(capture => capture.url === linking.officialLinkingPage.url)!;
   assert.ok(page.derivation);

@@ -243,6 +243,21 @@ test("a parsed page left by an interrupted publication is replayed despite uncha
   } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
+test("a future-dated campaign download check cannot suppress the current source release check",async()=>{
+  const options=await context();let clock="2026-10-18T00:00:00.000Z",metadataReads=0,lastChecked="";
+  const sourceFetch:typeof fetch=async(url)=>{
+    if(String(url).includes("/api/views/")){metadataReads++;return Response.json({rowsUpdatedAt:1792195200});}
+    return Response.json(fixture);
+  };
+  try{
+    for(const at of [clock,now]){
+      clock=at;
+      for await(const page of acquireCampaignFinanceResource("WA",resource,{...options,fetch:sourceFetch,now:()=>clock,releaseEveryMs:3600000}))lastChecked=page.sourceCheck.checkedAt;
+    }
+    assert.equal(metadataReads,2);assert.equal(lastChecked,now);
+  }finally{await options.facts.pg.close();await rm(options.directory,{recursive:true,force:true});}
+});
+
 test("bulk indexes follow the publisher's public form pagination and reject an empty declared table", async () => {
   const options = await context();
   let calls = 0;

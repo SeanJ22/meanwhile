@@ -425,8 +425,10 @@ if(STATE===null) {
     }
     await parentRepos.controlReadsBackfill.finish(PLANNING_STATES);
   }
+  // Why each state failed, for the round digest; a crashed state's own error is in owner-digest:<state>.
+  const failureReasons=new Map<string,string>();
   const runState=(state:string)=>new Promise<boolean>((resolve,reject)=>{
-    if(releaseDrainRequested){resolve(false);return;}
+    if(releaseDrainRequested){failureReasons.set(state,"not started (release handoff)");resolve(false);return;}
     const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,env:admittedRuntimeChildEnvironment({capability:"RESEARCH_CYCLE",parentPid:process.pid}),execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
     const forward=(message:unknown)=>{if(child.connected)child.send(message as object);};
     const terminate=()=>{releaseDrainRequested=true;child.kill("SIGTERM");};
@@ -437,11 +439,13 @@ if(STATE===null) {
       if (summary.type === "STATE_PLANNING_SUMMARY" && summary.summary?.state === state) summaries.set(state, mergeStatePlanningPass(summaries.get(state),summary.summary));
       else if (process.connected) process.send?.(message);
     });
-    child.once("error",reject);child.once("exit",code=>{
+    child.once("error",reject);child.once("exit",(code,signal)=>{
       process.off("message",forward);
       process.off("SIGTERM",terminate);
       const cleanup=releaseWindowLease(parentRepos,`cycle@${HOST}#${child.pid}`,nowIso());
-      void cleanup.then(()=>resolve(code===0 && summaries.has(state)),reject);
+      const completed=code===0 && summaries.has(state);
+      if(!completed)failureReasons.set(state,code===0?"exited without a summary":`exit ${code??signal}`);
+      void cleanup.then(()=>resolve(completed),reject);
     });
   });
   const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES);
@@ -482,7 +486,9 @@ if(STATE===null) {
     risk:result.failed.length?null:round.risk as unknown as Readonly<Record<string,unknown>>,health:null,promotedToReaderTruth:null,
     stateCycles:round.stateReports.flatMap(({state,cycleIds})=>cycleIds.map(cycleId=>({state,cycleId}))),
     failure:result.failed.length?{code:"STATE_PLANNING_FAILED",detail:`Planning failed in ${result.failed.join(", ")}; each state retains its work.`}:null,
-  },lines:[`Planning round: ${result.completed} states completed, ${result.failed.length} failed.`,...round.digest]});
+  },lines:[`Planning round: ${result.completed} states completed, ${result.failed.length} failed.`,
+    ...[...Map.groupBy(result.failed,state=>failureReasons.get(state)??"unknown")].map(([reason,states])=>`  failed: ${reason} — ${states.join(", ")}`),
+    ...round.digest]});
   const path = writeCycleRecord({...round, startedAt:NOW, finishedAt, testedSha:RUNNING_CODE_SHA,
     failedStates:result.failed, research:{state,scoutCost:round.scoutCost,cacheThisCycle:null}});
   console.log(`  local diagnostic: ${path}`);

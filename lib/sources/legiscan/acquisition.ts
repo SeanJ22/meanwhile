@@ -54,8 +54,8 @@ export async function acquireDataset(dataset:Dataset,options:BulkRequestOptions)
       bodies.push(new TextDecoder("utf-8",{fatal:true}).decode(Buffer.concat(chunks)));
     }
     if(!bodies.length) throw Error("LEGISCAN_ARCHIVE_BILLS_MISSING");
-    // Exact bill-member bytes survive for source verification and parser replay.
-    const body=JSON.stringify({dataset:{...dataset,access_key:undefined},archiveHash,bodies});
+    // Raw members publish once in bounded parts; this parent capture binds their archive and exact bytes.
+    const body=JSON.stringify({dataset:{...dataset,access_key:undefined},archiveHash,responseHash:acquired.rawHash,memberHashes:bodies.map(hash)});
     return {capture:{...acquired,body,rawHash:hash(body)},bodies,archiveHash};
   } finally {await rm(root,{recursive:true,force:true});}
 }

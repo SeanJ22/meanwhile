@@ -23,6 +23,7 @@ import { bindNamedEntity } from "../routing/named-entity.ts";
 import type { AskNominee } from "./ballot-inventory.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
 import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
+import { ballotCandidateAliases, ballotCandidatePeople } from "../ballot/tickets.ts";
 
 /** An exact full name in the already-read federal directory needs no state legislature lookup. */
 export function namedFederalOfficeholder(question: string): SeatHolder | null {
@@ -175,6 +176,9 @@ export async function loadBallotForDivisions(
   const measures = sets.flatMap(measureRecordsForBallot);
   for (const ballot of sets) {
     for (const row of [...ballot.contests, ...ballot.candidacies, ...ballot.filingCandidacies ?? [], ...ballot.heldContests ?? []]) byTarget.set(row.id, ballot);
+    for (const contest of ballot.contests) for (const alias of contest.aliases ?? []) byTarget.set(alias, ballot);
+    for (const candidate of [...ballot.candidacies, ...ballot.filingCandidacies ?? []])
+      for (const person of ballotCandidatePeople(candidate)) for (const alias of ballotCandidateAliases(person)) byTarget.set(alias, ballot);
     for (const row of ballot.measureAnalyses?.analyses ?? []) analyses.set(row.contestId, row);
     const lineup = ballot.generalLineup;
     for (const contest of lineup?.contests ?? []) {

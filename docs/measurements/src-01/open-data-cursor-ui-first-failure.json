@@ -1,0 +1,21 @@
+{
+  "status": "FAILED_HARNESS_SCOPE",
+  "recordedAt": "2026-10-23T14:05:04.702340+00:00",
+  "originalRequest": {
+    "division": "ocd-division/country:us/state:ca",
+    "zip": null
+  },
+  "originalBrowserError": "Waiting for50records timed out after30000ms",
+  "diagnosticActualGet": {
+    "status": 200,
+    "records": 0,
+    "nextCursor": null,
+    "unavailable": [],
+    "notHeld": [
+      "socrata-discovery"
+    ]
+  },
+  "cause": "The EPA reader selects facilities by ZIP/radius. Division-only requests select Socrata datasets. The proof harness incorrectly expected EPAfacilities from a division-only request.",
+  "correction": "Use actual existing dense CA ZIP90001, as the source owner's normal API proof does. No source, reader or component change was made to recover.",
+  "log": "  chromium system \u2014 SUBSTITUTED for the pinned 1234, which is not installed. Launching /usr/bin/chromium\nnode:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\npage.waitForFunction: Timeout 30000ms exceeded.\n    at /workspace/meanwhile/scripts/replay-open-data-cursor-ui.mts:52:14 {\n  log: [],\n  name: 'TimeoutError'\n}\n\nNode.js v24.19.0\n"
+}

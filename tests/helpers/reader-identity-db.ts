@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 const directory = join(import.meta.dirname, "../../lib/db/migrations");
 const stepMigration = (step: string) => readFileSync(join(directory,
-  readdirSync(directory).find(name => name.endsWith(`${step}.sql`))!), "utf8");
+  readdirSync(directory).find(name => name.toLowerCase().replaceAll("-", "_").endsWith(`${step.toLowerCase().replaceAll("-", "_")}.sql`))!), "utf8");
 export const readerIdentityMigration = () => stepMigration("RB-A1_shared");
 export const placeBoundaryMigration = () => stepMigration("RB-A2_place_boundaries");
 

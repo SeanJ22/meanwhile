@@ -7,6 +7,8 @@ import type { ModelRequest } from "../lib/control-plane/scheduler/scout-executor
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { translationHash } from "../lib/translate/records.ts";
 import { runHeldMeasureTranslations, type TranslationAttempt } from "../lib/translate/standing.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
+import { measureTranslationRoutineTask } from "../lib/translate/routine-contract.ts";
 
 const now = "2026-10-05T18:00:00Z", division = "ocd-division/country:us/state:oh/county:alder";
 const text = "Proposition 12. The levy funds library services. A YES vote adopts the levy. A NO vote keeps the current levy.";
@@ -32,7 +34,7 @@ function fixture() {
         usage: { input_tokens: 100, output_tokens: 50 } };
     },
   };
-  return { input, saved, requests, failCheck: () => { checkerPass = false; } };
+  return { input, saved, requests, failCheck: () => { checkerPass = false; }, recoverCheck: () => { checkerPass = true; } };
 }
 
 test("standing admission writes and independently checks held measures, reuses unchanged bytes and rewrites changed bytes", async () => {
@@ -61,12 +63,17 @@ test("failed checks retain both calls' usage and wait for the existing retry bef
   const f = fixture(); f.failCheck();
   const failed = await runHeldMeasureTranslations(f.input);
   assert.equal(failed.outcomes[0].status, "HELD");
-  assert.equal(failed.outcomes[0].usage.length, 2);
+  assert.equal(failed.outcomes[0].usage.length, 4);
   const waiting = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes, now: "2026-10-05T18:14:59Z" });
-  assert.equal(waiting.outcomes.length, 0); assert.equal(waiting.deferred.length, 1); assert.equal(f.requests.length, 2);
+  assert.equal(waiting.outcomes.length, 0); assert.equal(waiting.deferred.length, 1); assert.equal(f.requests.length, 4);
+  const task = measureTranslationRoutineTask("OH"), clock = { lastAttemptedAt: now };
+  assert.equal(routineTaskDue(task, clock, Date.parse(now) + task.retryMs - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(now) + task.retryMs), true);
   f.input.now = "2026-10-05T18:15:00Z";
-  await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
-  assert.equal(f.requests.length, 4);
+  f.recoverCheck();
+  const next = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
+  assert.equal(next.outcomes[0].status, "PUBLISHED");
+  assert.deepEqual(f.requests.slice(4).map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
 });
 
 test("admission never pays for another district, a partial capture or conflicting held evidence", async () => {

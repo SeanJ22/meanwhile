@@ -1,0 +1,244 @@
+{
+  "state": "FL",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://dos.fl.gov/elections/contacts/contact-us/",
+      "finalUrl": "https://dos.fl.gov/elections/contacts/contact-us/",
+      "publisher": "Florida Department of State, Division of Elections"
+    },
+    {
+      "requestedUrl": "https://dos.fl.gov/elections/",
+      "finalUrl": "https://dos.fl.gov/elections/",
+      "publisher": "Florida Department of State, Division of Elections"
+    },
+    {
+      "requestedUrl": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+      "finalUrl": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+      "publisher": "Florida Department of State, Division of Elections"
+    },
+    {
+      "requestedUrl": "https://registration.dos.fl.gov/CheckVoterStatus",
+      "finalUrl": "https://registration.dos.fl.gov/CheckVoterStatus",
+      "publisher": "Florida Department of State, Division of Elections"
+    },
+    {
+      "requestedUrl": "https://dos.fl.gov/elections/for-voters/election-dates/",
+      "finalUrl": "https://dos.fl.gov/elections/for-voters/election-dates/",
+      "publisher": "Florida Department of State, Division of Elections"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://dos.fl.gov/elections/",
+          "finalUrl": "https://dos.fl.gov/elections/",
+          "publisher": "Florida Department of State, Division of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:04.817011+00:00",
+          "httpStatus": 200,
+          "rawHash": "05ddca74855f2dee9c4e27e756dc181743e93b23bc698f3ef4d0c68120f0b29b",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://dos.fl.gov/elections/contacts/contact-us/",
+          "finalUrl": "https://dos.fl.gov/elections/contacts/contact-us/",
+          "publisher": "Florida Department of State, Division of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:49.889114+00:00",
+          "httpStatus": 200,
+          "rawHash": "cd6da26a4a8fddb0275e775c83c29f2e3801357abb21045499fa003be7069373",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+          "finalUrl": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+          "publisher": "Florida Department of State, Division of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:53.678612+00:00",
+          "httpStatus": 200,
+          "rawHash": "2ca54f9fa310a6d8564ef409b2b2cc34e1ae89cdf2d135d6b39edd50436da1fa",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://dos.fl.gov/elections/for-voters/election-dates/",
+          "finalUrl": "https://dos.fl.gov/elections/for-voters/election-dates/",
+          "publisher": "Florida Department of State, Division of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:29.729127+00:00",
+          "httpStatus": 200,
+          "rawHash": "1abac9bb37552a5fd769fca6ee3b5aad6aa109b6c2a4f013043735d2ed13bc69",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:070c46432f3e594ae4d0be87ce47a5c6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "election_office",
+            "text": "Division of Elections",
+            "quote": "Division of Elections\n850.245.6200",
+            "dates": [],
+            "url": "https://dos.fl.gov/elections/contacts/contact-us/",
+            "navigationUrl": "https://dos.fl.gov/elections/",
+            "electionDate": "2026-11-03",
+            "phone": "850.245.6200",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:49.889114+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:0e1a7e87dae823f05aa23de8b88bd086",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "registration_lookup",
+            "text": "https://registration.elections.myflorida.com/CheckVoterStatus",
+            "quote": "Voter Information Lookup",
+            "dates": [],
+            "url": "https://dos.fl.gov/elections/",
+            "navigationUrl": "https://registration.elections.myflorida.com/CheckVoterStatus",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.817011+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:1bfbd57a0878882664dafa7dd6a88313",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Deadline to request that ballot be mailed: October 22, 2026",
+            "quote": "Deadline to request that ballot be mailed: October 22, 2026",
+            "dates": [
+              "2026-10-22"
+            ],
+            "url": "https://dos.fl.gov/elections/for-voters/election-dates/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.729127+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:3d7b3b5a59aa89fdfe313448eff38faa",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "ballot_lookup",
+            "text": "https://dos.elections.myflorida.com/supervisors/",
+            "quote": "Supervisor of Elections Contact Information",
+            "dates": [],
+            "url": "https://dos.fl.gov/elections/",
+            "navigationUrl": "https://dos.elections.myflorida.com/supervisors/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.817011+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:530d1aa1c64ebb12332942332a179e35",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "registration_deadline",
+            "text": "Deadline to register to vote: October 5, 2026",
+            "quote": "General Election 2026 Deadline to send vote-by-mail ballots to UOCAVA voters: September 19, 2026 Deadline to send vote-by-mail ballots to domestic voters: September 24 2026 – October 1, 2026 Deadline to register to vote: October 5, 2026",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://dos.fl.gov/elections/for-voters/election-dates/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.729127+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:7526653c9570222e56de47cc889039b0",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "polling_lookup",
+            "text": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+            "quote": "Find your precinct within your county by selecting your county below.",
+            "dates": [],
+            "url": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+            "navigationUrl": "https://dos.fl.gov/elections/for-voters/check-your-voter-status-and-polling-place/voter-precinct-lookup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:53.678612+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:90e0ff93d4d18046b431f3d0e4606d3f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "registration_page",
+            "text": "https://RegisterToVoteFlorida.gov",
+            "quote": "RegisterToVoteFlorida.gov",
+            "dates": [],
+            "url": "https://dos.fl.gov/elections/",
+            "navigationUrl": "https://RegisterToVoteFlorida.gov",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.817011+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        },
+        {
+          "id": "election-field:f51dcffa2968595a20ee5c419c211b3f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "FL",
+            "divisionId": "ocd-division/country:us/state:fl",
+            "fieldKind": "early_voting",
+            "text": "Early voting period (mandatory period): October 24 – 31, 2026 (Contact Supervisor of Elections for optional days of early voting)",
+            "quote": "Early voting period (mandatory period): October 24 – 31, 2026 (Contact Supervisor of Elections for optional days of early voting)",
+            "dates": [
+              "2026-10-24",
+              "2026-10-31"
+            ],
+            "url": "https://dos.fl.gov/elections/for-voters/election-dates/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.729127+00:00",
+            "sourceOrg": "Florida Department of State, Division of Elections"
+          }
+        }
+      ]
+    }
+  }
+}

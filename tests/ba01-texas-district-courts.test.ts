@@ -27,8 +27,15 @@ test("a write-in-only court retains its certified choice and an enacted boundary
     const writeIn = candidates.find(row => row.familyName === "Michael P. Kopech");
     assert.ok(writeIn);
     assert.equal(writeIn.partyLabel, null);
-    const ordinary = ballot.candidacies.find(row => row.contestId === "tx-ba01-2026-district-judge-147")!;
-    assert.deepEqual(Object.keys(writeIn).sort(), Object.keys(ordinary).sort());
+    const ordinary = ballotForDivisions(ballot, [`${state}/county:travis`]).candidacies
+      .find(row => row.contestId === "tx-ba01-2026-district-judge-147")!;
+    assert.deepEqual(Object.keys(writeIn).sort(), Object.keys(ordinary).sort(), "write-ins and printed candidates use the same reader fields");
+    const sourceChoice = ballot.candidacies.find(row => row.id === writeIn.id)!;
+    assert.ok(sourceChoice);
+    assert.deepEqual(writeIn.provenance, sourceChoice.provenance);
+    assert.equal(writeIn.givenName, sourceChoice.givenName);
+    assert.equal(writeIn.familyName, sourceChoice.familyName);
+    assert.ok(writeIn.aliases?.includes(sourceChoice.id), "the original certified choice remains an addressable alias");
   }
   assert.equal(ballotForDivisions(ballot, [`${state}/county:travis`]).candidacies.some(row => row.familyName === "Michael P. Kopech"), false);
   for (const county of ["comal", "hays"]) assert.ok(ballotForDivisions(ballot, [`${state}/county:${county}`]).contests

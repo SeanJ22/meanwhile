@@ -1,8 +1,10 @@
 import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
-import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "./types.ts";
-import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
-import { canonicalCivicDataJson } from "./changes.ts";
+import type { CandidateVersionRecord, PromotedPointerIdentity, PromotedProjection, RoutineCandidate } from "./types.ts";
+import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { canonicalCivicDataJson, heldCivicRecords } from "./changes.ts";
+import { validateRoutineCandidate } from "./validate.ts";
+import type { NavigationComparison } from "./navigation-successor.ts";
 import { requiredRoutineContract, type RoutineSourceContract } from "./contracts.ts";
 import { meetingHistoryContract, requiredMeetingPartitionContract } from "./meeting-partitions.ts";
 import { movedToHistoryAuthorityIssue } from "./meeting-history.ts";
@@ -25,7 +27,7 @@ import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { freezeDurableJson } from "./durable-json.ts";
-import { immutableStateCandidate, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
+import { immutableStateCandidate, largePayloadScope, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -49,6 +51,7 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
     if (statePublicationScope(candidate.scope)) return withStateRecordHashes(immutableStateCandidate(candidate));
+    if (largePayloadScope(candidate.scope)) return immutableStateCandidate(candidate);
     return freezeDurableJson(candidate);
   } catch (error) {
     throw new Error(
@@ -364,7 +367,7 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
   if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
   if (candidate.scope !== contract.scope && !isScopedManualContractScope(contractId, candidate.scope)) return `scope ${candidate.scope} does not equal ${contract.scope}`;
-  if (isScopedManualContractScope(contractId, candidate.scope)) {
+  if (candidate.retrieval.succeeded && isScopedManualContractScope(contractId, candidate.scope)) {
     try {
       if (manualPayloadScope(contractId, contract.scope, candidate.readModel) !== candidate.scope) return "scoped candidate records do not belong to its exact jurisdiction";
     } catch { return "scoped candidate records have no exact jurisdiction"; }
@@ -428,6 +431,54 @@ export async function processRegisteredManualCandidate(
     await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification, options),
     now,
   );
+}
+
+/** The candidate lives only inside the first step; the typed readback runs after it is released. */
+export async function processNavigationCandidate(
+  store: RoutineDataStore,
+  prepare: () => Promise<{ readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison }>,
+  now: string,
+): Promise<{ readonly candidateId: string; readonly promotedVersionId: string }> {
+  const published = await promoteNavigationCandidate(store, prepare, now);
+  if (published.promoted) await recordRoutineReaderProjectionReadback(store, requiredManualProductionContract("ballot-navigation"), published.promoted, now);
+  return { candidateId: published.candidateId, promotedVersionId: published.promotedVersionId };
+}
+
+async function promoteNavigationCandidate(
+  store: RoutineDataStore,
+  prepare: () => Promise<{ readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison }>,
+  now: string,
+): Promise<{ readonly candidateId: string; readonly promotedVersionId: string; readonly promoted: PromotedPointerIdentity | null }> {
+  const { candidate, comparison } = await prepare();
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract("ballot-navigation", "manual");
+  const bounded = durableCandidateSnapshot(candidate);
+  const contract = requiredManualProductionContract("ballot-navigation");
+  const issue = manualCandidateContractIssue("ballot-navigation", bounded);
+  if (issue !== null) throw new Error(`MANUAL_CANDIDATE_CONTRACT_MISMATCH:ballot-navigation:${issue}`);
+  const changeSet = { ...comparison.changes, held: heldCivicRecords(bounded) };
+  const verification = await verifySourceScopedCandidateProjection(contract, { ...bounded, changeSet }, sourceProjectionObservedAt(store, now), null);
+  const base = comparison.base;
+  const at = await routineEventObservedAt(store, bounded.recordClass, bounded.scope, now);
+  if (comparison.kind === "MATCHED_REVIEW" && base && store.confirmUnchanged) {
+    const checked = { ...bounded, changeSet };
+    const validated = validateRoutineCandidate(checked, base.record, at, [{ consumer: `${verification.verifierId} (source-scoped pre-promotion)`,
+      passed: verification.status === "PASS", detail: verification.detail }]);
+    if (validated.receipt.decision !== "GOOD") {
+      const failed = validated.receipt.checks.find(check => check.verdict !== "PASS");
+      throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${failed?.detail ?? "Candidate did not satisfy the GOOD contract."}`);
+    }
+    const confirmed = await store.confirmUnchanged({ sourceId: bounded.sourceId, recordClass: bounded.recordClass, scope: bounded.scope,
+      parserVersion: bounded.normalization.parserVersion, pointerVersionId: base.pointer.versionId,
+      readModelHash: base.record.candidate.normalization.normalizedHash!, basis: "CHANGE_SET_UNCHANGED",
+      retrieval: { requestedUrl: bounded.retrieval.requestedUrl, finalUrl: bounded.retrieval.finalUrl,
+        httpStatus: bounded.retrieval.httpStatus, rawHash: bounded.retrieval.rawHash!, retrievedAt: bounded.retrieval.retrievedAt } }, at);
+    if (confirmed.kind !== "CONFIRMED") throw new Error(`ELECTION_FIELD_CONFIRMATION_REFUSED:${confirmed.kind}:${confirmed.detail}`);
+    return { candidateId: confirmed.versionId, promotedVersionId: confirmed.versionId, promoted: null };
+  }
+  const outcome = await processRoutineCandidate(store, bounded, now, base?.pointer.versionId ?? null, REGISTERED_PRODUCTION_DOOR,
+    verification, { confirmUnchanged: false }, comparison);
+  if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
+  return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId, promoted: promotedPointerIdentity(outcome.promoted) };
 }
 
 export async function processRegisteredStateRetirementCandidate(

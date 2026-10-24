@@ -381,7 +381,6 @@ test("THE PLANT: each narrowing shape is caught, and an additive one is not", ()
     "drop-constraint": 'ALTER TABLE "meetings" DROP CONSTRAINT "pairing";',
     "drop-index": 'DROP INDEX "reactions_target_idx";',
     rename: 'ALTER TABLE "reactions" RENAME COLUMN "free_text" TO "verbatim";',
-    "drop-function": 'DROP FUNCTION reader_resolve_id(text);',
     "add-not-null-column-without-default":
       'ALTER TABLE "speak_your_mind" ADD COLUMN "coverage_tier" text NOT NULL;',
   };

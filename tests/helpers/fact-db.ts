@@ -50,7 +50,6 @@ export async function factDb(options: { readonly withResolver?: boolean } = {}):
   if (options.withResolver !== false) {
     const resolve = readerIdentityMigration().split("--> statement-breakpoint").find(statement => /CREATE FUNCTION reader_resolve_id\(/.test(statement));
     await pg.exec(resolve!);
-    await pg.exec(readFileSync(join(import.meta.dirname, "../../lib/db/migrations/RB-A3_resolve.sql"), "utf8"));
   }
   const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
   return {

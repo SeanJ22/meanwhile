@@ -164,5 +164,12 @@
       "observedAt": "2026-10-24T14:18:13Z"
     }
   },
-  "code": "8649ec050"
+  "code": "8649ec050",
+  "canonicalIdCompatibility": {
+    "copy": "approved Alabama production snapshot",
+    "withIdentitySql": true,
+    "beforeIdentitySql": true,
+    "productionWrites": 0,
+    "observedAt": "2026-10-24T15:17:29Z"
+  }
 }

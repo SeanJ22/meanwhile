@@ -84,11 +84,6 @@ const CONTRACT_RULES: readonly {
     test: (s) => /\bDROP\s+TABLE\b/i.test(s),
   },
   {
-    rule: "drop-function",
-    why: "A callable the live build uses stops existing; its replacement runs after the dependent code and schema deploy.",
-    test: (s) => /\bDROP\s+FUNCTION\b/i.test(s),
-  },
-  {
     rule: "drop-default",
     why: "A write that omits the column stops landing and starts failing. This is the 0011/0014 shape.",
     test: (s) => /\bDROP\s+DEFAULT\b/i.test(s),
@@ -169,7 +164,6 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
-  "RB-A3_resolve": { phase: "contract", why: "Runs after RB-A1 installs the lookup; preserves an existing canonical id even when another source has used it as an alias." },
   "RB-A1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy." },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },

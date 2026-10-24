@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { door, decide } from "../lib/core/door.ts";
+import { resolveId } from "../lib/core/resolve.ts";
 import { publishClaim, type PublishInput } from "../lib/facts/publish.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -54,6 +55,15 @@ test("both lanes reach the existing place card with their own saved field source
     const sources = districtCardSources([], [], card.officeContact?.provenance, card.fieldSources);
     assert.deepEqual(sources.filter(source => source.what === "Name" || source.what === "Office address").map(source => [source.what, source.provenance.sourceUrl]),
       [["Name", "https://example.gov/council"], ["Office address", "https://news.example/council"]]);
+  } finally { await db.pg.close(); }
+});
+
+test("an existing canonical id resolves before the new identity SQL is installed", async () => {
+  const db = await factDb({ withResolver: false });
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES('held-person','person','Held person','AL')");
+    assert.deepEqual(await db.query("SELECT to_regprocedure('reader_resolve_id(text)') resolver"), [{ resolver: null }]);
+    assert.equal(await resolveId("held-person", db.query), "held-person");
   } finally { await db.pg.close(); }
 });
 

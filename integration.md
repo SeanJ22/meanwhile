@@ -371,3 +371,4 @@ One line per batch folded into river.
 - 2026-10-24T00:48:29Z · river-revert · REVERT-BL-21-FX · river 60ac4852e · tree identical to cd82fdc4a (pnpm gates pass, release 92); Sean approved the revert
 - 2026-10-24T01:38:00Z · rn-02 · RN-02 · ready da6a37852a50 · river f3baca176655 · pnpm gates pass on f3baca176655
 - 2026-10-24T02:42:52Z · river-ci · CI-POPPLER · river 21ae9bcfb663 · pnpm gates pass on 21ae9bcfb663 (9,630 pass, 0 fail)
+- 2026-10-24T09:44:10Z · river-repair · RV-REPAIR · ready ba769a4ede1e · river 39c3037f4c79 · pnpm gates pass on 39c3037f4c79

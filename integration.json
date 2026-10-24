@@ -4102,5 +4102,17 @@
     "tested_sha": "21ae9bcfb663794953b07a9d7977b228cab67c2d",
     "gates": "pass",
     "at": "2026-10-24T02:42:52Z"
+  },
+  {
+    "lane": "river-repair",
+    "steps": [
+      "RV-REPAIR"
+    ],
+    "ready_sha": "ba769a4ede1e2f4877dc5beca5f1e0d8f85a0bbc",
+    "merge_sha": "39c3037f4c79ffd3561938ea0619b99ee0c1a7bb",
+    "river_sha": "39c3037f4c79ffd3561938ea0619b99ee0c1a7bb",
+    "tested_sha": "39c3037f4c79ffd3561938ea0619b99ee0c1a7bb",
+    "gates": "pass",
+    "at": "2026-10-24T09:44:10Z"
   }
 ]

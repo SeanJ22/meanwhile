@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 93 LIVE (3fc035eeb) without election dates on /ballot. RELEASE 94 = revert of BL-21-FX alone (Sean approved 8:50 PM EDT), PR #804 OPEN, river 60ac4852e (tree 8b7f6a407 = release 92, gated as cd82fdc4a), run-full-ci + auto-merge. RELEASE 95 candidate river-next f3baca176 (RN-02 da6a37852 on the revert) in pnpm gates from 9:05 PM EDT
+build_state: RELEASE 94 LIVE (revert of BL-21-FX; /api/build b518e4d8d from 9:11 PM EDT): /ballot dates and election offices back as on release 92. RELEASE 95 candidate river-next f3baca176 (RN-02 on the revert) in pnpm gates from 9:05 PM EDT
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,16 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## Release 94 live check (Oct 23, 9:11 to 9:20 PM EDT): PASS, the revert restored what release 92 showed
+
+Release 94 = revert of BL-21-FX (Sean approved), live at 9:11 PM EDT (/api/build b518e4d8d). Code is release 92's byte for byte, so each page is back to release 92's.
+- 85003 Phoenix: "The next election: November 3rd, 2026", 12 dated deadlines (voter registration deadline October 5th, early voting begins October 7th, ...), Arizona election office line (Elections Division, Office of the Secretary of State, Phoenix). No "Your election offices" card: the national record holds no Maricopa office (it did not on release 92 either).
+- 19147 Philadelphia and 98101 Seattle: state election office line back (PA Bureau of Commissions, Elections and Legislation, 717/787-5280; WA Elections Division, 800/448-4881 · 360/902-4180). No next-election date or deadlines: the built-in dates table that release 92 used covers only AZ, NH and NJ, so these pages never had them. That is the real gap for PA, WA and 45 more states: each state's own dated record (BL-21-FX's per-state navigation) once it keeps the old content until it publishes.
+- On release 93 those same pages had no state election-office line at all (only the campaign-finance office) and "Still gathering"; both are gone now.
+- 85653 Marana: dates (12 deadlines) and "Your election offices": Pima County Recorder's Office 520-724-4330, Town Clerk (520) 382-1961.
+- National sample, 18 ZIPs in 16 states and DC-less sample: next-election card in AZ (85003, 85653, 85701, 12 deadlines each), NH 03301 (6), NJ 07102 (16); state election-office line in all 16 states (AZ, CA, CO, FL, GA, MI, MN, NC, NH, NJ, NY, OH, PA, TX, WA, WI); "Still gathering" on none.
+- BL-21-FX stays returned (Sean): it folds only when readers keep the old dates and offices until each state's own record is published.
 
 ## Release 93 live check (Oct 23, from 3:39 PM EDT): FAILED, readers lost election dates
 

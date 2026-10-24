@@ -32,3 +32,7 @@ What passing looks like: on the live site, before and after the runner's first n
 ## Repair
 
 Fix on stream/ballot-parity and publish a new READY commit; River folds the new READY and clears this return when it integrates.
+
+## Sean's condition (Oct 23, 8:50 PM EDT) and the revert
+
+Release 93 was reverted (release 94, live 9:11 PM EDT; pages back as on release 92). Sean: "BL-21-FX stays returned until readers keep the old dates and offices until each state's own record is published." A new READY folds only with proof, on the production runner's real state (no per-state navigation pointer yet), that /ballot keeps: the next election date and deadlines where release 92 showed them (AZ, NH, NJ; e.g. 85003 Phoenix 12 deadlines, 07102 Newark 16, 03301 Concord 6), the state election-office line in every state (e.g. 19147 PA 717/787-5280, 98101 WA 800/448-4881), and Marana 85653's "Your election offices" (Pima County Recorder 520-724-4330, Town Clerk (520) 382-1961); and that each state switches to its own record only once that record is published.

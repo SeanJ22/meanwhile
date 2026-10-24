@@ -166,7 +166,9 @@ WITH waiting AS (
    coalesce(nullif(w.value->>'lastSuccessAt',''),w.value->>'updatedAt',w.updated_at::text)::timestamptz +
    make_interval(mins=>coalesce(nullif(w.value->>'checkEveryMinutes','')::integer,60)) <= at
 )
-SELECT state,family,stage,count(*)::bigint AS count,min(since) AS oldest_at,owner FROM waiting GROUP BY state,family,stage,owner
+SELECT state,family,stage,count(*)::bigint AS count,
+ CASE WHEN count(*) FILTER(WHERE since IS NULL)>0 THEN NULL ELSE min(since) END AS oldest_at,
+ owner FROM waiting GROUP BY state,family,stage,owner
 $$;
 `;
 const tables = [["cp_doors","door"],["cp_work_items","work"],["cp_work_items_archive","work"],["cp_box_findings","box"]] as const;

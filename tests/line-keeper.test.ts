@@ -91,6 +91,12 @@ test('door and work changes are atomic, retries add no movement, and archival pr
     await db.query(`INSERT INTO cp_owner_snapshots(id,value) VALUES('current:az',$1::jsonb)`,[JSON.stringify({allRowsIndex:[{id:'queue-row',state:'WAITING',lane:'CREATED',stateCode:'AZ',waitingSince:value.createdAt,owner:'FLEET'}]})]);
     const waiting=await readOldest(query(db));
     assert.equal(waiting.find(r=>r.stage==='work list:WAITING')!.oldestAt,'2026-10-20T07:00:00.000Z');
+    await db.query(`UPDATE cp_owner_snapshots SET value=$1::jsonb WHERE id='current:az'`,[JSON.stringify({allRowsIndex:[
+      {id:'queue-row',state:'WAITING',lane:'CREATED',stateCode:'AZ',waitingSince:value.createdAt,owner:'FLEET'},
+      {id:'untimed-row',state:'WAITING',lane:'CREATED',stateCode:'AZ',owner:'FLEET'},
+    ]})]);
+    const mixed=await readOldest(query(db));
+    assert.equal(mixed.find(r=>r.stage==='work list:WAITING')!.oldestAt,null,'a dated row cannot hide another row whose age is unknown');
   }finally{await db.close();}
 });
 

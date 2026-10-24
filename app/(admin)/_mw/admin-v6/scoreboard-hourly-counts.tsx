@@ -13,7 +13,7 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
   const [family,setFamily]=useState("");
   const [stage,setStage]=useState("fact:live");
   const hour=data.hours.find(h=>h.from===selectedHour)??data.hours[0];
-  const families=[...new Set(data.hours.flatMap(h=>h.counts?.map(c=>c.family)??[]))].sort();
+  const families=[...new Set(data.hours.flatMap(h=>h.counts?.filter(c=>c.stage===stage).map(c=>c.family)??[]))].sort();
   const stages=[...new Set(["fact:live",...data.hours.flatMap(h=>h.counts?.map(c=>c.stage)??[])])].sort();
   return <Card title="Hourly counts">
     <p className={s.meta}>{data.status}</p>
@@ -27,7 +27,7 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
       <label>Kind <select className={s.select} aria-label="Count family" value={family} onChange={e=>setFamily(e.target.value)}>
         <option value="">All kinds</option>{families.map(f=><option key={f} value={f}>{words(f)}</option>)}
       </select></label>
-      <label>Step <select className={s.select} aria-label="Count step" value={stage} onChange={e=>setStage(e.target.value)}>
+      <label>Step <select className={s.select} aria-label="Count step" value={stage} onChange={e=>{setStage(e.target.value);setFamily("");}}>
         {stages.map(step=><option key={step} value={step}>{words(step)}</option>)}
       </select></label>
     </div>

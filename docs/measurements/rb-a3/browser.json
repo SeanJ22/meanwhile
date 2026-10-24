@@ -1,0 +1,50 @@
+{
+  "browser": "Google Chrome for Testing 151.0.7922.34",
+  "productionFrontendWithCopiedFacts": [
+    {
+      "reader": {
+        "url": "https://meanwhileusa.com/?zip=85201",
+        "status": 200,
+        "addressVisible": true,
+        "governmentSourceLinked": true,
+        "bothSourcesLinked": false,
+        "visibleCounts": {
+          "Meetings": 36,
+          "Bodies here": 33,
+          "Districts in view": 76,
+          "Officials": 27
+        },
+        "pageErrors": []
+      }
+    }
+  ],
+  "branchProductionBuildWithCopiedFacts": [
+    {
+      "reader": {
+        "url": "http://localhost:3107/?zip=85201",
+        "status": 200,
+        "addressVisible": true,
+        "governmentSourceLinked": true,
+        "bothSourcesLinked": true,
+        "visibleCounts": {
+          "Meetings": 36,
+          "Bodies here": 33,
+          "Districts in view": 76,
+          "Officials": 27
+        },
+        "pageErrors": []
+      }
+    },
+    {
+      "admin": {
+        "url": "http://localhost:3107/admin?view=scoreboard",
+        "arizona": "Arizona\t1\t1",
+        "stateRows": 57
+      }
+    }
+  ],
+  "boundaryContext": "The local copy reads the same public production boundary byte ranges. No Netlify credentials are copied.",
+  "mutationsBlocked": true,
+  "productionObservedAt": "2026-10-24T20:09:08.326851+00:00",
+  "branchObservedAt": "2026-10-24T20:09:02.511085+00:00"
+}

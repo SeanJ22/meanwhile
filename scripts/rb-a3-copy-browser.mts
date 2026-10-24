@@ -13,6 +13,12 @@ const browser=await launchGuarded({label:'rb-a3-copy-reader-and-admin',blockWrit
 try {
  const context=await browser.context({viewport:{width:1440,height:1000},serviceWorkers:'block'});
  await context.route('**/*',async route=>{if(!['GET','HEAD','OPTIONS'].includes(route.request().method()))await route.abort('blockedbyclient');else await route.fallback();});
+ if(!currentReader)await context.route('**/api/boundaries/**',async route=>{
+ const address=new URL(route.request().url());
+ const response=await route.fetch({url:new URL(address.pathname+address.search,PUBLIC_SITE_ORIGIN).href});
+ assert.equal(response.status(),206,'The copy uses the same public boundary byte ranges as the live page');
+ await route.fulfill({response});
+ });
  await context.route('**/api/reader/state?*',async route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(JSON.parse(readFileSync(`${dir}/mesa-copy-meetings.json`,'utf8')).stateResponse.value)}));
  await context.route('**/api/meetings?*',async route=>route.fulfill({status:200,contentType:'application/json',body:readFileSync(`${dir}/mesa-copy-meetings.json`,'utf8')}));
  const page=await context.newPage();const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
@@ -22,7 +28,12 @@ try {
  await page.getByRole('button',{name:'Who governs here?',exact:true}).click({timeout:15000});
  await page.getByRole('button',{name:'City Council',exact:true}).first().click({timeout:15000});
  await page.getByText('20 E. Main Street',{exact:false}).first().waitFor({state:'visible',timeout:15000});
- await page.locator('button').filter({hasText:/27\s*Officials/}).waitFor({state:'visible',timeout:15000});
+ const baseline=readFileSync(`${dir}/mesa-reader-body.txt`,'utf8');
+ const visibleCounts=Object.fromEntries(['Meetings','Bodies here','Districts in view','Officials'].map(label=>{
+ const match=new RegExp(`(?:^|\\n)([\\d,]+)\\n${label}(?:\\n|$)`).exec(baseline);assert(match,`The live baseline has ${label}`);
+ return[label,Number(match[1].replaceAll(',',''))];
+ }));
+ for(const[label,count]of Object.entries(visibleCounts))await page.locator('button').filter({hasText:new RegExp(`${count}\\s*${label}`)}).waitFor({state:'visible',timeout:30000});
  await page.screenshot({path:`${dir}/${prefix}.png`,fullPage:true});
  const beforeSources=await page.locator('body').innerText();assert(beforeSources.includes('20 E. Main Street'));assert(beforeSources.includes('Mesa, AZ 85201'));
  await page.getByRole('button',{name:/^Sources/}).click();
@@ -37,7 +48,7 @@ try {
  const govLink=page.locator('a[href="https://www.mesaaz.gov/Government/Mayor-City-Council"]').last();
  await govLink.scrollIntoViewIfNeeded();assert(await govLink.isVisible());
  await page.screenshot({path:`${dir}/${prefix}-sources.png`,fullPage:true});writeFileSync(`${dir}/${prefix}-body.txt`,await page.locator('body').innerText());
- console.log(JSON.stringify({reader:{url:page.url(),status:response?.status(),addressVisible:true,governmentSourceLinked:true,bothSourcesLinked:!currentReader,pageErrors:errors}}));
+ console.log(JSON.stringify({reader:{url:page.url(),status:response?.status(),addressVisible:true,governmentSourceLinked:true,bothSourcesLinked:!currentReader,visibleCounts,pageErrors:errors}}));
  if(!currentReader){
  const admin=await browser.context({viewport:{width:1440,height:1000},extraHTTPHeaders:{'x-forwarded-host':new URL(ADMIN_ORIGIN).host},serviceWorkers:'block'});
  const now=Math.floor(Date.now()/1000);const cookie=await signSession({sid:'adm_rba3localcopy00000000',iat:now,exp:now+3600,via:'google'},process.env.WTP_ADMIN_SESSION_KEY!);

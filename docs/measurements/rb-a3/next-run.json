@@ -1,12 +1,12 @@
 {
-  "observedAt": "2026-10-24T18:05:46.731Z",
+  "observedAt": "2026-10-24T19:53:33.034Z",
   "subject": "ocd-division/country:us/state:az/place:mesa#governing",
   "intervalMs": 60000,
   "mode": "wall-clock timer",
   "startedAt": [
-    "2026-10-24T18:03:46.110Z",
-    "2026-10-24T18:04:46.144Z",
-    "2026-10-24T18:05:46.392Z"
+    "2026-10-24T19:51:32.468Z",
+    "2026-10-24T19:52:32.713Z",
+    "2026-10-24T19:53:32.939Z"
   ],
   "passes": [
     {

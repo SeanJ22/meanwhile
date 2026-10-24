@@ -18,22 +18,22 @@ The sample combines up to 100 live fact values per state with already-published 
 
 The final report will replace `measurements/rb-a3/replay.json` after the complete run. Counts are selected values, not fabricated totals for the entire database. Any state below 1,000 uses its real available count; a state with zero values is named and does not pass.
 
-The read-only participation check at 2:20 PM Eastern resolved all 56 reaction rows, all three demand-signal rows and the one Ask row. Speak your mind had no rows. All 36 distinct target IDs resolved. See [the counts](measurements/rb-a3/live-id-resolution.json).
+The read-only participation check at 4:09 PM Eastern resolved all 56 reaction rows, all three demand-signal rows and the one Ask row. Speak your mind had no rows. All 36 distinct target IDs resolved. See [the counts](measurements/rb-a3/live-id-resolution.json).
 
 ## Two connections on production data
 
 1. The real Mesa subject and its held Legistar API (`BodyId 138`, `BodyName = City Council`) go through the official lane in the local production copy with an empty quote. The current fact reader and place composer return that name and API citation.
 2. Mesa's saved government council page supplies `20 E. Main Street / Mesa, AZ 85201`. An actual Box finding goes through `publishBoxFindings`, the compatibility publisher and the checked door. The resulting address has quote offset 1443. Mesa, Arizona and the US parent are queued, and Arizona receives one count through each lane.
 
-The fresh Chrome capture at 1:59 PM Eastern showed 33 bodies, 36 meetings, 76 districts and 27 officials on `https://meanwhileusa.com/?zip=85201`. Chrome then opened today's production frontend with only fact-data responses supplied from the local copy: the address and government source appeared. The branch's standalone frontend also showed the API source. Both checks had no page errors. The full captured reader response and unrelated values were retained. These are local-copy connections using real production data; no production fact was inserted.
+The fresh Chrome capture at 3:50 PM Eastern showed 33 bodies, 36 meetings, 76 districts and 27 officials on `https://meanwhileusa.com/?zip=85201`. Chrome then opened today's production frontend with only fact-data responses supplied from the local copy: the address and government source appeared. The branch's production build also showed the API source. Both checks assert all four visible counts and have no page errors. The local server reads the same public boundary byte ranges as production, without copying Netlify credentials. The full captured reader response and unrelated values were retained. These are local-copy connections using real production data; no production fact was inserted. See [the browser results](measurements/rb-a3/browser.json) and [the reader-table inventory](measurements/rb-a3/reader-tables.json).
 
-Admin's existing Scoreboard displays facts through each lane by state and hour. Chrome showed 57 state/territory/national rows and Arizona's official `1` and checked `1` in the 2 PM Eastern hour. A missing measurement stays blank; once the first door hour exists, an observed zero is shown as zero.
+Admin's existing Scoreboard displays facts through each lane by state and hour. Chrome showed 57 state/territory/national rows and Arizona's official `1` and checked `1` in the 3 PM Eastern hour. A missing measurement stays blank; once the first door hour exists, an observed zero is shown as zero.
 
 See [the connection results](measurements/rb-a3/connections.json), [production before](measurements/rb-a3/production-before.png), [production frontend with the copied result](measurements/rb-a3/production-reader-with-copy.png), [both Sources](measurements/rb-a3/copy-sources.png) and [Admin](measurements/rb-a3/copy-admin.png).
 
 ## Next scheduled run and checks
 
-The normal Box publisher ran on a real one-minute timer at 2:03:46, 2:04:46 and 2:05:46 PM Eastern. The middle tick published the checked address; the following tick changed no fact, source, queue or count. This used wall-clock scheduling in the local production copy, not an advanced test clock. See [the scheduled passes](measurements/rb-a3/next-run.json).
+The normal Box publisher ran on a real one-minute timer at 3:51:32, 3:52:32 and 3:53:32 PM Eastern. The middle tick published the checked address; the following tick changed no fact, source, queue or count. This used wall-clock scheduling in the local production copy, not an advanced test clock. See [the scheduled passes](measurements/rb-a3/next-run.json).
 
 All 41 focused door, API and source-path checks pass. The preceding complete run passed eight of nine checks: 9,807 tests passed, one source-style check failed and two were skipped. Both offending network-URL expressions were corrected; that focused check passes. The final complete check record will replace [checks.json](measurements/rb-a3/checks.json). READY requires that run and the full state replay to pass.
 

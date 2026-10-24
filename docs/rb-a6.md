@@ -35,3 +35,5 @@ Owned by RB-A6:
 The branch was cut from `origin/river` at `21ae9bcfb`. This is built work in progress, not READY, deployed or claimed live as new behavior.
 
 Test-runner lesson: a restricted execution sandbox reported a test file without its individual test cases. The same checklist file reports all eight cases in a network-permitted run. The canonical affected run then reported all 127 cases and complete file timing summaries. Use the network-permitted execution context for the full suite and verify actual case summaries; do not accept a file-only report as the case result.
+
+Fresh checkout setup: run the pinned `pnpm install --frozen-lockfile` before checks. Its postinstall creates ignored `data/derived/place-reference` files. Linking another checkout's dependencies omitted those files and caused the Box tests to fail with `ENOENT`; the same publication case passed in the isolated checkout after the normal install. The incomplete run is not a passing suite.

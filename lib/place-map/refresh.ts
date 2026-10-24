@@ -66,8 +66,11 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
     } else if (!legacyZips.has(link.zip)) legacyZips.set(link.zip, base);
   }
   const previousDataset = await heldStateDataset(query, state);
-  const dataset = await acquireDataset({ ...options, previousDataset, states: new Set([fips]), discoverPlans: false,
+  const acquired = await acquireDataset({ ...options, previousDataset, states: new Set([fips]), discoverPlans: false,
     only: ["county", "place", "cousub", "cd119", "sldu", "sldl", "cd120", "sldu2026", "sldl2026"] });
+  // A state can have no lower chamber or incorporated places. The shared
+  // acquisition retains that evidence; this publication contains present maps.
+  const dataset = { ...acquired, scopes: acquired.scopes.filter(scope => scope.instanceCount > 0) };
   const stateLandShares = new Map<string, number>();
   for (const scope of dataset.scopes) if (scope.type === "county" && scope.version === "county:2020") {
     for (const group of scope.groupings) for (const edge of group.overlaps) if (edge.fraction !== null) stateLandShares.set(edge.zcta5, (stateLandShares.get(edge.zcta5) ?? 0) + edge.fraction);

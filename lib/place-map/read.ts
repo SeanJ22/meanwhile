@@ -9,6 +9,9 @@ const districtTypes: Readonly<Record<string, GeographyType>> = {
 };
 const fields = `e.id AS place_id, e.name, e.state, b.layer, b.boundary_year, b.version,
   b.county_attachment, b.host_county_id`;
+// A point outside a newer local shape cannot fall back to its older shape.
+export const CURRENT_LOCAL_BOUNDARY_SQL = `(b.layer IN ('cd','sldu','sldl') OR b.boundary_year=(
+  SELECT max(current.boundary_year) FROM place_boundary current WHERE current.place_id=b.place_id))`;
 
 /** Choose the current local boundary before testing membership. Older shapes
  * remain held, but cannot return a place the newer boundary no longer covers. */
@@ -46,12 +49,13 @@ export async function placesForCode(query: Query, kind: "zip" | "zcta", code: st
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!/^\d{5}$/.test(code)) throw new Error("A five-digit ZIP or ZCTA is required");
   const table = kind === "zip" ? "zip_place" : "zcta_place";
-  const [row] = await query(`SELECT coalesce(jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year),'[]'::jsonb) AS memberships
+  const rows = await query(`SELECT coalesce(jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year),'[]'::jsonb) AS memberships
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.${kind}=$1 AND ${CURRENT_LOCAL_BOUNDARY_SQL}`, [code]);
-  if (!Array.isArray(row?.memberships)) throw new Error("The place map lookup could not be read");
-  const memberships = selected(row.memberships as PlaceMembership[], selection);
+    WHERE m.${kind}=$1`, [code]);
+  const normalized = rows.length === 1 && "memberships" in rows[0] ? rows[0].memberships : rows.map(membership);
+  if (!Array.isArray(normalized)) throw new Error("The place map lookup could not be read");
+  const memberships = selected(normalized as PlaceMembership[], selection);
   return { memberships, states: [...new Set(memberships.filter(row => row.layer === "state").flatMap(row => row.state ? [row.state] : []))].sort() };
 }
 

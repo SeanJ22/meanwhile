@@ -8,6 +8,22 @@ import { censusTigerArchive } from "../census-geography/tiger-source.ts";
 import { TIGER_ZCTA_2020 } from "../census-geography/tiger-acquire.ts";
 import type { CensusSourceOptions } from "../census-geography/source-release.ts";
 
+function relationship(a: MultiPolygon, b: MultiPolygon): { overlaps: boolean; partial: boolean } {
+  const clip = (left: MultiPolygon, right: MultiPolygon) => {
+    const overlaps = polygonClipping.intersection(left, right).length > 0;
+    return { overlaps, partial: overlaps && polygonClipping.difference(left, right).length > 0 };
+  };
+  try { return clip(a, b); }
+  catch {
+    // Constructive topology loses precision where nearly coincident segments
+    // use large geographic coordinates. Translation preserves the polygons
+    // and conditions the same operation without rounding away any slivers.
+    const [x, y] = a[0]![0]![0]!;
+    const translated = (shape: MultiPolygon): MultiPolygon => shape.map(polygon => polygon.map(ring => ring.map(([lng, lat]) => [lng - x, lat - y])));
+    return clip(translated(a), translated(b));
+  }
+}
+
 /** Positive polygon intersection includes every sliver. A polygon's surface
  * is not tabulated Census land, so the share stays unknown. */
 export async function acquireBoundaryOverlaps(boundaries: readonly PlaceBoundary[], zctas: ReadonlySet<string>,
@@ -33,9 +49,12 @@ export async function acquireBoundaryOverlaps(boundaries: readonly PlaceBoundary
       const geometry = tigerGeometry(feature), code = feature.properties.ZCTA5CE20;
       for (const shape of candidates) {
         options.signal?.throwIfAborted();
-        if (!polygonClipping.intersection(geometry, shape.geometry).length) continue;
+        let overlap: ReturnType<typeof relationship>;
+        try { overlap = relationship(geometry, shape.geometry); }
+        catch (error) { throw new Error(`ZIP shape ${code} and district ${shape.boundary.placeId}: ${error instanceof Error ? error.message : String(error)}`); }
+        if (!overlap.overlaps) continue;
         edges.push({ code, placeId: shape.boundary.placeId, boundaryYear: shape.boundary.boundaryYear, share: null, shareBasis: "unknown",
-          partial: polygonClipping.difference(geometry, shape.geometry).length > 0, fringe: false });
+          partial: overlap.partial, fringe: false });
       }
     }
     return edges;

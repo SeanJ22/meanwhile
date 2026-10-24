@@ -92,7 +92,7 @@ test("ZIP ballots retain every selected race including fringe membership without
   } finally { installPlaceMapQuery(undefined); }
 });
 
-test("the next map refresh changes point and ZIP membership while preserving the place's id and older boundaries", async () => {
+test("the next map refresh uses the current point boundary and retains unreplaced ZIP evidence and place ids", async () => {
   const db = new PGlite(), county = `${state("AZ")}/county:fixture`;
   try {
     await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,name text,state char(2));
@@ -123,7 +123,7 @@ test("the next map refresh changes point and ZIP membership while preserving the
     await loadStatePlaceMap({transaction},map(2026,-116,-114,"86001"));
     await withPlaceMapReads(async()=>{
       assert.ok(!(await readPointPlace(32,-111)).ids.includes(county),"a removed point membership cannot revive its older boundary");
-      assert.ok(!(await readZipPlace("85701"))?.ids.includes(county),"a removed ZIP membership cannot revive its older boundary");
+      assert.ok((await readZipPlace("85701"))?.ids.includes(county),"a new source with no replacement ZIP row cannot discard held ZIP evidence");
       assert.ok((await readZipPlace("86001"))?.ids.includes(county));
       assert.equal((await readZipLocation("85701"))?.lng,-116,"the next import updates the ZIP's display point without a build-time projection");
     });

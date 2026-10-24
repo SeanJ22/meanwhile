@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
-import { placesAtPoint, placesForCode, CURRENT_LOCAL_BOUNDARY_SQL, CODE_MEMBERSHIP_SQL } from "./read.ts";
+import { placesAtPoint, placesForCode, CODE_MEMBERSHIP_SQL } from "./read.ts";
 import type { PlaceMapResult } from "./types.ts";
 import { currentRepresentationSelection, type GeographySelection } from "../census-geography/selection.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
@@ -81,7 +81,7 @@ export async function readStateZipPlaces(input: string, selection: GeographySele
   const rows = await query(`SELECT m.zip,jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year) AS memberships
     FROM zip_place m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.zip=ANY($1::text[]) AND ${CURRENT_LOCAL_BOUNDARY_SQL} GROUP BY m.zip ORDER BY m.zip`, [codes.map(row => String(row.zip))]);
+    WHERE m.zip=ANY($1::text[]) GROUP BY m.zip ORDER BY m.zip`, [codes.map(row => String(row.zip))]);
   for (const row of rows) {
     const code=String(row.zip),result = await placesForCode(async () => [row], "zip", code, selection);
     const entry = placeEntry(result);

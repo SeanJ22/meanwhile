@@ -302,6 +302,33 @@ test("pending latest Scout outcomes select a Hunt or an autonomous continuation 
   assert.ok(!f.statements.some(statement => /SELECT .*record FROM cp_log_scout_results/.test(statement)), "selection transfers work candidates only");
 });
 
+test("a planner's owed work is decided once, however many pages of values it reads", async () => {
+  const f = await fixture();
+  const item = (await autonomousHarness()).item;
+  const ids: string[] = [];
+  for (let index = 0; index < 250; index++) {
+    const value: WorkItem = { ...item, id: `owed-${String(index).padStart(3, "0")}`, subject: `place-${index}`, createdAt: NOW,
+      autonomousPlan: { ...item.autonomousPlan!, capability: "officials/offices" } };
+    await f.db.query(`INSERT INTO cp_work_items${index % 2 ? "_archive" : ""} (id, revision, updated_at, value) VALUES ($1,1,$2,$3::jsonb)`, [value.id, NOW, JSON.stringify(value)]);
+    ids.push(value.id);
+  }
+  f.statements.length = 0;
+  assert.deepEqual((await pgCoordinatorWorkItems(f.sql)).map(row => row.id), ids);
+  // Release 95 re-ran the whole candidate query for every 100 rows: the system planner's 37 pages took five minutes.
+  assert.equal(f.statements.filter(statement => statement.includes("FROM cp_log_scout_results pending")).length, 1);
+  assert.ok(f.statements.every(statement => !/FROM cp_route_tasks\s+WHERE value->>'state' IN/.test(statement)), "never every pending route task");
+  assert.equal(f.statements.filter(statement => /id = ANY\(\$1::text\[\]\)/.test(statement)).length, 3);
+  await f.db.exec("CREATE TABLE cp_obligations (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL)");
+  const hunt: WorkItem = { ...item, id: "owed-hunt", subject: "place-hunt", createdAt: NOW, autonomousPlan: { ...item.autonomousPlan!, capability: "hunt-packet" } };
+  await f.db.query("INSERT INTO cp_work_items (id, revision, updated_at, value) VALUES ($1,1,$2,$3::jsonb)", [hunt.id, NOW, JSON.stringify(hunt)]);
+  await f.db.query("INSERT INTO cp_route_tasks (id, revision, updated_at, value) VALUES ('hunt-task',1,$1,$2::jsonb)", [NOW, JSON.stringify({ workItemId: hunt.id, state: "PENDING" })]);
+  assert.deepEqual((await pgCoordinatorWorkItems(f.sql, false, "system")).map(row => row.id), ids, "a hunt without an active obligation waits");
+  assert.deepEqual(await pgCoordinatorWorkItems(f.sql, false, "az"), []);
+  await f.db.query("INSERT INTO cp_obligations VALUES ('hunt-obligation',1,$1,$2::jsonb)", [NOW, JSON.stringify({ active: "true" })]);
+  await f.db.query("INSERT INTO cp_occurrences (id, revision, updated_at, value) VALUES ('hunt-occurrence',1,$1,$2::jsonb)", [NOW, JSON.stringify({ obligationId: "hunt-obligation", workItemId: hunt.id })]);
+  assert.deepEqual((await pgCoordinatorWorkItems(f.sql, false, "system")).map(row => row.id), [...ids, hunt.id].sort());
+});
+
 test("lineage summaries invalidate on writes and retain invalidation that races a refresh",async()=>{
   const f=await fixture();
   const opened=await openOccurrence(f.repos,{obligation:f.obligation,dueAt:NOW,now:NOW});assert.ok(opened);

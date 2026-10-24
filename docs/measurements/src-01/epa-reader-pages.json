@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "sourceRequests": 0,
+  "scope": "Normal GET first, second, third and final continuations; complete enumeration uses the SAME production iterator with one held partition and a single accepted-manifest read. This does not repeat normal SQL for every shared-iterator page.",
+  "manifestSha256": "2f4266f42b4a4eb58059310e20b0ec91f2747ba1e6760b03718d2054031d1a1e",
+  "states": [
+    {
+      "state": "CA",
+      "zip": "90001",
+      "status": "PASS",
+      "publishedLocationRows": 106013,
+      "previousFullScanRows": 106013,
+      "uniqueRows": 106013,
+      "pages": 2129,
+      "emptyPages": 1,
+      "allIdsSha256": "2f37d7056c617cca556ae194a119e23c5edcd95fa38ae5d0bb0d508bad305fe0",
+      "sharedIteratorElapsedMs": 15260.799924000003,
+      "maxSharedIteratorPageMs": 4914.924602,
+      "normalGetPages": [
+        {
+          "page": 1,
+          "elapsedMs": 863.7519319999997,
+          "sqlMs": 765.0013439999998,
+          "artifactRequests": 1
+        },
+        {
+          "page": 2,
+          "elapsedMs": 817.553492,
+          "sqlMs": 779.0932899999998,
+          "artifactRequests": 1
+        },
+        {
+          "page": 3,
+          "elapsedMs": 983.1849060000004,
+          "sqlMs": 947.5341860000008,
+          "artifactRequests": 1
+        },
+        {
+          "page": 2129,
+          "elapsedMs": 1152.9547660000026,
+          "sqlMs": 978.8220380000021,
+          "artifactRequests": 4
+        }
+      ],
+      "sourceDatesUnchanged": true
+    },
+    {
+      "state": "NJ",
+      "zip": "07001",
+      "status": "PASS",
+      "publishedLocationRows": 23370,
+      "previousFullScanRows": 23370,
+      "uniqueRows": 23370,
+      "pages": 476,
+      "emptyPages": 1,
+      "allIdsSha256": "07a13ec384372fb1929795724c4544454c3ac4808b90224ba4a36dafa8dcaf23",
+      "sharedIteratorElapsedMs": 8121.722410999999,
+      "maxSharedIteratorPageMs": 2609.3118790000008,
+      "normalGetPages": [
+        {
+          "page": 1,
+          "elapsedMs": 1629.1471700000002,
+          "sqlMs": 1570.0859330000017,
+          "artifactRequests": 1
+        },
+        {
+          "page": 2,
+          "elapsedMs": 878.5119049999994,
+          "sqlMs": 864.2864469999986,
+          "artifactRequests": 1
+        },
+        {
+          "page": 3,
+          "elapsedMs": 748.412304999998,
+          "sqlMs": 736.4689929999986,
+          "artifactRequests": 1
+        },
+        {
+          "page": 476,
+          "elapsedMs": 879.9222230000014,
+          "sqlMs": 826.6681320000025,
+          "artifactRequests": 3
+        }
+      ],
+      "sourceDatesUnchanged": true
+    }
+  ]
+}

@@ -1,17 +1,20 @@
-import { PGlite, type Results, type Transaction } from "@electric-sql/pglite";
+import { PGlite, type Results } from "@electric-sql/pglite";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
+import { localPostgresReplay } from "./local-postgres-replay.mts";
 
 const directory = process.argv[2];
 if (!directory) throw new Error("A benchmark database directory is required.");
-const fixtureStart = Number(process.argv[3]), elapsedStart = performance.now();
+let fixtureStart = Number(process.argv[3]), elapsedStart = performance.now();
 if (!Number.isFinite(fixtureStart)) throw new Error("The benchmark database must share its worker clock.");
 globalThis.Date = new Proxy(Date, {
   construct(target, args) { return Reflect.construct(target, args.length ? args : [fixtureStart + performance.now() - elapsedStart]); },
   get(target, name, receiver) { return name === "now" ? () => Math.floor(fixtureStart + performance.now() - elapsedStart) : Reflect.get(target, name, receiver); },
 });
-const db = new PGlite(directory);
+const nativeFlag=process.argv.indexOf("--native-connection-file");
+const native=nativeFlag>=0?await localPostgresReplay(directory,process.argv[nativeFlag+1],fixtureStart):null;
+const db = native?.db ?? new PGlite(directory);
 const exists = await db.query<{ relation: string | null }>("SELECT to_regclass('public.civic_data_candidates')::text AS relation");
 if (!exists.rows[0]?.relation) for (const migration of ["0025_typical_fixer", "0026_lame_sunset_bain", "0027_pdc_candidate_history_shape", "0028_wise_ikaris", "0029_unchanged_confirmation_receipts", "0031_civic_payload_parts", "0038_src_mn_federal_money_lookup"]) {
   await db.exec(readFileSync(join(process.cwd(), "lib", "db", "migrations", `${migration}.sql`), "utf8"));
@@ -29,16 +32,25 @@ function neonResult(result: Results<unknown[]>, query: string) {
 }
 const lines = createInterface({ input: process.stdin, crlfDelay: Infinity });
 for await (const line of lines) {
-  const message = JSON.parse(line) as { id: number; type?: string; body?: string };
+  const message = JSON.parse(line) as { id: number; type?: string; body?: string; replayAt?: number; dropNativeDatabase?:boolean };
+  if (message.type === "replay-clock") {
+    if (!Number.isFinite(message.replayAt)) throw new Error("The local replay clock must be a finite instant.");
+    fixtureStart = message.replayAt!; elapsedStart = performance.now();
+    if(native)await native.clock(fixtureStart);
+    send({ id: message.id, type: "replay-clock-set" });
+    continue;
+  }
   if (message.type === "close") {
     await db.close();
-    send({ id: message.id, type: "closed", databasePeakRssBytes: process.resourceUsage().maxRSS * 1024 });
+    if(native&&message.dropNativeDatabase)await native.drop();
+    send({ id: message.id, type: "closed", databasePeakRssBytes: native?native.peakRssBytes():process.resourceUsage().maxRSS * 1024,
+      databaseProxyPeakRssBytes:native?process.resourceUsage().maxRSS*1024:0 });
     break;
   }
   try {
     const request = JSON.parse(message.body!) as Statement & { queries?: Statement[] };
-    const execute = async (connection: PGlite | Transaction, statement: Statement) => neonResult(await connection.query<unknown[]>(statement.query, statement.params ?? [], { rowMode: "array", serializers }), statement.query);
-    const result = request.queries ? { results: await db.transaction(async tx => {
+    const execute = async (connection:{query:PGlite["query"]}, statement: Statement) => neonResult(await connection.query<unknown[]>(statement.query, statement.params ?? [], { rowMode: "array", serializers }), statement.query);
+    const result = request.queries ? { results: await db.transaction(async(tx:{query:PGlite["query"]}) => {
       const values = [];
       for (const statement of request.queries!) values.push(await execute(tx, statement));
       return values;

@@ -1,4 +1,5 @@
 import { stateBallotScope } from "./state-scopes.ts";
+import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge, refuseDatabaseInEdgeOnlyContext, reportReaderStateFailure } from "../registry/runtime-edge.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
@@ -18,6 +19,7 @@ const requests = new WeakMap<object, Map<string, Held>>();
 const classes: Record<StateAuthorityFamily, RoutineRecordClass> = {
   "registry-runtime": "REGISTRY_RUNTIME_BINDING", "federal-directory": "FEDERAL_DIRECTORY", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
   "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
+  "ballot-navigation": "CURATED_READER_RECORD",
 };
 
 /** Canonical pointers belonging to one state family. */
@@ -25,6 +27,7 @@ export function stateAuthorityPointers(family: StateAuthorityFamily, state: stri
   if (family === "registry-runtime") return [{ recordClass: classes[family], scope: stateRegistryRuntimeScope(state) }];
   if (family === "federal-directory") return [{ recordClass: classes[family], scope: federalDirectoryScope(state) },
     { recordClass: "STATE_LEGISLATOR", scope: peopleSourceScope(`US-${state}`, "people-portraits") }];
+  if (family === "ballot-navigation") return [{ recordClass: classes[family], scope: ballotNavigationScope(state) }];
   return [{ recordClass: classes[family], scope: stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state) }];
 }
 

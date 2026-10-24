@@ -70,7 +70,7 @@ const NEXT = "river-next";
 const MIGRATIONS_DIR = "lib/db/migrations";
 const JOURNAL = `${MIGRATIONS_DIR}/meta/_journal.json`;
 const OBSERVE_WORKFLOW = "post-deploy-integrity.yml";
-const STEP_ID = /\b(?:R\d-[A-Z]+(?:-[A-Z]+)*|[A-Z]{2,4}-\d{1,3}|[A-Z]{2,}-[A-Z]{2,}|R\d[A-Z]?)\b/g;
+const STEP_ID = /\b(?:R\d-[A-Z]+(?:-[A-Z]+)*|[A-Z]{2,4}-[A-Z]?\d{1,3}|[A-Z]{2,}-[A-Z]{2,}|R\d[A-Z]?)\b/g;
 
 /**
  * The adapter implementation path. An adapter stream that reaches outside it is
@@ -139,7 +139,7 @@ export function setStatusFields(text, updates) {
  */
 export const CONNECTION_PROOFS = Object.freeze([
   { label: "connected end to end", pattern: /\bconnect(?:ed|ion proof)\b|end[- ]to[- ]end|\bfeeds?\b/i },
-  { label: "still working on the next scheduled run", pattern: /next (?:scheduled|configured)[- ]run|\bnext[- ]day proof|\btomorrow proof|\bcontrolled (?:next|tomorrow)\b|following scheduled (?:run|refresh|pass)|\btomorrow(?:'s)?[- ](?:clock|run|pass|tick)\b/i },
+  { label: "still working on the next scheduled run", pattern: /next (?:scheduled|configured)[- ]run|\bnext[- ](?:day|run) proof|\btomorrow proof|\bcontrolled (?:next|tomorrow)\b|following scheduled (?:run|refresh|pass)|\btomorrow(?:'s)?[- ](?:clock|run|pass|tick)\b/i },
 ]);
 
 /** The connection proofs a READY commit's full message lacks, by label. */

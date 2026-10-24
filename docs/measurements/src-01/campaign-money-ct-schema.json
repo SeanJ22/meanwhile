@@ -1,0 +1,49 @@
+{
+  "state": "CT",
+  "kind": "real-publisher-schema-failure-detail",
+  "productionWrites": 0,
+  "normalizedRowsFromOtherEightFiles": 323097,
+  "rowsRejectedBeforeNormalization": 24705,
+  "totalRawRowsAcrossTenFiles": 347802,
+  "personBoundRowsPublishedPerControlledDay": 83060,
+  "heldCycleFactsPreserved": 331,
+  "failedFiles": [
+    {
+      "resourceId": "ecris-disbursements-candidates:b76f71106a1ad3ec",
+      "url": "https://seec.ct.gov/ecrisreporting/Data/eCrisDownloads/exportdatafiles/Disbursements2020ElectionYearCandidateExploratoryCommittees.csv",
+      "status": 200,
+      "sha256": "0c413de7ca6b30cdc1b9f13f5a07f5331a443b7aefc31ba670d7271afdd40735",
+      "byteLength": 9497200,
+      "rawDataRows": 23506,
+      "headerWidth": 29,
+      "rowWidths": {
+        "29": 23506
+      },
+      "duplicateHeaderOccurrences": {
+        "Description": 2
+      },
+      "officeSoughtColumnPresent": false,
+      "observedFailure": "Campaign export columns are missing or repeated.",
+      "failureStage": "CSV header validation before row normalization"
+    },
+    {
+      "resourceId": "ecris-disbursements-candidates:7b974cd187877e34",
+      "url": "https://seec.ct.gov/ecrisreporting/Data/eCrisDownloads/exportdatafiles/Disbursements2021ElectionYearCandidateExploratoryCommittees.csv",
+      "status": 200,
+      "sha256": "ae675cc3531465ed1bfe63a94469a22dc8ab5c155a076d4daf1db284767fc503",
+      "byteLength": 498140,
+      "rawDataRows": 1199,
+      "headerWidth": 29,
+      "rowWidths": {
+        "29": 1199
+      },
+      "duplicateHeaderOccurrences": {
+        "Description": 2
+      },
+      "officeSoughtColumnPresent": false,
+      "observedFailure": "Campaign export columns are missing or repeated.",
+      "failureStage": "CSV header validation before row normalization"
+    }
+  ],
+  "explanation": "Both historical disbursement files contain two Description headers. The generic CSV header guard rejects repeated names before projecting data. All data rows have 29 columns, so this is a native header format issue, not truncated HTTP acquisition. The files also lack Office Sought, which is independently relevant to safe office binding. The other 8 files normalize and publish; last verified money remains intact."
+}

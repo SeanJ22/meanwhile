@@ -1,0 +1,352 @@
+{
+  "state": "MD",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/about/contact.html",
+      "finalUrl": "https://www.elections.maryland.gov/about/contact.html",
+      "publisher": "Maryland State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+      "finalUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+      "publisher": "Maryland State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/voter_registration/",
+      "finalUrl": "https://www.elections.maryland.gov/voter_registration/",
+      "publisher": "Maryland State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/voting/absentee.html",
+      "finalUrl": "https://www.elections.maryland.gov/voting/absentee.html",
+      "publisher": "Maryland State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/voting/election_day_questions.html",
+      "finalUrl": "https://www.elections.maryland.gov/voting/election_day_questions.html",
+      "publisher": "Maryland State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.maryland.gov/elections/2026/2026_Election_Calendar.pdf",
+      "finalUrl": "https://www.elections.maryland.gov/elections/2026/2026_Election_Calendar.pdf",
+      "publisher": "Maryland State Board of Elections"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.elections.maryland.gov/about/contact.html",
+          "finalUrl": "https://www.elections.maryland.gov/about/contact.html",
+          "publisher": "Maryland State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.570124+00:00",
+          "httpStatus": 200,
+          "rawHash": "2270d391532106ebbfa631edc9274b8767e8aeda129eebed79242c3f9a88b4b9",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.maryland.gov/elections/2026/2026_Election_Calendar.pdf",
+          "finalUrl": "https://www.elections.maryland.gov/elections/2026/2026_Election_Calendar.pdf",
+          "publisher": "Maryland State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:43:02.104887+00:00",
+          "httpStatus": 200,
+          "rawHash": "21225ab8a188feb3d738824dd27b046805a7213176ac1c6ac38cd3eebf3bb9c5",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+          "finalUrl": "https://www.elections.maryland.gov/elections/2026/index.html",
+          "publisher": "Maryland State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:08.873714+00:00",
+          "httpStatus": 200,
+          "rawHash": "6d320d87e16ae498785b56c19c844808c572266e9ff487d88593a8ac75b19644",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.maryland.gov/voter_registration/",
+          "finalUrl": "https://www.elections.maryland.gov/voter_registration/",
+          "publisher": "Maryland State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.400707+00:00",
+          "httpStatus": 200,
+          "rawHash": "3c6a75a3dd806c273812eb1daf0839f49462259da1643d376b6aeb6fd9cab60c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.maryland.gov/voting/absentee.html",
+          "finalUrl": "https://www.elections.maryland.gov/voting/absentee.html",
+          "publisher": "Maryland State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.628495+00:00",
+          "httpStatus": 200,
+          "rawHash": "3ab95b7c568093823c031dd3daddc9c84cd6f46fe44c9cb391f9d93beb517c32",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.maryland.gov/voting/election_day_questions.html",
+          "finalUrl": "https://www.elections.maryland.gov/voting/election_day_questions.html",
+          "publisher": "Maryland State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:43:01.780328+00:00",
+          "httpStatus": 200,
+          "rawHash": "f02ed1659b9e9ae9b336fea61d5a3fec4fa448fd91f1140371939de526cfd3ed",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:2e9d1f8b675f9cc705603d3c1b77470e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "registration_deadline",
+            "text": "On election day : go to the polling place assigned for your residence.",
+            "quote": "on election day : go to the polling place assigned for your residence.",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.elections.maryland.gov/elections/2026/index.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.873714+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:771c4c6943243b6b560c71e513fa3eb9",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "polling_lookup",
+            "text": "https://voterservices.elections.maryland.gov/PollingPlaceSearch",
+            "quote": "Find My Polling Place",
+            "dates": [],
+            "url": "https://www.elections.maryland.gov/elections/2026/index.html",
+            "navigationUrl": "https://voterservices.elections.maryland.gov/PollingPlaceSearch",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.873714+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:7931084a63aa4d54115fb602695b26be",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "registration_lookup",
+            "text": "https://voterservices.elections.maryland.gov/VoterSearch",
+            "quote": "Voter Lookup website",
+            "dates": [],
+            "url": "https://www.elections.maryland.gov/voter_registration/",
+            "navigationUrl": "https://voterservices.elections.maryland.gov/VoterSearch",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.400707+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:7cd85d535e99d41556a7a768941b40c1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "early_voting",
+            "text": "If you prefer to vote in person, for the Gubernatorial General Election, early voting centers will be open from Thursday, October 22, 2026 through Thursday, October 29, 2026 from 7:00 am until 8:00 pm, including Saturday and Sunday.",
+            "quote": "If you prefer to vote in person, for the Gubernatorial General Election, early voting centers will be open from Thursday, October 22, 2026 through Thursday, October 29, 2026 from 7:00 am until 8:00 pm, including Saturday and Sunday.",
+            "dates": [
+              "2026-10-22",
+              "2026-10-29"
+            ],
+            "url": "https://www.elections.maryland.gov/elections/2026/index.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.873714+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:7f2954600b1e8e888223e3012884eed1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "To receive a ballot by mail or fax, you must submit your request by Tuesday, October 27, 2026",
+            "quote": "To receive a ballot by mail or fax, you must submit your request by Tuesday, October 27, 2026",
+            "dates": [
+              "2026-10-27"
+            ],
+            "url": "https://www.elections.maryland.gov/voting/absentee.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.628495+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:81728802992ea173c20071916bd40592",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "In person the deadline is november 03, 2026 by 8:00 pm .",
+            "quote": "in person the deadline is november 03, 2026 by 8:00 pm .",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.elections.maryland.gov/elections/2026/index.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.873714+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:86025326fe4e252a83384085c52c04c4",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "registration_deadline",
+            "text": "During early voting : go to an early voting center in the county where you live.",
+            "quote": "during early voting : go to an early voting center in the county where you live.\nIf you prefer to vote in person, for the Gubernatorial General Election, early voting centers will be open from Thursday, October 22, 2026 through Thursday, October 29, 2026 from 7:00 am until 8:00 pm, including Saturday and Sunday.",
+            "dates": [
+              "2026-10-22",
+              "2026-10-29"
+            ],
+            "url": "https://www.elections.maryland.gov/elections/2026/index.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.873714+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:8b00b348e551021068410ced89fcc5ea",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "registration_deadline",
+            "text": "Deadline to register to vote in advance of the general election. After this date, unregistered individuals must visit an early voting or election day polling location in person to register and vote.",
+            "quote": "Tuesday, October 13, 2026\n5 pm\nAdvance Registration Deadline\nDeadline to register to vote in advance of the general election. After this date, unregistered individuals must visit an early voting or election day polling location in person to register and vote.",
+            "dates": [
+              "2026-10-13"
+            ],
+            "url": "https://www.elections.maryland.gov/elections/2026/2026_Election_Calendar.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:43:02.104887+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:b328c511fc48f67830446e0422ee2e9b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "registration_page",
+            "text": "https://voterservices.elections.maryland.gov/OnlineVoterRegistration",
+            "quote": "Maryland's Online Voter Registration System (OLVR)",
+            "dates": [],
+            "url": "https://www.elections.maryland.gov/voter_registration/",
+            "navigationUrl": "https://voterservices.elections.maryland.gov/OnlineVoterRegistration",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.400707+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:bdb280637d1f3f67b84e73e328b00f45",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "election_office",
+            "text": "Maryland State Board of Elections",
+            "quote": "Maryland State Board of Elections",
+            "dates": [],
+            "url": "https://www.elections.maryland.gov/about/contact.html",
+            "navigationUrl": "https://www.elections.maryland.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "410-269-2840",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.570124+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:ca15dffff3198140f2da315b3346bb16",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "To receive a Print-At-Home ballot, you must submit your request by Friday, October 30, 2026",
+            "quote": "To receive a Print-At-Home ballot, you must submit your request by Friday, October 30, 2026",
+            "dates": [
+              "2026-10-30"
+            ],
+            "url": "https://www.elections.maryland.gov/voting/absentee.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.628495+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:d23595ffc58e8dc54e510a35dcd2b5cc",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MD",
+            "divisionId": "ocd-division/country:us/state:md",
+            "fieldKind": "ballot_lookup",
+            "text": "https://voterservices.elections.maryland.gov/VoterSearch",
+            "quote": "review the sample ballot you received in the mail or print it from the voter look-up website .",
+            "dates": [],
+            "url": "https://www.elections.maryland.gov/voting/election_day_questions.html",
+            "navigationUrl": "https://voterservices.elections.maryland.gov/VoterSearch",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:43:01.780328+00:00",
+            "sourceOrg": "Maryland State Board of Elections"
+          }
+        }
+      ]
+    }
+  }
+}

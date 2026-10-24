@@ -8,6 +8,7 @@ import {
   OFFICIAL_STATE_ROLL_CALL_TARGETS,
 } from "../state-rollcalls/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
+import { CENSUS_GEO_REQUIRED_VERSIONS } from "../census-geography/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
 import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
@@ -23,6 +24,8 @@ const DAY = 24 * HOUR;
 export interface RoutineCadencePolicy {
   readonly description: string;
   readonly defaultEveryMs: number;
+  /** Missing published scopes owe a refresh on the retry clock, even after a successful partial publication. */
+  readonly requiredScopeVersions?: readonly string[];
   readonly phases?: readonly {
     readonly through: string;
     readonly everyMs: number;
@@ -376,8 +379,10 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "CENSUS_GEOGRAPHY",
     scope: "US:zcta-geography-overlaps",
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/census-geography-refresh.mts"] },
+    childTimeoutMs: 20 * 60_000,
     parserNormalizerVersion: "census-geography-overlaps/1",
-    cadence: { description: "monthly check for a new Census relationship-file vintage", defaultEveryMs: 30 * DAY },
+    cadence: { description: "monthly vintage check; missing election plans retry every six hours", defaultEveryMs: 30 * DAY,
+      requiredScopeVersions: CENSUS_GEO_REQUIRED_VERSIONS },
     retry: { afterMs: 6 * HOUR, description: "six hours after a failed attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "census-geography-relationships" },
     validationContract: CHECKS,
@@ -599,7 +604,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   {
     id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },
-    parserNormalizerVersion: "legiscan-bulk/2",
+    parserNormalizerVersion: "legiscan-bulk/4",
     cadence: { description: "weekly, following LegiScan's weekly dataset publication", defaultEveryMs: 7 * DAY },
     retry: { afterMs: HOUR, description: "one hour after a failed bulk pass; already published sessions remain live" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "legiscan-bills" },

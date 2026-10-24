@@ -29,6 +29,8 @@ import {
   type RoutineClockRecord,
 } from "../lib/civic-data/store.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import {
   attestPromotedVersion,
   clearPromotedReadModelCache,
@@ -183,7 +185,7 @@ test("the routine clock builds its candidate view in Postgres; the payload and r
 
 test("the clock view names exactly the fields the clock proves; widening it is a visible cost decision", () => {
   assert.deepEqual(ROUTINE_CLOCK_CANDIDATE_FIELDS, {
-    top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
+    top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport", "stateRetirement"],
     retrieval: ["retrievedAt", "sourceCheck"],
     normalization: ["parserVersion"],
   });
@@ -452,7 +454,7 @@ test("attestations parse whole or not at all", () => {
   assert.equal(promotedPayloadSha256({ b: 1, a: 2 }), promotedPayloadSha256({ a: 2, b: 1 }), "canonical, key order free");
 });
 
-async function promotedStore(value: RoutineCandidate): Promise<MemoryRoutineDataStore> {
+async function promotedStore(value: RoutineCandidate, promotedAt = "2026-09-08T12:01:00.000Z"): Promise<MemoryRoutineDataStore> {
   const store = new MemoryRoutineDataStore();
   await store.create({ ...promoted(value), state: "FETCHED", receipt: null, promotedVersion: null, lastKnownGoodVersion: null }, {
     candidateId: value.id,
@@ -464,7 +466,7 @@ async function promotedStore(value: RoutineCandidate): Promise<MemoryRoutineData
   await store.transition(value.id, "NORMALIZED", value.retrieval.retrievedAt, "persisted normalization");
   const receipt = receiptFor(value);
   await store.transition(value.id, "VALIDATED", value.retrieval.retrievedAt, "persisted validation", receipt);
-  await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
+  await store.promote(value.id, receipt, promotedAt);
   return store;
 }
 
@@ -775,4 +777,32 @@ test("a confirmation's runner receipt is proved from the pointer and its newest 
   assert.match(await durableRoutineRunnerReceiptIssue(stale, expected, counting, "SUCCESS") ?? "", /does not carry the reported confirmation/);
   // A malformed instant is a schema failure, never a guess.
   assert.equal(parseRoutineRunnerReceipt(line.replace(at, "not a time")).ok, false);
+});
+
+test("a state move keeps every reader fact but owns neither attempt nor success; the next real read owns the clock", async () => {
+  const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "voting-sites:NC")!;
+  const movedAt = "2026-10-23T23:05:00.000Z";
+  const readAt = "2026-10-24T07:00:00.000Z";
+  const move = candidate("state-move", { sourceId: task.sourceId, recordClass: task.recordClass, scope: task.scope, retrieval: { ...candidate("source").retrieval, retrievedAt: movedAt },
+    stateRetirement: { kind: "STATE_AUTHORITY_RETIREMENT", contractId: task.id, state: "NC", unitSha256: HASH,
+      origin: { versionId: "original", recordClass: task.recordClass, scope: task.scope, readModelHash: HASH, sourceAuthenticity: "SOURCE_AUTHENTICITY_PASS" },
+      priorVersionId: null, readModelHash: HASH } });
+  const store = await promotedStore(move, movedAt);
+  const before = await store.readPromotion(task.recordClass, task.scope);
+  assert.ok(before);
+  const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
+  assert.deepEqual(clock, {});
+  assert.equal(routineTaskDue(task, clock, Date.parse(movedAt)), true);
+  assert.equal(proofConsistentSuccess({ ...promoted(move), candidate: routineClockCandidateView(move) }, pointerFor(move)), undefined);
+  assert.deepEqual(await store.readPromotion(task.recordClass, task.scope), before, "clock reads preserve all reader facts and IDs");
+  const { stateRetirement: _move, ...live } = { ...move, id: "source-read", retrieval: { ...move.retrieval, retrievedAt: readAt } };
+  await store.create({ ...promoted(live), state: "FETCHED", receipt: null, promotedVersion: null, lastKnownGoodVersion: move.id },
+    { candidateId: live.id, sequence: 1, state: "FETCHED", at: readAt, detail: "Source read" });
+  await store.transition(live.id, "NORMALIZED", readAt, "Source normalized");
+  await store.transition(live.id, "VALIDATED", readAt, "Source validated", receiptFor(live));
+  await store.promote(live.id, receiptFor(live), readAt);
+  const checked = await store.clock(task.sourceId, task.recordClass, task.scope);
+  assert.equal(checked.lastAttemptedAt, readAt);
+  assert.equal(checked.lastSucceededObservedAt, readAt);
+  assert.equal(routineTaskDue(task, checked, Date.parse(readAt) + 300_000), false);
 });

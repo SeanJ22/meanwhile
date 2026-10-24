@@ -9,6 +9,13 @@ test("all-caps filed surnames case as names", () => {
   assert.equal(surnameDisplayCase("KUNIANSKY"), "Kuniansky");
 });
 
+test("given names and individual capitalized words are cased without changing filed short words", () => {
+  assert.equal(ballotCandidateDisplayName({ givenName: "JOHN Q.", familyName: "O'BRIEN Jr." }), "John Q. O'Brien Jr.");
+  assert.equal(ballotCandidateDisplayName({ givenName: "MARY ANNE", familyName: "SMITH-Jones III" }), "Mary Anne Smith-Jones III");
+  assert.equal(surnameDisplayCase("AL LI NG II III IV"), "AL LI NG II III IV");
+  assert.equal(surnameDisplayCase("McDonald SMITH"), "McDonald Smith");
+});
+
 test("key-only reader slices have no invented name, and given-name initials stay as filed", () => {
   assert.equal(ballotCandidateDisplayName({} as Parameters<typeof ballotCandidateDisplayName>[0]), "");
   for (const givenName of ["Derek S.K.", '"BJ"', "A."])

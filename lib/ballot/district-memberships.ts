@@ -1,4 +1,5 @@
 import type { BallotSet } from "./types.ts";
+import { canonicalCongressionalDivision } from "../ocd/fips.ts";
 import type { Provenance } from "../sources/types.ts";
 
 /** The official source places the entire member division in this electorate. */
@@ -29,7 +30,9 @@ export function divisionsWithDistrictMemberships(set: BallotSet, divisions: read
   for (let index = 0; index < pending.length; index++) {
     const id = pending[index];
     const state = /^(ocd-division\/country:us\/(?:state|district|territory):[a-z]{2})\//.exec(id)?.[1];
-    for (const next of [...(districts.get(id) ?? []), ...(state ? [state] : [])]) {
+    // A saved address may carry an older spelling of its House seat (nd/cd:0); ballots hold the canonical seat (nd/cd:at-large).
+    const seat = id.includes("/cd:") ? canonicalCongressionalDivision(id) : null;
+    for (const next of [...(districts.get(id) ?? []), ...(state ? [state] : []), ...(seat ? [seat] : [])]) {
       if (present.has(next)) continue;
       present.add(next);
       pending.push(next);

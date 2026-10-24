@@ -1,0 +1,259 @@
+{
+  "state": "LA",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.la.gov/elections-voting/contact-us",
+      "finalUrl": "https://www.sos.la.gov/elections-voting/contact-us",
+      "publisher": "Louisiana Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.la.gov/elections-voting/election-dates",
+      "finalUrl": "https://www.sos.la.gov/elections-voting/election-dates",
+      "publisher": "Louisiana Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.la.gov/elections-voting/polling-locations",
+      "finalUrl": "https://www.sos.la.gov/elections-voting/polling-locations",
+      "publisher": "Louisiana Secretary of State"
+    },
+    {
+      "requestedUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+      "finalUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+      "publisher": "Louisiana Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+          "finalUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+          "publisher": "Louisiana Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:43.736761+00:00",
+          "httpStatus": 200,
+          "rawHash": "46932c93359e639a473a0211a4fef7506db03097eb6b7426a7b94c5436884332",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.la.gov/elections-voting/contact-us",
+          "finalUrl": "https://www.sos.la.gov/elections-voting/contact-us",
+          "publisher": "Louisiana Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:08.048348+00:00",
+          "httpStatus": 200,
+          "rawHash": "73f5111c9634383eed680bbdbe45db16b756913556c35c6df5994028e1478851",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.la.gov/elections-voting/election-dates",
+          "finalUrl": "https://www.sos.la.gov/elections-voting/election-dates",
+          "publisher": "Louisiana Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:08.556116+00:00",
+          "httpStatus": 200,
+          "rawHash": "6d75f12da7325f1f7baa9ad67bc88ece66edba1f58bf875977e2bf16d9ef9123",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.la.gov/elections-voting/polling-locations",
+          "finalUrl": "https://www.sos.la.gov/elections-voting/polling-locations",
+          "publisher": "Louisiana Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:08.081604+00:00",
+          "httpStatus": 200,
+          "rawHash": "83dc6a60ef61319175a6251afd136645417e74da95afb77762ec150bd5361f74",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:2ca6efc2eea482cf4bb65e94c951966e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "ballot_lookup",
+            "text": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "quote": "View your sample ballot​",
+            "dates": [],
+            "url": "https://www.sos.la.gov/elections-voting/election-dates",
+            "navigationUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.556116+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:8e5e3f5ad3cb5289aeaa8e680e32e18e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "registration_deadline",
+            "text": "The deadline to register to vote in person, by mail, or at an OMV Office is October 5.",
+            "quote": "The deadline to register to vote in person, by mail, or at an OMV Office is October 5.",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://www.sos.la.gov/elections-voting/election-dates",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.556116+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:98f9242349f9e3caeed3cf578018b0aa",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "polling_lookup",
+            "text": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "quote": "to find your election day polling location as well as other election information, visit our voter portal .",
+            "dates": [],
+            "url": "https://www.sos.la.gov/elections-voting/polling-locations",
+            "navigationUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.081604+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:bd5dba648f58579acb9d32ada0f664c3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "The deadline to request an absentee ballot is October 30 by 4:30 p.m (other than military and overseas voters).",
+            "quote": "The deadline to request an absentee ballot is October 30 by 4:30 p.m (other than military and overseas voters).",
+            "dates": [
+              "2026-10-30"
+            ],
+            "url": "https://www.sos.la.gov/elections-voting/election-dates",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.556116+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:be4f7bcf0f366676fe7faaa1c8f5f60b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.la.gov/elections-voting/register-to-vote",
+            "quote": "Register to vote",
+            "dates": [],
+            "url": "https://www.sos.la.gov/elections-voting/election-dates",
+            "navigationUrl": "https://www.sos.la.gov/elections-voting/register-to-vote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.556116+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ce6bc41090840e8be6071d517db0bcdd",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "registration_lookup",
+            "text": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "quote": "Voter Portal: Search By Voter",
+            "dates": [],
+            "url": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "navigationUrl": "https://voterportal.sos.la.gov/Home/VoterLogin",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:43.736761+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:cfa740b4d814d60b2173828dc291d03e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "election_office",
+            "text": "Elections Division",
+            "quote": "Elections Division",
+            "dates": [],
+            "url": "https://www.sos.la.gov/elections-voting/contact-us",
+            "navigationUrl": "https://www.sos.la.gov/elections-voting",
+            "electionDate": "2026-11-03",
+            "phone": "225.922.0900",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:08.048348+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:e2fde248a7a75ccde78eac2bdd323bc6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "registration_deadline",
+            "text": "The deadline to register to vote through the GeauxVote Online Registration System is October 13.",
+            "quote": "The deadline to register to vote through the GeauxVote Online Registration System is October 13.",
+            "dates": [
+              "2026-10-13"
+            ],
+            "url": "https://www.sos.la.gov/elections-voting/election-dates",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.556116+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ecea6fc70107476129dee238cf880dd0",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "LA",
+            "divisionId": "ocd-division/country:us/state:la",
+            "fieldKind": "early_voting",
+            "text": "Early voting is October 20-27 (excluding Sunday, October 25) from 8:30 a.m.-6 p.m.",
+            "quote": "Early voting is October 20-27 (excluding Sunday, October 25) from 8:30 a.m.-6 p.m.",
+            "dates": [
+              "2026-10-20",
+              "2026-10-27"
+            ],
+            "url": "https://www.sos.la.gov/elections-voting/election-dates",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.556116+00:00",
+            "sourceOrg": "Louisiana Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

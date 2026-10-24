@@ -1,0 +1,2177 @@
+{
+  "productionRole": "readonly",
+  "productionWritePrivilege": false,
+  "productionEpaPromotionsBefore": 0,
+  "registrations": {
+    "DE": "PROMOTED",
+    "DC": "PROMOTED",
+    "FL": "PROMOTED",
+    "GA": "PROMOTED",
+    "HI": "PROMOTED",
+    "ID": "PROMOTED",
+    "IL": "PROMOTED",
+    "IN": "PROMOTED",
+    "IA": "PROMOTED",
+    "KS": "PROMOTED",
+    "KY": "PROMOTED",
+    "LA": "PROMOTED",
+    "ME": "PROMOTED",
+    "MD": "PROMOTED",
+    "MA": "PROMOTED",
+    "MI": "PROMOTED",
+    "MN": "PROMOTED",
+    "MS": "PROMOTED",
+    "MO": "PROMOTED",
+    "MT": "PROMOTED",
+    "NE": "PROMOTED",
+    "NV": "PROMOTED",
+    "NH": "PROMOTED",
+    "NJ": "PROMOTED",
+    "NM": "PROMOTED",
+    "NY": "PROMOTED",
+    "NC": "PROMOTED",
+    "ND": "PROMOTED",
+    "OH": "PROMOTED",
+    "OK": "PROMOTED",
+    "OR": "PROMOTED",
+    "PA": "PROMOTED",
+    "RI": "PROMOTED",
+    "SC": "PROMOTED",
+    "SD": "PROMOTED",
+    "TN": "PROMOTED",
+    "TX": "PROMOTED",
+    "UT": "PROMOTED",
+    "VT": "PROMOTED",
+    "VA": "PROMOTED",
+    "WA": "PROMOTED",
+    "WV": "PROMOTED",
+    "WI": "PROMOTED",
+    "WY": "PROMOTED",
+    "AS": "PROMOTED",
+    "GU": "PROMOTED",
+    "MP": "PROMOTED",
+    "PR": "PROMOTED",
+    "VI": "PROMOTED",
+    "AL": "PROMOTED",
+    "AK": "PROMOTED",
+    "AZ": "PROMOTED",
+    "AR": "PROMOTED",
+    "CA": "PROMOTED",
+    "CO": "PROMOTED",
+    "CT": "PROMOTED"
+  },
+  "runs": [
+    {
+      "label": "first scheduled run",
+      "elapsedMs": 1855573,
+      "requests": [
+        {
+          "status": 200,
+          "conditional": null
+        }
+      ],
+      "unchanged": false,
+      "promoted": true,
+      "confirmed": false,
+      "candidateState": "PROMOTED",
+      "versionId": "cv-c5131d4fcc5cb7d3a575d5d763375e22",
+      "typedReader": "PASS",
+      "gaps": [
+        {
+          "id": "epa-echo:110051568932",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051590177",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051482409",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051535647",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110011332502",
+          "state": "FL",
+          "reason": "FL: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051494726",
+          "state": "IL",
+          "reason": "IL: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051468960",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110020990178",
+          "state": "TX",
+          "reason": "TX: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051537798",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051460110",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110043673539",
+          "state": "WY",
+          "reason": "WY: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110020799457",
+          "state": "TN",
+          "reason": "TN: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110048570159",
+          "state": "MO",
+          "reason": "MO: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051778867",
+          "state": "UNRESOLVED",
+          "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110063920761",
+          "state": "KY",
+          "reason": "KY: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110051012603",
+          "state": "AK",
+          "reason": "AK: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        },
+        {
+          "id": "epa-echo:110041271058",
+          "state": "ME",
+          "reason": "ME: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+        }
+      ],
+      "partitions": 55806,
+      "published": 3229294,
+      "archiveKeys": 108,
+      "archiveDiskBytes": 445450916,
+      "states": [
+        {
+          "state": "AB",
+          "loaded": 27,
+          "joined": 0,
+          "unjoined": 27
+        },
+        {
+          "state": "AK",
+          "loaded": 15524,
+          "joined": 5395,
+          "unjoined": 10129,
+          "reader": {
+            "status": "PASS",
+            "zip": "30097",
+            "id": "epa-echo:110070064685",
+            "title": "UPS SUPPLY CHAIN SOLUTIONS - GADTH",
+            "pages": 1,
+            "ms": 505
+          }
+        },
+        {
+          "state": "AL",
+          "loaded": 58122,
+          "joined": 56745,
+          "unjoined": 1377,
+          "reader": {
+            "status": "PASS",
+            "zip": "26561",
+            "id": "epa-echo:110071062010",
+            "title": "PUBLIX SUPER MARKET #1213",
+            "pages": 1,
+            "ms": 538
+          }
+        },
+        {
+          "state": "AP",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "AR",
+          "loaded": 22403,
+          "joined": 19551,
+          "unjoined": 2852,
+          "reader": {
+            "status": "PASS",
+            "zip": "47240",
+            "id": "epa-echo:110071141667",
+            "title": "BOBBY ATCHLEY",
+            "pages": 1,
+            "ms": 397
+          }
+        },
+        {
+          "state": "AS",
+          "loaded": 231,
+          "joined": 231,
+          "unjoined": 0,
+          "reader": {
+            "status": "PASS",
+            "zip": "96799",
+            "id": "epa-echo:110071729677",
+            "title": "FORMER AUA FUEL FARM, AUA VILLAGE, AMERICAN SAMOA (FUDS PROJECT NO. H09AS000704)",
+            "pages": 1,
+            "ms": 380
+          }
+        },
+        {
+          "state": "AT",
+          "loaded": 4,
+          "joined": 0,
+          "unjoined": 4
+        },
+        {
+          "state": "AZ",
+          "loaded": 24352,
+          "joined": 21949,
+          "unjoined": 2403,
+          "reader": {
+            "status": "PASS",
+            "zip": "02766",
+            "id": "epa-echo:110072164013",
+            "title": "VALLEY FARMS BESS",
+            "pages": 1,
+            "ms": 346
+          }
+        },
+        {
+          "state": "BC",
+          "loaded": 28,
+          "joined": 0,
+          "unjoined": 28
+        },
+        {
+          "state": "CA",
+          "loaded": 690454,
+          "joined": 653040,
+          "unjoined": 37414,
+          "reader": {
+            "status": "PASS",
+            "zip": "01702",
+            "id": "epa-echo:110071115320",
+            "title": "CLARA LOPEZ",
+            "pages": 1,
+            "ms": 382
+          }
+        },
+        {
+          "state": "CN",
+          "loaded": 8,
+          "joined": 0,
+          "unjoined": 8
+        },
+        {
+          "state": "CO",
+          "loaded": 79856,
+          "joined": 70581,
+          "unjoined": 9275,
+          "reader": {
+            "status": "PASS",
+            "zip": "06349",
+            "id": "epa-echo:110070001039",
+            "title": "STONEGATE VILLAGE METROPOLITAN DISTRICT",
+            "pages": 1,
+            "ms": 363
+          }
+        },
+        {
+          "state": "CS",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "CT",
+          "loaded": 25152,
+          "joined": 0,
+          "unjoined": 25152,
+          "reader": {
+            "status": "PASS",
+            "zip": "00660",
+            "id": "epa-echo:110022872550",
+            "title": "PLAINFIELD TIRE AND REPAIR",
+            "pages": 1,
+            "ms": 345
+          }
+        },
+        {
+          "state": "CY",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "CZ",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "DC",
+          "loaded": 3954,
+          "joined": 0,
+          "unjoined": 3954,
+          "reader": {
+            "status": "PASS",
+            "zip": "12345",
+            "id": "epa-echo:110028209597",
+            "title": "ALLIED REALTY",
+            "pages": 1,
+            "ms": 324
+          }
+        },
+        {
+          "state": "DE",
+          "loaded": 4343,
+          "joined": 3701,
+          "unjoined": 642,
+          "reader": {
+            "status": "PASS",
+            "zip": "19002",
+            "id": "epa-echo:110070827428",
+            "title": "DOVER AIRCRAFT MAINTENANCE HANGAR",
+            "pages": 1,
+            "ms": 347
+          }
+        },
+        {
+          "state": "DM",
+          "loaded": 4,
+          "joined": 0,
+          "unjoined": 4
+        },
+        {
+          "state": "FJ",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "FL",
+          "loaded": 167579,
+          "joined": 145012,
+          "unjoined": 22567,
+          "reader": {
+            "status": "PASS",
+            "zip": "06002",
+            "id": "epa-echo:110043423612",
+            "title": "KAMAN AEROSTRUCTURES DIVISION",
+            "pages": 4,
+            "ms": 1470
+          }
+        },
+        {
+          "state": "FM",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "FR",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "GA",
+          "loaded": 173643,
+          "joined": 159652,
+          "unjoined": 13991,
+          "reader": {
+            "status": "PASS",
+            "zip": "12093",
+            "id": "epa-echo:110072194122",
+            "title": "PENDERGRASS STATION - LOT 15",
+            "pages": 1,
+            "ms": 421
+          }
+        },
+        {
+          "state": "GB",
+          "loaded": 6,
+          "joined": 0,
+          "unjoined": 6
+        },
+        {
+          "state": "GE",
+          "loaded": 366,
+          "joined": 0,
+          "unjoined": 366
+        },
+        {
+          "state": "GM",
+          "loaded": 71,
+          "joined": 0,
+          "unjoined": 71
+        },
+        {
+          "state": "GU",
+          "loaded": 799,
+          "joined": 0,
+          "unjoined": 799,
+          "reader": {
+            "status": "PASS",
+            "zip": "96540",
+            "id": "epa-echo:110071726902",
+            "title": "POLARIS POINT - CONSTRUCTION ACCESS ROAD",
+            "pages": 1,
+            "ms": 330
+          }
+        },
+        {
+          "state": "HI",
+          "loaded": 9915,
+          "joined": 3702,
+          "unjoined": 6213,
+          "reader": {
+            "status": "PASS",
+            "zip": "06793",
+            "id": "epa-echo:110020724983",
+            "title": "KEHALANI   C6/10",
+            "pages": 1,
+            "ms": 393
+          }
+        },
+        {
+          "state": "IA",
+          "loaded": 22725,
+          "joined": 19976,
+          "unjoined": 2749,
+          "reader": {
+            "status": "PASS",
+            "zip": "20207",
+            "id": "epa-echo:110028127293",
+            "title": "PTB 3 & 4",
+            "pages": 1,
+            "ms": 367
+          }
+        },
+        {
+          "state": "ID",
+          "loaded": 17208,
+          "joined": 15053,
+          "unjoined": 2155,
+          "reader": {
+            "status": "PASS",
+            "zip": "59404",
+            "id": "epa-echo:110067021975",
+            "title": "PACIFIC STEEL AND RECYCLING",
+            "pages": 1,
+            "ms": 359
+          }
+        },
+        {
+          "state": "IL",
+          "loaded": 108312,
+          "joined": 84260,
+          "unjoined": 24052,
+          "reader": {
+            "status": "PASS",
+            "zip": "11950",
+            "id": "epa-echo:110072001521",
+            "title": "TOMASO PARK",
+            "pages": 1,
+            "ms": 387
+          }
+        },
+        {
+          "state": "IN",
+          "loaded": 58345,
+          "joined": 48605,
+          "unjoined": 9740,
+          "reader": {
+            "status": "PASS",
+            "zip": "06037",
+            "id": "epa-echo:110051694653",
+            "title": "TOMZ CORPORATION",
+            "pages": 3,
+            "ms": 1345
+          }
+        },
+        {
+          "state": "JA",
+          "loaded": 7,
+          "joined": 0,
+          "unjoined": 7
+        },
+        {
+          "state": "KS",
+          "loaded": 43154,
+          "joined": 34753,
+          "unjoined": 8401,
+          "reader": {
+            "status": "PASS",
+            "zip": "01701",
+            "id": "epa-echo:110072122578",
+            "title": "MARSHALLS STORE# 1494",
+            "pages": 1,
+            "ms": 423
+          }
+        },
+        {
+          "state": "KY",
+          "loaded": 40618,
+          "joined": 31631,
+          "unjoined": 8987,
+          "reader": {
+            "status": "PASS",
+            "zip": "12233",
+            "id": "epa-echo:110059771867",
+            "title": "DOLLAR GENERAL STORE #9698",
+            "pages": 1,
+            "ms": 442
+          }
+        },
+        {
+          "state": "LA",
+          "loaded": 73528,
+          "joined": 54494,
+          "unjoined": 19034,
+          "reader": {
+            "status": "PASS",
+            "zip": "40117",
+            "id": "epa-echo:110062687926",
+            "title": "DRAINAGE PUMP STATION 5 (DPS-5)",
+            "pages": 1,
+            "ms": 368
+          }
+        },
+        {
+          "state": "MA",
+          "loaded": 51609,
+          "joined": 13953,
+          "unjoined": 37656,
+          "reader": {
+            "status": "PASS",
+            "zip": "01001",
+            "id": "epa-echo:110003501700",
+            "title": "SIMMONS COMPANY",
+            "pages": 1,
+            "ms": 341
+          }
+        },
+        {
+          "state": "MB",
+          "loaded": 8,
+          "joined": 0,
+          "unjoined": 8
+        },
+        {
+          "state": "MD",
+          "loaded": 38691,
+          "joined": 30758,
+          "unjoined": 7933,
+          "reader": {
+            "status": "PASS",
+            "zip": "01702",
+            "id": "epa-echo:110060237079",
+            "title": "STAPLES THE OFFICE SUPERSTORE EATS, INC #1560",
+            "pages": 5,
+            "ms": 2091
+          }
+        },
+        {
+          "state": "ME",
+          "loaded": 13127,
+          "joined": 9678,
+          "unjoined": 3449,
+          "reader": {
+            "status": "PASS",
+            "zip": "03079",
+            "id": "epa-echo:110031228437",
+            "title": "VINING MINING LLC",
+            "pages": 1,
+            "ms": 547
+          }
+        },
+        {
+          "state": "MH",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "MI",
+          "loaded": 66169,
+          "joined": 57475,
+          "unjoined": 8694,
+          "reader": {
+            "status": "PASS",
+            "zip": "18060",
+            "id": "epa-echo:110031288595",
+            "title": "MI DEPT/TRANSPORTATION",
+            "pages": 1,
+            "ms": 357
+          }
+        },
+        {
+          "state": "MN",
+          "loaded": 73105,
+          "joined": 60381,
+          "unjoined": 12724,
+          "reader": {
+            "status": "PASS",
+            "zip": "46517",
+            "id": "epa-echo:110063987226",
+            "title": "DANS BODY SHOP INC",
+            "pages": 6,
+            "ms": 2337
+          }
+        },
+        {
+          "state": "MO",
+          "loaded": 61865,
+          "joined": 56516,
+          "unjoined": 5349,
+          "reader": {
+            "status": "PASS",
+            "zip": "19355",
+            "id": "epa-echo:110072075910",
+            "title": "LEONARD WOOD FAMILY COMMUNITIES CABLE ST",
+            "pages": 1,
+            "ms": 342
+          }
+        },
+        {
+          "state": "MP",
+          "loaded": 395,
+          "joined": 169,
+          "unjoined": 226,
+          "reader": {
+            "status": "PASS",
+            "zip": "96950",
+            "id": "epa-echo:110013025074",
+            "title": "HAFADAI BEACH HOTEL",
+            "pages": 1,
+            "ms": 295
+          }
+        },
+        {
+          "state": "MS",
+          "loaded": 16743,
+          "joined": 14957,
+          "unjoined": 1786,
+          "reader": {
+            "status": "PASS",
+            "zip": "01950",
+            "id": "epa-echo:110071091552",
+            "title": "JOOYUN SHIN",
+            "pages": 5,
+            "ms": 1707
+          }
+        },
+        {
+          "state": "MT",
+          "loaded": 21402,
+          "joined": 18690,
+          "unjoined": 2712,
+          "reader": {
+            "status": "PASS",
+            "zip": "59001",
+            "id": "epa-echo:110070875759",
+            "title": "ABSAROKEE WASTEWATER SYSTEM IMPROVEMENTS",
+            "pages": 1,
+            "ms": 353
+          }
+        },
+        {
+          "state": "MW",
+          "loaded": 4,
+          "joined": 0,
+          "unjoined": 4
+        },
+        {
+          "state": "NB",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "NC",
+          "loaded": 67412,
+          "joined": 51736,
+          "unjoined": 15676,
+          "reader": {
+            "status": "PASS",
+            "zip": "15832",
+            "id": "epa-echo:110052701260",
+            "title": "BEAR DEN SMOKEHOUSE & TAVERN",
+            "pages": 1,
+            "ms": 351
+          }
+        },
+        {
+          "state": "ND",
+          "loaded": 11908,
+          "joined": 10131,
+          "unjoined": 1777,
+          "reader": {
+            "status": "PASS",
+            "zip": "07757",
+            "id": "epa-echo:110072163539",
+            "title": "THUNDER BUTTE PIPELINE LLC - THUNDER BUTTE PIPELINE PROJECT",
+            "pages": 1,
+            "ms": 443
+          }
+        },
+        {
+          "state": "NE",
+          "loaded": 14569,
+          "joined": 12968,
+          "unjoined": 1601,
+          "reader": {
+            "status": "PASS",
+            "zip": "46818",
+            "id": "epa-echo:110071962953",
+            "title": "GOLFVIEW LIFT STATION",
+            "pages": 6,
+            "ms": 2396
+          }
+        },
+        {
+          "state": "NH",
+          "loaded": 28401,
+          "joined": 27041,
+          "unjoined": 1360,
+          "reader": {
+            "status": "PASS",
+            "zip": "01111",
+            "id": "epa-echo:110055062211",
+            "title": "NH DOT BRIDGE MAINTENANCE",
+            "pages": 1,
+            "ms": 430
+          }
+        },
+        {
+          "state": "NJ",
+          "loaded": 74020,
+          "joined": 64261,
+          "unjoined": 9759,
+          "reader": {
+            "status": "PASS",
+            "zip": "00705",
+            "id": "epa-echo:110018880488",
+            "title": "B P PRODUCTS NORTH AMERICA INC #70235",
+            "pages": 1,
+            "ms": 329
+          }
+        },
+        {
+          "state": "NM",
+          "loaded": 27976,
+          "joined": 25858,
+          "unjoined": 2118,
+          "reader": {
+            "status": "PASS",
+            "zip": "28211",
+            "id": "epa-echo:110071277667",
+            "title": "TRACTOR SUPPLY COMPANY, GRANTS, NM",
+            "pages": 2,
+            "ms": 786
+          }
+        },
+        {
+          "state": "NN",
+          "loaded": 40,
+          "joined": 0,
+          "unjoined": 40
+        },
+        {
+          "state": "NV",
+          "loaded": 12535,
+          "joined": 11491,
+          "unjoined": 1044,
+          "reader": {
+            "status": "PASS",
+            "zip": "14480",
+            "id": "epa-echo:110054087224",
+            "title": "WESTERN MINI MART",
+            "pages": 1,
+            "ms": 435
+          }
+        },
+        {
+          "state": "NY",
+          "loaded": 160767,
+          "joined": 85618,
+          "unjoined": 75149,
+          "reader": {
+            "status": "PASS",
+            "zip": "00840",
+            "id": "epa-echo:110038389188",
+            "title": "KARIM GAS STATION",
+            "pages": 1,
+            "ms": 364
+          }
+        },
+        {
+          "state": "OH",
+          "loaded": 63611,
+          "joined": 53781,
+          "unjoined": 9830,
+          "reader": {
+            "status": "PASS",
+            "zip": "14423",
+            "id": "epa-echo:110037617291",
+            "title": "HUBBARD ELECTRIC GENERATING STATION (0278030771)",
+            "pages": 1,
+            "ms": 355
+          }
+        },
+        {
+          "state": "OK",
+          "loaded": 35651,
+          "joined": 32091,
+          "unjoined": 3560,
+          "reader": {
+            "status": "PASS",
+            "zip": "70036",
+            "id": "epa-echo:110064011439",
+            "title": "FAMILY DOLLAR # 10759",
+            "pages": 1,
+            "ms": 367
+          }
+        },
+        {
+          "state": "ON",
+          "loaded": 65,
+          "joined": 0,
+          "unjoined": 65
+        },
+        {
+          "state": "OR",
+          "loaded": 25116,
+          "joined": 22394,
+          "unjoined": 2722,
+          "reader": {
+            "status": "PASS",
+            "zip": "07446",
+            "id": "epa-echo:110022324233",
+            "title": "ROBERT ROMINE D/B/A CRAZY HORSE TRACTORS",
+            "pages": 3,
+            "ms": 1096
+          }
+        },
+        {
+          "state": "PA",
+          "loaded": 100464,
+          "joined": 84636,
+          "unjoined": 15828,
+          "reader": {
+            "status": "PASS",
+            "zip": "01020",
+            "id": "epa-echo:110070030733",
+            "title": "XPO LOGISTICS FREIGHT, INC. - XSX",
+            "pages": 5,
+            "ms": 1854
+          }
+        },
+        {
+          "state": "PQ",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "PR",
+          "loaded": 10135,
+          "joined": 9610,
+          "unjoined": 525,
+          "reader": {
+            "status": "PASS",
+            "zip": "00601",
+            "id": "epa-echo:110052483273",
+            "title": "ASOCIACION ACUEDUCTO REVENTON - REVENTON",
+            "pages": 1,
+            "ms": 420
+          }
+        },
+        {
+          "state": "QC",
+          "loaded": 38,
+          "joined": 0,
+          "unjoined": 38
+        },
+        {
+          "state": "RI",
+          "loaded": 10278,
+          "joined": 0,
+          "unjoined": 10278,
+          "reader": {
+            "status": "PASS",
+            "zip": "02090",
+            "id": "epa-echo:110007823472",
+            "title": "PEP BOYS NO 447",
+            "pages": 3,
+            "ms": 1149
+          }
+        },
+        {
+          "state": "SC",
+          "loaded": 36588,
+          "joined": 32582,
+          "unjoined": 4006,
+          "reader": {
+            "status": "PASS",
+            "zip": "04401",
+            "id": "epa-echo:110070083496",
+            "title": "BLYTHE PORTABLE PLANT",
+            "pages": 8,
+            "ms": 3153
+          }
+        },
+        {
+          "state": "SD",
+          "loaded": 8664,
+          "joined": 7701,
+          "unjoined": 963,
+          "reader": {
+            "status": "PASS",
+            "zip": "50316",
+            "id": "epa-echo:110062708244",
+            "title": "TRI-STATE PAVING - OMG MIDWEST INC",
+            "pages": 2,
+            "ms": 769
+          }
+        },
+        {
+          "state": "SK",
+          "loaded": 5,
+          "joined": 0,
+          "unjoined": 5
+        },
+        {
+          "state": "SN",
+          "loaded": 3,
+          "joined": 0,
+          "unjoined": 3
+        },
+        {
+          "state": "SW",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "TN",
+          "loaded": 48261,
+          "joined": 39168,
+          "unjoined": 9093,
+          "reader": {
+            "status": "PASS",
+            "zip": "02109",
+            "id": "epa-echo:110007845760",
+            "title": "SCA SERVICES OF JACKSON",
+            "pages": 2,
+            "ms": 756
+          }
+        },
+        {
+          "state": "TT",
+          "loaded": 10,
+          "joined": 0,
+          "unjoined": 10
+        },
+        {
+          "state": "TX",
+          "loaded": 171749,
+          "joined": 164266,
+          "unjoined": 7483,
+          "reader": {
+            "status": "PASS",
+            "zip": "13838",
+            "id": "epa-echo:110070567210",
+            "title": "SOUTHTON LAKE SUBDIVISION",
+            "pages": 2,
+            "ms": 872
+          }
+        },
+        {
+          "state": "UM",
+          "loaded": 7,
+          "joined": 0,
+          "unjoined": 7
+        },
+        {
+          "state": "UNRESOLVED",
+          "loaded": 62200,
+          "joined": 0,
+          "unjoined": 62200
+        },
+        {
+          "state": "UT",
+          "loaded": 48739,
+          "joined": 47716,
+          "unjoined": 1023,
+          "reader": {
+            "status": "PASS",
+            "zip": "11001",
+            "id": "epa-echo:110012927208",
+            "title": "WHITEROCKS",
+            "pages": 2,
+            "ms": 986
+          }
+        },
+        {
+          "state": "VA",
+          "loaded": 49168,
+          "joined": 31450,
+          "unjoined": 17718,
+          "reader": {
+            "status": "PASS",
+            "zip": "03805",
+            "id": "epa-echo:110005245065",
+            "title": "PEP BOYS AUTO",
+            "pages": 1,
+            "ms": 343
+          }
+        },
+        {
+          "state": "VI",
+          "loaded": 1498,
+          "joined": 0,
+          "unjoined": 1498,
+          "reader": {
+            "status": "PASS",
+            "zip": "00801",
+            "id": "epa-echo:110001915385",
+            "title": "DEVCON INTERNATIONAL SUBBASE",
+            "pages": 1,
+            "ms": 397
+          }
+        },
+        {
+          "state": "VT",
+          "loaded": 13088,
+          "joined": 10586,
+          "unjoined": 2502,
+          "reader": {
+            "status": "PASS",
+            "zip": "02561",
+            "id": "epa-echo:110070869847",
+            "title": "POWNAL TOWN HALL",
+            "pages": 1,
+            "ms": 403
+          }
+        },
+        {
+          "state": "WA",
+          "loaded": 46849,
+          "joined": 42087,
+          "unjoined": 4762,
+          "reader": {
+            "status": "PASS",
+            "zip": "13691",
+            "id": "epa-echo:110070379781",
+            "title": "ENEL TWIN FALLS",
+            "pages": 1,
+            "ms": 333
+          }
+        },
+        {
+          "state": "WI",
+          "loaded": 57392,
+          "joined": 47204,
+          "unjoined": 10188,
+          "reader": {
+            "status": "PASS",
+            "zip": "01604",
+            "id": "epa-echo:110071221199",
+            "title": "CHIPPEWA FALLS INDUSTRIES",
+            "pages": 6,
+            "ms": 2015
+          }
+        },
+        {
+          "state": "WV",
+          "loaded": 46420,
+          "joined": 43349,
+          "unjoined": 3071,
+          "reader": {
+            "status": "PASS",
+            "zip": "00694",
+            "id": "epa-echo:110067632182",
+            "title": "TINA GUNNOE",
+            "pages": 1,
+            "ms": 410
+          }
+        },
+        {
+          "state": "WY",
+          "loaded": 11288,
+          "joined": 10130,
+          "unjoined": 1158,
+          "reader": {
+            "status": "PASS",
+            "zip": "28234",
+            "id": "epa-echo:110033187799",
+            "title": "SOUTH FORK MOUNTAIN RESORT",
+            "pages": 1,
+            "ms": 326
+          }
+        },
+        {
+          "state": "XF",
+          "loaded": 415,
+          "joined": 0,
+          "unjoined": 415
+        },
+        {
+          "state": "XH",
+          "loaded": 12,
+          "joined": 0,
+          "unjoined": 12
+        },
+        {
+          "state": "XI",
+          "loaded": 3,
+          "joined": 0,
+          "unjoined": 3
+        },
+        {
+          "state": "XX",
+          "loaded": 78,
+          "joined": 0,
+          "unjoined": 78
+        }
+      ],
+      "readerPass": 56,
+      "readerFail": []
+    },
+    {
+      "label": "next scheduled run",
+      "elapsedMs": 16657,
+      "requests": [
+        {
+          "status": 304,
+          "conditional": "\"1a8c158f-65e17bbb60e5b\""
+        }
+      ],
+      "unchanged": true,
+      "promoted": true,
+      "confirmed": true,
+      "candidateState": "PROMOTED",
+      "versionId": "cv-c5131d4fcc5cb7d3a575d5d763375e22",
+      "typedReader": "PASS",
+      "gaps": [],
+      "partitions": 55806,
+      "published": 3229294,
+      "archiveKeys": 108,
+      "archiveDiskBytes": 445450916,
+      "states": [
+        {
+          "state": "AB",
+          "loaded": 27,
+          "joined": 0,
+          "unjoined": 27
+        },
+        {
+          "state": "AK",
+          "loaded": 15524,
+          "joined": 5395,
+          "unjoined": 10129,
+          "reader": {
+            "status": "PASS",
+            "zip": "30097",
+            "id": "epa-echo:110070064685",
+            "title": "UPS SUPPLY CHAIN SOLUTIONS - GADTH",
+            "pages": 1,
+            "ms": 417
+          }
+        },
+        {
+          "state": "AL",
+          "loaded": 58122,
+          "joined": 56745,
+          "unjoined": 1377,
+          "reader": {
+            "status": "PASS",
+            "zip": "26561",
+            "id": "epa-echo:110071062010",
+            "title": "PUBLIX SUPER MARKET #1213",
+            "pages": 1,
+            "ms": 421
+          }
+        },
+        {
+          "state": "AP",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "AR",
+          "loaded": 22403,
+          "joined": 19551,
+          "unjoined": 2852,
+          "reader": {
+            "status": "PASS",
+            "zip": "47240",
+            "id": "epa-echo:110071141667",
+            "title": "BOBBY ATCHLEY",
+            "pages": 1,
+            "ms": 392
+          }
+        },
+        {
+          "state": "AS",
+          "loaded": 231,
+          "joined": 231,
+          "unjoined": 0,
+          "reader": {
+            "status": "PASS",
+            "zip": "96799",
+            "id": "epa-echo:110071729677",
+            "title": "FORMER AUA FUEL FARM, AUA VILLAGE, AMERICAN SAMOA (FUDS PROJECT NO. H09AS000704)",
+            "pages": 1,
+            "ms": 344
+          }
+        },
+        {
+          "state": "AT",
+          "loaded": 4,
+          "joined": 0,
+          "unjoined": 4
+        },
+        {
+          "state": "AZ",
+          "loaded": 24352,
+          "joined": 21949,
+          "unjoined": 2403,
+          "reader": {
+            "status": "PASS",
+            "zip": "02766",
+            "id": "epa-echo:110072164013",
+            "title": "VALLEY FARMS BESS",
+            "pages": 1,
+            "ms": 351
+          }
+        },
+        {
+          "state": "BC",
+          "loaded": 28,
+          "joined": 0,
+          "unjoined": 28
+        },
+        {
+          "state": "CA",
+          "loaded": 690454,
+          "joined": 653040,
+          "unjoined": 37414,
+          "reader": {
+            "status": "PASS",
+            "zip": "01702",
+            "id": "epa-echo:110071115320",
+            "title": "CLARA LOPEZ",
+            "pages": 1,
+            "ms": 410
+          }
+        },
+        {
+          "state": "CN",
+          "loaded": 8,
+          "joined": 0,
+          "unjoined": 8
+        },
+        {
+          "state": "CO",
+          "loaded": 79856,
+          "joined": 70581,
+          "unjoined": 9275,
+          "reader": {
+            "status": "PASS",
+            "zip": "06349",
+            "id": "epa-echo:110070001039",
+            "title": "STONEGATE VILLAGE METROPOLITAN DISTRICT",
+            "pages": 1,
+            "ms": 411
+          }
+        },
+        {
+          "state": "CS",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "CT",
+          "loaded": 25152,
+          "joined": 0,
+          "unjoined": 25152,
+          "reader": {
+            "status": "PASS",
+            "zip": "00660",
+            "id": "epa-echo:110022872550",
+            "title": "PLAINFIELD TIRE AND REPAIR",
+            "pages": 1,
+            "ms": 344
+          }
+        },
+        {
+          "state": "CY",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "CZ",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "DC",
+          "loaded": 3954,
+          "joined": 0,
+          "unjoined": 3954,
+          "reader": {
+            "status": "PASS",
+            "zip": "12345",
+            "id": "epa-echo:110028209597",
+            "title": "ALLIED REALTY",
+            "pages": 1,
+            "ms": 357
+          }
+        },
+        {
+          "state": "DE",
+          "loaded": 4343,
+          "joined": 3701,
+          "unjoined": 642,
+          "reader": {
+            "status": "PASS",
+            "zip": "19002",
+            "id": "epa-echo:110070827428",
+            "title": "DOVER AIRCRAFT MAINTENANCE HANGAR",
+            "pages": 1,
+            "ms": 373
+          }
+        },
+        {
+          "state": "DM",
+          "loaded": 4,
+          "joined": 0,
+          "unjoined": 4
+        },
+        {
+          "state": "FJ",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "FL",
+          "loaded": 167579,
+          "joined": 145012,
+          "unjoined": 22567,
+          "reader": {
+            "status": "PASS",
+            "zip": "06002",
+            "id": "epa-echo:110043423612",
+            "title": "KAMAN AEROSTRUCTURES DIVISION",
+            "pages": 4,
+            "ms": 1611
+          }
+        },
+        {
+          "state": "FM",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "FR",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "GA",
+          "loaded": 173643,
+          "joined": 159652,
+          "unjoined": 13991,
+          "reader": {
+            "status": "PASS",
+            "zip": "12093",
+            "id": "epa-echo:110072194122",
+            "title": "PENDERGRASS STATION - LOT 15",
+            "pages": 1,
+            "ms": 446
+          }
+        },
+        {
+          "state": "GB",
+          "loaded": 6,
+          "joined": 0,
+          "unjoined": 6
+        },
+        {
+          "state": "GE",
+          "loaded": 366,
+          "joined": 0,
+          "unjoined": 366
+        },
+        {
+          "state": "GM",
+          "loaded": 71,
+          "joined": 0,
+          "unjoined": 71
+        },
+        {
+          "state": "GU",
+          "loaded": 799,
+          "joined": 0,
+          "unjoined": 799,
+          "reader": {
+            "status": "PASS",
+            "zip": "96540",
+            "id": "epa-echo:110071726902",
+            "title": "POLARIS POINT - CONSTRUCTION ACCESS ROAD",
+            "pages": 1,
+            "ms": 488
+          }
+        },
+        {
+          "state": "HI",
+          "loaded": 9915,
+          "joined": 3702,
+          "unjoined": 6213,
+          "reader": {
+            "status": "PASS",
+            "zip": "06793",
+            "id": "epa-echo:110020724983",
+            "title": "KEHALANI   C6/10",
+            "pages": 1,
+            "ms": 639
+          }
+        },
+        {
+          "state": "IA",
+          "loaded": 22725,
+          "joined": 19976,
+          "unjoined": 2749,
+          "reader": {
+            "status": "PASS",
+            "zip": "20207",
+            "id": "epa-echo:110028127293",
+            "title": "PTB 3 & 4",
+            "pages": 1,
+            "ms": 445
+          }
+        },
+        {
+          "state": "ID",
+          "loaded": 17208,
+          "joined": 15053,
+          "unjoined": 2155,
+          "reader": {
+            "status": "PASS",
+            "zip": "59404",
+            "id": "epa-echo:110067021975",
+            "title": "PACIFIC STEEL AND RECYCLING",
+            "pages": 1,
+            "ms": 388
+          }
+        },
+        {
+          "state": "IL",
+          "loaded": 108312,
+          "joined": 84260,
+          "unjoined": 24052,
+          "reader": {
+            "status": "PASS",
+            "zip": "11950",
+            "id": "epa-echo:110072001521",
+            "title": "TOMASO PARK",
+            "pages": 1,
+            "ms": 410
+          }
+        },
+        {
+          "state": "IN",
+          "loaded": 58345,
+          "joined": 48605,
+          "unjoined": 9740,
+          "reader": {
+            "status": "PASS",
+            "zip": "06037",
+            "id": "epa-echo:110051694653",
+            "title": "TOMZ CORPORATION",
+            "pages": 3,
+            "ms": 1899
+          }
+        },
+        {
+          "state": "JA",
+          "loaded": 7,
+          "joined": 0,
+          "unjoined": 7
+        },
+        {
+          "state": "KS",
+          "loaded": 43154,
+          "joined": 34753,
+          "unjoined": 8401,
+          "reader": {
+            "status": "PASS",
+            "zip": "01701",
+            "id": "epa-echo:110072122578",
+            "title": "MARSHALLS STORE# 1494",
+            "pages": 1,
+            "ms": 640
+          }
+        },
+        {
+          "state": "KY",
+          "loaded": 40618,
+          "joined": 31631,
+          "unjoined": 8987,
+          "reader": {
+            "status": "PASS",
+            "zip": "12233",
+            "id": "epa-echo:110059771867",
+            "title": "DOLLAR GENERAL STORE #9698",
+            "pages": 1,
+            "ms": 522
+          }
+        },
+        {
+          "state": "LA",
+          "loaded": 73528,
+          "joined": 54494,
+          "unjoined": 19034,
+          "reader": {
+            "status": "PASS",
+            "zip": "40117",
+            "id": "epa-echo:110062687926",
+            "title": "DRAINAGE PUMP STATION 5 (DPS-5)",
+            "pages": 1,
+            "ms": 447
+          }
+        },
+        {
+          "state": "MA",
+          "loaded": 51609,
+          "joined": 13953,
+          "unjoined": 37656,
+          "reader": {
+            "status": "PASS",
+            "zip": "01001",
+            "id": "epa-echo:110003501700",
+            "title": "SIMMONS COMPANY",
+            "pages": 1,
+            "ms": 415
+          }
+        },
+        {
+          "state": "MB",
+          "loaded": 8,
+          "joined": 0,
+          "unjoined": 8
+        },
+        {
+          "state": "MD",
+          "loaded": 38691,
+          "joined": 30758,
+          "unjoined": 7933,
+          "reader": {
+            "status": "PASS",
+            "zip": "01702",
+            "id": "epa-echo:110060237079",
+            "title": "STAPLES THE OFFICE SUPERSTORE EATS, INC #1560",
+            "pages": 5,
+            "ms": 2110
+          }
+        },
+        {
+          "state": "ME",
+          "loaded": 13127,
+          "joined": 9678,
+          "unjoined": 3449,
+          "reader": {
+            "status": "PASS",
+            "zip": "03079",
+            "id": "epa-echo:110031228437",
+            "title": "VINING MINING LLC",
+            "pages": 1,
+            "ms": 458
+          }
+        },
+        {
+          "state": "MH",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "MI",
+          "loaded": 66169,
+          "joined": 57475,
+          "unjoined": 8694,
+          "reader": {
+            "status": "PASS",
+            "zip": "18060",
+            "id": "epa-echo:110031288595",
+            "title": "MI DEPT/TRANSPORTATION",
+            "pages": 1,
+            "ms": 379
+          }
+        },
+        {
+          "state": "MN",
+          "loaded": 73105,
+          "joined": 60381,
+          "unjoined": 12724,
+          "reader": {
+            "status": "PASS",
+            "zip": "46517",
+            "id": "epa-echo:110063987226",
+            "title": "DANS BODY SHOP INC",
+            "pages": 6,
+            "ms": 2141
+          }
+        },
+        {
+          "state": "MO",
+          "loaded": 61865,
+          "joined": 56516,
+          "unjoined": 5349,
+          "reader": {
+            "status": "PASS",
+            "zip": "19355",
+            "id": "epa-echo:110072075910",
+            "title": "LEONARD WOOD FAMILY COMMUNITIES CABLE ST",
+            "pages": 1,
+            "ms": 386
+          }
+        },
+        {
+          "state": "MP",
+          "loaded": 395,
+          "joined": 169,
+          "unjoined": 226,
+          "reader": {
+            "status": "PASS",
+            "zip": "96950",
+            "id": "epa-echo:110013025074",
+            "title": "HAFADAI BEACH HOTEL",
+            "pages": 1,
+            "ms": 312
+          }
+        },
+        {
+          "state": "MS",
+          "loaded": 16743,
+          "joined": 14957,
+          "unjoined": 1786,
+          "reader": {
+            "status": "PASS",
+            "zip": "01950",
+            "id": "epa-echo:110071091552",
+            "title": "JOOYUN SHIN",
+            "pages": 5,
+            "ms": 2115
+          }
+        },
+        {
+          "state": "MT",
+          "loaded": 21402,
+          "joined": 18690,
+          "unjoined": 2712,
+          "reader": {
+            "status": "PASS",
+            "zip": "59001",
+            "id": "epa-echo:110070875759",
+            "title": "ABSAROKEE WASTEWATER SYSTEM IMPROVEMENTS",
+            "pages": 1,
+            "ms": 368
+          }
+        },
+        {
+          "state": "MW",
+          "loaded": 4,
+          "joined": 0,
+          "unjoined": 4
+        },
+        {
+          "state": "NB",
+          "loaded": 2,
+          "joined": 0,
+          "unjoined": 2
+        },
+        {
+          "state": "NC",
+          "loaded": 67412,
+          "joined": 51736,
+          "unjoined": 15676,
+          "reader": {
+            "status": "PASS",
+            "zip": "15832",
+            "id": "epa-echo:110052701260",
+            "title": "BEAR DEN SMOKEHOUSE & TAVERN",
+            "pages": 1,
+            "ms": 386
+          }
+        },
+        {
+          "state": "ND",
+          "loaded": 11908,
+          "joined": 10131,
+          "unjoined": 1777,
+          "reader": {
+            "status": "PASS",
+            "zip": "07757",
+            "id": "epa-echo:110072163539",
+            "title": "THUNDER BUTTE PIPELINE LLC - THUNDER BUTTE PIPELINE PROJECT",
+            "pages": 1,
+            "ms": 399
+          }
+        },
+        {
+          "state": "NE",
+          "loaded": 14569,
+          "joined": 12968,
+          "unjoined": 1601,
+          "reader": {
+            "status": "PASS",
+            "zip": "46818",
+            "id": "epa-echo:110071962953",
+            "title": "GOLFVIEW LIFT STATION",
+            "pages": 6,
+            "ms": 2505
+          }
+        },
+        {
+          "state": "NH",
+          "loaded": 28401,
+          "joined": 27041,
+          "unjoined": 1360,
+          "reader": {
+            "status": "PASS",
+            "zip": "01111",
+            "id": "epa-echo:110055062211",
+            "title": "NH DOT BRIDGE MAINTENANCE",
+            "pages": 1,
+            "ms": 493
+          }
+        },
+        {
+          "state": "NJ",
+          "loaded": 74020,
+          "joined": 64261,
+          "unjoined": 9759,
+          "reader": {
+            "status": "PASS",
+            "zip": "00705",
+            "id": "epa-echo:110018880488",
+            "title": "B P PRODUCTS NORTH AMERICA INC #70235",
+            "pages": 1,
+            "ms": 358
+          }
+        },
+        {
+          "state": "NM",
+          "loaded": 27976,
+          "joined": 25858,
+          "unjoined": 2118,
+          "reader": {
+            "status": "PASS",
+            "zip": "28211",
+            "id": "epa-echo:110071277667",
+            "title": "TRACTOR SUPPLY COMPANY, GRANTS, NM",
+            "pages": 2,
+            "ms": 903
+          }
+        },
+        {
+          "state": "NN",
+          "loaded": 40,
+          "joined": 0,
+          "unjoined": 40
+        },
+        {
+          "state": "NV",
+          "loaded": 12535,
+          "joined": 11491,
+          "unjoined": 1044,
+          "reader": {
+            "status": "PASS",
+            "zip": "14480",
+            "id": "epa-echo:110054087224",
+            "title": "WESTERN MINI MART",
+            "pages": 1,
+            "ms": 460
+          }
+        },
+        {
+          "state": "NY",
+          "loaded": 160767,
+          "joined": 85618,
+          "unjoined": 75149,
+          "reader": {
+            "status": "PASS",
+            "zip": "00840",
+            "id": "epa-echo:110038389188",
+            "title": "KARIM GAS STATION",
+            "pages": 1,
+            "ms": 384
+          }
+        },
+        {
+          "state": "OH",
+          "loaded": 63611,
+          "joined": 53781,
+          "unjoined": 9830,
+          "reader": {
+            "status": "PASS",
+            "zip": "14423",
+            "id": "epa-echo:110037617291",
+            "title": "HUBBARD ELECTRIC GENERATING STATION (0278030771)",
+            "pages": 1,
+            "ms": 459
+          }
+        },
+        {
+          "state": "OK",
+          "loaded": 35651,
+          "joined": 32091,
+          "unjoined": 3560,
+          "reader": {
+            "status": "PASS",
+            "zip": "70036",
+            "id": "epa-echo:110064011439",
+            "title": "FAMILY DOLLAR # 10759",
+            "pages": 1,
+            "ms": 396
+          }
+        },
+        {
+          "state": "ON",
+          "loaded": 65,
+          "joined": 0,
+          "unjoined": 65
+        },
+        {
+          "state": "OR",
+          "loaded": 25116,
+          "joined": 22394,
+          "unjoined": 2722,
+          "reader": {
+            "status": "PASS",
+            "zip": "07446",
+            "id": "epa-echo:110022324233",
+            "title": "ROBERT ROMINE D/B/A CRAZY HORSE TRACTORS",
+            "pages": 3,
+            "ms": 1302
+          }
+        },
+        {
+          "state": "PA",
+          "loaded": 100464,
+          "joined": 84636,
+          "unjoined": 15828,
+          "reader": {
+            "status": "PASS",
+            "zip": "01020",
+            "id": "epa-echo:110070030733",
+            "title": "XPO LOGISTICS FREIGHT, INC. - XSX",
+            "pages": 5,
+            "ms": 2378
+          }
+        },
+        {
+          "state": "PQ",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "PR",
+          "loaded": 10135,
+          "joined": 9610,
+          "unjoined": 525,
+          "reader": {
+            "status": "PASS",
+            "zip": "00601",
+            "id": "epa-echo:110052483273",
+            "title": "ASOCIACION ACUEDUCTO REVENTON - REVENTON",
+            "pages": 1,
+            "ms": 365
+          }
+        },
+        {
+          "state": "QC",
+          "loaded": 38,
+          "joined": 0,
+          "unjoined": 38
+        },
+        {
+          "state": "RI",
+          "loaded": 10278,
+          "joined": 0,
+          "unjoined": 10278,
+          "reader": {
+            "status": "PASS",
+            "zip": "02090",
+            "id": "epa-echo:110007823472",
+            "title": "PEP BOYS NO 447",
+            "pages": 3,
+            "ms": 1221
+          }
+        },
+        {
+          "state": "SC",
+          "loaded": 36588,
+          "joined": 32582,
+          "unjoined": 4006,
+          "reader": {
+            "status": "PASS",
+            "zip": "04401",
+            "id": "epa-echo:110070083496",
+            "title": "BLYTHE PORTABLE PLANT",
+            "pages": 8,
+            "ms": 3341
+          }
+        },
+        {
+          "state": "SD",
+          "loaded": 8664,
+          "joined": 7701,
+          "unjoined": 963,
+          "reader": {
+            "status": "PASS",
+            "zip": "50316",
+            "id": "epa-echo:110062708244",
+            "title": "TRI-STATE PAVING - OMG MIDWEST INC",
+            "pages": 2,
+            "ms": 762
+          }
+        },
+        {
+          "state": "SK",
+          "loaded": 5,
+          "joined": 0,
+          "unjoined": 5
+        },
+        {
+          "state": "SN",
+          "loaded": 3,
+          "joined": 0,
+          "unjoined": 3
+        },
+        {
+          "state": "SW",
+          "loaded": 1,
+          "joined": 0,
+          "unjoined": 1
+        },
+        {
+          "state": "TN",
+          "loaded": 48261,
+          "joined": 39168,
+          "unjoined": 9093,
+          "reader": {
+            "status": "PASS",
+            "zip": "02109",
+            "id": "epa-echo:110007845760",
+            "title": "SCA SERVICES OF JACKSON",
+            "pages": 2,
+            "ms": 852
+          }
+        },
+        {
+          "state": "TT",
+          "loaded": 10,
+          "joined": 0,
+          "unjoined": 10
+        },
+        {
+          "state": "TX",
+          "loaded": 171749,
+          "joined": 164266,
+          "unjoined": 7483,
+          "reader": {
+            "status": "PASS",
+            "zip": "13838",
+            "id": "epa-echo:110070567210",
+            "title": "SOUTHTON LAKE SUBDIVISION",
+            "pages": 2,
+            "ms": 912
+          }
+        },
+        {
+          "state": "UM",
+          "loaded": 7,
+          "joined": 0,
+          "unjoined": 7
+        },
+        {
+          "state": "UNRESOLVED",
+          "loaded": 62200,
+          "joined": 0,
+          "unjoined": 62200
+        },
+        {
+          "state": "UT",
+          "loaded": 48739,
+          "joined": 47716,
+          "unjoined": 1023,
+          "reader": {
+            "status": "PASS",
+            "zip": "11001",
+            "id": "epa-echo:110012927208",
+            "title": "WHITEROCKS",
+            "pages": 2,
+            "ms": 1019
+          }
+        },
+        {
+          "state": "VA",
+          "loaded": 49168,
+          "joined": 31450,
+          "unjoined": 17718,
+          "reader": {
+            "status": "PASS",
+            "zip": "03805",
+            "id": "epa-echo:110005245065",
+            "title": "PEP BOYS AUTO",
+            "pages": 1,
+            "ms": 480
+          }
+        },
+        {
+          "state": "VI",
+          "loaded": 1498,
+          "joined": 0,
+          "unjoined": 1498,
+          "reader": {
+            "status": "PASS",
+            "zip": "00801",
+            "id": "epa-echo:110001915385",
+            "title": "DEVCON INTERNATIONAL SUBBASE",
+            "pages": 1,
+            "ms": 427
+          }
+        },
+        {
+          "state": "VT",
+          "loaded": 13088,
+          "joined": 10586,
+          "unjoined": 2502,
+          "reader": {
+            "status": "PASS",
+            "zip": "02561",
+            "id": "epa-echo:110070869847",
+            "title": "POWNAL TOWN HALL",
+            "pages": 1,
+            "ms": 447
+          }
+        },
+        {
+          "state": "WA",
+          "loaded": 46849,
+          "joined": 42087,
+          "unjoined": 4762,
+          "reader": {
+            "status": "PASS",
+            "zip": "13691",
+            "id": "epa-echo:110070379781",
+            "title": "ENEL TWIN FALLS",
+            "pages": 1,
+            "ms": 382
+          }
+        },
+        {
+          "state": "WI",
+          "loaded": 57392,
+          "joined": 47204,
+          "unjoined": 10188,
+          "reader": {
+            "status": "PASS",
+            "zip": "01604",
+            "id": "epa-echo:110071221199",
+            "title": "CHIPPEWA FALLS INDUSTRIES",
+            "pages": 6,
+            "ms": 2167
+          }
+        },
+        {
+          "state": "WV",
+          "loaded": 46420,
+          "joined": 43349,
+          "unjoined": 3071,
+          "reader": {
+            "status": "PASS",
+            "zip": "00694",
+            "id": "epa-echo:110067632182",
+            "title": "TINA GUNNOE",
+            "pages": 1,
+            "ms": 423
+          }
+        },
+        {
+          "state": "WY",
+          "loaded": 11288,
+          "joined": 10130,
+          "unjoined": 1158,
+          "reader": {
+            "status": "PASS",
+            "zip": "28234",
+            "id": "epa-echo:110033187799",
+            "title": "SOUTH FORK MOUNTAIN RESORT",
+            "pages": 1,
+            "ms": 382
+          }
+        },
+        {
+          "state": "XF",
+          "loaded": 415,
+          "joined": 0,
+          "unjoined": 415
+        },
+        {
+          "state": "XH",
+          "loaded": 12,
+          "joined": 0,
+          "unjoined": 12
+        },
+        {
+          "state": "XI",
+          "loaded": 3,
+          "joined": 0,
+          "unjoined": 3
+        },
+        {
+          "state": "XX",
+          "loaded": 78,
+          "joined": 0,
+          "unjoined": 78
+        }
+      ],
+      "readerPass": 56,
+      "readerFail": []
+    }
+  ]
+}

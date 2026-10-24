@@ -34,6 +34,11 @@ function auditStateLocation(fact: FederalMoneyFact): string[] {
     ? federalMoneyStateDivision(fact.state) : null;
   return state ? [state] : [];
 }
+function disasterStateLocation(fact: FederalMoneyFact): string[] {
+  const state = fact.source === "openfema" && fact.kind === "DISASTER" && fact.details.reportedState === fact.state
+    ? federalMoneyStateDivision(fact.state) : null;
+  return state ? [state] : [];
+}
 function append<T>(index: Map<string, Set<T>>, name: string, value: T) {
   const values = index.get(name) ?? new Set<T>();
   values.add(value); index.set(name, values);
@@ -91,12 +96,14 @@ export function joinFederalMoneyFacts(facts: readonly FederalMoneyFact[], input:
       ...(!ambiguous ? auditReports.flatMap(report => report.divisionIds) : [])]);
     const geographicDivisions = ["GRANT", "CONTRACT", "LOAN", "DISASTER"].includes(fact.kind)
       ? fact.geography.flatMap(geo => [...(geography.get(key(geo.type, geo.geoid)) ?? [])]) : [];
-    const divisionIds = unique([...recipientDivisions, ...geographicDivisions, ...auditStateLocation(fact)]);
+    const divisionIds = unique([...recipientDivisions, ...geographicDivisions, ...auditStateLocation(fact), ...disasterStateLocation(fact)]);
     const joined = bodyIds.length > 0 || divisionIds.length > 0;
     return { ...fact, bodyIds, divisionIds, joinStatus: joined ? "JOINED" : "UNJOINED",
       joinReason: ambiguous ? "Recipient native ids match more than one held government; recipient binding remains open."
         : joined ? bodyIds.length ? "Recipient matched by source-native government id or UEI crosswalk. Geographic reach is separate."
           : fact.source === "federal-audit-clearinghouse" ? "Auditee location matched the state named by its official audit report; recipient government remains unjoined."
+          : fact.source === "openfema" ? geographicDivisions.length ? "Disaster county matched an exact Census GEOID; the publisher's state association is separate."
+            : "Disaster record associated with the state named by OpenFEMA; county association remains open."
           : "Geographic reach matched an exact Census GEOID; recipient government remains unjoined."
         : "No exact source-native government id, UEI crosswalk, or covered Census GEOID is held; row retained." };
   });

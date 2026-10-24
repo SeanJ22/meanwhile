@@ -107,6 +107,24 @@ districts across 14 states (AZ, CA, CO, FL, IA, MI, NJ, NY, OH, PA, TX, VA, WA,
 WI); the shipped types cover their congressional, county, metro/micro, and both
 state-legislative-chamber overlaps.
 
+### BL-01 recovery (October 23, 2026)
+
+The old five-scope publication did not include the election plans. The standing
+contract now owes a refresh whenever any of `cd:120`, `sldu:2026`, or `sldl:2026`
+is absent, with one attempt per six-hour retry window. Successful partial
+publications cannot postpone that work for a month. A refresh requires all three
+before promotion; the ordinary monthly cadence resumes once they are held.
+
+Real national replay requires GRFN **VINTAGE 90** for current plan metadata;
+VINTAGE 70 describes historical districts. GRFC **CURSTATE**, when present,
+establishes the current state: South Dakota includes a former Nebraska tabulation
+block. A territory with current congressional rows can legitimately lack LSY;
+a state cannot. Decode large block files in chunks and stream canonical hashes
+rather than holding a whole state as both bytes and text or duplicating national
+payloads during promotion. The full PostgreSQL publication measured 115.75 seconds
+and 1,213.58 MiB in its unchanged 1,258 MiB slot. See [BL-01](./bl-01.md) for
+all-state source-to-page replay, retry/tomorrow evidence and source gaps.
+
 ### Upcoming-election CD boundaries (cd:120) — Census source found (grf/2026)
 
 Current-office vs upcoming-election boundaries are **distinguished, never

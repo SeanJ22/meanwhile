@@ -948,9 +948,9 @@ export function pgAppendOnlyRepository<T>(
 // Alternate retries and new findings. Each branch is bounded before ranking, and a poison finding's own retry clock cannot pin a page.
 export const BOX_DUE_SQL = `WITH due AS (
     (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL
-      AND ((value #>> '{waitingFor,slots}') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+      AND ((CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END) <> coalesce($1::jsonb ->> (CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END), $1::jsonb ->> 'other') OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
-      AND (coalesce(value #>> '{waitingFor,slots}', '') <> $1 OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+      AND (coalesce(CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END, '') <> coalesce($1::jsonb ->> (CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END), $1::jsonb ->> 'other') OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 ORDER BY id LIMIT $3)
     UNION ALL (SELECT 1, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL ORDER BY id LIMIT $3)
   ) SELECT id, value FROM (SELECT *, row_number() OVER (PARTITION BY rank ORDER BY id) AS turn FROM due) fair
@@ -966,7 +966,7 @@ function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxReposit
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
-    due: async ({ slots, now, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+    due: async ({ slots, now, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [JSON.stringify(slots), now, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
     waitingFor: async (reason, limit, subjectIds) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit)), subjectIds ?? null]) as Record<string, unknown>[]),
     waitingUnder: async (reason, limit, governmentIds) => (await Promise.all([...new Set(governmentIds)].map(async id =>
       rows(await run("boxWaitingUnder", "PAGE", BOX_UNDER_SQL, [reason, Math.max(0, Math.trunc(limit)), id]) as Record<string, unknown>[])))).flat(),
@@ -1532,45 +1532,51 @@ export async function readCoordinatorWorkItems(repos: ControlPlaneRepositories, 
   return pgCoordinatorWorkItems(sql, exaAgentLane, repos.planningState);
 }
 
+/**
+ * The work a planner owes, decided once from the few work items that carry a plan (13,163 of 619,189 on 2026-10-24).
+ * Release 95 re-decided the whole candidate set for every page of 100 and joined it from all 219,512 pending route
+ * tasks: the system planner's read took 37 pages of 7 to 11 s each, five minutes, and timed out under load.
+ */
 export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, state?: string): Promise<WorkItem[]> {
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
-  const selected: WorkItem[] = [];
-  let after = "";
-  for (;;) {
-    const rows = await run("coordinatorItems", "PAGE", `WITH candidates AS (
-      SELECT id FROM cp_work_items_history WHERE ${state ? "cp_control_state(value)=$2 AND" : ""} value->'autonomousPlan' IS NOT NULL
-        AND value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
-        AND (jsonb_array_length(coalesce(value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0
-          OR jsonb_array_length(coalesce(value #> '{autonomousPlan,sources}', '[]'::jsonb)) > 0)
-      UNION SELECT value #>> '{workItemId}' FROM cp_route_tasks
-        WHERE value->>'state' IN ('PENDING','CLAIMED','RECLAIMABLE','POLICY_DENIED')
-        ${state ? "AND EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=cp_route_tasks.value->>'workItemId' AND cp_control_state(w.value)=$2)" : ""}
-      UNION SELECT latest.id FROM (
-        SELECT DISTINCT pending.record #>> '{subjectId}' AS subject FROM cp_log_scout_results pending
-        WHERE ${state ? "cp_control_state(pending.record)=$2 AND" : ""} pending.record->>'outcome' = 'NEEDS_ADAPTER' AND pending.record->'refusal' = 'null'::jsonb
-          AND NOT EXISTS (SELECT 1 FROM cp_log_scout_results newer
-            WHERE newer.record #>> '{subjectId}' = pending.record #>> '{subjectId}'
-              AND newer.record->>'recordClass' = pending.record->>'recordClass'
-              AND (newer.record->>'recordedAt', newer.log_key, newer.position) > (pending.record->>'recordedAt', pending.log_key, pending.position))
-      ) owed CROSS JOIN LATERAL (
+  const ids = (await run("coordinatorItems", "PAGE", `WITH owed AS (
+      SELECT DISTINCT pending.record #>> '{subjectId}' AS subject FROM cp_log_scout_results pending
+      WHERE ${state ? "cp_control_state(pending.record)=$1 AND" : ""} pending.record->>'outcome' = 'NEEDS_ADAPTER' AND pending.record->'refusal' = 'null'::jsonb
+        AND NOT EXISTS (SELECT 1 FROM cp_log_scout_results newer
+          WHERE newer.record #>> '{subjectId}' = pending.record #>> '{subjectId}'
+            AND newer.record->>'recordClass' = pending.record->>'recordClass'
+            AND (newer.record->>'recordedAt', newer.log_key, newer.position) > (pending.record->>'recordedAt', pending.log_key, pending.position))
+    ), adapter AS (
+      SELECT latest.id FROM owed CROSS JOIN LATERAL (
         SELECT id FROM cp_work_items_history WHERE value #>> '{subject}' = owed.subject
           AND value->'autonomousPlan' IS NOT NULL
         ORDER BY CASE WHEN value #>> '{autonomousPlan,capability}' = 'hunt-packet' THEN 0 ELSE 1 END,
           value->>'createdAt' DESC, id DESC LIMIT 1
       ) latest
-      ${exaAgentLane ? `UNION SELECT w.id FROM cp_work_items_history w
-        WHERE w.value #>> '{autonomousPlan,capability}' = 'hunt-packet'
-          AND EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:packet')
-          AND NOT EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:exa-agent')` : ""}
-    ) SELECT w.id, w.value FROM candidates c JOIN cp_work_items_history w ON w.id=c.id
-      WHERE w.id > $1 ${state ? "AND cp_control_state(w.value)=$2" : ""} AND w.value->'autonomousPlan' IS NOT NULL
-        ${state ? `AND (w.value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet' OR EXISTS(
-          SELECT 1 FROM cp_occurrences_history own JOIN cp_obligations o ON o.id=own.value->>'obligationId'
-          WHERE own.value #>> '{workItemId}'=w.id AND o.value->>'active'='true'))` : ""} ORDER BY w.id LIMIT 100`, state ? [after,state] : [after]) as Record<string, unknown>[];
+    ), planned AS MATERIALIZED (
+      SELECT id, value FROM cp_work_items_history WHERE value->'autonomousPlan' IS NOT NULL
+    ) SELECT DISTINCT w.id FROM planned w
+    WHERE ${state ? "cp_control_state(w.value)=$1 AND" : ""} (
+      (w.value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
+        AND (jsonb_array_length(coalesce(w.value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0
+          OR jsonb_array_length(coalesce(w.value #> '{autonomousPlan,sources}', '[]'::jsonb)) > 0))
+      OR EXISTS (SELECT 1 FROM cp_route_tasks t WHERE t.value #>> '{workItemId}'=w.id
+        AND t.value->>'state' IN ('PENDING','CLAIMED','RECLAIMABLE','POLICY_DENIED'))
+      OR w.id IN (SELECT id FROM adapter)
+      ${exaAgentLane ? `OR (w.value #>> '{autonomousPlan,capability}' = 'hunt-packet'
+        AND EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:packet')
+        AND NOT EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:exa-agent'))` : ""})
+    ${state ? `AND CASE WHEN w.value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet' THEN true ELSE EXISTS(
+      SELECT 1 FROM cp_occurrences_history own JOIN cp_obligations o ON o.id=own.value->>'obligationId'
+      WHERE own.value #>> '{workItemId}'=w.id AND o.value->>'active'='true' OFFSET 0) END` : ""}
+    ORDER BY w.id`, state ? [state] : []) as Record<string, unknown>[]).map(row => String(row.id));
+  const selected: WorkItem[] = [];
+  for (let start = 0; start < ids.length; start += 100) {
+    const rows = await run("coordinatorItemValues", "PAGE", `SELECT id, value FROM cp_work_items_history
+      WHERE id = ANY($1::text[]) AND value->'autonomousPlan' IS NOT NULL ORDER BY id`, [ids.slice(start, start + 100)]) as Record<string, unknown>[];
     selected.push(...rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${String(row.id)}`)));
-    if (rows.length < 100) return selected;
-    after = String(rows.at(-1)!.id);
   }
+  return selected;
 }
 
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {

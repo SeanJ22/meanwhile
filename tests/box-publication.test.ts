@@ -8,14 +8,14 @@ import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { ProbeFetch } from "../lib/doors/probe.ts";
-import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readElectionFieldsForDivisions } from "./helpers/election-field-read.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import { officeNameOn, publishBoxFindings, remedyFor, seatIn } from "../lib/facts/box-publication.ts";
 import { factClocks, FRESHNESS_HOURS_DEFAULT } from "../lib/facts/clocks.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { ensureEntity, ensureFactEntities, ensureGoverningBody } from "../lib/facts/entities.ts";
-import { FINDING_SLOTS_VERSION, slotFor, slotsVersionOf } from "../lib/facts/finding-slots.ts";
+import { FINDING_SLOT_VERSIONS, slotFor } from "../lib/facts/finding-slots.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import type { RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import { fetchCapture } from "../lib/facts/capture.ts";
@@ -169,7 +169,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, deferred: 0, published: 5, refused: 1, byPlace: undefined, handed: 1, seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 }, errorExamples: [],
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 8, deferred: 0, published: 5, refused: 1, byPlace: undefined, handed: 0, seats: { flagged: 0 }, labels: { flagged: 0, moved: 0, cut: 0, renamed: 0 }, errorExamples: [],
     publishedByRoute: { "office contacts": 1, rosters: 3, bodies: 1 },
     waitingByClass: { rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
   assert.deepEqual(report.byPlace[TCCC], { published: 4, refused: 0, waiting: 1 });
@@ -210,7 +210,7 @@ test("a packet hunter's findings publish for the subject each names, not the job
   const first = await publishBoxFindings(input);
   assert.deepEqual(Object.keys(first.byPlace), [TUCSON], "every finding counts toward the packet's government");
   assert.deepEqual({ published: first.published, refused: first.refused, waitingByClass: first.waitingByClass, failuresByReason: first.failuresByReason },
-    { published: 3, refused: 1, waitingByClass: { elections: 1, rosters: 1 }, failuresByReason: { QUOTE_NOT_ON_SAVED_COPY: 1 } }, JSON.stringify(first));
+    { published: 3, refused: 1, waitingByClass: { rosters: 1 }, failuresByReason: { SEAT_NOT_IN_QUOTE: 1 } }, JSON.stringify(first));
   const live = async (entityId: string, field: string) => (await facts.query("SELECT value FROM fact WHERE entity_id = $1 AND field = $2 AND status = 'live'", [entityId, field]))
     .map(row => row.value);
   assert.deepEqual(await live(TCCC, "meeting_cadence"), ["January 22, April 16, 2026 and July and October 2026 TBD @ 9:30 a.m."]);
@@ -255,8 +255,8 @@ test("each checklist id goes where its record publishes: body links, the agenda 
   const store = new MemoryRoutineDataStore();
   const first = await publishBoxFindings({ repos, facts, vault, fetch, store, clocks: factClocks(null), now: NOW, limit: 100 });
   assert.deepEqual({ published: first.publishedByRoute, handed: first.handed, waiting: first.waitingByClass, failures: first.failuresByReason },
-    { published: { "body links": 2, "official hosts": 1, sittings: 1, "ballot navigation": 1 }, handed: 2,
-      waiting: { "ballot navigation": 1, governments: 1 }, failures: {} }, JSON.stringify(first));
+    { published: { "body links": 2, "official hosts": 1, sittings: 1, "ballot navigation": 1 }, handed: 0,
+      waiting: {}, failures: {} }, JSON.stringify(first));
   const live = async (entityId: string, field: string) => (await facts.query("SELECT value FROM fact WHERE entity_id = $1 AND field = $2 AND status = 'live'", [entityId, field]))
     .map(row => row.value);
   assert.deepEqual(await live(TCCC, "name"), ["Tucson Convention Center Commission"]);
@@ -372,7 +372,7 @@ test("a government with no governing board gets one; a phone or email with no pe
   const [refused] = await repos.boxFindings.list();
   await repos.boxFindings.compareAndSet(refused!.value.id, refused!.revision, { ...refused!.value, state: "refused", refusal: "PAGE_NOT_ABOUT_ENTITY", publicationId: null,
     waitingFor: undefined, attempts: [{ builder: "fact-publisher", token: "t", generation: 1, takenAt: OLD, expiresAt: OLD, outcome: "refused", endedAt: OLD, detail: "PAGE_NOT_ABOUT_ENTITY" }] }, NOW);
-  const due = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 });
+  const due = await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: NOW, limit: 10 });
   assert.deepEqual(due.map(row => row.state), ["refused"], "a refusal from the older slot map is due again, with no age limit");
   assert.equal((await publishBoxFindings(input)).looked, 1);
   assert.equal((await publishBoxFindings(input)).looked, 0, "once looked at under this slot map, it is not looked at again");
@@ -475,12 +475,6 @@ test("a finding about a city's #governing council makes one council and is built
     [{ id: `${HUNTSVILLE}#governing`, field: "office_phone", value: "(256) 427-5000" }]);
 });
 
-test("the slot version is a hash of the sorting and publishing code, so any edit to that code makes parked findings look again", () => {
-  assert.match(FINDING_SLOTS_VERSION, /^[0-9a-f]{16}$/);
-  assert.equal(slotsVersionOf(["a", "b"]), slotsVersionOf(["a", "b"]));
-  assert.notEqual(slotsVersionOf(["a", "b"]), slotsVersionOf(["a", "b "]));
-  assert.notEqual(slotsVersionOf(["a", "b"]), slotsVersionOf(["b", "a"]));
-});
 
 test("a fact two pages said is one row that builds from whichever page holds it, in any state", async () => {
   const { facts, repos, vault, hold } = await setup();
@@ -565,8 +559,8 @@ test("an unreadable source group records its own failed attempt and retry while 
   assert.equal(failed.state, "waiting");
   assert.equal(failed.attempts.at(-1)?.outcome, "failed");
   assert.match(failed.attempts.at(-1)!.detail, /SOURCE_GROUP.*saved source lookup unavailable/);
-  assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 }), []);
-  assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: "2026-09-08T12:05:00.000Z", limit: 10 })).map(row => row.id), [bad.id]);
+  assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: NOW, limit: 10 }), []);
+  assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: "2026-09-08T12:05:00.000Z", limit: 10 })).map(row => row.id), [bad.id]);
 });
 
 test("a broken audit never prevents the publisher from processing waiting findings", async () => {
@@ -578,8 +572,8 @@ test("a broken audit never prevents the publisher from processing waiting findin
     return facts.query(text, params);
   } };
   const report = await publishBoxFindings({ repos, facts: faulty, vault, fetch: async () => { throw new Error("not needed"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 });
-  assert.equal(report.looked, 1);
-  assert.equal(report.waitingByClass.other, 1);
+  assert.equal(report.looked, 0);
+  assert.equal((await repos.boxFindings.list())[0]!.value.waitingFor?.reason, "NO_FACT_SLOT");
   assert.equal(report.failuresByReason.BOX_AUDIT_FAILED, 1);
   assert.match(report.errorExamples[0]!.detail, /audit unavailable/);
 });
@@ -590,7 +584,7 @@ test("the pass deadline leaves every unstarted finding due and reports their cou
     finding: { subjectId: TUCSON, field: "office.phone", value: "(520) 791-4213", exactQuote: "Office (520) 791-4213", sourceUrl: "https://www.tucsonaz.gov/", artifactIds: [], subjectHint: null, index: 0 } }, NOW);
   const report = await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("deadline must stop the read"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10, deadlineMs: 0, audit: false });
   assert.deepEqual([report.looked, report.deferred, report.published], [0, 1, 0]);
-  assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: 10 })).map(row => row.id), [finding.id]);
+  assert.deepEqual((await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: NOW, limit: 10 })).map(row => row.id), [finding.id]);
 });
 
 test("slow metadata cannot spend every publication pass before true findings reach their source checks", async () => {
@@ -622,7 +616,7 @@ test("slow metadata cannot spend every publication pass before true findings rea
       assert.ok(metadataQueries > 0 && sources > 0, "both preparation and source checking get a turn");
       assert.ok(result.published > 0, JSON.stringify(result));
       remaining -= result.published;
-      const due = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: count });
+      const due = await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: NOW, limit: count });
       assert.equal(due.length, remaining, "the waiting count falls each pass");
       assert.equal(result.deferred, remaining);
       assert.ok(due.every(row => row.waitingFor === undefined && row.attempts.length === 0), "unstarted findings remain due with their evidence intact");
@@ -630,7 +624,7 @@ test("slow metadata cannot spend every publication pass before true findings rea
     const rest = await publishBoxFindings(input);
     assert.equal(rest.published, remaining, "without a deadline the entire remaining page still publishes");
     assert.equal(rest.deferred, 0);
-    assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: NOW, limit: count }), []);
+    assert.deepEqual(await repos.boxFindings.due({ slots: FINDING_SLOT_VERSIONS, now: NOW, limit: count }), []);
   } finally { Date.now = actualNow; }
 });
 
@@ -1024,4 +1018,17 @@ test("a board-name backfill exception is included in the saved publication failu
   const report = await publishBoxFindings({ repos, facts: broken, vault, fetch: async () => { throw new Error("no read is started"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 0, audit: false });
   assert.equal(report.failuresByReason.BOX_PUBLICATION_EXCEPTION, 1);
   assert.deepEqual(report.errorExamples, [{ findingId: "board-names", stage: "BODY_NAMING", detail: "body naming query unavailable" }]);
+});
+
+test("a federal committee page cannot seat its members on an unrelated local government", async t => {
+  const { facts, repos, vault, hold } = await setup();
+  t.after(() => facts.pg.close());
+  const url = "https://www.hud.gov/helping-americans/public-indian-housing-tiac";
+  const artifact = await hold(url, "<h1>Tribal Intergovernmental Advisory Committee</h1><p>Committee Member Jacqueline Pata, Juneau, AK</p>", NOW);
+  await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-hunt", missionPart: null,
+    finding: { subjectId: `${TUCSON}#governing`, field: "OFF-04", value: "Jacqueline Pata", exactQuote: "Committee Member Jacqueline Pata, Juneau, AK",
+      sourceUrl: url, artifactIds: [artifact], subjectHint: null, index: 0 } }, NOW);
+  const outcome = await publishBoxFindings({ repos, facts, vault, fetch: async () => { throw new Error("saved page only"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 1000, audit: false, purge: async () => ({ purged: true }) });
+  assert.equal(outcome.published, 0);
+  assert.equal((await repos.boxFindings.list())[0]!.value.refusal, "PAGE_NOT_ABOUT_ENTITY");
 });

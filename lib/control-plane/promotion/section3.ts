@@ -1,13 +1,7 @@
-/**
- * A fact passes when its value appears on a saved source page from the right place, captured inside
- * that kind of fact's freshness window, and code confirms the value is on the page. Evidence captured
- * by any job counts. A second, independent source is needed only for judgment calls. A record goes
- * live when its minimum facts pass; every other fact attaches when it passes.
- */
 import { DEFAULT_SOURCE_POLICY, hostSourceKind, type SourceKind, type SourcePolicy } from "./source-kinds.ts";
 export type { SourceKind, SourcePolicy } from "./source-kinds.ts";
 import { personNameField, personRecordBlocks } from "../workers/record-block.ts";
-import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
+import { isOfficialSource, type GovernmentWebsiteDelegation, type OfficialLinkingPage } from "../../civic-data/source-authority.ts";
 
 export interface Section3Page {
   readonly url: string;
@@ -15,6 +9,7 @@ export interface Section3Page {
   readonly retrievedAt: string;
   /** An official page that links this one, when this one is not `.gov`. */
   readonly linkingPage?: OfficialLinkingPage | null;
+  readonly websiteDelegation?: GovernmentWebsiteDelegation | null;
   /** The current Admin settings, supplied by the publisher, never by the model. */
   readonly sourcePolicy?: SourcePolicy;
   /** Canonical candidate identity from the work item; the page must name all three. */
@@ -41,11 +36,6 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
   BALLOT_CONTEST: ["election", "office"],
 };
 
-/**
- * Category labels the reader of a page assigns (a body's type, a link's kind,
- * a YES/NO/UNKNOWN rule). They describe a verified record rather than quote the
- * page, so they ride with it; each reader door still checks its allowed values.
- */
 export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state", "sourceKind"];
 
 /** Judgment calls: the only fields that need a second, independent source. */
@@ -62,11 +52,11 @@ export function needsSecondSource(contract: { readonly recordClass: string; read
 }
 
 /** A saved official page among `pages` that links `url` — how a non-.gov page earns official standing. */
-export function linkingPageFrom(url: string, pages: readonly { readonly canonicalUrl: string; readonly text: string }[]): OfficialLinkingPage | null {
+export function linkingPageFrom(url: string, pages: readonly { readonly canonicalUrl: string; readonly text: string; readonly linkingPage?: OfficialLinkingPage | null }[]): OfficialLinkingPage | null {
   for (const page of pages) {
     if (page.canonicalUrl === url) continue;
-    const candidate = { url: page.canonicalUrl, html: page.text };
-    if (isOfficialSource(page.canonicalUrl) && isOfficialSource(url, candidate)) return candidate;
+    const candidate = { url: page.canonicalUrl, html: page.text, ...(page.linkingPage ? { linkingPage: page.linkingPage } : {}) };
+    if (isOfficialSource(page.canonicalUrl, page.linkingPage) && isOfficialSource(url, candidate)) return candidate;
   }
   return null;
 }
@@ -102,8 +92,16 @@ export function pageWords(text: string): string {
     .trim();
 }
 
+let normalizedPage: { page: WeakRef<Section3Page>; text: string; words: string } | null = null;
+function wordsOf(page: Section3Page): string {
+  if (normalizedPage?.page.deref() === page && normalizedPage.text === page.text) return normalizedPage.words;
+  const words = pageWords(page.text);
+  normalizedPage = { page: new WeakRef(page), text: page.text, words };
+  return words;
+}
+
 /** Code confirms the value is on the page: its visible text, or an attribute such as an href or tel: link. */
-export function valueOnPage(value: unknown, text: string, words: string = pageWords(text)): boolean {
+export function valueOnPage(value: unknown, text: string, words: string = pageWords(text), pageUrl?: string): boolean {
   if (typeof value === "number" || typeof value === "boolean") return words.includes(String(value));
   if (typeof value !== "string" || !value.trim()) return false;
   const wanted = value.replace(/\s+/g, " ").toLowerCase().trim();
@@ -111,11 +109,12 @@ export function valueOnPage(value: unknown, text: string, words: string = pageWo
   const raw = text.replace(/&amp;/g, "&");
   if (raw.includes(value) || raw.includes(value.replace(/&/g, "&amp;"))) return true;
   if (/^https?:\/\//i.test(value)) {
-    // A link the page writes relative to itself ("/Home/…") is the same link.
-    // String parsing only: this also runs in the isolated Validator realm, which has no URL global.
-    const path = value.replace(/^https?:\/\/[^/?#]+/i, "").split("#")[0];
-    if (path.length > 1 && (raw.includes(`"${path}"`) || raw.includes(`'${path}'`))) return true;
+    const address = value.toLowerCase().replace(/^https?:\/\/(?:www\.)?/, "").replace(/\/$/, "");
+    const printed = address.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\//g, "/\\s*");
+    if (new RegExp(`(?<![\\w./:-])(?:www\\.)?${printed}/?(?![\\w/?:#-]|\\.[a-z0-9])`, "i").test(words)) return true;
   }
+  if (/^https?:\/\//i.test(value) && pageUrl &&
+      (sourceLinkAddress(value, pageUrl) === sourceLinkAddress(pageUrl) || pageLinksTo({ url: pageUrl, text }, value))) return true;
   const digits = value.replace(/\D/g, "");
   return digits.length >= 10 && digits.length <= 11 && /^[\d\s().+-]+$/.test(value) && (raw.replace(/\D/g, " ").includes(digits) || raw.includes(`tel:${digits}`));
 }
@@ -126,15 +125,38 @@ export interface Section3PageVerdict {
   readonly reason: string | null;
 }
 
-/** Resolve only actual links to saved source pages. No page-text mention counts as a citation. */
-export function pageLinksTo(page: Section3Page, url: string): boolean {
-  const clean = (value: string) => value.replace(/&amp;/g, "&").split("#")[0];
+// The isolated Validator has no URL global; source links resolve against their actual page.
+function sourceLinkAddress(value: string, base?: string): string | null {
+  let link = value.trim().replace(/&amp;/gi, "&").replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)));
+  const parent = base ? /^(https?):\/\/([^/?#]+)([^?#]*)([?#].*)?$/i.exec(base) : null;
+  if (link.startsWith("//")) link = `${parent?.[1] ?? "https"}:${link}`;
+  if (!/^https?:\/\//i.test(link)) {
+    if (!parent || /^[a-z][a-z0-9+.-]*:/i.test(link)) return null;
+    const path = parent[3] || "/";
+    const resolved = link.startsWith("/") ? link : link.startsWith("#") ? `${path}${parent[4]?.split("#")[0] ?? ""}${link}`
+      : link.startsWith("?") ? `${path}${link}` : `${path.replace(/[^/]*$/, "")}${link}`;
+    link = `${parent[1]}://${parent[2]}${resolved}`;
+  }
+  const match = /^(https?):\/\/([^/?#]+)([^?#]*)([?#].*)?$/i.exec(link);
+  if (!match || /\s|@/.test(match[2])) return null;
+  const segments: string[] = [];
+  const path = match[3] || "/";
+  for (const segment of path.split("/")) {
+    if (segment === ".") continue;
+    if (segment === "..") { if (segments.length > 1) segments.pop(); continue; }
+    segments.push(segment);
+  }
+  let normalized = segments.join("/") || "/";
+  if (/\/(?:\.|\.\.)$/.test(path) && !normalized.endsWith("/")) normalized += "/";
+  return `${match[1].toLowerCase()}://${match[2].toLowerCase()}${normalized}${match[4] ?? ""}`;
+}
+
+export function pageLinksTo(page: Pick<Section3Page, "url" | "text"> & Partial<Section3Page>, url: string): boolean {
+  const target = sourceLinkAddress(url, page.url);
+  if (!target) return false;
   for (const match of page.text.matchAll(/\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
-    let href = clean(match[1] ?? match[2] ?? match[3]);
-    if (href.startsWith("//")) href = "https:" + href;
-    else if (href.startsWith("/")) href = (/^https?:\/\/[^/]+/i.exec(page.url)?.[0] ?? "") + href;
-    else if (!/^[a-z][a-z0-9+.-]*:/i.test(href)) href = page.url.replace(/[?#].*$/, "").replace(/[^/]*$/, "") + href;
-    if (href === clean(url)) return true;
+    const href = sourceLinkAddress(match[1] ?? match[2] ?? match[3], page.url);
+    if (href && (target.includes("#") ? href === target : href.split("#")[0] === target)) return true;
   }
   return false;
 }
@@ -148,7 +170,7 @@ function campaignPageMatches(page: Section3Page): boolean {
 /** Label first; only enabled kinds with the required source evidence may publish. */
 export function section3Page(page: Section3Page, recordClass: string, now: string): Section3PageVerdict {
   const policy = page.sourcePolicy ?? DEFAULT_SOURCE_POLICY;
-  const official = isOfficialSource(page.url, page.linkingPage);
+  const official = isOfficialSource(page.url, page.linkingPage, page.websiteDelegation);
   const kind: SourceKind = official ? (/FILING/.test(recordClass) ? "FILING" : "OFFICIAL")
     : page.campaign || hostSourceKind(page.url, policy) === "CAMPAIGN" ? "CAMPAIGN" : hostSourceKind(page.url, policy);
   const refuse = (reason: string): Section3PageVerdict => ({ ok: false, kind, reason });
@@ -209,17 +231,17 @@ export function section3Record(input: {
   // pooling contact fields from several rows belonging to different people.
   const minimums = input.minimums ?? SECTION3_MINIMUMS[input.recordClass] ?? [];
   const matching = [...new Map(blocks.filter(block => minimums.every(requirement => requirement.split("|").some(field =>
-    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end)))))
+    SECTION3_LABEL_FIELDS.includes(field) || input.derived?.[field] || valueOnPage(input.fields[field], input.page.text.slice(block.start, block.end), undefined, input.page.url))))
     // CMS pages may repeat the exact same row for desktop and mobile. This
     // is one record twice, not permission to combine differing rows.
     .map(block => [input.page.text.slice(block.start, block.end), block])).values()];
   const recordText = nameField ? (matching.length === 1 ? input.page.text.slice(matching[0].start, matching[0].end) : "") : input.page.text;
-  const words = pageWords(recordText);
+  const words = recordText === input.page.text ? wordsOf(input.page) : pageWords(recordText);
   const verified = new Set<string>();
   for (const field of present) {
     if (SECOND_SOURCE_FIELDS.includes(field) || STANCE_SUMMARY_FIELDS.includes(field) || input.derived?.[field]) continue;
     if (SECTION3_LABEL_FIELDS.includes(field)) { verified.add(field); continue; }
-    if (valueOnPage(input.fields[field], recordText, words)) verified.add(field);
+    if (valueOnPage(input.fields[field], recordText, words, input.page.url)) verified.add(field);
   }
   for (const [field, from] of Object.entries(input.derived ?? {})) if (present.includes(field) && verified.has(from)) verified.add(field);
   for (const field of STANCE_SUMMARY_FIELDS) if (present.includes(field) && verified.has("quote")) verified.add(field);

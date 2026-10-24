@@ -115,7 +115,7 @@ async function readRowsFromCanonicalTables(
         sql`${laterCandidateAttemptEvent.at} > (${candidateAttemptAt})`,
       )),
   );
-  const sourceOrUnknownAuthority = sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`;
+  const sourceOrUnknownAuthority = sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION') AND coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`;
   const latestSourceAttempt = and(
     sourceOrUnknownAuthority,
     notExists(
@@ -129,7 +129,7 @@ async function readRowsFromCanonicalTables(
           eq(laterSourceCandidate.sourceId, civicDataCandidates.sourceId),
           eq(laterSourceCandidate.recordClass, civicDataCandidates.recordClass),
           eq(laterSourceCandidate.scope, civicDataCandidates.scope),
-          sql`coalesce(${laterSourceCandidate.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
+          sql`coalesce(${laterSourceCandidate.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION') AND coalesce(${laterSourceCandidate.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`,
           sql`${laterSourceAttemptEvent.at} > (${candidateAttemptAt})`,
         )),
     ),
@@ -154,7 +154,7 @@ async function readRowsFromCanonicalTables(
           eq(laterSuccessfulCandidate.scope, civicDataCandidates.scope),
           eq(laterSuccessfulCandidate.acquisitionSucceeded, true),
           lte(laterSuccessfulCandidate.retrievedAt, now),
-          sql`coalesce(${laterSuccessfulCandidate.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
+          sql`coalesce(${laterSuccessfulCandidate.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION') AND coalesce(${laterSuccessfulCandidate.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`,
           sql`${laterSuccessfulAttemptEvent.at} > (${candidateAttemptAt})`,
         )),
     ),

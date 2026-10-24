@@ -17,10 +17,30 @@ import { memoryLockManager } from "../lib/control-plane/repository/memory.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { acquireStateBoundaries } from "../lib/place-map/acquire.ts";
 
 const date = "2026-10-24T08:00:00.000Z";
 const state = "ocd-division/country:us/state:az", county = `${state}/county:pima`;
 const square = (west: number, east: number): GeoFeature["geometry"] => ({ type: "Polygon", coordinates: [[[west, 32], [east, 32], [east, 33], [west, 33], [west, 32]]] });
+
+test("a newer release of the same legislative plan replaces the older geometry", async () => {
+  const registration = JSON.parse(readFileSync("data/derived/registration/az.json", "utf8")) as RegistrationReference;
+  const bytes = readFileSync("tests/fixtures/census-tiger/tl_2025_04_sldu.zip");
+  const acquire = (newer: boolean) => acquireStateBoundaries(registration, {
+    onlyLayers: new Set(["sldu"]), cache: { store: new MemoryEvidenceStore(), locks: memoryLockManager() },
+    fetchImpl: async input => {
+      const url = String(input), year = url.includes("TIGER2026") ? 2026 : 2025;
+      return url.endsWith("/") ? new Response(year === 2026 && !newer ? "<html>No district files</html>" : `<a href="tl_${year}_04_sldu.zip">districts</a>`)
+        : new Response(bytes);
+    },
+  });
+  const first = await acquire(false), second = await acquire(true);
+  assert.equal(second.boundaries.length, first.boundaries.length);
+  for (const boundary of second.boundaries) {
+    assert.deepEqual(boundary.geometry, first.boundaries.find(row => row.placeId === boundary.placeId)?.geometry);
+    assert.ok(boundary.sourceUrls.every(url => url.includes("TIGER2026")));
+  }
+});
 
 test("20 real points within two miles of state lines resolve to their own state polygons", () => {
   const features = JSON.parse(readFileSync("public/geo/state-outlines.geojson", "utf8")).features as GeoFeature[];

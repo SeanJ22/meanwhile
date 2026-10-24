@@ -3,7 +3,6 @@ import type { MeasureRecord } from "../ballot/measure-record-contract.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { pageWords } from "../control-plane/promotion/section3.ts";
-import { canonicalModelId } from "../models.ts";
 
 export const TRANSLATION_SCOPE = "US:plain-english-translations";
 export function translationScope(ocdId: string): string {
@@ -84,7 +83,7 @@ export function translationRecordIssue(row: TranslationRecord): string | null {
       !jurisdictionFromOcdId(row.ocdId ?? "") || !(row.kind === "COMMENT_RULES" ? /^https?:\/\//.test(row.sourceUrl) : /^https:\/\//.test(row.sourceUrl)) ||
       !/^[a-f0-9]{64}$/.test(row.sourceHash) || !row.sourceText?.trim() || translationHash(row.sourceText) !== row.sourceTextHash ||
       !Number.isFinite(Date.parse(row.retrievedAt)) || !Number.isFinite(Date.parse(row.writtenAt)) ||
-      !row.writerModel || !row.checkerModel || canonicalModelId(row.writerModel) === canonicalModelId(row.checkerModel) ||
+      !row.writerModel || !row.checkerModel || row.writerModel === row.checkerModel ||
       !/^[a-f0-9]{64}$/.test(row.playbookVersion) || !Array.isArray(row.sentences) || !Array.isArray(row.checked)) return "Translation lacks its exact source, subject identity or independent checker.";
   if (row.kind === "MEASURE" && (measureRecordIssue(row.measure) || row.measure.contestId !== row.subjectId || row.measure.sourceHash !== row.sourceHash ||
       row.measure.sourceUrl !== row.sourceUrl || row.measure.writtenAt !== row.writtenAt || !row.measure.yesMeans || !row.measure.noMeans)) return "Translation lacks its exact measure identity or vote meanings.";

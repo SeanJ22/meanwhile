@@ -40,7 +40,7 @@ export interface AskTrace {
       cacheCreationInputTokens: number;
       uncachedInputTokens: number;
     };
-    writers?: { model: string; servedModel?: string | null; role: "FAST" | "SONNET" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
+    writers?: { model: string; servedModel?: string | null; role: "FAST" | "FRONTIER"; ms: number; result: "PASSED" | "FAILED" | "UNAVAILABLE"; failed?: string[]; detail?: string }[];
     escalation?: string;
     writerSelection?: { memberVoteRowsShown: number; memberVoteRowsWithheld: number; rollCallsWithheld: number; personVoteRecordsShown?: number; personVoteRecordsWithheld?: number };
   };

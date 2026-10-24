@@ -196,8 +196,6 @@ const titleCase = (slug: string) => slug.replace(/^(city|town|county|village|bor
   .replace(/\b([a-z])/g, (m) => m.toUpperCase()).replace(/\b(Of|And|The)\b/g, (m) => m.toLowerCase());
 
 export function workName(work: string, jurisdiction: string | null): string {
-  if (/^ask(?::|-|$)/.test(work)) return "Ask question";
-  if (/^look-review(?::|-|$)/.test(work)) return "Site review";
   if (/^scout-prewarm/.test(work) || /#?scout:prewarm/.test(work)) return "Hourly prompt-cache warm-up (no place)";
   const family = /#([a-z0-9:_-]+?)(?:-\d+)?$/.exec(work)?.[1];
   const jur = jurisdiction ?? /(?:^|:)([a-z]{2}:[a-z_]+:[a-z0-9-]+)/.exec(work)?.[1] ?? null;
@@ -244,7 +242,6 @@ export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | 
   const last = rolling?.[0];
   const number = (value: unknown) => value == null ? null : Number(value);
   const modelRows: ModelSpendRaw[] = (modelRaw ?? []).map(r => ({ day: String(r.day), role: String(r.role), model: typeof r.model === "string" ? r.model : null,
-    job: typeof r.job === "string" ? r.job : null,
     listPrice: number(r.list_price),
     window: r.window as ModelSpendRaw["window"], jobs: Number(r.jobs), calls: number(r.calls), usd: number(r.usd), uncached: number(r.uncached),
     reads: number(r.reads), writes: number(r.writes), writes1h: number(r.writes1h), output: number(r.output), eligible: number(r.eligible),

@@ -121,11 +121,12 @@ function perModelTransport(
   return t;
 }
 
-async function runHunt(input: { readonly transport: ModelTransport }): Promise<{ readonly outcome: WorkOutcome; readonly result: ScoutResult }> {
+async function runHunt(input: { readonly transport: ModelTransport; readonly model?: string }): Promise<{ readonly outcome: WorkOutcome; readonly result: ScoutResult }> {
   const toolkit = fakeToolkit();
   const results: ScoutResult[] = [];
   const exec = hunterExecutor({ role: "HUNTER", playbookFor: fixtureRolePlaybook,
     transport: input.transport, refusedBeforeSending: error => error instanceof FleetPreSendRefusal,
+    model: input.model ?? SONNET,
     toolkitFor: () => toolkit,
     contextFor: async () => ({ brief: "Place: test", reason: "test hunt", blanks: 1, handed: { artifactIds: [] },
       tools: { vault: async () => ({ stored: true, where: "x", why: "written" }), spaceOut: async () => undefined } }),
@@ -156,7 +157,7 @@ test("a long hunt walks beyond the former turn, tool, token and wall limits unti
     for (const ceiling of [100, 0.075]) {
       const controller = new FleetSafetyController({ now: NOW, spend: aggregatePricedSpend([], new Date(Date.parse(NOW) - 24 * 3_600_000).toISOString(), NOW), rollingCeilingUsd: ceiling, clock: () => NOW_MS });
       const fake = perModelTransport({ [HAIKU]: script }, () => { elapsed += 60_000; return { input_tokens: 20_000, output_tokens: 100 }; });
-      const { outcome, result } = await runHunt({ transport: controller.guardedModelTransport("anthropic", OBLIGATION.id, fake) });
+      const { outcome, result } = await runHunt({ model: HAIKU, transport: controller.guardedModelTransport("anthropic", OBLIGATION.id, fake) });
       assert.ok(fake.requests.length > 18, "long work passes the old model turn cap");
       assert.ok(result.usage.toolCalls > 16, "long work passes the old tool cap");
       assert.ok(result.usage.turns * 20_000 > 400_000, "long work passes the old cumulative token cap");
@@ -178,7 +179,7 @@ test("L1: a hunt starts with Haiku, with adaptive thinking and the hunter's effo
   assert.equal(SCOUT_MODEL, HAIKU);
   assert.equal(scoutLoopBase().model, HAIKU);
   const transport = perModelTransport({ [HAIKU]: [[fetchOf("u1", "https://a.gov/meetings")], [finish("f")]] });
-  const { result } = await runHunt({ transport });
+  const { result } = await runHunt({ transport, model: HAIKU });
   assert.equal(transport.requests.length, 2);
   for (const request of transport.requests) {
     assert.equal(request.model, HAIKU);

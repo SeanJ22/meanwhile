@@ -1,4 +1,4 @@
-import { canonicalModelId, MODELS, modelRequestFields } from "../models.ts";
+import { canonicalModelId } from "../models.ts";
 import { randomUUID } from "node:crypto";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { costEntryWithModel } from "../control-plane/cost.ts";
@@ -6,7 +6,8 @@ import { ZERO_COST } from "../control-plane/attempt.ts";
 import { WORKER_SAFETY_FRAME, rolePlaybook, readRolePlaybookRow, type RolePlaybookEntry } from "../control-plane/playbooks.ts";
 import { type FieldManualRepos } from "../control-plane/field-manual.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../control-plane/scheduler/scout-executor.ts";
+import { assertStepMayInvokeModel } from "../control-plane/scheduler/model-routing.ts";
+import { modelRequestAccounting, scoutThinkingOptions, type ModelRequest, type ModelResponse, type ModelTransport } from "../control-plane/scheduler/scout-executor.ts";
 import type { WorkerEvidence } from "../control-plane/workers/types.ts";
 import { meteredCostFields, readMeteredUsage, priceMeteredUsage } from "../control-plane/model-cost.ts";
 import { measureRecordIssue, type MeasureRecord } from "../ballot/measure-records.ts";
@@ -29,7 +30,15 @@ export interface TranslationPlaybook {
 export function translationPlaybook(entries: readonly RolePlaybookEntry[]): TranslationPlaybook {
   const writerBook = rolePlaybook(entries, "MEASURE_WRITER"), checkerBook = rolePlaybook(entries, "MEASURE_CHECKER");
   if (writerBook.error || checkerBook.error) throw new Error(writerBook.error ?? checkerBook.error);
-  const writerModel = MODELS.haiku.model, checkerModel = MODELS.sonnet.model;
+  const writer = assertStepMayInvokeModel("summarization"), checker = assertStepMayInvokeModel("adversarial-audit");
+  const modelFor = (role: "MEASURE_WRITER" | "MEASURE_CHECKER", fallback: string) => {
+    const id = rolePlaybook(entries, role).entryIds[0];
+    const model = (entries.find(entry => entry.id === id)?.payload as { model?: unknown })?.model;
+    return typeof model === "string" ? model : fallback;
+  };
+  const writerModel = modelFor("MEASURE_WRITER", writer.model), checkerModel = modelFor("MEASURE_CHECKER", checker.model);
+  if (![writer.model, assertStepMayInvokeModel("summarization", true).model].includes(writerModel) ||
+      ![checker.model, assertStepMayInvokeModel("adversarial-audit", true).model].includes(checkerModel) || canonicalModelId(writerModel) === canonicalModelId(checkerModel)) throw new Error("Translation instructions have no distinct supported writer and checker models.");
   return { writerText: writerBook.text, checkerText: checkerBook.text, writerModel, checkerModel,
     version: translationHash(JSON.stringify([writerBook.version, checkerBook.version, writerModel, checkerModel])) };
 }
@@ -59,25 +68,10 @@ function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTra
   };
 }
 
-class TranslationCheckFailed extends Error {}
-
-/** Budget or transport refusals propagate. Only a failed result check buys a rewrite. */
-async function translationLadder<T>(run: (writer: string, checker: string, feedback: string | null) => Promise<T>): Promise<T> {
-  let feedback: string | null = null;
-  for (const [writer, checker] of [[MODELS.haiku.model, MODELS.sonnet.model], [MODELS.sonnet.model, MODELS.opus.model]]) {
-    try { return await run(writer, checker, feedback); }
-    catch (error) {
-      if (!(error instanceof TranslationCheckFailed) || checker === MODELS.opus.model) throw error;
-      feedback = error.message;
-    }
-  }
-  throw new Error("Translation has no checked result.");
-}
-
 function toolResult(response: ModelResponse, name: string, model: string): unknown {
-  if (response.stop_reason === "max_tokens" || canonicalModelId(response.model) !== canonicalModelId(model)) throw new TranslationCheckFailed("Translation model result is incomplete or from a different model.");
+  if (response.stop_reason === "max_tokens" || canonicalModelId(response.model) !== canonicalModelId(model)) throw new Error("Translation model result is incomplete or from a different model.");
   const tools = response.content.filter(block => block.type === "tool_use" && block.name === name);
-  if (tools.length !== 1 || tools[0].type !== "tool_use") throw new TranslationCheckFailed("Translation model returned no unique structured result.");
+  if (tools.length !== 1 || tools[0].type !== "tool_use") throw new Error("Translation model returned no unique structured result.");
   return tools[0].input;
 }
 
@@ -157,28 +151,26 @@ export async function translateText(input: {
   const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.subjectId, state: subject.state }), subject.subjectId);
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: (subject.kind === "AGENDA" || subject.kind === "MINUTES") && !input.batchPriority ? "LIVE_REFRESH" : "TRANSLATOR", priority: input.batchPriority },
-    model, max_tokens: 8192, ...translationThinking(model),
-    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${tool === writer ? playbook.writerText : playbook.checkerText}\n\nUse the supplied text-translation tool. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral", ttl: "1h" } }],
+    model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
+    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${model === playbook.writerModel ? playbook.writerText : playbook.checkerText}\n\nUse the supplied text-translation tool. Every sentence uses field text and an exact supporting quote.`, cache_control: { type: "ephemeral", ttl: "1h" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
-  return translationLadder(async (writerModel, checkerModel, feedback) => {
-    const written = await send(request(writerModel, writer, { source: evidence.text, subject, instruction, preservation, feedback, ...(input.preservedText ? { curatedText: input.preservedText.text } : {}) }));
-    const proposal = toolResult(written, writer.name, writerModel) as { text: string; sentences: TranslationSentence[] };
-    if (typeof proposal?.text !== "string" || !proposal.text.trim() || !Array.isArray(proposal.sentences) ||
-        proposal.sentences.some(row => !row || row.field !== "text" || typeof row.quote !== "string" || !row.quote.trim() || !evidence.text.includes(row.quote))) throw new TranslationCheckFailed("Text translator returned unsupported source passages.");
-    if (input.preservedText && proposal.text !== input.preservedText.text) throw new TranslationCheckFailed("Curated migration would rewrite the existing text.");
-    const checked = await send(request(checkerModel, checkerTool, { originalSource: evidence.text, subject, instruction, preservation, proposal }));
-    const result = toolResult(checked, checkerTool.name, checkerModel) as { checked: TextTranslation["checked"] };
-    const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
-      ocdId: subject.ocdId, ...(input.preservedText ? { curatedOrigin: input.preservedText.origin } : {}), label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
-      sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}),
-      sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
-      writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),
-      playbookVersion: playbook.version, sentences: proposal.sentences, checked: result?.checked };
-    const issue = translationRecordIssue(record);
-    if (issue) throw new TranslationCheckFailed(`${issue} ${JSON.stringify(result?.checked)}`);
-    return { record };
-  });
+  const written = await send(request(playbook.writerModel, writer, { source: evidence.text, subject, instruction, preservation, ...(input.preservedText ? { curatedText: input.preservedText.text } : {}) }));
+  const proposal = toolResult(written, writer.name, playbook.writerModel) as { text: string; sentences: TranslationSentence[] };
+  if (typeof proposal?.text !== "string" || !proposal.text.trim() || !Array.isArray(proposal.sentences) ||
+      proposal.sentences.some(row => !row || row.field !== "text" || typeof row.quote !== "string" || !row.quote.trim() || !evidence.text.includes(row.quote))) throw new Error("Text translator returned unsupported source passages.");
+  if (input.preservedText && proposal.text !== input.preservedText.text) throw new Error("Curated migration would rewrite the existing text.");
+  const checked = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject, instruction, preservation, proposal }));
+  const result = toolResult(checked, checkerTool.name, playbook.checkerModel) as { checked: TextTranslation["checked"] };
+  const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
+    ocdId: subject.ocdId, ...(input.preservedText ? { curatedOrigin: input.preservedText.origin } : {}), label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
+    sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}),
+    sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
+    writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),
+    playbookVersion: playbook.version, sentences: proposal.sentences, checked: result?.checked };
+  const issue = translationRecordIssue(record);
+  if (issue) throw new Error(issue);
+  return { record };
 }
 
 /** The caller supplies the existing Fleet/area budget transport for BOTH calls. */
@@ -202,44 +194,33 @@ export async function translateMeasure(input: {
   const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId);
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: "TRANSLATOR", priority: input.batchPriority },
-    model, max_tokens: 8192, ...translationThinking(model),
-    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${tool === writerTool ? playbook.writerText : playbook.checkerText}`, cache_control: { type: "ephemeral", ttl: "1h" } }],
+    model, max_tokens: 8192, ...scoutThinkingOptions("medium"),
+    system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${model === playbook.writerModel ? playbook.writerText : playbook.checkerText}`, cache_control: { type: "ephemeral", ttl: "1h" } }],
     tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
-  const responses: ModelResponse[] = [];
-  const recordedSend: ModelTransport = async request => {
-    const response = await send(request); responses.push(response); return response;
-  };
-  return translationLadder(async (writerModel, checkerModel, feedback) => {
-    const writer = await recordedSend(request(writerModel, writerTool, { source: evidence.text, subject, feedback,
-      sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
-      partKinds: kinds.measurePart,
-      instruction: "Write a short, neutral explanation in plain high-school English of what the measure does, what a YES vote would enact, and what a NO vote would reject. All three fields are required. Use only the supplied official text. Preserve every material condition and exception. Never recommend, judge, endorse, favor or argue for either side. Do not invent consequences of rejecting the proposal. Cite one contiguous exact source passage for each individual sentence, with no inserted ellipses. Use sentence fields whatItDoes, yesMeans, noMeans, parts.<exact part id>.label or parts.<exact part id>.what; their sentences joined with one space must reproduce that field exactly. Return parts: [] for a short explainer unless retaining supplied existing numbered parts. Any part ID must start with the exact contestId followed by #, and its number must be the source's own unique number." }));
-    const proposal = toolResult(writer, writerTool.name, writerModel) as { measure: MeasureRecord; sentences: TranslationSentence[] };
-    if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
-        proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
-        !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || !translationSourceContains(evidence.text, sentence.quote))) throw new TranslationCheckFailed("Translation writer returned unsupported fields or source passages.");
-    if (proposal.measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new TranslationCheckFailed("Translation part kind is absent from the current kinds setting.");
-    if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
-        (part.number === null || proposed.number === part.number)))) throw new TranslationCheckFailed("Translation would lose or reassign an existing measure part's reaction identity.");
-    const checker = await recordedSend(request(checkerModel, checkerTool, { originalSource: evidence.text, subject,
-      proposal, instruction: "Check every written sentence and its qualifications against the original source. Verify what a YES vote would enact and what a NO vote would reject without assuming unstated consequences. Reject recommendations, judgments, persuasion or language favoring either side. Every official part number must appear there. Return a false check for any unsupported or non-neutral sentence." }));
-    const result = toolResult(checker, checkerTool.name, checkerModel) as { checked: MeasureTranslation["checked"] };
-    const record: MeasureTranslation = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
-      ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
-      sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,
-      writerModel: canonicalModelId(writer.model), checkerModel: canonicalModelId(checker.model), playbookVersion: playbook.version,
-      measure: proposal.measure, sentences: proposal.sentences, checked: result?.checked };
-    const issue = translationRecordIssue(record);
-    if (issue) throw new TranslationCheckFailed(`${issue} ${JSON.stringify(result?.checked)}`);
-    return { record, usage: responses.map(response => ({ model: response.model,
-      usage: readMeteredUsage(response.usage, response.batch === true), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "1h").usd })) };
-  });
-}
-
-function translationThinking(model: string) {
-  const fields = modelRequestFields(model, { thinking: "ADAPTIVE", effort: "medium" });
-  return { ...(fields.thinking?.type === "adaptive" ? { thinking: fields.thinking } : {}), output_config: { effort: "medium" as const } };
+  const writer = await send(request(playbook.writerModel, writerTool, { source: evidence.text, subject,
+    sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
+    partKinds: kinds.measurePart,
+    instruction: "Write a short, neutral explanation in plain high-school English of what the measure does, what a YES vote would enact, and what a NO vote would reject. All three fields are required. Use only the supplied official text. Preserve every material condition and exception. Never recommend, judge, endorse, favor or argue for either side. Do not invent consequences of rejecting the proposal. Cite one contiguous exact source passage for each individual sentence, with no inserted ellipses. Use sentence fields whatItDoes, yesMeans, noMeans, parts.<exact part id>.label or parts.<exact part id>.what; their sentences joined with one space must reproduce that field exactly. Return parts: [] for a short explainer unless retaining supplied existing numbered parts. Any part ID must start with the exact contestId followed by #, and its number must be the source's own unique number." }));
+  const proposal = toolResult(writer, writerTool.name, playbook.writerModel) as { measure: MeasureRecord; sentences: TranslationSentence[] };
+  if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
+      proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
+      !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || !translationSourceContains(evidence.text, sentence.quote))) throw new Error("Translation writer returned unsupported fields or source passages.");
+  if (proposal.measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new Error("Translation part kind is absent from the current kinds setting.");
+  if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
+      (part.number === null || proposed.number === part.number)))) throw new Error("Translation would lose or reassign an existing measure part's reaction identity.");
+  const checker = await send(request(playbook.checkerModel, checkerTool, { originalSource: evidence.text, subject,
+    proposal, instruction: "Check every written sentence and its qualifications against the original source. Verify what a YES vote would enact and what a NO vote would reject without assuming unstated consequences. Reject recommendations, judgments, persuasion or language favoring either side. Every official part number must appear there. Return a false check for any unsupported or non-neutral sentence." }));
+  const result = toolResult(checker, checkerTool.name, playbook.checkerModel) as { checked: MeasureTranslation["checked"] };
+  const record: MeasureTranslation = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
+    ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
+    sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,
+    writerModel: canonicalModelId(writer.model), checkerModel: canonicalModelId(checker.model), playbookVersion: playbook.version,
+    measure: proposal.measure, sentences: proposal.sentences, checked: result?.checked };
+  const issue = translationRecordIssue(record);
+  if (issue) throw new Error(issue);
+  return { record, usage: [writer, checker].map(response => ({ model: response.model,
+    usage: readMeteredUsage(response.usage, response.batch === true), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "1h").usd })) };
 }

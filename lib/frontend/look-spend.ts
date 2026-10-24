@@ -10,18 +10,19 @@ import { recordCost } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { ceilingPermits, readIntents, RESEARCH_INTENT_LOG_KEY } from "../control-plane/scheduler/research-policy.ts";
 import { readSpendWindow } from "../control-plane/spend-window.ts";
-import { canonicalModelId, MODELS, MODEL_TIERS, modelRequestFields } from "../models.ts";
-import { readLookReview, type LookReviewDeps, type LookScreenshot } from "./look-review.ts";
+import { canonicalModelId, MODELS } from "../models.ts";
+import type { LookReviewDeps, LookScreenshot } from "./look-review.ts";
 
-export const LOOK_MODEL = MODELS.haiku.model;
+export const LOOK_MODEL = MODELS.sonnet.model;
 export const LOOK_MAX_TOKENS = 6_000;
 /** About what one screenshot costs to read, for the reservation only; the ledger keeps the measured bill. */
 const TOKENS_PER_SCREEN = 1_600;
 const PROMPT_TOKENS = 3_000;
 
 /** A worst-case price for one review of `screens` screenshots, before it is sent. */
-export function lookReviewBoundUsd(screens: number, model: string = LOOK_MODEL): number {
-  return modelRequestBoundFor(model, screens * TOKENS_PER_SCREEN + PROMPT_TOKENS, LOOK_MAX_TOKENS)?.usd ?? Number.POSITIVE_INFINITY;
+export function lookReviewBoundUsd(screens: number): number {
+  const m = MODELS.sonnet;
+  return ((screens * TOKENS_PER_SCREEN + PROMPT_TOKENS) * m.inputUsdPerMillion + LOOK_MAX_TOKENS * m.outputUsdPerMillion) / 1_000_000;
 }
 
 export interface LookSpendFacts {
@@ -31,7 +32,7 @@ export interface LookSpendFacts {
 }
 
 /** The decision itself, plain code over what was read. */
-export function lookSpendDecision(facts: LookSpendFacts, screens: number, model: string = LOOK_MODEL): { readonly ok: boolean; readonly why: string } {
+export function lookSpendDecision(facts: LookSpendFacts, screens: number): { readonly ok: boolean; readonly why: string } {
   const read = facts.adminConfigRow !== null && "unreadable" in facts.adminConfigRow ? facts.adminConfigRow : { row: facts.adminConfigRow as { value: unknown } | null };
   const paid = adminConfigForPaidWork(read);
   if (paid.holdPaidWork) return { ok: false, why: paid.holdPaidWork };
@@ -40,18 +41,18 @@ export function lookSpendDecision(facts: LookSpendFacts, screens: number, model:
   if (intents.paused) return { ok: false, why: "the owner has paused research" };
   if (intents.runnerPause.paused) return { ok: false, why: "the owner has paused the runner" };
   const ceiling = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(paid.config)).rollingCeilingUsd;
-  const admit = ceilingPermits(facts.windowUsd === null ? null : facts.windowUsd + lookReviewBoundUsd(screens, model), ceiling);
+  const admit = ceilingPermits(facts.windowUsd === null ? null : facts.windowUsd + lookReviewBoundUsd(screens), ceiling);
   return { ok: admit.permits, why: admit.why };
 }
 
 type Repos = Pick<ControlPlaneRepositories, "adminConfig" | "researchIntents" | "spend">;
 
-export async function reserveLookSpend(repos: Repos, now: string, screens: number, model: string = LOOK_MODEL): Promise<{ readonly ok: boolean; readonly why: string }> {
+export async function reserveLookSpend(repos: Repos, now: string, screens: number): Promise<{ readonly ok: boolean; readonly why: string }> {
   const adminConfigRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).then((row) => row ?? null, (error: unknown) => ({ unreadable: error instanceof Error ? error.name : "unreadable" }));
   const intentLog = await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY).then((rows) => [...rows], () => null);
   const windowUsd = await readSpendWindow(repos, now)
     .then((spend) => spend.windowUsd, () => null);
-  return lookSpendDecision({ adminConfigRow, intentLog, windowUsd }, screens, model);
+  return lookSpendDecision({ adminConfigRow, intentLog, windowUsd }, screens);
 }
 
 /** Length bounds are left to readLookReview, which checks every answer again; structured output is sent only the shape. */
@@ -101,7 +102,8 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
   options: LookCallOptions = {}): NonNullable<LookReviewDeps["callModel"]> {
   const batched = batchEnabledForJob("background-worker-audit", "AUDIT_SAMPLE", options.env ?? process.env);
   return async ({ prompt, schema, images }) => {
-    const jobId = `look-review:${randomUUID()}`;
+    const attemptId = `look-review-${randomUUID()}`;
+    const started = performance.now();
     const content = [
       ...images.flatMap((img: LookScreenshot) => [
         { type: "text", text: `Screen: ${img.label}` },
@@ -109,69 +111,53 @@ export function lookModelCall(repos: ControlPlaneRepositories, apiKey: string, f
       ]),
       { type: "text", text: "Judge the screens above, in the order shown, using the label given before each." },
     ];
-    let failure: unknown = new Error("Look review has no valid result.");
-    for (const tier of MODEL_TIERS) {
-      const requestedModel = MODELS[tier].model;
-      if (tier !== "haiku") {
-        const permitted = await reserveLookSpend(repos, new Date().toISOString(), images.length, requestedModel);
-        if (!permitted.ok) throw new Error(permitted.why);
+    const params = {
+      model: LOOK_MODEL, max_tokens: LOOK_MAX_TOKENS, system: [{ type: "text", text: prompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
+      output_config: { format: { type: "json_schema", schema: plainSchema(schema) } },
+      messages: [{ role: "user", content }],
+    };
+    let status: number | null = null;
+    let resultKind: string | null = null;
+    let parsed: LookMessage | null = null;
+    try {
+      if (batched) {
+        try { parsed = await lookBatchRequest(apiKey, attemptId, params, fetchImpl, options); resultKind = "BATCH_SUCCEEDED"; }
+        catch (error) { resultKind = "BATCH_FAILED"; throw error; }
+      } else {
+        const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
+          method: "POST", signal: AbortSignal.timeout(180_000),
+          headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
+          body: JSON.stringify(params),
+        });
+        status = response.status;
+        parsed = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(`LOOK_REVIEW_HTTP_${response.status}`);
       }
-      const attemptId = `look-review-${randomUUID()}`;
-      const started = performance.now();
-      const fields = modelRequestFields(requestedModel, { thinking: "OFF", effort: "low" });
-      const params = {
-        model: requestedModel, max_tokens: LOOK_MAX_TOKENS, system: [{ type: "text", text: prompt, cache_control: { type: "ephemeral", ttl: "1h" } }],
-        ...(fields.thinking ? { thinking: fields.thinking } : {}),
-        output_config: { effort: fields.effort, format: { type: "json_schema", schema: plainSchema(schema) } },
-        messages: [{ role: "user", content }],
-      };
-      let status: number | null = null;
-      let resultKind: string | null = null;
-      let parsed: LookMessage | null = null;
-      try {
-        if (batched) {
-          try { parsed = await lookBatchRequest(apiKey, attemptId, params, fetchImpl, options); resultKind = "BATCH_SUCCEEDED"; }
-          catch (error) { resultKind = "BATCH_FAILED"; throw error; }
-        } else {
-          const response = await fetchImpl("https://api.anthropic.com/v1/messages", {
-            method: "POST", signal: AbortSignal.timeout(180_000),
-            headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
-            body: JSON.stringify(params),
-          });
-          status = response.status;
-          parsed = await response.json().catch(() => null);
-          if (!response.ok) throw new Error(`LOOK_REVIEW_HTTP_${response.status}`);
-        }
-        const text = parsed?.content?.find((b) => b.type === "text")?.text;
-        if (typeof text !== "string" || !readLookReview(text, images)) throw new Error("LOOK_REVIEW_INVALID_RESULT");
-        return text;
-      } catch (error) {
-        if (!(error instanceof Error) || error.message !== "LOOK_REVIEW_INVALID_RESULT") throw error;
-        failure = error;
-      } finally {
-        const metering = readMeteredUsage(parsed?.usage, batched);
-        const served = typeof parsed?.model === "string" ? parsed.model : null;
-        const model = served ?? requestedModel;
-        const recordedAt = new Date().toISOString();
-        const bound = modelRequestBoundFor(requestedModel, images.length * TOKENS_PER_SCREEN + PROMPT_TOKENS, LOOK_MAX_TOKENS);
-        const usd = priceMeteredUsage(canonicalModelId(model), metering, "1h").usd;
-        const entry = costEntryWithModel({
-          attemptId, workItemId: jobId, routeTaskId: null, routeId: "look-review", source: "api.anthropic.com",
-          jurisdiction: null, project: "pilot-health", role: "VALIDATOR", requestedModel, servedModel: served,
-          ...(bound && usd === null ? { modelRequestBound: bound } : {}),
-          resultKind: resultKind ?? (status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`), recordedAt,
-          cost: { ...ZERO_COST, ...meteredCostFields(metering),
-            inputTokens: metering.uncachedInputTokens === null ? null
-              : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),
-            outputTokens: metering.outputTokens, usd,
-            durationMs: Math.round(performance.now() - started), requestCount: 1,
-            listPriceUsd: listPriceUsdForUsage(model, metering),
-            modelRequestCount: 1, batchEligibleRequestCount: 1, batchRequestCount: batched ? 1 : 0 },
-        }, model);
-        try { await recordCost(repos, entry, recordedAt); }
-        catch (error) { console.error(`look review: the cost could not be recorded (${error instanceof Error ? error.name : "error"}); attempt ${attemptId}`); }
-      }
+      const text = parsed?.content?.find((b) => b.type === "text")?.text;
+      if (typeof text !== "string") throw new Error("LOOK_REVIEW_NO_TEXT");
+      return text;
+    } finally {
+      const metering = readMeteredUsage(parsed?.usage, batched);
+      const served = typeof parsed?.model === "string" ? parsed.model : null;
+      const model = served ?? LOOK_MODEL;
+      const recordedAt = new Date().toISOString();
+      const bound = modelRequestBoundFor(LOOK_MODEL, images.length * TOKENS_PER_SCREEN + PROMPT_TOKENS, LOOK_MAX_TOKENS);
+      const usd = priceMeteredUsage(canonicalModelId(model), metering, "1h").usd;
+      const entry = costEntryWithModel({
+        attemptId, workItemId: "look-review", routeTaskId: null, routeId: "look-review", source: "api.anthropic.com",
+        jurisdiction: null, project: "pilot-health", role: "VALIDATOR", requestedModel: LOOK_MODEL, servedModel: served,
+        ...(bound && usd === null ? { modelRequestBound: bound } : {}),
+        resultKind: resultKind ?? (status === null ? "TRANSPORT_UNMEASURED" : `HTTP_${status}`), recordedAt,
+        cost: { ...ZERO_COST, ...meteredCostFields(metering),
+          inputTokens: metering.uncachedInputTokens === null ? null
+            : metering.uncachedInputTokens + (metering.cacheReadInputTokens ?? 0) + (metering.cacheCreationInputTokens ?? 0),
+          outputTokens: metering.outputTokens, usd,
+          durationMs: Math.round(performance.now() - started), requestCount: 1,
+          listPriceUsd: listPriceUsdForUsage(model, metering),
+          modelRequestCount: 1, batchEligibleRequestCount: 1, batchRequestCount: batched ? 1 : 0 },
+      }, model);
+      try { await recordCost(repos, entry, recordedAt); }
+      catch (error) { console.error(`look review: the cost could not be recorded (${error instanceof Error ? error.name : "error"}); attempt ${attemptId}`); }
     }
-    throw failure;
   };
 }

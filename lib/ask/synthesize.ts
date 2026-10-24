@@ -1,8 +1,8 @@
 import { askPlaybook, askSettings } from "./runtime-settings.ts";
 import { writerSelection } from "./writer-selection.ts";
 import { gapWords, packHasEvidence, type EvidencePack } from "./evidence.ts";
-import { ASK_MODEL_ROLES, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelSettings } from "./model.ts";
-import { MODELS, modelRequestFields, servedModelOf } from "../models.ts";
+import { ASK_MODEL_ROLES, askModelTakesEffort, resolveAskEffort, resolveAskFastWriter, resolveAskModel, type AskEffort, type AskModelSettings } from "./model.ts";
+import { modelRequestFields, servedModelOf } from "../models.ts";
 import type { ValidationVerdict } from "./validate.ts";
 import {
   SYNTHESIS_CACHE_TTL,
@@ -190,28 +190,26 @@ export interface SynthesizeOptions {
   allowCall?: () => boolean;
   callerKey?: AskCallerKey;
   signal?: AbortSignal;
-  deadlineMs?: number;
 }
 
 export interface SynthesisRung {
   model: string;
   effort: AskEffort | null;
-  role: "FAST" | "SONNET" | "FRONTIER";
+  role: "FAST" | "FRONTIER";
   timeoutMs: number;
 }
 
 export const ASK_FAST_WRITER_TIMEOUT_MS = 6_000;
 
-function frontierRung(env: AskModelSettings = askSettings()): SynthesisRung {
-  return { model: MODELS.opus.model, effort: resolveAskEffort(env), role: "FRONTIER", timeoutMs: ASK_SYNTHESIS_TIMEOUT_MS };
+export function frontierRung(env: AskModelSettings = askSettings()): SynthesisRung {
+  return { model: resolveAskModel(env), effort: resolveAskEffort(env), role: "FRONTIER", timeoutMs: ASK_SYNTHESIS_TIMEOUT_MS };
 }
 
 export function synthesisLadder(env: AskModelSettings = askSettings()): SynthesisRung[] {
-  return [
-    { model: resolveAskFastWriter(), effort: "low", role: "FAST", timeoutMs: ASK_FAST_WRITER_TIMEOUT_MS },
-    { model: resolveAskModel(), effort: resolveAskEffort(env), role: "SONNET", timeoutMs: ASK_SYNTHESIS_TIMEOUT_MS },
-    frontierRung(env),
-  ];
+  const frontier = frontierRung(env);
+  const fast = resolveAskFastWriter(env);
+  if (!fast || fast === frontier.model) return [frontier];
+  return [{ model: fast, effort: askModelTakesEffort(fast) ? "low" : null, role: "FAST", timeoutMs: ASK_FAST_WRITER_TIMEOUT_MS }, frontier];
 }
 
 export function ladderIdentity(ladder: readonly SynthesisRung[]): { model: string; effort: string } {
@@ -222,7 +220,7 @@ export async function synthesizeAnswer(
   pack: EvidencePack,
   options: SynthesizeOptions = {},
 ): Promise<SynthesisOutcome> {
-  return synthesizeOnRung(pack, synthesisLadder()[0], options);
+  return synthesizeOnRung(pack, frontierRung(), options);
 }
 
 async function synthesizeOnRung(
@@ -279,7 +277,6 @@ async function synthesizeOnRung(
       stop_reason?: unknown;
       content?: Array<{ type?: string; text?: string }>;
     };
-    if (body.stop_reason === "max_tokens") return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: "max_tokens" };
     const text = body.content?.find((b) => b.type === "text")?.text ?? "";
     if (!text) {
       return { kind: "UNAVAILABLE", why: "error", ms: elapsed(), detail: body.stop_reason === "refusal" ? "refusal" : "no text block" };
@@ -336,14 +333,11 @@ export async function synthesizeWithLadder(
 ): Promise<LadderResult> {
   const ladder = options.ladder ?? synthesisLadder();
   const attempts: LadderAttempt[] = [];
-  const deadline = options.deadlineMs ?? Date.now() + 18_000;
   let escalation: string | null = null;
   let last: LadderResult | null = null;
   for (const [index, rung] of ladder.entries()) {
     if (options.signal?.aborted && last) return last;
-    const remaining = deadline - Date.now();
-    if (remaining <= 0) return last ?? { outcome: { kind: "UNAVAILABLE", why: "error", ms: 0, detail: "deadline" }, verdict: null, attempts, escalation };
-    const outcome = await synthesizeOnRung(pack, { ...rung, timeoutMs: Math.max(1, Math.min(rung.timeoutMs, remaining)) }, options);
+    const outcome = await synthesizeOnRung(pack, rung, options);
     const hasNext = index < ladder.length - 1 && !options.signal?.aborted;
     if (outcome.kind === "UNAVAILABLE") {
       attempts.push({ model: rung.model, role: rung.role, ms: outcome.ms, result: "UNAVAILABLE", detail: outcome.detail ? `${outcome.why}: ${outcome.detail}` : outcome.why });

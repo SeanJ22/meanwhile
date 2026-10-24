@@ -19,9 +19,7 @@ import {
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { readableSitting } from "../lib/ask/meeting-time.ts";
 import { citedUrlsFrom, synthesisContextPayload, synthesisLadder, synthesisPrompt, synthesisRequestBody, synthesisSources, synthesizeWithLadder } from "../lib/ask/synthesize.ts";
-import { MODELS } from "../lib/models.ts";
 import { ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL, resolveAskRoleModel } from "../lib/ask/model.ts";
-import { readSubjectRefs } from "../lib/ask/subject.ts";
 import { WRITER_MEMBER_VOTE_ROWS, writerInputProof, writerSelection } from "../lib/ask/writer-selection.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
@@ -516,7 +514,7 @@ test("ROUTE: a money question asking WHO gave is written by the fast writer firs
   assert.equal(payload.trace.synthesis.escalation, undefined, "the frontier writer did not run");
 });
 
-test("ROUTE: Sonnet runs only after Haiku fails a check, and the reason is recorded", { concurrency: false }, async () => {
+test("ROUTE: the frontier writer runs ONLY when the fast answer fails a check, and the reason is recorded", { concurrency: false }, async () => {
   installWriterAgendaFixture();
   try {
     writerAnswers = { [ASK_FAST_WRITER_MODEL]: { answer: "See https://invented.example/agenda for the full list.", citedSources: [1] }, default: PASSING };
@@ -526,7 +524,7 @@ test("ROUTE: Sonnet runs only after Haiku fails a check, and the reason is recor
     assert.equal(payload.mode, "GROUNDED_CLAUDE");
     assert.equal(payload.answer, PASSING.answer, "the frontier writer's passing answer is delivered â€” never the failed one");
     assert.equal(payload.trace.synthesis.model, ASK_SYNTHESIS_MODEL);
-    assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => [writer.role, writer.result]), [["FAST", "FAILED"], ["SONNET", "PASSED"]]);
+    assert.deepEqual(payload.trace.synthesis.writers?.map((writer) => [writer.role, writer.result]), [["FAST", "FAILED"], ["FRONTIER", "PASSED"]]);
     assert.match(payload.trace.synthesis.escalation ?? "", /^fast-writer-failed-validation: invented-source-url:/);
 
     writerAnswers = { [ASK_FAST_WRITER_MODEL]: "HTTP_529", default: PASSING };
@@ -547,7 +545,7 @@ test("ROUTE: when every writer fails validation the answer still fails closed â€
     ]) {
       writerAnswers = { default: answer };
       const { payload, calls: made } = await ask("What's on the Pima County Board of Supervisors agenda?", [AZ, PIMA]);
-      assert.deepEqual(made.map((call) => call.model), [ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL, MODELS.opus.model], "all three writers tried");
+      assert.deepEqual(made.map((call) => call.model), [ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL], "both writers tried");
       assert.equal(payload.mode, "REJECTED_FELL_BACK", answer.answer);
       assert.equal(payload.answer, null);
       assert.ok(payload.trace.validation.failed?.some((reason) => reason.startsWith("invented-source-url:")));
@@ -633,10 +631,10 @@ test("the writer is sent every record but member-vote rows past the bound, cut b
   assert.ok(!(validateAnswer("The Board has not published how each member voted on most other items.", [], whole) as { failed?: string[] }).failed?.includes("withheld-votes-called-unpublished"), "only where rows were held back from the writer");
 });
 
-test("the declared ladder always starts on Haiku, then Sonnet, then Opus", () => {
+test("the declared ladder: the fast writer first (thinking disabled, low effort), then the frontier; one switch turns the fast writer off", () => {
   const ladder = synthesisLadder({});
-  assert.deepEqual(ladder.map((rung) => [rung.model, rung.role, rung.effort]), [[ASK_FAST_WRITER_MODEL, "FAST", "low"], [ASK_SYNTHESIS_MODEL, "SONNET", "medium"], [MODELS.opus.model, "FRONTIER", "medium"]]);
-  assert.deepEqual(synthesisLadder({ "ask.fastWriterModel": "off" }).map((rung) => rung.role), ["FAST", "SONNET", "FRONTIER"]);
+  assert.deepEqual(ladder.map((rung) => [rung.model, rung.role, rung.effort]), [[ASK_FAST_WRITER_MODEL, "FAST", "low"], [ASK_SYNTHESIS_MODEL, "FRONTIER", "medium"]]);
+  assert.deepEqual(synthesisLadder({ "ask.fastWriterModel": "off" }).map((rung) => rung.role), ["FRONTIER"]);
   const pack: EvidencePack = { question: "q", intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null, records: [RECORDS[0]], gaps: [], denominators: {}, today: "2026-09-25" };
   const fast = synthesisRequestBody(pack, { model: ASK_FAST_WRITER_MODEL, cached: true, effort: "low" }) as { thinking?: unknown; output_config: { effort?: unknown } };
   assert.deepEqual(fast.thinking, { type: "disabled" });
@@ -663,14 +661,4 @@ test("government budget questions bind the named or focused body without borrowi
   assert.equal(lexicalReading({...input,question:"What is this government's budget?"}),null);
   assert.equal(lexicalReading({...input,question:"What is this government's budget?",activeSubjects:[focus,{id:MESA_SCHOOLS,name:"Mesa Unified School District Governing Board",kind:"BODY",focused:true}]}),null);
   assert.equal(lexicalReading({...input,question:"What is this government's campaign budget?",activeSubjects:[focus]}),null);
-});
-
-test("a full ballot's accepted subject context reaches Ask without a payload rejection", { concurrency: false }, async () => {
-  const activeSubjects = readSubjectRefs(Array.from({ length: 300 }, (_, index) => ({
-    id: `contest:${index}:` + "x".repeat(225), name: `Ballot contest ${index} ` + "y".repeat(140), kind: "CONTEST",
-  })));
-  assert.equal(activeSubjects.length, 60);
-  assert.ok(JSON.stringify({ activeSubjects }).length > 16_384);
-  const { payload } = await ask("What does the Vail school board do?", [AZ, PIMA, VAIL], { extra: { activeSubjects, surface: "BALLOT" } });
-  assert.ok(payload.trace);
 });

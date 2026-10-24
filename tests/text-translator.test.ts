@@ -101,7 +101,7 @@ test("failed independent checks retain GOOD text and both calls' charges; unchan
   const first = await run(); assert.equal(first.status, "PUBLISHED", JSON.stringify(first));
   assert.equal((await run()).status, "REUSED"); assert.equal(calls, 2);
   const revised = capture(spec, " The board cannot set property tax rates."); supported = false;
-  const held = await run(revised); assert.equal(held.status, "HELD"); assert.equal(held.usage.length, 4);
+  const held = await run(revised); assert.equal(held.status, "HELD"); assert.equal(held.usage.length, 2);
   assert.deepEqual((await readTranslations([division], { store, now, bypassCache: true }))[0], first.record);
   supported = true; const rewritten = await run(revised); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
   assert.notEqual(rewritten.versionId, first.versionId);

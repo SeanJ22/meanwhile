@@ -803,12 +803,12 @@ test("15. SEEDED (ii): a deterministic-capable step routed to a model is REFUSED
   assert.throws(() => assertStepMayInvokeModel("made-up-step"), UnknownStepInvokedModel);
   const loop = assertStepMayInvokeModel("scout-research-loop");
   assert.deepEqual(loop, { model: "claude-haiku-5-5", modelClass: "haiku", effort: "medium", role: "SCOUT" }, "the loop starts on Haiku");
-  assert.equal(assertStepMayInvokeModel("scout-research-loop", true).modelClass, "sonnet", "a failed hunter attempt moves to Sonnet");
+  assert.equal(assertStepMayInvokeModel("scout-research-loop", true).modelClass, "haiku", "a hunter is never moved to a dearer model");
   const extraction = assertStepMayInvokeModel("extraction");
   assert.deepEqual(extraction, { model: "claude-haiku-5-5", modelClass: "haiku", effort: "low", role: "SUB_STEP" });
   const escalated = assertStepMayInvokeModel("extraction", true);
   assert.equal(escalated.modelClass, "sonnet", "a cheaper model that fails the standard escalates one class");
-  assert.equal(assertStepMayInvokeModel("summarization", true).modelClass, "sonnet");
+  assert.equal(assertStepMayInvokeModel("summarization", true).modelClass, "frontier");
 });
 
 test("16. SEEDED (iii): a representation past its step budget is truncated with a stated notice naming the artifact, and the overrun is recorded", async () => {

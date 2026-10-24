@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { meteredAskFetch } from "../lib/ask/cost.ts";
-import { askModelLadder } from "../lib/ask/model-ladder.ts";
+import { hedgedFetch } from "../lib/ask/hedged-fetch.ts";
 import { costEntryModelRequestBound, modelRequestBoundFor, spendByTier, type CostEntry } from "../lib/control-plane/cost.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { MODELS } from "../lib/models.ts";
@@ -23,20 +23,20 @@ test("every Ask send records model/tier, cache billing and no question or reader
   assert.ok(!JSON.stringify(rows).includes("private question"));
   assert.equal(rows[0].question,undefined);
 });
-test("a failed cheaper send and the higher-tier winner both retain their actual charges", async () => {
+test("a stopped hedge is charged as unmeasured alongside the measured winner", async () => {
   const rows: CostEntry[] = []; let sends=0;
   const measured = meteredAskFetch(async (_url,request) => {
-    if (++sends === 1) throw new Error("provider unavailable");
-    return Response.json({ model: JSON.parse(String(request?.body)).model, usage: { input_tokens: 100, output_tokens: 10 } });
-  }, "interpret", async row=>{rows.push(row);});
-  await askModelLadder(async (model,signal) => measured("https://provider/messages",{...init,signal,body:JSON.stringify({model})}));
+    if (++sends === 2) return reply();
+    return new Promise((_resolve,reject)=>request!.signal!.addEventListener("abort",()=>reject(new Error("aborted")),{once:true}));
+  }, "interpret", async e=>{rows.push(e);});
+  await hedgedFetch(measured,"https://provider/messages",init,{hedgeAfterMs:1,timeoutMs:1000});
+  await new Promise(resolve=>setImmediate(resolve));
   assert.equal(sends,2); assert.equal(rows.length,2);
-  assert.equal(rows[0].cost.usd,null);
-  assert.equal(rows[0].tier,"haiku"); assert.equal(rows[1].tier,"sonnet");
+  assert.deepEqual(rows.map(r=>r.cost.usd===null).sort(),[false,true]);
+  assert.equal(rows[0].tier,"haiku"); assert.equal(rows[1].tier,"haiku");
   const since=new Date(Date.now()-10000).toISOString(),until=new Date(Date.now()+10000).toISOString();
-  assert.equal(spendByTier(rows,{since,until}).tiers.find(tier=>tier.tier==="haiku")!.usd,null);
+  assert.equal(spendByTier(rows,{since,until}).tiers.find(t=>t.tier==="haiku")!.usd,null);
 });
-
 test("provider refusals and malformed responses preserve unknown spend and served dated models", async () => {
   const rows: CostEntry[] = [];
   const write = async(e:CostEntry)=>{rows.push(e);};

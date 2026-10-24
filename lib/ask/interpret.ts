@@ -1,9 +1,9 @@
 import { askPlaybook } from "./runtime-settings.ts";
 import { scrubFreeText } from "../log/scrub.ts";
-import { ASK_MODEL_ROLES } from "./model.ts";
+import { resolveAskRoleModel, ASK_MODEL_ROLES } from "./model.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
 import { asksForBodyAgenda } from "../routing/named-entity.ts";
-import { askModelLadder } from "./model-ladder.ts";
+import { askHedgeMs, hedgedFetch } from "./hedged-fetch.ts";
 import { SYNTHESIS_CACHE_TTL } from "./prompt-cache.ts";
 
 import {
@@ -24,7 +24,7 @@ import {
  */
 
 /** The interpretation ceiling is a failure bound, not a latency target. */
-const ASK_INTERPRET_TIMEOUT_MS = 6_000;
+export const ASK_INTERPRET_TIMEOUT_MS = 6_000;
 
 export interface InterpretContext {
   /**
@@ -57,6 +57,7 @@ const MAX_PRIOR_TURNS = 4;
  * The READER role from `lib/ask/model.ts`, resolved per call so overrides
  * apply. This rung decides a tense, an entity and a referent together.
  */
+const askModel = (): string => resolveAskRoleModel("READER");
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 
 export function interpretSchema(): Record<string, unknown> {
@@ -126,8 +127,6 @@ export function interpretPrompt(context: InterpretContext): string {
 
 export interface InterpretOptions {
   fetchImpl?: typeof fetch;
-  deadlineMs?: number;
-  signal?: AbortSignal;
   recordCost?: AskCostWriter;
   apiKey?: string;
   /** Bounds spend the same way the classifier's ceiling does. */
@@ -144,8 +143,14 @@ export async function interpretQuestion(
 
   const apiKey = options.apiKey ?? process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key", ms: elapsed() };
+  if (options.allowCall && !options.allowCall()) {
+    return { kind: "UNAVAILABLE", why: "ceiling", ms: elapsed() };
+  }
 
   const impl = meteredAskFetch(options.fetchImpl ?? fetch, "interpret", options.recordCost);
+  /* Resolved once: the same id is sent and recorded. */
+  const model = askModel();
+  const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
   const priorTurns = (context.priorTurns ?? []).slice(-MAX_PRIOR_TURNS);
   const system = interpretSystem(context);
 
@@ -181,53 +186,46 @@ export async function interpretQuestion(
   });
 
   try {
-    return await askModelLadder<InterpretOutcome>(async (model, signal) => {
-      if (options.allowCall && !options.allowCall()) return { kind: "UNAVAILABLE", why: "ceiling", ms: elapsed() };
-      const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.READER.thinking, effort: ASK_MODEL_ROLES.READER.effort });
-      const response = await impl(MESSAGES_URL, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-          "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01",
-        },
-        body: JSON.stringify({
-          model,
-          max_tokens: Math.max(1024, fields.minMaxTokens),
-          /* The READER role's thinking and effort, as the registry says the model accepts them. */
-          ...(fields.thinking ? { thinking: fields.thinking } : {}),
-          output_config: {
-            ...(fields.effort ? { effort: fields.effort } : {}),
-            format: { type: "json_schema", schema: interpretSchema() },
-          },
-          /* Shared instructions survive for an hour; the ZIP context and changing packet follow. */
-          system: [
-            { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl },
-          ],
-          messages,
-        }),
-        signal,
-      });
-      if (!response.ok) throw new Error(`Ask reader HTTP ${response.status}`);
-
-      const body = (await response.json()) as {
-        model?: unknown;
-        stop_reason?: string;
-        content?: Array<{ type?: string; text?: string }>;
-      };
-      const text = body.content?.find((b) => b.type === "text")?.text ?? "";
-      if (!text || body.stop_reason === "max_tokens") throw new Error("Incomplete Ask reading");
-      const parsed = JSON.parse(text);
-      if (!parsed || !ASK_INTENTS.includes(parsed.intent) || !Array.isArray(parsed.entityMentions) ||
-        !Array.isArray(parsed.normalizedMentions) || !["NEXT", "LAST", "RANGE", "NONE"].includes(parsed.temporal?.kind)) throw new Error("Invalid Ask reading");
-      return {
-        kind: "READ",
-        interpretation: readInterpretation(parsed),
+    // A bounded wait: past it the deterministic reading stands in. A slow
+    // reading is asked again at the hedge time (lib/ask/hedged-fetch.ts).
+    const response = await hedgedFetch(impl, MESSAGES_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      body: JSON.stringify({
         model,
-        servedModel: servedModelOf(body),
-        ms: elapsed(),
-      };
-    }, { ...options, deadlineMs: options.deadlineMs ?? started + ASK_INTERPRET_TIMEOUT_MS });
+        max_tokens: Math.max(1024, fields.minMaxTokens),
+        /* The READER role's thinking and effort, as the registry says the model accepts them. */
+        ...(fields.thinking ? { thinking: fields.thinking } : {}),
+        output_config: {
+          ...(fields.effort ? { effort: fields.effort } : {}),
+          format: { type: "json_schema", schema: interpretSchema() },
+        },
+        /* Shared instructions survive for an hour; the ZIP context and changing packet follow. */
+        system: [
+          { type: "text", text: system.stable, cache_control: SYNTHESIS_CACHE_TTL.stableCacheControl },
+        ],
+        messages,
+      }),
+    }, { hedgeAfterMs: askHedgeMs(), timeoutMs: ASK_INTERPRET_TIMEOUT_MS });
+    if (!response.ok) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
+
+    const body = (await response.json()) as {
+      model?: unknown;
+      content?: Array<{ type?: string; text?: string }>;
+    };
+    const text = body.content?.find((b) => b.type === "text")?.text ?? "";
+    if (!text) return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
+    return {
+      kind: "READ",
+      interpretation: readInterpretation(JSON.parse(text)),
+      model,
+      servedModel: servedModelOf(body),
+      ms: elapsed(),
+    };
   } catch {
     return { kind: "UNAVAILABLE", why: "error", ms: elapsed() };
   }

@@ -26,6 +26,8 @@ import type { DeclaredExecutor, WorkArtifact, WorkDisposition, WorkOutcome } fro
 import type { ScheduledObligation } from "./obligation.ts";
 import { RESEARCH_BOUNDS, type ScoutBound } from "./research-policy.ts";
 import {
+  MODEL_CLASSES,
+  MODEL_FOR_CLASS,
   SCOUT_CACHE_POLICY,
   SCOUT_STEPS,
   assertStepMayInvokeModel,
@@ -272,6 +274,7 @@ interface HunterExecutorDeps {
   readonly transportFor?: (routeTaskId: string) => ModelTransport;
   /** Trusted transport wrapper provenance only; message text never proves a request was refused before sending. */
   readonly refusedBeforeSending?: (error: unknown) => boolean;
+  readonly model?: string;
   readonly bound?: ScoutBound;
   readonly now?: () => string;
   readonly toolkitFor: (ctx: ScoutToolContext) => ScoutToolkit;
@@ -290,7 +293,7 @@ const HUNTER_MAX_TURNS = 80;
  * starts. Null for a model with no stated rate, so budgeted work waits.
  */
 export function scoutJobWorstCaseUsd(bound: ScoutBound, modelOverride?: string): number | null {
-  const rate = rateFor(modelOverride ?? scoutLoopBase().model);
+  const rate = rateFor(scoutLoopBase(modelOverride).model);
   if (rate === null) return null;
   const card = highestRates(rate);
   const dearest = Math.max(card.inputUsdPerMillion * CACHE_RATE_MULTIPLIERS.cacheCreation, card.outputUsdPerMillion);
@@ -447,15 +450,17 @@ export function cacheTtlOrderProblems(request: Pick<ModelRequest, "tools" | "sys
 /** The step the research loop is registered under; asserted before every transport call. */
 export const SCOUT_LOOP_STEP = "scout-research-loop";
 
-/** Where every new hunt starts (class, model and effort). */
-export function scoutLoopBase(): {
+/** Where the loop starts (class, model and effort). An injected model overrides the id only. */
+export function scoutLoopBase(modelOverride?: string): {
   readonly model: string;
   readonly modelClass: ModelClass;
   readonly effort: ModelEffort;
   readonly why: string;
 } {
   const routed = assertStepMayInvokeModel(SCOUT_LOOP_STEP);
-  return { ...routed, why: SCOUT_STEPS[SCOUT_LOOP_STEP].why };
+  const model = modelOverride ?? routed.model;
+  const named = MODEL_CLASSES.find((c) => MODEL_FOR_CLASS[c] === model);
+  return { model, modelClass: named ?? routed.modelClass, effort: routed.effort, why: SCOUT_STEPS[SCOUT_LOOP_STEP].why };
 }
 
 
@@ -484,7 +489,7 @@ export function dispositionForHunt(result: Pick<ScoutResult, "findings" | "narra
 export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
   const bound = deps.bound ?? RESEARCH_BOUNDS.perDispatch;
   const clock = deps.now ?? (() => new Date().toISOString());
-  const base = scoutLoopBase();
+  const base = scoutLoopBase(deps.model);
   const role: HuntRole = deps.role;
   const workerRole = role === "DETECTIVE" ? "DETECTIVE" : "SCOUT";
 

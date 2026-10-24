@@ -135,10 +135,10 @@ test("a failed sentence check holds the explainer, retains both charges, and rem
   const f = fixture(); f.failChecker();
   const first = await runMeasureTranslationPass(f.input);
   assert.equal(first.checkedAfter, 0);
-  assert.deepEqual(first.outcomes.map(row => [row.status, row.usage.length]), [["HELD", 4], ["HELD", 4]]);
+  assert.deepEqual(first.outcomes.map(row => [row.status, row.usage.length]), [["HELD", 2], ["HELD", 2]]);
   const second = await runMeasureTranslationPass(f.input);
   assert.equal(second.held.length, 2);
-  assert.equal(f.calls.length, 8, "the existing attempt retry clock prevents duplicate paid calls");
+  assert.equal(f.calls.length, 4, "the existing attempt retry clock prevents duplicate paid calls");
 });
 
 test("source or durable-attempt failures stay visible and never start a model", async () => {

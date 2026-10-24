@@ -48,6 +48,21 @@ test("a saved official roster page becomes one live fact per member and title, e
   assert.ok(dispositions.every(d => d.state === "READER_ELIGIBLE"));
 });
 
+test("a structured API roster publishes its name and term fields without page-name or quote tests", async t => {
+  const db = await seeded(); t.after(() => db.pg.close());
+  const record = { Name: "Aster", TermStart: "2026-07-01" };
+  const saved = capture(JSON.stringify(record), "api-roster-9");
+  const api = { ...saved, evidence: { ...saved.evidence, canonicalUrl: "https://webapi.legistar.com/v1/example/officerecords" } };
+  const report = await publishRosterFacts(db, { body: BODY, capture: api, acquisition: "loader", nameFromPage: false,
+    members: [{ recordId: "source:42", externalIds: [["legistar:example", "42"]], fields: { name: record.Name, office: "Member", termStart: record.TermStart } }],
+    complete: false, producedBy: "legistar:example" }, clocks, NOW);
+  assert.equal(report.blanks, 0);
+  const [term] = await db.query("SELECT value,quote_start FROM fact WHERE entity_id=$1 AND field=$2 AND status='live'",
+    [report.people.get("source:42"), `term_start:${BODY.id}`]);
+  assert.deepEqual(term, { value: record.TermStart, quote_start: null });
+  assert.deepEqual(await db.query("SELECT DISTINCT step FROM count_hour"), [{ step: "door_official" }]);
+});
+
 test("a re-read confirms; a complete official page that drops a member retires only that membership; a page label is never a person", async () => {
   const db = await seeded();
   await publishRosterFacts(db, { body: BODY, capture: capture(html, "ar-roster-1"), members: members(html), complete: true, producedBy: "held-roster" }, clocks, NOW);

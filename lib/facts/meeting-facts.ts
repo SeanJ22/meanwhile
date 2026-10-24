@@ -1,7 +1,7 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
-import { boundedIndexOf, normalizeText } from "./check.ts";
+import { boundedIndexOf, normalizeText, type CheckEntity } from "./check.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
@@ -59,22 +59,49 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
 
 export interface MeetingFactsReport { readonly live: number; readonly confirmed: number; readonly held: number; readonly blanks: number }
 
-/** One sitting read from its body's door becomes facts, each found on the saved copy: title, start, place and links. */
-export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
-  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly pinCapture?: WorkerPublicationCapture; readonly producedBy: string;
-}, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
-  const { meeting, capture } = input;
+type MeetingFactDb = FactDb & { readonly query: Query };
+
+async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl = meeting.provenance.sourceUrl): Promise<CheckEntity> {
   const id = meetingEntityId(meeting.id);
   let state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
   let owner = meeting.bodyId ?? meeting.ocdId;
   if (owner) {
     owner = await ensureEntity(db.query, { id: owner, kind: meeting.bodyId ? "body" : "place", name: meeting.bodyName, state, parentId: meeting.bodyId ? meeting.ocdId : null });
     if (owner !== (meeting.bodyId ?? meeting.ocdId)) state = (await db.query("SELECT state FROM entity WHERE id = $1", [owner]))[0]?.state as string | null;
-    await learnDoorChannel(db.query, owner, capture.evidence.canonicalUrl);
+    if(sourceUrl)await learnDoorChannel(db.query, owner, sourceUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
   if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
-  const entity = (await readCheckEntity(db.query, id))!;
+  return (await readCheckEntity(db.query, id))!;
+}
+
+async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
+  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+}, clocks: Clocks, now: Date): Promise<PublishOutcome> {
+  const pin = input.meeting.mapPin!;
+  const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
+  return publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
+    valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
+}
+
+/** An already-published sitting can gain its checked point independently of another calendar read. */
+export async function publishMeetingPinFact(db: MeetingFactDb, input: {
+  readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly producedBy: string;
+}, clocks: Clocks, now: Date): Promise<PublishOutcome> {
+  const entity = await meetingFactEntity(db, input.meeting);
+  if (input.meeting.mapPin?.matchedAddress && input.capture) return publishPinClaim(db, entity, {...input, capture:input.capture}, clocks, now);
+  await openBlank(db.query, {entityId:entity.id, field:"map_pin", stage:"ACQUIRE", reason:"MEETING_ADDRESS_NOT_PLACED",
+    detail:input.meeting.venueGap?.publishedText ?? input.meeting.online?.label ?? null, retryMinutes:clocks.retryMinutes("meeting")});
+  return {blank:"MEETING_ADDRESS_NOT_PLACED"};
+}
+
+/** One sitting read from its body's door becomes facts, each found on the saved copy: title, start, place and links. */
+export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
+  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly pinCapture?: WorkerPublicationCapture; readonly producedBy: string;
+}, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
+  const { meeting, capture } = input;
+  const id = meetingEntityId(meeting.id);
+  const entity = await meetingFactEntity(db, meeting, capture.evidence.canonicalUrl);
   const copy = await db.transaction(query => saveCaptureCopy(query, capture));
   const provenance = captureProvenance(capture, entity.hosts);
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0 };
@@ -86,7 +113,8 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   };
   const claim = async (field: string, value: unknown, valueText: string, quote: string = valueText) =>
     count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote, copy,
-      producedBy: input.producedBy, costUsd: 0 }, clocks, now));
+      // Reviewed venue labels enrich the feed's location; they are claims, not the API's own field.
+      acquisition: field === "location" ? "walker" : "loader", producedBy: input.producedBy, costUsd: 0 }, clocks, now));
   await claim("title", meeting.title, meeting.title);
   const sitting = sittingOnPage(copy.text, meeting);
   const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };
@@ -100,11 +128,7 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
   else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
-  if(meeting.mapPin?.matchedAddress&&input.pinCapture){
-    const pinCopy=await db.transaction(query=>saveCaptureCopy(query,input.pinCapture!));
-    count(await publishClaim(db,{entity,field:"map_pin",fieldKind:"contact",provenance:"OFFICIAL",value:meeting.mapPin,
-      valueText:meeting.mapPin.matchedAddress,quote:meeting.mapPin.matchedAddress,copy:pinCopy,producedBy:input.producedBy,costUsd:0},clocks,now));
-  }
+  if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
   if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
   if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
   return tally;

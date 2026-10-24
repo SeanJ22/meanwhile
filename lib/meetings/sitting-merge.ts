@@ -3,6 +3,8 @@ import type { Meeting, Provenance } from "../sources/types.ts";
 import { preferCurrentSource } from "../civic-data/source-conflicts.ts";
 import type { SourceScopedHeldFact } from "../civic-data/manual-source-isolation.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { hasPublishedVenue } from "./venue-text.ts";
+import { repeatsPublishedVenue } from "../geo/address-query.ts";
 
 // Retain every contributing door after exact duplicate collapse, so two
 // sittings from one door never become an unambiguous day merely by merging.
@@ -11,16 +13,30 @@ const present = (value: unknown) => value !== null && value !== undefined && val
 const meta = new Set(["id", "bodyId", "ocdId", "jurisdiction", "provenance", "fieldSources", "publicationConflicts", "mergedMeetingIds", "carried"]);
 const timing = ["startsAt", "timeZone", "startPrecision"];
 const venue = ["location", "online", "venueGap", "mapPin"];
+const bodyOf = (meeting: Meeting) => meeting.bodyId ?? (meeting.ocdId && meeting.bodyName ? `${meeting.ocdId}:${meeting.bodyName}` : null);
+
+/** Multiple routes can return the same source ID, including a moved sitting. It remains one reader target. */
+export function mergeReaderSittings(input: readonly Meeting[]) {
+  const identities = new Map<string,Meeting[]>();
+  for (const meeting of input) {
+    const key = JSON.stringify([meeting.id,bodyOf(meeting)]);
+    identities.set(key,[...identities.get(key) ?? [],meeting]);
+  }
+  const exact = [...identities.values()].map(rows=>rows.length===1 ? {rows,dropped:[],conflicts:[]} : mergeSittingRows(rows,true));
+  const merged = mergeSittingRows(exact.flatMap(result=>result.rows),false);
+  const dropped = [...exact.flatMap(result=>result.dropped),...merged.dropped];
+  return {...merged,dropped,collapsed:dropped.length,conflicts:[...exact.flatMap(result=>result.conflicts),...merged.conflicts]};
+}
 
 /** Same body/day across doors. When a door lists multiple sittings that day,
  * only an unambiguous exact sitting identity can join them. */
-export function mergeReaderSittings(input: readonly Meeting[]) {
+function mergeSittingRows(input: readonly Meeting[], exactIdentity: boolean) {
   const groups = new Map<string, Meeting[]>();
   for (const meeting of input) {
     let date: string | undefined;
     try { if (meeting.timeZone && meeting.provenance) date = localWallClock(meeting.startsAt, meeting.timeZone)?.date; } catch { /* Invalid source dates do not acquire an identity. */ }
-    const body = meeting.bodyId ?? (meeting.ocdId && meeting.bodyName ? `${meeting.ocdId}:${meeting.bodyName}` : null);
-    const key = body && date ? `${body}\u001f${date}` : meeting.id;
+    const body = bodyOf(meeting);
+    const key = exactIdentity ? "same-source-id" : body && date ? `${body}\u001f${date}` : meeting.id;
     groups.set(key, [...(groups.get(key) ?? []), meeting]);
   }
   const rows: Meeting[] = [], dropped: Meeting[] = [];
@@ -29,7 +45,7 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
   for (const group of groups.values()) {
     const routes = group.flatMap(sources);
     const buckets = new Map<string, Meeting[]>();
-    const unambiguousDay = new Set(routes).size === routes.length;
+    const unambiguousDay = exactIdentity || new Set(routes).size === routes.length;
     for (const meeting of group) {
       let identity: string | null = null;
       try { identity = sittingKey({ ...meeting, bodyId: meeting.bodyId ?? `${meeting.ocdId}:${meeting.bodyName}` }); } catch { /* Keep malformed identities separate. */ }
@@ -37,7 +53,7 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
       buckets.set(key, [...(buckets.get(key) ?? []), meeting]);
     }
     for (const candidates of buckets.values()) {
-      if (candidates.length < 2 || new Set(candidates.flatMap(sources)).size !== candidates.flatMap(sources).length) {
+      if (candidates.length < 2 || !exactIdentity && new Set(candidates.flatMap(sources)).size !== candidates.flatMap(sources).length) {
         rows.push(...candidates); continue;
       }
       // Stable ordering makes ties independent of partition fetch order.
@@ -50,13 +66,27 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
       const merge = (fields: string[]) => {
         const value = (row: Meeting) => fields.length === 1 ? (row as unknown as Record<string, unknown>)[fields[0]]
           : Object.fromEntries(fields.map(key => [key, (row as unknown as Record<string, unknown>)[key] ?? null]));
-        const available = ordered.filter(row => fields.some(key => present((row as unknown as Record<string, unknown>)[key])));
+        let available = ordered.filter(row => fields.some(key => present((row as unknown as Record<string, unknown>)[key])));
+        if (fields === venue) {
+          const stated = available.filter(row => row.location || row.online ||
+            row.venueGap?.kind === "STATED_NOT_PLACED" && hasPublishedVenue(row.venueGap.publishedText));
+          if (stated.length) available = stated;
+        }
         if (!available.length) return;
         const winner = available.reduce((best, row) => preferCurrentSource(fieldSource(row, fields[0]), fieldSource(best, fields[0])) ? row : best);
         for (const field of fields) {
           const next = (winner as unknown as Record<string, unknown>)[field];
           if (next === undefined) delete result[field]; else result[field] = next;
           fieldSources[field] = fieldSource(winner, field);
+        }
+        if (fields === venue && !winner.location && !winner.online && winner.venueGap?.kind === "STATED_NOT_PLACED") {
+          const text = winner.venueGap.publishedText ?? "";
+          const placed = available.find(row => row.location && repeatsPublishedVenue(text,row.location.name,row.location.address));
+          if (placed?.location) {
+            result.location = {...placed.location,name:text,address:text};
+            delete result.venueGap;
+            if (placed.mapPin) result.mapPin = {...placed.mapPin,publishedLocation:text};
+          }
         }
         for (const loser of available) if (loser !== winner && canonicalCivicDataJson(value(loser)) !== canonicalCivicDataJson(value(winner))) {
           excluded.push({ key: `${primary.id}:${fields[0]}:${loser.id}`, code: "CONFLICT_SUPERSEDED",

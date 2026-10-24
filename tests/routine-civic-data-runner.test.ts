@@ -587,6 +587,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "dotgov",
 
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    ...REGISTRATION_TARGETS.map(({ state }) => `place-map-${state.toLowerCase()}`),
     "meeting-body-crosswalk-derived",
     "meeting-doors",
     "meeting-source-wiring",
@@ -1243,8 +1244,9 @@ test("national and publication source commands retain the progress-renewed timeo
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"]);
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "PASS_LAUNCH_DEADLINE_MS", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
+    withPassDeadline, Date.now() + 20 * 60_000);
   const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("people-portraits-"))!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
     "standing portrait work overrides the parent's quiet interval so every due person finishes");
@@ -1611,7 +1613,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
 
-  assert.match(runner, /for \(const \{ task \} of routinePassLaunchOrder\(routineSerialLanesFirst\(ballotPublicationLaunchOrder\(placeSourceLaunchOrder\(admitted\)\)\), admissionNowMs\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -2483,8 +2485,9 @@ test("every routine task's real child command runs a scripts/ script right after
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", `
-    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"]);
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "PASS_LAUNCH_DEADLINE_MS", `
+    ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
+    withPassDeadline, Date.now() + 20 * 60_000);
   const tasks = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract), ...AUTOMATIC_REFRESH_TASKS,
     ...STATE_BINDING_REFRESH_TASKS, ...legistarMemberTasks(["pima", "seattle", "fortworth"])];
   assert.ok(tasks.length > 100);

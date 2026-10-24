@@ -1,10 +1,12 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { REGISTRY_RUNTIME_PARSER_VERSION } from "../registry/runtime-version.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import { FEDERAL_MONEY_AUTHORITIES } from "../federal-money/authority.ts";
 import { CAMPAIGN_FINANCE_AUTHORITIES } from "../funding/state-sources.ts";
+import { CENSUS_GEO_PARSER_VERSION } from "../census-geography/publication.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -75,8 +77,24 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   if (/(^|\.)gov$/.test(host)) return true;
   if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return true;
   if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
+  return pageLinksSource(url, linkingPage);
+}
+
+/** A source's host is linked in this saved page; authority belongs to the caller's page check. */
+export function pageLinksSource(url: string, linkingPage: OfficialLinkingPage): boolean {
+  const host = hostOf(url);
+  if (host === null) return false;
   for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
     if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
+  }
+  // CivicClerk's official embed names its tenant instead of spelling out the portal URL.
+  if (/\bsrc\s*=\s*["']https:\/\/civicclerkcdn\.azureedge\.net\/publicportal-live\/embed\.js["']/i.test(linkingPage.html)) {
+    const config = /\bwindow\.clerkEmbedProps\s*=\s*(\{[^;]*?\})\s*;/.exec(linkingPage.html)?.[1];
+    if (config) try {
+      const tenant = (JSON.parse(config) as { tenant?: unknown }).tenant;
+      if (typeof tenant === "string" && /^[a-z0-9-]+$/i.test(tenant)
+        && ["portal", "api"].some(service => host === `${tenant.toLowerCase()}.${service}.civicclerk.com`)) return true;
+    } catch { /* A malformed embed names no source. */ }
   }
   return false;
 }
@@ -160,7 +178,7 @@ const AUTHORITIES = {
   },
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
   "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
-  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/2" }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/3" }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
     id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
@@ -272,7 +290,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["body_id", "division_ocd_id", "officeholder_id", "candidacy_id"],
     expectedTemporalFields: ["source_through", "collected_at"],
     horizonSemantics: "An explicit owner-reviewed package speaks only for its enumerated runtime bindings and exact source bytes. Static division/schema derivations remain separately versioned software inputs.",
-    parserVersion: "registry-runtime-bindings/3",
+    parserVersion: REGISTRY_RUNTIME_PARSER_VERSION,
     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,
@@ -492,7 +510,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["type", "geoid", "version"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. It never claims a wider geography universe and never substitutes a different Census vintage.",
-    parserVersion: "census-geography-overlaps/1",
+    parserVersion: CENSUS_GEO_PARSER_VERSION,
     freshnessExpectation: "Owner-invoked version promotion on a new Census relationship-file vintage; never a silent vintage substitution.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

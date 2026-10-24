@@ -32,12 +32,13 @@ export async function refreshFederalMoney(input: FederalMoneyRefreshOptions): Pr
 async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: FederalMoneyNationalProjection; outcome: PromotionOutcome; candidate: ReturnType<typeof federalMoneyCandidate> | null }> {
   const now = input.now ?? (() => new Date().toISOString()), started = Date.now();
   const states = input.states ?? federalMoneySourceStates(input.source);
+  const order = input.maxRounds === 0 ? states : await leastRecentlyServed(input.store, input.source, states);
   const acquire = input.acquire ?? acquireFederalMoney;
   const progress = new Map<string, FederalMoneyStateProgress>();
   const finished = new Set<string>();
   const maxRunMs = input.maxRunMs ?? 25 * 60_000;
   for (let round = 0; round < (input.maxRounds ?? Infinity) && Date.now() - started < maxRunMs && finished.size < states.length; round++) {
-    for (const state of states) {
+    for (const state of order) {
       if (finished.has(state) || Date.now() - started >= maxRunMs) continue;
       const scope = federalMoneyScope(input.source, state);
       let prior = await input.store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", scope);
@@ -145,4 +146,15 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   const candidate = federalMoneyCandidate({ projection, page: { facts: [], captures: [], declaredTotal: null, complete: rows.every(row => row.status === "COMPLETE") }, now: at });
   const outcome = await processRegisteredRoutineCandidate(input.store, input.source, candidate, at);
   return { projection, outcome, candidate };
+}
+
+/** A scheduled pass can end at its deadline after a few large states. Each pass starts with the states served longest ago,
+ * never-served first, so no state waits behind the same large states pass after pass. Ties keep the configured order. */
+async function leastRecentlyServed(store: RoutineDataStore, source: FederalMoneySource, states: readonly string[]): Promise<readonly string[]> {
+  const served = new Map<string, number>();
+  for (const state of states) {
+    const prior = await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", federalMoneyScope(source, state));
+    served.set(state, prior ? Math.max(Date.parse(prior.promotedAt), Date.parse(prior.latestConfirmation?.retrieval.retrievedAt ?? "") || 0) : -1);
+  }
+  return [...states].sort((a, b) => served.get(a)! - served.get(b)!);
 }

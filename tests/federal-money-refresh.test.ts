@@ -226,6 +226,22 @@ test("the next incremental pass overlaps the previous pass start, including upda
   assert.equal(since, now, "an update published after the initial page must remain eligible next pass");
 });
 
+// Production 2026-10-24: each OpenFEMA pass reached its deadline inside the first large states (FL, then GA),
+// so AL, AK, AZ, AR, CA, CO and CT were never requested at all.
+test("each scheduled pass starts with the states served longest ago, so a deadline inside one large state starves no other state", async t => {
+  let clock = Date.parse("2026-10-13T03:00:00.000Z");
+  t.mock.method(Date, "now", () => clock);
+  const store = new MemoryRoutineDataStore(), visited: string[] = [];
+  const input = { source: "openfema" as const, store, acquireOptions, states: ["AR", "OH", "TX"], identities: async () => identities, maxRunMs: 60_000,
+    now: () => new Date(clock).toISOString(),
+    acquire: async (_source: unknown, state: string) => {
+      visited.push(state); clock += 61_000;
+      return { facts: [], captures: [], complete: false, declaredTotal: 2000, continuation: { source: "openfema" as const, phase: "declarations" as const, offset: 1000 } };
+    } };
+  for (let pass = 0; pass < 4; pass++) await refreshFederalMoney(input);
+  assert.deepEqual(visited, ["AR", "OH", "TX", "AR"]);
+});
+
 test("a bounded national slice retains counts and continuation for a state it cannot visit", async () => {
   const store = new MemoryRoutineDataStore();
   await refreshFederalMoney({ source: "openfema", store, acquireOptions, states: ["AR"], identities: async () => identities,

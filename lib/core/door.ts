@@ -33,6 +33,9 @@ interface DoorOptions {
 
 const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
 
+const officialSource = (url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null) =>
+  isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage);
+
 /** Newer and more official wins; a value Sean typed changes only through him. */
 export function decide(current: Side | null, incoming: Side): Decision {
   if (current === null) return "PUBLISH";
@@ -87,13 +90,17 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const subjectId = await resolveId(requested, query) ?? await canonicalSubject(query, requested);
     let entity = await readCheckEntity(query, subjectId);
     const sourceUrl = input.capture?.evidence.canonicalUrl ?? input.copy.finalUrl;
-    const government = input.board ? await readCheckEntity(query,
+    const government = !entity && input.board ? await readCheckEntity(query,
       await resolveId(input.board.governmentId, query) ?? await canonicalSubject(query, input.board.governmentId)) : null;
-    if (input.board && government && isOfficialUrl(sourceUrl, government.hosts)) {
+    if (!entity && input.board && government && officialSource(sourceUrl, government.hosts, input.linkingPage)) {
       const body = await bodyNamed(query, government.id, null, input.board.name);
-      if (body) entity = await readCheckEntity(query, body.id);
+      if (body) {
+        if (requested !== body.id) await query(`INSERT INTO entity_external_id(entity_id,scheme,value)
+          VALUES($1,'body-alias',$2) ON CONFLICT DO NOTHING`, [body.id, requested]);
+        entity = await readCheckEntity(query, await resolveId(requested, query) ?? body.id);
+      }
     }
-    if (!entity && ["#governing", "#board"].includes(splitSubject(subjectId).tail) && isOfficialUrl(sourceUrl, [])) {
+    if (!entity && ["#governing", "#board"].includes(splitSubject(subjectId).tail) && officialSource(sourceUrl, [], input.linkingPage)) {
       const body = await ensureGoverningBody(query, subjectId);
       if (body) entity = await readCheckEntity(query, body.id);
     }
@@ -102,8 +109,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       return { refused: "SUBJECT_NOT_FOUND" };
     }
     const copy = input.capture ? await saveCaptureCopy(query, input.capture) : input.copy;
-    const official = isOfficialUrl(copy.finalUrl, entity.hosts) || isSourceApiUrl(copy.finalUrl)
-      || isOfficialSource(copy.finalUrl, input.linkingPage);
+    const official = officialSource(copy.finalUrl, entity.hosts, input.linkingPage);
     const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
     const fast = official && acquisition === "loader";
     const provenance = input.provenance === "OWNER" ? "OWNER" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;

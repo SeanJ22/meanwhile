@@ -209,9 +209,40 @@ test("one call creates the board a government names and publishes its fact under
     assert.equal((outcome as { decision: string }).decision, "PUBLISH");
     const [board] = await db.query("SELECT e.kind,e.name,e.parent_id FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.id=$1", [(outcome as { factId: number }).factId]);
     assert.deepEqual(board, { kind: "body", name: "Planning Commission", parent_id: "az:city:example" });
+    assert.equal((await db.query("SELECT reader_resolve_id('unheld-board')=(SELECT entity_id FROM fact WHERE id=$1) AS same", [(outcome as { factId: number }).factId]))[0]!.same, true);
     assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE name='Planning Commission'"))[0]!.n, 1);
     await door(db, { ...claim, subjectId: "unheld-board", board: { governmentId: "az:city:example", name: "Planning Commission" } }, clocks, now, { purge });
     assert.equal((await db.query("SELECT count(*)::int AS n FROM fact"))[0]!.n, 1);
+  } finally { await db.pg.close(); }
+});
+
+test("board-creation metadata cannot redirect an already resolved subject", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES('az:city:example','government','Example City','AZ','place-one')");
+    const outcome = await door(db, { ...input(), board: { governmentId: "az:city:example", name: "Planning Commission" } }, clocks, now, { purge });
+    assert.equal((outcome as { decision: string }).decision, "PUBLISH");
+    assert.deepEqual(await db.query("SELECT entity_id FROM fact"), [{ entity_id: input().entity.id }]);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE name='Planning Commission'"))[0]!.n, 0);
+  } finally { await db.pg.close(); }
+});
+
+test("an API and a government-linked portal can name an unheld board through the same official lane", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES('az:city:example','government','Example City','AZ','place-one')");
+    for (const [index, url] of ["https://webapi.legistar.com/v1/example/Bodies", "https://portal.example/council"].entries()) {
+      const source = index + 3;
+      await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES($1,$2,$2,$3,$4,$2)",
+        [source, url, now.toISOString(), "c".repeat(64)]);
+      const { entity: _entity, ...claim } = input();
+      const name = index === 0 ? "API Planning Commission" : "Portal Planning Commission";
+      const outcome = await door(db, { ...claim, subjectId: `unheld-${index}`, copy: { ...claim.copy, id: source, finalUrl: url },
+        board: { governmentId: "az:city:example", name },
+        ...(index === 1 ? { linkingPage: { url: "https://example.gov/", html: '<a href="https://portal.example/council">Council</a>' } } : {}) }, clocks, now, { purge });
+      assert.equal((outcome as { decision: string }).decision, "PUBLISH");
+      assert.equal((await db.query("SELECT e.name FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.id=$1", [(outcome as { factId: number }).factId]))[0]!.name, name);
+    }
   } finally { await db.pg.close(); }
 });
 

@@ -1,3 +1,5 @@
+import type { OfficeholderSet } from "./types.ts";
+
 /** A person's name with one token in it is incomplete, not a value. */
 
 /** Trailing generational and credential suffixes. Never a given name. */
@@ -57,4 +59,20 @@ export function personInitials(name: string): string {
   const first = parts[0]?.[0] ?? "";
   const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? "") : "";
   return (first + last).toUpperCase();
+}
+
+const NAVIGATION = new Set(["contact us", "contact information", "staff directory", "email us", "town hall", "member name"]);
+
+/** Page furniture such as "Actions" and "Contact us" never names an officeholder. */
+export const personName = (name: string | null | undefined): boolean => typeof name === "string" && /\s/.test(name.trim()) && !NAVIGATION.has(name.trim().toLowerCase().replace(/\s+/g, " "));
+
+/** Invalid statewide people cannot enter a source record through a prior roster or a secondary source. */
+export function withoutInvalidStatewidePeople(roster: OfficeholderSet): OfficeholderSet {
+  const statewideIds = new Set(roster.divisions.filter(row => /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(row.ocdId))
+    .map(row => row.officeholderId));
+  const invalid = new Set(roster.officeholders.filter(row => !personName(row.name) &&
+    (statewideIds.has(row.id) || row.level === "STATE" && !row.chamber)).map(row => row.id));
+  if (!invalid.size) return roster;
+  return { ...roster, officeholders: roster.officeholders.filter(row => !invalid.has(row.id)),
+    divisions: roster.divisions.filter(row => !invalid.has(row.officeholderId)), unmatched: roster.unmatched.filter(row => !invalid.has(row.officeholderId)) };
 }

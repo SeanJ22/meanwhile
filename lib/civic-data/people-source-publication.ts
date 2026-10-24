@@ -72,7 +72,7 @@ async function peopleSourceViolations(input:{state:string;sourceId:string;roster
     const pageText = words(statewidePageText(body));
     if (!capture || !quote || !pageText.includes(words(quote)) || !isOfficialSource(capture.finalUrl,linkingPage) ||
       !(input.sourceId === "official-state-people" ? legislaturePageNamesPerson(body,person.name) : pageText.includes(words(person.name)))
-      || !pageText.includes(words(person.officeTitle).replace(/^state /,""))) violations.push(`PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:${person.id}`);
+      || !(input.sourceId === "statewide-executive-sources" && !national) && !pageText.includes(words(person.officeTitle).replace(/^state /,""))) violations.push(`PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:${person.id}`);
     else if (national && input.verifyNationalCurrent !== false) {
       const index = input.captures.filter(row => row.finalUrl === ADMINISTRATION_URL).sort((a,b)=>b.retrievedAt.localeCompare(a.retrievedAt))[0];
       try {

@@ -6,7 +6,7 @@ import test from "node:test";
 import centroidFile from "../lib/geo/zcta-centroids.json" with { type: "json" };
 import postalFile from "../lib/geo/postal-zips.json" with { type: "json" };
 import { fixtureZipLocation, fixtureZipResolution } from "./helpers/zip-location.ts";
-import { lookupIn, resolveIn } from "../lib/geo/zcta-core.ts";
+import { resolveZipLocation } from "../lib/place-map/locations.ts";
 import { resolveReaderZip } from "../lib/reader/zip.ts";
 import { stateZipLocations } from "../lib/place-map/location-import.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
@@ -14,7 +14,7 @@ import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/ge
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
 import { areaLookup, buildPostalTable } from "../lib/geo/build-postal-table.ts";
 import type { Feature } from "../lib/geo/shapefile.ts";
-import { readZipPlace } from "../lib/place-map/reader.ts";
+import { installPlaceMapQuery, readZipPlace } from "../lib/place-map/reader.ts";
 import { zipCertainty } from "../lib/geo/zip-certainty.ts";
 import { readZipDivisions } from "../lib/place-map/reader.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
@@ -76,13 +76,15 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
   assert.equal(areaLookup(boundaries.zcta)(0, 0), null, "an uncovered point never gets its nearest ZCTA assigned");
 });
 
-test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, without claiming nonexistence", () => {
-  assert.deepEqual(resolveIn({}, "73960"), { ok: false, reason: "uncovered" });
-  assert.deepEqual(fixtureZipResolution("00000"), { ok: false, reason: "uncovered" });
-  const postal: PostalTable = { "73960": [null, null, "po-box", null, "Texhoma", "TX", "Sherman County", "48421", null] };
-  assert.equal(lookupIn({}, "73960", postal), null);
-  assert.deepEqual(resolveIn({}, "73960", postal), { ok: false, reason: "uncovered" });
-  assert.deepEqual(fixtureZipResolution("0509"), { ok: false, reason: "malformed" });
+test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, without claiming nonexistence", async () => {
+  installPlaceMapQuery(async () => []);
+  try {
+    assert.deepEqual(await resolveZipLocation("73960"), { ok: false, reason: "uncovered" });
+    assert.deepEqual(await resolveZipLocation("00000"), { ok: false, reason: "uncovered" });
+    installPlaceMapQuery(async () => [{zip:"73960",lat:null,lng:null,postal:fixtureZipLocation("73960")!.postal}]);
+    assert.deepEqual(await resolveZipLocation("73960"), { ok: false, reason: "uncovered" });
+    assert.deepEqual(await resolveZipLocation("0509"), { ok: false, reason: "malformed" });
+  } finally { installPlaceMapQuery(undefined); }
   assert.equal(ZIP_AREA_MISSING, "We don't have that ZIP's area yet. Enter your street address and we'll find your districts.");
   const text = postalAreaMessage(fixtureZipLocation("73960")!.postal!);
   assert.match(text, /Texhoma, TX · Sherman County/);

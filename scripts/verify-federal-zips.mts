@@ -13,21 +13,20 @@ import { holdersFor, indexByDivision, senatorsFor } from "../lib/officials/looku
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
-import { readZipPlace } from "../lib/place-map/reader.ts";
-import type { PostalTable } from "../lib/geo/postal-core.ts";
-import postal from "../lib/geo/postal-zips.json" with { type: "json" };
+import { installPlaceMapQuery, readStateZipPlaces } from "../lib/place-map/reader.ts";
+import { readZipPostalAreas } from "../lib/place-map/locations.ts";
 
 const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
 if (!connection) throw new Error("WTP_PRODUCTION_DATABASE_URL_READONLY is required; refusing to use a local database.");
 const sql = neon(connection);
-const query = async (text: string, params: readonly unknown[]) =>
+const query = async (text: string, params: readonly unknown[] = []) =>
   (await sql.transaction([sql.query(text, [...params])], { readOnly: true }))[0];
 const [identity] = await query("SELECT current_user, current_setting('transaction_read_only') AS read_only", []);
 if (identity.current_user !== "readonly" || identity.read_only !== "on") throw new Error("A read-only production role and transaction are required.");
 // The diagnostic's only database access is the explicit read-only transport above.
 delete process.env.DATABASE_URL;
 delete process.env.WTP_ASSET_STORE;
-const postalRows = postal.zips as unknown as PostalTable;
+installPlaceMapQuery(query);
 const failures: { state: string; zip?: string; member?: string; division?: string; problem: string }[] = [];
 const blanks: typeof failures = [];
 const summaries: { state: string; version: string | null; members: number; postalZips: number; residentialZips: number; addressRequired: number }[] = [];
@@ -56,14 +55,15 @@ for (const state of REGISTRY_STATES.filter(state => !["DC", "PR", "VI", "AS", "G
       if (offices.length < heldDistrict.length + (member.offices?.length ?? 0)) failures.push({ state, member: member.name, problem: "Held office records were hidden" });
       if (!(await readOfficeLocations(member.id, state)).length) addressGaps.push({ state, member: member.name });
     }
-    const zips = Object.keys(postalRows).filter(zip => postalRows[zip][5] === state);
+    const entries = await readStateZipPlaces(state), zips = [...entries.keys()];
+    const postal = await readZipPostalAreas(zips);
     let residentialZips = 0, addressRequired = 0;
     for (const zip of zips) {
       // The existing reader requires a residential address for mail-only ZIPs;
       // a postal destination never establishes someone's House district.
-      if (postalRows[zip][2] !== "standard") { addressRequired++; continue; }
+      if (postal.get(zip)?.type !== "standard") { addressRequired++; continue; }
       residentialZips++;
-      const entry = await readZipPlace(zip) ?? { ids: [], partial: [], samples: 0 };
+      const entry = entries.get(zip)!;
       const ids = entry.ids;
       const houseDistricts = ids.filter(id => id.startsWith(`${stateId}/cd:`));
       if (!houseDistricts.length) blanks.push({ state, zip, problem: "ZIP requires a point lookup; no published ZIP-to-House relationship" });

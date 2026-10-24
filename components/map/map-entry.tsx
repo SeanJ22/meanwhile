@@ -384,7 +384,9 @@ function MapEntryInner() {
   }, [search]);
 
   const pointLocated = useCallback((lat: number, lng: number) => {
-    takeForeground();
+    discardReaderAgendaStart();
+    dispatch({ type: "select/venue", key: null });
+    dispatch({ type: "select/district", ocdId: null, districtType: null });
     setPopupMeeting(null);
     setLarge(null);
     setPop(null);
@@ -395,7 +397,7 @@ function MapEntryInner() {
       key: `point:${lat},${lng}`, kind: "settled", zip: null, lat, lng,
     } });
     setFocus({ lat, lng, zoom: 14, key: `point:${lat},${lng}` });
-  }, [takeForeground, setLarge, dismissSidebar, location]);
+  }, [dispatch, setLarge, dismissSidebar, location]);
 
   const focusState = useStateFocus(view);
   const { contains } = focusState;

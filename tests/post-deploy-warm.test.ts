@@ -55,7 +55,7 @@ test("POST-DEPLOY · the fill and arriving page request the same CDN object", as
   const runtime={URL,URLSearchParams,Response,
     location:{pathname:"/",search:`?zip=${point.zip}`,href:`${PUBLIC_SITE_ORIGIN}/?zip=${point.zip}`},
     document:{documentElement:{dataset:{}}},window:{}as{__readerStart?:{location:Promise<unknown>}},
-    fetch:async(input:string)=>{calls.push(input);return Response.json({locations:{[point.zip]:point}});},
+    fetch:async(input:string)=>{calls.push(input);return Response.json({location:point});},
   };
   runInNewContext(readerStartScript(""),runtime);
   assert.ok(runtime.window.__readerStart);

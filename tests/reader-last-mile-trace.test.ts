@@ -30,13 +30,13 @@ test("Next deployment tracing includes static geography and excludes every migra
   const includes = Object.values(nextConfig.outputFileTracingIncludes ?? {}).flat();
   for (const required of [
     "./data/derived/state-geometry.json",
-    "./data/derived/resolver-geometry.json",
-    "./public/geo/*.geojson",
     "./data/derived/zip-coverage-tiers-runtime.json",
-    "./data/derived/zip-divisions/*.json",
     "./lib/db/migrations/meta/_journal.json",
   ]) {
     assert.ok(includes.includes(required), `static production input is no longer traced: ${required}`);
+  }
+  for(const retired of ["./data/derived/resolver-geometry.json","./public/geo/*.geojson","./data/derived/zip-divisions/*.json"]){
+    assert.ok(!includes.includes(retired),`retired place lookup is still traced: ${retired}`);
   }
 
   const bundled = new Set(
@@ -66,8 +66,6 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
     writeFileSync(path, JSON.stringify(value));
   };
   try {
-    write(join(root, "data/derived/resolver-geometry.json"), { files: ["public/geo/state-outlines.geojson"] });
-    write(join(root, "data/derived/zip-divisions/85.json"), {});
     const contracts = readerTraceRequirements(root);
     const routes = new Map<string, Set<string>>();
     for (const contract of contracts) {
@@ -82,7 +80,7 @@ test("postbuild checker rejects a removed dynamic holding in emitted route manif
     assert.deepEqual(checkReaderTraces(root).failures, []);
     const route = "api/meetings/route";
     const path = join(root, ".next/server/app", `${route}.js.nft.json`);
-    const missing = "data/derived/resolver-geometry.json";
+    const missing = "data/derived/state-geometry.json";
     write(path, { version: 1, files: [...routes.get(route)!].filter(file => file !== missing).map(file => relative(dirname(path), join(root, file))) });
     const failures = checkReaderTraces(root).failures;
     assert.equal(failures.length, 1);

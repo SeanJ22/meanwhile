@@ -1,8 +1,10 @@
 /** River's post-ship PK-01 check. --read-only captures the live ballot without saving or emitting reader events. */
 import assert from "node:assert/strict";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
-import type { PostalTable } from "../lib/geo/postal-core.ts";
+import { neon } from "@neondatabase/serverless";
+import { installPlaceMapQuery, readStateZipPlaces } from "../lib/place-map/reader.ts";
+import { readZipLocations } from "../lib/place-map/locations.ts";
 import { launchGuarded } from "./browser.mts";
 import { isLocalBase } from "../lib/ops/live-write-guard.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
@@ -15,16 +17,22 @@ const picksApi = process.env.PK01_PICKS_API_ORIGIN;
 if (picksApi) assert.ok(isLocalBase(base) && isLocalBase(picksApi), "a split-store replay is confined to local servers");
 assert.match(zip, /^\d{5}$/);
 if (national) assert.ok(picksApi && !readonly, "national replay needs local read-only production and development picks servers");
-const places = national ? (() => {
+const places = national ? await (async () => {
   // Geography metadata only; civic records are read one state at a time by the page.
-  const postal = (JSON.parse(readFileSync("lib/geo/postal-zips.json", "utf8")) as { zips: PostalTable }).zips;
-  return US_JURISDICTIONS.map(state => {
-    const rows = Object.entries(postal).filter(([, row]) => row[5] === state.usps && row[0] !== null && row[1] !== null)
-      .sort(([a], [b]) => a.localeCompare(b));
-    const place = rows.find(([, row]) => row[2] === "standard") ?? rows[0];
+  const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
+  assert.ok(connection && new URL(connection).username === "readonly", "national geography uses the production read-only role");
+  const sql = neon(connection);
+  installPlaceMapQuery(async (text, params = []) =>
+    (await sql.transaction([sql.query(text, [...params])], { readOnly: true }))[0]);
+  const places = [];
+  for (const state of US_JURISDICTIONS) {
+    const entries = await readStateZipPlaces(state.usps);
+    const rows = [...(await readZipLocations([...entries.keys()])).values()].sort((a, b) => a.zip.localeCompare(b.zip));
+    const place = rows.find(row => row.postal?.type === "standard") ?? rows[0];
     assert.ok(place, `${state.usps}: no held ZIP with coordinates`);
-    return { state: state.usps, zip: place[0] };
-  }).sort((a, b) => a.state.localeCompare(b.state));
+    places.push({ state: state.usps, zip: place.zip });
+  }
+  return places.sort((a, b) => a.state.localeCompare(b.state));
 })() : [{ state: "example", zip }];
 interface Result { state: string; zip: string; contests: number; choices: number; restored: number; restoreMs?: number;
   passed: boolean; reason?: string; tomorrow?: string; automaticPollingBothWays?: boolean }

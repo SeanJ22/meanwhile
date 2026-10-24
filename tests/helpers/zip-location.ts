@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { lookupIn, resolveIn, type CentroidTable } from "../../lib/geo/zcta-core.ts";
+import { isWellFormedZip, type CentroidTable, type ZipResolution } from "../../lib/geo/zcta-core.ts";
+import { sourceZipLocation } from "../../lib/place-map/location-import.ts";
 import { postalAreaIn, type PostalTable } from "../../lib/geo/postal-core.ts";
 
 let held: {centroids:CentroidTable;postal:PostalTable} | undefined;
@@ -10,8 +11,12 @@ function source() {
 }
 
 /** Captured source coordinates for test setup; application readers query the map. */
-export const fixtureZipLocation = (zip:string) => lookupIn(source().centroids,zip,source().postal);
-export const fixtureZipResolution = (zip:string) => resolveIn(source().centroids,zip,source().postal);
+export const fixtureZipLocation = (zip:string) => sourceZipLocation(source().centroids,zip,source().postal);
+export const fixtureZipResolution = (zip:string): ZipResolution => {
+  if (!isWellFormedZip(zip)) return {ok:false,reason:"malformed"};
+  const centroid = fixtureZipLocation(zip);
+  return centroid ? {ok:true,centroid} : {ok:false,reason:"uncovered"};
+};
 export const fixturePostalArea = (zip:string) => postalAreaIn(source().postal,zip);
 export const fixtureZipRecord = (zip:string) => {
   const point=fixtureZipLocation(zip),postal=fixturePostalArea(zip);

@@ -30,8 +30,8 @@ async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Prom
   for (let at = 0; at < rows.length; at += 500) await run(rows.slice(at, at + 500));
 }
 
-/** One state's source update is atomic. A failed update keeps its previous
- * rows; older plans and every existing id remain available on later runs. */
+/** One state's map rows commit atomically. Older plans and every existing id
+ * remain available; Admin totals refresh in a separate transaction afterward. */
 export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise<void> {
   await db.transaction(async query => {
     await batches(map.places, async places => {
@@ -69,6 +69,33 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
         ON CONFLICT(entity_id,place_id,boundary_year) DO NOTHING`,
       [JSON.stringify(rows.map(row => ({ entity_id: row.entityId, place_id: row.placeId, boundary_year: row.boundaryYear })))]);
     });
+  });
+  await refreshAdminCounts(db);
+}
+
+/** Keep Admin's country totals off the page's request path. Maps commit first;
+ * serializing only this cache refresh keeps concurrent imports' totals current. */
+async function refreshAdminCounts(db: FactDb): Promise<void> {
+  await db.transaction(async query => {
+    await query("SELECT pg_advisory_xact_lock(hashtextextended('place-map-admin-counts',0))");
+    const rows = await query(`WITH places AS (
+        SELECT e.state,count(DISTINCT b.place_id)::int AS places,
+          count(DISTINCT b.place_id) FILTER(WHERE b.county_attachment)::int AS county_attachments
+        FROM entity e JOIN place_boundary b ON b.place_id=e.id WHERE e.kind='place' AND e.state IS NOT NULL GROUP BY e.state
+      ), zips AS (SELECT state,count(*)::int AS n FROM (
+        SELECT DISTINCT e.state,m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id
+        JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year WHERE e.kind='place' AND b.layer<>'aiannh'
+      ) pairs GROUP BY state), zctas AS (SELECT state,count(*)::int AS n FROM (
+        SELECT DISTINCT e.state,m.zcta FROM zcta_place m JOIN entity e ON e.id=m.place_id
+        JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year WHERE e.kind='place' AND b.layer<>'aiannh'
+      ) pairs GROUP BY state)
+      SELECT p.*,coalesce(zips.n,0)::int AS zips,coalesce(zctas.n,0)::int AS zctas FROM places p
+      LEFT JOIN zips ON zips.state=p.state LEFT JOIN zctas ON zctas.state=p.state`);
+    await query(`INSERT INTO place_map_counts(state,places,zips,zctas,county_attachments)
+      SELECT state,places,zips,zctas,county_attachments FROM jsonb_to_recordset($1::jsonb)
+        AS r(state char(2),places integer,zips integer,zctas integer,county_attachments integer)
+      ON CONFLICT(state) DO UPDATE SET places=EXCLUDED.places,zips=EXCLUDED.zips,zctas=EXCLUDED.zctas,
+        county_attachments=EXCLUDED.county_attachments,updated_at=now()`, [JSON.stringify(rows)]);
   });
 }
 

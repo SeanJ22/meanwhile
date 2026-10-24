@@ -9,6 +9,22 @@ const districtTypes: Readonly<Record<string, GeographyType>> = {
 };
 const fields = `e.id AS place_id, e.name, e.state, b.layer, b.boundary_year, b.version,
   b.county_attachment, b.host_county_id`;
+const versionChoices = new Map<string, string | null>();
+type AvailableVersion = { key: string; type: GeographyType; states: string[] };
+
+/** Cache only the small plan decision, never place records or memberships. */
+function chosenVersion(available: readonly AvailableVersion[], type: GeographyType, state: string | null, selection: GeographySelection): string | null {
+  const keys: string[] = [];
+  for (const version of available) if (version.type === type && (!state || version.states.includes(state))) keys.push(version.key);
+  const day = (selection.purpose === "election" ? selection.electionDate : selection.asOf)?.slice(0, 10);
+  const key = JSON.stringify([type, state, selection.purpose, day, keys.sort()]);
+  const held = versionChoices.get(key);
+  if (held !== undefined) return held;
+  const chosen = selectGeographyVersion(available, type, selection, state ?? undefined)?.key ?? null;
+  if (versionChoices.size >= 1024) versionChoices.clear();
+  versionChoices.set(key, chosen);
+  return chosen;
+}
 // A point outside a newer local shape cannot fall back to its older shape.
 export const CURRENT_LOCAL_BOUNDARY_SQL = `(b.layer IN ('cd','sldu','sldl') OR b.boundary_year=(
   SELECT max(current.boundary_year) FROM place_boundary current WHERE current.place_id=b.place_id))`;
@@ -23,13 +39,25 @@ function membership(row: Record<string, unknown>): PlaceMembership {
 
 /** Select only the requested district plan. Entity ids and older memberships stay held. */
 function selected(rows: readonly PlaceMembership[], selection: GeographySelection): PlaceMembership[] {
-  const versions = [...new Map(rows.filter(row => districtTypes[row.layer]).map(row =>
-    [`${row.state}/${row.version}`, { key: row.version, type: districtTypes[row.layer], states: row.state ? [row.state] : [] }])).values()];
+  const versions = new Map<string, AvailableVersion>();
   const latest = new Map<string, number>();
-  for (const row of rows) if (!districtTypes[row.layer]) latest.set(row.placeId, Math.max(latest.get(row.placeId) ?? 0, row.boundaryYear));
-  return rows.filter(row => districtTypes[row.layer]
-    ? selectGeographyVersion(versions, districtTypes[row.layer], selection, row.state ?? undefined)?.key === row.version
-    : latest.get(row.placeId) === row.boundaryYear);
+  for (const row of rows) {
+    const type = districtTypes[row.layer];
+    if (type) {
+      const key = `${row.state}/${row.version}`;
+      if (!versions.has(key)) versions.set(key, { key: row.version, type, states: row.state ? [row.state] : [] });
+    } else latest.set(row.placeId, Math.max(latest.get(row.placeId) ?? 0, row.boundaryYear));
+  }
+  const available = [...versions.values()], chosen = new Map<string, string | null>();
+  const result: PlaceMembership[] = [];
+  for (const row of rows) {
+    const type = districtTypes[row.layer];
+    if (!type) { if (latest.get(row.placeId) === row.boundaryYear) result.push(row); continue; }
+    const key = `${row.state}/${row.layer}`;
+    if (!chosen.has(key)) chosen.set(key, chosenVersion(available, type, row.state, selection));
+    if (chosen.get(key) === row.version) result.push(row);
+  }
+  return result;
 }
 
 /** RB-A10's ZIP and ZCTA entry point. Each call performs one indexed table lookup. */
@@ -37,11 +65,11 @@ export async function placesForCode(query: Query, kind: "zip" | "zcta", code: st
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!/^\d{5}$/.test(code)) throw new Error("A five-digit ZIP or ZCTA is required");
   const table = kind === "zip" ? "zip_place" : "zcta_place";
-  const rows = await query(`SELECT coalesce(jsonb_agg(jsonb_build_object(
+  const rows = await query(`SELECT coalesce(json_agg(json_build_object(
       'placeId',e.id,'name',e.name,'state',e.state,'layer',b.layer,'boundaryYear',b.boundary_year,'version',b.version,
       'share',m.share,'shareBasis',m.share_basis,'partial',m.partial,'fringe',m.fringe,
       'countyAttachment',b.county_attachment,'hostCountyId',b.host_county_id
-    ) ORDER BY e.id,b.boundary_year),'[]'::jsonb) AS memberships
+    ) ORDER BY e.id,b.boundary_year),'[]'::json) AS memberships
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
     WHERE m.${kind}=$1 AND e.kind='place'`, [code]);

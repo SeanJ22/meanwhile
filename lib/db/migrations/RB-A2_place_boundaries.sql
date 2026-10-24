@@ -43,3 +43,12 @@ ALTER TABLE zcta_place DROP CONSTRAINT zcta_place_pkey,
   ADD CONSTRAINT zcta_place_pkey PRIMARY KEY(zcta,place_id,boundary_year) INCLUDE(share,share_basis,partial,fringe);
 --> statement-breakpoint
 CREATE INDEX "entity_place_name_lookup_idx" ON entity(id) INCLUDE(name,state) WHERE kind='place';
+--> statement-breakpoint
+CREATE TABLE place_map_counts (
+  state char(2) PRIMARY KEY,
+  places integer NOT NULL,
+  zips integer NOT NULL,
+  zctas integer NOT NULL,
+  county_attachments integer NOT NULL,
+  updated_at timestamptz NOT NULL DEFAULT now()
+);

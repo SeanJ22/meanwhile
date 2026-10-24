@@ -1,3 +1,5 @@
+import { stateName } from "../facts/entity-read.ts";
+
 /** Only the agenda's header is read: the place a sitting is held is stated first. */
 const HEADER_CHARS = 700;
 
@@ -91,13 +93,36 @@ export function statedAgendaAddress(agendaText: string): StatedAgendaAddress | n
   };
 }
 
-/** The issuing board's street address in its own agenda letterhead, before the agenda begins. */
-export function agendaLetterheadOffice(text:string,jurisdiction:string,state:string):string|null {
-  let header=text.replace(/\s+/g," ").trim().slice(0,HEADER_CHARS);
+const AGENDA_BODY = /\b(?:call\s+to\s+order|roll\s+call|public\s+comment|consent\s+(?:agenda|calendar)|briefing\s+items)\b|(?:^|\n)\s*\d+[.)]\s+/i;
+const MEETING_DATE = /\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}\b|\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}\/\d{1,2}\/\d{4}\b/i;
+
+function headerAddress(header:string,state:string,bareStreet=false):string|null {
+  const full=stateName(state);
+  if(full)header=header.replace(new RegExp(`,\\s*${full}\\b`,"gi"),`, ${state}`);
+  const address=statedAgendaAddress(header);
+  if(address?.city&&address.state===state)
+    return `${address.street}, ${address.city}, ${state}${address.zip?` ${address.zip}`:""}`;
+  if(!bareStreet)return null;
+  const lines=header.split(/\r?\n/).map(line=>line.trim());
+  const street=lines.find(line=>/^\d+[a-z]?(?:-\d+)?\s+[a-z][a-z\d .'-]*$/i.test(line));
+  const locality=lines.map(line=>/^([A-Z][A-Za-z .'-]{1,40}?),\s*([A-Z]{2})(?:\s+(\d{5}))?\b/.exec(line)).find(match=>match?.[2]===state);
+  return street&&locality?`${street}, ${locality[1]}, ${state}${locality[3]?` ${locality[3]}`:""}`:null;
+}
+
+/** A sitting's stated header address, before agenda items; its own source takes precedence over an office. */
+export function agendaMeetingAddress(text:string,state:string):string|null {
+  const header=text.slice(0,HEADER_CHARS).split(AGENDA_BODY,1)[0];
   const title=/\b(?:Meeting\s+)?Agenda\b/i.exec(header);
-  const street=streetKeyOf(header);
-  if(!title||!street||street.index>=title.index)return null;
-  header=header.slice(0,title.index);
+  return title?headerAddress(header.slice(title.index+title[0].length),state):null;
+}
+
+/** The issuing board's published header address, before the sitting's date and agenda items. */
+export function agendaLetterheadOffice(text:string,jurisdiction:string,state:string):string|null {
+  const front=text.slice(0,HEADER_CHARS).split(AGENDA_BODY,1)[0];
+  const title=/\b(?:Meeting\s+)?Agenda\b/i.exec(front);
+  if(!title)return null;
+  const date=MEETING_DATE.exec(front);
+  let header=front.slice(0,date?.index??title.index);
   const name=jurisdiction.replace(/,\s*[A-Z]{2}$/i,"").trim();
   for(const label of [name,name.replace(/^(county|city|town|village|borough) of (.+)$/i,"$2 $1"),
     name.replace(/^(.+) (county|city|town|village|borough)$/i,"$2 of $1")]){
@@ -105,8 +130,6 @@ export function agendaLetterheadOffice(text:string,jurisdiction:string,state:str
     const at=header.toLowerCase().indexOf(label.toLowerCase());
     if(at>=0)header=header.slice(0,at)+" ".repeat(label.length)+header.slice(at+label.length);
   }
-  const address=statedAgendaAddress(header);
-  if(!address?.city||address.state!==state)return null;
-  return `${address.street}, ${address.city}, ${address.state}${address.zip?` ${address.zip}`:""}`;
+  return headerAddress(header,state,true);
 }
 

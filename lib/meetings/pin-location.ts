@@ -17,6 +17,8 @@ export interface MeetingPinBody {
     address: string;
     provenance: RegistryProvenance;
   };
+  meetingAddresses?: MeetingPinAddress[];
+  postalAliases?: {address:string;provenance:RegistryProvenance}[];
 }
 
 export type PinBasis = "MEETING" | "BODY_OFFICE" | "GOVERNMENT_OFFICE";
@@ -27,6 +29,8 @@ export interface MeetingPinAddress {
   address: string;
   basis: PinBasis;
   provenance: RegistryProvenance;
+  geocodingAddress?:string;
+  addressAlias?:{sourceAddress:string;provenance:RegistryProvenance};
 }
 export interface MeetingPinLocation extends MeetingPinAddress {
   lat: number;
@@ -81,6 +85,8 @@ export function meetingPinAddresses(
       basis: "MEETING",
       provenance: meeting.fieldSources?.location ?? meeting.provenance,
     });
+  if(!isOnlineOnly(meeting))
+    addresses.push(...body?.meetingAddresses?.filter(address=>address.meetingId===meeting.id)??[]);
   if (body?.officeContact?.address)
     addresses.push({
       meetingId: meeting.id,

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   placePublishedMeetingPins,
@@ -642,4 +643,18 @@ test("Census rejects unusable published text with 400 and publication tries the 
     assert.equal(placed.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(requests,2);
     assert.equal(placed.held.length,status===400?0:1);
   }
+});
+
+test("a confirmed Census road spelling keeps the published house, street name, city, state, ZIP and any stated direction",()=>{
+  const rows=JSON.parse(readFileSync(new URL("./fixtures/mt01-galveston-census.json",import.meta.url),"utf8")) as {text:string}[];
+  const response=JSON.parse(rows.find(row=>JSON.parse(row.text).result.addressMatches?.[0]?.addressComponents.streetName==="CALDER")!.text);
+  const published="174 Calder Rd., League City, TX 77573";
+  assert.ok(verifiedCensusVenuePoint(published,response));
+  for(const changed of [published.replace("174","176"),published.replace("Calder","Other"),published.replace("League City","Galveston"),
+    published.replace("TX","CA"),published.replace("77573","77550"),published.replace("Calder","S Calder")]){
+    const conflict=structuredClone(response);conflict.result.input.address.address=changed;
+    assert.equal(verifiedCensusVenuePoint(changed,conflict),null,changed);
+  }
+  const unbound=structuredClone(response);delete unbound.result.input;
+  assert.equal(verifiedCensusVenuePoint(published,unbound),null,"an unbound provider copy cannot declare a road spelling change");
 });

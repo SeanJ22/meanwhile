@@ -50,7 +50,7 @@ export function verifiedCensusVenuePoint(
       .filter(Boolean)
       .join(" "),
   );
-  if (!hasWords(folded, street) || !hasWords(folded, usps(components.city)))
+  if (!hasWords(folded, usps(components.city)))
     return null;
   const query = censusAddressQuery(published);
   const foldedQuery = usps(query);
@@ -71,6 +71,11 @@ export function verifiedCensusVenuePoint(
     [...foldedQuery.matchAll(zipPattern)].at(-1)?.[1] ??
     /\b(\d{5})(?:-\d{4})?\s*$/.exec(query)?.[1];
   if (publishedZip && components.zip !== publishedZip) return null;
+  const echoed=(response as {result?:{input?:{address?:{address?:string}}}})?.result?.input?.address?.address;
+  const namedStreet=hasWords(folded,usps([house,components.streetName].join(" ")))
+    ||hasWords(folded,usps([house,components.preDirection,components.streetName].filter(Boolean).join(" ")));
+  // Census may supply an omitted directional or canonical road type. Require its exact input and the source's ZIP.
+  if(!hasWords(folded,street)&&!(publishedZip&&typeof echoed==="string"&&usps(echoed)===foldedQuery&&namedStreet))return null;
   const lat = match.coordinates?.y;
   const lng = match.coordinates?.x;
   if (

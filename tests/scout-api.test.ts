@@ -7,6 +7,13 @@ test('the held CivicClerk API is recognized only on its HTTPS API endpoint',()=>
   for(const url of ['https://example.portal.civicclerk.com/event/1','https://example.api.civicclerk.com.attacker.example/v1/Events','http://example.api.civicclerk.com/v1/Events','https://example.api.civicclerk.com/other'])assert.equal(isSourceApiUrl(url),false);
 });
 
+test('held CivicPlus and Thrillshare API fields include their published document assets',()=>{
+  assert.equal(isSourceApiUrl('https://content.civicplus.com/api/assets/example/asset-id'),true);
+  assert.equal(isSourceApiUrl('https://district.thrillshare.com/api/v4/o/123/cms'),true);
+  assert.equal(isSourceApiUrl('https://content.civicplus.com/other'),false);
+  assert.equal(isSourceApiUrl('https://district.thrillshare.com/other'),false);
+});
+
 test('government tools return data and source URLs without exposing provider credentials', async () => {
   const env = Object.fromEntries(['CONGRESS','CENSUS','FEC','PLURAL','LEGISCAN','LDA','DATA_GOV','GOOGLE_CIVIC','SAM_GOV'].map(name=>[name+'_API_KEY','secret-'+name]));
   const cases = ['congress_api','census_api','fec_api','plural_api','legiscan_api','lda_api','data_gov_api','google_civic_api','sam_gov_api','legistar_api'] as const;

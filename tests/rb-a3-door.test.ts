@@ -208,6 +208,19 @@ test("a campaign or advocacy site cannot publish a fact about someone else, and 
   } finally { await db.pg.close(); }
 });
 
+test("a government directory link preserves a campaign site's scope and source rank", async () => {
+  const db = await seeded();
+  try {
+    const claim = { ...input({ provenance: "CAMPAIGN", sourceSubjectId: "another-person", quote: "Call 520-555-0100",
+      copy: { ...input().copy, id: 2, finalUrl: "https://campaign.example/", text: "Example City Council Arizona Call 520-555-0100" } }),
+      linkingPage: { url: "https://example.gov/candidates", html: '<a href="https://campaign.example/">Campaign website</a>' } };
+    assert.deepEqual(await door(db, claim, clocks, now, { purge }), { refused: "CAMPAIGN_OTHER_SUBJECT" });
+    assert.equal("decision" in await door(db, { ...claim, sourceSubjectId: claim.entity.id }, clocks, now, { purge }), true);
+    assert.deepEqual(await db.query("SELECT provenance_kind,quote_start FROM fact"), [{ provenance_kind: "CAMPAIGN", quote_start: 29 }]);
+    assert.deepEqual(await db.query("SELECT step FROM count_hour"), [{ step: "door_checked" }]);
+  } finally { await db.pg.close(); }
+});
+
 test("nonofficial claims use clocks.ts; a failed quote leaves the old caller its blank", async () => {
   const db = await seeded();
   try {

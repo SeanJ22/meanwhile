@@ -48,6 +48,8 @@ const credentialName = /^(api[_-]?key|key|apikey|token|access_token|authorizatio
 export function isSourceApiUrl(value: string): boolean {
   const url = new URL(value);
   if (url.protocol === 'https:' && /^[a-z0-9-]+\.api\.civicclerk\.com$/i.test(url.hostname) && url.pathname.startsWith('/v1/')) return true;
+  if (url.protocol === 'https:' && url.hostname === 'content.civicplus.com' && url.pathname.startsWith('/api/')) return true;
+  if (url.protocol === 'https:' && /^(?:[a-z0-9-]+\.)?thrillshare\.com$/i.test(url.hostname) && url.pathname.startsWith('/api/')) return true;
   const bases = [...Object.values(config).map(provider => provider.base),
     'https://api.govinfo.gov/', 'https://webapi.legistar.com/v1/',
     'https://api.us.socrata.com/api/catalog/v1', 'https://data.openstates.org/', 'https://open.pluralpolicy.com/'];

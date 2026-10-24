@@ -125,8 +125,9 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const copy = input.capture ? await saveCaptureCopy(query, input.capture) : input.copy;
     const official = officialSource(copy.finalUrl, entity.hosts, input.linkingPage);
     const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
-    const fast = official && acquisition === "loader";
-    const provenance = input.provenance === "OWNER" ? "OWNER" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
+    const campaign = input.provenance === "CAMPAIGN" && !isOfficialUrl(copy.finalUrl, []) && !isSourceApiUrl(copy.finalUrl);
+    const fast = official && acquisition === "loader" && !campaign;
+    const provenance = input.provenance === "OWNER" ? "OWNER" : campaign ? "CAMPAIGN" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
     const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;
     const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
     const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };

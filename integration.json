@@ -4390,5 +4390,29 @@
     "tested_sha": "ca26d9092",
     "gates": "pass (deploy-paths rerun on fresh build)",
     "at": "2026-10-24T20:30:11Z"
+  },
+  {
+    "lane": "rn-03",
+    "steps": [
+      "RN-03"
+    ],
+    "ready_sha": "953466400",
+    "merge_sha": "0fd58dd5a",
+    "river_sha": "f6c4cba25",
+    "tested_sha": "0fd58dd5a",
+    "gates": "pass",
+    "at": "2026-10-24T21:26:21Z"
+  },
+  {
+    "lane": "so-01",
+    "steps": [
+      "SO-01"
+    ],
+    "ready_sha": "05012c722",
+    "merge_sha": "0fd58dd5a",
+    "river_sha": "f6c4cba25",
+    "tested_sha": "0fd58dd5a",
+    "gates": "pass",
+    "at": "2026-10-24T21:26:21Z"
   }
 ]

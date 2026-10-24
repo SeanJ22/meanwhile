@@ -395,3 +395,5 @@ One line per batch folded into river.
 - 2026-10-24T20:30:11Z · mt-01 · MT-01 · ready db4cd927b · river 720bc77b6 · pnpm gates on ca26d9092: 9,790 pass; deploy-paths (stale .next) passes 12/12 on the fresh build · release 102 PR #812
 - 2026-10-24T20:30:11Z · rb-a1 · RB-A1 · ready 1d6df41d9 · river 720bc77b6 · pnpm gates on ca26d9092: 9,790 pass; deploy-paths (stale .next) passes 12/12 on the fresh build · release 102 PR #812
 - 2026-10-24T20:30:11Z · river-meet · RV-MEET · ready 6be91744f · river 720bc77b6 · pnpm gates on ca26d9092: 9,790 pass; deploy-paths (stale .next) passes 12/12 on the fresh build · release 102 PR #812
+- 2026-10-24T21:26:21Z · rn-03 · RN-03 · ready 953466400 · river f6c4cba25 · pnpm gates pass on 0fd58dd5a (9 of 9, 9,808 tests) · release 103 PR #813
+- 2026-10-24T21:26:21Z · so-01 · SO-01 · ready 05012c722 · river f6c4cba25 · pnpm gates pass on 0fd58dd5a (9 of 9, 9,808 tests) · release 103 PR #813

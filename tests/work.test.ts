@@ -4,9 +4,9 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { workId, workList, type WorkInput } from "../lib/core/work.ts";
 import { workCounts } from "../lib/core/work-counts.ts";
-import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
+import { SHARED_WORK_DDL } from "../lib/control-plane/repository/migrations/RB-A1.ts";
 
-const base = readFileSync(new URL("./fixtures/work/base.sql", import.meta.url), "utf8");
+const base = SHARED_WORK_DDL.join(";\n");
 const migration = readFileSync(new URL("../lib/control-plane/repository/migrations/RB-A5.sql", import.meta.url), "utf8");
 const input: WorkInput = { kind: "check", placeId: "ocd-division/country:us/state:az/county:pima", subjectId: "body:pima",
   url: "https://www.pima.gov/contact", field: "phone", value: "520-724-4330", quote: "Phone: 520-724-4330", source: { report: "one" } };
@@ -14,7 +14,6 @@ const input: WorkInput = { kind: "check", placeId: "ocd-division/country:us/stat
 test("work list retains reports without reopening, fences changed work, backs off, recovers leases and creates one detective", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
-  await pg.exec(CONTROL_READS_BACKFILL_DDL[0]!);
   await pg.exec(base);
   await pg.exec(migration);
   const query = async (sql: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
@@ -28,12 +27,12 @@ test("work list retains reports without reopening, fences changed work, backs of
   const before = (await query("select not_before from work_row where id=$1", [added.id]))[0]!.not_before;
   at = new Date("2026-10-24T12:00:01Z");
   const repeated = await list.add({ ...input, source: { report: "two" }, priority: 99 });
-  assert.equal(repeated.state, "done");
-  assert.equal(String(repeated.not_before), String(before));
+  assert.equal(repeated.status, "done");
+  assert.equal(new Date(repeated.notBefore).getTime(), new Date(before as string).getTime());
   assert.equal(repeated.priority, 0);
-  assert.equal(repeated.sources.length, 2);
+  assert.equal(repeated.reports.length, 2);
   assert.equal((await list.claim("check", 1)).length, 0);
-  assert.equal((await list.add({ ...input, source: { report: "two" } })).sources.length, 2, "a replayed report is retained once");
+  assert.equal((await list.add({ ...input, source: { report: "two" } })).reports.length, 2, "a replayed report is retained once");
   await list.add({ ...input, quote: "New contact Phone: 520-724-4330", source: { report: "three" } });
   const [changed] = await list.claim("check", 1);
   await list.add({ ...input, value: "520-724-4444", quote: "Phone: 520-724-4444", source: { report: "four" } });
@@ -52,12 +51,12 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.equal(await list.finish(killed!), false, "an expired worker cannot finish");
   const [recovered] = await list.claim("check", 1);
   assert.equal(recovered!.id, killed!.id);
-  assert.notEqual(recovered!.lease_owner, killed!.lease_owner);
+  assert.notEqual(recovered!.leaseOwner, killed!.leaseOwner);
   assert.equal(await list.refuse(recovered!, "Value is absent from source"), true);
   assert.equal(await list.refuse(recovered!, "Duplicate callback"), false);
   const [detect] = await list.claim("detect", 1);
-  assert.equal(detect!.subject_id, input.subjectId);
-  assert.match(String(detect!.sources[0]!.reason), /absent/);
+  assert.equal(detect!.subjectId, input.subjectId);
+  assert.match(String(detect!.reports[0]!.reason), /absent/);
   assert.equal(await list.refuse(detect!, "No alternate source"), true);
   assert.equal((await query("select count(*)::int n from work_row where kind='detect'"))[0]!.n, 1, "refusing a detective cannot create a detective loop");
   const hours = await workCounts(query, "az", at);
@@ -83,7 +82,6 @@ test("link reports share a row across subjects; claim ids survive changed values
 test("a counter failure rolls back the work transition", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
-  await pg.exec(CONTROL_READS_BACKFILL_DDL[0]!);
   await pg.exec(base);
   await pg.exec(migration);
   const query = async (sql: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(sql, [...params])).rows;

@@ -8,6 +8,10 @@ export function workMigrationDefinition(): string {
 }
 
 export async function expandWorkList(sql: Sql): Promise<string> {
-  for (const statement of workMigrationDefinition().split("--> statement-breakpoint")) await sql.query(statement);
+  await sql.query("BEGIN");
+  try {
+    for (const statement of workMigrationDefinition().split("--> statement-breakpoint")) await sql.query(statement);
+    await sql.query("COMMIT");
+  } catch (error) { await sql.query("ROLLBACK"); throw error; }
   return "leased work and hourly counts";
 }

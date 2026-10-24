@@ -39,7 +39,7 @@ test("control-plane migrations use only the declared production context and its 
 
 test("committed journal hashes cover the expand-only definition", () => {
   const journal = JSON.parse(readFileSync("lib/control-plane/repository/migrations/meta/_journal.json", "utf8"));
-  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A5_expand"]);
+  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RB-A5_expand"]);
   for (const row of journal.entries) assert.equal(row.hash, controlPlaneMigrationHash(process.cwd(), row.id));
 });
 
@@ -88,7 +88,6 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl) || ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_pass_cursors"))
       await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
     await sql.query("CREATE TABLE cp_spend_window(id text PRIMARY KEY,value jsonb)");
-    await db.exec(readFileSync("tests/fixtures/work/base.sql", "utf8"));
     await sql.query((await import("../lib/control-plane/repository/control-reads-backfill.ts")).CONTROL_READS_BACKFILL_DDL[0]!);
     const az={...entry("az"),jurisdiction:"ocd-division/country:us/state:az/county:pima"};
     const nh={...entry("nh"),jurisdiction:"ocd-division/country:us/state:nh/county:coos"};
@@ -139,7 +138,7 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az","st:nh"]);
     assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,0);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,18);
-    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["CP-01_expand","DT-01_expand","RB-A5_expand"]);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["CP-01_expand","DT-01_expand","RB-A1_expand", "RB-A5_expand"]);
     assert.equal((await sql.query("SELECT value ? 'placeTargets' AS embedded FROM cp_admin_config"))[0].embedded,false);
     assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old"),[{old:null}]);
     assert.equal((await sql.query("SELECT (value #>> '{payload,count}')::integer AS n FROM cp_field_manual_entries WHERE id=$1",[BANK_WRITE_HEALTH_ID]))[0].n,5);

@@ -25,7 +25,7 @@ export function WorkCounts() {
     <select className={s.select} value={state} aria-label="State for hourly work counts" onChange={event => choose(event.target.value)}>
       <option value="">Every state</option>
       {REGISTRY_STATES.map(code => <option key={code} value={code.toLowerCase()}>{v.index.get(`st:${code.toLowerCase()}`)?.name ?? code}</option>)}
-      <option value="system">National and system work</option>
+      <option value="us">National and system work</option>
     </select>
     {reading.kind === "loading" && <Loading what="the hourly work counts" />}
     {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
@@ -35,7 +35,7 @@ export function WorkCounts() {
       {!!rows.length && <div className={s.tableWrap}><table className={s.table}>
         <thead><tr><th scope="col">Hour (Eastern)</th><th scope="col">State</th><th scope="col" className={s.num}>Rows in</th><th scope="col" className={s.num}>Done</th><th scope="col" className={s.num}>Refused</th></tr></thead>
         <tbody>{page.map(row => <tr key={`${row.state}:${row.hour}`}>
-          <th scope="row">{mst(row.hour)}</th><td>{row.state === "system" ? "National and system" : v.index.get(`st:${row.state}`)?.name ?? row.state.toUpperCase()}</td>
+          <th scope="row">{mst(row.hour)}</th><td>{row.state === "us" ? "National and system" : v.index.get(`st:${row.state}`)?.name ?? row.state.toUpperCase()}</td>
           <td className={s.num}>{count(row.incoming)}</td><td className={s.num}>{count(row.done)}</td><td className={s.num}>{count(row.refused)}</td>
         </tr>)}</tbody>
       </table></div>}

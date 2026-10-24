@@ -9,6 +9,8 @@ import { Pool } from "pg";
 import { workList, type WorkInput } from "../lib/core/work.ts";
 import { workCounts } from "../lib/core/work-counts.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
+import { expandSharedWork } from "../lib/control-plane/repository/migrations/RB-A1.ts";
+import { expandWorkList } from "../lib/control-plane/repository/migrations/RB-A5.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 const pool = new Pool({ host: "/tmp", port: 55435, database: "postgres", user: "agent", max: 200 });
@@ -57,12 +59,13 @@ try {
       const rows = await query("SELECT id, value FROM rb_a5_box_copy WHERE id > $1 ORDER BY id LIMIT 1000", [cursor]);
       if (!rows.length) break;
       for (let offset = 0; offset < rows.length; offset += 20) await Promise.all(rows.slice(offset, offset + 20).map(async row => {
-        const value = row.value as { subjectId: string; sourceUrl: string | null; exactQuote: string | null; fact?: { field: string; value: unknown }; origins: unknown[] };
+        const value = row.value as { subjectId: string; sourceUrl: string | null; exactQuote: string | null; fact?: { field: string; value: unknown }; origins: { artifactIds?: string[] }[] };
         const isLink = typeof value.fact?.value === "string" && /^https?:\/\//i.test(value.fact.value);
         const input: WorkInput = { kind: isLink ? "read" : "check", placeId: value.subjectId.split("#")[0]!, subjectId: value.subjectId,
           url: isLink ? String(value.fact!.value) : value.sourceUrl,
           ...(isLink ? {} : { field: value.fact?.field ?? "unclassified", claimKey: String(row.id) }),
           value: isLink ? null : value.fact?.value ?? null, quote: isLink ? null : value.exactQuote,
+          sources: [...new Set(value.origins.flatMap(origin => origin.artifactIds ?? []))],
           source: { boxId: row.id, subjectId: value.subjectId, url: value.sourceUrl, quote: value.exactQuote, reports: value.origins.length } };
         await list.add(input);
       }));
@@ -74,7 +77,7 @@ try {
   } else if (mode === "killed-worker") {
     const [claim] = await workList(query, { owner: "doomed-worker", leaseMs: 1_500 }).claim("read", 1);
     assert.ok(claim);
-    console.log(JSON.stringify({ id: claim.id, leaseUntil: claim.lease_until, leaseOwner: claim.lease_owner }));
+    console.log(JSON.stringify({ id: claim.id, leaseUntil: claim.leaseUntil, leaseOwner: claim.leaseOwner }));
     await new Promise(() => setInterval(() => undefined, 1_000));
   } else if (mode === "prove") {
     const list = workList(query, { owner: "probe" });
@@ -101,11 +104,11 @@ try {
     assert.equal(new Set(claims.map(row => row.id)).size, 200);
     await Promise.all(claims.slice(0, 199).map(row => list.finish(row)));
     const killed = claims[199]!;
-    const afterExpiry = workList(query, { owner: "replacement", now: () => new Date(new Date(killed.lease_until!).getTime() + 1) });
+    const afterExpiry = workList(query, { owner: "replacement", now: () => new Date(new Date(killed.leaseUntil!).getTime() + 1) });
     assert.equal(await afterExpiry.recover(), 1);
     assert.equal(await list.finish(killed), false);
-    const [returned] = await query("SELECT state,lease_owner FROM work_row WHERE id=$1", [killed.id]);
-    assert.equal(returned!.state, "ready");
+    const [returned] = await query("SELECT status,lease_owner FROM work_row WHERE id=$1", [killed.id]);
+    assert.equal(returned!.status, "ready");
     assert.equal(returned!.lease_owner, null);
     const child = spawn(process.execPath, ["--experimental-strip-types", import.meta.filename, "killed-worker"], { stdio: ["ignore", "pipe", "inherit"] });
     const lines = createInterface({ input: child.stdout });
@@ -117,44 +120,61 @@ try {
     const [, signal] = await stopped;
     assert.equal(signal, "SIGKILL");
     lines.close();
-    // Its lease really elapses. The normal claim call performs the next run's recovery.
-    await new Promise(resolve => setTimeout(resolve, Math.max(0, new Date(dead.leaseUntil).getTime() - Date.now() + 1)));
-    await list.recover();
-    const [recoveredChild] = await query("SELECT state,lease_owner FROM work_row WHERE id=$1", [dead.id]);
-    assert.equal(recoveredChild!.state, "ready");
+    const scheduledRuns: { at: string; ids: string[] }[] = [];
+    await new Promise<void>((resolve, reject) => {
+      let busy = false;
+      const timer = setInterval(async () => {
+        if (busy) return;
+        busy = true;
+        try {
+          const batch = await list.claim("read", 1);
+          scheduledRuns.push({ at: new Date().toISOString(), ids: batch.map(row => row.id) });
+          await Promise.all(batch.map(claim => list.finish(claim)));
+          if (scheduledRuns.length === 2) { clearInterval(timer); resolve(); }
+        } catch (error) { clearInterval(timer); reject(error); }
+        finally { busy = false; }
+      }, 1_000);
+    });
+    assert.ok(scheduledRuns[1]!.ids.includes(dead.id), "the next scheduled claim reclaims the killed worker's row");
+    const [recoveredChild] = await query("SELECT status,lease_owner FROM work_row WHERE id=$1", [dead.id]);
+    assert.equal(recoveredChild!.status, "done");
     assert.equal(recoveredChild!.lease_owner, null);
     const [refused] = await list.claim("check", 1);
     assert.ok(refused);
     assert.ok(await list.refuse(refused, "Source does not confirm this value"));
     assert.equal(await list.refuse(refused, "Repeated result"), false);
     assert.equal((await query("SELECT count(*)::int n FROM work_row WHERE id=$1", [`detect-${refused.id}`]))[0]!.n, 1);
-    const direct = await query(`SELECT cp_control_state(jsonb_build_object('subjectId',place_id)) state,
-      count(*)::int incoming, count(*) FILTER(WHERE state='done')::int done, count(*) FILTER(WHERE state='refused')::int refused
+    const direct = await query(`SELECT lower(state) state,
+      count(*)::int incoming, count(*) FILTER(WHERE status='done')::int done, count(*) FILTER(WHERE status='refused')::int refused
       FROM work_row GROUP BY 1 ORDER BY 1`);
-    const counted = await query(`SELECT state,sum(n) FILTER(WHERE step='work_in')::int incoming,
+    const counted = await query(`SELECT lower(state) AS state,sum(n) FILTER(WHERE step='work_in')::int incoming,
       coalesce(sum(n) FILTER(WHERE step='work_done'),0)::int done, coalesce(sum(n) FILTER(WHERE step='work_refused'),0)::int refused
       FROM count_hour WHERE step IN ('work_in','work_done','work_refused') GROUP BY state ORDER BY state`);
     assert.deepEqual(counted, direct);
     const directHours = await query(`WITH events AS (
-      SELECT cp_control_state(jsonb_build_object('subjectId',place_id)) AS state, date_trunc('hour',received_at) AS hour, 'work_in' AS step FROM work_row
-      UNION ALL SELECT cp_control_state(jsonb_build_object('subjectId',place_id)), date_trunc('hour',done_at), 'work_done' FROM work_row WHERE done_at IS NOT NULL
-      UNION ALL SELECT cp_control_state(jsonb_build_object('subjectId',place_id)), date_trunc('hour',refused_at), 'work_refused' FROM work_row WHERE refused_at IS NOT NULL
+      SELECT lower(state) AS state, date_trunc('hour',received_at) AS hour, 'work_in' AS step FROM work_row
+      UNION ALL SELECT lower(state), date_trunc('hour',done_at), 'work_done' FROM work_row WHERE done_at IS NOT NULL
+      UNION ALL SELECT lower(state), date_trunc('hour',refused_at), 'work_refused' FROM work_row WHERE refused_at IS NOT NULL
     ) SELECT state,hour,step,count(*)::int n FROM events GROUP BY 1,2,3 ORDER BY 1,2,3`);
-    assert.deepEqual(await query("SELECT state,hour,step,n::int FROM count_hour WHERE step IN ('work_in','work_done','work_refused') ORDER BY 1,2,3"), directHours);
+    assert.deepEqual(await query("SELECT lower(state) AS state,hour,step,n::int FROM count_hour WHERE step IN ('work_in','work_done','work_refused') ORDER BY 1,2,3"), directHours);
     const admin = await workCounts(query, null, new Date());
     for (const row of direct) assert.equal(admin.filter(hour => hour.state === row.state).reduce((n, h) => n + h.incoming, 0), row.incoming);
     const report = { at: new Date().toISOString(), snapshot: JSON.parse(await readFile(".scratch/rb-a5/snapshot.json", "utf8")),
       claimsMs: latency, maxClaimMs: Math.max(...latency), concurrentWorkers: 200, duplicateClaims: 0,
-      killedWorkerRecovered: dead.id, killedSignal: signal, countsEqual: true, countsPerHourEqual: true,
-      countsByState: [...REGISTRY_STATES.map(state => state.toLowerCase()), "system"].sort().map(state => counted.find(row => row.state === state) ?? { state, incoming: 0, done: 0, refused: 0 }),
+      killedWorkerRecovered: dead.id, killedSignal: signal, scheduledRuns, countsEqual: true, countsPerHourEqual: true,
+      countsByState: [...REGISTRY_STATES.map(state => state.toLowerCase()), "us"].sort().map(state => counted.find(row => row.state === state) ?? { state, incoming: 0, done: 0, refused: 0 }),
       sourceCountsByState: await query("SELECT cp_control_state(value) state,count(*)::int n FROM rb_a5_box_copy GROUP BY 1 ORDER BY 1"),
-      plan: (await query("EXPLAIN (FORMAT JSON) SELECT id FROM work_row WHERE kind='read' AND state='ready' AND not_before<=now() ORDER BY priority DESC,not_before,id LIMIT 1"))[0] };
+      plan: (await query("EXPLAIN (FORMAT JSON) SELECT id FROM work_row WHERE kind='read' AND status='ready' AND not_before<=now() ORDER BY priority DESC,not_before,id LIMIT 1"))[0] };
     await writeFile(".scratch/rb-a5/proof.json", JSON.stringify(report, null, 2));
     console.log(report);
   } else if (mode === "schema") {
     await query(CONTROL_READS_BACKFILL_DDL[0]!);
-    await query(await readFile("tests/fixtures/work/base.sql", "utf8"));
-    await query(await readFile("lib/control-plane/repository/migrations/RB-A5.sql", "utf8"));
+    const client = await pool.connect();
+    try {
+      const sql = { query: async (text: string, params: readonly unknown[] = []) => (await client.query(text, [...params])).rows };
+      await expandSharedWork(sql);
+      await expandWorkList(sql);
+    } finally { client.release(); }
     console.log("Local PostgreSQL schema applied");
   } else throw new Error("Use snapshot, schema, seed or prove");
 } finally { await pool.end(); }

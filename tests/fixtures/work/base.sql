@@ -1,3 +1,0 @@
-CREATE TABLE work_row (id text PRIMARY KEY, kind text NOT NULL CHECK (kind IN ('read','check','load','hunt','detect','audit')), state text NOT NULL DEFAULT 'ready' CHECK (state IN ('ready','taken','done','refused')), place_id text, subject_id text, url text, sources jsonb NOT NULL DEFAULT '[]', priority integer NOT NULL DEFAULT 0, not_before timestamptz NOT NULL DEFAULT now(), lease_until timestamptz, lease_owner text, attempts integer NOT NULL DEFAULT 0, refusal text);
-CREATE INDEX work_row_ready ON work_row(kind,not_before) WHERE state='ready';
-CREATE TABLE count_hour(state text, hour timestamptz, step text, n bigint NOT NULL DEFAULT 0, PRIMARY KEY(state,hour,step));

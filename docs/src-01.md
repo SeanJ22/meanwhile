@@ -37,4 +37,12 @@ The durable SAM quota cooldown is built and tested. Error `900804` records its o
 
 This chat's enabled follow-up starts after 8 PM Eastern on October 23 and must run SAM's real-data replay after the saved reset. If it passes, record the proof on River's board; if it fails, fix it and push another READY commit. Preserve SAM's last verified data and honor any subsequent reset. Sean's SAM exception remains in effect while the other sources' completed geographic proofs ship.
 
+## Return repair, October 24
+
+Production after release 90 (read-only): the two returned failures came from runs at 14:34–14:35 UTC still executing release 89. From 15:43 UTC EPA no longer collided but failed on a blank-name row (fixed on this branch by `echoMinimumGap`); OpenFEMA promoted from 16:56 UTC. EPA has never been promoted in production; Socrata has never launched (every pass deferred on worker memory or pass time); OpenFEMA reached only DC, DE, FL, GA, HI, ID and IL because every pass spent its deadline inside the first states in configured order.
+
+- EPA's held-source pointer was a `MUTABLE_INDEX` whose `contentHash` was its own bytes' hash, which the evidence store binds for life. It now lives at `archive/index/<source>/source.json` named for its key, so each run replaces it and the next run sends `If-None-Match`; archive bodies stay content-addressed. Release 90's random run-id key, which re-downloaded and re-stored the 445 MB exporter every run, is deleted.
+- Federal-money passes start with the states served longest ago, never-served first.
+- `scripts/src-01-epa-scheduled-runs.mts` runs the real scheduled EPA function twice against the live publisher into isolated stores and reads every US jurisdiction through `GET /api/open-data`: `docs/measurements/src-01/epa-scheduled-runs.json`. `docs/measurements/src-01/openfema-all-states.json` is the October 24 live OpenFEMA replay (56 of 56, 168 of 168 runs promoted).
+
 River owns combination checks, release and the post-shipping live check: each source ID (`fec-open-api`, `federal-audit-clearinghouse`, `openfema`, `epa-echo`, `sam-gov-entities`, `legiscan-bills`, `socrata-discovery`) must show a new `PROMOTED` candidate within its next scheduled run. Inspect a real CT legislator card and compare its money reason with that person's own stored blank. A deployment or manually triggered run alone is not that live proof.

@@ -21,7 +21,7 @@ import { countProblems, countWindow } from "../lib/counts/hour.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { config as schedule } from "../netlify/functions/line-keeper.mts";
 const migration=readFileSync(COUNT_SCHEMA_SOURCE,'utf8');
-const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query(text,[...params])).rows});
+const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query<Record<string,unknown>>(text,[...params])).rows});
 async function readerDatabase() {
   const db=new PGlite();
   await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,state text);

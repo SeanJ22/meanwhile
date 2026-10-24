@@ -9,6 +9,7 @@ import { placesForCode } from "../lib/place-map/read.ts";
 import { placeMapCounts } from "../lib/place-map/counts.ts";
 import { readLegacyStateMemberships, heldStateDataset } from "../lib/place-map/refresh.ts";
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
+import { CD_REDRAWN_FOR_2026 } from "../lib/census-geography/selection.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
 const verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), productionBaseline = process.argv.includes("--production-baseline"), zipLinksOnly = process.argv.includes("--zip-links");
@@ -57,7 +58,25 @@ try {
         count(*) FILTER(WHERE b.version IN('cd:120','sldu:2026','sldl:2026') AND b.geometry IS NULL)::int AS missing_current_shapes
         FROM place_boundary b JOIN entity e ON e.id=b.place_id WHERE e.state=$1`, [row.state]);
       assert.equal(plans.missing_current_shapes, 0, `${row.state} current district shapes`);
-      rows.push({ ...row, baselineZips: baseline.size, gainedDistrictRelationships: gains.n, cd120Shapes: plans.cd120_shapes });
+      let planProof = null;
+      if (CD_REDRAWN_FOR_2026.some(state => state === row.state)) {
+        const [sample] = await db.query(`SELECT m.zip,
+          array_agg(DISTINCT b.place_id ORDER BY b.place_id) FILTER(WHERE b.version='cd:119') AS previous,
+          array_agg(DISTINCT b.place_id ORDER BY b.place_id) FILTER(WHERE b.version='cd:120') AS upcoming
+          FROM zip_place m JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year JOIN entity e ON e.id=m.place_id
+          WHERE e.state=$1 AND b.layer='cd' GROUP BY m.zip
+          HAVING count(*) FILTER(WHERE b.version='cd:119')>0 AND count(*) FILTER(WHERE b.version='cd:120')>0
+            AND array_agg(DISTINCT b.place_id ORDER BY b.place_id) FILTER(WHERE b.version='cd:119') IS DISTINCT FROM
+                array_agg(DISTINCT b.place_id ORDER BY b.place_id) FILTER(WHERE b.version='cd:120') ORDER BY m.zip LIMIT 1`, [row.state]);
+        assert.ok(sample, `${row.state} has a sourced congressional map change`);
+        const zip = String(sample.zip);
+        const current = await placesForCode(db.query, "zip", zip, { purpose: "representation", asOf: "2026-10-24" });
+        const next = await placesForCode(db.query, "zip", zip, { purpose: "election", asOf: "2026-10-24", electionDate: "2026-11-03" });
+        const congressional = (result: typeof current) => result.memberships.filter(m => m.state === row.state && m.layer === "cd").map(m => m.placeId).sort();
+        assert.deepEqual(congressional(current), sample.previous); assert.deepEqual(congressional(next), sample.upcoming);
+        planProof = { zip, representation: congressional(current), election: congressional(next) };
+      }
+      rows.push({ ...row, baselineZips: baseline.size, gainedDistrictRelationships: gains.n, cd120Shapes: plans.cd120_shapes, planProof });
       console.log(`${row.state}: ${row.places} mapped places, ${row.zips} ZIPs, ${gains.n} gained district links`);
     }
     await writeFile("/tmp/rb-a2-replay/final-state-results.json", JSON.stringify(rows, null, 2));

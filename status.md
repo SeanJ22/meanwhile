@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 97 LIVE AND BROKEN (reader DB connections refused since 11:48 AM EDT). RELEASE 98 hotfix = PR #808, auto-merge on 12:25 PM EDT. Next batch (CL-01 6c3578d48, RV-TOOLS) gated 9/9, waits for release 98
+build_state: ROLLED BACK to release 96's deploy at 12:24 PM EDT (readers restored). Release 98 = release 97 + reader-pool fix, PR #808 on auto-merge. Next batch (CL-01 6c3578d48, RV-TOOLS) gated 9/9, waits
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Rolled back to release 96's deploy, 12:24 PM EDT
+- /api/build shows 38b470355 (release 96), deploy 6adc8886fc9fba3129579ae8, from 12:24 PM EDT: the previous good deploy was published (not by River; River's Netlify connector needs re-authorizing). Readers lost the ballot, /national and place APIs for 36 minutes (11:48 to 12:24 PM EDT).
+- Checked 12:30 PM EDT on the live site: /ballot 85701 and 03255 200 (Chromium: 6 and 3 dated deadlines, AZ and NH office lines, no console errors), 85003 6 deadlines; /api/meetings 85701 200 and 60602 200; /national 200.
+- Release 98 (release 97 + the one-line reader-pool fix) stays on auto-merge (#808). When it is live River runs Sean's checklist within 5 minutes.
 
 ### INCIDENT: release 97 broke every reader database read, 11:48 AM EDT; release 98 hotfix
 - Release 97 live 11:48 AM EDT (/api/build 96b6ea5e7). Reader walk in Chromium at ~11:50: every /ballot page "didn't load" (React #441 server-render error, "[ballot] render failed", 0 deadlines, 0 offices) in 14 ZIPs: AZ 85003 and 85653, NJ 07102, NH 03301, PA 19147, WA 98101, DC 20001, DE 19901, FL 32301, CA 90012, TX 78701, IL 60602, GA 30303, NY 10007. Also /national 500, /api/reader/state 503, /api/meetings 502. The home map page loaded.

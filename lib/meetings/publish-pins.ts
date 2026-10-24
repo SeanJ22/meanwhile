@@ -400,15 +400,23 @@ export function retainPreviouslyVerifiedVenuePoints(
       return meeting;
     const { venueGap: _gap, ...rest } = meeting;
     const text=meeting.venueGap.publishedText!;
+    // Keep the complete saved venue unless the source explicitly changes its room or suite.
+    const previousText=`${prior.location.name} ${prior.location.address ?? ""}`;
+    const changedUnit=[/\b(?:room|rm\.?)\s*#?\s*([a-z\d-]+)\b/i,/\b(?:suite|ste\.?)\s*#?\s*([a-z\d-]+)\b/i].some(pattern=>{
+      const current=pattern.exec(text)?.[1],previous=pattern.exec(previousText)?.[1];
+      return current && previous && current.toLowerCase()!==previous.toLowerCase();
+    });
     const retained:Meeting = {
       ...rest,
-      location: {...prior.location,...publishedVenueDescription(text,prior.location.address)},
+      location: changedUnit?{...prior.location,...publishedVenueDescription(text,prior.location.address)}:prior.location,
       ...(prior.mapPin
         ? { mapPin: { ...prior.mapPin, meetingId: meeting.id,publishedLocation:text } }
         : {}),
       fieldSources: {
         ...meeting.fieldSources,
-        location: meeting.fieldSources?.location ?? meeting.provenance,
+        location: prior.fieldSources?.location ?? prior.provenance,
+        // Attendance was read again; the point itself was not checked again.
+        venueGap: meeting.fieldSources?.venueGap ?? meeting.fieldSources?.location ?? meeting.provenance,
       },
     };
     return retained.mapPin?withPublishedPin(retained,retained.mapPin):retained;

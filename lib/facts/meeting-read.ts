@@ -68,8 +68,9 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if (field === "location" && !hasPublishedVenue((value as {address?:string;name?:string}).address || (value as {name?:string}).name)) continue;
     const factAt = Date.parse(source.collectedAt);
     const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
+    const attendanceAt = Date.parse(published.fieldSources?.venueGap?.collectedAt ?? published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
     const stated=published.venueGap?.kind==="STATED_NOT_PLACED"?published.venueGap.publishedText:null;
-    if(factAt<locationAt) {
+    if(factAt<attendanceAt) {
       if(field==="online"&&(stated||published.location))continue;
       if(field==="location") {
         const prior=value as {name?:string;address?:string|null;lat?:number;lng?:number};
@@ -81,10 +82,10 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
       const pinAt = Math.max(...[locationAt,Date.parse(published.provenance.collectedAt),
         Date.parse(published.mapPin.coordinateCheckedAt ?? "")].filter(Number.isFinite));
       // A once-saved point remains older than later calendar reads. Its old fact row cannot roll back a newer publication.
-      if (field === "mapPin" && factAt <= pinAt || (field === "location" || field === "online") && factAt < locationAt) continue;
+      if (field === "mapPin" && factAt <= pinAt || (field === "location" || field === "online") && factAt < attendanceAt) continue;
     }
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
-      : field === "location" ? publishedLocation(meeting,value,source,factAt<locationAt?stated:null)
+      : field === "location" ? publishedLocation(meeting,value,source,factAt<attendanceAt?stated:null)
       : field==="mapPin" ? {mapPin:{...value as NonNullable<Meeting["mapPin"]>,meetingId:meeting.id}}
       : field==="online" ? {online:value as Meeting["online"],location:null,venueGap:undefined} : { [field]: value as string };
     out[index] = { ...meeting, ...patch, fieldSources: { ...meeting.fieldSources, [field]: source } };

@@ -611,6 +611,8 @@ test("the following publication reuses the building point but shows the publishe
     assert.equal(read.location?.name,newText);assert.equal(read.location?.address,newText);
     assert.equal(read.location?.lat,first.meetings[0].location?.lat);assert.equal(read.online,undefined);
     assert.equal(after.responses.length,0);assert.deepEqual(after.held,[]);
+    assert.deepEqual(after.meetings[0].fieldSources?.location,first.meetings[0].fieldSources?.location ?? first.meetings[0].provenance);
+    assert.equal(after.meetings[0].fieldSources?.venueGap?.collectedAt,newer.provenance.collectedAt);
     if(!legacy){assert.equal(read.mapPin?.publishedLocation,newText);assert.equal(read.mapPin?.coordinateCheckedAt,NOW);}
   }
   const [fromFact]=withSittingFacts([newer],[{meetingId:newer.id,field:"location",value:first.meetings[0].location,source:SOURCE}]);

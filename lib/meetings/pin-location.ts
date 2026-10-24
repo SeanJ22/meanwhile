@@ -44,7 +44,7 @@ export function publishedVenueDescription<T extends string|null>(text:string,pre
 }
 
 export function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
-  if(pin.basis==="MEETING" && pin.publishedLocation) {
+  if(pin.basis==="MEETING" && pin.publishedLocation && pin.publishedLocation!==pin.name && pin.publishedLocation!==pin.address) {
     const text=pin.publishedLocation;
     pin={...pin,...publishedVenueDescription(text,pin.address)};
   }

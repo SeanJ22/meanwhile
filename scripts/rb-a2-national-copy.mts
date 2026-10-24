@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { performance } from "node:perf_hooks";
+import { neon } from "@neondatabase/serverless";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import { placesForCode } from "../lib/place-map/read.ts";
@@ -44,13 +45,21 @@ try {
     }
     await writeFile("/tmp/rb-a2-replay/national-preservation.json", JSON.stringify(results, null, 2));
   } else {
+    const url = process.env.RB_A2_READER_URL;
+    if (!url || new URL(url).username !== "readonly") throw new Error("Production read-only role is required");
+    const sql = neon(url);
     for (const state of states) {
-      const schema = `rb_a2_replay_${state.toLowerCase()}`;
-      // These state copies hold the production entities read under SELECT-only
-      // credentials. No national entity payload crosses into worker memory.
-      await db.query(`INSERT INTO entity(id,kind,name,state) SELECT id,kind,name,state FROM "${schema}".entity ON CONFLICT DO NOTHING`);
       const map = JSON.parse(gunzipSync(await readFile(`/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`)).toString("utf8")) as StatePlaceMap;
+      // Seed one state's real production identities under SELECT-only access.
+      // A national entity payload never crosses into worker memory.
+      const held = (await sql.transaction([sql.query(`SELECT id,kind,name,state FROM entity WHERE (kind='place' AND state=$1) OR id='ocd-division/country:us' OR id=ANY($2::text[])`,
+        [state, map.entityPlaces?.map(row => row.entityId) ?? []])], { readOnly: true }))[0];
+      await db.query(`INSERT INTO entity(id,kind,name,state) SELECT id,kind,name,state FROM jsonb_to_recordset($1::jsonb) AS e(id text,kind text,name text,state char(2)) ON CONFLICT DO NOTHING`, [JSON.stringify(held)]);
+      const unplaced = map.boundaries.filter(boundary => boundary.layer === "district" && !boundary.geometry && !boundary.countyAttachment);
+      assert.equal(unplaced.length, 0, `${state}: special districts without shape or host county: ${unplaced.slice(0, 3).map(row => row.placeId).join(", ")}`);
       await loadStatePlaceMap(db, map);
+      const [preserved] = await db.query("SELECT count(*)::int n FROM entity WHERE id=ANY($1::text[])", [held.map(row => row.id)]);
+      assert.equal(preserved.n, held.length, `${state}: held production IDs`);
       console.log(`${state}: composed ${map.places.length} places and ${map.zipEdges.length} ZIP memberships`);
     }
     await db.exec("ANALYZE entity; ANALYZE entity_external_id; ANALYZE entity_place; ANALYZE place_boundary; ANALYZE zip_place; ANALYZE zcta_place");

@@ -5,6 +5,7 @@ import {
   date,
   primaryKey,
   check,
+  customType,
   doublePrecision,
   foreignKey,
   index,
@@ -916,6 +917,16 @@ export const savedBallotPicks = pgTable("saved_ballot_picks", {
   revision: integer("revision").notNull(),
   file: jsonb("file").notNull(),
 });
+const postgresBox = customType<{ data: string }>({ dataType: () => "box" });
+export const placeBoundaries = pgTable("place_boundary", {
+  placeId: text("place_id").notNull(), boundaryYear: integer("boundary_year").notNull(),
+  layer: text("layer").notNull(), version: text("version").notNull(), geometry: jsonb("geometry"), bounds: postgresBox("bounds"),
+  hostCountyId: text("host_county_id"), countyAttachment: boolean("county_attachment").notNull().default(false),
+  sourceUrls: jsonb("source_urls").notNull().default([]), checkedAt: timestamp("checked_at", { withTimezone: true }).notNull(),
+}, t => [primaryKey({ columns: [t.placeId, t.boundaryYear] }), index("place_boundary_point_idx").using("gist", t.bounds),
+  index("place_boundary_host_idx").on(t.hostCountyId).where(sql`${t.countyAttachment}`),
+  check("place_boundary_shape_bounds", sql`(${t.geometry} IS NULL) = (${t.bounds} IS NULL)`),
+  check("place_boundary_county_attachment", sql`NOT ${t.countyAttachment} OR (${t.hostCountyId} IS NOT NULL AND ${t.geometry} IS NULL)`)]);
 const readerEventDimensions = () => ({
   period: text("period").notNull(), periodStart: date("period_start").notNull(),
   zip: text("zip").notNull(), district: text("district").notNull(),

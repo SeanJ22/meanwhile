@@ -36,6 +36,7 @@ export function buildStatePlaceMap(input: {
   readonly sourceCounties?: ReadonlyMap<string, string | null>;
   readonly geographicDistricts?: readonly GeographicDistrict[];
   readonly postalLinks?: readonly PostalLink[];
+  readonly crossStateZctas?: ReadonlySet<string>;
   readonly checkedAt: string;
 }): StatePlaceMap {
   const { registration: reg } = input;
@@ -154,6 +155,13 @@ export function buildStatePlaceMap(input: {
     }
     for (const edge of byZcta.get(link.zcta) ?? []) if (!link.addressRequired || isTownOrCountyDivision(edge.placeId)) {
       addEdge(zipEdges, { ...edge, code: link.zip });
+    }
+  }
+  const crossStateZips = new Set(input.crossStateZctas);
+  for (const link of input.postalLinks ?? []) if (crossStateZips.has(link.zcta)) crossStateZips.add(link.zip);
+  for (const edges of [zipEdges, zctaEdges]) for (const [id, edge] of edges) {
+    if (edge.boundaryYear === 2026 && (edges === zipEdges ? crossStateZips : input.crossStateZctas)?.has(edge.code)) {
+      edges.set(id, { ...edge, share: null, shareBasis: "unknown", partial: true });
     }
   }
   return { places: [...places.values()], boundaries: [...boundaries.values()].filter(row => places.has(row.placeId)), zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()], entityPlaces };

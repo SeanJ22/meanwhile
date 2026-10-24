@@ -92,7 +92,7 @@ async function buildScope(src: Source, options: AcquireOptions): Promise<BuiltSc
       if (options.states && !options.states.has(fields[columns.geoGeoid]?.slice(0, 2))) continue;
       acc.add(fields);
     }
-    if (acc.stats().rows === 0) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);
+    if (acc.stats().rows === 0 && !options.states) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);
     return acc;
   };
   let parsed: ScopeAccumulator | undefined;
@@ -225,7 +225,7 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
 
   const selected = [...scopes.values()].map(scope => options.states
     ? scope.type === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states)
-    : scope);
+    : scope).filter(scope => !options.states || scope.groupings.length > 0);
   const zctaUniverse = new Set<string>();
   for (const scope of selected) for (const grouping of scope.groupings) for (const overlap of grouping.overlaps) zctaUniverse.add(overlap.zcta5);
   const coverage = options.states

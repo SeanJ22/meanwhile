@@ -1,8 +1,8 @@
 {
   "lane": "DB-01",
-  "status": "implementation tested; production acceptance pending",
-  "base": "origin/river 21ae9bcfb",
-  "databases": "read-only throughout",
+  "status": "READY: DB-01 \u2014 copy replay and write timings complete; River owns release and live checks",
+  "base": "origin/river dfb076b40 merged as c38df4593",
+  "databases": "Production read-only; write benchmark restricted to isolated copy br-wandering-wildflower-ax90nnik",
   "connections": [
     {
       "place": "Arizona",
@@ -92,30 +92,16 @@
     "under3GBPerHour": null,
     "allFactsPerHourMaintained": null,
     "afterCountsByState": null,
-    "nextScheduledRun": null,
+    "nextScheduledRun": "Copy replay completed: 801 clocks, 536 due jobs, 208 held models, identical work hash",
     "chromeReaderCheck": null,
-    "riverPassedLiveCheck": null
+    "riverPassedLiveCheck": null,
+    "releaseAndLiveChecksOwner": "River, after release, per Sean\u2019s latest instruction"
   },
   "remaining": [
     {
-      "owner": "DB-01",
-      "task": "Rank production jobs by the new hourly breakdown and address any remaining heavy readers",
-      "dependsOn": "River deployment of the stream"
-    },
-    {
-      "owner": "DB-01",
-      "task": "Measure post-deploy bytes/hour and all published facts/hour by state, then observe the next automatic scheduled run",
-      "dependsOn": "River deployment and running hourly counters"
-    },
-    {
-      "owner": "DB-01",
-      "task": "Use Chrome to prove Admin's hourly view, reader contents, speed, and all existing referenced IDs",
-      "dependsOn": "A callable connected Chrome browser; Browser tools are absent from this session"
-    },
-    {
       "owner": "River",
-      "task": "Fold and deploy tested stream code through the authorized release process",
-      "dependsOn": "River's lane intake"
+      "task": "Ship the tested lane and check real hourly transfer, publication throughput by state, automatic scheduled run, Admin and reader Chrome behavior after release",
+      "dependsOn": "READY: DB-01"
     }
   ],
   "knownBaselineTestFailures": [
@@ -193,10 +179,10 @@
   ],
   "validation": {
     "focusedChecks": {
-      "hourlyAccountingAndClockTests": 67,
-      "readerStoreAndIdentityTests": 97,
+      "passed": 164,
       "failed": 0,
-      "skipped": 0
+      "skipped": 0,
+      "on": "c38df4593 after merging current origin/river"
     },
     "stateCache": {
       "coldResponseBytes": 645813,
@@ -204,8 +190,148 @@
       "identicalContents": true
     },
     "lint": "passed for changed code",
-    "typecheck": "passed (tsc --noEmit)",
+    "typecheck": "passed after merge and adding replay scripts",
     "geographyProductionPlan": "All civic_data_payload_parts accesses use hash indexes (EXPLAIN only, no live-page claim)",
-    "nextScheduledRun": "not observed; local cache persistence is tested independently"
+    "nextScheduledRun": "Controlled next-pass database-read replay completed on production copy; live end-to-end check belongs to River after release",
+    "writeBenchmark": "passed: five alternating pairs of 100 actual copied records / 900 writes per batch, existing integrity triggers enabled",
+    "startupConnectionSettingsAdded": false
+  },
+  "copyReplay": {
+    "branchId": "br-wandering-wildflower-ax90nnik",
+    "parentId": "br-delicate-lab-ax02xuo5",
+    "parentLsn": "23/375DB0D8",
+    "createdAt": "2026-10-24T16:50:43Z",
+    "scope": "Scheduled source pass database-read phase: all 801 clocks and prior publications for all 536 due jobs; fresh processes on both next-pass replays; same warmed disposable-copy policy",
+    "before": {
+      "mode": "next",
+      "branchId": "br-wandering-wildflower-ax90nnik",
+      "scheduledAt": "2026-10-24T17:03:43.627Z",
+      "taskCount": 801,
+      "dueCount": 536,
+      "heldModels": 208,
+      "readerResponseBytes": 1483223,
+      "requests": 1337,
+      "elapsedMs": 87252,
+      "clocksHash": "2b62e827ad42b5011cb2070bd6a6b7fa747cbcafed139f7427cc862a7878dc2c",
+      "workHash": "325df4f9259b0076f63682e350bdcee662c8a5283a5ee77cec5fc4328297f79d"
+    },
+    "after": {
+      "mode": "next",
+      "branchId": "br-wandering-wildflower-ax90nnik",
+      "scheduledAt": "2026-10-24T17:03:43.627Z",
+      "taskCount": 801,
+      "dueCount": 536,
+      "heldModels": 208,
+      "readerResponseBytes": 711557,
+      "requests": 1337,
+      "elapsedMs": 88164,
+      "clocksHash": "2b62e827ad42b5011cb2070bd6a6b7fa747cbcafed139f7427cc862a7878dc2c",
+      "workHash": "325df4f9259b0076f63682e350bdcee662c8a5283a5ee77cec5fc4328297f79d"
+    },
+    "beforeCold": {
+      "mode": "warm",
+      "branchId": "br-wandering-wildflower-ax90nnik",
+      "scheduledAt": "2026-10-24T17:03:43.627Z",
+      "taskCount": 801,
+      "dueCount": 536,
+      "heldModels": 208,
+      "readerResponseBytes": 1297464170,
+      "requests": 3830,
+      "elapsedMs": 340163,
+      "clocksHash": "2b62e827ad42b5011cb2070bd6a6b7fa747cbcafed139f7427cc862a7878dc2c",
+      "workHash": "325df4f9259b0076f63682e350bdcee662c8a5283a5ee77cec5fc4328297f79d"
+    },
+    "afterCold": {
+      "mode": "warm",
+      "branchId": "br-wandering-wildflower-ax90nnik",
+      "scheduledAt": "2026-10-24T17:03:43.627Z",
+      "taskCount": 801,
+      "dueCount": 536,
+      "heldModels": 208,
+      "readerResponseBytes": 1297406841,
+      "requests": 3862,
+      "elapsedMs": 328055,
+      "clocksHash": "2b62e827ad42b5011cb2070bd6a6b7fa747cbcafed139f7427cc862a7878dc2c",
+      "workHash": "325df4f9259b0076f63682e350bdcee662c8a5283a5ee77cec5fc4328297f79d"
+    },
+    "readerByteReductionPercent": 52.02629678746891
+  },
+  "writeBenchmark": {
+    "branchId": "br-wandering-wildflower-ax90nnik",
+    "method": "Five alternating pairs; 100 real candidate envelopes per batch; full create/normalize/validate/promote and pointer advancement; existing integrity triggers stay enabled; client times include commit and deferred checks; no startup settings",
+    "samples": [
+      {
+        "mode": "without",
+        "elapsedMs": 2957.2764250000037,
+        "serverMs": 2779.742,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "with",
+        "elapsedMs": 2760.0532410000014,
+        "serverMs": 2645.515,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "with",
+        "elapsedMs": 2745.030765000003,
+        "serverMs": 2598.37,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "without",
+        "elapsedMs": 2671.7915779999894,
+        "serverMs": 2557.425,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "without",
+        "elapsedMs": 2702.7771790000115,
+        "serverMs": 2567.488,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "with",
+        "elapsedMs": 2640.0390860000043,
+        "serverMs": 2513.886,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "with",
+        "elapsedMs": 2563.630317999996,
+        "serverMs": 2453.181,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "without",
+        "elapsedMs": 2524.3632739999885,
+        "serverMs": 2407.659,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "without",
+        "elapsedMs": 2696.232895999987,
+        "serverMs": 2578.535,
+        "candidates": 100,
+        "rowWrites": 900
+      },
+      {
+        "mode": "with",
+        "elapsedMs": 2642.1034539999964,
+        "serverMs": 2520.911,
+        "candidates": 100,
+        "rowWrites": 900
+      }
+    ],
+    "withoutTriggersMs": 2696.232895999987,
+    "withTriggersMs": 2642.1034539999964
   }
 }

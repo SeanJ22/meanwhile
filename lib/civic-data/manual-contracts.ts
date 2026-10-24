@@ -1,4 +1,5 @@
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
+import { REGISTRY_RUNTIME_PARSER_VERSION } from "../registry/runtime-version.ts";
 import { stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId, federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
@@ -118,7 +119,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     id: stateRegistryRuntimeContractId(state), execution: "EXPLICIT_OWNER_INVOCATION_ONLY" as const,
     sourceId: "registry-reviewed-bindings" as const, recordClass: "REGISTRY_RUNTIME_BINDING" as const,
     scope: stateRegistryRuntimeScope(state), command: ["scripts/promote-registry-runtime.mts", `--state=${state}`, "--promote"],
-    parserNormalizerVersion: "registry-runtime-bindings/3",
+    parserNormalizerVersion: REGISTRY_RUNTIME_PARSER_VERSION,
     authorityConstraint: { registry: "SOURCE_AUTHORITIES" as const, sourceId: "registry-reviewed-bindings" as const },
     validationContract: VALIDATION_CHECKS, canonicalProductionStore: STORE,
     readerProjection: { id: `reader-registry-runtime:${state}`, consumers: ["registry", "directory", "representation", "map", "ballot", "Ask", "funding identity"] },

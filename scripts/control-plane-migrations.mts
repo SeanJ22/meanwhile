@@ -9,6 +9,7 @@ import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandContro
 import { debtStateMigrationDefinition, stampDebtStates } from "../lib/control-plane/repository/migrations/DT-01.ts";
 import { sharedWorkMigrationDefinition, expandSharedWork } from "../lib/control-plane/repository/migrations/RB-A1.ts";
 import { reopenHeldDoors, reopenHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS.ts";
+import { reopenKeyHeldDoors, reopenKeyHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS-FX.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 const MIGRATIONS = [
@@ -20,6 +21,8 @@ const MIGRATIONS = [
     definition: sharedWorkMigrationDefinition, apply: async (sql: Sql) => { await expandSharedWork(sql); return "shared work and hourly counts"; } },
   { id: "RIVER-KEYS_expand", source: "lib/control-plane/repository/migrations/RIVER-KEYS.ts", declarations: [] as readonly string[],
     definition: reopenHeldDoorsMigrationDefinition, apply: async (sql: Sql) => `${await reopenHeldDoors(sql)} held door(s) reopened` },
+  { id: "RIVER-KEYS-FX_expand", source: "lib/control-plane/repository/migrations/RIVER-KEYS-FX.ts", declarations: [] as readonly string[],
+    definition: reopenKeyHeldDoorsMigrationDefinition, apply: async (sql: Sql) => `${await reopenKeyHeldDoors(sql)} key-held door(s) reopened` },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {

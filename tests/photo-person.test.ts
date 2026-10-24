@@ -40,8 +40,11 @@ test("a canonical person and its declared source aliases use one portrait withou
       nativeIds:{reader:[person.personId!]}}};
     withRegistryRuntimeProjection({...runtime,statewideExecutives:[alias,executive]},['NH'],()=>{
       const holders=statewideExecutivesFor([executive.stateOcdId]);
-      assert.deepEqual(holders.map(holder=>holder.id),[alias.holder.id,executive.holder.id]);
-      assert.deepEqual(holders.map(holder=>holder.photoUrl),[executive.holder.photoUrl,executive.holder.photoUrl]);
+      assert.equal(holders.length,1);
+      for (const id of [alias.holder.id,executive.holder.id]) assert.ok(personIdentityKeys(holders[0]).has(id));
+      assert.equal(holders[0].photoUrl,executive.holder.photoUrl);
+      assert.equal(holders[0].fieldSources?.photoUrl.sourceUrl,executive.sourceUrl);
+      assert.equal(holders[0].fieldSources?.partyLabel.sourceUrl,executive.partySourceUrl);
     });
   }));
 });
@@ -57,8 +60,9 @@ test("CL-01's official statewide source links share a photo before the next sour
   withReaderAuthorityEdge({},()=>withRegistryRuntimeProjection(runtime,['AZ'],()=>{
     assert.equal(photoForPerson(alias.holder.id,'AZ')?.url,executive.holder.photoUrl);
     assert.equal(photoForPerson('plural:native-person-one','AZ')?.url,executive.holder.photoUrl);
-    assert.deepEqual(statewideExecutivesFor([executive.stateOcdId]).map(holder=>holder.photoUrl),
-      [executive.holder.photoUrl,executive.holder.photoUrl]);
+    const holders=statewideExecutivesFor([executive.stateOcdId]);
+    assert.deepEqual(holders.map(holder=>holder.photoUrl),[executive.holder.photoUrl]);
+    for (const id of [alias.holder.id,executive.holder.id]) assert.ok(personIdentityKeys(holders[0]).has(id));
     const conflicting={...alias,holder:{...alias.holder,id:'statewide:az/other-native-source',nativeIds:{plural:['native-person-two']}}};
     withRegistryRuntimeProjection({...runtime,statewideExecutives:[alias,executive,conflicting]},['AZ'],()=>{
       assert.equal(photoForPerson(alias.holder.id,'AZ'),null);

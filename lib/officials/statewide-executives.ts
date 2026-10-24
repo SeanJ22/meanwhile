@@ -1,7 +1,7 @@
 import type { SeatHolder } from "./lookup.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
-import { currentStatewideExecutives } from "../registry/runtime-read-model.ts";
-import { photoForPerson } from "../photos/person.ts";
+import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
+import { selectStatewideExecutives, statewideHolder } from "./statewide-selection.ts";
 
 /** Statewide elected executives, curated from each state's own site and attached by the state OCD prefix, since no district elects them. */
 
@@ -384,6 +384,14 @@ export const STATEWIDE_EXECUTIVES: readonly StatewideExecutive[] = [
   },
 ];
 
+const selectedExecutives = new WeakMap<readonly StatewideExecutive[], readonly StatewideExecutive[]>();
+export function currentStatewideExecutives(): readonly StatewideExecutive[] {
+  const rows = getRegistryRuntimeReadModel().statewideExecutives;
+  let selected = selectedExecutives.get(rows);
+  if (!selected) { selected = selectStatewideExecutives(rows); selectedExecutives.set(rows, selected); }
+  return selected;
+}
+
 /** The statewide executives for whichever state these divisions sit in, read off the OCD prefix. */
 export function statewideExecutivesFor(ocdIds: string[]): SeatHolder[] {
   const states = new Set<string>();
@@ -395,20 +403,7 @@ export function statewideExecutivesFor(ocdIds: string[]): SeatHolder[] {
   const holders: SeatHolder[] = [];
   for (const executive of currentStatewideExecutives()) {
     if (!states.has(executive.stateOcdId)) continue;
-    const photo=photoForPerson(executive.holder.personId ?? executive.holder.id,executive.stateOcdId.split(":").at(-1));
-    // Provenance attached here once, from the entry's `sourceOrg` and `collectedAt`.
-    holders.push({
-      ...executive.holder,
-      photoUrl:photo?.url ?? executive.holder.photoUrl,
-      ...(photo?.provenance ? {fieldSources:{...executive.holder.fieldSources,photoUrl:photo.provenance}} : {}),
-      officeJurisdictionOcdId: executive.stateOcdId,
-      provenance: {
-        sourceUrl: executive.sourceUrl,
-        sourceOrg: executive.sourceOrg,
-        collectedAt: executive.collectedAt,
-        verifiedAt: null,
-      },
-    });
+    holders.push(statewideHolder(executive));
   }
   return holders;
 }

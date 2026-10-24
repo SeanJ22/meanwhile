@@ -1,4 +1,5 @@
 import { officeIdentity } from "../../officials/office-identity.ts";
+import { personName as isPersonName, withoutInvalidStatewidePeople } from "../../officials/person-name.ts";
 import { createHash } from "node:crypto";
 import type { Officeholder, OfficeholderSet, PortraitCandidate } from "../../officials/types.ts";
 import type { Provenance } from "../types.ts";
@@ -124,32 +125,54 @@ export function parseWikidataStatewide(body:string,sourceUrl:string,collectedAt:
 }
 
 export function verifyStatewideOfficialPage(lead:StatewideLead,page:{url:string;html:string;retrievedAt:string;linkingPage?:OfficialLinkingPage|null}):{person:Officeholder;selectionQuote:string|null}|{reason:string} {
+  if(!isPersonName(lead.name))return {reason:"STATEWIDE_OFFICIAL_NOT_A_PERSON"};
   if(!lead.profileUrls.includes(page.url))return {reason:"STATEWIDE_PAGE_NOT_PERSON_PROFILE"};
   if(!isOfficialSource(page.url,page.linkingPage))return {reason:"STATEWIDE_PAGE_NOT_OFFICIAL"};
   const jurisdiction=statewideJurisdiction(lead.state),text=statewidePageText(page.html);
   const normalized=words(statewidePageText(page.html.replace(/<head\b[^>]*>[\s\S]*?<\/head\s*>/gi," ").replace(/<title\b[^>]*>[\s\S]*?<\/title\s*>/gi," ")));
   if(!namedStates(text).includes(lead.state.toLowerCase()))return {reason:"STATEWIDE_PAGE_JURISDICTION_MISSING"};
   const officialOfficeTitle=statewideOfficeTitle(lead.officeTitle,lead.state);
-  const name=words(lead.name),office=words(officialOfficeTitle).replace(/^state /,"");
+  const office=words(officialOfficeTitle).replace(/^state /,"");
   if(/\b(?:state senator|state representative|assemblymember|member of (?:the )?(?:house|senate|legislature)|city|county|district|municipal)\b/.test(office))return {reason:"STATEWIDE_OFFICE_SCOPE_NOT_STATEWIDE"};
-  const officePattern=escaped(office).replace(/ /g,"\\s+");
+  const officeTitles=[officialOfficeTitle];
+  const key=officeIdentity(officialOfficeTitle);
+  // These offices publish a short title beside the person and the full agency
+  // elsewhere on the same page. Both parts must be present in the saved source.
+  if(key==="corporation_commissioner"&&/\bcorporation commission\b/.test(words(text)))officeTitles.push("Commissioner");
+  if(key==="superintendent_of_public_instruction"&&/\b(?:department of education|public instruction)\b/.test(words(text)))officeTitles.push("State Superintendent");
+  if(key==="lieutenant_governor")officeTitles.push("Lt. Governor","Lt. Gov.");
+  const headings=[...page.html.matchAll(/<(?:title|h[1-3])\b[^>]*>([\s\S]*?)<\/(?:title|h[1-3])\s*>/gi)].map(m=>statewidePageText(m[1]));
+  const leadTokens=words(lead.name).split(" "),firstNames=new Set([leadTokens[0],...Array.from(lead.name.matchAll(/["“]([^"”]+)["”]/g),match=>words(match[1]).split(" ")[0])]);
+  const nameTitles=[...officeTitles,...officeTitles.flatMap(title=>[`${jurisdiction.name} ${title}`,`${title} of ${jurisdiction.name}`])];
+  const leadMiddle=words(lead.name.replace(/["“][^"”]+["”]/g,"")).split(" ").slice(1,-1);
+  const sourceNames=[...new Set(headings.map(heading=>personName(heading,nameTitles)).filter((candidate):candidate is string=>{
+    if(!candidate)return false;
+    const tokens=words(candidate).split(" "),middle=tokens.slice(1,-1);
+    return firstNames.has(tokens[0])&&tokens.at(-1)===leadTokens.at(-1)&&!middle.some((token,index)=>leadMiddle[index]&&token[0]!==leadMiddle[index][0]);
+  }))];
+  const displayName=sourceNames.length===1?sourceNames[0]:lead.name,name=words(displayName);
+  const officePattern=`(?:${[...new Set(officeTitles.map(title=>title===officialOfficeTitle?words(title).replace(/^state /,""):words(title)))].map(title=>escaped(title).replace(/ /g,"\\s+")).join("|")})`;
   // A broad directory, a news mention, a past biography, or names elsewhere on
   // the same page cannot establish that this person currently holds this seat.
   const currentMatch=new RegExp(`(?:\\b${escaped(name)}\\b.{0,100}?\\b${officePattern}\\b|\\b${officePattern}\\b.{0,100}?\\b${escaped(name)}\\b)`,"g");
-  let binding:string|null=null;
-  for(const match of normalized.matchAll(currentMatch)){
+  const currentBinding=(match:RegExpMatchArray)=>{
     const start=Math.max(0,match.index!-45),end=match.index!+match[0].length+45,context=normalized.slice(start,end);
-    if(/\b(?:former|past|previous|retired|late|candidate|nominee|governor elect|secretary elect|served as|succeeded|resigned)\b/.test(context))continue;
+    if(/\b(?:former|past|previous|retired|late|candidate|nominee|governor elect|secretary elect|served as|succeeded|resigned)\b/.test(context))return false;
     const titleOffset=match.index!+match[0].search(new RegExp(`\\b${officePattern}\\b`));
     const titlePrefix=normalized.slice(Math.max(0,titleOffset-35),titleOffset);
-    if(/\b(?:deputy|assistant|vice|lieutenant|lt)\s+$/.test(titlePrefix))continue;
-    binding=match[0];break;
-  }
+    return !/\b(?:deputy|assistant|vice|lieutenant|lt|county|city|town|district|municipal)(?: state)?\s+$/.test(titlePrefix);
+  };
+  const statePattern=escaped(words(jurisdiction.name));
+  const titledName=`${officePattern}(?:\\s+(?:of|for)\\s+(?:the\\s+)?(?:state\\s+of\\s+)?${statePattern})?\\s+${escaped(name)}`;
+  const namedTitle=`${escaped(name)}\\s+(?:(?:is|serves as|serving as)\\s+(?:the\\s+)?)?(?:${statePattern}(?:\\s+s)?\\s+)?(?:(?:acting|interim)\\s+)?${officePattern}`;
+  const direct=[...normalized.matchAll(new RegExp(`(?:\\b${titledName}\\b|\\b${namedTitle}\\b)`,"g"))].find(currentBinding);
+  const binding=direct?.[0]??[...normalized.matchAll(currentMatch)].find(currentBinding)?.[0]??null;
   if(!binding)return {reason:"STATEWIDE_CURRENT_HOLDER_OFFICE_NOT_BOUND"};
-  // This page is the person's page, not a statewide multi-person list or a
-  // dated announcement. One named leader in a heading/title gives that link.
-  const headings=[...page.html.matchAll(/<(?:title|h[1-3])\b[^>]*>([\s\S]*?)<\/(?:title|h[1-3])\s*>/gi)].map(m=>words(statewidePageText(m[1])));
-  if(!headings.some(heading=>heading.includes(name))&&!/\b(?:is the|serves as|serving as|about|meet|was elected as|was appointed as)\b/.test(normalized.slice(Math.max(0,normalized.indexOf(name)-25),normalized.indexOf(name)+name.length+110)))return {reason:"STATEWIDE_OWN_PAGE_IDENTITY_MISSING"};
+  // An office's own landing page can name its holder without a personal-profile
+  // heading. It must state this exact name/title pair and name the office above it.
+  const officeLanding=direct&&headings.some(heading=>new RegExp(`\\b${officePattern}\\b`).test(words(heading)));
+  const identityStatement=new RegExp(`\\b(?:(?:about|meet)\\s+${escaped(name)}|${escaped(name)}\\s+(?:is(?: the)?|serves as|serving as|was elected as|was appointed as))\\b`).test(normalized);
+  if(!officeLanding&&!headings.some(heading=>words(heading).includes(name))&&!identityStatement)return {reason:"STATEWIDE_OWN_PAGE_IDENTITY_MISSING"};
   const sentences=text.split(/(?<=[.!?])\s+|[\r\n]+/).filter(sentence=>words(sentence).includes(office));
   let selectionMethod:"ELECTED_STATEWIDE"|"APPOINTED"|"UNKNOWN"="UNKNOWN",selectionQuote:string|null=null;
   const stateName=escaped(words(jurisdiction.name));
@@ -170,6 +193,8 @@ export function verifyStatewideOfficialPage(lead:StatewideLead,page:{url:string;
   const phoneLink=[...page.html.matchAll(/href\s*=\s*["']tel:([^"']+)["']/gi)][0]?.[1];
   const phone=phoneLink?decodeEntities(phoneLink):/\b(?:phone|telephone|office phone|contact)\s*:?\s*(\+?1?[ .-]?\(?\d{3}\)?[ .-]?\d{3}[ .-]\d{4})/i.exec(text)?.[1]??null;
   const emailLink=[...page.html.matchAll(/href\s*=\s*["']mailto:([^"'?]+)[^"']*["']/gi)][0]?.[1]??null;
+  const contactFormUrl=statewidePageLinks(page.html,page.url).find(link=>new URL(link.url).hostname===new URL(page.url).hostname&&
+    /^(?:contact(?: us| (?:the )?(?:governor|office|attorney general))?|constituent services|request assistance)$/i.test(link.label.trim()))?.url??null;
   const id=`statewide:${lead.state.toLowerCase()}:${hash(`${name}|${office}`)}`,membershipId=`${id}:membership`;
   const fieldSources:Record<string,Provenance>={name:provenance,officeTitle:provenance,websiteUrl:provenance};
   for(const namespace of Object.keys(lead.nativeIds??{}))fieldSources[`nativeIds.${namespace}`]=lead.nativeIdSources?.[namespace]??{
@@ -178,22 +203,23 @@ export function verifyStatewideOfficialPage(lead:StatewideLead,page:{url:string;
   if(lead.termEnd)fieldSources.termEnd=lead.termSources?.termEnd??{sourceUrl:lead.sourceUrl,sourceOrg:lead.sourceOrg,collectedAt:lead.collectedAt,verifiedAt:lead.collectedAt};
   if(phone)fieldSources.phone=provenance;
   if(emailLink)fieldSources.email=provenance;
+  if(contactFormUrl)fieldSources.contactFormUrl=provenance;
   if(selectionQuote)fieldSources.selectionMethod={...provenance,evidenceExcerpt:selectionQuote};
   const portrait=pickPortraits(lead.name,imagesIn(page.html,page.url))[0];
-  const person:Officeholder={id,personId:id,nativeIds:lead.nativeIds,state:jurisdiction.postal,name:lead.name,officeTitle:officialOfficeTitle,level:"STATE",
-    termStart:lead.termStart??"",termEnd:lead.termEnd??"",birthDate:null,partyLabel:null,websiteUrl:page.url,profileUrls:[page.url],contactFormUrl:null,phone,email:emailLink,campaignUrl:null,photo:null,
+  const person:Officeholder={id,personId:id,nativeIds:lead.nativeIds,state:jurisdiction.postal,name:displayName,officeTitle:officialOfficeTitle,level:"STATE",
+    termStart:lead.termStart??"",termEnd:lead.termEnd??"",birthDate:null,partyLabel:null,websiteUrl:page.url,profileUrls:[page.url],contactFormUrl,phone,email:emailLink,campaignUrl:null,photo:null,
     selectionMethod, ...(selectionQuote?{selectionMethodSourceUrl:page.url}:{}),
     memberships:[{id:membershipId,personId:id,officeId:`${jurisdiction.root}:office:${officeIdentity(officialOfficeTitle)}`,jurisdiction:`US-${jurisdiction.postal}`,officeTitle:officialOfficeTitle,
-      level:"STATE",current:true,...(selectionMethod!=="UNKNOWN"?{divisionId:jurisdiction.root}:{}),termStart:lead.termStart??null,termEnd:lead.termEnd??null,sourceUrl:page.url,selectionMethod,...(selectionQuote?{selectionMethodSourceUrl:page.url}:{})}],
+      level:"STATE",current:true,divisionId:jurisdiction.root,termStart:lead.termStart??null,termEnd:lead.termEnd??null,sourceUrl:page.url,selectionMethod,...(selectionQuote?{selectionMethodSourceUrl:page.url}:{})}],
     ...(portrait?{portraitCandidate:{...(portrait.src===lead.portraitCandidate?.imageUrl?lead.portraitCandidate:{}),imageUrl:portrait.src,sourceUrl:page.url,collectedAt:page.retrievedAt}}:lead.portraitCandidate?{portraitCandidate:lead.portraitCandidate}:{}),
     fieldSources,provenance};
   return {person,selectionQuote};
 }
 export function statewideRoster(state:string,people:readonly Officeholder[],generatedAt:string):OfficeholderSet {
   const jurisdiction=statewideJurisdiction(state);
-  return {scope:`US-${jurisdiction.postal}`,generatedAt,currentMembershipComplete:false,officeholders:[...people],
+  return withoutInvalidStatewidePeople({scope:`US-${jurisdiction.postal}`,generatedAt,currentMembershipComplete:false,officeholders:[...people],
     unmatched:people.filter(person=>!person.memberships?.some(membership=>membership.divisionId===jurisdiction.root))
       .map(person=>({officeholderId:person.id,reason:"STATEWIDE_SELECTION_METHOD_UNRESOLVED"})),
     divisions:people.flatMap(person=>(person.memberships??[]).filter(membership=>membership.divisionId===jurisdiction.root)
-      .map(membership=>({officeholderId:person.id,ocdId:jurisdiction.root,bodyId:null,membershipId:membership.id})))};
+      .map(membership=>({officeholderId:person.id,ocdId:jurisdiction.root,bodyId:null,membershipId:membership.id})))});
 }

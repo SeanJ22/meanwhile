@@ -46,6 +46,11 @@ export function recordAcquiredResponse(input: {
   )) activeEvidence.push(evidence);
 }
 
+/** A request our own infrastructure makes while a source is in scope (the evidence vault) is not that source's acquisition. */
+export function outsideSourceAcquisition<T>(operation: () => T): T {
+  return sourceContext.exit(operation);
+}
+
 /**
  * Capture every successful fetch performed by a batch composite acquisition.
  * AsyncLocalStorage keeps concurrently fetched children attributed to the

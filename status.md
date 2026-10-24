@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 94 LIVE (revert of BL-21-FX; /api/build b518e4d8d from 9:11 PM EDT). RELEASE 95 (RN-02) PR #805 OPEN: gates 9 of 9 on f3baca176 (9,630 pass, 0 fail, 6 skipped; 9:05 to 9:37 PM EDT), river 43742857f (main merged, tree identical), run-full-ci + auto-merge
+build_state: RELEASE 95 LIVE (RN-02 on the BL-21-FX revert; /api/build 16eead35c from 10:20 PM EDT; runner on it from 02:18 UTC). CI needed one fix: the test job now installs Poppler (21ae9bcfb), which RN-02 reads agenda PDFs with and the runner already has. No candidate; waiting for READYs
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,12 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## Release 95 live check (RN-02), first reading Oct 23, 10:20 to 10:30 PM EDT
+- /ballot kept the restored dates: 85003 "The next election: November 3rd, 2026", 12 deadlines.
+- RN-02's named meetings are not on the live site yet: /api/meetings?zip=92101 (San Diego) has 0 meetings and no legistar:sdcounty:2042; 77550 (Galveston) 0 meetings. RN-02 proved them on an isolated production copy; the runner has to publish them (on 16eead35c from 02:18 UTC).
+- Baseline meetings by ZIP (meetings / upcoming / boards): AZ 85701 241/93/136, 85003 0/0/4; CA 92101 0/0/10, 94102 0/0/0; CO 80202 0/0/1; FL 33130 0/0/5; GA 30303 0; IL 60602 0; MN 55401 0; NH 03301 9/0/7; NJ 07102 0/0/3; NY 10007 0; OR 97204 0; TX 77550 0/0/10, 78701 0; WA 98101 0; WI 53202 0/0/342, 53703 0/0/253.
+- Recheck after the runner's first passes (~11:50 PM EDT): launches for voting-sites, registration, legistar-members and ballot-navigation; supervisor and reader-repair failures; meetings by ZIP against this baseline.
 
 ## RN-02 live check, owed once release 95 is live (plus real places in 10+ states, counts by state)
 - Runner: voting-sites, registration, legistar-members (oregonmetro) and ballot-navigation tasks launch instead of deferring "Reader repair waits for the next pass" / "Waiting for a worker slot"; ROUTINE CIVIC DATA SUPERVISOR FAILED counts drop; reader-repair failures (READER_READBACK_REPAIR_FAILED) gone.

@@ -68,7 +68,7 @@ export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
   name: "Name", officeTitle: "Office", partyLabel: "Party", birthDate: "Birth date",
   termNote: "Term wording", termStart: "Term start date", termEnd: "Term end date",
   email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
-  campaignUrl: "Campaign website", photoUrl: "Portrait", portraitImage: "Portrait image", social: "Social accounts",
+  campaignUrl: "Campaign website", photoUrl: "Portrait", portraitImage: "Portrait image", sourcePortraitImage: "Portrait image", social: "Social accounts",
   districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
   officeJurisdictionOcdId: "Area served", contactScope: "Who the office serves", state: "State", chamber: "Chamber",
   selectionMethod: "How they took office", selectionMethodSourceUrl: "How they took office", executive: "National executive record",

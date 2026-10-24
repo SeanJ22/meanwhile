@@ -13,6 +13,9 @@ import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { civicDataReadNotInitialized } from "../lib/civic-data/read-model.ts";
 import { heldPersonSources } from "../lib/officials/held-sources.ts";
 import { personCardSources } from "../lib/officials/card-sources.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 
 const ROOT = "ocd-division/country:us/state:fl", AT = "2026-10-12T00:00:00.000Z";
 function person(id: string, name: string, bioguides: string[], source = "https://www.senate.gov/member", collectedAt = AT): Officeholder {
@@ -258,6 +261,16 @@ test("both held portraits and their exact image sources stay accessible through 
     }
   }
   assert.deepEqual(originals, snapshots, "retaining the source records never changes their held fields");
+  const state=packageFor([], [prior,current]);
+  withReaderAuthorityEdge({},()=>withRegistryRuntimeProjection(state.registry,["FL"],()=>{
+    primeStatePeopleProjection({formatVersion:1,sourceId:"held people",jurisdiction:"US-FL",term:"2026",generatedAt:AT,roster:state.people!});
+    const shared=indexByDivision([state.people!]).get(ROOT)!;
+    assert.ok(shared.every(holder=>holder.photoUrl === current.photo!.url),"every card uses the person's selected photo");
+    const merged=scopedHolders([shared[0]],[shared[1]])[0];
+    const sources=personCardSources(merged).flatMap(source=>source.details ?? [source]);
+    for(const image of [oldImage,newImage])assert.ok(sources.some(source=>source.provenance.sourceUrl === image && source.what.includes("Portrait image")),image);
+    assert.ok(sources.some(source=>source.provenance.sourceUrl === oldImage && source.provenance.sourceOrg.includes(prior.photo!.attribution!)));
+  }));
 });
 
 test("a source-native record naming two held Congress identities never selects either directory arbitrarily", () => {

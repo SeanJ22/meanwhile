@@ -96,6 +96,11 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   const portraitSource=photoSource ? {...photoSource,
     sourceUrl:photo?.verification?.imageUrl ?? (photo && photo.url !== person.photo?.url ? photoSource.sourceUrl : person.photo?.sourceUrl) ?? photoSource.sourceUrl,
     collectedAt:photo?.verification?.imageRetrievedAt ?? photoSource.collectedAt} : null;
+  const sourcePortrait=person.photo && photo && photo.url !== person.photo.url ? {
+    ...(person.fieldSources?.photo ?? person.provenance),sourceUrl:person.photo.sourceUrl,
+    sourceOrg:[person.fieldSources?.photo?.sourceOrg ?? person.provenance.sourceOrg,person.photo.attribution,person.photo.license].filter(Boolean).join(" · "),
+    collectedAt:person.photo.collectedAt,verifiedAt:person.photo.verification?.checkedAt ?? null,
+  } : null;
   return {
     id: person.id,
     personId: person.personId ?? person.id,
@@ -105,6 +110,7 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     selectionMethodSourceUrl: person.selectionMethodSourceUrl,
     fieldSources: photoSource ? { ...person.fieldSources,
       photoUrl:person.fieldSources?.photoUrl ?? photoSource,portraitImage:portraitSource ?? photoSource,
+      ...(sourcePortrait ? {sourcePortraitImage:sourcePortrait} : {}),
     } : person.fieldSources ? { ...person.fieldSources } : undefined,
     name: person.name,
     officeTitle: person.officeTitle,

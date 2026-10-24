@@ -14,9 +14,9 @@ export interface Entity {
 /** @public Zero preserves an association whose source did not record a boundary year. */
 export interface EntityPlace { readonly entityId: string; readonly placeId: string; readonly boundaryYear: number }
 /** @public Postal delivery areas, separately from Census statistical areas. */
-export interface ZipPlace { readonly zip: string; readonly placeId: string; readonly share: number; readonly boundaryYear: number }
+export interface ZipPlace { readonly zip: string; readonly placeId: string; readonly share: number | null; readonly boundaryYear: number }
 /** @public Census statistical ZIP areas. */
-export interface ZctaPlace { readonly zcta: string; readonly placeId: string; readonly share: number; readonly boundaryYear: number }
+export interface ZctaPlace { readonly zcta: string; readonly placeId: string; readonly share: number | null; readonly boundaryYear: number }
 /** @public Current prebuilt reader page for one place. */
 export interface PlacePage { readonly placeId: string; readonly version: bigint; readonly builtAt: string; readonly body: unknown }
 

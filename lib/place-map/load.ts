@@ -1,6 +1,7 @@
 import type { FactDb, Query } from "../facts/publish.ts";
 import { boundingBoxOf } from "../registry/resolve.ts";
 import type { PlaceBoundary } from "./types.ts";
+import type { EntityPlace } from "../core/shapes.ts";
 
 export interface MapPlace {
   readonly id: string;
@@ -22,6 +23,7 @@ export interface StatePlaceMap {
   readonly boundaries: readonly PlaceBoundary[];
   readonly zipEdges: readonly MapEdge[];
   readonly zctaEdges: readonly MapEdge[];
+  readonly entityPlaces?: readonly EntityPlace[];
 }
 
 async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Promise<void>): Promise<void> {
@@ -58,6 +60,13 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
     });
     await loadEdges(query, "zip", map.zipEdges);
     await loadEdges(query, "zcta", map.zctaEdges);
+    await batches(map.entityPlaces ?? [], async rows => {
+      await query(`INSERT INTO entity_place(entity_id,place_id,boundary_year)
+        SELECT e.id,p.id,r.boundary_year FROM jsonb_to_recordset($1::jsonb) AS r(entity_id text,place_id text,boundary_year integer)
+        JOIN entity e ON e.id=r.entity_id JOIN entity p ON p.id=r.place_id
+        ON CONFLICT(entity_id,place_id,boundary_year) DO NOTHING`,
+      [JSON.stringify(rows.map(row => ({ entity_id: row.entityId, place_id: row.placeId, boundary_year: row.boundaryYear })))]);
+    });
   });
 }
 

@@ -13,6 +13,9 @@ import { acquireStateBoundaries } from "./acquire.ts";
 import { acquireBoundaryOverlaps } from "./overlap.ts";
 import { buildStatePlaceMap } from "./build.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "./load.ts";
+import { geographicSpecialDistricts } from "./special-districts.ts";
+import { statePostalLinks } from "./postal-links.ts";
+import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 
 /** Read only the legacy shards touching this state. Their source is explicitly
  * Census ZCTAs; the independent Census universe confirms each ZCTA row. */
@@ -43,12 +46,21 @@ async function heldStateDataset(query: Query, state: string): Promise<BuiltDatas
 }
 
 export async function prepareStatePlaceMap(query: Query, root: string, state: string,
-  options: CensusSourceOptions = {}): Promise<StatePlaceMap> {
+  options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset }> {
   if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
   const { reference: registration } = loadRegistrationReference(root, state);
   const fips = registration.divisions.find(d => d[1] === "state")?.[2];
   if (!fips) throw new Error(`No state FIPS for ${state}`);
   const legacyZips = await stateLegacy(root, state);
+  const postalLinks = await statePostalLinks(root, state);
+  for (const link of postalLinks) {
+    const base = legacyZips.get(link.zcta);
+    if (!base) continue;
+    if (link.addressRequired) {
+      const ids = base.ids.filter(isTownOrCountyDivision);
+      legacyZips.set(link.zip, { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 });
+    } else if (!legacyZips.has(link.zip)) legacyZips.set(link.zip, base);
+  }
   const previousDataset = await heldStateDataset(query, state);
   const dataset = await acquireDataset({ ...options, previousDataset, states: new Set([fips]), discoverPlans: false,
     only: ["county", "place", "cousub", "cd119", "sldu", "sldl", "cd120", "sldu2026", "sldl2026"] });
@@ -72,15 +84,21 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   const zctas = new Set([...legacyZctas, ...dataset.scopes.flatMap(s => s.groupings.flatMap(g => g.overlaps.map(o => o.zcta5)))]);
   const acquiredEdges = await acquireBoundaryOverlaps(boundaries, zctas, options);
   const sources = JSON.parse(await readFile(join(root, "data/reference/district-boundary-sources.json"), "utf8")) as { sources: { id: string; countyFips: string | null }[] };
-  return buildStatePlaceMap({ registration, scopes: dataset.scopes, legacyZips, legacyZctas, boundaries, acquiredEdges,
+  const geographicDistricts = await geographicSpecialDistricts(root, fips);
+  const governmentIds = new Map((await query("SELECT value,entity_id FROM entity_external_id WHERE scheme='census-pid6' AND value=ANY($1::text[])",
+    [geographicDistricts.map(d => d.pid)])).map(row => [String(row.value), String(row.entity_id)]));
+  const map = buildStatePlaceMap({ registration, scopes: dataset.scopes, legacyZips, legacyZctas, boundaries, acquiredEdges,
     additionalPlaces: shapes.places, censusFacts: readCensusGovernmentFacts(root, [state]).byPid,
+    geographicDistricts: geographicDistricts.map(d => ({ ...d, governmentId: governmentIds.get(d.pid) })),
+    postalLinks,
     sourceCounties: new Map(sources.sources.map(source => [source.id, source.countyFips])), checkedAt: dataset.builtAt });
+  return { map, dataset };
 }
 
 /** The standing Census job uses this same import on every scheduled refresh. */
 export async function refreshStatePlaceMap(db: FactDb & { readonly query: Query }, root: string, state: string,
-  options: CensusSourceOptions = {}): Promise<StatePlaceMap> {
-  const map = await prepareStatePlaceMap(db.query, root, state, options);
-  await loadStatePlaceMap(db, map);
-  return map;
+  options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset }> {
+  const prepared = await prepareStatePlaceMap(db.query, root, state, options);
+  await loadStatePlaceMap(db, prepared.map);
+  return prepared;
 }

@@ -11,6 +11,7 @@ import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts"
 import { placesForCode } from "../lib/place-map/read.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
+import { identitySourceTables, identityEventTables, readerIdentityMigration } from "../tests/helpers/reader-identity-db.ts";
 
 const root = process.cwd(), output = process.env.RB_A2_OUTPUT ?? "/tmp/rb-a2-replay";
 const url = process.env.RB_A2_READER_URL;
@@ -32,21 +33,21 @@ for (const state of states) {
     let map: StatePlaceMap;
     if (process.env.RB_A2_REUSE === "1") map = JSON.parse(await readFile(path, "utf8"));
     else {
-      map = await prepareStatePlaceMap(production, root, state, { cache, fetchImpl: async (url, init) => {
+      ({ map } = await prepareStatePlaceMap(production, root, state, { cache, fetchImpl: async (url, init) => {
         console.log(`${state} source ${String(url)}`);
         return fetch(url, init);
-      } });
+      } }));
       await writeFile(path, JSON.stringify(map));
     }
     const db = new PGlite();
     try {
       await db.exec(await readFile(join(root, "lib/db/migrations/0035_r1_fact_store.sql"), "utf8"));
-      // Replaced by RB-A1's committed migration as soon as its branch supplies it.
-      await db.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
-        CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+      await identitySourceTables(db);
+      await identityEventTables(db);
+      await db.exec(readerIdentityMigration());
       await db.exec(await readFile(join(root, "lib/db/migrations/RB-A2_place_boundaries.sql"), "utf8"));
       const query: Query = async (text, params = []) => (await db.query(text, [...params])).rows as Record<string, unknown>[];
-      const transaction = <T>(work: (query: Query) => Promise<T>) => db.transaction(tx => work(async (text, params = []) => (await tx.query(text, [...params])).rows as Record<string, unknown>[]));
+      const transaction = <T,>(work: (query: Query) => Promise<T>) => db.transaction(tx => work(async (text, params = []) => (await tx.query(text, [...params])).rows as Record<string, unknown>[]));
       const held = await production("SELECT id,kind,name,state FROM entity WHERE kind='place' AND (state=$1 OR id='ocd-division/country:us')", [state]);
       await query(`INSERT INTO entity(id,kind,name,state) SELECT id,kind,name,state FROM jsonb_to_recordset($1::jsonb) AS e(id text,kind text,name text,state char(2))`, [JSON.stringify(held)]);
       await loadStatePlaceMap({ transaction }, map);

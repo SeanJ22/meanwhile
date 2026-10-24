@@ -1,3 +1,7 @@
+ALTER TABLE zip_place ALTER COLUMN share DROP NOT NULL;
+--> statement-breakpoint
+ALTER TABLE zcta_place ALTER COLUMN share DROP NOT NULL;
+--> statement-breakpoint
 CREATE TABLE place_boundary (
   place_id text NOT NULL REFERENCES entity(id),
   boundary_year integer NOT NULL,

@@ -7,6 +7,11 @@ import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { MapEdge, MapPlace, StatePlaceMap } from "./load.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
+import { countyIdentity, placeIdentity, subdivisionIdentity } from "../ocd/divisions.ts";
+import type { GeographicDistrict } from "./special-districts.ts";
+import type { EntityPlace } from "../core/shapes.ts";
+import type { PostalLink } from "./postal-links.ts";
+import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 
 const layers: Readonly<Record<string, string>> = { congressional_district: "cd", state_leg_upper: "sldu", state_leg_lower: "sldl", county_subdivision: "cousub" };
 const key = (id: string, year: number) => `${id}|${year}`;
@@ -29,12 +34,15 @@ export function buildStatePlaceMap(input: {
   readonly acquiredEdges?: readonly MapEdge[];
   readonly censusFacts?: ReadonlyMap<string, CensusGovernmentFacts>;
   readonly sourceCounties?: ReadonlyMap<string, string | null>;
+  readonly geographicDistricts?: readonly GeographicDistrict[];
+  readonly postalLinks?: readonly PostalLink[];
   readonly checkedAt: string;
 }): StatePlaceMap {
   const { registration: reg } = input;
   const places = new Map<string, MapPlace>((input.additionalPlaces ?? []).map(place => [place.id, place]));
   const boundaries = new Map(input.boundaries.map(row => [key(row.placeId, row.boundaryYear), row]));
   const zipEdges = new Map<string, MapEdge>(), zctaEdges = new Map<string, MapEdge>();
+  const entityPlaces: EntityPlace[] = [];
   const byGeoid = new Map(reg.divisions.map(row => [`${row[1]}:${row[2]}`, row[0]]));
   for (const place of input.additionalPlaces ?? []) for (const alias of place.aliases) {
     if (alias.scheme.startsWith("census-geoid:")) byGeoid.set(`${alias.scheme.slice("census-geoid:".length)}:${alias.value}`, place.id);
@@ -42,10 +50,12 @@ export function buildStatePlaceMap(input: {
   const byId = new Map(reg.divisions.map(row => [row[0], row]));
   const countyByGeoid = new Map(reg.divisions.filter(row => row[1] === "county").map(row => [row[2], row[0]]));
   const state = reg.state.toUpperCase();
+  const countyNames = new Map(input.scopes.filter(scope => scope.type === "county").flatMap(scope => scope.groupings)
+    .map(group => [group.geoid, group.label.replace(new RegExp(`^${state}\\s+`), "")]));
   const put = (id: string, name: string, layer: string, geoid: string, year: number, version: string, sourceUrls: readonly string[] = []) => {
     const previous = places.get(id);
     const aliases = [...(previous?.aliases ?? []), ...(geoid ? [{ scheme: layer === "district" ? "boundary-feature" : `census-geoid:${layer}`, value: geoid }] : []),
-      ...(["unsd", "elsd", "scsd"].includes(layer) ? [{ scheme: "nces", value: geoid }] : [])];
+      ...(geoid && ["unsd", "elsd", "scsd"].includes(layer) ? [{ scheme: "nces", value: geoid }] : [])];
     places.set(id, { id, name: previous?.name ?? name, state: id === "ocd-division/country:us" ? null : state, aliases: [...new Map(aliases.map(a => [`${a.scheme}:${a.value}`, a])).values()] });
     if (!boundaries.has(key(id, year))) boundaries.set(key(id, year), { placeId: id, boundaryYear: year, layer, version,
       geometry: null, hostCountyId: null, countyAttachment: false, sourceUrls, checkedAt: input.checkedAt });
@@ -69,9 +79,14 @@ export function buildStatePlaceMap(input: {
     for (const group of scope.groupings) {
       if (group.stateAbbr !== state) continue;
       const ref: GeographyRef = { ...group, type: scope.type, version: scope.version };
-      const id = byGeoid.get(`${layer}:${group.geoid}`) ?? censusWorkDivision(ref);
+      const label = group.label.replace(new RegExp(`^${state}\\s+`), "");
+      const inferred = layer === "county" ? countyIdentity(group.stateFips, label.replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId
+        : layer === "place" ? placeIdentity(group.stateFips, label)?.ocdId
+        : layer === "cousub" ? subdivisionIdentity(group.stateFips, countyNames.get(group.geoid.slice(0, 5)) ?? "", label)?.ocdId : null;
+      const id = byGeoid.get(`${layer}:${group.geoid}`) ?? censusWorkDivision(ref) ?? inferred;
       if (!id) throw new Error(`No held place identity for ${state} ${layer} ${group.geoid}`);
       put(id, group.label, layer, group.geoid, year, scope.version, scope.versionMeta.provenance.sourceUrls);
+      if (layer === "county") countyByGeoid.set(group.geoid, id);
       for (const overlap of group.overlaps) {
         const edge: MapEdge = { code: overlap.zcta5, placeId: id, boundaryYear: year, share: overlap.fraction,
           shareBasis: scope.fractionBasis, partial: !overlap.whole, fringe: false };
@@ -99,21 +114,47 @@ export function buildStatePlaceMap(input: {
   }
   // A government without its own polygon is filed at its source's host county.
   // Its county reach is explicit metadata, not an invented district shape.
-  for (const [pid, governmentId, name, type, division] of reg.governments) {
+  const countyIds = new Set(countyByGeoid.values());
+  const countyEdges = [zipEdges, zctaEdges].map(target => {
+    const index = new Map<string, MapEdge[]>();
+    for (const edge of target.values()) if (countyIds.has(edge.placeId)) {
+      const found = index.get(edge.placeId) ?? []; found.push(edge); index.set(edge.placeId, found);
+    }
+    return { target, index };
+  });
+  const shaped = new Set([...boundaries.values()].filter(row => row.geometry).map(row => row.placeId));
+  const governments = new Map(reg.governments.map(row => [row[0], row]));
+  const geographic = new Map((input.geographicDistricts ?? []).map(row => [row.pid, row]));
+  const districts = input.geographicDistricts
+    ? [...input.geographicDistricts.map(d => governments.get(d.pid) ?? [d.pid, d.governmentId ?? `census-government:${d.pid}`, d.name, "SPECIAL DISTRICT", -1, "", -1] as const),
+      ...reg.governments.filter(g => g[3] === "SPECIAL DISTRICT" && !/^\d+$/.test(g[0]))]
+    : reg.governments;
+  for (const [pid, governmentId, name, type, division] of districts) {
     if (type !== "SPECIAL DISTRICT") continue;
     const registered = division >= 0 ? reg.divisions[division] : undefined;
     const id = registered?.[0] ?? `${governmentId}#place`;
-    if ([...boundaries.values()].some(row => row.placeId === id && row.geometry)) continue;
+    entityPlaces.push({ entityId: geographic.get(pid)?.governmentId ?? governmentId, placeId: id, boundaryYear: 2022 });
+    if (shaped.has(id)) continue;
     const source = registered?.[2].split("#")[0];
-    const countyFips = (source ? input.sourceCounties?.get(source) : null) ?? input.censusFacts?.get(pid)?.countyFips;
+    const countyFips = geographic.get(pid)?.countyFips ?? (source ? input.sourceCounties?.get(source) : null) ?? input.censusFacts?.get(pid)?.countyFips;
     const county = countyFips ? countyByGeoid.get(countyFips) : undefined;
     if (!county) continue;
     put(id, name, "district", "", 2022, "district:2022");
     const row = boundaries.get(key(id, 2022))!;
     boundaries.set(key(id, 2022), { ...row, countyAttachment: true, hostCountyId: county });
-    for (const [target, current] of [[zipEdges, [...zipEdges.values()]], [zctaEdges, [...zctaEdges.values()]]] as const) {
-      for (const edge of current) if (edge.placeId === county) addEdge(target, { ...edge, placeId: id, boundaryYear: 2022, share: null, shareBasis: "county_attachment", partial: true });
+    for (const { target, index } of countyEdges) {
+      for (const edge of index.get(county) ?? []) addEdge(target, { ...edge, placeId: id, boundaryYear: 2022, share: null, shareBasis: "county_attachment", partial: true });
     }
   }
-  return { places: [...places.values()], boundaries: [...boundaries.values()].filter(row => places.has(row.placeId)), zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()] };
+  const byZcta = new Map<string, MapEdge[]>();
+  for (const edge of zctaEdges.values()) { const found = byZcta.get(edge.code) ?? []; found.push(edge); byZcta.set(edge.code, found); }
+  for (const link of input.postalLinks ?? []) {
+    if (link.addressRequired) for (const [id, edge] of zipEdges) {
+      if (edge.code === link.zip && !isTownOrCountyDivision(edge.placeId)) zipEdges.delete(id);
+    }
+    for (const edge of byZcta.get(link.zcta) ?? []) if (!link.addressRequired || isTownOrCountyDivision(edge.placeId)) {
+      addEdge(zipEdges, { ...edge, code: link.zip });
+    }
+  }
+  return { places: [...places.values()], boundaries: [...boundaries.values()].filter(row => places.has(row.placeId)), zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()], entityPlaces };
 }

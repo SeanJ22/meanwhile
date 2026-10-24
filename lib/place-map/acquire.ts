@@ -36,7 +36,7 @@ export async function acquireStateBoundaries(reg: RegistrationReference, options
     let features: Feature[] = [];
     const archive = await censusTigerArchive(url, options, async path => {
       features = [];
-      for await (const feature of tigerFeatures(path, undefined, options.signal)) if (feature.properties.STATEFP === fips) features.push(feature);
+      for await (const feature of tigerFeatures(path, undefined, options.signal, properties => properties.STATEFP === fips)) features.push(feature);
       if (!features.length && ["state", "county"].includes(layer)) throw new Error(`No ${reg.state} polygons in ${url}`);
     });
     try {
@@ -61,7 +61,7 @@ export async function acquireStateBoundaries(reg: RegistrationReference, options
         const previous = places.get(id);
         const aliases = [...previous?.aliases ?? [], { scheme: `census-geoid:${layer}`, value: geoid },
           ...(["unsd", "elsd", "scsd"].includes(layer) ? [{ scheme: "nces", value: geoid }] : [])];
-        places.set(id, { id, name, state: reg.state, aliases: [...new Map(aliases.map(a => [`${a.scheme}:${a.value}`, a])).values()] });
+        places.set(id, { id, name, state: reg.state.toUpperCase(), aliases: [...new Map(aliases.map(a => [`${a.scheme}:${a.value}`, a])).values()] });
         byGeoid.set(`${layer}:${geoid}`, id);
         const geometry = { type: "MultiPolygon" as const, coordinates: tigerGeometry(feature) };
         const previousBoundary = boundaries.get(`${id}|${year}`);

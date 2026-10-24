@@ -2,7 +2,7 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { GeographyType, GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
-import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
+import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, censusTextLines, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
 import type { GeographyApplicability } from "./selection.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { establishedApplicability } from "./selection.ts";
@@ -48,24 +48,6 @@ export interface GrfColumns {
 
 export function parseGrfHeader(headerLine: string): string[] {
   return headerLine.replace(/^﻿/, "").trim().split("|");
-}
-
-/** Decode a block archive a chunk at a time; the largest state must never
- * coexist in memory as both a complete byte buffer and a complete string. */
-function* grfLines(bytes: Uint8Array): Generator<string> {
-  const decoder = new TextDecoder();
-  let remainder = "";
-  for (let offset = 0; offset < bytes.byteLength; offset += 64 * 1024) {
-    const chunk = remainder + decoder.decode(bytes.subarray(offset, offset + 64 * 1024), { stream: true });
-    let start = 0, end: number;
-    while ((end = chunk.indexOf("\n", start)) >= 0) {
-      yield chunk.slice(start, end).replace(/\r$/, "");
-      start = end + 1;
-    }
-    remainder = chunk.slice(start);
-  }
-  remainder += decoder.decode();
-  if (remainder) yield remainder.replace(/\r$/, "");
 }
 
 export function resolveGrfColumns(header: readonly string[], column: GrfTarget["column"]): GrfColumns {
@@ -288,7 +270,7 @@ export async function acquireGrfScopes(targets: readonly GrfTarget[], options: A
       blockValidator = provenance.sourceValidators!.find(row => row.url === blockUrl)!;
     } else {
       const parse = (bytes: Uint8Array): readonly BuiltScope[] => {
-        const lines = grfLines(bytes);
+        const lines = censusTextLines(bytes);
         const header = parseGrfHeader(lines.next().value ?? "");
         const accs = plans.map(target => new GrfAccumulator(target, resolveGrfColumns(header, target.column)));
         const currentState = header.indexOf(header.includes("CURSTATE") ? "CURSTATE" : "TABBLKST");

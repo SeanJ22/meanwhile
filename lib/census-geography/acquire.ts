@@ -4,7 +4,7 @@ import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
 import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
 import { acquireGrfScopes, congressionalTarget, discoverGrfReleases, GRF_CD120, GRF_SLDU2026, GRF_SLDL2026, legislativeTarget, planApplicability, type GrfTarget } from "./grf.ts";
-import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
+import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, censusTextLines, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { acquireTigerScopes, discoverTigerDistrictFiles } from "./tiger-acquire.ts";
 
@@ -81,8 +81,8 @@ async function buildScope(src: Source, options: AcquireOptions): Promise<BuiltSc
   if (held && await heldSourcesUnchanged(held.versionMeta.provenance, [src.url], options)) return held;
   const filename = src.url.split("/").pop() ?? src.url;
   const parse = (bytes: Uint8Array): ScopeAccumulator => {
-    const lines = new TextDecoder().decode(bytes).split(/\r?\n/);
-    const header = parseTab20Header(lines.shift() ?? "");
+    const lines = censusTextLines(bytes);
+    const header = parseTab20Header(lines.next().value ?? "");
     const columns = resolveTab20Columns(header, src.geoTag);
     const acc = new ScopeAccumulator(src, columns);
     for (const line of lines) {

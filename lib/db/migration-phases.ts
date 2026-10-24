@@ -163,6 +163,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "RB-A1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy." },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },

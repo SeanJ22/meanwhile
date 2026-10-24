@@ -102,7 +102,7 @@ function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
     selectionMethod: person.selectionMethod,
     selectionMethodSourceUrl: person.selectionMethodSourceUrl,
     fieldSources: photoSource ? { ...person.fieldSources,
-      photoUrl:photoSource,portraitImage:portraitSource ?? photoSource,
+      photoUrl:person.fieldSources?.photoUrl ?? photoSource,portraitImage:portraitSource ?? photoSource,
     } : person.fieldSources ? { ...person.fieldSources } : undefined,
     name: person.name,
     officeTitle: person.officeTitle,

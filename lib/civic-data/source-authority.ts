@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { REGISTRY_RUNTIME_PARSER_VERSION } from "../registry/runtime-version.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
@@ -121,7 +122,7 @@ const AUTHORITIES = {
   },
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
   "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
-  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/2" }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/3" }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
     id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
@@ -233,7 +234,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["body_id", "division_ocd_id", "officeholder_id", "candidacy_id"],
     expectedTemporalFields: ["source_through", "collected_at"],
     horizonSemantics: "An explicit owner-reviewed package speaks only for its enumerated runtime bindings and exact source bytes. Static division/schema derivations remain separately versioned software inputs.",
-    parserVersion: "registry-runtime-bindings/3",
+    parserVersion: REGISTRY_RUNTIME_PARSER_VERSION,
     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,

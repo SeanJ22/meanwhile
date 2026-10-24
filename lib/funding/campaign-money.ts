@@ -7,7 +7,7 @@ import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import { officialCandidacySeatMatches, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
 import { directFundingTargetPlan } from "./target-authorities.ts";
 import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
-import { statePeopleScopeForDivision } from "../officials/people-identity.ts";
+import { personIdentityKeys, statePeopleScopeForDivision } from "../officials/people-identity.ts";
 import type { CampaignFinancePlaceRead } from "./state-reader.ts";
 
 export type OfficialFinanceIdentity = "NOT_OFFICIAL" | "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED";
@@ -35,21 +35,30 @@ export interface CampaignMoneyReadSelection {
 type BridgeRow = OfficialCandidacyBridgeRow;
 let indexedBridge: {
   source: ReturnType<typeof getRegistryRuntimeReadModel>["officialCandidacies"];
+  executives: ReturnType<typeof currentStatewideExecutives>;
   byHolder: Map<string, BridgeRow>;
   byCandidacy: Map<string, BridgeRow[]>;
 } | null = null;
 
 function bridgeIndex() {
   const source = getRegistryRuntimeReadModel().officialCandidacies;
-  if (indexedBridge?.source === source) return indexedBridge;
+  const executives = currentStatewideExecutives();
+  if (indexedBridge?.source === source && indexedBridge.executives === executives) return indexedBridge;
   const byHolder = new Map(source.rows.map(row => [row.holder.id, row]));
+  for (const executive of executives) {
+    const aliases = personIdentityKeys(executive.holder);
+    const rows = [...aliases].flatMap(id => { const row = byHolder.get(id); return row?.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" &&
+      officialFinanceIdentityMatches(row, currentHolder(row)) ? [row] : []; });
+    const selected = rows.find(row => row.status === "RESOLVED" && officialCandidacySeatMatches(row)) ?? rows.find(row => row.holder.id === executive.holder.id) ?? rows[0];
+    if (selected) for (const id of aliases) byHolder.set(id, selected);
+  }
   const byCandidacy = new Map<string, BridgeRow[]>();
   for (const row of source.rows) if (officialCandidacySeatMatches(row) && row.candidacy) {
     const rows = byCandidacy.get(row.candidacy.candidacyId) ?? [];
     rows.push(row);
     byCandidacy.set(row.candidacy.candidacyId, rows);
   }
-  indexedBridge = { source, byHolder, byCandidacy };
+  indexedBridge = { source, executives, byHolder, byCandidacy };
   return indexedBridge;
 }
 /** A reusable office/roster slot must never give its successor the predecessor's money. */
@@ -67,8 +76,8 @@ function currentHolder(row: BridgeRow) {
     return holder && set ? { ...holder, divisions: set.divisions.filter(division => division.officeholderId === holder.id).map(division => division.ocdId) } : null;
   }
   if (row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE") {
-    const e = currentStatewideExecutives().find(e => e.holder.id === row.holder.id);
-    return e ? { ...e.holder, divisions: [e.stateOcdId] } : null;
+    const e = currentStatewideExecutives().find(e => personIdentityKeys(e.holder).has(row.holder.id));
+    return e ? { ...e.holder, id: row.holder.id, divisions: [e.stateOcdId] } : null;
   }
   if (row.holder.authority === "REGISTRY_BODY_ROSTER") {
     for (const r of currentBodyRosters()) {

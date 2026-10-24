@@ -3,7 +3,7 @@ import labelsFile from "../../../data/reference/us-jurisdiction-labels.json" wit
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 
 export const STATEWIDE_SOURCE_ID = "statewide-executive-sources";
-export const STATEWIDE_PARSER_VERSION = "statewide-executives/1";
+export const STATEWIDE_PARSER_VERSION = "statewide-executives/2";
 export interface StatewideReferenceSource {
   readonly id: string;
   readonly publisher: string;

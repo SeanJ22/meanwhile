@@ -6,9 +6,82 @@ import { indexByDivision } from "../lib/officials/lookup.ts";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
 import type { StatewideExecutive } from "../lib/officials/statewide-executives.ts";
 import type { Officeholder, OfficeholderSet, PersonMembership } from "../lib/officials/types.ts";
+import type { SeatHolder } from "../lib/officials/lookup.ts";
+import { selectStatewideExecutives } from "../lib/officials/statewide-selection.ts";
+import { personIdentityKeys } from "../lib/officials/people-identity.ts";
+import { mergePeopleSets } from "../lib/officials/merge-people.ts";
 
 const COUNTRY = "ocd-division/country:us", STATE = `${COUNTRY}/state:az`, DISTRICT = `${STATE}/sldu:1`;
 const AT = "2026-10-20T00:00:00.000Z";
+function statewideHolder(id: string, state = "AZ", name = "Katie Hobbs", officeTitle = "Governor"): SeatHolder {
+  const division = `${COUNTRY}/state:${state.toLowerCase()}`;
+  return { id, state, name, officeTitle, officeJurisdictionOcdId: division, partyLabel: null, termEnd: null, birthDate: null,
+    websiteUrl: "https://azgovernor.gov/", sourceUrl: "https://azgovernor.gov/", email: "engage@az.gov", phone: "602-542-4331",
+    contactFormUrl: "https://azgovernor.gov/constituent-services", photoUrl: null, campaignUrl: null,
+    provenance: { sourceUrl: "https://azgovernor.gov/", sourceOrg: "Governor", collectedAt: AT, verifiedAt: AT } };
+}
+
+test("duplicates inside the primary statewide list merge before Open States; official contacts and every person ID survive", () => {
+  const national = { ...statewideHolder("usa-gov"), email: null, phone: null, contactFormUrl: null,
+    provenance: { sourceUrl: "https://www.usa.gov/states/arizona", sourceOrg: "USA.gov", collectedAt: "2026-10-09", verifiedAt: null } };
+  const official = { ...statewideHolder("statewide:az/governor"), provenance: { ...statewideHolder("x").provenance!, collectedAt: "2026-08-14" } };
+  const reference = { ...statewideHolder("openstates-hobbs"), email: "sosadmin@azsos.gov", phone: "old office phone",
+    provenance: { sourceUrl: "https://raw.githubusercontent.com/openstates/people/main/hobbs.yml", sourceOrg: "Open States", collectedAt: "2026-10-24", verifiedAt: null } };
+  const before = structuredClone([national, official, reference]);
+  const [holder, ...extra] = scopedHolders([national, official], [reference]);
+  assert.deepEqual(extra, []);
+  assert.equal(holder.email, official.email);
+  assert.equal(holder.phone, official.phone);
+  assert.equal(holder.contactFormUrl, official.contactFormUrl);
+  for (const id of before.map(row => row.id)) assert.ok(personIdentityKeys(holder).has(id));
+  assert.deepEqual([national, official, reference], before);
+});
+
+test("field timestamps choose the newest official value even when the reference roster was checked later", () => {
+  const original = statewideHolder("first");
+  original.fieldSources = { email: { ...original.provenance!, collectedAt: "2026-10-01" } };
+  const newer = { ...statewideHolder("second"), email: "new@az.gov", provenance: { ...original.provenance!, collectedAt: "2026-09-01" },
+    fieldSources: { email: { ...original.provenance!, collectedAt: "2026-10-23" } } };
+  assert.equal(scopedHolders([original, newer], [])[0].email, newer.email);
+});
+
+test("a newer official incumbent replaces a stale single seat without conflating different people or states", () => {
+  const stale = { ...statewideHolder("old", "AZ", "Previous Governor"), provenance: { ...statewideHolder("x").provenance!, collectedAt: "2026-08-01" } };
+  const current = statewideHolder("current");
+  const california = statewideHolder("california", "CA", "Gavin Newsom");
+  const result = scopedHolders([stale, current, california], []);
+  assert.deepEqual(result.map(row => row.id), [current.id, california.id]);
+  assert.equal(personIdentityKeys(result[0]).has(stale.id), false);
+});
+
+test("statewide page furniture never displays and a multi-member commission keeps distinct holders", () => {
+  const result = scopedHolders([statewideHolder("bad", "AZ", "Actions", "Attorney General"),
+    statewideHolder("one", "AZ", "René Lopez", "Corporation Commissioner"),
+    statewideHolder("two", "AZ", "Rachel Walden", "Corporation Commissioner")], []);
+  assert.deepEqual(result.map(row => row.id), ["one", "two"]);
+});
+
+test("stored statewide selection is repeatable and retains the prior IDs through a later source refresh", () => {
+  const rows = [statewideHolder("first"), statewideHolder("second")].map(holder => {
+    const { provenance, ...value } = holder;
+    return { stateOcdId: STATE, holder: value, sourceUrl: provenance!.sourceUrl!, sourceOrg: provenance!.sourceOrg,
+      collectedAt: provenance!.collectedAt, verification: "PAGE_FETCHED" as const };
+  });
+  const once = selectStatewideExecutives(rows);
+  assert.equal(once.length, 1);
+  assert.deepEqual(selectStatewideExecutives(once), once);
+  assert.deepEqual(selectStatewideExecutives([...once, rows[1]]), once);
+  assert.ok(once[0].holder.nativeIds?.reader?.includes(rows[1].holder.id));
+});
+
+test("the merged source record cannot carry a prior navigation label or accept one from Open States", () => {
+  const bad = person("bad", "Attorney General");
+  bad.name = "Actions";
+  const good = person("good", "Governor");
+  const result = mergePeopleSets([roster([bad]), roster([good, bad])])!;
+  assert.deepEqual(result.officeholders.map(row => row.id), [good.id]);
+  assert.equal(result.divisions.some(row => row.officeholderId === bad.id), false);
+});
 function person(id: string, officeTitle: string, chamber?: string): Officeholder {
   return { id, personId: id, name: `Example ${id}`, officeTitle, level: "STATE", state: "AZ", chamber,
     termStart: "", termEnd: "", birthDate: null, partyLabel: null, websiteUrl: `https://az.gov/${id}`,

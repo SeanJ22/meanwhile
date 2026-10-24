@@ -81,15 +81,25 @@ test("an association page never publishes its officer without their own official
   assert.deepEqual(verifyStatewideOfficialPage(candidate,{url,html:document("Arizona",candidate.name,candidate.officeTitle,"is elected statewide"),retrievedAt:at}),{reason:"STATEWIDE_PAGE_NOT_OFFICIAL"});
 });
 
-test("a district electorate or an unrelated appointment never labels a statewide seat elected or appointed",()=>{
+test("the office's own published contact page accompanies the statewide holder",()=>{
+  const url="https://official.az.gov/about",candidate=lead("az","Kris Mayes","Attorney General",url);
+  const html=document("Arizona",candidate.name,candidate.officeTitle,"is elected statewide")+
+    '<a href="https://other.az.gov/contact">Contact Us</a><a href="/webmaster">Contact webmaster</a><a href="/contact-us">Contact Us</a>';
+  const result=verifyStatewideOfficialPage(candidate,{url,html,retrievedAt:at});
+  assert.ok("person"in result);
+  assert.equal(result.person.contactFormUrl,"https://official.az.gov/contact-us");
+  assert.equal(result.person.fieldSources?.contactFormUrl.sourceUrl,url);
+});
+
+test("a verified statewide office publishes while an unrelated election or appointment leaves its selection method unknown",()=>{
   const url="https://official.az.gov/about",candidate=lead("az","Adrian Fontes","Secretary of State",url);
   for(const method of ["was elected by the voters of District 9","Adrian Fontes appointed a school board member"]){
     const result=verifyStatewideOfficialPage(candidate,{url,html:document("Arizona",candidate.name,candidate.officeTitle,method),retrievedAt:at});
     assert.ok("person"in result);assert.equal(result.person.selectionMethod,"UNKNOWN");
-    assert.equal(result.person.memberships?.[0]?.divisionId,undefined);
+    assert.equal(result.person.memberships?.[0]?.divisionId,"ocd-division/country:us/state:az");
     const roster=statewideRoster("az",[result.person],at);
-    assert.equal(roster.divisions.length,0,"an unverified statewide selection never supplies statewide reader coverage");
-    assert.equal(roster.unmatched[0]?.reason,"STATEWIDE_SELECTION_METHOD_UNRESOLVED");
+    assert.equal(roster.divisions.length,1,"the verified name, office and state meet the official's minimum facts in §3");
+    assert.deepEqual(roster.unmatched,[]);
   }
 });
 

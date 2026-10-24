@@ -15,6 +15,7 @@ import { publishRosterFacts } from "../facts/roster-facts.ts";
 import { rosterMemberId } from "../facts/roster-read.ts";
 import { section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
+import { personName } from "../officials/person-name.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { createHash } from "node:crypto";
 import { storeVerifiedPortrait, type PortraitRuntime } from "../photos/store.ts";
@@ -77,6 +78,7 @@ const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/;
 
 function statewideRow(official: NationalOfficialInput, capture: WorkerPublicationCapture, now: string, stateLabel: string | null): StatewideExecutive | string {
+  if (!personName(official.name)) return "STATEWIDE_OFFICIAL_NOT_A_PERSON";
   const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: official.linkingPage ?? null };
   const verdict = section3Record({ recordClass: "OFFICIAL_ROSTER", fields: { name: official.name, office: official.officeTitle }, page, now });
   if (!verdict.live) return verdict.reason ?? "STATEWIDE_OFFICIAL_UNVERIFIED";

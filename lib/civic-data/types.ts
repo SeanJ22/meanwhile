@@ -407,6 +407,7 @@ export interface RosterDepartureRemovalEvidence {
   readonly sourceUrl: string;
   readonly replacementHolderId?: string;
   readonly officeTitle?: string;
+  readonly reason?: "INVALID_PERSON_NAME" | "DUPLICATE_OFFICE_HOLDER";
 }
 
 export interface TrustedLkgFixtureEvidence {

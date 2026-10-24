@@ -21,16 +21,19 @@ import type { Body, Division, Registry } from "./types.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_LABELS, isCensusPlaceholderDivision } from "./census-placeholders.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
+import { selectStatewideExecutives } from "../officials/statewide-selection.ts";
+import { personName } from "../officials/person-name.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 import {registryRuntimeProjectionIssues} from "./runtime-issues.ts";
 export {registryRuntimeProjectionIssues} from "./runtime-issues.ts";
-import { officeIdentity } from "../officials/office-identity.ts";
+import { officeIdentity, sameOffice } from "../officials/office-identity.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";
 import { nameParts, namesAgree, namesAgreeLoosely, splitDisplayName } from "../ballot/incumbency.ts";
 import type { BallotSet } from "../ballot/types.ts";
+import { REGISTRY_RUNTIME_PARSER_VERSION } from "./runtime-version.ts";
+export { REGISTRY_RUNTIME_PARSER_VERSION } from "./runtime-version.ts";
 
 export const REGISTRY_RUNTIME_SOURCE_ID = "registry-reviewed-bindings" as const;
-export const REGISTRY_RUNTIME_PARSER_VERSION = "registry-runtime-bindings/3" as const;
 
 export interface OfficialPhotoManifestRow {
   readonly officeholderId: string;
@@ -173,10 +176,12 @@ export interface RegistryRuntimePackage {
   readonly payload: RegistryRuntimeCarton;
 
   readonly scope?: "MEMBERS";
-  readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string; readonly replacementHolderId?: string; readonly officeTitle?: string }[];
+  readonly departures?: readonly { readonly bodyId: string; readonly holderId: string; readonly sourceUrl: string; readonly replacementHolderId?: string; readonly officeTitle?: string; readonly reason?: "INVALID_PERSON_NAME" | "DUPLICATE_OFFICE_HOLDER" }[];
 }
 
 const departureKeys = (holderId: string) => ["statewide-executive", "official-candidacy", "official-photo", "roster-photo"].map(kind => `${kind}:${holderId}`);
+const removedDepartureKeys = (departure: NonNullable<RegistryRuntimePackage["departures"]>[number]) =>
+  departure.reason === "DUPLICATE_OFFICE_HOLDER" ? [`statewide-executive:${departure.holderId}`] : departureKeys(departure.holderId);
 
 export interface RegistryRuntimePrior {
   readonly versionId: string;
@@ -393,7 +398,7 @@ function registryIsolationIssue(member: SourceScopedMember<RegistryIsolationReco
     ? `${member.key} lacks an exact sourced roster disposition.` : null;
   if (record.kind === "STATEWIDE_EXECUTIVE") {
     const row = record.value;
-    return !row.holder.id || !row.holder.name || !row.holder.officeTitle || !row.stateOcdId || !row.sourceOrg ||
+    return !row.holder.id || !personName(row.holder.name) || !row.holder.officeTitle || !row.stateOcdId || !row.sourceOrg ||
         !row.collectedAt || registryIsolationUrls(member).length === 0 || (row.holder.partyLabel && !row.partySourceUrl)
       ? `${member.key} lacks exact statewide identity, source, or party provenance.`
       : null;
@@ -470,6 +475,8 @@ interface RegistryPriorProof {
   readonly versionId: string;
   readonly readModelSha256: string;
   readonly hashes: ReadonlyMap<string, string>;
+  readonly selectedExecutiveHashes: ReadonlyMap<string, string>;
+  readonly selectionInputKeys: ReadonlySet<string>;
   readonly bodyDivisions: ReadonlyMap<string, string | null>;
 }
 
@@ -482,10 +489,16 @@ function registerRegistryPrior(prior: RegistryRuntimePrior | null, scope: string
     rememberStatePublicationPrior(held.store, projection);
   }
   priorStores.delete(prior);
+  const hashes = new Map(held?.normalization.stateRecordHashes
+    ? held.normalization.stateRecordHashes.members.map(member => [member.key, member.sha256])
+    : civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload).map(member => [member.key, canonicalCivicDataHash(member.record)]));
+  const selectedExecutives = selectStatewideExecutives(prior.payload.statewideExecutives);
   return { versionId: prior.versionId, readModelSha256: prior.readModelSha256,
-    hashes: new Map(held?.normalization.stateRecordHashes
-      ? held.normalization.stateRecordHashes.members.map(member => [member.key, member.sha256])
-      : civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload).map(member => [member.key, canonicalCivicDataHash(member.record)])),
+    selectedExecutiveHashes: new Map(selectedExecutives
+      .map(row => [`statewide-executive:${row.holder.id}`, canonicalCivicDataHash(row)])),
+    selectionInputKeys: new Set(selectedExecutives.filter(row => hashes.get(`statewide-executive:${row.holder.id}`) !== canonicalCivicDataHash(row))
+      .flatMap(row => [row.holder.id, ...(row.holder.nativeIds?.reader ?? [])].map(id => `statewide-executive:${id}`))),
+    hashes,
     bodyDivisions: new Map(prior.payload.registry.bodies.map(body => [body.id, body.ocdId])) };
 }
 
@@ -549,13 +562,14 @@ class RegistryCandidateAssembly {
     this.referenceSources = input.sourceReceipt.sources.filter(source => source.sourceClass === "REFERENCE_PUBLISHER");
     this.prior = registerRegistryPrior(prior, contract.scope);
     const priorMembers = prior ? registryIsolationMembers(prior.payload, prior.sourceReceipt) : [];
+    const statewideKeys = new Set(priorMembers.flatMap(member => member.record.kind === "STATEWIDE_EXECUTIVE" ? departureKeys(member.record.value.holder.id) : []));
     const placeholders = new Set([...incoming.placeholderDivisions,
       ...priorMembers.flatMap(member => member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : [])]);
     const departureIds = new Set(input.departures?.flatMap(departure => departureKeys(departure.holderId)) ?? []);
     for (const member of priorMembers) {
       assertRegistryMemberState(member, state);
       if (member.record.kind === "DIVISION" && (CENSUS_PLACEHOLDER_LABELS[member.record.value.label] !== undefined || incoming.translatedDivisions.has(member.record.value.ocdId)) ||
-        departureIds.has(member.key) || member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholders.has(member.record.value.row.ocdId))
+        departureIds.has(member.key) || statewideKeys.has(member.key) || member.record.kind === "BODY" && member.record.value.row.ocdId !== null && placeholders.has(member.record.value.row.ocdId))
         this.protectedPrior.set(member.key, member);
     }
     this.reconciler = new SourceScopedReconciler({ currentReceipt: input.sourceReceipt,
@@ -601,26 +615,44 @@ class RegistryCandidateAssembly {
       member.record.kind === "DIVISION" && isCensusPlaceholderDivision(member.record.value) ? [member.record.value.ocdId] : []));
     const removedKeys = new Set(reconciled.members.flatMap(member => member.record.kind === "BODY" &&
       member.record.value.row.ocdId !== null && placeholders.has(member.record.value.row.ocdId) ? [member.key] : []));
-    const departedKeys = new Set(this.departures.flatMap(departure => departureKeys(departure.holderId)));
+    const explicitDeparted = new Set(this.departures.flatMap(departure => departureKeys(departure.holderId)));
+    const statewide = reconciled.members.flatMap(member => member.record.kind === "STATEWIDE_EXECUTIVE" && !explicitDeparted.has(member.key) ? [member.record.value] : []);
+    const selectedExecutives = selectStatewideExecutives(statewide);
+    const executiveById = new Map(selectedExecutives.map(row => [row.holder.id, row]));
+    for (const row of statewide) if (!executiveById.has(row.holder.id)) {
+      const replacement = selectedExecutives.find(next => next.stateOcdId === row.stateOcdId &&
+        (next.holder.nativeIds?.reader?.includes(row.holder.id) || sameOffice(next.holder.officeTitle, row.holder.officeTitle)));
+      this.departures.push({ bodyId: row.stateOcdId, holderId: row.holder.id, sourceUrl: replacement?.sourceUrl ?? row.sourceUrl,
+        replacementHolderId: replacement?.holder.id, officeTitle: row.holder.officeTitle,
+        ...(!personName(row.holder.name) ? { reason: "INVALID_PERSON_NAME" as const } :
+          replacement?.holder.nativeIds?.reader?.includes(row.holder.id) ? { reason: "DUPLICATE_OFFICE_HOLDER" as const } : {}) });
+    }
+    const departedKeys = new Set(this.departures.flatMap(removedDepartureKeys));
     const members = reconciled.members.filter(member => !removedKeys.has(member.key) && !departedKeys.has(member.key)).map(member => {
+      if (member.record.kind === "STATEWIDE_EXECUTIVE") return { ...member, record: { ...member.record, value: executiveById.get(member.record.value.holder.id)! } };
       if (member.record.kind !== "DIVISION") return member;
       const label = CENSUS_PLACEHOLDER_LABELS[member.record.value.label];
       return label === undefined ? member : { ...member, record: { ...member.record, value: { ...member.record.value, label } } };
     });
     const selected = new Map(members.map(member => [member.key, member]));
-    for (const previous of this.protectedPrior.values()) consumeRegistryMember(previous, selected.get(previous.key));
+    // These few source rows must remain available while prior authority replays
+    // their exact selection, including aliases of a removed duplicate.
+    for (const previous of this.protectedPrior.values()) if (!this.prior?.selectionInputKeys.has(previous.key)) consumeRegistryMember(previous, selected.get(previous.key));
     this.protectedPrior.clear();
     const payload = rebuildRegistryRuntime(input.payload, this.priorMetadata, members);
     const finalKeys = new Set(civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload).map(member => member.key));
     const removalEvidence: RoutineRemovalEvidence[] = [
       ...[...(this.prior?.bodyDivisions ?? [])].flatMap(([id, divisionOcdId]) => divisionOcdId && placeholders.has(divisionOcdId) && !finalKeys.has(`body:${id}`)
         ? [{ key: `body:${id}`, code: "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" as const, divisionOcdId }] : []),
-      ...this.departures.flatMap(departure => departureKeys(departure.holderId).filter(key => this.prior?.hashes.has(key) && !finalKeys.has(key))
+      ...this.departures.flatMap(departure => removedDepartureKeys(departure).filter(key => this.prior?.hashes.has(key) && !finalKeys.has(key))
         .map(key => ({ key, code: "OFFICIAL_ROSTER_NO_LONGER_LISTS" as const, ...departure }))),
     ];
     return registryCandidateFromIsolation(input, {
       payload, sourceReceipt: reconciled.promotionReceipt, removalEvidence,
       excludedFacts: [
+        ...statewide.filter(row => !executiveById.has(row.holder.id)).map(row => ({ key: `statewide-executive:${row.holder.id}`,
+          code: personName(row.holder.name) ? "STATEWIDE_OFFICE_SUPERSEDED" : "STATEWIDE_OFFICIAL_NOT_A_PERSON",
+          detail: `${row.holder.name} (${row.holder.officeTitle}, ${row.stateOcdId}) was removed from the current statewide roster.`, record: row })),
         ...input.sourceReceipt.sources.filter(source => source.reviewOutcome === "BLOCKED").map(source => ({
           key: `source:${source.requestedUrl}`, code: "MANUAL_SOURCE_BLOCKED",
           detail: `${source.requestedUrl} was blocked and could not authorize any current registry member: ${source.failureDetail}.`, record: source })),
@@ -641,7 +673,8 @@ function inheritedRegistryMembers(payload: RegistryRuntimeCarton, prior: Registr
   if (!prior) return inherited;
   for (const member of civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload)) {
     const digest = canonicalCivicDataHash(member.record);
-    if (prior.hashes.get(member.key) === digest && registryMemberCitedUrls(member.key, member.record).some(url => !receipted.has(url))) inherited.set(member.key, digest);
+    if ((prior.hashes.get(member.key) === digest || prior.selectedExecutiveHashes.get(member.key) === digest) &&
+      registryMemberCitedUrls(member.key, member.record).some(url => !receipted.has(url))) inherited.set(member.key, digest);
   }
   return inherited;
 }

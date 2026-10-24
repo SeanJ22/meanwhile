@@ -2,21 +2,25 @@ import type { SeatHolder } from "./lookup.ts";
 import { officeIdentity } from "./office-identity.ts";
 import { personIdentityKeys } from "./people-identity.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { personName } from "./person-name.ts";
 
 const SINGLE_OFFICES = new Set([
   "governor", "lieutenant_governor", "secretary_of_state", "attorney_general", "state_treasurer",
   "superintendent_of_public_instruction", "state_mine_inspector", "state_auditor", "state_comptroller",
   "insurance_commissioner", "chief_election_officer", "mayor",
+  "agriculture_commissioner", "public_lands_commissioner", "labor_commissioner",
 ]);
 
 /** Combine sources for one exact division, preferring official fields and current officeholders. */
 export function scopedHolders(primary: readonly SeatHolder[], additional: readonly SeatHolder[]): SeatHolder[] {
-  const holders = [...primary];
+  const holders: SeatHolder[] = [];
   const words = (value:string)=>value.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
   const state = (holder:SeatHolder)=>holder.state ?? /\/(?:state|district|territory):([a-z]{2})/.exec(holder.officeJurisdictionOcdId ?? "")?.[1];
   const office = (holder:SeatHolder)=>officeIdentity(holder.officeTitle) ?? words(holder.officeTitle);
   // Two holders of one office title are one seat only where the office is the same place's: every city has a mayor.
-  const samePlace = (left:SeatHolder,right:SeatHolder)=>!left.officeJurisdictionOcdId || !right.officeJurisdictionOcdId || left.officeJurisdictionOcdId === right.officeJurisdictionOcdId;
+  const samePlace = (left:SeatHolder,right:SeatHolder)=>left.officeJurisdictionOcdId && right.officeJurisdictionOcdId
+    ? left.officeJurisdictionOcdId === right.officeJurisdictionOcdId
+    : Boolean(state(left) && state(right) && state(left)!.toUpperCase() === state(right)!.toUpperCase());
   // Each holder is normalized once, and only holders of the same office are ever compared.
   const info = new WeakMap<SeatHolder,{office:string;name:string;state:string|undefined;keys:ReadonlySet<string>}>();
   const infoOf = (holder:SeatHolder)=>{
@@ -32,8 +36,8 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     holders[at]=holder; indexIdentities(holder,at);
   };
   const index = (holder:SeatHolder,at:number)=>{ const key=infoOf(holder).office; const rows=byOffice.get(key); if (rows) rows.push(at); else byOffice.set(key,[at]); indexIdentities(holder,at); };
-  holders.forEach((holder,at)=>index(holder,at));
-  for (const holder of additional) {
+  for (const holder of [...primary, ...additional]) {
+    if (isStatewideExecutive(holder) && !personName(holder.name)) continue;
     const mine = infoOf(holder);
     // Only a single-seat office is a person's identity: two councilmembers with one name are two seats, never one person.
     const singleSeat = SINGLE_OFFICES.has(officeIdentity(holder.officeTitle) ?? "");
@@ -46,22 +50,25 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     }) ?? -1;
     if (matching >= 0) {
       const prior = holders[matching];
-      const newer = (holder.provenance?.collectedAt ?? "") >= (prior.provenance?.collectedAt ?? "");
+      const newer = (holder.provenance?.collectedAt ?? "") > (prior.provenance?.collectedAt ?? "");
       const merged = {...prior, nativeIds: Object.fromEntries([...new Set([...Object.keys(prior.nativeIds ?? {}),...Object.keys(holder.nativeIds ?? {})])].map(key=>[key,[...new Set([...(prior.nativeIds?.[key] ?? []),...(holder.nativeIds?.[key] ?? [])])]])),
-        fieldSources: {...prior.fieldSources}, memberships: holder.memberships ?? prior.memberships};
+        fieldSources: {...prior.fieldSources}, ...((holder.memberships ?? prior.memberships) ? { memberships: holder.memberships ?? prior.memberships } : {})};
       merged.nativeIds.reader=[...new Set([...(merged.nativeIds.reader??[]),prior.id,prior.personId??prior.id,holder.id,holder.personId??holder.id])];
-      const fields = ["name","officeTitle","termStart","termEnd","birthDate","websiteUrl","phone","email","contactFormUrl","photoUrl","campaignUrl","selectionMethod","selectionMethodSourceUrl"] as const;
+      const fields = ["name","officeTitle","partyLabel","termStart","termEnd","termNote","birthDate","websiteUrl","phone","email","contactFormUrl","photoUrl","campaignUrl","selectionMethod","selectionMethodSourceUrl"] as const;
       for (const field of fields) if (holder[field] !== null && holder[field] !== undefined && holder[field] !== "") {
-        const source = holder.fieldSources?.[field === "photoUrl" ? "photo" : field] ?? holder.provenance;
-        const priorSource = prior.fieldSources?.[field === "photoUrl" ? "photo" : field] ?? prior.provenance;
+        const source = holder.fieldSources?.[field] ?? holder.fieldSources?.[field === "photoUrl" ? "photo" : field] ?? holder.provenance;
+        const priorSource = prior.fieldSources?.[field] ?? prior.fieldSources?.[field === "photoUrl" ? "photo" : field] ?? prior.provenance;
         const official = Boolean(source?.sourceUrl && isOfficialSource(source.sourceUrl) || source?.kind === "OFFICIAL");
         const priorOfficial = Boolean(priorSource?.sourceUrl && isOfficialSource(priorSource.sourceUrl) || priorSource?.kind === "OFFICIAL");
-        if (!prior[field] || official && !priorOfficial || official === priorOfficial && newer) {
+        const fieldNewer = (source?.collectedAt ?? "") > (priorSource?.collectedAt ?? "");
+        if (!prior[field] || official && !priorOfficial || official === priorOfficial && fieldNewer) {
           Object.assign(merged,{[field]:holder[field]});
           if (source) merged.fieldSources[field] = source;
         }
       }
-      if (newer && holder.provenance) {merged.provenance=holder.provenance;merged.sourceUrl=holder.sourceUrl;}
+      const official = Boolean(holder.provenance?.kind === "OFFICIAL" || holder.provenance?.sourceUrl && isOfficialSource(holder.provenance.sourceUrl));
+      const priorOfficial = Boolean(prior.provenance?.kind === "OFFICIAL" || prior.provenance?.sourceUrl && isOfficialSource(prior.provenance.sourceUrl));
+      if (holder.provenance && (official && !priorOfficial || official === priorOfficial && newer)) {merged.provenance=holder.provenance;merged.sourceUrl=holder.sourceUrl;}
       replace(matching,merged);
       continue;
     }
@@ -70,7 +77,9 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
     const sameSeat = key && SINGLE_OFFICES.has(key) ? sameOffice.find(at=>samePlace(holders[at],holder) && infoOf(holders[at]).state === mine.state) ?? -1 : -1;
     if (sameSeat >= 0) {
       const prior = holders[sameSeat];
-      if (holder.provenance?.sourceUrl && (holder.provenance.kind === "OFFICIAL" || isOfficialSource(holder.provenance.sourceUrl)) && (holder.provenance.collectedAt > (prior.provenance?.collectedAt ?? ""))) replace(sameSeat,holder);
+      const official = Boolean(holder.provenance?.kind === "OFFICIAL" || holder.provenance?.sourceUrl && isOfficialSource(holder.provenance.sourceUrl));
+      const priorOfficial = Boolean(prior.provenance?.kind === "OFFICIAL" || prior.provenance?.sourceUrl && isOfficialSource(prior.provenance.sourceUrl));
+      if (official && (!priorOfficial || (holder.provenance?.collectedAt ?? "") > (prior.provenance?.collectedAt ?? ""))) replace(sameSeat,holder);
       continue;
     }
     holders.push(holder);
@@ -81,7 +90,6 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
 
 /** State or district-wide executive offices, excluding Congress and legislative seats on the same index. */
 export function isStatewideExecutive(holder: SeatHolder): boolean {
-  if (holder.selectionMethod === "UNKNOWN") return false;
   if (holder.memberships?.some(row=>row.current !== false && row.level === "STATE" &&
     /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(row.divisionId ?? "") &&
     !["lower", "upper", "house", "senate"].includes(row.chamber ?? ""))) return true;

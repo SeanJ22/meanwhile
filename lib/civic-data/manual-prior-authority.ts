@@ -6,6 +6,8 @@ import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { registryMemberCitedUrls } from "../registry/runtime-data-plane.ts";
+import { selectStatewideExecutives } from "../officials/statewide-selection.ts";
+import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = canonicalCivicDataHash;
@@ -65,12 +67,21 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   const before = indexedPrior ? new Map([...indexedPrior.members].map(([key, member]) =>
     [candidate.recordClass === "CURATED_READER_RECORD" ? key.replace(/^curated-reader:/, "") : key, member.sha256])) : members(base.candidate);
   const after = members(candidate);
+  // Recombining exact prior statewide rows cannot authorize a name, contact or
+  // source absent from that verified base.
+  const selectedExecutives = candidate.recordClass === "REGISTRY_RUNTIME_BINDING"
+    ? new Map(selectStatewideExecutives(indexedPrior
+      ? [...indexedPrior.members.values()].flatMap(member => member.key.startsWith("statewide-executive:") && member.record ? [member.record as StatewideExecutive] : [])
+      : civicRecordsFor(base.candidate.recordClass, base.candidate.readModel).flatMap(member => member.key.startsWith("statewide-executive:") ? [member.record as StatewideExecutive] : []))
+      .map(row => [`statewide-executive:${row.holder.id}`, hash(row)]))
+    : new Map<string, string>();
   const retained = new Set<string>();
   for (const member of prior.retainedMembers) {
     if (!member || typeof member.key !== "string" || !member.key || retained.has(member.key) ||
         !before.has(member.key) || !after.has(member.key) ||
-        (indexedPrior ? before.get(member.key) : hash(before.get(member.key))) !== member.sha256 || hash(after.get(member.key)) !== member.sha256) {
-      return "An inherited member was changed, duplicated, invented, or omitted; prior authority cannot authorize it.";
+        ((indexedPrior ? before.get(member.key) : hash(before.get(member.key))) !== member.sha256 && selectedExecutives.get(member.key) !== member.sha256) ||
+        hash(after.get(member.key)) !== member.sha256) {
+      return `Inherited member ${member?.key ?? "(unnamed)"} was changed, duplicated, invented, or omitted; prior authority cannot authorize it.`;
     }
     retained.add(member.key);
   }

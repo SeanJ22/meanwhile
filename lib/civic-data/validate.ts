@@ -5,6 +5,7 @@ import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 import { sameOffice } from "../officials/office-identity.ts";
+import { personName } from "../officials/person-name.ts";
 import { meetingDoorRemovalCheck } from "../doors/meeting-door-removal.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
@@ -597,10 +598,22 @@ function registryPlaceholderRemovalCheck(
       continue;
     }
     if (row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
+      if (row.reason === "INVALID_PERSON_NAME") {
+        const executive = object(removed.find(delta => delta.key === `statewide-executive:${row.holderId}`)?.before);
+        const name = object(executive?.holder)?.name;
+        if (typeof name !== "string" || personName(name) ||
+          !["statewide-executive", "official-candidacy", "official-photo", "roster-photo"].some(kind => delta.key === `${kind}:${row.holderId}`) ||
+          executive?.stateOcdId !== row.bodyId || executive?.sourceUrl !== row.sourceUrl && !row.replacementHolderId) {
+          return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not a malformed statewide person.`);
+        }
+        continue;
+      }
       if (row.replacementHolderId) {
         const executives = object(candidate.readModel)?.statewideExecutives;
         const replacement = Array.isArray(executives) ? executives.map(object).find(entry=>object(entry?.holder)?.id === row.replacementHolderId) : null;
-        if (!replacement || replacement.stateOcdId !== row.bodyId || replacement.sourceUrl !== row.sourceUrl || object(replacement.holder)?.officeTitle !== row.officeTitle || row.holderId === row.replacementHolderId ||
+        if (!replacement || replacement.stateOcdId !== row.bodyId || replacement.sourceUrl !== row.sourceUrl ||
+          !(object(replacement.holder)?.officeTitle === row.officeTitle || sameOffice(String(object(replacement.holder)?.officeTitle), row.officeTitle)) || row.holderId === row.replacementHolderId ||
+          row.reason === "DUPLICATE_OFFICE_HOLDER" && !((object(object(replacement.holder)?.nativeIds)?.reader as unknown[] | undefined)?.includes(row.holderId)) ||
           !["statewide-executive","official-candidacy","official-photo","roster-photo"].some(kind=>delta.key===`${kind}:${row.holderId}`) ||
           delta.key===`statewide-executive:${row.holderId}` && (object(before?.holder)?.officeTitle !== row.officeTitle || before?.stateOcdId !== row.bodyId)) {
           return result("COMPLETENESS_HORIZON_VALIDITY","FAIL","REMOVAL_EVIDENCE_MISMATCH",`${delta.key} lacks an exact sourced successor for that executive office.`);

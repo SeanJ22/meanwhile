@@ -9,6 +9,7 @@ import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type Offici
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { currentStatePeopleProjection, primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { selectStatewideExecutives } from "../lib/officials/statewide-selection.ts";
 import { installManualValue, registryTransferImport, syntheticFederalDirectory, installFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
@@ -147,6 +148,25 @@ test("state people used by a reader stay within that request", () => {
     withReaderAuthorityEdge({}, () => assert.equal(currentStatePeopleProjection("US-MI"), null));
     assert.equal(currentStatePeopleProjection("US-MI"), model);
   });
+});
+
+test("deduplicating statewide cards preserves the resolved ballot and funding connection under every prior person ID", async () => {
+  const value = registryFixtureForState("AZ", registry);
+  const governor = value.statewideExecutives.find(row => row.holder.id === "statewide:az/governor")!;
+  const resolved = value.officialCandidacies.rows.find(row => row.holder.id === governor.holder.id)!;
+  assert.equal(resolved.status, "RESOLVED");
+  assert.ok(resolved.candidacy);
+  const alias = "statewide:az/governor-second-source";
+  const duplicate = { ...governor, holder: { ...governor.holder, id: alias } };
+  const selected = { ...value, statewideExecutives: selectStatewideExecutives([...value.statewideExecutives, duplicate]),
+    officialCandidacies: { ...value.officialCandidacies, rows: value.officialCandidacies.rows.map(row => row.holder.id === governor.holder.id
+      ? { ...row, status: "NOT_CHECKED" as const, candidacy: null } : row).concat({ ...resolved, holder: { ...resolved.holder, id: alias } }) } };
+  installManualValue("registry-runtime:AZ", selected, "statewide-alias-connections");
+  await readRegistryRuntimeProjection(["AZ"], { bypassCache: true });
+  const expected = { candidacyId: resolved.candidacy!.candidacyId, contestId: resolved.candidacy!.contestId };
+  assert.deepEqual(resolvedCandidacyForOfficial(governor.holder.id), expected);
+  assert.deepEqual(resolvedCandidacyForOfficial(alias), expected);
+  assert.deepEqual(officialIdsForCandidacy(expected.candidacyId), [alias]);
 });
 
 test("published national ballot rows are written to the promoted registry bridge", async () => {

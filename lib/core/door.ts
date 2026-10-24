@@ -135,11 +135,11 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const row = head?.status === "live" ? head : undefined;
     // Replaying an already checked source is a no-op, including after its freshness window.
     // It does not refresh the checked date, publish a value, or count another delivery.
-    if (campaignSelf && row && Number(row.source_copy_id) === c.copy.id && (row.provenance_kind === c.provenance || row.provenance_kind === input.provenance)
+    const repeated = campaignSelf && row && Number(row.source_copy_id) === c.copy.id && (row.provenance_kind === c.provenance || row.provenance_kind === input.provenance)
       && c.copy.fetchedAt.getTime() <= Math.max(new Date(row.fetched_at as string).getTime(), new Date(row.checked_at as string).getTime())
       && row.quote === c.quote && row.value_text === c.valueText && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
-      && canonicalJson(row.value) === canonicalJson(c.value)) return { decision: "CONFIRM", factId: Number(row.id) };
-    const verdict = !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
+      && canonicalJson(row.value) === canonicalJson(c.value);
+    const verdict = repeated ? {ok:true as const,quoteStart:null} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
       refusedClaim = c;
@@ -147,6 +147,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     }
     const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
     await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null);
+    if (repeated) return {decision:"CONFIRM",factId:Number(row!.id)};
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const currentProvenance = row?.provenance_kind === "OWNER" || row?.provenance_kind === "FILING" ? row.provenance_kind

@@ -6,6 +6,7 @@ import { readPlatformGovernment } from "./platform-government.ts";
 import { registeredPlatformTenant } from "./platform-catalog.ts";
 import type { PlatformTenant } from "./platform-enumeration.ts";
 import { governmentStateOf } from "../../registration/listings.ts";
+import type { DoorRecord } from "../../doors/registry.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "doors" | "fieldManual" | "discoveryAttempts">;
 
@@ -46,6 +47,8 @@ export async function runPlatformCensusPass(input: {
   now: () => string;
   reviewer: string;
   concurrency?: number;
+  withdraw?: (door: DoorRecord, portal: string) => Promise<void>;
+  confirm?: (door:DoorRecord) => Promise<void>;
   onGovernment?: (report: { government: string; state: string; doors: number; requests: number; held: number }) => void;
 }) {
   let failed = false;
@@ -62,7 +65,7 @@ export async function runPlatformCensusPass(input: {
     try {
       runtime = await input.runtimeFor(page);
       const got = await readPlatformGovernment({ need, registered: platformRegistrationBinding(page), repos: input.repos,
-        runtime, query:input.query, reviewer: input.reviewer, tenant: tenant ?? input.tenantFor?.(page),
+        runtime, query:input.query, withdraw:input.withdraw, confirm:input.confirm, reviewer: input.reviewer, tenant: tenant ?? input.tenantFor?.(page),
         checkedCalendars: previous?.payload?.reviewer === input.reviewer && previous.payload.registrationVersion === page.versionId ? previous.payload.checkedCalendars : undefined });
       input.onGovernment?.({ government: need.jurisdictionId, state: need.stateCode, doors: got.doors.length, requests: got.attempt.requestCount, held: got.review.held.length });
       return !runtime.budget.spent();

@@ -73,7 +73,6 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
     await learnDoorChannel(db.query, owner, capture.evidence.canonicalUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
-  if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
   const entity = (await readCheckEntity(db.query, id))!;
   const copy = await db.transaction(query => saveCaptureCopy(query, capture));
   const provenance = captureProvenance(capture, entity.hosts);

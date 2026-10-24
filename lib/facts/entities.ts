@@ -12,6 +12,7 @@ import { governingBoardName, type GoverningContext } from "../civic-data/governi
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import { fileEntityPlaces, type EntityPlace } from "./entity-places.ts";
 import type { Entity } from "../core/shapes.ts";
+import { registeredPlaceIds } from "../place-map/build.ts";
 
 interface EntityRow extends Entity {
   /** The registered government a reviewed door names as a board's owner. */
@@ -70,6 +71,8 @@ export interface Legislator { readonly ocdPersonId: string; readonly name: strin
 function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGovernmentFacts>, bodies: readonly RegistryBody[],
   legislators: readonly Legislator[] = []): EntityBatch {
   const out = emptyBatch();
+  const placeIds = registeredPlaceIds(reg);
+  reg = {...reg,divisions:reg.divisions.map(([id,layer,geoid,name]) => [placeIds.get(`${layer}:${geoid}`) ?? id,layer,geoid,name])};
   const state = reg.state.toUpperCase();
   const known = new Set(reg.divisions.map(d => d[0]));
   const parentOf = (id: string): string => {
@@ -190,9 +193,10 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   await query(`DELETE FROM entity_place unknown USING entity e WHERE e.id=unknown.entity_id AND unknown.boundary_year=0
     AND e.state=ANY($1::char(2)[]) AND EXISTS (SELECT 1 FROM entity_place dated WHERE dated.entity_id=unknown.entity_id
       AND dated.place_id=unknown.place_id AND dated.boundary_year>0)`,[[...new Set(batch.entities.flatMap(e => e.state ?? []))]]);
-  await query(`DELETE FROM entity_place root WHERE root.entity_id=ANY($1::text[]) AND root.place_id ~ '${BARE_ROOT}'
+  await query(`DELETE FROM entity_place root USING entity e WHERE e.id=root.entity_id
+    AND (root.entity_id=ANY($1::text[]) OR e.parent_id=ANY($2::text[])) AND root.place_id ~ '${BARE_ROOT}'
     AND EXISTS (SELECT 1 FROM entity_place local WHERE local.entity_id=root.entity_id AND local.place_id !~ '${BARE_ROOT}')`,
-  [batch.entities.map(e => e.id)]);
+  [batch.entities.map(e => e.id),governments]);
 }
 
 /** Merged boards retain their former ids as data, so a later registration load cannot recreate them. */
@@ -245,11 +249,13 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
   const loaded = new Map((await db.query("SELECT source, sha256 FROM fact_store_load")).map(r => [String(r.source), String(r.sha256)]));
   const registrationHeld = (await db.query("SELECT to_regclass('civic_data_promotions') IS NOT NULL AS held"))[0]?.held === true;
   const mapHeld = (await db.query("SELECT to_regclass('place_boundary') IS NOT NULL AS held"))[0]?.held === true;
+  let allCensus: ReadonlyMap<string,CensusGovernmentFacts> | undefined;
   await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING`, [COUNTRY]);
   const done: string[] = [];
   for (const st of states) {
     const file = readFileSync(join(root, "data", "derived", "registration", `${st}.json`));
     const registration = JSON.parse(file.toString("utf8")) as Registration;
+    const census = readCensusGovernmentFacts(root,[st]).byPid;
     const stateBodies = [...new Map(bodies.filter(body => (body.ocdId ?? body.id).includes(`/state:${st}`) || body.id.startsWith(`curated:${st}/`))
       .map(body => [body.id, body])).values()];
     const legislators = people.filter(row => row[stateAt]?.toLowerCase() === st && row[idAt]?.startsWith("ocd-person/"))
@@ -262,6 +268,19 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       WHERE p.key=$1 AND a->>'basis' IN ('SOURCE_CODE','GOVERNING_FUNCSTAT','SOURCE_BOUNDARY','COUNTY_IN_NAME')
         AND a->>'divisionId' LIKE $2 GROUP BY g->>'id',g->>'jurisdictionId' ORDER BY g->>'id'`,
       [`REGISTRATION:US-${st.toUpperCase()}:registration:v1`, `${COUNTRY}/state:${st.toLowerCase()}/%`])] : [];
+    const misplaced = registration.governments.filter(g => g[3] === 'SPECIAL DISTRICT' && !census.has(g[0]));
+    if (misplaced.length) {
+      allCensus ??= readCensusGovernmentFacts(root,registeredStates(root)).byPid;
+      const counties = misplaced.flatMap(g => {
+        const county = allCensus!.get(g[0])?.countyFips;
+        return county ? [{id:g[1],county}] : [];
+      });
+      associations.push(...await db.query(`SELECT r.id,r.id AS native_id,c.state,true AS held_place,
+        jsonb_build_array(jsonb_build_object('placeId',c.id,'boundaryYear',0,'basis','HOST_COUNTY')) AS places
+        FROM jsonb_to_recordset($1::jsonb) AS r(id text,county text)
+        JOIN entity_external_id x ON x.scheme='census-geoid:county' AND x.value=r.county
+        JOIN entity c ON c.id=x.entity_id AND c.kind='place' ORDER BY r.id`,[JSON.stringify(counties)]));
+    }
     // Census geographic county codes establish the host county even when a contact lives in another state.
     if (registrationHeld) associations.push(...await db.query(`SELECT g->>'id' AS native_id,g->>'jurisdictionId' AS id,c.state,
       jsonb_build_array(jsonb_build_object('placeId',c.id,'boundaryYear',0,'basis','HOST_COUNTY')) AS places,true AS held_place
@@ -281,7 +300,7 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       GROUP BY e.id,p.state ORDER BY e.id,p.state`,[registration.governments.map(g => g[1])]));
     const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["RB-A4", stateBodies, legislators, associations]))]));
     if (loaded.get(`registration:${st}`) === hash) continue;
-    const batch = stateEntities(registration, readCensusGovernmentFacts(root, [st]).byPid, stateBodies, legislators);
+    const batch = stateEntities(registration, census, stateBodies, legislators);
     const places = new Set(batch.entities.filter(row => row.kind === "place").map(row => row.id));
     for (const association of associations) {
       const territory = (association.places as EntityPlace[]).filter(p => association.held_place || places.has(p.placeId));

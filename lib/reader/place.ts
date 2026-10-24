@@ -231,6 +231,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   JOIN civic_data_promotions p ON p.record_class='MEETING' AND left(p.scope,7)='source:'
     AND split_part(p.scope,':',3)='body' AND split_part(p.scope,':',4)=b.encoded_id
     AND ($6::boolean OR right(p.scope,8)<>':history')
+    AND NOT EXISTS (SELECT 1 FROM blank WHERE entity_id=b.id AND field='calendar:'||p.scope AND reason='PORTAL_AUTHORITY_UNCONFIRMED')
   UNION
   SELECT p.scope,reader_payload_node(p.payload) AS header,p.current_version_id,
     (SELECT detail FROM (SELECT detail,sequence FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id OFFSET 0) e

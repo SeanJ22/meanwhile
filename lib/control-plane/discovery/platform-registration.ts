@@ -75,7 +75,7 @@ export async function platformGovernmentCandidates(query: PlatformQuery, tenant:
 export interface PlatformGovernmentLink { readonly governmentWebsite: string; readonly portalUrl: string }
 
 /** Only links observed on the government's own site establish portal ownership. */
-export async function matchRegisteredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, links: readonly PlatformGovernmentLink[] = []): Promise<PlatformRegistrationPage[]> {
+export async function matchRegisteredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, links: readonly PlatformGovernmentLink[] = [], governmentId?:string): Promise<PlatformRegistrationPage[]> {
   const hosts = links.filter(link => samePlatformTenant(link.portalUrl,tenant.url)).flatMap(link => {
     try { return [new URL(link.governmentWebsite).hostname.replace(/^www\./i, "").toLowerCase()]; } catch { return []; }
   });
@@ -88,6 +88,7 @@ export async function matchRegisteredPlatformTenant(query: PlatformQuery, tenant
         OR (${websiteHostSql("g->>'website'")} LIKE '%.gov' AND EXISTS (
           SELECT 1 FROM unnest($2::text[]) h WHERE h LIKE '%.'||${websiteHostSql("g->>'website'")})))
       AND ($3::text IS NULL OR ${directoryNameSql("g->>'name'")}=${directoryNameSql("$3::text")})
-    LIMIT 2`, [tenant.state, hosts, tenant.name]);
+      AND ($4::text IS NULL OR g->>'id'=$4 OR g->>'jurisdictionId'=$4)
+    LIMIT 2`, [tenant.state, hosts, tenant.name,governmentId ?? null]);
   return rows as unknown as PlatformRegistrationPage[];
 }

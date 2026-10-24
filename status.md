@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 100 (main 2d0b664ce, live 3:11 PM EDT; reader pool error handler). NEXT: release 101 = batch A (PR #811, CI); batch B gating (DB-01 + MT-01 + RB-A1 doc)
+build_state: LIVE FOR READERS: release 101 (main 6cd25dd09, live 3:37 PM EDT; CL-01, RV-TOOLS, RIVER-KEYS-FX). NEXT: batch B gating (DB-01 + MT-01 + RB-A1 doc), then RV-MEET alone, then PT-01
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T19:33:15Z
+heartbeat: 2026-10-24T19:44:07Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,17 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 101 live, 3:37 PM EDT
+- /api/build 6cd25dd09 (PR #811 merge commit). Sean's checks in Chromium at 3:38 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.
+- CL-01 live: Raleigh 27601's US House District 02 race shows 3 choices (Eugene F. Douglass, Matthew Laszacs, Deborah K. Ross), one Ross row; page mentions dropped 87 -> 73.
+- RIVER-KEYS-FX applied: cochise:ballot-box-table and legacy:cochise:vote-center-pdf are OPEN since 3:34 PM EDT.
+- Sean's item 3, checked on the live voting lookup (POST /api/voting-sites):
+  - 85603: Cochise County, vote-center model, 18 vote centers live, 0 drop boxes yet.
+  - 60090: 0 sites; Cook County, matched through Barrington Hills' page.
+  - The Wheeling door (page:wheelingil.gov:14d010f03f2c, vs07-cook-wheeling-early, Chamber Park early voting) last failed at 8:28 AM EDT on "fetch failed" at robots.txt; Node fetch reaches it fine from here, so the failure looks transient.
+  - Both wait on the next voting-sites run. Voting doors are read least-recently-checked first (scripts/fetch-voting-sites.mts votingSourceReadOrder), so Cochise's never-read drop-box door and Wheeling come early.
+  - Blocker: since 12:22 PM EDT every source-launch pass defers voting-sites:AZ and voting-sites:IL with WORKER_MEMORY_DEADLINE ("Waiting for a worker slot"). Before noon they were skipped only as not due. River keeps checking; drop boxes and Wheeling, with counts by state, follow the first run that gets a slot.
 
 ### Meeting calendars failing per pass: cause found, fix READY (RV-MEET), 3:35 PM EDT
 - What readers lose: about 200 public bodies a pass (Granicus, CivicPlus, PrimeGov calendars) never publish fresh meetings. Digest code MEETING_PARTITION_READ_FAILED / FINAL_ROUTE_NOT_REGISTERED.

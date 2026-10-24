@@ -8,6 +8,7 @@ import { factClocks } from "../lib/facts/clocks.ts";
 import { readSittingFacts,withSittingFacts } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
+import { agendaLetterheadOffice } from "../lib/meetings/agenda-address.ts";
 
 const NOW="2026-10-24T18:00:00.000Z",OLD="2026-10-13T01:48:06.116Z";
 const DIVISION="ocd-division/country:us/state:az/school_district:sunnyside_unified_district",BODY=`${DIVISION}#board`;
@@ -202,4 +203,42 @@ test("an overlapping pin publisher keeps the winning live point and the followin
       fetchImpl:async()=>{throw Error("the concurrent winner must be reused");}});
     assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});assert.equal(requests,1);
   }finally{await db.pg.close();}
+});
+
+test("Raleigh's own saved agenda letterhead supplies a board-office pin without a venue list or any changed source fact",async()=>{
+  const division="ocd-division/country:us/state:nc/county:wake",body=`${division}#governing`;
+  const meeting:Meeting={...online,id:"legistar:wake:6264",bodyId:body,ocdId:division,bodyName:"Board of Commissioners",
+    jurisdiction:"COUNTY OF WAKE",online:undefined,carried:undefined,
+    venueGap:{kind:"STATED_NOT_PLACED",publishedText:"Wake County Justice Center",publisher:"COUNTY OF WAKE"}};
+  const db=await setup([meeting]),vault=new MemoryEvidenceStore();
+  const header=readFileSync(new URL("./fixtures/mt01-wake-agenda-header.txt",import.meta.url),"utf8");
+  const census=readFileSync(new URL("./fixtures/mt01-wake-office-census.json",import.meta.url),"utf8");
+  const document={meetingId:meeting.id,ocdId:division,extraction:"pdf",text:header,
+    documentUrl:"https://wake.legistar1.com/wake/meetings/2026/10/6264_A_Board_of_Commissioners_26-10-26_Meeting_Agenda.pdf",
+    sourceOrg:"COUNTY OF WAKE",collectedAt:OLD};
+  try{
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Wake County','NC',NULL),($2,'body','Board of Commissioners','NC',$1)",[division,body]);
+    const payload={meetings:[meeting],agendaDocuments:[document]};
+    await db.query("UPDATE civic_data_promotions SET payload=$1 WHERE key='MEETING:held'",[JSON.stringify(payload)]);
+    let requests=0;const args={facts:db,vault,clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000};
+    const first=await publishHeldMeetingPins({...args,fetchImpl:async()=>{requests++;return new Response(census);}});
+    assert.deepEqual(first,{considered:1,published:1,unplaced:0,failures:[]});assert.equal(requests,1);
+    const [read]=withSittingFacts([meeting],(await readSittingFacts(db.query,[body])).get(body)!);
+    assert.equal(read.mapPin?.basis,"BODY_OFFICE");assert.equal(read.mapPin?.address,"301 South McDowell Street, Raleigh, NC");
+    assert.equal(read.mapPin?.provenance.sourceUrl,document.documentUrl);assert.equal(read.location,null);
+    assert.equal(read.venueGap?.publishedText,meeting.venueGap?.publishedText);assert.equal(read.id,meeting.id);
+    assert.deepEqual((await db.query("SELECT payload FROM civic_data_promotions WHERE key='MEETING:held'"))[0].payload,JSON.parse(JSON.stringify(payload)));
+    const next=await publishHeldMeetingPins({...args,fetchImpl:async()=>{throw Error("A saved Raleigh point was geocoded again");}});
+    assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+    await db.query("DELETE FROM fact WHERE entity_id=$1",[`meeting:${meeting.id}`]);
+    await db.query("UPDATE civic_data_promotions SET payload=$1 WHERE key='MEETING:held'",[JSON.stringify({...payload,agendaDocuments:[{...document,ocdId:DIVISION}]})]);
+    const foreign=await publishHeldMeetingPins({...args,fetchImpl:async()=>{throw Error("Another division's letterhead supplied an address");}});
+    assert.equal(foreign.published,0);assert.equal(foreign.considered,0);
+  }finally{await db.pg.close();}
+});
+
+test("an address in an agenda item or a conflicting state never becomes a board office",()=>{
+  assert.equal(agendaLetterheadOffice("Meeting Agenda Public hearing for 301 South McDowell Street, Raleigh, NC","COUNTY OF WAKE","NC"),null);
+  const header=readFileSync(new URL("./fixtures/mt01-wake-agenda-header.txt",import.meta.url),"utf8");
+  assert.equal(agendaLetterheadOffice(header,"COUNTY OF WAKE","AZ"),null);
 });

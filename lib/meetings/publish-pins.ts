@@ -16,6 +16,8 @@ import { OUTBOUND_USER_AGENT } from "../geo/outbound-agent.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
+import { agendaLetterheadOffice } from "./agenda-address.ts";
+import { meetingStateOf } from "./body-scope.ts";
 import {
   meetingPinAddresses,
   withPublishedPin,
@@ -52,13 +54,32 @@ LEFT JOIN LATERAL (
       AND e.id IN (b.parent_id,o.g->>'jurisdictionId',o.g->>'id') ORDER BY f.checked_at DESC,e.id LIMIT 1
 ) government ON true`;
 
+const AGENDA_PIN_OFFICES_SQL = `WITH owned AS MATERIALIZED (
+  SELECT p.key,s.value->>'id' AS meeting_id,s.value->>'bodyId' AS body_id,
+    s.value->>'ocdId' AS ocd_id,s.value->>'jurisdiction' AS jurisdiction,s.value->>'startsAt' AS starts_at
+  FROM civic_data_promotions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
+    LATERAL (SELECT reader_payload_node(m.item) AS value) s
+  WHERE p.record_class='MEETING' AND s.value->>'bodyId'=ANY($1::text[])
+)
+SELECT o.body_id,o.jurisdiction,reader_payload_value(d.value->'documentUrl')#>>'{}' AS url,
+  reader_payload_value(d.value->'sourceOrg')#>>'{}' AS source_org,
+  reader_payload_value(d.value->'collectedAt')#>>'{}' AS collected_at,
+  left(reader_payload_value(d.value->'text')#>>'{}',700) AS header
+FROM owned o JOIN civic_data_promotions p ON p.key=o.key,
+  LATERAL reader_payload_members(reader_payload_node(p.payload)->'agendaDocuments') a,
+  LATERAL (SELECT reader_payload_node(a.item) AS value) d
+WHERE d.value->>'meetingId'=o.meeting_id AND d.value->>'ocdId' IS NOT DISTINCT FROM o.ocd_id
+  AND d.value->>'extraction' IN ('pdf','html')
+ORDER BY o.body_id,o.starts_at DESC,reader_payload_value(d.value->'collectedAt')#>>'{}' DESC`;
+
 export async function publishedPinOffices(
   query: Query | undefined,
   bodyIds: readonly string[],
+  onFailure?: (detail:string)=>void,
 ): Promise<ReadonlyMap<string, MeetingPinBody>> {
   if (!query || !bodyIds.length) return new Map();
   const rows = await query(PIN_OFFICES_SQL, [[...new Set(bodyIds)]]);
-  return new Map(
+  const bodies = new Map(
     rows.map((row) => {
       const boardSource: RegistryProvenance | null =
         typeof row.board_source === "string"
@@ -96,6 +117,17 @@ export async function publishedPinOffices(
       ];
     }),
   );
+  const missing=[...bodies].filter(([,body])=>!body.officeContact?.address&&!body.governmentOffice?.address).map(([id])=>id);
+  if(missing.length)try{
+    for(const row of await query(AGENDA_PIN_OFFICES_SQL,[missing])){
+      const id=String(row.body_id),body=bodies.get(id);
+      if(!body||body.officeContact?.address||typeof row.header!=="string"||typeof row.url!=="string")continue;
+      const address=agendaLetterheadOffice(row.header,String(row.jurisdiction),meetingStateOf(id));
+      if(address)body.officeContact={address,phone:null,provenance:{sourceUrl:row.url,sourceOrg:String(row.source_org),
+        collectedAt:new Date(row.collected_at as string).toISOString(),verifiedAt:null}};
+    }
+  }catch(error){onFailure?.(`Published agenda office addresses could not be read: ${error instanceof Error?error.message:String(error)}`);}
+  return bodies;
 }
 
 export interface PublishedPinResult {
@@ -128,6 +160,7 @@ export async function placePublishedMeetingPins(input: {
         input.meetings
           .filter((m) => !m.location)
           .flatMap((m) => m.bodyId ?? []),
+        detail=>held.push(detail),
       );
     } catch (error) {
       officesUnavailable = true;

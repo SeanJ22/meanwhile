@@ -59,7 +59,7 @@ export async function publishHeldMeetingPins(input: {
   const byState = new Map<string,string[]>();
   for(const id of bodyIds){const state=meetingStateOf(id),ids=byState.get(state)??[];ids.push(id);byState.set(state,ids);}
   const offices = new Map<string,MeetingPinBody>(), officeFailures = new Set<string>();
-  const officeReads = await runBoundedWorkPool([...byState.values()],8,async ids=>({ids,offices:await publishedPinOffices(facts.query,ids)}));
+  const officeReads = await runBoundedWorkPool([...byState.values()],8,async ids=>({ids,offices:await publishedPinOffices(facts.query,ids,detail=>failures.push(detail))}));
   for(const result of officeReads) {
     if(result.ok)for(const [id,office] of result.value.offices)offices.set(id,office);
     else {failures.push(result.error);for(const id of [...byState.values()][result.index]!)officeFailures.add(id);}

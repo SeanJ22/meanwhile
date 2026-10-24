@@ -17,10 +17,22 @@ import { heldSpecialDistrictBoundaries } from "../lib/place-map/special-district
 
 const metadataOnly = process.argv.includes("--metadata-only");
 const sourceAliasesOnly = process.argv.includes("--source-aliases-only");
+const districtShapesOnly = process.argv.includes("--district-shapes-only");
 for (const state of process.argv.slice(2).filter(arg => !arg.startsWith("--"))) {
-  if (!/^[A-Z]{2}$/.test(state) || state === "NJ" && !metadataOnly && !sourceAliasesOnly) throw new Error("New Jersey requires fresh school polygons");
+  if (!/^[A-Z]{2}$/.test(state) || state === "NJ" && !metadataOnly && !sourceAliasesOnly && !districtShapesOnly) throw new Error("New Jersey requires fresh school polygons");
   const path = `/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`;
   const held = JSON.parse(gunzipSync(await readFile(path)).toString("utf8")) as StatePlaceMap;
+  if (districtShapesOnly) {
+    const { reference: registration } = loadRegistrationReference(process.cwd(), state);
+    const shapes = await acquireStateBoundaries(registration, { onlyLayers: new Set(["cd", "sldu", "sldl"]),
+      cache: { store: new DurableEvidenceStore("/tmp/rb-a2-replay/sources", { remote: null }), locks: memoryLockManager() } });
+    const places = new Map(held.places.map(place => [place.id, place]));
+    for (const place of shapes.places) places.set(place.id, place);
+    const boundaries = new Map([...held.boundaries, ...shapes.boundaries].map(boundary => [`${boundary.placeId}|${boundary.boundaryYear}`, boundary]));
+    await writeFile(path, gzipSync(JSON.stringify({ ...held, places: [...places.values()], boundaries: [...boundaries.values()] })));
+    console.log(`${state}: newest source release retained for ${shapes.boundaries.length} district boundaries`);
+    continue;
+  }
   if (sourceAliasesOnly) {
     const byCode = new Map(held.places.flatMap(place => place.aliases.filter(alias => alias.scheme === "census-geoid:aiannh" && /^\d{4}$/.test(alias.value)).map(alias => [alias.value, place] as const)));
     const added = new Map<string, string[]>();

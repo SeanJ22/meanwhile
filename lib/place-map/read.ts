@@ -59,7 +59,7 @@ export async function placesAtPoint(query: Query, point: [number, number],
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!Number.isFinite(point[0]) || !Number.isFinite(point[1]) || Math.abs(point[0]) > 180 || Math.abs(point[1]) > 90) throw new Error("A geographic map point is required");
   const rows = await query(`WITH candidates AS MATERIALIZED (
-      SELECT b.* FROM place_boundary b WHERE b.bounds @> point($1::float8, $2::float8) AND ${CURRENT_LOCAL_BOUNDARY_SQL}
+      SELECT b.* FROM place_boundary b WHERE b.bounds @> box(point($1::float8, $2::float8),point($1::float8, $2::float8)) AND ${CURRENT_LOCAL_BOUNDARY_SQL}
     ) SELECT ${fields}, b.geometry, false AS partial FROM candidates b JOIN entity e ON e.id=b.place_id
     UNION ALL SELECT ${fields}, NULL AS geometry, true AS partial FROM place_boundary b
       JOIN entity e ON e.id=b.place_id WHERE b.county_attachment AND ${CURRENT_LOCAL_BOUNDARY_SQL}

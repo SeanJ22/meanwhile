@@ -78,7 +78,10 @@ export async function acquireStateBoundaries(reg: RegistrationReference, options
         places.set(id, { id, name, state: reg.state.toUpperCase(), aliases: [...new Map(aliases.map(a => [`${a.scheme}:${a.value}`, a])).values()] });
         byGeoid.set(`${layer}:${geoid}`, id);
         const geometry = { type: "MultiPolygon" as const, coordinates: tigerGeometry(feature) };
-        const previousBoundary = boundaries.get(`${id}|${year}`);
+        const heldBoundary = boundaries.get(`${id}|${year}`);
+        // Different release files can describe the same legislative plan.
+        // Keep the newest release's shape; merge only parts in that same file.
+        const previousBoundary = heldBoundary?.sourceUrls.includes(url) ? heldBoundary : undefined;
         const coordinates = previousBoundary?.geometry ? [...(previousBoundary.geometry.type === "Polygon" ? [previousBoundary.geometry.coordinates] : previousBoundary.geometry.coordinates), ...geometry.coordinates] : geometry.coordinates;
         boundaries.set(`${id}|${year}`, { placeId: id, layer, boundaryYear: year, version,
           geometry: { type: "MultiPolygon", coordinates }, hostCountyId: null, countyAttachment: false,

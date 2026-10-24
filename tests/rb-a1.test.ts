@@ -42,12 +42,13 @@ test("all four event sources reuse exact identities and source crosswalks; futur
   const db = await database();
   try {
     await db.pg.exec(`INSERT INTO entity(id,kind,name,state) VALUES('person','person','Person','AZ'),('body','body','Body','AZ'),
-      ('congress-api:A000001','person','Person from another source','AZ');
+      ('congress-api:A000001','person','Person from another source','AZ'),
+      ('meeting:legistar:example:123','meeting','Meeting','AZ');
       INSERT INTO entity_external_id VALUES('person','campaign-person:AZ','candidate|Person'),('person','bioguide','A000001');
       INSERT INTO civic_data_promotions VALUES('funding','FEC_FUNDING','federal-supported',
         '{"candidates":[{"fecCandidateId":"S0AZ00001","name":"Person","state":"AZ","targetKeys":["candidate|Person","congress:A000001"]}]}');
       INSERT INTO reactions VALUES('candidate|Person','CANDIDATE'),('house:120-1:999','FEDERAL_VOTE'),('S0AZ00001','CONTRIBUTOR_REACTION');
-      INSERT INTO speak_your_mind VALUES('body','BODY');
+      INSERT INTO speak_your_mind VALUES('body','BODY'),('legistar:example:123','MEETING'),('congress:A000001','OFFICIAL');
       INSERT INTO demand_signals VALUES('candidate|Person','CANDIDATE');
       INSERT INTO ask_interactions VALUES('["body","ballot-az-anywhere:measure#new-part"]')`);
     await db.pg.exec(readerIdentityMigration());
@@ -55,6 +56,8 @@ test("all four event sources reuse exact identities and source crosswalks; futur
     assert.equal(await resolveId("S0AZ00001", db.query), "person");
     assert.equal(await resolveId("fec:S0AZ00001", db.query), "person");
     assert.equal(await resolveId("house:120-1:999", db.query), "house:120-1:999");
+    assert.equal(await resolveId("legistar:example:123", db.query), "meeting:legistar:example:123");
+    assert.equal(await resolveId("congress:A000001", db.query), "congress-api:A000001");
     assert.equal(await resolveId("ballot-az-anywhere:measure#new-part", db.query), "ballot-az-anywhere:measure#new-part");
     const before = await db.query("SELECT count(*)::int n FROM entity");
     await syncReaderIds(db.query);
@@ -69,6 +72,12 @@ test("all four event sources reuse exact identities and source crosswalks; futur
     assert.equal(counts.length, ALIAS_STATES.length);
     assert.equal(counts.find(row => row.state === "AZ")!.n, 3);
     assert.equal(counts.find(row => row.state === "WY")!.n, 0);
+    await db.pg.exec(`UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{candidates}',payload->'candidates'||
+      '[{"fecCandidateId":"S8WY00999","name":"New filer","state":"WY","targetKeys":["congress:Z000999"]}]'::jsonb);
+      INSERT INTO reactions VALUES('S8WY00999','FUNDING_TOTAL_REACTION')`);
+    await syncReaderIds(db.query);
+    assert.equal(await resolveId("S8WY00999", db.query), "congress-api:Z000999");
+    assert.equal(await resolveId("congress:Z000999", db.query), "congress-api:Z000999");
     await db.pg.exec("DELETE FROM civic_data_promotions");
     await syncReaderIds(db.query);
     assert.equal(await resolveId("S0AZ00001", db.query), "person", "a source refresh cannot orphan its saved FEC alias");

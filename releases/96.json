@@ -1,0 +1,21 @@
+{
+  "n": 96,
+  "branch": "release/96",
+  "river_sha": "bd77dcb0f556cfdd15a6646a15825aaeac377042",
+  "tested_sha": "39c3037f4c79ffd3561938ea0619b99ee0c1a7bb",
+  "steps": [
+    "CI-POPPLER",
+    "RV-REPAIR"
+  ],
+  "lanes": [
+    "river-ci",
+    "river-repair"
+  ],
+  "integration_from": 312,
+  "integration_count": 314,
+  "pr": {
+    "number": 806,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/806"
+  },
+  "at": "2026-10-24T09:45:23Z"
+}

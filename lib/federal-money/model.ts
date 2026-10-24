@@ -2,6 +2,7 @@ export const FEDERAL_MONEY_SOURCES = ["usaspending", "federal-audit-clearinghous
 export type FederalMoneySource = typeof FEDERAL_MONEY_SOURCES[number];
 export const FEDERAL_MONEY_RECORD_CLASS = "FEDERAL_MONEY" as const;
 export const FEDERAL_MONEY_PARSER = "federal-money/2";
+export const OPENFEMA_STATE_PROJECTION_VERSION = "openfema-state/1";
 export function federalMoneyScope(source: FederalMoneySource, state: string) { return `${source}:${state.toUpperCase()}`; }
 
 export interface FederalMoneyFact {
@@ -87,6 +88,7 @@ export interface FederalMoneyCheckpoint {
   readonly state: string;
   readonly counts: FederalMoneyCounts;
   readonly checkpoint: {
+    readonly projectionVersion?: string;
     readonly cursor: FederalMoneyCursor | null;
     readonly complete: boolean;
     readonly lastCompleteAt: string | null;

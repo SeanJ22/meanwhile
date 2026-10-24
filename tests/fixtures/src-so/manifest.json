@@ -75,6 +75,28 @@
       "capturedAt": "2026-10-23T08:26:42.452Z",
       "complete": false,
       "selection": "Exact catalog response for the Texas resource whose description contains a Unicode line separator; publisher values retained."
+    },
+    {
+      "file": "echo-program-identities.json",
+      "url": "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+      "archiveSha256": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+      "archiveMember": "ECHO_EXPORTER.csv",
+      "publishedAt": "2026-10-18T06:44:46.000Z",
+      "capturedAt": "2026-10-23T09:06:56.174Z",
+      "sha256": "019caadccb0b017660aecf2d11c6847fe07597a956a851260ac342fa70ab7144",
+      "complete": false,
+      "selection": "Exact parsed CSV cell values for the first blank-FRS facility encountered in each of AZ and CA; all133 columns retained."
+    },
+    {
+      "file": "echo-missing-name.json",
+      "url": "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+      "archiveSha256": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+      "archiveMember": "ECHO_EXPORTER.csv",
+      "publishedAt": "2026-10-18T06:44:46.000Z",
+      "capturedAt": "2026-10-23T09:06:56.174Z",
+      "sha256": "d84c4c29bb3789b3582ad377dc72ee525874ef7ed1fd8fa0e2c1e1977d59b851",
+      "complete": false,
+      "selection": "Exact parsed ECHO_EXPORTER.csv row with FRS110020990178 and blank FAC_NAME; all133 source columns retained."
     }
   ]
 }

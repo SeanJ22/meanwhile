@@ -45,6 +45,37 @@ test("routine defaults hold the three Census 2026 district plans", () => {
   assert.ok(GRF_KEYS.every(key => DEFAULT_SCOPES.includes(key)));
 });
 
+test("current GRFC plans come from GRFN vintage 90 even when decennial districts are also listed", () => {
+  const names = "MTFCC|VINTAGE|CDSESSN|LSY\nG5200|70|116|\nG5200|90|120|\nG5210|90||2026\nG5220|90||2026\n";
+  assert.deepEqual(grfTargetsFromNames(names).map(target => target.version), ["cd:120", "sldu:2026", "sldl:2026"]);
+  assert.throws(() => grfTargetsFromNames(names.replace("G5200|90|120", "G5200|70|120")), /one CDSESSN/);
+});
+
+test("a territory without Census legislative districts still supplies its delegate plan", () => {
+  const names = "MTFCC|VINTAGE|STATEFP|CDSESSN|LSY\nG5200|90|60|120|\n";
+  assert.deepEqual(grfTargetsFromNames(names).map(target => target.version), ["cd:120"]);
+  assert.throws(() => grfTargetsFromNames(names.replace("|60|", "|04|")), /one LSY/);
+});
+
+test("a block moved across the state line uses its current state for current districts", async () => {
+  const h = harness();
+  h.change("TABBLKST|CURSTATE|ZCTA5CE|CDCURFP|SLDUST|SLDLST|AREALAND\n08|04|85701|07|020|020|100\n");
+  const dataset = await acquireDataset({ only: GRF_KEYS, states: new Set(["04"]), fetchImpl: h.fetchImpl, cache: cache() });
+  assert.deepEqual(dataset.scopes.map(scope => scope.groupings[0].stateFips), ["04", "04", "04"]);
+  assert.equal(dataset.scopes[0].groupings[0].geoid, "0407");
+});
+
+test("large block files decode correctly across chunk boundaries and an unterminated final row", async () => {
+  const h = harness();
+  const row = "04|019|85701|03|07|020|020|100";
+  h.change(`\uFEFF${HEADER}\r\n${Array(5000).fill(row).join("\r\n")}`);
+  const dataset = await acquireDataset({ only: GRF_KEYS, states: new Set(["04"]), fetchImpl: h.fetchImpl, cache: cache() });
+  for (const scope of dataset.scopes) {
+    assert.equal(scope.groupings.length, 1);
+    assert.deepEqual(scope.groupings[0].overlaps, [{ zcta5: "85701", whole: true, fraction: 1 }]);
+  }
+});
+
 test("one state GRF download supplies House, Senate and State House, and a fresh HEAD reuses unchanged held rows", async () => {
   const h = harness(), options = { only: GRF_KEYS, states: new Set(["04"]), fetchImpl: h.fetchImpl, cache: cache() };
   const first = await acquireDataset(options);

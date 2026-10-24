@@ -14,14 +14,22 @@ import type { StatePlaceMap } from "../lib/place-map/load.ts";
 import { censusTigerArchive } from "../lib/census-geography/tiger-source.ts";
 import { tigerFeatures } from "../lib/census-geography/tiger-shapefile.ts";
 import { heldSpecialDistrictBoundaries } from "../lib/place-map/special-districts.ts";
+import { isUnassignedZcta } from "../lib/census-geography/contract.ts";
 
 const metadataOnly = process.argv.includes("--metadata-only");
 const sourceAliasesOnly = process.argv.includes("--source-aliases-only");
 const districtShapesOnly = process.argv.includes("--district-shapes-only");
+const assignedZctasOnly = process.argv.includes("--assigned-zctas-only");
 for (const state of process.argv.slice(2).filter(arg => !arg.startsWith("--"))) {
-  if (!/^[A-Z]{2}$/.test(state) || state === "NJ" && !metadataOnly && !sourceAliasesOnly && !districtShapesOnly) throw new Error("New Jersey requires fresh school polygons");
+  if (!/^[A-Z]{2}$/.test(state) || state === "NJ" && !metadataOnly && !sourceAliasesOnly && !districtShapesOnly && !assignedZctasOnly) throw new Error("New Jersey requires fresh school polygons");
   const path = `/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`;
   const held = JSON.parse(gunzipSync(await readFile(path)).toString("utf8")) as StatePlaceMap;
+  if (assignedZctasOnly) {
+    const zctaEdges = held.zctaEdges.filter(edge => !isUnassignedZcta(edge.code));
+    await writeFile(path, gzipSync(JSON.stringify({ ...held, zctaEdges })));
+    console.log(`${state}: removed ${held.zctaEdges.length - zctaEdges.length} unassigned ZCTA memberships`);
+    continue;
+  }
   if (districtShapesOnly) {
     const { reference: registration } = loadRegistrationReference(process.cwd(), state);
     const shapes = await acquireStateBoundaries(registration, { onlyLayers: new Set(["cd", "sldu", "sldl"]),

@@ -280,6 +280,21 @@ test("live historic FAC native finding identifiers retain separate requirements 
   assert.deepEqual(shared.map(row => row.identifiers.sourceRowId), ["838591", "762403"]);
   assert.deepEqual(shared.map(row => row.details.requirement), ["B", "A"]);
 });
+test("live Iowa FAC duplicate findings publish one fact while distinct native requirements keep stable identities", () => {
+  const body = fixture("fac-findings-ia-duplicates-live-2026-10-23.json"), url = "https://api.fac.gov/findings";
+  const duplicate = parsed("federal-audit-clearinghouse", url, body, "IA");
+  assert.equal(JSON.parse(body).length, 2);
+  assert.equal(duplicate.length, 1);
+  assert.equal(duplicate[0].identifiers.reportId, "2016-06-CENSUS-0000064400");
+  assert.equal(duplicate[0].details.requirement, "N");
+  const [row] = JSON.parse(body);
+  const variants = [row, { ...row, type_requirement: "L" }];
+  const distinct = parsed("federal-audit-clearinghouse", url, JSON.stringify(variants), "IA");
+  assert.equal(new Set(distinct.map(fact => fact.id)).size, 2);
+  assert.deepEqual(new Set(distinct.map(fact => fact.details.requirement)), new Set(["N", "L"]));
+  assert.deepEqual(new Set(parsed("federal-audit-clearinghouse", url, JSON.stringify(variants.reverse()), "IA").map(fact => fact.id)), new Set(distinct.map(fact => fact.id)));
+  assert.throws(() => parsed("federal-audit-clearinghouse", url, JSON.stringify([row, { ...row, is_significant_deficiency: "N" }]), "IA"), /distinct source rows share one native finding identity/);
+});
 test("FAC keeps current reports with missing or invalid states in the unresolved state partition", async () => {
   const result = await acquireFederalMoney("federal-audit-clearinghouse", "ZZ", { now, since: "2026-10-01", dataGovApiKey: "synthetic-key", fetch: async url => {
     const request = new URL(String(url)); assert.equal(request.pathname, "/general"); assert.equal(request.searchParams.has("auditee_state"), false);

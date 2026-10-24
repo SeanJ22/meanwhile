@@ -2,6 +2,8 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
 import { candidateOwnKind, hostOf } from "@/lib/officials/verification";
 import { VisibleCard } from "@/components/ballot/visible-card";
 import { personInitials } from "@/lib/officials/person-name";
+import { personCardSources } from "@/lib/officials/card-sources";
+import { ballotHolderSources } from "@/lib/ballot/held-holder";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
@@ -24,6 +26,7 @@ export function CandidateCard({
   links,
   filedSiteUrl,
   filingProvenance,
+  filingSources,
   nameSlot,
   battlecardSlot,
   derivedBlurb,
@@ -47,13 +50,16 @@ export function CandidateCard({
 
   filedSiteUrl?: string | null;
   filingProvenance?: Provenance;
+  filingSources?: readonly Provenance[];
 }) {
-  const photoUrl = card?.photoUrl ?? holder?.photoUrl ?? null;
+  const photoUrl = holder?.photoUrl ?? card?.photoUrl ?? null;
   const hasLinks = Boolean(links?.official || links?.campaign || filedSiteUrl);
   return (
 
     <VisibleCard className="candidate-row" cardId={`CANDIDATE:${name}`} cardKind="CANDIDATE">
-      {filingProvenance && <CardSourcesContribution id="candidate-filing" sources={[{ what: "Candidate name and party as filed", provenance: filingProvenance }]} />}
+      {filingProvenance && <CardSourcesContribution id="candidate-filing" sources={
+        [...new Map([filingProvenance, ...filingSources ?? []].map(provenance =>
+          [`${provenance.sourceUrl}:${provenance.collectedAt}`, { what: "Candidate name and party as filed", provenance }])).values()]} />}
       <span className="candidate-avatar" aria-hidden={photoUrl ? undefined : true}>
         {photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -81,9 +87,8 @@ export function CandidateCard({
         </div>
 
         <CandidatePortraitSources card={card} />
-        {photoUrl && holder && !card?.photoUrl && (holder.fieldSources?.photoUrl ?? holder.provenance) &&
-          <CardSourcesContribution id={`candidate-portrait:${holder.id}`} sources={[{ what: "Official portrait",
-            provenance: (holder.fieldSources?.photoUrl ?? holder.provenance)! }]} />}
+        {holder && <CardSourcesContribution id={`candidate-held-person:${holder.id}`}
+          sources={[holder, ...ballotHolderSources(holder)].flatMap(person => personCardSources(person))} />}
         {card?.bio && (
           <> <p className="mt-1 t-body leading-relaxed text-paper-dim">
             &ldquo;{card.bio}&rdquo;{" "}

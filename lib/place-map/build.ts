@@ -4,7 +4,7 @@ import { REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
 import type { CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { BuiltScope } from "../census-geography/dataset.ts";
 import { censusWorkDivision } from "../census-geography/division-id.ts";
-import type { GeographyRef } from "../census-geography/contract.ts";
+import { isUnassignedZcta, type GeographyRef } from "../census-geography/contract.ts";
 import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { MapEdge, MapPlace, StatePlaceMap } from "./load.ts";
@@ -85,12 +85,14 @@ export function buildStatePlaceMap(input: {
     put(id, name, layer, geoid, year, `${layer}:${year}`);
   }
   const addEdge = (target: Map<string, MapEdge>, edge: MapEdge) => {
+    if (target === zctaEdges && isUnassignedZcta(edge.code)) return;
     const identity = `${edge.code}|${key(edge.placeId, edge.boundaryYear)}`, previous = target.get(identity);
     target.set(identity, previous ? { ...edge, share: edge.share ?? previous.share, shareBasis: edge.share === null ? previous.shareBasis : edge.shareBasis,
       partial: edge.partial && previous.partial, fringe: edge.fringe && previous.fringe } : edge);
   };
   const knownZip = (code: string) => input.legacyZips.has(code) || input.knownZips?.has(code);
   for (const edge of input.acquiredEdges ?? []) {
+    if (isUnassignedZcta(edge.code)) continue;
     addEdge(zctaEdges, edge);
     if (knownZip(edge.code)) addEdge(zipEdges, edge);
   }
@@ -110,6 +112,7 @@ export function buildStatePlaceMap(input: {
       put(id, group.label, layer, group.geoid, year, scope.version, scope.versionMeta.provenance.sourceUrls);
       if (layer === "county") countyByGeoid.set(group.geoid, id);
       for (const overlap of group.overlaps) {
+        if (isUnassignedZcta(overlap.zcta5)) continue;
         const edge: MapEdge = { code: overlap.zcta5, placeId: id, boundaryYear: year, share: overlap.fraction,
           shareBasis: scope.fractionBasis, partial: !overlap.whole, fringe: false };
         addEdge(zctaEdges, edge);

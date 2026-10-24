@@ -60,9 +60,10 @@ function write(file: PicksFile) {
   replacePicksFile(file);
 }
 
-export function getPick(contestId: string): StoredPick | null {
+export function getPick(contestId: string, aliases: readonly string[] = []): StoredPick | null {
   if (typeof window === "undefined") return null;
-  return readPicksFile().picks[contestId] ?? null;
+  const picks = readPicksFile().picks;
+  return [contestId, ...aliases].map(id => picks[id]).find(Boolean) ?? null;
 }
 
 export function getAllPicks(): StoredPick[] {
@@ -86,14 +87,18 @@ export function togglePick(
   choiceId: string,
   choiceLabel: string,
   voteFor: number,
+  choiceAliases: readonly string[] = [],
+  contestAliases: readonly string[] = [],
 ) {
   const file = readPicksFile();
-  const existing = file.picks[contestId] ?? {
+  const saved = [contestId, ...contestAliases].map(id => file.picks[id]).find(Boolean);
+  const existing = saved ? { ...saved, choiceIds: [...new Set(saved.choiceIds.map(id => choiceAliases.includes(id) ? choiceId : id))] } : {
     contestId,
     contestTitle,
     choiceIds: [],
     labels: {},
   };
+  for (const id of contestAliases) if (id !== contestId) delete file.picks[id];
   const has = existing.choiceIds.includes(choiceId);
   let next: string[];
   if (has) {
@@ -112,8 +117,10 @@ export function togglePick(
   } else {
     file.picks[contestId] = { contestId, contestTitle, choiceIds: next, labels };
   }
-  delete file.suppressedDerived[contestId];
-  if (file.unsure) delete file.unsure[contestId];
+  for (const id of [contestId, ...contestAliases]) {
+    delete file.suppressedDerived[id];
+    if (file.unsure) delete file.unsure[id];
+  }
   write(file);
   captureEvent({
     type: "BALLOT_PICK",
@@ -122,16 +129,16 @@ export function togglePick(
   });
 }
 
-export function clearPick(contestId: string) {
+export function clearPick(contestId: string, aliases: readonly string[] = []) {
   const file = readPicksFile();
-  delete file.picks[contestId];
+  for (const id of [contestId, ...aliases]) delete file.picks[id];
   write(file);
   captureEvent({ type: "BALLOT_PICK", ...pickPlace(contestId), ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "BLANK" } });
 }
 
-export function markUnsure(contestId: string) {
+export function markUnsure(contestId: string, aliases: readonly string[] = []) {
   const file = readPicksFile();
-  delete file.picks[contestId];
+  for (const id of [contestId, ...aliases]) delete file.picks[id];
   file.unsure = { ...(file.unsure ?? {}), [contestId]: true };
   write(file);
   captureEvent({ type: "BALLOT_PICK", ...pickPlace(contestId), ballotPick: { contestId: storeSafeId(contestId), candidateIds: [], choice: "UNSURE" } });

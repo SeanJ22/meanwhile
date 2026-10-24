@@ -117,6 +117,14 @@ export function isTrustedLkgImportCandidate(candidate: unknown): candidate is Ro
   );
 }
 
+/** Retaining published facts moves authority without checking their source. */
+export function isImportOrStateMoveCandidate(candidate: unknown): boolean {
+  if (isTrustedLkgImportCandidate(candidate)) return true;
+  if (!candidate || typeof candidate !== "object" || Array.isArray(candidate)) return false;
+  const evidence = (candidate as { readonly stateRetirement?: { readonly kind?: unknown } }).stateRetirement;
+  return evidence?.kind === "STATE_AUTHORITY_RETIREMENT";
+}
+
 function trustedLkgFirstSeedEvidenceIssue(
   candidate: RoutineCandidate,
   predecessor: CandidateVersionRecord | null,

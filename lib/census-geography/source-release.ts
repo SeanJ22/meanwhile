@@ -3,7 +3,7 @@ import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, source
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
 
-export const CENSUS_ACQUISITION_PARSER = "census-geography/BL-01";
+export const CENSUS_ACQUISITION_PARSER = "census-geography/RB-A2/2";
 
 /** Decode source rows without a second complete string or a national row array. */
 export function* censusTextLines(bytes: Uint8Array): Generator<string> {

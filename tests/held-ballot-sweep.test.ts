@@ -134,7 +134,7 @@ test("the inputs are two grouped reads and two pointers, never a work item's val
   assert.deepEqual([inputs.nationalAt, inputs.registryAt, inputs.routesAt], [BEFORE, BEFORE, null]);
 });
 
-test("held publication reads every state's pointer in one bounded store call, beside its other input clocks", async () => {
+test("held publication reads every state's registry and routes pointers in bounded store calls, beside its other input clocks", async () => {
   const calls: { recordClass: string; scopes: readonly string[] }[] = [];
   const singles: string[] = [];
   const inputs = await readHeldPointerTimes(async () => [{ at: BEFORE }], async (recordClass, scope) => {
@@ -144,9 +144,10 @@ test("held publication reads every state's pointer in one bounded store call, be
     calls.push({ recordClass, scopes });
     return [{ promotedAt: BEFORE }, { promotedAt: AFTER }];
   });
-  assert.deepEqual(calls, [{ recordClass: "REGISTRY_RUNTIME_BINDING", scopes: ["US-AZ:reader-registry-runtime", "US-AL:reader-registry-runtime", "US-AR:reader-registry-runtime", "US-NH:reader-registry-runtime"] }]);
-  assert.equal(singles.length, 1, "only the ballot routes pointer is a single lookup");
-  assert.deepEqual(inputs, { nationalAt: BEFORE, registryAt: AFTER, routesAt: BEFORE });
+  assert.deepEqual(calls, [{ recordClass: "REGISTRY_RUNTIME_BINDING", scopes: ["US-AZ:reader-registry-runtime", "US-AL:reader-registry-runtime", "US-AR:reader-registry-runtime", "US-NH:reader-registry-runtime"] },
+    { recordClass: "CURATED_READER_RECORD", scopes: ["US-AZ:official-ballot-navigation", "US-AL:official-ballot-navigation", "US-AR:official-ballot-navigation", "US-NH:official-ballot-navigation"] }]);
+  assert.equal(singles.length, 0, "each state's routes pointer is read in the same bounded call");
+  assert.deepEqual(inputs, { nationalAt: BEFORE, registryAt: AFTER, routesAt: AFTER });
 });
 
 test("a batch reads each place once, narrowed, several places at a time", async () => {

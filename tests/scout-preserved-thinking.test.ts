@@ -42,7 +42,7 @@ import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 
 const NOW = "2026-09-23T18:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
-const SONNET = "claude-sonnet-5-5";
+const HAIKU = "claude-haiku-5-5";
 /** A fetch representation large enough that a few of them pass the context budget. */
 const PAGE_BYTES = 45_000;
 
@@ -126,7 +126,6 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
   const b: ScoutBound = { ...RESEARCH_BOUNDS.perDispatch, ...bound };
   const toolkit = bigPageToolkit();
   const exec = hunterExecutor({ role: "HUNTER", playbookFor: fixtureRolePlaybook,
-    model: SONNET,
     transport,
     bound: b,
     toolkitFor: () => toolkit,
@@ -163,7 +162,7 @@ const isRestart = (messages: ModelRequest["messages"]): boolean =>
 test("PT-1: the conversation is append-only — each request extends the one before byte-for-byte, except a restart, which replays no earlier turn or thinking block — and the payload stays bounded", async () => {
   const sonnet: Turn[] = Array.from({ length: 15 }, (_, i) => i + 1).map((k) => [thinking(`sig-s${k}`), fetchOf(`u${k}`, `https://page-${k}.gov/`)]);
   sonnet.push([thinking("sig-s16"), finish("f")]);
-  const provider = fakeProvider({ [SONNET]: sonnet });
+  const provider = fakeProvider({ [HAIKU]: sonnet });
   const { outcome, result } = await runScout(provider.transport);
   assert.equal(outcome.kind, "DISPOSED", outcome.detail);
   const { requests } = provider;
@@ -203,7 +202,7 @@ test("transport carries provider capacity and Retry-After from an unsent retry",
       "anthropic-ratelimit-input-tokens-limit": "80000", "anthropic-ratelimit-output-tokens-limit": "16000",
     } });
   }) as typeof fetch, "https://example.invalid/v1/messages", { onRateLimits: value => limits.push(value) });
-  await assert.rejects(() => transport({ model: SONNET, max_tokens: 1, system: [], tools: [],
+  await assert.rejects(() => transport({ model: HAIKU, max_tokens: 1, system: [], tools: [],
     messages: [{ role: "user", content: "fixture" }] }), (error: unknown) =>
       error instanceof ModelTransportError && error.status === 429 && error.retryAfterMs === 1_200_000);
   assert.equal(calls, 1);
@@ -216,12 +215,12 @@ test("transport carries provider capacity and Retry-After from an unsent retry",
 
 test("PT-3: a prefix-binding drop — our history changed under a block — is recorded on the result", async () => {
   const provider = fakeProvider(
-    { [SONNET]: [[thinking("s1"), fetchOf("u1", "https://a.gov/meetings")], [thinking("s2"), finish("f")]] },
+    { [HAIKU]: [[thinking("s1"), fetchOf("u1", "https://a.gov/meetings")], [thinking("s2"), finish("f")]] },
     (_model, turn) => (turn === 2 ? [{ type: "thinking_dropped", path: "messages.1.content.0", reason: "prefix_binding_mismatch" }] : []),
   );
   const { outcome, result } = await runScout(provider.transport);
   assert.equal(outcome.kind, "DISPOSED");
-  assert.deepEqual(result.inputTransformations, [{ turn: 2, model: SONNET, type: "thinking_dropped", path: "messages.1.content.0", reason: "prefix_binding_mismatch" }]);
+  assert.deepEqual(result.inputTransformations, [{ turn: 2, model: HAIKU, type: "thinking_dropped", path: "messages.1.content.0", reason: "prefix_binding_mismatch" }]);
 });
 
 
@@ -229,10 +228,10 @@ test("PT-4: the transport sends the thinking-binding beta header exactly when th
   const seen: { headers: Record<string, string>; body: Record<string, unknown> }[] = [];
   const fakeFetch = (async (_url: string, init: RequestInit) => {
     seen.push({ headers: init.headers as Record<string, string>, body: JSON.parse(String(init.body)) as Record<string, unknown> });
-    return new Response(JSON.stringify({ model: SONNET, stop_reason: "end_turn", content: [], usage: {}, input_transformations: [] }), { status: 200 });
+    return new Response(JSON.stringify({ model: HAIKU, stop_reason: "end_turn", content: [], usage: {}, input_transformations: [] }), { status: 200 });
   }) as typeof fetch;
   const transport = anthropicTransport("test-key-not-real", fakeFetch, "https://example.invalid/v1/messages");
-  const base: ModelRequest = { model: SONNET, max_tokens: 1, system: [{ type: "text", text: "s" }], tools: [], messages: [{ role: "user", content: "x" }] };
+  const base: ModelRequest = { model: HAIKU, max_tokens: 1, system: [{ type: "text", text: "s" }], tools: [], messages: [{ role: "user", content: "x" }] };
 
   await transport({ ...base, thinking: SCOUT_THINKING });
   assert.equal(seen[0].headers["anthropic-beta"], THINKING_BINDING_BETA, "block_binding without this header is HTTP 400");

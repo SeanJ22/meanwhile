@@ -1,0 +1,223 @@
+{
+  "state": "MO",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.mo.gov/elections/calendar/",
+      "finalUrl": "https://www.sos.mo.gov/elections/calendar/",
+      "publisher": "Missouri Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+      "finalUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+      "publisher": "Missouri Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/howtovote",
+      "finalUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/howtovote",
+      "publisher": "Missouri Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.sos.mo.gov/elections/calendar/",
+          "finalUrl": "https://www.sos.mo.gov/elections/calendar/",
+          "publisher": "Missouri Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T20:00:48.818633+00:00",
+          "httpStatus": 200,
+          "rawHash": "491caddd1800ac16dc19e5a1464410656d659b2f9433643e3e9fa26afa9f84bb",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+          "finalUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+          "publisher": "Missouri Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T20:00:48.544731+00:00",
+          "httpStatus": 200,
+          "rawHash": "7b0314cc56ad493c6c9c016498c403b1e1d21577f77cb03cdc0a9ac425d21d63",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/howtovote",
+          "finalUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/howtovote",
+          "publisher": "Missouri Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T20:00:48.823772+00:00",
+          "httpStatus": 200,
+          "rawHash": "d5fb54b04f5186544784cc1d6874ad85ff595e23d9d2f751c7bddb85c283fec8",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0b97ac7f0564e6d1a364ed1e0e2a8fbe",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "ballot_lookup",
+            "text": "https://www.sos.mo.gov/elections/goVoteMissouri/localelectionauthority",
+            "quote": "Find My Local Election Authority",
+            "dates": [],
+            "url": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+            "navigationUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/localelectionauthority",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.544731+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:559a3ca90ab1216a6117c9a474385d7c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Mail in or faxed absentee ballot requests must be received by the election authority no later than the 5:00 p.m. on the second Wednesday prior to any election.",
+            "quote": "Mail in or faxed absentee ballot requests must be received by the election authority no later than the 5:00 p.m. on the second Wednesday prior to any election.",
+            "dates": [
+              "2026-10-21"
+            ],
+            "url": "https://www.sos.mo.gov/elections/goVoteMissouri/howtovote",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.823772+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:6abf28209d39c8b510bc17dde1e2e8c6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "polling_lookup",
+            "text": "https://s1.sos.mo.gov/elections/VoterLookup/",
+            "quote": "Find Your Polling Location",
+            "dates": [],
+            "url": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+            "navigationUrl": "https://s1.sos.mo.gov/elections/VoterLookup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.544731+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:8b52cd544158deb0067319f0827be2dc",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "election_office",
+            "text": "Missouri Secretary of State",
+            "quote": "Missouri Secretary of State",
+            "dates": [],
+            "url": "https://www.sos.mo.gov/elections/calendar/",
+            "navigationUrl": "https://www.sos.mo.gov/elections/",
+            "electionDate": "2026-11-03",
+            "phone": "(573) 751-2301",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.818633+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:a11b41969d058b66e5c839f62e98c0e7",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "registration_lookup",
+            "text": "https://s1.sos.mo.gov/elections/VoterLookup/",
+            "quote": "Check Your Voter Registration",
+            "dates": [],
+            "url": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+            "navigationUrl": "https://s1.sos.mo.gov/elections/VoterLookup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.544731+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ac0db515a8aa388042bb0eee30e8552c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "registration_deadline",
+            "text": "October 7, 2026",
+            "quote": "November 3, 2026\nGeneral Election\nOctober 7, 2026",
+            "dates": [
+              "2026-10-07"
+            ],
+            "url": "https://www.sos.mo.gov/elections/calendar/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.818633+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:cb32d19ef3c59075ab0f7a9e2adc5ac5",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "early_voting",
+            "text": "From the second Tuesday before an election to the day before the election, you may vote a no-excuse absentee ballot in person at a location designated by your local election authority.",
+            "quote": "From the second Tuesday before an election to the day before the election, you may vote a no-excuse absentee ballot in person at a location designated by your local election authority.\nVoters can vote by absentee in the office of the local election authority until 5:00 p.m. the night before the election.",
+            "dates": [
+              "2026-10-20",
+              "2026-11-02"
+            ],
+            "url": "https://www.sos.mo.gov/elections/goVoteMissouri/howtovote",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.823772+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:fc9b2b83f7b80491e39a912cf8bebf25",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MO",
+            "divisionId": "ocd-division/country:us/state:mo",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.mo.gov/elections/goVoteMissouri/register",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://www.sos.mo.gov/elections/goVoteMissouri/",
+            "navigationUrl": "https://www.sos.mo.gov/elections/goVoteMissouri/register",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:00:48.544731+00:00",
+            "sourceOrg": "Missouri Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "state": "HI",
+  "kind": "production-roster-source-url-update-explanation",
+  "productionWrites": 0,
+  "heldCycles": 43,
+  "sameAmounts": 43,
+  "sameFinancialSourceBindings": 43,
+  "samePersonIdNameSeatAndOffice": 43,
+  "changedPersonFields": {
+    "sourceUrl": 43
+  },
+  "priorRosterCommit": "4ac1337916827666f513f1084ac8c024e044d740",
+  "currentProductionRosterCommit": "5aad164685d03e48fdc221390817f27d2d7516b7",
+  "explanation": "Each of 43 held cycles refreshes only person.sourceUrl to the exact newer Open States roster revision already used by current production people. Person id, name, seat, office, all amounts, and financial source bindings stay equal. The resulting live snapshot is stable in tomorrow's replay."
+}

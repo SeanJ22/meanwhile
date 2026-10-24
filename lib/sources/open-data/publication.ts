@@ -27,21 +27,33 @@ export interface OpenDataCapture {
   /** Full bytes are in the shared immutable vault. This row list is an exact excerpt. */
   readonly archive?: {readonly sha256:string;readonly member:string;readonly publishedAt:string|null};
 }
+/** Shared by the registered candidate and immutable slices, without building unused candidate digests. */
+export function openDataRowsBound(rows:readonly OpenDataFact[],captures:readonly OpenDataCapture[]):boolean {
+  const sourceObjects=new Set(captures.flatMap(capture=>capture.sourceRows));
+  const digests=new WeakMap<object,string>();
+  const sourceHash=(row:object)=>{let value=digests.get(row);if(!value){value=hash(row);digests.set(row,value);}return value;};
+  let sourceRows:Set<string>|undefined;
+  return rows.every(row=>{
+    if(!sourceObjects.has(row.sourceRow)) {
+      sourceRows??=new Set([...sourceObjects].map(sourceHash));
+      if(!sourceRows.has(sourceHash(row.sourceRow)))return false;
+    }
+    if(openDataFactIssue(row))return false;
+    const parsed=row.kind==="EPA_FACILITY"?normalizeEcho(row.sourceRow,row.capturedAt,row.publishedAt):normalizeSocrata(row.sourceRow,row.capturedAt);
+    const fieldsEqual=JSON.stringify(parsed.fields)===JSON.stringify(row.fields)||hash(parsed.fields)===hash(row.fields);
+    return fieldsEqual && parsed.title===row.title && parsed.description===row.description && parsed.sourceUrl===row.sourceUrl &&
+      parsed.publishedAt===row.publishedAt && parsed.updatedAt===row.updatedAt && parsed.sourceOrg===row.sourceOrg;
+  })&&new Set(rows.map(row=>row.id)).size===rows.length;
+}
 export function openDataCandidate(input:{source:OpenDataSource;partition?:string;rows:readonly OpenDataFact[];
-  reports?:readonly OpenDataReport[];partitions?:readonly OpenDataPartitionRef[];captures:readonly OpenDataCapture[];now:string}):RoutineCandidate {
+  reports?:readonly OpenDataReport[];partitions?:readonly OpenDataPartitionRef[];captures:readonly OpenDataCapture[];excludedFacts?:RoutineCandidate["excludedFacts"];now:string}):RoutineCandidate {
   const scope=openDataScope(input.source,input.partition), reports=input.reports ?? openDataReports(input.rows);
   const records=input.partitions?reports.reduce((n,r)=>n+r.loaded,0):input.rows.length;
   const readModel:OpenDataProjection={kind:"open-data",sourceId:input.source,records:input.rows,reports,...(input.partitions?{partitions:input.partitions}: {})};
   const normalizedPayload={captures:input.captures};
   const rawHash=hash(input.captures.map(c=>c.rawHash)), normalizedHash=hash(readModel);
   const last=input.captures.at(-1);
-  const sourceRows=new Set(input.captures.flatMap(c=>c.sourceRows.map(hash)));
-  const bound=input.rows.every(row=>{
-    if(!sourceRows.has(hash(row.sourceRow)) || openDataFactIssue(row))return false;
-    const parsed=row.kind==="EPA_FACILITY"?normalizeEcho(row.sourceRow,row.capturedAt,row.publishedAt):normalizeSocrata(row.sourceRow,row.capturedAt);
-    return hash(parsed.fields)===hash(row.fields) && parsed.title===row.title && parsed.description===row.description && parsed.sourceUrl===row.sourceUrl &&
-      parsed.publishedAt===row.publishedAt && parsed.updatedAt===row.updatedAt && parsed.sourceOrg===row.sourceOrg;
-  });
+  const bound=openDataRowsBound(input.rows,input.captures);
   return {id:`cv-${hash([input.source,scope,normalizedHash,rawHash,input.now]).slice(0,32)}`,sourceId:input.source,recordClass:"CURATED_READER_RECORD",scope,
     retrieval:{succeeded:!!last,requestedUrl:last?.url ?? "",finalUrl:last?.url ?? null,httpStatus:last?200:null,retrievedAt:last?.retrievedAt ?? input.now,rawHash,...(last?.sourceCheck?{sourceCheck:last.sourceCheck}:{})},
     normalization:{succeeded:bound,parserVersion:OPEN_DATA_PARSER,schemaVersion:OPEN_DATA_PARSER,normalizedHash,normalizedPayloadHash:hash(normalizedPayload),
@@ -53,7 +65,7 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
     horizon:{kind:"OPEN_FACT_SET",query:scope,returnedRecords:records,declaredTotal:null,paginationComplete:false,claimsComplete:false},
     absence:{claimsAbsence:false,basis:"NONE",exactSubject:null,exactHorizon:null},sourceProjectionEvidence:sourceProjectionEvidence(input.source,"CURATED_READER_RECORD",scope),
     dependentChecks:[{consumer:"Government and place cards and Ask",passed:bound && new Set(input.rows.map(r=>r.id)).size===input.rows.length,detail:"Every projected row binds an exact saved source row; unjoined rows remain held."}],
-    normalizedPayload,readModel};
+    excludedFacts:input.excludedFacts,normalizedPayload,readModel};
 }
 export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore;replace?:boolean}) {
   if(input.partition && input.partition!=="national")throw Error("SRC-SO publishes one canonical national manifest per source.");

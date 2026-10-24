@@ -41,7 +41,11 @@ export function cleanVotingCapture<T extends Capture>(body: T, at: string): Clea
 /** The words a reader of a saved document sees: its PDF text, workbook cells or archive members. */
 async function documentText(bytes: Uint8Array, url: string): Promise<string> {
   const { decodeVotingBytes, votingArchiveMembers, xlsxVotingTables } = await import("./voting-source-tables.ts");
-  if (bytes[0] === 0x25) return (await (await import("./voting-source-extraction.ts")).votingPdfText(bytes, url)).text;
+  // Deployed routes save door copies through here; the runner's OCR fallback stays out of their bundles.
+  if (bytes[0] === 0x25) {
+    const { extractTextLayer } = await import("../extract/text-layer.ts");
+    return (await extractTextLayer(new Uint8Array(bytes), url)).items.map(page => page.text).join("\n");
+  }
   const members = votingArchiveMembers(bytes);
   if (members.has("xl/workbook.xml")) {
     return xlsxVotingTables(bytes).flatMap(table => [table.headers.join(" "), ...table.rows.map(row => row.join(" "))]).join("\n");

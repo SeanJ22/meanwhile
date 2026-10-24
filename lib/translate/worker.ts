@@ -223,8 +223,11 @@ export async function translateMeasure(input: {
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
   const playbook = await loadTranslationPlaybook(input.repos);
   const source = translationPassages(evidence.text);
+  // Unnumbered reader parts remain in the held ballot with their original
+  // citation. They cannot be rewritten as newly numbered official sections.
+  const existingParts = subject.prior?.parts.filter(part => part.number !== null) ?? [];
   const modelSubject = { contestId: subject.contestId, title: subject.title, ocdId: subject.ocdId, state: subject.state,
-    sourceReference: source.reference(subject.sourceQuote), existingParts: subject.prior?.parts ?? [] };
+    sourceReference: source.reference(subject.sourceQuote), existingParts };
   const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId, subject.ocdId);
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: "TRANSLATOR", priority: input.batchPriority },
@@ -262,8 +265,8 @@ export async function translateMeasure(input: {
       return { field: sentence.field, text: sentence.text, quote };
     });
     if (measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new TranslationCheckFailed("Translation part kind is absent from the current kinds setting.");
-    if (subject.prior?.parts.some(part => !measure.parts.some(proposed => proposed.id === part.id &&
-        (part.number === null || proposed.number === part.number)))) throw new TranslationCheckFailed("Translation would lose or reassign an existing measure part's reaction identity.");
+    if (existingParts.some(part => !measure.parts.some(proposed => proposed.id === part.id &&
+        proposed.number === part.number))) throw new TranslationCheckFailed("Translation would lose or reassign an existing measure part's reaction identity.");
     const draft: Omit<MeasureTranslation, "checked"> = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
       ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
       sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,

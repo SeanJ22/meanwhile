@@ -10,7 +10,9 @@ import { translateMeasure, translationPlaybook } from "../lib/translate/worker.t
 import { translationHash, translationRecordIssue } from "../lib/translate/records.ts";
 import { publishTranslation, readTranslations, withMeasureTranslations } from "../lib/translate/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { measureRecordIssue, type MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { provisionsForContest, getProvisionTargetIds } from "../lib/ballot/measure-provisions.ts";
+import { MODELS } from "../lib/models.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { runMeasureTranslation } from "../lib/translate/runtime.ts";
 
@@ -167,14 +169,28 @@ test("a checked explainer attaches to a measure with no hand-made record and ret
 });
 
 test("checked summary and vote meanings preserve legacy reaction parts and ignore an older translation", async () => {
-  const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
-    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }) });
   const parts = [{ id: `${measure.contestId}#funding`, number: null, kind: "FUNDING", label: "Funding", what: measure.whatItDoes }];
-  const prior = { ...measure, noMeans: null, parts };
-  const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE" }], measureRecords: [prior] } as unknown as BallotSet;
+  const prior = { ...measure, noMeans: null, parts, sourceUrl: "https://example.gov/original-analysis", sourceHash: "b".repeat(64), writtenAt: "2026-10-01" };
+  const requests: ModelRequest[] = [];
+  const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject: { ...subject, prior }, now,
+    transportFor: () => async request => { requests.push(request); return response(request,
+      request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }); } });
+  assert.deepEqual(requests.map(request => request.model), [MODELS.haiku.model, MODELS.sonnet.model]);
+  const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE", measureTextUrl: evidence.canonicalUrl }], measureRecords: [prior] } as unknown as BallotSet;
   const translated = withMeasureTranslations(ballot, [record]);
   assert.equal(translated.measureRecords![0].noMeans, measure.noMeans);
   assert.deepEqual(translated.measureRecords![0].parts, parts);
+  assert.deepEqual(translated.measureRecords![0].partSources?.[parts[0].id], {
+    sourceUrl: prior.sourceUrl, sourceHash: prior.sourceHash, writtenAt: prior.writtenAt,
+  });
+  assert.equal(measureRecordIssue(translated.measureRecords![0]), null);
+  assert.deepEqual(record.measure.parts, [], "the new checker confirms the new summary; it does not pretend the old parts are newly numbered");
+  assert.ok(getProvisionTargetIds(translated.measureRecords!).has(parts[0].id));
+  const provision = provisionsForContest(subject.contestId, translated.measureRecords!)[0];
+  assert.deepEqual([provision.id, provision.label, provision.what, provision.citesUrl, provision.writtenAt],
+    [parts[0].id, parts[0].label, parts[0].what, prior.sourceUrl, prior.writtenAt]);
+  assert.deepEqual(provisionsForContest(subject.contestId, withMeasureTranslations(translated, [record]).measureRecords!), [provision],
+    "reading the composition again cannot move an old part's source to the new summary's source");
   const newer = { ...ballot, measureRecords: [{ ...prior, sourceHash: "a".repeat(64), writtenAt: "2026-10-06T18:00:00Z" }] };
   assert.equal(withMeasureTranslations(newer, [record]), newer);
 });

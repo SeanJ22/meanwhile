@@ -4306,5 +4306,17 @@
     "tested_sha": "dfb076b40",
     "gates": "57 reader-database tests; CI on PR #808",
     "at": "2026-10-24T16:10:35Z"
+  },
+  {
+    "lane": "river-pool",
+    "steps": [
+      "RV-POOL"
+    ],
+    "ready_sha": "f2537568e",
+    "merge_sha": "c125bfa59",
+    "river_sha": "d143c070c",
+    "tested_sha": "c125bfa59",
+    "gates": "pass (tsc/build/build:standalone rerun with CI's 4 GB heap)",
+    "at": "2026-10-24T18:24:19Z"
   }
 ]

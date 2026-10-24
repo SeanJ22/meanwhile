@@ -33,7 +33,17 @@ try {
   const clock = { lastAttemptedAt: dataset.builtAt, lastSucceededAt: dataset.builtAt, lastSucceededObservedAt: dataset.builtAt, lastSucceededParserVersion: task.parserVersion };
   const due = Date.parse(dataset.builtAt) + task.cadenceMs;
   if (routineTaskDue(task, clock, due - 1) || !routineTaskDue(task, clock, due)) throw new Error("Next refresh is not due on schedule");
+  const peakRssBytes = process.resourceUsage().maxRSS * 1024;
+  const [before] = await copy.query("SELECT count(*)::int n FROM zip_place");
+  await loadStatePlaceMap(copy, map);
+  const [after] = await copy.query("SELECT count(*)::int n FROM zip_place");
+  if (before.n !== after.n) throw new Error("The next import changes the membership count");
+  const nextDate = new Date(due).toISOString();
+  const next = censusGeographyCandidate({ ...dataset, builtAt: nextDate }, `US-${state}:place-map`);
+  const repeated = await processRegisteredRoutineCandidate(store, id, next, nextDate);
+  if (!repeated.promoted) throw new Error(`Next refresh publication ${repeated.candidate.state}`);
   const proof = { state, elapsedMs: Date.now() - started, peakRssBytes: process.resourceUsage().maxRSS * 1024,
+    firstRunPeakRssBytes: peakRssBytes, nextPublication: repeated.candidate.state, nextImportPreserved: true,
     places: map.places.length, zipEdges: map.zipEdges.length, zctaEdges: map.zctaEdges.length,
     publication: published.candidate.state, nextDueAt: new Date(due).toISOString(), nextRunDue: true,
     databaseWrites: "local PostgreSQL copy only" };

@@ -83,7 +83,7 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
     <p className={s.meta}>{data.setting.changedAt ? `Changed ${mst(data.setting.changedAt)}` : "No changes yet"}</p>
     {previous && <details><summary>Previous list ({size(previous).toLocaleString("en-US")} items)</summary>
       <ul>{previous.base.map((row, index) => <li key={index}>{kindWords[row.kind] ?? "Record"}: {row.label}</li>)}
-        {Object.entries(previous.states).flatMap(([state, items]) => items.map((row, index) => <li key={`${state}:${index}`}>{US_STATES.find(s => s.code.toUpperCase() === state)?.name}: {row.label}</li>))}</ul>
+        {Object.entries(previous.states).flatMap(([state, items]) => items.map((row, index) => <li key={`${state}:${index}`}>{US_STATES.find(entry => entry.code.toUpperCase() === state)?.name}: {row.label}</li>))}</ul>
     </details>}
   </fieldset>;
 }

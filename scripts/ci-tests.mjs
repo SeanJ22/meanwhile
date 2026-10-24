@@ -9,7 +9,9 @@ import { SCHEDULING_HINTS } from "./ci-test-scheduling-hints.mjs";
 import { validateTimings } from "./ci-test-timing-reporter.mjs";
 
 // Every test process starts with the fixture meeting doors installed, as every production process installs the registry's.
-const FLAGS = ["--test", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--import", "./tests/helpers/install-fixture-doors.ts"];
+// Node 24's V8 can double-free collected PGlite import wrappers (nodejs/node#66366).
+// Retain compiled Wasm code until each test process exits; assertions and file isolation stay intact.
+const FLAGS = ["--test", "--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--import", "./tests/helpers/install-fixture-doors.ts", "--no-wasm-code-gc"];
 const PATTERNS = ["tests/**/*.test.ts", "tests/**/*.test.tsx", "lib/sources/platform-adapters/**/*.test.ts", "lib/sources/platform-adapters/**/*.test.tsx"];
 const COMMAND = "node scripts/ci-tests.mjs";
 const REPORTER = new URL("./ci-test-timing-reporter.mjs", import.meta.url);

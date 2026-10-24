@@ -21,17 +21,21 @@ export async function candidatePortraitFromOwnSite(page: CandidateSitePage, now:
   const { canonicalUrl, text } = page.capture.evidence;
   const name = `${page.identity.givenName} ${page.identity.familyName}`.replace(/\s+/g, " ").trim();
   const personId = page.identity.candidacyId;
-  const image = pickPortraits(name, imagesIn(text, canonicalUrl))[0];
-  if (!image) return { gap: "PORTRAIT_NOT_ON_OWN_PAGE" };
-  const photo = await storeVerifiedPortrait(personId, {
-    subject: { personId, name, profileUrls: [canonicalUrl] },
-    imageUrl: image.src,
-    captures: [page.capture],
-    campaign: { url: canonicalUrl, identity: page.identity, cycleSource: page.cycleSource },
-  }, now, io, "candidates");
-  if (photo.verification?.basis !== "OWN_PAGE") return { gap: "PORTRAIT_NOT_FROM_OWN_PAGE" };
-  return { patch: { personId, photoUrl: photo.url, photoSource: `Portrait from the campaign's own site, ${new URL(canonicalUrl).hostname.replace(/^www\./, "")}`,
-    photoVerification: photo.verification } };
+  const images = pickPortraits(name, imagesIn(text, canonicalUrl));
+  if (!images.length) return { gap: "PORTRAIT_NOT_ON_OWN_PAGE" };
+  let failure: unknown;
+  for (const image of images) try {
+    const photo = await storeVerifiedPortrait(personId, {
+      subject: { personId, name, profileUrls: [canonicalUrl] },
+      imageUrl: image.src,
+      captures: [page.capture],
+      campaign: { url: canonicalUrl, identity: page.identity, cycleSource: page.cycleSource },
+    }, now, io, "candidates");
+    if (photo.verification?.basis !== "OWN_PAGE") return { gap: "PORTRAIT_NOT_FROM_OWN_PAGE" };
+    return { patch: { personId, photoUrl: photo.url, photoSource: `Portrait from the campaign's own site, ${new URL(canonicalUrl).hostname.replace(/^www\./, "")}`,
+      photoVerification: photo.verification } };
+  } catch (error) { failure = error; }
+  throw failure;
 }
 
 export interface CommonsPortraitRuntime {

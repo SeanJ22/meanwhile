@@ -60,6 +60,20 @@ test("an image that does not carry the candidate's name is never offered, and co
   assert.equal(out.cards.cards.k.photoUrl, legacy.photoUrl);
 });
 
+test("a campaign's smaller published rendition is tried after its original cannot decode", async () => {
+  const {io,stored}=runtime(),requested:string[]=[];
+  const got=await candidatePortraitFromOwnSite(page(`<img alt="Jane Doe" src="${IMAGE}" srcset="${IMAGE} 5000w, ${IMAGE}?resize=499,600 499w">`),NOW,
+    {...io,read:async url=>{
+      requested.push(url);
+      if(url === IMAGE)throw Error("PORTRAIT_TOO_LARGE");
+      return PNG();
+    }});
+  assert.ok("patch" in got);
+  assert.deepEqual(requested,[IMAGE,`${IMAGE}?resize=499,600`]);
+  assert.equal(got.patch.photoVerification?.imageUrl,`${IMAGE}?resize=499,600`);
+  assert.equal(stored.size,1);
+});
+
 const COMMONS_IMAGE = "https://upload.wikimedia.org/wikipedia/commons/a/ab/Jane_Doe.jpg";
 const commonsSubject: CampaignSiteIdentity = { candidacyId: "oh:2026:state-oh-cd-3:us-house:doe-jane",
   givenName: "Jane", familyName: "Doe", officeTitle: "U.S. Representative", ocdId: "ocd-division/country:us/state:oh/cd:3", stateCode: "OH", cycle: 2026 };

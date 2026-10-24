@@ -7,7 +7,7 @@ import { parse as parseYaml } from "yaml";
 import { pageWords, linkingPageFrom, pageLinksTo } from "../control-plane/promotion/section3.ts";
 import { captureProblem } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
-import type { CampaignSiteIdentity, CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
+import { campaignSiteHostRefusal, type CampaignSiteIdentity, type CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 
 /** A portrait can cite either a worker artifact or an immutable known-source vault object. */
@@ -68,13 +68,14 @@ function namesImage(subject: PortraitSubject, imageUrl: string, capture: Portrai
 
 function ownPortraitPage(name: string, input: PortraitSources, capture: PortraitCapture, now: string): boolean {
   const url = capture.evidence.canonicalUrl;
+  const social = campaignSiteHostRefusal(url)?.code === "SOCIAL_PLATFORM";
   const linked = linkingPageFrom(url, input.captures.filter(c => !captureProblem(c)).map(c => c.evidence));
   if (isOfficialSource(url, linked)) {
     // A government link to one account does not make every account on a
     // social platform official. The exact saved account must be linked.
-    const social = /(?:facebook|instagram|twitter|x|linkedin|youtube)\.com$/i.test(new URL(url).hostname);
     return !social || Boolean(linked && pageLinksTo({ url: linked.url, text: linked.html, retrievedAt: now }, url));
   }
+  if (social) return false;
   const identity = input.campaign;
   return Boolean(identity && identity.url === url && input.subject.profileUrls.includes(url) &&
     sameName(`${identity.identity.givenName} ${identity.identity.familyName}`, name) && pageWords(capture.evidence.text).includes(pageWords(name)));

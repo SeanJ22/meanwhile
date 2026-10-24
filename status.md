@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 95 LIVE (RN-02 on the BL-21-FX revert; /api/build 16eead35c from 10:20 PM EDT; runner on it from 02:18 UTC). CI needed one fix: the test job now installs Poppler (21ae9bcfb), which RN-02 reads agenda PDFs with and the runner already has. No candidate; waiting for READYs
+build_state: RELEASE 95 LIVE (RN-02 on the BL-21-FX revert; 16eead35c from 10:20 PM EDT) and FAILING ITS LIVE CHECK: reader repair failures 1,250 to 1,316 per pass (RN-02 returned); readers unharmed in the sample (boards up in IL, MN, WI, AZ; /ballot dates kept). No candidate; waiting for READYs
 worker: claude-river
 provider: Claude
 run_id: session_012UDbgz3sjA8QN2m7CY78QS
@@ -15,6 +15,13 @@ Items 1 (Vice President) and 2 (planning round) are answered above and shipped o
 ## Open data issue (from RN-02, Oct 23)
 
 NJ fresh entity import fails with PostgreSQL 21000 on a duplicate division id: ocd-division/country:us/state:nj/school_district:union_township_school_district, elementary-school GEOID 3416440 vs unified-school GEOID 3416500, both named "Union Township School District". Registration file identical on release 88 and release 90. Owner: the registration identity lane (to disambiguate the two districts). Not an observed live runner failure yet.
+
+## Release 95 live check (RN-02), 11:50 PM EDT: FAILED, returned
+- Supervisor passes on 16eead35c: 1300 (03:05 UTC) and 1316 (03:30 UTC) failures, READER_READBACK_REPAIR_FAILED=1250 ("PERMANENT_RUNTIME_AUTHORITY_REFUSED: candidate does not identify exactly one registered production contract", meetings-outcomes readbacks), READER_REPAIR_CHILD_EXIT_NONZERO=65 (store.appendEvidence failed). Release 94 passes had 11 to 56. RN-02 returned (returns/rn-02.md).
+- Meetings by ZIP unchanged from the 10:25 PM baseline (Tucson 241/93 upcoming, Concord 9, 0 in the other 16); San Diego 92101 and Galveston 77550 still 0 (RN-02's named meetings not live). Boards rose: IL 60602 0 to 109, MN 55401 0 to 15, WI 53703 253 to 419, AZ 85701 136 to 139.
+- Release 92 data still not delivered (Tucson 345, 0 sites in 10 states, Portland 0 Metro boards). The scheduler reports overdue voting-sites and registration tasks as "not due" (voting-sites:AZ last attempted 00:11 UTC, 1-hour retry, "not due" at 03:35 UTC; registration-or last attempted Oct 10); added to returns/rn-01.md.
+- /ballot dates kept (85003 12 deadlines).
+- Not reverted: no reader-visible loss in the sample; the failures are runner work that was already failing at a lower rate. Rulings §160 would revert failing new code; that call is Sean's (a revert of a shipped release needs his word, as for release 93).
 
 ## Release 95 live check (RN-02), first reading Oct 23, 10:20 to 10:30 PM EDT
 - /ballot kept the restored dates: 85003 "The next election: November 3rd, 2026", 12 deadlines.

@@ -3,6 +3,7 @@
 Owner: RB-A2. Branch: stream/rb-a2, based on river 21ae9bcfb.
 
 Merged integrated River 59b7c5577 after its integration record listed RB-A1 5bde46615 and the River history contained that commit. The merge is e4cc78826.
+River's production reader-pool hotfix dfb076b40 is also merged, in 81b5eb867. Final verification runs against that fixed River base.
 
 Release responsibilities:
 

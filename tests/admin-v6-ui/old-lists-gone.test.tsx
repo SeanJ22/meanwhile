@@ -46,9 +46,9 @@ test("the Fix list is not a page of its own: its items are on the Queue and disp
 });
 
 
-test("measures supplied work rows keep their view and detail link", () => {
+test("Work keeps only its current hourly view when a saved snapshot contains legacy rows", () => {
   const snapshot = {...waiting,workRows:{phase:"live",data:{rows:[{id:"work-one",stage:"waiting",placeKey:"us",title:"A saved work row",age:"One minute",at:"2026-10-06T04:00:00Z"}],totals:[{stage:"waiting",total:1}]},asOf:ref.observedAt,revision:"saved-work",missingParts:[],attempts:0} as SectionState};
   const html = renderToStaticMarkup(h(CommandCenter,{data:buildLiveBundle(snapshot,ref,workerStatusFromPulse(null)),mode:"live",executor:liveExecutor({capabilities:()=>null}),scopeKey:"us",onScopeChange:()=>{},connection:"live",lastGoodAt:null,recovered:false,access:owner,initialView:"work"}));
-  assert.match(html,/All work rows/);
-  assert.match(html,/A saved work row/);
+  assert.match(html,/Work by hour/);
+  assert.doesNotMatch(html,/All work rows|A saved work row/);
 });

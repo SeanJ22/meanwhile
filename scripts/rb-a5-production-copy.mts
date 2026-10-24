@@ -144,6 +144,13 @@ try {
     assert.ok(await list.refuse(refused, "Source does not confirm this value"));
     assert.equal(await list.refuse(refused, "Repeated result"), false);
     assert.equal((await query("SELECT count(*)::int n FROM work_row WHERE id=$1", [`detect-${refused.id}`]))[0]!.n, 1);
+    const [boxReports] = await query(`WITH reports AS (
+      SELECT note->>'boxId' id FROM work_row w CROSS JOIN LATERAL jsonb_array_elements(w.reports) incoming(note) WHERE note ? 'boxId'
+    ) SELECT (SELECT count(*)::int FROM rb_a5_box_copy) original_rows,count(*)::int notes,count(DISTINCT id)::int distinct_box_ids,
+      (SELECT count(*)::int FROM rb_a5_box_copy b WHERE NOT EXISTS(SELECT 1 FROM reports r WHERE r.id=b.id)) missing FROM reports`);
+    assert.equal(boxReports!.notes, boxReports!.original_rows);
+    assert.equal(boxReports!.distinct_box_ids, boxReports!.original_rows);
+    assert.equal(boxReports!.missing, 0);
     const direct = await query(`SELECT lower(state) state,
       count(*)::int incoming, coalesce(sum(cardinality(done_times)),0)::int done, coalesce(sum(cardinality(refused_times)),0)::int refused
       FROM work_row GROUP BY 1 ORDER BY 1`);
@@ -162,6 +169,7 @@ try {
     const report = { at: new Date().toISOString(), snapshot: JSON.parse(await readFile(".scratch/rb-a5/snapshot.json", "utf8")),
       claimsMs: latency, maxClaimMs: Math.max(...latency), concurrentWorkers: 200, duplicateClaims: 0,
       killedWorkerRecovered: dead.id, killedSignal: signal, scheduledRuns, countsEqual: true, countsPerHourEqual: true,
+      boxReports,
       countsByState: [...REGISTRY_STATES.map(state => state.toLowerCase()), "us"].sort().map(state => counted.find(row => row.state === state) ?? { state, incoming: 0, done: 0, refused: 0 }),
       sourceCountsByState: await query("SELECT cp_control_state(value) state,count(*)::int n FROM rb_a5_box_copy GROUP BY 1 ORDER BY 1"),
       plan: (await query("EXPLAIN (FORMAT JSON) SELECT id FROM work_row WHERE kind='read' AND status='ready' AND not_before<=now() ORDER BY priority DESC,not_before,id LIMIT 1"))[0] };

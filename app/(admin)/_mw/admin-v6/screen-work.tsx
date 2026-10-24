@@ -6,6 +6,7 @@ import { useV6 } from "./context.tsx";
 import { count, type WorkStage } from "./model.ts";
 import { COUNTRY_KEY, isWithin } from "./places.ts";
 import { cx, Card, Empty, useListView } from "./ui.tsx";
+import { WorkCounts } from "./work-counts.tsx";
 import s from "./v6.module.css";
 
 const STAGE_WORDS: Readonly<Record<WorkStage, string>> = { waiting: "Waiting to run", stuck: "Stuck", retrying: "Retrying on its own", done: "Done last round", retired: "Retired" };
@@ -18,6 +19,7 @@ export function WorkScreen() {
         <p className={s.eyebrow}>{v.place.name}</p>
         <h1 className={s.h1}>Work</h1>
       </header>
+      <WorkCounts />
       <Rows />
     </>
   );

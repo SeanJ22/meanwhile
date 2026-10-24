@@ -4,6 +4,7 @@ import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../design/copy-settings.ts";
 import "../../facts/clocks.ts";
+import "../../coverage/owed-table.ts";
 import { requestRoutineDue } from "../../civic-data/routine-due-request.ts";
 import { playbookUpdateAction } from "./playbook-action.ts";
 import { auditFlagAction, auditFlagRaiseAction } from "./audit-flag-action.ts";

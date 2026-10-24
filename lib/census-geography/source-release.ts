@@ -27,10 +27,14 @@ export interface CensusSourceOptions {
   readonly signal?: AbortSignal;
   /** The same evidence vault and release lock used by other routine sources. */
   readonly cache?: Pick<KnownReleaseOptions, "store" | "locks">;
+  /** Shared only within one acquisition pass; distinct parsers reuse the exact checked bytes. */
+  readonly releases?: Map<string, Promise<KnownRelease>>;
 }
 
 export function censusSourceRelease(url: string, options: CensusSourceOptions, validate?: KnownReleaseOptions["validate"]): Promise<KnownRelease> {
-  return acquireKnownRelease({
+  const held = options.releases?.get(url);
+  if (held) return held.then(async release => { await validate?.(release.bytes, release); return release; });
+  const pending = acquireKnownRelease({
     ...options.cache,
     sourceId: "census-geography-relationships",
     releaseId: url,
@@ -50,6 +54,8 @@ export function censusSourceRelease(url: string, options: CensusSourceOptions, v
       }
     } : undefined,
   });
+  options.releases?.set(url, pending);
+  return pending;
 }
 
 export function sourceValidator(release: KnownRelease): NonNullable<Provenance["sourceValidators"]>[number] {

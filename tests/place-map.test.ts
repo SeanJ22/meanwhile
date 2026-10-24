@@ -10,6 +10,13 @@ import type { Query } from "../lib/facts/publish.ts";
 import type { RegistrationReference } from "../lib/registration/reference.ts";
 import { identitySourceTables, identityEventTables, readerIdentityMigration } from "./helpers/reader-identity-db.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue } from "../lib/civic-data/runner.ts";
+import { geographicSpecialDistricts } from "../lib/place-map/special-districts.ts";
+import { currentGrfPlaceEdges } from "../lib/place-map/grf-edges.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { memoryLockManager } from "../lib/control-plane/repository/memory.ts";
+import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 const date = "2026-10-24T08:00:00.000Z";
 const state = "ocd-division/country:us/state:az", county = `${state}/county:pima`;
@@ -17,13 +24,7 @@ const square = (west: number, east: number): GeoFeature["geometry"] => ({ type: 
 
 test("20 real points within two miles of state lines resolve to their own state polygons", () => {
   const features = JSON.parse(readFileSync("public/geo/state-outlines.geojson", "utf8")).features as GeoFeature[];
-  const points: [number, number, string][] = [
-    [-109.06, 34, "az"], [-109.03, 34, "nm"], [-109.06, 39, "ut"], [-109.03, 39, "co"],
-    [-102.07, 39, "co"], [-102.03, 39, "ks"], [-104.07, 44, "wy"], [-104.03, 44, "sd"],
-    [-106, 41.01, "wy"], [-106, 40.99, "co"], [-106, 37.01, "co"], [-106, 36.99, "nm"],
-    [-108, 45.01, "mt"], [-108, 44.99, "wy"], [-114.06, 39, "nv"], [-114.02, 39, "ut"],
-    [-99, 40.01, "ne"], [-99, 39.99, "ks"], [-100, 45.95, "nd"], [-100, 45.93, "sd"],
-  ];
+  const points = JSON.parse(readFileSync("tests/fixtures/place-map-state-lines.json", "utf8")) as [number, number, string][];
   for (const [lng, lat, expected] of points) assert.deepEqual(divisionIdsAt([lng, lat], features), [`ocd-division/country:us/state:${expected}`], `${lng},${lat}`);
 });
 
@@ -80,8 +81,42 @@ test("the state builder preserves every legacy district and NCES/GEOID aliases",
   const registration = JSON.parse(readFileSync("data/derived/registration/az.json", "utf8")) as RegistrationReference;
   const id = `${state}/cd:6`;
   const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map([["85701", { ids: [state, county, id], partial: [id], samples: 100 }]]),
-    legacyZctas: new Set(["85701"]), boundaries: [], checkedAt: date });
+    legacyZctas: new Set(["85701"]), boundaries: [], checkedAt: date,
+    postalLinks: [{ zip: "85798", zcta: "85701", addressRequired: false }, { zip: "85799", zcta: "85701", addressRequired: true }] });
   for (const placeId of [state, county, id]) assert.ok(map.zipEdges.some(edge => edge.placeId === placeId));
   assert.ok(map.zctaEdges.some(edge => edge.placeId === id && edge.boundaryYear === 2024));
   assert.ok(map.places.some(place => place.aliases.some(alias => alias.scheme === "nces") && place.aliases.some(alias => alias.scheme.startsWith("census-geoid:"))));
+  assert.ok(map.places.every(place => place.aliases.every(alias => alias.value.length > 0)));
+  assert.ok(map.zipEdges.some(edge => edge.code === "85798" && edge.placeId === id));
+  assert.ok(!map.zipEdges.some(edge => edge.code === "85799" && edge.placeId === id));
+  assert.ok(!map.zctaEdges.some(edge => edge.code === "85798" || edge.code === "85799"));
+});
+
+test("Census geographic FIPS, rather than the mailing state, supplies an unshaped district's county", async () => {
+  const nm = await geographicSpecialDistricts(process.cwd(), "35"), az = await geographicSpecialDistricts(process.cwd(), "04");
+  assert.equal(nm.find(d => d.pid === "190929")?.countyFips, "35023");
+  assert.ok(!az.some(d => d.pid === "190929"));
+});
+
+test("current GRF parts produce measured school and county shares from one checked state source", async () => {
+  const bytes = "CURSTATE|CURCOUNTY|COUSUBFP|PLACEFP|SDELMLEA|SDSECLEA|SDUNILEA|ZCTA5CE|AREALAND\n" +
+    "04|019|99999|99999|99999|99999|00001|85701|60\n04|019|99999|99999|99999|99999|00002|85701|40\n";
+  const edges = await currentGrfPlaceEdges("04", [
+    { id: state, name: "Arizona", state: "AZ", aliases: [{ scheme: "census-geoid:state", value: "04" }] },
+    { id: county, name: "Pima", state: "AZ", aliases: [{ scheme: "census-geoid:county", value: "04019" }] },
+    ...[1, 2].map(n => ({ id: `school:${n}`, name: `School ${n}`, state: "AZ", aliases: [{ scheme: "census-geoid:unsd", value: `040000${n}` }] })),
+  ], { cache: { store: new MemoryEvidenceStore(), locks: memoryLockManager() }, fetchImpl: async () => new Response(bytes) });
+  assert.equal(edges.find(e => e.placeId === "school:1")?.share, 0.6);
+  assert.equal(edges.find(e => e.placeId === "school:2")?.share, 0.4);
+  assert.equal(edges.find(e => e.placeId === county)?.share, 1);
+});
+
+test("a state map refresh uses the existing Census publication path on a later run", async () => {
+  const dataset = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8"));
+  const store = new MemoryRoutineDataStore();
+  for (const builtAt of ["2026-10-24T08:00:00.000Z", "2026-11-23T08:00:00.000Z"]) {
+    const candidate = censusGeographyCandidate({ ...dataset, builtAt }, "US-AZ:place-map");
+    const result = await processRegisteredRoutineCandidate(store, "place-map-az", candidate, builtAt);
+    assert.equal(result.candidate.state, "PROMOTED");
+  }
 });

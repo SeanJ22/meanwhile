@@ -18,10 +18,11 @@ import { geographicSpecialDistricts } from "./special-districts.ts";
 import { statePostalLinks } from "./postal-links.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { stateZipLocations } from "./location-import.ts";
+import { currentGrfPlaceEdges } from "./grf-edges.ts";
 
 /** Read only the legacy shards touching this state. Their source is explicitly
  * Census ZCTAs; the independent Census universe confirms each ZCTA row. */
-async function stateLegacy(root: string, state: string): Promise<Map<string, PlaceEntry>> {
+export async function readLegacyStateMemberships(root: string, state: string): Promise<Map<string, PlaceEntry>> {
   const manifest = JSON.parse(await readFile(join(root, "data/derived/zip-divisions/index.json"), "utf8")) as { statesToShards: Record<string, string[]> };
   const result = new Map<string, PlaceEntry>();
   for (const shard of manifest.statesToShards[state] ?? []) {
@@ -50,10 +51,11 @@ async function heldStateDataset(query: Query, state: string): Promise<BuiltDatas
 export async function prepareStatePlaceMap(query: Query, root: string, state: string,
   options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset }> {
   if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
+  options = { ...options, releases: options.releases ?? new Map() };
   const { reference: registration } = loadRegistrationReference(root, state);
   const fips = registration.divisions.find(d => d[1] === "state")?.[2];
   if (!fips) throw new Error(`No state FIPS for ${state}`);
-  const legacyZips = await stateLegacy(root, state);
+  const legacyZips = await readLegacyStateMemberships(root, state);
   const postalLinks = await statePostalLinks(root, state);
   for (const link of postalLinks) {
     const base = legacyZips.get(link.zcta);
@@ -66,6 +68,11 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   const previousDataset = await heldStateDataset(query, state);
   const dataset = await acquireDataset({ ...options, previousDataset, states: new Set([fips]), discoverPlans: false,
     only: ["county", "place", "cousub", "cd119", "sldu", "sldl", "cd120", "sldu2026", "sldl2026"] });
+  const stateLandShares = new Map<string, number>();
+  for (const scope of dataset.scopes) if (scope.type === "county" && scope.version === "county:2020") {
+    for (const group of scope.groupings) for (const edge of group.overlaps) if (edge.fraction !== null) stateLandShares.set(edge.zcta5, (stateLandShares.get(edge.zcta5) ?? 0) + edge.fraction);
+  }
+  const crossStateZctas = new Set([...stateLandShares].filter(([, share]) => share > 0 && share < 1 - 1e-8).map(([code]) => code));
   const shapes = await acquireStateBoundaries(registration, options);
   const boundaries: PlaceBoundary[] = [...shapes.boundaries];
   const territory = join(root, "data/states", state.toLowerCase(), "geo", `territory-${fips}.geojson`);
@@ -84,7 +91,9 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   const legacyZctas = new Set(dataset.zctaUniverse);
   // The source index and the Census tabulation are distinct from postal aliases.
   const zctas = new Set([...legacyZctas, ...dataset.scopes.flatMap(s => s.groupings.flatMap(g => g.overlaps.map(o => o.zcta5)))]);
-  const acquiredEdges = await acquireBoundaryOverlaps(boundaries, zctas, options);
+  const acquiredEdges = await currentGrfPlaceEdges(fips, shapes.places, options);
+  const specialShapes = boundaries.filter(boundary => boundary.layer === "district" && boundary.geometry);
+  if (specialShapes.length) acquiredEdges.push(...await acquireBoundaryOverlaps(specialShapes, zctas, options));
   const sources = JSON.parse(await readFile(join(root, "data/reference/district-boundary-sources.json"), "utf8")) as { sources: { id: string; countyFips: string | null }[] };
   const geographicDistricts = await geographicSpecialDistricts(root, fips);
   const governmentIds = new Map((await query("SELECT value,entity_id FROM entity_external_id WHERE scheme='census-pid6' AND value=ANY($1::text[])",
@@ -93,6 +102,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
     additionalPlaces: shapes.places, censusFacts: readCensusGovernmentFacts(root, [state]).byPid,
     geographicDistricts: geographicDistricts.map(d => ({ ...d, governmentId: governmentIds.get(d.pid) })),
     postalLinks,
+    crossStateZctas,
     sourceCounties: new Map(sources.sources.map(source => [source.id, source.countyFips])), checkedAt: dataset.builtAt });
   return { map:{...map,zipLocations:await stateZipLocations(root,state,dataset.builtAt)}, dataset };
 }

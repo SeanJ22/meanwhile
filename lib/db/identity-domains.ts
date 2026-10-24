@@ -59,6 +59,14 @@ const nonIdentifying = (...names: string[]): Record<string, ColumnDomain> =>
 
 /** Every table, every column. */
 export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
+  place_boundary: {
+    storeClass: "CIVIC_CONTENT",
+    columns: {
+      place_id: { space: "CIVIC_IDENTIFIER", why: "The existing public place entity." },
+      host_county_id: { space: "CIVIC_IDENTIFIER", why: "The Census host county for a district without a polygon." },
+      ...nonIdentifying("boundary_year", "layer", "version", "geometry", "bounds", "county_attachment", "source_urls", "checked_at"),
+    },
+  },
   saved_ballot_picks: {
     storeClass: "READER_COLLECTION",
     columns: {

@@ -1,6 +1,6 @@
 # Switch readers to the place map
 
-Owner: RB-A10. Branch: stream/rb-a10, cut from river 21ae9bcfb. Current dependency: RB-A2 a9295c221, including RB-A1. Work in progress; no READY claim.
+Owner: RB-A10. Branch: stream/rb-a10, cut from river 21ae9bcfb. Current dependency: RB-A2 af8c2e48a, including RB-A1. Work in progress; no READY claim.
 
 Reader and Admin memberships and typed-ZIP display points now use the place map. The recurring state import writes `zip_location` from the acquired Census and postal coordinates; reader requests and browser startup query those imported rows. The old server ZIP coordinate module and browser shard projection are deleted. Typed ZIPs that cross a state line read every touched state’s boards and calendars. The request shares the point result and raw rows across current-representation and election-year selections. Nearest-centroid lookup and the second resolver-geometry pass are deleted. The acquired ZIP seed decoder remains only in the map import and isolated test fixtures; no reader loads a seed shard.
 

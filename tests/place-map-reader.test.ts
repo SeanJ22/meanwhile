@@ -95,8 +95,8 @@ test("the next map refresh changes point and ZIP membership while preserving the
   try {
     await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,name text,state char(2));
       CREATE TABLE entity_external_id(entity_id text REFERENCES entity(id),scheme text,value text,PRIMARY KEY(scheme,value));
-      CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
-      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+      CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8 CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
+      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8 CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
     await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql","utf8"));
     await db.exec(readFileSync("lib/db/migrations/RB-A10_zip_locations.sql","utf8"));
     const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});

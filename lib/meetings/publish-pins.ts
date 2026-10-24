@@ -1,6 +1,7 @@
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { createHash } from "node:crypto";
 import type { Query } from "../facts/publish.ts";
+import { meetingEntityId } from "../facts/meeting-read.ts";
 import type { RetainedSourceResponse } from "../civic-data/retained-meeting-bytes.ts";
 import {
   censusAddressQuery,
@@ -17,6 +18,7 @@ import type { Meeting } from "../sources/types.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
 import {
   meetingPinAddresses,
+  withPublishedPin,
   type MeetingPinAddress,
   type MeetingPinLocation,
   type MeetingPinBody,
@@ -108,6 +110,7 @@ export async function placePublishedMeetingPins(input: {
   readonly previous?: readonly Meeting[];
   readonly query?: Query;
   readonly offices?: ReadonlyMap<string, MeetingPinBody>;
+  readonly retainedAddresses?: ReadonlyMap<string, MeetingPinAddress>;
   readonly fetchImpl?: typeof fetch;
   readonly clock?: () => string;
 }): Promise<PublishedPinResult> {
@@ -137,6 +140,25 @@ export async function placePublishedMeetingPins(input: {
     (input.previous ?? []).map((meeting) => [meeting.id, meeting]),
   );
   const saved = new Map<string, MeetingPinLocation>();
+  const unresolved=input.meetings.filter(meeting=>{
+    if(meeting.location||meeting.mapPin)return false;
+    const prior=previous.get(meeting.id);
+    return !prior?.mapPin||prior.bodyId!==meeting.bodyId||prior.mapPin.publishedLocation!==(meeting.venueGap?.publishedText??null)
+      ||Boolean(prior.online)!==Boolean(meeting.online);
+  });
+  if(input.query&&unresolved.length)try {
+    const owners=new Map(unresolved.flatMap(meeting=>[meeting.id,...meeting.mergedMeetingIds??[]].map(id=>[id,meeting] as const)));
+    const rows=await input.query("SELECT entity_id,value FROM fact WHERE field='map_pin' AND status='live' AND entity_id=ANY($1::text[])",
+      [[...owners.keys()].map(meetingEntityId)]);
+    for(const row of rows) {
+      const pin=row.value as MeetingPinLocation|null;
+      if(!pin||!Number.isFinite(pin.lat)||!Number.isFinite(pin.lng)||!pin.bodyId||!pin.address||!pin.matchedAddress||
+        !["MEETING","BODY_OFFICE","GOVERNMENT_OFFICE"].includes(pin.basis))continue;
+      saved.set(`${pin.basis}:${pin.bodyId}:${pin.address}`,pin);
+      const owner=owners.get(String(row.entity_id).slice("meeting:".length));
+      if(owner&&!previous.get(owner.id)?.mapPin)previous.set(owner.id,{...owner,mapPin:{...pin,meetingId:owner.id}});
+    }
+  } catch(error){held.push(`Saved meeting points could not be read: ${error instanceof Error?error.message:String(error)}`);}
   for (const meeting of [...(input.previous ?? []), ...input.meetings])
     if (meeting.mapPin)
       saved.set(
@@ -240,9 +262,17 @@ export async function placePublishedMeetingPins(input: {
         meeting,
         offices.get(meeting.bodyId ?? ""),
       );
+      const retainedAddress = input.retainedAddresses?.get(meeting.id);
+      if (retainedAddress?.basis === "MEETING" && retainedAddress.bodyId === meeting.bodyId && !meeting.online &&
+        repeatsPublishedVenue(meeting.venueGap?.publishedText ?? "",retainedAddress.name,retainedAddress.address))
+        candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,retainedAddress);
       const prior = previous.get(meeting.id);
       const publishedLocation = meeting.venueGap?.publishedText ?? null;
       const repeated = prior?.mapPin ?? meeting.mapPin;
+      if (repeated?.basis === "MEETING" && repeated.bodyId === meeting.bodyId &&
+        repeated.publishedLocation === publishedLocation && !meeting.online &&
+        repeatsPublishedVenue(publishedLocation ?? "",repeated.name,repeated.address))
+        candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,repeated);
       // An unavailable office read cannot erase a point already published for this unchanged sitting.
       if (
         officesUnavailable &&
@@ -309,22 +339,6 @@ export async function placePublishedMeetingPins(input: {
     return input.meetings[row.index];
   });
   return { meetings, placedCount, held, responses };
-}
-
-function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
-  return pin.basis === "MEETING" && !meeting.online
-    ? {
-        ...meeting,
-        mapPin: pin,
-        location: {
-          name: pin.name,
-          address: pin.address,
-          lat: pin.lat,
-          lng: pin.lng,
-        },
-        venueGap: undefined,
-      }
-    : { ...meeting, mapPin: pin };
 }
 
 /** Resolve a relative event citation against the exact promoted publisher route. */

@@ -9,11 +9,15 @@ if(!schemaName)throw Error("The hourly count schema is missing");
 export const COUNT_SCHEMA_SOURCE = `lib/db/migrations/${schemaName}`;
 export const CONTROL_COUNT_SQL = `
 CREATE FUNCTION count_control_dimensions(v jsonb,kind text) RETURNS TABLE(state text,family text,stage text) LANGUAGE sql IMMUTABLE AS $$
+  WITH dimensions AS (
+    SELECT coalesce(v#>>'{fact,recordClass}',v#>>'{autonomousPlan,contract,recordClass}',v#>>'{autonomousPlan,publication,recordClass}',v->>'kind','Other facts') AS family,
+      kind||':'||coalesce(v->>'state',v->>'status','unknown') AS stage
+    UNION ALL
+    SELECT coalesce(nullif(family_name,''),'Other facts'),'door family:'||coalesce(v->>'status','unknown')
+    FROM jsonb_array_elements_text(CASE WHEN kind='door' AND jsonb_typeof(v->'holds')='array' THEN v->'holds' ELSE '[]'::jsonb END) f(family_name)
+  )
   SELECT count_state(CASE WHEN cp_control_state(v)<>'system' THEN cp_control_state(v) ELSE coalesce(v#>>'{config,scope}',v#>>'{config,ocdId}',v#>>'{autonomousPlan,jurisdiction}',v->>'subject',v->>'subjectId',v->>'doorId',v->>'id') END),
-    coalesce(nullif(family_name,''),v#>>'{fact,recordClass}',v#>>'{autonomousPlan,contract,recordClass}',v#>>'{autonomousPlan,publication,recordClass}',v->>'kind','Other facts'),
-    kind||':'||coalesce(v->>'state',v->>'status','unknown')
-  FROM jsonb_array_elements_text(CASE WHEN kind='door' AND jsonb_typeof(v->'holds')='array'
-    THEN CASE WHEN v->'holds'='[]'::jsonb THEN '[null]'::jsonb ELSE v->'holds' END ELSE '[null]'::jsonb END) f(family_name)
+    family,stage FROM dimensions
 $$;
 CREATE FUNCTION count_control_write() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE d record; kind text:=TG_ARGV[0]; before_key jsonb; after_key jsonb;
@@ -158,7 +162,7 @@ WITH waiting AS (
  SELECT d.state,d.family,d.stage,
    coalesce(nullif(w.value->>'lastSuccessAt',''),w.value->>'updatedAt',w.updated_at::text)::timestamptz,'diggers'
  FROM cp_doors w CROSS JOIN LATERAL count_control_dimensions(w.value,'door') d
- WHERE w.value->>'status'='OPEN' AND
+ WHERE w.value->>'status'='OPEN' AND d.stage='door:OPEN' AND
    coalesce(nullif(w.value->>'lastSuccessAt',''),w.value->>'updatedAt',w.updated_at::text)::timestamptz +
    make_interval(mins=>coalesce(nullif(w.value->>'checkEveryMinutes','')::integer,60)) <= at
 )

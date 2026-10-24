@@ -85,7 +85,8 @@ test('door and work changes are atomic, retries add no movement, and archival pr
     const w=countWindow(new Date(Date.now()+3_600_000).toISOString());
     const rows=await readCounts(query(db),w.from,w.through);
     assert.equal(rows.find(r=>r.stage==='work:OPEN')!.total,1);
-    assert.equal(rows.find(r=>r.stage==='door:OPEN'&&r.family==='FUTURE_FAMILY')!.total,1);
+    assert.equal(rows.filter(r=>r.stage==='door:OPEN').reduce((n,r)=>n+r.total,0),1,'a source that serves two families still counts as one door');
+    assert.equal(rows.find(r=>r.stage==='door family:OPEN'&&r.family==='FUTURE_FAMILY')!.total,1);
     await db.query(`INSERT INTO cp_owner_snapshots(id,value) VALUES('current:az',$1::jsonb)`,[JSON.stringify({allRowsIndex:[{id:'queue-row',state:'WAITING',lane:'CREATED',stateCode:'AZ',waitingSince:value.createdAt,owner:'FLEET'}]})]);
     const waiting=await readOldest(query(db));
     assert.equal(waiting.find(r=>r.stage==='work list:WAITING')!.oldestAt,'2026-10-20T07:00:00.000Z');

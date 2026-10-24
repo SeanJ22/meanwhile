@@ -159,7 +159,7 @@ export class CivicPayloadParts {
       pending.delete(hash);
       visiting.delete(hash);
     };
-    const resolve = async (values: readonly unknown[]): Promise<void> => {
+    const resolve = async (values: readonly unknown[]): Promise<boolean> => {
       const hashes = [...values.reduce<Set<string>>((into, value) => refsIn(value, into), new Set())];
       for (let at = 0; at < hashes.length; at += READ_BATCH) {
         const wanted = hashes.slice(at, at + READ_BATCH), missing = wanted.filter(hash => !decoded.has(hash) && !pending.has(hash));
@@ -175,8 +175,9 @@ export class CivicPayloadParts {
         }
         for (const hash of wanted) await resolvePart(hash);
       }
+      return hashes.length > 0;
     };
-    try { await resolve([input]); return build(input); }
+    try { return await resolve([input]) ? build(input) : input; }
     finally {
       pending.clear(); decoded.clear(); visiting.clear();
       if (preloaded) for (const hash of Object.keys(preloaded)) delete preloaded[hash];

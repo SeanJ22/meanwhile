@@ -79,6 +79,8 @@ export const CLASS_PHRASES: readonly string[] = [
  * into a wrong `BOUND`, only into an honest `AMBIGUOUS`.
  */
 export interface BindableEntity extends NameableEntity {
+  /** Previously published identifiers of this same entity, for explicit context references. */
+  aliases?: readonly string[];
   /** The registry's own division type — `school_district`, `place`, `county`. */
   divisionType?: string | null;
   /**

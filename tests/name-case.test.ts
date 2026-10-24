@@ -16,6 +16,12 @@ test("given names and individual capitalized words are cased without changing fi
   assert.equal(surnameDisplayCase("McDonald SMITH"), "McDonald Smith");
 });
 
+test("key-only reader slices have no invented name, and given-name initials stay as filed", () => {
+  assert.equal(ballotCandidateDisplayName({} as Parameters<typeof ballotCandidateDisplayName>[0]), "");
+  for (const givenName of ["Derek S.K.", '"BJ"', "A."])
+    assert.equal(ballotCandidateDisplayName({ givenName, familyName: "Example" }), `${givenName} Example`);
+});
+
 test("Mc names keep the internal capital", () => {
   assert.equal(surnameDisplayCase("MCDONALD"), "McDonald");
   assert.equal(surnameDisplayCase("MCKEON"), "McKeon");

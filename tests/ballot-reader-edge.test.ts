@@ -231,7 +231,7 @@ const houstonFixtures = await Promise.all([false, true].map(async withSuccessor 
 }));
 
 /** One cold render: the page, then every async component it returned, called from outside the page. */
-async function renderBallot(place: string | Record<string, string>): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; readerSelection: ReaderSelection | undefined;
+async function renderBallot(place: string | Record<string, string>): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; candidateAliases: Map<string, Set<string>>; choiceOccurrences: Map<string, number>; ticketLabels: Map<string, string>; readerSelection: ReaderSelection | undefined;
   datedEvents: number; navigationCards: Set<string>; stateElectionOffices: Set<string> }> {
   activateCanonicalFixture(activeFixture!);
   clearPromotedReadModelCache();
@@ -244,6 +244,11 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
   const filingCandidateIds = new Set<string>();
   const sourceUrls = new Set<string>();
   const candidateSources = new Map<string, string[]>();
+  const candidateAliases = new Map<string, Set<string>>();
+  const choiceOccurrences = new Map<string, number>();
+  const ticketLabels = new Map<string, string>();
+  const addCandidateSources = (key: string, urls: readonly string[]) =>
+    candidateSources.set(key, [...new Set([...candidateSources.get(key) ?? [], ...urls])]);
   let readerSelection: ReaderSelection | undefined;
   let datedEvents = 0;
   const navigationCards = new Set<string>(), stateElectionOffices = new Set<string>();
@@ -276,10 +281,31 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
     const filingCandidateId = element.props?.["data-filing-candidacy"];
     if (typeof filingCandidateId === "string") filingCandidateIds.add(filingCandidateId);
     const candidateId = element.props?.["data-candidate-target"];
-    if (typeof candidateId === "string") candidateIds.add(candidateId);
+    if (typeof candidateId === "string") {
+      candidateIds.add(candidateId);
+      choiceOccurrences.set(candidateId, (choiceOccurrences.get(candidateId) ?? 0) + 1);
+      const aliases = typeof element.props?.["data-candidate-aliases"] === "string"
+        ? JSON.parse(element.props["data-candidate-aliases"]) as string[] : [];
+      for (const alias of [candidateId, ...aliases]) candidateAliases.set(alias,
+        new Set([...candidateAliases.get(alias) ?? [], candidateId]));
+      const children = element.props?.children;
+      if (Array.isArray(children)) for (const child of children) {
+        const label = child as { props?: { "data-ticket-label"?: unknown; children?: unknown } } | null;
+        if (label?.props?.["data-ticket-label"] && typeof label.props.children === "string") ticketLabels.set(candidateId, label.props.children);
+      }
+    }
     const contributionId = element.props?.id;
     if (typeof contributionId === "string" && contributionId.startsWith("candidate-filing:")) {
-      candidateSources.set(contributionId.slice("candidate-filing:".length), (element.props?.sources as { provenance: { sourceUrl: string } }[]).map(source => source.provenance.sourceUrl));
+      addCandidateSources(contributionId.slice("candidate-filing:".length), (element.props?.sources as { provenance: { sourceUrl: string } }[]).map(source => source.provenance.sourceUrl));
+    }
+    if (typeof element.type === "function" && element.type.name === "CandidateCard") {
+      const battlecard = element.props?.battlecardSlot as { props?: { targetKey?: unknown } } | undefined;
+      const memberId = battlecard?.props?.targetKey;
+      if (typeof memberId === "string") {
+        const filing = element.props?.filingProvenance as { sourceUrl: string } | undefined;
+        const filings = element.props?.filingSources as readonly { sourceUrl: string }[] | undefined;
+        addCandidateSources(memberId, [...filing ? [filing] : [], ...filings ?? []].map(source => source.sourceUrl));
+      }
     }
     const href = element.props?.href;
     if (typeof href === "string" && href.startsWith("https://")) sourceUrls.add(href);
@@ -292,7 +318,7 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
     for (const value of Object.values(element.props ?? {})) await walk(value);
   };
   await walk(tree);
-  return { components, text: text.join(" "), contestIds, candidateIds, filingCandidateIds, sourceUrls, candidateSources, readerSelection, datedEvents, navigationCards, stateElectionOffices };
+  return { components, text: text.join(" "), contestIds, candidateIds, filingCandidateIds, sourceUrls, candidateSources, candidateAliases, choiceOccurrences, ticketLabels, readerSelection, datedEvents, navigationCards, stateElectionOffices };
 }
 
 test("React async cards retain the page's supplied place selection", () => {
@@ -582,10 +608,21 @@ test("BL-30: Arizona additions and the corrected Corporation Commission slate ea
     for (const nominee of lineup.nominees) {
       if (!nominee.provenance) continue;
       const id = `${lineup.contestId}|${nominee.name}`;
-      assert.ok(rendered.candidateIds.has(id), `The reader omitted the verified ${nominee.name} filing`);
-      assert.deepEqual(rendered.candidateSources.get(id), [nominee.provenance.sourceUrl]);
+      const choices = rendered.candidateAliases.get(id);
+      assert.equal(choices?.size, 1, `The verified ${nominee.name} filing must resolve to exactly one visible choice`);
+      const choice = [...choices!][0];
+      assert.ok(rendered.candidateIds.has(choice), `The reader omitted the verified ${nominee.name} filing`);
+      const sourceUrl = nominee.provenance.sourceUrl;
+      assert.ok(sourceUrl, `The verified ${nominee.name} filing must identify its official source`);
+      assert.ok(rendered.candidateSources.get(choice)?.includes(sourceUrl),
+        `The ${nominee.name} card lost its own filing source ${nominee.provenance.sourceUrl}`);
     }
   }
+  const hobbsTicket = rendered.candidateAliases.get("ballot-az-pima:governor|Katie Hobbs / John Giles");
+  assert.equal(hobbsTicket?.size, 1, "the joint filing resolves to one visible choice");
+  const hobbsChoice = [...hobbsTicket!][0];
+  assert.equal(rendered.choiceOccurrences.get(hobbsChoice), 1, "the Hobbs/Giles ticket appears once in its race");
+  assert.equal(rendered.ticketLabels.get(hobbsChoice), "Katie Hobbs / John Giles");
   assert.ok(rendered.text.includes("General-election candidates"));
 });
 

@@ -75,8 +75,24 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   if (/(^|\.)gov$/.test(host)) return true;
   if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return true;
   if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
+  return pageLinksSource(url, linkingPage);
+}
+
+/** A source's host is linked in this saved page; authority belongs to the caller's page check. */
+export function pageLinksSource(url: string, linkingPage: OfficialLinkingPage): boolean {
+  const host = hostOf(url);
+  if (host === null) return false;
   for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
     if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
+  }
+  // CivicClerk's official embed names its tenant instead of spelling out the portal URL.
+  if (/\bsrc\s*=\s*["']https:\/\/civicclerkcdn\.azureedge\.net\/publicportal-live\/embed\.js["']/i.test(linkingPage.html)) {
+    const config = /\bwindow\.clerkEmbedProps\s*=\s*(\{[^;]*?\})\s*;/.exec(linkingPage.html)?.[1];
+    if (config) try {
+      const tenant = (JSON.parse(config) as { tenant?: unknown }).tenant;
+      if (typeof tenant === "string" && /^[a-z0-9-]+$/i.test(tenant)
+        && ["portal", "api"].some(service => host === `${tenant.toLowerCase()}.${service}.civicclerk.com`)) return true;
+    } catch { /* A malformed embed names no source. */ }
   }
   return false;
 }

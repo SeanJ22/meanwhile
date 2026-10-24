@@ -75,6 +75,9 @@ export function hostOf(url: string): string {
 /** An entity's own site is a host, or a host and path for a channel its door reads on a shared platform. */
 function ownSite(url: string, site: string): boolean {
   const host = hostOf(url);
+  // A registered CivicClerk API and its public portal are the same tenant's publication.
+  const civicClerk = /^([a-z0-9-]+)\.api\.civicclerk\.com(?:\/v1(?:\/.*)?)?$/i.exec(site);
+  if (civicClerk && host === `${civicClerk[1]!.toLowerCase()}.portal.civicclerk.com`) return true;
   if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
   const { pathname } = new URL(url);
   const at = `${host}${pathname}`.toLowerCase(), own = site.toLowerCase();

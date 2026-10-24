@@ -5,7 +5,7 @@ import { bodyNamed, canonicalSubject, ensureEntity, governmentAt, placeBody, spl
 import { readCheckEntity } from "../facts/entity-read.ts";
 import type { FactDb, Query, PublishInput, Clocks } from "../facts/publish.ts";
 import { isSourceApiUrl } from "../control-plane/scheduler/scout-api.ts";
-import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
+import { isOfficialSource, pageLinksSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { resolveId } from "./resolve.ts";
@@ -33,8 +33,10 @@ interface DoorOptions {
 
 const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
 
-const officialSource = (url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null) =>
-  isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage);
+function officialSource(url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null): boolean {
+  return isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage)
+    || !!linkingPage && officialSource(linkingPage.url, hosts, linkingPage.linkingPage) && pageLinksSource(url, linkingPage);
+}
 
 /** Newer and more official wins; a value Sean typed changes only through him. */
 export function decide(current: Side | null, incoming: Side, field?: string): Decision {

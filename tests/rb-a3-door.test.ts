@@ -100,6 +100,46 @@ test("an official field publishes without reading or searching the page text, an
   } finally { await db.pg.close(); }
 });
 
+test("a portal linked by a registered government site uses the official lane", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'government.example.org')", [input().entity.id]);
+    const claim = input({ copy: { ...input().copy, finalUrl: "https://portal.example/meetings/1",
+      get text(): string { throw Error("The government's linked portal searched a quote"); } } });
+    const outcome = await door(db, { ...claim, linkingPage: { url: "https://government.example.org/meetings",
+      html: '<a href="https://portal.example/meetings">Public meetings</a>' } }, clocks, now, { purge });
+    assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
+    assert.deepEqual(await db.query("SELECT step,n::int FROM count_hour"), [{ step: "door_official", n: 1 }]);
+    assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
+  } finally { await db.pg.close(); }
+});
+
+test("a government's CivicClerk embed delegates only its named tenant", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'government.example.org')", [input().entity.id]);
+    const linkingPage = { url: "https://government.example.org/meetings", html: '<script>window.clerkEmbedProps = {"tenant":"example"};</script><script src="https://civicclerkcdn.azureedge.net/publicportal-live/embed.js"></script>' };
+    const claim = input({ copy: { ...input().copy, finalUrl: "https://example.portal.civicclerk.com/event/1",
+      get text(): string { throw Error("The government's embedded portal searched a quote"); } } });
+    const outcome = await door(db, { ...claim, linkingPage }, clocks, now, { purge });
+    assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
+    const refused = await door(db, { ...input({ field: "office_email", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), linkingPage }, clocks, now, { purge });
+    assert.deepEqual(refused, { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+  } finally { await db.pg.close(); }
+});
+
+test("a registered government API and its portal keep the same CivicClerk tenant", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'example.api.civicclerk.com/v1')", [input().entity.id]);
+    const outcome = await door(db, input({ copy: { ...input().copy, finalUrl: "https://example.portal.civicclerk.com/event/1",
+      get text(): string { throw Error("The held government's portal searched a quote"); } } }), clocks, now, { purge });
+    assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
+    assert.deepEqual(await door(db, input({ field: "office_email", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), clocks, now, { purge }),
+      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+  } finally { await db.pg.close(); }
+});
+
 test("a checked sidebar preserves the agenda while an official API field publishes its document directly", async () => {
   const db = await seeded();
   try {

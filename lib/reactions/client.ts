@@ -49,8 +49,14 @@ function readSelections(): Record<string, ReactionValue> {
 export function getStoredReaction(
   targetType: ReactionTargetType,
   targetId: string,
+  aliases: readonly string[] = [],
 ): ReactionValue | null {
-  return readSelections()[selectionKey(targetType, targetId)] ?? null;
+  const selections = readSelections();
+  for (const id of [targetId, ...aliases]) {
+    const value = selections[selectionKey(targetType, id)];
+    if (value !== undefined) return value;
+  }
+  return null;
 }
 
 /**

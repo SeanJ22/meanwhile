@@ -8,6 +8,7 @@ import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts"
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
 import { debtStateMigrationDefinition, stampDebtStates } from "../lib/control-plane/repository/migrations/DT-01.ts";
 import { sharedWorkMigrationDefinition, expandSharedWork } from "../lib/control-plane/repository/migrations/RB-A1.ts";
+import { reopenHeldDoors, reopenHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS.ts";
 
 import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition, installHourlyCounts } from "../lib/control-plane/repository/migrations/RB-A8.ts";
 
@@ -19,6 +20,8 @@ const MIGRATIONS = [
     definition: debtStateMigrationDefinition, apply: async (sql: Sql) => `${await stampDebtStates(sql)} debt(s) given their state` },
   { id: "RB-A1_expand", source: "lib/control-plane/repository/migrations/RB-A1.ts", declarations: [] as readonly string[],
     definition: sharedWorkMigrationDefinition, apply: async (sql: Sql) => { await expandSharedWork(sql); return "shared work and hourly counts"; } },
+  { id: "RIVER-KEYS_expand", source: "lib/control-plane/repository/migrations/RIVER-KEYS.ts", declarations: [] as readonly string[],
+    definition: reopenHeldDoorsMigrationDefinition, apply: async (sql: Sql) => `${await reopenHeldDoors(sql)} held door(s) reopened` },
   { id: "RB-A8_expand", source: "lib/control-plane/repository/migrations/RB-A8.ts", declarations: [COUNT_SCHEMA_SOURCE],
     definition: countHourMigrationDefinition, apply: async (sql: Sql) => { await installHourlyCounts(sql); return "hourly counts"; } },
 ] as const;

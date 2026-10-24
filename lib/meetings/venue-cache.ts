@@ -83,46 +83,6 @@ export function unplacedVenueGap(
 export const VENUE_CACHE: VenueEntry[] = [
   // Test seed only: currentVenueCache() serves this array only in the explicit test seam.
   {
-    sourceId: "legistar",
-    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
-    match: "Board of Supervisors Hearing Room",
-    name: "Pima County Administration Building, Board of Supervisors Hearing Room",
-    address: "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
-    lat: 32.221618,
-    lng: -110.974036,
-    addressSourceUrl: "https://www.pima.gov/government/board_of_supervisors/",
-    coordinateSourceUrl:
-      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=130+W+Congress+St%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
-    verifiedAt: null,
-  },
-  {
-    sourceId: "legistar",
-    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
-    match: "1 E. Broadway, 4th Floor",
-    name: "1 E. Broadway Blvd, 4th Floor",
-    address: "1 E. Broadway Blvd, Tucson, AZ 85701",
-    lat: 32.221075,
-    lng: -110.971059,
-    addressSourceUrl: "https://pima.legistar.com/Calendar.aspx",
-    coordinateSourceUrl:
-      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=1+E+Broadway+Blvd%2C+Tucson%2C+AZ+85701&benchmark=Public_AR_Current&format=json",
-    verifiedAt: null,
-  },
-  {
-    sourceId: "legistar-insite",
-    bodyOcdId: "ocd-division/country:us/state:az/place:mesa",
-    match: "Council Chambers",
-    name: "Mesa City Hall, Council Chambers",
-    address: "20 E. Main Street, Mesa, AZ 85201",
-    lat: 33.415155,
-    lng: -111.830942,
-    addressSourceUrl: "https://www.mesaaz.gov/Government/City-Council-Meetings",
-    coordinateSourceUrl:
-      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=20+E+Main+St%2C+Mesa%2C+AZ+85201&benchmark=Public_AR_Current&format=json",
-    verifiedAt: null,
-  },
-
-  {
     sourceId: "onbase",
     bodyOcdId: "ocd-division/country:us/state:az/place:tucson",
     match: "Public Housing Authority Board of Commissioners",

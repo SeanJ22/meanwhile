@@ -1,0 +1,95 @@
+{
+  "status": "READER_DEADLINE_EXCEEDED",
+  "scope": "Complete real EPA national manifest; selected normal reader locations",
+  "productionWrites": 0,
+  "sourceRows": 3229311,
+  "publishedRows": 3229294,
+  "rejectedRows": 17,
+  "references": 55806,
+  "vaultRoot": "/workspace/meanwhile/.scratch/src01-epa/national-reader-vault-national-fc8b79c7-5f7b-4a48-ab7b-b623f31ba1e0",
+  "deadlines": {
+    "sqlMs": 1800,
+    "pageMs": 3000
+  },
+  "jit": "off, matching production reader startup options",
+  "clocks": [
+    {
+      "label": "initial",
+      "at": "2026-10-23T12:24:23.769Z",
+      "due": false,
+      "version": "cv-6771e0cd435d0e08fedf65aacfab3aad",
+      "confirmed": false,
+      "publishMs": 13276.68662
+    }
+  ],
+  "readers": [
+    {
+      "state": "CT",
+      "zip": "00660",
+      "id": "epa-echo:110022872550",
+      "label": "initial",
+      "apiElapsedMs": 3718.945907000001,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 3718.712335,
+          "sqlMs": 2111.6660819999997,
+          "sqlStatements": 1,
+          "sqlBytes": 10891,
+          "artifactRequests": 8,
+          "artifactBytes": 12591650,
+          "artifactLocalGetMs": 286.8382489999931,
+          "artifactReplayDecodeHashMs": 196.95849200000157
+        }
+      ],
+      "apiTotalRows": 715,
+      "recordId": "epa-echo:110022872550",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110022872550",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "553ce7126e68d83b6a947680543525a3cb40e29a3d5afdb81a21803cfb2fd572"
+    },
+    {
+      "state": "CA",
+      "zip": "01702",
+      "id": "epa-echo:110071115320",
+      "label": "initial",
+      "apiElapsedMs": 11061.617961000004,
+      "apiPages": 1,
+      "pageTimings": [
+        {
+          "offset": 0,
+          "elapsedMs": 11061.448370000002,
+          "sqlMs": 1320.1859559999975,
+          "sqlStatements": 1,
+          "sqlBytes": 23885,
+          "artifactRequests": 61,
+          "artifactBytes": 181214349,
+          "artifactLocalGetMs": 2144.6704970000064,
+          "artifactReplayDecodeHashMs": 1362.1007180000088
+        }
+      ],
+      "apiTotalRows": 9666,
+      "recordId": "epa-echo:110071115320",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071115320",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "4cb5754d7c82e8613fc39e67fa0358460914f340c22b1834cfe9e2976e5fee15"
+    }
+  ],
+  "database": {
+    "read": 57685355,
+    "written": 11616,
+    "requests": 10,
+    "statements": 13,
+    "largestRead": 14410496,
+    "largestWrite": 2958,
+    "databasePeakRssBytes": 311214080,
+    "databaseElapsedMs": 11857.357031999998,
+    "largestLatencyMs": 3039.6096610000004,
+    "databaseProxyPeakRssBytes": 322985984
+  }
+}

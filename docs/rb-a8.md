@@ -1,6 +1,6 @@
 # RB-A8 — Hourly counts
 
-Work in progress on `stream/rb-a8`. At 10:46 AM EDT on October 24, the latest RB-A1 commit (`5bde46615`) builds successfully with this lane; River is testing its fifth combined batch and has not promoted RB-A1. READY waits for RB-A1 in both River's integration log and `origin/river`, then the River merge and a complete check run.
+Work in progress on `stream/rb-a8`. River recorded RB-A1 (`5bde46615`) at 11:25 AM EDT on October 24; `origin/river` (`59b7c5577`) contains that exact commit. This lane has merged the promoted River tree, keeping River's numbered RB-A1 migration and RIVER-KEYS migration before RB-A8. The complete combined check run is next; READY waits for its results.
 
 Readers keep their current facts, civic payloads and identifiers. Writer transactions update `count_hour`; the observer reads counters and grouped oldest ages. Admin shows counts by state, kind, step and Eastern hour. Counting coverage starts after every hook and baseline is installed, so the first partial hour is unknown, and timestamp-only rechecks earn no movement. Doors have a unique source count plus a separate family breakdown, so a source serving two families still counts once in the source total.
 

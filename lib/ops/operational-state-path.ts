@@ -1,4 +1,4 @@
-import { existsSync, realpathSync } from "node:fs";
+import { realpathSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, resolve, sep } from "node:path";
 
@@ -8,9 +8,13 @@ export function operationalStatePath(value: string): string {
   const temporary = resolve(tmpdir());
   const root = realpathSync(tmpdir());
   const persistent = "/var/lib/meanwhile";
-  let ancestor = target;
-  while (!existsSync(ancestor)) ancestor = dirname(ancestor);
-  const parent = realpathSync(ancestor);
+  // Other processes create and remove the shared lock and temporary files at any moment, so a path seen a moment ago
+  // may be gone when it is resolved: resolve the nearest ancestor that exists at the moment of resolution.
+  let parent = "";
+  for (let ancestor = target; !parent; ancestor = dirname(ancestor)) {
+    try { parent = realpathSync(ancestor); }
+    catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT" || dirname(ancestor) === ancestor) throw error; }
+  }
   const inTemporary = target.startsWith(temporary + sep) && (parent === root || parent.startsWith(root + sep));
   const inPersistent = (target === persistent || target.startsWith(persistent + sep)) &&
     (parent === persistent || parent.startsWith(persistent + sep));

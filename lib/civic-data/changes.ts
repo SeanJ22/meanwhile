@@ -178,8 +178,13 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {
   const root = object(payload) ?? {};
   switch (recordClass) {
-    case "STATE_BILL":
-      return [...keyed("bill", array(root.bills), ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"])];
+    case "STATE_BILL": {
+      const bills=root.kind==="PART"?array(root.bills).map(value=>{
+        const row=object(value)??{}, {sponsorRefs,...fields}=row;
+        return {...fields,sponsors:array(sponsorRefs).map(index=>array(root.sponsors)[Number(index)])};
+      }):array(root.bills);
+      return [...keyed("bill", bills, ["id"]), ...keyed("dataset", array(root.datasets), ["session_id"]), ...keyed("part", array(root.parts), ["scope"])];
+    }
     case "FEC_FUNDING":
       return [
         ...keyed("candidate", array(root.candidates), ["fecCandidateId", "id"]),
@@ -588,6 +593,15 @@ export const ROW_KEYED_CIVIC_CHANGE_CONTRACT: CivicChangeContract = {
   facts: (_recordClass, member) => member.record,
 };
 
+export function heldCivicRecords(candidate: RoutineCandidate): RoutineChangeSet["held"] {
+  return (candidate.excludedFacts ?? []).map((fact) => ({
+    key: fact.key ?? null,
+    code: fact.code,
+    detail: fact.detail,
+    ...(Object.hasOwn(fact, "record") ? { record: fact.record } : {}),
+  }));
+}
+
 export function candidateChangeSet(
   candidate: RoutineCandidate,
   previousPayload: unknown | null,
@@ -622,12 +636,7 @@ export function candidateChangeSet(
     }
     for (const member of priorIndex.members.values()) delete member.record;
   }
-  const held = (candidate.excludedFacts ?? []).map((fact) => ({
-    key: fact.key ?? null,
-    code: fact.code,
-    detail: fact.detail,
-    ...(Object.hasOwn(fact, "record") ? { record: fact.record } : {}),
-  }));
+  const held = heldCivicRecords(candidate);
   return {
     outcome: added.length + changed.length + removed.length > 0 ? "CHANGED" : "UNCHANGED",
     added,

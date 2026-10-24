@@ -1,0 +1,239 @@
+{
+  "state": "TN",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://sos.tn.gov/elections",
+      "finalUrl": "https://sos.tn.gov/elections",
+      "publisher": "Tennessee Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.tn.gov/elections/calendar",
+      "finalUrl": "https://sos.tn.gov/elections/calendar",
+      "publisher": "Tennessee Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.tn.gov/newsroom/pages/contact-us-tennessee-secretary-state",
+      "finalUrl": "https://sos.tn.gov/contact",
+      "publisher": "Tennessee Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.tn.gov/govotetn",
+      "finalUrl": "https://sos.tn.gov/govotetn",
+      "publisher": "Tennessee Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://sos.tn.gov/contact",
+          "finalUrl": "https://sos.tn.gov/contact",
+          "publisher": "Tennessee Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:42:04.383174+00:00",
+          "httpStatus": 200,
+          "rawHash": "b496fe25096e8023f19406783e7f9bda94a7a8333e0c8da9b1d006eedb91225e",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://sos.tn.gov/elections",
+          "finalUrl": "https://sos.tn.gov/elections",
+          "publisher": "Tennessee Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:01.160839+00:00",
+          "httpStatus": 200,
+          "rawHash": "50d469f1bf587fece5e66b0b84439d51fc02ba353347d674a4d55d347ea90f2f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://sos.tn.gov/elections/calendar",
+          "finalUrl": "https://sos.tn.gov/elections/calendar",
+          "publisher": "Tennessee Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:03.422093+00:00",
+          "httpStatus": 200,
+          "rawHash": "f8bdec3caad276fae713d838e2969624e1f2a5f8d7a6c29e8f8aa7c377f3f1c7",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://sos.tn.gov/govotetn",
+          "finalUrl": "https://sos.tn.gov/govotetn",
+          "publisher": "Tennessee Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:45:01.110801+00:00",
+          "httpStatus": 200,
+          "rawHash": "9bbfa96e5b4b25e65667e9fa1e424a9275cbf478fcd0dd8f66becc5dc4013e7f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0ed2479ba1f736949df33a06f879be5c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "ballot_lookup",
+            "text": "https://govote.tnsos.gov/",
+            "quote": "The easiest way for Tennessee voters to find when to vote and where to vote, early voting and Election Day polling locations, view and mark sample ballots, see their elected officials, districts and county election commission information, as well as access online election results, is through the GoVoteTN app.",
+            "dates": [],
+            "url": "https://sos.tn.gov/govotetn",
+            "navigationUrl": "https://govote.tnsos.gov/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:45:01.110801+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:1dc7530b9458cb856ed13f4eceff92f2",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Absentee Ballot Request Deadline Saturday, October 24, 2026",
+            "quote": "Absentee Ballot Request Deadline Saturday, October 24, 2026",
+            "dates": [
+              "2026-10-24"
+            ],
+            "url": "https://sos.tn.gov/elections/calendar",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:03.422093+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:23e590fe5e61de111fb22b8029a421aa",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "election_office",
+            "text": "Tennessee Secretary of State",
+            "quote": "Elections 312 Rosa L. Parks Avenue 7th Floor, Snodgrass Tower Nashville, TN 37243-1102 1-877-850-4959 (615)-741-7956",
+            "dates": [],
+            "url": "https://sos.tn.gov/contact",
+            "navigationUrl": "https://sos.tn.gov/elections",
+            "electionDate": "2026-11-03",
+            "phone": "(615) 741-7956",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:42:04.383174+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:648d4d42a1b33e9ee259a787bd592118",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "polling_lookup",
+            "text": "https://govote.tnsos.gov/",
+            "quote": "View Polling Locations and Hours",
+            "dates": [],
+            "url": "https://sos.tn.gov/govotetn",
+            "navigationUrl": "https://govote.tnsos.gov/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:45:01.110801+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:6ba4ab0a75a105f6f2c5362e3a2a5937",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "registration_page",
+            "text": "https://ovr.govote.tn.gov/",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://sos.tn.gov/elections",
+            "navigationUrl": "https://ovr.govote.tn.gov/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.160839+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:95f0389e8c85e41c793c0e10ddc98a9c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "registration_deadline",
+            "text": "Voter Registration Deadline Monday, October 5, 2026",
+            "quote": "Voter Registration Deadline Monday, October 5, 2026",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://sos.tn.gov/elections/calendar",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:03.422093+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:eabab06370db2f3347d34da0a907c818",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "early_voting",
+            "text": "Early Voting Wednesday, October 14 – Thursday, October 29, 2026",
+            "quote": "Early Voting Wednesday, October 14 – Thursday, October 29, 2026",
+            "dates": [
+              "2026-10-14",
+              "2026-10-29"
+            ],
+            "url": "https://sos.tn.gov/elections/calendar",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:03.422093+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ff34ae81590f572199ca5b03d65a9b88",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "TN",
+            "divisionId": "ocd-division/country:us/state:tn",
+            "fieldKind": "registration_lookup",
+            "text": "https://tnmap.tn.gov/voterlookup/",
+            "quote": "Check My Voter Registration Status",
+            "dates": [],
+            "url": "https://sos.tn.gov/elections",
+            "navigationUrl": "https://tnmap.tn.gov/voterlookup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.160839+00:00",
+            "sourceOrg": "Tennessee Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

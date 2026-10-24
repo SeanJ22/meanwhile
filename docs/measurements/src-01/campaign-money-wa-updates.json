@@ -1,0 +1,110 @@
+{
+  "state": "WA",
+  "observedAt": "2026-10-23T10:26:11.000049+00:00",
+  "kind": "explanation-of-genuine-publisher-updates",
+  "productionInputSha256": "34aba5cfd9bd37409dd737e20b4f5bb5e3370effdf78ee1e3333b87f7feb6fda",
+  "retainedRealSourceHash": "79f4957f06f8958356953ff790886093f62e4b24e0466906ed895d70fb583511",
+  "sourceCapturedAt": "2026-10-23T09:49:22.509Z",
+  "sourceStatus": 200,
+  "sameAmounts": 431,
+  "productionCycleFacts": 434,
+  "samePersonBindings": 434,
+  "sourceURLFilingURLPublisherAndOfficialFlagUnchanged": 434,
+  "changes": [
+    {
+      "person": "Skyler Rude",
+      "entity": "plural:43c0e02f-19f5-4c29-bcb7-e9975baa0e61",
+      "cycle": 2026,
+      "amountChanges": [
+        {
+          "label": "Contributions",
+          "before": 81317.41,
+          "after": 82517.41
+        }
+      ],
+      "personBindingUnchanged": true,
+      "nativeSourceRow": {
+        "id": "ca-2026-3321525",
+        "filer_id": "RUDES  504",
+        "filer_name": "SKYLER D. RUDE (Skyler Rude)",
+        "election_year": "2026",
+        "office": "STATE REPRESENTATIVE",
+        "legislative_district": "16",
+        "has_reports": true,
+        "contributions_amount": "82517.41",
+        "expenditures_amount": "83533.04",
+        "updated_at": "2026-10-22T16:47:12.000",
+        "url": {
+          "url": "https://my.pdc.wa.gov/registration/public/-/#/public/registration/69336"
+        }
+      }
+    },
+    {
+      "person": "Jeff Wilson",
+      "entity": "plural:7f7dab20-f60b-494e-a8b1-6527165777fb",
+      "cycle": 2028,
+      "amountChanges": [
+        {
+          "label": "Contributions",
+          "before": 2800,
+          "after": 4000
+        }
+      ],
+      "personBindingUnchanged": true,
+      "nativeSourceRow": {
+        "id": "ca-2028-3397218",
+        "filer_id": "WILSS  632",
+        "filer_name": "Stephen Jeffrey Wilson (Jeff Wilson)",
+        "election_year": "2028",
+        "office": "STATE SENATOR",
+        "legislative_district": "19",
+        "has_reports": true,
+        "contributions_amount": "4000.00",
+        "expenditures_amount": "0.0",
+        "updated_at": "2026-10-22T16:12:15.000",
+        "url": {
+          "url": "https://my.pdc.wa.gov/registration/public/-/#/public/registration/70187"
+        }
+      }
+    },
+    {
+      "person": "Sam Low",
+      "entity": "plural:d3783097-d29a-46e1-a0da-ed7d8cab5a04",
+      "cycle": 2026,
+      "amountChanges": [
+        {
+          "label": "Contributions",
+          "before": 181635.3,
+          "after": 185635.3
+        }
+      ],
+      "personBindingUnchanged": true,
+      "nativeSourceRow": {
+        "id": "ca-2026-3382083",
+        "filer_id": "LOW SE 258",
+        "filer_name": "Samuel E. Low (Sam Low)",
+        "election_year": "2026",
+        "office": "STATE REPRESENTATIVE",
+        "legislative_district": "39",
+        "has_reports": true,
+        "contributions_amount": "185635.30",
+        "expenditures_amount": "133428.42",
+        "updated_at": "2026-10-22T20:37:18.000",
+        "url": {
+          "url": "https://my.pdc.wa.gov/registration/public/-/#/public/registration/67303"
+        }
+      }
+    }
+  ],
+  "explanation": "Three contribution totals rose in the real official summary extract; the exact native rows independently equal the new replayed cycle totals. Every held cycle keeps its person, seat, public filing URL, publisher, and official flag. All 434 source hashes and vault keys advance to the newly retained official extract. The separate missing-seat-cohort failure is preserved under missing-seat-failure; corrected initial, hourly, and tomorrow publication/API/card runs now pass.",
+  "priorProductionSourceHashes": [
+    {
+      "sha256": "9f90fb6ffc2f3813914efae01683fda86a03e36fe58b530a1039895250eab9ae",
+      "cycleSources": 420
+    },
+    {
+      "sha256": "1be72e3a6921d557954721030ad859620b8b475fdada12db3884f10b96e8b52d",
+      "cycleSources": 14
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "../civic-data/state-scopes.ts";
+import { ballotNavigationState } from "../civic-data/ballot-navigation-scope.ts";
 import { stateFromRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
@@ -131,8 +132,9 @@ export async function ensurePromotedEdge(recordClass: RoutineRecordClass, scope:
     for (const entry of loaded?.entries ?? []) entries.set(entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`, entry);
     return currentPromotedEdge(recordClass, scope);
   }
-  for (const scopedFamily of STATE_BALLOT_FAMILIES) {
-    const state = stateFromBallotScope(scope, scopedFamily);
+  const navigationState = recordClass === "CURATED_READER_RECORD" ? ballotNavigationState(scope) : null;
+  for (const scopedFamily of [...STATE_BALLOT_FAMILIES, "ballot-navigation"] as const) {
+    const state = scopedFamily === "ballot-navigation" ? navigationState : stateFromBallotScope(scope, scopedFamily);
     const family: StateAuthorityFamily = scopedFamily === "candidate-corpus" ? "candidate-publications" : scopedFamily;
     if (!state || !stateEdge.families.has(family)) continue;
     let entries = loadedStateEntries.get(bundle);

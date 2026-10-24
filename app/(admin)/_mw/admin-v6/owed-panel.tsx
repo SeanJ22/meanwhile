@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { OwedRule, OwedTable } from "@/lib/coverage/owed-table.ts";
 import type { StateOwedCounts } from "@/lib/coverage/owed-read.ts";
 import type { SettingRow } from "@/lib/control-plane/admin-view/v6-settings-read.ts";
@@ -18,6 +18,8 @@ const kindWords: Record<string, string> = { place: "Place", government: "Governm
   measure: "Ballot measure", committee: "Campaign committee", statement: "Public statement", law_question: "Law question", news_item: "Government news" };
 const clockWords: Record<string, string> = { officeholder: "Officeholder", contact: "Contact", comment_rule: "Taking part", meeting: "Meeting", agenda: "Agenda",
   outcome: "Decision", vote: "Vote", money: "Funding", statement: "Statement", portrait: "Portrait", ballot: "Election", law: "Law", news: "News", same_person_link: "Person identity" };
+const placeWords: Record<string, string> = { county: "County", place: "City or town", school_district: "School district", sldu: "State senate district",
+  sldl: "State house district", cd: "Congressional district", special_district: "Special district", fire_district: "Fire district", water_district: "Water district", sanitation_district: "Sanitation district" };
 const size = (table: OwedTable) => table.base.length + Object.values(table.states).reduce((n, rows) => n + rows.length, 0);
 
 function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload: () => void }) {
@@ -25,6 +27,7 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
   const [scope, setScope] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const pending = useRef<{ readonly body: string; readonly key: string } | null>(null);
   const table = draft ?? data.table;
   const rows = scope ? table.states[scope] ?? [] : table.base;
   function update(next: readonly OwedRule[]) {
@@ -35,17 +38,19 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
   async function save(value: OwedTable, undoOf?: string) {
     setSaving(true); setMessage("");
     try {
+      const input = { key: data.setting.key, value, why: undoOf ? "Undo" : "", ...(undoOf ? { undoOf } : {}) };
+      const body = JSON.stringify(input);
+      if (pending.current?.body !== body) pending.current = { body, key: crypto.randomUUID() };
       const response = await fetch("/api/admin/action", { method: "POST", credentials: "same-origin", headers: { "content-type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ type: "config.setSetting", subject: data.setting.key, idempotencyKey: crypto.randomUUID(), returnTo: "/admin?view=settings",
-          input: { key: data.setting.key, value, why: undoOf ? "Undo" : "", ...(undoOf ? { undoOf } : {}) } }) });
+        body: JSON.stringify({ type: "config.setSetting", subject: data.setting.key, idempotencyKey: pending.current.key, returnTo: "/admin?view=settings", input }) });
       const result = await response.json() as ActionOutcome;
       if (!response.ok || !result.ok || result.receipt.outcome !== "DONE") throw new Error(result.receipt?.says ?? "The list could not be saved.");
-      setDraft(null); setMessage(undoOf ? "The previous list is restored." : "Saved."); reload();
+      pending.current = null; setDraft(null); setMessage(undoOf ? "The previous list is restored." : "Saved."); reload();
     } catch (error) { setMessage(error instanceof Error ? error.message : "The list could not be saved."); }
     finally { setSaving(false); }
   }
   const previous = data.setting.undo ? JSON.parse(data.setting.undo.value) as OwedTable : null;
-  return <div className={s.stack}>
+  return <fieldset className={s.stack} disabled={saving} style={{ border: 0, padding: 0, minWidth: 0 }}>
     <label className={s.small}>Applies in <select aria-label="Where items are owed" value={scope} onChange={event => setScope(event.target.value)}>
       <option value="">Every state</option>{US_STATES.map(state => <option key={state.code} value={state.code.toUpperCase()}>{state.name} additions</option>)}
     </select></label>
@@ -55,7 +60,7 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
         <td><select aria-label={`Kind for item ${index + 1}`} value={row.kind} onChange={event => edit(index, { kind: event.target.value, placeKind: undefined })}>
           {Object.entries(kindWords).map(([kind, words]) => <option key={kind} value={kind}>{words}</option>)}
         </select>{row.kind === "place" && <select aria-label={`Place kind for item ${index + 1}`} value={row.placeKind ?? ""} onChange={event => edit(index, { placeKind: event.target.value || undefined })}>
-          <option value="">Every kind</option>{DEFAULT_KINDS.division.map(kind => <option key={kind.key} value={kind.key}>{kind.label}</option>)}
+          <option value="">Every kind</option>{DEFAULT_KINDS.division.map(kind => <option key={kind.key} value={kind.key}>{placeWords[kind.key] ?? kind.label}</option>)}
         </select>}</td>
         <td><input aria-label={`What is owed for item ${index + 1}`} value={row.label} maxLength={200} onChange={event => edit(index, { label: event.target.value })} />
           <details><summary>Technical details</summary><label>Field <input value={row.field} onChange={event => edit(index, { field: event.target.value })} /></label>
@@ -78,21 +83,27 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
       <ul>{previous.base.map((row, index) => <li key={index}>{kindWords[row.kind] ?? "Record"}: {row.label}</li>)}
         {Object.entries(previous.states).flatMap(([state, items]) => items.map((row, index) => <li key={`${state}:${index}`}>{US_STATES.find(s => s.code.toUpperCase() === state)?.name}: {row.label}</li>))}</ul>
     </details>}
-  </div>;
+  </fieldset>;
 }
 
 export function OwedPanel() {
-  const { reading, reload } = useReading<{ readonly data: OwedData }>("/api/admin/v6/owed", 60_000);
+  const [countState, setCountState] = useState("US");
+  const { reading, reload } = useReading<{ readonly data: OwedData }>(`/api/admin/v6/owed?state=${countState}`, 60_000);
   const data = reading.kind === "ready" ? reading.data.data : null;
+  const measured = data?.counts?.filter(row => row.state === countState);
+  const stateName = countState === "US" ? "National government" : US_STATES.find(row => row.code.toUpperCase() === countState)!.name;
   return <Card title="What readers are owed" id="owed" aside={<button type="button" className={s.btn} onClick={reload}>Refresh</button>}>
     <div className={s.stack}>
       {reading.kind === "loading" && <Loading what="what readers are owed" />}
       {reading.kind === "failed" && <p className={s.p}>—</p>}
       {reading.kind === "ready" && reading.stale && <p className={s.small}>Showing the last reading. Refresh is pending.</p>}
       {data && <>
+        <label className={s.small}>State <select aria-label="State counts" value={countState} onChange={event => setCountState(event.target.value)}>
+          <option value="US">National government</option>{US_STATES.map(state => <option key={state.code} value={state.code.toUpperCase()}>{state.name}</option>)}
+        </select></label>
         <div className={s.tableWrap}><table className={s.table}><caption>What readers have by state</caption>
           <thead><tr><th scope="col">State</th><th scope="col">Owed</th><th scope="col">Held</th><th scope="col">Missing</th><th scope="col">Refresh due</th><th scope="col">Stuck</th></tr></thead>
-          <tbody>{(data.counts ?? US_STATES.map(state => ({ state: state.code, name: state.name, owed: null, held: null, missing: null, stale: null, stuck: null }))).map(row => <tr key={row.state}>
+          <tbody>{(measured?.length ? measured : [{ state: countState, name: stateName, owed: null, held: null, missing: null, stale: null, stuck: null }]).map(row => <tr key={row.state}>
             <th scope="row">{row.name}</th>{(["owed", "held", "missing", "stale", "stuck"] as const).map(key => <td key={key}>{row[key]?.toLocaleString("en-US") ?? "—"}</td>)}
           </tr>)}</tbody>
         </table></div>

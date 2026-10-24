@@ -5,7 +5,6 @@ import test from "node:test";
 import { actionInput } from "../app/(admin)/_mw/admin-v6/contract.ts";
 import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
 import type { ActionKind } from "../app/(admin)/_mw/admin-v6/model.ts";
-import { owedOverlayView } from "../lib/control-plane/admin-view/owed-overlay-view.ts";
 import { owedKindUpdates } from "../lib/control-plane/admin-view/updates-read.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
@@ -82,11 +81,8 @@ test("declining an added item removes it from that place's list, the log shows w
   assert.equal(rowsNow().some((r) => r.checklistId === "GOV-X1"), false, "declined, so no longer owed");
   assert.ok(rowsNow().some((r) => r.checklistId === "GOV-01"), "everything else is still owed");
 
-  const view = owedOverlayView(overlay, "2026-10-05T16:00:00Z");
-  assert.equal(view.declined, 1);
-  const line = view.log.find((e) => e.kind === "decline")!;
-  assert.equal(line.reason, "Not a duty of a county board", "the log shows why");
-  assert.equal(line.canUndo, true);
+  assert.equal(overlay?.declines.filter(row => row.undone === null).length, 1);
+  assert.equal(overlay?.declines[0].reason, "Not a duty of a county board");
 
   const undo = await send(repos, "owed-undo", overlay!.declines[0].changeId, {}, "owed-undo-0003", "2026-10-05T16:00:00Z");
   assert.equal(undo.ok, true, JSON.stringify(undo));

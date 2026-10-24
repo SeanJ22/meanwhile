@@ -1,0 +1,42 @@
+{
+  "observedAt": "2026-10-24T09:28:31.485Z",
+  "runId": "rb-a6-reader@2026-10-24T09:28:26.254Z",
+  "browser": "Google Chrome for Testing",
+  "writesBlocked": 0,
+  "results": [
+    {
+      "zip": "85003",
+      "status": 200,
+      "readyMs": 1632,
+      "chars": 49653,
+      "election": "November 3rd, 2026",
+      "electionOffice": [
+        "Elections Division, Office of the Secretary of State, Phoenix, AZ",
+        "Secretary of State",
+        "Secretary of StateSTATE",
+        "“Vote Alex Kolodin for Arizona Secretary of State in November 2026! Your Conservative Candidate for AZ's Chief of Elections.”",
+        "No U.S. Senate seat is on Arizona's 2026 ballot — the Secretary of State's 2026 candidate filing lists no U.S. Senate contest; neither Arizona seat is scheduled this cycle."
+      ]
+    },
+    {
+      "zip": "19147",
+      "status": 200,
+      "readyMs": 1573,
+      "chars": 7372,
+      "election": null,
+      "electionOffice": [
+        "Bureau of Commissions, Elections and Legislation, Department of State, Harrisburg, PA"
+      ]
+    },
+    {
+      "zip": "98101",
+      "status": 200,
+      "readyMs": 1017,
+      "chars": 10234,
+      "election": null,
+      "electionOffice": [
+        "Elections Division, Office of the Secretary of State, Olympia, WA"
+      ]
+    }
+  ]
+}

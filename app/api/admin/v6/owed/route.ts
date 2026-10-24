@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
     if (row && !isAdminConfig(row.value)) throw new Error("Settings could not be read");
     const config = row?.value ?? null;
     const query = factReader();
-    const counts = query ? await readStateOwedCounts(query, config, observedAt) : null;
+    const state = request.nextUrl.searchParams.get("state") ?? "US";
+    const counts = query ? await readStateOwedCounts(query, config, observedAt, state).catch(() => null) : null;
     const setting = projectSettings({ config, heartbeat: null, published: null, observedAt }).rows.find(row => row.key === OWED_TABLE_SETTING)!;
     return {
       contract: "admin-v6/owed@2",

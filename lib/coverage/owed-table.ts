@@ -45,6 +45,8 @@ export const DEFAULT_OWED_TABLE: OwedTable = {
     rule("seat", "holder", "Current officeholder", "officeholder", ["OFF-01"]),
     rule("person", "name", "Officeholder name", "officeholder", ["OFF-04"]),
     rule("person", "office", "Office and role", "officeholder", ["OFF-01"]),
+    rule("person", "term_start", "When the term begins", "officeholder", ["OFF-01"]),
+    rule("person", "term_end", "When the term ends", "officeholder", ["OFF-01"]),
     rule("person", "office_phone", "Office phone", "contact", ["OFF-09"]),
     rule("person", "office_email", "Office email", "contact", ["OFF-09"]),
     rule("person", "office_address", "Office address", "contact", ["OFF-09"]),
@@ -90,14 +92,16 @@ function validRows(value: unknown): value is readonly OwedRule[] {
       !Array.isArray(row.checklist) || !row.checklist.every(id => typeof id === "string" && checklistIds.has(id)) ||
       row.placeKind !== undefined && (row.kind !== "place" || typeof row.placeKind !== "string" || !/^[a-z][a-z_]{0,99}$/.test(row.placeKind))) return false;
     const key = JSON.stringify([row.kind, row.placeKind ?? null, row.field]);
-    if (keys.has(key)) return false;
+    if (keys.has(key) || (value as OwedRule[]).some(other => other !== row && other.kind === row.kind && other.field === row.field &&
+      (other.placeKind === undefined || row.placeKind === undefined))) return false;
     keys.add(key); return true;
   });
 }
 export function owedTableValid(value: unknown): value is OwedTable {
   return object(value) && Object.keys(value).length === 2 && validRows(value.base) && object(value.states) &&
     Object.entries(value.states).every(([state, rows]) => /^[A-Z]{2}$/.test(state) && stateEntry(state) !== null && validRows(rows) &&
-      rows.every(row => !(value.base as readonly OwedRule[]).some(base => base.kind === row.kind && base.field === row.field && base.placeKind === row.placeKind)));
+      rows.every(row => !(value.base as readonly OwedRule[]).some(base => base.kind === row.kind && base.field === row.field &&
+        (base.placeKind === undefined || row.placeKind === undefined || base.placeKind === row.placeKind))));
 }
 registerSetting({ key: OWED_TABLE_SETTING, label: "What readers are owed by kind of place", readerFacing: false, control: "json",
   defaultValue: DEFAULT_OWED_TABLE as unknown as SettingValue, validate: (value): value is SettingValue => owedTableValid(value) });

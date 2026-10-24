@@ -12,6 +12,9 @@ import { defaultAdminConfig, type AdminConfig } from "../lib/control-plane/gatew
 import { lookupAction } from "../lib/control-plane/gateway/registry.ts";
 import { withSetting, type SettingValue } from "../lib/control-plane/settings.ts";
 import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
+import { readFileSync } from "node:fs";
+import { publishClaim } from "../lib/facts/publish.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
 
 const now = "2026-10-24T12:00:00.000Z";
 const table: OwedTable = { base: [
@@ -71,15 +74,19 @@ test("every state's totals match direct SQL and a hunter read preserves duplicat
     }
     await db.query("INSERT INTO entity_place VALUES ('body:CA','place:AZ')");
     await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('meeting:AZ','meeting','Meeting','AZ','body:AZ')");
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('other-place:AZ','place','Another place','AZ','place:AZ'),('other-body:AZ','body','Another board','AZ','other-place:AZ')");
     const all = await readStateOwedCounts(db.query, config(), now);
-    const direct = await db.query(`SELECT e.state,count(*)::int AS owed,count(*) FILTER (WHERE x.field='name')::int AS held,
-      count(*) FILTER (WHERE x.field<>'name')::int AS missing FROM entity e CROSS JOIN LATERAL
-        (SELECT 'name' AS field UNION ALL SELECT 'office_phone' UNION ALL SELECT 'agenda_url' WHERE e.state='AZ') x
-      WHERE e.kind='body' GROUP BY e.state`);
+    const direct = await db.query(`WITH expected AS (SELECT e.id,e.state,x.field FROM entity e CROSS JOIN LATERAL
+        (SELECT 'name' AS field UNION ALL SELECT 'office_phone' UNION ALL SELECT 'agenda_url' WHERE e.state='AZ') x WHERE e.kind='body'),
+      held AS (SELECT DISTINCT entity_id,field FROM fact WHERE status IN ('live','held'))
+      SELECT e.state,count(*)::int AS owed,count(h.entity_id)::int AS held,(count(*)-count(h.entity_id))::int AS missing
+      FROM expected e LEFT JOIN held h ON h.entity_id=e.id AND h.field=e.field GROUP BY e.state`);
     for (const row of direct) {
       const got = all.find(state => state.state === row.state)!;
       assert.equal(got.owed, row.owed, String(row.state)); assert.equal(got.held, row.held, String(row.state)); assert.equal(got.missing, row.missing, String(row.state));
       assert.equal(got.owed, got.held + got.missing); assert.equal(got.stuck, 1);
+      const scoped = await readStateOwedCounts(db.query, config(), now, String(row.state));
+      assert.deepEqual(scoped, [got], `State-selected reading: ${row.state}`);
     }
     assert.equal(all.length, US_STATES.length + 1);
     assert.equal(all.find(row => row.state === "US")?.owed, 0);
@@ -89,6 +96,28 @@ test("every state's totals match direct SQL and a hunter read preserves duplicat
     assert.equal(needs.held[0].facts.length, 2);
     assert.equal(needs.missing.find(item => item.field === "office_phone")?.blank?.reason, "NOT_FOUND");
     assert.ok([...needs.missing, ...needs.held].every(item => item.entityId === "body:AZ"));
+    await assert.rejects(readPlaceNeeds(db.query, config(), "unknown-place", now), /no coverage/);
+  } finally { await db.pg.close(); }
+});
+
+test("the hunter entry point uses RB-A2's selected ZIP places without adding another town in the county", async () => {
+  const db = await factDb();
+  try {
+    await db.pg.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
+      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+    await db.pg.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('county','place','County','AZ'),('town','place','Town','AZ'),('elsewhere','place','Another town','AZ')");
+    await db.query("UPDATE entity SET parent_id='county' WHERE id IN ('town','elsewhere')");
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('county-board','body','County board','AZ','county'),('town-board','body','Town board','AZ','town'),('other-board','body','Other board','AZ','elsewhere')");
+    await db.query(`INSERT INTO place_boundary(place_id,boundary_year,layer,version,checked_at)
+      VALUES ('county',2023,'county','county:2023',$1),('town',2023,'place','place:2023',$1)`, [now]);
+    await db.query("INSERT INTO zip_place(zip,place_id,boundary_year) VALUES ('85701','county',2023),('85701','town',2023)");
+    const repos = createMemoryRepositories();
+    await repos.adminConfig.save(null, config(), now);
+    const needs = await placeNeeds(repos, { kind: "zip", code: "85701" }, now, db.query);
+    assert.deepEqual(needs.memberships.map(row => row.placeId), ["county", "town"]);
+    assert.deepEqual([...new Set(needs.missing.map(row => row.entityId))], ["county-board", "town-board"]);
+    await assert.rejects(placeNeeds(repos, { kind: "zcta", code: "85701" }, now, db.query), /no coverage/);
   } finally { await db.pg.close(); }
 });
 
@@ -120,5 +149,22 @@ test("the next scheduled pass reads edited settings and undo again, and stalenes
     await repos.adminConfig.save(saved, withSetting(saved.value, { id: "undo-table", key: OWED_TABLE_SETTING, at: now, why: "Undo", undoOf: "table-edit", after: table as unknown as SettingValue }), now);
     const afterUndo = await placeNeeds(repos, "place:AZ", "2026-10-24T13:20:00.000Z", db.query);
     assert.equal(afterUndo.counts.owed, first.counts.owed);
+  } finally { await db.pg.close(); }
+});
+
+test("a verified fact publishes while other owed fields remain missing", async () => {
+  const db = await factDb();
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('county','place','County','AZ',NULL),('board','body','Arizona Board','AZ','county')");
+    await db.query("INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key) VALUES('https://example.gov/board','https://example.gov/board',$1,repeat('a',64),'publication-copy')", [now]);
+    const before = await readPlaceNeeds(db.query, config(), "county", now);
+    assert.ok(before.missing.length > 1);
+    const result = await publishClaim(db, { entity: { id: "board", fullName: "Arizona Board", stateName: "Arizona", hosts: ["example.gov"], externalIds: [] },
+      field: "name", fieldKind: "officeholder", provenance: "OFFICIAL", value: "Arizona Board", valueText: "Arizona Board", quote: "Arizona Board",
+      copy: { id: 1, finalUrl: "https://example.gov/board", text: "Arizona Board", fetchedAt: new Date(now), isArchive: false }, producedBy: "test", costUsd: 0 },
+    factClocks(config()), new Date(now), { purge: async () => ({ purged: true }) });
+    assert.ok("decision" in result && result.decision === "PUBLISH");
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM fact WHERE status='live'"))[0].n, 1);
+    assert.equal((await readPlaceNeeds(db.query, config(), "county", now)).missing.length, before.missing.length - 1);
   } finally { await db.pg.close(); }
 });

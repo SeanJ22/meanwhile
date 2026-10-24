@@ -225,7 +225,7 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
 
   const selected = [...scopes.values()].map(scope => options.states
     ? scope.type === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states)
-    : scope).filter(scope => !options.states || scope.groupings.length > 0);
+    : scope);
   const zctaUniverse = new Set<string>();
   for (const scope of selected) for (const grouping of scope.groupings) for (const overlap of grouping.overlaps) zctaUniverse.add(overlap.zcta5);
   const coverage = options.states

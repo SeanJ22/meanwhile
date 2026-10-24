@@ -67,7 +67,10 @@ export function buildStatePlaceMap(input: {
     .map(group => [group.geoid, group.label.replace(new RegExp(`^${state}\\s+`), "")]));
   const put = (id: string, name: string, layer: string, geoid: string, year: number, version: string, sourceUrls: readonly string[] = []) => {
     const previous = places.get(id);
-    const aliases = [...(previous?.aliases ?? []), ...(geoid ? [{ scheme: layer === "district" ? "boundary-feature" : `census-geoid:${layer}`, value: geoid }] : []),
+    // A district source's local feature key can identify a district *type*
+    // rather than one entity (Idaho repeats these across many districts).
+    // Keep Census GEOIDs and NCES ids; source feature keys stay provenance.
+    const aliases = [...(previous?.aliases ?? []), ...(geoid && layer !== "district" ? [{ scheme: `census-geoid:${layer}`, value: geoid }] : []),
       ...(geoid && ["unsd", "elsd", "scsd"].includes(layer) ? [{ scheme: "nces", value: geoid }] : [])];
     places.set(id, { id, name: previous?.name ?? name, state: id === "ocd-division/country:us" ? null : state, aliases: [...new Map(aliases.map(a => [`${a.scheme}:${a.value}`, a])).values()] });
     if (!boundaries.has(key(id, year))) boundaries.set(key(id, year), { placeId: id, boundaryYear: year, layer, version,

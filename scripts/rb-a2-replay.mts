@@ -53,7 +53,12 @@ for (const state of states) {
       await loadStatePlaceMap({ transaction }, map);
       const second = (await query("SELECT count(*)::int AS n FROM zip_place"))[0].n;
       if (first !== second) throw new Error("A repeated import changes the ZIP edge count");
+      const [connections] = await query(`SELECT count(*)::int AS n FROM entity_place p JOIN entity e ON e.id=p.entity_id WHERE e.kind='government'`);
+      const governmentProof = await query(`SELECT e.id AS government_id,e.name,p.place_id,p.boundary_year,b.county_attachment,b.host_county_id,m.zip
+        FROM entity_place p JOIN entity e ON e.id=p.entity_id JOIN place_boundary b USING(place_id,boundary_year)
+        JOIN zip_place m USING(place_id,boundary_year) WHERE e.kind='government' ORDER BY b.county_attachment DESC,e.id,m.zip LIMIT 1`);
       let worstMs = 0;
+      let planProof: Record<string, unknown> | undefined;
       const codes = [...new Set(map.zipEdges.map(e => e.code))];
       const baseline = await readLegacyStateMemberships(root, state);
       const missing: { zip: string; id: string }[] = [];
@@ -62,8 +67,15 @@ for (const state of states) {
         const result = await placesForCode(query, "zip", zip, { purpose: "representation", asOf: "2026-10-24" });
         worstMs = Math.max(worstMs, performance.now() - start);
         if (!result.memberships.length) throw new Error(`Imported ZIP ${zip} cannot be read`);
+        if (!planProof && result.memberships.some(m => m.layer === "cd")) {
+          const election = await placesForCode(query, "zip", zip, { purpose: "election", asOf: "2026-10-24", electionDate: "2026-11-03" });
+          planProof = { zip, representation: result.memberships.filter(m => m.layer === "cd").map(m => ({ id: m.placeId, version: m.version })),
+            election: election.memberships.filter(m => m.layer === "cd").map(m => ({ id: m.placeId, version: m.version })) };
+          if (!election.memberships.some(m => m.layer === "cd" && m.version === "cd:120")) throw new Error(`The election lookup cannot read cd:120 for ${zip}`);
+        }
         const ids = new Set(result.memberships.map(m => m.placeId));
-        for (const id of baseline.get(zip)?.ids ?? []) if ((!ocdStateCode(id) || ocdStateCode(id)?.toUpperCase() === state) && !ids.has(id)) missing.push({ zip, id });
+        const previous = baseline.get(zip);
+        for (const id of [...previous?.ids ?? [], ...previous?.fringe ?? []]) if ((!ocdStateCode(id) || ocdStateCode(id)?.toUpperCase() === state) && !ids.has(id)) missing.push({ zip, id });
       }
       for (const zip of baseline.keys()) if (!codes.includes(zip)) missing.push({ zip, id: 'entire ZIP' });
       if (missing.length) throw new Error(`Legacy memberships missing: ${JSON.stringify(missing.slice(0, 8))} (${missing.length} total)`);
@@ -75,7 +87,8 @@ for (const state of states) {
       if (remaining !== held.length) throw new Error("A held entity id disappeared");
       const result = { state, places: map.places.length, zips: codes.length, zipEdges: second, zctaEdges: map.zctaEdges.length,
         heldPlaceIds: held.length, heldPlaceIdsPreserved: remaining, missingLegacyMemberships: missing.length,
-        gainedDistrictRelationships: gains.size, governmentConnections: governments.length, sourcePeakMiB,
+        gainedDistrictRelationships: gains.size, governmentConnections: governments.length, entityPlaceConnections: connections.n,
+        governmentProof, planProof, sourcePeakMiB,
         repeatImport: first === second, worstZipMs: Math.round(worstMs * 100) / 100 };
       results.push(result); console.log(JSON.stringify(result));
       await writeFile(join(output, `${state.toLowerCase()}-result.json`), JSON.stringify({ production: identity, ...result }, null, 2));

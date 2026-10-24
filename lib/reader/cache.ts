@@ -7,6 +7,8 @@ export interface ReaderCachePurgeResult {
   readonly detail?: string;
 }
 
+const batchedPurgers=new WeakSet<ReaderCachePurger>();
+
 export type ReaderCachePurger = (tags: readonly string[]) => Promise<ReaderCachePurgeResult>;
 
 /** The same tag purge is used by publication jobs and deployed reader functions. */
@@ -121,9 +123,7 @@ export function readerCacheScopeForPublication(scope: string, context: {
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
 export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
   // Explicit global owner actions and outcomes without a known place still clear place answers.
-  const result=await invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
-  await countReaderInvalidation(scope,result.purged);
-  return result;
+  return invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
@@ -131,6 +131,10 @@ async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderC
   let result: ReaderCachePurgeResult;
   try { result = await purge(tags); }
   catch (error) { result = { purged: false, detail: error instanceof Error ? error.message : String(error) }; }
+  if(!batchedPurgers.has(purge))await countReaderInvalidation({
+    national:tags.includes(READER_NATIONAL_CACHE_TAG),nationalPeople:tags.includes(READER_NATIONAL_PEOPLE_CACHE_TAG),
+    states:tags.filter(tag=>tag.startsWith("reader-state:")).map(tag=>tag.slice("reader-state:".length)),
+  },result.purged);
   if (!result.purged) console.error("Reader cache invalidation failed after publication", { tags, detail: result.detail ?? "purge refused" });
   return result;
 }
@@ -138,12 +142,15 @@ async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderC
 /** A bulk publication clears each affected tag once, including facts committed before a later field failed. */
 export async function withBatchedReaderInvalidation<T>(write: (collect: ReaderCachePurger) => Promise<T>, purge?: ReaderCachePurger): Promise<T> {
   const changed = new Set<string>();
+  const collect:ReaderCachePurger=async tags=>{
+    for(const tag of tags)changed.add(tag);
+    return {purged:true};
+  };
+  batchedPurgers.add(collect);
   try {
-    return await write(async tags => {
-      for (const tag of tags) changed.add(tag);
-      return { purged: true };
-    });
+    return await write(collect);
   } finally {
+    batchedPurgers.delete(collect);
     if (changed.size) await invalidateReaderCacheTags([...changed].sort(), purge);
   }
 }

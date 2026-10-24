@@ -1,29 +1,31 @@
-CREATE TABLE count_hour (
+CREATE TABLE IF NOT EXISTS count_hour (
+  state char(2) NOT NULL,
   hour timestamptz NOT NULL,
-  state text NOT NULL,
-  family text NOT NULL,
-  stage text NOT NULL,
-  delta bigint NOT NULL DEFAULT 0,
-  incoming bigint NOT NULL DEFAULT 0,
-  outgoing bigint NOT NULL DEFAULT 0,
-  changed bigint NOT NULL DEFAULT 0,
-  PRIMARY KEY (hour,state,family,stage)
+  step text NOT NULL,
+  n bigint NOT NULL DEFAULT 0 CHECK (n>=0),
+  PRIMARY KEY (state,hour,step)
 );
 --> statement-breakpoint
 CREATE FUNCTION count_state(scope text) RETURNS text LANGUAGE sql IMMUTABLE AS $$
-  SELECT upper(coalesce(
+  SELECT CASE WHEN candidate=ANY(ARRAY['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','PR','VI','AS','GU','MP','US']) THEN candidate ELSE 'US' END
+  FROM (SELECT upper(coalesce(
     substring(normalized FROM '(?:state:|district:|territory:|us-)([a-z]{2})(?:[^a-z]|$)'),
-    substring(normalized FROM '^([a-z]{2})(?:[:/]|$)'), 'US'))
-  FROM (SELECT replace(replace(replace(replace(lower(scope),'%2f','/'),'%3a',':'),'%23','#'),'%2d','-') AS normalized) decoded
+    substring(normalized FROM '^([a-z]{2})(?:[:/]|$)'), 'US')) AS candidate
+  FROM (SELECT replace(replace(replace(replace(lower(scope),'%2f','/'),'%3a',':'),'%23','#'),'%2d','-') AS normalized) decoded) located
 $$;
 --> statement-breakpoint
-CREATE FUNCTION count_hour_add(place text, family_name text, step text, amount bigint,
+CREATE FUNCTION count_hour_at(place text,family_name text,stage text,effective_at timestamptz,amount bigint,
   n_in bigint DEFAULT 0,n_out bigint DEFAULT 0,n_changed bigint DEFAULT 0) RETURNS void LANGUAGE sql AS $$
-  INSERT INTO count_hour(hour,state,family,stage,delta,incoming,outgoing,changed)
-  VALUES(date_trunc('hour',statement_timestamp()),count_state(place),coalesce(nullif(family_name,''),'Other facts'),step,amount,n_in,n_out,n_changed)
-  ON CONFLICT(hour,state,family,stage) DO UPDATE SET
-    delta=count_hour.delta+excluded.delta,incoming=count_hour.incoming+excluded.incoming,
-    outgoing=count_hour.outgoing+excluded.outgoing,changed=count_hour.changed+excluded.changed
+  INSERT INTO count_hour(state,hour,step,n)
+  SELECT count_state(place),effective_at,'v1:'||jsonb_build_array(coalesce(nullif(family_name,''),'Other facts'),stage,metric)::text,value
+  FROM (VALUES ('stock in',greatest(amount,0)),('stock out',greatest(-amount,0)),('in',n_in),('out',n_out),('changed',n_changed)) metrics(metric,value)
+  WHERE value>0
+  ON CONFLICT(state,hour,step) DO UPDATE SET n=count_hour.n+excluded.n
+$$;
+--> statement-breakpoint
+CREATE FUNCTION count_hour_add(place text,family_name text,stage text,amount bigint,
+  n_in bigint DEFAULT 0,n_out bigint DEFAULT 0,n_changed bigint DEFAULT 0) RETURNS void LANGUAGE sql AS $$
+  SELECT count_hour_at(place,family_name,stage,date_trunc('hour',statement_timestamp()),amount,n_in,n_out,n_changed)
 $$;
 --> statement-breakpoint
 CREATE TABLE line_keeper_run (
@@ -31,6 +33,7 @@ CREATE TABLE line_keeper_run (
   checked_at timestamptz NOT NULL,
   problems integer NOT NULL,
   bytes_read bigint NOT NULL,
+  oldest jsonb NOT NULL DEFAULT '{}'::jsonb,
   CHECK (problems >= 0 AND bytes_read >= 0)
 );
 --> statement-breakpoint
@@ -79,9 +82,9 @@ END $$;
 --> statement-breakpoint
 CREATE TRIGGER count_hour_fact AFTER INSERT OR UPDATE OR DELETE ON fact FOR EACH ROW EXECUTE FUNCTION count_fact_write();
 --> statement-breakpoint
-INSERT INTO count_hour(hour,state,family,stage,delta)
- SELECT date_trunc('hour',statement_timestamp()),count_state(d.state),d.family,d.stage,count(*)
- FROM fact f CROSS JOIN LATERAL count_fact_dimension(to_jsonb(f)) d GROUP BY 2,3,4;
+INSERT INTO count_hour(state,hour,step,n)
+ SELECT count_state(d.state),date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(d.family,d.stage,'stock in')::text,count(*)
+ FROM fact f CROSS JOIN LATERAL count_fact_dimension(to_jsonb(f)) d GROUP BY 1,3;
 --> statement-breakpoint
 CREATE FUNCTION count_pointer_write() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
@@ -97,9 +100,9 @@ END $$;
 CREATE TRIGGER count_hour_pointer AFTER INSERT OR UPDATE OR DELETE ON civic_data_promotions
  FOR EACH ROW EXECUTE FUNCTION count_pointer_write();
 --> statement-breakpoint
-INSERT INTO count_hour(hour,state,family,stage,delta)
- SELECT date_trunc('hour',statement_timestamp()),count_state(scope),record_class,'published sets',count(*)
- FROM civic_data_promotions GROUP BY 2,3;
+INSERT INTO count_hour(state,hour,step,n)
+ SELECT count_state(scope),date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(record_class,'published sets','stock in')::text,count(*)
+ FROM civic_data_promotions GROUP BY 1,3;
 
 --> statement-breakpoint
 CREATE FUNCTION count_entity_move() RETURNS trigger LANGUAGE plpgsql AS $$
@@ -120,3 +123,24 @@ END $$;
 --> statement-breakpoint
 CREATE TRIGGER count_hour_entity AFTER UPDATE OF state,kind ON entity FOR EACH ROW
   WHEN ((OLD.state,OLD.kind) IS DISTINCT FROM (NEW.state,NEW.kind)) EXECUTE FUNCTION count_entity_move();
+--> statement-breakpoint
+CREATE FUNCTION count_subject_write() RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
+  IF TG_OP='UPDATE' THEN
+    IF OLD IS NOT DISTINCT FROM NEW THEN RETURN NEW; END IF;
+    IF (OLD.state,OLD.kind) IS NOT DISTINCT FROM (NEW.state,NEW.kind) THEN
+      PERFORM count_hour_add(NEW.state,NEW.kind,'subjects',0,0,0,1);
+      RETURN NEW;
+    END IF;
+  END IF;
+  IF TG_OP<>'INSERT' THEN PERFORM count_hour_add(OLD.state,OLD.kind,'subjects',-1,0,1); END IF;
+  IF TG_OP<>'DELETE' THEN PERFORM count_hour_add(NEW.state,NEW.kind,'subjects',1,1,0); END IF;
+  RETURN coalesce(NEW,OLD);
+END $$;
+--> statement-breakpoint
+CREATE TRIGGER count_hour_subject AFTER INSERT OR UPDATE OR DELETE ON entity
+ FOR EACH ROW EXECUTE FUNCTION count_subject_write();
+--> statement-breakpoint
+INSERT INTO count_hour(state,hour,step,n)
+ SELECT count_state(state),date_trunc('hour',statement_timestamp()),'v1:'||jsonb_build_array(kind,'subjects','stock in')::text,count(*)
+ FROM entity GROUP BY 1,3;

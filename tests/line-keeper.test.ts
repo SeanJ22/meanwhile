@@ -6,6 +6,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { countHourMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A8.ts";
+import { SHARED_WORK_DDL } from "../lib/control-plane/repository/migrations/RB-A1.ts";
 import { REJECT_REWRITE_FUNCTION_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
 import { readCounts, readOldest } from "../lib/control-plane/line-keeper/read.ts";
@@ -40,6 +41,7 @@ async function controlDatabase() {
   await db.exec(REJECT_REWRITE_FUNCTION_DDL);
   await db.exec(`CREATE TRIGGER cp_owner_snapshots_no_rewrite BEFORE DELETE ON cp_owner_snapshots
     FOR EACH ROW EXECUTE FUNCTION cp_reject_rewrite();`);
+  for(const statement of SHARED_WORK_DDL)await db.exec(statement);
   await db.exec(countHourMigrationDefinition());
   await db.query(`INSERT INTO cp_admin_config VALUES('current',1,now(),$1::jsonb)`,[JSON.stringify(defaultAdminConfig(new Date().toISOString()))]);
   return db;
@@ -65,9 +67,9 @@ test('every fact state and new pointer family agrees with direct SQL through ins
     assert.equal(counts.find(c=>c.family==='FUTURE_FAMILY')!.state,'CA');
     assert.equal(counts.find(c=>c.family==='MEETING')!.state,'AZ','real production pointer scopes keep their state through encoding');
     assert.equal(counts.find(c=>c.family==='NEW_FAMILY')!.incoming,1,'baseline invents no writer activity');
-    const before=JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,family,stage')).rows);
+    const before=JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows);
     await db.exec(`BEGIN; INSERT INTO fact(entity_id,field,status) VALUES('az:body','name','live'); ROLLBACK;`);
-    assert.equal(JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,family,stage')).rows),before);
+    assert.equal(JSON.stringify((await db.query('SELECT * FROM count_hour ORDER BY state,hour,step')).rows),before);
   }finally{await db.close();}
 });
 
@@ -156,5 +158,33 @@ test('work-list counts follow lease and due-time boundaries without another snap
     // A same-snapshot retry cannot manufacture work moving on.
     await db.query(`UPDATE cp_owner_snapshots SET value=$1::jsonb WHERE id='current:az'`,[JSON.stringify({allRowsIndex:rows})]);
     assert.deepEqual(await readCounts(query(db),window.from,window.through,later),after);
+  }finally{await db.close();}
+});
+
+
+test('RB-A1 work rows feed the same counters and oldest ages through scheduling, leasing, refusal and completion',async()=>{
+  const db=await controlDatabase();
+  try {
+    const due=new Date(Date.now()-2*3_600_000).toISOString();
+    await db.query(`INSERT INTO work_row(id,kind,state,not_before) VALUES('new-work','read','AZ',$1::timestamptz)`,[due]);
+    const window=countWindow(new Date().toISOString());
+    let rows=await readCounts(query(db),window.from,window.through);
+    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.total,1);
+    assert.equal((await readOldest(query(db))).find(r=>r.family==='read')!.oldestAt,due);
+    const lease=new Date(Date.now()+5*60_000).toISOString();
+    await db.query(`UPDATE work_row SET lease_until=$1::timestamptz,lease_owner='runner' WHERE id='new-work'`,[lease]);
+    rows=await readCounts(query(db),window.from,window.through);
+    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.total,0);
+    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:LEASED')!.total,1);
+    const expired=new Date(Date.parse(lease)+1).toISOString();
+    rows=await readCounts(query(db),window.from,window.through,expired);
+    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:EXPIRED')!.total,1);
+    await db.exec(`UPDATE work_row SET lease_until=NULL,lease_owner=NULL,refusal='Source unavailable' WHERE id='new-work'`);
+    rows=await readCounts(query(db),window.from,window.through);
+    assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:REFUSED')!.total,1);
+    await db.exec(`DELETE FROM work_row WHERE id='new-work'`);
+    rows=await readCounts(query(db),window.from,window.through,expired);
+    assert.ok(rows.filter(r=>r.family==='read').every(r=>r.total===0),'removing a row cancels its future clock changes too');
+    assert.ok((await db.query<{n:number}>('SELECT n FROM count_hour')).rows.every(r=>Number(r.n)>=0),'the shared nonnegative CountHour contract holds');
   }finally{await db.close();}
 });

@@ -25,18 +25,22 @@ export interface CountProblem {
   readonly owner: string;
   readonly next: string;
 }
-export const COUNT_HOUR_SQL = `WITH totals AS (
-  SELECT state,family,stage,coalesce(sum(delta) FILTER (WHERE hour <= $3::timestamptz),0)::bigint AS total,
-    coalesce(sum(delta) FILTER (WHERE hour < $2::timestamptz),0)::bigint AS closed_total FROM count_hour GROUP BY state,family,stage
-), hours AS (
-  SELECT state,family,stage,sum(incoming)::bigint incoming,sum(outgoing)::bigint outgoing,
-    sum(changed)::bigint changed FROM count_hour WHERE hour >= $1::timestamptz AND hour < $2::timestamptz
-    GROUP BY state,family,stage
+export const COUNT_HOUR_SQL = `WITH parsed AS (
+  SELECT state,hour,n,CASE WHEN step LIKE 'v1:%' THEN substring(step FROM 4)::jsonb
+    ELSE jsonb_build_array('Other facts',step,'events') END AS dimension FROM count_hour
+), counters AS (
+  SELECT state,hour,dimension->>0 AS family,dimension->>1 AS stage,dimension->>2 AS metric,n FROM parsed
 )
-SELECT $1::timestamptz AS hour,t.state,t.family,t.stage,t.total,t.closed_total,
-  coalesce(h.incoming,0) incoming,coalesce(h.outgoing,0) outgoing,coalesce(h.changed,0) changed
-FROM totals t LEFT JOIN hours h ON h.state=t.state AND h.family=t.family AND h.stage=t.stage
-ORDER BY t.state,t.family,t.stage`;
+SELECT $1::timestamptz AS hour,state,family,stage,
+  coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
+    FILTER (WHERE hour <= $3::timestamptz),0)::bigint AS total,
+  coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
+    FILTER (WHERE hour < $2::timestamptz),0)::bigint AS closed_total,
+  coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS incoming,
+  coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS outgoing,
+  coalesce(sum(n) FILTER (WHERE metric='changed' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS changed
+FROM counters GROUP BY state,family,stage ORDER BY state,family,stage`;
+
 
 /** Closed hours use UTC keys; Eastern formatting includes its zone to distinguish the repeated fall hour. */
 export function countWindow(at: string) {

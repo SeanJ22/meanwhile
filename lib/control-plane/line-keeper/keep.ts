@@ -1,3 +1,4 @@
+import { REGISTRY_STATES } from "../../civic-data/state-scopes.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { fixItems, withFixAdded } from "../fix-list.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "../gateway/admin-config.ts";
@@ -61,14 +62,21 @@ export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{re
   const input=await readHour(control,reader,at);
   const hour:LineHour={...input.window,measuredAt:at,counts:input.counts,waiting:input.waiting,
     problems:countProblems(input.counts,input.previous,input.waiting,at),own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
+  const oldest:Record<string,{n:number;at:string|null}>={};
+  for(const waiting of input.waiting) {
+    const code=REGISTRY_STATES.some(state=>state===waiting.state)?waiting.state:"US";
+    const held=oldest[code];
+    oldest[code]={n:(held?.n??0)+waiting.count,at:!waiting.oldestAt||held?.at===null?null:
+      held?.at&&held.at<waiting.oldestAt?held.at:waiting.oldestAt};
+  }
   if(!options.readOnly) {
     await retireLineInventory(control);
     await writeFixes(control,hour);
     await query(control,"retire-old-runs",`DELETE FROM line_keeper_run WHERE hour < $1::timestamptz - interval '2 hours'`,[hour.from]);
-    await query(control,"save-run",`INSERT INTO line_keeper_run(hour,checked_at,problems,bytes_read)
-      VALUES($1::timestamptz,$2::timestamptz,$3,$4) ON CONFLICT(hour) DO UPDATE SET
-        checked_at=excluded.checked_at,problems=excluded.problems,bytes_read=excluded.bytes_read`,
-      [hour.from,at,hour.problems.length,hour.own.bytesRead]);
+    await query(control,"save-run",`INSERT INTO line_keeper_run(hour,checked_at,problems,bytes_read,oldest)
+      VALUES($1::timestamptz,$2::timestamptz,$3,$4,$5::jsonb) ON CONFLICT(hour) DO UPDATE SET
+        checked_at=excluded.checked_at,problems=excluded.problems,bytes_read=excluded.bytes_read,oldest=excluded.oldest`,
+      [hour.from,at,hour.problems.length,hour.own.bytesRead,JSON.stringify(oldest)]);
   }
   return {hour};
 }

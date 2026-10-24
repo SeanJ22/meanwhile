@@ -608,7 +608,7 @@ export interface HourlyCountTableData {
   readonly at: string;
   readonly status: string;
   readonly states: readonly string[];
-  readonly hours: readonly { readonly from:string; readonly through:string;
+  readonly hours: readonly { readonly from:string; readonly through:string; readonly measuredAt:string;
     readonly counts:readonly import("../../../../lib/counts/hour.ts").HourCount[]|null;
     readonly waiting:readonly import("../../../../lib/counts/hour.ts").OldestWaiting[]|null }[];
 }

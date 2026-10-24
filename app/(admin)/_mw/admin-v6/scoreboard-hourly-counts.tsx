@@ -35,6 +35,7 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
         {stages.map(step=><option key={step} value={step}>{words(step)}</option>)}
       </select></label>
     </div>
+    {hour&&<p className={s.meta}>Waiting times checked {formatEastern(hour.measuredAt)}.</p>}
     <div className={s.tableWrap}><table className={s.table}>
       <thead><tr><th scope="col">State</th><th scope="col">Now</th><th scope="col">At end of hour</th><th scope="col">In</th><th scope="col">Moved on</th><th scope="col">Updated</th><th scope="col">Oldest work waiting</th></tr></thead>
       <tbody>{data.states.filter(code=>!state||code===state).map(code=>{

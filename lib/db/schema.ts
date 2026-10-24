@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  char,
   bigint,
   date,
   primaryKey,
@@ -931,15 +932,12 @@ export const readerEventTotals = pgTable("reader_event_totals", {
 
 /** Writer totals and hourly movement; no source payloads or reader identities. */
 export const countHour = pgTable("count_hour", {
-  hour: timestamp("hour", {withTimezone:true}).notNull(),
-  state: text("state").notNull(), family: text("family").notNull(), stage: text("stage").notNull(),
-  delta: bigint("delta",{mode:"number"}).notNull().default(0),
-  incoming: bigint("incoming",{mode:"number"}).notNull().default(0),
-  outgoing: bigint("outgoing",{mode:"number"}).notNull().default(0),
-  changed: bigint("changed",{mode:"number"}).notNull().default(0),
-}, table=>[primaryKey({columns:[table.hour,table.state,table.family,table.stage]})]);
+  state: char("state",{length:2}).notNull(),hour: timestamp("hour", {withTimezone:true}).notNull(),step: text("step").notNull(),
+  n: bigint("n",{mode:"number"}).notNull().default(0),
+}, table=>[primaryKey({columns:[table.state,table.hour,table.step]}),check("count_hour_n_check",sql`${table.n} >= 0`)]);
 export const lineKeeperRun = pgTable("line_keeper_run", {
   hour: timestamp("hour",{withTimezone:true}).primaryKey(),
   checkedAt: timestamp("checked_at",{withTimezone:true}).notNull(),
   problems: integer("problems").notNull(), bytesRead: bigint("bytes_read",{mode:"number"}).notNull(),
+  oldest: jsonb("oldest").notNull().default(sql`'{}'::jsonb`),
 }, table=>[check("line_keeper_run_check",sql`${table.problems} >= 0 AND ${table.bytesRead} >= 0`)]);

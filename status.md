@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 101 (main 6cd25dd09, live 3:37 PM EDT). GATING: batch B (MT-01 db4cd927b + RB-A1 doc + RV-MEET 6be91744f, river-next ca26d9092). Returned: DB-01 (6 tests), SO-01 (River finishing after its 60-min window)
+build_state: LIVE FOR READERS: release 102 (main 4ae2e14e6, live 4:54 PM EDT; RV-MEET, MT-01, RB-A1 doc). GATING: batch C (RN-03 953466400 + SO-01 05012c722, river-next 0fd58dd5a; re-run after installing SO-01's new 'entities' dependency)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T20:27:14Z
+heartbeat: 2026-10-24T20:55:43Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,12 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 102 live, 4:54 PM EDT
+- /api/build 4ae2e14e6 (PR #812 merge commit). Sean's checks in Chromium at 4:55 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200 (598 id fields, up from 584), /national 200.
+- Readers now get: RV-MEET (Granicus, CivicPlus and PrimeGov calendars publish instead of failing on the vault's manifest URL); MT-01 (held meetings keep saved map pins; Sunnyside online meeting).
+- Owed: the first supervisor digest on 4ae2e14e6 must show MEETING_PARTITION_READ_FAILED far below the 195 to 339 a pass seen since 2 AM. River is watching for it.
+- Batch C's first gates run failed everywhere: SO-01 adds the npm package `entities` (named HTML entity decoding) and River's gating worktree wasn't reinstalled. Installed from the lockfile; re-gating from 4:45 PM EDT. River now reinstalls after every fold.
 
 ### River finished SO-01 on its branch, 4:40 PM EDT (standing order: no READY within 60 minutes of the return)
 - What: merged river e2ee3657a (with CL-01) into stream/so-01 and marked READY: SO-01 05012c722 (fast-forward from 64ea93bb5).

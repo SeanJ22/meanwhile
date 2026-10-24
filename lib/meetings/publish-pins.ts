@@ -19,6 +19,7 @@ import type { RegistryProvenance } from "../registry/types.ts";
 import {
   meetingPinAddresses,
   withPublishedPin,
+  publishedVenueDescription,
   type MeetingPinAddress,
   type MeetingPinLocation,
   type MeetingPinBody,
@@ -398,16 +399,18 @@ export function retainPreviouslyVerifiedVenuePoints(
     )
       return meeting;
     const { venueGap: _gap, ...rest } = meeting;
-    return {
+    const text=meeting.venueGap.publishedText!;
+    const retained:Meeting = {
       ...rest,
-      location: prior.location,
+      location: {...prior.location,...publishedVenueDescription(text,prior.location.address)},
       ...(prior.mapPin
-        ? { mapPin: { ...prior.mapPin, meetingId: meeting.id } }
+        ? { mapPin: { ...prior.mapPin, meetingId: meeting.id,publishedLocation:text } }
         : {}),
       fieldSources: {
         ...meeting.fieldSources,
-        location: prior.fieldSources?.location ?? prior.provenance,
+        location: meeting.fieldSources?.location ?? meeting.provenance,
       },
     };
+    return retained.mapPin?withPublishedPin(retained,retained.mapPin):retained;
   });
 }

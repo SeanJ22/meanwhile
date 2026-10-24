@@ -2,6 +2,7 @@ import type { RegistryProvenance } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 import { isOnlineOnly } from "./online.ts";
 import { readerBodyName, readerGovernmentName } from "../text/reader-names.ts";
+import { censusAddressQuery } from "../geo/address-query.ts";
 
 export interface MeetingPinBody {
   bodyId: string;
@@ -37,7 +38,16 @@ export interface MeetingPinLocation extends MeetingPinAddress {
   publishedLocation?: string | null;
 }
 
+/** Keep the current attendance text while reusing a checked point and any still-needed street address. */
+export function publishedVenueDescription<T extends string|null>(text:string,previousAddress:T) {
+  return {name:text,address:/^\d+[a-z]?(?:-\d+)?\s/i.test(censusAddressQuery(text))?text:previousAddress};
+}
+
 export function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
+  if(pin.basis==="MEETING" && pin.publishedLocation) {
+    const text=pin.publishedLocation;
+    pin={...pin,...publishedVenueDescription(text,pin.address)};
+  }
   return pin.basis === "MEETING" && !meeting.online
     ? {...meeting,mapPin:pin,location:{name:pin.name,address:pin.address,lat:pin.lat,lng:pin.lng},venueGap:undefined}
     : {...meeting,mapPin:pin};

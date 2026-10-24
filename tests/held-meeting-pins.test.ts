@@ -128,11 +128,12 @@ test("an already-promoted address for the same source sitting fills an abbreviat
       assert.equal(first.published,Number(valid));assert.equal(first.unplaced,Number(!valid));assert.equal(requests,valid?2:1);
       if(valid) {
         const [read]=withSittingFacts([physical],(await readSittingFacts(db.query,[BODY])).get(BODY)!);
-        assert.equal(read.mapPin?.basis,"MEETING");assert.equal(read.mapPin?.address,OWN);assert.equal(read.mapPin?.publishedLocation,short);
+        assert.equal(read.mapPin?.basis,"MEETING");assert.equal(read.mapPin?.address,short);assert.equal(read.mapPin?.publishedLocation,short);
+        assert.match(read.mapPin!.matchedAddress!,/BISBEE, AZ, 85603$/,"the saved Census match retains the complete address used to check the point");
         assert.equal(read.provenance.collectedAt,OLD);
         const next=await placePublishedMeetingPins({meetings:[physical],query:db.query,
           fetchImpl:async()=>{throw new Error("the prior-address point must be reused on the following calendar run");}});
-        assert.equal(next.responses.length,0);assert.deepEqual(next.held,[]);assert.equal(next.meetings[0].mapPin?.address,OWN);
+        assert.equal(next.responses.length,0);assert.deepEqual(next.held,[]);assert.equal(next.meetings[0].mapPin?.address,short);
       }
     }finally{await db.pg.close();}
   }

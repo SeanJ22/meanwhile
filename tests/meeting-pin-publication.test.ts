@@ -595,3 +595,38 @@ test("a shortened published street repeats its prior point, but a conflicting st
     "1 E. Broadway Boulevard, Tucson, AZ 85702"])
     assert.equal(repeatsPublishedVenue(changed,"PAG Office",prior),false,changed);
 });
+
+test("the following publication reuses the building point but shows the publisher's current room, including over older facts",async()=>{
+  const oldText=OWN.replace(", Bisbee",", Room 101, Bisbee"),newText=OWN.replace(", Bisbee",", Room 202, Bisbee");
+  const first=await placePublishedMeetingPins({meetings:[meeting(oldText)],offices:new Map(),clock:()=>NOW,fetchImpl:async()=>response(OWN_GEO)});
+  const newer={...meeting(newText),provenance:{...SOURCE,collectedAt:"2026-10-24T01:00:00Z"}};
+  for(const legacy of [false,true]) {
+    const previous=first.meetings.map(row=>legacy?{...row,mapPin:undefined}:row);
+    const after=await placePublishedMeetingPins({meetings:[newer],previous,offices:new Map(),
+      fetchImpl:async()=>{throw new Error("the verified building point must be reused");}});
+    const [read]=withSittingFacts(after.meetings,[
+      {meetingId:newer.id,field:"location",value:first.meetings[0].location,source:SOURCE},
+      {meetingId:newer.id,field:"online",value:{label:"Virtual",joinUrl:null},source:SOURCE},
+    ]);
+    assert.equal(read.location?.name,newText);assert.equal(read.location?.address,newText);
+    assert.equal(read.location?.lat,first.meetings[0].location?.lat);assert.equal(read.online,undefined);
+    assert.equal(after.responses.length,0);assert.deepEqual(after.held,[]);
+    if(!legacy){assert.equal(read.mapPin?.publishedLocation,newText);assert.equal(read.mapPin?.coordinateCheckedAt,NOW);}
+  }
+  const [fromFact]=withSittingFacts([newer],[{meetingId:newer.id,field:"location",value:first.meetings[0].location,source:SOURCE}]);
+  assert.equal(fromFact.location?.name,newText);assert.equal(fromFact.location?.address,newText);
+  assert.equal(fromFact.location?.lat,first.meetings[0].location?.lat);
+  const [fromUnplacedFact]=withSittingFacts([newer],[{meetingId:newer.id,field:"location",value:{name:oldText,address:null},source:SOURCE}]);
+  assert.equal(fromUnplacedFact.venueGap?.publishedText,newText);
+});
+
+test("a newly published physical point replaces an older office-reference pin",async()=>{
+  const office=await placePublishedMeetingPins({meetings:[{...meeting(null),online:{label:"Virtual",joinUrl:null},venueGap:undefined}],offices,
+    clock:()=>NOW,fetchImpl:async()=>response(BOARD_GEO)});
+  const source={...SOURCE,collectedAt:"2026-10-24T01:00:00Z"},physical={name:OWN,address:OWN,lat:31.39,lng:-109.92};
+  const [read]=withSittingFacts([meeting(null)],[
+    {meetingId:meeting().id,field:"mapPin",value:office.meetings[0].mapPin,source:SOURCE},
+    {meetingId:meeting().id,field:"location",value:physical,source},
+  ]);
+  assert.deepEqual(read.location,physical);assert.equal(read.mapPin,undefined,"the meeting's own point takes precedence over an office reference");
+});

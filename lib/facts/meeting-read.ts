@@ -1,7 +1,7 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
 import type { Query } from "./publish.ts";
 import { repeatsPublishedVenue } from "../geo/address-query.ts";
-import { withPublishedPin } from "../meetings/pin-location.ts";
+import { publishedVenueDescription, withPublishedPin } from "../meetings/pin-location.ts";
 import { hasPublishedVenue } from "../meetings/venue-text.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
@@ -13,8 +13,10 @@ const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.f
 
 const FIELD = { title: "title", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
 
-function publishedLocation(meeting: Meeting, value: unknown, source: Provenance): Partial<Meeting> {
-  const location = value as { name: string; address: string | null; lat?: number; lng?: number };
+function publishedLocation(meeting: Meeting, value: unknown, source: Provenance, currentText?:string|null): Partial<Meeting> {
+  let location = value as { name: string; address: string | null; lat?: number; lng?: number };
+  if(currentText && Number.isFinite(location.lat) && Number.isFinite(location.lng))
+    location={...location,...publishedVenueDescription(currentText,location.address)};
   if (Number.isFinite(location.lat) && Number.isFinite(location.lng)) return { location:location as Meeting["location"],online:undefined,venueGap:undefined };
   if (meeting.location && repeatsPublishedVenue(location.address || location.name,meeting.location.name,meeting.location.address))
     return { location:{...meeting.location,...location,address:location.address ?? meeting.location.address},online:undefined };
@@ -66,12 +68,13 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if (field === "location" && !hasPublishedVenue((value as {address?:string;name?:string}).address || (value as {name?:string}).name)) continue;
     const factAt = Date.parse(source.collectedAt);
     const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
+    const stated=published.venueGap?.kind==="STATED_NOT_PLACED"?published.venueGap.publishedText:null;
     if(factAt<locationAt) {
-      const stated=published.venueGap?.kind==="STATED_NOT_PLACED"?published.venueGap.publishedText:null;
-      if(field==="online"&&stated&&!published.online)continue;
+      if(field==="online"&&(stated||published.location))continue;
       if(field==="location") {
-        const prior=value as {name?:string;address?:string|null};
-        if(published.online||stated&&!repeatsPublishedVenue(stated,prior.name??"",prior.address??null))continue;
+        const prior=value as {name?:string;address?:string|null;lat?:number;lng?:number};
+        if(published.online||published.location||stated&&!repeatsPublishedVenue(stated,prior.name??"",prior.address??null))continue;
+        if(stated && publishedVenueDescription(stated,null).address && (!Number.isFinite(prior.lat)||!Number.isFinite(prior.lng)))continue;
       }
     }
     if (published.mapPin) {
@@ -81,7 +84,7 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
       if (field === "mapPin" && factAt <= pinAt || (field === "location" || field === "online") && factAt < locationAt) continue;
     }
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
-      : field === "location" ? publishedLocation(meeting,value,source)
+      : field === "location" ? publishedLocation(meeting,value,source,factAt<locationAt?stated:null)
       : field==="mapPin" ? {mapPin:{...value as NonNullable<Meeting["mapPin"]>,meetingId:meeting.id}}
       : field==="online" ? {online:value as Meeting["online"],location:null,venueGap:undefined} : { [field]: value as string };
     out[index] = { ...meeting, ...patch, fieldSources: { ...meeting.fieldSources, [field]: source } };
@@ -89,7 +92,7 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
   return out.map(meeting=>{
     const pin=meeting.mapPin;
     if(!pin)return meeting;
-    const agrees=meeting.location ? pin.basis!=="MEETING"||repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)
+    const agrees=meeting.location ? pin.basis==="MEETING"&&repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)
       :pin.publishedLocation===(meeting.venueGap?.publishedText??null);
     if(agrees)return withPublishedPin(meeting,pin);
     const {mapPin:_stale,...rest}=meeting;return rest;

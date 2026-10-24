@@ -63,7 +63,7 @@ const CONN_WORDS: Readonly<Record<Connection, string>> = {
 
 export function CommandCenter(props: CommandCenterProps) {
   const { data } = props;
-  const [view, setView] = useState<View>(props.initialView === "work" && !props.data.workRows?.data ? "queue" : props.initialView ?? "now");
+  const [view, setView] = useState<View>(props.initialView ?? "now");
   const [stack, setStack] = useState<readonly { readonly view: View; readonly detail: Detail | null }[]>([]);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -212,7 +212,7 @@ export function CommandCenter(props: CommandCenterProps) {
   };
 
   const goView = (requested: View) => {
-    const v = requested === "work" ? "queue" : requested;
+    const v = requested;
     setStack((st) => (v === view && !detail ? st : [...st, { view, detail }].slice(-20)));
     setView(v);
     setDetail(null);
@@ -303,7 +303,7 @@ export function CommandCenter(props: CommandCenterProps) {
           <div className={s.headerTop}>
             <span className={s.brand}>meanwhile<span style={{ color: "var(--pill-teal-text)" }}> …</span></span>
             <nav className={s.nav} aria-label="Admin">
-              {VIEWS.filter(([id]) => id !== "work" || data.workRows?.data != null).map(([id, label]) => (
+              {VIEWS.map(([id, label]) => (
                 <button key={id} type="button" className={s.navBtn} aria-current={view === id && !detail ? "page" : undefined} onClick={() => goView(id)}>{label}</button>
               ))}
             </nav>

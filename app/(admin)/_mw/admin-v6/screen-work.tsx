@@ -20,7 +20,7 @@ export function WorkScreen() {
         <h1 className={s.h1}>Work</h1>
       </header>
       <WorkCounts />
-      <Rows />
+      {v.data.workRows.data !== null && <Rows />}
     </>
   );
 }

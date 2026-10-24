@@ -41,6 +41,7 @@ test("the Fix list is not a page of its own: its items are on the Queue and disp
   assert.equal(parseView("work"), "work");
   assert.equal(VIEWS.some(([id]) => id === "work"), true);
   assert.doesNotMatch(page("work"), /All work rows/);
+  assert.match(page("work"), /Work by hour/, "hourly work counts remain reachable without the old work-row read");
   assert.match(queue, /Queue/);
 });
 

@@ -19,7 +19,7 @@ import { resolveInterpretation } from "./resolve.ts";
 import type { AskSubjectRef } from "./subject.ts";
 import { readerMoneyReference, readerContestReference, readerMeasureReference } from "./reader-references.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
-import { contestsForBallotAsk } from "./ballot-summary.ts";
+import { ballotQuestionShape, contestsForBallotAsk } from "./ballot-summary.ts";
 import type { Contest } from "../ballot/types.ts";
 
 /**
@@ -47,7 +47,7 @@ export type SittingShape = "MEETING_TIME" | "BODY_AGENDA" | "MEETING_OUTCOME" | 
  * by `moneyQuestionShape` in `lib/ask/money-answer.ts`. `CONTACT` is how to
  * reach a named person or body.
  */
-export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "GOVERNMENT_MONEY" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY" | "PERSON_VOTES";
+export type LexicalShape = SittingShape | "BODY_ROSTER" | "BODY_CIVICS" | "CONTEST_CIVICS" | "GOVERNMENT_MONEY" | "MEASURE_EXPLAIN" | "PERSON_RECORD" | "CONTEST_FIELD" | "CONTACT" | "MONEY" | "GROUP_MONEY" | "PERSON_VOTES";
 
 export type SubjectKind = "BODY" | "MEASURE" | "CONTEST" | "PERSON";
 
@@ -150,6 +150,7 @@ const SITTING_SHAPES: ReadonlySet<LexicalShape> = new Set<LexicalShape>(["MEETIN
 const SHAPE_INTENT: Readonly<Record<Exclude<LexicalShape, SittingShape>, AskIntent>> = {
   BODY_ROSTER: "PERSON_RECORD",
   BODY_CIVICS: "CIVICS",
+  CONTEST_CIVICS: "CIVICS",
   GOVERNMENT_MONEY: "CIVICS",
   MEASURE_EXPLAIN: "MEASURE",
   CONTEST_FIELD: "PERSON_RECORD",
@@ -551,6 +552,16 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
       interpretation: { ...unavailableInterpretation(), intent: referencedMeasure ? "MEASURE" : "PERSON_RECORD", temporal: { kind: "NONE" },
         entityMentions: candidates.length === 1 ? [candidates[0].name] : [] },
       ...(candidates.length > 1 ? { areaChoices: { mention: referencedMeasure ? "the measure on your ballot" : "your seat", bodies: candidates } } : {}) };
+  }
+  // This names the held office, not its incumbent or its powers. Every word
+  // must belong to that office and its division; qualifications keep the model.
+  const duties = /^what does (?:the )?(.+?) do$/.exec(normalizeName(input.question));
+  const office = duties && ballotQuestionShape(`Who is running for ${duties[1]}?`, input.readerContests);
+  if (office?.kind === "OFFICE" && !input.activeSubjects?.some(ref => ref.focused)) {
+    const contests = contestsForBallotAsk(input.readerContests ?? [], office);
+    const held = contests.length === 1 && input.inventory.find(entity => entity.id === contests[0].id && kindOf(entity) === "CONTEST");
+    if (held) return { shape: "CONTEST_CIVICS", subjectId: held.id,
+      interpretation: { ...unavailableInterpretation(), intent: "CIVICS", temporal: { kind: "NONE" }, entityMentions: [held.name] } };
   }
   const money = moneyReading(input);
   if (money !== undefined) return money;

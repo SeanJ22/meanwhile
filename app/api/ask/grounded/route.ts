@@ -78,7 +78,7 @@ import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionSh
 import { composePersonVotes, personVotesQuestionShape, readerPersonVotesQuestion, readerPersonVoteOfficials } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion, statesNamedInQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
-import { composeBallotOnlyAnswer, composeSelectedBallots } from "@/lib/ask/ballot-only-answer";
+import { composeBallotOnlyAnswer, composeMissingContestCivics, composeSelectedBallots } from "@/lib/ask/ballot-only-answer";
 import { ballotQuestionHint, ballotQuestionShape, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
 import { electionInformationQuestion, readElectionInformation } from "@/lib/ask/election-information";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
@@ -515,7 +515,7 @@ async function answerWithSettings(request: Request, started: number) {
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) ? electionInformationQuestion(question) : null;
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
 
-  const noPersonRecordShapes = new Set([...sittingShapes, "CONTACT", "BODY_ROSTER", "BODY_CIVICS", "GOVERNMENT_MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
+  const noPersonRecordShapes = new Set([...sittingShapes, "CONTACT", "BODY_ROSTER", "BODY_CIVICS", "CONTEST_CIVICS", "GOVERNMENT_MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
   const deferShape = !topicRoute && !financeQuestionAsked(question) && (ballotReference || noPersonRecordShapes.has(lexicalQuestionShape(question)?.shape ?? ""));
   const deferSittingIdentity = !topicRoute && sittingShapes.has(lexicalQuestionShape(question)?.shape ?? "");
   const governmentMoneyAsk = !topicRoute && lexicalQuestionShape(question)?.shape === "GOVERNMENT_MONEY";
@@ -534,6 +534,15 @@ async function answerWithSettings(request: Request, started: number) {
       preloadMs[name] = Date.now() - started;
     }
   };
+  const civicsBallotRead = registryQuestionShape === "BODY_CIVICS" && !ballotReference && !topicRoute && !leanAsk && ocdIds.length > 0 &&
+    readSubjectRefs(body.activeSubjects).every(ref => !ref.focused)
+    ? timed("ballot", () => loadBallotForDivisions(ocdIds, {}, ballotZip))() : null;
+  const civicsBallot = await civicsBallotRead;
+  const civicsReading = civicsBallot && !civicsBallot.loaderFailures.length ? lexicalReading({ question,
+    inventory: ballotAskInventory(civicsBallot.set, civicsBallot.contests, civicsBallot.nominees).entities,
+    readerContests: civicsBallot.contests, namedBodies: [] }) : null;
+  const contestCivics = civicsReading?.shape === "CONTEST_CIVICS" ? civicsReading : null;
+  if (contestCivics) needsOutcomePreload = false;
   const production = process.env.NODE_ENV === "production";
   let outcomesFromDatabase = !registryStates.length || leanAsk || ballotOnlyHint || electionInfoAsk || !needsOutcomePreload || sittingShapes.has(registryQuestionShape ?? "") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
@@ -628,7 +637,7 @@ async function answerWithSettings(request: Request, started: number) {
   const earlyFederalDirectory = !relativeFederalMoney && !campaignRecordsAsk && (votingOnly || federalMoneyOnly)
     ? timed("federalDirectory", () => settleFederalDirectoryRead(registryStates))() : null;
   earlyFederalDirectory?.catch(() => undefined);
-  const referencedBallotRead = ballotReference ? timed("ballot", () => loadBallotForDivisions(ocdIds, {}, ballotZip))() : null;
+  const referencedBallotRead = civicsBallotRead ?? (ballotReference ? timed("ballot", () => loadBallotForDivisions(ocdIds, {}, ballotZip))() : null);
   referencedBallotRead?.catch(() => undefined);
   await timed("registryProjection", () => readAskRegistry(registryStates))();
   const registrySource = registryStates.every(state => currentStateAuthorityProjection("registry-runtime", state)?.source === "EDGE") ? "EDGE" : "DATABASE";
@@ -674,7 +683,7 @@ async function answerWithSettings(request: Request, started: number) {
     !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
   const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
-  const governmentListingsRead = leanAsk || calendarReading || ballotReference || deferPersonRecords || personVotesQuestionShape(question) ? Promise.resolve({ records: [], unavailableStates: [] as string[] })
+  const governmentListingsRead = leanAsk || calendarReading || ballotReference || contestCivics || deferPersonRecords || personVotesQuestionShape(question) ? Promise.resolve({ records: [], unavailableStates: [] as string[] })
     : timed("governmentListings", () => readerGovernmentListings(question, ocdIds, [...explicitBodyIds]))().catch(() => ({ records: [], unavailableStates: [] }));
 
   const calendarTime = calendarReading?.interpretation.temporal.kind;
@@ -698,7 +707,7 @@ async function answerWithSettings(request: Request, started: number) {
   meetingsRead?.catch(() => undefined);
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
-    ...(stateExecutiveOnly || nationalExecutiveOnly ? [async () => undefined] : earlyFederalDirectory ? [() => earlyFederalDirectory] : [timed("federalDirectory", () => settleFederalDirectoryRead())]),
+    ...(stateExecutiveOnly || nationalExecutiveOnly || contestCivics ? [async () => undefined] : earlyFederalDirectory ? [() => earlyFederalDirectory] : [timed("federalDirectory", () => settleFederalDirectoryRead())]),
     ...(needsOutcomePreload && !(calendarReading && !calendarReading.subjectId) ? [outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead)] : []),
 
   ];
@@ -719,7 +728,8 @@ async function answerWithSettings(request: Request, started: number) {
     executiveActions: promotedSource("executive-actions"),
   };
   if (!needsOutcomePreload) delete trace.preloadSources.outcomes;
-  if (areaMeetingsAsk || stateExecutiveOnly || nationalExecutiveOnly) delete trace.preloadSources.federalDirectory;
+  if (areaMeetingsAsk || stateExecutiveOnly || nationalExecutiveOnly || contestCivics) delete trace.preloadSources.federalDirectory;
+  if (contestCivics) delete trace.preloadSources.funding;
   let stateMoneyFilers: Awaited<ReturnType<typeof requestedStateMoneySubjects>> = [];
   if (deferPersonRecords && selectStateMoneyNames(question).length && readSubjectRefs(body.activeSubjects).every(ref => !ref.focused)) {
     await earlyFederalDirectory?.catch(() => undefined);
@@ -752,7 +762,7 @@ async function answerWithSettings(request: Request, started: number) {
       timed("candidateProfiles", async () => await hasOneReferencedContest() ? Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateProfilesRead(state))) : []),
       timed("candidateCorpus", async () => await hasOneReferencedContest() ? Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateCorpusRead(state))) : []),
     ] : stateMoneyFilers.length ? [] : votingOnly ? personRecordPreloads.slice(0, exactVote && !billVote ? 1 : 2) : [
-    fundingPreload,
+    ...(contestCivics ? [] : [fundingPreload]),
     timed("candidateProfiles", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateProfilesRead(state)))),
     timed("candidateCorpus", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateCorpusRead(state)))),
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
@@ -938,11 +948,11 @@ async function answerWithSettings(request: Request, started: number) {
   }
   trace.sourcesLoaded = leanAsk ? "ESSENTIAL" : !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
   const federalPerson = deferPersonRecords || personVotesQuestionShape(question) ? namedFederalOfficeholder(question) : null;
-  const officeholders: Awaited<ReturnType<typeof readerOfficeholders>> = ballotReference || officialsAsk?.unresolvedPlace || sittingReading || areaMeetingsAsk || stateMoneyFilers.length > 0
+  const officeholders: Awaited<ReturnType<typeof readerOfficeholders>> = ballotReference || contestCivics || officialsAsk?.unresolvedPlace || sittingReading || areaMeetingsAsk || stateMoneyFilers.length > 0
     ? { seats: [], loaderFailures: 0, held: [] } : await timed("officeholders", () => readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId),
       officialsAsk?.keys ?? relativeMoney?.office.keys ?? (federalPerson ? ["us_senator", "us_representative"] : undefined)))();
   let namedPeople = 0;
-  if (!relativeMoney && !ballotReference && !officialsAsk && !areaMeetingsAsk && !sittingReading && !stateMoneyFilers.length) try {
+  if (!relativeMoney && !ballotReference && !contestCivics && !officialsAsk && !areaMeetingsAsk && !sittingReading && !stateMoneyFilers.length) try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
       .flatMap(ref => ref.id ? [ref.id] : []);
     const named = federalPerson ? [federalPerson] : await timed("namedOfficeholders", () => namedOfficeholders(question, explicitIds, ocdIds))();
@@ -1114,7 +1124,7 @@ async function answerWithSettings(request: Request, started: number) {
   const readerVoteReading: LexicalReading | null = readerVoteAsk && readerVoteChoices.length ? { shape: "PERSON_VOTES" as const,
     interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD" as const, temporal: { kind: "NONE" as const } },
     subjectId: readerVoteChoices.length === 1 ? readerVoteChoices[0]!.id : "" } : null;
-  const lexical = modelFreeTopicRoute ? null : sittingReading ?? readerVoteReading ?? lexicalReading({
+  const lexical = modelFreeTopicRoute ? null : contestCivics ?? sittingReading ?? readerVoteReading ?? lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
     readerContests: ballot.contests,
     readerPeople: officeholders.held.map(({seat}) => ({id: officialToBallot.get(seat.id) ?? officialAliases.get(seat.id) ?? seat.id, officeTitle: seat.officeTitle})),
@@ -1218,7 +1228,7 @@ async function answerWithSettings(request: Request, started: number) {
       trace.interpretation.temporal = interpretation.temporal;
     }
 
-    const lexicalActor = lexical && ["PERSON_VOTES", "MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"].includes(lexical.shape) ? inventory.find(entity => entity.id === lexical.subjectId) : null;
+    const lexicalActor = lexical && ["PERSON_VOTES", "MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD", "CONTEST_CIVICS"].includes(lexical.shape) ? inventory.find(entity => entity.id === lexical.subjectId) : null;
     const initialResolution: ReturnType<typeof resolveInterpretation> = lexical && !lexical.subjectId && !lexical.areaChoices && !readerVoteReading
       ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
       : readerVoteReading && readerVoteAsk
@@ -2373,8 +2383,9 @@ async function answerWithSettings(request: Request, started: number) {
     // holding needs the separate AI answer, not another model to write a gap.
     const financeNotHeld = !heldComposition && governmentMoneyAsk && subject?.kind === "BODY" &&
       governmentFinanceQuestion(question) && !packRecords.some(row => row.kind === "GOVERNMENT_FINANCE" || row.kind === "FEDERAL_MONEY");
-    const composed = heldComposition ?? (financeNotHeld ? { answer: "We don't have that answer yet.", citedUrls: [], missingAnswer: true } : null);
-    const composedWhy = financeNotHeld ? "government-finance-not-held" : federalMoneySettled.composed ? "composed-from-federal-money" : populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const officeNotHeld = !heldComposition && lexical?.shape === "CONTEST_CIVICS" ? composeMissingContestCivics(pack) : null;
+    const composed = heldComposition ?? officeNotHeld ?? (financeNotHeld ? { answer: "We don't have that answer yet.", citedUrls: [], missingAnswer: true } : null);
+    const composedWhy = officeNotHeld ? "office-definition-not-held" : financeNotHeld ? "government-finance-not-held" : federalMoneySettled.composed ? "composed-from-federal-money" : populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
 
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"

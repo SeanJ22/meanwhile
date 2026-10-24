@@ -21,7 +21,7 @@ const kindOf = (field: string): FieldKind => /^member:|^name$|^office:/.test(fie
 for (const state of baseline.counts) {
   const file = join(resolve(directory), `${state.state}.json`);
   if (!existsSync(file)) {
-    report.push({ state: state.state, available: state.live_facts, replayed: 0, unchanged: 0, missingCopy: true });
+    report.push({ state: state.state, baselineLive: state.live_facts, replayed: 0, unchanged: 0, missingCopy: true });
     continue;
   }
   const snapshot = JSON.parse(readFileSync(file, "utf8")) as FactSnapshot;
@@ -49,7 +49,7 @@ for (const state of baseline.counts) {
       assert.deepEqual(after!.value, fact.value);
       unchanged++;
     }
-    report.push({ state: state.state, available: state.live_facts, sampled: facts.length, replayed: unchanged, unchanged, unavailable });
+    report.push({ state: state.state, baselineLive: state.live_facts, sampled: facts.length, replayed: unchanged, unchanged, unavailable });
   } finally { await db.pg.close(); }
 }
 const output = { observedAt: new Date().toISOString(), states: report };

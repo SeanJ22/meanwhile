@@ -15,6 +15,21 @@ Verification so far: the imported-coordinate preservation test checks all 33,791
 
 Production references captured read-only: 56 reactions referring to 33 distinct target IDs, three demand signals, one Ask interaction, and zero Speak your mind rows. No production database writes were made.
 
+## Production-data connections on the imported map
+
+Both checks used current official map rows imported into disposable local PostgreSQL and downstream civic facts from the production reader's `readonly` role in read-only transactions. They called the real meetings and ballot-scope readers and the voting-site projection. These are not Chrome live checks or claims that the new map is deployed.
+
+| ZIP | Baseline boards retained | Baseline race IDs retained | Baseline site IDs retained |
+| --- | ---: | ---: | ---: |
+| 85701, AZ | 139 / 139 | 24 / 24 | 345 / 345 |
+| 03301, NH | 7 / 7 | 33 / 33 | 0 / 0 |
+
+Concord also returned five additional board IDs. The ballot-scope endpoint includes held elections, so its total is not presented as the current ballot page's race count. All comparisons preserve the baseline IDs themselves.
+
+The statewide New Hampshire replay still reports three old Newfound Area School District memberships at ZIPs 03266, 03241 and 03264. Current Census polygons show no overlap and current memberships include Pasquaney School District. The Newfound ID remains held. Preservation remains open; the missing memberships have not been silently accepted as a pass or reintroduced as current governing claims.
+
+The additive seed has 42,883 source rows, including known postal destinations with no coordinates. Migration verification now sizes its committed-file read for the actual migration, retaining exact byte comparison; all 21 migration tests pass after that fix.
+
 ## Production baseline by state
 
 Boards count distinct runtime-registry IDs plus sourced body and committee IDs with a live name fact. Races count distinct contests in the current promoted ballot records. Sites count distinct IDs in promoted voting records. These describe held production data, not rendered-page completeness. After counts remain open until the new map is loaded and checked.

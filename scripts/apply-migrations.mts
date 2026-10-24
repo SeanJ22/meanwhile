@@ -209,7 +209,8 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       throw new Error(`db:apply: REFUSED — ${entry.tag} has no matching migration phase`);
     }
     if (PRODUCTION) {
-      const committed = execFileSync("git", ["show", `HEAD:${relative}`], { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"] });
+      const committed = execFileSync("git", ["show", `HEAD:${relative}`], { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"],
+        maxBuffer: Math.max(raw.byteLength + 1024, 1024 * 1024) });
       if (!committed.equals(raw)) throw new Error(`db:apply: REFUSED — ${entry.tag} differs from its committed SQL`);
     }
   }

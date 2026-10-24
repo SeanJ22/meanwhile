@@ -173,7 +173,7 @@ test("Hourihan's exact card corpus answers while the unresolved party/candidacy 
   delete process.env.ANTHROPIC_API_KEY;
   const cardKey = "ballot-az-pima:governor|Teri Ann Hourihan";
   assert.equal(lineupRowForCard(cardKey)?.outcome, "PARTY_CONFLICT");
-  assert.deepEqual(readerPersonKeys(cardKey).keys, [cardKey]);
+  assert.deepEqual(readerPersonKeys(cardKey).keys, ["ballot-az-pima:governor:hourihan-teri-ann",cardKey]);
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();

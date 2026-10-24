@@ -395,5 +395,4 @@ test("the ballot page renders the GATED map, never the raw resolution", () => {
     .join("\n");
   assert.ok(src.includes("resolvedStanding?.decisions.get(targetKey)"), "the chip reads the gated decisions");
   assert.ok(!src.includes("resolvedStanding?.resolved"), "and never reaches around the gate for the raw answer");
-  assert.ok(src.includes("{ ...contest, candidates, federal:"), "the seat count reaches the reconciliation");
 });

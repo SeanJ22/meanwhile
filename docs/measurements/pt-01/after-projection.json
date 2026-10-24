@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T10:28:17.296Z",
+  "measuredAt": "2026-10-24T11:18:56.122Z",
   "mode": "reader projection on production holdings",
   "counts": [
     {
@@ -42,7 +42,7 @@
       "state": "AK",
       "role": "Candidate",
       "withPhoto": 1,
-      "withoutPhoto": 157
+      "withoutPhoto": 152
     },
     {
       "state": "AL",
@@ -210,7 +210,7 @@
       "state": "AZ",
       "role": "Candidate",
       "withPhoto": 84,
-      "withoutPhoto": 217
+      "withoutPhoto": 213
     },
     {
       "state": "CA",
@@ -335,8 +335,8 @@
     {
       "state": "CT",
       "role": "Candidate",
-      "withPhoto": 23,
-      "withoutPhoto": 352
+      "withPhoto": 22,
+      "withoutPhoto": 426
     },
     {
       "state": "DC",
@@ -414,7 +414,7 @@
       "state": "DE",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 2
     },
     {
       "state": "DE",
@@ -462,7 +462,7 @@
       "state": "FL",
       "role": "Candidate",
       "withPhoto": 21,
-      "withoutPhoto": 503
+      "withoutPhoto": 493
     },
     {
       "state": "GA",
@@ -588,7 +588,7 @@
       "state": "HI",
       "role": "Candidate",
       "withPhoto": 2,
-      "withoutPhoto": 138
+      "withoutPhoto": 136
     },
     {
       "state": "IA",
@@ -630,7 +630,7 @@
       "state": "IA",
       "role": "Candidate",
       "withPhoto": 2,
-      "withoutPhoto": 246
+      "withoutPhoto": 244
     },
     {
       "state": "ID",
@@ -714,7 +714,7 @@
       "state": "IL",
       "role": "Candidate",
       "withPhoto": 0,
-      "withoutPhoto": 259
+      "withoutPhoto": 256
     },
     {
       "state": "IN",
@@ -750,7 +750,7 @@
       "state": "IN",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 17
+      "withoutPhoto": 28
     },
     {
       "state": "IN",
@@ -798,7 +798,7 @@
       "state": "KS",
       "role": "Candidate",
       "withPhoto": 4,
-      "withoutPhoto": 360
+      "withoutPhoto": 358
     },
     {
       "state": "KY",
@@ -924,7 +924,7 @@
       "state": "MA",
       "role": "Candidate",
       "withPhoto": 10,
-      "withoutPhoto": 297
+      "withoutPhoto": 294
     },
     {
       "state": "MD",
@@ -965,8 +965,8 @@
     {
       "state": "MD",
       "role": "Candidate",
-      "withPhoto": 15,
-      "withoutPhoto": 660
+      "withPhoto": 14,
+      "withoutPhoto": 657
     },
     {
       "state": "ME",
@@ -1050,7 +1050,7 @@
       "state": "MI",
       "role": "Candidate",
       "withPhoto": 10,
-      "withoutPhoto": 702
+      "withoutPhoto": 697
     },
     {
       "state": "MN",
@@ -1092,7 +1092,7 @@
       "state": "MN",
       "role": "Candidate",
       "withPhoto": 92,
-      "withoutPhoto": 594
+      "withoutPhoto": 591
     },
     {
       "state": "MO",
@@ -1176,7 +1176,7 @@
       "state": "MP",
       "role": "Candidate",
       "withPhoto": 0,
-      "withoutPhoto": 75
+      "withoutPhoto": 72
     },
     {
       "state": "MS",
@@ -1385,8 +1385,8 @@
     {
       "state": "NE",
       "role": "Candidate",
-      "withPhoto": 5,
-      "withoutPhoto": 93
+      "withPhoto": 4,
+      "withoutPhoto": 90
     },
     {
       "state": "NH",
@@ -1512,7 +1512,7 @@
       "state": "NM",
       "role": "Candidate",
       "withPhoto": 1,
-      "withoutPhoto": 334
+      "withoutPhoto": 332
     },
     {
       "state": "NV",
@@ -1596,7 +1596,7 @@
       "state": "NY",
       "role": "Candidate",
       "withPhoto": 81,
-      "withoutPhoto": 444
+      "withoutPhoto": 442
     },
     {
       "state": "OH",
@@ -1632,13 +1632,13 @@
       "state": "OH",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 1
     },
     {
       "state": "OH",
       "role": "Candidate",
       "withPhoto": 22,
-      "withoutPhoto": 418
+      "withoutPhoto": 411
     },
     {
       "state": "OK",
@@ -1716,7 +1716,7 @@
       "state": "OR",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 1
     },
     {
       "state": "OR",
@@ -1764,7 +1764,7 @@
       "state": "PA",
       "role": "Candidate",
       "withPhoto": 15,
-      "withoutPhoto": 305
+      "withoutPhoto": 302
     },
     {
       "state": "PR",
@@ -1890,7 +1890,7 @@
       "state": "SC",
       "role": "Candidate",
       "withPhoto": 42,
-      "withoutPhoto": 463
+      "withoutPhoto": 459
     },
     {
       "state": "SD",
@@ -1932,7 +1932,7 @@
       "state": "SD",
       "role": "Candidate",
       "withPhoto": 1,
-      "withoutPhoto": 188
+      "withoutPhoto": 186
     },
     {
       "state": "TN",
@@ -2142,7 +2142,7 @@
       "state": "VI",
       "role": "Candidate",
       "withPhoto": 0,
-      "withoutPhoto": 75
+      "withoutPhoto": 70
     },
     {
       "state": "VT",
@@ -2789,7 +2789,7 @@
     {
       "state": "GA",
       "scope": "US-GA:people:portraits:v1",
-      "version": "cv-5b966e241d7693ed6076b96bf7e6d633"
+      "version": "cv-f0bc3f1d7a96d8820989ca39f1488e35"
     },
     {
       "state": "GU",
@@ -3464,7 +3464,7 @@
     {
       "state": "NC",
       "scope": "US-NC:people:portraits:v1",
-      "version": "cv-f63019f50752baed68982a5e5e085917"
+      "version": "cv-d7c068f178210539b7b79a7445865048"
     },
     {
       "state": "ND",
@@ -3884,7 +3884,7 @@
     {
       "state": "PR",
       "scope": "US-PR:people:portraits:v1",
-      "version": "cv-a042b01ca39b689075d9c938ae8bf1fc"
+      "version": "cv-060b61e305adbb2d932bef377ca0c956"
     },
     {
       "state": "RI",
@@ -4059,7 +4059,7 @@
     {
       "state": "TX",
       "scope": "US-TX:people:portraits:v1",
-      "version": "cv-aee6c09f433bac4c26789fb1075dc2a6"
+      "version": "cv-f0b8c83dec4419c2f9c468d5488bf48d"
     },
     {
       "state": "UT",
@@ -4405,7 +4405,7 @@
     },
     {
       "state": "AZ",
-      "name": " Katie Hobbs",
+      "name": "Katie Hobbs",
       "candidacyId": "ballot-az-pima:governor:hobbs-katie",
       "personId": "plural:6e522a2a-e7b7-4713-a40f-c897e4341a87",
       "ballotPhoto": "/officials/statewide-az-governor.jpg",
@@ -4432,7 +4432,7 @@
     },
     {
       "state": "AZ",
-      "name": " Andy Biggs",
+      "name": "Andy Biggs",
       "candidacyId": "ballot-az-pima:governor:biggs-andy",
       "personId": "congress:B001302",
       "ballotPhoto": "/api/portraits/officials/96f74b7e389f6d0196d29b082f1527f173c19ea7427fe76d520cd7b18b7cfdc0.webp",
@@ -4564,7 +4564,7 @@
     },
     {
       "state": "CT",
-      "name": " Ned Lamont",
+      "name": " Ned Lamont and Susan Bysiewicz",
       "candidacyId": "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-democraticparty",
       "personId": "plural:4cd3e60f-3830-4121-965f-f29d9b5ec6e7",
       "ballotPhoto": "/api/portraits/officials/91f8dd19a47c943e2cce745b63941de9e8b08aef549f5ea2618307cf7d2e5ea7.webp",
@@ -4580,16 +4580,18 @@
     },
     {
       "state": "CT",
-      "name": " Susan Bysiewicz",
-      "candidacyId": "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-democraticparty:running-mate",
-      "personId": "plural:e5e49f6f-a9d8-4f9c-b235-53f7f571c3e3",
-      "ballotPhoto": "/api/portraits/officials/119e0619c4acf017fe3ee82237fdcaa19dc68f03e1c82bc8fbc7283b3d9ab572.webp",
-      "personPhoto": "/api/portraits/officials/119e0619c4acf017fe3ee82237fdcaa19dc68f03e1c82bc8fbc7283b3d9ab572.webp",
+      "name": " Ned Lamont and Susan Bysiewicz",
+      "candidacyId": "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-workingfamiliesparty",
+      "personId": "plural:4cd3e60f-3830-4121-965f-f29d9b5ec6e7",
+      "ballotPhoto": "/api/portraits/officials/91f8dd19a47c943e2cce745b63941de9e8b08aef549f5ea2618307cf7d2e5ea7.webp",
+      "personPhoto": "/api/portraits/officials/91f8dd19a47c943e2cce745b63941de9e8b08aef549f5ea2618307cf7d2e5ea7.webp",
       "personKeys": [
-        "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-democraticparty:running-mate",
-        "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-workingfamiliesparty:running-mate",
-        "ct-sots-2026-general-governor-and-lieutenant-governor-state|Susan Bysiewicz",
-        "plural:ct:e5e49f6f-a9d8-4f9c-b235-53f7f571c3e3"
+        "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-democraticparty",
+        "ct-sots-2026-general-governor-and-lieutenant-governor-state-nedlamontandsusanbysiewicz-workingfamiliesparty",
+        "ct-sots-2026-general-governor-and-lieutenant-governor-state|Ned Lamont",
+        "ct-sots-2026-general-governor-and-lieutenant-governor-state|Ned Lamont / Susan Bysiewicz",
+        "ct-sots-2026-general-governor-and-lieutenant-governor-state|Ned Lamont and Susan Bysiewicz",
+        "plural:ct:4cd3e60f-3830-4121-965f-f29d9b5ec6e7"
       ]
     },
     {
@@ -4854,7 +4856,7 @@
     },
     {
       "state": "MD",
-      "name": " Wes Moore",
+      "name": " Wes Moore and Aruna Miller",
       "candidacyId": "md-2026-governor-lt-governor-statewide-wes-moore-democratic",
       "personId": "plural:a6a4f3ad-59c0-471c-8fd3-ea06a8e21a87",
       "ballotPhoto": "/api/portraits/officials/85bcc9d5580b819b8de8391b9e9072e573ba347b68c8bb9a3466e594cf0518fa.webp",
@@ -4869,15 +4871,15 @@
     },
     {
       "state": "MD",
-      "name": " Aruna Miller",
-      "candidacyId": "md-2026-governor-lt-governor-statewide-wes-moore-democratic:running-mate",
-      "personId": "plural:27dd7c4f-0e25-4cd0-b849-6830e5ec7fa1",
-      "ballotPhoto": "/api/portraits/officials/f1034bb53d2e38d538cdda74017a29e3725e1ead261b1a4090853974c427b76f.webp",
-      "personPhoto": "/api/portraits/officials/f1034bb53d2e38d538cdda74017a29e3725e1ead261b1a4090853974c427b76f.webp",
+      "name": "Andy Harris",
+      "candidacyId": "md-2026-representative-in-congress-1-andy-harris-republican",
+      "personId": "congress:H001052",
+      "ballotPhoto": "/api/portraits/officials/6bea863a266b8aa4c4ec8b3394ecd2fb4725523534ddec6e2a99854d8daa3758.webp",
+      "personPhoto": "/api/portraits/officials/6bea863a266b8aa4c4ec8b3394ecd2fb4725523534ddec6e2a99854d8daa3758.webp",
       "personKeys": [
-        "md-2026-governor-lt-governor-statewide-wes-moore-democratic:running-mate",
-        "md-2026-governor-lt-governor-statewide|Aruna Miller",
-        "plural:md:27dd7c4f-0e25-4cd0-b849-6830e5ec7fa1"
+        "congress:H001052",
+        "md-2026-representative-in-congress-1-andy-harris-republican",
+        "md-2026-representative-in-congress-1|Andy Harris"
       ]
     },
     {
@@ -5200,7 +5202,7 @@
     },
     {
       "state": "NY",
-      "name": " Kathy C. Hochul",
+      "name": "Kathy C. Hochul and Adrienne E. Adams",
       "candidacyId": "ny-boe:2026-general:governor-lieutenant-governor:763380d64630519c",
       "personId": "plural:ccdd914d-9853-4fd2-9a80-ce6c962cdd18",
       "ballotPhoto": "/api/portraits/officials/e3fcea0f3cf23c11912598bd59e64908a5d8d6bd4387ef562a6afb18a16156ee.webp",

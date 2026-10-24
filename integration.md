@@ -372,3 +372,17 @@ One line per batch folded into river.
 - 2026-10-24T01:38:00Z · rn-02 · RN-02 · ready da6a37852a50 · river f3baca176655 · pnpm gates pass on f3baca176655
 - 2026-10-24T02:42:52Z · river-ci · CI-POPPLER · river 21ae9bcfb663 · pnpm gates pass on 21ae9bcfb663 (9,630 pass, 0 fail)
 - 2026-10-24T09:44:10Z · river-repair · RV-REPAIR · ready ba769a4ede1e · river 39c3037f4c79 · pnpm gates pass on 39c3037f4c79
+- 2026-10-24T15:25:14Z · river-tools · RV-TOOLS · ready 7e19c4d58947 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · rn-03 · RN-03 · ready 3ed53813c25c · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · rb-a1 · RB-A1 · ready 5bde46615d6e · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · ballot-parity-fx · BL-21-FX · ready 13918a9c8dcb · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · rn-01-fx · RN-01 · ready a5601eec9d30 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · bl-01 · BL-01 · ready 9f38dcfde16b · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · lv-01 · LV-01 · ready 0b1aafa1e5b6 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · river-keys · RIVER-KEYS · ready 3e2dcfb7e19e · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · mt-01 · MT-01 · ready d1bd02b8911d · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · src-01 · SRC-01 · ready 4215348315b9 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · cl-01 · CL-01 · ready 16159c59d096 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · rn-03 · RN-03 · ready 13f6eb19f47b · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · pb-02 · PB-02 · ready 2bfa981e1423 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T15:25:14Z · md-01 · MD-01 · ready f16a1d8a26c9 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8

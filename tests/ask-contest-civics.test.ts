@@ -39,6 +39,22 @@ test("duties with another state, conditions, history, a person or several matchi
   assert.notEqual(read("What does the governor do?", [contest], [])?.shape, "CONTEST_CIVICS");
 });
 
+test("local councils and generic school or county boards retain the body reader even when one ballot contest matches", () => {
+  const local: Contest = { ...contest, id: "fixture:council", title: "Concord City Council", ocdId: `${ROOT}/place:concord` };
+  const body: BindableEntity = { id: `${local.ocdId}#governing`, name: local.title, nameClass: "body", level: "BODY", divisionType: "place", ocdId: local.ocdId };
+  const reading = lexicalReading({ question: "What does the Concord City Council do?", readerContests: [local],
+    inventory: [body, { ...entity, id: local.id, name: local.title, ocdId: local.ocdId }], namedBodies: [body] });
+  assert.ok(reading);
+  assert.equal(reading.shape, "BODY_CIVICS");
+  assert.equal(reading.subjectId, body.id);
+  for (const [question, title, division] of [
+    ["What does a school board do?", "School Board", `${ROOT}/school_district:fixture`],
+    ["What does a county board of supervisors do?", "County Board of Supervisors", `${ROOT}/county:fixture`],
+  ]) {
+    assert.notEqual(read(question, [{ ...contest, title, ocdId: division }])?.shape, "CONTEST_CIVICS", question);
+  }
+});
+
 const pack: EvidencePack = { question: "What does the governor of New Hampshire do?", intent: "CIVICS", temporal: { kind: "NONE" },
   subject: { id: contest.id, kind: "CONTEST", name: contest.title, office: null }, today: "2026-10-24", denominators: {}, gaps: [], records: [
     { id: contest.id, kind: "CONTEST", text: "Governor appears on the held ballot.", sourceUrl: contest.provenance.sourceUrl },

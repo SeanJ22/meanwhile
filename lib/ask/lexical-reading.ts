@@ -559,7 +559,11 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   const office = duties && ballotQuestionShape(`Who is running for ${duties[1]}?`, input.readerContests);
   if (office?.kind === "OFFICE" && !input.activeSubjects?.some(ref => ref.focused)) {
     const contests = contestsForBallotAsk(input.readerContests ?? [], office);
-    const held = contests.length === 1 && input.inventory.find(entity => entity.id === contests[0].id && kindOf(entity) === "CONTEST");
+    const contest = contests.length === 1 ? contests[0] : null;
+    const stateExecutive = contest && /^ocd-division\/country:us\/(state|district|territory):[^/]+$/.test(contest.ocdId) &&
+      ["governor", "governor_and_lieutenant_governor", "lieutenant_governor", "attorney_general", "secretary_of_state",
+        "state_treasurer", "superintendent_of_public_instruction"].includes(officeIdentity(contest.title, contest.ocdId) ?? "");
+    const held = stateExecutive && input.inventory.find(entity => entity.id === contest.id && kindOf(entity) === "CONTEST");
     if (held) return { shape: "CONTEST_CIVICS", subjectId: held.id,
       interpretation: { ...unavailableInterpretation(), intent: "CIVICS", temporal: { kind: "NONE" }, entityMentions: [held.name] } };
   }

@@ -29,7 +29,7 @@ test("R7: two jobs reuse the same hour-long prefix; the saved Newbury passage is
         calls++;
         return { ok: true, forModel: `Saved-page envelope\n${page}`, artifacts: [], provenance: [], step: null, requestCount: 0, bytesFetched: 0 };
       } };
-    const exec = hunterExecutor({ role: "DETECTIVE", model: MODELS.haiku.model, now: () => clock,
+    const exec = hunterExecutor({ role: "DETECTIVE", now: () => clock,
       playbookFor: fixtureRolePlaybook, toolkitFor: () => toolkit,
       contextFor: async () => ({ brief: `${place}: saved official Planning Board page`, reason: "Read held planning board evidence", blanks: 1,
         handed: { artifactIds: ["saved-newbury"] },

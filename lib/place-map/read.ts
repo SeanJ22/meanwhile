@@ -44,7 +44,7 @@ export async function placesForCode(query: Query, kind: "zip" | "zcta", code: st
     ) ORDER BY e.id,b.boundary_year),'[]'::jsonb) AS memberships
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.${kind}=$1`, [code]);
+    WHERE m.${kind}=$1 AND e.kind='place'`, [code]);
   // RB-A10 also supplies already fetched state rows through Query, sharing
   // the same selection across every ZIP without another database round trip.
   const normalized = rows.length === 1 && "memberships" in rows[0] ? rows[0].memberships : rows.map(membership);

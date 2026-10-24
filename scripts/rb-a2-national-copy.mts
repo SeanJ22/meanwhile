@@ -23,8 +23,12 @@ try {
     for (const state of states) {
       const dataset = await heldStateDataset(async (text, params = []) => (await sql.transaction([sql.query(text, [...params])], { readOnly: true }))[0], state);
       if (!dataset) throw new Error(`No production Census baseline for ${state}`);
-      const byZip = new Map<string, Set<string>>();
+      const byPurpose = new Map<"representation" | "election", Map<string, Set<string>>>([
+        ["representation", new Map()], ["election", new Map()],
+      ]);
       for (const scope of dataset.scopes) if (["congressional_district", "state_leg_upper", "state_leg_lower"].includes(scope.type)) {
+        const purpose = ["cd:120", "sldu:2026", "sldl:2026"].includes(scope.version) ? "election" : "representation";
+        const byZip = byPurpose.get(purpose)!;
         for (const group of scope.groupings) {
           const id = censusWorkDivision({ ...group, type: scope.type, version: scope.version });
           if (!id) continue;
@@ -32,13 +36,14 @@ try {
         }
       }
       const missing = [];
-      for (const [zip, previous] of byZip) {
-        const current = await placesForCode(db.query, "zip", zip, { purpose: "representation", asOf: "2026-10-24" });
+      for (const [purpose, byZip] of byPurpose) for (const [zip, previous] of byZip) {
+        const current = await placesForCode(db.query, "zip", zip, { purpose, asOf: "2026-10-24", electionDate: "2026-11-03" });
         const ids = new Set(current.memberships.map(row => row.placeId));
-        for (const id of previous) if (!ids.has(id)) missing.push({ zip, id });
+        for (const id of previous) if (!ids.has(id)) missing.push({ zip, id, purpose });
       }
-      results.push({ state, checkedZips: byZip.size, missing });
-      console.log(JSON.stringify({ state, checkedZips: byZip.size, missing: missing.length, examples: missing.slice(0, 3) }));
+      const checkedZips = byPurpose.get("representation")!.size, checkedElectionZips = byPurpose.get("election")!.size;
+      results.push({ state, checkedZips, checkedElectionZips, missing });
+      console.log(JSON.stringify({ state, checkedZips, checkedElectionZips, missing: missing.length, examples: missing.slice(0, 3) }));
     }
     await writeFile("/tmp/rb-a2-replay/production-membership-preservation.json", JSON.stringify(results, null, 2));
     if (results.some(row => row.missing.length)) process.exitCode = 1;

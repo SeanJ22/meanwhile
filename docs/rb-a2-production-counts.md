@@ -67,4 +67,4 @@ Gains count distinct additional ZIP–district links for congressional, legislat
 
 All 56 jurisdictions have mapped places. There are 131,357 mapped places, 919,438 additional ZIP–district links and 441 cd:120 shapes. County attachments locate a district at its host county; they do not establish its service boundary.
 
-Preservation checks found no missing link in the September 23 ordinary/fringe index or the held production Census congressional and legislative memberships (33,931 state/ZIP comparisons). All 41,831 postal ZIP lookups returned memberships; maximum 20.71 ms, median 1.67 ms, p99 5.92 ms in the isolated native PostgreSQL copy.
+Preservation checks found no missing link in the September 23 ordinary/fringe index or the held production Census congressional and legislative memberships (33,931 state/ZIP comparisons). All 41,831 postal ZIP lookups returned memberships; maximum 46.50 ms, median 0.99 ms, p99 2.33 ms in the isolated native PostgreSQL copy. Admin reads the same state totals from the importer's count cache in 1.24 ms.

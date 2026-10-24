@@ -90,7 +90,7 @@ export async function readStateZipPlaces(input: string, selection: GeographySele
   const out = new Map<string, PlaceEntry>();
   // Read the state in one bounded query, then apply the shared year selection per code.
   if (!codes.length) return out;
-  const rows = await query(`SELECT m.zip,jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year) AS memberships
+  const rows = await query(`SELECT m.zip,json_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year) AS memberships
     FROM zip_place m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
     WHERE m.zip=ANY($1::text[]) AND e.kind='place' GROUP BY m.zip ORDER BY m.zip`, [codes.map(row => String(row.zip))]);

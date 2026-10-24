@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  char,
   bigint,
   date,
   primaryKey,
@@ -927,6 +928,11 @@ export const placeBoundaries = pgTable("place_boundary", {
   index("place_boundary_host_idx").on(t.hostCountyId).where(sql`${t.countyAttachment}`),
   check("place_boundary_shape_bounds", sql`(${t.geometry} IS NULL) = (${t.bounds} IS NULL)`),
   check("place_boundary_county_attachment", sql`NOT ${t.countyAttachment} OR (${t.hostCountyId} IS NOT NULL AND ${t.geometry} IS NULL)`)]);
+export const placeMapCountCache = pgTable("place_map_counts", {
+  state: char("state", { length: 2 }).primaryKey(), places: integer("places").notNull(),
+  zips: integer("zips").notNull(), zctas: integer("zctas").notNull(), countyAttachments: integer("county_attachments").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
 const readerEventDimensions = () => ({
   period: text("period").notNull(), periodStart: date("period_start").notNull(),
   zip: text("zip").notNull(), district: text("district").notNull(),

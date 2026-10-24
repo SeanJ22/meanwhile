@@ -57,7 +57,7 @@ test("ballot leaves empty funding fields out and contributes partial holdings to
   const fn = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "CandidateFunding")!;
   const context = all.find((node) => ts.isFunctionDeclaration(node) && node.name?.text === "withBallotReader")!;
   assert.ok(fn && context, "exercise the production funding section and its place context");
-  const envelope = { kind: "ANSWER", holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
+  const envelope = { kind: "ANSWER", answer: { kind: "none" }, holdingStatus: "HELD", dataState: "PROMOTED", dataMetadata: { stale: "STALE", sourceThrough: "2026-08-19" } };
   const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderSelection", "CardGapContribution", compile(`${context.getText()}; ${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
   const divisions = ["ocd-division/country:us/state:az/cd:1"];

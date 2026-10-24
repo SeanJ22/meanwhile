@@ -1,6 +1,6 @@
 {
-  "measuredAt": "2026-10-24T13:15:08.822Z",
-  "revision": "e9f4ea0b2",
+  "measuredAt": "2026-10-24T13:29:14.809Z",
+  "revision": "47aefba1a",
   "mode": "Built branch HTTP state and ballot HTML diagnostics on read-only production holdings. These are not Chrome checks. Person links use exact identity keys; normalized display names locate rendered image alt text only.",
   "rows": [
     {
@@ -10,12 +10,12 @@
         {
           "path": "/api/reader/state?state=AZ&zip=85701",
           "status": 200,
-          "seconds": 2.225327149
+          "seconds": 2.5316575690000005
         },
         {
           "path": "/ballot?zip=85701",
           "status": 200,
-          "seconds": 2.48894648
+          "seconds": 2.4116067580000005
         }
       ],
       "connections": [
@@ -84,12 +84,12 @@
         {
           "path": "/api/reader/state?state=AK&zip=99501",
           "status": 200,
-          "seconds": 0.646870766
+          "seconds": 0.8563209489999999
         },
         {
           "path": "/ballot?zip=99501",
           "status": 200,
-          "seconds": 0.8672047330000004
+          "seconds": 0.9211658470000003
         }
       ],
       "connections": [
@@ -115,12 +115,12 @@
         {
           "path": "/api/reader/state?state=CO&zip=80202",
           "status": 200,
-          "seconds": 0.5907419389999995
+          "seconds": 0.5875309649999999
         },
         {
           "path": "/ballot?zip=80202",
           "status": 200,
-          "seconds": 1.0097752180000006
+          "seconds": 1.0553107069999996
         }
       ],
       "connections": [
@@ -146,12 +146,12 @@
         {
           "path": "/api/reader/state?state=NH&zip=03301",
           "status": 200,
-          "seconds": 2.3483005219999997
+          "seconds": 1.7292722350000003
         },
         {
           "path": "/ballot?zip=03301",
           "status": 200,
-          "seconds": 2.0278491240000003
+          "seconds": 2.020533931
         }
       ],
       "connections": [
@@ -177,12 +177,12 @@
         {
           "path": "/api/reader/state?state=NY&zip=10007",
           "status": 200,
-          "seconds": 0.8328941589999995
+          "seconds": 1.0823307019999993
         },
         {
           "path": "/ballot?zip=10007",
           "status": 200,
-          "seconds": 1.062780908999999
+          "seconds": 1.0628659099999986
         }
       ],
       "connections": [
@@ -208,12 +208,12 @@
         {
           "path": "/api/reader/state?state=WI&zip=53703",
           "status": 200,
-          "seconds": 0.5289084619999994
+          "seconds": 0.5791418010000016
         },
         {
           "path": "/ballot?zip=53703",
           "status": 200,
-          "seconds": 1.5786587849999996
+          "seconds": 1.139046883000001
         }
       ],
       "connections": [
@@ -243,12 +243,12 @@
         {
           "path": "/api/reader/state?state=ME&zip=04330",
           "status": 200,
-          "seconds": 0.5524782349999987
+          "seconds": 0.5563524230000003
         },
         {
           "path": "/ballot?zip=04330",
           "status": 200,
-          "seconds": 0.8321183709999969
+          "seconds": 0.8255086520000005
         }
       ],
       "connections": [
@@ -274,12 +274,12 @@
         {
           "path": "/api/reader/state?state=OR&zip=97204",
           "status": 200,
-          "seconds": 0.5247243830000007
+          "seconds": 0.430012329000001
         },
         {
           "path": "/ballot?zip=97204",
           "status": 200,
-          "seconds": 0.7609899089999999
+          "seconds": 0.7371261599999998
         }
       ],
       "connections": [
@@ -322,12 +322,12 @@
         {
           "path": "/api/reader/state?state=SD&zip=57104",
           "status": 200,
-          "seconds": 0.5550066250000018
+          "seconds": 0.620720100999999
         },
         {
           "path": "/ballot?zip=57104",
           "status": 200,
-          "seconds": 0.8549839179999981
+          "seconds": 0.8689904569999999
         }
       ],
       "connections": [
@@ -353,12 +353,12 @@
         {
           "path": "/api/reader/state?state=VT&zip=05602",
           "status": 200,
-          "seconds": 0.6601300049999991
+          "seconds": 0.6592678870000018
         },
         {
           "path": "/ballot?zip=05602",
           "status": 200,
-          "seconds": 0.8726278840000014
+          "seconds": 0.9438295370000014
         }
       ],
       "connections": [

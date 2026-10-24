@@ -19,14 +19,17 @@ test("grf: aggregates ZCTA↔CDCURFP overlaps by block land (whole vs partial), 
   acc.add("06|001||30|37|020|045|0".split("|"));        // water block, blank ZCTA -> skipped
   acc.add("06|001|90003|30|ZZ|020|045|50".split("|"));  // ZCTA in no CD of this layer (ZZ)
   acc.add("02|170|99501|00|00|001|001|500".split("|")); // AK at-large
+  acc.add("06|001|99999|30|37|020|045|100".split("|")); // unassigned land, not a ZCTA
+  acc.add("06|001|00000|30|37|020|045|100".split("|"));
 
   const stats = acc.stats();
-  assert.equal(stats.blocks, 6);
+  assert.equal(stats.blocks, 8);
 
   const scope = acc.finish(VER);
   assert.equal(scope.type, "congressional_district");
   assert.equal(scope.version, "cd:120");
   assert.equal(scope.fractionBasis, "area");
+  assert.ok(scope.groupings.every(group => group.overlaps.every(edge => edge.zcta5 !== "99999" && edge.zcta5 !== "00000")));
 
   const ca37 = scope.groupings.find((g) => g.geoid === "0637")!;
   assert.equal(ca37.stateAbbr, "CA");

@@ -5,6 +5,7 @@ import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRA
 import { extractedMemberUrl } from "./manual-source-urls.ts";
 import { FEDERAL_MONEY_AUTHORITIES } from "../federal-money/authority.ts";
 import { CAMPAIGN_FINANCE_AUTHORITIES } from "../funding/state-sources.ts";
+import { CENSUS_GEO_PARSER_VERSION } from "../census-geography/publication.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -492,7 +493,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["type", "geoid", "version"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. It never claims a wider geography universe and never substitutes a different Census vintage.",
-    parserVersion: "census-geography-overlaps/1",
+    parserVersion: CENSUS_GEO_PARSER_VERSION,
     freshnessExpectation: "Owner-invoked version promotion on a new Census relationship-file vintage; never a silent vintage substitution.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

@@ -164,6 +164,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A4_entity_places": {phase:"expand",why:"Adds the host-county filing marker after RB-A1 supplies boundary-year identity."},
+  "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy." },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },

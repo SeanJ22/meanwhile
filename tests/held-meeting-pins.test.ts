@@ -152,3 +152,23 @@ test("an unreadable earlier calendar cannot hold a directly matched meeting addr
     assert.deepEqual(result.failures,["Earlier meeting addresses could not be read: earlier calendar unavailable"]);
   }finally{await db.pg.close();}
 });
+
+test("a Census result arriving at the pass deadline is saved once and reused by the following pass",async()=>{
+  const physical:Meeting={...online,id:"legistar:held:deadline",online:undefined,carried:undefined,
+    venueGap:{kind:"STATED_NOT_PLACED",publishedText:OWN,publisher:"District"}};
+  const db=await setup([physical]),deadline=Date.parse(NOW)+60000;let clock=Date.parse(NOW);
+  try {
+    const first=await publishHeldMeetingPins({facts:db,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,
+      clock:()=>clock,deadlineMs:deadline,fetchImpl:async()=>{
+        clock=deadline+1;
+        return new Response(JSON.stringify(geocode("1415","MELODY","LN","W","BISBEE","85603")));
+      }});
+    assert.equal(first.published,1);assert.deepEqual(first.failures,[]);
+    const [read]=withSittingFacts([physical],(await readSittingFacts(db.query,[BODY])).get(BODY)!);
+    assert.equal(read.mapPin?.address,OWN);
+    const next=await publishHeldMeetingPins({facts:db,vault:new MemoryEvidenceStore(),clocks:factClocks(null),
+      now:new Date(clock+60000).toISOString(),clock:()=>clock+60000,deadlineMs:clock+120000,
+      fetchImpl:async()=>{throw new Error("a completed Census result was thrown away at the pass deadline");}});
+    assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+  }finally{await db.pg.close();}
+});

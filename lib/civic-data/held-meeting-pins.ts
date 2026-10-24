@@ -102,8 +102,8 @@ export async function publishHeldMeetingPins(input: {
       if("error" in saved)failures.push(`${response.finalUrl}: ${saved.error}`);
       else captures.set(response.finalUrl,saved.capture);
     }
+    // Finish the admitted batch so a checked Census result is saved before another pass.
     await runBoundedWorkPool(census.meetings,8,async meeting=>{
-      if(now()>=input.deadlineMs)return;
       const row=rows.find(row=>(row.value as Meeting).id===meeting.id)!;
       const capture=meeting.mapPin?.coordinateSourceUrl?captures.get(meeting.mapPin.coordinateSourceUrl):undefined;
       if(meeting.mapPin&&!capture){failures.push(`The saved Census copy is unavailable for ${meeting.id}`);return;}

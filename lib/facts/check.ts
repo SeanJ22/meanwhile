@@ -20,6 +20,8 @@ export interface SavedCopy {
 export interface CheckEntity {
   readonly id: string;
   readonly fullName: string;
+  /** Published spellings retained under this same subject id. */
+  readonly names?: readonly string[];
   readonly stateName: string | null;
   /** Registered official hosts for this entity and its parents. */
   readonly hosts: readonly string[];
@@ -29,8 +31,9 @@ export interface CheckEntity {
 export interface Claim {
   readonly entity: CheckEntity;
   readonly fieldKind: FieldKind;
-  /** A campaign site describing anyone but itself is OTHER. */
   readonly provenance: Provenance;
+  /** The subject whose campaign or advocacy site this is, established during acquisition. */
+  readonly sourceSubjectId?: string;
   /** The value exactly as written on the page. */
   readonly valueText: string;
   readonly quote: string;
@@ -72,8 +75,17 @@ export function hostOf(url: string): string {
 /** An entity's own site is a host, or a host and path for a channel its door reads on a shared platform. */
 function ownSite(url: string, site: string): boolean {
   const host = hostOf(url);
-  if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
   const { pathname } = new URL(url);
+  site = site.toLowerCase().replace(/^www\./, "");
+  // A registered CivicClerk API and its public portal are the same tenant's publication.
+  const civicClerk = /^([a-z0-9-]+)\.api\.civicclerk\.com(?:\/v1(?:\/.*)?)?$/i.exec(site);
+  if (civicClerk && host === `${civicClerk[1]!.toLowerCase()}.portal.civicclerk.com`) return true;
+  const legistar = /^webapi\.legistar\.com\/v1\/([a-z0-9_-]+)(?:\/.*)?$/i.exec(site)
+    ?? /^([a-z0-9_-]+)\.legistar\.com(?:\/.*)?$/i.exec(site);
+  if (legistar && ["legistar.com", "legistar1.com"].some(domain => host === `${legistar[1]!.toLowerCase()}.${domain}`)) return true;
+  if (legistar && /^legistar\d*\.granicus\.com$/.test(host)
+    && pathname.toLowerCase().startsWith(`/${legistar[1]!.toLowerCase()}/meetings/`)) return true;
+  if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
   const at = `${host}${pathname}`.toLowerCase(), own = site.toLowerCase();
   return at === own || at.startsWith(`${own}/`);
 }
@@ -84,11 +96,11 @@ export function isOfficialUrl(url: string, entitySites: readonly string[]): bool
   return host === "gov" || host.endsWith(".gov") || entitySites.some(site => ownSite(url, site));
 }
 
-/** Judgment calls: matching one person across sources, an unofficial portrait, and anything a third party says about someone else. */
+/** Judgment calls: matching one person across sources and an unofficial portrait. */
 export function needsSecondSource(kind: FieldKind, provenance: Provenance, url: string): boolean {
   if (kind === "same_person_link") return true;
   if (kind === "portrait") return provenance !== "OFFICIAL" && provenance !== "CAMPAIGN" && provenance !== "OWNER" && hostOf(url) !== "commons.wikimedia.org";
-  return provenance === "OTHER";
+  return false;
 }
 
 function quoteHolds(copy: SavedCopy, quote: string, valueText: string, kind: FieldKind): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {
@@ -115,7 +127,8 @@ export function pageNamesEntity(entity: CheckEntity, copy: SavedCopy): boolean {
   const text = copyText(copy);
   if (entity.externalIds.some(id => boundedIndexOf(text, id) !== -1)) return true;
   const lower = text.toLowerCase();
-  const named = [entity.fullName, placeCore(entity.fullName)].some(name => name !== "" && boundedIndexOf(lower, name.toLowerCase()) !== -1);
+  const named = [entity.fullName, ...entity.names ?? []].flatMap(name => [name, placeCore(name)])
+    .some(name => name !== "" && boundedIndexOf(lower, name.toLowerCase()) !== -1);
   const code = entity.stateName === null ? null : stateCodeOf(entity.stateName);
   return named && (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1 ||
     code !== null && boundedIndexOf(text, code) !== -1);

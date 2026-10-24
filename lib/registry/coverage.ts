@@ -131,6 +131,8 @@ export interface CoveredBody {
   bodyClass: BodyClass;
   coverageStatus: CoverageStatus;
   homepageUrl: string | null;
+  /** Saved sources for each published body field shown on its card. */
+  fieldSources?: Body["fieldSources"];
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
   /** The body's office address and phone, with the saved page that states them. */
@@ -344,6 +346,7 @@ export function summarizeCoverage(
       bodyClass: body.bodyClass,
       coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
+      ...(body.fieldSources ? { fieldSources: body.fieldSources } : {}),
       agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,
       meetingCadence: body.meetingCadence
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }

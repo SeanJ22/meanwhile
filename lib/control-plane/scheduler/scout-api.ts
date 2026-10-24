@@ -3,6 +3,7 @@
 import { readCompleteResponse } from "../../sources/source-bytes.ts";
 import { assertPublicUrl } from '../../hunt/egress.ts';
 import type { ScoutToolSpec } from './scout-contract.ts';
+import districtBoundarySources from '../../../data/reference/district-boundary-sources.json' with { type: 'json' };
 
 export const SOURCE_API_TOOLS = ['congress_api', 'census_api', 'fec_api', 'plural_api', 'legiscan_api', 'lda_api', 'data_gov_api', 'socrata_api', 'google_civic_api', 'sam_gov_api', 'legistar_api'] as const;
 export type SourceApiTool = typeof SOURCE_API_TOOLS[number];
@@ -43,6 +44,26 @@ const config: Partial<Record<SourceApiTool, { base: string; key: string; param?:
   sam_gov_api: {base:'https://api.sam.gov/opportunities/v2/',key:'SAM_GOV_API_KEY',param:'api_key',path:'search'},
 };
 const credentialName = /^(api[_-]?key|key|apikey|token|access_token|authorization|secret|app_token)$/i;
+const heldGisApis = districtBoundarySources.sources.filter(source => source.format === 'arcgis').map(source => new URL(source.url));
+
+/** The captured response of an API we hold is published directly from its fields. */
+export function isSourceApiUrl(value: string): boolean {
+  const url = new URL(value);
+  if (url.protocol === 'https:' && /^[a-z0-9-]+\.api\.civicclerk\.com$/i.test(url.hostname) && url.pathname.startsWith('/v1/')) return true;
+  if (url.protocol === 'https:' && url.hostname === 'content.civicplus.com' && url.pathname.startsWith('/api/')) return true;
+  if (url.protocol === 'https:' && /^(?:[a-z0-9-]+\.)?thrillshare\.com$/i.test(url.hostname) && url.pathname.startsWith('/api/')) return true;
+  if (url.protocol === 'https:' && /^services\d*\.arcgis\.com$/i.test(url.hostname) && /\/arcgis\/rest\/services\//i.test(url.pathname)) return true;
+  if (url.protocol === 'https:' && heldGisApis.some(api => url.origin === api.origin
+    && [api.pathname, `${api.pathname}/query`].includes(url.pathname))) return true;
+  const bases = [...Object.values(config).map(provider => provider.base),
+    'https://api.govinfo.gov/', 'https://webapi.legistar.com/v1/',
+    'https://api.us.socrata.com/api/catalog/v1', 'https://data.openstates.org/', 'https://open.pluralpolicy.com/'];
+  return bases.some(base => {
+    const provider = new URL(base);
+    return url.origin === provider.origin && url.pathname.startsWith(provider.pathname);
+  });
+}
+
 export async function readSourceApi(name: SourceApiTool, raw: unknown, options: SourceApiOptions = {}): Promise<SourceApiResult> {
   const env = options.env ?? process.env;
   const input = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;

@@ -6,12 +6,12 @@ import { badgeFor } from "../lib/meetings/jurisdiction-badge.ts";
 import { withSittingFacts } from "../lib/facts/meeting-read.ts";
 import { groupByVenue } from "../lib/meetings/venues.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import type { CoveredBody } from "../lib/registry/coverage.ts";
+import type { MeetingPinBody } from "../lib/meetings/pin-location.ts";
 
 const source={sourceUrl:"https://example.gov/calendar",sourceOrg:"Government",collectedAt:"2026-10-24T00:00:00Z",verifiedAt:null};
 const division="ocd-division/country:us/state:nc/county:wake";
 const body={bodyId:`${division}#governing`,name:"Board",officeContact:{address:"1 Board Street, Raleigh, NC 27601",phone:null,provenance:source},
-  governmentOffice:{name:"County",address:"2 Government Street, Raleigh, NC 27601",provenance:source}} as CoveredBody;
+  governmentOffice:{name:"County",address:"2 Government Street, Raleigh, NC 27601",provenance:source}} as MeetingPinBody;
 const meeting={id:"existing:meeting:id",bodyId:body.bodyId,bodyName:"Board",location:null,ocdId:division,provenance:source} as Meeting;
 
 test("canonical governing and school board identities count as governing; source kinds retain their class",()=>{

@@ -5,8 +5,7 @@ import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
-import { useMeetingPinLocations } from "@/hooks/use-meeting-pin-locations";
-import { pinBasisLabel, type MeetingPinLocation } from "@/lib/meetings/pin-location";
+import { publishedMeetingPins, type MeetingPinLocation } from "@/lib/meetings/pin-location";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -139,7 +138,6 @@ interface ViewTarget {
   state?: string;
 }
 
-const EMPTY_COVERED_BODIES: CoveredBody[] = [];
 const EMPTY_MEETINGS: Meeting[] = [];
 // Start the split map download when its client module arrives, before hydration's effects.
 let arrivingMap = typeof window === "undefined" ? null : import("./map-canvas");
@@ -438,8 +436,8 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const officeLocations = useMeetingPinLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
-  const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
+  const meetingPinLocations = useMemo(() => publishedMeetingPins(pinned?.meetings ?? EMPTY_MEETINGS), [pinned?.meetings]);
+  const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, meetingPinLocations), [meetings, pinned?.listingIdentity, meetingPinLocations]);
 
   /* The reader's representatives' district offices: a pin each, or a line on the venue card in the same building. */
   const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
@@ -453,10 +451,10 @@ function MapEntryInner() {
   );
 
   const allVenues = useMemo<Venue[]>(
-    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, officeLocations).filter(venue =>
+    () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, meetingPinLocations).filter(venue =>
       venue.lat !== null && venue.lng !== null && contains(venue.lat, venue.lng),
     ) : []),
-    [pinned, officeLocations, contains],
+    [pinned, meetingPinLocations, contains],
   );
   const visibleVenueKeys = useMemo(
     () => new Set(venues.map((v) => v.key)),
@@ -469,8 +467,8 @@ function MapEntryInner() {
   );
   /* The same bodies' sittings with no building, from the filtered `meetings`. */
   const selectedVenuePlaceless = useMemo(
-    () => (selectedVenue ? placelessSittingsOfVenueBodies(selectedVenue, meetings, officeLocations) : []),
-    [selectedVenue, meetings, officeLocations],
+    () => (selectedVenue ? placelessSittingsOfVenueBodies(selectedVenue, meetings, meetingPinLocations) : []),
+    [selectedVenue, meetings, meetingPinLocations],
   );
 
   const openSurface = useCallback(
@@ -725,9 +723,9 @@ function MapEntryInner() {
     openMeetingCard.current = (meeting: Meeting) =>
       openLarge({
         kind: "entity",
-        subject: meetingSubject(meeting, bodyForMeeting(meeting), officeLocations.find(pin => pin.meetingId === meeting.id)),
+        subject: meetingSubject(meeting, bodyForMeeting(meeting), meetingPinLocations.find(pin => pin.meetingId === meeting.id)),
       });
-  }, [openLarge, bodyForMeeting, officeLocations]);
+  }, [openLarge, bodyForMeeting, meetingPinLocations]);
 
   useEffect(() => {
     if (!current) return;
@@ -783,7 +781,7 @@ function MapEntryInner() {
         if (meeting) {
           openLarge({
             kind: "entity",
-            subject: meetingSubject(meeting, bodyForMeeting(meeting), officeLocations.find(pin => pin.meetingId === meeting.id)),
+            subject: meetingSubject(meeting, bodyForMeeting(meeting), meetingPinLocations.find(pin => pin.meetingId === meeting.id)),
           });
         }
       } else if (item.kind === "body") {
@@ -825,13 +823,13 @@ function MapEntryInner() {
 
     // Picking a result dismisses the phone drawer covering the map.
     dismissSidebar();
-  }, [dispatch, dismissSidebar, current, openLarge, bodyForMeeting, officeLocations]);
+  }, [dispatch, dismissSidebar, current, openLarge, bodyForMeeting, meetingPinLocations]);
 
   const onPickMeeting = useCallback(
     (meeting: Meeting) => {
       // A list row opens that meeting's card one level deeper; the camera still moves to the room.
       openMeeting(meeting);
-      const pin = meeting.location ?? officeLocations.find(location => location.meetingId === meeting.id);
+      const pin = meeting.location ?? meetingPinLocations.find(location => location.meetingId === meeting.id);
       if (pin) {
         setFocus({
           lat: pin.lat,
@@ -841,7 +839,7 @@ function MapEntryInner() {
         });
       }
     },
-    [openMeeting, officeLocations],
+    [openMeeting, meetingPinLocations],
   );
 
   const onReset = useCallback(() => {
@@ -2029,7 +2027,7 @@ function meetingSubject(
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
     meetings: [meeting],
     // The shared assembler.
-    sources: [...meetingCardSources(meeting, roster),...(pin ? [{what:pinBasisLabel(pin.basis),provenance:pin.provenance}] : [])],
+    sources: meetingCardSources(meeting, roster),
   };
 }
 

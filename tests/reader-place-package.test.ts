@@ -810,11 +810,6 @@ test("a special district's board on a city's territory reads under the district,
     await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,$1,$1,$2,$3,'housing')", ["https://www.mobilehousing.org/board", at, "c".repeat(64)]);
     for (const [entity, name] of [[board, "Board of Commissioners"], [council, "City Council"]]) await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
       VALUES($1,'name',$2,$3,'live','OFFICIAL',1,$3,$4,'fixture')`, [entity, JSON.stringify(name), name, at]);
-    const provenance={sourceUrl:"https://www.mobilehousing.org/board",sourceOrg:"Housing Authority",collectedAt:at,verifiedAt:at};
-    await db.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload,promoted_at,current_version_id)
-      VALUES('REGISTRATION:US-AL:registration:v1','REGISTRATION','US-AL:registration:v1',$1,$2,'registration')`,
-      [JSON.stringify({governments:[{id:"government:US-AL:cog:housing",jurisdictionId:housing,name:"Mobile Housing Authority",state:"AL",aliases:[],bodyIds:[],
-        officeAddress:"1 Housing Street, Mobile, AL 36602",provenance,associations:[{divisionId:mobile}]}]}),at]);
     const result = await readPlacePackage({ state: "AL", divisionIds: [mobile] }, db.query);
     assert.deepEqual(result.bodies.map(b => [b.id, b.division, b.government ?? null]).sort(), [[board, mobile, "Mobile Housing Authority"], [council, mobile, null]]);
     const runtime: RegistryRuntimeReadModel = { formatVersion: 1, registry: { generatedAt: at, bodies: [], divisions: [{ ocdId: mobile, label: "Mobile city", divisionType: "place", tier: "local", state: "AL",
@@ -823,13 +818,6 @@ test("a special district's board on a city's territory reads under the district,
       statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {}, officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
     const coverage = stateCoverage({ state: "AL", registry: runtime, version: "fixture" }, [mobile], 0, 0, [], result.bodies);
     assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["Board of Commissioners", "Mobile Housing Authority"], ["City Council", "Mobile city"]]);
-    assert.equal(coverage.bodies.find(b=>b.bodyId===board)?.governmentOffice?.address,"1 Housing Street, Mobile, AL 36602");
-    assert.equal(coverage.bodies.find(b=>b.bodyId===council)?.governmentOffice,undefined,"a city council never borrows another government's office in the same territory");
     assert.equal(coverage.bodies.find(b=>b.bodyId===board)?.bodyClass,"GOVERNING");
-    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
-      VALUES($1,'office_address','"2 New Housing Street, Mobile, AL 36602"','2 New Housing Street, Mobile, AL 36602','live','OFFICIAL',1,'Our office address',$2,'fixture')`,[housing,at]);
-    const next=await readPlacePackage({state:"AL",divisionIds:[mobile]},db.query);
-    assert.equal(next.bodies.find(b=>b.id===board)?.fields.governmentOffice?.address,"2 New Housing Street, Mobile, AL 36602","the next source fact replaces the held directory office without a release");
-    assert.equal(next.bodies.find(b=>b.id===council)?.fields.governmentOffice,undefined);
   } finally { await db.pg.close(); }
 });

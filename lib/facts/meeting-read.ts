@@ -1,5 +1,6 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
 import type { Query } from "./publish.ts";
+import { repeatsPublishedVenue } from "../geo/address-query.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
@@ -8,16 +9,15 @@ const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.f
   FROM entity m JOIN fact f ON f.entity_id = m.id
   WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND f.status = 'live'`;
 
-const FIELD = { title: "title", starts_at: "startsAt", location: "location", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
+const FIELD = { title: "title", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
 
 function publishedLocation(meeting: Meeting, value: unknown, source: Provenance): Partial<Meeting> {
-  if (meeting.online) return {};
   const location = value as { name: string; address: string | null; lat?: number; lng?: number };
-  if (Number.isFinite(location.lat) && Number.isFinite(location.lng)) return { location:location as Meeting["location"],venueGap:undefined };
+  if (Number.isFinite(location.lat) && Number.isFinite(location.lng)) return { location:location as Meeting["location"],online:undefined,venueGap:undefined };
   if (meeting.location && (location.address && meeting.location.address === location.address
-    || !location.address && meeting.location.name === location.name))
-    return { location:{...meeting.location,...location,address:location.address ?? meeting.location.address} };
-  return { location:null,venueGap: { kind:"STATED_NOT_PLACED",publishedText:location.address || location.name,publisher:source.sourceOrg } };
+    || !location.address && repeatsPublishedVenue(location.name,meeting.location.name,meeting.location.address)))
+    return { location:{...meeting.location,...location,address:location.address ?? meeting.location.address},online:undefined };
+  return { location:null,online:undefined,venueGap: { kind:"STATED_NOT_PLACED",publishedText:location.address || location.name,publisher:source.sourceOrg } };
 }
 
 /** One live fact about a sitting, citing the saved page it was found on. */
@@ -55,14 +55,24 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
   if (!facts.length) return out;
   const owner = new Map<string, number>();
   meetings.forEach((meeting, index) => { for (const id of [meeting.id, ...meeting.mergedMeetingIds ?? []]) owner.set(id, index); });
-  for (const { meetingId, field, value, source } of facts) {
+  const ordered=[...facts].sort((a,b)=>Date.parse(a.source.collectedAt)-Date.parse(b.source.collectedAt)
+    || Number(a.field==="online")-Number(b.field==="online"));
+  for (const { meetingId, field, value, source } of ordered) {
     const index = owner.get(meetingId);
     if (index === undefined) continue;
     const meeting = out[index]!;
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
       : field === "location" ? publishedLocation(meeting,value,source)
-      : { [field]: value as string };
+      : field==="mapPin" ? {mapPin:{...value as NonNullable<Meeting["mapPin"]>,meetingId:meeting.id}}
+      : field==="online" ? {online:value as Meeting["online"],location:null,venueGap:undefined} : { [field]: value as string };
     out[index] = { ...meeting, ...patch, fieldSources: { ...meeting.fieldSources, [field]: source } };
   }
-  return out;
+  return out.map(meeting=>{
+    const pin=meeting.mapPin;
+    if(!pin)return meeting;
+    const agrees=meeting.location ? pin.basis!=="MEETING"||repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)
+      :pin.publishedLocation===(meeting.venueGap?.publishedText??null);
+    if(agrees)return meeting;
+    const {mapPin:_stale,...rest}=meeting;return rest;
+  });
 }

@@ -413,17 +413,7 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     (SELECT l.division FROM linked_bodies l WHERE l.id=b.id),
     (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
-    split_part(b.id,'#',1)),'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'),
-    'government_office',coalesce((SELECT jsonb_build_object('name',g.name,'officeAddress',f.value#>>'{}','provenance',
-      jsonb_build_object('sourceUrl',s.url,'sourceOrg',g.name,'collectedAt',f.checked_at,'verifiedAt',f.checked_at))
-      FROM entity g JOIN fact f ON f.entity_id=g.id AND f.status='live' AND f.field='office_address'
-      JOIN source_copy s ON s.id=f.source_copy_id WHERE g.kind='government' AND g.state=b.state AND g.id IN (
-        SELECT b.parent_id UNION SELECT owner.g->>'jurisdictionId' FROM government_inventory owner
-          WHERE owner.g->>'id'=b.parent_id OR owner.g->'aliases' ? b.id OR owner.g->'bodyIds' ? b.id)
-      ORDER BY f.checked_at DESC,g.id LIMIT 1),
-    (SELECT g FROM government_inventory WHERE g->>'officeAddress' IS NOT NULL
-      AND (g->>'jurisdictionId'=b.parent_id OR g->>'id'=b.parent_id OR g->'aliases' ? b.id OR g->'bodyIds' ? b.id)
-      ORDER BY (g->>'jurisdictionId'=b.parent_id) DESC,g->>'id' LIMIT 1)))) FROM bodies b),'[]'::jsonb) AS entities,
+    split_part(b.id,'#',1)),'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
@@ -519,11 +509,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
-    const government = e.government_office as RegistrationGovernmentListing | null | undefined;
-    const governmentOffice = government?.officeAddress ? { name:government.name,address:government.officeAddress,
-      provenance:government.contactProvenance?.officeAddress ?? government.provenance } : undefined;
-    return { id, division: String(e.division), fields: {...(fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}),
-      ...(governmentOffice ? {governmentOffice} : {})}, roster: own, comment: comments.get(id) ?? null,
+    return { id, division: String(e.division), fields: fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });

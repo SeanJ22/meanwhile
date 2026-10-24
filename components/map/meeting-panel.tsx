@@ -234,7 +234,7 @@ export function MeetingPanel({
           </section>
         ))}
 
-        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])), ...(venue.officeAddressSource ? [{ what: venue.pinBasis === "GOVERNMENT_OFFICE" ? "Map pin at the government’s published office" : venue.pinBasis === "BODY_OFFICE" ? "Map pin at the board’s published office" : "Published meeting location", provenance: venue.officeAddressSource }] : []),
+        <MeetingSourceCredit sources={[...rows.flatMap(meeting => meetingCardSources(meeting, [])),
           ...offices.map(office => ({ what: `${office.name}: district office address`, provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg ?? "", collectedAt: office.collectedAt ?? "", verifiedAt: null } }))]} />
       </div>
     </aside>

@@ -18,7 +18,7 @@ test("online-only venues use only the exact body's published office, without cha
   assert.equal(venues.length, 1);
   assert.equal(venues[0].kind, "ONLINE_ONLY");
   assert.deepEqual(venues[0].meetings.map(meeting => meeting.id), ["online"]);
-  assert.equal(venues[0].officeAddressSource, provenance);
+  assert.equal(venues[0].pinBasis, "BODY_OFFICE");
   assert.equal(online.location, null);
   assert.equal(online.online?.joinUrl, "https://example.gov/join");
   assert.deepEqual(groupByVenue([online], undefined, [{ ...office, meetingId: "other", bodyId: "body:other" }]), []);

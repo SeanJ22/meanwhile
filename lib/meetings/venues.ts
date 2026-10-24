@@ -1,6 +1,5 @@
 import type { Meeting } from "@/lib/sources/types";
 
-import type { RegistryProvenance } from "../registry/types.ts";
 import { hasPhysicalLocation, isOnlineOnly } from "./online.ts";
 import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 import type { MeetingPinLocation, PinBasis } from "./pin-location.ts";
@@ -17,7 +16,6 @@ export interface Venue {
   listingIdentity?: MeetingListingIdentityReadback;
   kind?: "PHYSICAL" | "ONLINE_ONLY";
   pinBasis?: PinBasis;
-  officeAddressSource?: RegistryProvenance;
 }
 
 /** ~11 meters. Two rooms in one building are one pin. */
@@ -28,7 +26,7 @@ export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListi
   const byMeeting = new Map(locations.map(location => [location.meetingId,location]));
 
   for (const meeting of meetings) {
-    const resolved = byMeeting.get(meeting.id);
+    const resolved = byMeeting.get(meeting.id) ?? meeting.mapPin;
     const kind = isOnlineOnly(meeting) ? "ONLINE_ONLY" : "PHYSICAL";
     const location = meeting.location ?? resolved;
     if (!location) continue;
@@ -46,8 +44,7 @@ export function groupByVenue(meetings: Meeting[], listingIdentity?: MeetingListi
       continue;
     }
 
-    venues.set(key, { key, name, address, lat, lng, meetings: [meeting], listingIdentity, kind, pinBasis:basis,
-      ...(resolved ? { officeAddressSource: resolved.provenance } : {}) });
+    venues.set(key, { key, name, address, lat, lng, meetings: [meeting], listingIdentity, kind, pinBasis:basis });
   }
 
   return [...venues.values()];

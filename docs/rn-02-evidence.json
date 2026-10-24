@@ -1,28 +1,269 @@
 {
-  "implementationRevision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
-  "baseRevision": "dfae00f3c70444f06c95adf66c89c9b4e818827d",
+  "implementationRevision": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
+  "productionProofRevision": "001011be17652d8276ce7e5f78e9091f5eab14ac",
+  "runtimeParity": {
+    "productionProofRevision": "001011be17652d8276ce7e5f78e9091f5eab14ac",
+    "validationRevision": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
+    "changedPaths": [
+      "tests/round-progress.test.ts"
+    ],
+    "applicationAndRuntimeCodeIdentical": true,
+    "attestation": {
+      "identical": true,
+      "detail": "all 810 files of the typed Reader verifiers' import closure (lib/civic-data/reader-verification.ts) and dependency manifests are byte-identical at both commits"
+    },
+    "focusedProgressFixture": {
+      "tests": 8,
+      "pass": 8,
+      "quietMs": 2000,
+      "waveMs": 3000,
+      "productionTimingChanged": false
+    }
+  },
+  "baseRevision": "739e03665e46149120290951e0f459c02f320158",
+  "productionWrites": 0,
   "resolvedReturn": {
-    "id": "fix:81a2add3",
-    "supersedesReady": "d0498209046b7c6bc4473d7eb8744c69d2bcb26d",
-    "release91PrerequisiteCleared": true,
-    "reconciledOntoTestedRelease92River": true,
+    "id": "fix:1ede816a",
+    "supersedesReady": "4792100a12aa6f26c5983b5fdf6087ac8c6c7dbd",
+    "reconciledOntoTestedRiver": "739e03665e46149120290951e0f459c02f320158",
     "acceptanceClaimed": false
   },
-  "productionWrites": 0,
+  "returnFix": {
+    "agendaSpool": "Normalize zero-length SQLite byte bindings to zeroblob(0); preserve exact empty200/204/205/304 responses and shared request failures",
+    "batching": "Repack sparse held contracts after exact bulk NO_PROMOTION filtering, retaining geography, calendar objects, ZIP isolation, timeout and 32-single/256-calendar bounds; ordered contract hash keeps source phases distinct",
+    "sameInventoryPacking": {
+      "at": "2026-10-23T21:52:30.435Z",
+      "productionReadOnly": true,
+      "contracts": 11593,
+      "noPromotion": 10348,
+      "heldContracts": 1245,
+      "sparseChildren": 116,
+      "packedChildren": 78,
+      "singletonSparseChildren": 8,
+      "sparseSizes": [
+        1,
+        14,
+        19,
+        10,
+        15,
+        15,
+        14,
+        22,
+        15,
+        18,
+        18,
+        6,
+        16,
+        6,
+        14,
+        16,
+        10,
+        6,
+        2,
+        6,
+        12,
+        12,
+        12,
+        13,
+        12,
+        12,
+        12,
+        12,
+        6,
+        18,
+        9,
+        6,
+        14,
+        6,
+        14,
+        10,
+        2,
+        3,
+        6,
+        11,
+        12,
+        6,
+        6,
+        5,
+        6,
+        5,
+        6,
+        13,
+        6,
+        11,
+        5,
+        6,
+        5,
+        2,
+        4,
+        18,
+        7,
+        6,
+        11,
+        11,
+        11,
+        10,
+        5,
+        4,
+        2,
+        10,
+        10,
+        5,
+        5,
+        4,
+        6,
+        10,
+        11,
+        27,
+        15,
+        6,
+        6,
+        9,
+        5,
+        11,
+        6,
+        9,
+        6,
+        9,
+        22,
+        31,
+        11,
+        13,
+        13,
+        21,
+        22,
+        23,
+        19,
+        23,
+        26,
+        22,
+        6,
+        20,
+        1,
+        6,
+        9,
+        5,
+        1,
+        1,
+        20,
+        4,
+        4,
+        4,
+        4,
+        1,
+        1,
+        1,
+        1,
+        42,
+        63,
+        7
+      ],
+      "packedSizes": [
+        1,
+        14,
+        29,
+        15,
+        15,
+        14,
+        32,
+        32,
+        15,
+        22,
+        14,
+        16,
+        24,
+        12,
+        12,
+        12,
+        13,
+        12,
+        12,
+        12,
+        18,
+        32,
+        1,
+        20,
+        14,
+        21,
+        11,
+        12,
+        12,
+        11,
+        11,
+        19,
+        11,
+        11,
+        11,
+        18,
+        13,
+        11,
+        11,
+        11,
+        10,
+        11,
+        10,
+        10,
+        10,
+        10,
+        10,
+        32,
+        32,
+        1,
+        9,
+        5,
+        17,
+        15,
+        9,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        32,
+        28,
+        27,
+        15,
+        1,
+        20,
+        4,
+        4,
+        4,
+        4,
+        1,
+        1,
+        1,
+        1,
+        42,
+        63,
+        7
+      ]
+    },
+    "familyTest": "Mock accepted immutable candidate and assert every published fact produced_by uses its exact ID on promotion and confirmation",
+    "localBaseline": "2 derived-family failures reproduced; empty-response test passed on Node24.19/SQLite3.53.3; River reported its NULL-binding failure on the same READY",
+    "focused": {
+      "tests": 129,
+      "pass": 129
+    },
+    "progressFixtureFocused": {
+      "tests": 8,
+      "pass": 8
+    },
+    "ciIsolation": "No ambient DATABASE_URL or control URL; ordinary CI environment. First broad selection hit ambient fact-reader network and was rerun with isolated CI environment."
+  },
   "productionReplayRoles": {
     "reader": "readonly",
     "control": "wtp_cp_release_readonly",
-    "transactionReadOnly": true,
-    "insertUpdateDeleteGranted": false
+    "transactionReadOnly": true
   },
-  "proofMethod": "Production SELECT-only door/pointer/typed-reader replay; local readback evidence, source and LKG guards retained. Native acquisition/publication and scheduled-parent writes only in isolated Neon copies. Frozen detached implementation checkout throughout.",
+  "proofMethod": "Frozen detached code; production SELECT-only typed readers with exact local append evidence guards; native acquisitions/publications and scheduling only on isolated Neon copies.",
   "doorReplay": {
     "productionReadOnly": true,
     "productionBaseVersion": "cv-a142e000f9ca3f6681aba5969cada744",
-    "observedAt": "2026-10-23T18:43:15.930Z",
+    "observedAt": "2026-10-23T21:58:02.841Z",
     "doorPublish": "PROMOTED",
-    "openDoors": 6599,
-    "publishedDoors": 6668,
+    "openDoors": 6666,
+    "publishedDoors": 6735,
     "allOpenDoorsBecomeWork": true,
     "removed": [
       "meeting-door:meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing:route:0391b4c4f54b65e7",
@@ -35,15 +276,15 @@
       "detail": "2 removed door(s) have exact suspended registry records."
     },
     "nextScheduledPublish": {
-      "at": "2026-10-24T18:43:15.930Z",
+      "at": "2026-10-24T21:58:02.841Z",
       "kind": "UNCHANGED_CONFIRMED",
-      "versionId": "cv-2506b340410264f4c861c0559f1df13c"
+      "versionId": "cv-06bca2959480d48ef558b24bbc6216f4"
     }
   },
   "doorCounts": {
-    "at": "2026-10-23T18:43:18.504Z",
-    "openDoors": 6599,
-    "meetingContracts": 6645,
+    "at": "2026-10-23T21:58:55.298Z",
+    "openDoors": 6666,
+    "meetingContracts": 6712,
     "states": {
       "NH": {
         "openDoors": 99,
@@ -66,9 +307,9 @@
         "contracts": 1748
       },
       "MA": {
-        "openDoors": 159,
-        "runnableDoors": 159,
-        "contracts": 159
+        "openDoors": 180,
+        "runnableDoors": 180,
+        "contracts": 180
       },
       "AK": {
         "openDoors": 78,
@@ -81,9 +322,9 @@
         "contracts": 48
       },
       "AR": {
-        "openDoors": 5,
-        "runnableDoors": 5,
-        "contracts": 5
+        "openDoors": 8,
+        "runnableDoors": 8,
+        "contracts": 8
       },
       "FL": {
         "openDoors": 677,
@@ -171,9 +412,9 @@
         "contracts": 106
       },
       "MN": {
-        "openDoors": 68,
-        "runnableDoors": 68,
-        "contracts": 68
+        "openDoors": 86,
+        "runnableDoors": 86,
+        "contracts": 86
       },
       "CO": {
         "openDoors": 195,
@@ -241,9 +482,9 @@
         "contracts": 1
       },
       "WI": {
-        "openDoors": 469,
-        "runnableDoors": 469,
-        "contracts": 469
+        "openDoors": 494,
+        "runnableDoors": 494,
+        "contracts": 494
       },
       "IA": {
         "openDoors": 10,
@@ -280,14 +521,14 @@
   },
   "registryInputs": {
     "current": {
-      "capturedAt": "2026-10-23T17:45:15.213Z",
-      "doorsSha256": "8f1a9822014e97a6eb906b4b6ee674b87bec21a09789a1dacf919824bfea0b67",
-      "rows": 6697
+      "capturedAt": "2026-10-23T21:49:36.684Z",
+      "rows": 6768,
+      "sha256": "8e5909d63f32d95552b6303258303c791c6f28207407f965da0e005a22f0d309"
     },
     "tomorrow": {
-      "capturedAt": "2026-10-23T18:41:45.591Z",
-      "doorsSha256": "24183202651695064077984a2fda4f336de227dda3a6d327a2b91739484707b9",
-      "rows": 6701
+      "capturedAt": "2026-10-23T21:57:39.284Z",
+      "rows": 6768,
+      "sha256": "5e93cb6de88504b47320ae2ec73d0b84de550c82762c15080f51249121a6b0d7"
     }
   },
   "nationalReaderReplay": {
@@ -304,15 +545,15 @@
         "AZ": {
           "contracts": 211,
           "dispositions": {
-            "NO_PROMOTION": 147,
-            "RECORDED:PASS": 64
+            "NO_PROMOTION": 140,
+            "RECORDED:PASS": 71
           }
         },
         "NJ": {
           "contracts": 51,
           "dispositions": {
-            "NO_PROMOTION": 30,
-            "RECORDED:PASS": 21
+            "NO_PROMOTION": 29,
+            "RECORDED:PASS": 22
           }
         },
         "DE": {
@@ -330,17 +571,17 @@
           }
         },
         "FL": {
-          "contracts": 1081,
+          "contracts": 1084,
           "dispositions": {
-            "NO_PROMOTION": 1067,
-            "RECORDED:PASS": 14
+            "NO_PROMOTION": 1005,
+            "RECORDED:PASS": 79
           }
         },
         "GA": {
           "contracts": 89,
           "dispositions": {
-            "NO_PROMOTION": 76,
-            "RECORDED:PASS": 13
+            "NO_PROMOTION": 67,
+            "RECORDED:PASS": 22
           }
         },
         "HI": {
@@ -353,15 +594,15 @@
         "ID": {
           "contracts": 70,
           "dispositions": {
-            "NO_PROMOTION": 55,
-            "RECORDED:PASS": 15
+            "NO_PROMOTION": 54,
+            "RECORDED:PASS": 16
           }
         },
         "IL": {
           "contracts": 394,
           "dispositions": {
-            "NO_PROMOTION": 378,
-            "RECORDED:PASS": 16
+            "NO_PROMOTION": 370,
+            "RECORDED:PASS": 24
           }
         },
         "IN": {
@@ -388,8 +629,8 @@
         "KY": {
           "contracts": 21,
           "dispositions": {
-            "NO_PROMOTION": 9,
-            "RECORDED:PASS": 12
+            "NO_PROMOTION": 8,
+            "RECORDED:PASS": 13
           }
         },
         "LA": {
@@ -414,38 +655,38 @@
           }
         },
         "MA": {
-          "contracts": 196,
+          "contracts": 238,
           "dispositions": {
-            "NO_PROMOTION": 179,
-            "RECORDED:PASS": 17
+            "NO_PROMOTION": 220,
+            "RECORDED:PASS": 18
           }
         },
         "MI": {
           "contracts": 192,
           "dispositions": {
-            "NO_PROMOTION": 174,
-            "RECORDED:PASS": 18
+            "NO_PROMOTION": 159,
+            "RECORDED:PASS": 33
           }
         },
         "MN": {
-          "contracts": 93,
+          "contracts": 129,
           "dispositions": {
-            "NO_PROMOTION": 81,
-            "RECORDED:PASS": 12
+            "NO_PROMOTION": 109,
+            "RECORDED:PASS": 20
           }
         },
         "MS": {
           "contracts": 23,
           "dispositions": {
-            "NO_PROMOTION": 11,
-            "RECORDED:PASS": 12
+            "NO_PROMOTION": 9,
+            "RECORDED:PASS": 14
           }
         },
         "MO": {
-          "contracts": 469,
+          "contracts": 470,
           "dispositions": {
-            "NO_PROMOTION": 457,
-            "RECORDED:PASS": 12
+            "NO_PROMOTION": 449,
+            "RECORDED:PASS": 21
           }
         },
         "MT": {
@@ -465,8 +706,8 @@
         "NV": {
           "contracts": 127,
           "dispositions": {
-            "NO_PROMOTION": 116,
-            "RECORDED:PASS": 11
+            "NO_PROMOTION": 115,
+            "RECORDED:PASS": 12
           }
         },
         "NM": {
@@ -486,15 +727,16 @@
         "NC": {
           "contracts": 189,
           "dispositions": {
-            "NO_PROMOTION": 178,
-            "RECORDED:PASS": 11
+            "NO_PROMOTION": 170,
+            "RECORDED:PASS": 19
           }
         },
         "ND": {
           "contracts": 33,
           "dispositions": {
             "NO_PROMOTION": 22,
-            "RECORDED:PASS": 11
+            "RECORDED:PASS": 10,
+            "REPAIR_FAILED": 1
           }
         },
         "OH": {
@@ -514,8 +756,8 @@
         "OR": {
           "contracts": 76,
           "dispositions": {
-            "NO_PROMOTION": 60,
-            "RECORDED:PASS": 16
+            "NO_PROMOTION": 58,
+            "RECORDED:PASS": 18
           }
         },
         "PA": {
@@ -596,10 +838,10 @@
           }
         },
         "WI": {
-          "contracts": 920,
+          "contracts": 970,
           "dispositions": {
-            "NO_PROMOTION": 895,
-            "RECORDED:PASS": 25
+            "NO_PROMOTION": 905,
+            "RECORDED:PASS": 65
           }
         },
         "WY": {
@@ -612,57 +854,58 @@
         "PR": {
           "contracts": 19,
           "dispositions": {
-            "NO_PROMOTION": 15,
-            "RECORDED:PASS": 4
+            "NO_PROMOTION": 14,
+            "RECORDED:PASS": 5
           }
         },
         "AL": {
           "contracts": 113,
           "dispositions": {
-            "NO_PROMOTION": 100,
-            "RECORDED:PASS": 13
+            "NO_PROMOTION": 96,
+            "RECORDED:PASS": 17
           }
         },
         "AK": {
           "contracts": 138,
           "dispositions": {
-            "NO_PROMOTION": 126,
-            "RECORDED:PASS": 12
+            "NO_PROMOTION": 123,
+            "RECORDED:PASS": 15
           }
         },
         "AR": {
-          "contracts": 24,
+          "contracts": 27,
           "dispositions": {
-            "NO_PROMOTION": 15,
+            "NO_PROMOTION": 18,
             "RECORDED:PASS": 9
           }
         },
         "CA": {
           "contracts": 3038,
           "dispositions": {
-            "NO_PROMOTION": 2983,
-            "RECORDED:PASS": 55
+            "NO_PROMOTION": 2786,
+            "RECORDED:PASS": 252
           }
         },
         "CO": {
           "contracts": 299,
           "dispositions": {
-            "NO_PROMOTION": 290,
-            "RECORDED:PASS": 9
+            "NO_PROMOTION": 272,
+            "RECORDED:PASS": 27
           }
         },
         "CT": {
           "contracts": 270,
           "dispositions": {
-            "NO_PROMOTION": 261,
-            "RECORDED:PASS": 9
+            "NO_PROMOTION": 255,
+            "RECORDED:PASS": 15
           }
         },
         "US": {
           "contracts": 41,
           "dispositions": {
             "NO_PROMOTION": 15,
-            "RECORDED:PASS": 26
+            "RECORDED:PASS": 25,
+            "RECORDED:FAIL": 1
           }
         },
         "AS": {
@@ -675,8 +918,8 @@
         "GU": {
           "contracts": 16,
           "dispositions": {
-            "NO_PROMOTION": 13,
-            "RECORDED:PASS": 3
+            "NO_PROMOTION": 12,
+            "RECORDED:PASS": 4
           }
         },
         "MP": {
@@ -695,125 +938,107 @@
         }
       },
       "productionReadOnly": true,
-      "at": "2026-10-23T18:30:20.317Z",
-      "domains": 103,
-      "originalDomains": 254,
-      "contracts": 11458,
-      "failures": [],
+      "at": "2026-10-23T21:49:37.165Z",
+      "domains": 78,
+      "originalDomains": 255,
+      "contracts": 11593,
+      "failures": [
+        {
+          "taskId": "reader-readback:openstates-votes-nd",
+          "code": "READER_READBACK_REPAIR_FAILED",
+          "detail": "Failed query: select \"key\", concat(\"civic_data_promotions\".xmin::text, '/', \"civic_data_promotions\".ctid::text, '/', coalesce(( select confirmation.sequence from civic_data_candidate_events as confirmation where confirmation.candidate_id = \"civic_data_promotions\".\"current_version_id\" and left(confirmation.detail, $1) = $2 order by confirmation.sequence desc limit 1 ), 0)) from \"civic_data_promotions\" where (\"civic_data_promotions\".\"record_class\" = $3 and \"civic_data_promotions\".\"key\" in ($4)) params: 26,UNCHANGED_CONFIRMATION_V1 ,STATE_ROLL_CALL,STATE_ROLL_CALL:US-ND:openstates-votes:v1 <- NeonDbError: Server error (HTTP status 503): upstream connect error or disconnect/reset before headers. reset reason: connection timeout"
+        }
+      ],
       "deferred": [],
       "dispositions": {
-        "NO_PROMOTION": 10621,
-        "RECORDED:PASS": 836,
-        "RECORDED:FAIL": 1
+        "NO_PROMOTION": 10348,
+        "RECORDED:PASS": 1242,
+        "RECORDED:FAIL": 2,
+        "REPAIR_FAILED": 1
       },
-      "durationMs": 918842,
-      "peakBytes": 988545024,
+      "durationMs": 1101127,
+      "peakBytes": 1078599680,
       "peakByDomain": {
-        "reader-readback:fec-funding": 340123648,
-        "reader-readback:contracts:NH:0": 488460288,
-        "reader-readback:contracts:AZ:0": 374042624,
-        "reader-readback:contracts:AZ:1": 326959104,
-        "reader-readback:contracts:NJ:0": 548282368,
-        "reader-readback:contracts:DE:0": 450154496,
-        "reader-readback:contracts:DC:0": 337940480,
-        "reader-readback:contracts:FL:0": 494514176,
-        "reader-readback:contracts:FL:12": 253247488,
-        "reader-readback:contracts:GA:0": 503930880,
-        "reader-readback:contracts:GA:1": 249290752,
-        "reader-readback:contracts:HI:0": 478593024,
-        "reader-readback:contracts:ID:0": 502226944,
-        "reader-readback:contracts:IL:0": 752865280,
-        "reader-readback:contracts:IL:5": 250830848,
-        "reader-readback:contracts:IN:0": 457981952,
-        "reader-readback:contracts:IA:0": 527470592,
-        "reader-readback:contracts:KS:0": 395538432,
-        "reader-readback:contracts:KY:0": 438546432,
-        "reader-readback:contracts:LA:0": 553631744,
-        "reader-readback:contracts:ME:0": 518361088,
-        "reader-readback:contracts:MD:0": 617586688,
-        "reader-readback:contracts:MA:0": 391712768,
-        "reader-readback:contracts:MA:1": 249839616,
-        "reader-readback:contracts:MI:0": 529391616,
-        "reader-readback:contracts:MI:1": 250490880,
-        "reader-readback:contracts:MI:2": 248807424,
-        "reader-readback:contracts:MN:0": 432377856,
-        "reader-readback:contracts:MS:0": 444043264,
-        "reader-readback:contracts:MO:0": 406020096,
-        "reader-readback:contracts:MO:7": 252055552,
-        "reader-readback:contracts:MT:0": 613019648,
-        "reader-readback:contracts:NE:0": 457269248,
-        "reader-readback:contracts:NV:0": 438231040,
-        "reader-readback:contracts:NV:2": 251113472,
-        "reader-readback:contracts:NM:0": 340381696,
-        "reader-readback:contracts:NM:1": 253173760,
-        "reader-readback:contracts:NY:0": 988545024,
-        "reader-readback:contracts:NY:3": 251842560,
-        "reader-readback:contracts:NC:0": 429326336,
-        "reader-readback:contracts:NC:1": 254681088,
-        "reader-readback:contracts:ND:0": 535318528,
-        "reader-readback:contracts:OH:0": 422707200,
-        "reader-readback:contracts:OH:1": 252624896,
-        "reader-readback:contracts:OK:0": 548392960,
-        "reader-readback:contracts:OK:1": 250314752,
-        "reader-readback:contracts:OK:2": 251916288,
-        "reader-readback:contracts:OR:0": 327467008,
-        "reader-readback:contracts:PA:0": 578998272,
-        "reader-readback:contracts:PA:1": 249528320,
-        "reader-readback:contracts:RI:0": 461426688,
-        "reader-readback:contracts:SC:0": 564199424,
-        "reader-readback:contracts:SD:0": 347942912,
-        "reader-readback:contracts:TN:0": 327774208,
-        "reader-readback:contracts:TX:0": 437501952,
-        "reader-readback:contracts:TX:13": 285863936,
-        "reader-readback:contracts:TX:14": 250900480,
-        "reader-readback:contracts:UT:0": 311242752,
-        "reader-readback:contracts:VT:0": 330444800,
-        "reader-readback:contracts:VA:0": 347201536,
-        "reader-readback:contracts:VA:1": 251949056,
-        "reader-readback:contracts:WA:0": 358416384,
-        "reader-readback:contracts:WA:3": 247947264,
-        "reader-readback:contracts:WV:0": 335962112,
-        "reader-readback:contracts:WI:0": 333680640,
-        "reader-readback:contracts:WI:1": 252915712,
-        "reader-readback:contracts:WI:2": 248827904,
-        "reader-readback:contracts:WI:13": 252739584,
-        "reader-readback:contracts:WI:14": 249122816,
-        "reader-readback:contracts:WY:0": 285478912,
-        "reader-readback:contracts:PR:0": 270614528,
-        "reader-readback:contracts:AL:0": 345415680,
-        "reader-readback:contracts:AL:1": 250814464,
-        "reader-readback:contracts:AK:0": 287617024,
-        "reader-readback:contracts:AK:1": 248578048,
-        "reader-readback:contracts:AR:0": 335044608,
-        "reader-readback:contracts:CA:0": 473128960,
-        "reader-readback:contracts:CA:1": 249192448,
-        "reader-readback:contracts:CA:2": 252657664,
-        "reader-readback:contracts:CA:3": 248561664,
-        "reader-readback:contracts:CA:4": 249040896,
-        "reader-readback:contracts:CA:5": 253808640,
-        "reader-readback:contracts:CA:6": 250617856,
-        "reader-readback:contracts:CA:7": 252248064,
-        "reader-readback:contracts:CA:40": 255123456,
-        "reader-readback:contracts:CO:0": 328187904,
-        "reader-readback:contracts:CO:3": 254181376,
-        "reader-readback:contracts:CT:0": 325799936,
-        "reader-readback:contracts:CT:1": 249102336,
-        "reader-readback:voting-sites:CT": 248864768,
-        "reader-readback:census-acs-population": 829665280,
-        "reader-readback:contracts:US:0": 606154752,
-        "reader-readback:contracts:AS:0": 252768256,
-        "reader-readback:contracts:GU:0": 250966016,
-        "reader-readback:contracts:MP:0": 248303616,
-        "reader-readback:contracts:VI:0": 246964224,
-        "reader-readback:campaign-money": 249384960,
-        "reader-readback:venue-resolutions": 250138624,
-        "reader-readback:meeting-body-crosswalk": 251056128,
-        "reader-readback:everyday-routing": 253562880,
-        "reader-readback:meetings-aggregate:AZ:0": 393699328,
-        "reader-readback:meetings-aggregate:NH:0": 300650496,
-        "reader-readback:meetings-aggregate:NJ:0": 269258752
+        "reader-readback:inventory:SINGLE:4bbb2b70a51794aecee62613e18a834fd69e09b993a87e59d916b70cb2b39ad6": 340525056,
+        "reader-readback:inventory:SINGLE:bf8e654ff805a7aa78cb998875cd43fc2b8fecedf936812c920cef2fcf485933": 449830912,
+        "reader-readback:inventory:SINGLE:e21ca61a70e4cb69e58a94b8a52745b92bb9235770ea33d4c8477a838c45368d": 383664128,
+        "reader-readback:inventory:SINGLE:f59748567986d85d05854c2133fb2f3349694a81db81f960f2e2cb4215db1449": 524906496,
+        "reader-readback:inventory:SINGLE:15779785def45335bb0d3eee44890cfa9261710985aff256930df473a1dfb742": 446238720,
+        "reader-readback:inventory:SINGLE:196645eb3446dab1c6ef59a0da1b33802aec37654f44f4836bb813f307622a26": 333275136,
+        "reader-readback:inventory:SINGLE:82b8b8e602131b25a9246f8ad135294d7fc7dab2c6ea3a29ff0717eb8db79ecd": 482619392,
+        "reader-readback:inventory:SINGLE:21997ab574ee99fb1632bc63a93ae6bcc4b745fc66801d16eeb69e887b3cd293": 253845504,
+        "reader-readback:inventory:SINGLE:7e773bcf653bbcd5bcefa9a01b914755c12cf2802589b560e49b7022dfc40527": 251564032,
+        "reader-readback:inventory:SINGLE:a71fb81435ba9979f7eff25ed0e94cb6ddc7aa9c7a5f9abea4cc6fcd1fd62282": 534278144,
+        "reader-readback:inventory:SINGLE:ecea773adb1d274e96391dcf3d221b3f8abb59089a98162cf549fdb1d1be3f26": 466268160,
+        "reader-readback:inventory:SINGLE:9b7eb1fa91a9377697943c536e676f4619639dde393bd7089531823b1f9a785c": 453693440,
+        "reader-readback:inventory:SINGLE:787a72a3aab928bf365986caa3060c7536452df19660843079f8337892ffdeb3": 780627968,
+        "reader-readback:inventory:SINGLE:9acf7ac6f59dfec5cff2237cfcd825a70c097fd62fba71cdb9ea2f946a040dc8": 452861952,
+        "reader-readback:inventory:SINGLE:0f420d8ee97458cd557dd0c6eb9800a11169210f24e5a0fb9615b79003ca61d4": 492863488,
+        "reader-readback:inventory:SINGLE:23dd6f6d1cf08c36495ccdd32f991b16888d95479b733f4a164794dcfa1e7185": 400969728,
+        "reader-readback:inventory:SINGLE:cb51f61b11fe508b3d921376aca4f43539b932278668c56a84459a9e568aff40": 432041984,
+        "reader-readback:inventory:SINGLE:f7cad355b8a9569f02cc8584fcb8ed3a35f35bc0a53e875b78cb598303202f6f": 551882752,
+        "reader-readback:inventory:SINGLE:487d1411c444ed672ac2006188de06937be9462147e7700e2e7ba41b99469edf": 483246080,
+        "reader-readback:inventory:SINGLE:ba8391f0168a221fe7bb658c27b27e223b598c3e35419d89e363fb5acaaad4c3": 615260160,
+        "reader-readback:inventory:SINGLE:4a43f66617095c9d4841dc7b025d641cb94adec7a8d090a1142cd2a0077087ef": 392785920,
+        "reader-readback:inventory:SINGLE:d761453a076844e5f7d6fa1f107dfb4c1ef65640dd5b574a5e3cf5897fa72bf6": 532033536,
+        "reader-readback:inventory:SINGLE:8fa006af7281acd79a7b5e4d06df8c2840cfaed3ba97141dd34e6dcbe2cb24da": 249225216,
+        "reader-readback:inventory:SINGLE:8050a7cc31d5172f9146947be0586ad1d6a30b9316d387b8b87bd45584c3369b": 425705472,
+        "reader-readback:inventory:SINGLE:06e15bf09fa4dedfba12fefee274840bd964156cc48220de512a12a73f2b6752": 455151616,
+        "reader-readback:inventory:SINGLE:50b5e52d633d0652c5273a1ce94896072cc297ee53eb0d9ca4fbec8e4a1ffdf4": 389263360,
+        "reader-readback:inventory:SINGLE:1c4f77705715aece9899345ff750b731ffd9cc8281c0f27800c6cf9799c7720f": 611622912,
+        "reader-readback:inventory:SINGLE:ba45755e02f4d89cc95ba0fd2fe1179b8e429e66de0c0bb22345b7cb52d68d3f": 461197312,
+        "reader-readback:inventory:SINGLE:5b31cc02a3090950c977db2e90e7aa494a182c9eb9b2090137d8b8b28c01abfc": 409075712,
+        "reader-readback:inventory:SINGLE:6cca19ddfd63aa08471962a6ffeb3dbed67edb4269d4a2ca6dce348e8a170010": 327757824,
+        "reader-readback:inventory:SINGLE:00a4477aa99353e82d8b6d4b6992761ccee906274111f49641b3b1baa892c4a7": 1078599680,
+        "reader-readback:inventory:SINGLE:daaae964221313f2acc8e96351669720587aabb7d57497acfcffb2abd70070cd": 409825280,
+        "reader-readback:inventory:SINGLE:fa7111cd22b2e090674fd392eb4cbcdbb3f893ab359abea9a3444c849e2ae3ad": 549789696,
+        "reader-readback:inventory:SINGLE:01b2b7ec7eed596024b3f97c0c05068eff0b45b4933c4faf4fa03264b430008f": 419233792,
+        "reader-readback:inventory:SINGLE:c32d58a5dc57313c83e0154079bea08e57310e0b5b7109c22c05a6a0c3aa7245": 548507648,
+        "reader-readback:inventory:SINGLE:a62f7572babe347bae8d80607baf6d319246c38951f9fe049f9c30a2d30e1b7a": 320217088,
+        "reader-readback:inventory:SINGLE:08f530990a12541a3a9fec60fd598c0f229ec7b3a80ad94c04dc914df42fa917": 604475392,
+        "reader-readback:inventory:SINGLE:f5bebac2ecb331e53e790a391851cb07ee0464dded2944f1b029651e365037aa": 439267328,
+        "reader-readback:inventory:SINGLE:0d072521b404d5a807db4912e9234d92d0b3cab8aa20b8c582054a9c2576ae02": 555937792,
+        "reader-readback:inventory:SINGLE:4b76d813aa68529996760eeb2304b480004350222e5d699e92da49ccdb864283": 385191936,
+        "reader-readback:inventory:SINGLE:7d2c7489e4d1e698857bf5c2321624278514e47312f19a3249f2032702632544": 336961536,
+        "reader-readback:inventory:SINGLE:b18db27ddada395aaf22faf7de161d999130405c9fcf11b7abae8911d7856d0c": 412282880,
+        "reader-readback:inventory:SINGLE:66e9f9fedad645abd60ffab44a50be81069935de77e4dea7dee4366d9eeafc34": 313356288,
+        "reader-readback:inventory:SINGLE:3bc5c4aa19c40fab4e01d7991753866fb8350c86525855524b024a1145fb5b73": 327213056,
+        "reader-readback:inventory:SINGLE:2233e8b71c1850b439a81e33bfc6741a32cdd2cf4fb443b0388b2afdc1ec110b": 345849856,
+        "reader-readback:inventory:SINGLE:3f70c09bcb7e96d1a9ab6607e2f32f8aeefbf30e6a3a54a35b409e1d76de49f5": 326324224,
+        "reader-readback:inventory:SINGLE:2ade6154b30d55c02876bd83a5e324baba645b71512b3b7f931464e3d6a8b0e9": 326729728,
+        "reader-readback:inventory:SINGLE:b57fd925f7e1af8a8c5f1f70f8d99b7489ddbdd989f7911c6cc7d4b5d1f6da3a": 335273984,
+        "reader-readback:inventory:SINGLE:5250e3f95dd8a040f07abb49c573373399216c7a96d813c99f71c2eb81b790e8": 252387328,
+        "reader-readback:inventory:SINGLE:6d8b07d291dde80e4d19e660713446830992ce295d3b29d2513982b25368d5a3": 249081856,
+        "reader-readback:inventory:SINGLE:7bd55511b5f3d55f2dd8caed0eb2c4c795a2aa4f2c03879c798c173812a628f9": 291696640,
+        "reader-readback:inventory:SINGLE:8d29fe0df1c890b8f4a8625ec9ea588b5918187aad94d97525391bfe3ea8089a": 270917632,
+        "reader-readback:inventory:SINGLE:a266040423916d7e9581fd88ce318d94a89093d1f1015b03f16e83e742b66ee8": 344047616,
+        "reader-readback:inventory:SINGLE:c78a627ce03d723f3685fb5dc07cf49e752634ecbfb2b81783234fb5ce1de5cc": 289361920,
+        "reader-readback:inventory:SINGLE:cdd636adf3c22c260766d0bbff3fe1cbbe192508df09701e5448fc345de50320": 336883712,
+        "reader-readback:inventory:SINGLE:5049f0ecec563e57cd9414d12121a61c9db334d7133ac634e94246eead12d448": 429608960,
+        "reader-readback:inventory:SINGLE:0ce4bca9c29e258e035abaec9a0b646b57a981ab7be8e4af16c3a5517633ee87": 249761792,
+        "reader-readback:inventory:SINGLE:c2faa17a07007cb1262dcb35f64064d74febcb0fe60a90b91837adb9dc74bd08": 255315968,
+        "reader-readback:inventory:SINGLE:7fbb1297927be2de14c2a6d0e2816dc2394db2e6f6215d38afc962d6443ba09f": 251441152,
+        "reader-readback:inventory:SINGLE:599d5654e3b16e89314244fbc465539c3606091c3c3f4d271192c2d12295327d": 249843712,
+        "reader-readback:inventory:SINGLE:63757ddb2eb13fcf5019a1689293a158434c1d1e6eba3202653f4d6ad4af55c6": 250716160,
+        "reader-readback:inventory:SINGLE:4ba6c00fb4b9e26b60d9a36fb277c5698a0c1b1476ed327b5e9170bbcfadcce3": 253284352,
+        "reader-readback:inventory:SINGLE:f4e278820ffbb8c82f8ef2e4416f938538bf434578ee80d7a119aa339ace76ce": 261648384,
+        "reader-readback:inventory:SINGLE:78f16fc1e39b365611d8f6805c523991549343153033e38b038b351a2555f1a2": 320700416,
+        "reader-readback:inventory:SINGLE:6259cfe9dfb76c287f645c30d4b7125936b06760ce61d40668f07166572db8a5": 339759104,
+        "reader-readback:inventory:SINGLE:358de7b31f9b7d8edf89a7e8d06e0c18222c7956a85efcd77d9f89c2918d2d04": 793845760,
+        "reader-readback:inventory:SINGLE:b18376d7537b4fae52bd2b942157f8f9ad75e76cf41843de2d52de163349417d": 706478080,
+        "reader-readback:inventory:SINGLE:733c54a66f4f9177562dd1556b014e131b1855a57d57c70c1a32669646a76221": 250859520,
+        "reader-readback:inventory:SINGLE:0db7b3c71f9e05e18eb9cd37d831a6bae2bc28f7c1a928e8f255ad3f49c22e27": 249139200,
+        "reader-readback:inventory:SINGLE:029dbe0be1ecc226ab6d3e250c067f9642660e4005a0ab8efdf86bdffa4101d6": 248934400,
+        "reader-readback:inventory:SINGLE:50cdf048aceb47666fc3ed3450e11bbde4b27c1495f8150dab4d603681eb9db1": 248201216,
+        "reader-readback:inventory:SINGLE:cb827c8ddb37488a971615ad0347a36dc8d4ab7fcd2a1a30b9743039c70b2e76": 249925632,
+        "reader-readback:inventory:SINGLE:2b8cf0eb8648e5e0a337ef55601bdcc36925e1af6825c05282a767db541039b2": 252788736,
+        "reader-readback:inventory:SINGLE:ec03b893f05254a6aeabd2b9d7e6963e37d4914a1a65c6493c321c9dfa9e4b68": 246661120,
+        "reader-readback:inventory:SINGLE:f7347a6d6b42313fa15276a32056650bf724eacd892ebb293a98b951bb779cee": 249593856,
+        "reader-readback:inventory:MEETING_AGGREGATE:e18fa4533449a8a8e42d4fca6b06abff4dd3ee62b5c0bad080a6c2568380af97": 488890368,
+        "reader-readback:inventory:MEETING_AGGREGATE:ffe3b993bc0e0153cecca06171c6b6b2c4d74d86f18c95ee4c3dc21fa126a4dc": 320421888,
+        "reader-readback:inventory:MEETING_AGGREGATE:429e3e9be7b89629ac82240a389719a325da2dfb959a8fc8e3e2124554391691": 278335488
       },
-      "expectedContracts": 11458
+      "expectedContracts": 11593
     },
     "tomorrow": {
       "states": {
@@ -821,24 +1046,24 @@
           "contracts": 131,
           "dispositions": {
             "NO_PROMOTION": 54,
-            "CURRENT:PASS": 76,
+            "CURRENT:PASS": 75,
+            "RECORDED:PASS": 1,
             "RECORDED:FAIL": 1
           }
         },
         "AZ": {
           "contracts": 211,
           "dispositions": {
-            "NO_PROMOTION": 145,
-            "CURRENT:PASS": 64,
-            "RECORDED:PASS": 2
+            "NO_PROMOTION": 140,
+            "CURRENT:PASS": 70,
+            "RECORDED:PASS": 1
           }
         },
         "NJ": {
           "contracts": 51,
           "dispositions": {
-            "NO_PROMOTION": 30,
-            "CURRENT:PASS": 20,
-            "RECORDED:PASS": 1
+            "NO_PROMOTION": 29,
+            "CURRENT:PASS": 22
           }
         },
         "DE": {
@@ -858,15 +1083,17 @@
         "FL": {
           "contracts": 1084,
           "dispositions": {
-            "NO_PROMOTION": 1070,
-            "CURRENT:PASS": 14
+            "NO_PROMOTION": 1002,
+            "CURRENT:PASS": 79,
+            "RECORDED:PASS": 3
           }
         },
         "GA": {
           "contracts": 89,
           "dispositions": {
-            "NO_PROMOTION": 76,
-            "CURRENT:PASS": 13
+            "NO_PROMOTION": 66,
+            "CURRENT:PASS": 22,
+            "RECORDED:PASS": 1
           }
         },
         "HI": {
@@ -879,15 +1106,16 @@
         "ID": {
           "contracts": 70,
           "dispositions": {
-            "NO_PROMOTION": 55,
-            "CURRENT:PASS": 15
+            "NO_PROMOTION": 54,
+            "CURRENT:PASS": 16
           }
         },
         "IL": {
           "contracts": 394,
           "dispositions": {
-            "NO_PROMOTION": 378,
-            "CURRENT:PASS": 16
+            "NO_PROMOTION": 368,
+            "CURRENT:PASS": 24,
+            "RECORDED:PASS": 2
           }
         },
         "IN": {
@@ -901,24 +1129,21 @@
           "contracts": 29,
           "dispositions": {
             "NO_PROMOTION": 17,
-            "RECORDED:PASS": 1,
-            "CURRENT:PASS": 11
+            "CURRENT:PASS": 12
           }
         },
         "KS": {
           "contracts": 25,
           "dispositions": {
             "NO_PROMOTION": 13,
-            "RECORDED:PASS": 1,
-            "CURRENT:PASS": 11
+            "CURRENT:PASS": 12
           }
         },
         "KY": {
           "contracts": 21,
           "dispositions": {
-            "NO_PROMOTION": 9,
-            "RECORDED:PASS": 1,
-            "CURRENT:PASS": 11
+            "NO_PROMOTION": 8,
+            "CURRENT:PASS": 13
           }
         },
         "LA": {
@@ -943,40 +1168,41 @@
           }
         },
         "MA": {
-          "contracts": 196,
+          "contracts": 238,
           "dispositions": {
-            "NO_PROMOTION": 178,
-            "CURRENT:PASS": 17,
-            "RECORDED:PASS": 1
+            "NO_PROMOTION": 220,
+            "CURRENT:PASS": 18
           }
         },
         "MI": {
           "contracts": 192,
           "dispositions": {
-            "NO_PROMOTION": 172,
-            "CURRENT:PASS": 18,
+            "NO_PROMOTION": 157,
+            "CURRENT:PASS": 33,
             "RECORDED:PASS": 2
           }
         },
         "MN": {
-          "contracts": 93,
+          "contracts": 129,
           "dispositions": {
-            "NO_PROMOTION": 81,
-            "CURRENT:PASS": 12
+            "NO_PROMOTION": 107,
+            "CURRENT:PASS": 20,
+            "RECORDED:PASS": 2
           }
         },
         "MS": {
           "contracts": 23,
           "dispositions": {
-            "NO_PROMOTION": 11,
-            "CURRENT:PASS": 12
+            "NO_PROMOTION": 9,
+            "CURRENT:PASS": 14
           }
         },
         "MO": {
           "contracts": 470,
           "dispositions": {
-            "NO_PROMOTION": 458,
-            "CURRENT:PASS": 12
+            "NO_PROMOTION": 446,
+            "CURRENT:PASS": 21,
+            "RECORDED:PASS": 3
           }
         },
         "MT": {
@@ -996,8 +1222,8 @@
         "NV": {
           "contracts": 127,
           "dispositions": {
-            "NO_PROMOTION": 116,
-            "CURRENT:PASS": 11
+            "NO_PROMOTION": 115,
+            "CURRENT:PASS": 12
           }
         },
         "NM": {
@@ -1017,8 +1243,9 @@
         "NC": {
           "contracts": 189,
           "dispositions": {
-            "NO_PROMOTION": 178,
-            "CURRENT:PASS": 11
+            "NO_PROMOTION": 168,
+            "CURRENT:PASS": 19,
+            "RECORDED:PASS": 2
           }
         },
         "ND": {
@@ -1046,8 +1273,7 @@
           "contracts": 76,
           "dispositions": {
             "NO_PROMOTION": 58,
-            "CURRENT:PASS": 16,
-            "RECORDED:PASS": 2
+            "CURRENT:PASS": 18
           }
         },
         "PA": {
@@ -1128,11 +1354,11 @@
           }
         },
         "WI": {
-          "contracts": 920,
+          "contracts": 970,
           "dispositions": {
-            "NO_PROMOTION": 888,
-            "CURRENT:PASS": 25,
-            "RECORDED:PASS": 7
+            "NO_PROMOTION": 902,
+            "CURRENT:PASS": 65,
+            "RECORDED:PASS": 3
           }
         },
         "WY": {
@@ -1145,61 +1371,59 @@
         "PR": {
           "contracts": 19,
           "dispositions": {
-            "NO_PROMOTION": 15,
-            "CURRENT:PASS": 4
+            "NO_PROMOTION": 14,
+            "CURRENT:PASS": 5
           }
         },
         "AL": {
           "contracts": 113,
           "dispositions": {
-            "NO_PROMOTION": 97,
-            "CURRENT:PASS": 13,
-            "RECORDED:PASS": 3
+            "NO_PROMOTION": 96,
+            "CURRENT:PASS": 17
           }
         },
         "AK": {
           "contracts": 138,
           "dispositions": {
-            "NO_PROMOTION": 125,
-            "CURRENT:PASS": 12,
-            "RECORDED:PASS": 1
+            "NO_PROMOTION": 123,
+            "CURRENT:PASS": 15
           }
         },
         "AR": {
-          "contracts": 24,
+          "contracts": 27,
           "dispositions": {
-            "NO_PROMOTION": 15,
+            "NO_PROMOTION": 18,
             "CURRENT:PASS": 9
           }
         },
         "CA": {
           "contracts": 3038,
           "dispositions": {
-            "NO_PROMOTION": 2954,
-            "CURRENT:PASS": 55,
-            "RECORDED:PASS": 29
+            "NO_PROMOTION": 2775,
+            "CURRENT:PASS": 252,
+            "RECORDED:PASS": 11
           }
         },
         "CO": {
           "contracts": 299,
           "dispositions": {
-            "NO_PROMOTION": 290,
-            "CURRENT:PASS": 9
+            "NO_PROMOTION": 272,
+            "CURRENT:PASS": 27
           }
         },
         "CT": {
           "contracts": 270,
           "dispositions": {
-            "NO_PROMOTION": 261,
-            "CURRENT:PASS": 9
+            "NO_PROMOTION": 255,
+            "CURRENT:PASS": 15
           }
         },
         "US": {
           "contracts": 41,
           "dispositions": {
             "NO_PROMOTION": 15,
-            "CURRENT:PASS": 24,
-            "RECORDED:PASS": 2
+            "CURRENT:PASS": 25,
+            "RECORDED:FAIL": 1
           }
         },
         "AS": {
@@ -1212,8 +1436,8 @@
         "GU": {
           "contracts": 16,
           "dispositions": {
-            "NO_PROMOTION": 13,
-            "CURRENT:PASS": 3
+            "NO_PROMOTION": 12,
+            "CURRENT:PASS": 4
           }
         },
         "MP": {
@@ -1232,181 +1456,163 @@
         }
       },
       "productionReadOnly": true,
-      "at": "2026-10-24T18:30:20.317Z",
-      "domains": 106,
-      "originalDomains": 254,
-      "contracts": 11462,
+      "at": "2026-10-24T21:49:37.165Z",
+      "domains": 79,
+      "originalDomains": 255,
+      "contracts": 11593,
       "failures": [],
       "deferred": [],
       "dispositions": {
-        "NO_PROMOTION": 10578,
-        "CURRENT:PASS": 830,
-        "RECORDED:FAIL": 1,
-        "RECORDED:PASS": 53
+        "NO_PROMOTION": 10319,
+        "CURRENT:PASS": 1241,
+        "RECORDED:PASS": 31,
+        "RECORDED:FAIL": 2
       },
-      "durationMs": 411675,
-      "peakBytes": 341864448,
+      "durationMs": 294162,
+      "peakBytes": 263049216,
       "peakByDomain": {
-        "reader-readback:fec-funding": 249085952,
-        "reader-readback:contracts:NH:0": 254844928,
-        "reader-readback:contracts:AZ:0": 250867712,
-        "reader-readback:contracts:AZ:1": 253800448,
-        "reader-readback:contracts:NJ:0": 249462784,
-        "reader-readback:contracts:DE:0": 250163200,
-        "reader-readback:contracts:DC:0": 252866560,
-        "reader-readback:contracts:FL:0": 252846080,
-        "reader-readback:contracts:FL:12": 249442304,
-        "reader-readback:contracts:GA:0": 252678144,
-        "reader-readback:contracts:GA:1": 252997632,
-        "reader-readback:contracts:HI:0": 249589760,
-        "reader-readback:contracts:ID:0": 253591552,
-        "reader-readback:contracts:IL:0": 250159104,
-        "reader-readback:contracts:IL:5": 250134528,
-        "reader-readback:contracts:IN:0": 250662912,
-        "reader-readback:contracts:IA:0": 329650176,
-        "reader-readback:contracts:KS:0": 316743680,
-        "reader-readback:contracts:KY:0": 341864448,
-        "reader-readback:contracts:LA:0": 252768256,
-        "reader-readback:contracts:ME:0": 249626624,
-        "reader-readback:contracts:MD:0": 249135104,
-        "reader-readback:contracts:MA:0": 254042112,
-        "reader-readback:contracts:MA:1": 249073664,
-        "reader-readback:contracts:MI:0": 249880576,
-        "reader-readback:contracts:MI:1": 253857792,
-        "reader-readback:contracts:MI:2": 251248640,
-        "reader-readback:contracts:MN:0": 247640064,
-        "reader-readback:contracts:MS:0": 251252736,
-        "reader-readback:contracts:MO:0": 250404864,
-        "reader-readback:contracts:MO:7": 253906944,
-        "reader-readback:contracts:MT:0": 250884096,
-        "reader-readback:contracts:NE:0": 253329408,
-        "reader-readback:contracts:NV:0": 253865984,
-        "reader-readback:contracts:NV:2": 250085376,
-        "reader-readback:contracts:NM:0": 249929728,
-        "reader-readback:contracts:NM:1": 253800448,
-        "reader-readback:contracts:NY:0": 248729600,
-        "reader-readback:contracts:NY:3": 249917440,
-        "reader-readback:contracts:NC:0": 250515456,
-        "reader-readback:contracts:NC:1": 249819136,
-        "reader-readback:contracts:ND:0": 252604416,
-        "reader-readback:contracts:OH:0": 249143296,
-        "reader-readback:contracts:OH:1": 251240448,
-        "reader-readback:contracts:OK:0": 253890560,
-        "reader-readback:contracts:OK:1": 254312448,
-        "reader-readback:contracts:OK:2": 247988224,
-        "reader-readback:contracts:OR:0": 254595072,
-        "reader-readback:contracts:PA:0": 252907520,
-        "reader-readback:contracts:PA:1": 249626624,
-        "reader-readback:contracts:RI:0": 248877056,
-        "reader-readback:contracts:SC:0": 248229888,
-        "reader-readback:contracts:SD:0": 253173760,
-        "reader-readback:contracts:TN:0": 248352768,
-        "reader-readback:contracts:TX:0": 251015168,
-        "reader-readback:contracts:TX:13": 251441152,
-        "reader-readback:contracts:TX:14": 249147392,
-        "reader-readback:contracts:UT:0": 248082432,
-        "reader-readback:contracts:VT:0": 252993536,
-        "reader-readback:contracts:VA:0": 255127552,
-        "reader-readback:contracts:VA:1": 252719104,
-        "reader-readback:contracts:WA:0": 249069568,
-        "reader-readback:contracts:WA:3": 248369152,
-        "reader-readback:contracts:WV:0": 253935616,
-        "reader-readback:contracts:WI:0": 250458112,
-        "reader-readback:contracts:WI:1": 250347520,
-        "reader-readback:contracts:WI:2": 251068416,
-        "reader-readback:contracts:WI:13": 250089472,
-        "reader-readback:contracts:WI:14": 251932672,
-        "reader-readback:contracts:WY:0": 253755392,
-        "reader-readback:contracts:PR:0": 251801600,
-        "reader-readback:contracts:AL:0": 252936192,
-        "reader-readback:contracts:AL:1": 247705600,
-        "reader-readback:contracts:AK:0": 248176640,
-        "reader-readback:contracts:AK:1": 250699776,
-        "reader-readback:contracts:AR:0": 251502592,
-        "reader-readback:contracts:CA:0": 253509632,
-        "reader-readback:contracts:CA:1": 248578048,
-        "reader-readback:contracts:CA:2": 250462208,
-        "reader-readback:contracts:CA:3": 254033920,
-        "reader-readback:contracts:CA:4": 243769344,
-        "reader-readback:contracts:CA:5": 249298944,
-        "reader-readback:contracts:CA:6": 252108800,
-        "reader-readback:contracts:CA:7": 251060224,
-        "reader-readback:contracts:CA:8": 249540608,
-        "reader-readback:contracts:CA:9": 253296640,
-        "reader-readback:contracts:CA:10": 249192448,
-        "reader-readback:contracts:CA:40": 254627840,
-        "reader-readback:contracts:CO:0": 247418880,
-        "reader-readback:contracts:CO:3": 247660544,
-        "reader-readback:contracts:CT:0": 253440000,
-        "reader-readback:contracts:CT:1": 249401344,
-        "reader-readback:voting-sites:CT": 249360384,
-        "reader-readback:census-acs-population": 248233984,
-        "reader-readback:contracts:US:0": 259899392,
-        "reader-readback:contracts:AS:0": 249597952,
-        "reader-readback:contracts:GU:0": 254287872,
-        "reader-readback:contracts:MP:0": 253784064,
-        "reader-readback:contracts:VI:0": 252297216,
-        "reader-readback:campaign-money": 250212352,
-        "reader-readback:venue-resolutions": 254648320,
-        "reader-readback:meeting-body-crosswalk": 250757120,
-        "reader-readback:everyday-routing": 247353344,
-        "reader-readback:meetings-aggregate:AZ:0": 253063168,
-        "reader-readback:meetings-aggregate:NH:0": 250572800,
-        "reader-readback:meetings-aggregate:NJ:0": 251895808
+        "reader-readback:inventory:SINGLE:4bbb2b70a51794aecee62613e18a834fd69e09b993a87e59d916b70cb2b39ad6": 252981248,
+        "reader-readback:inventory:SINGLE:bf8e654ff805a7aa78cb998875cd43fc2b8fecedf936812c920cef2fcf485933": 248377344,
+        "reader-readback:inventory:SINGLE:e21ca61a70e4cb69e58a94b8a52745b92bb9235770ea33d4c8477a838c45368d": 263049216,
+        "reader-readback:inventory:SINGLE:f59748567986d85d05854c2133fb2f3349694a81db81f960f2e2cb4215db1449": 247758848,
+        "reader-readback:inventory:SINGLE:15779785def45335bb0d3eee44890cfa9261710985aff256930df473a1dfb742": 250093568,
+        "reader-readback:inventory:SINGLE:196645eb3446dab1c6ef59a0da1b33802aec37654f44f4836bb813f307622a26": 251756544,
+        "reader-readback:inventory:SINGLE:82b8b8e602131b25a9246f8ad135294d7fc7dab2c6ea3a29ff0717eb8db79ecd": 250867712,
+        "reader-readback:inventory:SINGLE:409bb7dede4417581bd86068e7b2fc5350a20c342f23152ae68db9b64afb3614": 253865984,
+        "reader-readback:inventory:SINGLE:3663d98e9b4c3629e6de5d1fb8c4840209c4de75d0db5e57209d7982de710c3f": 247422976,
+        "reader-readback:inventory:SINGLE:dcf3e4e14e416ef9cbbac509ba7884a3833089fca3be300d87b853995a2267bd": 248111104,
+        "reader-readback:inventory:SINGLE:ecea773adb1d274e96391dcf3d221b3f8abb59089a98162cf549fdb1d1be3f26": 245997568,
+        "reader-readback:inventory:SINGLE:9b7eb1fa91a9377697943c536e676f4619639dde393bd7089531823b1f9a785c": 251871232,
+        "reader-readback:inventory:SINGLE:82052b955ab8cc9c969ab5bd26f55137bd689f4d72eb4ae2b3b580e5d4a11a4d": 248139776,
+        "reader-readback:inventory:SINGLE:9acf7ac6f59dfec5cff2237cfcd825a70c097fd62fba71cdb9ea2f946a040dc8": 246956032,
+        "reader-readback:inventory:SINGLE:0f420d8ee97458cd557dd0c6eb9800a11169210f24e5a0fb9615b79003ca61d4": 250511360,
+        "reader-readback:inventory:SINGLE:23dd6f6d1cf08c36495ccdd32f991b16888d95479b733f4a164794dcfa1e7185": 247685120,
+        "reader-readback:inventory:SINGLE:cb51f61b11fe508b3d921376aca4f43539b932278668c56a84459a9e568aff40": 252960768,
+        "reader-readback:inventory:SINGLE:f7cad355b8a9569f02cc8584fcb8ed3a35f35bc0a53e875b78cb598303202f6f": 252166144,
+        "reader-readback:inventory:SINGLE:487d1411c444ed672ac2006188de06937be9462147e7700e2e7ba41b99469edf": 247287808,
+        "reader-readback:inventory:SINGLE:ba8391f0168a221fe7bb658c27b27e223b598c3e35419d89e363fb5acaaad4c3": 248307712,
+        "reader-readback:inventory:SINGLE:4a43f66617095c9d4841dc7b025d641cb94adec7a8d090a1142cd2a0077087ef": 252329984,
+        "reader-readback:inventory:SINGLE:e19708a1ebd7a9176c30e92a13bd169ac76ec20a4e05a2cd4a3e94777d5f2202": 252112896,
+        "reader-readback:inventory:SINGLE:4ce89ca3fc049560e933c6216ddade31c5114e75c09a5ab6f4789952d8bc0af5": 248426496,
+        "reader-readback:inventory:SINGLE:b80daa88a1e8d6cf33b340f5dd208ab04df2c59a058ad047cac7a429deb29d73": 247336960,
+        "reader-readback:inventory:SINGLE:06e15bf09fa4dedfba12fefee274840bd964156cc48220de512a12a73f2b6752": 246415360,
+        "reader-readback:inventory:SINGLE:414b68bbb0ef532b9885fa35ec87e836496042f4441289df7391aa98bbf3ec1b": 248586240,
+        "reader-readback:inventory:SINGLE:1c4f77705715aece9899345ff750b731ffd9cc8281c0f27800c6cf9799c7720f": 251170816,
+        "reader-readback:inventory:SINGLE:ba45755e02f4d89cc95ba0fd2fe1179b8e429e66de0c0bb22345b7cb52d68d3f": 249294848,
+        "reader-readback:inventory:SINGLE:5b31cc02a3090950c977db2e90e7aa494a182c9eb9b2090137d8b8b28c01abfc": 250388480,
+        "reader-readback:inventory:SINGLE:6cca19ddfd63aa08471962a6ffeb3dbed67edb4269d4a2ca6dce348e8a170010": 248815616,
+        "reader-readback:inventory:SINGLE:00a4477aa99353e82d8b6d4b6992761ccee906274111f49641b3b1baa892c4a7": 254111744,
+        "reader-readback:inventory:SINGLE:ef9532f6cf335fdba17b0202616540d3c30c7bf8b271658a2c35dd029c43eaf2": 251662336,
+        "reader-readback:inventory:SINGLE:fa7111cd22b2e090674fd392eb4cbcdbb3f893ab359abea9a3444c849e2ae3ad": 248647680,
+        "reader-readback:inventory:SINGLE:01b2b7ec7eed596024b3f97c0c05068eff0b45b4933c4faf4fa03264b430008f": 249049088,
+        "reader-readback:inventory:SINGLE:c32d58a5dc57313c83e0154079bea08e57310e0b5b7109c22c05a6a0c3aa7245": 248602624,
+        "reader-readback:inventory:SINGLE:a62f7572babe347bae8d80607baf6d319246c38951f9fe049f9c30a2d30e1b7a": 250621952,
+        "reader-readback:inventory:SINGLE:08f530990a12541a3a9fec60fd598c0f229ec7b3a80ad94c04dc914df42fa917": 245821440,
+        "reader-readback:inventory:SINGLE:f5bebac2ecb331e53e790a391851cb07ee0464dded2944f1b029651e365037aa": 249237504,
+        "reader-readback:inventory:SINGLE:0d072521b404d5a807db4912e9234d92d0b3cab8aa20b8c582054a9c2576ae02": 248537088,
+        "reader-readback:inventory:SINGLE:4b76d813aa68529996760eeb2304b480004350222e5d699e92da49ccdb864283": 255115264,
+        "reader-readback:inventory:SINGLE:7d2c7489e4d1e698857bf5c2321624278514e47312f19a3249f2032702632544": 249614336,
+        "reader-readback:inventory:SINGLE:b18db27ddada395aaf22faf7de161d999130405c9fcf11b7abae8911d7856d0c": 251035648,
+        "reader-readback:inventory:SINGLE:66e9f9fedad645abd60ffab44a50be81069935de77e4dea7dee4366d9eeafc34": 253841408,
+        "reader-readback:inventory:SINGLE:3bc5c4aa19c40fab4e01d7991753866fb8350c86525855524b024a1145fb5b73": 248504320,
+        "reader-readback:inventory:SINGLE:2233e8b71c1850b439a81e33bfc6741a32cdd2cf4fb443b0388b2afdc1ec110b": 251912192,
+        "reader-readback:inventory:SINGLE:3f70c09bcb7e96d1a9ab6607e2f32f8aeefbf30e6a3a54a35b409e1d76de49f5": 246566912,
+        "reader-readback:inventory:SINGLE:2ade6154b30d55c02876bd83a5e324baba645b71512b3b7f931464e3d6a8b0e9": 246865920,
+        "reader-readback:inventory:SINGLE:b57fd925f7e1af8a8c5f1f70f8d99b7489ddbdd989f7911c6cc7d4b5d1f6da3a": 250101760,
+        "reader-readback:inventory:SINGLE:bc29c1d2934e2ad5f24dc6eb12f504679c3d3fc01fbc26400943d2211bed1f12": 248246272,
+        "reader-readback:inventory:SINGLE:81f11eca21a3ff7632d512fdff7478dc9c529a4163295beb79162e2d5e8a277c": 246677504,
+        "reader-readback:inventory:SINGLE:7bd55511b5f3d55f2dd8caed0eb2c4c795a2aa4f2c03879c798c173812a628f9": 248467456,
+        "reader-readback:inventory:SINGLE:8d29fe0df1c890b8f4a8625ec9ea588b5918187aad94d97525391bfe3ea8089a": 249122816,
+        "reader-readback:inventory:SINGLE:a266040423916d7e9581fd88ce318d94a89093d1f1015b03f16e83e742b66ee8": 252604416,
+        "reader-readback:inventory:SINGLE:c78a627ce03d723f3685fb5dc07cf49e752634ecbfb2b81783234fb5ce1de5cc": 252628992,
+        "reader-readback:inventory:SINGLE:cdd636adf3c22c260766d0bbff3fe1cbbe192508df09701e5448fc345de50320": 247930880,
+        "reader-readback:inventory:SINGLE:5049f0ecec563e57cd9414d12121a61c9db334d7133ac634e94246eead12d448": 251695104,
+        "reader-readback:inventory:SINGLE:f6704dcfefbaae1bcf8f143b8f6a7ce03bc7f78ff37683bb7b692fb7a39904b8": 246923264,
+        "reader-readback:inventory:SINGLE:ab4841785b2881af671f8ec9c9e93689660e1477fc169f40d8b09ec58e1199b8": 251043840,
+        "reader-readback:inventory:SINGLE:acbe65b0492c88a9d41172e08ff0c054df37fc5d5973943cb7c072726b632253": 251895808,
+        "reader-readback:inventory:SINGLE:2451a99282c31b0cf3482fa559a6d50426ea9ea0b3c3df61aecd87c752899dac": 246317056,
+        "reader-readback:inventory:SINGLE:383c1084c2a067b6a68e57d5d6a279505ce8634527772a3a0814bca3cd35a813": 251146240,
+        "reader-readback:inventory:SINGLE:7ffc1816c49ff55515027b1a35869b051e3938944094a6d98ea92594ec51de7b": 247738368,
+        "reader-readback:inventory:SINGLE:4af6396542128e61eb4abb70bbd290b11405ef88ade0e5ea7a1f1357e5b28868": 249397248,
+        "reader-readback:inventory:SINGLE:ee1849625ee25a2a2fda2b7234a9674f64c38e70d5b9a9b854b7f3a49e92a860": 247992320,
+        "reader-readback:inventory:SINGLE:78f16fc1e39b365611d8f6805c523991549343153033e38b038b351a2555f1a2": 250404864,
+        "reader-readback:inventory:SINGLE:6259cfe9dfb76c287f645c30d4b7125936b06760ce61d40668f07166572db8a5": 248180736,
+        "reader-readback:inventory:SINGLE:358de7b31f9b7d8edf89a7e8d06e0c18222c7956a85efcd77d9f89c2918d2d04": 251727872,
+        "reader-readback:inventory:SINGLE:b18376d7537b4fae52bd2b942157f8f9ad75e76cf41843de2d52de163349417d": 250404864,
+        "reader-readback:inventory:SINGLE:733c54a66f4f9177562dd1556b014e131b1855a57d57c70c1a32669646a76221": 248905728,
+        "reader-readback:inventory:SINGLE:0db7b3c71f9e05e18eb9cd37d831a6bae2bc28f7c1a928e8f255ad3f49c22e27": 250044416,
+        "reader-readback:inventory:SINGLE:029dbe0be1ecc226ab6d3e250c067f9642660e4005a0ab8efdf86bdffa4101d6": 249880576,
+        "reader-readback:inventory:SINGLE:50cdf048aceb47666fc3ed3450e11bbde4b27c1495f8150dab4d603681eb9db1": 252047360,
+        "reader-readback:inventory:SINGLE:cb827c8ddb37488a971615ad0347a36dc8d4ab7fcd2a1a30b9743039c70b2e76": 246857728,
+        "reader-readback:inventory:SINGLE:2b8cf0eb8648e5e0a337ef55601bdcc36925e1af6825c05282a767db541039b2": 251404288,
+        "reader-readback:inventory:SINGLE:ec03b893f05254a6aeabd2b9d7e6963e37d4914a1a65c6493c321c9dfa9e4b68": 250576896,
+        "reader-readback:inventory:SINGLE:f7347a6d6b42313fa15276a32056650bf724eacd892ebb293a98b951bb779cee": 250814464,
+        "reader-readback:inventory:MEETING_AGGREGATE:e18fa4533449a8a8e42d4fca6b06abff4dd3ee62b5c0bad080a6c2568380af97": 250294272,
+        "reader-readback:inventory:MEETING_AGGREGATE:ffe3b993bc0e0153cecca06171c6b6b2c4d74d86f18c95ee4c3dc21fa126a4dc": 249532416,
+        "reader-readback:inventory:MEETING_AGGREGATE:429e3e9be7b89629ac82240a389719a325da2dfb959a8fc8e3e2124554391691": 249962496
       },
-      "expectedContracts": 11462
+      "expectedContracts": 11593
     },
     "passBudgetMs": 1500000,
     "simulatedAvailableMiB": 2036,
     "headroomMiB": 768,
     "readerFloorMiB": 1106,
-    "stateCountIncludingNational": 57,
-    "sourceAcquisitionClaimedForNoPromotion": false
+    "sourceAcquisitionClaimedForNoPromotion": false,
+    "implementationRevision": "001011be17652d8276ce7e5f78e9091f5eab14ac",
+    "missingOrMalformedChildResults": 0,
+    "todayTransportFailedRepairs": 1,
+    "tomorrowFailedRepairs": 0
   },
   "states": {
     "AK": {
       "openRunnableDoors": 78,
       "today": {
         "contracts": 138,
-        "pass": 12,
-        "noPromotion": 126,
-        "dataFail": 0
+        "pass": 15,
+        "noPromotion": 123,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 138,
-        "pass": 13,
-        "noPromotion": 125,
-        "dataFail": 0
+        "pass": 15,
+        "noPromotion": 123,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "AL": {
       "openRunnableDoors": 48,
       "today": {
         "contracts": 113,
-        "pass": 13,
-        "noPromotion": 100,
-        "dataFail": 0
+        "pass": 17,
+        "noPromotion": 96,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 113,
-        "pass": 16,
-        "noPromotion": 97,
-        "dataFail": 0
+        "pass": 17,
+        "noPromotion": 96,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "AR": {
-      "openRunnableDoors": 5,
+      "openRunnableDoors": 8,
       "today": {
-        "contracts": 24,
+        "contracts": 27,
         "pass": 9,
-        "noPromotion": 15,
-        "dataFail": 0
+        "noPromotion": 18,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
-        "contracts": 24,
+        "contracts": 27,
         "pass": 9,
-        "noPromotion": 15,
-        "dataFail": 0
+        "noPromotion": 18,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "AS": {
@@ -1415,73 +1621,83 @@
         "contracts": 16,
         "pass": 4,
         "noPromotion": 12,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 16,
         "pass": 4,
         "noPromotion": 12,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "AZ": {
       "openRunnableDoors": 145,
       "today": {
         "contracts": 211,
-        "pass": 64,
-        "noPromotion": 147,
-        "dataFail": 0
+        "pass": 71,
+        "noPromotion": 140,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 211,
-        "pass": 66,
-        "noPromotion": 145,
-        "dataFail": 0
+        "pass": 71,
+        "noPromotion": 140,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "CA": {
       "openRunnableDoors": 1748,
       "today": {
         "contracts": 3038,
-        "pass": 55,
-        "noPromotion": 2983,
-        "dataFail": 0
+        "pass": 252,
+        "noPromotion": 2786,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 3038,
-        "pass": 84,
-        "noPromotion": 2954,
-        "dataFail": 0
+        "pass": 263,
+        "noPromotion": 2775,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "CO": {
       "openRunnableDoors": 195,
       "today": {
         "contracts": 299,
-        "pass": 9,
-        "noPromotion": 290,
-        "dataFail": 0
+        "pass": 27,
+        "noPromotion": 272,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 299,
-        "pass": 9,
-        "noPromotion": 290,
-        "dataFail": 0
+        "pass": 27,
+        "noPromotion": 272,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "CT": {
       "openRunnableDoors": 204,
       "today": {
         "contracts": 270,
-        "pass": 9,
-        "noPromotion": 261,
-        "dataFail": 0
+        "pass": 15,
+        "noPromotion": 255,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 270,
-        "pass": 9,
-        "noPromotion": 261,
-        "dataFail": 0
+        "pass": 15,
+        "noPromotion": 255,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "DC": {
@@ -1490,13 +1706,15 @@
         "contracts": 19,
         "pass": 14,
         "noPromotion": 5,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 19,
         "pass": 14,
         "noPromotion": 5,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "DE": {
@@ -1505,58 +1723,66 @@
         "contracts": 20,
         "pass": 15,
         "noPromotion": 5,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 20,
         "pass": 15,
         "noPromotion": 5,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "FL": {
       "openRunnableDoors": 677,
       "today": {
-        "contracts": 1081,
-        "pass": 14,
-        "noPromotion": 1067,
-        "dataFail": 0
+        "contracts": 1084,
+        "pass": 79,
+        "noPromotion": 1005,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 1084,
-        "pass": 14,
-        "noPromotion": 1070,
-        "dataFail": 0
+        "pass": 82,
+        "noPromotion": 1002,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "GA": {
       "openRunnableDoors": 50,
       "today": {
         "contracts": 89,
-        "pass": 13,
-        "noPromotion": 76,
-        "dataFail": 0
+        "pass": 22,
+        "noPromotion": 67,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 89,
-        "pass": 13,
-        "noPromotion": 76,
-        "dataFail": 0
+        "pass": 23,
+        "noPromotion": 66,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "GU": {
       "openRunnableDoors": 0,
       "today": {
         "contracts": 16,
-        "pass": 3,
-        "noPromotion": 13,
-        "dataFail": 0
+        "pass": 4,
+        "noPromotion": 12,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 16,
-        "pass": 3,
-        "noPromotion": 13,
-        "dataFail": 0
+        "pass": 4,
+        "noPromotion": 12,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "HI": {
@@ -1565,13 +1791,15 @@
         "contracts": 35,
         "pass": 14,
         "noPromotion": 21,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 35,
         "pass": 14,
         "noPromotion": 21,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "IA": {
@@ -1580,43 +1808,49 @@
         "contracts": 29,
         "pass": 12,
         "noPromotion": 17,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 29,
         "pass": 12,
         "noPromotion": 17,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "ID": {
       "openRunnableDoors": 49,
       "today": {
         "contracts": 70,
-        "pass": 15,
-        "noPromotion": 55,
-        "dataFail": 0
+        "pass": 16,
+        "noPromotion": 54,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 70,
-        "pass": 15,
-        "noPromotion": 55,
-        "dataFail": 0
+        "pass": 16,
+        "noPromotion": 54,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "IL": {
       "openRunnableDoors": 213,
       "today": {
         "contracts": 394,
-        "pass": 16,
-        "noPromotion": 378,
-        "dataFail": 0
+        "pass": 24,
+        "noPromotion": 370,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 394,
-        "pass": 16,
-        "noPromotion": 378,
-        "dataFail": 0
+        "pass": 26,
+        "noPromotion": 368,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "IN": {
@@ -1625,13 +1859,15 @@
         "contracts": 25,
         "pass": 12,
         "noPromotion": 13,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 25,
         "pass": 12,
         "noPromotion": 13,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "KS": {
@@ -1640,28 +1876,32 @@
         "contracts": 25,
         "pass": 12,
         "noPromotion": 13,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 25,
         "pass": 12,
         "noPromotion": 13,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "KY": {
       "openRunnableDoors": 1,
       "today": {
         "contracts": 21,
-        "pass": 12,
-        "noPromotion": 9,
-        "dataFail": 0
+        "pass": 13,
+        "noPromotion": 8,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 21,
-        "pass": 12,
-        "noPromotion": 9,
-        "dataFail": 0
+        "pass": 13,
+        "noPromotion": 8,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "LA": {
@@ -1670,28 +1910,32 @@
         "contracts": 19,
         "pass": 12,
         "noPromotion": 7,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 19,
         "pass": 12,
         "noPromotion": 7,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MA": {
-      "openRunnableDoors": 159,
+      "openRunnableDoors": 180,
       "today": {
-        "contracts": 196,
-        "pass": 17,
-        "noPromotion": 179,
-        "dataFail": 0
+        "contracts": 238,
+        "pass": 18,
+        "noPromotion": 220,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
-        "contracts": 196,
+        "contracts": 238,
         "pass": 18,
-        "noPromotion": 178,
-        "dataFail": 0
+        "noPromotion": 220,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MD": {
@@ -1700,13 +1944,15 @@
         "contracts": 33,
         "pass": 12,
         "noPromotion": 21,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 33,
         "pass": 12,
         "noPromotion": 21,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "ME": {
@@ -1715,58 +1961,66 @@
         "contracts": 80,
         "pass": 12,
         "noPromotion": 68,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 80,
         "pass": 12,
         "noPromotion": 68,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MI": {
       "openRunnableDoors": 106,
       "today": {
         "contracts": 192,
-        "pass": 18,
-        "noPromotion": 174,
-        "dataFail": 0
+        "pass": 33,
+        "noPromotion": 159,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 192,
-        "pass": 20,
-        "noPromotion": 172,
-        "dataFail": 0
+        "pass": 35,
+        "noPromotion": 157,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MN": {
-      "openRunnableDoors": 68,
+      "openRunnableDoors": 86,
       "today": {
-        "contracts": 93,
-        "pass": 12,
-        "noPromotion": 81,
-        "dataFail": 0
+        "contracts": 129,
+        "pass": 20,
+        "noPromotion": 109,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
-        "contracts": 93,
-        "pass": 12,
-        "noPromotion": 81,
-        "dataFail": 0
+        "contracts": 129,
+        "pass": 22,
+        "noPromotion": 107,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MO": {
       "openRunnableDoors": 237,
       "today": {
-        "contracts": 469,
-        "pass": 12,
-        "noPromotion": 457,
-        "dataFail": 0
+        "contracts": 470,
+        "pass": 21,
+        "noPromotion": 449,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 470,
-        "pass": 12,
-        "noPromotion": 458,
-        "dataFail": 0
+        "pass": 24,
+        "noPromotion": 446,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MP": {
@@ -1775,28 +2029,32 @@
         "contracts": 16,
         "pass": 4,
         "noPromotion": 12,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 16,
         "pass": 4,
         "noPromotion": 12,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MS": {
       "openRunnableDoors": 2,
       "today": {
         "contracts": 23,
-        "pass": 12,
-        "noPromotion": 11,
-        "dataFail": 0
+        "pass": 14,
+        "noPromotion": 9,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 23,
-        "pass": 12,
-        "noPromotion": 11,
-        "dataFail": 0
+        "pass": 14,
+        "noPromotion": 9,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "MT": {
@@ -1805,43 +2063,49 @@
         "contracts": 19,
         "pass": 11,
         "noPromotion": 8,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 19,
         "pass": 11,
         "noPromotion": 8,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "NC": {
       "openRunnableDoors": 129,
       "today": {
         "contracts": 189,
-        "pass": 11,
-        "noPromotion": 178,
-        "dataFail": 0
+        "pass": 19,
+        "noPromotion": 170,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 189,
-        "pass": 11,
-        "noPromotion": 178,
-        "dataFail": 0
+        "pass": 21,
+        "noPromotion": 168,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "ND": {
       "openRunnableDoors": 14,
       "today": {
         "contracts": 33,
-        "pass": 11,
+        "pass": 10,
         "noPromotion": 22,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 1
       },
       "tomorrow": {
         "contracts": 33,
         "pass": 11,
         "noPromotion": 22,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "NE": {
@@ -1850,13 +2114,15 @@
         "contracts": 19,
         "pass": 12,
         "noPromotion": 7,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 19,
         "pass": 12,
         "noPromotion": 7,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "NH": {
@@ -1865,28 +2131,32 @@
         "contracts": 131,
         "pass": 76,
         "noPromotion": 54,
-        "dataFail": 1
+        "typedFail": 1,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 131,
         "pass": 76,
         "noPromotion": 54,
-        "dataFail": 1
+        "typedFail": 1,
+        "transportRepairFail": 0
       }
     },
     "NJ": {
       "openRunnableDoors": 48,
       "today": {
         "contracts": 51,
-        "pass": 21,
-        "noPromotion": 30,
-        "dataFail": 0
+        "pass": 22,
+        "noPromotion": 29,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 51,
-        "pass": 21,
-        "noPromotion": 30,
-        "dataFail": 0
+        "pass": 22,
+        "noPromotion": 29,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "NM": {
@@ -1895,28 +2165,32 @@
         "contracts": 101,
         "pass": 11,
         "noPromotion": 90,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 101,
         "pass": 11,
         "noPromotion": 90,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "NV": {
       "openRunnableDoors": 54,
       "today": {
         "contracts": 127,
-        "pass": 11,
-        "noPromotion": 116,
-        "dataFail": 0
+        "pass": 12,
+        "noPromotion": 115,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 127,
-        "pass": 11,
-        "noPromotion": 116,
-        "dataFail": 0
+        "pass": 12,
+        "noPromotion": 115,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "NY": {
@@ -1925,13 +2199,15 @@
         "contracts": 267,
         "pass": 11,
         "noPromotion": 256,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 267,
         "pass": 11,
         "noPromotion": 256,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "OH": {
@@ -1940,13 +2216,15 @@
         "contracts": 151,
         "pass": 11,
         "noPromotion": 140,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 151,
         "pass": 11,
         "noPromotion": 140,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "OK": {
@@ -1955,28 +2233,32 @@
         "contracts": 137,
         "pass": 11,
         "noPromotion": 126,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 137,
         "pass": 11,
         "noPromotion": 126,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "OR": {
       "openRunnableDoors": 43,
       "today": {
         "contracts": 76,
-        "pass": 16,
-        "noPromotion": 60,
-        "dataFail": 0
+        "pass": 18,
+        "noPromotion": 58,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 76,
         "pass": 18,
         "noPromotion": 58,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "PA": {
@@ -1985,28 +2267,32 @@
         "contracts": 133,
         "pass": 13,
         "noPromotion": 120,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 133,
         "pass": 13,
         "noPromotion": 120,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "PR": {
       "openRunnableDoors": 0,
       "today": {
         "contracts": 19,
-        "pass": 4,
-        "noPromotion": 15,
-        "dataFail": 0
+        "pass": 5,
+        "noPromotion": 14,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 19,
-        "pass": 4,
-        "noPromotion": 15,
-        "dataFail": 0
+        "pass": 5,
+        "noPromotion": 14,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "RI": {
@@ -2015,13 +2301,15 @@
         "contracts": 37,
         "pass": 11,
         "noPromotion": 26,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 37,
         "pass": 11,
         "noPromotion": 26,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "SC": {
@@ -2030,13 +2318,15 @@
         "contracts": 26,
         "pass": 11,
         "noPromotion": 15,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 26,
         "pass": 11,
         "noPromotion": 15,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "SD": {
@@ -2045,13 +2335,15 @@
         "contracts": 42,
         "pass": 11,
         "noPromotion": 31,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 42,
         "pass": 11,
         "noPromotion": 31,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "TN": {
@@ -2060,13 +2352,15 @@
         "contracts": 32,
         "pass": 10,
         "noPromotion": 22,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 32,
         "pass": 10,
         "noPromotion": 22,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "TX": {
@@ -2075,28 +2369,32 @@
         "contracts": 1148,
         "pass": 11,
         "noPromotion": 1137,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 1148,
         "pass": 11,
         "noPromotion": 1137,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "US": {
       "openRunnableDoors": 0,
       "today": {
         "contracts": 41,
-        "pass": 26,
+        "pass": 25,
         "noPromotion": 15,
-        "dataFail": 0
+        "typedFail": 1,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 41,
-        "pass": 26,
+        "pass": 25,
         "noPromotion": 15,
-        "dataFail": 0
+        "typedFail": 1,
+        "transportRepairFail": 0
       }
     },
     "UT": {
@@ -2105,13 +2403,15 @@
         "contracts": 46,
         "pass": 10,
         "noPromotion": 36,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 46,
         "pass": 10,
         "noPromotion": 36,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "VA": {
@@ -2120,13 +2420,15 @@
         "contracts": 212,
         "pass": 10,
         "noPromotion": 202,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 212,
         "pass": 10,
         "noPromotion": 202,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "VI": {
@@ -2135,13 +2437,15 @@
         "contracts": 16,
         "pass": 4,
         "noPromotion": 12,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 16,
         "pass": 4,
         "noPromotion": 12,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "VT": {
@@ -2150,13 +2454,15 @@
         "contracts": 19,
         "pass": 10,
         "noPromotion": 9,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 19,
         "pass": 10,
         "noPromotion": 9,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "WA": {
@@ -2165,28 +2471,32 @@
         "contracts": 307,
         "pass": 10,
         "noPromotion": 297,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 307,
         "pass": 10,
         "noPromotion": 297,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "WI": {
-      "openRunnableDoors": 469,
+      "openRunnableDoors": 494,
       "today": {
-        "contracts": 920,
-        "pass": 25,
-        "noPromotion": 895,
-        "dataFail": 0
+        "contracts": 970,
+        "pass": 65,
+        "noPromotion": 905,
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
-        "contracts": 920,
-        "pass": 32,
-        "noPromotion": 888,
-        "dataFail": 0
+        "contracts": 970,
+        "pass": 68,
+        "noPromotion": 902,
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "WV": {
@@ -2195,13 +2505,15 @@
         "contracts": 62,
         "pass": 10,
         "noPromotion": 52,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 62,
         "pass": 10,
         "noPromotion": 52,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     },
     "WY": {
@@ -2210,13 +2522,15 @@
         "contracts": 43,
         "pass": 9,
         "noPromotion": 34,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       },
       "tomorrow": {
         "contracts": 43,
         "pass": 9,
         "noPromotion": 34,
-        "dataFail": 0
+        "typedFail": 0,
+        "transportRepairFail": 0
       }
     }
   },
@@ -2260,7 +2574,11 @@
       "legistar-members",
       "reader-readback",
       "national-place"
-    ]
+    ],
+    "latestReplayPeaks": {
+      "today": 1078599680,
+      "tomorrow": 263049216
+    }
   },
   "calendarStressRemaining": {
     "state": "CA",
@@ -2271,8 +2589,8 @@
   },
   "connectedProof": {
     "feedsFrom": [
-      "CAL-01 cp_doors registry",
-      "RN-01 standing frontier and admission"
+      "CAL-01 registry",
+      "RN-01 standing frontier/admission"
     ],
     "feedsInto": [
       "PM-01 native meeting facts",
@@ -2293,7 +2611,7 @@
         "promotedVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
         "lastKnownGoodVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
         "failureDetail": null,
-        "confirmedAt": "2026-10-23T18:49:08.374Z",
+        "confirmedAt": "2026-10-23T21:57:28.552Z",
         "structuralReleaseContract": {
           "testSitePromotions": 0,
           "gitDataCommits": 0,
@@ -2317,7 +2635,7 @@
         "promotedVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
         "lastKnownGoodVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
         "failureDetail": null,
-        "confirmedAt": "2026-10-23T18:49:35.284Z",
+        "confirmedAt": "2026-10-23T21:57:58.799Z",
         "structuralReleaseContract": {
           "testSitePromotions": 0,
           "gitDataCommits": 0,
@@ -2331,13 +2649,13 @@
     ],
     "browser": {
       "current": {
-        "revision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+        "revision": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
         "isolatedProductionCopy": true,
         "results": [
           {
             "zip": "92101",
             "board": "BOARD OF SUPERVISORS",
-            "asOf": "2026-10-23T18:51:12.585Z",
+            "asOf": "2026-10-24T00:30:00.934Z",
             "next": {
               "id": "legistar:sdcounty:2042",
               "startsAt": "2026-10-27T09:00:00-07:00",
@@ -2350,7 +2668,7 @@
           {
             "zip": "77550",
             "board": "Commissioners Court",
-            "asOf": "2026-10-23T18:51:12.585Z",
+            "asOf": "2026-10-24T00:30:00.934Z",
             "next": {
               "id": "legistar-insite:derived-state-tx-county-galveston-governing:1443038",
               "startsAt": "2026-10-26T09:30:00-05:00",
@@ -2363,13 +2681,13 @@
         ]
       },
       "tomorrow": {
-        "revision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+        "revision": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
         "isolatedProductionCopy": true,
         "results": [
           {
             "zip": "92101",
             "board": "BOARD OF SUPERVISORS",
-            "asOf": "2026-10-24T18:51:12.862Z",
+            "asOf": "2026-10-25T00:30:12.431Z",
             "next": {
               "id": "legistar:sdcounty:2042",
               "startsAt": "2026-10-27T09:00:00-07:00",
@@ -2382,7 +2700,7 @@
           {
             "zip": "77550",
             "board": "Commissioners Court",
-            "asOf": "2026-10-24T18:51:12.862Z",
+            "asOf": "2026-10-25T00:30:12.431Z",
             "next": {
               "id": "legistar-insite:derived-state-tx-county-galveston-governing:1443038",
               "startsAt": "2026-10-26T09:30:00-05:00",
@@ -2394,24 +2712,23 @@
           }
         ]
       }
-    },
-    "browserMethod": "Built standalone Next server on isolated production copies; current and +24h server/browser clocks; earliest future SCHEDULED exact-body API row equals visible data-meeting-id; personally inspected all four screenshots; system Chromium substituted for unavailable pinned 1234"
+    }
   },
   "nextScheduledParent": {
-    "implementationRevision": "466f0ce95ba46a6b16c0ac506aa91a2c19cc73f8",
+    "implementationRevision": "001011be17652d8276ce7e5f78e9091f5eab14ac",
     "force": false,
     "schedulerOffsetMs": 86400000,
-    "offsetScope": "routineTaskDue and sittingWindowSignals only; real DB/publication timestamps",
+    "offsetScope": "routineTaskDue and sittingWindowSignals only; real DB and publication timestamps",
     "schedulerControls": [
       {
         "id": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
-        "lastObserved": "2026-10-23T18:48:59.332Z",
+        "lastObserved": "2026-10-23T21:57:15.113Z",
         "dueNow": false,
         "dueTomorrow": true
       },
       {
         "id": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
-        "lastObserved": "2026-10-23T18:48:59.916Z",
+        "lastObserved": "2026-10-23T21:57:14.241Z",
         "dueNow": false,
         "dueTomorrow": true
       }
@@ -2419,7 +2736,7 @@
     "outcome": {
       "kind": "ROUTINE_CIVIC_DATA_SUPERVISOR",
       "state": "SUCCEEDED",
-      "cycleId": "routine-civic-data-supervisor:e5db58173e64:2026-10-23T18:42:14.128Z",
+      "cycleId": "routine-civic-data-supervisor:e5db58173e64:2026-10-23T21:50:30.690Z",
       "lane": "routine-civic-data",
       "exactTaskReceipts": 2,
       "durable": true
@@ -2448,57 +2765,7 @@
         "nextBuilds": 0,
         "fullSiteBrowserWalks": 0
       }
-    },
-    "sourceReceipts": [
-      {
-        "source": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
-        "partitionId": "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
-        "meetingSource": "legistar",
-        "bodyId": "ocd-division/country:us/state:ca/county:san_diego#governing",
-        "scope": "source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Asan_diego%23governing:route:d7df58b54636cdca",
-        "candidateId": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
-        "acquisitionSucceeded": true,
-        "state": "PROMOTED",
-        "decision": "GOOD",
-        "promotedVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
-        "lastKnownGoodVersion": "cv-c0e5ac2464c7644cb9660dbff5e8c315",
-        "failureDetail": null,
-        "confirmedAt": "2026-10-23T18:49:08.374Z",
-        "structuralReleaseContract": {
-          "testSitePromotions": 0,
-          "gitDataCommits": 0,
-          "pullRequests": 0,
-          "githubActionsRuns": 0,
-          "netlifyDeploys": 0,
-          "nextBuilds": 0,
-          "fullSiteBrowserWalks": 0
-        }
-      },
-      {
-        "source": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
-        "partitionId": "meetings:legistar-insite:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
-        "meetingSource": "legistar-insite",
-        "bodyId": "ocd-division/country:us/state:tx/county:galveston#governing",
-        "scope": "source:legistar-insite:body:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fcounty%3Agalveston%23governing:route:075dc9d48074990d",
-        "candidateId": "cv-131f86c81a1ae765e27315c67a7b1d60",
-        "acquisitionSucceeded": true,
-        "state": "PROMOTED",
-        "decision": "GOOD",
-        "promotedVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
-        "lastKnownGoodVersion": "cv-131f86c81a1ae765e27315c67a7b1d60",
-        "failureDetail": null,
-        "confirmedAt": "2026-10-23T18:49:35.284Z",
-        "structuralReleaseContract": {
-          "testSitePromotions": 0,
-          "gitDataCommits": 0,
-          "pullRequests": 0,
-          "githubActionsRuns": 0,
-          "netlifyDeploys": 0,
-          "nextBuilds": 0,
-          "fullSiteBrowserWalks": 0
-        }
-      }
-    ]
+    }
   },
   "exceptions": {
     "NH": {
@@ -2533,45 +2800,161 @@
         "page:meetings:webapi.legistar.com:fd616888ee70"
       ],
       "owner": "CAL-01 binding work"
+    },
+    "ND": {
+      "state": "ND",
+      "classification": "one exact REPAIR_FAILED caused by Neon HTTP503 during local evidence canonical-pointer guard, not missing or malformed child output",
+      "failedResult": {
+        "kind": "ROUTINE_READER_REPAIR",
+        "contractId": "openstates-votes-nd",
+        "sourceId": "plural-openstates-votes",
+        "recordClass": "STATE_ROLL_CALL",
+        "scope": "US-ND:openstates-votes:v1",
+        "projectionId": "nd-openstates-native-votes",
+        "disposition": "REPAIR_FAILED",
+        "receipt": null,
+        "error": "Failed query: select \"key\", concat(\"civic_data_promotions\".xmin::text, '/', \"civic_data_promotions\".ctid::text, '/', coalesce(( select confirmation.sequence from civic_data_candidate_events as confirmation where confirmation.candidate_id = \"civic_data_promotions\".\"current_version_id\" and left(confirmation.detail, $1) = $2 order by confirmation.sequence desc limit 1 ), 0)) from \"civic_data_promotions\" where (\"civic_data_promotions\".\"record_class\" = $3 and \"civic_data_promotions\".\"key\" in ($4)) params: 26,UNCHANGED_CONFIRMATION_V1 ,STATE_ROLL_CALL,STATE_ROLL_CALL:US-ND:openstates-votes:v1 <- NeonDbError: Server error (HTTP status 503): upstream connect error or disconnect/reset before headers. reset reason: connection timeout"
+      },
+      "narrowRecovery": {
+        "states": {
+          "ND": {
+            "contracts": 1,
+            "dispositions": {
+              "RECORDED:PASS": 1
+            }
+          }
+        },
+        "productionReadOnly": true,
+        "at": "2026-10-23T22:00:02.362Z",
+        "domains": 1,
+        "originalDomains": 1,
+        "contracts": 1,
+        "failures": [],
+        "deferred": [],
+        "dispositions": {
+          "RECORDED:PASS": 1
+        },
+        "durationMs": 11729,
+        "peakBytes": 512585728,
+        "peakByDomain": {
+          "reader-readback:contracts:ND:0": 512585728
+        },
+        "expectedContracts": 1
+      },
+      "recoveredReceipts": [
+        {
+          "contractVersion": 2,
+          "kind": "READER_PROJECTION_READBACK",
+          "contractId": "openstates-votes-nd",
+          "sourceId": "plural-openstates-votes",
+          "recordClass": "STATE_ROLL_CALL",
+          "scope": "US-ND:openstates-votes:v1",
+          "projectionId": "nd-openstates-native-votes",
+          "versionId": "cv-6cc1a10e6475c377fa97c96ae766f285",
+          "pointerKey": "STATE_ROLL_CALL:US-ND:openstates-votes:v1",
+          "observedAt": "2026-10-23T22:00:02.362Z",
+          "evidenceKind": "TYPED_READER_READ_MODEL",
+          "verifierId": "lib/sources/plural/votes.ts#readPluralVotesProjection",
+          "verifierCodeSha": "001011be17652d8276ce7e5f78e9091f5eab14ac",
+          "status": "PASS",
+          "detail": "The typed ND attributed votes Reader read canonical version cv-6cc1a10e6475c377fa97c96ae766f285."
+        }
+      ],
+      "initialCountryPassRewritten": false,
+      "recoveryProvesPermanentFix": false
+    },
+    "US": {
+      "revision": "739e03665e46149120290951e0f459c02f320158",
+      "contractId": "ballot-navigation",
+      "scope": "US:official-ballot-navigation",
+      "productionWrites": 0,
+      "productionQueries": 0,
+      "result": {
+        "verifierId": "lib/civic-data/curated-reader-read-model.ts#readBallotNavigationProjection",
+        "status": "FAIL",
+        "detail": "Navigation readback requires its exact state scope."
+      },
+      "exactDispatchAndContractUnchangedOnRn02": true,
+      "productionPointer": "curated-reader-primary-sources:316a2afbe7beec59cba0d059ce838c79",
+      "owner": "BL-21-FX upstream navigation contract"
     }
   },
   "validation": {
-    "reconciledFocused": {
-      "tests": 487,
-      "pass": 487
+    "focused": {
+      "tests": 129,
+      "pass": 129
     },
-    "obsoleteMemoryWaitRegression": {
-      "tests": 103,
-      "pass": 103
+    "progressFixtureFocused": {
+      "tests": 8,
+      "pass": 8
     },
-    "registeredOutcomeGrouping": {
-      "tests": 106,
-      "pass": 106
+    "fullGates": {
+      "passed": 9,
+      "required": 9,
+      "suite": {
+        "tests": 9674,
+        "pass": 9671,
+        "fail": 0,
+        "skipped": 3
+      }
     },
-    "exactOutcomeHandoffAndDispatcherRace": {
-      "tests": 111,
-      "pass": 111
-    },
-    "finalMemoryFloor": {
-      "tests": 14,
-      "pass": 14
-    },
-    "typeScript": "PASS",
-    "changedFileLint": "PASS",
-    "builds": {
-      "default": "PASS",
-      "standalone": "PASS",
-      "readerTrace": {
+    "defaultAndStandaloneBuilds": "PASS in full gates",
+    "readerTrace": {
+      "default": {
         "routes": 11,
         "requirements": 15,
         "files": 107,
         "failures": []
       },
-      "deployPathTestsEach": 12
+      "standalone": {
+        "routes": 11,
+        "requirements": 15,
+        "files": 107,
+        "failures": []
+      }
     },
-    "riverCombinedGatesRunHere": false,
-    "deadCode": "PASS; system Poppler pdftotext declared alongside existing external system binaries",
-    "readyDelta": "Documentation and Knip external-binary declaration only; runtime code and dependency manifests identical to frozen implementation 466f0ce95"
+    "suiteIdentity": {
+      "commit": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
+      "tree": "e911d119f498e6d4656c6c97881ae89230ba159c",
+      "workingTreeStatus": "",
+      "runner": {
+        "platform": "linux",
+        "arch": "x64",
+        "totalMemoryBytes": 18882674688
+      },
+      "node": "v24.19.0",
+      "configInputs": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "tsconfig.json",
+        "scripts/register-test-loader.mjs",
+        "scripts/test-alias-loader.mjs",
+        "scripts/ci-tests.mjs",
+        "scripts/ci-test-timing-reporter.mjs",
+        "scripts/ci-test-scheduling-hints.mjs"
+      ],
+      "configHash": "4f64993467ad75815abd6fe3e84e3a659b86bf05b6751f24ea32ba0465937f5a",
+      "suiteHash": "49a4374b17c6e2e83e3c7b8851c94cf405fc3acc9751ad142c89273096956fa4",
+      "command": "node scripts/ci-tests.mjs",
+      "mode": "shard",
+      "shard": {
+        "index": 1,
+        "count": 1
+      },
+      "concurrency": {
+        "available": 4,
+        "effective": 2
+      },
+      "startedAt": "2026-10-23T23:46:58.859Z",
+      "status": "passed",
+      "exitCode": 0,
+      "signal": null,
+      "elapsedMs": 2526204,
+      "selectedCount": 1349,
+      "selectedListSha256": "79cafab2f9ece7dd4a27aff6157df1edc3f78be46997b4ce70675afc31f5c1da",
+      "fullMetadataArtifact": "return1ede-final-suite.json"
+    },
+    "browser": "4 screenshots personally inspected; exact API/native meeting ID equality; system Chromium substituted for unavailable pinned build1234"
   },
   "liveAcceptance": {
     "accepted": false,
@@ -2592,150 +2975,415 @@
     "upstreamBaseline": "825ff1c HUNT_SCOPE_UNREAD cp_work_items_history 30000 ms headers deadline is historical, superseded by releases 91/92; do not claim current without production outcomes"
   },
   "prePushBoard": {
-    "at": "2026-10-23T18:48:45.878Z",
-    "river": "dfae00f3c70444f06c95adf66c89c9b4e818827d",
-    "main": "5f0e9de16016e20c9f068365a55db8a43ca63c51",
-    "status": "# River status\n\nbuild_state: RELEASE 92 LIVE (/api/build 5f0e9de16 from 1:46 PM EDT; runner on 5f0e9de16 from 17:44 UTC); RELEASE 93 candidate river-next 5ddf41bb8 (BL-21-FX alone on release 92) in pnpm gates from 2:25 PM EDT; BL-01 returned\nworker: claude-river\nprovider: Claude\nrun_id: session_012UDbgz3sjA8QN2m7CY78QS\nlock: session_012UDbgz3sjA8QN2m7CY78QS\nheartbeat: 2026-10-23T18:43:46Z\n\n## Waiting on Sean (from FX-01's returns/sean.md on stream/fx-01-fx, Oct 23 ~12:10 PM EDT)\n\nItems 1 (Vice P",
-    "integration": [],
-    "return": "# Returned: rn-02\n\nlane: rn-02\nowner: rn-02\nwriter: the rn-02 lane\ncheck: fold conflict with releases 89 to 91 (runner core)\nready: RN-02 d0498209046b7c6bc4473d7eb8744c69d2bcb26d\nriver: 5130d339c83fac517179b8612a2e1ee414c9464b\nat: 2026-10-23T14:56:49Z\nstate: returned\nfix_subject: fix:81a2add3\nfix: River \u00b7 stream/rn-02 \u2014 fold conflict with releases 89 to 91 (runner core) failed for rn-02: What failed: git merge of d04982090 onto river-next 827e9d6eb (river 5130d339c = release 90, plus RN-01-FX ecfc8636f), Oct 23 ~11:30 AM EDT: 15 conflicting hunks in 7 files: scripts/ingest.ts (7), scripts/routine-civic-data-runner.mts (3),\n\n## Live note (River, 12:20 PM EDT Oct 23)\n\nOn release 90 the 15:41 UTC routine pass logged 100 supervisor failures, 85 of them READER_READBACK_REPAIR_FAILED (plus RECEIPT_COUNT_INVALID 13, READER_REPAIR_CHILD_EXIT_NONZERO 2). Include them in the merged READY's live check.\n\n## Failure\n\n```\nRN-02 READY d04982090 has both proofs now (accepted), but it cannot fold: it is cut from River 78f82a232 (release 88) and conflicts with the 56 commits since (releases 89 and 90, and RN-01-FX, which is in gates as release 91 now).\n\nWhat failed: git merge of d04982090 onto river-next 827e9d6eb (river 5130d339c = release 90, plus RN-01-FX ecfc8636f), Oct 23 ~11:30 AM EDT: 15 conflicting hunks in 7 files: scripts/ingest.ts (7), scripts/routine-civic-data-runner.mts (3), lib/civic-data/meeting-partitions.ts (1), lib/civic-data/runtime-authority.ts (1), lib/civic-data/store.ts (1), lib/doors/mission-refresh.ts (1), tests/deploy-paths.test.ts (1). These are the runner's core paths that CAL-01-FX (publish-now scan, pass deadline), SP-01 and RN-01 (admission, cleanup) changed; River does not hand-resolve runner logic across three lanes.\nLive site: release 90 (a462d38) serves; RN-01 ships in release 91 (gates from 11:30 AM EDT).\nWhat passing looks like: once release 91 is live (river moves; see board/river status.md), merge origin/river into stream/rn-02, resolve keeping CAL-01-FX's publish-now scan, RN-01's admission and cleanup, and RN-02's reader repair and memory bounds, rerun RN-02's focused tests and the all-country replay on the merged tree, and post a new READY with both proofs (same wording as d04982090). River folds it first.\nAlso recorded on the board from RN-02's message: NJ fresh entity import fails on a duplicate division id ocd-division/country:us/state:nj/school_district:union_township_school_district (elementary GEOID 3416440 vs unified GEOID 3416500, both \"Union Township School District\"); the registration identity owner must disambiguate them.\n```\n\n## Repair\n\nFix on stream/rn-02 and publish a new READY commit; River folds the new READY and clears this return when it integrates.\n",
+    "observedAt": "2026-10-24 00:30:59 UTC",
+    "observedAtEastern": "8:30 PM EDT October 23, 2026",
+    "ready": "4792100a12aa6f26c5983b5fdf6087ac8c6c7dbd",
+    "river": "739e03665e46149120290951e0f459c02f320158",
+    "main": "3fc035eeb1c7f2556518b828b6e8426b3bb862a7",
     "publishedDeploy": {
-      "id": "6adb9cec987c23cc9cb9bfc2",
-      "commit": "5f0e9de16016e20c9f068365a55db8a43ca63c51",
-      "publishedAt": "2026-10-23T17:46:33.108Z"
+      "id": "6adbb7570a837395c0b130ab",
+      "commit": "3fc035eeb1c7f2556518b828b6e8426b3bb862a7",
+      "publishedAt": "2026-10-23T19:39:20.416Z"
+    },
+    "exactReadyInIntegration": false,
+    "activeReturn": "fix:1ede816a",
+    "statusFirstLine": "build_state: RELEASE 93 LIVE (/api/build 3fc035eeb from 3:39 PM EDT) and FAILING ITS LIVE CHECK: /ballot lost Election Day dates and election offices in every state (BL-21-FX returned). Revert waiting on Sean. No release candidate: RN-02 returned (3 tests fail on its own READY). River idle, waiting for READYs.",
+    "accepted": false,
+    "ancestry": {
+      "river": {
+        "tip": "739e03665e46149120290951e0f459c02f320158",
+        "readyIsAncestor": false
+      },
+      "main": {
+        "tip": "3fc035eeb1c7f2556518b828b6e8426b3bb862a7",
+        "readyIsAncestor": false
+      }
     }
   },
+  "failedCleanGateSetupAttempt": {
+    "revision": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
+    "gates": {
+      "pass": 7,
+      "required": 9
+    },
+    "suite": {
+      "files": 1349,
+      "tests": 9674,
+      "pass": 9668,
+      "fail": 0,
+      "skipped": 6
+    },
+    "builds": "Both refused the checkout-external node_modules symlink; Turbopack filesystem-root error. Local dependency installation is required; application code unchanged.",
+    "browser": "did not start; gate prerequisite failed"
+  },
+  "localDependencyTree": {
+    "method": "Byte-identical local dependency tree copy; deterministic path order; same package graph and manifests",
+    "identical": true,
+    "trees": [
+      {
+        "root": "/workspace/meanwhile/node_modules",
+        "files": 36378,
+        "links": 1510,
+        "bytes": 751589133,
+        "hash": "b0502fb26e0bed79cba4d900fda258e4a4f3d12a7aa89feb4764d22d4fa36563",
+        "externalLinks": []
+      },
+      {
+        "root": "/workspace/rn02-final-check/node_modules",
+        "files": 36378,
+        "links": 1510,
+        "bytes": 751589133,
+        "hash": "b0502fb26e0bed79cba4d900fda258e4a4f3d12a7aa89feb4764d22d4fa36563",
+        "externalLinks": []
+      }
+    ]
+  },
+  "cleanSetupAttempt": {
+    "validationRevision": "1fa16479b4827bf6497213b8e39b7e1716cc4cd0",
+    "attemptStopped": true,
+    "completeSuiteClaimed": false,
+    "observedBoxFile": {
+      "tests": 37,
+      "pass": 5,
+      "fail": 32
+    },
+    "isolatedDiagnostic": "return1ede-clean-box-diagnostic.log",
+    "reason": "Linked existing dependencies without running package postinstall; all AZ-dependent setup calls could not find data/derived/place-reference/az.json",
+    "fix": "Run the existing pnpm run postinstall, then recheck all37 Box tests before restarting full9gate validation",
+    "runtimeCodeChanged": false
+  },
+  "postinstallProjection": "56 state indexes generated by the existing package postinstall; all37 Box checks PASS after setup",
+  "failedGateAttempt": {
+    "revision": "001011be17652d8276ce7e5f78e9091f5eab14ac",
+    "passed": 6,
+    "required": 9,
+    "suite": {
+      "tests": 9674,
+      "pass": 9670,
+      "fail": 1,
+      "skipped": 3
+    },
+    "testFailure": "unchanged round-progress fixture reporting wave hit its 400ms no-progress clock in423.6ms; isolated original River fixture passes8. Replace fixture with3s wave/2s quiet bound; silent must still time out, reporting must still renew. Production timing unchanged.",
+    "buildFailure": {
+      "at": "2026-10-23",
+      "implementation": "001011be17652d8276ce7e5f78e9091f5eab14ac",
+      "manifestEntries": 2279,
+      "categories": {
+        "ignoredLocalVault": 1910,
+        "otherRepo": 167,
+        "dependencies": 145,
+        "compiled": 57
+      },
+      "localVaultIsTracked": false,
+      "diagnosticLog": "return1ede-build-diagnostic.log",
+      "ceilingChanged": false,
+      "nextAction": "Use an isolated clean checkout of the final test-fixture revision for full gates and the browser build; preserve local source evidence in the primary workspace.",
+      "ignoredVaultFiles": 1910,
+      "oldestCaptureEt": "October23 4:12AM EDT",
+      "newestCaptureEt": "October23 1:22PM EDT",
+      "capturesPredateGateRun": true,
+      "cleanCheckout": "/workspace/rn02-final-check"
+    },
+    "cleanFinalGateCheckout": "/workspace/rn02-final-check",
+    "sourceEvidenceDeleted": false
+  },
+  "failedEarlierReplay": {
+    "revision": "f7aa3119b028cd1ef57549b94d0bb67a9ee2ab54",
+    "contracts": 11593,
+    "pass": 826,
+    "noPromotion": 10408,
+    "dataOrTransportFail": 2,
+    "repairFailed": 357,
+    "durationMs": 1500050,
+    "budgetMs": 1500000,
+    "reason": "Sparse post-inventory children exhausted the pass window; this is a failure, not a passing replay. NH exact data proof and PA canonical-pointer Neon HTTP503 preserved separately.",
+    "dataAndTransportDetails": [
+      {
+        "contractId": "ballot-contests:PA",
+        "recordClass": "BALLOT_CANDIDACY",
+        "scope": "US-PA:state-election-ballots",
+        "versionId": "cv-e37780feb57229d732a8364e06cecb18",
+        "detail": "Reading canonical pointer BALLOT_CANDIDACY:US-PA:state-election-ballots failed (Failed query: select \"key\", concat(\"civic_data_promotions\".xmin::text, '/', \"civic_data_promotions\".ctid::text, '/', coalesce(( select confirmation.sequence from civic_data_candidate_events as confirmation where confirmation.candidate_id = \"civic_data_promotions\".\"current_version_id\" and left(confirmation.detail, $1) = $2 order by confirmation.sequence desc limit 1 ), 0)) from \"civic_data_promotions\" where (\"civic_data_promotions\".\"record_class\" = $3 and \"civic_data_promotions\".\"key\" in ($4)) params: 26,UNCHANGED_CONFIRMATION_V1 ,BALLOT_CANDIDACY,BALLOT_CANDIDACY:US-PA:state-election-ballots <- NeonDbError: Server error (HTTP status 503): upstream connect error or disconnect/reset before headers. reset reason: connection termination). We could not ask the store."
+      },
+      {
+        "contractId": "nh-sos-campaign-finance",
+        "recordClass": "STATE_CAMPAIGN_FINANCE",
+        "scope": "US-NH:campaign-finance:2026",
+        "versionId": "nh-sos-campaign-finance:trusted-lkg-reattested:5cb94ee54c78061b4d927d398452f44b",
+        "detail": "Expected promoted nh-sos-campaign-finance:trusted-lkg-reattested:5cb94ee54c78061b4d927d398452f44b; typed NH campaign-finance Reader returned STORE_UNREACHABLE:nh-sos-campaign-finance:trusted-lkg-reattested:5cb94ee54c78061b4d927d398452f44b."
+      }
+    ],
+    "stoppedOldFullGates": "Runtime batching change invalidated the old full gate run; it was stopped and is not counted as PASS",
+    "initialMemoryPathRefusal": "A scratch path outside TMPDIR was rejected before useful replay work; corrected beneath workspace TMPDIR, not counted as PASS"
+  },
   "artifacts": {
-    "national-workspace-final-current.json": {
-      "sha256": "0d90f1a4039461f5d9f0875da4cb73984fc6a7238ddea8d02bf0322fb1fcc13d",
-      "bytes": 12963
+    "return1ede-dense-national-current.json": {
+      "sha256": "52a81271af54f9ff50ef04b1f1505aee57471f34a69ac411e3403c9c6c478332",
+      "bytes": 17921
     },
-    "national-workspace-final-tomorrow.json": {
-      "sha256": "14639fb4d4ae47eb14a2ebff897b3a8826ff4483a301b43dc98dfffd7086489b",
-      "bytes": 13442
+    "return1ede-dense-national-tomorrow.json": {
+      "sha256": "aeb99c8a54c6336c35f0058e086f7838e35caec4e17861f3cf4dd3568f280daa",
+      "bytes": 17369
     },
-    "national-workspace-inputs.json": {
-      "sha256": "cb9f2bc814db69359068f93cc7604d35ee8faba69287f9f603313d260918e7c2",
-      "bytes": 343
+    "return1ede-dense-national.log": {
+      "sha256": "7926ae182f7df3946bf06b74f09c57499b0cf03dfbf9b550adbcf26861603d83",
+      "bytes": 399226
     },
-    "final-expanded-door-states.json": {
-      "sha256": "a46020ee4fc90ed3e95fe4def5b7b3b12924e07bd735149f0e5a3832475001b0",
-      "bytes": 4332
+    "return1ede-dense-inputs.json": {
+      "sha256": "488919e2c518ddbe8ccbbf03c5bb6e7b14d7d209ac3d5b4799e699b5e3e526a6",
+      "bytes": 334
     },
-    "doors-replay.json": {
-      "sha256": "066bbd3239d084fc058eb4c1fc4866cc3e32ba477ad68373bf62bc7e21c8e857",
-      "bytes": 905
+    "return1ede-dense-parent-scheduled.log": {
+      "sha256": "084efdf5e8349a935cf352db159cab401a5edfb283476b3e301a404fd0c50d23",
+      "bytes": 32017
     },
-    "national-workspace-final.log": {
-      "sha256": "af7cc68a1d1b094a362b6ff473dfd39477d1e187339f4f3c3825291fc22f1ba3",
-      "bytes": 440030
-    },
-    "parent-final-466-scheduled.log": {
-      "sha256": "3fafaccd4ca64c53745a31bf0a16d08e570a759b6c13bb5454afd32ed74a19e9",
-      "bytes": 32766
-    },
-    "final-466-scheduler-controls.log": {
-      "sha256": "6200445b03ad3616441d21074ec8aead26f9c10cbac4ee370ae7e5dd146f0379",
+    "return1ede-dense-scheduler-controls.log": {
+      "sha256": "7dac05e69380efd636776410c181e403c7bd27e3d6ad48b102ac70d8ff8e7c19",
       "bytes": 911
     },
-    "final-466-default-build.log": {
-      "sha256": "3aad7944684c6a7073f5b304d7ec1fa1eecff4c0f1a50624a38bda58f4f8d4ef",
-      "bytes": 5832
+    "return1ede-final-gates.log": {
+      "sha256": "2c9f8c7a938c54a974f3034b6f212cf275dfdf34f3e5e963427e5ee278b747c0",
+      "bytes": 1692
     },
-    "final-466-standalone-build.log": {
-      "sha256": "e094db7bab29ac6658005ab3376fb4c6af1f9dc66e6e562870846381e75eaabe",
-      "bytes": 5837
+    "return1ede-dense-focused2.log": {
+      "sha256": "a06d6b5bee3ae7dce431ee89a4c26d03b7ff7d4c8ee20c919ffae802a4822d0b",
+      "bytes": 16253
     },
-    "final-466-current-browser.log": {
-      "sha256": "8c1d550f2f4bf90d727f785b9c4b1a1df3ef9d313c7fa2ac6897856a4ae50d52",
-      "bytes": 1185
+    "return1ede-baseline.log": {
+      "sha256": "2532756fbc1ac5e944168c06c0b7f9d594276ccb5aa59b58a40361121b7e8502",
+      "bytes": 2003
     },
-    "final-466-tomorrow-browser.log": {
-      "sha256": "3006b451597173e31b2cebb5274980623e682b01ed743e5a8f7b68f0b99da943",
-      "bytes": 1186
+    "return1ede-dense-doors-replay.json": {
+      "sha256": "c55006c767ec5c46ac48e588dd7e902b6cfd7f018dbc222d9a7fdcb95adf6efb",
+      "bytes": 905
     },
-    "release92-focused-final.log": {
-      "sha256": "684a6535898e2eda61526e66294cc829ae37aa9a2b4429e3506f4f12176f70fd",
-      "bytes": 94140
+    "return1ede-dense-door-states.json": {
+      "sha256": "607fc0182a0eb40185eb8d47d1353d12673e7f163e626421b3e5f5f07ac93717",
+      "bytes": 4332
     },
-    "release92-admission-final.log": {
-      "sha256": "f3c28965e7509b6ad8d8debf54b7af6575a5c2eb12bc12ac72fa2873cedbb9a6",
-      "bytes": 12498
-    },
-    "release92-outcome-handoff2.log": {
-      "sha256": "d52b89926a7fa94de72e8ab6eefb984ab326798618fec416abc04054176752b8",
-      "bytes": 13617
-    },
-    "final-reader-floor-tests.log": {
-      "sha256": "a646a08871e7fddff7bf61040afc7bcd5697a3d45b0550286e69e30d93cba7a4",
-      "bytes": 1880
-    },
-    "release90-entities-sql.json": {
-      "sha256": "c1a9ffc8de181bb62ecb77965249a03acf0501a5937a83061ebeeb083ee45d5f",
-      "bytes": 6660
-    },
-    "release92-entities-or-sql2.json": {
-      "sha256": "2a85e83c24280e079ffe660aa466fcf077d508b25a9ce1a3131cc694dc23a628",
-      "bytes": 141
-    },
-    "door-denominator-audit.json": {
-      "sha256": "e1c7600ca986d9f06214f95df2435d632a4b110600a4e6bc7ef646298dd7474e",
+    "return1ede-denominator-audit.json": {
+      "sha256": "3896067d6a5f5ea3e739899f6102696134e623640ae0782bdd4c7725f08bdc1c",
       "bytes": 2543
     },
-    "door-missing-metadata.json": {
-      "sha256": "cd876f613c967188bc92fe156fab5003c81cb3e1f8c6db99340434a4657c2f4f",
+    "return1ede-unassigned-hints.json": {
+      "sha256": "1270e91764b98d779f3b7cb20d224e8e719a909f93dedc07bb6df25fb085a8b8",
       "bytes": 737
     },
-    "final-current-reader-92101.png": {
-      "sha256": "55ef9dcec17a9502b244c1e4786884a20ce936256d313753d2f28c5768db1914",
-      "bytes": 114621
+    "return1ede-national.log": {
+      "sha256": "4d58f480d236dd773044ef9ef033f0558b21f9a2710124207a705b78c0564755",
+      "bytes": 431301
     },
-    "final-current-reader-92101.txt": {
-      "sha256": "7b397cbbebc9c8712193e60e48b8002355af408e01c39124acc96e41bdd21788",
-      "bytes": 2265
+    "return1ede-national-current.json": {
+      "sha256": "51fb4f820f0f17da930919e2994c7eddc8c7ad9d418e52bea805bc9d0dc8f0d4",
+      "bytes": 166969
     },
-    "final-current-api-92101.json": {
-      "sha256": "e3cb836cdb2167be358297a90be912327e322ea8e682c95b904bd5236b8e4878",
+    "return1ede-dense-packing.json": {
+      "sha256": "0f703c2dc2b633754b3faccb36a9d441b965918103120b24d9c2aedcb995a9f2",
+      "bytes": 4432
+    },
+    "return1ede-density-reader-closure.json": {
+      "sha256": "6c5897cb9a043f08d8a59ac44f22460309a4550750d0a0d1ae07b38a91e91252",
+      "bytes": 256
+    },
+    "return1ede-data-fails.json": {
+      "sha256": "414c4ccc4fcace52c17eed2689d86c76554ecc6566f64546262d66fb46bb1b57",
+      "bytes": 1580
+    },
+    "return1ede-national-memory-path.log": {
+      "sha256": "b3599531362dfb75bb3254779823bad70677679426da0d4462c25a0d0ee494a1",
+      "bytes": 4670
+    },
+    "return1ede-stopped-baseline-suite.json": {
+      "sha256": "e7e91744744ef99d92b790762030d87a0abc58a3d39eb3d40b050ab4b16c2a18",
+      "bytes": 368259
+    },
+    "return1ede-dense-nd-transport.json": {
+      "sha256": "a2e01c958a2bd751d624c4085cec3a5dadd81301a85f26d46b4c74ab0251de5e",
+      "bytes": 2747
+    },
+    "return1ede-dense-nd-recovery.json": {
+      "sha256": "8a0b2074460140bf363b62c43ec0b067eff09195d84993f186a4f5b8f2133c8c",
+      "bytes": 477
+    },
+    "return1ede-dense-nd-recovery.log": {
+      "sha256": "abd826061072aa5f54acfbdc2457006647d59f6a4f593cefd32e91cdf2d4ba59",
+      "bytes": 1875
+    },
+    "return1ede-dense-data-fails.json": {
+      "sha256": "2aedeadcd4e629f0473d60a350b1d97c27b19c91463102168d31a204779a890f",
+      "bytes": 1801
+    },
+    "return1ede-river93-navigation-control.json": {
+      "sha256": "c7945a91cb856fa0dfb14df5c7052d75502a8c9be0ac2278c372c34ea081a52c",
+      "bytes": 591
+    },
+    "return1ede-river93-navigation-control.log": {
+      "sha256": "f6000f4ba92d8cdb6dac84bab22532b08ba6a182c9c365cc413e142f535ffb12",
+      "bytes": 352
+    },
+    "return1ede-dense-observed-exceptions.json": {
+      "sha256": "c4893a00d0110c008a484afaf4e9ccdfc8d3c523d9658ba06b2047deb8fb8cb3",
+      "bytes": 1184
+    },
+    "return1ede-round-progress-failed-suite.json": {
+      "sha256": "23fd0f33f17d725dedfe1b0581ad15b6aaa591eae4385c7a7da956a135c6d069",
+      "bytes": 904995
+    },
+    "return1ede-round-progress-failed-suite.log": {
+      "sha256": "b2dd31a13ba282522c6a876762bd656bb0f8afb14a361a9f38e07775c6464de9",
+      "bytes": 1319012
+    },
+    "return1ede-round-progress-failed-suite.timings.jsonl": {
+      "sha256": "72531ae9c791c54d662e50daff530f2d7358f6fa19f531fdedf9b1043398e2f5",
+      "bytes": 295038
+    },
+    "return1ede-round-progress-failed-gates.log": {
+      "sha256": "3bfa45fcfef37e3d7a39111bcb40f6e59d2873d1f1fd4d0272f6447650b1966a",
+      "bytes": 1809
+    },
+    "return1ede-round-progress-isolated.log": {
+      "sha256": "d3ec257c684c45e86efa0a7761c5e0cf23ef4cf8cc0e3cc9bd180d3e89d34cac",
+      "bytes": 1057
+    },
+    "return1ede-round-progress-final-focused.log": {
+      "sha256": "4872e9a04054d3994cea5cbaf550504f50f866202ced5ae8f04180ec608a7cbb",
+      "bytes": 1045
+    },
+    "return1ede-build-workspace-contamination.json": {
+      "sha256": "409808264c363b6c9215e5e402f6aa4123b3f55e966643917e187adbbba2de22",
+      "bytes": 732
+    },
+    "return1ede-build-diagnostic.log": {
+      "sha256": "63062f80958e47bc608cd7b838d54bfc9f370b361509e082fa0530d691427c92",
+      "bytes": 390713
+    },
+    "return1ede-final-runtime-parity.json": {
+      "sha256": "5d514d3e125a8b8759899e217465a9e9e72ae4ea39e874b95ca4af70acc01d78",
+      "bytes": 617
+    },
+    "return1ede-final-fixture-reader-closure.json": {
+      "sha256": "20cda0556a85b1300ac5ddfb164744c0c7674ea7d9137fb66183a88fe09af3d6",
+      "bytes": 256
+    },
+    "return1ede-clean-missing-postinstall.json": {
+      "sha256": "b304176b6a3f6325b15ab1b8f95a1bd0ded186af84b89cb1fc0e47a9457792a2",
+      "bytes": 580
+    },
+    "return1ede-clean-missing-postinstall-gates.log": {
+      "sha256": "36c8bd973a6fbb30f29772b0aad7fa389f8c863aaf8bcbe34ee57fc47191663b",
+      "bytes": 494
+    },
+    "return1ede-clean-box-diagnostic.log": {
+      "sha256": "da9e3fd3960d1e8ff7910eb8385307b03644ac0382219d152c0ab2b3129a3eb3",
+      "bytes": 1500
+    },
+    "return1ede-final-postinstall.log": {
+      "sha256": "32f3d37c064326828c06d5a0704ea1d2e879b73bf43534c52f240a0317ac2809",
+      "bytes": 214
+    },
+    "return1ede-box-postinstall-focused.log": {
+      "sha256": "e2acac4c2bede6c4c64dae2f4f7c2677a8e1e8aa1bb524bf393994c79efb7b26",
+      "bytes": 15678
+    },
+    "return1ede-final-suite.json": {
+      "sha256": "70e8a3c141f074bbffb0aee555880b8deaa301117237cf57b363d53968f89565",
+      "bytes": 905013
+    },
+    "return1ede-final-suite.log": {
+      "sha256": "470cbf569fe52d6b9cd23806dd9019cf686ac1b889a013f3f4652cf3534dce2d",
+      "bytes": 1318328
+    },
+    "return1ede-final-suite.timings.jsonl": {
+      "sha256": "a1e7b31c69bb53d3350e95a4db7ee6fbe537f0b241257f17e65c250d6ab8f895",
+      "bytes": 295043
+    },
+    "return1ede-final-default-build.log": {
+      "sha256": "c64906f4cf5da40ec6f5f5fa9443c67d7bed7eaea34b1c8e44d19384b1e7dcf1",
+      "bytes": 5848
+    },
+    "return1ede-final-standalone-build.log": {
+      "sha256": "75fd84e6c98be719c7b914f80588e69fceb26e0025f7a44b09e5aa42735eb61a",
+      "bytes": 5853
+    },
+    "return1ede-clean-symlink-setup.json": {
+      "sha256": "f22092e8fb9c44e7d0efbdb2e51bf7aa82cc3de21bd0779f730c8de286078e9f",
+      "bytes": 450
+    },
+    "return1ede-clean-symlink-suite.json": {
+      "sha256": "d06cfd6770fea0d680d77a7ebbfce33dab007e0137614d14d556cd58e9146143",
+      "bytes": 904984
+    },
+    "return1ede-clean-symlink-suite.log": {
+      "sha256": "12632dec38b0baafcf8bd5cfc3bb55dc872b4d99755066a5f03419573cd59458",
+      "bytes": 1318626
+    },
+    "return1ede-clean-symlink-suite.timings.jsonl": {
+      "sha256": "0ded5ac51ff7ee00573b32ab63d8392de7e7b08771c1ef272ba10a057140491c",
+      "bytes": 295014
+    },
+    "return1ede-clean-symlink-gates.log": {
+      "sha256": "b7e7a181dd673568455dbc93db746a13803719674a5d9f13d62efb8a50a0f29c",
+      "bytes": 1803
+    },
+    "return1ede-clean-symlink-default-build.log": {
+      "sha256": "2daddca483726fe8be0f97f3b02a74040cafe2c4da7c2a4f276f61ab1cf47370",
+      "bytes": 3356
+    },
+    "return1ede-clean-symlink-standalone-build.log": {
+      "sha256": "b0020d1e2fe44f5bcd8bfaace5a9d74ef8bf32ad081cded7ae952ff6c0bae5fd",
+      "bytes": 2902
+    },
+    "return1ede-local-dependencies.json": {
+      "sha256": "6b8550d07594c78e1d742b5e676473db0902ff34b2a7cf4088514d64e1c69bf7",
+      "bytes": 647
+    },
+    "return1ede-final-current-reader-92101.png": {
+      "sha256": "3b080a72603bef5606469e52c0fb7b0e1d77ed315a5099c301bea250ebf44199",
+      "bytes": 114943
+    },
+    "return1ede-final-current-reader-92101.txt": {
+      "sha256": "a95f57c7eca84911ff72775b7084db8cc0aa4138912349b84210112e1cf0846a",
+      "bytes": 2358
+    },
+    "return1ede-final-current-api-92101.json": {
+      "sha256": "5c3791506b67bf274373a640d318267747076cac28bce908a2754adcb5cabe61",
       "bytes": 299889
     },
-    "final-current-reader-77550.png": {
-      "sha256": "4aad277a62e7312f7f770c7732279ed6f76a0eeb599dff75112a48172c498f3b",
-      "bytes": 112867
+    "return1ede-final-current-reader-77550.png": {
+      "sha256": "f2990ab4ef033fd3e2d530af179295472ddea90ce613e2b8440d7ba9a8a0eb88",
+      "bytes": 114101
     },
-    "final-current-reader-77550.txt": {
-      "sha256": "67c6e24d550f9986ae2956ab4e0f9b82515d9d9cfdb10506ca84f137d6fc860a",
-      "bytes": 2210
+    "return1ede-final-current-reader-77550.txt": {
+      "sha256": "8e5e7902c533df6c4d768583beb43dd0029cb3dfdf65fcd99e49aa231436353e",
+      "bytes": 2331
     },
-    "final-current-api-77550.json": {
-      "sha256": "963ae5dc4b64a69ac6bc1d78ce238a38e55a106cb482856bd5f60a16eb0d7802",
+    "return1ede-final-current-api-77550.json": {
+      "sha256": "e99341729a8a9cf664b357ecbd75ac8041080ab4a5fb17630c090fab538c51f1",
       "bytes": 67750
     },
-    "final-tomorrow-reader-92101.png": {
-      "sha256": "e03a72399036d6a7f1e8ce4767eb469fc2a7218679a61f453d69116249653c07",
-      "bytes": 112068
+    "return1ede-final-tomorrow-reader-92101.png": {
+      "sha256": "2e9652a4d6eac741e58dad407403c632dc8093ef64bf87144ab822c1cafc2358",
+      "bytes": 114584
     },
-    "final-tomorrow-reader-92101.txt": {
-      "sha256": "cfbc302b6835be2d2fdf2750f39b12cd7ca8a7dd95ac625dd1775e0583b4e161",
-      "bytes": 2261
+    "return1ede-final-tomorrow-reader-92101.txt": {
+      "sha256": "d24d39d941b749a84ead81e2995ea6517b74f6cc2ca30f27c64a29c2b9cc8bc2",
+      "bytes": 2340
     },
-    "final-tomorrow-api-92101.json": {
-      "sha256": "e3cb836cdb2167be358297a90be912327e322ea8e682c95b904bd5236b8e4878",
+    "return1ede-final-tomorrow-api-92101.json": {
+      "sha256": "5c3791506b67bf274373a640d318267747076cac28bce908a2754adcb5cabe61",
       "bytes": 299889
     },
-    "final-tomorrow-reader-77550.png": {
-      "sha256": "23e5c2ea386a362f56d8c88b096c6b2245ae18935555d555fefe5b65d41d4fc7",
-      "bytes": 112601
+    "return1ede-final-tomorrow-reader-77550.png": {
+      "sha256": "862b89d6a64cfc8b32214b0cced0cc416e592224b3a16fe6d2ad3162e9dfc8a7",
+      "bytes": 113859
     },
-    "final-tomorrow-reader-77550.txt": {
-      "sha256": "fe5222f0e8376c9d8ed99b2b046904895f27e887ba6b52d0a70e50f1e197198a",
-      "bytes": 2286
+    "return1ede-final-tomorrow-reader-77550.txt": {
+      "sha256": "143af17f15a062100ddcf74a65cea65a4cbfa70492a2fe17df3dcc67231052b0",
+      "bytes": 2328
     },
-    "final-tomorrow-api-77550.json": {
-      "sha256": "963ae5dc4b64a69ac6bc1d78ce238a38e55a106cb482856bd5f60a16eb0d7802",
+    "return1ede-final-tomorrow-api-77550.json": {
+      "sha256": "e99341729a8a9cf664b357ecbd75ac8041080ab4a5fb17630c090fab538c51f1",
       "bytes": 67750
-    },
-    "final-466-knip2.log": {
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "bytes": 0
     }
   }
 }

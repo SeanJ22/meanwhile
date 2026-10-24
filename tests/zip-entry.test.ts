@@ -2,6 +2,9 @@ import { installFactReader } from "../lib/facts/db.ts";
 import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 import test from "node:test";
 import centroidFile from "../lib/geo/zcta-centroids.json" with { type: "json" };
 import postalFile from "../lib/geo/postal-zips.json" with { type: "json" };
@@ -9,6 +12,7 @@ import { fixtureZipLocation, fixtureZipResolution } from "./helpers/zip-location
 import { resolveZipLocation } from "../lib/place-map/locations.ts";
 import { resolveReaderZip } from "../lib/reader/zip.ts";
 import { stateZipLocations } from "../lib/place-map/location-import.ts";
+import { zipSourceRows, type ZipSourceMetadata } from "../lib/place-map/source-rows.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/geo/postal-core.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
@@ -23,6 +27,21 @@ import { locateAddressInZip, parseCensusPoint, sampleStreetPoints } from "../lib
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/zip-entry/${name}`, import.meta.url), "utf8");
 
 installFactReader(fixturePlaceMapQuery());
+
+test("ZIP source streaming keeps split Unicode rows and refuses a truncated capture", async () => {
+  const directory = await mkdtemp(join(tmpdir(),"rb-a10-zip-source-")), path = join(directory,"zips.json");
+  const rows = {"00501":[1,2,"unique","11742","Río [\"North\"]".repeat(6000),"NY","County",null,null],"00502":[3,4]};
+  const capture = JSON.stringify({source:"https://example.gov/zip-source",vintage:2020,zips:rows});
+  try {
+    await writeFile(path,capture);
+    const metadata: ZipSourceMetadata = {};
+    const decoded = Object.fromEntries(await Array.fromAsync(zipSourceRows(path,metadata)));
+    assert.deepEqual(decoded,rows);
+    assert.equal(metadata.source,"https://example.gov/zip-source"); assert.equal(metadata.vintage,2020);
+    await writeFile(path,capture.slice(0,-1));
+    await assert.rejects(async () => Array.fromAsync(zipSourceRows(path)),/Incomplete acquired ZIP source/);
+  } finally { await rm(directory,{recursive:true,force:true}); }
+});
 
 test("the map import preserves every acquired Census ZIP display coordinate and source", async () => {
   const rows=(await Promise.all(US_JURISDICTIONS.map(state=>stateZipLocations(process.cwd(),state.usps,"2026-10-24T00:00:00Z")))).flat();

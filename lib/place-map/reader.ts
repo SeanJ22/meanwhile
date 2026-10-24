@@ -87,14 +87,14 @@ export async function stateForZip(zip: string): Promise<string | null> {
 /** Enumerate only the requested state's codes; their memberships use the same lookup as a typed ZIP. */
 export async function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection()): Promise<ReadonlyMap<string, PlaceEntry>> {
   const state = requireRegistryState(input.replace(/^US-/i, "")), query = placeMapQuery();
-  const codes = await query("SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state=$1::char(2) ORDER BY m.zip", [state]);
+  const codes = await query("SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state=$1::char(2) AND e.kind='place' ORDER BY m.zip", [state]);
   const out = new Map<string, PlaceEntry>();
   // Read the state in one bounded query, then apply the shared year selection per code.
   if (!codes.length) return out;
   const rows = await query(`SELECT m.zip,jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year) AS memberships
     FROM zip_place m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.zip=ANY($1::text[]) GROUP BY m.zip ORDER BY m.zip`, [codes.map(row => String(row.zip))]);
+    WHERE m.zip=ANY($1::text[]) AND e.kind='place' GROUP BY m.zip ORDER BY m.zip`, [codes.map(row => String(row.zip))]);
   for (const row of rows) {
     const code=String(row.zip),result = await placesForCode(async () => [row], "zip", code, selection);
     const entry = placeEntry(result);

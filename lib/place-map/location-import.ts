@@ -1,8 +1,8 @@
-import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { isWellFormedZip, type CentroidTable, type ZctaCentroid } from "../geo/zcta-core.ts";
-import { postalAreaIn, type PostalTable } from "../geo/postal-core.ts";
+import { postalAreaIn, type PostalRow, type PostalTable } from "../geo/postal-core.ts";
 import type { MapZipLocation } from "./load.ts";
+import { zipSourceRows, type ZipSourceMetadata } from "./source-rows.ts";
 
 /** Decode acquired coordinate evidence for import; application lookups read zip_location. */
 export function sourceZipLocation(centroids: CentroidTable, input: string, postal: PostalTable): ZctaCentroid | null {
@@ -17,15 +17,21 @@ export function sourceZipLocation(centroids: CentroidTable, input: string, posta
 
 /** Acquired source bytes enter the map during import, never during a reader request. */
 export async function stateZipLocations(root: string, state: string, checkedAt: string): Promise<MapZipLocation[]> {
-  const [census, postal] = await Promise.all([
-    readFile(join(root,"lib/geo/zcta-centroids.json"),"utf8").then(JSON.parse) as Promise<{centroids:CentroidTable;vintage:string;source:string}>,
-    readFile(join(root,"lib/geo/postal-zips.json"),"utf8").then(JSON.parse) as Promise<{zips:PostalTable;source:string;typeSource:string}>,
-  ]);
-  return Object.keys(postal.zips).flatMap(zip => {
-    if (postal.zips[zip][5] !== state) return [];
-    const point = sourceZipLocation(census.centroids,zip,postal.zips);
-    return [{...point,zip,lat:point?.lat??null,lng:point?.lng??null,postal:postalAreaIn(postal.zips,zip)!,
-      boundaryYear:Number(census.vintage),checkedAt,
-      sourceUrls:[...(census.centroids[zip] ? [census.source] : [postal.source]),postal.typeSource]}];
+  const postal: PostalTable = {}, centroids: CentroidTable = {};
+  const postalMetadata: ZipSourceMetadata = {}, censusMetadata: ZipSourceMetadata = {};
+  for await (const [zip,value] of zipSourceRows(join(root,"lib/geo/postal-zips.json"),postalMetadata)) {
+    const row = value as PostalRow;
+    if (row[5] === state) postal[zip] = row;
+  }
+  for await (const [zip,value] of zipSourceRows(join(root,"lib/geo/zcta-centroids.json"),censusMetadata)) {
+    if (Object.hasOwn(postal,zip)) centroids[zip] = value as [number,number];
+  }
+  const {source:postalSource,typeSource} = postalMetadata, {source:censusSource,vintage} = censusMetadata;
+  if (!postalSource || !typeSource || !censusSource || !vintage) throw new Error("Acquired ZIP source metadata is incomplete");
+  return Object.keys(postal).map(zip => {
+    const point = sourceZipLocation(centroids,zip,postal);
+    return {...point,zip,lat:point?.lat??null,lng:point?.lng??null,postal:postalAreaIn(postal,zip)!,
+      boundaryYear:Number(vintage),checkedAt,
+      sourceUrls:[centroids[zip] ? censusSource : postalSource,typeSource]};
   });
 }

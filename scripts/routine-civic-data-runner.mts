@@ -744,7 +744,7 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 
 async function runFactMaintenance(deadlineMs: number): Promise<void> {
   const facts = readerFactDb(), states = registeredStates(ROOT);
-  try { await syncReaderIds(facts.query); }
+  try { console.log(`fact store reader identities: ${await syncReaderIds(facts.query)} targets resolve`); }
   catch (error) {
     supervisorFailures.push({ taskId: "reader-entity-ids", code: "READER_ENTITY_IDS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }

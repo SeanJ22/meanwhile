@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { buildStatePlaceMap } from "../lib/place-map/build.ts";
+import { buildStatePlaceMap, registeredPlaceIds } from "../lib/place-map/build.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import { placesAtPoint, placesForCode } from "../lib/place-map/read.ts";
 import { divisionIdsAt, type GeoFeature } from "../lib/registry/resolve.ts";
@@ -79,17 +79,29 @@ test("every state's place job is due on its next monthly cycle without routineTa
 
 test("the state builder preserves every legacy district and NCES/GEOID aliases", () => {
   const registration = JSON.parse(readFileSync("data/derived/registration/az.json", "utf8")) as RegistrationReference;
-  const id = `${state}/cd:6`;
-  const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map([["85701", { ids: [state, county, id], partial: [id], samples: 100 }]]),
+  const id = `${state}/cd:6`, tribal = "ocd-division/country:us/aiannh:2430";
+  const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map([["85701", { ids: [state, county, id, tribal], partial: [id], samples: 100 }]]),
     legacyZctas: new Set(["85701"]), boundaries: [], checkedAt: date,
     postalLinks: [{ zip: "85798", zcta: "85701", addressRequired: false }, { zip: "85799", zcta: "85701", addressRequired: true }] });
-  for (const placeId of [state, county, id]) assert.ok(map.zipEdges.some(edge => edge.placeId === placeId));
+  for (const placeId of [state, county, id, tribal]) assert.ok(map.zipEdges.some(edge => edge.placeId === placeId));
   assert.ok(map.zctaEdges.some(edge => edge.placeId === id && edge.boundaryYear === 2024));
   assert.ok(map.places.some(place => place.aliases.some(alias => alias.scheme === "nces") && place.aliases.some(alias => alias.scheme.startsWith("census-geoid:"))));
   assert.ok(map.places.every(place => place.aliases.every(alias => alias.value.length > 0)));
   assert.ok(map.zipEdges.some(edge => edge.code === "85798" && edge.placeId === id));
   assert.ok(!map.zipEdges.some(edge => edge.code === "85799" && edge.placeId === id));
   assert.ok(!map.zctaEdges.some(edge => edge.code === "85798" || edge.code === "85799"));
+});
+
+test("same-named New Jersey school districts keep separate GEOID and NCES identities", () => {
+  const registration = JSON.parse(readFileSync("data/derived/registration/nj.json", "utf8")) as RegistrationReference;
+  const byCode = registeredPlaceIds(registration);
+  assert.notEqual(byCode.get("elsd:3416440"), byCode.get("unsd:3416500"));
+  const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map(), legacyZctas: new Set(), boundaries: [], checkedAt: date });
+  const elementary = map.places.find(place => place.aliases.some(alias => alias.scheme === "nces" && alias.value === "3416440"));
+  const unified = map.places.find(place => place.aliases.some(alias => alias.scheme === "nces" && alias.value === "3416500"));
+  assert.ok(elementary && unified);
+  assert.notEqual(elementary.id, unified.id);
+  assert.ok(registration.divisions.some(row => row[0] === elementary.id));
 });
 
 test("Census geographic FIPS, rather than the mailing state, supplies an unshaped district's county", async () => {
@@ -99,8 +111,8 @@ test("Census geographic FIPS, rather than the mailing state, supplies an unshape
 });
 
 test("current GRF parts produce measured school and county shares from one checked state source", async () => {
-  const bytes = "CURSTATE|CURCOUNTY|COUSUBFP|PLACEFP|SDELMLEA|SDSECLEA|SDUNILEA|ZCTA5CE|AREALAND\n" +
-    "04|019|99999|99999|99999|99999|00001|85701|60\n04|019|99999|99999|99999|99999|00002|85701|40\n";
+  const bytes = "CURSTATE|CURCOUNTY|COUSUBFP|PLACEFP|SDELMLEA|SDSECLEA|SDUNILEA|AIANNHCE|ZCTA5CE|AREALAND\n" +
+    "04|019|99999|99999|99999|99999|00001|9999|85701|60\n04|019|99999|99999|99999|99999|00002|9999|85701|40\n";
   const edges = await currentGrfPlaceEdges("04", [
     { id: state, name: "Arizona", state: "AZ", aliases: [{ scheme: "census-geoid:state", value: "04" }] },
     { id: county, name: "Pima", state: "AZ", aliases: [{ scheme: "census-geoid:county", value: "04019" }] },

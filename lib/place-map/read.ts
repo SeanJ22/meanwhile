@@ -34,17 +34,25 @@ function selected(rows: readonly PlaceMembership[], selection: GeographySelectio
     : latest.get(row.placeId) === row.boundaryYear);
 }
 
+/** Shared by single-code reads and bounded state enumeration. */
+export const CODE_MEMBERSHIP_SQL = `jsonb_build_object(
+      'placeId',e.id,'name',e.name,'state',e.state,'layer',b.layer,'boundaryYear',b.boundary_year,'version',b.version,
+      'share',m.share,'shareBasis',m.share_basis,'partial',m.partial,'fringe',m.fringe,
+      'countyAttachment',b.county_attachment,'hostCountyId',b.host_county_id
+    )`;
+
 /** RB-A10's ZIP and ZCTA entry point. Each call performs one indexed table lookup. */
 export async function placesForCode(query: Query, kind: "zip" | "zcta", code: string,
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!/^\d{5}$/.test(code)) throw new Error("A five-digit ZIP or ZCTA is required");
   const table = kind === "zip" ? "zip_place" : "zcta_place";
-  const rows = await query(`SELECT ${fields}, m.share, m.share_basis, m.partial, m.fringe
+  const [row] = await query(`SELECT coalesce(jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year),'[]'::jsonb) AS memberships
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.${kind}=$1 AND ${CURRENT_LOCAL_BOUNDARY_SQL} ORDER BY e.id, b.boundary_year`, [code]);
-  const memberships = selected(rows.map(membership), selection);
-  return { memberships, states: [...new Set(memberships.flatMap(row => row.state ? [row.state] : []))].sort() };
+    WHERE m.${kind}=$1 AND ${CURRENT_LOCAL_BOUNDARY_SQL}`, [code]);
+  if (!Array.isArray(row?.memberships)) throw new Error("The place map lookup could not be read");
+  const memberships = selected(row.memberships as PlaceMembership[], selection);
+  return { memberships, states: [...new Set(memberships.filter(row => row.layer === "state").flatMap(row => row.state ? [row.state] : []))].sort() };
 }
 
 /** One GiST query, then the registry's exact polygon test. County attachments
@@ -64,6 +72,6 @@ export async function placesAtPoint(query: Query, point: [number, number],
   const states = new Set(exact.filter(row => row.layer === "state").map(row => String(row.state)));
   const counties = new Set(exact.filter(row => row.layer === "county" && states.has(String(row.state))).map(row => String(row.place_id)));
   const memberships = selected([...exact, ...rows.filter(row => row.county_attachment && counties.has(String(row.host_county_id)))]
-    .filter(row => row.state == null || states.has(String(row.state))).map(membership), selection);
+    .filter(row => row.state == null || String(row.place_id).startsWith("ocd-division/country:us/aiannh:") || states.has(String(row.state))).map(membership), selection);
   return { memberships, states: [...states].sort() };
 }

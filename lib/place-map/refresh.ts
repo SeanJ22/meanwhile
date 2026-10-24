@@ -73,7 +73,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
     for (const group of scope.groupings) for (const edge of group.overlaps) if (edge.fraction !== null) stateLandShares.set(edge.zcta5, (stateLandShares.get(edge.zcta5) ?? 0) + edge.fraction);
   }
   const crossStateZctas = new Set([...stateLandShares].filter(([, share]) => share > 0 && share < 1 - 1e-8).map(([code]) => code));
-  const shapes = await acquireStateBoundaries(registration, options);
+  const shapes = await acquireStateBoundaries(registration, options, [...legacyZips.values()].flatMap(entry => [...entry.ids, ...entry.fringe ?? []]));
   const boundaries: PlaceBoundary[] = [...shapes.boundaries];
   const territory = join(root, "data/states", state.toLowerCase(), "geo", `territory-${fips}.geojson`);
   const special = new Map(registration.divisions.filter(d => d[1] === "district").map(d => [d[0], d]));

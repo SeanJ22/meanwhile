@@ -86,5 +86,17 @@
     "productionDatabaseRole": "readonly",
     "productionWrites": false
   },
-  "note": "The full test run started with no .next output. Its three build-dependent skips are covered by test:bundle and the 17 passing postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing."
+  "note": "The full test run started with no .next output. Its three build-dependent skips are covered by test:bundle and the 17 passing postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing.",
+  "subsequentIntegration": {
+    "commit": "a0be6dde1",
+    "riverCommit": "f6c4cba25",
+    "focusedTests": {
+      "passed": 78,
+      "failed": 0,
+      "skipped": 0,
+      "runner": "Canonical node scripts/ci-tests.mjs with an explicit file list"
+    },
+    "build": "PASS",
+    "note": "Newly promoted River changes merge cleanly. The complete nine-check result above remains attached to its tested code revision."
+  }
 }

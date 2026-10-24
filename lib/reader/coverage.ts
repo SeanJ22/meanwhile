@@ -18,6 +18,7 @@ import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { primeStatePeopleProjection } from "../state-rollcalls/legislators.ts";
+import { withFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 
 /** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
 export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
@@ -26,7 +27,7 @@ export function withPlaceRegistry<T extends { readonly registry: RegistryRuntime
 }
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
-  "people" | "peopleRead" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
+  "people" | "peopleRead" | "legislativePeople" | "federal" | "federalRead" | "president" | "stateLegislatorAuthority">>;
 type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
 
@@ -84,7 +85,7 @@ export function stateCoverage(
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;
-  return withReaderSelection(undefined, () => withReaderAuthorityEdge({}, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
+  return withReaderSelection(undefined, () => withReaderAuthorityEdge({}, () => withRegistryRuntimeProjection(runtime, [state.state], () => withFederalDirectoryProjection(state.federalRead,[state.state],() => {
     // Carry the already loaded source identities into this composition context.
     // A cached state answer must not depend on another request's resident state.
     if(state.peopleRead?.kind === 'PROMOTED' || state.peopleRead?.kind === 'BOOTSTRAP')primeStatePeopleProjection(state.peopleRead.value);
@@ -109,5 +110,5 @@ export function stateCoverage(
         return { ...body, readerRoster: { members: membersOfBody(body.bodyId).members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
       }),
     };
-  })));
+  }))));
 }

@@ -26,6 +26,15 @@ const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Co
 const contextKey = () => currentReaderSelection() ?? currentReaderAuthorityEdge();
 const current = () => { const key = contextKey(); return key ? requests.get(key) : jobs.getStore(); };
 
+/** Compose a cached state answer with its already loaded, portrait-enriched directory. */
+export function withFederalDirectoryProjection<T>(read: Read | undefined, states: readonly string[], compose: () => T): T {
+  if(!read)return compose();
+  const context: Context={states:[...new Set(states.map(requireRegistryState))].sort(),read};
+  const key=contextKey();
+  if(key)requests.set(key,context);
+  return jobs.run(context,compose);
+}
+
 function validate(value: FederalDirectoryReadModel, versionId: string): void {
   const issues = federalDirectoryProjectionIssues(value);
   if (issues.length) throw new Error(`Federal directory projection ${versionId} is invalid: ${issues.join(", ")}.`);

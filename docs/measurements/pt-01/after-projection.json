@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T11:18:56.122Z",
+  "measuredAt": "2026-10-24T12:07:09.819Z",
   "mode": "reader projection on production holdings",
   "counts": [
     {
@@ -486,7 +486,7 @@
       "state": "GA",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 46
+      "withoutPhoto": 47
     },
     {
       "state": "GA",
@@ -498,7 +498,7 @@
       "state": "GA",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 1
     },
     {
       "state": "GA",
@@ -750,7 +750,7 @@
       "state": "IN",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 28
+      "withoutPhoto": 32
     },
     {
       "state": "IN",
@@ -1074,7 +1074,7 @@
       "state": "MN",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 7
+      "withoutPhoto": 14
     },
     {
       "state": "MN",
@@ -1716,7 +1716,7 @@
       "state": "OR",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 1
+      "withoutPhoto": 3
     },
     {
       "state": "OR",
@@ -2346,7 +2346,7 @@
       "state": "WY",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 1
     },
     {
       "state": "WY",
@@ -2754,7 +2754,7 @@
     {
       "state": "FL",
       "scope": "US-FL:people:portraits:v1",
-      "version": "cv-7668b02343a82e5d752dd54da16bbe5f"
+      "version": "cv-f1bfd3b6bc14766eee52ef07a4140a99"
     },
     {
       "state": "GA",
@@ -2854,7 +2854,7 @@
     {
       "state": "HI",
       "scope": "US-HI:people:portraits:v1",
-      "version": "cv-b3ef1964171942f6f51a783b660e2f76"
+      "version": "cv-389bd0e171139711df8a053327d4e0c9"
     },
     {
       "state": "HI",
@@ -3049,7 +3049,7 @@
     {
       "state": "KS",
       "scope": "US-KS:people:portraits:v1",
-      "version": "cv-db549b9a923670360169c971f3af8b7a"
+      "version": "cv-1a5962d5fc1cc90e01f45c0846dce112"
     },
     {
       "state": "KY",
@@ -3154,7 +3154,7 @@
     {
       "state": "MA",
       "scope": "US-MA:people:portraits:v1",
-      "version": "cv-06a505a0766efab3ce6477d1b6bf51bd"
+      "version": "cv-284abbce8f35e3c498e07a17687ad041"
     },
     {
       "state": "MD",
@@ -3329,7 +3329,7 @@
     {
       "state": "MO",
       "scope": "US-MO:people:portraits:v1",
-      "version": "cv-7b61305068a13303c8e660c8394766ab"
+      "version": "cv-931f57679696e03a0d2b9c9a91223ca6"
     },
     {
       "state": "MP",
@@ -3464,7 +3464,7 @@
     {
       "state": "NC",
       "scope": "US-NC:people:portraits:v1",
-      "version": "cv-d7c068f178210539b7b79a7445865048"
+      "version": "cv-187359cc2020a486c691e6f9eaeb0392"
     },
     {
       "state": "ND",

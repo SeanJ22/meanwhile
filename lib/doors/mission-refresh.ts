@@ -15,6 +15,7 @@
  */
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
 import { DOOR_STATUSES, isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { meetingPartitionId, meetingPartitionIdentity } from "../meetings/body-scope.ts";
 
 const MARK_FIELDS = { formatVersion: true, doorId: true, kind: true, bodyIds: true, hosts: true,
   status: true, updatedAt: true, ocdId: true, readNow: true } as const;
@@ -72,12 +73,16 @@ export async function markDoorsReadNow(
 }
 
 /**
- * The partition a meeting door is read through: a hand-wired door's id is its partition's id, and a derived member is
+ * The partition a meeting door is read through: a hand-wired door uses its current body and route, and a derived member is
  * read by its family's partition (`meeting.family`). A feed door is read by its registered source contract.
  */
 export function doorPartitionIds(door: DoorRecord): readonly string[] {
   if (door.meeting == null) return door.doorId.startsWith("feed:") && typeof door.config.contractId === "string" ? [door.config.contractId] : [];
-  return [door.meeting.family ?? door.doorId];
+  if (door.meeting.family !== null) return [door.meeting.family];
+  const identity = meetingPartitionIdentity(door.doorId);
+  return identity && door.bodyIds.length === 1
+    ? [meetingPartitionId(identity.source, door.bodyIds[0]!, typeof door.config.partitionRoute === "string" ? door.config.partitionRoute : identity.route)]
+    : [door.doorId];
 }
 
 /**

@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { canonicalCivicDataHash, durableCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 
 test("incremental hashing preserves canonical ballot hashes including optional and numeric JSON values", () => {
@@ -27,8 +28,25 @@ test("durable canonical hashes match JSON persistence without copying nested evi
   ]) {
     const durable = JSON.parse(JSON.stringify(value));
     assert.equal(canonicalCivicDataHash(value, { durable: true }), createHash("sha256").update(canonicalCivicDataJson(durable)).digest("hex"));
+    assert.equal(normalizedHash(value), createHash("sha256").update(canonicalCivicDataJson(durable)).digest("hex"));
   }
   for (const value of [undefined, () => 1, Symbol("omitted"), BigInt(1), Object(BigInt(1))]) assert.throws(() => canonicalCivicDataHash(value, { durable: true }), TypeError);
   const cyclic: { self?: unknown } = {}; cyclic.self = cyclic;
   assert.throws(() => canonicalCivicDataHash(cyclic, { durable: true }), TypeError);
+});
+
+test("streamed round-trip proofs preserve acceptance and refusal for durable JSON values", () => {
+  const cyclic: { self?: unknown } = {}; cyclic.self = cyclic;
+  const sparse: unknown[] = []; sparse[2] = "present";
+  for (const value of [null, false, "李José", 0, -0, NaN, Infinity, { rows: [{ id: 1, label: "held" }] },
+    undefined, BigInt(1), cyclic, sparse, { omitted: undefined }, new Date("2026-10-01T00:00:00Z"),
+    { custom: { toJSON() { return { changed: true }; } } }, { boxed: new Number(3) }]) {
+    let previous: string | null = null;
+    try {
+      const durable = JSON.parse(JSON.stringify(value));
+      const before = canonicalCivicDataJson(value), after = canonicalCivicDataJson(durable);
+      if (before === after) previous = createHash("sha256").update(after).digest("hex");
+    } catch { /* These values had no durable projection proof. */ }
+    assert.equal(durableCivicDataHash(value), previous);
+  }
 });

@@ -199,8 +199,9 @@ export async function runLeaseWorkerProcesses(input: {
   const failures: { ids: readonly string[]; error: unknown }[] = [];
   const launch = async (): Promise<void> => {
     if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
-    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry, input.deadlineMs)
-      .catch(error => { throw new WorkerAdmissionRefusal(error); });
+    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry, input.deadlineMs,
+      { priority: Number.POSITIVE_INFINITY, stillNeeded: () => pending.size > 0 })
+      .catch(error => { if (pending.size) throw new WorkerAdmissionRefusal(error); return undefined; });
     try {
 
     if (!pending.size) return;

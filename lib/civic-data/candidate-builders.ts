@@ -1,6 +1,7 @@
 import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { AcsNationalLoad, AcsLoadCounts } from "../sources/census-acs-population/national.ts";
@@ -45,9 +46,7 @@ function canonical(value: unknown): string {
 }
 
 export function normalizedHash(value: unknown): string {
-  const encoded = JSON.stringify(value);
-  if (encoded === undefined) throw new Error("NORMALIZED_VALUE_NOT_DURABLE_JSON");
-  return sha256(canonical(JSON.parse(encoded) as unknown));
+  return canonicalCivicDataHash(value, { durable: true });
 }
 
 function candidateId(sourceId: string, scope: string, rawHash: string, retrievedAt: string): string {

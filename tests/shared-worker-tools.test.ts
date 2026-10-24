@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
+import { operationalStatePath } from "../lib/ops/operational-state-path.ts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
@@ -41,6 +42,7 @@ test("Windows and Linux process probes leave timers and the host lock available"
     const syncProbe = () => { beginProbe(); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 75); finishProbe(); };
     const loaded: Record<string, unknown> = {};
     runInNewContext(source, { exports: loaded, require: (name: string) => {
+      if (name === "../../ops/operational-state-path.ts") return { operationalStatePath };
       if (name === "node:os") return { ...nativeRequire(name), platform: () => operatingSystem, tmpdir: () => root };
       if (name === "node:child_process") return { ...nativeRequire(name),
         execFileSync: () => { syncProbe(); return rows; },
@@ -57,7 +59,7 @@ test("Windows and Linux process probes leave timers and the host lock available"
       return nativeRequire(name);
     }, process, console, Buffer, setTimeout, clearTimeout, setInterval, clearInterval, queueMicrotask });
     const loadedSlots = loaded as { workerMemoryHost: typeof workerMemoryHost; workerProcessSlots: typeof workerProcessSlots };
-    const host = loadedSlots.workerMemoryHost({ shared: true });
+    const host = loadedSlots.workerMemoryHost({ shared: true, directory: root });
     const slots = loadedSlots.workerProcessSlots(() => 20, { host, availableBytes: () => 1000 * 1024,
       parentPeakBytes: 300 * 1024, headroomBytes: 100 * 1024, peakBytes: () => 30 * 1024 });
     let parentReserved = false;

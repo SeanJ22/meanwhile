@@ -1,8 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { runBoundedChildPass, type BoundedChildCommand, type BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
-import { ROUTINE_SOURCE_TASKS, routinePassLaunchOrder, routineSerialLane, routineSerialLanesFirst } from "../lib/civic-data/runner.ts";
-import { workerMemoryHost, workerProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
+import { readFileSync } from "node:fs";
+import { ROUTINE_SOURCE_TASKS, routineBaselineOwed, routinePassLaunchOrder, routineSerialLane, routineSerialLanesFirst, routineTaskDue,
+  routineTaskNextDueMs, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
+import { electionLaunchOrder } from "../lib/civic-data/ballot-publication.ts";
+import { placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
+import { routineProcessSlots, workerMemoryHost, workerProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
+import { votingAcquisitionDeadline } from "../scripts/fetch-voting-sites.mts";
+import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 
 const mib = 1024 * 1024;
 const people = (id: string) => ROUTINE_SOURCE_TASKS.find(task => task.id === id)!;
@@ -76,4 +83,51 @@ test("a pass whose meeting programs fill memory still runs every read of the peo
   });
   assert.deepEqual(peopleReads.map(c => ran.includes(c.id)), [true, true, true], `ran: ${ran.join(" ")}`);
   assert.equal(results.filter(r => r.termination === "EXITED").length, ran.length);
+});
+
+test("a due state's voting sites take memory at the start of the pass, ahead of the overdue backlog that holds it to the deadline", async () => {
+  // Production, Oct 24 20:20:05Z pass: all 56 voting-sites tasks deferred WORKER_MEMORY_DEADLINE. IL had read at 12:29 and was
+  // due only by its changed doors (owed "now"), TX had never read (a baseline first read), AK's 12:28 read failed (retry owed
+  // 13:28). Fifteen 1,447 MiB state calendar programs held 20,244 MiB of available memory until the pass deadline.
+  const now = Date.parse("2026-10-24T20:20:05.706Z"), MIB = 1024 * 1024, HOUR = 3_600_000;
+  const site = (state: string) => AUTOMATIC_REFRESH_TASKS.find(task => task.id === `voting-sites:${state}`)!;
+  const clocks: Record<string, RoutineTaskClock | undefined> = {
+    IL: { lastAttemptedAt: "2026-10-24T12:29:19.703Z", lastSucceededAt: "2026-10-24T12:29:18.917Z",
+      lastSucceededObservedAt: "2026-10-24T12:29:19.703Z", lastSucceededParserVersion: site("IL").parserVersion },
+    TX: undefined,
+    AK: { lastAttemptedAt: "2026-10-24T12:28:11.774Z" },
+  };
+  // The runner's candidate: cadence work is owed from its due instant, input-only work "now", a first read has no instant.
+  const candidate = (task: typeof meeting, clock: RoutineTaskClock | undefined, inputDue: boolean) => {
+    const cadenceDue = routineTaskDue(task, clock, now), nextDueMs = routineTaskNextDueMs(task, clock, now);
+    assert.ok(cadenceDue || inputDue);
+    return { task, baselineOwed: routineBaselineOwed(task, clock), lastConsideredAt: clock?.lastAttemptedAt ?? null,
+      owedAtMs: !cadenceDue ? now : nextDueMs < now ? nextDueMs : undefined };
+  };
+  const campaign = ROUTINE_SOURCE_TASKS.find(task => task.id === "candidate-campaign-sites-derived:IL")!;
+  const admitted = [
+    ...Array.from({ length: 15 }, (_, index) => ({ task: { ...meeting, id: `meetings:calendar-${index}` },
+      deadlineMs: index ? now - (index + 3) * HOUR : Number.NEGATIVE_INFINITY, lastConsideredAt: null })),
+    { task: campaign, owedAtMs: now, lastConsideredAt: "2026-10-24T20:00:00.000Z" },
+    ...["IL", "TX", "AK"].map(state => candidate(site(state), clocks[state], true)),
+  ];
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(runner, /for \(const \{ task \} of electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\)/);
+  const order = electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), now));
+  assert.deepEqual(order.slice(0, 3).map(job => job.task.id).sort(), ["voting-sites:AK", "voting-sites:IL", "voting-sites:TX"]);
+
+  const slots = routineProcessSlots({ host: workerMemoryHost({ processes: () => [] }), availableBytes: () => 20_244 * MIB });
+  const script = (id: string) => id.startsWith("meetings:") ? "ingest.ts" : id.startsWith("voting-sites:") ? "fetch-voting-sites.mts" : "derive-candidate-campaign-sites.mts";
+  const deadline = Date.now() + 200;
+  // Nothing releases before the deadline: every started child holds its reservation until the pass's wall.
+  const outcomes = await Promise.allSettled(order.map(({ task }, index) => slots.acquire(`${task.id}/${script(task.id)}`, deadline, { priority: index })));
+  const started = order.filter((_, index) => outcomes[index]!.status === "fulfilled").map(job => job.task.id);
+  for (const state of ["IL", "TX", "AK"]) assert.ok(started.includes(`voting-sites:${state}`), `voting-sites:${state} starts this pass`);
+  assert.equal(started.filter(id => id.startsWith("meetings:")).length, 12, "the calendar backlog keeps the rest of the memory");
+
+  // A voting child told when the pass ends stops reading with time to publish; untold, it reads into the pass's wall.
+  assert.match(runner, /function sourceChildCommand[\s\S]*?env: withPassDeadline\(\{[\s\S]*?\.\.\.pending\.env,\s*\}, PASS_LAUNCH_DEADLINE_MS\),/);
+  const wall = now + 20 * 60_000;
+  assert.equal(votingAcquisitionDeadline(now, passDeadlineFromEnv({})), wall);
+  assert.ok(votingAcquisitionDeadline(now, passDeadlineFromEnv(withPassDeadline({ NODE_ENV: "test" }, wall))) <= wall - 6 * 60_000);
 });

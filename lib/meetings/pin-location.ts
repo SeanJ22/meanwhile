@@ -37,6 +37,12 @@ export interface MeetingPinLocation extends MeetingPinAddress {
   publishedLocation?: string | null;
 }
 
+export function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
+  return pin.basis === "MEETING" && !meeting.online
+    ? {...meeting,mapPin:pin,location:{name:pin.name,address:pin.address,lat:pin.lat,lng:pin.lng},venueGap:undefined}
+    : {...meeting,mapPin:pin};
+}
+
 /** Pins arrive with the published meeting. Reader visits perform no meeting-address lookups. */
 export function publishedMeetingPins(
   meetings: readonly Meeting[],

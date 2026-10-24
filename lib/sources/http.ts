@@ -13,6 +13,7 @@
  */
 
 import { readCompleteResponse } from "./source-bytes.ts";
+import { decodeHTMLStrict } from "entities";
 import { recordAcquiredResponse } from "./acquisition-trace.ts";
 import { challengeIn } from "./challenge-signatures.ts";
 import {
@@ -457,16 +458,15 @@ export async function politeGetBytes(
  * and hex forms.
  */
 export function decodeEntities(value: string): string {
-  return value
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#(x[0-9a-f]+|\d+);/gi, (entity, digits: string) => {
+  return value.replace(/&(?:#(?:x[0-9a-f]+|\d+)|[a-z][a-z0-9]+);/gi, entity => {
+    const numeric = /^&#(x[0-9a-f]+|\d+);$/i.exec(entity);
+    if (numeric) {
+      const digits = numeric[1];
       const code = digits[0].toLowerCase() === "x" ? parseInt(digits.slice(1), 16) : parseInt(digits, 10);
-      return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff) ? String.fromCodePoint(code) : entity;
-    })
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&");
+      if (!(code > 0 && code <= 0x10ffff) || code >= 0xd800 && code <= 0xdfff) return entity;
+    }
+    return decodeHTMLStrict(entity).replace(/\u00a0/g, " ");
+  });
 }
 
 export { REQUEST_SPACING_MS };

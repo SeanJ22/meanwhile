@@ -210,7 +210,7 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
 
   const officialsById = indexByOfficeholderId(sets, photos);
   for (const holder of statewideExecutivesFor(currentStatewideExecutives().map((executive) => executive.stateOcdId))) {
-    officialsById.set(holder.id, holder);
+    for (const id of personIdentityKeys(holder)) officialsById.set(id, holder);
   }
   for (const roster of currentBodyRosters()) for (const holder of rosterHoldersForBody(roster.bodyId)) {
     if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
@@ -553,7 +553,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
   const canonicalId = rosterIdentity?.canonicalId ?? id;
   if (canonicalId.startsWith("congress:")) return seatHolderById(canonicalId);
   const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
-    .find((holder) => holder.id === canonicalId);
+    .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
   for (const roster of currentBodyRosters()) {
     const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);

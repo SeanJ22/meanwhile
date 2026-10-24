@@ -1,4 +1,5 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
+import { personName } from "../officials/person-name.ts";
 import type { Provenance as FieldSource } from "../sources/types.ts";
 import { boundedIndexOf, normalizeText, type CheckEntity, type FieldKind, type SavedCopy } from "./check.ts";
 import { captureProvenance } from "./capture.ts";
@@ -59,9 +60,6 @@ export interface RosterFactsReport {
 const text = (value: unknown): string | null => (typeof value === "string" && value.trim() ? value.trim() : null);
 export const nameKey = (name: string) => name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
-const NAVIGATION = new Set(["contact us", "contact information", "staff directory", "email us", "town hall", "member name"]);
-/** A single word ("Actions", "Menu") or a navigation label is page furniture, never an officeholder's name. */
-const personName = (name: string) => /\s/.test(name.trim()) && !NAVIGATION.has(name.trim().toLowerCase().replace(/\s+/g, " "));
 
 const CONTACTS = [["email", "email"], ["phone", "phone"], ["websiteUrl", "website"]] as const;
 const TERMS = [["termNote", "term_note"], ["termStart", "term_start"], ["termEnd", "term_end"]] as const;

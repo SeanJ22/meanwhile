@@ -100,6 +100,29 @@ test("an official field publishes without reading or searching the page text, an
   } finally { await db.pg.close(); }
 });
 
+test("a checked sidebar preserves the agenda while an official API field publishes its document directly", async () => {
+  const db = await seeded();
+  try {
+    const current = "https://example.gov/council/agenda";
+    const later = new Date(now.getTime() + 60_000), latest = new Date(now.getTime() + 120_000);
+    const api = "https://webapi.legistar.com/v1/example/Events/10";
+    await db.query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES
+      (3,'https://example.gov/council','https://example.gov/council',$1,$2,'sidebar'),(4,$3,$3,$4,$5,'api')`,
+    [later.toISOString(), "c".repeat(64), api, latest.toISOString(), "d".repeat(64)]);
+    await door(db, input({ field: "agenda_url", fieldKind: "agenda", value: current, valueText: current }), clocks, now, { purge });
+    const video = "https://www.youtube.com/@ExampleCouncil";
+    const checked = await door(db, input({ field: "agenda_url", fieldKind: "agenda", value: video, valueText: video, quote: video, acquisition: "walker",
+      copy: { id: 3, finalUrl: "https://example.gov/council", fetchedAt: later, text: `Example City Council Arizona ${video}`, isArchive: false } }), clocks, later, { purge });
+    assert.equal("decision" in checked && checked.decision, "KEEP_CURRENT");
+    const document = "https://documents.example/files/session-2026.pdf";
+    const published = await door(db, { ...input({ field: "agenda_url", fieldKind: "agenda", value: "ignored", valueText: "ignored",
+      copy: { id: 4, finalUrl: api, fetchedAt: latest, get text(): string { throw Error("The API field searched a quote"); }, isArchive: false } }),
+      sourceField: { record: { AgendaUrl: document }, key: "AgendaUrl" } }, clocks, latest, { purge });
+    assert.equal("decision" in published && published.decision, "PUBLISH");
+    assert.deepEqual(await db.query("SELECT value FROM fact WHERE field='agenda_url' AND status='live'"), [{ value: document }]);
+  } finally { await db.pg.close(); }
+});
+
 test("a newer official value replaces OTHER and a repeat of a losing fact creates no second row", async () => {
   const db = await seeded();
   try {

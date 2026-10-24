@@ -1,7 +1,8 @@
 "use client";
 
 import { PersonCard } from "@/components/ui/person-card";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContext, CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardSourceContext } from "@/components/ui/card-source-context";
 import { useEffect, useState } from "react";
 
 import { captureEvent } from "@/lib/events/client";
@@ -10,7 +11,10 @@ import type { BattlecardSectionId } from "@/lib/ballot/battlecard-sections";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
+import { IdentityChip, IdentityPortrait, PersonIdentity } from "@/components/officials/person-identity";
+import { LegislatorBills } from "@/components/officials/legislator-bills";
+import { prlCardSource } from "@/lib/officials/card-sources";
+import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -69,6 +73,7 @@ export function CandidateBattlecard({
 
 }) {
   const [open, setOpen] = useState(false);
+  const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -107,12 +112,15 @@ export function CandidateBattlecard({
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <PersonCard
+          <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><PersonCard
             title={name}
             className="account-modal"
             onClose={() => setOpen(false)}
             subject={{ type: "CANDIDATE", id: subjectId }}
-            identity={(
+            sources={prlProfile ? [prlCardSource(prlProfile)] : []}
+            identity={contactHolder ? <PersonIdentity holder={{ ...contactHolder, name, photoUrl,
+              partyLabel: partyLabel ?? contactHolder.partyLabel }} seatLabel={null} large
+              chips={["Candidate", incumbencyLabel(incumbency, incumbencyGap ?? undefined)].filter((chip): chip is string => chip !== null)} /> : (
               <div className="flex min-w-0 flex-1 items-start gap-3">
                 <IdentityPortrait name={name} photoUrl={photoUrl} />
 
@@ -150,12 +158,13 @@ export function CandidateBattlecard({
             sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} subjectName={name} contentOnly /></> }}
             afterSections={<>
               <FederalMemberRecords key={contactHolder?.id ?? subjectId} memberId={contactHolder?.id ?? subjectId} />
+              {contactHolder && !contactHolder.id.startsWith("congress:") && <LegislatorBills holder={contactHolder} />}
               {(contactHolder?.id ?? subjectId).startsWith("congress:") && <FederalCommentRules />}
-              <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} />
+              <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} onProfile={setPrlProfile} />
               <OfficialActions context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} gapWhenEmpty={actionsGap} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
             </>}
-          />
+          /></CardGapContext.Provider></CardSourceContext.Provider>
         </div>
       )}
     </>

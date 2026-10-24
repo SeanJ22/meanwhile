@@ -61,7 +61,7 @@ export interface MeetingFactsReport { readonly live: number; readonly confirmed:
 
 /** One sitting read from its body's door becomes facts, each found on the saved copy: title, start, place and links. */
 export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
-  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly pinCapture?: WorkerPublicationCapture; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const { meeting, capture } = input;
   const id = meetingEntityId(meeting.id);
@@ -98,7 +98,14 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
         valueText:meeting.startsAt,quote:meeting.startsAt,producedBy:input.producedBy}), retryMinutes: clocks.retryMinutes("meeting") });
     tally.blanks++;
   }
-  if (meeting.location) await claim("location", { name: meeting.location.name, address: meeting.location.address }, meeting.location.address ?? meeting.location.name);
+  if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
+  else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
+  if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
+  if(meeting.mapPin?.matchedAddress&&input.pinCapture){
+    const pinCopy=await db.transaction(query=>saveCaptureCopy(query,input.pinCapture!));
+    count(await publishClaim(db,{entity,field:"map_pin",fieldKind:"contact",provenance:"OFFICIAL",value:meeting.mapPin,
+      valueText:meeting.mapPin.matchedAddress,quote:meeting.mapPin.matchedAddress,copy:pinCopy,producedBy:input.producedBy,costUsd:0},clocks,now));
+  }
   if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
   if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
   return tally;

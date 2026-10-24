@@ -15,11 +15,17 @@ test("normal person and candidate cards decode stored portrait bytes on first us
     import React from "react"; import {createRoot} from "react-dom/client";
     import {PersonIdentity} from "./components/officials/person-identity.tsx";
     import {CandidateBattlecard} from "./components/ballot/candidate-battlecard.tsx";
+    import {Card} from "./components/ui/card.tsx";
+    import {CardSourcesContribution} from "./components/ui/card-sources-contribution.tsx";
     import {GovernmentListings} from "./components/map/government-listings.tsx";
     const holder={id:"plural:oh:11111111-1111-1111-1111-111111111111",name:"Fixture person",officeTitle:"State Representative",photoUrl:"/portrait.webp",termEnd:null,birthDate:null,partyLabel:null};
     createRoot(document.getElementById("root")).render(<>
       <div id="official"><PersonIdentity holder={holder} seatLabel={null} large /></div>
-      <div id="candidate"><CandidateBattlecard name={holder.name} subjectId={holder.id} photoUrl={holder.photoUrl} contactHolder={holder}/></div>
+      <div id="candidate"><Card title="Governor" sources={[]}><CandidateBattlecard name={holder.name}
+        subjectId={holder.id} photoUrl={holder.photoUrl} contactHolder={holder}
+        sections={{sources:<CardSourcesContribution id="candidate-filing" sources={[{what:"Candidate filing",provenance:{
+          sourceUrl:"https://elections.example.gov/candidates",sourceOrg:"Election authority",collectedAt:"2026-10-14",verifiedAt:null,
+        }}]}/>}} /></Card></div>
       <GovernmentListings records={[]} states={["OH"]}/>
     </>);`, resolveDir: process.cwd(), sourcefile: "acquisition-reader-fixture.tsx", loader: "tsx" },
     bundle: true, write: false, outfile: ".scratch/acquisition-reader-fixture.js", platform: "browser", format: "iife", jsx: "automatic",
@@ -34,6 +40,7 @@ test("normal person and candidate cards decode stored portrait bytes on first us
       id: "government:US-OH:nces:390001", name: "Fixture Education Agency", kind: "EDUCATION_AGENCY", governmentClass: "Education agency", associations: [],
       sourceVintage: "2025–26 preliminary", provenance: { sourceOrg: "NCES", sourceUrl: "https://nces.ed.gov/ccd/", collectedAt: "2026-10-01" },
     }] }));
+    else if (request.url?.startsWith("/api/bills?")) response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({bills:[],complete:true,checkedAt:null}));
     else if (request.url === "/") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');
     else response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ profile: null, records: [], votes: [], districtOffices: [], committees: [], topics: [] }));
   });
@@ -44,6 +51,8 @@ test("normal person and candidate cards decode stored portrait bytes on first us
     browser = await launchGuarded({ label: "acquisition-reader-first-use", blockWrites: true });
     const context = await browser.context({ viewport: { width: 1000, height: 800 } });
     const page = await context.newPage();
+    const pageErrors: string[] = [];
+    page.on("pageerror", error => pageErrors.push(error.message));
     await page.goto(`http://127.0.0.1:${address.port}/`);
     const decode = async (selector: string) => {
       await page.locator(selector).waitFor({ state: "visible" });
@@ -60,7 +69,14 @@ test("normal person and candidate cards decode stored portrait bytes on first us
     await page.screenshot({ path: ".scratch/ci/acquisition-first-use.png", fullPage: true });
     await page.getByRole("button", { name: "View Battlecard", exact: true }).click();
     await decode("[data-candidate-battlecard] img");
+    const dialog = page.locator("[data-candidate-battlecard]");
+    assert.match(await dialog.locator("[data-person-identity]").innerText(), /State Representative/);
+    await dialog.getByRole("button", {name:/^Sources/}).click();
+    const sourceLink = dialog.locator('[data-source-list] a[href="https://elections.example.gov/candidates"]');
+    await sourceLink.waitFor({state:"visible"});
+    assert.equal(await sourceLink.count(), 1, "a ballot's nested person dialog retains its own source footer");
     await page.screenshot({ path: ".scratch/ci/acquisition-candidate-portrait.png", fullPage: true });
+    assert.deepEqual(pageErrors, []);
     await context.close();
   } finally {
     await browser?.close();

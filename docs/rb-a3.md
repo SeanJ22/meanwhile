@@ -14,13 +14,15 @@ The reader-side `RB-A3_expand` migration restores `rebuild_queue` and adds `coun
 
 Remaining work, in dependency order:
 
-- RB-A3: build against each newest RB-A1 tip. RB-A1 `5bde46615` is merged into this stream, and the door uses its `resolveId` for native ids and saved aliases. READY still requires the RB-A1 integration entry and ancestry on River.
+- RB-A3: keep building against the newest RB-A1 tip. River recorded `rb-a1` at 15:25 UTC (11:25 AM Eastern), and `origin/river` contains READY `5bde46615`. The stream merges River `59b7c5577`, retaining the numbered `0051_rb_a1_shared` migration unchanged. The foundation integration requirement is met.
 - RB-A3: replace the current subject/place-link filing with RB-A4's service-map implementation once it lands.
 - RB-A3: repeat the complete checks for the final resolver correction and after merging River. All nine checks passed on `8649ec050`; 80 focused identity, door, migration and fixture checks pass after the correction.
 - RB-A3: complete the required per-state replay minimum. The approved local copy preserved all 31,627 sampled values. Counts for every state and territory are in `docs/measurements/rb-a3/replay.json`; 25 regions reached 1,000 and the other 31 supplied all available rows at their capture times, so the minimum remains open.
 - RB-A3: repeat the current-frontend Chrome and Admin checks after the final combined build. The copied-data checks below pass. The Browser app has no control tool here, so these use the repository’s guarded Google Chrome for Testing 151 harness with writes blocked and certificate validation enabled.
 - RB-A3: merge River after its RB-A1 fold, rerun every check, push READY and continue checking River returns until the lane passes its live check.
 - River: deploy the combined code and perform the automatic production pass and live check after READY. The two copied-data connections and real minute-timer proof below pass.
+
+The River merge keeps its existing agenda-route protection in the shared decision function for checked claims: a sidebar video or contact link does not displace the government's held agenda route. Official loader fields publish their field value directly. The old decision and publication modules remain wrappers. The merge's 144 focused identity, door, Box, source-card, meeting, migration and fixture checks pass, including both agenda paths.
 
 `docs/measurements/rb-a3/production-counts.json` records the read-only aggregate baseline for all 50 states, DC and five US territories. `latest-counts.json` records the fresh read at 14:23 UTC (10:23 AM Eastern): 31 regions remain below the minimum and six have none: AS, GU, LA, MP, NE and PR. North Dakota now holds 31, Vermont five and Montana nine. These shortfalls must not be presented as 1,000 replayed facts.
 

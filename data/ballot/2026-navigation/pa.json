@@ -1,0 +1,255 @@
+{
+  "state": "PA",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+      "finalUrl": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+      "publisher": "Pennsylvania Department of State"
+    },
+    {
+      "requestedUrl": "https://www.pa.gov/agencies/vote/voter-registration/check-my-registration-status",
+      "finalUrl": "https://www.pa.gov/agencies/vote/voter-registration/check-my-registration-status",
+      "publisher": "Pennsylvania Department of State"
+    },
+    {
+      "requestedUrl": "https://www.pa.gov/services/vote/find-your-local-polling-place",
+      "finalUrl": "https://www.pa.gov/services/vote/find-your-local-polling-place",
+      "publisher": "Pennsylvania Department of State"
+    },
+    {
+      "requestedUrl": "https://www.pa.gov/agencies/vote/voter-support/mail-in-and-absentee-ballot/mail-ballot-before-election-day",
+      "finalUrl": "https://www.pa.gov/agencies/vote/voter-support/mail-in-and-absentee-ballot/mail-ballot-before-election-day",
+      "publisher": "Pennsylvania Department of State"
+    },
+    {
+      "requestedUrl": "https://www.pa.gov/agencies/vote/voter-support/new-voters",
+      "finalUrl": "https://www.pa.gov/agencies/vote/voter-support/new-voters",
+      "publisher": "Pennsylvania Department of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+          "finalUrl": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+          "publisher": "Pennsylvania Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:01.244400+00:00",
+          "httpStatus": 200,
+          "rawHash": "71d18fc2cd7e909d1f07a46f2fd67010deebfaa625174d73c3e53d5acf986ce5",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.pa.gov/agencies/vote/voter-registration/check-my-registration-status",
+          "finalUrl": "https://www.pa.gov/agencies/vote/voter-registration/check-my-registration-status",
+          "publisher": "Pennsylvania Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:02.490127+00:00",
+          "httpStatus": 200,
+          "rawHash": "f638fa6cdd7dbd3804548031501aca49c7dbb783b0f3e33069dc8c1517f0e563",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.pa.gov/agencies/vote/voter-support/mail-in-and-absentee-ballot/mail-ballot-before-election-day",
+          "finalUrl": "https://www.pa.gov/agencies/vote/voter-support/mail-in-and-absentee-ballot/mail-ballot-before-election-day",
+          "publisher": "Pennsylvania Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:02.542895+00:00",
+          "httpStatus": 200,
+          "rawHash": "34a30eb7cd23560066f60dcd7657392c370ca717849cb5ddd8c80b510989c2da",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.pa.gov/agencies/vote/voter-support/new-voters",
+          "finalUrl": "https://www.pa.gov/agencies/vote/voter-support/new-voters",
+          "publisher": "Pennsylvania Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:42:03.933316+00:00",
+          "httpStatus": 200,
+          "rawHash": "174efe9cea3bd3c1dba94dc6d5796be2dbbe3cb7e48f5c48b7140f38f5cf6f0c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.pa.gov/services/vote/find-your-local-polling-place",
+          "finalUrl": "https://www.pa.gov/services/vote/find-your-local-polling-place",
+          "publisher": "Pennsylvania Department of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:02.477478+00:00",
+          "httpStatus": 200,
+          "rawHash": "5bacb8c9785d60d2a3430f9c2835239b74ee6e315c5f76e9ab254d8d03b6ce8c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:00a22624f6d825aad1c59699b736240a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "election_office",
+            "text": "Department of State",
+            "quote": "The Department of State is committed to ensuring free, fair, safe, and secure elections in Pennsylvania.",
+            "dates": [],
+            "url": "https://www.pa.gov/services/vote/find-your-local-polling-place",
+            "navigationUrl": "https://www.pa.gov/agencies/vote",
+            "electionDate": "2026-11-03",
+            "phone": "1-877-868-3772",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:02.477478+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:320713af3e81e3f0997735593225ad9c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "polling_lookup",
+            "text": "https://www.pavoterservices.pa.gov/Pages/PollingPlaceInfo.aspx",
+            "quote": "Find your polling place",
+            "dates": [],
+            "url": "https://www.pa.gov/services/vote/find-your-local-polling-place",
+            "navigationUrl": "https://www.pavoterservices.pa.gov/Pages/PollingPlaceInfo.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:02.477478+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:44e69c494378c8a7907ca235e1860961",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "registration_lookup",
+            "text": "https://www.pavoterservices.pa.gov/pages/voterregistrationstatus.aspx",
+            "quote": "Check your registration status",
+            "dates": [],
+            "url": "https://www.pa.gov/agencies/vote/voter-registration/check-my-registration-status",
+            "navigationUrl": "https://www.pavoterservices.pa.gov/pages/voterregistrationstatus.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:02.490127+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:7886d53661247328d52e7f38c88bb048",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "registration_deadline",
+            "text": "October 19 Last day to REGISTER before the November election",
+            "quote": "October 19 Last day to REGISTER before the November election",
+            "dates": [
+              "2026-10-19"
+            ],
+            "url": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.244400+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:7f66804907aa7cf4182f0ea24886366f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "October 27 Last day to apply for a mail-in or civilian absentee ballot",
+            "quote": "October 27 Last day to apply for a mail-in or civilian absentee ballot",
+            "dates": [
+              "2026-10-27"
+            ],
+            "url": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.244400+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:9a8c991c65344ce3d172b5436ed830a8",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "early_voting",
+            "text": "You can vote in person by mail ballot at your county election office or other officially designated location. You may drop off your mail ballot in person until 8 p.m. on Election Day, so long as you have applied for it before the deadline. The deadline to apply for a ballot in-person for the 2026 general election is 5 p.m., Oct. 27, 2026.",
+            "quote": "You can vote in person by mail ballot at your county election office or other officially designated location. You may drop off your mail ballot in person until 8 p.m. on Election Day, so long as you have applied for it before the deadline. The deadline to apply for a ballot in-person for the 2026 general election is 5 p.m., Oct. 27, 2026.",
+            "dates": [
+              "2026-10-27",
+              "2026-11-03"
+            ],
+            "url": "https://www.pa.gov/agencies/vote/voter-support/mail-in-and-absentee-ballot/mail-ballot-before-election-day",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:02.542895+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:defa31f0a08b269f02d40a04ca18909c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "ballot_lookup",
+            "text": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+            "quote": "You can find a sample ballot on your county election office website.",
+            "dates": [],
+            "url": "https://www.pa.gov/agencies/vote/voter-support/new-voters",
+            "navigationUrl": "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:42:03.933316+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        },
+        {
+          "id": "election-field:f0cd5a151a6822b8b4937c8de4c611a5",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "PA",
+            "divisionId": "ocd-division/country:us/state:pa",
+            "fieldKind": "registration_page",
+            "text": "https://www.pa.gov/services/vote/register-to-vote",
+            "quote": "register to vote",
+            "dates": [],
+            "url": "https://www.pa.gov/agencies/vote/elections/upcoming-elections",
+            "navigationUrl": "https://www.pa.gov/services/vote/register-to-vote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.244400+00:00",
+            "sourceOrg": "Pennsylvania Department of State"
+          }
+        }
+      ]
+    }
+  }
+}

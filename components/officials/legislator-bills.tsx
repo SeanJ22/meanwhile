@@ -9,7 +9,7 @@ import { CardGapContribution } from "@/components/ui/card-gap-context";
 export function LegislatorBills({holder}:{holder:SeatHolder}) {
   const [read,setRead]=useState<{bills:Bill[];complete:boolean;checkedAt:string|null}|null>(null),[showAll,setShowAll]=useState(false);
   const state=holder.id.startsWith("congress:")?"US":holder.state??/^(?:plural:)?([a-z]{2})(?::|-)/i.exec(holder.id)?.[1]?.toUpperCase();
-  const legislative=/senator|representative|assembly|delegate|legislator/i.test(holder.officeTitle);
+  const legislative=/senator|representative|assembly|delegate|legislator/i.test(holder.officeTitle)||state==="DC"&&/council/i.test(holder.officeTitle);
   useEffect(()=>{
     if(!state||!legislative) return;
     const controller=new AbortController();

@@ -9,13 +9,14 @@ import { FederalMoneySection } from "@/components/funding/federal-money-section"
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardFooter } from "@/components/ui/card-footer";
 import { federalMoneyStateDivision } from "@/lib/federal-money/view";
+import { readerGovernmentName } from "@/lib/text/reader-names";
 
 function Listing({ row }: { row: RegistrationGovernmentListing }) {
   const [open, setOpen] = useState(false);
   const divisionId = row.associations.length === 1 ? row.associations[0].divisionId : federalMoneyStateDivision(typeof row.state === "string" ? row.state : governmentStateOf(row.id));
   const { register, sources, insideCard } = useCardSourceRegistry([{ what: `Government inventory, ${row.sourceVintage}`, provenance: { kind: "OFFICIAL", sourceOrg: row.provenance.sourceOrg, sourceUrl: row.provenance.sourceUrl, collectedAt: row.provenance.collectedAt, verifiedAt: null } }], row.id);
   return <CardSourceContext value={register}><details className="mt-2" data-government-listing={row.id} onToggle={event => setOpen(event.currentTarget.open)}>
-    <summary className="cursor-pointer t-body text-paper">{row.name}</summary>
+    <summary className="cursor-pointer t-body text-paper">{readerGovernmentName(row.name, null)}</summary>
     <div className="mt-1 space-y-1 t-detail text-voice">
       <p>{row.governmentClass}{row.status ? ` · ${row.status}` : ""}</p>
       {row.kind === "DEPENDENT_SCHOOL_SYSTEM" && <p>A dependent school system; this listing does not establish an independent government.</p>}

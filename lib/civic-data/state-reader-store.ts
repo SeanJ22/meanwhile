@@ -1,5 +1,6 @@
 import { REGISTRY_STATES, STATE_BALLOT_FAMILIES, stateFromBallotScope } from "./state-scopes.ts";
 import { stateFromRegistryRuntimeScope } from "./state-scopes.ts";
+import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { parseUnchangedConfirmation } from "./unchanged-confirmation.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import type { PublishedCandidateMetadata } from "./store.ts";
@@ -88,7 +89,8 @@ export async function readStateReaderPromotion<T>(query: Query, recordClass: Rou
     : recordClass === "FEDERAL_DIRECTORY" && federalState ? REGISTRY_STATES.some(state => state === federalState)
     : recordClass === "STATE_LEGISLATOR" && portraitState ? REGISTRY_STATES.some(state => state === portraitState)
     : recordClass === "REGISTRATION" && registrationState ? REGISTRY_STATES.some(state => state === registrationState)
-    : STATE_BALLOT_FAMILIES.some(family => classes[family] === recordClass && stateFromBallotScope(scope, family));
+    : recordClass === "CURATED_READER_RECORD" && ballotNavigationState(scope) !== null ||
+      STATE_BALLOT_FAMILIES.some(family => classes[family] === recordClass && stateFromBallotScope(scope, family));
   if (!state) throw new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`);
   const rows = await query(READ_STATE, [`${recordClass}:${scope}`]);
   if (!rows.length) return null;

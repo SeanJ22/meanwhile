@@ -11,9 +11,9 @@ import {
 import type { ReaderReadbackRepairOutcome } from "./reader-verification.ts";
 import type { RoutineCivicDataReaderReadbackReference } from "../control-plane/owner-surface.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
-import { DOOR_OUTCOMES_SOURCE_ID, DOOR_MINUTES_OUTCOMES_SOURCE_ID, OUTCOME_PARTITION_CONTRACTS, outcomePartitionId,
+import { DOOR_OUTCOMES_SOURCE_ID, DOOR_MINUTES_OUTCOMES_SOURCE_ID, OUTCOME_PARTITION_CONTRACTS, installOutcomePartitions, outcomePartitionId,
   type OutcomePartitionContract } from "./outcome-partitions.ts";
-import { outcomePartitionScope, setDoorOutcomePointers } from "../outcomes/door-outcome-pointers.ts";
+import { outcomePartitionScope } from "../outcomes/door-outcome-pointers.ts";
 
 export const ROUTINE_READER_REPAIR_PREFIX = "RCD_READER_REPAIR=";
 export const ROUTINE_READER_CHILD_CONCURRENCY = 4;
@@ -45,9 +45,7 @@ export function installOutcomeRepairSelection(contracts: readonly OutcomePartiti
         ids.has(contract.id) || scopes.has(contract.scope)) throw new Error("READER_REPAIR_OUTCOME_SELECTION_INVALID");
     ids.add(contract.id); scopes.add(contract.scope);
   }
-  OUTCOME_PARTITION_CONTRACTS.splice(0, OUTCOME_PARTITION_CONTRACTS.length, ...contracts);
-  setDoorOutcomePointers(contracts.map(contract => ({ contractId: contract.id, scope: contract.scope, recordClass: "MEETING_OUTCOME",
-    slug: contract.tenant.slug, kind: contract.kind })));
+  installOutcomePartitions(contracts);
 }
 
 /** The state roster and ballot publishers also update their own state's holder/candidacy join. */

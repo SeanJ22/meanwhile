@@ -5,6 +5,7 @@ import { afterEach, describe, it } from "node:test";
 import { routineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "../lib/civic-data/runtime-routine-contracts.ts";
 import {
+  DOOR_MINUTES_OUTCOMES_SOURCE_ID,
   DOOR_OUTCOMES_SOURCE_ID,
   OUTCOME_PARTITION_CONTRACTS,
   buildOutcomePartitions,
@@ -15,7 +16,7 @@ import {
 import { sittingWindowSourceIds, observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
 import { installOutcomeRepairSelection, readerRepairContractHandoff, routineReaderRepairDomains } from "../lib/civic-data/reader-repair-protocol.ts";
 import { authorityFor, installDoorHosts } from "../lib/civic-data/source-authority.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, routineDataStoreCandidateAuthorityIssue } from "../lib/civic-data/store.ts";
 import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { applyManualEdit, checkDoorDraft, type DoorDraft, type DoorRecord } from "../lib/doors/registry.ts";
 import { legistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
@@ -96,6 +97,33 @@ describe("DB-22: outcome contracts are built from doors", () => {
       { ...selected!, tenant: { ...selected!.tenant, sourceId: "another-source" } }]) {
       assert.throws(() => installOutcomeRepairSelection([invalid]), /READER_REPAIR_OUTCOME_SELECTION_INVALID/);
       assert.deepEqual(OUTCOME_PARTITION_CONTRACTS, [selected], "a bad handoff leaves the exact prior selection intact");
+    }
+  });
+
+  it("authorizes a repair child's evidence for the outcome contracts its parent handed it, minutes doors included", () => {
+    const minutes = door({
+      doorId: "meetings:legistar-insite:apache-junction", kind: "legistar-insite",
+      ocdId: "ocd-division/country:us/state:az/place:apache_junction",
+      bodyIds: ["ocd-division/country:us/state:az/place:apache_junction#governing"],
+      hosts: ["apachejunction.legistar.com"],
+      config: { slug: "apachejunction", sourceRoutes: "legistar-insite", insiteHost: "apachejunction.legistar.com",
+        insiteBodyNames: "City Council", insiteBodyName: "City Council" },
+    });
+    assert.equal(refreshOutcomePartitions([DEMO, minutes]).refreshed, true);
+    // The child reads its selection from the parent's JSON handoff and has no door snapshot of its own.
+    const handed = JSON.parse(JSON.stringify(readerRepairContractHandoff([...OUTCOME_PARTITION_CONTRACTS])));
+    assert.deepEqual(handed.map((contract: { sourceId: string }) => contract.sourceId).sort(),
+      [DOOR_MINUTES_OUTCOMES_SOURCE_ID, DOOR_OUTCOMES_SOURCE_ID].sort());
+    refreshOutcomePartitions([]);
+    installOutcomeRepairSelection(handed);
+    const authority = { repo: "/repo", sha: "1".repeat(40), parentPid: 1, nonce: "2".repeat(64) };
+    for (const contract of handed) {
+      const candidate = { id: `candidate:${contract.id}`, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope };
+      assert.equal(routineDataStoreCandidateAuthorityIssue(candidate,
+        { ...authority, capability: "ROUTINE_SUPERVISOR", contract: null }, "reader-evidence"), null);
+      assert.equal(routineDataStoreCandidateAuthorityIssue(candidate,
+        { ...authority, capability: "ROUTINE_CONTRACT", contract: contract.id }, "candidate"), null);
+      assert.deepEqual(sittingWindowSourceIds(contract.id), [contract.doorId]);
     }
   });
 

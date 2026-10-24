@@ -7,7 +7,7 @@ import type { WorkItem } from "../lib/control-plane/work-item.ts";
 
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { publishElectionFields } from "../lib/civic-data/election-field-publication.ts";
-import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readElectionFieldsForDivisions } from "./helpers/election-field-read.ts";
 import { heldElectionOfficeFields, heldNationalElectionOfficeFields, NATIONAL_ELECTION_OFFICES_URL, publishHeldElectionOffices, readHeldElectionOffices } from "../lib/civic-data/worker-held-elections.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";

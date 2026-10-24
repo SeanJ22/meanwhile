@@ -59,7 +59,7 @@ const RECORD_EXTRACTION = {
   cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
 };
 
-export const PARSE_TIERS: readonly ModelClass[] = ["haiku", "sonnet"];
+export const PARSE_TIERS: readonly ModelClass[] = ["haiku", "sonnet", "frontier"];
 
 export interface ParseRoute {
 
@@ -72,34 +72,13 @@ export interface ParseRoute {
   readonly knownFieldNames: readonly string[];
 }
 
-interface OutcomePayload { readonly recordClass?: unknown; readonly host?: unknown; readonly tier?: unknown }
-
-function outcomeEntries(store: FieldManualStore, recordClass: string): FieldManualEntry[] {
-  return store.entries.filter((e) => e.kind === "PARSE_OUTCOME" && (e.payload as OutcomePayload | null)?.recordClass === recordClass);
-}
-
 export function routeParse(store: FieldManualStore, key: { readonly recordClass: string; readonly host: string }): ParseRoute {
-  const entries = outcomeEntries(store, key.recordClass);
   const names = store.entries.find((e) => e.id === parseFieldsId(key.recordClass));
   const knownFieldNames = names ? ((names.payload as { fieldNames?: unknown }).fieldNames as string[] | undefined) ?? [] : [];
-  const ruledOut: { tier: ModelClass; id: string; why: string }[] = [];
-  for (const tier of PARSE_TIERS) {
-    const here = entries.find((e) => (e.payload as OutcomePayload).host === key.host && (e.payload as OutcomePayload).tier === tier);
-    if (here) {
-      if (here.outcome === "FAILED") ruledOut.push({ tier, id: here.id, why: `${tier} failed to confirm quotes on ${key.host} before` });
-      continue;
-    }
-    const elsewhere = entries.filter((e) => (e.payload as OutcomePayload).tier === tier);
-    if (elsewhere.length > 0 && elsewhere.every((e) => e.outcome === "FAILED")) {
-      ruledOut.push({ tier, id: elsewhere[0]!.id, why: `${tier} failed to confirm quotes on ${elsewhere.length} other publisher(s) of ${key.recordClass} and yielded on none` });
-    }
-  }
-  const start = PARSE_TIERS.find((tier) => !ruledOut.some((r) => r.tier === tier)) ?? PARSE_TIERS[PARSE_TIERS.length - 1]!;
-  const skipped = ruledOut.filter((r) => PARSE_TIERS.indexOf(r.tier) < PARSE_TIERS.indexOf(start));
   return {
-    tier: start,
-    reason: skipped.length ? `starting at ${start}: ${skipped.map((r) => r.why).join("; ")}` : `starting at ${start}: the cheapest tier, nothing recorded against it`,
-    inheritedEntryIds: [...skipped.map((r) => r.id), ...(names ? [names.id] : [])],
+    tier: "haiku",
+    reason: "starting at haiku: each source gets its own cheapest-model attempt",
+    inheritedEntryIds: names ? [names.id] : [],
     knownFieldNames,
   };
 }
@@ -261,7 +240,7 @@ export function modelParseReasoner(
     const attempts: { tier: ModelClass; proposed: number; confirmed: number; rejected: number }[] = [];
 
     for (;;) {
-      const step = assertStepMayInvokeModel(PARSE_STEP, tier !== "haiku");
+      const step = tier === "haiku" ? initial : assertStepMayEscalate(PARSE_STEP, "RESULT_REFUSED", PARSE_TIERS[PARSE_TIERS.indexOf(tier) - 1]);
       model = step.model; effort = step.effort; validationError = null;
       const proposals: (ProposedRecord & { windowStart: number })[] = [];
       const calls = await Promise.allSettled(windows.map(async (w, index) => {
@@ -315,8 +294,8 @@ export function modelParseReasoner(
       attempts.push({ tier, proposed: confirmed.proposed, confirmed: confirmed.records.length, rejected: confirmed.rejections.length });
       if (confirmed.records.length > 0) break;
 
-      const up = PARSE_TIERS.indexOf(tier) < PARSE_TIERS.length - 1 ? assertStepMayEscalate(PARSE_STEP, "RESULT_REFUSED") : null;
-      if (up === null || escalation !== undefined) break;
+      const up = PARSE_TIERS.indexOf(tier) < PARSE_TIERS.length - 1 ? assertStepMayEscalate(PARSE_STEP, "RESULT_REFUSED", tier) : null;
+      if (up === null) break;
       escalation = { from: tier, to: up.modelClass, reason: validationError ?? `no proposed field confirmed against the saved document (${confirmed.rejections.length} claim(s) dropped)` };
       tier = up.modelClass;
     }

@@ -115,11 +115,13 @@ ON CONFLICT(state,hour,step) DO UPDATE SET n=count_hour.n+excluded.n;
 CREATE FUNCTION count_work_row_index(v jsonb,at timestamptz) RETURNS jsonb LANGUAGE sql STABLE AS $$
   SELECT jsonb_build_object('allRowsIndex',CASE
     WHEN v IS NULL OR NOT v ? 'id' THEN '[]'::jsonb
-    WHEN v->>'refusal' IS NOT NULL THEN jsonb_build_array(base||jsonb_build_object('state','REFUSED'))
-    WHEN (v->>'lease_until')::timestamptz>at THEN jsonb_build_array(
+    WHEN v->>'status'='done' THEN jsonb_build_array(base||jsonb_build_object('state','DONE'))
+    WHEN v->>'status'='refused' OR NOT v ? 'status' AND v->>'refusal' IS NOT NULL THEN jsonb_build_array(base||jsonb_build_object('state','REFUSED'))
+    WHEN (v->>'status'='taken' OR NOT v ? 'status') AND (v->>'lease_until')::timestamptz>at THEN jsonb_build_array(
       base||jsonb_build_object('state','LEASED','until',v->>'lease_until'),
       base||jsonb_build_object('state','EXPIRED','from',v->>'lease_until','waitingSince',v->>'lease_until'))
-    WHEN v->>'lease_until' IS NOT NULL THEN jsonb_build_array(base||jsonb_build_object('state','EXPIRED','waitingSince',v->>'lease_until'))
+    WHEN (v->>'status'='taken' OR NOT v ? 'status') AND v->>'lease_until' IS NOT NULL THEN jsonb_build_array(base||jsonb_build_object('state','EXPIRED','waitingSince',v->>'lease_until'))
+    WHEN v->>'status'='taken' THEN jsonb_build_array(base||jsonb_build_object('state','UNKNOWN','waitingSince',NULL))
     WHEN (v->>'not_before')::timestamptz>at THEN jsonb_build_array(
       base||jsonb_build_object('state','SCHEDULED','until',v->>'not_before'),
       base||jsonb_build_object('state','WAITING','from',v->>'not_before'))
@@ -153,7 +155,7 @@ WITH waiting AS (
  UNION ALL
  SELECT d.state,d.family,d.stage,d.oldest_at,d.owner FROM work_row w
  CROSS JOIN LATERAL count_work_segments(count_work_row_index(to_jsonb(w),at),'current:'||w.state,at) d
- WHERE d.from_at<=at AND d.stage IN ('work list:WAITING','work list:EXPIRED','work list:REFUSED')
+ WHERE d.from_at<=at AND d.stage IN ('work list:WAITING','work list:EXPIRED','work list:REFUSED','work list:UNKNOWN')
  UNION ALL
  SELECT d.state,d.family,d.stage,coalesce(b.value#>>'{origins,0,recordedAt}',b.updated_at::text)::timestamptz,'diggers'
  FROM cp_box_findings b CROSS JOIN LATERAL count_control_dimensions(b.value,'box') d

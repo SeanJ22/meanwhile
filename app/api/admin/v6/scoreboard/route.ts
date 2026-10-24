@@ -55,11 +55,13 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,pipeline,vital,factStore]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,url?attempt(()=>readVitalSigns(neon(url),observedAt)):null,
-        attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query):null;})]);
+      const [keeper,pipeline,vital,factStore,heartbeat]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,url?attempt(()=>readVitalSigns(neon(url),observedAt)):null,
+        attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query):null;}),
+        attempt(async()=>{const opened=await openControlPlane();return opened.ok?(await opened.repos.runnerHeartbeat.read(RUNNER_ID))?.value??null:null;})]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
         data:buildScoreboard({lineKeeper:keeper,observedAt,vital,factStore,places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
-          learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:null,readiness:readinessCounts({})}),
+          learning:{trends:[],readings:[],notMeasured:[]},doors:null,
+          gates:readGateHealth({nowIso:observedAt,heartbeat,databaseReachable:null,lastDispatch:null,spend:null}),readiness:readinessCounts({})}),
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });

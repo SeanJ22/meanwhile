@@ -7,6 +7,8 @@ import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A8.ts";
 import { SHARED_WORK_DDL } from "../lib/control-plane/repository/migrations/RB-A1.ts";
+import { workMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A5.ts";
+import { workList } from "../lib/core/work.ts";
 import { REJECT_REWRITE_FUNCTION_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
 import { readCounts, readOldest } from "../lib/control-plane/line-keeper/read.ts";
@@ -31,7 +33,7 @@ async function readerDatabase() {
   await db.exec(migration.replaceAll('--> statement-breakpoint',''));
   return db;
 }
-async function controlDatabase() {
+async function controlDatabase(withLeasedWork = false) {
   const db=new PGlite();
   for(const table of ['cp_work_items','cp_work_items_archive','cp_doors','cp_box_findings','cp_owner_snapshots'])
     await db.exec(`CREATE TABLE ${table}(id text PRIMARY KEY,revision integer NOT NULL DEFAULT 1,updated_at timestamptz NOT NULL DEFAULT now(),value jsonb NOT NULL)`);
@@ -43,10 +45,38 @@ async function controlDatabase() {
   await db.exec(`CREATE TRIGGER cp_owner_snapshots_no_rewrite BEFORE DELETE ON cp_owner_snapshots
     FOR EACH ROW EXECUTE FUNCTION cp_reject_rewrite();`);
   for(const statement of SHARED_WORK_DDL)await db.exec(statement);
+  if(withLeasedWork)await db.exec(workMigrationDefinition());
   await db.exec(countHourMigrationDefinition());
   await db.query(`INSERT INTO cp_admin_config VALUES('current',1,now(),$1::jsonb)`,[JSON.stringify(defaultAdminConfig(new Date().toISOString()))]);
   return db;
 }
+
+test('the merged work list counts completed work as done and delayed retries as scheduled',async()=>{
+  const db=await controlDatabase(true);
+  try {
+    const at=new Date(),list=workList(async(text,params=[])=>query(db).query(text,params),{owner:'counter-test',now:()=>at});
+    const input={kind:'check' as const,placeId:'ocd-division/country:us/state:az/county:pima',subjectId:'body:pima',url:'https://www.pima.gov/contact',field:'phone',value:'520-724-4330',quote:'Phone: 520-724-4330',source:{report:'one'}};
+    const first=await list.add(input);
+    const [leased]=await list.claim('check',1);
+    assert.equal(leased!.id,first.id);assert.equal(await list.finish(leased!),true);
+    assert.equal((await list.add({...input,source:{report:'repeat'}})).status,'done');
+    const window=countWindow(new Date(at.getTime()+3_600_000).toISOString());
+    let rows=await readCounts(query(db),window.from,window.through);
+    assert.equal(rows.find(r=>r.family==='check'&&r.stage==='work list:DONE')!.total,1);
+    assert.equal((await readOldest(query(db))).filter(r=>r.family==='check').length,0,'done work never becomes a waiting pile');
+    await list.add({...input,field:'address'});
+    const [retry]=await list.claim('check',1);
+    assert.equal(await list.later(retry!,'Source offline'),true);
+    rows=await readCounts(query(db),window.from,window.through);
+    assert.equal(rows.find(r=>r.family==='check'&&r.stage==='work list:SCHEDULED')!.total,1);
+    assert.ok(!rows.some(r=>r.family==='check'&&r.stage==='work list:REFUSED'&&r.total>0),'a retry reason is not a terminal refusal');
+    const due=(await db.query<{not_before:Date}>('SELECT not_before FROM work_row WHERE id=$1',[retry!.id])).rows[0]!.not_before;
+    rows=await readCounts(query(db),window.from,window.through,new Date(due).toISOString());
+    assert.equal(rows.find(r=>r.family==='check'&&r.stage==='work list:WAITING')!.total,1);
+    const direct=(await db.query<{n:number}>("SELECT count(*)::int n FROM work_row WHERE status='done'")).rows[0]!.n;
+    assert.equal(rows.filter(r=>r.stage==='work list:DONE').reduce((n,r)=>n+r.total,0),direct);
+  }finally{await db.close();}
+});
 
 test('every fact state and new pointer family agrees with direct SQL through inserts, transitions, deletes and rollback',async()=>{
   const db=await readerDatabase();

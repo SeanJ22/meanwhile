@@ -4,6 +4,8 @@ import { factClocks } from "../lib/facts/clocks.ts";
 import type { FieldKind, Provenance } from "../lib/facts/check.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { COUNT_SCHEMA_SOURCE } from "../lib/control-plane/repository/migrations/RB-A8.ts";
 import { readerIdentityMigration } from "../tests/helpers/reader-identity-db.ts";
 
 type Row = Record<string, unknown>;
@@ -37,6 +39,8 @@ export async function openFactCopy(snapshot: FactSnapshot) {
     await db.query("INSERT INTO fact SELECT * FROM jsonb_populate_recordset(NULL::fact,$1::jsonb)", [JSON.stringify(snapshot.facts ?? [])]);
     for (const table of ["source_copy", "fact"])
       await db.query(`SELECT setval(pg_get_serial_sequence('${table}','id'),greatest(coalesce(max(id),0),1),count(*)>0) FROM ${table}`);
+    await db.pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
+    await db.pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8").replaceAll("--> statement-breakpoint",""));
     return db;
   } catch (error) {
     await db.pg.close();

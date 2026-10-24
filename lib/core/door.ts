@@ -193,7 +193,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     [row!.id,`A source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      await filePublication(query, entity.id, fast ? "door_official" : "door_checked", now);
+      await queueRebuild(query, entity.id, now);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
     }
     return { decision, factId };
@@ -205,7 +205,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
 }
 
 /** Existing subject-to-place links keep serving readers until RB-A4 supplies the full service map. */
-async function filePublication(query: Query, entityId: string, step: string, now: Date): Promise<void> {
+async function queueRebuild(query: Query, entityId: string, now: Date): Promise<void> {
   const places = await query(`WITH RECURSIVE subjects AS (
       SELECT id,kind,state,parent_id,ARRAY[id] AS path FROM entity WHERE id=$1
       UNION ALL SELECT e.id,e.kind,e.state,e.parent_id,s.path || e.id FROM entity e JOIN subjects s ON e.id=s.parent_id
@@ -217,11 +217,4 @@ async function filePublication(query: Query, entityId: string, step: string, now
   if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
     SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
   [places.map(place => place.id), now.toISOString()]);
-  const [subject] = await query("SELECT state FROM entity WHERE id=$1", [entityId]);
-  const states = [...new Set([...places.map(place => place.state), subject?.state]
-    .flatMap(state => state && state !== "US" ? [String(state).toUpperCase()] : []))];
-  await query(`INSERT INTO count_hour(state,hour,step,n)
-    SELECT state,date_trunc('hour',$2::timestamptz),$3,1 FROM unnest($1::text[]) AS state
-    ON CONFLICT(state,hour,step) DO UPDATE SET n=count_hour.n+1`,
-  [states.length ? states : ["US"], now.toISOString(), step]);
 }

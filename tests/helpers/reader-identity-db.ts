@@ -4,7 +4,7 @@ import type { PGlite } from "@electric-sql/pglite";
 
 const directory = join(import.meta.dirname, "../../lib/db/migrations");
 export const readerIdentityMigration = () => readFileSync(join(directory,
-  readdirSync(directory).find(name => name.endsWith("RB-A1_shared.sql"))!), "utf8");
+  readdirSync(directory).find(name => name.endsWith("0051_rb_a1_shared.sql"))!), "utf8");
 
 export async function identitySourceTables(pg: PGlite): Promise<void> {
   await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb);

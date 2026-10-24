@@ -4,7 +4,8 @@ import type { GenericBallotProjection } from "../lib/ballot/generic-projection.t
 import { deriveCandidateUniverse } from "../lib/hunt/candidate-universe.ts";
 import { campaignSiteSubjects } from "../lib/candidates/campaign-site-subjects.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/campaign-site-portraits.ts";
+import { publishCandidatePortraits } from "../lib/ballot/portrait-refresh.ts";
+import { campaignSiteHostRefusal } from "../lib/candidates/campaign-site-verifier.ts";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
@@ -63,6 +64,20 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
   } catch (error) {
     return { unreadable: error instanceof Error ? error.message : String(error) };
   }
+}
+
+/** Found campaign pages feed portraits as soon as their own saved page verifies. */
+async function foundPortraitSites(subjectIds:readonly string[]):Promise<Map<string,string[]>> {
+  const sites=new Map<string,string[]>(),connection=process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+  if(!connection || !subjectIds.length)return sites;
+  const sql=neon(connection);
+  const rows=await sql.query(`SELECT record->>'subjectId' AS subject_id,
+    coalesce(record->>'canonicalUrl',record#>>'{source,websiteUrl}',record#>>'{source,pointerUrl}') AS url
+    FROM cp_log_promotion_pipeline WHERE record->>'stage'='SCOUTED' AND record->>'recordClass'='candidate-enrichment'
+      AND record->>'subjectId'=ANY($1::text[])`,[subjectIds]);
+  for(const row of rows)if(typeof row.url === "string" && campaignSiteHostRefusal(row.url) === null)
+    sites.set(row.subject_id,[...sites.get(row.subject_id) ?? [],row.url]);
+  return sites;
 }
 
 function wwwAlias(url: string): string {
@@ -201,13 +216,13 @@ async function main(): Promise<void> {
       if (reference && plan) plan = { ...plan, inputs: [...plan.inputs, reference] };
     }
   } catch (error) { console.error(`State candidate portrait subjects could not be read: ${error instanceof Error ? error.message : String(error)}`); }
-  if (plan) await publishCampaignSitePortraits({
-    plan, approvals: "unreadable" in approvals ? [] : approvals, subjects: [...subjects.values()], now,
-    held: async record => {
-      const pages = await readApprovedPages([record]), held = pages.get(record.recordId) ?? null;
-      pages.clear();
-      return held;
-    },
+  let sites=new Map<string,string[]>();
+  try {sites=await foundPortraitSites([...subjects.keys()]);} catch(error){console.error(`Found campaign portrait pages could not be read: ${error instanceof Error ? error.message : String(error)}`);}
+  if(profiles && !("unreadable" in profiles)) for(const subject of subjects.values())
+    sites.set(subject.candidacyId,[...sites.get(subject.candidacyId) ?? [],...subject.readerKeys.flatMap(key=>profiles.links[key]?.campaign?.url ? [profiles.links[key].campaign!.url] : [])]);
+  for(const record of plan?.records ?? [])sites.set(record.candidacyId,[...sites.get(record.candidacyId) ?? [],record.campaign.url]);
+  if (plan) await publishCandidatePortraits({
+    plan, sites, subjects: [...subjects.values()], now,
     onPublished: published => finish(derivedCampaignSitesCandidate(state, published, now)),
   });
 }

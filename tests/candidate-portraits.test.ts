@@ -5,7 +5,7 @@ import sharp from "sharp";
 import { candidatePortraitFromOwnSite, candidatePortraitFromCommons } from "../lib/ballot/candidate-portraits.ts";
 import { readerCandidateProfiles } from "../lib/ballot/candidate-reader-privacy.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
-import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/campaign-site-portraits.ts";
+import { publishCandidatePortraits } from "../lib/ballot/portrait-refresh.ts";
 import { derivedCampaignSitesCandidate } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import type { DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
@@ -118,9 +118,9 @@ test("Commons publication refuses a restrictive license or missing author", asyn
 
 test("a Commons portrait publishes through the existing derived door without a campaign site", async () => {
   const published: unknown[] = [];
-  const plan = await publishCampaignSitePortraits({ plan: { records: [], inputs: [], held: [], published: [] },
-    approvals: [], subjects: [{ ...commonsSubject, readerKeys: ["national-oh-house-3:jane-doe"], filingDomains: [] }],
-    held: () => null, now: NOW, commonsRuntime: commonsRuntime(), onPublished: async plan => { published.push(plan); } });
+  const plan = await publishCandidatePortraits({ plan: { records: [], inputs: [], held: [], published: [] },
+    subjects: [{ ...commonsSubject, readerKeys: ["national-oh-house-3:jane-doe"], filingDomains: [] }],
+    now: NOW, commonsRuntime: commonsRuntime(), onPublished: async plan => { published.push(plan); } });
   assert.equal(plan.records.length, 0);
   assert.equal(plan.portraits?.length, 1);
   assert.equal(published.length, 1);
@@ -133,4 +133,18 @@ test("a Commons portrait publishes through the existing derived door without a c
   const read = await readPromotedCivicData<DerivedCampaignSitesProjection>("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "OH"), { store, now: NOW, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.deepEqual(read.value.portraits, plan.portraits);
+});
+
+test("scheduled portrait refresh keeps the last photo when both source routes fail",async t=>{
+  const subject={...commonsSubject,readerKeys:[commonsSubject.candidacyId],filingDomains:[]};
+  const plan=await publishCandidatePortraits({plan:{records:[],inputs:[],held:[],published:[]},subjects:[subject],now:NOW,commonsRuntime:commonsRuntime()});
+  assert.equal(plan.portraits?.length,1);
+  let reads=0;
+  const unavailable=async()=>{reads++;throw Error("Source temporarily unavailable");};
+  const current=await publishCandidatePortraits({plan,subjects:[subject],now:"2026-10-01T01:00:00Z",capture:unavailable,commonsRuntime:{capture:unavailable}});
+  assert.equal(reads,0,"the next hourly run retains a current portrait without another acquisition");
+  t.mock.method(console,"error",()=>{});
+  const refreshed=await publishCandidatePortraits({plan,subjects:[subject],now:"2026-10-09T00:00:00Z",capture:unavailable,commonsRuntime:{capture:unavailable}});
+  assert.equal(reads,1);
+  assert.deepEqual(refreshed.portraits,plan.portraits);
 });

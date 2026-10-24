@@ -88,8 +88,10 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
       const a = left[field], b = right[field];
       if (!present(b)) continue;
       if (field === "selectionMethod" && b === "UNKNOWN") continue;
-      // A portrait verified for another canonical alias must be re-bound before serving.
-      if (field === "photo" && !portraitBindingMatches(personId, right.photo ?? {url: ""})) continue;
+      if (field === "photo") {
+        const verifiedFor=right.photo?.verification?.personId;
+        if(!verifiedFor || !personIdentityKeys(right).has(verifiedFor) || !portraitBindingMatches(verifiedFor,right.photo!))continue;
+      }
       const rightWins = !present(a) || prefers(right, left, field);
       if (rightWins) Object.assign(merged, {[field]: b, fieldSources: {...merged.fieldSources, [field]: sourceFor(right, field)}});
       else merged.fieldSources = {...merged.fieldSources, [field]: sourceFor(left, field)};

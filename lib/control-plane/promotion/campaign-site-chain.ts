@@ -13,7 +13,6 @@ import { CAMPAIGN_SITE_LEAD, FINDING_SLOTS_VERSION } from "../../facts/finding-s
 import { pageCopy } from "../../facts/source-copy.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
-  type ApprovalBurden,
   type ApprovedRecord,
   type PipelineItemState,
   type PipelineStage,
@@ -583,26 +582,13 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
     const verdict = verifyCampaignSitePage(subject, { url: artifact.canonicalUrl, origin: "RECORDED_SITE", ref: verifiedRecord.recordId }, read, independent?.supporting);
     if (verdict.verdict !== "VERIFIED") return state;
     const scouted = state.byStage.SCOUTED!;
-    const failedChecks = verifiedRecord.checks.filter((c) => c.result !== "PASS").map((c) => c.name);
     const host = siteHost(artifact.canonicalUrl) ?? "";
-    // Only a later read of this exact page can contradict it, not another page on the same host.
-    const newer = allArtifacts.filter((a) => a.canonicalUrl === artifact.canonicalUrl && a.recordedAt > artifact.recordedAt && a.attemptId !== artifact.attemptId && ctx.attemptRoleById(a.attemptId) === "ACQUIRER")
-      .sort((a, b) => (a.recordedAt < b.recordedAt ? 1 : -1))[0];
-    const newerPage = newer === undefined ? null : await options.heldPage(newer);
-    const newerVerdict = newer === undefined || newerPage === null ? null : verifyCampaignSitePage(subject, { url: newer.canonicalUrl, origin: "RECORDED_SITE", ref: newer.artifactId }, newerPage, independent?.supporting);
-    const age = Date.parse(options.now) - Date.parse(verdict.measurement.retrievedAt);
-    const burdens: ApprovalBurden[] = [
-      { name: "CHAIN_CHECKS_PASS", result: failedChecks.length === 0 ? "PASS" : "FAIL", detail: failedChecks.length === 0 ? `all ${verifiedRecord.checks.length} checks PASS on ${verifiedRecord.recordId}` : `${failedChecks.join(", ")} not PASS on ${verifiedRecord.recordId}` },
-      { name: "FACT_CURRENT", result: newerVerdict !== null && newerVerdict.verdict !== "VERIFIED" ? "FAIL" : "PASS",
-        detail: newerVerdict === null ? `no later read of ${artifact.canonicalUrl} by our own Attempt contradicts ${artifact.artifactId}` : `the newest read ${newer!.artifactId} of ${artifact.canonicalUrl} ${newerVerdict.verdict === "VERIFIED" ? "agrees" : `no longer verifies (${newerVerdict.refusals.map((r) => r.code).join(", ")})`}` },
-      { name: "FRESHNESS_NOT_STALE", result: age <= MAX_READ_AGE_MS ? "PASS" : "FAIL", detail: `the verifying read is ${Math.round(age / 3_600_000)}h old; the bound is ${MAX_READ_AGE_MS / 86_400_000} days` },
-    ];
     const record: CampaignSiteApprovedRecord = {
       formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION, recordId: `${state.itemId}:approved:${verifiedRecord.recordId}`, itemId: state.itemId, at: verifiedRecord.at,
       actor: { role: "RELEASE_ORCHESTRATOR", lane: "DETERMINISTIC", instance: `${CAMPAIGN_SITE_APPROVER_ID}@${state.itemId}` },
       stage: "APPROVED_FOR_PROMOTION",
       chain: { scouted: scouted.recordId, verified: verifiedRecord.recordId },
-      recordClass: CAMPAIGN_SITE_RECORD_CLASS, burdens, field: CAMPAIGN_SITE_FIELD,
+      recordClass: CAMPAIGN_SITE_RECORD_CLASS, field: CAMPAIGN_SITE_FIELD,
       campaignSite: {
         field: CAMPAIGN_SITE_FIELD,
         candidacyId: subject.candidacyId,

@@ -87,15 +87,16 @@ test("a state portrait failure advances durable attempt metadata without withhol
     assert.equal(read.value.roster.officeholders[0].provenance.collectedAt,SOURCE_DATE);
   }
 });
-test("a state's portrait run writes one candidate and reads its sources once, whatever its size",async()=>{
+test("a state's portrait run publishes finished photos promptly and reads its sources once",async()=>{
   const {store}=await seed(25),images=await imageStore();
   const before=(store as unknown as {candidates:Map<string,CandidateVersionRecord>}).candidates.size;
   let sourceReads=0;const readPromotion=store.readPromotion.bind(store);
-  store.readPromotion=(async(recordClass,scope)=>{if(recordClass === "STATE_LEGISLATOR")sourceReads++;return readPromotion(recordClass,scope);}) as typeof store.readPromotion;
+  store.readPromotion=(async(recordClass,scope)=>{if(recordClass === "STATE_LEGISLATOR" && !scope.includes(":portraits:"))sourceReads++;return readPromotion(recordClass,scope);}) as typeof store.readPromotion;
   const result=await refreshStatePortraits({state:"az",store,now:START},{now:()=>VERIFIED,storePortrait:images.store,acquire:async options=>profile(options)});
   assert.ok(result?.outcome.promoted);
   const written=[...(store as unknown as {candidates:Map<string,CandidateVersionRecord>}).candidates.values()].slice(before);
-  assert.deepEqual(written.map(row=>row.candidate.sourceId),["people-portraits"],"25 finished people are one publication");
+  assert.ok(written.length>1,"finished photos publish while the rest of the roster is still being read");
+  assert.ok(written.every(row=>row.candidate.sourceId === "people-portraits"));
   const sourceContracts=sourceReads;
   sourceReads=0;
   await refreshStatePortraits({state:"az",store,now:START},{now:()=>VERIFIED,acquire:async()=>{throw Error("not due");}});
@@ -213,8 +214,8 @@ test("exact held links and sources supply profiles when a native person's select
         return heldPage(options,`<h1>${person.name}</h1><img alt="Portrait of ${person.name}" src="/verified-person.png">`);
       }});
     assert.ok(result?.outcome.promoted,JSON.stringify(result?.outcome.candidate.receipt));
-    assert.equal(requests.length,1,"unrelated third-party and old nonofficial source URLs are not acquired");
-    assert.ok(person.profileUrls!.includes(requests[0]));
+    assert.ok(requests.length<=1,"the captured Open States photo can publish without another profile read");
+    if(requests.length)assert.ok(person.profileUrls!.includes(requests[0]));
     const read=await readStatePeopleProjection(`US-${state.toUpperCase()}`,{store,now:HELD_NOW,bypassCache:true});
     assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")continue;
     const shown=read.value.roster.officeholders[0];

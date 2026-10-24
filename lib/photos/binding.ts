@@ -18,7 +18,7 @@ export interface PortraitVerification {
   readonly width?: number;
   readonly height?: number;
   readonly imageRetrievedAt?: string;
-  readonly basis?: "OWN_PAGE" | "TWO_SOURCES" | "COMMONS";
+  readonly basis?: "OWN_PAGE" | "SOURCE_FEED" | "TWO_SOURCES" | "COMMONS";
   readonly ownPageUrl?: string;
   readonly attribution?: { readonly sourceUrl: string; readonly name: string; readonly author?: string };
   readonly commons?: CommonsCandidacyIdentity & { readonly identitySourceUrl: string };
@@ -50,6 +50,8 @@ export function portraitVerificationMatches(personId: string, verification?: Por
       verification.sources.some(s => s.url === verification.attribution!.sourceUrl)
       : Boolean(verification.license?.value && verification.license.quote && verification.sources.some(s => s.url === verification.license!.sourceUrl));
     if (!validSources || !attributed) return false;
+    if (verification.basis === "SOURCE_FEED") return verification.sources.some(s =>
+      portraitPublisher(s.url) === "openstates.org" || /^https:\/\/api\.congress\.gov\/v3\/member\//.test(s.url));
     if (verification.basis === "COMMONS") {
       const identity = verification.commons;
       return Boolean(identity && identity.candidacyId === personId &&

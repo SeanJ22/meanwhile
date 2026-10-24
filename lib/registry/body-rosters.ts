@@ -6,6 +6,7 @@
 import type { Provenance } from "../sources/types.ts";
 
 import { getRegistryRuntimeReadModel } from "./runtime-read-model.ts";
+import { photoForPerson } from "../photos/person.ts";
 
 export interface RosterMember {
   fieldSources?: Record<string, Provenance>;
@@ -198,7 +199,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     contactScope: member.contactScope,
     fieldSources: member.fieldSources,
     contactFormUrl: null,
-    photoUrl: photos[member.id] ?? null,
+    photoUrl: photoForPerson(member.personId ?? member.id)?.url ?? photos[member.id] ?? null,
     campaignUrl: null,
     termStart: member.termStart ?? null,
     termEnd: member.termEnd ?? null,

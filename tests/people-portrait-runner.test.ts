@@ -32,6 +32,7 @@ async function images(){
 }
 test("standing portrait commands require exactly one data-backed state",()=>{
   assert.equal(parsePeoplePortraitArguments(["--promote","--state=az"]),"az");
+  assert.equal(parsePeoplePortraitArguments(["--promote","--state=us"]),"us");
   for(const args of [["--state=az"],["--promote","--state=zz"],["--promote","--federal"],["--promote","--federal","--state=az"]])
     assert.throws(()=>parsePeoplePortraitArguments(args),/PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED/);
 });

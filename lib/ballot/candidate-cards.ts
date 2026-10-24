@@ -1,7 +1,6 @@
 import { currentCandidateProfilesProjection, candidateProfilesReadState } from "../civic-data/manual-read-models.ts";
-import { currentDerivedCandidatePortraits, type DerivedCandidatePortraitRecord } from "../civic-data/derived-campaign-sites.ts";
 import type { PortraitVerification } from "../photos/binding.ts";
-import { officialPhotoForPerson } from "../photos/person.ts";
+import { photoForPerson } from "../photos/person.ts";
 
 export interface CandidateCardData {
   personId?: string;
@@ -32,23 +31,12 @@ function load(state: string): CandidateCardsFile {
   return currentCandidateProfilesProjection(state).cards;
 }
 
-const portraitIndexes = new WeakMap<readonly DerivedCandidatePortraitRecord[], ReadonlyMap<string, DerivedCandidatePortraitRecord>>();
-function portraitFor(state: string, key: string) {
-  const records = currentDerivedCandidatePortraits(state);
-  let index = portraitIndexes.get(records);
-  if (!index) { index = new Map(records.map(record => [record.id, record])); portraitIndexes.set(records, index); }
-  return index.get(key)?.portrait;
-}
-
 function cardForKey(state: string, key: string): CandidateCardData | null {
   const read = candidateProfilesReadState(state);
   const cards = read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? load(state).cards : {};
   const card = Object.hasOwn(cards, key) ? cards[key] : null;
-  if (card?.photoUrl) return card;
-  const portrait = portraitFor(state, key);
-  const official = officialPhotoForPerson(card?.personId ?? key);
-  const photo = portrait ?? (official ? { personId: official.verification?.personId ?? card?.personId,
-    photoUrl: official.url, photoSource: official.source, photoVerification: official.verification } : null);
+  const personPhoto = photoForPerson(card?.personId ?? key,state);
+  const photo = personPhoto ? {personId:card?.personId,photoUrl:personPhoto.url,photoSource:personPhoto.source,photoVerification:personPhoto.verification} : null;
   if (!photo) return card;
   const base = card ?? { bio: null, bioSourceUrl: null, bioSourceLabel: null, email: null, phone: null, phoneLabel: null,
     filedAddress: null, filedAddressSource: null };

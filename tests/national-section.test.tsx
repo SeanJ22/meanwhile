@@ -14,8 +14,15 @@ const { NationalSection } = await import("../components/national/national-sectio
 const { default: NationalPage } = await import("../app/national/page.tsx");
 const { readNationalCards } = await import("../lib/national/section.ts");
 
-const card = (id: string): NationalCard => ({ id, office: "Cabinet", title: `Secretary ${id}`, holder: `Holder ${id}`,
+const card = (id: string): NationalCard => ({ id, office: "Cabinet", title: `Secretary ${id}`, holder: `Holder ${id}`, photoUrl:null,
   sources: [{ what: "the department head", provenance: { sourceUrl: "https://www.whitehouse.gov/administration/cabinet/", sourceOrg: "whitehouse.gov", collectedAt: "2026-10-22", verifiedAt: null } }] });
+
+test("national cards show the person's portrait",()=>{
+  const photoUrl="/api/portraits/officials/"+"a".repeat(64)+".webp";
+  const html=renderToStaticMarkup(<NationalSection cards={[{...card("example"),photoUrl}]} />);
+  assert.ok(html.includes(`src="${photoUrl}"`));
+  assert.ok(html.includes('alt="Portrait of Holder example"'));
+});
 
 test("the link reads 'National government' and goes to the National section", () => {
   const html = renderToStaticMarkup(<NationalLink />);

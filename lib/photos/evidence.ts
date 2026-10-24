@@ -7,7 +7,7 @@ import { parse as parseYaml } from "yaml";
 import { pageWords, linkingPageFrom, pageLinksTo } from "../control-plane/promotion/section3.ts";
 import { captureProblem } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
-import { heldPageRead, verifyCampaignSitePage, type CampaignSiteIdentity, type CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
+import type { CampaignSiteIdentity, CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 
 /** A portrait can cite either a worker artifact or an immutable known-source vault object. */
@@ -76,10 +76,8 @@ function ownPortraitPage(name: string, input: PortraitSources, capture: Portrait
     return !social || Boolean(linked && pageLinksTo({ url: linked.url, text: linked.html, retrievedAt: now }, url));
   }
   const identity = input.campaign;
-  return Boolean(identity && identity.url === url && sameName(`${identity.identity.givenName} ${identity.identity.familyName}`, name) &&
-    verifyCampaignSitePage(identity.identity, { url, origin: "RECORDED_SITE", ref: capture.evidence.artifactId ?? capture.evidence.vaultKey ?? "" },
-      heldPageRead({ requestedUrl: url, finalUrl: url, httpStatus: capture.httpStatus!, contentType: "text/html",
-        body: capture.evidence.text, retrievedAt: capture.observedAt }), identity.cycleSource).verdict === "VERIFIED");
+  return Boolean(identity && identity.url === url && input.subject.profileUrls.includes(url) &&
+    sameName(`${identity.identity.givenName} ${identity.identity.familyName}`, name) && pageWords(capture.evidence.text).includes(pageWords(name)));
 }
 
 export function verifyPortraitSources(personId: string, input: PortraitSources, now: string): Omit<PortraitVerification, "imageHash" | "sourceImageHash"> {
@@ -93,10 +91,12 @@ export function verifyPortraitSources(personId: string, input: PortraitSources, 
   const commons = verifiedCommonsPortrait(input, intact, now);
   if (commons) return commons;
   const valid = intact.filter(c => namesImage(input.subject, input.imageUrl, c));
+  const feed = valid.find(c => portraitPublisher(c.evidence.canonicalUrl) === "openstates.org" ||
+    /^https:\/\/api\.congress\.gov\/v3\/member\//.test(c.evidence.canonicalUrl));
   let sources = [...new Map(valid.map(c => [portraitPublisher(c.evidence.canonicalUrl), c])).values()];
   const own = valid.find(c => ownPortraitPage(name, input, c, now));
   if (own) sources = [own, ...sources.filter(c => portraitPublisher(c.evidence.canonicalUrl) !== portraitPublisher(own.evidence.canonicalUrl))];
-  if (!own && (sources.length < 2 || new Set(sources.map(c => c.evidence.contentHash)).size < 2)) throw Error("PORTRAIT_SECOND_SOURCE_MISSING");
+  if (!own && !feed && (sources.length < 2 || new Set(sources.map(c => c.evidence.contentHash)).size < 2)) throw Error("PORTRAIT_SECOND_SOURCE_MISSING");
   // The bulk roster's CC0 licence covers its data, never the linked image.
   let license: PortraitVerification["license"] | undefined;
   for (const capture of sources.filter(c => portraitPublisher(c.evidence.canonicalUrl) !== "openstates.org")) {
@@ -104,9 +104,9 @@ export function verifyPortraitSources(personId: string, input: PortraitSources, 
     const match = /(?:portrait|photograph|photo|image)\s+(?:is\s+|: ?)?(?:licensed under\s+|released (?:under|into)\s+|in (?:the )?)?(public domain|cc0|cc by(?:-sa)? [\d.]+)/i.exec(text);
     if (match) { license = { value: match[1], sourceUrl: capture.evidence.canonicalUrl, quote: match[0] }; break; }
   }
-  const attribution = { sourceUrl: (own ?? sources[0]).evidence.canonicalUrl, name };
+  const attribution = { sourceUrl: (own ?? feed ?? sources[0]).evidence.canonicalUrl, name };
   return { personId, name, imageUrl: input.imageUrl, checkedAt: now, ...(license ? { license } : {}), attribution,
-    basis: own ? "OWN_PAGE" : "TWO_SOURCES", ...(own ? { ownPageUrl: own.evidence.canonicalUrl } : {}),
+    basis: own ? "OWN_PAGE" : feed ? "SOURCE_FEED" : "TWO_SOURCES", ...(own ? { ownPageUrl: own.evidence.canonicalUrl } : {}),
     sources: sources.map(c => ({url:c.evidence.canonicalUrl,
       ...(c.evidence.artifactId ? {artifactId:c.evidence.artifactId} : {vaultKey:c.evidence.vaultKey}),
       contentHash:c.evidence.contentHash,retrievedAt:c.evidence.retrievedAt})) };

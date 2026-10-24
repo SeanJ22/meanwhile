@@ -21,11 +21,16 @@ import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-sup
 import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { peopleJurisdiction } from "../lib/civic-data/people-source-read.ts";
+import { readStateRegistryRuntimeProjection } from "../lib/civic-data/read-model.ts";
+import { factReader } from "../lib/facts/db.ts";
+import { readFactRosters } from "../lib/facts/roster-read.ts";
+import { mergePeopleSets } from "../lib/officials/merge-people.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
   const state=args.find(arg=>arg.startsWith("--state="))?.slice(8).toLowerCase();
   if (args.filter(arg=>arg === "--promote").length !== 1 || args.length !== 2 ||
-    !state || !STATE_PEOPLE_JURISDICTIONS.includes(`US-${state.toUpperCase()}`)) throw Error("PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED");
+    !state || state !== "us" && !STATE_PEOPLE_JURISDICTIONS.includes(`US-${state.toUpperCase()}`)) throw Error("PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED");
   return state;
 }
 
@@ -73,15 +78,12 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
   return saved;
 }
 
-/** Finished portraits publish together once this long has passed, and at the end, so a cut-off run keeps its work. */
-const PORTRAIT_PUBLISH_BATCH_MS = 10 * 60_000;
-
 export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;options?:StandingPortraitOptions}) {
   const {store,vault,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
   const pacing={sizeFor:websiteSizeFromHoldings([state])};
   const acquire=options.acquire ?? ((request:Parameters<typeof pacedPortraitAcquire>[0])=>pacedPortraitAcquire(request,pacing));
   const portraitOptions={...options,acquire,storePortrait:options.storePortrait ?? ((...args:Parameters<typeof storeStandingPortrait>)=>storeStandingPortrait(args[0],args[1],args[2],args[3],pacing))};
-  const jurisdiction=`US-${state.toUpperCase()}` as const;
+  const jurisdiction=peopleJurisdiction(state);
   const contractId=`people-portraits-${state.toLowerCase()}`;
   const prior=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
   if(prior.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
@@ -90,10 +92,10 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
   const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
   let baseRoster:OfficeholderSet|null=null,last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
-  let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),batchStarted=Date.now(),queue=Promise.resolve();
+  let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),queue=Promise.resolve();
   const publish=async(continuation:readonly PortraitAttempt[]|null)=>{
     const batch=[...finished.values()];
-    finished=new Map();batchStarted=Date.now();
+    finished=new Map();
     const people=new Set(batch.map(row=>row.person.personId ?? row.person.id));
     const officeholders=batch.length ? batch.map(row=>portraitPerson(row.person)) : baseRoster!.officeholders.map(portraitPerson);
     for(;;){
@@ -113,20 +115,40 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   };
   const marker=async(person:Officeholder,facts:readonly PortraitAttempt[])=>{
     finished.set(person.personId ?? person.id,{person,facts});
-    if(Date.now()-batchStarted >= PORTRAIT_PUBLISH_BATCH_MS){
-      const operation=queue.then(()=>publish(null));
-      queue=operation.catch(()=>{});await operation;
-    }
+    const operation=queue.then(async()=>{if(finished.size)await publish(null);});
+    queue=operation.catch(()=>{});await operation;
     await options.onPerson?.(person,facts);
   };
   // The place's members of Congress share its portrait record; readers lay their photos on the place directory.
-  const [peopleRead,placeRead]=await Promise.all([readStatePeopleProjection(jurisdiction,{store,now:clock(),bypassCache:true}),
-    readStateFederalDirectory(state,{store,now:clock(),bypassCache:true})]);
+  const [peopleRead,placeRead]=await Promise.all([state === "us" ? readPeopleSourceProjection("US","statewide-executive-sources",{store,now:clock(),bypassCache:true}) : readStatePeopleProjection(jurisdiction as `US-${string}`,{store,now:clock(),bypassCache:true}),
+    state === "us" ? Promise.resolve(null) : readStateFederalDirectory(state,{store,now:clock(),bypassCache:true})]);
   const people=peopleRead.kind === "PROMOTED" || peopleRead.kind === "BOOTSTRAP" ? peopleRead.value.roster : null;
-  const place=placeRead.kind === "PROMOTED" ? placeRead.value : null;
+  const place=placeRead?.kind === "PROMOTED" ? placeRead.value : null;
   if(!people && !place)throw Error("PEOPLE_PORTRAIT_ROSTER_UNAVAILABLE");
-  baseRoster={...(people ?? place!.roster),officeholders:[...people?.officeholders ?? [],...place?.roster.officeholders ?? []]};
-  const stateResult=people ? await statePeoplePortraits({roster:people,state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
+  const local:Officeholder[]=[];
+  if(state !== "us") {
+    const registry=await readStateRegistryRuntimeProjection(state,{store,now:clock(),bypassCache:true});
+    if(registry.kind === "PROMOTED" || registry.kind === "BOOTSTRAP") {
+      const query=factReader();
+      const bodies=query ? await query("SELECT id FROM entity WHERE kind='body' AND state=$1",[state.toUpperCase()]) : [];
+      const rosters=[...registry.value.bodyRosters,...query ? (await readFactRosters(query,[...new Set([...registry.value.registry.bodies.map(body=>body.id),...bodies.map(body=>String(body.id))])])).rosters : []];
+      for(const roster of rosters) for(const member of roster.members) local.push({id:member.id,personId:member.personId ?? member.id,
+        nativeIds:member.nativeIds,name:member.name,officeTitle:member.officeTitle,level:"LOCAL",state:state.toUpperCase(),
+        termStart:member.termStart ?? "",termEnd:member.termEnd ?? "",birthDate:null,partyLabel:member.partyLabel ?? null,
+        websiteUrl:member.websiteUrl,profileUrls:[...new Set([member.websiteUrl,roster.sourceUrl].filter((url):url is string=>Boolean(url)))],
+        contactFormUrl:null,phone:member.phone,email:member.email,campaignUrl:null,photo:null,social:{},
+        provenance:{sourceUrl:roster.sourceUrl,sourceOrg:roster.sourceOrg,collectedAt:roster.collectedAt,verifiedAt:null}});
+      const promotion=await store.readPromotion("REGISTRY_RUNTIME_BINDING",`US-${state.toUpperCase()}:reader-registry-runtime`);
+      if(promotion){const reference=promotedInputRef("REGISTRY_RUNTIME_BINDING",promotion.scope,promotion.versionId,promotion.payload,promotion.promotedAt);if(reference)sources.push(reference);}
+    }
+  }
+  const combined=mergePeopleSets([...(people ? [people] : []),{scope:state,generatedAt:clock(),officeholders:local,divisions:[],unmatched:[]}])!;
+  if(prior.kind === "PROMOTED") {
+    const held=new Map(prior.value.roster.officeholders.filter(person=>person.photo).map(person=>[person.personId ?? person.id,person.photo]));
+    for(const person of combined.officeholders) person.photo=person.photo ?? held.get(person.personId ?? person.id) ?? null;
+  }
+  baseRoster={...(people ?? place!.roster),officeholders:[...combined.officeholders,...place?.roster.officeholders ?? []]};
+  const stateResult=combined.officeholders.length ? await statePeoplePortraits({roster:combined,state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
   const congressResult=place ? await congressPortraits(place,clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
   const continuationFacts=[...stateResult?.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS") ?? [],
     ...congressResult?.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS") ?? []];

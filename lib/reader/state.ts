@@ -29,6 +29,7 @@ import type { MemberOfficeRecord } from "../officials/member-offices.ts";
 import type { Division } from "../registry/types.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { primeReaderCanonicalStore } from "./canonical-context.ts";
+import { settleCandidateProfilesRead } from "../civic-data/manual-read-models.ts";
 
 export interface ReaderStatePackage {
   readonly state: string;
@@ -163,6 +164,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     readEverydayRoutingProjection(options),
     presidentRead,
     readCuratedReaderProjection("member-offices", options),
+    settleCandidateProfilesRead(state).catch(error=>{console.error(`Portrait profile enrichment remains unavailable for ${state}: ${error instanceof Error ? error.message : String(error)}`);}),
   ]);
   if (runtime.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(runtime);
   if (runtime.kind !== "PROMOTED" && runtime.kind !== "BOOTSTRAP") throw new Error(`STATE_PACKAGE_NOT_RECORDED:${state}`);

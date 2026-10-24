@@ -1,5 +1,4 @@
 import { imagesIn, pickPortraits } from "../hunt/portrait-pick.ts";
-import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { PortraitCapture } from "../photos/evidence.ts";
 import type { PortraitRuntime } from "../photos/store.ts";
 import { storeVerifiedPortrait } from "../photos/store.ts";
@@ -11,7 +10,7 @@ import { sourceUserAgent } from "../sources/http.ts";
 
 export interface CandidateSitePage {
   readonly identity: CampaignSiteIdentity;
-  readonly capture: WorkerPublicationCapture;
+  readonly capture: PortraitCapture;
   readonly cycleSource?: CampaignSiteSupportingRead;
 }
 
@@ -45,7 +44,7 @@ function commonsCapture(release: KnownRelease): PortraitCapture {
   return { evidence: { vaultKey: release.vaultKey, contentHash: `sha256-${release.sha256}`,
     text: new TextDecoder().decode(release.bytes), canonicalUrl: release.finalUrl, retrievedAt: release.retrievedAt,
     sourceId: "candidate-wikimedia-portrait" },
-    observedAt: release.retrievedAt, httpStatus: release.httpStatus, transport: "REACHABLE", partial: false };
+    observedAt: release.checkedAt, httpStatus: release.httpStatus, transport: "REACHABLE", partial: false };
 }
 
 function wikidataCandidatePortraitQuery(subject: CampaignSiteIdentity): string {
@@ -118,8 +117,9 @@ async function commonsFilePortrait(subject: CampaignSiteIdentity, file: string, 
   const pages = Object.values(JSON.parse(metadataCapture.evidence.text).query?.pages ?? {}) as { title?: string; imageinfo?: { url?: string }[] }[];
   const imageUrl = pages.find(page => page.title === title)?.imageinfo?.[0]?.url;
   if (!imageUrl) return { gap: "COMMONS_IMAGE_NOT_HELD" };
+  const verifiedAt=new Date(Math.max(Date.parse(now),...captures.map(row=>Date.parse(row.observedAt)),Date.parse(metadataCapture.observedAt))).toISOString();
   const photo = await storeVerifiedPortrait(subject.candidacyId, { subject: { personId: subject.candidacyId, name, profileUrls: [] },
-    imageUrl, commons: identity, captures: [...captures, metadataCapture] }, now, io?.portrait, "candidates");
+    imageUrl, commons: identity, captures: [...captures, metadataCapture] }, verifiedAt, io?.portrait, "candidates");
   if (photo.verification?.basis !== "COMMONS") return { gap: "COMMONS_LICENSE_NOT_VERIFIED" };
   return { patch: { personId: subject.candidacyId, photoUrl: photo.url,
     photoSource: `Wikimedia Commons: ${photo.verification.attribution!.author}, ${photo.verification.license!.value}`,

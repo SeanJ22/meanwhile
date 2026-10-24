@@ -189,6 +189,19 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
     if (sourceSignal.aborted) return;
     attempted++;
     for (let i=excludedFacts.length-1;i>=0;i--) if (excludedFacts[i].key === `${person.personId ?? person.id}:portrait`) excludedFacts.splice(i,1);
+    if (person.portraitCandidate) {
+      const lead = person.portraitCandidate;
+      const captures = linkingCaptures.filter(row => row.evidence.canonicalUrl === lead.sourceUrl);
+      if (captures.length) try {
+        person.photo = await storePortrait(person.personId ?? person.id, {subject:{personId:person.personId ?? person.id,
+          name:person.name,nativeIds:person.nativeIds,profileUrls:person.profileUrls ?? []},imageUrl:lead.imageUrl,captures},clock(),sourceSignal);
+        person.fieldSources = {...person.fieldSources,photo:{sourceUrl:lead.sourceUrl,sourceOrg:"Open States",
+          collectedAt:lead.collectedAt,verifiedAt:clock()}};
+        await recordPerson(person); return;
+      } catch (error) {
+        gap(person,"STATE_PORTRAIT_FEED_FAILED",sanitizedErrorDiagnostic(error,500));
+      }
+    }
     const profiles = [...new Set([person.websiteUrl,...(person.profileUrls ?? [])])]
       .filter((url):url is string=>Boolean(url && official(url)));
     if (!profiles.length) {

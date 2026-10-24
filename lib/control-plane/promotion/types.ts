@@ -27,7 +27,6 @@ export const PIPELINE_REFUSALS = [
   "VERIFICATION_CHECK_NOT_IMPLEMENTED",
   "APPROVAL_CHAIN_INCOMPLETE",
   /** A deterministic approval burden beyond the chain (freshness, currency, checks) failed. */
-  "APPROVAL_BURDEN_FAILED",
   "WORKER_RESULT_NOT_VERIFIED",
 ] as const;
 export type PipelineRefusalCode = (typeof PIPELINE_REFUSALS)[number];
@@ -152,20 +151,6 @@ export interface ControlScore {
   readonly falsePresenceRate: number | null;
 }
 
-/** Burdens measured when an approval is offered and kept on the record; a FAIL refuses as APPROVAL_BURDEN_FAILED. */
-export const APPROVAL_BURDENS = [
-  "CHAIN_CHECKS_PASS",
-  "FACT_CURRENT",
-  "FRESHNESS_NOT_STALE",
-] as const;
-export type ApprovalBurdenName = (typeof APPROVAL_BURDENS)[number];
-
-export interface ApprovalBurden {
-  readonly name: ApprovalBurdenName;
-  readonly result: "PASS" | "FAIL";
-  readonly detail: string;
-}
-
 export interface ApprovedRecord extends RecordBase {
   readonly stage: "APPROVED_FOR_PROMOTION";
   readonly chain: {
@@ -173,8 +158,6 @@ export interface ApprovedRecord extends RecordBase {
     readonly verified: string;
   };
   readonly recordClass: string;
-  /** Absent on approvals written before the burdens existed. */
-  readonly burdens?: readonly ApprovalBurden[];
   /** The one field of the class this approval is for (`campaignSite`). */
   readonly field?: string;
 }

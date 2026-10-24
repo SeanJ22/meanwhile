@@ -1,8 +1,9 @@
 {
-  "at": "2026-10-24T11:30:52.520Z",
+  "at": "2026-10-24T15:43:07.211Z",
+  "scope": "isolated local schema with synthetic links",
   "workerClockAheadMs": 600000,
-  "leaseMs": 5000,
-  "actualLeaseFromServerBeforeMs": 5024,
-  "existingLeaseRetained": true,
-  "passed": true
+  "validLeaseRetained": true,
+  "remainingLeaseMs": 4996,
+  "separateRowClaimed": true,
+  "bothFinished": true
 }

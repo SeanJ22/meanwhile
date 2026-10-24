@@ -1,5 +1,5 @@
 {
-  "at": "2026-10-24T15:17:10.715Z",
+  "at": "2026-10-24T17:01:29.870Z",
   "countsEqual": true,
   "countsPerHourEqual": true,
   "states": [
@@ -12,13 +12,13 @@
     {
       "state": "AL",
       "incoming": 18669,
-      "done": 29,
+      "done": 28,
       "refused": 0
     },
     {
       "state": "AR",
       "incoming": 14906,
-      "done": 21,
+      "done": 22,
       "refused": 0
     },
     {
@@ -36,7 +36,7 @@
     {
       "state": "CA",
       "incoming": 30723,
-      "done": 23,
+      "done": 22,
       "refused": 1
     },
     {
@@ -114,7 +114,7 @@
     {
       "state": "KS",
       "incoming": 1711,
-      "done": 1,
+      "done": 2,
       "refused": 0
     },
     {

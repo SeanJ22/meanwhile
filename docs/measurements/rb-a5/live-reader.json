@@ -1,10 +1,10 @@
 {
-  "at": "2026-10-24T14:40:37.768Z",
+  "at": "2026-10-24T17:05:13.249Z",
   "chrome": "Chrome/151.0.7922.34",
   "status": 200,
   "url": "https://meanwhileusa.com/ballot?zip=85003",
-  "domMs": 1784.023269,
-  "usableMs": 2079.7902219999996,
+  "domMs": 2160.735431,
+  "usableMs": 2756.919976,
   "deadlineVisible": true,
   "candidatesVisible": true,
   "measuresVisible": true,

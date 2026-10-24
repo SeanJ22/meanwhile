@@ -1,22 +1,26 @@
 {
-  "revision": "f471098ef1bf66b7c8c6d4170bcac44b3f00eb5f",
-  "gatesPassed": 8,
+  "codeCommit": "17e96649183be2802a856a5a494862b9f391b156",
+  "testedLocalCommit": "fcee2a925d0ff0bbb165c33bf3da2c71e7896de5",
+  "codeTree": "65306cce0a5efe6e32c7c9de4fd6940a8a1e0875",
+  "gatesPassed": 9,
   "gatesTotal": 9,
   "suite": {
-    "registered": 9643,
-    "passed": 9640,
-    "failed": 1,
+    "registered": 9779,
+    "passed": 9777,
+    "failed": 0,
     "skipped": 2
   },
-  "failure": "tests/origins.test.ts: new Chrome helper had a public host literal",
-  "correction": "Import PUBLIC_SITE_ORIGIN",
-  "afterCorrection": {
-    "originTestsPassed": 7,
-    "originTestsFailed": 0,
-    "lint": "passed",
-    "typescript": "passed",
-    "placeChrome": "passed",
-    "adminChrome": "passed"
+  "skippedFiles": [
+    "tests/acquisition-repair-profile.test.ts",
+    "tests/acquisition-repair-roster.test.ts"
+  ],
+  "bundleTestsPassed": 16,
+  "node": "24.19.0",
+  "testRuntime": {
+    "wasmCodeGc": false,
+    "reason": "Native V8 allocator aborts while closing PGlite; code reclamation disabled in the local test process, assertions unchanged"
   },
-  "finalRiverRerun": "pending RB-A1 integration"
+  "readerPoolHotfix": "dfb076b406864f8bfea44e14744a6f6ff047d942",
+  "foundationReady": "5bde46615d6e3b862aa5589192c73f529864f37e",
+  "foundationIntegrationRecordedAt": "2026-10-24T15:25:14Z"
 }

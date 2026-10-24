@@ -1,73 +1,73 @@
 # Work list
 
-Owner: RB-A5. Branch: `stream/rb-a5`, based on River `21ae9bcfb` and merged with RB-A1 `5bde46615`.
+Owner: RB-A5. Branch: `stream/rb-a5`, cut from River `21ae9bcfb`, merged with promoted River and its reader-pool hotfix `dfb076b40`. River recorded RB-A1 READY `5bde46615` in integration.md at 11:25 a.m. Eastern on October 24; both that READY and tested River `166fa32ab` are ancestors of this stream.
 
 Remaining work:
 
-- RB-A5: merge River after its RB-A1 integration, rerun every check, push READY, and handle River returns through the passed live check.
+- RB-A5: monitor River's return file, fix any returned issue, and continue until board/river status.md records the passed live check.
 
-The Box remains in service until Phase D. No production rows have been changed.
+The Box stays in service until Phase D. No production database rows were changed by this lane.
 
-`state` is the postal state from RB-A1; national and system work uses US. `status` is ready, taken, done or refused. `sources` holds the shared source references, and `reports` holds repeat notes with their supplied referring URLs. A claim's stable key distinguishes separate people or seats within a multivalued field. Changed values or quotes retain the row id and update its source URL; unchanged reports preserve its place and backoff. Changed evidence during an active lease waits for that worker to release the claim before becoming available again. Leases and hourly event times use the database clock. A worker clock ten minutes ahead retained another worker's valid lease in the PostgreSQL copy probe.
+`lib/core/work.ts` shares one row per canonical link or stable claim slot. Repeat notes retain their supplied referring URLs and source references. Unchanged values and quotes preserve status, priority and backoff; changed evidence retains the id and reopens the row. Evidence changing during a lease becomes ready when the old worker releases it. Claim and expired-lease recovery use bounded, indexed FOR UPDATE SKIP LOCKED queries. Claims take a short lease immediately; lease tokens fence stale finish, refusal and retry calls. Retries back off exponentially, and a refusal creates one detective row. Database time governs leases and hourly events.
 
-`work_in`, `work_done` and `work_refused` are the work list's `count_hour.step` values. The database trigger counts transitions in their transaction, including the detective row created by a refusal. Outcome timestamps stay on the row so direct SQL can count every completion or refusal after changed evidence reopens it, including outcomes in different hours.
+`state` is the postal state; US means national or system work. `status` is ready, taken, done or refused. A stable claim key preserves separate seats or people within a multivalued field. `work_in`, `work_done` and `work_refused` are count_hour steps. Triggers count transitions in their transaction. Outcome timestamps retain completions and refusals across reopened versions so direct SQL can also verify every hour.
 
-## Production copy verification
+## Production-copy checks
 
-Read-only Box export: 328,791 complete rows (742 MB source relation), captured October 24, 4:55–4:57 a.m. Eastern time. Source role: wtp_cp_release_readonly; project withered-sunset-39821877, branch br-tiny-frog-aeufpjeq. SHA-256: da80058267dc394af20e66d7b606b0799f05096017880861852ad7e8b93f964f. All writes stayed in local PostgreSQL 18.4.
+The read-only Box export contains 328,791 complete rows from a 742 MB source relation, captured October 24, 4:55–4:57 a.m. Eastern. Source: withered-sunset-39821877 / br-tiny-frog-aeufpjeq, role wtp_cp_release_readonly. SHA-256: da80058267dc394af20e66d7b606b0799f05096017880861852ad7e8b93f964f. Mutations stayed in local PostgreSQL 18.4.
 
-The actual RB-A1 and RB-A5 migrations applied cleanly. Feeding every copied report through add produced 243,681 distinct links or claims, plus one detective in the probe. Two hundred independent connections started claiming together: 200 claims, 200 distinct ids. The slowest of 20 measured claims was 32.14 ms, including indexed lease recovery. The plan uses work_row_claim_ready.
+The actual RB-A1 and RB-A5 migrations applied to the copy. All 328,791 reports passed through add(), producing 243,681 distinct links or claims. Direct SQL found all 328,791 distinct Box ids in their notes, with zero missing reports. Source references were retained.
 
-A child worker was killed with SIGKILL. Two timer-driven runs used the normal claim method; the second reclaimed and completed its row after its 1.5-second lease. Runs: 2026-10-24T12:21:13.517Z, 2026-10-24T12:21:14.518Z. This is scheduled behavior on the production copy; deployed queue scheduling remains for the connected rollout.
+Twenty measured claims included indexed recovery. The slowest was 15.29 ms; the plan uses work_row_claim_ready. Two hundred independent connections claimed together: 200 rows, 200 distinct ids. A worker was killed with SIGKILL; the normal claim method reclaimed and completed its row after its 1.5-second lease. The two timer-driven runs were 12:13:19 and 12:13:20 p.m. Eastern, October 24. This is next scheduled run proof on the production copy; deployed queue scheduling remains for the connected rollout.
 
-Counter totals matched direct SQL both by state and by hour. The authenticated local Admin Work screen rendered the copy's actual hourly query results in Eastern time. Its obsolete redirect to Queue was removed so these counts are reachable without the former work-row read. Local Chrome captures show Arizona and California, including its refusal. National and zero-row state filters passed. The captures remain local in .scratch/rb-a5; scripts/rb-a5-admin-browser.mts reproduces them. Numeric results are saved in measurements/rb-a5/admin.json. On the loaded local copy, run node --experimental-strip-types scripts/rb-a5-production-copy.mts counts to export the actual hourly response for the browser helper. It expects the local production server on port 3145 with WTP_ADMIN_SESSION_KEY=rb-a5-local-browser-only and no production database environment.
+Separate local schemas also verified that a worker clock ten minutes ahead preserves another worker's valid lease, and that concurrent parent/detective refusals preserve one detective with the newer value and matching counters. These synthetic probes did not change the copied queue.
 
-Measurements and Chrome captures are in [docs/measurements/rb-a5](measurements/rb-a5/).
+After the detective and contact probes, the copy contains 243,683 incoming rows, 222 completions and one refusal. All 57 regions and every hour match direct SQL. Authenticated local Chrome rendered the actual hourly query in Admin Work, including California's refusal, the national scope and a zero-row state. The obsolete Work redirect and inactive legacy row renderer were removed. Run `node --experimental-strip-types scripts/rb-a5-production-copy.mts counts` on the loaded copy to export the actual workCounts response for `scripts/rb-a5-admin-browser.mts`; its fixture server uses port 3145 and WTP_ADMIN_SESSION_KEY=rb-a5-local-browser-only, with production database variables unset.
 
-## Connection proofs
+## Connected end to end
 
-1. All 328,791 production Box reports passed through work.add() and became 243,681 distinct links or claims. Direct SQL found all 328,791 distinct Box ids in the row notes, with zero missing reports. Source references were retained. This used the read-only export and wrote only the local copy.
-2. A real work row (work-bd914e099d0889ef5fc4f17c4bcdf64e5b4fc8e0bc4c14a2735646bdcc1d7cd1) was claimed, passed through the RB-A3 door, finished, and appeared in the ordinary readPlacePackage payload for ocd-division/country:us/state:az/county:pinal. Production fact 1711874, source-copy 62692, became “520-866-6854” with [its original government source](https://www.azcleanelections.gov/november-3-2026/pinal). The door also queued that place for rebuilding. Pinned Chrome 151 then opened meanwhileusa.com/?zip=85139 with the copy's response: the Recorder card had no phone before the work and showed this phone afterward; its source link was visible. All body ids and meetings in the baseline response were retained. Six log/event writes were blocked in the latest replay. Reader data used role readonly and its actual parents and source records; mutations stayed in local copies. Replay scripts: scripts/rb-a5-connection-copy.mts and scripts/rb-a5-copy-browser.mts. The browser uses the normal production reader with copied API responses, leaving production data untouched.
+1. Production Box to work: all 328,791 original report ids survive in 243,681 distinct work rows, with their source references. This verifies the incoming connection using real production data without moving the live Box.
+2. Work to door to place page: work-bd914e099d0889ef5fc4f17c4bcdf64e5b4fc8e0bc4c14a2735646bdcc1d7cd1 was claimed, published through RB-A3's door and finished. Production fact 1711874 and source-copy 62692 became 520-866-6854 for az:county:county-of-pinal#office-recorder, with [the original government source](https://www.azcleanelections.gov/november-3-2026/pinal). The current stream's ordinary readPlacePackage returned it for ocd-division/country:us/state:az/county:pinal and the door queued a rebuild. A refreshed ZIP 85139 baseline retained all seven body ids and every meeting. Pinned Chrome 151 opened the ordinary production reader using the copy's GET responses: the Recorder card had no phone before the work and showed it afterward; its source link was visible. Six log/event writes were blocked. Reader data came from tiny-hill-13996172 / br-delicate-lab-ax02xuo5, role readonly. The door checkpoint was 5585a6458; the proof checkout loaded this stream's reader module, verified by module identity. All publication writes stayed in local copies.
 
-The isolated connected checkout also compiled and passed 27 focused identity, candidate-reaction, door, database-isolation and queue checks against RB-A1 READY (5bde46615) and door code (8649ec050). Later door commits through b6a04f7bc only update evidence. The main stream awaits River's foundation fold before its final merge and full rerun.
+Replay scripts: scripts/rb-a5-production-copy.mts, scripts/rb-a5-connection-copy.mts, scripts/rb-a5-copy-browser.mts and scripts/rb-a5-admin-browser.mts. Numeric evidence is in [measurements/rb-a5](measurements/rb-a5/). New captures remain local under .scratch/rb-a5; the committed public place images are from the earlier replay.
 
-## Checks
+## Checks and live reader
 
-The full checkpoint run on f471098ef registered 9,643 tests: 9,640 passed, one failed and two optional saved-capture cases were skipped. All other gates passed, including schema, default build, bundle and standalone build. The failed origin-literal rule identified the new Chrome replay helper; it now imports PUBLIC_SITE_ORIGIN. Its seven origin tests, lint, TypeScript and both Chrome replays pass after that correction. This is not a claim of a clean full run on the final River combination: that required rerun remains pending the foundation fold.
+All nine standard checks pass on the merged code: 9,777 tests pass, zero fail, two optional saved-capture cases are skipped; bundle tests pass 16 of 16. Lint, TypeScript, dead code, pinned-browser guard, read-only database gate and both builds pass. The task host's Node 24.19.0 intermittently aborted in PGlite's native WASM allocator. The successful full rerun disables WASM code reclamation in the local test process with v8.setFlagsFromString('--no-wasm-code-gc'); no assertions are disabled and no production setting changes. Details, code tree and skipped files are in measurements/rb-a5/checks.json.
 
-## Live reader check
+The stream includes River's one-line release-98 reader-pool fix. Its actual startup option connected to the production pooled reader endpoint with role readonly and transaction_read_only=on, reading 104,048 places. This transport check is separate from the Chrome check.
 
-Pinned Google Chrome for Testing 151.0.7922.34 read meanwhileusa.com/ballot?zip=85003. The November 3 election, deadlines, candidates, measures and 87 source controls remained visible. The Katie Hobbs / John Giles battlecard opened with its existing candidate subject id and Speak Your Mind control. The latest walk blocked two event writes: DOM arrival was 1.78 s; candidate controls were usable in 2.08 s. An earlier Chrome 156 reading took 3.07 s, over the three-second target. No A5 page speed improvement is claimed. Chrome used a disposable container with a task-only CA store and TLS verification enabled; the container was removed. Numeric evidence is in measurements/rb-a5/live-reader.json.
+Fresh Chrome 151.0.7922.34 read meanwhileusa.com/ballot?zip=85003 without copied API responses. The November 3 election, deadlines, candidates, measures and 87 source controls remained visible. The Katie Hobbs / John Giles battlecard opened with its existing subject id and Speak Your Mind control. DOM arrival was 2.16 s and candidate controls were usable in 2.76 s; two event writes were blocked. No A5 page-speed improvement is claimed. Browser containers used task-only CA stores with TLS verification enabled and were removed. RB-A1's copied-event proof retains all 36 distinct existing event ids; the queue does not replace those public ids.
 
-## Counts by state
+## Counts by every state
 
-After the concurrency and connection probes: 2026-10-24T15:17:10.715Z. Direct counts equal the hourly totals for all states.
+Copy audit: 2026-10-24T17:01:29.870Z. Direct totals and every hourly bucket agree. The incoming total includes the one detective and one contact probe added after the Box import.
 
 | State | Rows in | Done | Refused |
 | --- | ---: | ---: | ---: |
-| AK | 11090 | 20 | 0 |
-| AL | 18669 | 29 | 0 |
-| AR | 14906 | 21 | 0 |
+| AK | 11,090 | 20 | 0 |
+| AL | 18,669 | 28 | 0 |
+| AR | 14,906 | 22 | 0 |
 | AS | 1 | 0 | 0 |
-| AZ | 20032 | 21 | 0 |
-| CA | 30723 | 23 | 1 |
-| CO | 13584 | 12 | 0 |
-| CT | 22599 | 10 | 0 |
-| DC | 4014 | 1 | 0 |
-| DE | 12635 | 12 | 0 |
-| FL | 19823 | 9 | 0 |
-| GA | 25318 | 23 | 0 |
+| AZ | 20,032 | 21 | 0 |
+| CA | 30,723 | 22 | 1 |
+| CO | 13,584 | 12 | 0 |
+| CT | 22,599 | 10 | 0 |
+| DC | 4,014 | 1 | 0 |
+| DE | 12,635 | 12 | 0 |
+| FL | 19,823 | 9 | 0 |
+| GA | 25,318 | 23 | 0 |
 | GU | 160 | 0 | 0 |
-| HI | 5158 | 3 | 0 |
-| IA | 7334 | 5 | 0 |
-| ID | 16780 | 20 | 0 |
-| IL | 3389 | 4 | 0 |
-| IN | 5888 | 5 | 0 |
-| KS | 1711 | 1 | 0 |
+| HI | 5,158 | 3 | 0 |
+| IA | 7,334 | 5 | 0 |
+| ID | 16,780 | 20 | 0 |
+| IL | 3,389 | 4 | 0 |
+| IN | 5,888 | 5 | 0 |
+| KS | 1,711 | 2 | 0 |
 | KY | 948 | 1 | 0 |
 | LA | 0 | 0 | 0 |
 | MA | 964 | 1 | 0 |
-| MD | 6449 | 1 | 0 |
+| MD | 6,449 | 1 | 0 |
 | ME | 0 | 0 | 0 |
 | MI | 0 | 0 | 0 |
 | MN | 0 | 0 | 0 |

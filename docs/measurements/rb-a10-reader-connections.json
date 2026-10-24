@@ -1,0 +1,118 @@
+{
+  "readerConnections": {
+    "implementationCommit": "b1e6ac88f",
+    "method": "Actual meetings and ballot-scope readers plus voting-site projection, official map rows in disposable PostgreSQL, civic facts from production readonly in read-only transactions",
+    "raceComparison": "Baseline current-page race IDs are checked against the scope endpoint. Its raw after total also includes held elections and is not a current-page race count.",
+    "results": [
+      {
+        "state": "AZ",
+        "zip": "85701",
+        "production": {
+          "role": "readonly",
+          "read_only": "on"
+        },
+        "boardsBefore": 139,
+        "boardsAfter": 139,
+        "racesBefore": 24,
+        "racesAfter": 37,
+        "sitesBefore": 345,
+        "sitesAfter": 345,
+        "missingBoards": [],
+        "missingRaces": [],
+        "missingSites": [],
+        "method": "Imported official map in local PostgreSQL, downstream civic facts from production readonly; not a Chrome live check"
+      },
+      {
+        "state": "NH",
+        "zip": "03301",
+        "production": {
+          "role": "readonly",
+          "read_only": "on"
+        },
+        "boardsBefore": 7,
+        "boardsAfter": 12,
+        "racesBefore": 33,
+        "racesAfter": 33,
+        "sitesBefore": 0,
+        "sitesAfter": 1,
+        "missingBoards": [],
+        "missingRaces": [],
+        "missingSites": [],
+        "method": "Imported official map in local PostgreSQL, downstream civic facts from production readonly; not a Chrome live check"
+      }
+    ]
+  },
+  "nextScheduledRun": {
+    "implementationCommit": "b1e6ac88f",
+    "method": "Actual standing importer and Census publication path executed twice with production reads, local PostgreSQL writes and a controlled next-due clock; not a claim that a future production run occurred",
+    "refresh": {
+      "state": "AZ",
+      "elapsedMs": 116498,
+      "peakRssBytes": 1062813696,
+      "firstRunPeakRssBytes": 1062813696,
+      "nextPublication": "PROMOTED",
+      "nextImportPreserved": true,
+      "places": 1194,
+      "zipEdges": 32164,
+      "zctaEdges": 27569,
+      "publication": "PROMOTED",
+      "nextDueAt": "2026-11-23T16:42:04.079Z",
+      "nextRunDue": true,
+      "databaseWrites": "local PostgreSQL copy only"
+    },
+    "postRefreshReaders": [
+      {
+        "state": "AZ",
+        "zip": "85701",
+        "production": {
+          "role": "readonly",
+          "read_only": "on"
+        },
+        "boardsBefore": 139,
+        "boardsAfter": 139,
+        "racesBefore": 24,
+        "racesAfter": 37,
+        "sitesBefore": 345,
+        "sitesAfter": 345,
+        "missingBoards": [],
+        "missingRaces": [],
+        "missingSites": [],
+        "method": "After the complete standing refresh and its controlled-clock next due run, imported map in disposable PostgreSQL and civic facts from production readonly; not a Chrome live check"
+      }
+    ]
+  },
+  "existingReaderReferences": {
+    "method": "Production entities and aliases copied read-only into shared identity schema in disposable PostgreSQL; compare every captured target before and after AZ/NH map refreshes",
+    "result": {
+      "eventReferences": 60,
+      "distinctIds": 36,
+      "existingEntities": 31,
+      "existingAliases": 72,
+      "sources": {
+        "reactions": 56,
+        "speak": 0,
+        "ask": 1,
+        "demand": 3
+      },
+      "allIdsResolve": true,
+      "mappingsUnchangedAfterRefresh": true,
+      "databaseWrites": "local PostgreSQL copy only"
+    }
+  },
+  "configuredReaderPool": {
+    "implementationCommit": "6d4c20789",
+    "result": {
+      "status": "PASS",
+      "role": "readonly",
+      "read_only": "on",
+      "method": "Configured readerDatabaseQuery pool through session network proxy; accounting kept in memory"
+    }
+  },
+  "epaReplayMapConnection": {
+    "status": "PASS",
+    "role": "readonly",
+    "read_only": "on",
+    "method": "Production SELECT through replay map connection while local vault transport is installed"
+  },
+  "liveAcceptance": "Production Chrome comparison for 20 ZIPs and ten boundary map moves remains open for the post-release live check."
+}

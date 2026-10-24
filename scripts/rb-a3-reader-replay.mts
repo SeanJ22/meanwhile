@@ -6,6 +6,7 @@ import { door, type DoorInput } from "../lib/core/door.ts";
 import { resolveId } from "../lib/core/resolve.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { isOfficialUrl } from "../lib/facts/check.ts";
+import { stateName } from "../lib/facts/entity-read.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
 import { isOfficialSource, pageLinksSource } from "../lib/civic-data/source-authority.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
@@ -137,7 +138,7 @@ for (const state of states) {
     assert.deepEqual(await db.query("SELECT id,value,status FROM fact WHERE id=ANY($1::bigint[]) ORDER BY id", [baseline.map(row => row.id)]), baseline);
     assert.equal(digest(sample), beforeSample);
     assert.deepEqual(await identityState(), identitiesBefore);
-    report.push({ state, selected: existing.replayed + sample.values.length, existingFactValues: existing.replayed, legacyReaderValues: sample.values.length,
+    report.push({ state, stateName: stateName(state), selected: existing.replayed + sample.values.length, existingFactValues: existing.replayed, legacyReaderValues: sample.values.length,
       legacyValuesPreserved: preserved, repeatUnchanged: repeated, distinctLegacyRecords: new Set(sample.values.map(v => v.subjectId)).size,
       byTable: { fact: existing.replayed, ...Object.fromEntries([...new Set(sample.values.map(value => value.table))]
         .map(table => [table, sample.values.filter(value => value.table === table).length])) },
@@ -145,6 +146,7 @@ for (const state of states) {
     console.log(JSON.stringify(report.at(-1)));
   } finally { await db.pg.close(); }
 }
-const output = { observedAt: new Date().toISOString(), states: report, zeroStates: report.filter(s => s.zero).map(s => s.state) };
+const output = { observedAt: new Date().toISOString(), states: report, zeroStates: report.filter(s => s.zero).map(s => s.state),
+  zeroStateNames: report.filter(s => s.zero).map(s => s.stateName) };
 if (process.argv[3]) writeFileSync(resolve(process.argv[3]), JSON.stringify(output, null, 2) + "\n");
 if (report.some(s => s.zero || s.failures.length || s.legacyValuesPreserved !== s.legacyReaderValues)) process.exitCode = 1;

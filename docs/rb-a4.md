@@ -24,15 +24,83 @@ Verification completed so far:
 
 ## Workspace interruption, October 24
 
-The managed cloud workspace went offline during the full checks. The last code pushed is 3199ab08e. No READY, production correction, deployment, completed full check set, or live pass is claimed.
+The managed cloud workspace went offline during the full checks. Its runtime-status API later reported connected, but the shell still returned No usable execution environment; no resumed execution is claimed. The last code pushed is 3199ab08e. No READY, production correction, deployment, completed full check set, or live pass is claimed.
 
 Before the interruption, the 174 real production board IDs were replayed on isolated reader copies, one state at a time. All 174 acquired local placements; the cohort carries 2,185 live member facts. Each affected state's unchanged next registration invocation performed no import. By state: AK 1 board / 3 members; AL 3 / 4; AR 2 / 4; CA 136 / 2,044; CO 1 / 2; DE 1 / 1; HI 1 / 5; IL 17 / 60; MI 6 / 24; OR 3 / 16; WI 3 / 22. Every other state and territory has zero boards in this specific cohort. These results precede the pending shared-schema integration and must be rerun on the final code.
 
-The broader district replay completed 55 state/territory imports: 40,030 special districts, 39,932 locally filed, 98 still without a local place. New Jersey failed with the existing duplicate Union Township school-district identity. Inspection of the Census CSV confirmed mailing-state errors among the unresolved examples: New Model Canal Community Ditch Association and Upper Maestas Ditch were filed in AZ but Census government FIPS place them in NM; Hyder Valley was filed in CA but belongs to AZ/Maricopa; Ashland Fire Protection was filed in CA but belongs to IL/Cass; Vya Conservation was filed in CA but belongs to NV/Washoe. The remaining unresolved records still need the same exact-source investigation. No guessed county or state was published.
+The broader district replay completed 55 state/territory imports: 40,030 special districts, 39,932 locally filed, 98 still without a local place. New Jersey failed with the existing duplicate Union Township school-district identity. Inspection of the Census CSV confirmed mailing-state errors among the unresolved examples: New Model Canal Community Ditch Association and Upper Maestas Ditch were filed in AZ but Census government FIPS place them in NM; Hyder Valley was filed in CA but belongs to AZ/Maricopa; Ashland Fire Protection was filed in CA but belongs to IL/Cass; Vya Conservation was filed in CA but belongs to NV/Washoe. An additional read-only production query then confirmed all 98 state mismatches: registration's countyFips prefix maps to a different state through the held census-geoid:state aliases. The same rows' county FIPS identify the destination county without name matching. No guessed county or state was published.
 
 Portal snapshots and HTTP source scans cover all 56 state/territory partitions locally under /tmp/rb-a4-portals and /tmp/rb-a4-portal-results. The final per-portal moves/removals report and scheduled withdrawal/reassignment path are unfinished. A failed HTTP request or a missing homepage link was not treated as proof of a mismatch. The databases were never written.
 
 Pending local integration is in /workspace/rb-a4-combined. RB-A2 8e7da3e0e, RB-A1 2da436296 and RB-A3 7857f247a were combined there. All source blobs, trees and commits obtained through the GitHub connector were verified against GitHub's exact hashes after git transport failures. RB-A2's three focused place-map tests and RB-A3's nine focused door tests passed on that combination. The newer A1/A2 tips still need to be fetched and merged.
+
+
+The 98 confirmed source-state transfers, still unapplied:
+
+| Filed state | Source state | Districts |
+| --- | --- | ---: |
+| AK | AR | 1 |
+| AZ | NM | 2 |
+| CA | AZ | 1 |
+| CA | IL | 1 |
+| CA | NV | 1 |
+| CO | NE | 1 |
+| CO | WY | 1 |
+| CT | FL | 1 |
+| DC | VA | 1 |
+| FL | AL | 1 |
+| IA | ID | 1 |
+| IA | MO | 3 |
+| IA | SD | 2 |
+| IA | WI | 2 |
+| ID | OR | 1 |
+| ID | WY | 2 |
+| IL | ID | 1 |
+| IL | IN | 1 |
+| IL | WI | 3 |
+| IN | IL | 1 |
+| IN | KS | 1 |
+| IN | OH | 1 |
+| KS | NE | 1 |
+| LA | MS | 1 |
+| MA | CT | 1 |
+| MA | RI | 1 |
+| ME | MA | 1 |
+| MI | OH | 1 |
+| MN | SD | 2 |
+| MN | WI | 12 |
+| MO | KS | 1 |
+| MT | ND | 1 |
+| MT | TN | 1 |
+| ND | SD | 2 |
+| NE | KS | 5 |
+| NE | SD | 1 |
+| NM | CO | 1 |
+| NM | NE | 1 |
+| NV | CA | 1 |
+| NY | CT | 1 |
+| NY | MA | 1 |
+| NY | TX | 1 |
+| OH | KY | 1 |
+| OK | KS | 1 |
+| OR | CA | 1 |
+| OR | WA | 1 |
+| SC | ME | 1 |
+| SD | ND | 2 |
+| SD | WY | 2 |
+| TN | KY | 1 |
+| TX | AL | 1 |
+| TX | AR | 5 |
+| TX | NM | 2 |
+| TX | OR | 1 |
+| WA | CA | 1 |
+| WA | ID | 4 |
+| WA | NM | 1 |
+| WI | MT | 1 |
+| WV | OH | 2 |
+| WY | ID | 3 |
+
+The repair must update existing entities' state/parent and place links by their exact census-pid6 identity, preserving IDs and moving their boards with them. The wrong mailing state's next registration import must not overwrite the correction. RB-A2's newer geographicSpecialDistricts reader already streams fips_state/fips_county; reuse its exact source mapping and the known government ID when connecting the door.
 
 The next implementation steps are concrete:
 

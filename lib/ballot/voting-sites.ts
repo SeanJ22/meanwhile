@@ -252,6 +252,9 @@ export interface VotingSitesAnswer {
   googleFallback?: { available: boolean; requested: boolean; reason?: VotingFallbackReason; label?: string; message?: string };
   /** Transient Google results must disappear from an open panel within 24 hours. */
   expiresAt?: string;
+
+  pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
+  ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
 
 export function modelSentence(j: VotingJurisdiction): string {

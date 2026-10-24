@@ -1,12 +1,29 @@
+/**
+ * The evidence vault: an `EvidenceStore` interface with the four object-storage
+ * verbs, and the key shape, immutability rule and access rule above it.
+ *
+ *     project/<project>/source/<sourceId>/<yyyy>/<mm>/<dd>/<workItemId>/<contentHash>.<ext>
+ *
+ * The segment order makes per-project, per-source, per-day (retention) and
+ * per-obligation (replay) operations prefix rules. The hash is the identity;
+ * the extension is a courtesy.
+ *
+ * Guarantee: immutability and content identity within the scoped namespace.
+ * One key holds one body for its whole life. Identical bytes under different
+ * work-item, source or date prefixes are stored separately, on purpose.
+ * `putArtifact` re-hashes the offered bytes and refuses a key holding an
+ * incompatible object.
+ *
+ * A `manifest.json` per work item is the one rebuilt object, declared via
+ * `ObjectMeta.objectClass = "MUTABLE_INDEX"`; undeclared means `IMMUTABLE_BODY`.
+ *
+ * `MemoryEvidenceStore` is a non-durable test double that refuses at least as
+ * much as production does; `assertDurable` keeps it off production paths.
+ */
 
 import {
   RestrictedArtifactRefused,
-  artifactId,
-  classifyAcquisition,
-  deriveSanitized,
-  extractionSourceDocument,
   parserMayRead,
-  supportedDocumentExtraction,
   type Artifact,
   type ArtifactDerivation,
 } from "./artifact.ts";
@@ -122,6 +139,19 @@ export class EvidenceStoreRefusal extends Error {
 
 /** ------------------------------------------- immutability, enforced */
 
+/**
+ * Which `custom` fields are immutable identity:
+ *
+ *   - `tier`: decides who may read the bytes; relabelling a `RESTRICTED_RAW`
+ *     key would hand parsers the quarantined body.
+ *   - `sourceId`, `workItemId`: key segments; metadata must agree with the key.
+ *   - `retentionPolicy`: decides when the bytes are destroyed.
+ *
+ * Not compared (facts about one execution, first writer wins): `attemptId`,
+ * `methodRouteId`, `retrievedAt`, `httpStatus`, `permission`, `transport`,
+ * `canonicalUrl`, `retrievalUrl`. Unrecognised `custom` keys are neither
+ * compared nor printed.
+ */
 export const IMMUTABLE_IDENTITY_FIELDS: readonly string[] = [
   "tier",
   "sourceId",
@@ -142,6 +172,11 @@ function contentTypeEssence(contentType: string): string {
   return contentType.split(";")[0].trim().toLowerCase();
 }
 
+/**
+ * Is the offered object the same object already at this key? Returns the first
+ * disagreement in a fixed order, or `null`. The class check comes first: a
+ * write that reclassifies a body as a mutable index is refused outright.
+ */
 export function objectIncompatibility(
   stored: ObjectMeta,
   offered: ObjectMeta,
@@ -208,6 +243,11 @@ export function sameBytes(a: Uint8Array, b: Uint8Array): boolean {
   return true;
 }
 
+/**
+ * The provider-level immutability rule, shared by every `EvidenceStore`.
+ * Returns `true` for a no-op (identical object present), `false` to proceed,
+ * and throws when the key holds something else.
+ */
 export function reconcileExistingObject(
   key: string,
   offeredBytes: Uint8Array,
@@ -263,6 +303,10 @@ export function buildManifest(
 
 /** ------------------------------------------------------------ roles */
 
+/**
+ * Who is asking; access is by role and tier. `AUDITOR` may read a quarantined
+ * body; `PARSER` and `PUBLISHER` may not.
+ */
 export const EVIDENCE_ROLES = ["ACQUIRER", "PARSER", "AUDITOR", "PUBLISHER"] as const;
 export type EvidenceRole = (typeof EVIDENCE_ROLES)[number];
 
@@ -302,32 +346,25 @@ export function artifactMeta(artifact: Artifact): ObjectMeta {
   };
 }
 
+/**
+ * Store one artifact's bytes at its content-addressed key. Checks, in order:
+ * the offered length is the recorded length; the bytes re-hash to
+ * `artifact.contentHash`; an occupied key holds the same object
+ * (`objectIncompatibility`). An identical re-put is a no-op, so concurrent
+ * writers of one retrieval converge on one object.
+ */
 async function requireDocumentOriginal(store: EvidenceStore, project: string, artifact: Artifact): Promise<void> {
   if (artifact.tier !== "EXTRACTED_DERIVED") return;
   const extraction = artifact.extraction;
-  const original = extractionSourceDocument(artifact);
-  if (!extraction || !original || extraction.parent.canonicalUrl !== artifact.canonicalUrl ||
+  if (!extraction || extraction.parent.tier !== "RAW" || extraction.parent.canonicalUrl !== artifact.canonicalUrl ||
     extraction.parent.workItemId !== artifact.workItemId || !Number.isSafeInteger(extraction.pages) || extraction.pages < 1 ||
-    !supportedDocumentExtraction(extraction)) {
+    extraction.version !== "pdf-transcription/1" || !["PDF_TEXT", "PDF_TABLES"].includes(extraction.kind)) {
     throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_PROVENANCE_INVALID");
   }
   const parent = await store.get(objectKey(project, extraction.parent));
-  if (!parent || contentHash(parent.bytes) !== extraction.parent.contentHash || parent.meta.custom?.tier !== extraction.parent.tier ||
+  if (!parent || contentHash(parent.bytes) !== extraction.parent.contentHash || parent.meta.custom?.tier !== "RAW" ||
     parent.meta.custom?.canonicalUrl !== artifact.canonicalUrl || parent.meta.custom?.sourceId !== artifact.sourceId ||
     parent.meta.custom?.workItemId !== artifact.workItemId) throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_ORIGINAL_MISSING");
-  if (extraction.parent.tier === "SANITIZED_DERIVED") {
-    const raw: Artifact = { ...extraction.parent, id: original.artifactId, contentHash: original.contentHash,
-      tier: original.artifactId === artifactId("RESTRICTED_RAW", original.contentHash) ? "RESTRICTED_RAW" : "RAW", derivation: undefined };
-    const native = await store.get(objectKey(project, raw));
-    if (!native || contentHash(native.bytes) !== raw.contentHash || native.meta.custom?.tier !== raw.tier ||
-        native.meta.custom?.canonicalUrl !== artifact.canonicalUrl || native.meta.custom?.sourceId !== artifact.sourceId ||
-        native.meta.custom?.workItemId !== artifact.workItemId) throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_ORIGINAL_MISSING");
-    const sanitized = deriveSanitized(raw, new TextDecoder().decode(native.bytes), extraction.parent.derivation!.derivedAt);
-    if (sanitized.artifact.id !== extraction.parent.id || sanitized.artifact.contentHash !== contentHash(parent.bytes) ||
-        JSON.stringify(sanitized.derivation) !== JSON.stringify(extraction.parent.derivation)) {
-      throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_SANITIZER_PROOF_INVALID");
-    }
-  }
 }
 
 export async function putArtifact(
@@ -357,11 +394,6 @@ export async function putArtifact(
     );
   }
 
-  if (artifact.tier === "EXTRACTED_DERIVED" && artifact.extraction?.parent.tier === "SANITIZED_DERIVED" &&
-      classifyAcquisition(new TextDecoder().decode(bytes)).tier !== "RAW") {
-    throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_CONTAINS_CREDENTIAL");
-  }
-
   const meta = artifactMeta(artifact);
   const existing = await store.get(key);
   if (existing) {
@@ -377,6 +409,11 @@ export async function putArtifact(
   return { key, written: true };
 }
 
+/**
+ * Write the per-obligation index, pretty-printed. The one write allowed to
+ * replace what is there, declared as `MUTABLE_INDEX`. Its `contentHash`
+ * (`manifest:<workItemId>`) is still compared.
+ */
 export async function putManifest(
   store: EvidenceStore,
   project: string,
@@ -412,6 +449,11 @@ export interface ReadOptions {
   readonly derivatives?: ReadonlyMap<string, Artifact>;
 }
 
+/**
+ * Read an artifact as a role. A `PARSER` handed a `RESTRICTED_RAW` artifact
+ * reads its known sanitized derivative (reported), or gets
+ * `RestrictedArtifactRefused`.
+ */
 export async function readArtifact(
   store: EvidenceStore,
   project: string,
@@ -469,6 +511,10 @@ export async function readForParser(
 
 /** ------------------------------------------------- the test double */
 
+/**
+ * A test double: one in-process `Map`, no durability. `durable` is `false`.
+ * Deterministic (`list` sorts) and refuses an occupied key by the shared rule.
+ */
 export class MemoryEvidenceStore implements EvidenceStore {
   /** Read by `assertDurable`. */
   readonly durable: boolean;

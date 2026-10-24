@@ -133,7 +133,7 @@ export function registryRuntimeStore(store: MemoryRoutineDataStore = new MemoryR
   return store;
 }
 
-export function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
   const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
   const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
   const bodyIds = new Set(bodies.map(row => row.id));

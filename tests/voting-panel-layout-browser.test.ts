@@ -28,7 +28,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
     const jurisdiction: VotingJurisdiction = { ...door.scope, model: "UNKNOWN", election: "November 3, 2026", electionDate: door.electionDate,
       sites: parsed.sites, rules: door.rules, sourceUrl: door.url, sourceOrg: door.publisher, collectedAt: source.checkedAt, refusal: null };
     const place: VotingReaderPlace = { precision: "ZIP", point: null, divisionIds: [door.scope.ocdId], states: [door.scope.state], countyFips: [], countyNames: [item.county], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
-    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false };
+    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false, pollingPlaceLinks: [] };
     assert.ok(answer.jurisdictions[0].sites.length > 0);
     answers.set(item.zip, answer);
   }
@@ -61,7 +61,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       }
       if (["KEY_MISSING", "GOOGLE_UNAVAILABLE", "NO_DATA"].includes(data.address)) {
         response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({
-          match: true, point: null, jurisdictions: [], outsideCoverage: true,
+          match: true, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [],
           googleFallback: { requested: true, available: false, reason: data.address },
         })); return;
       }

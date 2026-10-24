@@ -1,5 +1,5 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
-import { durableStateHash, largePayloadScope } from "./state-publication.ts";
+import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
@@ -651,7 +651,7 @@ export function validateRoutineCandidate(
   const derivedCivicRecordKeys = derivedCivicRecords.map((member) => member.key);
   const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
   const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
-  const scoped = largePayloadScope(candidate.scope);
+  const scoped = statePublicationScope(candidate.scope);
   const readModel = durableCanonicalHash(candidate.readModel, scoped);
   const normalizedPayload = candidate.normalizedPayload === candidate.readModel ? readModel : durableCanonicalHash(candidate.normalizedPayload, scoped);
   const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords, scoped);

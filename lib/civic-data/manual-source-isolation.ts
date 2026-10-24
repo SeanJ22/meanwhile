@@ -52,12 +52,6 @@ export function directPositiveSourceUrls(value: unknown, found: Set<string> = ne
   return found;
 }
 
-/** An official page's linked lookup is a fact on that page, not another acquired source. */
-export function manualRecordSourceUrls(record: unknown): readonly string[] {
-  const row = record as { readonly kind?: string; readonly value?: { readonly url?: string } } | null;
-  return row?.kind === "ELECTION_FIELD" ? row.value?.url ? [row.value.url] : [] : [...directPositiveSourceUrls(record)];
-}
-
 function sourceIdentity(source: ManualSourceReview): string {
   return `${source.finalUrl}\n${source.rawHash}`;
 }

@@ -15,7 +15,7 @@ import type { VotingSitesAnswer, VotingSitesFile } from "@/lib/ballot/voting-sit
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" } as const;
-const empty = (status = 200, outsideCoverage = true) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage }, { status, headers: NO_STORE });
+const empty = (status = 200, outsideCoverage = true) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
 
 export async function POST(request: Request): Promise<Response> {
   return withReaderRoute("/api/voting-sites", async () => {
@@ -95,7 +95,7 @@ export async function POST(request: Request): Promise<Response> {
           return answer;
         } catch (error) {
           recordVotingFailure({ stage }, error, address);
-          return { match: false, point: null, jurisdictions: [], outsideCoverage: true };
+          return { match: false, point: null, jurisdictions: [], outsideCoverage: true, pollingPlaceLinks: [] };
         }
       };
       return await votingSitesResponse(lookup(), request.headers.get("accept")?.includes("application/x-ndjson") ?? false);

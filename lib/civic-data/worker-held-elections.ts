@@ -18,14 +18,13 @@ import { electionFieldState } from "./election-fields.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
-import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import type { HeldInputs, WorkerPublicationItem } from "./worker-publication-tasks.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
 
 const SUBJECT_PAGE = 500;
 
-/** When the inputs every held ballot route shares last changed: the national office list, the registry and each state's published routes. */
+/** When the inputs every held ballot route shares last changed: the national office list, the registry and the published routes. */
 export async function readHeldPointerTimes(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   promotedAt: (recordClass: RoutineRecordClass, scope: string) => Promise<string | null>,
@@ -33,21 +32,22 @@ export async function readHeldPointerTimes(
   promotedAtMany?: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly promotedAt: string }[]>,
 ): Promise<Pick<HeldInputs, "nationalAt" | "registryAt" | "routesAt">> {
   const routes = requiredManualProductionContract("ballot-navigation");
-  const owned = [...new Set(states)];
-  const newest = async (recordClass: RoutineRecordClass, scopes: readonly string[]) => {
-    if (promotedAtMany) return (await promotedAtMany(recordClass, scopes)).map(row => row.promotedAt).sort().at(-1) ?? null;
+  const scopes = [...new Set(states)].map(stateRegistryRuntimeScope);
+  const registryTimes = async () => {
+    if (promotedAtMany) return (await promotedAtMany("REGISTRY_RUNTIME_BINDING", scopes)).map(row => row.promotedAt);
     const times: string[] = [];
     await runPool(scopes, 8, async scope => {
-      const at = await promotedAt(recordClass, scope);
+      const at = await promotedAt("REGISTRY_RUNTIME_BINDING", scope);
       if (at) times.push(at);
     });
-    return times.sort().at(-1) ?? null;
+    return times;
   };
-  const [[national], registryAt, routesAt] = await Promise.all([
+  const [[national], registry, routesAt] = await Promise.all([
     query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]),
-    newest("REGISTRY_RUNTIME_BINDING", owned.map(stateRegistryRuntimeScope)),
-    newest(routes.recordClass, owned.map(ballotNavigationScope)),
+    registryTimes(),
+    promotedAt(routes.recordClass, routes.scope),
   ]);
+  const registryAt = registry.sort().at(-1) ?? null;
   return { nationalAt: iso(national?.at), registryAt, routesAt };
 }
 
@@ -229,9 +229,7 @@ export async function publishHeldElectionOffices(input: {
   if (fields.length) {
     try {
       // Delivery counts what this pass newly put in front of readers, once, not each re-verified office per owed item.
-      const states = [...new Set(fields.flatMap(field => electionFieldState(field.divisionId) ?? []))];
-      const before = new Set((await Promise.all(states.map(state => readManualProjectionPrior("ballot-navigation", input.store, input.now, ballotNavigationScope(state)))))
-        .flatMap(prior => (prior?.payload as { records?: readonly { id: string }[] } | undefined)?.records?.map(row => row.id) ?? []));
+      const before = new Set(((await readManualProjectionPrior("ballot-navigation", input.store, input.now))?.payload as { records?: readonly { id: string }[] } | undefined)?.records?.map(row => row.id) ?? []);
       published = await publishElectionFields({ store: input.store, now: input.now, fields, verify: section3Record });
       fresh = published.fields.filter(id => !before.has(id));
     } catch (error) { failure = sanitizedErrorDiagnostic(error); }

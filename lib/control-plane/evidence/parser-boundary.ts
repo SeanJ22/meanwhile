@@ -1,6 +1,12 @@
+/**
+ * The vault-first rule as a mechanism: a parser never touches the network; it
+ * reads bytes the vault issued it and nothing else. `ParserInput` carries a
+ * brand only `issueParserInput` can apply, and `assertNoNetwork` refuses a
+ * parser role holding any network capability before it runs.
+ */
 
 import { contentHash } from "../ids.ts";
-import { RestrictedArtifactRefused, extractionSourceDocument, supportedDocumentExtraction, type Artifact, type ArtifactTier } from "./artifact.ts";
+import { RestrictedArtifactRefused, type Artifact, type ArtifactTier } from "./artifact.ts";
 
 /** ------------------------------------------------------- capabilities */
 
@@ -79,7 +85,7 @@ export interface ParserInput {
   readonly workItemId: string;
   readonly attemptId: string;
   readonly text: string;
-  readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: NonNullable<Artifact["extraction"]>["kind"] };
+  readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: "PDF_TEXT" | "PDF_TABLES" };
 }
 
 /** Is this value one the vault actually issued? */
@@ -91,6 +97,11 @@ export function isParserInput(value: unknown): value is ParserInput {
   );
 }
 
+/**
+ * The only constructor of `ParserInput`. Refuses a `RESTRICTED_RAW` artifact
+ * by name (naming the derivative when known), and bytes that do not hash to the
+ * artifact's recorded `contentHash`.
+ */
 export function issueParserInput(
   artifact: Artifact,
   text: string,
@@ -98,8 +109,7 @@ export function issueParserInput(
 ): ParserInput {
   const role = options.role ?? "PARSER";
 
-  if (artifact.tier === "EXTRACTED_DERIVED" && (!artifact.extraction?.complete ||
-      !supportedDocumentExtraction(artifact.extraction) || !extractionSourceDocument(artifact) || artifact.retentionPolicy === "DIAGNOSTIC")) {
+  if (artifact.tier === "EXTRACTED_DERIVED" && (!artifact.extraction?.complete || artifact.retentionPolicy === "DIAGNOSTIC")) {
     throw new Error("DOCUMENT_EXTRACTION_INCOMPLETE");
   }
 
@@ -128,7 +138,8 @@ export function issueParserInput(
     workItemId: artifact.workItemId,
     attemptId: artifact.attemptId,
     text,
-    ...(artifact.extraction ? { sourceDocument: extractionSourceDocument(artifact)! } : {}),
+    ...(artifact.extraction ? { sourceDocument: { artifactId: artifact.extraction.parent.id,
+      contentHash: artifact.extraction.parent.contentHash, kind: artifact.extraction.kind } } : {}),
   };
 }
 

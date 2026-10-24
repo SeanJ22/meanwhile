@@ -1,5 +1,4 @@
 import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
-import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { federalMemberOfScope } from "../votes/data-plane.ts";
@@ -115,8 +114,8 @@ function verifierIdFor(contract: ReaderContract): string {
     case "az-official-actions": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
     case "pima-legistar-outcomes": return "lib/outcomes/store.ts#readOutcomeProjection";
     case "mesa-legistar-minutes-outcomes": return "lib/outcomes/store.ts#readMesaOutcomeProjection";
-    case "ballot-navigation": return "lib/civic-data/curated-reader-read-model.ts#readBallotNavigationProjection";
     case "official-filings":
+    case "ballot-navigation":
     case "stances":
     case "campaign-sites":
     case "member-offices":
@@ -399,13 +398,8 @@ export async function verifyRoutineReaderProjection(
         const [{ readDoorOutcomeProjection }, { MESA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
         return verifyExactVersion(verifierId, await readDoorOutcomeProjection(MESA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
       }
-      case "ballot-navigation": {
-        const state = ballotNavigationState(options.scope ?? "");
-        if (!state) return fail(verifierId, "Navigation readback requires its exact state scope.");
-        const { readBallotNavigationProjection } = await import("./curated-reader-read-model.ts");
-        return verifyExactVersion(verifierId, await readBallotNavigationProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} ballot navigation`);
-      }
       case "official-filings":
+      case "ballot-navigation":
       case "stances":
       case "campaign-sites":
       case "member-offices":

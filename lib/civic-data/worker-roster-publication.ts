@@ -35,7 +35,6 @@ import { openBlank } from "../facts/publish.ts";
 import { learnOfficialHost } from "../facts/entities.ts";
 
 export interface WorkerPublicationCapture {
-  readonly rawContentHash?: string;
   readonly campaign?: import("../control-plane/promotion/section3.ts").Section3Page["campaign"];
   readonly sourcePolicy?: import("../control-plane/promotion/source-kinds.ts").SourcePolicy;
   readonly evidence: WorkerEvidence;

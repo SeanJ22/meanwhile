@@ -1,7 +1,6 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { installAbsent, installManualValue, installPromotedValue, installStateLegislators } from "./helpers/promoted-fixtures.ts";
-import { ballotNavigationScope } from "../lib/civic-data/ballot-navigation-scope.ts";
+import { installAbsent, installManualValue, installStateLegislators } from "./helpers/promoted-fixtures.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -157,16 +156,12 @@ test("a place reads one full state ballot and its own candidate families before 
   installManualValue("candidate-profiles:AZ", { cards: { ...profiles.cards, hunts: [] }, links: { ...profiles.links, hunts: [] } });
   installManualValue("voting-sites:AZ", { jurisdictions: [{ ocdId: county, name: "Selected", sites: [] }, { ocdId: neighbour, name: "Other", sites: [] }] });
   installManualValue("candidate-corpus:AZ", { documents: [] });
-  installPromotedValue({ recordClass: "CURATED_READER_RECORD", scope: ballotNavigationScope("AZ"), sourceId: "official-ballot-navigation", versionId: "test:ballot-navigation:AZ",
-    value: { kind: "ballot-navigation", records: [{ id: "election-field:az", kind: "ELECTION_FIELD", value: { state: "AZ", divisionId: "ocd-division/country:us/state:az", fieldKind: "registration_lookup",
-      text: "https://elections.example.gov/az", quote: "Check registration", dates: [], url: "https://elections.example.gov/az", navigationUrl: "https://elections.example.gov/az",
-      verifiedAt: at, collectedAt: at, sourceOrg: "Election office" } }] } });
   const bundle = promotedFixtureBundle(), selected: string[] = [];
   const families = await withReaderAuthorityEdge({ ...bundle, stateAuthorities: {
     families: bundle.stateAuthorities!.families,
     load: async (family, state) => { selected.push(`${family}:${state}`); return bundle.stateAuthorities!.load(family, state); },
   } }, () => readHeldPlaceFamilies([county], { now: at }));
-  assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "ballot-navigation:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
+  assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
   assert.deepEqual(families.ballots![0].contests.map(row => row.id), ["ballot-az-pima:supervisor"]);
   assert.deepEqual(families.ballots![0].candidacies.map(row => row.id), ["ballot-az-pima:supervisor:one-candidate"]);
   assert.deepEqual(families.votingSites!.jurisdictions.map(row => row.ocdId), [county]);
@@ -538,12 +533,8 @@ test("ballot candidacies, filings and voting sites retain their exact place and 
     filings: [{ id: "filing-1", kind: "CANDIDATE_FILING_DOCUMENT", bodyId: "county-body", bodyName: "County",
       ocdId: county, jurisdictionName: "County", sourceUrl: provenance.sourceUrl, documentUrl: "https://cochise.az.gov/filing.pdf",
       collectedAt: at, verifiedAt: at, facts: { candidateName: "Filed Candidate", office: "Supervisor" } }],
-    electionFields: [{ id: "registration-deadline:AZ", kind: "ELECTION_FIELD", value: {
-      state: "AZ", divisionId: state, electionDate: "2026-11-03", fieldKind: "registration_deadline",
-      text: "Register by October 5, 2026, at 11:59 pm", quote: "Register by October 5, 2026, at 11:59 pm",
-      dates: ["2026-10-05"], url: provenance.sourceUrl, navigationUrl: null, sourceOrg: "State election authority fixture",
-      collectedAt: "2026-08-01", verifiedAt: "2026-08-01",
-    } }],
+    electionDates: [{ state: "AZ", electionDay: "2026-11-03", sourceUrl: provenance.sourceUrl,
+      collectedAt: "2026-08-01", steps: [{ label: "Registration deadline", date: "2026-10-05", detail: "11:59 pm" }] }],
   } as unknown as HeldPlaceFamilies;
   const result = projectHeldPlaceCapture([county, state], registry, [], at, families);
   assert.ok(result.held.some(field => field.subjectId === "candidate-1" && field.checklistId === "CAN-02"));
@@ -551,9 +542,9 @@ test("ballot candidacies, filings and voting sites retain their exact place and 
   assert.deepEqual(result.held.filter(field => field.subjectId === "filing-1").map(field => field.checklistId), ["CAN-01"]);
   assert.ok(result.held.some(field => field.checklistId === "ELE-09"));
   const deadline = result.held.find(field => field.checklistId === "ELE-08");
-  assert.equal(deadline?.state, "published");
+  assert.equal(deadline?.state, "held");
   assert.equal(deadline?.checkedAt, "2026-08-01");
-  assert.ok(Date.parse(deadline!.freshUntil) < Date.parse(at), "a held field is not newly checked by reading it");
+  assert.ok(Date.parse(deadline!.freshUntil) < Date.parse(at), "adopted calendar is not newly checked by reading it");
   const owed = buildPlaceOwedList({ divisions: [{ id: county, label: "County" }, { id: state, label: "State" }], ...result, now: at });
   assert.deepEqual(owed.filter(row => row.subject.id === deadline!.subjectId).map(row => row.checklistId), ["ELE-08"]);
   assert.ok(owed.filter(row => row.subject.id === "candidate-1").every(row => row.checklistId.startsWith("CAN-")));

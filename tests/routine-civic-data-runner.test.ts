@@ -168,7 +168,7 @@ test("a missing ballot file with no canonical state records an owed publication,
     parseStateBallotContractId, parseBallotPublicationResult, ballotPublicationHasNoInput,
     parseRoutineRunnerReceipt: () => { throw Error("source receipt check reached"); },
     store: { readPromotionIdentity: async () => pointer },
-    recordBallotReport: (_taskId: string, value: BallotPublicationResult) => recordBallotPublication(repos, value, { cycleId: "missing-input", testedSha: null }),
+    recordBallotReport: (value: BallotPublicationResult) => recordBallotPublication(repos, value, { cycleId: "missing-input", testedSha: null }),
     console: { log: (value: string) => lines.push(value) },
   };
   const settle = runInNewContext(transpileModule(functionSource(source, "settlePendingRunResult"), {
@@ -404,10 +404,10 @@ test("source refreshes use their standing clocks without a Send and retry failed
   const now = Date.parse("2026-09-30T12:00:00Z");
   for (const task of AUTOMATIC_REFRESH_TASKS) {
     assert.equal(task.ownerInvocation, undefined);
-    assert.equal(automaticRefreshContract(task.id), task.id.startsWith("ballot-navigation-") ? "ballot-navigation" : task.id);
+    assert.equal(automaticRefreshContract(task.id), task.id);
     assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
     assert.equal(routineTaskDue(task, undefined, now), true);
-    const checked = task.id.startsWith("voting-sites:") || task.id.startsWith("ballot-navigation-") ? "2026-09-30T00:00:00Z" : "2026-09-29T12:00:00Z";
+    const checked = task.id.startsWith("voting-sites:") ? "2026-09-30T00:00:00Z" : "2026-09-29T12:00:00Z";
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now), true);
     const failed = "2026-09-30T11:00:00Z";

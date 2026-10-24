@@ -58,3 +58,26 @@ test("a board's clerk title does not erase that same person's separate staff job
   assert.equal(seatQuoteOnPage("<p>James D. Perey</p><p>Administrative Head</p><p>President</p>", "James D. Perey", "school#board", "James D. Perey"), null);
   assert.deepEqual(seatIn("Supervisor Rex Scott, District 1", "az:county:pima#governing", "Rex Scott"), { ward: "1" });
 });
+
+test("the fresh seven-day cohort's false seats stay refused: a school's street address, menu labels, a library board, a cut-off name and a name glued to its title", () => {
+  // Saved Kodiak staff directory: the district's street number on the next line is not a seat.
+  assert.equal(seatQuoteOnPage("<li><h3>Tania Silva-Johnson</h3><p>School Social Worker, District-wide</p><p>Phone: (907) 486-7426</p><p>Kodiak Island Borough School District<br>722 Mill Bay Rd.</p></li>",
+    "Tania Silva-Johnson", "ak:depschool:kodiak-island-borough-school-district#board", "Tania Silva-Johnson"), null);
+  assert.equal(seatIn("Kent Example\nArbor Park School District 145", "school#board"), null, "a school district's own number is its name, not a seat");
+  // Saved Pinellas County, Orlando, Tampa and New Britain pages: menu entries and leadership labels are not people.
+  for (const [name, page] of [
+    ["Community Development", "<p>Animal Services Building Services Housing and Community Development Development Review Services Office of Human Rights Board of County Commissioners</p>"],
+    ["Human Rights", "<p>Animal Services Building Services Housing and Community Development Development Review Services Office of Human Rights Board of County Commissioners</p>"],
+    ["Harry P. Leu Gardens", "<h3>Harry P. Leu Gardens Board of Trustees</h3>"],
+    ["Urban Forest Management Plan", "<p>The City of Tampa Urban Forest Management Plan calls for the creation of a Natural Resources Advisory Committee.</p>"],
+    ["Majority Leader", "<p>Majority Leader</p><p>Alderman Ward 4</p>"],
+  ]) assert.equal(seatQuoteOnPage(page!, name!, "county#governing", name!), null, name);
+  // Saved Homedale library page: the library's vice chair is not on the city council, and "Gibbens-" is a name glued to a title.
+  const library = "<title>Board of Trustees &#8211; Gypsy Jackson Memorial Library</title><p>Pam Gibbens- Vice Chair</p><p>Amanda Rice, Chair</p>";
+  assert.equal(seatQuoteOnPage(library, "Amanda Rice", "id:city:city-of-homedale#governing", "Amanda Rice"), null);
+  assert.equal(seatQuoteOnPage(library.replace(/<title>.*<\/title>/, ""), "Pam Gibbens- Vice", "id:city:city-of-homedale#governing", "Pam Gibbens- Vice"), null);
+  // Saved Aberdeen page: the link holds "Brian Schneide" and the page writes "Schneider".
+  const aberdeen = '<p>City Council Members</p><p><span><a href="x.html">Karl Vollmer</a></span></p><p><span><a href="dept-head-contact-form.html">Brian Schneide</a>r</span></p>';
+  assert.equal(seatQuoteOnPage(aberdeen, "Brian Schneide", "id:city:city-of-aberdeen#governing", "Brian Schneide"), null);
+  assert.ok(seatQuoteOnPage(aberdeen, "Karl Vollmer", "id:city:city-of-aberdeen#governing", "Karl Vollmer"), "a whole name on the same list still seats");
+});

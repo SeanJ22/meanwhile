@@ -948,6 +948,78 @@ test("a member already live with a title inside the name is renamed to the name,
   assert.equal((await run()).labels.renamed, 0, "a member is read once");
 });
 
+test("governing boards holding facts but no name are named from the page that supplied a fact, once a pass; a page that does not name the board is left open for five days", async () => {
+  const { facts, repos, vault } = await setup();
+  const NAMED = "az:city:town-of-clifton", PLAIN = "az:city:city-of-tucson";
+  const pages = new Map([["https://www.cliftonaz.gov/council", "<html><body><h1>Clifton, AZ</h1><p>The Town Council meets the first Monday.</p><p>Town Council office (928) 865-4146</p></body></html>"],
+    ["https://www.tucsonaz.gov/leaders", "<html><body><h1>Tucson, AZ</h1><p>Mayor Regina Romero and ward representatives.</p></body></html>"]]);
+  const requested: string[] = [];
+  const fetch: ProbeFetch = async url => {
+    requested.push(String(url));
+    const body = new TextEncoder().encode(pages.get(String(url)) ?? "");
+    return { status: 200, headers: new Headers({ "content-type": "text/html" }), bytes: async () => body };
+  };
+  const bodies: string[] = [];
+  for (const [government, url] of [[NAMED, "https://www.cliftonaz.gov/council"], [PLAIN, "https://www.tucsonaz.gov/leaders"]] as const) {
+    const body = (await ensureGoverningBody(facts.query, government))!;
+    bodies.push(body.id);
+    await facts.query("INSERT INTO source_copy(url, final_url, fetched_at, sha256, blob_key) VALUES($1, $1, $2, $3, $4)", [url, NOW, "d".repeat(64), `held:${government}`]);
+    await facts.query(`INSERT INTO fact(entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, checked_at, live_at, produced_by)
+      SELECT $1, 'office_phone', '"(928) 865-4146"'::jsonb, '(928) 865-4146', 'live', 'OFFICIAL', max(id), '(928) 865-4146', $2, $2, 'box' FROM source_copy WHERE url = $3`, [body.id, NOW, url]);
+  }
+  const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 10 };
+  await publishBoxFindings(input);
+  const names = await facts.query("SELECT entity_id, value_text, produced_by FROM fact WHERE field = 'name' AND status = 'live'");
+  assert.deepEqual(names.map(row => [row.entity_id, row.value_text, row.produced_by]), [[bodies[0], "Town Council", "box"]]);
+  assert.deepEqual((await facts.query("SELECT entity_id, reason FROM blank WHERE field = 'name'")).map(row => [row.entity_id, row.reason]), [[bodies[1], "NAME_NOT_ON_PAGE"]]);
+  requested.length = 0;
+  await publishBoxFindings(input);
+  assert.deepEqual(requested, [], "a named board and a board waiting out its five days are not read again");
+});
+
+test("board-name backfill obeys the publication deadline and resumes unstarted names next pass", async () => {
+  const { facts, repos, vault } = await setup();
+  const url = "https://www.tucsonaz.gov/council";
+  const [copy] = await facts.query("INSERT INTO source_copy(url, final_url, fetched_at, sha256, blob_key) VALUES($1, $1, $2, $3, 'fixture') RETURNING id", [url, NOW, "d".repeat(64)]);
+  for (let index = 0; index < 3; index++) {
+    const id = `${TUCSON}:naming-${index}#governing`;
+    await ensureEntity(facts.query, { id, kind: "body", name: "City Council", state: "AZ", parentId: TUCSON });
+    await facts.query(`INSERT INTO fact(entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, checked_at, live_at, produced_by)
+      VALUES($1, 'office_phone', '"(520) 791-4213"'::jsonb, '(520) 791-4213', 'live', 'OFFICIAL', $2, '(520) 791-4213', $3, $3, 'box')`, [id, copy!.id, NOW]);
+  }
+  let clockMs = Date.parse(NOW), reads = 0;
+  const actualNow = Date.now;
+  const input = { repos, facts, vault, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 0, audit: false,
+    purge: async () => ({ purged: true }), fetch: async () => {
+      reads++; clockMs += 30_000;
+      return { status: 200, headers: new Headers({ "content-type": "text/html" }), bytes: async () => new TextEncoder().encode("<h1>City of Tucson, Arizona</h1><p>The City Council meets monthly.</p>") };
+    } };
+  const named = async () => Number((await facts.query("SELECT count(*) AS n FROM fact WHERE field = 'name' AND status = 'live'"))[0]!.n);
+  Date.now = () => clockMs;
+  try {
+    await publishBoxFindings({ ...input, deadlineMs: clockMs });
+    assert.deepEqual([reads, await named()], [0, 0], "an expired pass does not start the naming scan");
+    for (let pass = 1; pass <= 2; pass++) {
+      await publishBoxFindings({ ...input, deadlineMs: clockMs + 1 });
+      assert.deepEqual([reads, await named()], [pass, pass], "the in-flight page publishes its name and the next board stays due");
+      assert.deepEqual(await facts.query("SELECT entity_id FROM blank WHERE field = 'name'"), [], "a deferred read does not become a missing name");
+    }
+    await publishBoxFindings(input);
+    assert.deepEqual([reads, await named()], [3, 3], "the no-deadline path still names all remaining boards");
+  } finally { Date.now = actualNow; }
+});
+
+test("a board-name backfill exception is included in the saved publication failure summary", async () => {
+  const { facts, repos, vault } = await setup();
+  const broken = { ...facts, query: async (text: string, params?: readonly unknown[]) => {
+    if (text.includes("AS url") && text.includes("FROM entity e")) throw new Error("body naming query unavailable");
+    return facts.query(text, params);
+  } };
+  const report = await publishBoxFindings({ repos, facts: broken, vault, fetch: async () => { throw new Error("no read is started"); }, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 0, audit: false });
+  assert.equal(report.failuresByReason.BOX_PUBLICATION_EXCEPTION, 1);
+  assert.deepEqual(report.errorExamples, [{ findingId: "board-names", stage: "BODY_NAMING", detail: "body naming query unavailable" }]);
+});
+
 test("a federal committee page cannot seat its members on an unrelated local government", async t => {
   const { facts, repos, vault, hold } = await setup();
   t.after(() => facts.pg.close());

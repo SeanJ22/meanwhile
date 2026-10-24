@@ -111,7 +111,7 @@ const OFFICE_WORD =
 
 /** Words a page puts in a heading, a notice, a menu or a place's name, never in a person's: a cell holding one is not a name. */
 const NOT_A_NAME =
-  /\b(?:scholarships?|fund[- ]?raising|accounts payable|readi[- ]ride|remote work|field trips|controversial issues|announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses|date|dates|elected|expires|expiration|term|terms|seat|title|position|bid|bids|package|packages|name|town|village|of|the|and|for|at|in|on|to|by|from|with)\b/i;
+  /\b(?:scholarships?|fund[- ]?raising|gardens?|plans?|rights|development|management|majority|minority|accounts payable|readi[- ]ride|remote work|field trips|controversial issues|announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses|date|dates|elected|expires|expiration|term|terms|seat|title|position|bid|bids|package|packages|name|town|village|of|the|and|for|at|in|on|to|by|from|with)\b/i;
 
 export function looksLikeNameCell(text: string): boolean {
   const first = splitPersonTitle(text.split("\n")[0]?.trim() ?? "").name;
@@ -126,7 +126,8 @@ export function looksLikeNameCell(text: string): boolean {
     if (bare.length === 0) continue;
     if (/^(?:Sr|Jr|II|III|IV|V|Esq)\.?$/i.test(bare)) continue;
     if (/^(?:van|von|de|del|della|di|da|la|le|du)$/i.test(bare)) continue;
-    if (!/^[\p{Lu}][\p{L}'’.-]*$/u.test(bare)) return false;
+    // A word cut off at a dash ("Gibbens- Vice Chair") is a name glued to a title, not a name.
+    if (!/^[\p{Lu}][\p{L}'’.-]*$/u.test(bare) || /-$/.test(bare)) return false;
     capitalised++;
   }
   return capitalised >= 2;

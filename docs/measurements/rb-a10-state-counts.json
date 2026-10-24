@@ -1,0 +1,744 @@
+{
+  "identity": {
+    "role": "readonly",
+    "read_only": "on",
+    "checked_at": "2026-10-24T17:20:59.104Z"
+  },
+  "method": "Held production inventory; same definition as baseline, not rendered-page or deployed map completeness",
+  "definition": {
+    "boards": "Distinct runtime registry body IDs plus body/committee entities with a live name fact",
+    "races": "Distinct contest IDs in the current promoted ballot records",
+    "sites": "Distinct site IDs in promoted voting records"
+  },
+  "attribution": "This is held production inventory. Increases reflect ongoing source acquisition and are not attributed to the place-map switch. It is not deployed-map or rendered-page verification.",
+  "states": [
+    {
+      "state": "AK",
+      "before": {
+        "boards": 115,
+        "races": 76,
+        "sites": 0
+      },
+      "after": {
+        "boards": 118,
+        "races": 76,
+        "sites": 0
+      }
+    },
+    {
+      "state": "AL",
+      "before": {
+        "boards": 271,
+        "races": 187,
+        "sites": 78
+      },
+      "after": {
+        "boards": 271,
+        "races": 187,
+        "sites": 78
+      }
+    },
+    {
+      "state": "AR",
+      "before": {
+        "boards": 117,
+        "races": 179,
+        "sites": 0
+      },
+      "after": {
+        "boards": 119,
+        "races": 179,
+        "sites": 3
+      }
+    },
+    {
+      "state": "AS",
+      "before": {
+        "boards": 0,
+        "races": 18,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 18,
+        "sites": 0
+      }
+    },
+    {
+      "state": "AZ",
+      "before": {
+        "boards": 1012,
+        "races": 169,
+        "sites": 345
+      },
+      "after": {
+        "boards": 1013,
+        "races": 169,
+        "sites": 363
+      }
+    },
+    {
+      "state": "CA",
+      "before": {
+        "boards": 1851,
+        "races": 346,
+        "sites": 0
+      },
+      "after": {
+        "boards": 1855,
+        "races": 346,
+        "sites": 1828
+      }
+    },
+    {
+      "state": "CO",
+      "before": {
+        "boards": 214,
+        "races": 165,
+        "sites": 0
+      },
+      "after": {
+        "boards": 219,
+        "races": 165,
+        "sites": 56
+      }
+    },
+    {
+      "state": "CT",
+      "before": {
+        "boards": 148,
+        "races": 197,
+        "sites": 0
+      },
+      "after": {
+        "boards": 153,
+        "races": 197,
+        "sites": 174
+      }
+    },
+    {
+      "state": "DC",
+      "before": {
+        "boards": 4,
+        "races": 16,
+        "sites": 0
+      },
+      "after": {
+        "boards": 4,
+        "races": 16,
+        "sites": 129
+      }
+    },
+    {
+      "state": "DE",
+      "before": {
+        "boards": 42,
+        "races": 77,
+        "sites": 297
+      },
+      "after": {
+        "boards": 45,
+        "races": 77,
+        "sites": 297
+      }
+    },
+    {
+      "state": "FL",
+      "before": {
+        "boards": 618,
+        "races": 307,
+        "sites": 1
+      },
+      "after": {
+        "boards": 664,
+        "races": 307,
+        "sites": 824
+      }
+    },
+    {
+      "state": "GA",
+      "before": {
+        "boards": 223,
+        "races": 279,
+        "sites": 132
+      },
+      "after": {
+        "boards": 234,
+        "races": 279,
+        "sites": 178
+      }
+    },
+    {
+      "state": "GU",
+      "before": {
+        "boards": 0,
+        "races": 0,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 0,
+        "sites": 0
+      }
+    },
+    {
+      "state": "HI",
+      "before": {
+        "boards": 68,
+        "races": 92,
+        "sites": 60
+      },
+      "after": {
+        "boards": 70,
+        "races": 92,
+        "sites": 60
+      }
+    },
+    {
+      "state": "IA",
+      "before": {
+        "boards": 48,
+        "races": 140,
+        "sites": 64
+      },
+      "after": {
+        "boards": 53,
+        "races": 140,
+        "sites": 64
+      }
+    },
+    {
+      "state": "ID",
+      "before": {
+        "boards": 99,
+        "races": 423,
+        "sites": 0
+      },
+      "after": {
+        "boards": 103,
+        "races": 423,
+        "sites": 2
+      }
+    },
+    {
+      "state": "IL",
+      "before": {
+        "boards": 431,
+        "races": 166,
+        "sites": 24
+      },
+      "after": {
+        "boards": 432,
+        "races": 166,
+        "sites": 25
+      }
+    },
+    {
+      "state": "IN",
+      "before": {
+        "boards": 18,
+        "races": 142,
+        "sites": 0
+      },
+      "after": {
+        "boards": 26,
+        "races": 142,
+        "sites": 182
+      }
+    },
+    {
+      "state": "KS",
+      "before": {
+        "boards": 10,
+        "races": 248,
+        "sites": 0
+      },
+      "after": {
+        "boards": 10,
+        "races": 248,
+        "sites": 23
+      }
+    },
+    {
+      "state": "KY",
+      "before": {
+        "boards": 13,
+        "races": 127,
+        "sites": 1690
+      },
+      "after": {
+        "boards": 15,
+        "races": 127,
+        "sites": 1690
+      }
+    },
+    {
+      "state": "LA",
+      "before": {
+        "boards": 0,
+        "races": 18,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 18,
+        "sites": 112
+      }
+    },
+    {
+      "state": "MA",
+      "before": {
+        "boards": 53,
+        "races": 232,
+        "sites": 164
+      },
+      "after": {
+        "boards": 54,
+        "races": 232,
+        "sites": 164
+      }
+    },
+    {
+      "state": "MD",
+      "before": {
+        "boards": 293,
+        "races": 336,
+        "sites": 102
+      },
+      "after": {
+        "boards": 301,
+        "races": 336,
+        "sites": 102
+      }
+    },
+    {
+      "state": "ME",
+      "before": {
+        "boards": 10,
+        "races": 278,
+        "sites": 0
+      },
+      "after": {
+        "boards": 10,
+        "races": 278,
+        "sites": 0
+      }
+    },
+    {
+      "state": "MI",
+      "before": {
+        "boards": 142,
+        "races": 340,
+        "sites": 0
+      },
+      "after": {
+        "boards": 142,
+        "races": 340,
+        "sites": 51
+      }
+    },
+    {
+      "state": "MN",
+      "before": {
+        "boards": 33,
+        "races": 392,
+        "sites": 0
+      },
+      "after": {
+        "boards": 52,
+        "races": 392,
+        "sites": 25
+      }
+    },
+    {
+      "state": "MO",
+      "before": {
+        "boards": 453,
+        "races": 195,
+        "sites": 0
+      },
+      "after": {
+        "boards": 453,
+        "races": 195,
+        "sites": 57
+      }
+    },
+    {
+      "state": "MP",
+      "before": {
+        "boards": 0,
+        "races": 21,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 21,
+        "sites": 0
+      }
+    },
+    {
+      "state": "MS",
+      "before": {
+        "boards": 0,
+        "races": 102,
+        "sites": 0
+      },
+      "after": {
+        "boards": 4,
+        "races": 102,
+        "sites": 0
+      }
+    },
+    {
+      "state": "MT",
+      "before": {
+        "boards": 0,
+        "races": 146,
+        "sites": 0
+      },
+      "after": {
+        "boards": 4,
+        "races": 146,
+        "sites": 0
+      }
+    },
+    {
+      "state": "NC",
+      "before": {
+        "boards": 159,
+        "races": 561,
+        "sites": 0
+      },
+      "after": {
+        "boards": 159,
+        "races": 561,
+        "sites": 2806
+      }
+    },
+    {
+      "state": "ND",
+      "before": {
+        "boards": 0,
+        "races": 409,
+        "sites": 209
+      },
+      "after": {
+        "boards": 11,
+        "races": 409,
+        "sites": 209
+      }
+    },
+    {
+      "state": "NE",
+      "before": {
+        "boards": 0,
+        "races": 48,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 48,
+        "sites": 13
+      }
+    },
+    {
+      "state": "NH",
+      "before": {
+        "boards": 650,
+        "races": 98,
+        "sites": 1
+      },
+      "after": {
+        "boards": 650,
+        "races": 98,
+        "sites": 2
+      }
+    },
+    {
+      "state": "NJ",
+      "before": {
+        "boards": 694,
+        "races": 109,
+        "sites": 156
+      },
+      "after": {
+        "boards": 694,
+        "races": 109,
+        "sites": 614
+      }
+    },
+    {
+      "state": "NM",
+      "before": {
+        "boards": 74,
+        "races": 255,
+        "sites": 0
+      },
+      "after": {
+        "boards": 76,
+        "races": 255,
+        "sites": 37
+      }
+    },
+    {
+      "state": "NV",
+      "before": {
+        "boards": 53,
+        "races": 78,
+        "sites": 0
+      },
+      "after": {
+        "boards": 56,
+        "races": 78,
+        "sites": 48
+      }
+    },
+    {
+      "state": "NY",
+      "before": {
+        "boards": 128,
+        "races": 268,
+        "sites": 0
+      },
+      "after": {
+        "boards": 130,
+        "races": 268,
+        "sites": 1292
+      }
+    },
+    {
+      "state": "OH",
+      "before": {
+        "boards": 112,
+        "races": 223,
+        "sites": 0
+      },
+      "after": {
+        "boards": 113,
+        "races": 223,
+        "sites": 269
+      }
+    },
+    {
+      "state": "OK",
+      "before": {
+        "boards": 33,
+        "races": 95,
+        "sites": 0
+      },
+      "after": {
+        "boards": 46,
+        "races": 95,
+        "sites": 0
+      }
+    },
+    {
+      "state": "OR",
+      "before": {
+        "boards": 79,
+        "races": 116,
+        "sites": 0
+      },
+      "after": {
+        "boards": 88,
+        "races": 116,
+        "sites": 0
+      }
+    },
+    {
+      "state": "PA",
+      "before": {
+        "boards": 15,
+        "races": 188,
+        "sites": 0
+      },
+      "after": {
+        "boards": 16,
+        "races": 188,
+        "sites": 0
+      }
+    },
+    {
+      "state": "PR",
+      "before": {
+        "boards": 0,
+        "races": 0,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 0,
+        "sites": 0
+      }
+    },
+    {
+      "state": "RI",
+      "before": {
+        "boards": 0,
+        "races": 126,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 126,
+        "sites": 0
+      }
+    },
+    {
+      "state": "SC",
+      "before": {
+        "boards": 0,
+        "races": 298,
+        "sites": 1956
+      },
+      "after": {
+        "boards": 7,
+        "races": 298,
+        "sites": 1956
+      }
+    },
+    {
+      "state": "SD",
+      "before": {
+        "boards": 0,
+        "races": 89,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 89,
+        "sites": 0
+      }
+    },
+    {
+      "state": "TN",
+      "before": {
+        "boards": 0,
+        "races": 129,
+        "sites": 0
+      },
+      "after": {
+        "boards": 3,
+        "races": 129,
+        "sites": 0
+      }
+    },
+    {
+      "state": "TX",
+      "before": {
+        "boards": 474,
+        "races": 1736,
+        "sites": 0
+      },
+      "after": {
+        "boards": 475,
+        "races": 1736,
+        "sites": 0
+      }
+    },
+    {
+      "state": "UT",
+      "before": {
+        "boards": 10,
+        "races": 142,
+        "sites": 0
+      },
+      "after": {
+        "boards": 10,
+        "races": 142,
+        "sites": 0
+      }
+    },
+    {
+      "state": "VA",
+      "before": {
+        "boards": 28,
+        "races": 427,
+        "sites": 0
+      },
+      "after": {
+        "boards": 28,
+        "races": 427,
+        "sites": 0
+      }
+    },
+    {
+      "state": "VI",
+      "before": {
+        "boards": 1,
+        "races": 10,
+        "sites": 0
+      },
+      "after": {
+        "boards": 1,
+        "races": 10,
+        "sites": 0
+      }
+    },
+    {
+      "state": "VT",
+      "before": {
+        "boards": 0,
+        "races": 140,
+        "sites": 0
+      },
+      "after": {
+        "boards": 3,
+        "races": 140,
+        "sites": 0
+      }
+    },
+    {
+      "state": "WA",
+      "before": {
+        "boards": 68,
+        "races": 156,
+        "sites": 0
+      },
+      "after": {
+        "boards": 68,
+        "races": 156,
+        "sites": 0
+      }
+    },
+    {
+      "state": "WI",
+      "before": {
+        "boards": 1000,
+        "races": 195,
+        "sites": 0
+      },
+      "after": {
+        "boards": 1000,
+        "races": 195,
+        "sites": 0
+      }
+    },
+    {
+      "state": "WV",
+      "before": {
+        "boards": 0,
+        "races": 196,
+        "sites": 0
+      },
+      "after": {
+        "boards": 0,
+        "races": 196,
+        "sites": 0
+      }
+    },
+    {
+      "state": "WY",
+      "before": {
+        "boards": 3,
+        "races": 98,
+        "sites": 0
+      },
+      "after": {
+        "boards": 9,
+        "races": 98,
+        "sites": 0
+      }
+    }
+  ]
+}

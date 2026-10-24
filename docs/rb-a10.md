@@ -8,7 +8,7 @@ Remaining work, owned by RB-A10:
 
 - Verify complete ZIP coverage and every referenced identity against the production map. Depends on the RB-A1 schema and RB-A2 import. Production had no `zip_place`, `zcta_place` or `place_boundary` tables at the October 24 read. The new additive `RB-A10_zip_locations` migration seeds the existing source coordinates and postal metadata before deployment and must also be applied by the production pipeline; this session has only read-only database authorization.
 - Complete the Chrome 20-ZIP comparison and ten boundary map moves, including each first visit under three seconds. This session currently exposes no browser-control tool. HTTP snapshots below are not Chrome verification.
-- Verify the deployed map and actual scheduled production refresh after RB-A2 ships. The two production-data copy reader connections and controlled-clock standing refresh below pass; they are not a claim that a production map run occurred.
+- Verify the deployed map after RB-A2 ships and complete River’s post-release live check. The two production-data copy reader connections and controlled-clock standing refresh below prove repeat execution at the next due time; they are not a claim that a future production run has already occurred.
 - After board/river integration.md names rb-a2 and origin/river contains its folded commit, merge river, rerun every check, push READY, then handle returns until River records the live-check pass.
 
 The integrated 83b96a9b3 revision passes 113 canonical focused checks, the default build and merge-file lint. River's paged open-data reader and ballot navigation are retained. Four incoming EPA replay/test imports of the retired ZIP module are replaced; the replays use an explicit read-only map connection and preserve their local evidence stores. A production SELECT through that connection with the replay transport installed reports role `readonly` and transaction read-only `on`. The production pre-deploy schema check passes with 51 of 54 migrations applied; A1 remains owed from the earlier release and A2 plus the ZIP seed remain pending. This is not deployed-map verification.
@@ -48,68 +48,68 @@ Twenty points on both sides of ten state lines resolve to the expected state usi
 
 The additive seed has 42,883 source rows, including known postal destinations with no coordinates. Migration verification now sizes its committed-file read for the actual migration, retaining exact byte comparison; all 21 migration tests pass after that fix.
 
-## Production baseline by state
+## Production inventory before and after
 
-Boards count distinct runtime-registry IDs plus sourced body and committee IDs with a live name fact. Races count distinct contests in the current promoted ballot records. Sites count distinct IDs in promoted voting records. These describe held production data, not rendered-page completeness. After counts remain open until the new map is loaded and checked.
+Boards count distinct runtime-registry IDs plus sourced body and committee IDs with a live name fact. Races count distinct contests in the current promoted ballot records. Sites count distinct IDs in promoted voting records. The after read is October 24 at 1:20 PM Eastern, in a read-only repeatable-read transaction on production. No state count decreases. Totals are 9,867 to 10,067 boards, 11,604 to 11,604 races, and 5,279 to 13,733 sites. Increases reflect ongoing acquisition; they are not attributed to RB-A10. These are held-data counts, not deployed-map or rendered-page completeness. The [captured comparison](measurements/rb-a10-state-counts.json) retains the method and all values.
 
-| State | Boards before | Races before | Sites before |
-| --- | ---: | ---: | ---: |
-| AK | 115 | 76 | 0 |
-| AL | 271 | 187 | 78 |
-| AR | 117 | 179 | 0 |
-| AS | 0 | 18 | 0 |
-| AZ | 1012 | 169 | 345 |
-| CA | 1851 | 346 | 0 |
-| CO | 214 | 165 | 0 |
-| CT | 148 | 197 | 0 |
-| DC | 4 | 16 | 0 |
-| DE | 42 | 77 | 297 |
-| FL | 618 | 307 | 1 |
-| GA | 223 | 279 | 132 |
-| GU | 0 | 0 | 0 |
-| HI | 68 | 92 | 60 |
-| IA | 48 | 140 | 64 |
-| ID | 99 | 423 | 0 |
-| IL | 431 | 166 | 24 |
-| IN | 18 | 142 | 0 |
-| KS | 10 | 248 | 0 |
-| KY | 13 | 127 | 1690 |
-| LA | 0 | 18 | 0 |
-| MA | 53 | 232 | 164 |
-| MD | 293 | 336 | 102 |
-| ME | 10 | 278 | 0 |
-| MI | 142 | 340 | 0 |
-| MN | 33 | 392 | 0 |
-| MO | 453 | 195 | 0 |
-| MP | 0 | 21 | 0 |
-| MS | 0 | 102 | 0 |
-| MT | 0 | 146 | 0 |
-| NC | 159 | 561 | 0 |
-| ND | 0 | 409 | 209 |
-| NE | 0 | 48 | 0 |
-| NH | 650 | 98 | 1 |
-| NJ | 694 | 109 | 156 |
-| NM | 74 | 255 | 0 |
-| NV | 53 | 78 | 0 |
-| NY | 128 | 268 | 0 |
-| OH | 112 | 223 | 0 |
-| OK | 33 | 95 | 0 |
-| OR | 79 | 116 | 0 |
-| PA | 15 | 188 | 0 |
-| PR | 0 | 0 | 0 |
-| RI | 0 | 126 | 0 |
-| SC | 0 | 298 | 1956 |
-| SD | 0 | 89 | 0 |
-| TN | 0 | 129 | 0 |
-| TX | 474 | 1736 | 0 |
-| UT | 10 | 142 | 0 |
-| VA | 28 | 427 | 0 |
-| VI | 1 | 10 | 0 |
-| VT | 0 | 140 | 0 |
-| WA | 68 | 156 | 0 |
-| WI | 1000 | 195 | 0 |
-| WV | 0 | 196 | 0 |
-| WY | 3 | 98 | 0 |
+| State | Boards before | Boards after | Races before | Races after | Sites before | Sites after |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| AK | 115 | 118 | 76 | 76 | 0 | 0 |
+| AL | 271 | 271 | 187 | 187 | 78 | 78 |
+| AR | 117 | 119 | 179 | 179 | 0 | 3 |
+| AS | 0 | 0 | 18 | 18 | 0 | 0 |
+| AZ | 1012 | 1013 | 169 | 169 | 345 | 363 |
+| CA | 1851 | 1855 | 346 | 346 | 0 | 1828 |
+| CO | 214 | 219 | 165 | 165 | 0 | 56 |
+| CT | 148 | 153 | 197 | 197 | 0 | 174 |
+| DC | 4 | 4 | 16 | 16 | 0 | 129 |
+| DE | 42 | 45 | 77 | 77 | 297 | 297 |
+| FL | 618 | 664 | 307 | 307 | 1 | 824 |
+| GA | 223 | 234 | 279 | 279 | 132 | 178 |
+| GU | 0 | 0 | 0 | 0 | 0 | 0 |
+| HI | 68 | 70 | 92 | 92 | 60 | 60 |
+| IA | 48 | 53 | 140 | 140 | 64 | 64 |
+| ID | 99 | 103 | 423 | 423 | 0 | 2 |
+| IL | 431 | 432 | 166 | 166 | 24 | 25 |
+| IN | 18 | 26 | 142 | 142 | 0 | 182 |
+| KS | 10 | 10 | 248 | 248 | 0 | 23 |
+| KY | 13 | 15 | 127 | 127 | 1690 | 1690 |
+| LA | 0 | 0 | 18 | 18 | 0 | 112 |
+| MA | 53 | 54 | 232 | 232 | 164 | 164 |
+| MD | 293 | 301 | 336 | 336 | 102 | 102 |
+| ME | 10 | 10 | 278 | 278 | 0 | 0 |
+| MI | 142 | 142 | 340 | 340 | 0 | 51 |
+| MN | 33 | 52 | 392 | 392 | 0 | 25 |
+| MO | 453 | 453 | 195 | 195 | 0 | 57 |
+| MP | 0 | 0 | 21 | 21 | 0 | 0 |
+| MS | 0 | 4 | 102 | 102 | 0 | 0 |
+| MT | 0 | 4 | 146 | 146 | 0 | 0 |
+| NC | 159 | 159 | 561 | 561 | 0 | 2806 |
+| ND | 0 | 11 | 409 | 409 | 209 | 209 |
+| NE | 0 | 0 | 48 | 48 | 0 | 13 |
+| NH | 650 | 650 | 98 | 98 | 1 | 2 |
+| NJ | 694 | 694 | 109 | 109 | 156 | 614 |
+| NM | 74 | 76 | 255 | 255 | 0 | 37 |
+| NV | 53 | 56 | 78 | 78 | 0 | 48 |
+| NY | 128 | 130 | 268 | 268 | 0 | 1292 |
+| OH | 112 | 113 | 223 | 223 | 0 | 269 |
+| OK | 33 | 46 | 95 | 95 | 0 | 0 |
+| OR | 79 | 88 | 116 | 116 | 0 | 0 |
+| PA | 15 | 16 | 188 | 188 | 0 | 0 |
+| PR | 0 | 0 | 0 | 0 | 0 | 0 |
+| RI | 0 | 0 | 126 | 126 | 0 | 0 |
+| SC | 0 | 7 | 298 | 298 | 1956 | 1956 |
+| SD | 0 | 0 | 89 | 89 | 0 | 0 |
+| TN | 0 | 3 | 129 | 129 | 0 | 0 |
+| TX | 474 | 475 | 1736 | 1736 | 0 | 0 |
+| UT | 10 | 10 | 142 | 142 | 0 | 0 |
+| VA | 28 | 28 | 427 | 427 | 0 | 0 |
+| VI | 1 | 1 | 10 | 10 | 0 | 0 |
+| VT | 0 | 3 | 140 | 140 | 0 | 0 |
+| WA | 68 | 68 | 156 | 156 | 0 | 0 |
+| WI | 1000 | 1000 | 195 | 195 | 0 | 0 |
+| WV | 0 | 0 | 196 | 196 | 0 | 0 |
+| WY | 3 | 9 | 98 | 98 | 0 | 0 |
 
 ## Twenty ZIP snapshots
 

@@ -679,9 +679,17 @@ export function routineTaskNextDueMs(
   if (attempted > succeeded) return attempted + failureRetryMs(task.retryMs, clock);
   if (task.recordClass === "FEDERAL_MONEY" && task.contract.fanOut === true &&
       task.scope === `${task.sourceId}:US` && clock.continuationPending === true) return nowMs;
-  const policyMs = cadenceMsAt(task.contract, nowMs);
-  return succeeded + (observedEveryMs === undefined ? policyMs
-    : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS)));
+  const boundaries = [...new Set((task.contract.cadence.phases ?? []).map(phase => Date.parse(phase.through))
+    .filter(at => Number.isFinite(at) && at > nowMs))].sort((a, b) => a - b);
+  const starts = [nowMs, ...boundaries];
+  for (const [index, start] of starts.entries()) {
+    const policyMs = cadenceMsAt(task.contract, start);
+    const everyMs = observedEveryMs === undefined ? policyMs
+      : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS));
+    const due = index === 0 ? succeeded + everyMs : Math.max(start, succeeded + everyMs);
+    if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return due;
+  }
+  return Number.POSITIVE_INFINITY;
 }
 
 export function routineTaskDue(

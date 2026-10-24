@@ -41,7 +41,7 @@ async function loadTranslationPlaybook(repos: FieldManualRepos) {
 }
 
 /** Preserve each writer/checker charge even when its proposed translation is rejected. */
-function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTransport, subjectId: string): ModelTransport {
+function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTransport, subjectId: string, ocdId: string): ModelTransport {
   return async request => {
     const started = performance.now();
     const response = await send(request);
@@ -49,7 +49,7 @@ function meteredTranslationTransport(repos: TranslationCostRepos, send: ModelTra
     const at = new Date().toISOString(), id = `translation:${randomUUID()}`;
     const checker = request.tools[0]?.name.startsWith("check_") === true;
     const entry = costEntryWithModel({ attemptId: id, workItemId: subjectId, routeTaskId: null, routeId: "plain-english-translation",
-      source: "api.anthropic.com", jurisdiction: subjectId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
+      source: "api.anthropic.com", jurisdiction: ocdId, project: "freshness", role: checker ? "TRANSLATION_CHECKER" : "TRANSLATOR",
       costPolicy: "R7", recordedAt: at, requestedModel: request.model, servedModel: response.model,
       cost: { ...ZERO_COST, ...meteredCostFields(usage), ...modelRequestAccounting(response), requestCount: 1,
         inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
@@ -160,7 +160,7 @@ export async function translateText(input: {
     input_schema: { type: "object", required: ["text", "sentences"], properties: {
       text: { type: "string" }, sentences: quotedSentences,
     } } };
-  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.subjectId, state: subject.state }), subject.subjectId);
+  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.subjectId, state: subject.state }), subject.subjectId, subject.ocdId);
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: (subject.kind === "AGENDA" || subject.kind === "MINUTES") && !input.batchPriority ? "LIVE_REFRESH" : "TRANSLATOR", priority: input.batchPriority },
     model, max_tokens: 8192, ...translationThinking(model),
@@ -211,7 +211,7 @@ export async function translateMeasure(input: {
   const source = translationPassages(evidence.text);
   const modelSubject = { contestId: subject.contestId, title: subject.title, ocdId: subject.ocdId, state: subject.state,
     sourceReference: source.reference(subject.sourceQuote), existingParts: subject.prior?.parts ?? [] };
-  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId);
+  const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId, subject.ocdId);
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: "TRANSLATOR", priority: input.batchPriority },
     model, max_tokens: 8192, ...translationThinking(model),

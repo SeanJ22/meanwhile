@@ -335,5 +335,8 @@ test("a failed Sonnet check buys a Sonnet rewrite and an Opus check, metering al
   assert.equal(result.record.subjectId, subject.contestId);
   assert.equal(result.usage.length, 4);
   assert.ok(result.usage.every(row => row.usd !== null));
+  const costs = await repos.costs.readAll();
+  assert.equal(costs.length, 4);
+  assert.ok(costs.every(row => row.jurisdiction === subject.ocdId && row.workItemId === subject.contestId), "every rung keeps the job ID and attributes dollars to its real state, including legacy ballot IDs");
   assert.equal(translationRecordIssue({ ...result.record, checkerModel: `${result.record.writerModel}-20261024` })?.includes("independent checker"), true);
 });

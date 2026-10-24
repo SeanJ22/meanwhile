@@ -2,7 +2,6 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
-import { performance } from "node:perf_hooks";
 import { neon } from "@neondatabase/serverless";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
@@ -12,25 +11,11 @@ import { readLegacyStateMemberships, heldStateDataset } from "../lib/place-map/r
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
-const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), productionBaseline = process.argv.includes("--production-baseline"), zipLinksOnly = process.argv.includes("--zip-links");
+const verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), productionBaseline = process.argv.includes("--production-baseline"), zipLinksOnly = process.argv.includes("--zip-links");
 const states = Object.values(FIPS_TO_STATE).map(state => state.postal).sort();
-const db = await openMapCopy("national", !measuring && !verifying && !aliasesOnly && !shapesOnly && !reporting && !productionBaseline && !zipLinksOnly);
+const db = await openMapCopy("national", !verifying && !aliasesOnly && !shapesOnly && !reporting && !productionBaseline && !zipLinksOnly);
 try {
-  if (measuring) {
-    const codes = await db.query("SELECT DISTINCT zip FROM zip_place ORDER BY zip");
-    let worstMs = 0, worstZip = "", worstRows = 0;
-    for (const row of codes) {
-      const zip = String(row.zip), start = performance.now();
-      const result = await placesForCode(db.query, "zip", zip, { purpose: "representation", asOf: "2026-10-24" });
-      const elapsed = performance.now() - start;
-      if (elapsed > worstMs) { worstMs = elapsed; worstZip = zip; worstRows = result.memberships.length; }
-    }
-    const result = { engine: "PostgreSQL 17.11", states: 56, zips: codes.length, worstZip, memberships: worstRows,
-      worstZipMs: Math.round(worstMs * 100) / 100, passed: worstMs < 50 };
-    await writeFile("/tmp/rb-a2-replay/national-benchmark.json", JSON.stringify(result, null, 2));
-    console.log(JSON.stringify(result));
-    if (!result.passed) process.exitCode = 1;
-  } else if (productionBaseline) {
+  if (productionBaseline) {
     const url = process.env.RB_A2_READER_URL;
     if (!url || new URL(url).username !== "readonly") throw new Error("Production read-only role is required");
     const sql = neon(url), results = [];

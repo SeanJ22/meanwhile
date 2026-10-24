@@ -1,0 +1,211 @@
+{
+  "lane": "DB-01",
+  "status": "implementation tested; production acceptance pending",
+  "base": "origin/river 21ae9bcfb",
+  "databases": "read-only throughout",
+  "connections": [
+    {
+      "place": "Arizona",
+      "record": "REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime",
+      "beforeResultHash": "7dca126e50348c9a18e63d9f3c86ca65",
+      "afterResultHash": "7dca126e50348c9a18e63d9f3c86ca65",
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforePayloadPartPlan": "two sequential scans of 28322 rows each",
+      "afterPayloadPartPlan": "two indexed lookups over 628 referenced hashes each",
+      "measurement": "EXPLAIN ANALYZE and server-side result comparison on real production data; does not establish browser behavior"
+    },
+    {
+      "place": "Cincinnati, Ohio",
+      "record": "MEETING:source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aoh%2Fplace%3Acincinnati%23governing:route:54e233837a0d4ce5",
+      "beforeResultHash": "2b405ca13dc787624c534ad6dbbe38a9",
+      "afterResultHash": "2b405ca13dc787624c534ad6dbbe38a9",
+      "beforeRows": 2,
+      "afterRows": 2,
+      "beforePromotionRowsScanned": 10786,
+      "afterPromotionRowsScanned": 1,
+      "measurement": "EXPLAIN ANALYZE and server-side result comparison on real production data; does not establish browser behavior"
+    }
+  ],
+  "baselineDefinition": "Live fact rows (fact.status='live') joined to entity.state. This excludes facts in civic_data read models and cannot alone establish all publication throughput. The 08:00-09:00 UTC column was partial when sampled. All values precede this lane's deployment.",
+  "baselineHoursUTC": [
+    "2026-10-24T07:00:00Z/2026-10-24T08:00:00Z",
+    "2026-10-24T08:00:00Z/sample"
+  ],
+  "runnerDailyBaseline": {
+    "at": "2026-10-24T08:44Z",
+    "dayEastern": "2026-10-24",
+    "responseBytes": 76068639037,
+    "requests": 347052,
+    "jobBreakdown": "absent"
+  },
+  "protectedReferences": {
+    "reactions": {
+      "CANDIDATE": {
+        "signals": 29,
+        "ids": 17,
+        "hash": "5727b87bd57f3d024a2598f232c59a60"
+      },
+      "CONTRIBUTOR_REACTION": {
+        "signals": 3,
+        "ids": 3,
+        "hash": "4ca28128ee0f3e4d61dc13776cc3a2fe"
+      },
+      "FEDERAL_VOTE": {
+        "signals": 17,
+        "ids": 7,
+        "hash": "7ce3bc5b50adf0691b08af3ed42c2078"
+      },
+      "FUNDING_TOTAL_REACTION": {
+        "signals": 4,
+        "ids": 4,
+        "hash": "1e8e73d0ba9ccc18d6354cb49eb180d4"
+      },
+      "MEASURE_PROVISION": {
+        "signals": 3,
+        "ids": 3,
+        "hash": "70e074300fef2f4e7a3df2e33c2c478c"
+      }
+    },
+    "demand": {
+      "BODY": {
+        "signals": 2,
+        "ids": 2,
+        "hash": "b3a326743232422834c0b27b98144313"
+      },
+      "CANDIDATE": {
+        "signals": 1,
+        "ids": 1,
+        "hash": "1db83728800b0ba928657e4a4d9e1d40"
+      }
+    },
+    "feedbackWithRecordId": 0,
+    "ask": {
+      "questions": 1,
+      "withSubjects": 1,
+      "subjectIdsHash": "e09fe01254e346a6618fba9ac33cbbe8",
+      "evidenceRefsHash": "8367780dc951eb2b1e9cb3606ecde658"
+    },
+    "note": "Aggregate baseline only. IDs and resolver code are unchanged by DB-01. Full live reference resolution remains to be verified."
+  },
+  "productionAcceptance": {
+    "under3GBPerHour": null,
+    "allFactsPerHourMaintained": null,
+    "afterCountsByState": null,
+    "nextScheduledRun": null,
+    "chromeReaderCheck": null,
+    "riverPassedLiveCheck": null
+  },
+  "remaining": [
+    {
+      "owner": "DB-01",
+      "task": "Rank production jobs by the new hourly breakdown and address any remaining heavy readers",
+      "dependsOn": "River deployment of the stream"
+    },
+    {
+      "owner": "DB-01",
+      "task": "Measure post-deploy bytes/hour and all published facts/hour by state, then observe the next automatic scheduled run",
+      "dependsOn": "River deployment and running hourly counters"
+    },
+    {
+      "owner": "DB-01",
+      "task": "Use Chrome to prove Admin's hourly view, reader contents, speed, and all existing referenced IDs",
+      "dependsOn": "A callable connected Chrome browser; Browser tools are absent from this session"
+    },
+    {
+      "owner": "River",
+      "task": "Fold and deploy tested stream code through the authorized release process",
+      "dependsOn": "River's lane intake"
+    }
+  ],
+  "knownBaselineTestFailures": [
+    {
+      "revision": "21ae9bcfb",
+      "test": "the pilot outer bound contains the source and meeting frontier",
+      "failure": "shared-provider tails are outside one pass",
+      "reproducedIn": "detached unmodified origin/river worktree"
+    },
+    {
+      "revision": "21ae9bcfb",
+      "test": "scoped source passes repair only matching reader pointers, including narrow meeting domains",
+      "failure": "2 domains returned; test expects 1",
+      "reproducedIn": "detached unmodified origin/river worktree"
+    }
+  ],
+  "countsByState": [
+    {"state":"AK","beforeLiveFacts":1277,"beforeNewFacts0700":388,"beforeNewFacts0800Partial":110,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"AL","beforeLiveFacts":1283,"beforeNewFacts0700":19,"beforeNewFacts0800Partial":42,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"AR","beforeLiveFacts":461,"beforeNewFacts0700":18,"beforeNewFacts0800Partial":51,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"AS","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"AZ","beforeLiveFacts":3539,"beforeNewFacts0700":295,"beforeNewFacts0800Partial":12,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"CA","beforeLiveFacts":26093,"beforeNewFacts0700":54,"beforeNewFacts0800Partial":597,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"CO","beforeLiveFacts":2797,"beforeNewFacts0700":516,"beforeNewFacts0800Partial":114,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"CT","beforeLiveFacts":89745,"beforeNewFacts0700":82,"beforeNewFacts0800Partial":45040,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"DC","beforeLiveFacts":13,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":1,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"DE","beforeLiveFacts":132,"beforeNewFacts0700":24,"beforeNewFacts0800Partial":2,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"FL","beforeLiveFacts":7707,"beforeNewFacts0700":8,"beforeNewFacts0800Partial":411,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"GA","beforeLiveFacts":1273,"beforeNewFacts0700":98,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"GU","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"HI","beforeLiveFacts":37353,"beforeNewFacts0700":98,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"IA","beforeLiveFacts":177,"beforeNewFacts0700":4,"beforeNewFacts0800Partial":14,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"ID","beforeLiveFacts":716,"beforeNewFacts0700":271,"beforeNewFacts0800Partial":79,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"IL","beforeLiveFacts":6617,"beforeNewFacts0700":427,"beforeNewFacts0800Partial":208,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"IN","beforeLiveFacts":68,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"KS","beforeLiveFacts":35,"beforeNewFacts0700":9,"beforeNewFacts0800Partial":2,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"KY","beforeLiveFacts":98696,"beforeNewFacts0700":5,"beforeNewFacts0800Partial":76727,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"LA","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MA","beforeLiveFacts":472,"beforeNewFacts0700":31,"beforeNewFacts0800Partial":71,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MD","beforeLiveFacts":772,"beforeNewFacts0700":1,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"ME","beforeLiveFacts":412,"beforeNewFacts0700":48,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MI","beforeLiveFacts":2266,"beforeNewFacts0700":195,"beforeNewFacts0800Partial":156,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MN","beforeLiveFacts":1204,"beforeNewFacts0700":261,"beforeNewFacts0800Partial":108,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MO","beforeLiveFacts":5469,"beforeNewFacts0700":285,"beforeNewFacts0800Partial":122,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MP","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MS","beforeLiveFacts":36,"beforeNewFacts0700":36,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"MT","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NC","beforeLiveFacts":1469,"beforeNewFacts0700":91,"beforeNewFacts0800Partial":36,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"ND","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NE","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NH","beforeLiveFacts":797,"beforeNewFacts0700":12,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NJ","beforeLiveFacts":661,"beforeNewFacts0700":7,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NM","beforeLiveFacts":1723,"beforeNewFacts0700":180,"beforeNewFacts0800Partial":63,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NV","beforeLiveFacts":1190,"beforeNewFacts0700":41,"beforeNewFacts0800Partial":24,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"NY","beforeLiveFacts":1939,"beforeNewFacts0700":233,"beforeNewFacts0800Partial":88,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"OH","beforeLiveFacts":1352,"beforeNewFacts0700":273,"beforeNewFacts0800Partial":147,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"OK","beforeLiveFacts":1289,"beforeNewFacts0700":156,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"OR","beforeLiveFacts":777,"beforeNewFacts0700":171,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"PA","beforeLiveFacts":275,"beforeNewFacts0700":103,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"PR","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"RI","beforeLiveFacts":58,"beforeNewFacts0700":52,"beforeNewFacts0800Partial":6,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"SC","beforeLiveFacts":117359,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":65029,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"SD","beforeLiveFacts":55,"beforeNewFacts0700":32,"beforeNewFacts0800Partial":23,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"TN","beforeLiveFacts":8,"beforeNewFacts0700":8,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"TX","beforeLiveFacts":5864,"beforeNewFacts0700":227,"beforeNewFacts0800Partial":869,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"US","beforeLiveFacts":14,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"UT","beforeLiveFacts":218,"beforeNewFacts0700":5,"beforeNewFacts0800Partial":56,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"VA","beforeLiveFacts":1052,"beforeNewFacts0700":104,"beforeNewFacts0800Partial":255,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"VI","beforeLiveFacts":2,"beforeNewFacts0700":2,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"VT","beforeLiveFacts":0,"beforeNewFacts0700":0,"beforeNewFacts0800Partial":0,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"WA","beforeLiveFacts":2961,"beforeNewFacts0700":168,"beforeNewFacts0800Partial":490,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"WI","beforeLiveFacts":17454,"beforeNewFacts0700":401,"beforeNewFacts0800Partial":109,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"WV","beforeLiveFacts":72,"beforeNewFacts0700":14,"beforeNewFacts0800Partial":58,"afterLiveFacts":null,"afterNewFactsPerHour":null},
+    {"state":"WY","beforeLiveFacts":164,"beforeNewFacts0700":14,"beforeNewFacts0800Partial":88,"afterLiveFacts":null,"afterNewFactsPerHour":null}
+  ],
+  "validation": {
+    "focusedChecks": {
+      "hourlyAccountingAndClockTests": 67,
+      "readerStoreAndIdentityTests": 97,
+      "failed": 0,
+      "skipped": 0
+    },
+    "stateCache": {
+      "coldResponseBytes": 645813,
+      "nextProcessResponseBytes": 2550,
+      "identicalContents": true
+    },
+    "lint": "passed for changed code",
+    "typecheck": "passed (tsc --noEmit)",
+    "geographyProductionPlan": "All civic_data_payload_parts accesses use hash indexes (EXPLAIN only, no live-page claim)",
+    "nextScheduledRun": "not observed; local cache persistence is tested independently"
+  }
+}

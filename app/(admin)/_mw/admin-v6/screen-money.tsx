@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { periodDays } from "@/lib/control-plane/admin-view/periods.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
@@ -8,7 +8,7 @@ import type { ModelSpendView } from "@/lib/control-plane/admin-view/model-spend.
 import type { HuntCostView } from "@/lib/hunt/cost-per-fact.ts";
 
 import { useV6 } from "./context.tsx";
-import { mst, usd, type Hunt } from "./model.ts";
+import { mst, usd, type Hunt, type SpendView } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
 import { Card, cx, Facts, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
@@ -23,6 +23,57 @@ const dayWords = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateStrin
 const percent = (n: number | null) => n === null ? DASH : `${(n * 100).toFixed(1)}%`;
 const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "Page reader", MEASURE_WRITER: "Translator", MEASURE_CHECKER: "Translation checker", ASK: "Ask" }[role]
   ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
+
+function RunnerReadsPanel({ reads, totals, span }: { reads: SpendView["neon"]["runnerReads"]; totals: SpendView["neon"]["runnerHours"]; span: ReturnType<typeof periodDays> }) {
+  const [all, setAll] = useState(false);
+  const hours = (totals ?? []).filter(row => {
+    const day = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(new Date(row.hour));
+    return span === null || day >= span.from && day <= span.to;
+  }).map(row => row.hour);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState<{ hour: string; reads: NonNullable<typeof reads>; failed: boolean } | null>(null);
+  const hour = selected && hours.includes(selected) ? selected : hours[0];
+  useEffect(() => {
+    if (!hour || reads?.some(row => row.hour === hour)) return;
+    let active = true;
+    void fetch(`/api/admin/v6/spend?runnerHour=${encodeURIComponent(hour)}`, { cache: "no-store" }).then(async response => {
+      if (!response.ok) throw new Error("Hour unavailable");
+      const result = await response.json();
+      if (active) setLoaded({ hour, reads: result.reads, failed: false });
+    }).catch(() => { if (active) setLoaded({ hour, reads: [], failed: true }); });
+    return () => { active = false; };
+  }, [hour, reads]);
+  const inHour = (reads?.some(row => row.hour === hour) ? reads : loaded?.hour === hour ? loaded.reads : []).filter(row => row.hour === hour);
+  const total = totals?.find(row => row.hour === hour);
+  const shown = all ? inHour : inHour.slice(0, TOP);
+  const words = (value: string) => value.replace(/\.m?[jt]s$/, "").replaceAll(/[_:-]+/g, " ");
+  const dataSize = (bytes: number) => bytes >= 1e9 ? gigabytes(bytes) : bytes >= 1e6 ? `${(bytes / 1e6).toFixed(2)} MB` : `${(bytes / 1e3).toFixed(1)} kB`;
+  const tableWords = (value: string) => value.split(",").map(table => ({ civic_data_payload_parts: "Published record parts", civic_data_promotions: "Published records",
+    civic_data_candidates: "Record versions", civic_data_candidate_events: "Publication history", civic_data_clock_versions: "Source update times", owner_flag: "Flagged facts",
+    fact: "Facts", source_copy: "Saved sources", socket: "Connection", query: "Database query" }[table.split(":")[0]] ?? words(table))).join(", ");
+  const jobWords = (job: string) => /lobby|lda/i.test(job) ? "Lobbying" : /fema/i.test(job) ? "Emergency aid" : /govinfo/i.test(job) ? "Federal publications"
+    : /reader-readback/i.test(job) ? "Publication check" : /reader-repair/i.test(job) ? "Reader repair" : /meeting|legistar|calendar/i.test(job) ? "Meetings"
+    : /census/i.test(job) ? "Census" : /funding|finance|fec/i.test(job) ? "Campaign funding" : /ballot|voting/i.test(job) ? "Voting information"
+    : /pilot-runner/i.test(job) ? "Scheduler" : /freshness-shadow/i.test(job) ? "Standing coverage" : words(job.split(":")[0]);
+  return <Card title="Runner database reads by hour">
+    {!hours.length ? <p className={cx(s.p, s.small)}>{DASH}</p> : <>
+      <label className={s.small}>Hour · Eastern time <select value={hour} onChange={event => { setSelected(event.target.value); setAll(false); }}>
+        {hours.map(value => <option key={value} value={value}>{mst(value)}</option>)}
+      </select></label>
+      <Facts rows={[["Reader database", gigabytes(total?.readerBytes ?? null)], ["Control plane", gigabytes(total?.controlPlaneBytes ?? null)]]} />
+      {!inHour.length && <p className={cx(s.p, s.small)}>{loaded?.hour === hour ? loaded.failed ? "This hour could not be read just now." : DASH : "Reading this hour…"}</p>}
+      <div className={s.tableWrap}><table className={s.table}>
+        <thead><tr>{["Job", "Data", "Database", "Received", "Sent"].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
+        <tbody>{shown.map(row => <tr key={`${row.database}:${row.job}:${row.table}`}>
+          <th scope="row">{jobWords(row.job)}</th><td>{tableWords(row.table)}</td><td>{row.database === "reader" ? "Reader" : "Control plane"}</td>
+          <td className={s.num}>{dataSize(row.responseBytes)}</td><td className={s.num}>{dataSize(row.requestBytes)}</td>
+        </tr>)}</tbody>
+      </table></div>
+      {inHour.length > TOP && <button type="button" className={s.btn} onClick={() => setAll(!all)}>{all ? `Show the top ${TOP}` : `Show all ${inHour.length}`}</button>}
+      <Technical lines={inHour.map(row => `${row.hour} · ${row.job} · ${row.database} · ${row.table}: ${row.requests} HTTP requests, ${row.responseBytes} bytes received, ${row.requestBytes} sent`)} />
+    </>}
+  </Card>;
+}
 
 /** What hunting cost for each fact it got published. */
 function HuntCostPanel({ view }: { view: HuntCostView | null }) {
@@ -187,6 +238,7 @@ export function MoneyScreen() {
 
       <ModelSpendPanel view={spendData?.modelSpend ?? null} days={days.map(day => day.day)} />
       <HuntCostPanel view={spendData?.huntCost ?? null} />
+      <RunnerReadsPanel reads={spendData?.neon.runnerReads} totals={spendData?.neon.runnerHours} span={billSpan} />
 
       <Card title={by === "hunt" ? "Hunts" : "Days"} aside={switcher}>
         {by === "day" ? (days.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (

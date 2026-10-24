@@ -1606,7 +1606,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     },
   };
   private readonly payloadParts = new CivicPayloadParts(this.payloadPartIO);
-  private readonly ownedPayloadParts = new CivicPayloadParts({ ...this.payloadPartIO, read: hashes => this.readPayloadParts(hashes) });
+  private readonly ownedPayloadParts = new CivicPayloadParts(this.payloadPartIO);
   private async loadPayload(value: unknown, scope: string): Promise<unknown> {
     if (statePublicationScope(scope)) return decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value));
     return this.payloadParts.load(value);
@@ -1624,7 +1624,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       AND p.validation_receipt->>'decision' = 'GOOD' AND p.validation_receipt->>'candidateId' = c.id
       AND p.validation_receipt->>'sourceId' = c.source_id AND p.validation_receipt->>'recordClass' = c.record_class
       AND p.validation_receipt->>'scope' = c.scope` : sql`false`;
-    const result = await this.db.execute(sql`WITH RECURSIVE state_promotion AS MATERIALIZED (
+    const result = await this.db.execute(sql`WITH state_promotion AS MATERIALIZED (
       SELECT p.*, c.candidate, c.state, c.acquisition_succeeded, c.promoted_version_id, c.last_known_good_version_id AS candidate_lkg,
         c.failure_code, c.failure_detail,
         (p.payload = c.candidate->'readModel' AND p.validation_receipt = c.validation_receipt) AS coupled,
@@ -1648,18 +1648,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           'state', state, 'acquisitionSucceeded', acquisition_succeeded, 'promotedVersion', promoted_version_id,
           'lastKnownGoodVersion', candidate_lkg, 'failureCode', failure_code, 'failureDetail', failure_detail)) AS value,
         coupled, reuse, confirmation FROM state_promotion
-    ), hashes(hash) AS (
-      SELECT ref#>>'{}' FROM roots, LATERAL jsonb_path_query(value, 'strict $.**."$civicPayloadPart"', '{}', true) ref WHERE coupled
-      UNION
-      SELECT ref#>>'{}' FROM hashes JOIN civic_data_payload_parts part USING(hash),
-        LATERAL jsonb_path_query(part.payload, 'strict $.**."$civicPayloadPart"', '{}', true) ref
-    ) SELECT value, coupled, reuse, confirmation,
-      COALESCE((SELECT jsonb_object_agg(part.hash, part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)), '{}'::jsonb) AS parts
-      FROM roots`);
-    const row = result.rows[0] as { value: unknown; coupled: boolean; reuse: boolean; confirmation: string | null; parts: Record<string, unknown> } | undefined;
+    ) SELECT value, coupled, reuse, confirmation FROM roots`);
+    const row = result.rows[0] as { value: unknown; coupled: boolean; reuse: boolean; confirmation: string | null } | undefined;
     if (!row) return null;
     if (!row.coupled) throw new Error(`STATE_PUBLICATION_POINTER_PROOF_INVALID:${recordClass}:${scope}`);
-    const decoded = await this.ownedPayloadParts.loadOwned(row.value, row.parts) as {
+    const decoded = await this.ownedPayloadParts.loadOwned(row.value) as {
       projection: PromotedProjection<T>; candidate: PublishedCandidateMetadata;
     };
     const projection = { ...decoded.projection,
@@ -2321,13 +2314,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const key = [sourceId, recordClass, scope, parserVersion ?? ""].join("\u0000");
     if (!this.readCache) return this.readClock(sourceId, recordClass, scope, parserVersion);
-    const [held] = await this.readCache.rows({ namespace: "routine-clock", keys: [key], keyOf: row => row.key,
+    const [held] = await this.readCache.rows({ namespace: "routine-clock-v2", keys: [key], keyOf: row => row.key,
       values: async () => [{ key, clock: await this.readClock(sourceId, recordClass, scope, parserVersion) }],
-      versions: async () => (await this.db.execute(sql`select concat(
-          (select concat(count(*), '/', max(e.at)::text, '/', max(c.xmin::text::bigint)) from ${civicDataCandidates} c
-            join ${civicDataCandidateEvents} e on e.candidate_id = c.id where c.record_class = ${recordClass} and c.scope = ${scope}),
-          '/', (select concat(p.xmin::text, '/', p.ctid::text) from ${civicDataPromotions} p where p.record_class = ${recordClass} and p.scope = ${scope})
-        ) as etag`)).rows.map(row => ({ key, etag: String((row as { etag: unknown }).etag) })),
+      versions: async () => (await this.db.execute(sql`select coalesce((select version::text
+        from civic_data_clock_versions where record_class = ${recordClass} and scope = ${scope}), '0') as etag`))
+        .rows.map(row => ({ key, etag: String((row as { etag: unknown }).etag) })),
     });
     return held!.clock;
   }

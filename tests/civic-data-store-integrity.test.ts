@@ -1,3 +1,4 @@
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { immutableStateHash, immutableStateValue, rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -1282,7 +1283,7 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       })[0];
       return none;
     }
-    if (query.includes("WITH RECURSIVE state_promotion")) {
+    if (query.includes("WITH state_promotion")) {
       const { receipt: _receipt, ...metadata } = publishedCandidateMetadata({ candidate: envelope, state: "PROMOTED", acquisitionSucceeded: true,
         receipt, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });
       return { columns: [["value", "jsonb"], ["coupled", "bool"], ["reuse", "bool"], ["confirmation", "text"], ["parts", "jsonb"]],
@@ -1335,7 +1336,7 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
     assert.equal(read.kind, "PROMOTED", JSON.stringify(read.kind === "PROMOTED" ? {} : read));
     if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
     assert.ok(sent.slice(readAt).every(row => !row.params.includes(lineageRef)), "metadata and published reads leave lineage parts unopened");
-    const partReads = () => sent.filter(row => row.query.includes("WITH RECURSIVE state_promotion") ||
+    const partReads = () => sent.filter(row => row.query.includes("WITH state_promotion") ||
       row.query.includes('from "civic_data_payload_parts"') && !row.query.startsWith('select "hash" from')).length;
     let readCount = partReads();
     const repeatedMetadata = await store.readPublishedCandidateMetadata(value.id);
@@ -1408,7 +1409,7 @@ test("state readback reuses only a proven index and consumes its coupled metadat
   rememberStatePublicationHashes(projection, value.normalization);
   let moved = false, coupled = true;
   await withCannedNeon(({ query, params }) => {
-    if (!query.includes("WITH RECURSIVE state_promotion")) return { columns: [], rows: [] };
+    if (!query.includes("WITH state_promotion")) return { columns: [], rows: [] };
     const reuse = params.includes(value.id) && !moved;
     const metadata = publishedCandidateMetadata({ candidate: value, state: "PROMOTED", acquisitionSucceeded: true,
       receipt: null, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });
@@ -1446,7 +1447,7 @@ test("state readback reuses only a proven index and consumes its coupled metadat
   });
 });
 
-test("the keyed state read executes recursive parts and rejects forged durable coupling", async () => {
+test("the keyed state read hydrates selected parts and rejects forged durable coupling", async t => {
   const { PGlite } = await import("@electric-sql/pglite");
   const pg = new PGlite();
   await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY, source_id text, record_class text, scope text,
@@ -1470,22 +1471,39 @@ test("the keyed state read executes recursive parts and rejects forged durable c
     [value.id, value.sourceId, value.recordClass, value.scope, encoded, value.normalization.normalizedHash, receipt]);
   await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5,$5,$6,$7,$8)",
     [key, value.sourceId, value.recordClass, value.scope, value.id, "2026-09-08T12:01:00Z", encoded.readModel, receipt]);
+  let receivedBytes = 0;
+  const copies = new Map<string, string>();
+  const cache = () => new CivicReadCache({ read: async key => copies.get(key) ?? null, write: async (key, saved) => { copies.set(key, saved); } });
   try {
     await withCannedNeon(async ({ query, params }) => {
       const result = await pg.query<Record<string, unknown>>(query, [...params]);
+      receivedBytes += Buffer.byteLength(JSON.stringify(result.rows));
       return { columns: result.fields.map(field => [field.name, Object.entries(NEON_TYPE).find(([, oid]) => oid === field.dataTypeID)![0] as keyof typeof NEON_TYPE]),
         rows: result.rows.map(row => result.fields.map(field => row[field.name])) };
     }, async (store, sent) => {
+      Object.defineProperty(store, "readCache", { value: cache() });
       const read = await readPromotedCivicData<typeof payload>(value.recordClass, value.scope, { store, bypassCache: true });
       assert.equal(read.kind, "PROMOTED");
-      assert.equal(sent.length, 1);
+      assert.equal(sent.filter(row => row.query.includes("state_promotion")).length, 1);
+      assert.ok(sent.some(row => row.query.includes('from "civic_data_payload_parts"')), "only referenced parts hydrate separately");
+      const coldBytes = receivedBytes;
+      const nextPass = new PostgresRoutineDataStore();
+      Object.defineProperty(nextPass, "readCache", { value: cache() });
+      const beforeNextPass = sent.length;
+      receivedBytes = 0;
+      const repeated = await nextPass.readPromotion(value.recordClass, value.scope);
+      assert.deepEqual(repeated?.payload, payload);
+      assert.equal(sent.length, beforeNextPass + 1, "the next process reads only the coupled pointer and metadata");
+      assert.ok(receivedBytes < coldBytes / 10, `${coldBytes} cold response bytes -> ${receivedBytes} on the next pass`);
+      t.diagnostic(`state publication response bytes: ${coldBytes} cold -> ${receivedBytes} on the next process's pass`);
+      const afterHydration = sent.length;
       if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
       assert.deepEqual(read.value, payload);
       rememberStatePublicationHashes(read.projection, value.normalization);
       await withStatePublicationRead(read.projection, async () => {
         const same = await store.readPromotion(value.recordClass, value.scope);
         const metadata = await store.readPublishedCandidateMetadata(value.id);
-        assert.equal(sent.length, 2);
+        assert.equal(sent.length, afterHydration + 1, "a held state checks only its coupled metadata");
         assert.equal(same?.payload, read.value);
         assert.equal(metadata?.candidate.normalization.stateRecordHashes, value.normalization.stateRecordHashes);
         assert.equal(metadata?.receipt, same?.receipt);
@@ -1503,6 +1521,7 @@ test("the keyed state read executes recursive parts and rejects forged durable c
       await pg.query("UPDATE civic_data_promotions SET payload=$1, validation_receipt='{}'", [encoded.readModel]);
       await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
       await pg.query("UPDATE civic_data_promotions SET validation_receipt=$1", [receipt]);
+      copies.clear();
       await pg.query("DELETE FROM civic_data_payload_parts");
       await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /PART_MISSING/);
     });

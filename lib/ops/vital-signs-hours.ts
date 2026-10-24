@@ -6,6 +6,7 @@ import { hourStart, type NeonBytesHour, type NeonDatabase } from "../db/transfer
 /** Keep one process's latest part for its hour (each part is that process's whole hour so far). */
 export function keepNeonBytesPart(dir: string, part: NeonBytesHour): boolean {
   if (!Number.isSafeInteger(part.pid) || !/^\d{4}-\d{2}-\d{2}T\d{2}:00:00\.000Z$/.test(part.hour)) return false;
+  if (part.readChunk) return true;
   try {
     mkdirSync(dir, { recursive: true });
     /* The start time keeps a reused pid from overwriting another process's hour. */

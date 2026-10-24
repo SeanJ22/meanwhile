@@ -701,6 +701,13 @@ export const civicDataPayloadParts = pgTable("civic_data_payload_parts", {
   payload: jsonb("payload").notNull(),
 });
 
+/** A scheduler cache changes only when this scope's candidates, events or pointer change. */
+export const civicDataClockVersions = pgTable("civic_data_clock_versions", {
+  recordClass: text("record_class").notNull(),
+  scope: text("scope").notNull(),
+  version: bigint("version", { mode: "bigint" }).notNull(),
+}, table => [primaryKey({ columns: [table.recordClass, table.scope] })]);
+
 export const civicDataCandidates = pgTable(
   "civic_data_candidates",
   {

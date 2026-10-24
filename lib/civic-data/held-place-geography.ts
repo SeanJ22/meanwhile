@@ -80,7 +80,8 @@ export async function readHeldPlaceGeography(ids: readonly string[], divisions: 
       SELECT 0,payload,'{}'::jsonb FROM civic_data_promotions WHERE record_class=$1 AND scope=$2
       UNION ALL
       SELECT n.step,n.node,n.meta FROM walk w
-      LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
+      LEFT JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts
+        WHERE hash=w.node->>'$civicPayloadPart' OFFSET 0) p ON true
       CROSS JOIN LATERAL (SELECT CASE WHEN p.hash IS NULL THEN w.node
         WHEN p.payload->>'kind'='object' THEN p.payload->'value'
         WHEN p.payload->>'kind'='array' THEN p.payload->'groups' ELSE p.payload END node) r
@@ -97,7 +98,8 @@ export async function readHeldPlaceGeography(ids: readonly string[], divisions: 
       AND (node->>'ocdId'=ANY($3::text[]) OR ((meta->>'type')||':'||(node->>'geoid'))=ANY($4::text[]))
     UNION ALL
     SELECT '{}'::jsonb,jsonb_build_object('$missing',true) FROM walk WHERE node ? '$civicPayloadPart'
-      AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart')
+      AND (SELECT p.hash IS NULL FROM (VALUES (node->>'$civicPayloadPart')) wanted(hash)
+        LEFT JOIN LATERAL (SELECT hash FROM civic_data_payload_parts WHERE hash=wanted.hash OFFSET 0) p ON true)
     UNION ALL
     SELECT '{}'::jsonb,jsonb_build_object('$version',current_version_id) FROM civic_data_promotions WHERE record_class=$1 AND scope=$2` }]);
   if ((rows.find(row => (row.grouping as { $version?: string }).$version)?.grouping as { $version?: string } | undefined)?.$version !== version) {

@@ -21,6 +21,10 @@ export interface NeonBytesHour {
   readonly bytes: Readonly<Record<NeonDatabase, number>>;
   /** Requests and request-body bytes by database: with `bytes`, the runner's rows in the daily transfer table (transfer.ts). */
   readonly sent?: Readonly<Record<NeonDatabase, NeonSent>>;
+  /** Database, job and table → cumulative calls, sent bytes and received bytes. */
+  readonly reads?: Readonly<Record<string, readonly [number, number, number]>>;
+  /** A bounded report carrying another portion of the same cumulative read map. */
+  readonly readChunk?: boolean;
   /** Caller key → bytes. Keys are prefixed "reader: " for the reader database. */
   readonly byCaller: Readonly<Record<string, number>>;
   /** Which processes contributed: script name and pid. */
@@ -46,7 +50,7 @@ export interface NeonBytesSummary {
 
 export interface NeonSent { readonly requests: number; readonly bytes: number }
 
-interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: Record<NeonDatabase, NeonSent>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
+interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: Record<NeonDatabase, NeonSent>; reads: Map<string, readonly [number, number, number]>; byCaller: Map<string, number>; counters: Map<string, number>; dirty: boolean }
 
 interface CallerState {
   scope: AsyncLocalStorage<string>;
@@ -188,7 +192,7 @@ function callSite(): string {
 }
 
 export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now(),
-  sent: NeonSent = { requests: 1, bytes: 0 }, caller?: string): void {
+  sent: NeonSent = { requests: 1, bytes: 0 }, caller?: string, table?: string): void {
   try {
     const socket = callerState.socketScope.getStore();
     const site = socket?.caller ?? caller ?? scope.getStore() ?? `query ← ${namedSite()}`;
@@ -198,6 +202,10 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
     bucket.sent[database] = { requests: bucket.sent[database].requests + sent.requests, bytes: bucket.sent[database].bytes + sent.bytes };
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
+    const job = process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
+    const read = `${database}\t${job}\t${table ?? /(?:^|\s)query:([^ ←]+)/.exec(site)?.[1] ?? site.split(/[. ]/)[0]}`;
+    const held = bucket.reads.get(read) ?? [0, 0, 0];
+    bucket.reads.set(read, [held[0] + sent.requests, held[1] + sent.bytes, held[2] + bytes]);
     const route = socket?.route ?? callerState.queryRoute.getStore();
     if (route && route !== "unattributed") {
       const name = `neon_bytes:${database}:${route}`;
@@ -213,7 +221,7 @@ function bucketFor(nowMs: number): Bucket {
   if (!bucket) {
     bucket = { requests: 0, bytes: { reader: 0, "control-plane": 0 },
       sent: { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } },
-      byCaller: new Map(), counters: new Map(), dirty: false };
+      reads: new Map(), byCaller: new Map(), counters: new Map(), dirty: false };
     buckets.set(hour, bucket);
   }
   return bucket;
@@ -236,6 +244,7 @@ function processLabel(): string {
 
 function snapshot(hour: string, bucket: Bucket): NeonBytesHour {
   return { hour, requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
+    reads: Object.fromEntries(bucket.reads),
     byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()],
     ...(bucket.counters.size > 0 ? { counters: Object.fromEntries(bucket.counters) } : {}) };
 }
@@ -258,14 +267,28 @@ export function takeNeonBytesHours(nowMs: number = Date.now()): readonly NeonByt
 
 export function formatVitalSignsReport(part: NeonBytesHour): string {
   const ranked = Object.entries(part.byCaller).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  const line = (byCaller: Record<string, number>) => `${VITAL_SIGNS_LINE_PREFIX}${JSON.stringify({ ...part, byCaller })}`;
+  const { reads, ...totals } = part;
+  const line = (byCaller: Record<string, number>) => `${VITAL_SIGNS_LINE_PREFIX}${JSON.stringify({ ...totals, byCaller })}`;
   let kept = ranked.length;
   for (;;) {
     const rest = ranked.slice(kept).reduce((total, [, bytes]) => total + bytes, 0);
     const byCaller = Object.fromEntries(ranked.slice(0, kept));
     if (rest > 0) byCaller.other = (byCaller.other ?? 0) + rest;
     const text = line(byCaller);
-    if (new TextEncoder().encode(text).length <= VITAL_SIGNS_LINE_LIMIT || kept === 0) return text;
+    if (new TextEncoder().encode(text).length <= VITAL_SIGNS_LINE_LIMIT || kept === 0) {
+      const lines = [text];
+      let chunk: Record<string, readonly [number, number, number]> = {};
+      const readLine = () => `${VITAL_SIGNS_LINE_PREFIX}${JSON.stringify({ ...totals, byCaller: {}, counters: undefined, readChunk: true, reads: chunk })}`;
+      for (const [key, counts] of Object.entries(reads ?? {})) {
+        const prior = chunk;
+        chunk = { ...chunk, [key]: counts };
+        if (Buffer.byteLength(readLine()) > VITAL_SIGNS_LINE_LIMIT && Object.keys(prior).length) {
+          chunk = prior; lines.push(readLine()); chunk = { [key]: counts };
+        }
+      }
+      if (Object.keys(chunk).length) lines.push(readLine());
+      return lines.join("\n");
+    }
     kept -= 1;
   }
 }
@@ -285,7 +308,7 @@ export function parseVitalSignsReport(line: string): NeonBytesHour | null {
 export function reportNeonBytes(nowMs: number = Date.now(), write: (text: string) => void = text => { process.stdout.write(text); }): boolean {
   if (callerState.keptInProcess || process.env[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
   try {
-    for (const part of takeNeonBytesHours(nowMs)) write(`${formatVitalSignsReport(part)}\n`);
+    for (const part of takeNeonBytesHours(nowMs)) for (const line of formatVitalSignsReport(part).split("\n")) write(`${line}\n`);
     return true;
   } catch { return false; }
 }

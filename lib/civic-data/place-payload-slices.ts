@@ -25,14 +25,16 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
     throw new Error("STATE_AUTHORITY_REQUIRES_KEYED_READ");
   const fields = collections(recordClass), paths = Object.keys(fields);
   const predicate = Object.entries(fields).map(([field, where]) => `(field='${field.replaceAll("'", "''")}' AND (${where}))`).join(" OR ");
-  const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
-  projections AS (SELECT record_class,scope,current_version_id,payload FROM civic_data_promotions),
+  const [rows] = await query([{ text: `WITH RECURSIVE
+  projections AS (SELECT record_class,scope,current_version_id,payload FROM civic_data_promotions
+    WHERE record_class=$1 AND scope=ANY($2::text[])),
   walk(scope,path,step,node) AS (
     SELECT scope,string_to_array(f.field,'.'),0,payload FROM projections
       CROSS JOIN unnest($6::text[]) f(field) WHERE record_class=$1 AND scope=ANY($2::text[])
     UNION ALL
     SELECT w.scope,w.path,n.step,n.node FROM walk w
-      LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
+      LEFT JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts
+        WHERE hash=w.node->>'$civicPayloadPart' OFFSET 0) p ON true
       CROSS JOIN LATERAL (SELECT CASE WHEN p.hash IS NULL THEN w.node
         WHEN p.payload->>'kind'='object' THEN p.payload->'value'
         WHEN p.payload->>'kind'='array' THEN p.payload->'groups' ELSE p.payload END node) r
@@ -55,7 +57,8 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   SELECT scope,field,jsonb_agg(x) rows FROM records WHERE ${predicate} GROUP BY scope,field
   UNION ALL
   SELECT scope,'$missing',jsonb_agg(node) FROM walk WHERE node ? '$civicPayloadPart'
-    AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart') GROUP BY scope
+    AND (SELECT p.hash IS NULL FROM (VALUES (node->>'$civicPayloadPart')) wanted(hash)
+        LEFT JOIN LATERAL (SELECT hash FROM civic_data_payload_parts WHERE hash=wanted.hash OFFSET 0) p ON true) GROUP BY scope
   UNION ALL
   SELECT scope,'$version',to_jsonb(current_version_id) FROM projections WHERE record_class=$1 AND scope=ANY($2::text[])`,
     params: [recordClass, [...scopes], [...ids], [...bodies], [...targets], paths] }]);

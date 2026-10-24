@@ -105,7 +105,7 @@ export async function runRuntimeChildren(
     const reports = { stdout: vitalSignsLineFilter(report), stderr: vitalSignsLineFilter(report) };
     const child = spawn(command.executable, [...command.args], {
       cwd: options.cwd,
-      env: command.env ?? options.env,
+      env: { ...(command.env ?? options.env), WTP_DATABASE_JOB: command.id },
       windowsHide: true,
       detached: process.platform !== "win32",
       stdio: command.executable === process.execPath ? ["ignore", "pipe", "pipe", "ipc"] : ["ignore", "pipe", "pipe"],

@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
-import { readDailyDatabaseTransfer, type DailyDatabaseTransferRead } from "../../db/transfer.ts";
+import { readDailyDatabaseTransfer, readRunnerDatabaseTransfer, type DailyDatabaseTransferRead } from "../../db/transfer.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { openControlPlane } from "../admin-data.ts";
@@ -41,12 +41,20 @@ export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })
     : NextResponse.json({ says: guard.says }, { status: guard.status, headers: NO_STORE });
-  const query = validateV6Query(request.nextUrl.searchParams);
+  const parameters = new URLSearchParams(request.nextUrl.searchParams);
+  const runnerHour = parameters.get("runnerHour");
+  parameters.delete("runnerHour");
+  const query = validateV6Query(parameters);
   if (!query.ok) return NextResponse.json({ code: query.code }, { status: 400, headers: NO_STORE });
   const url = controlPlaneUrlFromEnv();
   if (!url) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so spend was not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
   try {
+    if (runnerHour !== null) {
+      if (!/^\d{4}-\d{2}-\d{2}T\d{2}:00:00\.000Z$/.test(runnerHour) || !Number.isFinite(Date.parse(runnerHour)))
+        return NextResponse.json({ says: "Choose a recorded hour." }, { status: 400, headers: NO_STORE });
+      return NextResponse.json(await readRunnerDatabaseTransfer(runnerHour), { headers: NO_STORE });
+    }
     if (!memo || Date.now() - memo.at > MEMO_MS) {
       let transfer: DailyDatabaseTransferRead | null = null;
       try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }

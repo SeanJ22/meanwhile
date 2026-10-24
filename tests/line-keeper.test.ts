@@ -155,6 +155,11 @@ test('the two Eastern fall-back hours remain separate and a growing pile keeps i
   const markup=renderToStaticMarkup(createElement(HourlyCounts,{data:details}));
   assert.match(markup,/1:00 AM EDT/);
   assert.match(markup,/1:00 AM EST/);
+  const cache={...current,family:'Reader cache',stage:'cache',total:0,closedTotal:0,incoming:null,outgoing:null,observedIn:2,observedOut:1};
+  const failed=countProblems([cache],[],[],h.measuredAt);
+  assert.equal(failed[0].owner,'the runner');
+  assert.match(failed[0].says,/1 reader cache refresh failed/);
+  assert.equal(countProblems([{...cache,observedOut:2}],[],[],h.measuredAt).length,0);
 });
 
 

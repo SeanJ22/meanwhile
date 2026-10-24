@@ -57,6 +57,12 @@ export function countWindow(at: string) {
 }
 export function countProblems(current: readonly HourCount[], previous: readonly HourCount[], waiting: readonly OldestWaiting[], at: string): CountProblem[] {
   const problems: CountProblem[] = [];
+  for(const row of current.filter(row=>row.stage==='cache')) {
+    const failed=(row.observedIn??row.incoming??0)-(row.observedOut??row.outgoing??0);
+    if(failed>0)problems.push({key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · reader updates`,
+      says:`${failed.toLocaleString("en-US")} reader cache refresh${failed===1?'':'es'} failed in the recorded part of the hour.`,owner:"the runner",
+      next:"Repair the cache refresh and check the published records on the live page."});
+  }
   const old = new Map(previous.map(row => [JSON.stringify([row.state,row.family,row.stage]),row]));
   for (const row of waiting) {
     const key = JSON.stringify([row.state,row.family,row.stage]);

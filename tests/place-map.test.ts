@@ -96,6 +96,18 @@ test("the state builder preserves every legacy district and NCES/GEOID aliases",
   assert.ok(map.zipEdges.some(edge => edge.code === "85798" && edge.placeId === id));
   assert.ok(!map.zipEdges.some(edge => edge.code === "85799" && edge.placeId === id));
   assert.ok(!map.zctaEdges.some(edge => edge.code === "85798" || edge.code === "85799"));
+  assert.ok(map.boundaries.filter(boundary => boundary.layer === "district").every(boundary => boundary.sourceUrls.length > 0));
+});
+
+test("Idaho district type keys cannot become shared entity aliases", () => {
+  const registration = JSON.parse(readFileSync("data/derived/registration/id.json", "utf8")) as RegistrationReference;
+  const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map(), legacyZctas: new Set(), boundaries: [], checkedAt: date });
+  const aliases = new Map<string, string>();
+  for (const place of map.places) for (const alias of place.aliases) {
+    const key = `${alias.scheme}:${alias.value}`;
+    assert.ok(!aliases.has(key) || aliases.get(key) === place.id, key);
+    aliases.set(key, place.id);
+  }
 });
 
 test("same-named New Jersey school districts keep separate GEOID and NCES identities", () => {

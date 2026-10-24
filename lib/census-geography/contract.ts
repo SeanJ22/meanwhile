@@ -4,6 +4,11 @@
  */
 export type Zcta5 = string;
 
+/** GRF uses 99999 for blocks outside every ZCTA; zeros and blanks are unassigned too. */
+export function isUnassignedZcta(code: string): boolean {
+  return code === "" || code === "00000" || code === "99999";
+}
+
 export type UspsZip = string;
 
 /**

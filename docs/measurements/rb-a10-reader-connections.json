@@ -1,6 +1,6 @@
 {
   "readerConnections": {
-    "implementationCommit": "b1e6ac88f",
+    "implementationCommit": "bb3aa5cf0",
     "method": "Actual meetings and ballot-scope readers plus voting-site projection, official map rows in disposable PostgreSQL, civic facts from production readonly in read-only transactions",
     "raceComparison": "Baseline current-page race IDs are checked against the scope endpoint. Its raw after total also includes held elections and is not a current-page race count.",
     "results": [
@@ -79,7 +79,8 @@
         "missingSites": [],
         "method": "After the complete standing refresh and its controlled-clock next due run, imported map in disposable PostgreSQL and civic facts from production readonly; not a Chrome live check"
       }
-    ]
+    ],
+    "postRefreshReaderImplementationCommit": "bb3aa5cf0"
   },
   "existingReaderReferences": {
     "method": "Production entities and aliases copied read-only into shared identity schema in disposable PostgreSQL; compare every captured target before and after AZ/NH map refreshes",
@@ -100,7 +101,7 @@
     }
   },
   "configuredReaderPool": {
-    "implementationCommit": "6d4c20789",
+    "implementationCommit": "bb3aa5cf0",
     "result": {
       "status": "PASS",
       "role": "readonly",

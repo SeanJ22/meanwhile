@@ -142,14 +142,17 @@
     "updatedLocalReader": {
       "status": 200,
       "bothSourcesLinked": true,
-      "officials": 27
+      "officials": 27,
+      "mode": "production standalone build"
     },
     "localAdmin": {
       "rows": 57,
       "AZ": {
         "official": 1,
         "checked": 1
-      }
+      },
+      "hour": "2026-10-24T12:00:00.000Z",
+      "mode": "production standalone build"
     }
   }
 }

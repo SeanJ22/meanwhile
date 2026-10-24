@@ -12,7 +12,7 @@ export function FactHours({ hours }: { readonly hours: readonly FactDoorHour[] |
   const available = [...new Set(hours?.map(row => row.hour) ?? [])];
   const selected = available.includes(hour) ? hour : available[0];
   return <Card title="Facts published, by state and hour">
-    <p className={s.meta}>New and replacement facts. Sending the same fact again adds nothing.</p>
+    <p className={s.meta}>New and replacement facts through the door. Sending the same fact again adds nothing.</p>
     {hours === null ? <span className={s.big}>—</span> : <>
       <label>Hour <select className={s.select} value={selected ?? ""} onChange={event => setHour(event.target.value)}>
         {available.map(at => <option key={at} value={at}>{mst(at)}</option>)}

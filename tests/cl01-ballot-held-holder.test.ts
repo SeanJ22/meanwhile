@@ -2,6 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import { ballotHolderSources, mergeBallotPersonHolders } from "../lib/ballot/held-holder.ts";
+import { indexByOfficeholderId } from "../lib/officials/lookup.ts";
+import { personCardSources } from "../lib/officials/card-sources.ts";
+import { syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 
 const oldSource = { sourceUrl: "https://governor.example.gov/about", sourceOrg: "Governor's office",
   collectedAt: "2026-10-20", verifiedAt: null };
@@ -11,6 +14,36 @@ function holder(id: string, overrides: Partial<SeatHolder> = {}): SeatHolder {
     birthDate: null, websiteUrl: null, sourceUrl: oldSource.sourceUrl, provenance: oldSource,
     email: null, phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null, ...overrides };
 }
+
+test("a held portrait retains its image source alongside the government profile's field source", () => {
+  const roster = syntheticFederalDirectory().roster;
+  const image = "https://www.congress.gov/img/member/67f0316b1b05a5a598f7fdf3_200.jpg";
+  const profile = "https://api.congress.gov/v3/member/H001104?format=json";
+  const person = { ...roster.officeholders[0], id: "congress:H001104", name: "Jon Husted",
+    fieldSources: { photoUrl: { ...oldSource, sourceUrl: profile } },
+    photo: { url: "/api/portraits/officials/held.webp", sourceUrl: image, license: null,
+      attribution: "Congress.gov", collectedAt: oldSource.collectedAt } };
+  const projected = indexByOfficeholderId([{ ...roster, officeholders: [person] }]).get(person.id)!;
+  assert.equal(projected.photoUrl, person.photo.url);
+  const urls = personCardSources(projected).map(source => source.provenance.sourceUrl);
+  assert.ok(urls.includes(profile));
+  assert.ok(urls.includes(image), "the source visible before the person aliases merged must remain in Sources");
+});
+
+test("a Congress source slot keeps its native person key for records while all source ids remain aliases", () => {
+  const api = holder("congress-api:oh:H001104", { name: "Jon Husted", officeTitle: "U.S. Senator",
+    nativeIds: { bioguide: ["H001104"] }, phone: "202-555-0100" });
+  const merged = mergeBallotPersonHolders([api])!;
+  assert.equal(merged.id, "congress:H001104");
+  assert.equal(merged.personId, "congress:H001104");
+  assert.ok(merged.personAliases.includes(api.id));
+  assert.ok(merged.personAliases.includes(merged.id));
+  assert.equal(merged.phone, api.phone);
+  assert.deepEqual(ballotHolderSources(merged), [api]);
+  assert.deepEqual(mergeBallotPersonHolders([merged]), merged);
+  const conflict = mergeBallotPersonHolders([{ ...api, nativeIds: { bioguide: ["H001104", "S001230"] } }])!;
+  assert.equal(conflict.id, api.id, "conflicting native keys never select an arbitrary person");
+});
 
 test("a verified empty office slot cannot replace its person's held portrait and contact", () => {
   const empty = holder("statewide:az:empty", { provenance: newSource });

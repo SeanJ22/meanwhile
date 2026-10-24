@@ -64,6 +64,7 @@ import { officeCardSections, officeHasActions } from "@/lib/officials/office-sec
 import { PERSON_CARD_READING_ORDER } from "@/lib/design/card-sections";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { heldCandidatePersonKeys, heldPersonIdForCandidate } from "@/lib/ballot/person-keys";
+import { personIdentityKeys } from "@/lib/officials/people-identity";
 import { ballotHolderSources, mergeBallotPersonHolders } from "@/lib/ballot/held-holder";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 
@@ -207,7 +208,7 @@ function pickOptionsFor(
 }
 
 function isFederalContest(contest: Contest): boolean {
-  const office = officeIdentity(contest.title);
+  const office = officeIdentity(contest.title, contest.ocdId);
   return office === "us_senator" || office === "us_representative";
 }
 
@@ -247,7 +248,9 @@ async function CandidateFunding({
   let partial = false;
   try {
     const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
-    partial = settled.kind === "ANSWER" && settled.holdingStatus === "PARTIAL";
+    partial = settled.kind !== "ANSWER" || settled.holdingStatus === "PARTIAL";
+    if (settled.kind === "ANSWER" && (settled.answer.kind === "funding" || settled.answer.kind === "absence"))
+      answer = settled.answer;
   } catch {
     partial = true;
   }
@@ -690,7 +693,8 @@ export default readerRoute("/ballot", async function BallotPage({
         profileId = heldPersonIdForCandidate(set!.election.state, candidate.id);
         profileIds = heldCandidatePersonKeys(set!.election.state, candidate.id);
       } catch { /* The profile preload reports this missing authority. */ }
-      const ids = [...new Set([...officialIds, ...profileIds, ...profileId ? [profileId] : []])];
+      const incumbentKeys = incumbent ? [...personIdentityKeys(incumbent)].filter(id => /^congress:[A-Z]\d{6}$/i.test(id)) : [];
+      const ids = [...new Set([...officialIds, ...profileIds, ...profileId ? [profileId] : [], ...incumbentKeys])];
       const reads = await Promise.allSettled(ids.map(id => seatHolderById(id, set!.election.state)));
       for (const read of reads) if (read.status === "fulfilled" && read.value) verified.push(read.value);
       return [candidate.id, mergeBallotPersonHolders(verified)] as const;

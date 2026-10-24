@@ -45,7 +45,7 @@ function mergePerson(kept: Candidacy, other: Candidacy): Candidacy {
 }
 
 function raceOffice(contest: Contest): string {
-  const office = officeIdentity(contest.title.replace(/\s*\/\s*/g, " and "));
+  const office = officeIdentity(contest.title.replace(/\s*\/\s*/g, " and "), contest.ocdId);
   return office === "governor_and_lieutenant_governor" ? "governor" : office ?? nameKey(contest.title);
 }
 

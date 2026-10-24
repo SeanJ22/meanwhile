@@ -719,10 +719,10 @@ export async function seatHoldersForOffice(
   ocdId: string,
   officeTitle: string,
 ): Promise<SeatHolder[]> {
-  const office = officeIdentity(officeTitle);
+  const office = officeIdentity(officeTitle, ocdId);
   if (office === null) return [];
   const holders = await seatHoldersForDivision(ocdId);
-  return holders.filter((h) => officeIdentity(h.officeTitle) === office);
+  return holders.filter((h) => officeIdentity(h.officeTitle, ocdId) === office);
 }
 
 export async function prepareCoverage(): Promise<void> {

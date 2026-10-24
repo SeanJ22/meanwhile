@@ -58,7 +58,7 @@ export async function publishOfficialBallotCandidacies(input: {
       divisions: [roster.bodyId.split("#")[0]], authority: "REGISTRY_BODY_ROSTER" as const,
       sourceUrl: member.websiteUrl ?? member.membershipSource?.sourceUrl ?? roster.sourceUrl })));
   const federalContests = input.ballots.some(ballot => ballot.contests.some(contest => {
-    const office = officeIdentity(contest.title);
+    const office = officeIdentity(contest.title, contest.ocdId);
     return office === "us_senator" || office === "us_representative";
   }));
   if (federalContests) {

@@ -162,7 +162,7 @@ export function ballotAskInventory(
     // OCD key supplies the number. These are names for one existing contest,
     // never a name-based join between different people or governments.
     const cd = /\/cd:(\d+)$/.exec(contest.ocdId)?.[1];
-    if (cd && officeIdentity(contest.title) === "us_representative") {
+    if (cd && officeIdentity(contest.title, contest.ocdId) === "us_representative") {
       const n = Number(cd);
       const suffix = n % 100 >= 11 && n % 100 <= 13 ? "th" : ({ 1: "st", 2: "nd", 3: "rd" } as Record<number, string>)[n % 10] ?? "th";
       for (const number of [cd, `${cd}${suffix}`]) {

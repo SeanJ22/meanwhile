@@ -25,6 +25,9 @@ import {reconciledCandidacyIdForCard} from "../identity/az-2026.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry} from "../reader/selected-entry.ts";
 import {readerDatabaseQuery} from "../reader/database.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
+import { settleFederalDirectoryRead } from "../registry/server.ts";
+import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
+import { personIdentityKeys } from "../officials/people-identity.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */
 export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
@@ -163,7 +166,17 @@ export async function primeBallotCandidateDetails(set: BallotSet, contests: read
 /** Read money for the exact displayed contests, retaining candidates and earlier filings. */
 export async function primeBallotFundingRead(set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
-  const keys = ballotCandidateKeys(set,contests);
-  if (keys.length) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,
+  const keys = new Set(ballotCandidateKeys(set,contests));
+  // A registration may be held under the official's native id alone. Finish
+  // the shared directory read before pinning this request's FEC slice.
+  try {
+    await settleFederalDirectoryRead();
+    const roster = getFederalOfficeholderSet();
+    const divisions = new Set(contests.map(contest => contest.ocdId));
+    const holders = new Set(roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId));
+    for (const person of roster.officeholders) if (holders.has(person.id))
+      for (const key of personIdentityKeys(person)) keys.add(key);
+  } catch { /* Ballot-bound FEC records remain readable if the directory is unavailable. */ }
+  if (keys.size) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,
     [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
 }

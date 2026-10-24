@@ -74,7 +74,7 @@ test("a stored stale state-legislative interval still establishes Arizona's 2026
 test("when Census ZIP rows are unavailable, Arizona's declared point plan answers the ballot and an undeclared point plan does not", async () => {
   const local = "ocd-division/country:us/state:az/place:tucson";
   const point = [local, "ocd-division/country:us/state:az/cd:7", "ocd-division/country:us/state:az/sldu:20", "ocd-division/country:us/state:az/sldl:20"];
-  const unavailable = <T>(read: () => T): T => withReaderAuthorityEdge({}, read);
+  const unavailable = <T>(read: () => T): T => withReaderAuthorityEdge({ edgeOnly: true }, read);
   const declared = await unavailable(() => divisionIdsForZipArea("85701", point, electionSelection, POINT_GEOMETRY_PLANS));
   assert.ok(point.every(id => declared.includes(id)));
   assert.deepEqual(unestablishedDistrictOfficesForFamilies(["az/cd", "az/sldu", "az/sldl"], declared), []);

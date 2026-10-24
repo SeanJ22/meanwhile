@@ -22,3 +22,5 @@ The five focused federal refresh, PostgreSQL, joins, reader and edge files produ
 Machine-readable results: [federal-read-only.json](federal-read-only.json). Screenshots: [OpenFEMA](openfema-card.png), [FAC](federal-audit-clearinghouse-card.png).
 
 There were zero production writes. October 24 was a controlled replay against real retained and subsequent publisher data. This proves continuation and reader behavior; observing an automatic post-shipping production run remains a separate live check.
+
+The prior scope above covers DE and FL only. OpenFEMA's registered cadence is 20 minutes, so its next-day continuation alone does not prove the next configured admission. The expanded all-state replay checks that admission separately and reports every covered jurisdiction; the source cadence has not changed.

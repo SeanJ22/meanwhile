@@ -1,4 +1,6 @@
 import { US_JURISDICTIONS } from "../coverage/states.ts";
+import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { factReader } from "../facts/db.ts";
 import { legistarMemberReceiptIssue } from "../sources/legistar/members-tasks.ts";
 import { CANDIDATE_STATES, type CandidateDecision, type CandidateState } from "./types.ts";
@@ -302,11 +304,14 @@ export async function durableRoutineRunnerReceiptIssue(
         candidate.candidate.scope.startsWith(`${expected.scope}/`)) {
       expected = { ...expected, scope: candidate.candidate.scope };
     }
+    const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === expected.registeredContractId);
+    const scope = contract?.scope === expected.scope && isScopedManualContractScope(contract.id, candidate.candidate.scope)
+      ? candidate.candidate.scope : expected.scope;
     if (
       candidate.candidate.id !== receipt.candidateId ||
       candidate.candidate.sourceId !== expected.sourceId ||
       candidate.candidate.recordClass !== expected.recordClass ||
-      candidate.candidate.scope !== expected.scope
+      candidate.candidate.scope !== scope
     ) return "the durable candidate does not match the registered task identity";
     if (
       candidate.state !== receipt.state ||
@@ -314,13 +319,13 @@ export async function durableRoutineRunnerReceiptIssue(
       candidate.promotedVersion !== receipt.promotedVersion ||
       candidate.lastKnownGoodVersion !== receipt.lastKnownGoodVersion
     ) return "the emitted state/version summary differs from the durable candidate";
-    const durableReceipt = parseValidationReceipt(candidate.receipt);
+    const durableReceipt = candidate.receipt === null ? null : parseValidationReceipt({ ...candidate.receipt, excludedFacts: [] });
     if (
       !durableReceipt ||
       durableReceipt.candidateId !== receipt.candidateId ||
       durableReceipt.sourceId !== expected.sourceId ||
       durableReceipt.recordClass !== expected.recordClass ||
-      durableReceipt.scope !== expected.scope ||
+      durableReceipt.scope !== scope ||
       durableReceipt.decision !== receipt.decision
     ) return "the emitted decision is not backed by the candidate's durable eight-check receipt";
 
@@ -329,7 +334,7 @@ export async function durableRoutineRunnerReceiptIssue(
       if (summaryIssue) return summaryIssue;
       if (receipt.confirmedAt !== undefined) {
                 // The database admits a confirmation only for the pointed version and its read-model hash, so no re-read.
-        const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
+        const pointer = await store.readPromotionIdentity(expected.recordClass, scope);
         if (
           pointer === null ||
           pointer.versionId !== receipt.candidateId ||
@@ -337,39 +342,39 @@ export async function durableRoutineRunnerReceiptIssue(
           pointer.sourceId !== expected.sourceId ||
           pointer.latestConfirmation?.versionId !== receipt.candidateId ||
           pointer.latestConfirmation.observedAt !== receipt.confirmedAt
-        ) return `canonical ${expected.recordClass}:${expected.scope} does not carry the reported confirmation of ${receipt.candidateId}`;
+        ) return `canonical ${expected.recordClass}:${scope} does not carry the reported confirmation of ${receipt.candidateId}`;
         return null;
       }
       if (!readerRepairReprovesVersion(expected)) {
-        const readback = await readPromotedCivicData(expected.recordClass, expected.scope, { store, bypassCache: true });
+        const readback = await readPromotedCivicData(expected.recordClass, scope, { store, bypassCache: true });
         if (
           readback.kind !== "PROMOTED" ||
           readback.metadata.versionId !== receipt.candidateId ||
           readback.metadata.sourceId !== expected.sourceId ||
           canonicalCivicDataJson(readback.projection.receipt) !== canonicalCivicDataJson(durableReceipt)
-        ) return `canonical ${expected.recordClass}:${expected.scope} does not prove the reported GOOD candidate`;
+        ) return `canonical ${expected.recordClass}:${scope} does not prove the reported GOOD candidate`;
         return null;
       }
             // Keeps its durable outcome even when another child publishes a newer version before settlement.
-      const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
+      const pointer = await store.readPromotionIdentity(expected.recordClass, scope);
       if (
         pointer === null ||
         pointer.recordClass !== expected.recordClass ||
-        pointer.scope !== expected.scope ||
+        pointer.scope !== scope ||
         pointer.lastKnownGoodVersionId !== pointer.versionId ||
         pointer.sourceId !== expected.sourceId
-      ) return `canonical ${expected.recordClass}:${expected.scope} does not carry a valid current LKG identity`;
+      ) return `canonical ${expected.recordClass}:${scope} does not carry a valid current LKG identity`;
       return null;
     }
 
-    const pointer = await store.readPromotionIdentity(expected.recordClass, expected.scope);
+    const pointer = await store.readPromotionIdentity(expected.recordClass, scope);
     if (receipt.lastKnownGoodVersion === null) {
       return pointer === null ? null : "the held receipt omitted the canonical last-known-good pointer";
     }
     if (
       pointer === null ||
       pointer.recordClass !== expected.recordClass ||
-      pointer.scope !== expected.scope ||
+      pointer.scope !== scope ||
       pointer.versionId !== receipt.lastKnownGoodVersion ||
       pointer.lastKnownGoodVersionId !== pointer.versionId ||
       pointer.sourceId !== expected.sourceId ||

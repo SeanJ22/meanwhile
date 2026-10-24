@@ -71,6 +71,7 @@ const INTENDED = {
   ITS_STATE: "its state's lessons rank next, ahead of other places' doors",
   NATIONAL: "what applies everywhere (and platform lessons when the job's platform is unknown) ranks after its state",
   ROLE_INSTRUCTIONS: "canonical role rows are read directly, outside the place-filtered manual list",
+  PARSER_CHEAPEST_FIRST: "every source starts on Haiku before any escalation, while learned field names still apply",
 } as const;
 
 const strip = (line: string) => line.replace(/^\s+• /, "").replace(/ \[(works here|untried here[^\]]*|fails here[^\]]*)\]$/, "");
@@ -78,6 +79,8 @@ const strip = (line: string) => line.replace(/^\s+• /, "").replace(/ \[(works 
 function classify(line: string, side: "removed" | "added", entries: readonly FieldManualEntry[], read: FieldManualRead,
   job: { state: string; recordClass: string; platform?: string } | null, otherSide: readonly string[]): keyof typeof INTENDED | null {
   const body = strip(line);
+  if (body === "starting at haiku: the cheapest tier, nothing recorded against it" ||
+      body === "starting at haiku: each source gets its own cheapest-model attempt") return "PARSER_CHEAPEST_FIRST";
   if (body.includes("/PLAYBOOK ")) return "ROLE_INSTRUCTIONS";
   const entry = entries.find((e) => body.startsWith(fieldManualLine(e).replace(/ seen \d{4}-\d{2}-\d{2}$/, "")));
   if (!entry) return null;
@@ -112,7 +115,7 @@ test("every role's starting page is the old page except for the listed intended 
     for (const [key, old] of Object.entries(byJob)) {
       const now = after.pages[role]![key]!;
       assert.equal(now.prompt, old.prompt, `${role} ${key}: the written instructions are unchanged`);
-      if (role === "PARSER" || role === "VALIDATOR") {
+      if (role === "VALIDATOR") {
         assert.deepEqual(now.manual, old.manual, `${role} ${key}: the inherited routing is unchanged`);
         continue;
       }

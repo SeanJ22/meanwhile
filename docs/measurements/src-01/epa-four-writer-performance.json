@@ -1,0 +1,228 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "sourceRows": 3229311,
+  "validPrimaryRows": 3229294,
+  "excludedRows": 17,
+  "physicalReaderRows": 6396691,
+  "readerPartitions": 55806,
+  "logicalPartitions": 52720,
+  "manifestFile": "/workspace/meanwhile/.scratch/src01-epa/four-writer-compact-manifest.json",
+  "vaultRoots": [
+    "/tmp/src-01-epa-encoded-8a71679e-0d28-4a1d-b015-4069e601db2b",
+    "/workspace/src01-scratch/epa-encoded-8a71679e-0d28-4a1d-b015-4069e601db2b"
+  ],
+  "vaultEncoding": "gzip-level1",
+  "implementation": {
+    "lib/sources/open-data/spool.ts": "0538269f1322926594a5b002164d6a80eb52a17d5d0cfc2d0623d5af10b09551",
+    "lib/sources/open-data/spool-reader.ts": "22a4be37c9ac099092f47f410c332d5f7e7621dc75339d92d96050aa8d1f083e",
+    "lib/sources/open-data/echo-materialization.ts": "7271752130833a6cc4bfa17f68ffc820adfd1b0908cedd3c5b873600b2364856",
+    "lib/sources/open-data/normalize.ts": "29da0922bea3ed2cf716b26d1359e9bf357594d02cdd0eac8fe94e0db470e8b0",
+    "lib/sources/open-data/artifacts.ts": "a105cab959c9b7d05582ee5777aae133c303e26e040ca094fb48bc54cc207b25",
+    "scripts/replay-epa-materialization.mts": "c20f6166d9bb22674adaa5b253e4f20b5f491f957a48e4281db1a23396e2a6ab",
+    "scripts/lib/epa-held-spool.mts": "5805ee8471194a63caf3030a6d595cc6a86cbb4ecb0be90ed13f6f2a4ac3f54f",
+    "scripts/lib/open-data-replay-vault.mts": "0ec587bafb6a1311597ffc0248323311f6241bb5db59d73a38ee0d6efe950eeb"
+  },
+  "feedsFrom": "Official EPA archive -> streamCsvObjects -> normalizeEcho -> OpenDataSpool source facts and location references",
+  "feeds": "publishOpenData canonical national manifest -> normal GET /api/open-data -> grounded Ask and OpenDataFacts cards",
+  "materialization": {
+    "elapsedMs": 887595.415586,
+    "cpuMs": 893726.348,
+    "peakPendingWrites": 4,
+    "peakRssBytes": 670797824,
+    "includedSynchronousGzipElapsedMs": 36697.75826299409,
+    "resourceSamplingIntervalMs": 1000,
+    "minHostAvailableBytes": 15962357760,
+    "cgroupLimitBytes": 17179869184,
+    "peakCgroupCurrentBytes": 11681329152,
+    "minCgroupRawMarginBytes": 5498540032,
+    "minTmpFreeBytes": 8354291712,
+    "minWorkspaceFreeBytes": 4267253760,
+    "rawOfferedBytes": 9697325867,
+    "uniqueLogicalBodies": 54795,
+    "uniqueLogicalBytes": 9694966213,
+    "shardLogicalBytes": [
+      6072559681,
+      3622406532
+    ]
+  },
+  "memoryCapacity": {
+    "scope": "Four-writer materializer-phase memory-only calculations, not a whole worker peak or observed production concurrency. No scheduler, worker-slot or Admin settings changed.",
+    "serverMiB": 8192,
+    "reserveMiB": 768,
+    "researchParentMiB": 2928,
+    "measuredPhasePeakBytes": 670797824,
+    "measuredPhasePeakPlus5PercentMiB": 672,
+    "phaseOnlyWorkersWithoutResearchParent": 11,
+    "phaseOnlyWorkersWithResearchParent": 6,
+    "routineRunnerMapping": {
+      "scope": "Static runner mapping only. Recent production-host measurements and actual concurrent admission were not inspected; Admin settings and scheduler behavior are unchanged.",
+      "tableOverride": false,
+      "noHistoryFallbackMiB": 342,
+      "fallbackSource": "WORKER_ENTRY_PEAK_MIB.lease",
+      "recentMeasurementRule": "Largest of the last five completed job family peaks, plus 5% rounded up to MiB, replaces the table fallback; actual available memory, parent growth and existing reservations also affect admission.",
+      "productionHostHistoryInspected": false,
+      "sourceLocations": [
+        "scripts/routine-civic-data-runner.mts:302",
+        "lib/control-plane/workers/worker-slots.ts:10",
+        "lib/control-plane/workers/worker-slots.ts:16",
+        "lib/control-plane/workers/worker-slots.ts:170",
+        "lib/control-plane/workers/worker-slots.ts:281",
+        "lib/control-plane/workers/worker-slots.ts:360",
+        "lib/civic-data/contracts.ts:601",
+        "lib/civic-data/contracts.ts:633"
+      ],
+      "workerSlotsSha256": "97e66527ef6c6488d09d38372b0fce9c2d306e3662a5c16b18a2111d7c66db07",
+      "replayObservedRoutineAdmission": false,
+      "entries": [
+        "epa-echo/open-data-refresh.mts",
+        "socrata-discovery/open-data-refresh.mts"
+      ]
+    },
+    "noHistoryFallbackOnlyArithmetic": {
+      "scope": "Conditional arithmetic for the 342 MiB table default alone, not observed or predicted production admission. Recent host peaks and other live memory are unknown.",
+      "reservationMiB": 342,
+      "workersWithoutResearchParent": 21,
+      "workersWithResearchParent": 13
+    },
+    "phaseOnlyEstimateExceedsNoHistoryFallback": true,
+    "wholeWorkerPeakMeasured": false
+  },
+  "runtimeScope": "Continuous same production shared iterator, normalizer, full-source binding, compact writer, and four pending EvidenceStore writes. The proof-only level1 gzip codec retains exact logical bytes and metadata. Every gzip call and encoded file write stays in the measured total; no exact artifact readback, pause, or timing deduction occurs. Production Netlify latency and fresh source network latency are unmeasured.",
+  "infrastructureRetry": {
+    "failedRawAttemptReceipt": "docs/measurements/src-01/epa-four-writer-failed-raw.json",
+    "failedRawAttemptStatus": "FAILED_INFRASTRUCTURE_MEMORY_RESERVE",
+    "replacement": "Fresh proof-only gzip-level1 stores; exact production logical bytes and metadata; same shared production materializer; every codec cost included",
+    "preparation": {
+      "capturedAt": "2026-10-23T13:15:20Z",
+      "cgroupLimitBytes": 17179869184,
+      "cgroupCurrentBytes": 4039565312,
+      "requiredMarginBytes": 805306368,
+      "migration": {
+        "status": "PASS",
+        "encoding": "gzip-level1",
+        "vaultRoots": [
+          "/workspace/src01-scratch/epa-failed-encoded-a-f1bde221-285a-452e-aa53-3bcaf7667c4c",
+          "/workspace/src01-scratch/epa-failed-encoded-b-f1bde221-285a-452e-aa53-3bcaf7667c4c"
+        ],
+        "objects": 34689,
+        "logicalBytes": 6940291924,
+        "sha256": "ace370e1d73c988cfd8029259913fa7a4348709510d558057987b4bc52bc2c5c",
+        "elapsedMs": 216563.568757,
+        "allDecodedBytesAndMetadataVerifiedBeforeRawDuplicateRemoval": true
+      },
+      "filesystems": {
+        "/tmp": {
+          "freeBytes": 9088581632,
+          "totalBytes": 9441337344
+        },
+        "/workspace": {
+          "freeBytes": 4713684992,
+          "totalBytes": 33770192896
+        }
+      },
+      "encodedHistoricalStorage": [
+        {
+          "root": "/workspace/src01-scratch/epa-failed-encoded-a-f1bde221-285a-452e-aa53-3bcaf7667c4c",
+          "files": 43117,
+          "bytes": 377051928,
+          "allocatedBytes": 501907456
+        },
+        {
+          "root": "/workspace/src01-scratch/epa-failed-encoded-b-f1bde221-285a-452e-aa53-3bcaf7667c4c",
+          "files": 26262,
+          "bytes": 225443569,
+          "allocatedBytes": 301535232
+        }
+      ],
+      "nextRunCondition": "Fresh logical stores; shared level1 gzip included in full elapsed; closed held SQLite cache was advised away before preparation, exact bytes retained; no source or production settings changed.",
+      "cgroupMarginBytes": 13140303872,
+      "beforeLaunchBudgetObservedAt": "2026-10-23T13:17:03Z",
+      "beforeLaunchCgroupCurrentBytes": 4039196672,
+      "beforeLaunchCgroupMarginBytes": 13140672512,
+      "beforeLaunchFilesystems": {
+        "/tmp": {
+          "freeBytes": 9088581632
+        },
+        "/workspace": {
+          "freeBytes": 4713680896
+        }
+      }
+    },
+    "postTimingClosedSourceCacheRelease": {
+      "scope": "Post-timing cleanup of only closed immutable source SQLite clean pages, after complete sourceDBclose; no bytes removed, outputvault untouched. No time deduction.",
+      "path": "/workspace/src01-scratch/epa-held-national-final/rows.sqlite",
+      "fileBytes": 5631787008,
+      "beforeCgroupCurrentBytes": 11108368384,
+      "afterCgroupCurrentBytes": 5664714752,
+      "elapsedMs": 481.0703930015734,
+      "exactFileBytesSizeMtimeInodePreserved": true
+    },
+    "freshStoresNoPartialWriteReuse": true,
+    "continuousUnpaused": true,
+    "timingDeductionsMs": 0
+  },
+  "heldSpoolMetadataSha256": "9c43df0774f9e0b53a41d44656b7ca116b92b473e74352d76eaff42a321fcdcd",
+  "comparison": {
+    "partitions": 55806,
+    "uniquePrimaryNativeIds": 3229294,
+    "peakRssBytes": 646426624,
+    "minCgroupRawMarginBytes": 7210065920,
+    "memorySamplingEveryPartitions": 5000,
+    "elapsedMs": 2847560.969333,
+    "sha256": "af9751f717865edc64b894ca62dc4f3060838643e648ca403118e2c0de3cff40",
+    "proofScriptSha256": "4f0057e4cd8842eca082730b6ece1ee04fe914b13619b6d930b964384d704ea7",
+    "allNativeValuesAndSelectedSourceCellsByteExact": true,
+    "allNewLogicalArtifactBytesRetained": true,
+    "holds": [
+      {
+        "pid": 232248,
+        "action": "SIGSTOP",
+        "at": "2026-10-23T13:59:37Z",
+        "monotonicSeconds": 21627.804557872,
+        "reason": "Quiet final EPA first-page API/card and clientbrowser proof; only separate offline comparison paused, completed national source/materializer untouched."
+      },
+      {
+        "pid": 232248,
+        "action": "SIGCONT",
+        "at": "2026-10-23T14:24:20Z",
+        "monotonicSeconds": 23111.14805881,
+        "reason": "Quiet reader and isolated retention measurements ended; resume only separate artifact verification."
+      },
+      {
+        "pid": 232248,
+        "action": "SIGSTOP",
+        "at": "2026-10-23T14:24:53Z",
+        "monotonicSeconds": 23144.103183234,
+        "reason": "Owner reports matched SQL profile ready now; isolate few actual comparison queries."
+      },
+      {
+        "pid": 232248,
+        "action": "SIGCONT",
+        "at": "2026-10-23T14:26:54Z",
+        "monotonicSeconds": 23265.346301819,
+        "reason": "Matched old/new SQL workers finished; resume exhaustive verification while SQL owners edit."
+      }
+    ],
+    "holdsIncludedInReportedElapsedMs": true,
+    "scope": "Exhaustive offline artifact and primary-ID verification. Its wall time includes quiet reader/profile holds; no verification time enters the measured production processing sum."
+  },
+  "productionEquivalent": {
+    "sourceArchiveDownloadMs": 96377,
+    "sourceIngestMs": 450365,
+    "continuousMaterializationMs": 887595.415586,
+    "heldBaselineRegistrationMs": 153373,
+    "heldBaselineIndexAndBookkeepingMs": 23953,
+    "initialNationalPublishMs": 14374.197249999997,
+    "readerProofFile": "/workspace/meanwhile/docs/measurements/src-01/epa-reader-all-states.json",
+    "changedEditionRetentionMs": 105505.177292,
+    "retentionProofFile": "/workspace/meanwhile/docs/measurements/src-01/epa-retention-performance.json",
+    "totalMs": 1731542.7901279998,
+    "parentLimitMs": 1800000,
+    "withinParentLimit": true,
+    "scope": "Conservative changed-edition processing: the actual archive HTTP download, measured held-byte source ingestion and unchanged indexing, complete continuous four-writer materialization, actual production registration reads, actual national publisher and actual retention over all primary records for the17 real gaps. No extrapolated rows or latency deductions; all proof-codec overhead remains included. Future source HTTP and production remote-vault latency are unmeasured."
+  },
+  "timingReceiptScriptSha256": "f3f3386f5667b46cacf2cff0c765e0dc672342f7dc4c4dac473854a528159cbd",
+  "retentionImplementationSha256": "9608294551afb9d21c43bcd36a0427ca26cfee84bbfa1d69e44eececa6a7fe41",
+  "readerVerificationScope": "Normal API, cards, and Ask correctness and first-use SQL performance are reported separately in epa-reader-all-states.json. This artifact measures complete source materialization, exact output equivalence, and processing budget."
+}

@@ -14,7 +14,7 @@ test("12: the long sections render inside the battlecard, not on the row", () =>
 
   /* Current candidates and earlier filings share the same sections. */
   const builders = page.match(/<BallotBattlecard(?![A-Za-z])/g) ?? [];
-  assert.equal(builders.length, 3, "nominees, current candidacies and earlier filings each receive the shared card");
+  assert.equal(builders.length, 2, "unified current choices and earlier filings each receive the shared card");
   assert.match(page, /data-earlier-filings=\{contest.id\}>[\s\S]*?battlecardSlot=\{<BallotBattlecard/);
 
   const defined = page.match(/async function BallotBattlecard\(/g) ?? [];

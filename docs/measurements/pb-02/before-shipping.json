@@ -1,0 +1,17 @@
+{
+  "counts": {
+    "observed_at": "2026-10-23T08:35:45.226Z",
+    "findings": "270013",
+    "never_tried": "205220",
+    "built": "7940",
+    "refused": "766"
+  },
+  "transfer": {
+    "observed_at": "2026-10-23T08:35:41.926Z",
+    "day": "2026-10-23T00:00:00.000Z",
+    "database_name": "control-plane",
+    "client": "runner",
+    "request_bytes": "13876585886",
+    "response_bytes": "21816827439"
+  }
+}

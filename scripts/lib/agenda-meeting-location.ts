@@ -183,7 +183,7 @@ export function placeUnplacedFromAgendas<M extends PlaceableMeeting>(
   let ambiguous = 0;
   const lines: string[] = [];
   const out = rows.map((meeting) => {
-    if (meeting.location || meeting.online) return meeting;
+    if (meeting.location || meeting.online || /^legistar(?:-insite)?:/.test(meeting.id)) return meeting;
     const text = agendaTextFor(meeting.id);
     if (!text) return meeting;
     const placement = placementFor(meeting, text, venues);

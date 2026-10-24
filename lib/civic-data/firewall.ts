@@ -415,9 +415,10 @@ function confinedTemporaryBindings(executable: string, files: Readonly<Record<st
       String.raw`constrepository=realpathSync\(process\.cwd\(\)\);if\(target===repository\|\|target\.startsWith\(repository\+sep\)\|\|parent===repository\|\|parent\.startsWith\(repository\+sep\)\)\{thrownewError\("[^"\\]*"\);\}returntarget;\}$`,
     ].join(""));
     const operational = new RegExp([
-      String.raw`^import\{existsSync,realpathSync\}from["']node:fs["'];import\{tmpdir\}from["']node:os["'];import\{dirname,resolve,sep\}from["']node:path["'];`,
+      String.raw`^import\{realpathSync\}from["']node:fs["'];import\{tmpdir\}from["']node:os["'];import\{dirname,resolve,sep\}from["']node:path["'];`,
       String.raw`exportfunction([A-Za-z_$][\w$]*)\(value:string\):string\{consttarget=resolve\(value\);consttemporary=resolve\(tmpdir\(\)\);constroot=realpathSync\(tmpdir\(\)\);constpersistent="/var/lib/meanwhile";`,
-      String.raw`letancestor=target;while\(!existsSync\(ancestor\)\)ancestor=dirname\(ancestor\);constparent=realpathSync\(ancestor\);`,
+      String.raw`letparent="";for\(letancestor=target;!parent;ancestor=dirname\(ancestor\)\)\{try\{parent=realpathSync\(ancestor\);\}`,
+      String.raw`catch\(error\)\{if\(\(errorasNodeJS\.ErrnoException\)\.code!=="ENOENT"\|\|dirname\(ancestor\)===ancestor\)throwerror;\}\}`,
       String.raw`constinTemporary=target\.startsWith\(temporary\+sep\)&&\(parent===root\|\|parent\.startsWith\(root\+sep\)\);`,
       String.raw`constinPersistent=\(target===persistent\|\|target\.startsWith\(persistent\+sep\)\)&&\(parent===persistent\|\|parent\.startsWith\(persistent\+sep\)\);`,
       String.raw`if\(!inTemporary&&!inPersistent\)thrownewError\("WORKER_MEMORY_PATH_OUTSIDE_HOST_STATE"\);constrepository=realpathSync\(process\.cwd\(\)\);`,

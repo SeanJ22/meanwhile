@@ -4,7 +4,9 @@ import { captureSha256 } from "../scripts/ba01-evidence.mts";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
-import type { BallotSet } from "../lib/ballot/types.ts";
+import type { BallotSet, Candidacy } from "../lib/ballot/types.ts";
+import { ballotCandidateDisplayName } from "../lib/ballot/name-case.ts";
+import { ballotCandidatePeople } from "../lib/ballot/tickets.ts";
 import type { BallotWithTickets } from "../lib/ballot/tickets.ts";
 import type { BallotWithDistrictMemberships } from "../lib/ballot/district-memberships.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
@@ -15,6 +17,27 @@ const json = (path: string) => JSON.parse(readFileSync(path, "utf8"));
 const state = (st: string): BallotSet => Object.values(json(`${root}data/ballot/2026-general/${st.toLowerCase()}.json`).ballots)[0] as BallotSet;
 const base = (st: string) => `ocd-division/country:us/territory:${st.toLowerCase()}`;
 const count = (set: BallotSet) => ({ contests: set.contests.length, choices: set.candidacies.length });
+
+function assertOfficialTickets(set: BallotSet, choices: readonly Candidacy[], expectedCount: number) {
+  const sourceTickets = set.candidateTickets!.filter(ticket => choices.some(choice =>
+    choice.id === ticket.leadCandidacyId || choice.aliases?.includes(ticket.leadCandidacyId)));
+  assert.equal(sourceTickets.length, expectedCount);
+  for (const sourceTicket of sourceTickets) {
+    const rawLead = set.candidacies.find(row => row.id === sourceTicket.leadCandidacyId)!;
+    const selected = choices.filter(row => row.id === sourceTicket.leadCandidacyId || row.aliases?.includes(sourceTicket.leadCandidacyId));
+    assert.equal(selected.length, 1, "each official ticket remains one choice");
+    const choice = selected[0];
+    assert.ok(choice.ticket);
+    assert.equal(choice.ticket.id, sourceTicket.id);
+    assert.equal(choice.ticket.runningMate.id, sourceTicket.runningMate.id);
+    assert.notEqual(choice.id, choice.ticket.runningMate.id, "ticket members keep distinct person cards");
+    const names = [ballotCandidateDisplayName(rawLead), ballotCandidateDisplayName(sourceTicket.runningMate)];
+    assert.equal(ballotCandidateDisplayName(choice), names.join(" / "));
+    assert.deepEqual(ballotCandidatePeople(choice).map(ballotCandidateDisplayName), names);
+    assert.ok(sourceTicket.provenance.quote?.includes(names.join(" / ")), "both names are in the saved official pairing");
+    assert.deepEqual(choice.ticket.provenance, sourceTicket.provenance);
+  }
+}
 
 test("American Samoa's certified roster reaches only the reader's House district and every delegate candidate", () => {
   const set = state("AS");
@@ -47,7 +70,7 @@ test("CNMI reader selection matches all 13 official specimen fronts with explici
     const governor = selected.contests.find(row => row.id === "mp-ba01-2026-governor")!;
     const tickets = selected.candidacies.filter(row => row.contestId === governor.id);
     assert.equal(tickets.length, 3);
-    assert(tickets.every(row => row.familyName.includes(" / ")));
+    assertOfficialTickets(set, tickets, 3);
     const senate = selected.contests.find(row => /-senate-/.test(row.id))!;
     assert.equal(senate.voteFor, 2);
   }
@@ -63,7 +86,7 @@ test("both Virgin Islands district samples have every printed choice and the exa
     assert.deepEqual(count(selected), { contests: expected.contests, choices: expected.choices });
     const governor = selected.candidacies.filter(row => row.contestId === "vi-ba01-2026-governor");
     assert.equal(governor.length, 5);
-    assert(governor.every(row => row.familyName.includes(" / ")));
+    assertOfficialTickets(set, governor, 5);
     const board = selected.contests.filter(row => row.id.includes("board-of-elections"));
     assert.equal(board.length, district === "St. Croix" ? 1 : 2);
     assert(board.every(row => row.ocdId === `${base("VI")}/board_of_elections:${slug}`));

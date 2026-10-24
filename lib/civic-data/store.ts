@@ -14,6 +14,9 @@ import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
+import { isCivicPayloadPart } from "./payload-codec.ts";
+import { navigationCandidateIndex, type NavigationPublicationBase, type NavigationRecord } from "./navigation-publication-base.ts";
+import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import {
   type CandidateEvent,
   type CandidateState,
@@ -39,7 +42,7 @@ import {
 } from "./unchanged-confirmation.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import {
-  isTrustedLkgImportCandidate,
+  isImportOrStateMoveCandidate,
 } from "./trusted-lkg-import.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
@@ -66,9 +69,13 @@ import { invalidateReaderCache, readerCacheScopeForPublication, readerPublicatio
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
-export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> & {
+export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate" | "receipt"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope">;
+  readonly receipt: Omit<ValidationReceipt, "excludedFacts"> | null;
 };
+
+const isNavigationCandidate = (candidate: Pick<RoutineCandidate, "recordClass" | "scope">) =>
+  candidate.recordClass === "CURATED_READER_RECORD" && ballotNavigationState(candidate.scope) !== null;
 
 export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "retrieval" | "temporal"> & {
@@ -146,6 +153,7 @@ export interface RoutineDataStore {
 }
 
 export interface RoutineStoreClock {
+  readonly publishedScopeVersions?: readonly string[];
   readonly failureStreak?: number;
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
@@ -318,7 +326,7 @@ function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCan
 }
 
 function receiptsEqual(left: ValidationReceipt, right: ValidationReceipt): boolean {
-  return canonicalCivicDataJson(left) === canonicalCivicDataJson(right);
+  return left === right || canonicalCivicDataHash(left, { durable: true }) === canonicalCivicDataHash(right, { durable: true });
 }
 
 function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {
@@ -603,12 +611,12 @@ interface PromotionPointerProof {
 
 /** The only candidate fields the routine clock reads. It runs for every task on every pass, so widening it is a cost decision. */
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
-  top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
+  top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport", "stateRetirement"],
   retrieval: ["retrievedAt", "sourceCheck"],
   normalization: ["parserVersion"],
 } as const;
 
-type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport"> & {
+type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport" | "stateRetirement"> & {
   readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
   readonly normalization: Pick<RoutineCandidate["normalization"], "parserVersion">;
 };
@@ -649,8 +657,8 @@ function proofConsistentPointedSuccess(
   if (pointer.sourceId !== record.candidate.sourceId || pointer.recordClass !== record.candidate.recordClass || pointer.scope !== record.candidate.scope) return false;
   if (!receiptIsGoodForCandidate(receipt, record.candidate)) return false;
   if (!receiptsEqual(pointer.receipt, receipt)) return false;
-    // A frozen LKG import is not a publisher acquisition: no clock success, so the runner is due at once.
-  return !isTrustedLkgImportCandidate(record.candidate);
+    // Imports and state moves retain facts without a publisher acquisition.
+  return !isImportOrStateMoveCandidate(record.candidate);
 }
 
 export function proofConsistentSuccess(
@@ -693,8 +701,10 @@ export function trustedLkgImportClock(
 
 export function candidateVersionSummary(record: CandidateVersionRecord): CandidateVersionSummary {
   const { candidate, ...columns } = record;
+  const { excludedFacts: _facts, ...receipt } = record.receipt ?? {};
   return {
     ...columns,
+    receipt: record.receipt ? receipt as CandidateVersionSummary["receipt"] : null,
     candidate: { id: candidate.id, sourceId: candidate.sourceId, recordClass: candidate.recordClass, scope: candidate.scope },
   };
 }
@@ -804,7 +814,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const row = this.candidates.get(candidateId);
-    return row ? candidateVersionSummary(heldRecord(row)) : null;
+    return row ? structuredClone(candidateVersionSummary(row)) : null;
   }
 
   private pointerRead(recordClass: RoutineRecordClass, scope: string): PromotedProjection | null {
@@ -946,8 +956,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     ) {
       return { kind: "POINTER_MOVED", detail: `The pointer ${key} no longer names ${input.pointerVersionId}.` };
     }
-    if (isTrustedLkgImportCandidate(row.candidate)) {
-      return { kind: "POINTER_IS_IMPORT", detail: `${input.pointerVersionId} is a trusted-LKG import; a live read of it promotes.` };
+    if (isImportOrStateMoveCandidate(row.candidate)) {
+      return { kind: "POINTER_IS_IMPORT", detail: `${input.pointerVersionId} retains published facts without a source read; a live read of it promotes.` };
     }
     if (row.candidate.normalization.normalizedHash !== input.readModelHash) {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s read model is not ${input.readModelHash}.` };
@@ -1038,7 +1048,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         row.candidate.recordClass === recordClass &&
         row.candidate.scope === scope &&
         (parserVersion === undefined || row.candidate.normalization.parserVersion === parserVersion) &&
-        !isTrustedLkgImportCandidate(row.candidate)
+        !isImportOrStateMoveCandidate(row.candidate)
       )
       .flatMap((row) => (this.history.get(row.candidate.id) ?? [])
         .filter(event => event.sequence === 1 || event.detail.startsWith("RECHECKED_UNCHANGED:"))
@@ -1056,7 +1066,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       ? { ...pointedRow, candidate: routineClockCandidateView(pointedRow.candidate) }
       : null;
     const sittings = recordClass === "MEETING" && pointer ? { sittingStarts: meetingPayloadSittingStarts(pointer.payload) } : {};
-    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+    if (pointer && pointedRecord && isImportOrStateMoveCandidate(pointedRecord.candidate)) {
       return { ...trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt), ...sittings };
     }
     const pointedHistory = pointedRow ? this.history.get(pointedRow.candidate.id) ?? [] : [];
@@ -1064,6 +1074,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const confirmation = pointedRow ? latestUnchangedConfirmation(pointedHistory, pointedRow.candidate.id) : null;
     return confirmedClock({
       lastAttemptedAt,
+      ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: ((pointer?.payload as { scopes?: { version: string; versionMeta?: { retrievalComplete?: boolean } }[] } | undefined)?.scopes ?? [])
+        .filter(scope => scope.versionMeta?.retrievalComplete !== false).map(scope => scope.version) } : {}),
       ...(repeatedFailureStreak(attempts) ? { failureStreak: repeatedFailureStreak(attempts) } : {}),
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
@@ -1086,6 +1098,12 @@ function rowToCandidate(row: typeof civicDataCandidates.$inferSelect): Candidate
     failureCode: row.failureCode,
     failureDetail: row.failureDetail,
   };
+}
+
+/** The clock checks the receipt's decision and names, never its held facts. */
+function clockReceipt<T extends { readonly validationReceipt: unknown }>(row: T): T {
+  const receipt = row.validationReceipt as { readonly excludedFacts?: unknown } | null;
+  return receipt && isCivicPayloadPart(receipt.excludedFacts) ? { ...row, validationReceipt: { ...receipt, excludedFacts: [] } } : row;
 }
 
 const CLOCK_FIELD_NAME = /^[A-Za-z]+$/;
@@ -1121,6 +1139,9 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
       lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       promotedAt: civicDataPromotions.promotedAt,
       validationReceipt: civicDataPromotions.validationReceipt,
+      ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: sql<readonly string[]>`
+        coalesce((select jsonb_agg(s->>'version') from jsonb_array_elements(${civicDataPromotions.payload}->'scopes') s
+          where coalesce(s#>>'{versionMeta,retrievalComplete}', 'true') <> 'false'), '[]'::jsonb)` } : {}),
       ...(recordClass === "FEDERAL_MONEY" && scope.endsWith(":US") ? { continuationPending: sql<boolean>`
         coalesce(${civicDataPromotions.payload}->>'state', '') = 'US'
         and ${civicDataPromotions.payload}->>'source' = ${civicDataPromotions.sourceId}
@@ -1177,6 +1198,7 @@ function confirmedClock(
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
     ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
     ...(clock.continuationPending !== undefined ? { continuationPending: clock.continuationPending } : {}),
+    ...(clock.publishedScopeVersions !== undefined ? { publishedScopeVersions: clock.publishedScopeVersions } : {}),
     ...sittings,
   };
 }
@@ -1418,7 +1440,9 @@ const CANDIDATE_SUMMARY_COLUMNS = {
 } as const;
 
 export function candidateSummaryRead(db: RoutineClockDb, candidateId: string) {
-  return db.select(CANDIDATE_SUMMARY_COLUMNS).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+  return db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
+    validationReceipt: sql<unknown>`${civicDataCandidates.validationReceipt} - 'excludedFacts'`,
+  }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
 }
 
 type PostgresCandidateSummaryRow = Pick<typeof civicDataCandidates.$inferSelect, keyof typeof CANDIDATE_SUMMARY_COLUMNS>;
@@ -1428,7 +1452,7 @@ function postgresCandidateSummary(row: PostgresCandidateSummaryRow): CandidateVe
     candidate: { id: row.id, sourceId: row.sourceId, recordClass: row.recordClass as RoutineRecordClass, scope: row.scope },
     state: row.state as CandidateState,
     acquisitionSucceeded: row.acquisitionSucceeded,
-    receipt: row.validationReceipt as ValidationReceipt | null,
+    receipt: row.validationReceipt as CandidateVersionSummary["receipt"],
     promotedVersion: row.promotedVersionId,
     lastKnownGoodVersion: row.lastKnownGoodVersionId,
     failureCode: row.failureCode,
@@ -1607,9 +1631,38 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   };
   private readonly payloadParts = new CivicPayloadParts(this.payloadPartIO);
   private readonly ownedPayloadParts = new CivicPayloadParts({ ...this.payloadPartIO, read: hashes => this.readPayloadParts(hashes) });
+  private readonly storedHeldFacts = new WeakMap<object, unknown>();
   private async loadPayload(value: unknown, scope: string): Promise<unknown> {
     if (statePublicationScope(scope)) return decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value));
     return this.payloadParts.load(value);
+  }
+
+  /** A navigation proof never needs the losing values, which are a part of their own. */
+  private async loadProofCandidate(encoded: unknown): Promise<RoutineCandidate> {
+    const candidate = encoded as RoutineCandidate;
+    const proof = isNavigationCandidate(candidate) && isCivicPayloadPart((candidate as { excludedFacts?: unknown }).excludedFacts)
+      ? { ...candidate, excludedFacts: [] } : candidate;
+    return await this.loadPayload(proof, candidate.scope) as RoutineCandidate;
+  }
+
+  /** A navigation receipt keeps its held facts in payload parts; `readCandidate` loads them, reader paths carry the receipt without them. */
+  private async storeReceipt(candidate: Pick<RoutineCandidate, "recordClass" | "scope">, receipt: ValidationReceipt | null): Promise<unknown> {
+    if (receipt === null || !isNavigationCandidate(candidate)) return receipt;
+    const { excludedFacts, ...rest } = receipt;
+    return { ...await this.payloadParts.store(rest, Object.keys(rest)) as object, excludedFacts: await this.heldFactParts(excludedFacts) };
+  }
+
+  /** The candidate and each of its receipts carry the same held facts, so they are encoded once. */
+  private async heldFactParts(facts: unknown): Promise<unknown> {
+    if (facts === null || typeof facts !== "object") return this.payloadParts.store(facts);
+    if (!this.storedHeldFacts.has(facts)) this.storedHeldFacts.set(facts, await this.payloadParts.store(facts));
+    return this.storedHeldFacts.get(facts);
+  }
+
+  private async withReceiptParts<T extends { readonly validationReceipt: unknown }>(row: T, heldFacts = true): Promise<T> {
+    const receipt = row.validationReceipt as { readonly excludedFacts?: unknown } | null;
+    if (!receipt || !isCivicPayloadPart(receipt.excludedFacts)) return row;
+    return { ...row, validationReceipt: heldFacts ? await this.payloadParts.load(receipt) : { ...receipt, excludedFacts: [] } };
   }
 
   private async readStatePromotion<T>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
@@ -1754,6 +1807,20 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     )`;
   }
 
+  /** Each large section is encoded, written and released before the next, so the whole candidate is never encoded at once. */
+  private async storeNavigationCandidate(candidate: RoutineCandidate, navigationIndex: unknown): Promise<RoutineCandidate> {
+    const { readModel, normalizedPayload, civicRecords, identities, changeSet, excludedFacts, ...rest } = candidate;
+    const stored: Record<string, unknown> = await this.payloadParts.store({ ...rest, navigationIndex },
+      ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport", "navigationIndex"]) as Record<string, unknown>;
+    stored.readModel = await this.payloadParts.store(readModel);
+    stored.normalizedPayload = normalizedPayload === readModel ? stored.readModel : await this.payloadParts.store(normalizedPayload);
+    for (const [key, value] of Object.entries({ civicRecords, identities, changeSet })) {
+      if (value !== undefined) stored[key] = await this.payloadParts.store(value);
+    }
+    if (excludedFacts !== undefined) stored.excludedFacts = await this.heldFactParts(excludedFacts);
+    return stored as unknown as RoutineCandidate;
+  }
+
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
@@ -1764,11 +1831,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "sourceCheck", "failureDetail"]),
     } : record.candidate;
+    const navigationIndex = navigationCandidateIndex(record.candidate);
     const stored = stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"],
         meetingDoors || meeting ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
-      : record.candidate;
+      : navigationIndex ? await this.storeNavigationCandidate(record.candidate, navigationIndex) : record.candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
         id: record.candidate.id,
@@ -1784,7 +1852,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         parserVersion: record.candidate.normalization.parserVersion,
         identity: stored.identities,
         candidate: stored,
-        validationReceipt: record.receipt,
+        validationReceipt: await this.storeReceipt(record.candidate, record.receipt),
         promotedVersionId: record.promotedVersion,
         lastKnownGoodVersionId: record.lastKnownGoodVersion,
         failureCode: record.failureCode,
@@ -1808,6 +1876,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       state, at, detail, receipt, failure,
     );
     const allowed = allowedPriorStates(state);
+    const storedReceipt = receipt ? await this.storeReceipt(authority.candidate, receipt) : undefined;
     const priorStateEligible = and(
       eq(civicDataCandidates.id, candidateId),
       inArray(civicDataCandidates.state, [...allowed]),
@@ -1817,7 +1886,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const updatedCandidate = this.db.$with("updated_candidate").as(
       this.db.update(civicDataCandidates).set({
         state,
-        ...(receipt ? { validationReceipt: receipt } : {}),
+        ...(receipt ? { validationReceipt: storedReceipt } : {}),
         ...(failure ? { failureCode: failure.code, failureDetail: failure.detail } : {}),
       }).where(priorStateEligible).returning({ candidateId: civicDataCandidates.id }),
     );
@@ -1843,7 +1912,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw new Error(`CANDIDATE_TRANSITION_INVALID:${candidateId}:${current.state}:${state}`);
     }
     const { candidate: _sameRow, ...columns } = postgresCandidateSummary(updatedRows[0]);
-    return { ...columns, candidate: options.candidate ?? await this.readCandidateEnvelope(candidateId) };
+    return { ...columns, receipt: receipt ?? columns.receipt as ValidationReceipt | null,
+      candidate: options.candidate ?? await this.readCandidateEnvelope(candidateId) };
   }
 
   private async readCandidateEnvelope(candidateId: string): Promise<RoutineCandidate> {
@@ -1858,7 +1928,65 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return row ? { ...rowToCandidate(row), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+    return row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+  }
+
+  async readNavigationPublicationBase(scope: string): Promise<NavigationPublicationBase | null> {
+    const [row] = await this.db.select({
+      ...PROMOTED_POINTER_IDENTITY_COLUMNS,
+      candidate: sql<unknown>`(${civicDataCandidates.candidate} - array['readModel','normalizedPayload','civicRecords','identities','changeSet','excludedFacts','retrieval']) ||
+        jsonb_build_object('retrieval', ${civicDataCandidates.candidate}->'retrieval' #- '{manualSourceReceipt,sources}')`,
+      receipt: sql<unknown>`jsonb_set(${civicDataCandidates.validationReceipt}, '{excludedFacts}', '[]'::jsonb)`,
+      state: civicDataCandidates.state,
+      acquired: civicDataCandidates.acquisitionSucceeded,
+      promotedVersion: civicDataCandidates.promotedVersionId,
+      lkgVersion: civicDataCandidates.lastKnownGoodVersionId,
+      exact: sql<boolean>`${civicDataCandidates.sourceId} = ${civicDataPromotions.sourceId}
+        and ${civicDataCandidates.recordClass} = ${civicDataPromotions.recordClass}
+        and ${civicDataCandidates.scope} = ${civicDataPromotions.scope}
+        and ${civicDataCandidates.normalizedHash} = ${civicDataCandidates.candidate} #>> '{normalization,normalizedHash}'
+        and ${civicDataCandidates.candidate}->'readModel' = ${civicDataPromotions.payload}
+        and ${civicDataCandidates.candidate}->'normalizedPayload' = ${civicDataCandidates.candidate}->'readModel'
+        and ${civicDataCandidates.validationReceipt} = ${civicDataPromotions.validationReceipt}`,
+    }).from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
+      .where(and(eq(civicDataPromotions.recordClass, "CURATED_READER_RECORD"), eq(civicDataPromotions.scope, scope))).limit(1);
+    if (!row) return null;
+    const candidate = row.candidate as RoutineCandidate & { navigationIndex?: { reviewFactsHash: string; reviewHeldKeysHash: string } };
+    const receipt = parseValidationReceipt(row.receipt);
+    const pointer = postgresPromotedPointerIdentity(row);
+    const times = [candidate?.retrieval?.retrievedAt, receipt?.validatedAt, pointer.promotedAt].map(value => Date.parse(value ?? ""));
+    if (!row.exact || pointer.key !== projectionKey("CURATED_READER_RECORD", scope) || row.state !== "PROMOTED" || !row.acquired || row.promotedVersion !== pointer.versionId ||
+        row.lkgVersion !== pointer.versionId || pointer.lastKnownGoodVersionId !== pointer.versionId ||
+        candidate?.id !== pointer.versionId || candidate.sourceId !== pointer.sourceId || candidate.scope !== scope ||
+        candidate.recordClass !== "CURATED_READER_RECORD" || !receipt || receipt.decision !== "GOOD" ||
+        receipt.candidateId !== candidate.id || receipt.sourceId !== candidate.sourceId || receipt.scope !== scope ||
+        !/^[a-f0-9]{64}$/.test(candidate.normalization?.normalizedHash ?? "") ||
+        candidate.normalization.normalizedPayloadHash !== candidate.normalization.normalizedHash ||
+        receipt.recordClass !== candidate.recordClass || !times.every(Number.isFinite) || times[0] > times[1] || times[1] > times[2]) {
+      throw new Error("MANUAL_PROMOTION_BASE_PROOF_INVALID:ballot-navigation");
+    }
+    const metadata: CandidateVersionRecord = { candidate, receipt, state: "PROMOTED", acquisitionSucceeded: true,
+      promotedVersion: pointer.versionId, lastKnownGoodVersion: pointer.versionId, failureCode: null, failureDetail: null };
+    const parts = this.payloadParts;
+    const field = async (key: string) => {
+      const [encoded] = await this.db.select({ value: sql<unknown>`${civicDataCandidates.candidate}->${key}` })
+        .from(civicDataCandidates).where(eq(civicDataCandidates.id, pointer.versionId)).limit(1);
+      if (!encoded) throw new Error("MANUAL_SUCCESSOR_EXACT_BASE_UNAVAILABLE");
+      return encoded.value;
+    };
+    const records = async function* () {
+      yield* parts.rows(await parts.path(await field("readModel"), ["records"])) as AsyncGenerator<NavigationRecord>;
+    };
+    return { pointer, record: metadata, reviewFactsHash: candidate.navigationIndex?.reviewFactsHash ?? null,
+      reviewHeldKeysHash: candidate.navigationIndex?.reviewHeldKeysHash ?? null,
+      hasSourceReceipt: candidate.retrieval.manualSourceReceipt !== undefined, records,
+      sourceReceipt: async () => {
+        const [source] = await this.db.select({ receipt: sql<unknown>`${civicDataCandidates.candidate} #> '{retrieval,manualSourceReceipt}'` })
+          .from(civicDataCandidates).where(eq(civicDataCandidates.id, pointer.versionId)).limit(1);
+        return source?.receipt as import("./types.ts").ManualSourceSetReceipt | undefined;
+      },
+      identities: async function* () { yield* parts.rows(await field("identities")) as AsyncIterable<import("./types.ts").IdentityEvidence>; },
+    };
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
@@ -1944,7 +2072,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (statePublicationScope(scope)) return this.readStatePromotion<T>(recordClass, scope);
     const [row] = await this.promotionRows(recordClass, [scope]);
     if (!row) return null;
-    const projection = { ...postgresPromotionRowToProjection<T>(row), payload: await this.loadPayload(row.payload, row.scope) as T };
+    const projection = { ...postgresPromotionRowToProjection<T>(await this.withReceiptParts(row, false)), payload: await this.loadPayload(row.payload, row.scope) as T };
     return projection;
   }
 
@@ -1954,7 +2082,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   ): Promise<readonly PromotedProjection<T>[]> {
     if (scopes.length === 0) return [];
     const rows = await this.promotionRows(recordClass, scopes);
-    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.loadPayload(row.payload, row.scope) as T })));
+    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(await this.withReceiptParts(row, false)), payload: await this.loadPayload(row.payload, row.scope) as T })));
   }
 
   async listPromotionScopes(recordClasses: readonly RoutineRecordClass[]) {
@@ -1988,7 +2116,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(row), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadProofCandidate(row.candidate) } })));
   }
 
   async readPublishedCandidateMetadata(candidateId: string): Promise<PublishedCandidateMetadata | null> {
@@ -2022,13 +2150,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return row ? { ...candidateProofRowToRecord(row), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+    return row ? { ...candidateProofRowToRecord(await this.withReceiptParts(row, false)), candidate: await this.loadProofCandidate(row.candidate) } : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(row), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(await this.withReceiptParts(row, false)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } })));
   }
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
@@ -2100,6 +2228,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           and ${civicDataCandidates.scope} = ${input.scope}
           and ${civicDataCandidates.normalizedHash} = ${input.readModelHash}
           and not (${civicDataCandidates.candidate} ? 'bootstrapImport')
+          and coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'
           and exists (
             select 1 from ${civicDataPromotions}
             where ${civicDataPromotions.recordClass} = ${civicDataCandidates.recordClass}
@@ -2153,7 +2282,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       this.db.select({
         state: civicDataCandidates.state,
         normalizedHash: civicDataCandidates.normalizedHash,
-        imported: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
+        imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
+          OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'`,
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, id)).limit(1),
     ]);
     const pointer = pointerRows[0];
@@ -2164,7 +2294,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     ) {
       return { kind: "POINTER_MOVED", detail: `The pointer ${key} no longer names ${id}.` };
     }
-    if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} is a trusted-LKG import; a live read of it promotes.` };
+    if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} retains published facts without a source read; a live read of it promotes.` };
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
@@ -2176,19 +2306,20 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async promote(candidateId: string, receipt: ValidationReceipt, at: string, options: CandidateTransitionOptions = {}): Promise<PromotedProjection> {
     this.assertMutationAuthority();
     const held = options.candidate;
+    const navigation = held !== undefined && isNavigationCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (statePublicationScope(held.scope) || held.recordClass === "MEETING")) {
-      const hash = statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
+    if (held && (navigation || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY")) {
+      const hash = navigation || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
         normalizedPayloadHash: sql<string | null>`${civicDataCandidates.candidate}#>>'{normalization,normalizedPayloadHash}'`,
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
       if (!row || !heldEnvelopeMatches(row, held) || hash(held.readModel) !== row.normalizedHash ||
           held.normalization.normalizedPayloadHash !== row.normalizedPayloadHash || hash(held.normalizedPayload) !== row.normalizedPayloadHash) throw new Error(`CANDIDATE_PROMOTION_ENVELOPE_MISMATCH:${candidateId}`);
-      record = { ...postgresCandidateSummary(row), candidate: held };
+      record = { ...postgresCandidateSummary(row), ...(navigation ? { receipt } : {}), candidate: held } as CandidateVersionRecord;
     } else {
       const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-      record = row ? { ...rowToCandidate(row), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+      record = row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
     }
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
     if (!record || !persistedReceipt) throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
@@ -2203,7 +2334,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .where(eq(civicDataPromotions.key, key))
       .limit(1);
     const expectedVersionId = record.lastKnownGoodVersion;
-    const receiptJson = JSON.stringify(persistedReceipt);
+    const storedReceipt = navigation ? await this.storeReceipt(candidate, persistedReceipt) : persistedReceipt;
+    const receiptJson = JSON.stringify(storedReceipt);
     const eligibility = sql`
       ${civicDataCandidates.id} = ${candidateId}
       and ${civicDataCandidates.state} = 'VALIDATED'
@@ -2260,7 +2392,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     `);
     const candidateWrite = this.db.update(civicDataCandidates).set({
       state: "PROMOTED",
-      validationReceipt: persistedReceipt,
+      validationReceipt: storedReceipt,
       promotedVersionId: candidateId,
       lastKnownGoodVersionId: candidateId,
     }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning({ candidateId: civicDataCandidates.id });
@@ -2287,7 +2419,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,
-      receipt: promotedRows[0].validationReceipt as ValidationReceipt,
+      receipt: navigation ? persistedReceipt : promotedRows[0].validationReceipt as ValidationReceipt,
     };
   }
 
@@ -2352,8 +2484,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         eq(civicDataCandidates.recordClass, recordClass),
         eq(civicDataCandidates.scope, scope),
         parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
-                // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
-        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
+                // Transfers retain the reader record without advancing the source clock.
+        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')
+          AND coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`,
       ))
       .orderBy(desc(attemptAt), desc(civicDataCandidates.id))
       .limit(16);
@@ -2372,11 +2505,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const [pointedRow] = pointer && pointer.sourceId === sourceId
       ? await routineClockCandidateRead(this.db, pointer.currentVersionId)
       : [];
-    const pointedRecord = pointedRow ? routineClockRowToRecord(pointedRow) : null;
+    const pointedRecord = pointedRow ? routineClockRowToRecord(clockReceipt(pointedRow)) : null;
     const sittings = pointer && sittingRows !== null
       ? { sittingStarts: sittingStartsFromRow(sittingRows[0]?.starts) }
       : {};
-    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+    if (pointer && pointedRecord && isImportOrStateMoveCandidate(pointedRecord.candidate)) {
       return {
         ...trustedLkgImportClock(
           lastAttemptedAt,
@@ -2391,7 +2524,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       scope: pointer.scope,
       versionId: pointer.currentVersionId,
       lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
-      receipt: pointer.validationReceipt as ValidationReceipt,
+      receipt: clockReceipt(pointer).validationReceipt as ValidationReceipt,
     } : null;
     const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointerProof);
     const canonicalLastSucceededAt = lastSucceededAt === undefined
@@ -2410,6 +2543,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ...(repeatedFailureStreak(rows) ? { failureStreak: repeatedFailureStreak(rows) } : {}),
       lastSucceededAt: canonicalLastSucceededAt,
       lastSucceededObservedAt,
+      ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: pointer?.publishedScopeVersions ?? [] } : {}),
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
         ? { continuationPending: pointer.continuationPending === true } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)

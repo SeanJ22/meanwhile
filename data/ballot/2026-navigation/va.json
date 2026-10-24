@@ -1,0 +1,240 @@
+{
+  "state": "VA",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.elections.virginia.gov/",
+      "finalUrl": "https://www.elections.virginia.gov/",
+      "publisher": "Virginia Department of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup/",
+      "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup/",
+      "publisher": "Virginia Department of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+      "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+      "publisher": "Virginia Department of Elections"
+    },
+    {
+      "requestedUrl": "https://www.elections.virginia.gov/contact-us/",
+      "finalUrl": "https://www.elections.virginia.gov/contact-us/",
+      "publisher": "Virginia Department of Elections"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.elections.virginia.gov/",
+          "finalUrl": "https://www.elections.virginia.gov/",
+          "publisher": "Virginia Department of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:01.229467+00:00",
+          "httpStatus": 200,
+          "rawHash": "a5456027024a0468a4d3b784d3a8975d09f79bf2e6a397e5a128dde99b49a018",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+          "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+          "publisher": "Virginia Department of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:51.635384+00:00",
+          "httpStatus": 200,
+          "rawHash": "5571465182c4d0a6e4704d28ee54faee40c0da0cd51ec0fb639def2df5e63c18",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup/",
+          "finalUrl": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup/",
+          "publisher": "Virginia Department of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:04.085607+00:00",
+          "httpStatus": 200,
+          "rawHash": "3ef6b4d670e6d77145c6ed64124924342c862e93b940cd50540f74f6dcf1699f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.virginia.gov/contact-us/",
+          "finalUrl": "https://www.elections.virginia.gov/contact-us/",
+          "publisher": "Virginia Department of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:04.152569+00:00",
+          "httpStatus": 200,
+          "rawHash": "f2a554224e1c0bbca2ff77bc44fb11f8631dc9c9bb0d8818fd43d713c4da5fe8",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:05c86d836bc6dabd3330f40e47b48d4d",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Apply for a ballot to be mailed to you: Through 5:00 p.m., Friday, October 23, 2026. Your request must be received by your local registrar's office by 5:00 p.m.",
+            "quote": "Apply for a ballot to be mailed to you: Through 5:00 p.m., Friday, October 23, 2026. Your request must be received by your local registrar's office by 5:00 p.m.",
+            "dates": [
+              "2026-10-23"
+            ],
+            "url": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:51.635384+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:3a7d0d923f63086729eaf1ea12085371",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "ballot_lookup",
+            "text": "https://vote.elections.virginia.gov/VoterInformation",
+            "quote": "Citizen Portal",
+            "dates": [],
+            "url": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup/",
+            "navigationUrl": "https://vote.elections.virginia.gov/VoterInformation",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.085607+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:4b91db102b126ec5c06059b4b03012e0",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "early_voting",
+            "text": "Early, in-person voting period: Friday, September 18, 2026 through 5:00 p.m., Saturday, October 31, 2026.",
+            "quote": "Early, in-person voting period: Friday, September 18, 2026 through 5:00 p.m., Saturday, October 31, 2026.",
+            "dates": [
+              "2026-09-18",
+              "2026-10-31"
+            ],
+            "url": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:51.635384+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:58bcbc387dd22547d49e73d95d955998",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "registration_lookup",
+            "text": "https://www.elections.virginia.gov/registration/view-your-info/",
+            "quote": "View Your Info",
+            "dates": [],
+            "url": "https://www.elections.virginia.gov/",
+            "navigationUrl": "https://www.elections.virginia.gov/registration/view-your-info/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.229467+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:7215891a7e26c66cd2b2fb13e7b38636",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "registration_deadline",
+            "text": "Register to vote or update an existing registration : Through Friday, October 23, 2026. Register to vote or update an existing registration online using the Citizen Portal . Voters may register and vote using a provisional ballot In-Person after October 23, 2026, through Election Day.",
+            "quote": "Register to vote or update an existing registration : Through Friday, October 23, 2026. Register to vote or update an existing registration online using the Citizen Portal . Voters may register and vote using a provisional ballot In-Person after October 23, 2026, through Election Day.",
+            "dates": [
+              "2026-10-23",
+              "2026-11-03"
+            ],
+            "url": "https://www.elections.virginia.gov/casting-a-ballot/calendars-schedules/upcoming-elections.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:51.635384+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:9ad6506a0a473a18bed38203b2ad08a6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "registration_page",
+            "text": "https://www.elections.virginia.gov/registration/how-to-register/",
+            "quote": "How to Register",
+            "dates": [],
+            "url": "https://www.elections.virginia.gov/",
+            "navigationUrl": "https://www.elections.virginia.gov/registration/how-to-register/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.229467+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:9f0956544e3ec326e54a4449097446aa",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "election_office",
+            "text": "Virginia Department of Elections",
+            "quote": "Department Contact Information Telephone: (804) 864-8901 Toll Free: (800) 552-9745",
+            "dates": [],
+            "url": "https://www.elections.virginia.gov/contact-us/",
+            "navigationUrl": "https://www.elections.virginia.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "(800) 552-9745",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.152569+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        },
+        {
+          "id": "election-field:c9ae8a36b569cecd22564c7819829ee0",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "VA",
+            "divisionId": "ocd-division/country:us/state:va",
+            "fieldKind": "polling_lookup",
+            "text": "https://vote.elections.virginia.gov/VoterInformation",
+            "quote": "Citizen Portal",
+            "dates": [],
+            "url": "https://www.elections.virginia.gov/casting-a-ballot/polling-place-lookup/",
+            "navigationUrl": "https://vote.elections.virginia.gov/VoterInformation",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.085607+00:00",
+            "sourceOrg": "Virginia Department of Elections"
+          }
+        }
+      ]
+    }
+  }
+}

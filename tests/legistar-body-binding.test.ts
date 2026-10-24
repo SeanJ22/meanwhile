@@ -4,7 +4,7 @@ import { fetchEvents, fetchEventItems } from "../lib/sources/legistar/client.ts"
 import { resolveNativeBody, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
 
 const client = (): LegistarClient => ({ slug: "tenant", bodyId: "county:governing", ocdId: "ocd-division/country:us/state:az/county:pima",
-  jurisdiction: "County", publishingOrg: "County Board", timeZone: "America/Phoenix", eventBodyName: "Board of Supervisors", venues: [] });
+  jurisdiction: "County", publishingOrg: "County Board", timeZone: "America/Phoenix", eventBodyName: "Board of Supervisors" });
 test("a known exact official body name resolves uniquely within its tenant", async () => {
   const exact = client();
   const read = (async () => new Response(JSON.stringify([{ BodyId: 2, BodyName: "Planning Commission" }, { BodyId: 4, BodyName: "Board of Supervisors" }]))) as typeof fetch;

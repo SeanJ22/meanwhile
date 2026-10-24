@@ -1,0 +1,323 @@
+{
+  "state": "AZ",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://azsos.gov/about/contact-us",
+      "finalUrl": "https://azsos.gov/about/contact-us",
+      "publisher": "Arizona Secretary of State"
+    },
+    {
+      "requestedUrl": "https://azsos.gov/elections",
+      "finalUrl": "https://azsos.gov/elections",
+      "publisher": "Arizona Secretary of State"
+    },
+    {
+      "requestedUrl": "https://my.arizona.vote/PortalList.aspx",
+      "finalUrl": "https://my.arizona.vote/PortalList.aspx",
+      "publisher": "Arizona Secretary of State"
+    },
+    {
+      "requestedUrl": "https://azsos.gov/elections/election-information/2026-election-info",
+      "finalUrl": "https://azsos.gov/elections/election-information/2026-election-info",
+      "publisher": "Arizona Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.azcleanelections.gov/state-general",
+      "finalUrl": "https://www.azcleanelections.gov/state-general",
+      "publisher": "Arizona Secretary of State"
+    },
+    {
+      "requestedUrl": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+      "finalUrl": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+      "publisher": "Arizona Secretary of State"
+    },
+    {
+      "requestedUrl": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+      "finalUrl": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+      "publisher": "Arizona Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-15T20:10:00.000Z",
+    "sourceThrough": "2026-10-15T20:10:00.000Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-15T20:10:00.000Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://azsos.gov/about/contact-us",
+          "finalUrl": "https://azsos.gov/about/contact-us",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:48.723498+00:00",
+          "httpStatus": 200,
+          "rawHash": "87fc0196f8ca5d8e50b7ba32325446734f5c670045d33c30798ab92ca5c45f57",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://azsos.gov/elections",
+          "finalUrl": "https://azsos.gov/elections",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:04.150472+00:00",
+          "httpStatus": 200,
+          "rawHash": "3c9535898ae50f7ff1ac529e7c85e6a19d816b54b8abafbe470351b948206e54",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://azsos.gov/elections/election-information/2026-election-info",
+          "finalUrl": "https://azsos.gov/elections/election-information/2026-election-info",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:28.272714+00:00",
+          "httpStatus": 200,
+          "rawHash": "5467344331ccded796cfb20bc07c44e5e10f539f7855f6cfb8a84095b7acc82a",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://my.arizona.vote/PortalList.aspx",
+          "finalUrl": "https://my.arizona.vote/PortalList.aspx",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:54.333403+00:00",
+          "httpStatus": 200,
+          "rawHash": "2b540c5767944c57485fb45078fba3f5f6bdfc3e8e6315c362f77ec02d6ee97c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.azcleanelections.gov/state-general",
+          "finalUrl": "https://www.azcleanelections.gov/state-general",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:28.309188+00:00",
+          "httpStatus": 200,
+          "rawHash": "9c2679c6613046b720f3f76c1ffe94b7fd17c3a09bc8bfa5e6b9e4d1bd169650",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+          "finalUrl": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-15T19:46:53.322Z",
+          "httpStatus": 200,
+          "rawHash": "9604e13451a4f1903b29b32dc997ce17c0045fca02851e6c3f1e2c53f0209668",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+          "finalUrl": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+          "publisher": "Arizona Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-15T19:46:53.262Z",
+          "httpStatus": 200,
+          "rawHash": "0fd001c8bd76c3e9e8e905251a4aad9e57dd436dbf63d64739ae3350102a628c",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0648fc8a801c70d9d57745a10c26f5c9",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "polling_lookup",
+            "text": "https://my.arizona.vote/PortalList.aspx",
+            "quote": "Find your polling locations",
+            "dates": [],
+            "url": "https://my.arizona.vote/PortalList.aspx",
+            "navigationUrl": "https://my.arizona.vote/PortalList.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.333403+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:180a6b2e5e167229642f6fcec9c3c419",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "registration_page",
+            "text": "https://azsos.gov/elections/voters/register-vote-update-voter-information/registerupdate-vote/",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://azsos.gov/elections",
+            "navigationUrl": "https://azsos.gov/elections/voters/register-vote-update-voter-information/registerupdate-vote/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.150472+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:1ebc873a0b499120547c2090e3587a1e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "registration_deadline",
+            "text": "October 5, 2026 Last day to register to vote in the November 3, 2026 General Election at 11:59 p.m.",
+            "quote": "October 5, 2026 Last day to register to vote in the November 3, 2026 General Election at 11:59 p.m.",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://azsos.gov/elections/election-information/2026-election-info",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:28.272714+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:4d0acdc68377c7d0aa303155280a7fc3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "early_voting",
+            "text": "Last Day to Vote Early In-Person",
+            "quote": "October 07 Early Voting Begins October 23 Last Day to Request Ballot By Mail October 27 Mail Back Ballot By October 30 Last Day to Vote Early In-Person",
+            "dates": [
+              "2026-10-07",
+              "2026-10-30"
+            ],
+            "url": "https://www.azcleanelections.gov/state-general",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:28.309188+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:8710d397890b5b408a34bcf99fe2a425",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "ballot_lookup",
+            "text": "https://my.arizona.vote/PortalList.aspx",
+            "quote": "View your sample ballot",
+            "dates": [],
+            "url": "https://my.arizona.vote/PortalList.aspx",
+            "navigationUrl": "https://my.arizona.vote/PortalList.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.333403+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:995dba866f3dec2bbf1e730473edad04",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "October 23 Last Day to Request Ballot By Mail",
+            "quote": "October 23 Last Day to Request Ballot By Mail",
+            "dates": [
+              "2026-10-23"
+            ],
+            "url": "https://www.azcleanelections.gov/state-general",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:28.309188+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:c02dfc98e1a3b97603b25d1dea3a9957",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "election_office",
+            "text": "Arizona Secretary of State",
+            "quote": "Arizona Secretary of State\n602-542-8683",
+            "dates": [],
+            "url": "https://azsos.gov/about/contact-us",
+            "navigationUrl": "https://azsos.gov/elections",
+            "electionDate": "2026-11-03",
+            "phone": "602-542-8683",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:48.723498+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:f651ac5f9d739a6eaa6c584933324326",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "registration_lookup",
+            "text": "https://my.arizona.vote/PortalList.aspx",
+            "quote": "Search Voter Registration Status / Additional Voter Services",
+            "dates": [],
+            "url": "https://my.arizona.vote/PortalList.aspx",
+            "navigationUrl": "https://my.arizona.vote/PortalList.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.333403+00:00",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:abc1ef5c7b05517721d6316183f74726",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "registration_lookup",
+            "text": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+            "quote": "Voter Registration Search",
+            "dates": [],
+            "url": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+            "navigationUrl": "https://my.arizona.vote/WhereToVote.aspx?s=individual",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-15T20:10:00.000Z",
+            "collectedAt": "2026-10-15T19:46:53.322Z",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:c428fb42842572e98c16c1a93ba58838",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AZ",
+            "divisionId": "ocd-division/country:us/state:az",
+            "fieldKind": "polling_lookup",
+            "text": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+            "quote": "Voter Registration Search",
+            "dates": [],
+            "url": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+            "navigationUrl": "https://my.arizona.vote/WhereToVote.aspx?s=pollingplace",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-15T20:10:00.000Z",
+            "collectedAt": "2026-10-15T19:46:53.262Z",
+            "sourceOrg": "Arizona Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

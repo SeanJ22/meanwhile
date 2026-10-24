@@ -1,0 +1,238 @@
+{
+  "state": "WA",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.wa.gov/elections/",
+      "finalUrl": "https://www.sos.wa.gov/elections",
+      "publisher": "Washington Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+      "finalUrl": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+      "publisher": "Washington Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+      "finalUrl": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+      "publisher": "Washington Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.wa.gov/node/5974",
+      "finalUrl": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+      "publisher": "Washington Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.sos.wa.gov/elections",
+          "finalUrl": "https://www.sos.wa.gov/elections",
+          "publisher": "Washington Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:01.687636+00:00",
+          "httpStatus": 200,
+          "rawHash": "06dafb6a1c5cee554076c3d163cdc77d4b35b35bc23b03e651c6d5fc28327fff",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+          "finalUrl": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+          "publisher": "Washington Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:04.476044+00:00",
+          "httpStatus": 200,
+          "rawHash": "6b36d140e10ff5a2d679d368bcde38a7bcaa5e1ef609c76acea075080676a230",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+          "finalUrl": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+          "publisher": "Washington Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:46:17.848947+00:00",
+          "httpStatus": 200,
+          "rawHash": "aa55583905428b8826fae882a4d7ef47874f7956045ac7996619156f0a18e4bd",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+          "finalUrl": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+          "publisher": "Washington Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:04.594690+00:00",
+          "httpStatus": 200,
+          "rawHash": "3550e490fab4d789d94999516100da4c274c40ce567bc9713dea2655a1c45bdb",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:1943067f24d9b9e8f02767c6f0f3392e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "registration_lookup",
+            "text": "https://voter.votewa.gov/WhereToVote.aspx",
+            "quote": "VoteWA.gov",
+            "dates": [],
+            "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+            "navigationUrl": "https://voter.votewa.gov/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.594690+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:2f05c5b2254d64352fb7e0b61454daa8",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "In Washington, voters do not request absentee ballots. All voters are automatically mailed a ballot at least 18 days before every election. To make sure we have your correct address, visit VoteWA.gov . If you need to receive your ballot at a different address or need to get a replacement ballot, visit VoteWA.gov or contact your county elections office .",
+            "quote": "In Washington, voters do not request absentee ballots. All voters are automatically mailed a ballot at least 18 days before every election. To make sure we have your correct address, visit VoteWA.gov . If you need to receive your ballot at a different address or need to get a replacement ballot, visit VoteWA.gov or contact your county elections office .",
+            "dates": [],
+            "url": "https://www.sos.wa.gov/elections/voters/voter-eligibility-resources/how-receive-absentee-ballot",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.594690+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:5ca37763aded5c04a2fd1ed3dec5b384",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "early_voting",
+            "text": "October 16 Start of 18-day voting period (through Election Day). Ballots are mailed out and Accessible Voting Units (AVUs) are available at voting centers.",
+            "quote": "October 16 Start of 18-day voting period (through Election Day). Ballots are mailed out and Accessible Voting Units (AVUs) are available at voting centers.",
+            "dates": [
+              "2026-10-16",
+              "2026-11-03"
+            ],
+            "url": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.476044+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:71c255192f748311c5f4e6fe9c0e6ebc",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "registration_deadline",
+            "text": "October 26 Online and mail registrations must be received 8 days before Election Day. Register to vote in person during business hours and any time before 8:00 p.m. on Election Day. November 3 Deadline for Washington State voter registration or updates (in person only).",
+            "quote": "October 26 Online and mail registrations must be received 8 days before Election Day. Register to vote in person during business hours and any time before 8:00 p.m. on Election Day. November 3 Deadline for Washington State voter registration or updates (in person only).",
+            "dates": [
+              "2026-10-26",
+              "2026-11-03"
+            ],
+            "url": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.476044+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:7c870b7b5cb26e69bedfb1553c37c68f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington",
+            "quote": "Register to Vote in Washington",
+            "dates": [],
+            "url": "https://www.sos.wa.gov/elections",
+            "navigationUrl": "https://www.sos.wa.gov/elections/voters/voter-registration/register-vote-washington",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.687636+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:b77c0747a4a0f2626fea4425bf6518da",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "polling_lookup",
+            "text": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+            "quote": "Find a drop box or voting center",
+            "dates": [],
+            "url": "https://www.sos.wa.gov/elections",
+            "navigationUrl": "https://www.sos.wa.gov/elections/voters/voter-registration/drop-box-and-voting-center-locations",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.687636+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ca9aa4c28351d5b871929df45c32a035",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "ballot_lookup",
+            "text": "https://voter.votewa.gov/WhereToVote.aspx",
+            "quote": "For your customized online voter guide, please visit VoteWA.gov .",
+            "dates": [],
+            "url": "https://www.sos.wa.gov/elections/voters/helpful-information/current-election-information",
+            "navigationUrl": "https://voter.votewa.gov/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:46:17.848947+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:eb03b023b20d9c5d3451754cdcda1e28",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "WA",
+            "divisionId": "ocd-division/country:us/state:wa",
+            "fieldKind": "election_office",
+            "text": "Washington Secretary of State Elections Division",
+            "quote": "Washington Secretary of State Elections Division",
+            "dates": [],
+            "url": "https://www.sos.wa.gov/elections/elections-calendar/dates-and-deadlines",
+            "navigationUrl": "https://www.sos.wa.gov/elections",
+            "electionDate": "2026-11-03",
+            "phone": "800-448-4881",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:04.476044+00:00",
+            "sourceOrg": "Washington Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

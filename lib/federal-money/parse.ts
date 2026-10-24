@@ -1,6 +1,7 @@
 import { csvRows } from "../reference/csv.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
+import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import type { FederalMoneyCapture, FederalMoneyFact, FederalMoneySource } from "./model.ts";
 
 type Row = Record<string, unknown>;
@@ -88,9 +89,10 @@ function audit(capture: FederalMoneyCapture, state: string, row: Row): FederalMo
   if (!reportId) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Federal Audit Clearinghouse: a report has no source-native identifier.");
   const reference = pick(row, "reference_number", "finding_ref_number", "FINDINGSREFNUMS", "FINDINGREFNUMS");
   const awardReference = pick(row, "award_reference", "ELECAUDITSID");
+  const requirement = pick(row, "type_requirement", "TYPEREQUIREMENT");
   const extraUei = auditUei(pick(row, "additional_uei", "UEI"));
   const sourceRowId = pick(row, "ELECAUDITFINDINGSID", "ELECAUDITFINDINGSTEXTID", "ELECCAPTEXTID", "ELECUEISID", "id");
-  const sourceId = table === "general" ? reportId : [reportId, table, ...(sourceRowId ? [sourceRowId] : [reference, awardReference, extraUei])].filter(Boolean).join(":");
+  const sourceId = table === "general" ? reportId : [reportId, table, ...(sourceRowId ? [sourceRowId] : [reference, awardReference, extraUei, ...(table === "findings" ? [requirement] : [])])].filter(Boolean).join(":");
   const recipient = pick(row, "auditee_name", "AUDITEENAME");
   const reportedState = pick(row, "auditee_state", "STATE")?.toUpperCase() ?? null;
   const actualState = reportedState ? stateFips[reportedState] ? reportedState : "ZZ" : state;
@@ -113,16 +115,30 @@ function entity(capture: FederalMoneyCapture, state: string, row: Row): FederalM
 }
 function disaster(capture: FederalMoneyCapture, state: string, row: Row): FederalMoneyFact {
   const sourceId = pick(row, "id"); if (!sourceId) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "OpenFEMA: a declaration row has no source-native identifier.");
-  const actualState = pick(row, "state")?.toUpperCase() ?? state;
+  const reportedState = pick(row, "state")?.toUpperCase() ?? null;
+  const actualState = reportedState ?? state;
   const fips = pick(row, "fipsStateCode");
   const location = { state: fips ? FIPS_TO_STATE[fips.padStart(2, "0")]?.postal : actualState, fipsCountyCode: row.fipsCountyCode };
   return fact("openfema", capture, actualState, row, { sourceId, kind: "DISASTER", title: `${pick(row, "declarationTitle") ?? "Federal disaster declaration"}${pick(row, "designatedArea") ? ` — ${pick(row, "designatedArea")}` : ""}`, period: pick(row, "declarationDate"), identifiers: { ...identifiers(row), declarationId: sourceId, disasterNumber: pick(row, "disasterNumber") ?? "", ...(pick(row, "femaDeclarationString") ? { declaration: pick(row, "femaDeclarationString")! } : {}) }, geography: geography(actualState, location),
-    details: { declarationType: pick(row, "declarationType"), incidentType: pick(row, "incidentType"), designatedArea: pick(row, "designatedArea"), incidentBegin: pick(row, "incidentBeginDate"), incidentEnd: pick(row, "incidentEndDate"), individualAssistance: truth(row.iaProgramDeclared), individualsHouseholds: truth(row.ihProgramDeclared), publicAssistance: truth(row.paProgramDeclared), hazardMitigation: truth(row.hmProgramDeclared), tribalRequest: truth(row.tribalRequest), lastRefresh: pick(row, "lastRefresh"), placeCode: pick(row, "placeCode") },
+    details: { reportedState, declarationType: pick(row, "declarationType"), incidentType: pick(row, "incidentType"), designatedArea: pick(row, "designatedArea"), incidentBegin: pick(row, "incidentBeginDate"), incidentEnd: pick(row, "incidentEndDate"), individualAssistance: truth(row.iaProgramDeclared), individualsHouseholds: truth(row.ihProgramDeclared), publicAssistance: truth(row.paProgramDeclared), hazardMitigation: truth(row.hmProgramDeclared), tribalRequest: truth(row.tribalRequest), lastRefresh: pick(row, "lastRefresh"), placeCode: pick(row, "placeCode") },
     provenance: { publicationDate: date(row.declarationDate) ?? capture.publicationDate } as FederalMoneyFact["provenance"] });
 }
 
 export function parseFederalMoney(source: FederalMoneySource, capture: FederalMoneyCapture, state: string, body: string): FederalMoneyFact[] {
-  return Array.from(rows(body, source), row => parseFederalMoneyRow(source, capture, state, row));
+  const facts: FederalMoneyFact[] = [], seen = new Map<string, Row>();
+  for (const row of rows(body, source)) {
+    const parsed = parseFederalMoneyRow(source, capture, state, row);
+    if (source === "federal-audit-clearinghouse") {
+      const previous = seen.get(parsed.id);
+      if (previous) {
+        if (canonicalCivicDataJson(previous) !== canonicalCivicDataJson(row)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Federal Audit Clearinghouse: distinct source rows share one native finding identity.");
+        continue;
+      }
+      seen.set(parsed.id, row);
+    }
+    facts.push(parsed);
+  }
+  return facts;
 }
 export function parseFederalMoneyRow(source: FederalMoneySource, capture: FederalMoneyCapture, state: string, row: Row): FederalMoneyFact {
   const parse = source === "usaspending" ? spending : source === "federal-audit-clearinghouse" ? audit : source === "sam-gov-entities" ? entity : disaster;

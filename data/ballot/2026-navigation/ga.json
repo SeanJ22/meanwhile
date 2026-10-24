@@ -1,0 +1,223 @@
+{
+  "state": "GA",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://sos.ga.gov/november-3-2026-general-election",
+      "finalUrl": "https://sos.ga.gov/november-3-2026-general-election",
+      "publisher": "Georgia Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Short%20Calendar%20.pdf",
+      "finalUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Short%20Calendar%20.pdf",
+      "publisher": "Georgia Secretary of State"
+    },
+    {
+      "requestedUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Elections%20Calendar_0.pdf",
+      "finalUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Elections%20Calendar_0.pdf",
+      "publisher": "Georgia Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://sos.ga.gov/november-3-2026-general-election",
+          "finalUrl": "https://sos.ga.gov/november-3-2026-general-election",
+          "publisher": "Georgia Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:54.653896+00:00",
+          "httpStatus": 200,
+          "rawHash": "5fc5d4a60ac154ed4c579382ef466c021b722019696bbdcf931eb66ace906252",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Elections%20Calendar_0.pdf",
+          "finalUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Elections%20Calendar_0.pdf",
+          "publisher": "Georgia Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:42:03.892226+00:00",
+          "httpStatus": 200,
+          "rawHash": "c5b550110fa655f83e72df61898735914668a5b6ac285ec4caf93af1606aaac3",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Short%20Calendar%20.pdf",
+          "finalUrl": "https://sos.ga.gov/sites/default/files/forms/2026%20Short%20Calendar%20.pdf",
+          "publisher": "Georgia Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:41:08.672412+00:00",
+          "httpStatus": 200,
+          "rawHash": "78662d3bbb7e06ba3706902e8634aa30b7fda145d33086edd0d5d7ef53fa61c5",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:1e44d81ba9c84d9f3d4ff65d0f96028e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "ballot_lookup",
+            "text": "https://mvp.sos.ga.gov/s/",
+            "quote": "The My Voter Page or MVP is your all-in-one portal to access and update your voter information, check your registration status, locate advance voting and Election Day polling locations, view your sample ballot and your elected officials.",
+            "dates": [],
+            "url": "https://sos.ga.gov/november-3-2026-general-election",
+            "navigationUrl": "https://mvp.sos.ga.gov/s/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.653896+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:395594322833091d98fbf186eea825f0",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "registration_lookup",
+            "text": "https://mvp.sos.ga.gov/s/",
+            "quote": "Check Your Registration",
+            "dates": [],
+            "url": "https://sos.ga.gov/november-3-2026-general-election",
+            "navigationUrl": "https://mvp.sos.ga.gov/s/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.653896+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:51b96435d2a450a874f85dfa09051454",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "polling_lookup",
+            "text": "https://mvp.sos.ga.gov/s/",
+            "quote": "The My Voter Page or MVP is your all-in-one portal to access and update your voter information, check your registration status, locate advance voting and Election Day polling locations, view your sample ballot and your elected officials.",
+            "dates": [],
+            "url": "https://sos.ga.gov/november-3-2026-general-election",
+            "navigationUrl": "https://mvp.sos.ga.gov/s/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.653896+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:bb617e3aa6f8d8ea45c00c50d04a2c29",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "election_office",
+            "text": "Elections Division",
+            "quote": "Elections Division\n404-656-2881",
+            "dates": [],
+            "url": "https://sos.ga.gov/november-3-2026-general-election",
+            "navigationUrl": "https://sos.ga.gov/elections-division-georgia-secretary-states-office",
+            "electionDate": "2026-11-03",
+            "phone": "404-656-2881",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.653896+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:bd4a4222981ef55c761b90cb7038ea5d",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "registration_deadline",
+            "text": "10/05/2026",
+            "quote": "General Election/Special Election 11/03/2026 10/13/26 – 10/30/26 10/05/2026",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://sos.ga.gov/sites/default/files/forms/2026%20Short%20Calendar%20.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:41:08.672412+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:c5be02e601002b429d030c34e18d97d4",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Last day to request absentee by mail ballot.",
+            "quote": "October 23, 2026 DEADLINE TO REQUEST ABSENTEE BALLOT FOR NOVEMBER GENERAL ELECTION Last day to request absentee by mail ballot.",
+            "dates": [
+              "2026-10-23"
+            ],
+            "url": "https://sos.ga.gov/sites/default/files/forms/2026%20Elections%20Calendar_0.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:42:03.892226+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:cbd8531b8a794531fd663f462e840d27",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "registration_page",
+            "text": "https://mvp.sos.ga.gov/s/voter-registration?IsRegisterNow=true",
+            "quote": "Online Voter Registration",
+            "dates": [],
+            "url": "https://sos.ga.gov/november-3-2026-general-election",
+            "navigationUrl": "https://mvp.sos.ga.gov/s/voter-registration?IsRegisterNow=true",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:54.653896+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:fc0a507925c18382d5cf50e125cad965",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "GA",
+            "divisionId": "ocd-division/country:us/state:ga",
+            "fieldKind": "early_voting",
+            "text": "10/13/26 – 10/30/26",
+            "quote": "General Election/Special Election 11/03/2026 10/13/26 – 10/30/26 10/05/2026",
+            "dates": [
+              "2026-10-13",
+              "2026-10-30"
+            ],
+            "url": "https://sos.ga.gov/sites/default/files/forms/2026%20Short%20Calendar%20.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:41:08.672412+00:00",
+            "sourceOrg": "Georgia Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -51,6 +51,7 @@ function isNonDispositionEvidence(detail: string): boolean {
   return isReaderProjectionReadbackDetail(detail) || isUnchangedConfirmationDetail(detail);
 }
 import {
+  isImportOrStateMoveCandidate,
   isTrustedLkgImportCandidate,
   trustedLkgImportEvidenceIssue,
 } from "./trusted-lkg-import.ts";
@@ -65,7 +66,7 @@ const HISTORY_WINDOWS = [
 export type HistoryWindowId = (typeof HISTORY_WINDOWS)[number]["id"];
 export type FreshnessState = "FRESH" | "DUE" | "STALE" | "UNKNOWN" | "MANUAL";
 export type SourceOperationalState = "HEALTHY" | "DUE" | "STALE" | "UNKNOWN" | "RETRYING" | "HELD" | "IN_PROGRESS";
-export type CandidateAuthorityOrigin = "LIVE_SOURCE_ACQUISITION" | "TRUSTED_LKG_IMPORT";
+export type CandidateAuthorityOrigin = "LIVE_SOURCE_ACQUISITION" | "TRUSTED_LKG_IMPORT" | "STATE_AUTHORITY_RETIREMENT";
 type ObservableCivicDataContract = RoutineSourceContract | ManualProductionSourceContract;
 
 export interface CurrentReaderBuildIdentity {
@@ -430,6 +431,7 @@ function candidateVersionRecord(row: RoutineCandidateRow): CandidateVersionRecor
 function authorityOrigin(row: RoutineCandidateRow): CandidateAuthorityOrigin {
   return isTrustedLkgImportCandidate(row.candidate)
     ? "TRUSTED_LKG_IMPORT"
+    : isImportOrStateMoveCandidate(row.candidate) ? "STATE_AUTHORITY_RETIREMENT"
     : "LIVE_SOURCE_ACQUISITION";
 }
 
@@ -948,14 +950,12 @@ function pointerProof(
     versionId: promotion.currentVersionId,
     promotedAt,
     receipt: promotedReceipt,
-    authorityOrigin: candidate && authorityOrigin(candidate) === "TRUSTED_LKG_IMPORT"
-      ? "TRUSTED_LKG_IMPORT"
-      : "LIVE_SOURCE_ACQUISITION",
+    authorityOrigin: candidate ? authorityOrigin(candidate) : "LIVE_SOURCE_ACQUISITION",
     pointerProof: [
       `contract:${contract.id}`,
       `candidate:${promotion.currentVersionId}:PROMOTED`,
       `receipt:${promotedReceipt.candidateId}:GOOD`,
-      `authority-origin:${candidate && authorityOrigin(candidate) === "TRUSTED_LKG_IMPORT" ? "TRUSTED_LKG_IMPORT" : "LIVE_SOURCE_ACQUISITION"}`,
+      `authority-origin:${candidate ? authorityOrigin(candidate) : "LIVE_SOURCE_ACQUISITION"}`,
       `pointer:${promotion.key}:${promotion.currentVersionId}`,
     ],
   });
@@ -1101,10 +1101,10 @@ function freshness(
   );
   if (!Number.isFinite(succeededAt)) return { state: "UNKNOWN", detail: "The canonical acquisition time is unreadable." };
   if (succeededAt > nowMs) return { state: "UNKNOWN", detail: "The canonical acquisition time is in the future relative to this observation." };
-  if (authorityOrigin(canonicalCandidate) === "TRUSTED_LKG_IMPORT") {
+  if (isImportOrStateMoveCandidate(canonicalCandidate.candidate)) {
     return {
       state: "STALE",
-      detail: "A frozen trusted LKG is serving, but it is explicitly not a source-authenticated freshness observation; the permanent source path remains due now.",
+      detail: "Retained published facts are serving; their authority transfer did not check the source, which remains due now.",
     };
   }
   if (isManualContract(contract)) {
@@ -1135,7 +1135,7 @@ function nextDue(
   published = true,
 ): Observation<string> {
   if (isManualContract(contract)) return notApplicable("Manual production contract: no next-due clock exists.");
-  if (latest && authorityOrigin(latest) === "TRUSTED_LKG_IMPORT") {
+  if (latest && isImportOrStateMoveCandidate(latest.candidate)) {
     return measured(new Date(nowMs).toISOString());
   }
   if (latestOrderIssue !== null) return unknown(`The next due time cannot be proven because ${latestOrderIssue}`);

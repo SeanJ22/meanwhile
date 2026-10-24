@@ -3,7 +3,7 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { FEDERAL_MONEY_SOURCES, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
 import { FederalMoneyIndex, federalMoneyArtifactHash, federalMoneyArtifactKey, readFederalMoneyJson, type FederalMoneyIndexEntry, FEDERAL_MONEY_PAGE_SIZE, federalMoneyPlaceKey, federalMoneyStatusKey, federalMoneyTargetPlaces, type FederalMoneyPlaceIndex, type FederalMoneyPlacePage, type FederalMoneyPlaceSnapshot, type FederalMoneySegmentArtifact, type FederalMoneyStateStatus } from "./edge.ts";
-import { federalMoneyRows, type FederalMoneyTarget } from "./view.ts";
+import { federalMoneyRows, federalMoneyStateDivision, type FederalMoneyTarget } from "./view.ts";
 
 function record(value: unknown): value is Record<string, unknown> { return value !== null && typeof value === "object" && !Array.isArray(value); }
 function text(value: unknown): value is string { return typeof value === "string" && value.trim().length > 0; }
@@ -75,7 +75,7 @@ export async function readFederalMoneyForPlace(target: FederalMoneyTarget, optio
     if (loaded.some(row => row.status === "rejected")) throw new Error("Federal place artifact is unavailable.");
     const indices = loaded.flatMap(row => row.status === "fulfilled" && row.value ? [row.value] : []);
     const selected = indices.filter(index => source === "openfema"
-      ? index.place.startsWith("division:") && /\/county:[^/]+$/.test(index.place)
+      ? index.place.startsWith("division:") && (/\/county:[^/]+$/.test(index.place) || !target.bodyId && target.divisionId === federalMoneyStateDivision(state) && index.place === `division:${target.divisionId}`)
       : source === "federal-audit-clearinghouse" || source === "sam-gov-entities"
         ? index.place === (target.bodyId ? `body:${target.bodyId}` : `division:${target.divisionId}`)
         : index.place === `division:${target.divisionId}` || index.place === `body:${target.bodyId}`);

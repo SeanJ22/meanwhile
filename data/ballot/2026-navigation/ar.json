@@ -1,0 +1,246 @@
+{
+  "state": "AR",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.sos.arkansas.gov/elections",
+      "finalUrl": "https://www.sos.arkansas.gov/elections",
+      "publisher": "Arkansas Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+      "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+      "publisher": "Arkansas Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.sos.arkansas.gov/elections",
+          "finalUrl": "https://www.sos.arkansas.gov/elections",
+          "publisher": "Arkansas Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:04.827279+00:00",
+          "httpStatus": 200,
+          "rawHash": "a853c1c171f910f81797f373e092d353856d8415f6fe37b8b6cb77c847eaaadd",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+          "finalUrl": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+          "publisher": "Arkansas Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:29.062005+00:00",
+          "httpStatus": 200,
+          "rawHash": "e4ffb262ddc14d741f0f67f852ed0572d99f4bd1bb4de5b78f97d65d294aaf89",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0b86bf55bb28868cfccb86b2decffb5f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "early_voting",
+            "text": "Last day for voter to participate in early voting.",
+            "quote": "November 2, 2026\nLast day for voter to participate in early voting.\nEarly voting closes at 5:00 pm on the Monday before the election.",
+            "dates": [
+              "2026-11-02"
+            ],
+            "url": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.062005+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:17cc8b1a175dadaab05af1f3903b8ac3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "election_office",
+            "text": "Arkansas Secretary of State",
+            "quote": "Arkansas Secretary of State\n501-682-1010",
+            "dates": [],
+            "url": "https://www.sos.arkansas.gov/elections",
+            "navigationUrl": "https://www.sos.arkansas.gov/elections",
+            "electionDate": "2026-11-03",
+            "phone": "501-682-1010",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.827279+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:33be50a326a2712b2dd2e823516d6492",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "registration_lookup",
+            "text": "https://www.voterview.ar-nova.org/voterview",
+            "quote": "Check Registration Status, Polling Sites, and Sample Ballots",
+            "dates": [],
+            "url": "https://www.sos.arkansas.gov/elections",
+            "navigationUrl": "https://www.voterview.ar-nova.org/voterview",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.827279+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:3463f40eac47de801c1cf377e0a34314",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "polling_lookup",
+            "text": "https://www.voterview.ar-nova.org/voterview",
+            "quote": "Check Registration Status, Polling Sites, and Sample Ballots",
+            "dates": [],
+            "url": "https://www.sos.arkansas.gov/elections",
+            "navigationUrl": "https://www.voterview.ar-nova.org/voterview",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.827279+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:372caee9f4e93e5c355839d502c135d1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Deadline for county clerk to receive absentee ballot applications by mail, fax, or electronic mail for the General Election.",
+            "quote": "October 27, 2026\nDeadline for county clerk to receive absentee ballot applications by mail, fax, or electronic mail for the General Election.",
+            "dates": [
+              "2026-10-27"
+            ],
+            "url": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.062005+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:5d35e0e9955143dd7f8a8d31c13a0039",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Deadline for county clerk to receive in-person applications for absentee ballots",
+            "quote": "October 30, 2026\nDeadline for county clerk to receive in-person applications for absentee ballots",
+            "dates": [
+              "2026-10-30"
+            ],
+            "url": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.062005+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:77355a2043e0f64c5b648f53755dd273",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "ballot_lookup",
+            "text": "https://www.voterview.ar-nova.org/voterview",
+            "quote": "Check Registration Status, Polling Sites, and Sample Ballots",
+            "dates": [],
+            "url": "https://www.sos.arkansas.gov/elections",
+            "navigationUrl": "https://www.voterview.ar-nova.org/voterview",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.827279+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:7ee8b473e9be16e61730eb084b781b8b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "early_voting",
+            "text": "Early voting begins for General Election",
+            "quote": "October 19, 2026\nEarly voting begins for General Election\nEarly voting ends at 5:00 pm on the Monday prior to the election.",
+            "dates": [
+              "2026-10-19"
+            ],
+            "url": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.062005+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:db5b1ab48dc1f038370f86dc8597e880",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "registration_deadline",
+            "text": "Actual deadline is Monday, October 5, 2026",
+            "quote": "NOVEMBER 3, 2026\nActual deadline is Monday, October 5, 2026",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://www.sos.arkansas.gov/uploads/elections/2026_Election_Calendar_Rev._6-2025_.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.062005+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:dd628351cae3baa0e3ccb8de9fdf92d6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "AR",
+            "divisionId": "ocd-division/country:us/state:ar",
+            "fieldKind": "registration_page",
+            "text": "https://www.sos.arkansas.gov/elections/voter-information",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://www.sos.arkansas.gov/elections",
+            "navigationUrl": "https://www.sos.arkansas.gov/elections/voter-information",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:04.827279+00:00",
+            "sourceOrg": "Arkansas Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

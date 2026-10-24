@@ -12,7 +12,7 @@ import { readAskAnswer, unresolvedReadLine, type AskAnswerPayload } from "@/lib/
 import { sourceLinks } from "@/lib/ask/host";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
-import type { AskSubjectRef } from "@/lib/ask/subject";
+import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
 
 /**
@@ -71,7 +71,7 @@ export function BallotAsk({
           ocdIds,
           approximateLocation: zip,
           surface: "BALLOT",
-          activeSubjects,
+          activeSubjects: readSubjectRefs(activeSubjects),
           priorSubjects,
           priorTurns,
           /* What the reader did; the server decides the confidence. */

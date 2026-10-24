@@ -96,6 +96,10 @@ function votingZipFiles(bytes: Uint8Array, include: (path: string) => boolean): 
   }
   return files;
 }
+/** Every member of a saved archive or workbook, by path. */
+export function votingArchiveMembers(bytes: Uint8Array): Map<string, Uint8Array> {
+  return votingZipFiles(bytes, () => true);
+}
 /** Read the publisher's named document inside its saved archive without a synthetic HTTP URL. */
 export function votingArchiveMember(bytes: Uint8Array, member: string): Uint8Array {
   const file = votingZipFiles(bytes, path => path === member).get(member);

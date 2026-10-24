@@ -1,5 +1,6 @@
 import { carriedRowClause, relativeAge } from "../meetings/freshness.ts";
 import type { Meeting, Provenance } from "../sources/types.ts";
+import { pinBasisLabel } from "../meetings/pin-location.ts";
 
 import type { RollCallVote } from "../votes/types.ts";
 import type { ExecutiveAction } from "./executive-actions.ts";
@@ -68,10 +69,12 @@ export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
   name: "Name", officeTitle: "Office", partyLabel: "Party", birthDate: "Birth date",
   termNote: "Term wording", termStart: "Term start date", termEnd: "Term end date",
   email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
-  campaignUrl: "Campaign website", photoUrl: "Portrait", social: "Social accounts",
+  campaignUrl: "Campaign website", photoUrl: "Portrait", portraitImage: "Portrait image", social: "Social accounts",
   districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
+  officeJurisdictionOcdId: "Area served", contactScope: "Who the office serves", state: "State", chamber: "Chamber",
+  selectionMethod: "How they took office", selectionMethodSourceUrl: "How they took office", executive: "National executive record",
   title: "Meeting title", bodyName: "Public body", startsAt: "Meeting date and time", endsAt: "Meeting end time",
-  timeZone: "Time zone", status: "Meeting status", location: "Meeting place", online: "Online attendance",
+  timeZone: "Time zone", status: "Meeting status", location: "Meeting place", online: "Online attendance",mapPin:"Map coordinates",
   agendaUrl: "Agenda", videoUrl: "Meeting recording", minutesUrl: "Meeting minutes",
   commentPeriod: "Public comment", commentPeriodDetail: "Public comment details", signup: "How to sign up",
   writtenComment: "Written comments", attend: "How to attend", timeLimit: "Speaking time limit",
@@ -100,7 +103,13 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
 }
 
 function fieldHolderSources(holder: SeatHolder): CardSource[] {
-  return Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${fieldSourceLabel(field)}`, provenance }));
+  const entries = Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${fieldSourceLabel(field)}`, provenance }));
+  for (const sourceHolder of holder.sourceHolders ?? []) {
+    const source = holderSource(sourceHolder, "Who they are, their office and how to reach them");
+    if (source) entries.push(source);
+    entries.push(...fieldHolderSources(sourceHolder));
+  }
+  return entries;
 }
 
 /** Every record behind a district or division battlecard: the boundary, the representatives and the sittings. */
@@ -138,6 +147,11 @@ export function meetingCardSources(
     { what: `This sitting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
   ];
   for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${fieldSourceLabel(field)}`, provenance });
+  if(meeting.mapPin){
+    entries.push({what:pinBasisLabel(meeting.mapPin.basis),provenance:meeting.mapPin.provenance});
+    if(meeting.mapPin.coordinateSourceUrl)entries.push({what:"Map coordinates",provenance:{sourceUrl:meeting.mapPin.coordinateSourceUrl,
+      sourceOrg:"U.S. Census Bureau",collectedAt:meeting.mapPin.coordinateCheckedAt??meeting.fieldSources?.mapPin?.collectedAt??meeting.mapPin.provenance.collectedAt,verifiedAt:null}});
+  }
   if (meeting.carried) {
     const clause = carriedRowClause(meeting.carried);
     entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });

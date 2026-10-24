@@ -4,6 +4,7 @@ import { requireBallotState, stateBallotScope } from "../civic-data/state-scopes
 import type { BallotSet } from "./types.ts";
 import { measureRecordIssue } from "./measure-record-contract.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { withCandidateTickets } from "./tickets.ts";
 
 
 export interface GenericBallotProjection {
@@ -11,6 +12,16 @@ export interface GenericBallotProjection {
   readonly ballots: Readonly<Record<string, BallotSet>>;
 }
 export const ballotElectionKey = (ballot: BallotSet) => `${ballot.election.state.toUpperCase()}:${ballot.election.id}`;
+const candidateViews = new WeakMap<GenericBallotProjection, GenericBallotProjection>();
+
+export function ballotPeopleProjection(value: GenericBallotProjection): GenericBallotProjection {
+  let view = candidateViews.get(value);
+  if (!view) {
+    view = { ...value, ballots: Object.fromEntries(Object.entries(value.ballots).map(([key, ballot]) => [key, withCandidateTickets(ballot)])) };
+    candidateViews.set(value, view);
+  }
+  return view;
+}
 
 export function genericBallotProblems(value: GenericBallotProjection, expectedState?: string): string[] {
   if (!value || value.kind !== "ballot-contests" || !value.ballots || typeof value.ballots !== "object" || Array.isArray(value.ballots)) return ["Generic ballot records are missing."];
@@ -77,6 +88,11 @@ export function currentGenericBallotProjection(state: string): GenericBallotProj
   const read = currentStateAuthorityProjection<GenericBallotProjection>("ballot-contests", state)?.result;
   if (read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP") return read.value;
   throw new Error(`Ballot for ${state} is ${read?.kind ?? "UNREAD"}; read its authority before using the projection.`);
+}
+
+/** The person/choice view is derived from, and never replaces, the published source holding. */
+export function currentBallotPeopleProjection(state: string): GenericBallotProjection {
+  return ballotPeopleProjection(currentGenericBallotProjection(state));
 }
 
 export async function readGenericBallotProjection(state: string, options: PromotedCivicDataReadOptions = {}) {

@@ -159,8 +159,8 @@ test("(b) the three Pima sittings reach the canonical layer with date, time, kin
     assert.equal(meeting.bodyName, "Board of Supervisors");
     assert.equal(meeting.status, "SCHEDULED");
     assert.equal(
-      meeting.location?.name,
-      "Pima County Administration Building, Board of Supervisors Hearing Room",
+      meeting.venueGap?.publishedText,
+      "Board of Supervisors' Hearing Room",
     );
     assert.equal(meeting.jurisdiction, "Pima County, AZ");
     assert.equal(meeting.provenance.sourceOrg, "Pima County Clerk of the Board");
@@ -213,8 +213,8 @@ test("(c) NAMED REGRESSION: the 8 September 1:00 PM Study Session survives to th
   assert.equal(study.timeZone, "America/Phoenix");
   assert.equal(study.status, "SCHEDULED");
   assert.equal(
-    study.location?.name,
-    "Pima County Administration Building, Board of Supervisors Hearing Room",
+    study.venueGap?.publishedText,
+    "Board of Supervisors' Hearing Room",
   );
 
   assert.notEqual(study.startsAt.slice(11, 16), "17:00");
@@ -796,18 +796,13 @@ test("the portal route is registered on the same bodies, BELOW the API route", (
   );
 });
 
-test("every tenant states a body, a zone and a sourced venue — no room name is geocoded at runtime", () => {
+test("every tenant states its own body, zone and official host", () => {
   assert.ok(INSITE_TENANTS.length >= 2);
   for (const tenant of INSITE_TENANTS) {
     assert.ok(tenant.bodyId.includes("#"), `${tenant.slug} states no registry body`);
     assert.ok(tenant.bodyNames.length > 0, `${tenant.slug} matches no department name`);
     assert.match(tenant.timeZone, /^[A-Za-z]+\/[A-Za-z_]+$/);
     assert.ok(tenant.host.endsWith(".legistar.com"));
-    for (const venue of tenant.venues) {
-      assert.ok(venue.addressSourceUrl, `${tenant.slug}/${venue.match} has no address source`);
-      assert.ok(venue.coordinateSourceUrl, `${tenant.slug}/${venue.match} has no coordinate source`);
-      assert.ok(Number.isFinite(venue.lat) && Number.isFinite(venue.lng));
-    }
   }
 });
 

@@ -1,0 +1,241 @@
+{
+  "state": "SC",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://scvotes.gov/voters/",
+      "finalUrl": "https://scvotes.gov/voters/",
+      "publisher": "South Carolina State Election Commission"
+    },
+    {
+      "requestedUrl": "https://scvotes.gov/contact/",
+      "finalUrl": "https://scvotes.gov/contact/",
+      "publisher": "South Carolina State Election Commission"
+    },
+    {
+      "requestedUrl": "https://scvotes.gov/voters/2026prep/",
+      "finalUrl": "https://scvotes.gov/voters/2026prep/",
+      "publisher": "South Carolina State Election Commission"
+    },
+    {
+      "requestedUrl": "https://scvotes.gov/wp-content/uploads/2026/09/Absentee-Statewide-General-Election-Go-To-Guide.pdf",
+      "finalUrl": "https://scvotes.gov/wp-content/uploads/2026/09/Absentee-Statewide-General-Election-Go-To-Guide.pdf",
+      "publisher": "South Carolina State Election Commission"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://scvotes.gov/contact/",
+          "finalUrl": "https://scvotes.gov/contact/",
+          "publisher": "South Carolina State Election Commission",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:03.560879+00:00",
+          "httpStatus": 200,
+          "rawHash": "d4b45073e89effd93d2cfca20713f05a6ac1cc158ab6a9c5310ebe368b0089e3",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://scvotes.gov/voters/",
+          "finalUrl": "https://scvotes.gov/voters/",
+          "publisher": "South Carolina State Election Commission",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:01.588827+00:00",
+          "httpStatus": 200,
+          "rawHash": "8333094f563a5a72f166f1436f39f5b4e3f00eba6202a26223040cbb42831260",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://scvotes.gov/voters/2026prep/",
+          "finalUrl": "https://scvotes.gov/voters/2026prep/",
+          "publisher": "South Carolina State Election Commission",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:02.921749+00:00",
+          "httpStatus": 200,
+          "rawHash": "9a4bf823410b5b67d7b51112ee6ba0d86c90fb5f5ecd6fdb3c1a34f2a3c89662",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://scvotes.gov/wp-content/uploads/2026/09/Absentee-Statewide-General-Election-Go-To-Guide.pdf",
+          "finalUrl": "https://scvotes.gov/wp-content/uploads/2026/09/Absentee-Statewide-General-Election-Go-To-Guide.pdf",
+          "publisher": "South Carolina State Election Commission",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T20:06:55.420324+00:00",
+          "httpStatus": 200,
+          "rawHash": "69f171cb269be61a00a2e15414be942ef34898dd75e64d5053ced07632a170df",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:1dbf4536b8ac65ba24049fa8768a3b8c",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "The deadline to return your application is 5:00 p.m. on Friday, October 23.",
+            "quote": "The deadline to return your application is 5:00 p.m. on Friday, October 23.",
+            "dates": [
+              "2026-10-23"
+            ],
+            "url": "https://scvotes.gov/wp-content/uploads/2026/09/Absentee-Statewide-General-Election-Go-To-Guide.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T20:06:55.420324+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:20c8026ccba59bd88e862f7086948136",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "early_voting",
+            "text": "The early voting period for the Statewide General Election starts on Monday, October 19 and ends Saturday, October 31. Early voting centers are open 8:30 a.m.- 6:00 p.m. during the early voting period. Closed Sunday, October 25.",
+            "quote": "The early voting period for the Statewide General Election starts on Monday, October 19 and ends Saturday, October 31. Early voting centers are open 8:30 a.m.- 6:00 p.m. during the early voting period. Closed Sunday, October 25.",
+            "dates": [
+              "2026-10-19",
+              "2026-10-31"
+            ],
+            "url": "https://scvotes.gov/voters/2026prep/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:02.921749+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:317646a34209e05aff36bf3871b0c7cd",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "polling_lookup",
+            "text": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=PollingPlace",
+            "quote": "Find My Polling Place",
+            "dates": [],
+            "url": "https://scvotes.gov/voters/",
+            "navigationUrl": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=PollingPlace",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.588827+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:7480713b8ea701c44aa8b7b1fa860d87",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "registration_lookup",
+            "text": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=VoterInformation",
+            "quote": "Check Your Voter Registration",
+            "dates": [],
+            "url": "https://scvotes.gov/voters/",
+            "navigationUrl": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=VoterInformation",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.588827+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:9927744aa6de25f9c75a1a5aa4d61f75",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "registration_deadline",
+            "text": "Register online at scVOTES.gov (must be received by Sunday, October 4 ). Download a voter registration form from scVOTES.gov . Complete and return the form to your county voter registration office: By fax or email attachment (must be received by Sunday, October 4 ). By mail (must be postmarked by Monday, October 5 ). Register in person at your county voter registration office (most offices will close at 5:00 p.m. on Friday, October 2 for in-office registrations).",
+            "quote": "Register online at scVOTES.gov (must be received by Sunday, October 4 ). Download a voter registration form from scVOTES.gov . Complete and return the form to your county voter registration office: By fax or email attachment (must be received by Sunday, October 4 ). By mail (must be postmarked by Monday, October 5 ). Register in person at your county voter registration office (most offices will close at 5:00 p.m. on Friday, October 2 for in-office registrations).",
+            "dates": [
+              "2026-10-04",
+              "2026-10-05",
+              "2026-10-02"
+            ],
+            "url": "https://scvotes.gov/voters/2026prep/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:02.921749+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:9d1fd73e0d8e8f8f869c918ae2ff8583",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "election_office",
+            "text": "South Carolina State Election Commission",
+            "quote": "South Carolina State Election Commission",
+            "dates": [],
+            "url": "https://scvotes.gov/contact/",
+            "navigationUrl": "https://scvotes.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "(803) 734-9060",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:03.560879+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:ac423ac1536702b6ced53f26aca07023",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "ballot_lookup",
+            "text": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=Sampleballot",
+            "quote": "Get My Sample Ballot",
+            "dates": [],
+            "url": "https://scvotes.gov/voters/",
+            "navigationUrl": "https://vrems.scvotes.sc.gov/Voter/Login?PageMode=Sampleballot",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.588827+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        },
+        {
+          "id": "election-field:de2adc57811a8391749a89422c975bc4",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "SC",
+            "divisionId": "ocd-division/country:us/state:sc",
+            "fieldKind": "registration_page",
+            "text": "https://scvotes.gov/voters/register-to-vote/",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://scvotes.gov/voters/",
+            "navigationUrl": "https://scvotes.gov/voters/register-to-vote/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:01.588827+00:00",
+            "sourceOrg": "South Carolina State Election Commission"
+          }
+        }
+      ]
+    }
+  }
+}

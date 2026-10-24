@@ -368,7 +368,7 @@
     "ELE-03": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "reconciliation", "scoreAs": "core", "countsAs": "row"},
     "ELE-04": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
     "ELE-05": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
-    "ELE-06": {"unit": "deadline", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
+    "ELE-06": {"unit": "deadline", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "ELE-07": {"unit": "contest", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
     "ELE-08": {"unit": "deadline", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
     "ELE-09": {"unit": "deadline", "trigger": "when-offered", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary", "filledBy": ["families"]},

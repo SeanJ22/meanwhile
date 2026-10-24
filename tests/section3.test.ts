@@ -1,10 +1,57 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { needsSecondSource, section3Contest, section3Page, section3Record } from "../lib/control-plane/promotion/section3.ts";
+import { linkingPageFrom, needsSecondSource, pageLinksTo, section3Contest, section3Page, section3Record, valueOnPage } from "../lib/control-plane/promotion/section3.ts";
 
 const NOW = "2026-09-29T20:00:00.000Z";
 const page = (text: string, url = "https://recorder.cochise.az.gov/candidates", retrievedAt = "2026-09-29T12:00:00.000Z") => ({ url, text, retrievedAt });
 const LIST = `<h1>2026 General Election — Candidate List</h1><table><tr><td>Sheriff</td><td>Mark Dannels</td></tr><tr><td>Sheriff</td><td>Jane Ortiz</td></tr></table>`;
+
+test("an official platform's saved document links retain the platform's government endorsement", () => {
+  const official = { url: "https://elections.example.gov/voting", html: '<a href="https://elections.example.net/voting">Voting information</a>' };
+  const platform = { canonicalUrl: "https://elections.example.net/voting", text: '<a href="https://documents.example.net/faq.pdf">Election FAQ</a>',
+    linkingPage: official };
+  const proof = linkingPageFrom("https://documents.example.net/faq.pdf", [platform]);
+  assert.deepEqual(proof, { url: platform.canonicalUrl, html: platform.text, linkingPage: official });
+  assert.equal(linkingPageFrom("https://documents.example.net/faq.pdf", [{ ...platform, linkingPage: undefined }]), null);
+});
+
+test("official navigation resolves relative, unquoted and fragment links against its own page", () => {
+  const source = page(`<a href='../forms/sample.pdf'>Sample ballot</a><a href=registration.shtml>Register to vote</a>
+    <a href=/Voter/RegisterToVote>Registration form</a><a href='#personal-search'>Registration status</a>
+    <a href='//lookup.example.gov/portal'>Find your polling place</a>`, "https://elections.example.gov/elections/voters/index.shtml");
+  for (const target of ["https://elections.example.gov/elections/forms/sample.pdf",
+    "https://elections.example.gov/elections/voters/registration.shtml", "https://elections.example.gov/Voter/RegisterToVote",
+    "https://elections.example.gov/elections/voters/index.shtml#personal-search", "https://lookup.example.gov/portal"]) {
+    assert.equal(pageLinksTo(source, target), true, target);
+    assert.equal(section3Record({ recordClass: "VOTER_ACCESS_ROUTE", fields: { kind: "POLLING_PLACE_LINK", url: target,
+      quote: "Register to vote" }, page: source, now: NOW, minimums: ["kind", "url", "quote"] }).live, true, target);
+  }
+  for (const target of ["https://another.example.gov/Voter/RegisterToVote",
+    "https://elections.example.gov/elections/forms/other.pdf",
+    "https://elections.example.gov/elections/voters/index.shtml#missing-search"]) {
+    assert.equal(pageLinksTo(source, target), false, target);
+    assert.equal(valueOnPage(target, source.text, undefined, source.url), false, target);
+  }
+  assert.equal(valueOnPage("https://another.example.gov/Voter/RegisterToVote", source.text), false);
+});
+
+test("a lookup may use the cited official page itself when its source words verify the route", () => {
+  const source = page("<h1>2026 General Election sample ballots</h1>", "https://elections.example.gov/2026/sample-ballots");
+  assert.equal(section3Record({ recordClass: "VOTER_ACCESS_ROUTE", fields: { url: source.url, quote: "2026 General Election sample ballots" },
+    minimums: ["url", "quote"], page: source, now: NOW }).live, true);
+  assert.equal(section3Record({ recordClass: "VOTER_ACCESS_ROUTE", fields: { url: source.url, quote: "Find my registration status" },
+    minimums: ["url", "quote"], page: source, now: NOW }).live, false);
+});
+
+test("printed official portal addresses retain their whole domain and path when normalized", () => {
+  const text = "For voter registration status and sample ballots visit NVSOS.gov/VoterSearch. Visit Vote.Vermont.gov/ to view your sample ballot.";
+  assert.equal(valueOnPage("https://www.nvsos.gov/VoterSearch", text), true);
+  assert.equal(valueOnPage("https://www.nvsos.gov/VoterSearch", "Visit NVSOS.gov/ VoterSearch to find your sample ballot."), true);
+  assert.equal(valueOnPage("https://vote.vermont.gov/", text), true);
+  assert.equal(valueOnPage("https://www.nvsos.gov/different", text), false);
+  assert.equal(valueOnPage("https://nvsos.gov", "Go to nvsos.gov.attacker.example/"), false);
+  assert.equal(valueOnPage("https://nvsos.gov", "Go to http://nvsos.gov"), false);
+});
 
 test("the page half: an official page inside its window passes; a stale or unofficial one does not", () => {
   assert.equal(section3Page(page(LIST), "BALLOT_CONTEST", NOW).ok, true);

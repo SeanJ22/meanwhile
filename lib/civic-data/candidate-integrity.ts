@@ -1,5 +1,5 @@
 import { durableCivicDataHash } from "./canonical-hash.ts";
-import { durableStateHash, statePublicationScope } from "./state-publication.ts";
+import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement, votingSourceReplacementVerifier } from "../ballot/voting-source-replacement-contract.ts";
 
@@ -173,7 +173,7 @@ export async function verifySourceScopedCandidateProjection(
   // JSONB is the durable authority. Reject values whose in-memory meaning
   // would change or disappear when persisted before any typed Reader sees it.
   try {
-    const scoped = statePublicationScope(candidate.scope);
+    const scoped = largePayloadScope(candidate.scope);
     const readModelCanonical = scoped ? durableStateHash(candidate.readModel) : durableCivicDataHash(candidate.readModel);
     const normalizedPayloadCanonical = candidate.normalizedPayload === candidate.readModel ? readModelCanonical :
       scoped ? durableStateHash(candidate.normalizedPayload) : durableCivicDataHash(candidate.normalizedPayload);
@@ -225,6 +225,11 @@ export async function verifySourceScopedCandidateProjection(
     if (!source) return fail(verifierId, "The federal source is not registered.");
     const sourceIssue = await federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null, proofStore);
     if (sourceIssue) return fail(verifierId, sourceIssue);
+  }
+  if(candidate.sourceId==="legiscan-bills"&&candidate.recordClass==="STATE_BILL"){
+    const {bulkManifestIssue}=await import("../sources/legiscan/publication.ts");
+    const issue=await bulkManifestIssue(candidate,proofStore);
+    if(issue)return fail("lib/sources/legiscan/publication.ts#bulkManifestIssue",issue);
   }
 
   const replacement = candidate.recordClass === "VOTING_SITE" && votingSourceReplacement(candidate.normalizedPayload);

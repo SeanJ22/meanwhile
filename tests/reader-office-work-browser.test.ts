@@ -8,16 +8,16 @@ test("equivalent state and place records reuse office work, while changed record
   const output = await build({ stdin: { contents: `
     import React,{useEffect,useState} from "react";import {createRoot} from "react-dom/client";
     import {useOfficePins} from "./hooks/use-office-pins.ts";
-    import {useBodyOfficeLocations} from "./hooks/use-body-office-locations.ts";
+    import {publishedMeetingPins} from "./lib/meetings/pin-location.ts";
     import {primeStateMemberDirectories} from "./hooks/use-member-directory.ts";
     const provenance={sourceUrl:"https://example.gov/offices",sourceOrg:"Official office",collectedAt:"2026-10-01"};
     primeStateMemberDirectories([{ids:["congress:A000001"],directory:{committees:[],districtOffices:[{address:"100 Example Street",city:"Tucson",state:"AZ",zip:"85701",lat:32.2,lng:-110.9}],officeDetails:[{...provenance,officeKind:"DISTRICT",official:true}]}}],"AZ");
     const initial={seats:[{ocdId:"ocd-division/country:us/state:az/cd:7",divisionType:"cd",label:"District 7",representatives:[{id:"congress:A000001",name:"First name",state:"AZ"}]}],senators:[],bodies:[{bodyId:"body:one",name:"Board",officeContact:{address:"200 Example Street",provenance}}]};
-    const meetings=[{bodyId:"body:one",location:null,online:{url:"https://example.gov/watch"}}],venues=[];
+    const meetings=[{id:"meeting:one",bodyId:"body:one",location:null,online:{label:"Online only",joinUrl:"https://example.gov/watch"},mapPin:{meetingId:"meeting:one",bodyId:"body:one",name:"Board",address:"200 Example Street",basis:"BODY_OFFICE",lat:32.2,lng:-110.9,provenance}}],venues=[];
     function App(){
       const [coverage,setCoverage]=useState(initial),[version,setVersion]=useState(0);
       const pins=useOfficePins(coverage,{bounds:null,venues});
-      const locations=useBodyOfficeLocations(coverage.bodies,meetings);
+      const locations=React.useMemo(()=>publishedMeetingPins(meetings),[meetings]);
       useEffect(()=>{window.officePublications=(window.officePublications||0)+1},[pins,locations]);
       return <><button onClick={()=>{setCoverage(JSON.parse(JSON.stringify(coverage)));setVersion(v=>v+1)}}>Equivalent</button><button onClick={()=>{setCoverage({...coverage,seats:[{...coverage.seats[0],representatives:[{...coverage.seats[0].representatives[0],name:"Updated name"}]}]});setVersion(v=>v+1)}}>Change</button><pre id="answer">{JSON.stringify({version,pins,locations})}</pre></>;
     }
@@ -43,16 +43,16 @@ test("equivalent state and place records reuse office work, while changed record
     await page.goto(`http://127.0.0.1:${address.port}/`);
     await page.waitForFunction(() => { const value = JSON.parse(document.querySelector("#answer")!.textContent!); return value.pins.pins.length === 1 && value.locations.length === 1; });
     const publications = await page.evaluate(() => (window as unknown as {officePublications:number}).officePublications);
-    // The representative's office arrives with the point saved at publication; only the board's office is located here.
-    assert.equal(requests.length, 1);
+    // Both office points arrive saved; a reader visit does not locate a meeting.
+    assert.equal(requests.length, 0);
     await page.getByRole("button", { name: "Equivalent" }).click();
     await page.waitForFunction(() => JSON.parse(document.querySelector("#answer")!.textContent!).version === 1);
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    assert.equal(requests.length, 1, "equivalent data does not repeat the completed geocode");
+    assert.equal(requests.length, 0, "equivalent data does not repeat the completed geocode");
     assert.equal(await page.evaluate(() => (window as unknown as {officePublications:number}).officePublications), publications, "unchanged office results keep their references and do not republish");
     await page.getByRole("button", { name: "Change", exact: true }).click();
     await page.waitForFunction(() => JSON.parse(document.querySelector("#answer")!.textContent!).pins.pins[0]?.name === "Updated name");
-    assert.equal(requests.length, 1, "a changed owner publishes its current name while reusing its saved office point");
+    assert.equal(requests.length, 0, "a changed owner publishes its current name while reusing its saved office point");
     assert.deepEqual(errors, []);
   } finally { await browser?.close(); await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); }
 });

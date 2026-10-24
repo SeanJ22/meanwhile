@@ -131,8 +131,16 @@ async function postWithSettings(request: Request) {
       suspectReason,
       marker: markerFromRequest(request),
     });
+    if (stored.kind === "FAILED") {
+      await raiseWriteAlarm("speak_your_mind", new Error(stored.reason));
+      return Response.json({ error: "could not record that" }, { status: 500 });
+    }
+    if (stored.kind === "NO_STORE") {
+      await raiseWriteAlarm("speak_your_mind", new Error("Speak your mind store is unavailable"));
+      return new Response(null, { status: 202 });
+    }
     /* A held row is still a 204 and the reader is not told it was held: telling them would show a prober where the line sits. */
-    return new Response(null, { status: stored.kind === "STORED" ? 204 : 202 });
+    return new Response(null, { status: 204 });
   } catch (error) {
     console.error("speak-your-mind write failed", error);
     await raiseWriteAlarm("speak_your_mind", error);

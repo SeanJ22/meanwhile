@@ -127,9 +127,11 @@ export function readerBodyName(raw: string): string {
  * School District".
  */
 export function readerGovernmentName(label: string, divisionType: string | null): string {
-  let name = capitaliseSuffix(label.replace(/\s+/g, " ").trim());
+  let name = label.replace(/\s+/g, " ").trim();
+  if (isAllCaps(name)) name = titleCase(name);
+  name = capitaliseSuffix(name);
   if (name === "") return name;
-  if (divisionType === "county" && !/\b(county|parish|borough)$/i.test(name)) {
+  if (divisionType === "county" && !/\b(county|parish|borough)$/i.test(name) && !/^(?:county|parish|borough) of\b/i.test(name)) {
     name = `${name} County`;
   } else if (divisionType === "school_district" && /\sDistrict$/.test(name) && !/\bSchool\b/i.test(name)) {
     name = name.replace(/\sDistrict$/, " School District");
@@ -155,17 +157,20 @@ export function bodyDisplayName(body: {
  */
 export function withReaderNames<
   R extends {
-    meetings: ReadonlyArray<{ bodyName: string }>;
-    coverage: { bodies: ReadonlyArray<{ name: string | null }> } | null;
+    meetings: ReadonlyArray<{ bodyName: string; jurisdiction?: string }>;
+    coverage: { bodies: ReadonlyArray<{ name: string | null; divisionLabel?: string; divisionType?: string | null }>; governments?: ReadonlyArray<{name:string}> } | null;
   },
 >(result: R): R {
   return {
     ...result,
-    meetings: result.meetings.map((m) => ({ ...m, bodyName: readerBodyName(m.bodyName) })),
+    meetings: result.meetings.map((m) => ({ ...m, bodyName: readerBodyName(m.bodyName),
+      ...(m.jurisdiction ? { jurisdiction:readerGovernmentName(m.jurisdiction,null) } : {}) })),
     coverage: result.coverage
       ? {
           ...result.coverage,
-          bodies: result.coverage.bodies.map((b) => (b.name === null ? b : { ...b, name: readerBodyName(b.name) })),
+          bodies: result.coverage.bodies.map((b) => ({ ...b, ...(b.name === null ? {} : { name: readerBodyName(b.name) }),
+            ...(b.divisionLabel ? { divisionLabel: readerGovernmentName(b.divisionLabel,b.divisionType ?? null) } : {}) })),
+          ...(result.coverage.governments ? { governments:result.coverage.governments.map(g => ({...g,name:readerGovernmentName(g.name,null)})) } : {}),
         }
       : null,
   };

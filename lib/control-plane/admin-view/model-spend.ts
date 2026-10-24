@@ -1,10 +1,12 @@
 import { rateFor, ratesForPrompt } from "../model-cost.ts";
+import { canonicalModelId } from "../../models.ts";
 
 export interface ModelSpendRaw {
   readonly listPrice?: number | null;
   readonly day: string;
   readonly role: string;
   readonly model: string | null;
+  readonly job?: string | null;
   readonly window: "day" | "before" | "after";
   readonly jobs: number;
   readonly calls: number | null;
@@ -22,6 +24,8 @@ export interface ModelSpendRaw {
 interface ModelSpendLine {
   readonly day: string;
   readonly role: string;
+  readonly model: string | null;
+  readonly job: string | null;
   readonly dollars: number | null;
   readonly calls: number | null;
   readonly cacheHitShare: number | null;
@@ -37,6 +41,7 @@ interface ModelSpendLine {
 
 export interface ModelSpendView {
   readonly days: readonly ModelSpendLine[];
+  readonly jobs: readonly ModelSpendLine[];
   readonly before: readonly ModelSpendLine[];
   readonly after: readonly ModelSpendLine[];
   readonly changedAt: string | null;
@@ -62,7 +67,8 @@ function line(rows: readonly ModelSpendRaw[], liveFacts: number | null): ModelSp
     const card = ratesForPrompt(rate, row.promptBand);
     listPrice += ((row.uncached + row.reads + row.writes) * card.inputUsdPerMillion + row.output * card.outputUsdPerMillion) / 1_000_000;
   }
-  return { day: rows[0].day, role: rows[0].role, dollars: dollars === null ? null : round(dollars), calls: sum(rows, "calls"),
+  return { day: rows[0].day, role: rows[0].role, model: rows[0].model, job: rows[0].job ?? null,
+    dollars: dollars === null ? null : round(dollars), calls: sum(rows, "calls"),
     cacheHitShare: input && reads !== null ? reads / input : null,
     cacheWriteShare: input && writes !== null ? writes / input : null,
     hourCacheTokens: sum(rows, "writes1h"), cacheWritesPerJob: writes === null || !jobs ? null : writes / jobs,
@@ -75,15 +81,16 @@ function line(rows: readonly ModelSpendRaw[], liveFacts: number | null): ModelSp
 /** Missing historical metering stays unknown. Daily fact counts are new or updated reader records, shared by every contributing role. */
 export function modelSpendView(rows: readonly ModelSpendRaw[], facts: readonly { day: string; facts: number }[], changedAt: string | null, now: string): ModelSpendView {
   const groups = new Map<string, ModelSpendRaw[]>();
-  for (const row of rows) {
-    const key = JSON.stringify([row.window, row.window === "day" ? row.day : "", row.role]);
+  for (const raw of rows) {
+    const row = { ...raw, model: raw.model ? canonicalModelId(raw.model) : null };
+    const key = JSON.stringify([row.window, row.window === "day" ? row.day : "", row.role, row.model, row.job ?? null]);
     groups.set(key, [...(groups.get(key) ?? []), row]);
   }
-  const project = (window: ModelSpendRaw["window"]) => [...groups.values()].filter(group => group[0].window === window)
+  const project = (window: ModelSpendRaw["window"], jobs = false) => [...groups.values()].filter(group => group[0].window === window && Boolean(group[0].job) === jobs)
     .map(group => line(group, window === "day" ? facts.find(f => f.day === group[0].day)?.facts ?? null : null))
     .sort((a, b) => b.day.localeCompare(a.day) || a.role.localeCompare(b.role));
   const afterThrough = changedAt ? new Date(Date.parse(changedAt) + 86_400_000).toISOString() : null;
-  return { days: project("day"), before: project("before"), after: project("after"), changedAt, afterThrough,
+  return { days: project("day"), jobs: project("day", true), before: project("before"), after: project("after"), changedAt, afterThrough,
     comparison: changedAt === null ? "not-started" : Date.parse(now) < Date.parse(afterThrough!) ? "collecting" : "complete" };
 }
 
@@ -105,7 +112,7 @@ export const MODEL_SPEND_SQL = `WITH changed AS (
      AND coalesce((record->'cost'->>'requestCount')::int, 0) > 0
      AND (record->'cost'->>'usd' IS NULL OR (record->'cost'->>'usd')::float8 > 0)))
 ), portions AS (
- SELECT c.recorded_at, c.record->>'role' AS role, c.record->>'attemptId' AS job,
+ SELECT c.recorded_at, c.record->>'role' AS role, coalesce(c.record->>'workItemId', c.record->>'attemptId') AS job,
  coalesce(m->>'model', c.record->>'model') AS model, coalesce(m, c.record->'cost') AS cost,
  CASE WHEN m IS NOT NULL THEN (m->>'requestCount')::int ELSE (c.record->'cost'->>'modelRequestCount')::int END AS calls
  FROM recent c LEFT JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(c.record->'byModel') = 'array'
@@ -115,11 +122,11 @@ export const MODEL_SPEND_SQL = `WITH changed AS (
  UNION ALL SELECT p.*, 'before' FROM portions p, changed WHERE p.recorded_at >= changed.at - interval '24 hours' AND p.recorded_at < changed.at
  UNION ALL SELECT p.*, 'after' FROM portions p, changed WHERE p.recorded_at >= changed.at AND p.recorded_at < changed.at + interval '24 hours'
 ), labeled AS (
- SELECT *, CASE WHEN span = 'day' THEN to_char(recorded_at AT TIME ZONE 'America/New_York', 'YYYY-MM-DD') ELSE span END AS day FROM spans
-), jobs AS (SELECT day, role, span, count(distinct job)::int AS jobs FROM labeled GROUP BY 1, 2, 3)
- SELECT p.day, p.role, model, p.span AS "window",
- CASE WHEN coalesce((cost->>'inputTokens')::bigint, 0) > 100000 THEN 100001 ELSE 0 END AS prompt_band,
- max(j.jobs)::int AS jobs,
+ SELECT *, CASE WHEN span = 'day' THEN to_char(recorded_at AT TIME ZONE 'America/New_York', 'YYYY-MM-DD') ELSE span END AS day,
+ CASE WHEN coalesce((cost->>'inputTokens')::bigint, 0) > 100000 THEN 100001 ELSE 0 END AS prompt_band FROM spans
+), jobs AS (SELECT day, role, span, count(distinct job)::int AS jobs FROM labeled GROUP BY 1, 2, 3), aggregated AS (
+ SELECT p.day, p.role, model, p.span AS "window", p.job, grouping(p.job) AS job_total, p.prompt_band,
+ CASE WHEN grouping(p.job) = 0 THEN 1 ELSE max(j.jobs)::int END AS jobs,
  CASE WHEN count(calls) = count(*) THEN sum(calls)::int END AS calls,
  CASE WHEN count(cost->>'usd') = count(*) THEN sum((cost->>'usd')::float8) END AS usd,
  CASE WHEN count(cost->>'listPriceUsd') = count(*) THEN sum((cost->>'listPriceUsd')::float8) END AS list_price,
@@ -131,7 +138,12 @@ export const MODEL_SPEND_SQL = `WITH changed AS (
  CASE WHEN count(cost->>'batchEligibleRequestCount') = count(*) THEN sum((cost->>'batchEligibleRequestCount')::int)::int END AS eligible,
  CASE WHEN count(cost->>'batchRequestCount') = count(*) THEN sum((cost->>'batchRequestCount')::int)::int END AS batched,
  (SELECT at FROM changed) AS changed_at
- FROM labeled p JOIN jobs j ON j.day = p.day AND j.role = p.role AND j.span = p.span GROUP BY 1, 2, 3, 4, 5`;
+ FROM labeled p JOIN jobs j ON j.day = p.day AND j.role = p.role AND j.span = p.span
+ GROUP BY GROUPING SETS ((p.day, p.role, model, p.span, p.prompt_band), (p.day, p.role, model, p.span, p.prompt_band, p.job))
+), recent_jobs AS (
+ SELECT job FROM portions WHERE job IS NOT NULL GROUP BY job ORDER BY max(recorded_at) DESC LIMIT 100
+)
+ SELECT * FROM aggregated WHERE job_total = 1 OR ("window" = 'day' AND job IN (SELECT job FROM recent_jobs))`;
 
 export const MODEL_LIVE_FACTS_SQL = `SELECT to_char(recorded_at AT TIME ZONE 'America/New_York', 'YYYY-MM-DD') AS day,
  sum((record->'publicationFlow'->>'changedRecords')::int)::int AS facts

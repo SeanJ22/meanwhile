@@ -77,6 +77,7 @@ export interface RoutineCivicDataReaderReadbackOutcomeInput {
 
 interface RoutineCivicDataSupervisorOutcomeInput {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
+  readonly ballotNavigationPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly cycleId: string;

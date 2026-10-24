@@ -6,6 +6,7 @@ import { requireBallotState } from "../civic-data/state-scopes.ts";
 import type { BallotSet, BallotSource } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readTranslations, withMeasureTranslations } from "../translate/projection-reader.ts";
+import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 
 export interface RegisteredBallotSource {
   readonly state: string;
@@ -83,8 +84,9 @@ export async function readerBallotSourceForTargetId(targetId: string, divisions:
   for (const source of await readerBallotSourcesForDivisions(divisions, options)) {
     const ballot = source.source.normalize(await source.source.fetch());
     if (ballot.generalLineup?.contests.some(row => row.nominees.some(nominee => `${row.contestId}|${nominee.name}` === targetId))
-      || ballot.candidacies.some(row => row.id === targetId) || ballot.filingCandidacies?.some(row => row.id === targetId)
-      || ballot.contests.some(row => row.id === targetId)
+      || [...ballot.candidacies, ...ballot.filingCandidacies ?? []].some(row => ballotCandidateAliases(row).includes(targetId)
+        || ballotCandidatePeople(row).some(person => ballotCandidateAliases(person).includes(targetId)))
+      || ballot.contests.some(row => row.id === targetId || row.aliases?.includes(targetId))
       || ballot.heldContests?.some(row => row.id === targetId)
       || ballot.measureRecords?.some(row => row.parts.some(part => part.id === targetId))) return source;
   }

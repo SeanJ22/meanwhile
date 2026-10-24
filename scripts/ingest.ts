@@ -90,11 +90,8 @@ import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, withRegistryRuntimeStates } from "../lib/registry/runtime-read-model.ts";
 import { requireRegistryState, statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
-import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
-import type { ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
-import { publishVenueResolutions } from "../lib/meetings/venue-publication.ts";
-import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
-import { currentVenueCache, resolveVenue, venueResolutionRecordId, type VenueEntry } from "../lib/meetings/venue-cache.ts";
+import { normalizeFamilyMeetingCitations, placePublishedMeetingPins, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/publish-pins.ts";
+import { currentVenueCache, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { scopedMeetingSource } from "./lib/scoped-meeting-source.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
@@ -630,50 +627,24 @@ export async function promoteDerivedMeetingFamily(
       return { meetings: reconciled.meetings, agendaDocuments: reconciled.agendaDocuments, removalEvidence: reconciled.removalEvidence };
     },
   });
-  const venueRead = await readCuratedReaderProjection("venue-resolutions", { store, now: new Date().toISOString(), bypassCache: true });
-  const reviewed = venueRead.kind === "PROMOTED" ? venueRead.value.records as unknown as VenueEntry[] : [];
-  if (venueRead.kind !== "PROMOTED" && venueRead.kind !== "NOT_RECORDED") {
-    console.warn(`AUTOMATIC_VENUE_REVIEWED_UNAVAILABLE:${venueRead.kind}:${venueRead.detail}`);
-  }
   const memberRoutes = new Map(members.filter((member) => member.status === "ACTIVE").map((member) =>
     [`${DERIVED_WIRING_SOURCE_NAMES[member.row.kind]}:${member.row.bodyId}`, member.row.route] as const));
   const cited = normalizeFamilyMeetingCitations(build.snapshot.meetings, memberRoutes);
-  const retained = retainPreviouslyVerifiedVenuePoints(cited, previous?.meetings ?? []);
-  const fromReviewed = placeMeetingsFromVerifiedVenues(retained, reviewed);
-  const existingIds = new Set(venueRead.kind === "PROMOTED" ? venueRead.value.records.map((row) => row.id) : []);
-  const census = await placeMeetingsFromCensusVenues({
-    snapshot: { ...build.snapshot, meetings: [...fromReviewed.meetings] }, existingIds, memberRoutes,
-  });
-  for (const hold of census.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
-  const placed = census;
-  const venueReferenceEvidence = census.venueReferenceEvidence;
-  const finalBuild = { ...build, snapshot: { ...build.snapshot, meetings: [...placed.meetings],
-    ...(venueReferenceEvidence.length > 0 ? { venueReferenceEvidence } : {}) } };
-  const candidate = derivedFamilyCandidate(partition, finalBuild);
+  const census = await placePublishedMeetingPins({meetings:cited,previous:previous?.meetings,query:facts?.db.query,fetchImpl});
+  for (const hold of census.held) console.warn(`MEETING_PIN_UNRESOLVED ${hold}`);
+  const finalBuild = { ...build,snapshot:{...build.snapshot,meetings:[...census.meetings]} };
+  const candidate = retainMeetingCandidateEvidence(derivedFamilyCandidate(partition, finalBuild),finalBuild.snapshot,[...retaining.responses,...census.responses]);
   // An unchanged family pass is receipted on the pointed version.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   if (outcome.promoted || outcome.confirmed) {
-    await publishVenuePins(store, partition.id, census.package);
     for (const read of facts ? reads.filter(row => row.ok) : []) {
-      await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        read.freshMeetings, read.acquisitions, outcome.candidate.candidate.id, generatedAt);
+      await publishPartitionFacts({ ...facts!, responses: [...retaining.responses,...census.responses] }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
+        census.meetings.filter(meeting=>read.freshMeetings.some(fresh=>fresh.id===meeting.id)), read.acquisitions, outcome.candidate.candidate.id, generatedAt);
     }
   }
-  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: outcome.candidate.candidate.id,
-    placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
-    retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
-    held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
-    promotedVersion: outcome.promoted?.versionId ?? null })}`);
+  console.log(`Meeting pins: ${census.placedCount} placed, ${census.responses.length} new Census reads, ${census.held.length} unresolved`);
   return outcome;
-}
-
-/** BX-09: the pins this pass matched go into the venue-resolutions pointer on their own; a hold there never stops the pass. */
-async function publishVenuePins(store: RoutineDataStore, partitionId: string, pkg: ManualProjectionPackage | null): Promise<void> {
-  const published = await publishVenueResolutions({ store, package: pkg, now: new Date().toISOString() });
-  if (published.records === 0) return;
-  console.log(`VENUE_RESOLUTIONS_PUBLISHED=${JSON.stringify({ partition: partitionId, records: published.records,
-    promoted: published.outcome?.promoted?.versionId ?? null, held: published.held })}`);
 }
 
 export interface MeetingIngestResult {
@@ -897,7 +868,7 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
 
 async function readMeetingPartition(partition: MeetingPartitionContract, promotionStore: RoutineDataStore,
   options: MeetingIngestOptions, dryRun: boolean): Promise<MeetingIngestResult> {
-  const source = (options.venues !== undefined ? scopedMeetingSource(partition, options.venues) : null) ?? buildCompositeSource({
+  const source = scopedMeetingSource(partition) ?? buildCompositeSource({
     timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
     captureAcquisitionEvidence: true,
     sourceNames: [partition.meetingSource],
@@ -1029,8 +1000,7 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       const fresh = agendaPlaced.rows.filter(meeting => meeting.bodyId === partition.bodyId);
       const generatedAt = new Date().toISOString();
       const reconciled = reconcileSuccessfulMeetingPartition({ sourceName: partition.meetingSource, generatedAt,
-        freshMeetings: fresh, freshAgendaDocuments: fresh.flatMap(meeting => agendaStore.versionsFor(meeting.id)), previous,
-        reviewedVenues: options.venues === undefined ? undefined : () => options.venues! });
+        freshMeetings: fresh, freshAgendaDocuments: fresh.flatMap(meeting => agendaStore.versionsFor(meeting.id)), previous });
       const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt,
         counts: snapshotCounts(reconciled.meetings, 0), sources: [{ source: partition.meetingSource,
           ok: report.ok, error: report.error, fetched: report.fetched, normalized: report.normalized,
@@ -1189,20 +1159,6 @@ export interface SuccessfulMeetingPartitionReconciliation {
   readonly upperBound: string;
 }
 
-export function placeCarriedFromReviewedVenue(
-  prior: Meeting,
-  sourceName: string,
-  reviewedVenues: (() => readonly VenueEntry[]) | undefined,
-): Meeting {
-  const gap = prior.venueGap;
-  if (!reviewedVenues || prior.location || prior.online || prior.ocdId === null) return prior;
-  if (gap?.kind !== "STATED_NOT_PLACED" || !gap.publishedText?.trim()) return prior;
-  const venue = resolveVenue(sourceName, prior.ocdId, gap.publishedText, null, reviewedVenues());
-  if (!venue) return prior;
-  const { venueGap: _gap, ...rest } = prior;
-  return { ...rest, location: { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } };
-}
-
 export { meetingCarriesRecords };
 
 export function reconcileSuccessfulMeetingPartition(input: {
@@ -1214,7 +1170,6 @@ export function reconcileSuccessfulMeetingPartition(input: {
 
   readonly publisherExclusions?: readonly PublisherExclusion[];
 
-  readonly reviewedVenues?: () => readonly VenueEntry[];
 
   readonly fetchedWindow?: { readonly lowerBound: string; readonly upperBound: string };
 
@@ -1338,7 +1293,7 @@ export function reconcileSuccessfulMeetingPartition(input: {
     );
     const outsideFetch = Number.isFinite(startsAt) && (startsAt < fetchedLower || startsAt > fetchedUpper);
     meetings.push({
-      ...placeCarriedFromReviewedVenue(prior, input.sourceName, input.reviewedVenues),
+      ...prior,
       carried: {
         source: input.sourceName,
         lastFreshAt,
@@ -1552,7 +1507,7 @@ export function printMeetingPartitionReceipt(
 async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, source: string,
   meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string): Promise<void> {
   try {
-    const responses = tracedResponses([{ source, acquisitions }], facts.responses);
+    const responses = [...tracedResponses([{ source, acquisitions }], facts.responses),...facts.responses.filter(response=>response.source==="census-geocoder")];
     const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
     console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
   } catch (error) {
@@ -1628,26 +1583,11 @@ export async function promoteMeetingPartitions(input: {
         freshAgendaDocuments: freshDocuments,
         previous: restoredPrevious,
         publisherExclusions: recurrence.exclusions,
-        reviewedVenues: () => input.venues ?? currentVenueCache(),
         movedToHistory: moved,
       });
-      // BX-08: a hand-wired body's newly published address gets its pin the same way a derived family's does.
-      const acquired = (report.acquisitions ?? []).find((evidence) => evidence.httpStatus >= 200 && evidence.httpStatus < 300);
-      let census: Awaited<ReturnType<typeof placeMeetingsFromCensusVenues>> | null = null;
-      if (acquired) {
-        try {
-          census = await placeMeetingsFromCensusVenues({
-            snapshot: { generatedAt: input.generatedAt, meetings: [...reconciled.meetings],
-              sources: [{ source: partition.meetingSource, acquisitions: report.acquisitions }] } as unknown as MeetingsSnapshot,
-            existingIds: new Set((input.venues ?? currentVenueCache()).map((venue) => venueResolutionRecordId(venue))),
-            memberRoutes: new Map([[`${partition.meetingSource}:${partition.bodyId}`, acquired.finalUrl]]),
-            fetchImpl: input.venueFetch,
-          });
-          for (const hold of census.held) console.warn(`AUTOMATIC_VENUE_HELD ${hold}`);
-        } catch (error) {
-          console.warn(`AUTOMATIC_VENUE_SKIPPED ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
-        }
-      }
+      const census = await placePublishedMeetingPins({meetings:reconciled.meetings,previous:restoredPrevious?.meetings,
+        query:input.facts?.db.query,fetchImpl:input.venueFetch});
+      for (const hold of census.held) console.warn(`MEETING_PIN_UNRESOLVED ${hold}`);
       const scopeFailures = [
         ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
           ? [`${partition.meetingSource} reported ${partition.ocdId} unreachable.`]
@@ -1659,7 +1599,7 @@ export async function promoteMeetingPartitions(input: {
       const snapshot: MeetingsSnapshot = {
         formatVersion: 1,
         generatedAt: input.generatedAt,
-        counts: snapshotCounts(reconciled.meetings, 0),
+        counts: snapshotCounts(census.meetings, 0),
         sources: [{
           source: partition.meetingSource,
           ok: true,
@@ -1672,9 +1612,8 @@ export async function promoteMeetingPartitions(input: {
           drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
           ...(report.acquisitions ? { acquisitions: report.acquisitions } : {}),
         }],
-        meetings: [...(census?.meetings ?? reconciled.meetings)],
+        meetings: [...census.meetings],
         agendaDocuments: [...reconciled.agendaDocuments],
-        ...(census && census.venueReferenceEvidence.length > 0 ? { venueReferenceEvidence: census.venueReferenceEvidence } : {}),
       } as MeetingsSnapshot;
       const { candidate, outcome } = await promoteMeetingPartition(
         input.store,
@@ -1682,7 +1621,7 @@ export async function promoteMeetingPartitions(input: {
         snapshot,
         scopeFailures,
         reconciled.removalEvidence,
-        input.retainedResponses,
+        [...input.retainedResponses??[],...census.responses],
         recurrence.held,
         idSuffix,
         tracedResponses([{ source: partition.meetingSource, acquisitions: report.acquisitions }], input.facts?.responses ?? input.retainedResponses ?? [])
@@ -1706,8 +1645,7 @@ export async function promoteMeetingPartitions(input: {
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
     if (outcome.promoted || outcome.confirmed) {
-      await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts({...input.facts,responses:[...input.facts.responses,...attempted.census.responses]}, partition.id, partition.meetingSource, attempted.census.meetings.filter(meeting=>freshRowIds.has(meeting.id)), report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }

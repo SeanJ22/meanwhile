@@ -1,4 +1,5 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { ballotNavigationScope, ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { campaignFinanceStateScope, isCampaignFinanceStateScope } from "../funding/state-sources.ts";
 import { federalMemberOfScope, federalMemberVotesScope } from "../votes/data-plane.ts";
 
@@ -17,12 +18,19 @@ export function scopedManualContractScope(id: string, ocdId: string): string {
   return `${PREFIXES[id]}:${ocdId}`;
 }
 export function isScopedManualContractScope(id: string, scope: string): boolean {
+  if (id === "ballot-navigation") return ballotNavigationState(scope) !== null;
   if (id === "campaign-finance") return isCampaignFinanceStateScope(scope);
   if (id === "congress-rollcalls") return federalMemberOfScope(scope) !== null;
   const prefix = PREFIXES[id];
   return Boolean(prefix && scope.startsWith(`${prefix}:`) && jurisdictionIsValid(id, scope.slice(prefix.length + 1)));
 }
 export function manualPayloadScope(id: string, fallback: string, payload: unknown): string {
+  if (id === "ballot-navigation") {
+    const records = (payload as { records?: readonly { value?: { state?: string } }[] })?.records;
+    const state = records?.[0]?.value?.state;
+    if (!state || records?.some(row => row.value?.state !== state)) throw new Error("Navigation publication requires one state.");
+    return ballotNavigationScope(state);
+  }
   if (id === "campaign-finance") {
     const records = (payload as { records?: readonly { ocdId?: string }[] })?.records;
     if (!records?.length) throw new Error("Campaign finance has no state-bound filings.");

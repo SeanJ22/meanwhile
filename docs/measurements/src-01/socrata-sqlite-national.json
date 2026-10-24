@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "startedAt": "2026-10-23T11:24:15.140Z",
+  "source": "socrata-discovery",
+  "spoolSha256": "00e4ed4aa7392757fbcfa4af085ed3b15089e58c7aa51bb49670f08bad4d9afd",
+  "scope": "Full unrestricted public catalog; no registration or production reads/writes",
+  "transport": "Direct readonly public GETs; no evidence-store or production-cache writes",
+  "readOptions": {
+    "consume": false,
+    "maxRows": 1000,
+    "maxBytes": 4194304
+  },
+  "requests": 181,
+  "rows": 179938,
+  "sourceBytes": 1031662218,
+  "passes": [
+    {
+      "pass": 1,
+      "status": "PASS",
+      "rows": 179938,
+      "partitions": 614,
+      "chunks": 813,
+      "sourceRowBytes": 625070542,
+      "sourceBytes": 1031662218,
+      "sourceManifestSha256": "fdee50fe5650ab21634e7eadb641297d3beed64323931e7117aa5ae6f0490df7",
+      "nativeOrderedRowSha256": "6b80f08da6d2fe9b6c6cf9aaffe81916252baeee91f6dcdeee89cb691bee43e0",
+      "partitionManifestSha256": "b4cb8e6345ea2a2b8d40109bdf3d2f7915bf8e2e95a885709849cdbb5e7164de",
+      "elapsedMs": 23572,
+      "rssBytes": 441364480,
+      "heapUsedBytes": 122894856
+    },
+    {
+      "pass": 2,
+      "status": "PASS",
+      "rows": 179938,
+      "partitions": 614,
+      "chunks": 813,
+      "sourceRowBytes": 625070542,
+      "sourceBytes": 1031662218,
+      "sourceManifestSha256": "fdee50fe5650ab21634e7eadb641297d3beed64323931e7117aa5ae6f0490df7",
+      "nativeOrderedRowSha256": "6b80f08da6d2fe9b6c6cf9aaffe81916252baeee91f6dcdeee89cb691bee43e0",
+      "partitionManifestSha256": "b4cb8e6345ea2a2b8d40109bdf3d2f7915bf8e2e95a885709849cdbb5e7164de",
+      "elapsedMs": 28592,
+      "rssBytes": 443248640,
+      "heapUsedBytes": 121909768
+    }
+  ],
+  "catalogMs": 270786,
+  "sourceManifestSha256": "fdee50fe5650ab21634e7eadb641297d3beed64323931e7117aa5ae6f0490df7",
+  "completedAt": "2026-10-23T11:29:38.123Z",
+  "elapsedMs": 322989,
+  "peakRssKiB": 445916,
+  "productionWrites": 0,
+  "samCalls": 0,
+  "limitation": "Full catalog acquisition and exact repeatable SQLite spool regression; this measurement does not repeat production registration, publication, or the reader route. Those connected proofs are recorded separately.",
+  "partitionCount": 614,
+  "sourcePageCount": 181,
+  "detailsSha256": "e7934a663a7f0fd013b815df13e973561a02adeee2912da325cc805b743f2180",
+  "replayScript": "scripts/src-01-socrata-national-read-only.mts",
+  "replayScriptSha256": "7ea4e4fccde7886bbc98d36628ff68b889a1ee6aaeee019d0e6b5435392e5545",
+  "replayCommand": "TMPDIR=/workspace/src01-scratch NODE_USE_ENV_PROXY=1 node --max-old-space-size=512 --use-env-proxy --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/src-01-socrata-national-read-only.mts --output=/workspace/src01-scratch/src01-socrata-sqlite-proof.json"
+}

@@ -15,7 +15,7 @@ import { hunterExecutor, type ModelRequest } from "../lib/control-plane/schedule
 import { publishAskPlaybooks, publishReaderSettings, type ReaderSettingsSnapshot, type SettingsEdgeStore } from "../lib/civic-data/reader-settings-publication.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { withPublishedAskSettings, askPlaybook } from "../lib/ask/runtime-settings.ts";
-import { resolveAskRoleModel } from "../lib/ask/model.ts";
+import { resolveAskEffort, resolveAskRoleModel } from "../lib/ask/model.ts";
 import { classifierCeiling } from "../lib/routing/classifier.ts";
 
 const at = "2026-10-12T12:00:00Z";
@@ -72,7 +72,7 @@ nodeTest("all ten model roles have one canonical row; missing instructions are s
   assert.match(playbookEditView([], "HUNTER").stuck!, /missing/);
 });
 
-nodeTest("Ask publication merges independent revisions with settings; one edge read supplies text, models, and classifier cap", async () => {
+nodeTest("Ask publication merges instructions, effort, and classifier cap without overriding the Haiku-first ladder", async () => {
   const repos = createMemoryRepositories();
   let held: { snapshot: ReaderSettingsSnapshot; etag: string } | null = null, reads = 0, serial = 0;
   const store: SettingsEdgeStore = {
@@ -81,41 +81,45 @@ nodeTest("Ask publication merges independent revisions with settings; one edge r
   };
   const options = { store, purge: async () => {} };
   await publishAskPlaybooks(repos, options);
-  await publishReaderSettings({ ...defaultAdminConfig(at), settings: { "ask.classifierDailyCap": 7, "ask.readerModel": "claude-sonnet-5-5" } }, 4, options);
+  await publishReaderSettings({ ...defaultAdminConfig(at), settings: {
+    "ask.classifierDailyCap": 7, "ask.writerEffort": "high", "ask.readerModel": "claude-sonnet-5-5",
+  } }, 4, options);
   const before = await readRolePlaybook(repos, "ASK_READER");
   await updateRolePlaybook(repos, { role: "ASK_READER", text: "Read carefully from the supplied inventory.", expectedVersion: before.version, id: "ask-edit", at, why: "" });
   await publishAskPlaybooks(repos, options);
   const startReads = reads;
   await withPublishedAskSettings(async () => {
     assert.match(askPlaybook("ASK_READER"), /Read carefully/);
-    assert.equal(resolveAskRoleModel("READER"), "claude-sonnet-5-5");
+    assert.equal(resolveAskRoleModel("READER"), "claude-haiku-5-5");
+    assert.equal(resolveAskEffort(), "high");
     assert.equal(classifierCeiling(), 7);
     assert.match(askPlaybook("ASK_WRITER"), /supplied records/i);
   }, store);
   assert.equal(reads - startReads, 1);
 });
 
-nodeTest("Ask model choices use plain names and the existing Settings action, log, and undo", async () => {
+nodeTest("Ask effort uses the existing Settings action, log, and undo; starting models follow the ladder", async () => {
   const view = projectSettings({ config: null, heartbeat: null, published: null, observedAt: at });
-  const row = view.rows.find(row => row.key === "ask.readerModel")!;
-  assert.equal(row.valueWords, "Claude Haiku 5.5");
+  assert.equal(view.rows.some(row => row.key === "ask.readerModel"), false);
+  const row = view.rows.find(row => row.key === "ask.writerEffort")!;
+  assert.equal(row.valueWords, "Medium");
   const action = settingActions(row)[0];
   const preview = actionDef(action.kind).preview({ target: action.target, targetName: row.label, scopeName: "United States", scopeIsCountry: true, outreachAuthorized: false, payload: action.payload });
-  const choice = preview.options!.find(option => option.label === "Claude Sonnet 5.5")!;
-  const input = actionInput(action.kind, { target: action.target, scopeKey: "us", option: choice.id, words: "Use this model", amount: "", selected: [], payload: action.payload });
+  const choice = preview.options!.find(option => option.label === "High")!;
+  const input = actionInput(action.kind, { target: action.target, scopeKey: "us", option: choice.id, words: "Use this effort", amount: "", selected: [], payload: action.payload });
   const repos = createMemoryRepositories();
   const deps = { repos, now: () => at, currentStateVersion: null, codeSha: null };
-  const request = { type: "config.setSetting", subject: action.target, input, stateVersion: null, idempotencyKey: "ask-model", caller: "OWNER_SESSION" as const, actorRef: "owner" };
+  const request = { type: "config.setSetting", subject: action.target, input, stateVersion: null, idempotencyKey: "ask-effort", caller: "OWNER_SESSION" as const, actorRef: "owner" };
   assert.equal((await submit(request, deps)).ok, true);
   const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value;
-  assert.equal(config.settings?.["ask.readerModel"], choice.id);
-  assert.equal(config.settingHistory?.at(-1)?.before, "claude-haiku-5-5");
+  assert.equal(config.settings?.["ask.writerEffort"], choice.id);
+  assert.equal(config.settingHistory?.at(-1)?.before, "medium");
   assert.equal(config.settingHistory?.at(-1)?.factory, undefined);
   const changedRow = projectSettings({ config, heartbeat: null, published: null, observedAt: at }).rows.find(row => row.key === action.target)!;
   const undo = settingActions(changedRow)[1];
   const undoInput = actionInput(undo.kind, { target: undo.target, scopeKey: "us", option: null, words: "Undo", amount: "", selected: [], payload: undo.payload });
-  assert.equal((await submit({ ...request, input: undoInput, idempotencyKey: "ask-model-undo" }, deps)).ok, true);
-  assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value.settings?.["ask.readerModel"], "claude-haiku-5-5");
+  assert.equal((await submit({ ...request, input: undoInput, idempotencyKey: "ask-effort-undo" }, deps)).ok, true);
+  assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { settingHistory: true })).value.settings?.["ask.writerEffort"], "medium");
 });
 
 nodeTest("restoring missing instructions can be undone to stuck work, including the Ask snapshot", async () => {

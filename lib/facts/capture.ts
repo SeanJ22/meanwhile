@@ -1,4 +1,4 @@
-import { artifactId, deriveSanitized, recordAcquisition, type Artifact } from "../control-plane/evidence/artifact.ts";
+import { artifactId, classifyAcquisition, deriveSanitized, recordAcquisition, type Artifact } from "../control-plane/evidence/artifact.ts";
 import { putArtifact, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import { contentHash } from "../control-plane/ids.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
@@ -55,18 +55,25 @@ export async function vaultCapture(input: {
     workItemId: RECEIPT_WORK_ITEM, attemptId: `fact-receipt:${input.retrievedAt}`, permission: "ALLOWED" as const, transport: "REACHABLE" as const };
   let text: string, artifact: Artifact;
   if (/pdf/i.test(input.contentType) || new TextDecoder().decode(input.bytes.subarray(0, 5)) === "%PDF-") {
-    const hash = contentHash(input.bytes);
-    const parent: Artifact = { ...acquisition, headers: {}, retrievalUrl: input.url, id: artifactId("RAW", hash), tier: "RAW",
-      contentHash: hash, byteLength: input.bytes.byteLength, retentionPolicy: "EVIDENCE_PERMANENT" };
-    await putArtifact(input.vault, "freshness", parent, input.bytes);
     const { extractPdf } = await import("../control-plane/scheduler/scout-tools.ts");
     const extracted = await extractPdf(input.bytes);
     if (extracted.kind !== "TEXT" || !extracted.complete) return { error: "PDF_EXTRACTION_INCOMPLETE" };
     text = extracted.text;
     const captured = recordAcquisition({ ...acquisition, contentType: "text/plain" }, text).artifact;
-    if (captured.tier !== "RAW") return { error: "PDF_TEXT_HOLDS_CREDENTIALS" };
-    artifact = { ...captured, id: artifactId("EXTRACTED_DERIVED", captured.contentHash), tier: "EXTRACTED_DERIVED",
-      extraction: { kind: "PDF_TEXT", version: "pdf-transcription/1", complete: true, pages: extracted.pages, parent } };
+    if (captured.tier === "RESTRICTED_RAW" || classifyAcquisition(new TextDecoder().decode(input.bytes)).tier === "RESTRICTED_RAW") {
+      // A PDF holding a key-like string is never re-saved; its extracted text, blanked, is the copy facts are checked against.
+      if (captured.tier === "RESTRICTED_RAW") {
+        const sanitized = deriveSanitized(captured, text, input.retrievedAt);
+        artifact = sanitized.artifact; text = sanitized.text;
+      } else artifact = captured;
+    } else {
+      const hash = contentHash(input.bytes);
+      const parent: Artifact = { ...acquisition, headers: {}, retrievalUrl: input.url, id: artifactId("RAW", hash), tier: "RAW",
+        contentHash: hash, byteLength: input.bytes.byteLength, retentionPolicy: "EVIDENCE_PERMANENT" };
+      await putArtifact(input.vault, "freshness", parent, input.bytes);
+      artifact = { ...captured, id: artifactId("EXTRACTED_DERIVED", captured.contentHash), tier: "EXTRACTED_DERIVED",
+        extraction: { kind: "PDF_TEXT", version: "pdf-transcription/1", complete: true, pages: extracted.pages, parent } };
+    }
   } else {
     try { text = new TextDecoder("utf-8", { fatal: true }).decode(input.bytes); }
     catch { return { error: "SOURCE_TEXT_ENCODING_UNREADABLE" }; }

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { VotingFallbackReason } from "../../ballot/voting-sites.ts";
+import type { VotingFallbackReason, VotingOfficeContact } from "../../ballot/voting-sites.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_ELECTION_DAY, GOOGLE_CIVIC_STATES } from "./targets.ts";
 
 export type CivicJson = Record<string, unknown>;
@@ -33,7 +33,7 @@ export interface CivicLookup {
   failureReason?: VotingFallbackReason;
   rows: CivicFact[];
   counts: { loaded: number; joined: number; unjoined: number };
-  electionOffices?: { name: string; url: string }[];
+  electionOffices?: VotingOfficeContact[];
 }
 export interface CivicStateCoverage {
   state: string;
@@ -107,14 +107,22 @@ export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: s
       value: row, sources: civicSources(row, checkedAt, "voterinfo") });
   }
   const joined = rows.filter(row => row.joinedDivisionId !== null).length;
-  const electionOffices: { name: string; url: string }[] = [];
+  const electionOffices: VotingOfficeContact[] = [];
   for (const jurisdiction of civicArray(data.state)) {
     const local = jurisdiction.local_jurisdiction ?? jurisdiction.localJurisdiction;
-    for (const area of [jurisdiction, ...(local ? [civicObject(local)] : [])]) {
+    for (const area of [...(local ? [civicObject(local)] : []), jurisdiction]) {
       if (!area.electionAdministrationBody) continue;
       const office = civicObject(area.electionAdministrationBody);
-      const url = string(office.electionInfoUrl) || string(office.votingLocationFinderUrl);
-      if (/^https?:\/\//i.test(url)) electionOffices.push({ name: string(office.name) || string(area.name) || "Election office", url });
+      const url = [office.votingLocationFinderUrl, office.electionInfoUrl].map(string).find(value => /^https?:\/\//i.test(value));
+      const location = office.physicalAddress ?? office.correspondenceAddress;
+      const address = location ? civicObject(location) : {};
+      const officials = civicArray(office.electionOfficials);
+      electionOffices.push({ name: string(office.name) || string(area.name) || "Election office",
+        address: [address.line1, address.line2, address.line3, address.city, address.state, address.zip].map(string).filter(Boolean).join(", ") || undefined,
+        phone: officials.map(row => string(row.officePhoneNumber)).find(Boolean),
+        email: officials.map(row => string(row.emailAddress)).find(Boolean),
+        hours: string(office.hours) || undefined,
+        ...(url ? { url } : {}) });
     }
   }
   return { formatVersion: 1, kind: "LOOKUP", electionId, state, checkedAt, status: rows.length ? "AVAILABLE" : "NO_DATA",

@@ -1,0 +1,298 @@
+{
+  "state": "CO",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.coloradosos.gov/pubs/info_center/contact.html",
+      "finalUrl": "https://www.coloradosos.gov/pubs/info_center/contact.html",
+      "publisher": "Colorado Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+      "finalUrl": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+      "publisher": "Colorado Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.state.co.us/pubs/elections/calendars/2026ElectionCalendar.pdf",
+      "finalUrl": "https://www.sos.state.co.us/pubs/elections/calendars/2026ElectionCalendar.pdf",
+      "publisher": "Colorado Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/VoterRegistrationFAQ.html",
+      "finalUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/VoterRegistrationFAQ.html",
+      "publisher": "Colorado Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/mailBallotsFAQ.html",
+      "finalUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/mailBallotsFAQ.html",
+      "publisher": "Colorado Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "finalUrl": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
+      "publisher": "Federal Election Commission"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/mailBallotsFAQ.html",
+          "finalUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/mailBallotsFAQ.html",
+          "publisher": "Colorado Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:38:37.258375+00:00",
+          "httpStatus": 200,
+          "rawHash": "7c846f16a5d590d65f990025219a55fdbda8d3980771481d1b7908fd16868cf7",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/VoterRegistrationFAQ.html",
+          "finalUrl": "https://www.coloradosos.gov/pubs/elections/FAQs/VoterRegistrationFAQ.html",
+          "publisher": "Colorado Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:38:37.240166+00:00",
+          "httpStatus": 200,
+          "rawHash": "0027565f8ab70501b2940afd8ede4c29315cb33605cb6b2d99030b37e2078153",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.coloradosos.gov/pubs/info_center/contact.html",
+          "finalUrl": "https://www.coloradosos.gov/pubs/info_center/contact.html",
+          "publisher": "Colorado Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:49.285986+00:00",
+          "httpStatus": 200,
+          "rawHash": "80fe5ad478e3c305c13d9b2423d6689e0f3cb69fd9897e187e93cbba6248c0dc",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+          "finalUrl": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+          "publisher": "Colorado Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:38:37.184058+00:00",
+          "httpStatus": 200,
+          "rawHash": "edae2e0eb56d1e8888193eb29ebb3cf086163254719538d6d5abd545631698bd",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.state.co.us/pubs/elections/calendars/2026ElectionCalendar.pdf",
+          "finalUrl": "https://www.sos.state.co.us/pubs/elections/calendars/2026ElectionCalendar.pdf",
+          "publisher": "Colorado Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:29.025434+00:00",
+          "httpStatus": 200,
+          "rawHash": "6cb2bd245f1376ebd919218c953d9f4f54a472f9e12ab6bd95924ba8a16042bc",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:13c68ccd7c7eccad21408db4ed571b4a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "ballot_lookup",
+            "text": "https://myballot.coloradosos.gov",
+            "quote": "View my sample ballot",
+            "dates": [],
+            "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+            "navigationUrl": "https://myballot.coloradosos.gov",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.184058+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:25e3bf8b46656d4eb437644ee29faef1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "registration_lookup",
+            "text": "https://www.coloradosos.gov/voter/pages/pub/olvr/findVoterReg.xhtml",
+            "quote": "Find registration",
+            "dates": [],
+            "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+            "navigationUrl": "https://www.coloradosos.gov/voter/pages/pub/olvr/findVoterReg.xhtml",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.184058+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:3f51a1eab7540cb19d483745b1cf91c1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Every voter receives a mail ballot.",
+            "quote": "Every voter receives a mail ballot. The ballot will be sent to the mailing address you provided for your voter registration file.",
+            "dates": [],
+            "url": "https://www.coloradosos.gov/pubs/elections/FAQs/mailBallotsFAQ.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.258375+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:3f6f97ca12a943c12da8e167df9821b1",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "early_voting",
+            "text": "The minimum number of required Voter Service and Polling Centers",
+            "quote": "19-October\n3-November\nThe minimum number of required Voter Service and Polling Centers\nexcept Sundays and the first Saturday of this period",
+            "dates": [
+              "2026-10-19",
+              "2026-11-03"
+            ],
+            "url": "https://www.sos.state.co.us/pubs/elections/calendars/2026ElectionCalendar.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.025434+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:4b10b14c519a7c0d35d95880c57d6013",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "registration_page",
+            "text": "https://www.coloradosos.gov/voter/pages/pub/olvr/verifyNewVoter.xhtml",
+            "quote": "Register",
+            "dates": [],
+            "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+            "navigationUrl": "https://www.coloradosos.gov/voter/pages/pub/olvr/verifyNewVoter.xhtml",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.184058+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:5e75939ca740a79a80ef9a54edfa4219",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "registration_deadline",
+            "text": "Last day for an individual to submit a voter registration application",
+            "quote": "26-October\nLast day for an individual to submit a voter registration application",
+            "dates": [
+              "2026-10-26"
+            ],
+            "url": "https://www.sos.state.co.us/pubs/elections/calendars/2026ElectionCalendar.pdf",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:29.025434+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:65e81649cbbbb31cafcf81d13cbdc7d2",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "polling_lookup",
+            "text": "https://www.coloradosos.gov/pubs/elections/VIP.html",
+            "quote": "Find out where to return your mail ballot or where to vote in person",
+            "dates": [],
+            "url": "https://www.coloradosos.gov/voter/pages/pub/home.xhtml",
+            "navigationUrl": "https://www.coloradosos.gov/pubs/elections/VIP.html",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.184058+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:786e9f92c7ca7e2602ea2517d3cd2197",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "election_office",
+            "text": "Colorado Department of State",
+            "quote": "Colorado Department of State\n303-894-2200",
+            "dates": [],
+            "url": "https://www.coloradosos.gov/pubs/info_center/contact.html",
+            "navigationUrl": "https://www.sos.state.co.us/pubs/elections/main.html",
+            "electionDate": "2026-11-03",
+            "phone": "303-894-2200",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:49.285986+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:c98e5b5350d93927bd8010fad4da99ab",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "registration_deadline",
+            "text": "If you miss the above deadlines, you may register in-person at a voter service and polling center in your county through Election Day.",
+            "quote": "If you miss the above deadlines, you may register in-person at a voter service and polling center in your county through Election Day.",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.coloradosos.gov/pubs/elections/FAQs/VoterRegistrationFAQ.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.240166+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:eb7305fa68e26963c089cd57f5f5148b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "CO",
+            "divisionId": "ocd-division/country:us/state:co",
+            "fieldKind": "registration_deadline",
+            "text": "Voters may register through Election Day.",
+            "quote": "Voters may register through Election Day.",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://www.coloradosos.gov/pubs/elections/FAQs/VoterRegistrationFAQ.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:38:37.240166+00:00",
+            "sourceOrg": "Colorado Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

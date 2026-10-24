@@ -24,6 +24,10 @@ export const TIER_SEGMENTS: Readonly<Record<Tier, readonly string[]>> = {
     // State legislative chambers, upper and lower.
     "sldu",
     "sldl",
+    "supreme_court",
+    "court_of_appeals",
+    "public_service_commission",
+    "sbe",
   ],
   local: [
     "county",
@@ -127,11 +131,14 @@ const STATE_OFFICES = new Set([
   "state_treasurer", "superintendent_of_public_instruction", "state_mine_inspector",
   "corporation_commissioner", "state_auditor", "state_comptroller",
   "insurance_commissioner", "state_senator", "state_lower_house", "executive_councilor",
+  "governor_and_lieutenant_governor", "state_supreme_court", "state_appeals_court",
+  "agriculture_commissioner", "labor_commissioner", "public_service_commissioner",
+  "public_lands_commissioner", "chief_election_officer",
 ]);
 
 /** Office identity takes precedence over the geography of its electorate. */
 export function tierForOffice(title: string | null | undefined, ocdId: OcdId): Tier | null {
-  const office = officeIdentity(title);
+  const office = officeIdentity(title, ocdId);
   if (office === "us_senator" || office === "us_representative") return "national";
   if (office !== null && STATE_OFFICES.has(office)) return "state";
   if (office !== null) return "local";

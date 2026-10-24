@@ -10,16 +10,14 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
-
-import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
-import { readStateAuthorityProjection } from "./state-reader.ts";
-import { ballotNavigationFor } from "../ballot/navigation.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
+import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
 import { readerRecordsWithOwnerChoices } from "../facts/owner-flags.ts";
 import { factReader } from "../facts/db.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
+  "ballot-navigation",
   "stances",
   "campaign-sites",
   "member-offices",
@@ -27,8 +25,6 @@ export const CURATED_READER_CONTRACT_IDS = [
   "meeting-body-crosswalk",
 ] as const;
 export type CuratedReaderContractId = (typeof CURATED_READER_CONTRACT_IDS)[number];
-
-const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
 
 export interface BallotNavigationProjectionRecord {
   readonly id: string;
@@ -85,16 +81,11 @@ export async function readCuratedReaderProjection(
   return result;
 }
 
-/** One state's navigation records, with Sean's choices applied. A request reads its state pointer; an injected store reads that pointer directly. */
-export async function readBallotNavigationProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CuratedReaderProjection>> {
-  const scope = ballotNavigationScope(state);
-  const result = Object.keys(options).length
-    ? await readPromotedCivicData<CuratedReaderProjection>(BALLOT_NAVIGATION.recordClass, scope, options)
-    : (await readStateAuthorityProjection<CuratedReaderProjection>("ballot-navigation", state)).result;
-  if (result.kind !== "PROMOTED") return result;
-  // Validate the government's own version, which may become empty after an owner removal.
-  ballotNavigationFor(state, result.value, result.metadata.versionId!, []);
-  return { ...result, value: { ...result.value, records: await readerRecordsWithOwnerChoices(factReader(), "ballot-navigation", result.value.records) } };
+export async function readElectionFieldsForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}) {
+  const read = await readCuratedReaderProjection("ballot-navigation", options);
+  const fields = read.kind === "PROMOTED" ? read.value.records.filter(row => row.kind === "ELECTION_FIELD" && electionFieldIssue(row) === null)
+    .map(row => row as unknown as PublishedElectionField).filter(row => divisions.includes(row.value.divisionId)) : [];
+  return { read, fields };
 }
 
 export async function refreshCuratedReaderProjection(
@@ -147,11 +138,17 @@ export async function primeCuratedReaderProjectionWithOwnerChoices(id: CuratedRe
   validateOnce(id,value,versionId,()=>validate(id,value,versionId));
   storeCuratedReaderProjection(id,{...value,records},versionId);
 }
+
+export const refreshBallotNavigationFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
+  refreshCuratedReaderProjection("ballot-navigation", options);
 export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<CuratedReaderProjection>> => {
   const contract = requiredManualProductionContract("official-filings");
   return readPromotedEdgeFirst(contract.recordClass, contract.scope,
     options => readCuratedReaderProjection("official-filings", options), "Official filing records");
 };
+const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
+export const settleBallotNavigationRead = (): Promise<string> =>
+  readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope, refreshBallotNavigationFromPromoted, "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
 export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>

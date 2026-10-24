@@ -1,4 +1,3 @@
-import { manualPayloadScope } from "../../lib/civic-data/scoped-manual-contracts.ts";
 import assert from "node:assert/strict";
 
 import { promotedPayloadSha256 } from "../../lib/civic-data/attested-promotion.ts";
@@ -71,7 +70,7 @@ export function absentEdgeEntry(recordClass: RoutineRecordClass, scope: string):
 /** A manual contract's pointer, proven, carrying `value`. */
 export function manualEdgeEntry(id: ManualProductionContractId, value: unknown, versionId: string): PromotedEdgeEntry {
   const contract = requiredManualProductionContract(id);
-  return provenEdgeEntry({ recordClass: contract.recordClass, scope: id === "ballot-navigation" ? manualPayloadScope(id, contract.scope, value) : contract.scope, sourceId: contract.sourceId, versionId, value });
+  return provenEdgeEntry({ recordClass: contract.recordClass, scope: contract.scope, sourceId: contract.sourceId, versionId, value });
 }
 
 /** The value a read serves. */

@@ -13,7 +13,6 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
-const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // RH-01 complete native publication peaks: 3,403 MiB Open States and
@@ -35,7 +34,6 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "people-portraits-refresh.mts": 448,
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
-  "ballot-navigation-refresh.mts": NAVIGATION_PUBLICATION_PEAK_MIB,
   "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
@@ -271,7 +269,6 @@ function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
   const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
   if (family) return STATE_PUBLICATION_PEAK_MIB * MIB;
-  if (script === "ballot-navigation-refresh.mts" || /^ballot-navigation-[a-z]{2}(?=[:/]|$)/.test(entry)) return NAVIGATION_PUBLICATION_PEAK_MIB * MIB;
   return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "retire-state-authorities.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 

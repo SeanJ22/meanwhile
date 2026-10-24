@@ -1,3 +1,22 @@
+/**
+ * What an Artifact is: the durable, content-addressed record of one retrieval,
+ * the unit a replay re-runs and an audit points at.
+ *
+ * A retrieval whose body carries a confirmed third-party credential is
+ * `RESTRICTED_RAW`: stored exactly, restricted retention, readable only by roles
+ * allowed to see credential material. Every downstream consumer reads the
+ * `SANITIZED_DERIVED` artifact instead, linked by hash. `deriveSanitized` is the
+ * only way to get a parseable body from one, and `store.ts` refuses the raw to a
+ * parser by name.
+ *
+ * No credential value crosses this boundary: only the class id, twelve-hex
+ * fingerprint, length, line and occurrence count.
+ *
+ * Redaction is `sanitizeText` from `lib/ops/fixture-credentials.ts`; this file
+ * records which `SANITIZER_VERSION` produced each derivative.
+ *
+ * No function here reads a clock.
+ */
 
 import { createHash } from "node:crypto";
 
@@ -21,6 +40,10 @@ export const sha256Hex = (input: string): string =>
 export const ARTIFACT_TIERS = [
   /** Exact retrieved bytes, carrying no known credential class. Freely readable. */
   "RAW",
+  /**
+   * Exact retrieved bytes that DO carry a confirmed third-party credential.
+   * Quarantined. A sanitized derivative is mandatory and is what parsers read.
+   */
   "RESTRICTED_RAW",
   /** A derivative produced by the shipped sanitizer from a specific raw artifact. */
   "SANITIZED_DERIVED",
@@ -28,26 +51,6 @@ export const ARTIFACT_TIERS = [
   "EXTRACTED_DERIVED",
 ] as const;
 export type ArtifactTier = (typeof ARTIFACT_TIERS)[number];
-
-export function supportedDocumentExtraction(extraction: Artifact["extraction"]): boolean {
-  return Boolean(extraction && (extraction.kind === "HTML_TEXT"
-    ? ["html-decoding/1", "html-json/1"].includes(extraction.version) && extraction.encoding
-    : extraction.version === "pdf-transcription/1" && ["PDF_TEXT", "PDF_TABLES"].includes(extraction.kind)));
-}
-
-export function extractionSourceDocument(artifact: Artifact): { artifactId: string; contentHash: string; kind: NonNullable<Artifact["extraction"]>["kind"] } | null {
-  const extraction = artifact.extraction;
-  if (!extraction || !supportedDocumentExtraction(extraction)) return null;
-  const parent = extraction.parent;
-  if (parent.tier === "RAW") return { artifactId: parent.id, contentHash: parent.contentHash, kind: extraction.kind };
-  const proof = parent.derivation;
-  if (parent.tier !== "SANITIZED_DERIVED" || extraction.kind !== "HTML_TEXT" || !proof ||
-      proof.sanitizerVersion !== SANITIZER_VERSION || proof.derivedArtifactId !== parent.id ||
-      proof.derivedHash !== parent.contentHash || parent.id !== artifactId("SANITIZED_DERIVED", parent.contentHash) ||
-      !/^sha256-[0-9a-f]{64}$/.test(proof.rawHash) ||
-      ![artifactId("RAW", proof.rawHash), artifactId("RESTRICTED_RAW", proof.rawHash)].includes(proof.rawArtifactId)) return null;
-  return { artifactId: proof.rawArtifactId, contentHash: proof.rawHash, kind: extraction.kind };
-}
 
 /** How long the vault keeps a body. Stated per artifact: a licence can shorten what the tier would allow. */
 export const RETENTION_POLICIES = [
@@ -69,6 +72,11 @@ export function defaultRetention(tier: ArtifactTier): RetentionPolicy {
 
 /** ------------------------------------------------------------- artifacts */
 
+/**
+ * Links a raw artifact to its sanitized derivative. Both hashes are recorded
+ * and must differ. `fingerprints` and `redactionsByClass` are comparable
+ * across runs and not invertible.
+ */
 export interface ArtifactDerivation {
   readonly rawArtifactId: string;
   readonly derivedArtifactId: string;
@@ -91,6 +99,12 @@ export interface ArtifactDerivation {
   readonly derivedAt: string;
 }
 
+/**
+ * One retrieval, durably recorded. `sourceId`, `methodRouteId`, `workItemId`
+ * and `attemptId` walk a claim back to its obligation and execution.
+ * `permission` and `transport` are separate: failing to fetch robots.txt is
+ * never "robots disallows this host".
+ */
 export interface Artifact {
   readonly id: string;
   readonly tier: ArtifactTier;
@@ -121,11 +135,10 @@ export interface Artifact {
   readonly derivation?: ArtifactDerivation;
   /** Exact retained input and procedure for an unverified document transcription. */
   readonly extraction?: {
-    readonly kind: "PDF_TEXT" | "PDF_TABLES" | "HTML_TEXT";
+    readonly kind: "PDF_TEXT" | "PDF_TABLES";
     readonly version: string;
     readonly complete: boolean;
     readonly pages: number;
-    readonly encoding?: string;
     readonly parent: Artifact;
   };
 }
@@ -143,6 +156,11 @@ export class ArtifactContract extends Error {
   }
 }
 
+/**
+ * A quarantined body was requested by something that may not have it. Thrown
+ * by name so "you may not read this" is distinct from "this does not exist".
+ * The message never names a credential, class or fingerprint.
+ */
 export class RestrictedArtifactRefused extends Error {
   readonly artifactId: string;
   readonly role: string;
@@ -176,6 +194,10 @@ export interface AcquisitionClassification {
   readonly sanitizerVersion: string;
 }
 
+/**
+ * Decide the tier from the bytes with the shipped scanner. One confirmed
+ * finding is enough. A `RAW` verdict is a claim about the known classes only.
+ */
 export function classifyAcquisition(
   text: string,
   digest: (input: string) => string = sha256Hex,
@@ -241,6 +263,12 @@ export function recordAcquisition(
 
 /** --------------------------------------------------------- derivation */
 
+/**
+ * Produce the sanitized derivative and its derivation record. Refuses when the
+ * bytes do not hash to the claimed artifact, when the input is itself a
+ * derivative, and when a `RESTRICTED_RAW` input produces an identical body.
+ * The derivative inherits the raw's provenance, not its tier or retention.
+ */
 export function deriveSanitized(
   raw: Artifact,
   body: string,

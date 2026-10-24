@@ -1,3 +1,9 @@
+/**
+ * Live audit: each pass samples published facts a few at a time per area, re-reads each fact's own source page,
+ * and re-runs the value-on-page and date checks. Never loads a whole read model; an unchanged routine refresh
+ * counts as green with no fetch; an unreadable page is INCONCLUSIVE, never red; re-reads go through the caller's
+ * spaced fetch and never call a model. Pure or takes its reads, clock and store as arguments.
+ */
 import { createHash } from "node:crypto";
 import { pageWords, valueOnPage, FRESHNESS_WINDOW_HOURS, SECTION3_LABEL_FIELDS } from "../promotion/section3.ts";
 import { boostReason, type SampleBoosts } from "./audit-sampling.ts";
@@ -90,6 +96,12 @@ const NOT_PAGE_STATEMENTS = new Set([
   "label", "match", "lat", "lng", "timeZone", "officeholderId", "officeKind",
 ]);
 
+/**
+ * The (field, value) pairs of a record that the page itself should show: its own
+ * string and number fields, one level of nested object (a contact, a value), no
+ * bookkeeping, no category labels. A record that carries `fieldSources` is
+ * audited on the fields whose source is the page being re-read.
+ */
 export function auditableFields(record: Readonly<Record<string, unknown>>, sourceUrl: string): { field: string; value: string | number }[] {
   const sourced = record.fieldSources as Record<string, { sourceUrl?: string }> | undefined;
   const out: { field: string; value: string | number }[] = [];
@@ -124,6 +136,12 @@ export function isoDateParts(value: unknown): { y: number; m: number; d: number 
   return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 ? { y, m: mo, d } : null;
 }
 
+/**
+ * Whether the page shows this calendar date in any of the forms a government
+ * page uses: "October 5, 2026", "Oct. 5, 2026", "5 October 2026", "10/5/2026",
+ * "10/05/26", "2026-10-05". Numbers are matched on word boundaries so "10/5/2026"
+ * never matches inside "110/5/20267".
+ */
 export function dateOnPage(parts: { y: number; m: number; d: number }, words: string): boolean {
   const { y, m, d } = parts;
   const month = MONTHS[m - 1];
@@ -177,7 +195,7 @@ export function auditLiveFact(fact: LiveFact, page: PageRead, now: string, picke
   const checks: LiveAuditCheck[] = fields.map(({ field, value }) => {
     const date = isoDateParts(value);
     if (date) return { field, kind: "DATE_ON_PAGE" as const, ok: dateOnPage(date, words), value: trimmed(value) };
-    return { field, kind: "VALUE_ON_PAGE" as const, ok: valueOnPage(value, text, words, page.url), value: trimmed(value) };
+    return { field, kind: "VALUE_ON_PAGE" as const, ok: valueOnPage(value, text, words), value: trimmed(value) };
   });
   const failed = checks.filter((c) => !c.ok);
   if (!failed.length) {
@@ -199,6 +217,11 @@ export function greenFromRefresh(fact: LiveFact, refresh: RoutineRefresh | null 
     reason: "A routine refresh re-read this page and it is unchanged since the fact was verified." };
 }
 
+/**
+ * A fact's demand rank from the reader-demand lists (ZIPs, districts, meetings,
+ * officials; most-asked first). A fact ranks by the best-placed key it carries: its
+ * area, ZIP, division, body, or its own record ID. Null when readers have not asked.
+ */
 export function demandRanker(lists: readonly (readonly { readonly key: string }[])[]): (fact: LiveFact) => number | null {
   const rank = new Map<string, number>();
   for (const list of lists) list.forEach((row, index) => rank.set(row.key, Math.min(rank.get(row.key) ?? Infinity, index)));
@@ -234,6 +257,13 @@ export function boostsOf(fact: LiveFact, input: { readonly now: string; readonly
   };
 }
 
+/**
+ * Pick facts from one area's pool: not audited recently, oldest-audited first
+ * (never-audited before any), ties broken by a hash of the pass so no fact is
+ * favoured by its name. Facts past their refresh date or in high demand come
+ * first, may be audited again sooner, and the area gets extra slots for them;
+ * a single-source fact only wins ties in the order.
+ */
 export function pickFromArea(pool: readonly LiveFact[], input: {
   readonly passId: string; readonly now: string; readonly policy: LiveAuditPolicy;
   readonly lastAuditedAt: (factId: string) => string | null | undefined;
@@ -327,6 +357,12 @@ export async function runLiveAuditPass(deps: LiveAuditPassDeps): Promise<LiveAud
 }
 
 
+/**
+ * Facts from one curated Reader family's published records (comment rules,
+ * everyday routing, ballot navigation, campaign sites, venues, member offices,
+ * official filings). The area is the record's body, division or ZIP; a record
+ * with none is filed under its state, then "national".
+ */
 export function curatedReaderCatalog(kind: string, records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[]): LiveFactCatalog {
   const areaOf = (record: Readonly<Record<string, unknown>>): string => {
     for (const key of ["bodyId", "ocdId", "zip", "state"]) {

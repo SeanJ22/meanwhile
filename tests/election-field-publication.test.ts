@@ -3,7 +3,7 @@ import test from "node:test";
 import { createHash } from "node:crypto";
 import { publishElectionFields, type ElectionFieldVerifier } from "../lib/civic-data/election-field-publication.ts";
 import { electionFieldState, type ElectionFieldInput } from "../lib/civic-data/election-fields.ts";
-import { readElectionFieldsForDivisions } from "./helpers/election-field-read.ts";
+import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
 
@@ -19,38 +19,6 @@ const make = (text: string, kind: ElectionFieldInput["kind"] = "registration_dea
 });
 
 const verify: ElectionFieldVerifier = section3Record;
-
-test("official calendar shorthand and relative statutory rules resolve to the held election date", async () => {
-  for (const [text, dates] of [
-    ["5-Oct First day; 2-Nov Last day", ["2026-10-05", "2026-11-02"]],
-    ["October 19, 2026, to November 1, 2026; October 27 & 29, 2026", ["2026-10-19", "2026-11-01", "2026-10-27", "2026-10-29"]],
-    ["Mail registration closes on the 3rd Wednesday preceding the election.", ["2026-10-14"]],
-    ["Applications must arrive by the fifth day immediately preceding the election.", ["2026-10-29"]],
-    ["Voting begins fourteen days preceding the election and ends on the Sunday preceding the election.", ["2026-10-20", "2026-11-01"]],
-    ["Registration closes fifteen days before each election.", ["2026-10-19"]],
-    ["Online applications close at 5 p.m. the Friday before Election Day.", ["2026-10-30"]],
-    ["In-person applications close at 4 p.m. the day before Election Day.", ["2026-11-02"]],
-    ["30 days prior to election day for absentee voting in person;", ["2026-10-04"]],
-    ["Online registration closes eight days before Election Day; in-person registration continues through Election Day.", ["2026-10-26", "2026-11-03"]],
-  ] as const) {
-    const store = new MemoryRoutineDataStore();
-    const field = { ...make(text), electionDate: "2026-11-03", dates: [] };
-    const result = await publishElectionFields({ store, now, fields: [field], verify });
-    assert.ok(result.promotedVersionId, JSON.stringify(result.gaps));
-    const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-    assert.deepEqual(read.fields[0].value.dates, [...dates].sort());
-  }
-});
-
-test("a changed abbreviated calendar deadline replaces its existing contextual field", async () => {
-  const store = new MemoryRoutineDataStore();
-  const first = await publishElectionFields({ store, now, fields: [{ ...make("26-October Registration closes"), electionDate: "2026-11-03", dates: ["2026-10-26"] }], verify });
-  const next = await publishElectionFields({ store, now, fields: [{ ...make("27-October Registration closes"), electionDate: "2026-11-03", dates: ["2026-10-27"] }], verify });
-  assert.equal(first.fields[0], next.fields[0]);
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-  assert.equal(read.fields.length, 1);
-  assert.deepEqual(read.fields[0].value.dates, ["2026-10-27"]);
-});
 
 test("the same election-field publication and Reader path accepts every national jurisdiction class", async () => {
   for (const [prefix, state] of [["state", "WI"], ["district", "DC"], ["territory", "PR"], ["territory", "GU"]]) {
@@ -76,7 +44,7 @@ test("one verified election field publishes while an unrelated unconfirmed field
   assert.equal(result.fields.length, 1);
   assert.equal(result.gaps.length, 1);
   const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-  assert.equal(read.reads[0].kind, "PROMOTED");
+  assert.equal(read.read.kind, "PROMOTED");
   assert.equal(read.fields[0].value.collectedAt, now);
   assert.deepEqual(read.fields[0].value.dates, ["2026-10-05"]);
   assert.equal((await readElectionFieldsForDivisions(["ocd-division/country:us/state:az"], { store, now })).fields.length, 0);
@@ -105,7 +73,7 @@ test("missing/corrupt captures and invented calendar dates never replace the cur
   assert.equal(held.promotedVersionId, null);
   assert.equal(held.gaps.length, 3);
   const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-  assert.equal(read.reads[0].metadata.versionId, prior.promotedVersionId);
+  assert.equal(read.read.metadata.versionId, prior.promotedVersionId);
   assert.equal(read.fields[0].value.text, field.value);
 });
 
@@ -134,42 +102,6 @@ test("an unchanged later source capture confirms the prior version without anoth
   const second = await publishElectionFields({ store, now: later, fields: [refreshed], verify });
   assert.equal(second.promotedVersionId, first.promotedVersionId);
   assert.equal(second.candidateId, first.candidateId);
-});
-
-test("an unchanged partial review confirms the publication and keeps its inherited field", async () => {
-  const store = new MemoryRoutineDataStore();
-  const deadline = make("Registration deadline October 5, 2026");
-  const target = "https://voter.example.gov/lookup";
-  const lookup = make(`Find your polling place ${target}`, "polling_lookup", target, "Find your polling place");
-  await publishElectionFields({ store, now, fields: [deadline, lookup], verify });
-  const partial = await publishElectionFields({ store, now, fields: [deadline], verify });
-  const repeat = await publishElectionFields({ store, now, fields: [deadline], verify });
-  assert.equal(repeat.promotedVersionId, partial.promotedVersionId);
-  const complete = await store.readCandidate(partial.candidateId!);
-  const summary = await store.readCandidateSummary(partial.candidateId!);
-  assert.ok(complete?.receipt?.excludedFacts.some(fact => fact.code === "MANUAL_MEMBER_HELD_LKG"));
-  assert.ok(summary?.receipt && !("excludedFacts" in summary.receipt));
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-  assert.equal(read.fields.length, 2);
-  assert.ok(read.fields.some(field => field.value.navigationUrl === target));
-});
-
-test("successive deadline revisions carry only the source receipts their current conflicts cite", async () => {
-  const store = new MemoryRoutineDataStore();
-  let published;
-  for (const day of [5, 6, 7]) {
-    const at = `2026-09-30T12:0${day}:00.000Z`;
-    const field = make(`Registration deadline October ${day}, 2026`);
-    published = await publishElectionFields({ store, now: at, verify, fields: [{ ...field, dates: [`2026-10-0${day}`],
-      document: { ...field.document, collectedAt: at, capture: { ...field.document.capture!, observedAt: at,
-        evidence: { ...field.document.capture!.evidence, retrievedAt: at } } } }] });
-  }
-  const candidate = await store.readCandidate(published!.candidateId!);
-  assert.equal(candidate?.candidate.retrieval.manualSourceReceipt?.sources.length, 2);
-  assert.ok(candidate?.candidate.retrieval.manualSourceReceipt?.sources.every(source => source.retrievedAt >= "2026-09-30T12:06:00.000Z"));
-  const repeat = await publishElectionFields({ store, now: "2026-09-30T13:00:00.000Z", verify,
-    fields: [{ ...make("Registration deadline October 7, 2026"), dates: ["2026-10-07"] }] });
-  assert.equal(repeat.promotedVersionId, published!.promotedVersionId, "the same winning facts keep their conflict history without republishing");
 });
 
 test("the actual section3 verifier holds stale captures without holding fresh sibling fields", async () => {

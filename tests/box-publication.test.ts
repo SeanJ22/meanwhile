@@ -8,7 +8,7 @@ import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { ProbeFetch } from "../lib/doors/probe.ts";
-import { readElectionFieldsForDivisions } from "./helpers/election-field-read.ts";
+import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { projectCampaignSiteChains, type CampaignSiteSubject } from "../lib/control-plane/promotion/campaign-site-chain.ts";
 import { officeNameOn, publishBoxFindings, remedyFor, seatIn } from "../lib/facts/box-publication.ts";

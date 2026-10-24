@@ -30,7 +30,6 @@ import type { ManualPriorAuthority } from "./manual-prior-authority.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
-  manualRecordSourceUrls,
   reconcileSourceScopedMembers,
   type SourceScopedHeldFact,
   type SourceScopedMember,
@@ -193,6 +192,13 @@ function ballotProvenanceUrls(value: unknown): Set<string> {
     for (const child of Object.values(row)) if (child && typeof child === "object") pending.push(child);
   }
   return urls;
+}
+
+/** An official page's linked lookup is a fact on that page, not another acquired source. */
+function manualRecordSourceUrls(record: unknown): readonly string[] {
+  const row = object(record);
+  if (row?.kind === "ELECTION_FIELD") return [string(object(row.value)?.url)].filter(Boolean);
+  return [...directPositiveSourceUrls(record)];
 }
 
 function duplicateProblems(values: readonly string[], noun: string): string[] {

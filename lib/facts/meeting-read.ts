@@ -2,6 +2,7 @@ import type { Meeting, Provenance } from "../sources/types.ts";
 import type { Query } from "./publish.ts";
 import { repeatsPublishedVenue } from "../geo/address-query.ts";
 import { withPublishedPin } from "../meetings/pin-location.ts";
+import { hasPublishedVenue } from "../meetings/venue-text.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
@@ -15,8 +16,7 @@ const FIELD = { title: "title", starts_at: "startsAt", location: "location", map
 function publishedLocation(meeting: Meeting, value: unknown, source: Provenance): Partial<Meeting> {
   const location = value as { name: string; address: string | null; lat?: number; lng?: number };
   if (Number.isFinite(location.lat) && Number.isFinite(location.lng)) return { location:location as Meeting["location"],online:undefined,venueGap:undefined };
-  if (meeting.location && (location.address && meeting.location.address === location.address
-    || !location.address && repeatsPublishedVenue(location.name,meeting.location.name,meeting.location.address)))
+  if (meeting.location && repeatsPublishedVenue(location.address || location.name,meeting.location.name,meeting.location.address))
     return { location:{...meeting.location,...location,address:location.address ?? meeting.location.address},online:undefined };
   return { location:null,online:undefined,venueGap: { kind:"STATED_NOT_PLACED",publishedText:location.address || location.name,publisher:source.sourceOrg } };
 }
@@ -63,6 +63,7 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if (index === undefined) continue;
     const meeting = out[index]!;
     const published = meetings[index]!;
+    if (field === "location" && !hasPublishedVenue((value as {address?:string;name?:string}).address || (value as {name?:string}).name)) continue;
     const factAt = Date.parse(source.collectedAt);
     const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
     if(factAt<locationAt) {

@@ -4,12 +4,12 @@ import { publishMeetingPinFact } from "../facts/meeting-facts.ts";
 import { readSittingFacts, withSittingFacts, type SittingFact } from "../facts/meeting-read.ts";
 import type { Clocks, FactDb, Query } from "../facts/publish.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
-import { censusAddressQuery } from "../geo/address-query.ts";
+import { censusAddressQuery, repeatsPublishedVenue } from "../geo/address-query.ts";
 import { placePublishedMeetingPins, publishedPinOffices } from "../meetings/publish-pins.ts";
 import type { Meeting } from "../sources/types.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { meetingStateOf } from "../meetings/body-scope.ts";
-import type { MeetingPinBody } from "../meetings/pin-location.ts";
+import type { MeetingPinAddress, MeetingPinBody } from "../meetings/pin-location.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
 const heldRows = `FROM civic_data_promotions p,
@@ -21,6 +21,17 @@ const heldRows = `FROM civic_data_promotions p,
     AND (sitting.value->>'startsAt')::timestamptz BETWEEN $1::timestamptz-interval '90 days' AND $1::timestamptz+interval '90 days'`;
 
 export const HELD_PIN_BODIES_SQL = `SELECT DISTINCT sitting.value->>'bodyId' AS body_id ${heldRows}`;
+
+/** Previously promoted points keep the address already verified for this exact source sitting. */
+export const HELD_PIN_PRIOR_VENUES_SQL = `SELECT DISTINCT ON (sitting.value->>'id')
+  reader_payload_value(sitting.value) AS value
+  FROM civic_data_promotions p JOIN civic_data_candidates c ON c.scope=p.scope AND c.source_id=p.source_id
+    AND c.record_class='MEETING' AND c.state='PROMOTED' AND c.id<>p.current_version_id,
+  LATERAL reader_payload_members(reader_payload_node(c.candidate->'readModel')->'meetings') m,
+  LATERAL (SELECT reader_payload_node(m.item) AS value) sitting
+  WHERE p.key=ANY($1::text[]) AND sitting.value->>'id'=ANY($2::text[])
+    AND jsonb_typeof(sitting.value->'location')='object'
+  ORDER BY sitting.value->>'id',c.retrieved_at DESC,c.id`;
 
 /** Only already-promoted sittings participate. Existing points and unchanged retry blanks stay out. */
 export const HELD_PIN_ROWS_SQL = `SELECT p.key,p.current_version_id,m.ordinal_index,reader_payload_value(sitting.value) AS value,
@@ -69,7 +80,20 @@ export async function publishHeldMeetingPins(input: {
     for(const id of missing)knownFacts.set(id,read.get(id)??[]);
     const current=withSittingFacts(meetings,[...new Set(meetings.flatMap(meeting=>meeting.bodyId??[]))].flatMap(id=>knownFacts.get(id)??[]))
       .filter(meeting=>!meeting.location&&!meeting.mapPin);
-    const census=await placePublishedMeetingPins({meetings:current,previous:placed,offices,
+    const retainedAddresses = new Map<string,MeetingPinAddress>();
+    const stated = new Map(current.filter(meeting=>!meeting.online && meeting.venueGap?.publishedText).map(meeting=>[meeting.id,meeting]));
+    if(stated.size) {
+      const prior = await facts.query(HELD_PIN_PRIOR_VENUES_SQL,[[...new Set(rows.map(row=>String(row.key)))],[...stated.keys()]]);
+      for(const row of prior) {
+        const old=row.value as Meeting,meeting=stated.get(old.id);
+        if(meeting && old.location?.address && Number.isFinite(old.location.lat) && Number.isFinite(old.location.lng) &&
+          meeting.bodyId===old.bodyId && meeting.ocdId===old.ocdId && meeting.provenance.sourceUrl===old.provenance.sourceUrl &&
+          repeatsPublishedVenue(meeting.venueGap!.publishedText!,old.location.name,old.location.address))
+          retainedAddresses.set(meeting.id,{meetingId:meeting.id,bodyId:meeting.bodyId,name:old.location.name,
+            address:old.location.address,basis:"MEETING",provenance:old.fieldSources?.location??old.provenance});
+      }
+    }
+    const census=await placePublishedMeetingPins({meetings:current,previous:placed,offices,retainedAddresses,
       fetchImpl:input.fetchImpl,clock:()=>new Date(now()).toISOString()});
     failures.push(...census.held);
     for(const response of census.responses) {

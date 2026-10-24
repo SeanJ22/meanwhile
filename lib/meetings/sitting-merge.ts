@@ -3,6 +3,8 @@ import type { Meeting, Provenance } from "../sources/types.ts";
 import { preferCurrentSource } from "../civic-data/source-conflicts.ts";
 import type { SourceScopedHeldFact } from "../civic-data/manual-source-isolation.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { hasPublishedVenue } from "./venue-text.ts";
+import { repeatsPublishedVenue } from "../geo/address-query.ts";
 
 // Retain every contributing door after exact duplicate collapse, so two
 // sittings from one door never become an unambiguous day merely by merging.
@@ -50,13 +52,27 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
       const merge = (fields: string[]) => {
         const value = (row: Meeting) => fields.length === 1 ? (row as unknown as Record<string, unknown>)[fields[0]]
           : Object.fromEntries(fields.map(key => [key, (row as unknown as Record<string, unknown>)[key] ?? null]));
-        const available = ordered.filter(row => fields.some(key => present((row as unknown as Record<string, unknown>)[key])));
+        let available = ordered.filter(row => fields.some(key => present((row as unknown as Record<string, unknown>)[key])));
+        if (fields === venue) {
+          const stated = available.filter(row => row.location || row.online ||
+            row.venueGap?.kind === "STATED_NOT_PLACED" && hasPublishedVenue(row.venueGap.publishedText));
+          if (stated.length) available = stated;
+        }
         if (!available.length) return;
         const winner = available.reduce((best, row) => preferCurrentSource(fieldSource(row, fields[0]), fieldSource(best, fields[0])) ? row : best);
         for (const field of fields) {
           const next = (winner as unknown as Record<string, unknown>)[field];
           if (next === undefined) delete result[field]; else result[field] = next;
           fieldSources[field] = fieldSource(winner, field);
+        }
+        if (fields === venue && !winner.location && !winner.online && winner.venueGap?.kind === "STATED_NOT_PLACED") {
+          const text = winner.venueGap.publishedText ?? "";
+          const placed = available.find(row => row.location && repeatsPublishedVenue(text,row.location.name,row.location.address));
+          if (placed?.location) {
+            result.location = {...placed.location,name:text,address:text};
+            delete result.venueGap;
+            if (placed.mapPin) result.mapPin = {...placed.mapPin,publishedLocation:text};
+          }
         }
         for (const loser of available) if (loser !== winner && canonicalCivicDataJson(value(loser)) !== canonicalCivicDataJson(value(winner))) {
           excluded.push({ key: `${primary.id}:${fields[0]}:${loser.id}`, code: "CONFLICT_SUPERSEDED",

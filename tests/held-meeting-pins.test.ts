@@ -21,7 +21,9 @@ const online:Meeting={id:"diligent:susd12:2026-10-13T0730-virtual-governing-boar
 async function setup(meetings:readonly Meeting[],office=OFFICE){
   const db=await factDb();
   await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,promoted_at timestamptz,payload jsonb);
-    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+    ALTER TABLE civic_data_promotions ADD COLUMN source_id text DEFAULT 'fixture';
+    CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,retrieved_at timestamptz,candidate jsonb)`);
   for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
     if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
   await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Sunnyside Unified School District','AZ',NULL),($2,'body','Governing Board','AZ',$1)",[DIVISION,BODY]);
@@ -29,7 +31,8 @@ async function setup(meetings:readonly Meeting[],office=OFFICE){
     VALUES('https://www.susd12.org/office','https://www.susd12.org/office',$1,$2,'office') RETURNING id`,[OLD,"a".repeat(64)]);
   await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
     VALUES($1,'office_address',$2,$3,'live','OFFICIAL',$4,$3,$5,'fixture')`,[BODY,JSON.stringify(office),office,copy.id,OLD]);
-  await db.query(`INSERT INTO civic_data_promotions VALUES('MEETING:held','MEETING','source:diligent:body:held','cv-held',$1,$2)`,[OLD,JSON.stringify({meetings})]);
+  await db.query(`INSERT INTO civic_data_promotions(key,record_class,scope,current_version_id,promoted_at,payload)
+    VALUES('MEETING:held','MEETING','source:diligent:body:held','cv-held',$1,$2)`,[OLD,JSON.stringify({meetings})]);
   return db;
 }
 
@@ -105,4 +108,32 @@ test("older online and room facts cannot hide a newer published physical address
       publishedLocation:OWN,lat:31.3,lng:-109.9,provenance:fresh},source:fresh},
   ]);
   assert.equal(seen.online,undefined);assert.equal(seen.venueGap,undefined);assert.equal(seen.location?.address,OWN);
+});
+
+test("an already-promoted address for the same source sitting fills an abbreviated street once, without borrowing another body or an unpromoted record",async()=>{
+  for(const valid of [true,false]) {
+    const short="1415 W Melody Ln",physical:Meeting={...online,id:"legistar:held:short",online:undefined,carried:undefined,
+      venueGap:{kind:"STATED_NOT_PLACED",publishedText:short,publisher:"District"}};
+    const prior={...physical,bodyId:valid?BODY:"other-body",venueGap:undefined,location:{name:"Board Room",address:OWN,lat:31.3,lng:-109.9}};
+    const db=await setup([physical],"P.O. Box 123");let requests=0;
+    try {
+      for(const [id,state,readModel] of [["cv-previous","PROMOTED",prior],["cv-unpromoted","PARSE_INVALID",{...prior,bodyId:BODY}]] as const)
+        await db.query("INSERT INTO civic_data_candidates VALUES($1,'fixture','MEETING','source:diligent:body:held',$2,$3,$4)",
+          [id,state,OLD,JSON.stringify({readModel:{meetings:[readModel]}})]);
+      const first=await publishHeldMeetingPins({facts:db,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,
+        clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000,fetchImpl:async input=>{
+          requests++;const full=new URL(String(input)).searchParams.get("address")!.includes("Bisbee");
+          return new Response(JSON.stringify(full?geocode("1415","MELODY","LN","W","BISBEE","85603"):{result:{addressMatches:[]}}));
+        }});
+      assert.equal(first.published,Number(valid));assert.equal(first.unplaced,Number(!valid));assert.equal(requests,valid?2:1);
+      if(valid) {
+        const [read]=withSittingFacts([physical],(await readSittingFacts(db.query,[BODY])).get(BODY)!);
+        assert.equal(read.mapPin?.basis,"MEETING");assert.equal(read.mapPin?.address,OWN);assert.equal(read.mapPin?.publishedLocation,short);
+        assert.equal(read.provenance.collectedAt,OLD);
+        const next=await placePublishedMeetingPins({meetings:[physical],query:db.query,
+          fetchImpl:async()=>{throw new Error("the prior-address point must be reused on the following calendar run");}});
+        assert.equal(next.responses.length,0);assert.deepEqual(next.held,[]);assert.equal(next.meetings[0].mapPin?.address,OWN);
+      }
+    }finally{await db.pg.close();}
+  }
 });

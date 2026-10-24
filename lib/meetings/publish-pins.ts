@@ -110,6 +110,7 @@ export async function placePublishedMeetingPins(input: {
   readonly previous?: readonly Meeting[];
   readonly query?: Query;
   readonly offices?: ReadonlyMap<string, MeetingPinBody>;
+  readonly retainedAddresses?: ReadonlyMap<string, MeetingPinAddress>;
   readonly fetchImpl?: typeof fetch;
   readonly clock?: () => string;
 }): Promise<PublishedPinResult> {
@@ -261,9 +262,17 @@ export async function placePublishedMeetingPins(input: {
         meeting,
         offices.get(meeting.bodyId ?? ""),
       );
+      const retainedAddress = input.retainedAddresses?.get(meeting.id);
+      if (retainedAddress?.basis === "MEETING" && retainedAddress.bodyId === meeting.bodyId && !meeting.online &&
+        repeatsPublishedVenue(meeting.venueGap?.publishedText ?? "",retainedAddress.name,retainedAddress.address))
+        candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,retainedAddress);
       const prior = previous.get(meeting.id);
       const publishedLocation = meeting.venueGap?.publishedText ?? null;
       const repeated = prior?.mapPin ?? meeting.mapPin;
+      if (repeated?.basis === "MEETING" && repeated.bodyId === meeting.bodyId &&
+        repeated.publishedLocation === publishedLocation && !meeting.online &&
+        repeatsPublishedVenue(publishedLocation ?? "",repeated.name,repeated.address))
+        candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,repeated);
       // An unavailable office read cannot erase a point already published for this unchanged sitting.
       if (
         officesUnavailable &&

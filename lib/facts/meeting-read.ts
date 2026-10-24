@@ -10,6 +10,16 @@ const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.f
 
 const FIELD = { title: "title", starts_at: "startsAt", location: "location", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
 
+function publishedLocation(meeting: Meeting, value: unknown, source: Provenance): Partial<Meeting> {
+  if (meeting.online) return {};
+  const location = value as { name: string; address: string | null; lat?: number; lng?: number };
+  if (Number.isFinite(location.lat) && Number.isFinite(location.lng)) return { location:location as Meeting["location"],venueGap:undefined };
+  if (meeting.location && (location.address && meeting.location.address === location.address
+    || !location.address && meeting.location.name === location.name))
+    return { location:{...meeting.location,...location,address:location.address ?? meeting.location.address} };
+  return { location:null,venueGap: { kind:"STATED_NOT_PLACED",publishedText:location.address || location.name,publisher:source.sourceOrg } };
+}
+
 /** One live fact about a sitting, citing the saved page it was found on. */
 export interface SittingFact {
   readonly meetingId: string;
@@ -50,7 +60,7 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if (index === undefined) continue;
     const meeting = out[index]!;
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
-      : field === "location" ? (meeting.location ? { location: { ...meeting.location, ...(value as { name: string; address: string | null }) } } : {})
+      : field === "location" ? publishedLocation(meeting,value,source)
       : { [field]: value as string };
     out[index] = { ...meeting, ...patch, fieldSources: { ...meeting.fieldSources, [field]: source } };
   }

@@ -135,6 +135,7 @@ export interface CoveredBody {
   agendaSourceRef: string | null;
   /** The body's office address and phone, with the saved page that states them. */
   officeContact?: { address: string | null; phone: string | null; provenance: RegistryProvenance } | null;
+  governmentOffice?: { name: string; address: string; provenance: RegistryProvenance };
   /** When the body regularly meets, in its official page's words, with that page. */
   meetingCadence?: { text: string; sourceUrl: string | null } | null;
   /**
@@ -342,6 +343,7 @@ export function summarizeCoverage(
       lsad: division?.lsad ?? null,
       schoolDependency: schoolDependency(body.ocdId),
       bodyClass: body.bodyClass,
+      ...(body.governmentOffice ? { governmentOffice: body.governmentOffice } : {}),
       coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
       agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,

@@ -5,7 +5,8 @@ import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
-import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
+import { useMeetingPinLocations } from "@/hooks/use-meeting-pin-locations";
+import { pinBasisLabel, type MeetingPinLocation } from "@/lib/meetings/pin-location";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -437,7 +438,7 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const officeLocations = useBodyOfficeLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
+  const officeLocations = useMeetingPinLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
 
   /* The reader's representatives' district offices: a pin each, or a line on the venue card in the same building. */
@@ -468,8 +469,8 @@ function MapEntryInner() {
   );
   /* The same bodies' sittings with no building, from the filtered `meetings`. */
   const selectedVenuePlaceless = useMemo(
-    () => (selectedVenue ? placelessSittingsOfVenueBodies(selectedVenue, meetings) : []),
-    [selectedVenue, meetings],
+    () => (selectedVenue ? placelessSittingsOfVenueBodies(selectedVenue, meetings, officeLocations) : []),
+    [selectedVenue, meetings, officeLocations],
   );
 
   const openSurface = useCallback(
@@ -724,9 +725,9 @@ function MapEntryInner() {
     openMeetingCard.current = (meeting: Meeting) =>
       openLarge({
         kind: "entity",
-        subject: meetingSubject(meeting, bodyForMeeting(meeting)),
+        subject: meetingSubject(meeting, bodyForMeeting(meeting), officeLocations.find(pin => pin.meetingId === meeting.id)),
       });
-  }, [openLarge, bodyForMeeting]);
+  }, [openLarge, bodyForMeeting, officeLocations]);
 
   useEffect(() => {
     if (!current) return;
@@ -782,7 +783,7 @@ function MapEntryInner() {
         if (meeting) {
           openLarge({
             kind: "entity",
-            subject: meetingSubject(meeting, bodyForMeeting(meeting)),
+            subject: meetingSubject(meeting, bodyForMeeting(meeting), officeLocations.find(pin => pin.meetingId === meeting.id)),
           });
         }
       } else if (item.kind === "body") {
@@ -824,23 +825,23 @@ function MapEntryInner() {
 
     // Picking a result dismisses the phone drawer covering the map.
     dismissSidebar();
-  }, [dispatch, dismissSidebar, current, openLarge, bodyForMeeting]);
+  }, [dispatch, dismissSidebar, current, openLarge, bodyForMeeting, officeLocations]);
 
   const onPickMeeting = useCallback(
     (meeting: Meeting) => {
       // A list row opens that meeting's card one level deeper; the camera still moves to the room.
       openMeeting(meeting);
-      /* An online meeting is in no venue: the camera stays where the reader left it. */
-      if (meeting.location) {
+      const pin = meeting.location ?? officeLocations.find(location => location.meetingId === meeting.id);
+      if (pin) {
         setFocus({
-          lat: meeting.location.lat,
-          lng: meeting.location.lng,
+          lat: pin.lat,
+          lng: pin.lng,
           zoom: 14,
           key: meeting.id,
         });
       }
     },
-    [openMeeting],
+    [openMeeting, officeLocations],
   );
 
   const onReset = useCallback(() => {
@@ -1968,11 +1969,13 @@ function locationWithDirections(location: NonNullable<Meeting["location"]>): Rea
 function meetingSubject(
   meeting: Meeting,
   body: CoveredBody | null = null,
+  pin?: MeetingPinLocation,
 ): ModalSubject {
   /* The body holding this sitting, resolved explicitly; never a division fallback. */
   const roster = [...projectedBodyRoster(body).members];
   return {
     // The body is the headline; the jurisdiction is the subtitle.
+    ...(pin ? {mapPin:pin} : {}),
     subjectId: meeting.id,
     subjectKind: "MEETING" as const,
     heldByBodyId: body?.bodyId ?? null,
@@ -2026,7 +2029,7 @@ function meetingSubject(
       "We haven't sourced who sits on this body. The people we hold for this area represent it in Congress and the state legislature, which is a different thing.",
     meetings: [meeting],
     // The shared assembler.
-    sources: meetingCardSources(meeting, roster),
+    sources: [...meetingCardSources(meeting, roster),...(pin ? [{what:pinBasisLabel(pin.basis),provenance:pin.provenance}] : [])],
   };
 }
 

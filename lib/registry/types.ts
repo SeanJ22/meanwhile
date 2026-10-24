@@ -195,6 +195,8 @@ export interface Body {
   homepageUrl: string | null;
   /** The body's office address, as its own page states it; its source is in `fieldSources`. */
   officeAddress?: string;
+  /** The owning government's published office; kept distinct from the board's own address. */
+  governmentOffice?: { name: string; address: string; provenance: RegistryProvenance };
   /** The body's office phone, as its own page states it. */
   officePhone?: string;
 

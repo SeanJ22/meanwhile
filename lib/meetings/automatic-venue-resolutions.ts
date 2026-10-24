@@ -5,13 +5,9 @@ import type { ManualSourceReview } from "../civic-data/types.ts";
 import type { MeetingsSnapshot } from "./snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
 import { resolveVenue, venueResolutionRecordId, type VenueEntry } from "./venue-cache.ts";
+import { censusAddressQuery } from "../geo/address-query.ts";
 
 const CENSUS_URL = "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress";
-/** A calendar often prefixes its street address with the venue name and appends room directions. Keep the original as evidence. */
-function censusAddressQuery(published: string): string {
-  const street = /(?:^|[\r\n,;]|\bat\s+)\s*(\d+\s+[a-z][\s\S]*)/i.exec(published)?.[1];
-  return (street ?? published).replace(/\s*\([^)]*\)\s*$/, "").trim();
-}
 const hash = (bytes: Uint8Array): string => createHash("sha256").update(bytes).digest("hex");
 const words = (value: string): string => value.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const hasWords = (whole: string, part: string): boolean => ` ${whole} `.includes(` ${part} `);

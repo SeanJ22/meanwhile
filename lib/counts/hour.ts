@@ -74,9 +74,9 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
         says:"Waiting work has no recorded starting time.",owner:row.owner,next:"Restore the waiting time on this work list."});
       continue;
     }
-    const priorTotal=before?.closedTotal??now?.closedTotal;
     const total=now?.total??row.count;
-    const growing=priorTotal!==null&&priorTotal!==undefined&&total>priorTotal;
+    const growing=[before?.closedTotal,now?.closedTotal]
+      .some(prior=>prior!==null&&prior!==undefined&&total>prior);
     const partialGrowth=(now?.observedIn??0)>(now?.observedOut??0);
     const aged=row.count>0&&age!==null&&age>=3_600_000;
     const expired=row.stage==='work list:EXPIRED'&&row.count>0;

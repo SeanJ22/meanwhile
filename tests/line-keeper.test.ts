@@ -190,6 +190,17 @@ test('growth uses the whole counted pile when waiting ages are split between own
   assert.match(problems[0].says,/3 items are waiting; the pile grew/);
 });
 
+test('clearing an older large pile cannot hide new work arriving after the latest hour closes',()=>{
+  const current={hour:'2026-10-24T16:00:00Z',state:'AZ',family:'read',stage:'work list:WAITING',
+    total:1,closedTotal:0,incoming:0,outgoing:100,changed:0};
+  const previous={...current,hour:'2026-10-24T15:00:00Z',total:100,closedTotal:100};
+  const waiting={state:'AZ',family:'read',stage:'work list:WAITING',count:1,oldestAt:'2026-10-24T17:02:00Z',owner:'diggers'};
+  const problems=countProblems([current],[previous],[waiting],'2026-10-24T17:05:00Z');
+  assert.equal(problems.length,1);
+  assert.equal(problems[0].owner,'diggers');
+  assert.match(problems[0].says,/1 items are waiting; the pile grew/);
+});
+
 
 test('work-list counts follow lease and due-time boundaries without another snapshot or an inventory read',async()=>{
   const db=await controlDatabase();

@@ -154,6 +154,8 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   const { sanitizedErrorDiagnostic } = await import("../ops/error-diagnostic.ts");
   const { linkingPageFrom } = await import("../control-plane/promotion/section3.ts");
   const { pacedPortraitAcquire, storeStandingPortrait } = await import("../photos/portrait-work.ts");
+  const { executiveOfficeSources, executiveProfileLinks, executiveDirectoryLinks } = await import("../sources/white-house/profile.ts");
+  const { whiteHouseOffice } = await import("../officials/white-house-offices.ts");
   const acquire = options.acquire ?? pacedPortraitAcquire;
   const storePortrait = options.storePortrait ?? storeStandingPortrait;
   const sourceSignal = input.signal ?? new AbortController().signal;
@@ -202,15 +204,20 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
         gap(person,"STATE_PORTRAIT_FEED_FAILED",sanitizedErrorDiagnostic(error,500));
       }
     }
-    const profiles = [...new Set([person.websiteUrl,...(person.profileUrls ?? [])])]
+    const departmentPages = input.state.toLowerCase() === "us" && whiteHouseOffice(person.officeTitle)?.startsWith("cabinet:")
+      ? executiveOfficeSources(person.officeTitle) : [];
+    const profiles = [...new Set([...departmentPages,person.websiteUrl,...(person.profileUrls ?? [])])]
       .filter((url):url is string=>Boolean(url && official(url)));
+    const queuedProfiles = new Set(profiles);
+    const departmentRoots = new Set(departmentPages.map(url=>new URL(url).hostname.split(".").slice(-2).join(".")));
     if (!profiles.length) {
       gap(person,"STATE_PORTRAIT_PROFILE_UNRESOLVED","No verified official profile URL is held for this native person; no source route was invented."); await recordPerson(person); return;
     }
     let page:import("../sources/known-release.ts").KnownRelease|undefined;
     const profileAttempts:{sourceUrl:string;code:string;detail:string}[]=[];
     // Per-request cancellation remains; there is no deadline on the due roster.
-    for (const sourceUrl of profiles) {
+    for (let profileIndex=0;profileIndex<profiles.length;profileIndex++) {
+      const sourceUrl=profiles[profileIndex];
       if (sourceSignal.aborted) break;
       const signal = AbortSignal.any([sourceSignal,AbortSignal.timeout(20000)]);
       try {
@@ -220,6 +227,13 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
         page = await acquire({sourceId:"official-person-profile",releaseId:sourceUrl,url:profile.href,parserVersion:"portrait-profile/2",maxBytes:2*1024*1024,checkAfterMs:7*86400000,signal,allowedHosts:[host,`www.${host}`],headers:{accept:"text/html"}});
         if (!official(page.finalUrl)) throw Error("STATE_PORTRAIT_PROFILE_REDIRECT_UNVERIFIED");
         const text=new TextDecoder("utf-8",{fatal:true}).decode(page.bytes);
+        if (departmentRoots.has(new URL(page.finalUrl).hostname.split(".").slice(-2).join("."))) {
+          const directory={url:page.finalUrl,html:text,retrievedAt:page.retrievedAt};
+          const links=[...new Set([...executiveProfileLinks(person,directory),...executiveDirectoryLinks(directory)])]
+            .filter(url=>!queuedProfiles.has(url) && departmentRoots.has(new URL(url).hostname.split(".").slice(-2).join(".")));
+          for (const url of links) queuedProfiles.add(url);
+          profiles.splice(profileIndex+1,0,...links);
+        }
         const candidates=pickPortraits(person.name,imagesIn(text,page.finalUrl));
         candidates.sort((a,b)=>Number(b.src===person.portraitCandidate?.imageUrl)-Number(a.src===person.portraitCandidate?.imageUrl));
         if (!candidates.length) {

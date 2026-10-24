@@ -84,13 +84,13 @@ export type PhotoIndex = Map<string, string>;
 
 function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   const photo=photoForPerson(person.personId ?? person.id,person.state);
-  const photoSource=photo && photo.url !== person.photo?.url ? {
+  const photoSource=photo?.provenance ?? (photo && photo.url !== person.photo?.url ? {
     sourceUrl:photo.verification?.attribution?.sourceUrl ?? photo.verification?.sources[0]?.url ?? photo.url,
     sourceOrg:photo.source,collectedAt:photo.verification?.sources[0]?.retrievedAt ?? "",verifiedAt:photo.verification?.checkedAt ?? null,
   } : person.photo ? person.fieldSources?.photo ?? {
     sourceUrl:person.photo.sourceUrl,sourceOrg:[person.provenance.sourceOrg,person.photo.attribution,person.photo.license].filter(Boolean).join(" · "),
     collectedAt:person.photo.collectedAt,verifiedAt:person.photo.verification?.checkedAt ?? null,
-  } : null;
+  } : null);
   return {
     id: person.id,
     personId: person.personId ?? person.id,

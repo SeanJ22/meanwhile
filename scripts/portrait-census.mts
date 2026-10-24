@@ -8,6 +8,17 @@ import type { OfficeholderSet } from "../lib/officials/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
 import type { DerivedCandidatePortraitRecord } from "../lib/civic-data/derived-campaign-sites.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
+import { settleCandidateProfilesRead } from "../lib/civic-data/manual-read-models.ts";
+import { currentGenericBallotProjection, readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { ballotCandidatePeople } from "../lib/ballot/tickets.ts";
+import { cardForCandidacy } from "../lib/ballot/candidate-cards.ts";
+import { heldPersonIdForCandidate } from "../lib/ballot/person-keys.ts";
+import { photoForPerson } from "../lib/photos/person.ts";
+import { readerPersonKeys } from "../lib/identity/reader-person.ts";
+import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 
 interface CensusPayload extends Partial<RegistryRuntimeReadModel> {
   readonly roster?:OfficeholderSet;
@@ -23,10 +34,13 @@ if (new URL(connection).username !== "readonly") throw Error("Portrait census re
 const sql = neon(connection);
 const output = process.argv.find(arg => arg.startsWith("--output="))?.slice(9) ?? "/tmp/pt01-census";
 const requested = process.argv.find(arg => arg.startsWith("--state="))?.slice(8).toUpperCase();
+const reader=process.argv.includes("--reader");
+if(reader)process.env.DATABASE_URL=connection;
 const states = requested ? [requested] : (await sql`SELECT DISTINCT substring(scope from '^US-([A-Z]{2}):') AS state FROM civic_data_promotions WHERE record_class='REGISTRY_RUNTIME_BINDING' ORDER BY state`).map(row => row.state as string).filter(Boolean);
 const roles = requested === "US" ? ["President","Vice President","Cabinet"] : ["Congress", "Statewide", "Legislator", "County", "City", "School", "Candidate"];
 const counts: {state:string;role:string;withPhoto:number;withoutPhoto:number}[] = [];
 const versions: {state:string;scope:string;version:string}[] = [];
+const connections:{state:string;name:string;candidacyId:string;personId:string;ballotPhoto:string|null;personPhoto:string|null;cardPersonId?:string;personKeys?:readonly string[]}[]=[];
 for (const state of states) {
   const parts = new CivicPayloadParts({existing:async()=>[],write:async()=>{throw Error("Read-only census");},
     read:async hashes => await sql`SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY(${hashes}::text[])` as {hash:string;payload:unknown}[]});
@@ -71,9 +85,33 @@ for (const state of states) {
       add('Candidate',p.id,p.photoUrl ?? photos.get(p.personId ?? p.id));
     for (const p of value.portraits ?? []) add('Candidate',p.portrait.personId ?? p.candidacyId ?? p.id,p.portrait.photoUrl);
   }
+  if(reader && state !== 'US') {
+    const registry=decoded.find(row=>row.recordClass === 'REGISTRY_RUNTIME_BINDING')?.value as RegistryRuntimeReadModel|undefined;
+    if(!registry || !merged)throw Error(`Reader census has no state package for ${state}`);
+    await withReaderAuthorityEdge({},()=>withRegistryRuntimeProjection(registry,[state],async()=>{
+      primeStatePeopleProjection({formatVersion:1,sourceId:'held production people',jurisdiction:`US-${state}`,term:'',generatedAt:merged.generatedAt,roster:merged});
+      const [,ballotRead]=await Promise.all([settleCandidateProfilesRead(state),readGenericBallotProjection(state),readFederalDirectoryProjection([state])]);
+      for(const [role,held] of people)if(role !== 'Candidate')for(const [id,alreadyVisible] of held)
+        held.set(id,Boolean(photoForPerson(id,state)?.url) || alreadyVisible);
+      if(ballotRead.kind !== 'PROMOTED' && ballotRead.kind !== 'BOOTSTRAP')return;
+      people.set('Candidate',new Map());
+      const projection=currentGenericBallotProjection(state);
+      const peopleByKey=new Map([...merged.officeholders,...registry.statewideExecutives.map(row=>row.holder),...registry.bodyRosters.flatMap(row=>row.members)]
+        .flatMap(person=>[...personIdentityKeys(person)].map(key=>[key,person.personId ?? person.id] as const)));
+      for(const ballot of Object.values(projection.ballots))for(const choice of ballot.candidacies)for(const candidate of ballotCandidatePeople(choice)) {
+        const related=readerPersonKeys(candidate.id).keys;
+        const personId=heldPersonIdForCandidate(state,candidate.id) ?? candidate.personId ?? related.map(key=>peopleByKey.get(key)).find(Boolean) ?? candidate.id;
+        const card=cardForCandidacy(state,candidate.id),photo=card?.photoUrl ?? null;
+        add('Candidate',personId,photo);
+        if(photo && personId !== candidate.id && (connections.filter(row=>row.state === state).length<2 || /Hobbs|Gonzales|Villegas|Alma Hernandez/i.test(`${candidate.givenName} ${candidate.familyName}`)))
+          connections.push({state,name:`${candidate.givenName} ${candidate.familyName}`,candidacyId:candidate.id,personId,ballotPhoto:photo,personPhoto:photoForPerson(personId,state)?.url ?? null,
+            cardPersonId:card?.personId,personKeys:readerPersonKeys(candidate.id).keys});
+      }
+    }));
+  }
   for(const role of roles){const held=[...people.get(role)!.values()];counts.push({state,role,withPhoto:held.filter(Boolean).length,withoutPhoto:held.filter(v=>!v).length});}
   console.log(state,counts.filter(row=>row.state===state).map(row=>`${row.role}=${row.withPhoto}/${row.withoutPhoto}`).join(' '));
 }
 await mkdir(output.slice(0,output.lastIndexOf('/')),{recursive:true});
-await writeFile(`${output}.json`,JSON.stringify({measuredAt:new Date().toISOString(),counts,versions},null,2));
+await writeFile(`${output}.json`,JSON.stringify({measuredAt:new Date().toISOString(),mode:reader?'reader projection on production holdings':'stored holdings',counts,versions,connections},null,2));
 await writeFile(`${output}.csv`,['state,role,with_photo,without_photo',...counts.map(row=>[row.state,row.role,row.withPhoto,row.withoutPhoto].join(','))].join('\n')+'\n');

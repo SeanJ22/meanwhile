@@ -7,11 +7,13 @@ import { personIdentityKeys, type StatePeopleJurisdiction } from "../officials/p
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
 import { currentDerivedCandidatePortraits } from "../civic-data/derived-campaign-sites.ts";
 import type { Officeholder } from "../officials/types.ts";
+import type { Provenance } from "../sources/types.ts";
 
 export interface PersonPhoto {
   url: string;
   source: string;
   verification?: PortraitVerification;
+  provenance?: Provenance;
 }
 
 const rosterPhotos=new WeakMap<readonly Officeholder[],ReadonlyMap<string,Officeholder[]>>();
@@ -22,14 +24,43 @@ function matchingPortraits(people:readonly Officeholder[],keys:ReadonlySet<strin
   return [...new Set([...keys].flatMap(key=>index.get(key) ?? []))];
 }
 
+type NativePerson=Pick<Officeholder,'id'|'personId'|'nativeIds'>;
+const nativeAliases=new WeakMap<object,ReadonlyMap<string,readonly string[]>>();
+function aliasIndex(source:object,people:()=>readonly NativePerson[]):ReadonlyMap<string,readonly string[]> {
+  let index=nativeAliases.get(source);
+  if(!index){const built=new Map<string,readonly string[]>();for(const person of people()){
+    const aliases=[...personIdentityKeys(person)];for(const key of aliases)built.set(key,[...new Set([...built.get(key) ?? [],...aliases])]);
+  }index=built;nativeAliases.set(source,index);}
+  return index;
+}
+
+/** CL-01's person links and the held sources' native aliases form one person. */
+function portraitPersonKeys(subjectId:string,state?:string):Set<string> {
+  const indexes:ReadonlyMap<string,readonly string[]>[]=[];
+  for(const selected of new Set([...selectedRegistryStates(),...state ? [state.toUpperCase()] : []])) {
+    const people=currentStatePeopleProjection(`US-${selected}` as StatePeopleJurisdiction)?.roster.officeholders;
+    if(people)indexes.push(aliasIndex(people,()=>people));
+  }
+  try {const people=getFederalOfficeholderSet().officeholders;indexes.push(aliasIndex(people,()=>people));} catch { /* This request has no federal directory. */ }
+  try {
+    const runtime=getRegistryRuntimeReadModel();
+    indexes.push(aliasIndex(runtime.statewideExecutives,()=>runtime.statewideExecutives.map(row=>row.holder)),
+      aliasIndex(runtime.bodyRosters,()=>runtime.bodyRosters.flatMap(row=>row.members)));
+  } catch { /* Source-native identities remain usable without registry enrichment. */ }
+  const keys=new Set<string>(),pending=[subjectId];
+  while(pending.length){const key=pending.shift()!;if(keys.has(key))continue;keys.add(key);
+    try {const identity=readerPersonKeys(key);if(identity.status === 'IDENTITY_UNRESOLVED' && key === subjectId)return new Set();
+      for(const related of identity.keys)if(!keys.has(related))pending.push(related);
+    } catch { /* An unavailable enrichment never discards an exact native identity. */ }
+    for(const index of indexes)for(const related of index.get(key) ?? [])if(!keys.has(related))pending.push(related);
+  }
+  return keys;
+}
+
 /** Exact committed identity relationships only; a name is display text. */
 export function officialPhotoForPerson(subjectId: string,state?:string): PersonPhoto | null {
-  let keys = new Set([subjectId]);
-  try {
-    const identity = readerPersonKeys(subjectId);
-    if (identity.status === "IDENTITY_UNRESOLVED") return null;
-    keys = new Set(identity.keys);
-  } catch { /* No identity holding is a direct-id lookup, never a name fallback. */ }
+  const keys=portraitPersonKeys(subjectId,state);
+  if(!keys.size)return null;
   const states=state ? [...new Set([...selectedRegistryStates(),state.toUpperCase()])] : selectedRegistryStates();
   const holders = states.flatMap(state => {
     const people=currentStatePeopleProjection(`US-${state}` as StatePeopleJurisdiction)?.roster.officeholders;
@@ -39,24 +70,30 @@ export function officialPhotoForPerson(subjectId: string,state?:string): PersonP
   const held = holders
     .sort((a,b) => (b.photo?.verification?.checkedAt ?? b.photo?.collectedAt ?? "").localeCompare(a.photo?.verification?.checkedAt ?? a.photo?.collectedAt ?? "") || a.id.localeCompare(b.id))[0];
   if (held?.photo) return {url:held.photo.url,source:[held.photo.license,held.photo.attribution].filter(Boolean).join(" — ") || "Official portrait",
-    verification:held.photo.verification};
+    verification:held.photo.verification,provenance:held.fieldSources?.photo ?? {
+      sourceUrl:held.photo.verification?.attribution?.sourceUrl ?? held.photo.sourceUrl,sourceOrg:held.provenance.sourceOrg,
+      collectedAt:held.photo.collectedAt,verifiedAt:held.photo.verification?.checkedAt ?? null}};
   let runtime: ReturnType<typeof getRegistryRuntimeReadModel>;
   try {runtime = getRegistryRuntimeReadModel();} catch {return null;}
   const photos = runtime.officialPhotos.photos.filter(row => keys.has(row.personId ?? row.officeholderId) || keys.has(row.officeholderId))
     .filter(row => row.verification ? portraitBindingMatches(row.personId ?? row.officeholderId,row) : Boolean(row.license))
     .sort((a,b)=>(b.collectedAt ?? "").localeCompare(a.collectedAt ?? "") || a.officeholderId.localeCompare(b.officeholderId));
   const photo = photos[0];
-  if (photo) return {url:photo.url,source:[photo.license,photo.attribution].filter(Boolean).join(" — ") || "Official portrait published by the office",verification:photo.verification};
+  if (photo) return {url:photo.url,source:[photo.license,photo.attribution].filter(Boolean).join(" — ") || "Official portrait published by the office",verification:photo.verification,
+    provenance:{sourceUrl:photo.verification?.attribution?.sourceUrl ?? photo.sourceUrl ?? photo.url,
+      sourceOrg:[photo.license,photo.attribution].filter(Boolean).join(" — ") || "Official portrait",
+      collectedAt:photo.collectedAt ?? "",verifiedAt:photo.verification?.checkedAt ?? null}};
   const executive = runtime.statewideExecutives.find(row => keys.has(row.holder.personId ?? row.holder.id) && row.holder.photoUrl);
-  return executive ? {url:executive.holder.photoUrl!,source:executive.sourceOrg ? `Portrait published by ${executive.sourceOrg}` : "Official portrait published by the office"} : null;
+  return executive ? {url:executive.holder.photoUrl!,source:executive.sourceOrg ? `Portrait published by ${executive.sourceOrg}` : "Official portrait published by the office",
+    provenance:executive.holder.fieldSources?.photoUrl ?? {sourceUrl:executive.sourceUrl,sourceOrg:executive.sourceOrg,collectedAt:executive.collectedAt,verifiedAt:null}} : null;
 }
 
 /** All reader surfaces use the same identity links and the same source order. */
 export function photoForPerson(subjectId:string, state?:string):PersonPhoto|null {
   const official=officialPhotoForPerson(subjectId,state);
   if(official)return official;
-  let keys=new Set([subjectId]);
-  try {const identity=readerPersonKeys(subjectId);if(identity.status === "IDENTITY_UNRESOLVED")return null;keys=new Set(identity.keys);} catch { /* Direct identity still resolves its own photograph. */ }
+  const keys=portraitPersonKeys(subjectId,state);
+  if(!keys.size)return null;
   const candidates:{id:string;url:string;source:string;verification?:PortraitVerification}[]=[];
   for(const selected of state ? [state.toUpperCase()] : selectedRegistryStates()) {
     try {

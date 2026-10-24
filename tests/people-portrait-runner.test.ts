@@ -15,6 +15,11 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { portraitHash, type PortraitSources } from "../lib/photos/evidence.ts";
 import { storeVerifiedPortrait } from "../lib/photos/store.ts";
 import type { KnownReleaseOptions, KnownRelease } from "../lib/sources/known-release.ts";
+import { verifiedPresident, ADMINISTRATION_URL } from "../lib/sources/white-house/president.ts";
+import { publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
+import { liveNationalExecutiveRoster, readNationalPresident } from "../lib/reader/national.ts";
+import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -77,4 +82,34 @@ test("a place's portrait run also enriches its members of Congress, on the place
   assert.equal(reader.value.roster.officeholders[0].phone,"202-225-1000");
   const marker=await readPeopleSourceProjection("US-AZ","people-portraits",{store,now:NOW,bypassCache:true});
   assert.equal(marker.kind,"PROMOTED");
+});
+
+test("the national hourly portrait job reaches National cards and the next run retains its photo",async t=>{
+  const store=new MemoryRoutineDataStore(),sourceUrl=`${ADMINISTRATION_URL}jordan-example/`;
+  const index=`<a href="${sourceUrl}">President Jordan Example</a>`;
+  const body='<main><h1>Jordan Example</h1><p>President of the United States</p></main>';
+  const roster=verifiedPresident({url:ADMINISTRATION_URL,html:index},{url:sourceUrl,html:body,retrievedAt:NOW});
+  const seed=await publishPeopleSource({store,vault,state:"us",sourceId:"statewide-executive-sources",roster,
+    acquisitions:[{requestedUrl:ADMINISTRATION_URL,finalUrl:ADMINISTRATION_URL,httpStatus:200,body:index,retrievedAt:NOW},
+      {requestedUrl:sourceUrl,finalUrl:sourceUrl,httpStatus:200,body,retrievedAt:NOW}],releaseId:SHA,now:NOW});
+  assert.ok(seed.outcome.promoted,seed.outcome.candidate.failureDetail ?? undefined);
+  t.mock.method(console,"log",()=>{});
+  let acquired=0;
+  const first=await refreshPeoplePortraits({store,vault,state:"us",options:{now:()=>NOW,storePortrait:await images(),
+    acquire:async options=>{acquired++;return page(options,'<h1>Jordan Example</h1><img alt="Jordan Example" src="/jordan.png">');}}});
+  assert.ok(first.outcome.promoted);
+  const shown=liveNationalExecutiveRoster(await readNationalPresident(async()=>store));
+  const portrait=shown?.officeholders[0].photo;
+  assert.ok(portrait);
+  assert.ok(portrait.url.startsWith('/api/portraits/officials/'));
+  assert.equal(acquired,1);
+  const task=routineTaskFromContract(PEOPLE_SOURCE_CONTRACTS.find(contract=>contract.id === 'people-portraits-us')!);
+  const clock={lastAttemptedAt:NOW,lastSucceededAt:NOW,lastSucceededObservedAt:NOW,lastSucceededParserVersion:task.parserVersion};
+  assert.equal(routineTaskDue(task,clock,Date.parse(NOW)),false);
+  const nextAt=new Date(Date.parse(NOW)+task.cadenceMs).toISOString();
+  assert.equal(routineTaskDue(task,clock,Date.parse(nextAt)),true);
+  await refreshPeoplePortraits({store,vault,state:"us",options:{now:()=>nextAt,acquire:async()=>{throw Error("A fresh portrait is not due");}}});
+  const next=await readPeopleSourceProjection("US","people-portraits",{store,now:nextAt,bypassCache:true});
+  assert.equal(next.kind,'PROMOTED');
+  if(next.kind==='PROMOTED')assert.equal(next.value.roster.officeholders[0].photo?.url,portrait.url);
 });

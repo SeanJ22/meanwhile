@@ -1,0 +1,746 @@
+{
+  "measuredAt": "2026-10-24T10:40:40.686Z",
+  "mode": "Local source and image files only; no production writes",
+  "people": 23,
+  "before": 0,
+  "after": 23,
+  "gaps": [],
+  "portraits": [
+    {
+      "id": "white-house:donald-j-trump",
+      "name": "Donald J. Trump",
+      "office": "President of the United States",
+      "photoUrl": "/api/portraits/officials/ffa428b52c91b2a6059e9c69820bad5f2ca58b39b0e89531ee38375a83cda903.webp",
+      "verification": {
+        "personId": "white-house:donald-j-trump",
+        "name": "Donald J. Trump",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2025/06/President-Donald-Trump-Official-Presidential-Portrait.png",
+        "checkedAt": "2026-10-24T10:40:31.476Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/donald-j-trump/",
+          "name": "Donald J. Trump"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/donald-j-trump/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/donald-j-trump/",
+            "vaultKey": "project/freshness/source/pt-01-national/d425852cd0ef014849be55d20f8c2ee9f43e6fac0bcfe3266e4ea64a96f0daf6.bin",
+            "contentHash": "sha256-d425852cd0ef014849be55d20f8c2ee9f43e6fac0bcfe3266e4ea64a96f0daf6",
+            "retrievedAt": "2026-10-24T10:40:31.474Z"
+          }
+        ],
+        "imageHash": "sha256-ffa428b52c91b2a6059e9c69820bad5f2ca58b39b0e89531ee38375a83cda903",
+        "sourceImageHash": "sha256-6a8c6ad2fae3ca32fd43454cc788a91683f513a0a830fa4539ecb405b661e562",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 2048,
+        "height": 1152,
+        "imageRetrievedAt": "2026-10-24T10:40:31.692Z"
+      }
+    },
+    {
+      "id": "white-house:jd-vance",
+      "name": "JD Vance",
+      "office": "Vice President of the United States",
+      "photoUrl": "/api/portraits/officials/92ea766839b53a60616edffcc0aba6014978cf11de2ea1057cad16f9b3de7444.webp",
+      "verification": {
+        "personId": "white-house:jd-vance",
+        "name": "JD Vance",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/03/Vice-President-JD-Vance-3.jpg",
+        "checkedAt": "2026-10-24T10:40:33.363Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/jd-vance/",
+          "name": "JD Vance"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/jd-vance/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/jd-vance/",
+            "vaultKey": "project/freshness/source/pt-01-national/1a89fa6feecd56729230031048db4ad52209b8c24f14392aa36b2124dd0f0566.bin",
+            "contentHash": "sha256-1a89fa6feecd56729230031048db4ad52209b8c24f14392aa36b2124dd0f0566",
+            "retrievedAt": "2026-10-24T10:40:33.361Z"
+          }
+        ],
+        "imageHash": "sha256-92ea766839b53a60616edffcc0aba6014978cf11de2ea1057cad16f9b3de7444",
+        "sourceImageHash": "sha256-49568585b853c583ef42541e86b53377d5d0192799fd1427a94d172582385027",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 500,
+        "height": 750,
+        "imageRetrievedAt": "2026-10-24T10:40:33.446Z"
+      }
+    },
+    {
+      "id": "white-house:scott-bessent",
+      "name": "Scott Bessent",
+      "office": "Secretary of the Treasury",
+      "photoUrl": "/api/portraits/officials/3d369826512063b72b134c0d3605ea38aca7db09166968cc9520dad7d3319ed5.webp",
+      "verification": {
+        "personId": "white-house:scott-bessent",
+        "name": "Scott Bessent",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Scott-Bessent.jpeg?w=855",
+        "checkedAt": "2026-10-24T10:40:39.540Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Scott Bessent"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-3d369826512063b72b134c0d3605ea38aca7db09166968cc9520dad7d3319ed5",
+        "sourceImageHash": "sha256-9c0137468da5ab97f5acd975a7b13dc2e88d7114809eb48cc8fb885711535108",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 855,
+        "height": 1200,
+        "imageRetrievedAt": "2026-10-24T10:40:39.582Z"
+      }
+    },
+    {
+      "id": "white-house:todd-blanche",
+      "name": "Todd Blanche",
+      "office": "Attorney General",
+      "photoUrl": "/api/portraits/officials/ea1e079238c978c411be434e54d22e6b69e4391a2c7ec21a9376fc7a7e150848.webp",
+      "verification": {
+        "personId": "white-house:todd-blanche",
+        "name": "Todd Blanche",
+        "imageUrl": "https://www.justice.gov/sites/default/files/styles/about_block_image/public/2026-08/270810%20OAG%20AG%20Todd%20Blanche%20Official%20Portrait-08-RMB_0310_0.jpg?h=c8488330&amp;itok=E3Tc_0in",
+        "checkedAt": "2026-10-24T10:40:40.037Z",
+        "attribution": {
+          "sourceUrl": "https://www.justice.gov/ag",
+          "name": "Todd Blanche"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.justice.gov/ag",
+        "sources": [
+          {
+            "url": "https://www.justice.gov/ag",
+            "vaultKey": "project/freshness/source/pt-01-national/6e3e9c2f28a643acc571db16ea23eff42afe15848b3818b33aa7aebc113c6f83.bin",
+            "contentHash": "sha256-6e3e9c2f28a643acc571db16ea23eff42afe15848b3818b33aa7aebc113c6f83",
+            "retrievedAt": "2026-10-24T10:40:40.036Z"
+          }
+        ],
+        "imageHash": "sha256-ea1e079238c978c411be434e54d22e6b69e4391a2c7ec21a9376fc7a7e150848",
+        "sourceImageHash": "sha256-cc1069c4abde8c3f6c7fa9d708c0c6083092e1069eef6bbd535159acd994b55b",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 300,
+        "height": 400,
+        "imageRetrievedAt": "2026-10-24T10:40:40.215Z"
+      }
+    },
+    {
+      "id": "white-house:doug-burgum",
+      "name": "Doug Burgum",
+      "office": "Secretary of the Interior",
+      "photoUrl": "/api/portraits/officials/e68000ef4ba973a2837007279cc208162f588f4a88c99261ff41b331546ab09d.webp",
+      "verification": {
+        "personId": "white-house:doug-burgum",
+        "name": "Doug Burgum",
+        "imageUrl": "https://www.doi.gov/sites/default/files/styles/medium_1_1/public/images/2025-11/cropped_sdbheadshot_final.jpg?itok=desXGrLo",
+        "checkedAt": "2026-10-24T10:40:32.449Z",
+        "attribution": {
+          "sourceUrl": "https://www.doi.gov/interior-leadership",
+          "name": "Doug Burgum"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.doi.gov/interior-leadership",
+        "sources": [
+          {
+            "url": "https://www.doi.gov/interior-leadership",
+            "vaultKey": "project/freshness/source/pt-01-national/8dc5f9b0811a3fe7a80e358983ab3b41130c2336b39171f5345671c9d25472d2.bin",
+            "contentHash": "sha256-8dc5f9b0811a3fe7a80e358983ab3b41130c2336b39171f5345671c9d25472d2",
+            "retrievedAt": "2026-10-24T10:40:32.446Z"
+          }
+        ],
+        "imageHash": "sha256-e68000ef4ba973a2837007279cc208162f588f4a88c99261ff41b331546ab09d",
+        "sourceImageHash": "sha256-aef5274dcd1551ddd930958d78fc32d8bffe283d5bfa7471b91b0c0939e88ca6",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 550,
+        "height": 550,
+        "imageRetrievedAt": "2026-10-24T10:40:32.622Z"
+      }
+    },
+    {
+      "id": "white-house:jay-clayton",
+      "name": "Jay Clayton",
+      "office": "Director of National Intelligence",
+      "photoUrl": "/api/portraits/officials/3aaf573bcf8cedfe361aa1fb2eb28edc48bcc9910d459845e257f2a61f4e2295.webp",
+      "verification": {
+        "personId": "white-house:jay-clayton",
+        "name": "Jay Clayton",
+        "imageUrl": "https://www.odni.gov/wp-content/uploads/Jay-Clayton-8X10-819x1024.webp",
+        "checkedAt": "2026-10-24T10:40:38.771Z",
+        "attribution": {
+          "sourceUrl": "https://www.odni.gov/leadership/",
+          "name": "Jay Clayton"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.odni.gov/leadership/",
+        "sources": [
+          {
+            "url": "https://www.odni.gov/leadership/",
+            "vaultKey": "project/freshness/source/pt-01-national/79a176941417ada69fa2a47fb52445e110629ce2bac678ff51c68bf9e6a7161a.bin",
+            "contentHash": "sha256-79a176941417ada69fa2a47fb52445e110629ce2bac678ff51c68bf9e6a7161a",
+            "retrievedAt": "2026-10-24T10:40:33.307Z"
+          }
+        ],
+        "imageHash": "sha256-3aaf573bcf8cedfe361aa1fb2eb28edc48bcc9910d459845e257f2a61f4e2295",
+        "sourceImageHash": "sha256-9cff9db91c733dee4f8eaa50c684db44dd997acf4d7688a89cacd4e99cec364f",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 819,
+        "height": 1024,
+        "imageRetrievedAt": "2026-10-24T10:40:39.224Z"
+      }
+    },
+    {
+      "id": "white-house:doug-collins",
+      "name": "Doug Collins",
+      "office": "Secretary of Veterans Affairs",
+      "photoUrl": "/api/portraits/officials/2c6652e88a45de6ebd2178c53a596c5f7a96e3dcb907735d4eedd286388ce020.webp",
+      "verification": {
+        "personId": "white-house:doug-collins",
+        "name": "Doug Collins",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Doug-Collins.jpeg",
+        "checkedAt": "2026-10-24T10:40:33.801Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Doug Collins"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-2c6652e88a45de6ebd2178c53a596c5f7a96e3dcb907735d4eedd286388ce020",
+        "sourceImageHash": "sha256-d6097cdd879e8b27ebbb1e663c0d7a6dcc8cf5936d95fb33732edee68ad1d270",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 720,
+        "height": 900,
+        "imageRetrievedAt": "2026-10-24T10:40:33.861Z"
+      }
+    },
+    {
+      "id": "white-house:sean-duffy",
+      "name": "Sean Duffy",
+      "office": "Secretary of Transportation",
+      "photoUrl": "/api/portraits/officials/5377327140a2abfa168c500c42e2ad423bee8baf0ea648e40d3c7bc9207bcb67.webp",
+      "verification": {
+        "personId": "white-house:sean-duffy",
+        "name": "Sean Duffy",
+        "imageUrl": "https://www.transportation.gov/sites/dot.gov/files/inline-images/S1_Portrait_FINAL_Compressed_0.jpg",
+        "checkedAt": "2026-10-24T10:40:39.866Z",
+        "attribution": {
+          "sourceUrl": "https://www.transportation.gov/meet-secretary/us-transportation-secretary-sean-duffy",
+          "name": "Sean Duffy"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.transportation.gov/meet-secretary/us-transportation-secretary-sean-duffy",
+        "sources": [
+          {
+            "url": "https://www.transportation.gov/meet-secretary/us-transportation-secretary-sean-duffy",
+            "vaultKey": "project/freshness/source/pt-01-national/64140787bc9807725724950fd3fdc459383ba613ed46c1c5e4f3e5f18d511620.bin",
+            "contentHash": "sha256-64140787bc9807725724950fd3fdc459383ba613ed46c1c5e4f3e5f18d511620",
+            "retrievedAt": "2026-10-24T10:40:39.865Z"
+          }
+        ],
+        "imageHash": "sha256-5377327140a2abfa168c500c42e2ad423bee8baf0ea648e40d3c7bc9207bcb67",
+        "sourceImageHash": "sha256-051cc7f7682ca2db7d3e798c074b18732048435e7b9bc92bfb853e706faffe94",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 1365,
+        "height": 2048,
+        "imageRetrievedAt": "2026-10-24T10:40:40.194Z"
+      }
+    },
+    {
+      "id": "white-house:jamieson-greer",
+      "name": "Jamieson Greer",
+      "office": "United States Trade Representative",
+      "photoUrl": "/api/portraits/officials/6eb59735b1c51ad4911118a110b06ecc17159a6faf4037583bd90ca5aff19284.webp",
+      "verification": {
+        "personId": "white-house:jamieson-greer",
+        "name": "Jamieson Greer",
+        "imageUrl": "https://ustr.gov/themes/custom/ustr2025/images/jamieson_greer_headshot.jpg",
+        "checkedAt": "2026-10-24T10:40:32.900Z",
+        "attribution": {
+          "sourceUrl": "https://ustr.gov/about-us/biographies-key-officials",
+          "name": "Jamieson Greer"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://ustr.gov/about-us/biographies-key-officials",
+        "sources": [
+          {
+            "url": "https://ustr.gov/about-us/biographies-key-officials",
+            "vaultKey": "project/freshness/source/pt-01-national/ba9fe17fdabed3c2fbd7a2c4b20b010be6574ffc86c64e319eab3e7d5398a887.bin",
+            "contentHash": "sha256-ba9fe17fdabed3c2fbd7a2c4b20b010be6574ffc86c64e319eab3e7d5398a887",
+            "retrievedAt": "2026-10-24T10:40:32.897Z"
+          }
+        ],
+        "imageHash": "sha256-6eb59735b1c51ad4911118a110b06ecc17159a6faf4037583bd90ca5aff19284",
+        "sourceImageHash": "sha256-93e96dbdf98f8133969a244292e91050c9ce95f19c07dd1fa6303f14d528b0c2",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 800,
+        "height": 1200,
+        "imageRetrievedAt": "2026-10-24T10:40:33.200Z"
+      }
+    },
+    {
+      "id": "white-house:pete-hegseth",
+      "name": "Pete Hegseth",
+      "office": "Secretary of War",
+      "photoUrl": "/api/portraits/officials/92e473319a99d111a93255f168a5532a343959a74cee4408ae00eb7c88916cdb.webp",
+      "verification": {
+        "personId": "white-house:pete-hegseth",
+        "name": "Pete Hegseth",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Pete-Hegseth.jpeg?w=927",
+        "checkedAt": "2026-10-24T10:40:38.106Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Pete Hegseth"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-92e473319a99d111a93255f168a5532a343959a74cee4408ae00eb7c88916cdb",
+        "sourceImageHash": "sha256-3b1fd30c86ba6512173315f0646ea872eba5b5607908551bdeb8ffdad0a53693",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 927,
+        "height": 1199,
+        "imageRetrievedAt": "2026-10-24T10:40:38.161Z"
+      }
+    },
+    {
+      "id": "white-house:robert-f-kennedy-jr",
+      "name": "Robert F. Kennedy, Jr.",
+      "office": "Secretary of Health and Human Services",
+      "photoUrl": "/api/portraits/officials/c1ddfa9f958c20436e49bd2f24729f89d730c7a3f2419035142b18d9d7c9ef9e.webp",
+      "verification": {
+        "personId": "white-house:robert-f-kennedy-jr",
+        "name": "Robert F. Kennedy, Jr.",
+        "imageUrl": "https://www.hhs.gov/sites/default/files/styles/bio_575x575/public/bio-robert-kennedy.png?itok=W1Gqw-Ez",
+        "checkedAt": "2026-10-24T10:40:38.283Z",
+        "attribution": {
+          "sourceUrl": "https://www.hhs.gov/about/leadership/index.html",
+          "name": "Robert F. Kennedy, Jr."
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.hhs.gov/about/leadership/index.html",
+        "sources": [
+          {
+            "url": "https://www.hhs.gov/about/leadership/index.html",
+            "vaultKey": "project/freshness/source/pt-01-national/155300867c4f29b58b2567c263be1458187cadb7d2d97f1358b6a5dc16704bb1.bin",
+            "contentHash": "sha256-155300867c4f29b58b2567c263be1458187cadb7d2d97f1358b6a5dc16704bb1",
+            "retrievedAt": "2026-10-24T10:40:38.279Z"
+          }
+        ],
+        "imageHash": "sha256-c1ddfa9f958c20436e49bd2f24729f89d730c7a3f2419035142b18d9d7c9ef9e",
+        "sourceImageHash": "sha256-995800477c21ee706f606904c9543de239f9a39292dae59f00e0dc0dac8c0879",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 575,
+        "height": 575,
+        "imageRetrievedAt": "2026-10-24T10:40:38.390Z"
+      }
+    },
+    {
+      "id": "white-house:kelly-loeffler",
+      "name": "Kelly Loeffler",
+      "office": "Administrator of the Small Business Administration",
+      "photoUrl": "/api/portraits/officials/9af76c85dc43aae67595684d43e5b960922ff2b60e6526281b0ee3f572fde67b.webp",
+      "verification": {
+        "personId": "white-house:kelly-loeffler",
+        "name": "Kelly Loeffler",
+        "imageUrl": "https://cdn.www.sba.gov/app/uploads/2026/05/01143043/kelly_loeffler-scaled.jpg",
+        "checkedAt": "2026-10-24T10:40:35.478Z",
+        "attribution": {
+          "sourceUrl": "https://www.sba.gov/person/kelly-loeffler/",
+          "name": "Kelly Loeffler"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.sba.gov/person/kelly-loeffler/",
+        "sources": [
+          {
+            "url": "https://www.sba.gov/person/kelly-loeffler/",
+            "vaultKey": "project/freshness/source/pt-01-national/997785be875984a24cf9ed6a75c1386cf9359360a04c8b4b6d6ea6b4c87577e4.bin",
+            "contentHash": "sha256-997785be875984a24cf9ed6a75c1386cf9359360a04c8b4b6d6ea6b4c87577e4",
+            "retrievedAt": "2026-10-24T10:40:35.471Z"
+          }
+        ],
+        "imageHash": "sha256-9af76c85dc43aae67595684d43e5b960922ff2b60e6526281b0ee3f572fde67b",
+        "sourceImageHash": "sha256-a1d129ed637c533e32f7dbb28897f78c5b271f12b6a9e87e7b8c1830b525451e",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 1638,
+        "height": 2048,
+        "imageRetrievedAt": "2026-10-24T10:40:36.146Z"
+      }
+    },
+    {
+      "id": "white-house:howard-lutnick",
+      "name": "Howard Lutnick",
+      "office": "Secretary of Commerce",
+      "photoUrl": "/api/portraits/officials/9405a653443dbdbb942d446a015b2e7248905b4947fa283963bf67f88cb15c6e.webp",
+      "verification": {
+        "personId": "white-house:howard-lutnick",
+        "name": "Howard Lutnick",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Howard-Lutnick.jpeg?w=927",
+        "checkedAt": "2026-10-24T10:40:32.699Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Howard Lutnick"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-9405a653443dbdbb942d446a015b2e7248905b4947fa283963bf67f88cb15c6e",
+        "sourceImageHash": "sha256-a4294cf8d2fd2e65ab3eb059f2b7c86c2dacc075f5ef1facf35dc6fa69021cbf",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 927,
+        "height": 1199,
+        "imageRetrievedAt": "2026-10-24T10:40:32.767Z"
+      }
+    },
+    {
+      "id": "white-house:linda-mcmahon",
+      "name": "Linda McMahon",
+      "office": "Secretary of Education",
+      "photoUrl": "/api/portraits/officials/f18f64d7d9c1c116f575d74c18ec0924ea9379a621b917c6c9448dd35b84060f.webp",
+      "verification": {
+        "personId": "white-house:linda-mcmahon",
+        "name": "Linda McMahon",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Linda-McMahon.jpg",
+        "checkedAt": "2026-10-24T10:40:36.569Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Linda McMahon"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-f18f64d7d9c1c116f575d74c18ec0924ea9379a621b917c6c9448dd35b84060f",
+        "sourceImageHash": "sha256-3740fa8f2f88ca9c8aa39c8d759dbfd10281afa462a5142f03e0ab62003cf867",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 943,
+        "height": 943,
+        "imageRetrievedAt": "2026-10-24T10:40:36.653Z"
+      }
+    },
+    {
+      "id": "white-house:markwayne-mullin",
+      "name": "Markwayne Mullin",
+      "office": "Secretary of Homeland Security",
+      "photoUrl": "/api/portraits/officials/3adce0ac3d6dbb25574e93d3d630caa6e5ea957146397a5e214de937926934ee.webp",
+      "verification": {
+        "personId": "white-house:markwayne-mullin",
+        "name": "Markwayne Mullin",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/03/Markwayne-Mullin.jpg",
+        "checkedAt": "2026-10-24T10:40:37.398Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Markwayne Mullin"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-3adce0ac3d6dbb25574e93d3d630caa6e5ea957146397a5e214de937926934ee",
+        "sourceImageHash": "sha256-85b7eafe0eabe18d19fe326c533d76c4fc4cf35146e495fdb2a4441e5b00f163",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 500,
+        "height": 647,
+        "imageRetrievedAt": "2026-10-24T10:40:37.457Z"
+      }
+    },
+    {
+      "id": "white-house:john-ratcliffe",
+      "name": "John Ratcliffe",
+      "office": "Director of the Central Intelligence Agency",
+      "photoUrl": "/api/portraits/officials/4dbb3fc6af14f447b14c95b21df01e0f153210f1c82b3547d07fce3e58f2de92.webp",
+      "verification": {
+        "personId": "white-house:john-ratcliffe",
+        "name": "John Ratcliffe",
+        "imageUrl": "https://www.cia.gov/static/d520eef6b0e6819142de7d9a12757787/eddee/DCIA_Ratcliffe769x1000.png",
+        "checkedAt": "2026-10-24T10:40:33.950Z",
+        "attribution": {
+          "sourceUrl": "https://www.cia.gov/about/director-of-cia/",
+          "name": "John Ratcliffe"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.cia.gov/about/director-of-cia/",
+        "sources": [
+          {
+            "url": "https://www.cia.gov/about/director-of-cia/",
+            "vaultKey": "project/freshness/source/pt-01-national/ae2a1ca529738952572706aabf0e55a82adc2b501213bf7c19a3d6d32c7048bf.bin",
+            "contentHash": "sha256-ae2a1ca529738952572706aabf0e55a82adc2b501213bf7c19a3d6d32c7048bf",
+            "retrievedAt": "2026-10-24T10:40:33.947Z"
+          }
+        ],
+        "imageHash": "sha256-4dbb3fc6af14f447b14c95b21df01e0f153210f1c82b3547d07fce3e58f2de92",
+        "sourceImageHash": "sha256-c6c05c83a0652d3f88d8848847458d124277a77b4a4ec5fae618f5d7f64fdbd9",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 769,
+        "height": 1000,
+        "imageRetrievedAt": "2026-10-24T10:40:34.229Z"
+      }
+    },
+    {
+      "id": "white-house:brooke-rollins",
+      "name": "Brooke Rollins",
+      "office": "Secretary of Agriculture",
+      "photoUrl": "/api/portraits/officials/29337be45741fb56e9a60af6e11df1c0ece79be3aaaeb1c1a1a3201e70a467e3.webp",
+      "verification": {
+        "personId": "white-house:brooke-rollins",
+        "name": "Brooke Rollins",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Brooke-Rollins.jpeg?w=960",
+        "checkedAt": "2026-10-24T10:40:31.841Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Brooke Rollins"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-29337be45741fb56e9a60af6e11df1c0ece79be3aaaeb1c1a1a3201e70a467e3",
+        "sourceImageHash": "sha256-5f816943c03e59217ade029bf340f2fec3835d1d2d7d7a9f37ccd4160896f0a8",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 960,
+        "height": 1200,
+        "imageRetrievedAt": "2026-10-24T10:40:31.934Z"
+      }
+    },
+    {
+      "id": "white-house:marco-rubio",
+      "name": "Marco Rubio",
+      "office": "Secretary of State",
+      "photoUrl": "/api/portraits/officials/850031fa3aabc6939702c5ca20d3b6a89a824f996a3d19ce9089bc7f8b35073d.webp",
+      "verification": {
+        "personId": "white-house:marco-rubio",
+        "name": "Marco Rubio",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Marco-Rubio.jpeg?w=907",
+        "checkedAt": "2026-10-24T10:40:37.633Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Marco Rubio"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-850031fa3aabc6939702c5ca20d3b6a89a824f996a3d19ce9089bc7f8b35073d",
+        "sourceImageHash": "sha256-a445e987c6698c10c311373c0ac277fbbf03bae617cb82af43e4c2097c0d4634",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 907,
+        "height": 1200,
+        "imageRetrievedAt": "2026-10-24T10:40:37.792Z"
+      }
+    },
+    {
+      "id": "white-house:keith-sonderling",
+      "name": "Keith Sonderling",
+      "office": "Secretary of Labor",
+      "photoUrl": "/api/portraits/officials/67e7cf070672f70d600ae0b7321f671df8e2a8e00f87aaf1064df1dbfde2652e.webp",
+      "verification": {
+        "personId": "white-house:keith-sonderling",
+        "name": "Keith Sonderling",
+        "imageUrl": "https://www.dol.gov/sites/dolgov/files/general/images/Keith-Sonderling.jpg",
+        "checkedAt": "2026-10-24T10:40:34.531Z",
+        "attribution": {
+          "sourceUrl": "https://www.dol.gov/agencies/osec/keith-sonderling",
+          "name": "Keith Sonderling"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.dol.gov/agencies/osec/keith-sonderling",
+        "sources": [
+          {
+            "url": "https://www.dol.gov/agencies/osec/keith-sonderling",
+            "vaultKey": "project/freshness/source/pt-01-national/4e642151f211861644d86e880e8bfec45150c25d6cf969a14c003c34b0b17eac.bin",
+            "contentHash": "sha256-4e642151f211861644d86e880e8bfec45150c25d6cf969a14c003c34b0b17eac",
+            "retrievedAt": "2026-10-24T10:40:34.530Z"
+          }
+        ],
+        "imageHash": "sha256-67e7cf070672f70d600ae0b7321f671df8e2a8e00f87aaf1064df1dbfde2652e",
+        "sourceImageHash": "sha256-1e1caf234bb420ee305318bfe5f902cef9976fdb0998c5a3975177f354f6e95c",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 618,
+        "height": 800,
+        "imageRetrievedAt": "2026-10-24T10:40:34.719Z"
+      }
+    },
+    {
+      "id": "white-house:scott-turner",
+      "name": "Scott Turner",
+      "office": "Secretary of Housing and Urban Development",
+      "photoUrl": "/api/portraits/officials/1bf70ae7d01f62e2dd33e6a32be5c79b1d1e011990debc5f86d4dc9fa7524768.webp",
+      "verification": {
+        "personId": "white-house:scott-turner",
+        "name": "Scott Turner",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Scott-Turner.jpeg",
+        "checkedAt": "2026-10-24T10:40:39.567Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Scott Turner"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-1bf70ae7d01f62e2dd33e6a32be5c79b1d1e011990debc5f86d4dc9fa7524768",
+        "sourceImageHash": "sha256-90ecc91ee5e5bc79ca5a4a193f6547ae9548600ab4883e24a946374012808bb5",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 800,
+        "height": 1000,
+        "imageRetrievedAt": "2026-10-24T10:40:39.627Z"
+      }
+    },
+    {
+      "id": "white-house:russ-vought",
+      "name": "Russ Vought",
+      "office": "Director of the Office of Management and Budget",
+      "photoUrl": "/api/portraits/officials/6118f9d46ac90fb525f7fc05f2c18ba10c9966b37c1b4ab22b1f2e2a667558d8.webp",
+      "verification": {
+        "personId": "white-house:russ-vought",
+        "name": "Russ Vought",
+        "imageUrl": "https://www.whitehouse.gov/wp-content/uploads/2026/02/Russ-Vought.jpg",
+        "checkedAt": "2026-10-24T10:40:38.446Z",
+        "attribution": {
+          "sourceUrl": "https://www.whitehouse.gov/administration/cabinet/",
+          "name": "Russ Vought"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.whitehouse.gov/administration/cabinet/",
+        "sources": [
+          {
+            "url": "https://www.whitehouse.gov/administration/cabinet/",
+            "vaultKey": "project/freshness/source/pt-01-national/924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6.bin",
+            "contentHash": "sha256-924cd0700abd5d5c78d156b24755ba46c5812a8bdd67e522c59fabbdd3b8cca6",
+            "retrievedAt": "2026-10-24T10:40:31.837Z"
+          }
+        ],
+        "imageHash": "sha256-6118f9d46ac90fb525f7fc05f2c18ba10c9966b37c1b4ab22b1f2e2a667558d8",
+        "sourceImageHash": "sha256-7f21b99a4bcc2ea04a3cdda25927419554eabe3b4d968612980379c41b0f4461",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 367,
+        "height": 483,
+        "imageRetrievedAt": "2026-10-24T10:40:38.505Z"
+      }
+    },
+    {
+      "id": "white-house:chris-wright",
+      "name": "Chris Wright",
+      "office": "Secretary of Energy",
+      "photoUrl": "/api/portraits/officials/9a277ae2593834b354ab3c10ee67193c0b12589397cd44ef385268e21e22543f.webp",
+      "verification": {
+        "personId": "white-house:chris-wright",
+        "name": "Chris Wright",
+        "imageUrl": "https://www.energy.gov/sites/default/files/2025-02/CHRIS_WRIGHT_PORTRAIT_SQ.jpg",
+        "checkedAt": "2026-10-24T10:40:31.448Z",
+        "attribution": {
+          "sourceUrl": "https://www.energy.gov/leadership-organization",
+          "name": "Chris Wright"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.energy.gov/leadership-organization",
+        "sources": [
+          {
+            "url": "https://www.energy.gov/leadership-organization",
+            "vaultKey": "project/freshness/source/pt-01-national/cd0c2c466b7073e4f1ed7659b6c55c90f63421899549cc7c9438eabc181c27a5.bin",
+            "contentHash": "sha256-cd0c2c466b7073e4f1ed7659b6c55c90f63421899549cc7c9438eabc181c27a5",
+            "retrievedAt": "2026-10-24T10:40:31.440Z"
+          }
+        ],
+        "imageHash": "sha256-9a277ae2593834b354ab3c10ee67193c0b12589397cd44ef385268e21e22543f",
+        "sourceImageHash": "sha256-feec5953e6efa7537fb6acbc588e5861cf82596fb34992c1e70d2bfb80cb745c",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 1536,
+        "height": 1412,
+        "imageRetrievedAt": "2026-10-24T10:40:31.832Z"
+      }
+    },
+    {
+      "id": "white-house:lee-zeldin",
+      "name": "Lee Zeldin",
+      "office": "Administrator of the Environmental Protection Agency",
+      "photoUrl": "/api/portraits/officials/d193bff54169f3af7613f4f36f93afd6348db9fae967e7f61928127e699393ae.webp",
+      "verification": {
+        "personId": "white-house:lee-zeldin",
+        "name": "Lee Zeldin",
+        "imageUrl": "https://www.epa.gov/system/files/styles/thumbnail/private/images/2025-02/54306676554_6f732bdf9c_k.jpg?itok=iu4CcegE",
+        "checkedAt": "2026-10-24T10:40:35.114Z",
+        "attribution": {
+          "sourceUrl": "https://www.epa.gov/aboutepa/epa-administrator",
+          "name": "Lee Zeldin"
+        },
+        "basis": "OWN_PAGE",
+        "ownPageUrl": "https://www.epa.gov/aboutepa/epa-administrator",
+        "sources": [
+          {
+            "url": "https://www.epa.gov/aboutepa/epa-administrator",
+            "vaultKey": "project/freshness/source/pt-01-national/277369219435bc1d4208536b7ce09d3d7ba90ebd6f74fa4cb26b61a2cc505c8a.bin",
+            "contentHash": "sha256-277369219435bc1d4208536b7ce09d3d7ba90ebd6f74fa4cb26b61a2cc505c8a",
+            "retrievedAt": "2026-10-24T10:40:35.112Z"
+          }
+        ],
+        "imageHash": "sha256-d193bff54169f3af7613f4f36f93afd6348db9fae967e7f61928127e699393ae",
+        "sourceImageHash": "sha256-35c0037c3669a2c7ff21c741911ee04017a1b163eca205782d38a238218ba60a",
+        "decoderVersion": "sharp-0.35.3/static-webp/1",
+        "width": 160,
+        "height": 200,
+        "imageRetrievedAt": "2026-10-24T10:40:35.957Z"
+      }
+    }
+  ]
+}

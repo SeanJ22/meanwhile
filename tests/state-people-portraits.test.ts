@@ -169,6 +169,42 @@ test("a saved government endorsement verifies a named portrait on an official .u
   assert.ok(portraitBindingMatches(person.personId!,photo));
   assert.equal(photo.verification!.basis,"OWN_PAGE");assert.equal(photo.verification!.ownPageUrl,url);
 });
+
+test("Cabinet portraits follow the department's named profile before the White House fallback",async()=>{
+  const {roster}=await seed(),images=await imageStore();
+  const person={...roster.officeholders[0],name:"Jane Example",officeTitle:"Attorney General",
+    websiteUrl:"https://www.whitehouse.gov/administration/cabinet/",profileUrls:[]};
+  const requested:string[]=[];
+  const result=await statePeoplePortraits({state:"us",roster:{...roster,officeholders:[person]},now:START},{now:()=>VERIFIED,
+    storePortrait:images.store,acquire:async options=>{
+      requested.push(options.url);
+      const page=profile(options);
+      const html=options.url === "https://www.justice.gov/ag"
+        ? '<main><a href="/ag/jane-example">Jane Example</a></main>'
+        : '<main><h1>Jane Example</h1><img alt="Jane Example" src="/jane.jpg"></main>';
+      const bytes=new TextEncoder().encode(html),sha256=portraitHash(bytes).slice(7);
+      return {...page,bytes,sha256};
+    }});
+  assert.deepEqual(requested,["https://www.justice.gov/ag","https://www.justice.gov/ag/jane-example"]);
+  assert.equal(result.roster.officeholders[0].photo?.verification?.ownPageUrl,"https://www.justice.gov/ag/jane-example");
+});
+
+test("an oversized official original falls through to its published srcset rendition",async()=>{
+  const {roster}=await seed(),images=await imageStore(),requested:string[]=[];
+  const result=await statePeoplePortraits({state:"az",roster,now:START},{now:()=>VERIFIED,
+    acquire:async options=>{
+      const page=profile(options),html='<h1>Jane Member 0</h1><img alt="Jane Member 0" src="/jane.jpg" srcset="/jane.jpg 4985w, /jane.jpg?resize=499,600 499w">';
+      const bytes=new TextEncoder().encode(html),sha256=portraitHash(bytes).slice(7);
+      return {...page,bytes,sha256};
+    },storePortrait:async(id,sources,at,signal)=>{
+      requested.push(sources.imageUrl);
+      if(!sources.imageUrl.includes("resize="))throw Error("PORTRAIT_TOO_LARGE");
+      return images.store(id,sources,at,signal);
+    }});
+  assert.deepEqual(requested,["https://legislature.example.gov/jane.jpg","https://legislature.example.gov/jane.jpg?resize=499,600"]);
+  assert.ok(result.roster.officeholders[0].photo);
+  assert.equal(result.excludedFacts.length,0);
+});
 test("state portrait cancellation retains work and prioritizes untouched native people next",async()=>{
   const {store}=await seed(5);
   const run=async()=>{

@@ -47,7 +47,7 @@ function cardForKey(state: string, key: string): CandidateCardData | null {
     ...(bioCard ? { bio: bioCard.bio, bioSourceUrl: bioCard.bioSourceUrl, bioSourceLabel: bioCard.bioSourceLabel } : {}),
     ...(phoneCard ? { phone: phoneCard.phone, phoneSource: phoneCard.phoneSource, phoneLabel: phoneCard.phoneLabel } : {}),
   } : null;
-  const personPhoto = photoForPerson(card?.personId ?? key,state);
+  const personPhoto = photoForPerson(key,state);
   const photo = personPhoto ? {personId:card?.personId,photoUrl:personPhoto.url,photoSource:personPhoto.source,photoVerification:personPhoto.verification} : null;
   if (!photo) return card;
   const base = card ?? { bio: null, bioSourceUrl: null, bioSourceLabel: null, email: null, phone: null, phoneLabel: null,

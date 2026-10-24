@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T20:09:45Z
+heartbeat: 2026-10-24T20:27:14Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,22 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### River finished SO-01 on its branch, 4:40 PM EDT (standing order: no READY within 60 minutes of the return)
+- What: merged river e2ee3657a (with CL-01) into stream/so-01 and marked READY: SO-01 05012c722 (fast-forward from 64ea93bb5).
+- Why: SO-01's READY conflicted with CL-01 in 5 files / 8 hunks; the lane didn't answer by 4:08 PM EDT.
+- How each conflict was resolved, keeping both lanes:
+  - scoped-holders: CL-01's held sources, field merging and federal bare-title identity, plus SO-01's personName skip, state-scoped samePlace and per-field source date as the last tie-break.
+  - campaign-money: CL-01's funding index, with the statewide executives added to its inputs; SO-01's separate executives cache removed.
+  - state-publication, runtime-data-plane, runtime-issues: both import sets; the registry parser version only in runtime-version.ts.
+- Two tests updated to SO-01's intended behavior: white-house-cabinet (parser version people-sources/3 so held pages reparse) and sl-03-real-sources (a verified statewide holder is placed, selection method UNKNOWN).
+- Checks: 186 focused test files, 1,703 of 1,706 pass. The 3 failures were exactly those two files' old assertions, failing on SO-01's own READY too; after the update both files pass 15/15. tsc, eslint and knip clean.
+- Proof on production data (read-only, merged code in-process):
+  - AZ statewide: 12 -> 11. AG Kris Mayes; "Actions" gone. One governor, Katie Hobbs, engage@az.gov, her old IDs resolve to her card. All 5 Corporation Commissioners kept.
+  - All 50 states: 186 -> 185 non-Congress statewide officials, only AZ changes; governors 51 -> 50; invalid names 1 -> 0.
+  - Raleigh NC-02 keeps a single Deborah K. Ross.
+- Open, for the SO-01 lane or Sean: looking up the old id plural:az:6e522a2a directly returns Katie Hobbs with the older Open States email (sosadmin@azsos.gov). The card shows engage@az.gov. SO-01's own code does the same.
+- Folds in batch C with RN-03 953466400.
 
 ### Live for readers, 4:10 PM EDT
 - Live: release 101 (6cd25dd09). Reader checks passed at 3:38 PM EDT. Readers have CL-01's one card per person, 0051's id lookup, the pool error handler, and Cochise's reopened doors (publishing waits on a voting-sites run, see 3:37 PM).

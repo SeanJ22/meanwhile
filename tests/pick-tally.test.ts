@@ -155,7 +155,7 @@ test("the count line names both kinds and reconciles with the numbers", () => {
 test("every PickControl on the ballot page gets its options from the shared builder", () => {
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
   const controls = page.match(/<PickControl\b[\s\S]*?\/>/g) ?? [];
-  assert.ok(controls.length >= 3, `expected at least 3 PickControl call sites, found ${controls.length}`);
+  assert.equal(controls.length, 2, "one shared candidate control and one measure control remain");
   for (const control of controls) {
     assert.ok(
       /options=\{pickOptionsFor\(/.test(control),

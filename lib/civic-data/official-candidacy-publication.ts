@@ -15,6 +15,8 @@ import { registryEdition } from "./worker-publication-evidence.ts";
 
 export function statePeopleCandidacyHolders(roster: OfficeholderSet): OfficialCandidacyBridgeRow["holder"][] {
   return roster.officeholders.map(holder => ({ id: holder.id, name: holder.name, officeTitle: holder.officeTitle,
+    ...(holder.personId ? { personId: holder.personId } : {}), ...(holder.nativeIds ? { nativeIds: holder.nativeIds } : {}),
+    ...(holder.websiteUrl ? { officialProfileUrl: holder.websiteUrl } : {}),
     divisions: [...new Set(roster.divisions.filter(division => division.officeholderId === holder.id).map(division => division.ocdId))],
     authority: "STATE_PEOPLE", sourceUrl: holder.provenance.sourceUrl }));
 }
@@ -41,6 +43,20 @@ export async function publishOfficialBallotCandidacies(input: {
     return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value.roster : null;
   }));
   const holders = stateReads.flatMap(read => read.status === "fulfilled" && read.value ? statePeopleCandidacyHolders(read.value) : []);
+  holders.push(...prior.payload.statewideExecutives.map(row => ({
+    id: row.holder.id, name: row.holder.name, officeTitle: row.holder.officeTitle, divisions: [row.stateOcdId],
+    ...(row.holder.personId ? { personId: row.holder.personId } : {}), ...(row.holder.nativeIds ? { nativeIds: row.holder.nativeIds } : {}),
+    ...(row.holder.websiteUrl ? { officialProfileUrl: row.holder.websiteUrl } : {}),
+    authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: row.sourceUrl,
+  })));
+  const dispositions = new Map((prior.payload.rosterReaderDispositions ?? []).map(row => [row.sourceId, row.state]));
+  for (const roster of prior.payload.bodyRosters ?? []) holders.push(...roster.members
+    .filter(member => !dispositions.has(member.id) || dispositions.get(member.id) === "READER_ELIGIBLE")
+    .map(member => ({ id: member.id, name: member.name, officeTitle: member.officeTitle,
+      ...(member.personId ? { personId: member.personId } : {}), ...(member.nativeIds ? { nativeIds: member.nativeIds } : {}),
+      ...(member.websiteUrl ? { officialProfileUrl: member.websiteUrl } : {}),
+      divisions: [roster.bodyId.split("#")[0]], authority: "REGISTRY_BODY_ROSTER" as const,
+      sourceUrl: member.websiteUrl ?? member.membershipSource?.sourceUrl ?? roster.sourceUrl })));
   const federalContests = input.ballots.some(ballot => ballot.contests.some(contest => {
     const office = officeIdentity(contest.title);
     return office === "us_senator" || office === "us_representative";

@@ -2,6 +2,8 @@ import { currentOfficialIdentityStatus, officialIdsForCandidacy, resolvedCandida
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "./az-2026.ts";
 import { currentRosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 import { fecPersonKeys } from "../funding/snapshot.ts";
+import { candidateKeysForState, heldCandidatePersonKeys } from "../ballot/person-keys.ts";
+import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
 
 /** Exact committed person relationships; no names participate in reader joins. */
 export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIRECT" | "IDENTITY_UNRESOLVED"; keys: string[] } {
@@ -15,6 +17,9 @@ export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIR
     const key = pending.shift()!;
     if (!key || keys.has(key)) continue;
     keys.add(key);
+    const namedState = /^(?:ballot-)?([a-z]{2})[-:]/i.exec(key)?.[1]?.toUpperCase();
+    for (const state of new Set([...selectedRegistryStates(), ...namedState ? [namedState] : []]))
+      for (const alias of [...candidateKeysForState(state, key), ...heldCandidatePersonKeys(state, key)]) if (!keys.has(alias)) pending.push(alias);
     for (const related of fecPersonKeys(key)) if (!keys.has(related)) pending.push(related);
     const isAzCandidacy = key.startsWith("ballot-az-");
     const azRows = isAzCandidacy ? azLineupReconciliation()?.rows ?? [] : [];

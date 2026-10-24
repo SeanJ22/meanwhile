@@ -135,9 +135,9 @@ test("a party-conflict card and its filing are the committed pair, one subject w
     readerGapSentence: "We have not established that this nominee is the same candidacy as a filing.",
   });
   assert.deepEqual(partyConflictCardForFiling(filingId), pair);
-  // The honest conflict stands: the card never acquires the filing as its candidacy.
+  // The filing/canvass discrepancy remains sourced while the person keeps both aliases.
   assert.equal(reconciledCandidacyIdForCard(card), null);
-  assert.deepEqual(readerPersonKeys(card).keys, [card]);
+  assert.deepEqual(readerPersonKeys(card).keys, [filingId, card].sort());
   // Only the conflicting pair is returned; a reconciled card or an unrelated filing is not.
   assert.equal(partyConflictCardForFiling(`${contestId}:example-casey`), null);
 

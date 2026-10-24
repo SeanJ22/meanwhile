@@ -11,6 +11,8 @@ import { bindNamedEntity, COMMON_QUESTION_NOUNS } from "../routing/named-entity.
 import { formatDateLong } from "../text/format-date.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { reconciledCandidacyIdForCard } from "../identity/az-2026.ts";
+import { ballotCandidateAliases, ballotCandidatePeople } from "../ballot/tickets.ts";
+import { ballotCandidateDisplayName } from "../ballot/name-case.ts";
 import type { MeasureAnalysis } from "../ballot/analyses.ts";
 import { readerContestScope } from "../ballot/reader-scope.ts";
 import type { CandidatePublicationDate, CandidateSourceClass } from "../candidates/corpus.ts";
@@ -71,7 +73,7 @@ export function candidateTargetKey(contestId: string, name: string): string {
 
 /** As filed: given name then family name, the way the cards render it. */
 export function candidacyDisplayName(candidacy: Candidacy): string {
-  return [candidacy.givenName, candidacy.familyName].filter(Boolean).join(" ");
+  return ballotCandidateDisplayName(candidacy);
 }
 
 /**
@@ -115,9 +117,10 @@ export function ballotAskInventory(
     nameClass: BindableEntity["nameClass"],
     divisionType: string,
     subject: BallotSubjectRecord,
+    aliases: readonly string[] = [],
   ) => {
-    entities.push({ id, name, nameClass, divisionType });
-    if (!subjects.has(id)) subjects.set(id, subject);
+    entities.push({ id, name, nameClass, divisionType, ...(aliases.length ? { aliases } : {}) });
+    for (const key of [id, ...aliases]) if (!subjects.has(key)) subjects.set(key, subject);
   };
 
   for (const contest of contests) {
@@ -137,6 +140,7 @@ export function ballotAskInventory(
       "body",
       isMeasure ? "measure" : "contest",
       record,
+      contest.aliases ?? [],
     );
     if (isMeasure) {
       for (const designation of measureDesignations(contest.title)) {
@@ -168,55 +172,40 @@ export function ballotAskInventory(
       }
     }
 
-    const filed = set.candidacies.filter((c) => c.contestId === contest.id);
+    const filed = set.candidacies.filter((candidate) => candidate.contestId === contest.id);
     const nominees = nomineesFor(contest.id);
-
-    /*
-     * Where a general lineup exists it is canonical (keyed `<contestId>|<name>`,
-     * as the page renders), and the filing row rides along as `candidacyId`. A
-     * filed candidate the lineup does not carry is not offered.
-     */
-    if (nominees.length > 0) {
-      for (const nominee of nominees) {
-        if (!nominee.name) continue;
-        const id = candidateTargetKey(contest.id, nominee.name);
-        if (subjects.has(id)) continue;
-        const candidacyId = reconciledCandidacyIdForCard(id);
-        const match = filed.find((c) => c.id === candidacyId);
-        const surname = match?.familyName ?? nominee.name.trim().split(/\s+/).pop() ?? "";
-        const personRecord: BallotSubjectRecord = {
-          kind: "PERSON",
-          id,
-          name: nominee.name,
-          contestId: contest.id,
-          contestTitle: contest.title,
-          ocdId: contest.ocdId,
-          candidacyId: match?.id ?? null,
-        };
-        add(id, nominee.name, "person", "person", personRecord);
-        if (usableSurname(surname)) {
-          add(id, surname, "person", "person", personRecord);
-        }
+    const listed = nominees.length ? nominees.map(nominee => {
+      const key = candidateTargetKey(contest.id, nominee.name);
+      let candidate = filed.find(candidate => ballotCandidateAliases(candidate).includes(key)) ?? null;
+      if (!candidate) {
+        let legacy: string | null = null;
+        try { legacy = reconciledCandidacyIdForCard(key); } catch { /* A standalone inventory may have no committed Arizona projection. */ }
+        candidate = filed.find(row => row.id === legacy) ?? null;
       }
-      continue;
-    }
-
-    /* No lineup: the authority's own filing list IS the ballot. */
-    for (const candidacy of filed) {
-      const name = candidacyDisplayName(candidacy);
-      if (!name) continue;
-      const personRecord: BallotSubjectRecord = {
-        kind: "PERSON",
-        id: candidacy.id,
-        name,
-        contestId: contest.id,
-        contestTitle: contest.title,
-        ocdId: contest.ocdId,
-        candidacyId: candidacy.id,
-      };
-      add(candidacy.id, name, "person", "person", personRecord);
-      if (usableSurname(candidacy.familyName)) {
-        add(candidacy.id, candidacy.familyName, "person", "person", personRecord);
+      return { nominee, candidate };
+    }) : filed.map(candidate => ({ candidate, nominee: null }));
+    const represented = new Set<string>();
+    for (const { candidate, nominee } of listed) {
+      if (!candidate) {
+        if (!nominee?.name) continue;
+        const id = candidateTargetKey(contest.id, nominee.name);
+        add(id, nominee.name, "person", "person", { kind: "PERSON", id, name: nominee.name,
+          contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId, candidacyId: null });
+        continue;
+      }
+      for (const person of ballotCandidatePeople(candidate)) {
+        if (represented.has(person.id)) continue;
+        represented.add(person.id);
+        const name = candidacyDisplayName(person);
+        if (!name) continue;
+        const id = nominee && !candidate.ticket ? candidateTargetKey(contest.id, nominee.name) : person.id;
+        const aliases = [...new Set([person.id, ...ballotCandidateAliases(person)])].filter(key => key !== id);
+        const office = "office" in person && typeof person.office === "string" ? person.office
+          : candidate.ticket ? contest.title.split(/\s*(?:\/|\band\b|&)\s*/i)[0] : contest.title;
+        const personRecord: BallotSubjectRecord = { kind: "PERSON", id, name, contestId: contest.id,
+          contestTitle: office, ocdId: contest.ocdId, candidacyId: person.id };
+        add(id, name, "person", "person", personRecord, aliases);
+        if (usableSurname(person.familyName)) add(id, person.familyName, "person", "person", personRecord, aliases);
       }
     }
   }
@@ -227,8 +216,8 @@ export function ballotAskInventory(
    * `outsideReaderDivisions` so no record says it is on this reader's ballot.
    */
   const requested = new Set(requestedFilingIds);
-  for (const candidacy of set.candidacies) {
-    if (!requested.has(candidacy.id) || [...subjects.values()].some((subject) => subject.id === candidacy.id || subject.candidacyId === candidacy.id)) continue;
+  for (const candidacy of [...set.candidacies, ...set.filingCandidacies ?? []].flatMap(ballotCandidatePeople)) {
+    if (!ballotCandidateAliases(candidacy).some(key => requested.has(key)) || [...subjects.values()].some((subject) => subject.id === candidacy.id || subject.candidacyId === candidacy.id)) continue;
     const matched = contests.find((row) => row.id === candidacy.contestId);
     const contest = matched ?? set.contests.find((row) => row.id === candidacy.contestId);
     if (!contest || contest.type === "MEASURE") continue;
@@ -236,7 +225,7 @@ export function ballotAskInventory(
     add(candidacy.id, name, "person", "person", {
       kind: "PERSON", id: candidacy.id, candidacyId: candidacy.id, name, contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId,
       ...(matched ? { historicalFiling: true } : { outsideReaderDivisions: true }),
-    });
+    }, ballotCandidateAliases(candidacy));
   }
   return { entities, subjects };
 }
@@ -244,7 +233,7 @@ export function ballotAskInventory(
 /** Bind the reader's words to a held filing; never join one civic record by a name. */
 export function namedSourceFilingIds(question: string, set: BallotSet | null): string[] {
   if (!set) return [];
-  const binding = bindNamedEntity(question, set.candidacies.map((candidacy) => ({ id: candidacy.id, name: candidacyDisplayName(candidacy), nameClass: "person" as const, divisionType: "person" })));
+  const binding = bindNamedEntity(question, [...set.candidacies, ...set.filingCandidacies ?? []].flatMap(ballotCandidatePeople).map((candidacy) => ({ id: candidacy.id, name: candidacyDisplayName(candidacy), nameClass: "person" as const, divisionType: "person" })));
   return binding.kind === "BOUND" ? [binding.entity.id] : binding.kind === "AMBIGUOUS" ? binding.candidates.map((candidate) => candidate.id) : [];
 }
 
@@ -407,7 +396,8 @@ export function ballotRecordsFor(
 
   /* One candidate, by exact canonical id; the filing row through `candidacyId` where the lineup key is used. */
   const wantedCandidacy = record.candidacyId ?? record.id;
-  const candidacy = deps.set.candidacies.find((c) => c.id === wantedCandidacy) ?? null;
+  const candidacy = [...deps.set.candidacies, ...deps.set.filingCandidacies ?? []].flatMap(ballotCandidatePeople)
+    .find(candidate => ballotCandidateAliases(candidate).includes(wantedCandidacy)) ?? null;
   const nominee = deps.nominees?.(record.contestId).find((entry) => candidateTargetKey(record.contestId, entry.name) === record.id);
   if (candidacy) {
     records.push(candidacyRecord(candidacy, record.contestTitle));
@@ -423,7 +413,7 @@ export function ballotRecordsFor(
   if (nominee) records.push(nomineeRecord(record.contestId, record.contestTitle, nominee));
 
   const positions = [...new Map(
-    [...new Set([record.id, wantedCandidacy])].flatMap((key) => deps.positions?.(key) ?? [])
+    [...new Set([record.id, wantedCandidacy, ...candidacy ? ballotCandidateAliases(candidacy) : []])].flatMap((key) => deps.positions?.(key) ?? [])
       .map((position) => [`${position.documentUrl}|${position.quote}`, position]),
   ).values()];
   denominators.sourcedPositionPassages = positions.length;

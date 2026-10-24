@@ -15,7 +15,7 @@ import {
 } from "../civic-data/manual-source-isolation.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "../civic-data/read-model.ts";
 import type { ManualSuccessorCandidate } from "../civic-data/manual-prior-authority.ts";
-import { manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-data/source-authority.ts";
+import { isOfficialSource, manualSourceReceiptStructureIssue, sourceAuthority } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type ManualSourceReview, type ManualSourceSetReceipt, type RoutineRemovalEvidence } from "../civic-data/types.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
@@ -84,11 +84,16 @@ export interface OfficialCandidacyBridge {
   readonly rows: readonly OfficialCandidacyBridgeRow[];
 }
 
+function personSeatMatches(title: string, holder: OfficialCandidacyBridgeRow["holder"], divisionId: string): boolean {
+  const officialProfile = Boolean(holder.officialProfileUrl && isOfficialSource(holder.officialProfileUrl));
+  return sameSeatDiscriminators(title, holder.officeTitle, divisionId, { allowUnspecified: officialProfile });
+}
+
 export function officialCandidacySeatMatches(row: OfficialCandidacyBridgeRow): boolean {
   const candidacy = row.status === "RESOLVED" ? row.candidacy : null;
-  const office = officeIdentity(row.holder.officeTitle);
-  if (!candidacy || !office || !row.holder.divisions.includes(candidacy.divisionId) || officeIdentity(candidacy.contestTitle) !== office ||
-    !sameSeatDiscriminators(candidacy.contestTitle, row.holder.officeTitle, candidacy.divisionId)) return false;
+  const office = officeIdentity(row.holder.officeTitle, candidacy?.divisionId);
+  if (!candidacy || !office || !row.holder.divisions.includes(candidacy.divisionId) || officeIdentity(candidacy.contestTitle, candidacy.divisionId) !== office ||
+    !personSeatMatches(candidacy.contestTitle, row.holder, candidacy.divisionId)) return false;
   const holder = splitDisplayName(row.holder.name), candidate = splitDisplayName(candidacy.candidateName);
   const left = nameParts(holder.givenName, holder.familyName), right = nameParts(candidate.givenName, candidate.familyName);
   return namesAgree(left, right) || namesAgreeLoosely(left, right);
@@ -102,18 +107,18 @@ function ballotPeople(ballot: BallotSet) {
     const display = ballotCandidateDisplayName({ ...candidate, ticket: undefined });
     if (!display || display.includes(" / ")) return;
     const parts = candidate.givenName ? candidate : splitDisplayName(display);
-    rows.push({ ballot, contest, candidate, display, name: nameParts(parts.givenName, parts.familyName), office: officeIdentity(contest.title) });
+    rows.push({ ballot, contest, candidate, display, name: nameParts(parts.givenName, parts.familyName), office: officeIdentity(contest.title, contest.ocdId) });
   };
   for (const candidate of ballot.candidacies) {
     const contest = contests.get(candidate.contestId);
     if (!contest || contest.type !== "CANDIDACY") continue;
     const ticket = candidate.ticket;
-    const jointOffice = officeIdentity(contest.title) === "governor_and_lieutenant_governor" || /governor\s*\/\s*(?:lieutenant|lt\.?) governor/i.test(contest.title);
+    const jointOffice = officeIdentity(contest.title, contest.ocdId) === "governor_and_lieutenant_governor" || /governor\s*\/\s*(?:lieutenant|lt\.?) governor/i.test(contest.title);
     add(candidate, ticket && jointOffice ? { ...contest, title: "Governor" } : contest);
     if (!ticket) continue;
     const mate = ticket.runningMate;
     const mateContest = contests.get(mate.contestId);
-    const title = mate.office ?? mateContest?.title ?? (jointOffice || officeIdentity(contest.title) === "governor" ? "Lieutenant Governor" : null);
+    const title = mate.office ?? mateContest?.title ?? (jointOffice || officeIdentity(contest.title, contest.ocdId) === "governor" ? "Lieutenant Governor" : null);
     if (!title) continue;
     add(mate, { ...(mateContest ?? contest), id: mate.contestId, title });
   }
@@ -139,7 +144,7 @@ export function reconcileOfficialCandidacies(input: {
       return [`${current.id}\u0000${current.title}`, current];
     }));
     for (const person of people) seats.set(`${person.contest.id}\u0000${person.contest.title}`, person.contest);
-    return [...seats.values()].map(contest => ({ ballot, contest, office: officeIdentity(contest.title),
+    return [...seats.values()].map(contest => ({ ballot, contest, office: officeIdentity(contest.title, contest.ocdId),
       candidates: people.filter(person => person.contest.id === contest.id && person.contest.title === contest.title) }));
   });
   const bySeat = new Map<string, typeof contests>();
@@ -161,10 +166,10 @@ export function reconcileOfficialCandidacies(input: {
     return namesAgree(nameParts(previous.givenName, previous.familyName), current.name);
   };
   for (const holder of holders.values()) {
-    const office = officeIdentity(holder.officeTitle);
+    const office = officeIdentity(holder.officeTitle, holder.divisions[0]);
     if (!office) continue;
     const exact = holder.divisions.flatMap(division => bySeat.get(`${division}\u0000${office}`) ?? [])
-      .filter(({ contest }) => sameSeatDiscriminators(contest.title, holder.officeTitle, contest.ocdId));
+      .filter(({ contest }) => personSeatMatches(contest.title, holder, contest.ocdId));
     if (!exact.length) continue;
     const latest = exact.map(row => row.ballot.election.date).sort().at(-1);
     const current = exact.filter(row => row.ballot.election.date === latest);
@@ -204,7 +209,8 @@ export function reconcileOfficialCandidacies(input: {
     const match = matches[0];
     if (!match.candidate.provenance.sourceUrl) continue;
     const seatHolders = [...holders.values()].filter(other => other.divisions.includes(match.contest.ocdId) &&
-      officeIdentity(other.officeTitle) === office && sameSeatDiscriminators(match.contest.title, other.officeTitle, match.contest.ocdId));
+      officeIdentity(other.officeTitle, match.contest.ocdId) === office &&
+      personSeatMatches(match.contest.title, other, match.contest.ocdId));
     const matchingHolders = seatHolders.filter(other => {
       const parts = splitDisplayName(other.name), otherName = nameParts(parts.givenName, parts.familyName);
       return namesAgree(otherName, match.name) || committedMatch(other, match);
@@ -227,7 +233,7 @@ export function reconcileOfficialCandidacies(input: {
       contestId: match.contest.id, contestTitle: match.contest.title,
       divisionId: match.contest.ocdId, electionId: match.ballot.election.id, candidateName: match.display,
       sourceUrl: match.candidate.provenance.sourceUrl,
-    }, reason: "The current officeholder and a unique candidate on the sourced ballot agree on name, exact division, office and seat.",
+    }, reason: "The current officeholder and a unique candidate on the sourced ballot agree on name, exact division and office; known seat details do not conflict.",
       ballotSourceUrls: httpsUrls([...groups[0].sources]), unresolvedCandidacyIds: [] });
   }
   return { ...input.bridge, rows: [...rows.values()] };

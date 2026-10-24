@@ -1,7 +1,8 @@
 import type { SeatHolder } from "../officials/lookup.ts";
 import type { Provenance } from "../sources/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
-import { nativePersonIdFromUrl } from "../officials/people-identity.ts";
+import { nativePersonIdFromUrl, personIdentityKeys } from "../officials/people-identity.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
 
 export interface BallotPersonHolder extends SeatHolder {
   readonly personAliases: readonly string[];
@@ -68,9 +69,13 @@ export function mergeBallotPersonHolders(verified: readonly SeatHolder[]): Ballo
   for (const holder of ranked) for (const [source, ids] of Object.entries(holder.nativeIds ?? {})) {
     nativeIds[source] = [...new Set([...nativeIds[source] ?? [], ...ids])];
   }
-  const personAliases = [...new Set(ranked.flatMap(holder => [holder.id, holder.personId ?? holder.id, ...holder.nativeIds?.reader ?? []]))];
+  const federal = ["us_senator", "us_representative"].includes(officeIdentity(result.officeTitle, result.officeJurisdictionOcdId ?? undefined) ?? "");
+  const congressKeys = [...personIdentityKeys({ ...result, nativeIds })].filter(key => /^congress:[A-Z]\d{6}$/i.test(key));
+  const personId = federal && congressKeys.length === 1 ? congressKeys[0] : result.personId ?? result.id;
+  const id = federal && congressKeys.length === 1 ? congressKeys[0] : result.id;
+  const personAliases = [...new Set([...ranked.flatMap(holder => [holder.id, holder.personId ?? holder.id, ...holder.nativeIds?.reader ?? []]), id, personId])];
   nativeIds.reader = [...new Set([...nativeIds.reader ?? [], ...personAliases])];
-  return { ...result, fieldSources, nativeIds, personAliases, sourceHolders,
+  return { ...result, id, personId, fieldSources, nativeIds, personAliases, sourceHolders,
     memberships: complementary(canonical.memberships ?? [], ranked.flatMap(holder => holder.memberships ?? [])) as SeatHolder["memberships"],
     social: complementary(canonical.social ?? [], ranked.flatMap(holder => holder.social ?? [])) as SeatHolder["social"],
     executive: ranked.reduce<SeatHolder["executive"]>((value, holder) => complementary(value, holder.executive) as SeatHolder["executive"], canonical.executive),

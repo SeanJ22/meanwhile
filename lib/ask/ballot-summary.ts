@@ -102,7 +102,7 @@ export function contestsForBallotAsk(contests: readonly Contest[], ask: Extract<
 export function contestsOfOffice(contests: readonly Contest[], key: OfficeKey): Contest[] {
   return contests.filter(contest => {
     if (contest.type !== "CANDIDACY") return false;
-    const office = officeIdentity(contest.title.replace(/^for\s+/i, "").replace(/\s*\/\s*/g, " and "));
+    const office = officeIdentity(contest.title.replace(/^for\s+/i, "").replace(/\s*\/\s*/g, " and "), contest.ocdId);
     return office === key || office === "governor_and_lieutenant_governor" && (key === "governor" || key === "lieutenant_governor");
   });
 }

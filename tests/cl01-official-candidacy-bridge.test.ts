@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { BallotSet, Candidacy, Contest } from "../lib/ballot/types.ts";
+import { sameSeatDiscriminators } from "../lib/officials/office-seat.ts";
 import { officialCandidacySeatMatches, reconcileOfficialCandidacies,
   registryRuntimeProjectionIssues, type OfficialCandidacyBridge, type OfficialCandidacyBridgeRow, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 
@@ -20,6 +21,24 @@ const candidate = (id: string, contestId: string, name: string): Candidacy => ({
 const ballot = (contests: Contest[], candidacies: Candidacy[]): BallotSet => ({
   election: { id: "az-general", state: "AZ", name: "General election", date: "2026-11-03" },
   contests, candidacies, measures: [], absences: [],
+});
+
+test("a verified person link carries records when a roster omits position detail, without proving exact-seat incumbency", () => {
+  const district = "ocd-division/country:us/state:wa/sldl:24";
+  const official = { ...holder("held:person", "Steve Tharinger", "State Representative"),
+    divisions: [district], authority: "STATE_PEOPLE" as const, officialProfileUrl: "https://leg.wa.gov/people/steve-tharinger/" };
+  const race = { ...contest("house-position-2", "State Representative Pos. 2, Legislative District 24"), ocdId: district };
+  const input = ballot([race], [candidate("source:tharinger", race.id, official.name)]);
+  const joined = reconcileOfficialCandidacies({ bridge, ballots: [input], holders: [official] });
+  assert.equal(joined.rows[0].status, "RESOLVED");
+  assert.equal(officialCandidacySeatMatches(joined.rows[0]), true);
+  assert.equal(joined.rows[0].candidacy?.personId, official.id);
+  assert.equal(sameSeatDiscriminators(race.title, official.officeTitle, district), false,
+    "the independent incumbency check still needs the exact position");
+  const conflicting = { ...official, officeTitle: "State Representative Position 1, District 24" };
+  assert.ok(!reconcileOfficialCandidacies({ bridge, ballots: [input], holders: [conflicting] }).rows.some(row => row.status === "RESOLVED"));
+  const wrongDistrict = { ...race, title: "State Representative Pos. 2, Legislative District 25" };
+  assert.ok(!reconcileOfficialCandidacies({ bridge, ballots: [ballot([wrongDistrict], input.candidacies)], holders: [official] }).rows.some(row => row.status === "RESOLVED"));
 });
 
 test("source aliases retain one same-seat person connection on the next reconciliation", () => {

@@ -68,7 +68,7 @@ export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
   name: "Name", officeTitle: "Office", partyLabel: "Party", birthDate: "Birth date",
   termNote: "Term wording", termStart: "Term start date", termEnd: "Term end date",
   email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
-  campaignUrl: "Campaign website", photoUrl: "Portrait", social: "Social accounts",
+  campaignUrl: "Campaign website", photoUrl: "Portrait", portraitImage: "Portrait image", social: "Social accounts",
   districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
   title: "Meeting title", bodyName: "Public body", startsAt: "Meeting date and time", endsAt: "Meeting end time",
   timeZone: "Time zone", status: "Meeting status", location: "Meeting place", online: "Online attendance",

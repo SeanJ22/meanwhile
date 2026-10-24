@@ -12,65 +12,65 @@ Each jurisdiction was read separately from Reader project `tiny-hill-13996172`, 
 
 | State | Duplicate entries before | After | Linked to held person | Tickets as one choice |
 | --- | ---: | ---: | ---: | ---: |
-| AK | 0 | 0 | 1 | 5 |
+| AK | 0 | 0 | 33 | 5 |
 | AL | 0 | 0 | 128 | 0 |
-| AR | 0 | 0 | 42 | 0 |
+| AR | 0 | 0 | 43 | 0 |
 | AS | 0 | 0 | 0 | 0 |
 | AZ | 4 | 0 | 78 | 4 |
-| CA | 0 | 0 | 122 | 0 |
+| CA | 0 | 0 | 123 | 0 |
 | CO | 0 | 0 | 67 | 7 |
-| CT | 174 | 0 | 152 | 5 |
+| CT | 174 | 0 | 153 | 5 |
 | DC | 0 | 0 | 0 | 0 |
 | DE | 0 | 0 | 37 | 0 |
 | FL | 0 | 0 | 114 | 10 |
 | GA | 0 | 0 | 210 | 0 |
 | GU | 0 | 0 | 0 | 0 |
-| HI | 0 | 0 | 28 | 2 |
+| HI | 0 | 0 | 30 | 2 |
 | IA | 0 | 0 | 95 | 2 |
-| ID | 0 | 0 | 16 | 0 |
-| IL | 0 | 0 | 36 | 3 |
+| ID | 0 | 0 | 41 | 0 |
+| IL | 0 | 0 | 124 | 3 |
 | IN | 0 | 0 | 105 | 0 |
-| KS | 0 | 0 | 5 | 2 |
+| KS | 0 | 0 | 76 | 2 |
 | KY | 0 | 0 | 106 | 0 |
-| LA | 0 | 0 | 0 | 0 |
+| LA | 0 | 0 | 3 | 0 |
 | MA | 0 | 0 | 11 | 3 |
 | MD | 0 | 0 | 145 | 4 |
 | ME | 0 | 0 | 96 | 0 |
-| MI | 0 | 0 | 25 | 5 |
+| MI | 0 | 0 | 100 | 5 |
 | MN | 0 | 0 | 144 | 3 |
 | MO | 0 | 0 | 117 | 0 |
 | MP | 0 | 0 | 0 | 3 |
-| MS | 0 | 0 | 0 | 0 |
+| MS | 0 | 0 | 5 | 0 |
 | MT | 0 | 0 | 76 | 0 |
-| NC | 0 | 0 | 13 | 0 |
+| NC | 0 | 0 | 157 | 0 |
 | ND | 0 | 0 | 47 | 0 |
-| NE | 0 | 0 | 6 | 4 |
-| NH | 0 | 0 | 31 | 0 |
-| NJ | 0 | 0 | 24 | 0 |
+| NE | 0 | 0 | 17 | 4 |
+| NH | 0 | 0 | 7 | 0 |
+| NJ | 0 | 0 | 29 | 0 |
 | NM | 0 | 0 | 43 | 2 |
 | NV | 0 | 0 | 46 | 0 |
 | NY | 0 | 0 | 169 | 2 |
 | OH | 0 | 0 | 98 | 7 |
 | OK | 0 | 0 | 57 | 0 |
 | OR | 0 | 0 | 65 | 0 |
-| PA | 0 | 0 | 148 | 3 |
+| PA | 0 | 0 | 168 | 3 |
 | PR | 0 | 0 | 0 | 0 |
-| RI | 0 | 0 | 3 | 0 |
+| RI | 0 | 0 | 79 | 0 |
 | SC | 0 | 0 | 117 | 4 |
 | SD | 0 | 0 | 66 | 2 |
-| TN | 0 | 0 | 7 | 0 |
-| TX | 0 | 0 | 123 | 0 |
-| UT | 0 | 0 | 0 | 0 |
-| VA | 0 | 0 | 0 | 0 |
+| TN | 0 | 0 | 103 | 0 |
+| TX | 0 | 0 | 147 | 0 |
+| UT | 0 | 0 | 68 | 0 |
+| VA | 0 | 0 | 13 | 0 |
 | VI | 0 | 0 | 0 | 5 |
 | VT | 0 | 0 | 5 | 0 |
-| WA | 0 | 0 | 0 | 0 |
-| WI | 0 | 0 | 18 | 2 |
-| WV | 0 | 0 | 1 | 0 |
+| WA | 0 | 0 | 108 | 0 |
+| WI | 0 | 0 | 87 | 2 |
+| WV | 0 | 0 | 78 | 0 |
 | WY | 0 | 0 | 40 | 0 |
-| Total | 178 | 0 | 3083 | 89 |
+| Total | 178 | 0 | 4074 | 89 |
 
-40,032 person and source keys resolve; zero earlier raw/displayed keys are missing. The 18 candidate targets already used by 30 production reaction/demand records all resolve. Existing Speak posts retain their submitted subject IDs, and Ask resolves those aliases to the correct person.
+40,030 person and source keys resolve; zero earlier raw/displayed keys are missing. The 18 candidate targets already used by 30 production reaction/demand records all resolve. Existing Speak posts retain their submitted subject IDs, and Ask resolves those aliases to the correct person.
 
 ## Two production connections
 
@@ -113,6 +113,25 @@ The raw ballot accessor again returns the exact published holding. Person and ti
 
 Ticket assertions now check the displayed pair, two distinct person IDs and the exact official pairing source. Reader assertions resolve each historical nominee alias to exactly one visible choice and check its own card's filing source. Original contest and candidate count/hash assertions remain in place.
 
-Verification after merging `origin/river` at `bd77dcb0f`: all seven returned suites pass, plus the ticket, alias and scheduled-refresh suites (83 distinct checks, zero skipped; the final changed Wisconsin and reader suites were rerun together, 32/32). TypeScript, changed-file lint, the existing dead-code check and diff whitespace checks pass. The unchanged worker/publication suites additionally pass 23/23. The production-snapshot recount remains 178 duplicates before, zero after, 3,083 linked candidacies and 89 tickets, with no original key or existing activity target missing.
+Verification after merging `origin/river` at `bd77dcb0f`: all seven returned suites pass, plus the ticket, alias and scheduled-refresh suites (83 distinct checks, zero skipped; the final changed Wisconsin and reader suites were rerun together, 32/32). TypeScript, changed-file lint, the existing dead-code check and diff whitespace checks pass. The unchanged worker/publication suites additionally pass 23/23. The production-snapshot recount remains 178 duplicates before, zero after, 4,074 linked candidacies and 89 tickets, with no original key or existing activity target missing.
 
 Google Chrome comparison of meanwhileusa.com and the repaired branch at Morristown `07960` retains all 22 contest IDs and 53 choices. None of the original candidate aliases, biographies, candidate links or source links are missing; no candidate changes race. All five allocated regional-board seats remain separate. The live page's first visible contests took 1.824 seconds; the cold development branch took 5.842 seconds, recorded above three seconds and not a production speed pass. No page errors occurred; four event writes were blocked. [Mendham live](measurements/cl-01/nj-mendham-live.png) · [Mendham repaired branch](measurements/cl-01/nj-mendham-branch.png).
+
+
+## Complete office and seat matching
+
+An audit of the zero-link states exposed source office wording that the shared parser did not recognize. The parser now uses the source division to interpret ambiguous chamber labels, known jurisdiction names/codes, and numeric, Roman or written district numbers. All 3,403 previously classified production titles retain their original classification. Person matching still requires the same conservative name, exact district, office, and unique held identity. An independently held official profile supports the person relationship when its roster omits a position label; known conflicting seat or district values still refuse the match. Incumbency retains the stricter exact-seat check.
+
+Lettered seats, position abbreviations, court groups, and term commencement dates remain separate races. This preserves Ohio's distinct January 1 and January 2, 2027 Supreme Court terms. Across all 56 production snapshots, all 11,602 original separate contests remain separate, and all 19,847 old visible choice targets resolve in their correct races. Only the 178 source duplicates merge. No original choice, race, source key or ticket member alias is missing or reassigned. Explicit ticket-member identity checks pass 21/21.
+
+The recount links 4,074 candidacies to held people (991 more than the first CL-01 projection), with zero lost current general-election person connections against the original reader's 2,734 valid links. The two source-backed retired Arizona primary filings remain accessible as described above. The comparison uses the exact pre-CL-01 office and seat matching code for its baseline.
+
+Chrome additionally compares the live baseline with this branch at WA `98101` (26 contests, 33 choices), UT `84101` (13, 20), OH `43215` (28, 53) and VA `20175` (10, 9). All entries, names, aliases, biographies and candidate links remain. Ohio's two Supreme Court terms each retain their own candidates and pick control. Seattle's Jayapal card carries the held portrait, contact, voting record and sources; Utah's checked cards carry held terms and contacts, without claiming a portrait or voting-content proof for them. Live first-visible contests were 1.778 seconds in WA, 1.779 in UT and 1.295 in OH; the WA development read was 3.355 seconds and is recorded above the target.
+
+Cold Chrome checks exposed two further connections that component checks had missed. Husted's publisher-specific ID sent his records to an invalid directory endpoint; the merged federal card now uses its unique native Congress key while retaining every publisher ID as an alias, and loads the native held record and its portrait provenance. His card now shows recent and selected votes, its original Congress image citation, and successful directory, vote and profile responses. [Held record](measurements/cl-01/oh-held-record.png).
+
+His [Ohio candidate list](https://www.ohiosos.gov/assets/dir2026-45-form-of-the-official-ballot-for-the-november%203-general-election.pdf) and [official Congress member source](https://api.congress.gov/v3/member/H001104?format=json) identify the same senator. Subramanyam's [Virginia candidate list](https://www.elections.virginia.gov/media/castyourballot/candidatelist/2026/2026-November-Federal-Offices-Candidate-List-(rev-10-6-2026).xlsx) and [official Congress member source](https://api.congress.gov/v3/member/S001230?format=json) identify the same House member.
+
+The FEC slice was being pinned before the concurrent official-directory read supplied native person keys. The funding preload now finishes that shared read and includes only the displayed divisions' exact native identities before selecting its slice. An actual read-only replay of production pointer `cv-5ebb867fb8b5281fa6b785a1276734a0` changed Suhas Subramanyam's empty first slice into the already-held `H4VA10279` registration. All amounts remain null and no committee or contribution rows are invented. Funding also resolves old candidate and mate aliases, and the card uses the returned alias-aware result. Cold Chrome shows the FEC registration, source and explicit campaign-totals gap on Suhas's own card. [FEC registration](measurements/cl-01/va-fec-registration.png).
+
+Current focused checks: 71 returned-ballot/schedule checks and 38 office/seat/person checks pass; the final reader, holder, alias, contextual-money and first-read FEC checks pass 31/31. The existing numbered-seat refusal test remains unchanged. Full TypeScript, lint for all 23 changed TypeScript files, the existing dead-code check and whitespace checks pass. These are branch and read-only production-data proofs. River's deployed Chrome check and the next automatic production pass remain pending.

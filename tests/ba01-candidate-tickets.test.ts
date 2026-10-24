@@ -75,6 +75,21 @@ test("an already joint office title retains the authority's wording", () => {
   assert.equal(ballotCandidateDisplayName(view.candidacies[0]), "A Lead / B Mate");
 });
 
+test("the published Idaho, Washington, Nevada and Ohio seat choices remain separate races", () => {
+  for (const state of ["id", "wa", "nv", "oh"]) {
+    const pack = JSON.parse(readFileSync(`data/ballot/2026-general/${state}.json`, "utf8"));
+    const raw = Object.values(pack.ballots)[0] as BallotWithTickets;
+    const separate = raw.contests.filter(row => /\b(?:seat\s+[a-z]|pos\.\s*\d|commencing\s+\d)/i.test(row.title));
+    assert.ok(separate.length >= 2, state);
+    const view = withCandidateTickets(raw);
+    for (const contest of separate) {
+      assert.ok(view.contests.some(row => row.id === contest.id), `${state}: a separate vote was combined: ${contest.title}`);
+      for (const candidate of raw.candidacies.filter(row => row.contestId === contest.id))
+        assert.ok(view.candidacies.some(row => row.contestId === contest.id && ballotCandidateAliases(row).includes(candidate.id)), candidate.id);
+    }
+  }
+});
+
 test("Arizona, Colorado and Wisconsin official ticket records reach the division-filtered reader", () => {
   for (const name of ["az", "co", "wi"]) {
     const file = JSON.parse(readFileSync(`data/ballot/2026-general/${name}.json`, "utf8"));

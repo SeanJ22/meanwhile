@@ -34,6 +34,12 @@ The next full ordinary scheduled cycle after migration ran from 2026-10-24T18:17
 
 The original scoped-copy migration check missed the production runner's one-second statement limit. River reproduced the full-size index cost and shipped RV-0051 in release 99, giving this established migration a ten-second statement budget while retaining the lock wait. The migration SQL was not rewritten.
 
+## Remaining live check — River
+
+The implementation and production verification above are live through release 102 (4ae2e14e6); the evidence update was 1d6df41d9. After release 101's candidate changes, a further read-only check at 2026-10-24T19:56:53.089Z still resolved all 36 ids, including all 17 saved candidate ids, with zero unresolved ids.
+
+The lane remains open for River to verify the authenticated Admin Data screen's “Record aliases by state” table (all 56 jurisdictions plus National) and the live reaction endpoint for all 17 saved candidate targets in tests/rb-a1-reactions.test.ts. River's board currently confirms the renamed-candidate case; my direct live POST probes were rejected by automatic approval review under the read-only rule. The user's stop condition is for board/river status.md to say RB-A1 passed its live check. The lane continues its 20-minute return/status watch until that result is recorded.
+
 ## Counts by every state and territory
 
 Counts below are live after migration at 2026-10-24T18:11:59.203718Z. Ask refs counts subject references rather than rows with empty subject lists. All 56 jurisdictions plus US are included. Alias total: 593,217.

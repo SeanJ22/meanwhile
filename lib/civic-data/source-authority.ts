@@ -18,6 +18,18 @@ export interface OfficialLinkingPage {
   readonly linkingPage?: OfficialLinkingPage | null;
 }
 
+export interface GovernmentWebsiteDelegation {
+  readonly governmentUrl: string;
+  readonly html: string;
+  readonly dns: {
+    readonly url: string;
+    readonly text: string;
+    readonly artifactId: string;
+    readonly contentHash: string;
+    readonly retrievedAt: string;
+  };
+}
+
 // Plain string parsing: this runs inside the isolated Validator realm, which has no URL global.
 const hostOf = (url: string, base?: string): string | null => {
   const absolute = /^(https?):\/\/([^/?#\s]+)/i.exec(url.trim());
@@ -30,11 +42,38 @@ const hostOf = (url: string, base?: string): string | null => {
   return base === undefined ? null : hostOf(base);
 };
 
-/** Any `.gov` site is official; any other site is official once an official government page links to it. No host list. */
-export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null): boolean {
+function delegatedGovernmentWebsite(url: string, proof: GovernmentWebsiteDelegation): boolean {
+  if (!proof || typeof proof.governmentUrl !== "string" || typeof proof.html !== "string" || !proof.dns ||
+      typeof proof.dns.url !== "string" || typeof proof.dns.text !== "string") return false;
+  const parts = (value: string) => /^https:\/\/([a-z0-9.-]+)(?::443)?(\/[^#]*)?$/i.exec(value);
+  const government = parts(proof.governmentUrl), delivery = parts(url);
+  if (!government || !delivery || !/(^|\.)gov$/i.test(government[1]) ||
+      (government[2] ?? "/") !== (delivery[2] ?? "/") ||
+      !/^https:\/\/dns\.google\/resolve\?/.test(proof.dns.url) || !proof.dns.artifactId ||
+      !/^sha256-[a-f0-9]{64}$/.test(proof.dns.contentHash) || !Number.isFinite(Date.parse(proof.dns.retrievedAt))) return false;
+  const canonical = [...proof.html.matchAll(/<link\b([^>]+)>/gi)].flatMap(tag => {
+    const attr = (name: string) => new RegExp(`\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, "i").exec(tag[1]);
+    const rel = attr("rel"), href = attr("href");
+    return rel && href && (rel[1] ?? rel[2] ?? rel[3]).toLowerCase().split(/\s+/).includes("canonical")
+      ? [(href[1] ?? href[2] ?? href[3]).replace(/&amp;/g, "&")] : [];
+  });
+  if (canonical.length !== 1 || canonical[0] !== proof.governmentUrl) return false;
+  try {
+    const dns = JSON.parse(proof.dns.text) as { Status?: number; Question?: { name?: string; type?: number }[];
+      Answer?: { name?: string; type?: number; data?: string }[] };
+    const name = (value: string | undefined) => value?.toLowerCase().replace(/\.$/, "");
+    const owner = government[1].toLowerCase(), target = delivery[1].toLowerCase();
+    return dns.Status === 0 && Array.isArray(dns.Question) && Array.isArray(dns.Answer) &&
+      dns.Question.some(question => question.type === 5 && name(question.name) === owner) &&
+      dns.Answer.some(answer => answer.type === 5 && name(answer.name) === owner && name(answer.data) === target);
+  } catch { return false; }
+}
+
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null, websiteDelegation?: GovernmentWebsiteDelegation | null): boolean {
   const host = hostOf(url);
   if (host === null) return false;
   if (/(^|\.)gov$/.test(host)) return true;
+  if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return true;
   if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
   for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
     if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
@@ -148,7 +187,7 @@ const AUTHORITIES = {
     id: "epa-echo", publisher: "U.S. Environmental Protection Agency", trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "FEDERAL_AGENCY",
     routePrefixes: ["https://echo.epa.gov/files/echodownloads/", "https://echodata.epa.gov/echo/"],
     jurisdictions: ["US", ...REGISTRATION_TARGETS.map(t=>t.jurisdiction)], recordClasses: ["CURATED_READER_RECORD"],
-    competentFacts: ["FRS facility identity", "ZIP and Census FIPS", "reported inspections, dates, compliance and violation histories"],
+    competentFacts: ["FRS facility identity and source-linked EPA program identity", "ZIP and Census FIPS", "reported inspections, dates, compliance and violation histories"],
     expectedIdentifierKeys: ["record_id", "registry_id"], expectedTemporalFields: ["source_through"],
     horizonSemantics: "Complete weekly national exporter, including facilities beyond the search API's queryset limit. Each native facility is retained in its ZIP; missing ZIPs and unresolved government joins remain held and counted.",
     parserVersion: "src-so/1", freshnessExpectation: "Weekly EPA publication; HTTP Last-Modified dates the source release.",
@@ -889,7 +928,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["bill_id", "session_id"],
     expectedTemporalFields: ["dataset_date", "session_id"],
     horizonSemantics: "All bills in each published session archive; LegiScan attribution remains secondary, while linked government documents retain official labels. Unresolved sponsor joins never imply no bills.",
-    parserVersion: "legiscan-bulk/2",
+    parserVersion: "legiscan-bulk/4",
     freshnessExpectation: "Vendor weekly publication.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

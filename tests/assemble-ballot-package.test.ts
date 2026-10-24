@@ -113,6 +113,22 @@ const sourceFacts = (value: unknown): unknown => JSON.parse(JSON.stringify(value
 const packageFor = (state: BallotStateFile): ManualProjectionPackage => ({ contractId: stateBallotContractId("ballot-contests", ballotOf(state).election.state), version: "fixture",
   sourceThrough: state.sourceReceipt.reviewedAt, sourceReceipt: state.sourceReceipt, payload: { kind: "ballot-contests", ballots: state.ballots } });
 
+test("ballot publication canonicalizes every congressional code through the shared Census seat rule", async () => {
+  const input = JSON.parse(await readFile("data/ballot/2026-general/nd.json", "utf8")) as BallotStateFile;
+  const ballot = ballotOf(input);
+  const contest = ballot.contests.find(row => row.ocdId.endsWith("/cd:at-large"))!;
+  for (const code of ["0", "00", "98", "at-large"]) {
+    contest.ocdId = `ocd-division/country:us/state:nd/cd:${code}`;
+    const candidate = manualProjectionCandidate(packageFor(input));
+    const normalized = candidate.readModel as GenericBallotProjection;
+    assert.equal(Object.values(normalized.ballots)[0].contests.find(row => row.id === contest.id)?.ocdId,
+      "ocd-division/country:us/state:nd/cd:at-large", code);
+    assert.equal(contest.ocdId, `ocd-division/country:us/state:nd/cd:${code}`, "the source input remains as filed");
+  }
+  contest.ocdId = "ocd-division/country:us/state:nd/cd:ZZ";
+  assert.ok(manualProjectionCandidate(packageFor(input)).semantics.violations.some(row => row.includes("carries no seat")));
+});
+
 async function publish(store: MemoryRoutineDataStore, input: ManualProjectionPackage) {
   const result = await processRegisteredManualCandidate(store, input.contractId, manualProjectionCandidate(input), now);
   assert.ok(result.promoted, result.candidate.failureDetail ?? JSON.stringify(result.candidate.receipt));

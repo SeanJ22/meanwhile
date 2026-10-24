@@ -1,0 +1,243 @@
+{
+  "state": "ID",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://voteidaho.gov/idaho-general-election/",
+      "finalUrl": "https://voteidaho.gov/idaho-general-election/",
+      "publisher": "Idaho Secretary of State"
+    },
+    {
+      "requestedUrl": "https://voteidaho.gov/voter-registration/",
+      "finalUrl": "https://voteidaho.gov/voter-registration/",
+      "publisher": "Idaho Secretary of State"
+    },
+    {
+      "requestedUrl": "https://voteidaho.gov/casting-your-ballot/",
+      "finalUrl": "https://voteidaho.gov/casting-your-ballot/",
+      "publisher": "Idaho Secretary of State"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://voteidaho.gov/casting-your-ballot/",
+          "finalUrl": "https://voteidaho.gov/casting-your-ballot/",
+          "publisher": "Idaho Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:07.064018+00:00",
+          "httpStatus": 200,
+          "rawHash": "218bda05f1ca4d805857a004bb6d066d49a4069136a1787bd8858f91efa17b01",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://voteidaho.gov/idaho-general-election/",
+          "finalUrl": "https://voteidaho.gov/idaho-general-election/",
+          "publisher": "Idaho Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:08.464435+00:00",
+          "httpStatus": 200,
+          "rawHash": "baeeef392ce1672ad23e77e71ed7be28506620f2475ae7e3928d021ee7c2290d",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://voteidaho.gov/voter-registration/",
+          "finalUrl": "https://voteidaho.gov/voter-registration/",
+          "publisher": "Idaho Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:07.077486+00:00",
+          "httpStatus": 200,
+          "rawHash": "ef31d1a594085aa1d524b1ba0eb5261d8be4b673377c798a979110cc8e128846",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:2522e38c941421797df3d736bedbae9a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "registration_lookup",
+            "text": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter-search/ovr-voter-search?returnUrl=VoterServices%2Fvoter%2Fvoter-profile",
+            "quote": "Check Your Registration",
+            "dates": [],
+            "url": "https://voteidaho.gov/voter-registration/",
+            "navigationUrl": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter-search/ovr-voter-search?returnUrl=VoterServices%2Fvoter%2Fvoter-profile",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:07.077486+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:2e4b4d22963d696309c734c08df598f8",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "election_office",
+            "text": "Idaho Secretary of State",
+            "quote": "An official website of the Idaho Secretary of State.",
+            "dates": [],
+            "url": "https://voteidaho.gov/idaho-general-election/",
+            "navigationUrl": "https://voteidaho.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "(208) 334-2852",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.464435+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:5f9b11c2678c7ea2d53c0b0bb376c5f9",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "registration_deadline",
+            "text": "You may also register when you vote in person at early voting or on Election Day.",
+            "quote": "You may also register when you vote in person at early voting or on Election Day.",
+            "dates": [
+              "2026-11-03"
+            ],
+            "url": "https://voteidaho.gov/voter-registration/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:07.077486+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:65a3ebae1a24e34d021a7af3fc8ba7bb",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "registration_deadline",
+            "text": "Voter pre-registration ends on october 23 .",
+            "quote": "voter pre-registration ends on october 23 .",
+            "dates": [
+              "2026-10-23"
+            ],
+            "url": "https://voteidaho.gov/idaho-general-election/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.464435+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:6d2e3a125a6ccb9efb6c02b30bdddc2e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "early_voting",
+            "text": "Visit an early voting or in-person absentee location from october 13 to october 30 .",
+            "quote": "visit an early voting or in-person absentee location from october 13 to october 30 .",
+            "dates": [
+              "2026-10-13",
+              "2026-10-30"
+            ],
+            "url": "https://voteidaho.gov/idaho-general-election/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.464435+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:8232c336ee529f370392adb88e847845",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "registration_page",
+            "text": "https://voteidaho.gov/voter-registration/",
+            "quote": "register to vote page",
+            "dates": [],
+            "url": "https://voteidaho.gov/idaho-general-election/",
+            "navigationUrl": "https://voteidaho.gov/voter-registration/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.464435+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:b4745cc3a49b6ace3643addf9ac4d28e",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "ballot_lookup",
+            "text": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter/el-sample-ballot",
+            "quote": "Preview Your Sample Ballot",
+            "dates": [],
+            "url": "https://voteidaho.gov/idaho-general-election/",
+            "navigationUrl": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter/el-sample-ballot",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.464435+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:e68798f7e7ac870b22735e8b346a2085",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "polling_lookup",
+            "text": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter/where-do-I-vote",
+            "quote": "Find Your Polling Location",
+            "dates": [],
+            "url": "https://voteidaho.gov/casting-your-ballot/",
+            "navigationUrl": "https://votertools.voteidaho.gov/TEDElectionLink/VoterServices/voter/where-do-I-vote",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:07.064018+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:ea2b94ea473e89c246f808284725713a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "ID",
+            "divisionId": "ocd-division/country:us/state:id",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Request an absentee ballot by 5:00 p.m. local time on october 23 .",
+            "quote": "request an absentee ballot by 5:00 p.m. local time on october 23 .",
+            "dates": [
+              "2026-10-23"
+            ],
+            "url": "https://voteidaho.gov/idaho-general-election/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:08.464435+00:00",
+            "sourceOrg": "Idaho Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

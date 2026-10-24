@@ -41,6 +41,7 @@ import {
   meetingCardSources,
 } from "@/lib/officials/card-sources";
 import type { Meeting } from "@/lib/sources/types";
+import { pinBasisLabel, type MeetingPinLocation } from "@/lib/meetings/pin-location";
 
 import {
   CardSection,
@@ -136,6 +137,7 @@ export interface PlaceCardData {
 
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
+  mapPin?: MeetingPinLocation;
   publicRecordsDivisionId?: string | null;
   title: string;
   subtitle: string;
@@ -562,11 +564,12 @@ export function EntityModal({
   const meetingLinks =
     embedded && subject.subjectKind === "MEETING" && (onOpenVenue || (subject.heldByBodyId && onOpenPlaceBody)) ? (
       <div className="mw-link-rows">
-        {onOpenVenue && subject.meetings[0]?.location && (
+        {onOpenVenue && (subject.meetings[0]?.location || subject.mapPin) && (
           <button type="button" className="mw-row-link" onClick={onOpenVenue}>
-            <span className="mw-row-link-label">Where</span>
+            <span className="mw-row-link-label">{subject.mapPin ? "Map pin" : "Where"}</span>
             <span className="mw-row-link-value">
-              {subject.meetings[0].location.name ?? subject.meetings[0].location.address}
+              {subject.mapPin ? `${pinBasisLabel(subject.mapPin.basis)} · ${subject.mapPin.address}`
+                : subject.meetings[0].location!.name ?? subject.meetings[0].location!.address}
             </span>
             <span aria-hidden="true">›</span>
           </button>

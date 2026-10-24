@@ -2,7 +2,7 @@ import type { RoutineDataStore } from "../../civic-data/store.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { civicCandidate } from "./publication.ts";
-import { readCivicApi, recordCivicCatalogFailure, CivicSourceError, type CivicReadOptions } from "./acquisition.ts";
+import { readCivicApi, parseCivicResponse, recordCivicCatalogFailure, CivicSourceError, type CivicReadOptions } from "./acquisition.ts";
 import { civicElectionRows } from "./model.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_STATES, civicStateScope } from "./targets.ts";
 import { readRegistrationProjection } from "../../registration/reader.ts";
@@ -79,7 +79,7 @@ export async function refreshGoogleCivic(input: {
     const failed = await recordCivicCatalogFailure(input.store, error instanceof CivicSourceError ? error.reason : "Google Civic elections could not be read.", new Date().toISOString());
     return { candidate: failed.outcome.candidate.candidate, outcome: failed.outcome, coverage: [] };
   }
-  const elections = civicElectionRows(catalog.raw, catalog.checkedAt, new Set(["ocd-division/country:us"]));
+  const elections = parseCivicResponse("elections", catalog, raw => civicElectionRows(raw, catalog.checkedAt, new Set(["ocd-division/country:us"])), {}, options);
   const electionId = elections.find(row => row.ocdId === "ocd-division/country:us")?.electionId;
   const coverage: CountyCivicStateCoverage[] = [];
   const task = routineTaskFromContract(requiredRoutineContract(GOOGLE_CIVIC_SOURCE_ID));

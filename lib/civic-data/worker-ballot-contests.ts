@@ -1,3 +1,4 @@
+import { canonicalCongressionalDivision } from "../ocd/fips.ts";
 import { consumeStatePublicationRecord, immutableStateValue, reuseStatePublicationRecord } from "./state-publication.ts";
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow, saveWorkerPublicationOutcome } from "./publication-flow.ts";
@@ -348,16 +349,19 @@ export class BallotContestMerge {
       const currentAuthority = this.currentAuthorities.get(`${contest.provenance.sourceUrl}\n${contest.provenance.collectedAt}`) ??
         this.currentAuthorities.get(contest.provenance.sourceUrl ?? "");
       const correction = (contest as Contest & { scopeCorrection?: { previousOcdId: string; provenance: Contest["provenance"] } }).scopeCorrection;
+      const priorCongressionalDivision = previous && canonicalCongressionalDivision(previous.ocdId);
+      const sameDivision = previous && (previous.ocdId === contest.ocdId || Boolean(priorCongressionalDivision &&
+        priorCongressionalDivision === canonicalCongressionalDivision(contest.ocdId)));
       const correctedScope = previous && correction?.previousOcdId === previous.ocdId &&
         previous.electionId === contest.electionId && authoritative && observedAt(contest) > observedAt(previous) &&
         Boolean(correction.provenance?.quote?.trim()) &&
         this.official.has(`${correction.provenance?.sourceUrl}\n${correction.provenance?.collectedAt}`);
-      if (this.checkAuthority && previous && previous.ocdId !== contest.ocdId && !correctedScope) {
+      if (this.checkAuthority && previous && !sameDivision && !correctedScope) {
         throw new Error("Contest division conflicts with the published ballot without an official scope correction.");
       }
       if (this.checkAuthority && old && priorAuthority !== currentAuthority &&
         !(priorAuthority && currentAuthority && authoritative && observedAt(contest) > observedAt(previous) &&
-          previous.electionId === contest.electionId && (previous.ocdId === contest.ocdId || correctedScope))) {
+          previous.electionId === contest.electionId && (sameDivision || correctedScope))) {
         throw new Error(`Contest authority conflicts with the published ballot: ${id}.`);
       }
       if (held) {

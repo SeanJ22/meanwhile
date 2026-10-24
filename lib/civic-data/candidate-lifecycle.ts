@@ -3,12 +3,13 @@ import { randomUUID } from "node:crypto";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
 import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
-import { canonicalCivicDataJson, candidateChangeSet } from "./changes.ts";
+import { canonicalCivicDataJson, candidateChangeSet, heldCivicRecords } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
 import { isRegisteredCandidateDoor, sameCitedAuthority, trustedLkgPredecessorVersionId, type PromotionOutcome } from "./promotion.ts";
 import type { RoutineReaderVerification } from "./reader-verification.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { statePublicationScope } from "./state-publication.ts";
+import { navigationBaseProjection, type NavigationComparison } from "./navigation-successor.ts";
 
 
 function failureOf(receipt: NonNullable<CandidateVersionRecord["receipt"]>): { code: string; detail: string } {
@@ -75,6 +76,7 @@ export async function processRoutineCandidate(
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
   options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"] } = {},
+  navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
   if (productionStore && !isRegisteredCandidateDoor(registeredDoor)) {
@@ -87,10 +89,16 @@ export async function processRoutineCandidate(
     throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const scoped = statePublicationScope(inputCandidate.scope);
   let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
-  let current = base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
-  let lkg = base ? base.lkg : current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
+  let current = navigation ? navigation.base ? navigationBaseProjection(navigation.base) : null
+    : base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
+  // Geography needs the prior payload and its proof, without rereading the
+  // national before/after delta and identity lists from the prior candidate.
+  let lkg = navigation ? navigation.base?.record ?? null : base ? base.lkg : current ? await (inputCandidate.recordClass === "CENSUS_GEOGRAPHY" && store.readCandidateProof
+    ? store.readCandidateProof(current.lastKnownGoodVersionId) : store.readCandidate(current.lastKnownGoodVersionId)) : null;
   let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
-  const observedBaseVersionId = current?.versionId ?? null;
+  const observedBaseVersionId = navigation
+    ? (await store.readPromotionIdentity(inputCandidate.recordClass, inputCandidate.scope))?.versionId ?? null
+    : current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
   const lkgPredecessorVersionId = lkg === null
     ? null
@@ -99,7 +107,7 @@ export async function processRoutineCandidate(
     ? null
     : await store.readCandidate(lkgPredecessorVersionId);
   let declaredBase = !scoped && preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
-    ? await store.readCandidate(expectedBaseVersionId)
+    ? navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
     : null;
   let exactDeclaredBase = declaredBase &&
       declaredBase.candidate.id === expectedBaseVersionId &&
@@ -112,7 +120,7 @@ export async function processRoutineCandidate(
       declaredBase.lastKnownGoodVersion === expectedBaseVersionId
     ? declaredBase
     : null;
-  const lkgProofIssue = current === null
+  const lkgProofIssue = navigation || current === null
     ? null
     : lkg === null
       ? "The canonical pointer's last-known-good candidate row is missing."
@@ -126,7 +134,7 @@ export async function processRoutineCandidate(
   const candidate: RoutineCandidate = {
     ...inputCandidate,
     // A receiptless curated base contributes no verified records to the change set.
-    changeSet: candidateChangeSet(
+    changeSet: navigation ? { ...navigation.changes, held: heldCivicRecords(inputCandidate) } : candidateChangeSet(
       inputCandidate,
       inputCandidate.recordClass === "CURATED_READER_RECORD" && inputCandidate.retrieval.manualSourceReceipt &&
         !(preloadedBaseChanged ? exactDeclaredBase : lkg)?.candidate.retrieval.manualSourceReceipt
@@ -293,7 +301,8 @@ export async function processRoutineCandidate(
   const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
-    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, scoped || candidate.recordClass === "MEETING" ? held : undefined);
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt,
+      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" ? held : undefined);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";
@@ -308,5 +317,5 @@ export async function processRoutineCandidate(
   const summary = await store.readCandidateSummary(candidate.id);
   if (summary === null) throw new Error(`CANDIDATE_NOT_FOUND:${candidate.id}`);
   const { candidate: _sameRow, ...promotedColumns } = summary;
-  return { candidate: { ...promotedColumns, candidate: validatedRecord.candidate }, promoted, readerReadback: null };
+  return { candidate: { ...promotedColumns, receipt: validatedRecord.receipt, candidate: validatedRecord.candidate }, promoted, readerReadback: null };
 }

@@ -3,7 +3,7 @@ import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, source
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
 
-export const CENSUS_ACQUISITION_PARSER = "census-geography/BD-01";
+export const CENSUS_ACQUISITION_PARSER = "census-geography/BL-01";
 
 export interface CensusSourceOptions {
   readonly fetchImpl?: typeof fetch;

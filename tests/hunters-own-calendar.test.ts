@@ -56,7 +56,8 @@ test("a member page a hunter found, linked from nowhere the walk would look, is 
   const link=await indexReportedFinding(repos.boxFindings,{workItemId:'wi-hunter',attemptId:'at-hunter',obligationId:`hunt:packet:${government}`,missionPart:null,finding:{index:0,subjectId:body,subjectHint:'Example',field:'GOV-03',value:MEMBERS,sourceUrl:'https://example.gov/',exactQuote:MEMBERS,artifactIds:['a-home']}},now);
   const publish=()=>publishBoxFindings({repos,facts,vault,fetch:async()=>{throw new Error('must reuse saved evidence')},store:new MemoryRoutineDataStore(),clocks:factClocks(null),now,limit:100,purge:async()=>({purged:true})});
   const handed=await publish();
-  assert.equal(handed.handed,1,'the link is handed to the walk, not parked or published');
+  // Intake hands the link to the walk when it arrives; the publisher spends no turn on it.
+  assert.deepEqual([handed.looked,handed.handed,handed.published],[0,0,0],'the link is handed to the walk at intake, not parked or published');
   assert.deepEqual((await repos.boxFindings.mustRead(link.id)).value.waitingFor?.reason,'SITE_WALK_TAKES_IT');
   const run=placeSourceExecutor({repos,scope:{jurisdictionId:government,governmentId:government,bodyId:body,name:'City of Example',state:'AL',website:'https://example.gov/'},query:facts.query,now:()=>now,readHeldPage:async()=>null,spaceOut:async()=>{},vault:async(a,text)=>{const saved=await putArtifact(vault,'freshness',a,Buffer.from(text));return {stored:true,where:saved.key,why:'saved'};},open:async({url})=>{seen.push(url);const text=pages[url];assert.ok(text,'unexpected source '+url);return {status:200,body:text,bytes:Buffer.byteLength(text),contentType:url.endsWith('robots.txt')?'text/plain':'text/html',durationMs:1,transportError:null};}});
   const outcome=await run(job);

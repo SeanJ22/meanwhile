@@ -14,13 +14,13 @@ The Box remains in service until Phase D. No production rows have been changed.
 
 ## Production copy verification
 
-Read-only Box export: 328,791 complete rows (742 MB source relation), captured October 24, 1:55–1:57 a.m. Arizona time. Source role: wtp_cp_release_readonly; project withered-sunset-39821877, branch br-tiny-frog-aeufpjeq. SHA-256: da80058267dc394af20e66d7b606b0799f05096017880861852ad7e8b93f964f. All writes stayed in local PostgreSQL 18.4.
+Read-only Box export: 328,791 complete rows (742 MB source relation), captured October 24, 4:55–4:57 a.m. Eastern time. Source role: wtp_cp_release_readonly; project withered-sunset-39821877, branch br-tiny-frog-aeufpjeq. SHA-256: da80058267dc394af20e66d7b606b0799f05096017880861852ad7e8b93f964f. All writes stayed in local PostgreSQL 18.4.
 
 The actual RB-A1 and RB-A5 migrations applied cleanly. Feeding every copied report through add produced 243,681 distinct links or claims, plus one detective in the probe. Two hundred independent connections started claiming together: 200 claims, 200 distinct ids. The slowest of 20 measured claims was 32.14 ms, including indexed lease recovery. The plan uses work_row_claim_ready.
 
 A child worker was killed with SIGKILL. Two timer-driven runs used the normal claim method; the second reclaimed and completed its row after its 1.5-second lease. Runs: 2026-10-24T12:21:13.517Z, 2026-10-24T12:21:14.518Z. This is scheduled behavior on the production copy; deployed queue scheduling remains for the connected rollout.
 
-Counter totals matched direct SQL both by state and by hour. The authenticated local Admin Work screen rendered the copy's actual hourly query results in Eastern time. Its obsolete redirect to Queue was removed so these counts are reachable without the former work-row read. Local Chrome captures show Arizona and California, including its refusal. National and zero-row state filters passed. The captures remain local in .scratch/rb-a5; scripts/rb-a5-admin-browser.mts reproduces them. Numeric results are saved in measurements/rb-a5/admin.json.
+Counter totals matched direct SQL both by state and by hour. The authenticated local Admin Work screen rendered the copy's actual hourly query results in Eastern time. Its obsolete redirect to Queue was removed so these counts are reachable without the former work-row read. Local Chrome captures show Arizona and California, including its refusal. National and zero-row state filters passed. The captures remain local in .scratch/rb-a5; scripts/rb-a5-admin-browser.mts reproduces them. Numeric results are saved in measurements/rb-a5/admin.json. On the loaded local copy, run node --experimental-strip-types scripts/rb-a5-production-copy.mts counts to export the actual hourly response for the browser helper. It expects the local production server on port 3145 with WTP_ADMIN_SESSION_KEY=rb-a5-local-browser-only and no production database environment.
 
 Measurements and Chrome captures are in [docs/measurements/rb-a5](measurements/rb-a5/).
 
@@ -29,7 +29,7 @@ Measurements and Chrome captures are in [docs/measurements/rb-a5](measurements/r
 1. All 328,791 production Box reports passed through work.add() and became 243,681 distinct links or claims. Direct SQL found all 328,791 distinct Box ids in the row notes, with zero missing reports. Source references were retained. This used the read-only export and wrote only the local copy.
 2. A real work row (work-bd914e099d0889ef5fc4f17c4bcdf64e5b4fc8e0bc4c14a2735646bdcc1d7cd1) was claimed, passed through the RB-A3 door, finished, and appeared in the ordinary readPlacePackage payload for ocd-division/country:us/state:az/county:pinal. Production fact 1711874, source-copy 62692, became “520-866-6854” with [its original government source](https://www.azcleanelections.gov/november-3-2026/pinal). The door also queued that place for rebuilding. Pinned Chrome 151 then opened meanwhileusa.com/?zip=85139 with the copy's response: the Recorder card had no phone before the work and showed this phone afterward; its source link was visible. All body ids and meetings in the baseline response were retained. Six log/event writes were blocked in the latest replay. Reader data used role readonly and its actual parents and source records; mutations stayed in local copies. Replay scripts: scripts/rb-a5-connection-copy.mts and scripts/rb-a5-copy-browser.mts. The browser uses the normal production reader with copied API responses, leaving production data untouched.
 
-The isolated connected checkout also compiled and passed 22 focused identity, candidate-reaction, door and queue checks against RB-A1 READY (5bde46615) and door checkpoint (5d3e4f4ab). The main stream awaits River's foundation fold before its final merge and full rerun.
+The isolated connected checkout also compiled and passed 27 focused identity, candidate-reaction, door, database-isolation and queue checks against RB-A1 READY (5bde46615) and door code (8649ec050). Later door commits through b6a04f7bc only update evidence. The main stream awaits River's foundation fold before its final merge and full rerun.
 
 ## Checks
 
@@ -37,11 +37,11 @@ The full checkpoint run on f471098ef registered 9,643 tests: 9,640 passed, one f
 
 ## Live reader check
 
-Google Chrome for Testing 156 read meanwhileusa.com/ballot?zip=85003. The November 3 election, deadlines, candidates, measures and Sources remained visible. The walk blocked three attempted event writes. DOM arrival was 2.24 s; the observed usable time was 3.07 s, over the three-second target. No page speed improvement is claimed. Chrome used a disposable container with a task-only CA store and TLS verification enabled; the container was removed.
+Pinned Google Chrome for Testing 151.0.7922.34 read meanwhileusa.com/ballot?zip=85003. The November 3 election, deadlines, candidates, measures and 87 source controls remained visible. The Katie Hobbs / John Giles battlecard opened with its existing candidate subject id and Speak Your Mind control. The latest walk blocked two event writes: DOM arrival was 1.78 s; candidate controls were usable in 2.08 s. An earlier Chrome 156 reading took 3.07 s, over the three-second target. No A5 page speed improvement is claimed. Chrome used a disposable container with a task-only CA store and TLS verification enabled; the container was removed. Numeric evidence is in measurements/rb-a5/live-reader.json.
 
 ## Counts by state
 
-After the concurrency and connection probes: 2026-10-24T13:32:34.326Z. Direct counts equal the hourly totals for all states.
+After the concurrency and connection probes: 2026-10-24T15:17:10.715Z. Direct counts equal the hourly totals for all states.
 
 | State | Rows in | Done | Refused |
 | --- | ---: | ---: | ---: |

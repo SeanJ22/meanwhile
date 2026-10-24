@@ -175,6 +175,11 @@ try {
       plan: (await query("EXPLAIN (FORMAT JSON) SELECT id FROM work_row WHERE kind='read' AND status='ready' AND not_before<=now() ORDER BY priority DESC,not_before,id LIMIT 1"))[0] };
     await writeFile(".scratch/rb-a5/proof.json", JSON.stringify(report, null, 2));
     console.log(report);
+  } else if (mode === "counts") {
+    const at = new Date();
+    const rows = await workCounts(query, null, at);
+    await writeFile(".scratch/rb-a5/admin-counts.json", JSON.stringify({ at: at.toISOString(), rows }));
+    console.log({ at: at.toISOString(), hourlyRows: rows.length });
   } else if (mode === "schema") {
     await query(CONTROL_READS_BACKFILL_DDL[0]!);
     const client = await pool.connect();
@@ -184,5 +189,5 @@ try {
       await expandWorkList(sql);
     } finally { client.release(); }
     console.log("Local PostgreSQL schema applied");
-  } else throw new Error("Use snapshot, schema, seed or prove");
+  } else throw new Error("Use snapshot, schema, seed, prove or counts");
 } finally { await pool.end(); }

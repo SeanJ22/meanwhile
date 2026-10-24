@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-24T14:31:03.485560+00:00",
+  "foundation": "5bde46615d6e3b862aa5589192c73f529864f37e",
+  "doorCode": "8649ec05076bfa80b6efd44f1c7108126f7c29e9",
+  "testsPassed": 27,
+  "testsFailed": 0,
+  "testsSkipped": 0,
+  "typescript": "passed",
+  "files": [
+    "tests/rb-a1.test.ts",
+    "tests/rb-a1-reactions.test.ts",
+    "tests/rb-a3-door.test.ts",
+    "tests/work.test.ts",
+    "tests/fact-db-isolation.test.ts"
+  ]
+}

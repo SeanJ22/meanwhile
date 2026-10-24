@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-24T14:40:37.768Z",
+  "chrome": "Chrome/151.0.7922.34",
+  "status": 200,
+  "url": "https://meanwhileusa.com/ballot?zip=85003",
+  "domMs": 1784.023269,
+  "usableMs": 2079.7902219999996,
+  "deadlineVisible": true,
+  "candidatesVisible": true,
+  "measuresVisible": true,
+  "sourceControls": 87,
+  "battlecard": {
+    "subject": "ballot-az-pima:governor|Katie Hobbs / John Giles",
+    "candidate": "Katie Hobbs / John Giles",
+    "visible": true
+  },
+  "writesBlocked": {
+    "count": 2,
+    "paths": [
+      "/api/events"
+    ]
+  }
+}

@@ -27,11 +27,11 @@ Production reads use only `readonly` on tiny-hill-13996172 / br-delicate-lab-ax0
 
 Owned by RB-A6:
 
-- Complete the full checks on the current combined branch. The production build, TypeScript, focused lint, unused-code check and 126 related tests pass. The earlier full run was stopped when the obsolete edit path had to be removed; it is not a passing full run.
-- Follow `stream/rb-a2` on each fetch. Current merged dependency: `af8c2e48a` (includes RB-A1’s latest READY). River has not recorded or contained RB-A2 yet.
+- Complete the full checks after River contains RB-A2. The current production build and 14 affected map/hunter cases pass. The preceding combined branch passed 127 related cases, lint, TypeScript and the unused-code check. Full runs stopped for the edit-path replacement and later dependency changes are not passing full runs.
+- Follow `stream/rb-a2` on each fetch. Current merged dependency: `3b392c823` (includes RB-A1’s latest READY and RB-A2’s tribal, school identity and source-topology fixes). River has not recorded or contained RB-A2 yet.
 - After River folds RB-A2, merge `origin/river`, rerun every check, and push `READY: RB-A6` with the production connections, every-state counts and next-pass evidence.
 - Keep checking River's return and status until RB-A6 passes its live check. The first automatic production pass remains part of that live check.
 
 The branch was cut from `origin/river` at `21ae9bcfb`. This is built work in progress, not READY, deployed or claimed live as new behavior.
 
-Test-runner lesson: a restricted execution sandbox reported a test file without its individual test cases. The same checklist file reports all eight cases in a network-permitted run. The canonical affected run then reported all 126 cases and complete file timing summaries. Use the network-permitted execution context for the full suite and verify actual case summaries; do not accept a file-only report as the case result.
+Test-runner lesson: a restricted execution sandbox reported a test file without its individual test cases. The same checklist file reports all eight cases in a network-permitted run. The canonical affected run then reported all 127 cases and complete file timing summaries. Use the network-permitted execution context for the full suite and verify actual case summaries; do not accept a file-only report as the case result.

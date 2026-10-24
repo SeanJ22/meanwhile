@@ -18,6 +18,7 @@ import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateBoundaries } from "../lib/place-map/acquire.ts";
+import { knownPostalZips, readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
 
 const date = "2026-10-24T08:00:00.000Z";
 const state = "ocd-division/country:us/state:az", county = `${state}/county:pima`;
@@ -129,6 +130,22 @@ test("Idaho district type keys cannot become shared entity aliases", () => {
     assert.ok(!aliases.has(key) || aliases.get(key) === place.id, key);
     aliases.set(key, place.id);
   }
+});
+
+test("a border ZIP keeps its sourced districts even when the older state sample missed it", async () => {
+  const registration = JSON.parse(readFileSync("data/derived/registration/ar.json", "utf8")) as RegistrationReference;
+  const legacyZips = await readLegacyStateMemberships(process.cwd(), "AR");
+  assert.ok(!legacyZips.has("75556"));
+  const knownZips = await knownPostalZips(process.cwd(), new Set(["75556", "99999"]));
+  assert.ok(knownZips.has("75556")); assert.ok(!knownZips.has("99999"));
+  const id = "ocd-division/country:us/state:ar/cd:4";
+  const map = buildStatePlaceMap({ registration, scopes: [], legacyZips, legacyZctas: new Set(["75556"]), knownZips,
+    additionalPlaces: [{ id, name: "Congressional District 4", state: "AR", aliases: [] }],
+    boundaries: [{ placeId: id, boundaryYear: 2024, layer: "cd", version: "cd:119", geometry: null,
+      countyAttachment: false, hostCountyId: null, sourceUrls: ["https://www.census.gov/"], checkedAt: date }],
+    acquiredEdges: ["75556", "99999"].map(code => ({ code, placeId: id, boundaryYear: 2024, share: null, shareBasis: "unknown", partial: true, fringe: false })), checkedAt: date });
+  assert.ok(map.zipEdges.some(edge => edge.code === "75556" && edge.placeId === id));
+  assert.ok(!map.zipEdges.some(edge => edge.code === "99999"));
 });
 
 test("same-named New Jersey school districts keep separate GEOID and NCES identities", () => {

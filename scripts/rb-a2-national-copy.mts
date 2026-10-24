@@ -8,12 +8,13 @@ import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import { placesForCode } from "../lib/place-map/read.ts";
 import { placeMapCounts } from "../lib/place-map/counts.ts";
-import { readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
+import { readLegacyStateMemberships, heldStateDataset } from "../lib/place-map/refresh.ts";
+import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
-const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report");
+const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), productionBaseline = process.argv.includes("--production-baseline"), zipLinksOnly = process.argv.includes("--zip-links");
 const states = Object.values(FIPS_TO_STATE).map(state => state.postal).sort();
-const db = await openMapCopy("national", !measuring && !verifying && !aliasesOnly && !shapesOnly && !reporting);
+const db = await openMapCopy("national", !measuring && !verifying && !aliasesOnly && !shapesOnly && !reporting && !productionBaseline && !zipLinksOnly);
 try {
   if (measuring) {
     const codes = await db.query("SELECT DISTINCT zip FROM zip_place ORDER BY zip");
@@ -29,6 +30,32 @@ try {
     await writeFile("/tmp/rb-a2-replay/national-benchmark.json", JSON.stringify(result, null, 2));
     console.log(JSON.stringify(result));
     if (!result.passed) process.exitCode = 1;
+  } else if (productionBaseline) {
+    const url = process.env.RB_A2_READER_URL;
+    if (!url || new URL(url).username !== "readonly") throw new Error("Production read-only role is required");
+    const sql = neon(url), results = [];
+    for (const state of states) {
+      const dataset = await heldStateDataset(async (text, params = []) => (await sql.transaction([sql.query(text, [...params])], { readOnly: true }))[0], state);
+      if (!dataset) throw new Error(`No production Census baseline for ${state}`);
+      const byZip = new Map<string, Set<string>>();
+      for (const scope of dataset.scopes) if (["congressional_district", "state_leg_upper", "state_leg_lower"].includes(scope.type)) {
+        for (const group of scope.groupings) {
+          const id = censusWorkDivision({ ...group, type: scope.type, version: scope.version });
+          if (!id) continue;
+          for (const edge of group.overlaps) { const found = byZip.get(edge.zcta5) ?? new Set<string>(); found.add(id); byZip.set(edge.zcta5, found); }
+        }
+      }
+      const missing = [];
+      for (const [zip, previous] of byZip) {
+        const current = await placesForCode(db.query, "zip", zip, { purpose: "representation", asOf: "2026-10-24" });
+        const ids = new Set(current.memberships.map(row => row.placeId));
+        for (const id of previous) if (!ids.has(id)) missing.push({ zip, id });
+      }
+      results.push({ state, checkedZips: byZip.size, missing });
+      console.log(JSON.stringify({ state, checkedZips: byZip.size, missing: missing.length, examples: missing.slice(0, 3) }));
+    }
+    await writeFile("/tmp/rb-a2-replay/production-membership-preservation.json", JSON.stringify(results, null, 2));
+    if (results.some(row => row.missing.length)) process.exitCode = 1;
   } else if (reporting) {
     const counts = await placeMapCounts(db.query), rows = [];
     await db.exec("CREATE TEMP TABLE baseline_zip_place(zip text,place_id text,PRIMARY KEY(zip,place_id))");
@@ -64,11 +91,11 @@ try {
       console.log(`${state}: ${baseline.size} legacy ZIPs, no missing districts including fringe and adjacent-state IDs`);
     }
     await writeFile("/tmp/rb-a2-replay/national-preservation.json", JSON.stringify(results, null, 2));
-  } else if (aliasesOnly || shapesOnly) {
+  } else if (aliasesOnly || shapesOnly || zipLinksOnly) {
     for (const state of states) {
       const map = JSON.parse(gunzipSync(await readFile(`/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`)).toString("utf8")) as StatePlaceMap;
-      await loadStatePlaceMap(db, { places: map.places, boundaries: shapesOnly ? map.boundaries : [], zipEdges: [], zctaEdges: [] });
-      console.log(`${state}: source aliases loaded`);
+      await loadStatePlaceMap(db, { places: zipLinksOnly ? [] : map.places, boundaries: shapesOnly ? map.boundaries : [], zipEdges: zipLinksOnly ? map.zipEdges : [], zctaEdges: [] });
+      console.log(`${state}: ${zipLinksOnly ? "ZIP links" : shapesOnly ? "source shapes" : "source aliases"} loaded`);
     }
   } else {
     const url = process.env.RB_A2_READER_URL;

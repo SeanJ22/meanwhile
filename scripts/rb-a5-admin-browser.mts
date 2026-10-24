@@ -1,0 +1,38 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {launchGuarded} from './browser.mts';
+import {signSession,ADMIN_SESSION_COOKIE} from '../lib/control-plane/admin-auth.ts';
+import {ADMIN_ORIGIN,hostOf} from '../lib/ops/origins.ts';
+import {resolve} from 'node:path';
+const directory=resolve(process.argv[2]??'.scratch/rb-a5');
+const file=(name:string)=>resolve(directory,name);
+const browser=await launchGuarded({label:'rb-a5-admin-copy',blockWrites:true,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+try{
+ const ctx=await browser.context({viewport:{width:1440,height:1100},extraHTTPHeaders:{'x-forwarded-host':hostOf(ADMIN_ORIGIN)}});
+ const now=Math.floor(Date.now()/1000);const cookie=await signSession({sid:'adm_rb_a5_local000000000',iat:now,exp:now+3600,via:'google'},'rb-a5-local-browser-only');
+ await ctx.addCookies([{name:ADMIN_SESSION_COOKIE,value:cookie,url:'https://localhost:3145',secure:true,httpOnly:true,sameSite:'Lax'}]);
+ const data=JSON.parse(await readFile(file('admin-counts.json'),'utf8'));
+ await ctx.route('**/api/admin/v6/work-counts*',route=>{const state=new URL(route.request().url()).searchParams.get('state');return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({...data,rows:state?data.rows.filter((row:{state:string})=>row.state===state):data.rows})})});
+ const page=await ctx.newPage();const response=await page.goto('http://localhost:3145/admin?view=work&scope=az',{waitUntil:'domcontentloaded',timeout:120000});
+ console.log({status:response?.status(),url:page.url()});
+ await page.getByRole('heading',{name:'Work by hour',exact:true}).waitFor({timeout:30000});
+ await page.getByRole('columnheader',{name:'Rows in',exact:true}).waitFor({timeout:30000});
+ await page.getByRole('cell',{name:'Arizona',exact:true}).first().waitFor();
+ const text=await page.locator('body').innerText();console.log(text.slice(0,12000));
+ await writeFile(file('admin-work.txt'),text);
+ await page.screenshot({path:file('admin-work.png')});
+ await page.getByRole('combobox',{name:'State for hourly work counts'}).selectOption('ca');
+ const refusal=data.rows.find((row:{state:string;refused:number})=>row.state==='ca'&&row.refused>0);
+ if(!refusal)throw Error('The copied probe must include a refusal');
+ const outcomes=[refusal.incoming,refusal.done,refusal.refused].map(n=>new Intl.NumberFormat('en-US').format(n));
+ await page.getByRole('cell',{name:'California',exact:true}).first().waitFor();
+ if(!new RegExp('California\\s+'+outcomes.join('\\s+')).test(await page.locator('table').first().innerText()))throw Error('California hourly outcomes disagree with the production copy');
+ await page.screenshot({path:file('admin-california.png')});
+ await page.getByRole('combobox',{name:'State for hourly work counts'}).selectOption('us');
+ await page.getByRole('cell',{name:'National and system',exact:true}).first().waitFor();
+ await page.getByRole('combobox',{name:'State for hourly work counts'}).selectOption('wy');
+ await page.getByRole('cell',{name:'Wyoming',exact:true}).first().waitFor();
+ const zeroRows=await page.locator('table').first().innerText();
+ if(!zeroRows.includes('Wyoming')||/Arizona|California/.test(zeroRows))throw Error('Zero-state filter retained another state');
+ const result={at:new Date().toISOString(),dataAt:data.at,regions:57,hours:24,totals:data.rows.reduce((a:{incoming:number;done:number;refused:number},r:{incoming:number;done:number;refused:number})=>({incoming:a.incoming+r.incoming,done:a.done+r.done,refused:a.refused+r.refused}),{incoming:0,done:0,refused:0}),californiaHourlyOutcomes:'passed',nationalAndZeroStateFilters:'passed'};
+ await writeFile(file('admin-browser-proof.json'),JSON.stringify(result,null,2));console.log(result);
+}finally{await browser.close();}

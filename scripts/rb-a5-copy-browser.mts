@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile,writeFile} from 'node:fs/promises';
 import {launchGuarded} from './browser.mts';
 import {resolve} from 'node:path';
+import {PUBLIC_SITE_ORIGIN} from '../lib/ops/origins.ts';
 const directory=resolve(process.argv[2]??'.scratch/rb-a5');
 const file=(name:string)=>resolve(directory,name);
 const proof=JSON.parse(await readFile(file('connection-proof.json'),'utf8'));
@@ -19,7 +20,7 @@ try{
   await context.route('**/api/reader/state?*',r=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data.stateResponse.value)}));
   await context.route('**/api/meetings?*',r=>{served++;return r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(data)})});
   const page=await context.newPage();
-  await page.goto(`https://meanwhileusa.com/?zip=${response.nearZip}`,{waitUntil:'domcontentloaded',timeout:60000});
+  await page.goto(`${PUBLIC_SITE_ORIGIN}/?zip=${response.nearZip}`,{waitUntil:'domcontentloaded',timeout:60000});
   await page.getByRole('button',{name:'Skip',exact:true}).click({timeout:5000}).catch(()=>{});
   await page.getByText('Keep current view',{exact:true}).click({timeout:1000}).catch(()=>{});
   await page.getByRole('button',{name:'Who governs here?',exact:true}).click({timeout:20000});

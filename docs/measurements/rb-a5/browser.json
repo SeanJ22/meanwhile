@@ -13,7 +13,7 @@
   "placePageReaderValue": "520-866-6854",
   "reader": "readPlacePackage",
   "queuedForPageRebuild": true,
-  "browserAt": "2026-10-24T13:26:38.285Z",
+  "browserAt": "2026-10-24T14:12:02.352Z",
   "contexts": [
     {
       "stage": "before",
@@ -29,7 +29,7 @@
     }
   ],
   "writesBlocked": {
-    "count": 5,
+    "count": 6,
     "paths": [
       "/api/log",
       "/api/events"

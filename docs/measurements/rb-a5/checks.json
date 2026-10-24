@@ -1,0 +1,22 @@
+{
+  "revision": "f471098ef1bf66b7c8c6d4170bcac44b3f00eb5f",
+  "gatesPassed": 8,
+  "gatesTotal": 9,
+  "suite": {
+    "registered": 9643,
+    "passed": 9640,
+    "failed": 1,
+    "skipped": 2
+  },
+  "failure": "tests/origins.test.ts: new Chrome helper had a public host literal",
+  "correction": "Import PUBLIC_SITE_ORIGIN",
+  "afterCorrection": {
+    "originTestsPassed": 7,
+    "originTestsFailed": 0,
+    "lint": "passed",
+    "typescript": "passed",
+    "placeChrome": "passed",
+    "adminChrome": "passed"
+  },
+  "finalRiverRerun": "pending RB-A1 integration"
+}

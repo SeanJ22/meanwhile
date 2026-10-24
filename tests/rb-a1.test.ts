@@ -3,8 +3,12 @@ import test from "node:test";
 import { factDb } from "./helpers/fact-db.ts";
 import { identitySourceTables, identityEventTables, readerIdentityMigration } from "./helpers/reader-identity-db.ts";
 import { resolveId, syncReaderIds } from "../lib/core/resolve.ts";
-import { ALIAS_STATES, readAliasCounts } from "../lib/core/aliases.ts";
+import { ALIAS_STATES, readAliasCounts, type AliasCount } from "../lib/core/aliases.ts";
 import { SHARED_WORK_DDL } from "../lib/control-plane/repository/migrations/RB-A1.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { NextRequest } from "next/server";
+import { GET as aliasesGET } from "../app/api/admin/v6/data/aliases/route.ts";
+import { adminSessionCookie, ADMIN_HOST, withAdminSessionKey } from "./admin-session.ts";
 
 async function database() {
   const db = await factDb();
@@ -38,12 +42,13 @@ test("all four event sources reuse exact identities and source crosswalks; futur
   const db = await database();
   try {
     await db.pg.exec(`INSERT INTO entity(id,kind,name,state) VALUES('person','person','Person','AZ'),('body','body','Body','AZ'),
-      ('congress-api:A000001','person','Person from another source','AZ');
+      ('congress-api:A000001','person','Person from another source','AZ'),
+      ('meeting:legistar:example:123','meeting','Meeting','AZ');
       INSERT INTO entity_external_id VALUES('person','campaign-person:AZ','candidate|Person'),('person','bioguide','A000001');
       INSERT INTO civic_data_promotions VALUES('funding','FEC_FUNDING','federal-supported',
         '{"candidates":[{"fecCandidateId":"S0AZ00001","name":"Person","state":"AZ","targetKeys":["candidate|Person","congress:A000001"]}]}');
       INSERT INTO reactions VALUES('candidate|Person','CANDIDATE'),('house:120-1:999','FEDERAL_VOTE'),('S0AZ00001','CONTRIBUTOR_REACTION');
-      INSERT INTO speak_your_mind VALUES('body','BODY');
+      INSERT INTO speak_your_mind VALUES('body','BODY'),('legistar:example:123','MEETING'),('congress:A000001','OFFICIAL');
       INSERT INTO demand_signals VALUES('candidate|Person','CANDIDATE');
       INSERT INTO ask_interactions VALUES('["body","ballot-az-anywhere:measure#new-part"]')`);
     await db.pg.exec(readerIdentityMigration());
@@ -51,6 +56,8 @@ test("all four event sources reuse exact identities and source crosswalks; futur
     assert.equal(await resolveId("S0AZ00001", db.query), "person");
     assert.equal(await resolveId("fec:S0AZ00001", db.query), "person");
     assert.equal(await resolveId("house:120-1:999", db.query), "house:120-1:999");
+    assert.equal(await resolveId("legistar:example:123", db.query), "meeting:legistar:example:123");
+    assert.equal(await resolveId("congress:A000001", db.query), "congress-api:A000001");
     assert.equal(await resolveId("ballot-az-anywhere:measure#new-part", db.query), "ballot-az-anywhere:measure#new-part");
     const before = await db.query("SELECT count(*)::int n FROM entity");
     await syncReaderIds(db.query);
@@ -65,7 +72,40 @@ test("all four event sources reuse exact identities and source crosswalks; futur
     assert.equal(counts.length, ALIAS_STATES.length);
     assert.equal(counts.find(row => row.state === "AZ")!.n, 3);
     assert.equal(counts.find(row => row.state === "WY")!.n, 0);
+    await db.pg.exec(`UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{candidates}',payload->'candidates'||
+      '[{"fecCandidateId":"S8WY00999","name":"New filer","state":"WY","targetKeys":["congress:Z000999"]}]'::jsonb);
+      INSERT INTO reactions VALUES('S8WY00999','FUNDING_TOTAL_REACTION')`);
+    await syncReaderIds(db.query);
+    assert.equal(await resolveId("S8WY00999", db.query), "congress-api:Z000999");
+    assert.equal(await resolveId("congress:Z000999", db.query), "congress-api:Z000999");
+    await db.pg.exec("DELETE FROM civic_data_promotions");
+    await syncReaderIds(db.query);
+    assert.equal(await resolveId("S0AZ00001", db.query), "person", "a source refresh cannot orphan its saved FEC alias");
     await db.pg.exec("INSERT INTO entity_external_id VALUES('body','other','candidate|Person')");
     await assert.rejects(resolveId("candidate|Person", db.query), /Ambiguous/);
   } finally { await db.pg.close(); }
 });
+
+test("Admin's alias route returns every state's count and keeps its sign-in requirement", async () => {
+  const db = await database();
+  try {
+    await db.pg.exec(readerIdentityMigration());
+    await db.pg.exec(`INSERT INTO entity(id,kind,name,state) VALUES('person','person','Person','AZ');
+      INSERT INTO entity_external_id VALUES('person','fec','S0AZ00001')`);
+    installFactReader(db.query);
+    await withAdminSessionKey(async () => {
+      const response = await aliasesGET(new NextRequest(`https://${ADMIN_HOST}/api/admin/v6/data/aliases`, {
+        headers: { host: ADMIN_HOST, cookie: await adminSessionCookie() },
+      }));
+      assert.equal(response.status, 200);
+      const { counts } = await response.json() as { counts: readonly AliasCount[] };
+      assert.equal(counts.length, ALIAS_STATES.length);
+      assert.equal(counts.find(row => row.state === "AZ")!.n, 1);
+      assert.equal(counts.find(row => row.state === "WY")!.n, 0);
+      assert.equal((await aliasesGET(new NextRequest(`https://${ADMIN_HOST}/api/admin/v6/data/aliases`, {
+        headers: { host: ADMIN_HOST },
+      }))).status, 401);
+    });
+  } finally { installFactReader(undefined); await db.pg.close(); }
+});
+

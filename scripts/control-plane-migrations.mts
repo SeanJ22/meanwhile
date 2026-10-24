@@ -7,6 +7,7 @@ import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
 import { debtStateMigrationDefinition, stampDebtStates } from "../lib/control-plane/repository/migrations/DT-01.ts";
+import { WORK_MIGRATION_SOURCE, workMigrationDefinition, expandWorkList } from "../lib/control-plane/repository/migrations/RB-A5.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 const MIGRATIONS = [
@@ -14,6 +15,8 @@ const MIGRATIONS = [
     definition: controlReadsMigrationDefinition, apply: async (sql: Sql) => { await expandControlReads(sql); return "control reads"; } },
   { id: "DT-01_expand", source: "lib/control-plane/repository/migrations/DT-01.ts", declarations: [] as readonly string[],
     definition: debtStateMigrationDefinition, apply: async (sql: Sql) => `${await stampDebtStates(sql)} debt(s) given their state` },
+  { id: "RB-A5_expand", source: "lib/control-plane/repository/migrations/RB-A5.ts", declarations: [WORK_MIGRATION_SOURCE],
+    definition: workMigrationDefinition, apply: expandWorkList },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {

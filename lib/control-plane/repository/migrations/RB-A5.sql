@@ -7,9 +7,12 @@ ALTER TABLE work_row
   ADD COLUMN received_at timestamptz NOT NULL DEFAULT now(),
   ADD COLUMN done_at timestamptz,
   ADD COLUMN refused_at timestamptz;
+--> statement-breakpoint
 
 CREATE INDEX work_row_claim_ready ON work_row (kind, priority DESC, not_before, id) WHERE state = 'ready';
+--> statement-breakpoint
 CREATE INDEX work_row_expired ON work_row (lease_until, id) WHERE state = 'taken';
+--> statement-breakpoint
 
 CREATE FUNCTION count_work_transition() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE region text; event text;
@@ -25,6 +28,7 @@ BEGIN
     ON CONFLICT (state, hour, step) DO UPDATE SET n = count_hour.n + 1;
   RETURN NEW;
 END $$;
+--> statement-breakpoint
 
 CREATE TRIGGER work_row_counts AFTER INSERT OR UPDATE ON work_row
 FOR EACH ROW EXECUTE FUNCTION count_work_transition();

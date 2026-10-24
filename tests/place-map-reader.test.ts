@@ -11,6 +11,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { readZipLocation } from "../lib/place-map/locations.ts";
+import { placeBoundaryMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
 
 const state = (code: string) => `ocd-division/country:us/state:${code.toLowerCase()}`;
 const row = (id: string, code: string, layer: string, version: string, extra: Record<string, unknown> = {}) => ({
@@ -99,8 +100,8 @@ test("the next map refresh uses the current point boundary and retains unreplace
       CREATE TABLE entity_external_id(entity_id text REFERENCES entity(id),scheme text,value text,PRIMARY KEY(scheme,value));
       CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8 CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
       CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8 CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
-    await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql","utf8"));
-    await db.exec(readFileSync("lib/db/migrations/RB-A10_zip_locations.sql","utf8"));
+    await db.exec(placeBoundaryMigration());
+    await db.exec(zipLocationMigration());
     const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});
     const map = (year:number,west:number,east:number,zip:string):StatePlaceMap => ({
       places:[state("AZ"),county].map(id=>({id,name:id,state:"AZ",aliases:[]})),

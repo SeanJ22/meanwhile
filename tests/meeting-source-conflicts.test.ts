@@ -107,3 +107,20 @@ test("a repeated street keeps its point across abbreviation and missing ZIP, whi
   assert.equal(online.location,null);
   assert.equal(online.online?.label,"Virtual");
 });
+
+test("two routes returning the same source ID produce one target with the current time, retained point and all aliases",()=>{
+  const prior = meeting("ical:board:1",{location:{name:"Council Room",address:"1500 Blowing Rock Road, Boone, NC",lat:36.2,lng:-81.66},
+    agendaUrl:"https://office.gov/agenda",mergedMeetingIds:["ical:board:1","portal:board:1"]});
+  const current = meeting(prior.id,{startsAt:"2026-10-07T19:00:00Z",title:"Rescheduled meeting",
+    provenance:{...prior.provenance,collectedAt:"2026-10-05T14:00:00Z"},
+    venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:"Clerk"}});
+  const merged = mergeReaderSittings([prior,current]);
+  assert.equal(merged.rows.length,1);assert.equal(merged.collapsed,1);
+  assert.equal(merged.rows[0].id,prior.id);assert.equal(merged.rows[0].startsAt,current.startsAt);
+  assert.equal(merged.rows[0].agendaUrl,prior.agendaUrl);assert.deepEqual(merged.rows[0].location,prior.location);
+  assert.deepEqual(merged.rows[0].mergedMeetingIds,prior.mergedMeetingIds);
+  assert.equal(merged.aliases.get("portal:board:1"),prior.id);
+  assert.deepEqual(mergeReaderSittings([current,prior]).rows,merged.rows);
+  assert.equal(mergeReaderSittings([prior,{...current,id:"ical:board:2"}]).rows.length,2,"distinct source IDs remain separate sittings");
+  assert.equal(mergeReaderSittings([prior,{...current,bodyId:"other-body"}]).rows.length,2,"another board never supplies the same target");
+});

@@ -13,16 +13,30 @@ const present = (value: unknown) => value !== null && value !== undefined && val
 const meta = new Set(["id", "bodyId", "ocdId", "jurisdiction", "provenance", "fieldSources", "publicationConflicts", "mergedMeetingIds", "carried"]);
 const timing = ["startsAt", "timeZone", "startPrecision"];
 const venue = ["location", "online", "venueGap", "mapPin"];
+const bodyOf = (meeting: Meeting) => meeting.bodyId ?? (meeting.ocdId && meeting.bodyName ? `${meeting.ocdId}:${meeting.bodyName}` : null);
+
+/** Multiple routes can return the same source ID, including a moved sitting. It remains one reader target. */
+export function mergeReaderSittings(input: readonly Meeting[]) {
+  const identities = new Map<string,Meeting[]>();
+  for (const meeting of input) {
+    const key = JSON.stringify([meeting.id,bodyOf(meeting)]);
+    identities.set(key,[...identities.get(key) ?? [],meeting]);
+  }
+  const exact = [...identities.values()].map(rows=>rows.length===1 ? {rows,dropped:[],conflicts:[]} : mergeSittingRows(rows,true));
+  const merged = mergeSittingRows(exact.flatMap(result=>result.rows),false);
+  const dropped = [...exact.flatMap(result=>result.dropped),...merged.dropped];
+  return {...merged,dropped,collapsed:dropped.length,conflicts:[...exact.flatMap(result=>result.conflicts),...merged.conflicts]};
+}
 
 /** Same body/day across doors. When a door lists multiple sittings that day,
  * only an unambiguous exact sitting identity can join them. */
-export function mergeReaderSittings(input: readonly Meeting[]) {
+function mergeSittingRows(input: readonly Meeting[], exactIdentity: boolean) {
   const groups = new Map<string, Meeting[]>();
   for (const meeting of input) {
     let date: string | undefined;
     try { if (meeting.timeZone && meeting.provenance) date = localWallClock(meeting.startsAt, meeting.timeZone)?.date; } catch { /* Invalid source dates do not acquire an identity. */ }
-    const body = meeting.bodyId ?? (meeting.ocdId && meeting.bodyName ? `${meeting.ocdId}:${meeting.bodyName}` : null);
-    const key = body && date ? `${body}\u001f${date}` : meeting.id;
+    const body = bodyOf(meeting);
+    const key = exactIdentity ? "same-source-id" : body && date ? `${body}\u001f${date}` : meeting.id;
     groups.set(key, [...(groups.get(key) ?? []), meeting]);
   }
   const rows: Meeting[] = [], dropped: Meeting[] = [];
@@ -31,7 +45,7 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
   for (const group of groups.values()) {
     const routes = group.flatMap(sources);
     const buckets = new Map<string, Meeting[]>();
-    const unambiguousDay = new Set(routes).size === routes.length;
+    const unambiguousDay = exactIdentity || new Set(routes).size === routes.length;
     for (const meeting of group) {
       let identity: string | null = null;
       try { identity = sittingKey({ ...meeting, bodyId: meeting.bodyId ?? `${meeting.ocdId}:${meeting.bodyName}` }); } catch { /* Keep malformed identities separate. */ }
@@ -39,7 +53,7 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
       buckets.set(key, [...(buckets.get(key) ?? []), meeting]);
     }
     for (const candidates of buckets.values()) {
-      if (candidates.length < 2 || new Set(candidates.flatMap(sources)).size !== candidates.flatMap(sources).length) {
+      if (candidates.length < 2 || !exactIdentity && new Set(candidates.flatMap(sources)).size !== candidates.flatMap(sources).length) {
         rows.push(...candidates); continue;
       }
       // Stable ordering makes ties independent of partition fetch order.

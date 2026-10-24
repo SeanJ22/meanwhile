@@ -32,6 +32,8 @@ for (const copy of officialCopies) assert.equal(createHash("sha256").update(read
 for (const state of states) {
   const snapshot = JSON.parse(readFileSync(resolve(directory, `${state}.json`), "utf8")) as FactSnapshot;
   const sample = JSON.parse(readFileSync(resolve(directory, "reader", `${state}.json`), "utf8")) as ReaderSample;
+  assert.equal(new Set(sample.values.map(value => canonicalJson([value.canonicalId ?? value.subjectId, readerReplayField(value)]))).size, sample.values.length);
+  assert.ok(Math.min(100, snapshot.facts?.length ?? 0) + sample.values.length <= 1_000);
   bindReaderSources(sample, JSON.parse(readFileSync(resolve(directory, "reader", "held-api-doors.json"), "utf8")) as HeldApiDoor[],
     JSON.parse(readFileSync(resolve(directory, "reader", "meeting-source-hosts.json"), "utf8")) as MeetingSourceHosts[],
     JSON.parse(readFileSync(resolve(directory, "reader", "legistar-tenants.json"), "utf8")) as string[]);
@@ -137,6 +139,8 @@ for (const state of states) {
     assert.deepEqual(await identityState(), identitiesBefore);
     report.push({ state, selected: existing.replayed + sample.values.length, existingFactValues: existing.replayed, legacyReaderValues: sample.values.length,
       legacyValuesPreserved: preserved, repeatUnchanged: repeated, distinctLegacyRecords: new Set(sample.values.map(v => v.subjectId)).size,
+      byTable: { fact: existing.replayed, ...Object.fromEntries([...new Set(sample.values.map(value => value.table))]
+        .map(table => [table, sample.values.filter(value => value.table === table).length])) },
       byFamily, officialValues, checkedValues, equivalentGovernmentSourceValues, failures, zero: existing.replayed + sample.values.length === 0 });
     console.log(JSON.stringify(report.at(-1)));
   } finally { await db.pg.close(); }

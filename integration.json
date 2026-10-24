@@ -4078,5 +4078,17 @@
     "gates": "pass",
     "at": "2026-10-24T00:48:29Z",
     "note": "revert of BL-21-FX approved by Sean; tree 8b7f6a407 is byte-identical to cd82fdc4a, which passed pnpm gates (release 92)"
+  },
+  {
+    "lane": "rn-02",
+    "steps": [
+      "RN-02"
+    ],
+    "ready_sha": "da6a37852a5016d1ab6a45751ed755087fe8aef3",
+    "merge_sha": "f3baca176655d68b9008969f6ff22ceac53ff2f0",
+    "river_sha": "f3baca176655d68b9008969f6ff22ceac53ff2f0",
+    "tested_sha": "f3baca176655d68b9008969f6ff22ceac53ff2f0",
+    "gates": "pass",
+    "at": "2026-10-24T01:38:00Z"
   }
 ]

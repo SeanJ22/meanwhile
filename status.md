@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 96 LIVE (38b470355, 6:32 AM EDT). Job 1 DONE: 0 reader-repair failures on both repair passes (7:10, 7:33 AM EDT). Batch 3 + CL-01 gating from 7:20 AM EDT. RIVER-KEYS and SRC-01 being finished by helpers
+build_state: RELEASE 96 LIVE (38b470355). Job 1 DONE. Batch 4 gating from 8:38 AM EDT (incl. RIVER-KEYS, MT-01) = release 97 candidate. Returned 8:39 AM EDT: MD-01, CL-01. PB-02 and SRC-01 being finished by River's helpers
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,16 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Batch 4 (release 97 candidate), 8:38 AM EDT
+- Batch 3 gates (river-next c4ced5044): 9,687 pass, 10 fail. Traced each:
+  - RN-03 (its own tip): tests/routine-due-request.test.ts:183 matched the runner's skip line without RN-03's new `!inputDue`. River updated the pattern (16e6fd544).
+  - MD-01 (its own tip, 3): tests/playbook-workflow.test.ts:98 (Admin setting ask.readerModel deleted, Settings action/undo test left), :75 (published Admin model no longer reaches Ask), tests/field-manual-pages.test.ts:104 (field-manual text). Reverted from the batch; returned 8:39 AM EDT (returns/md-01.md).
+  - CL-01 (its own tip, 2): tests/incumbency-eligibility.test.ts:390 (incumbency map loses the seat count) and the Hourihan Ask card (ballot-az-pima:governor:hourihan-teri-ann leaves the card corpus). Taken out of the batch; returned 8:39 AM EDT. Combined with BL-01 it also cased initials ("S.K.", "BJ", "JR.") and crashed on a nameless candidacy; River's fixes ride its next fold.
+  - PB-02 (its own tree, 2): tests/comment-summary.test.ts:51 (comment-rule pages no longer handed to the comment writer) and tests/hunters-own-calendar.test.ts:42; its merged tree also drops river's board-naming pass (nameBoardsFromTheirPages). River's own READY 31f0cb8b3 ran only PB-02's files and missed these: River's miss. Reverted from the batch; a River helper is fixing PB-02 now.
+- Batch 4 on river-next 74389649f, gating from 8:38 AM EDT: RV-TOOLS, RN-03, RB-A1, BL-21-FX, RN-01, BL-01, LV-01, RIVER-KEYS (READY 3e2dcfb7e), MT-01 (READY d1bd02b89). Focused: 585 + 422 tests pass; tsc and dead-code clean.
+- RIVER-KEYS (Job 2, finished by River's helper): every fetched official page and door capture is cleaned before it is classified or saved (existing cleaner, html/text/json/xml/csv); xlsx/zip/pdf keep their bytes and only a key-holding one is saved as blanked extracted text; the change fingerprint uses cleaned bytes; the hold path is deleted; a control-plane migration (RIVER-KEYS_expand) reopens exactly the doors the hold suspended (cochise:ballot-box-table included). On the real saved pages through the full scheduled job: El Paso 39 early + 123 Election Day, Cochise 5 drop boxes, Wheeling 1 (Wheeling's saved capture holds no key; its key path is proven on El Paso and Cochise). KY xlsx 1,690, MT xlsx 335, FL zip 463 combined: identical before/after.
+- MT-01 (READY d1bd02b89): meeting places from published addresses; 50-state production cohort keeps all 1,733 pins and adds 282 (CA 31->104, HI 0->23, AK 1->14, CT 6->24, ...). Its READY notes a Raleigh (27601) crash reproduced on release 96: River checks it live.
 
 ### WIN, Job 1 (RV-REPAIR) DONE, 7:33 AM EDT
 - Second routine pass on 38b470355 (started 7:11, written 7:33 AM EDT): 0 Reader repair mechanism failures, 32 Reader PASS, 122 supervisor failures. Both reader-repair passes on release 96 are under 60 (0 and 0). Publish-now passes at 7:13 and 7:22 run no reader repair (0 Reader PASS) and are not counted.

@@ -27,6 +27,7 @@ export interface RegistrationGovernmentListing {
     readonly divisionId: string;
     readonly layer: string;
     readonly geoid: string;
+    readonly boundaryYear?: number | null;
     readonly basis: "SOURCE_CODE" | "GOVERNING_FUNCSTAT" | "SOURCE_BOUNDARY" | "COUNTY_IN_NAME";
   }[];
   readonly bodyIds: readonly string[];

@@ -2085,6 +2085,9 @@ export function bodySubject(
             },
           ]
         : []),
+      ...(body.placementBasis === "HOST_COUNTY"
+        ? [{label:"Service area",value:<>Filed under its host county; service boundary not available</>}]
+        : []),
       // As the body's own page states them; sourced in this card's Sources.
       ...(body.officeContact?.address
         ? [{ label: "Office address", value: <>{body.officeContact.address}</> }]

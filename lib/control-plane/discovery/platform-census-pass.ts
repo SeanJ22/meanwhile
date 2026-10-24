@@ -62,7 +62,7 @@ export async function runPlatformCensusPass(input: {
     try {
       runtime = await input.runtimeFor(page);
       const got = await readPlatformGovernment({ need, registered: platformRegistrationBinding(page), repos: input.repos,
-        runtime, reviewer: input.reviewer, tenant: tenant ?? input.tenantFor?.(page),
+        runtime, query:input.query, reviewer: input.reviewer, tenant: tenant ?? input.tenantFor?.(page),
         checkedCalendars: previous?.payload?.reviewer === input.reviewer && previous.payload.registrationVersion === page.versionId ? previous.payload.checkedCalendars : undefined });
       input.onGovernment?.({ government: need.jurisdictionId, state: need.stateCode, doors: got.doors.length, requests: got.attempt.requestCount, held: got.review.held.length });
       return !runtime.budget.spent();

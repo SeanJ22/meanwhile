@@ -54,6 +54,8 @@ test("shared vendor hosts keep the exact published tenant", () => {
   assert.equal(samePlatformTenant("https://meetings.boardbook.org/Public/Organization/2065", "https://meetings.boardbook.org/Public/Organization/999"), false);
   assert.equal(samePlatformTenant("https://ca-ventura.civicplus.com/AgendaCenter", "https://ca-russianriver.civicplus.com/AgendaCenter"), false);
   assert.equal(samePlatformTenant("https://metro.legistar.com/Calendar.aspx", "https://oregonmetro.legistar.com/Calendar.aspx"), false);
+  assert.equal(samePlatformTenant("https://webapi.legistar.com/v1/metro/Events", "https://webapi.legistar.com/v1/oregonmetro/Events"), false);
+  assert.equal(samePlatformTenant("https://metro.legistar.com/Calendar.aspx", "https://webapi.legistar.com/v1/metro/Events"), true);
   assert.equal(samePlatformTenant("https://pub-capecoral.escribemeetings.com/", "https://pub-leecounty.escribemeetings.com/"), false);
   assert.equal(samePlatformTenant("https://go.boarddocs.com/az/vail/Board.nsf", "https://go.boarddocs.com/az/vail/Board.nsf/Public"), true);
 });

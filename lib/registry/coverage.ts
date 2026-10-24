@@ -113,6 +113,7 @@ export interface CoveredBody {
    */
   name: string | null;
   divisionLabel: string;
+  placementBasis?: "SERVICE_AREA" | "HOST_COUNTY";
   /**
    * Null where the body has no division; never a placeholder type, which would attach a class
    * definition to a body nobody has classified.
@@ -337,6 +338,7 @@ export function summarizeCoverage(
       name: body.name,
       // A body with no division: real, hyperlocal, and not a division.
       divisionLabel: body.governmentName ?? division?.label ?? "",
+      ...(body.placementBasis ? {placementBasis:body.placementBasis} : {}),
       // Null, never a placeholder type.
       divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,

@@ -98,9 +98,24 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=original.value->>'id'
     LEFT JOIN entity canonical ON canonical.id=alias.entity_id
     CROSS JOIN LATERAL (SELECT CASE WHEN alias.entity_id IS NULL THEN original.value ELSE original.value || jsonb_build_object(
-      'id',alias.entity_id,'ocdId',coalesce((SELECT place_id FROM entity_place WHERE entity_id=alias.entity_id ORDER BY place_id LIMIT 1),original.value->>'ocdId')) END AS value) header
-    WHERE (header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR header.value->>'id'=ANY($3::text[]) OR $5::boolean
-      OR header.value->>'id' IN (SELECT id FROM owned WHERE kind='body'))
+      'id',alias.entity_id) END || jsonb_build_object('ocdId',CASE WHEN EXISTS (
+        SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')
+          AND place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$')
+        AND original.value->>'ocdId' ~ '^ocd-division/country:us/(state|district|territory):[^/]+$'
+        THEN NULL ELSE original.value->>'ocdId' END) || CASE WHEN EXISTS (
+          SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id'))
+        THEN jsonb_build_object('alsoServesOcdIds',coalesce((
+        SELECT jsonb_agg(DISTINCT place_id) FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')),'[]'::jsonb)
+        || coalesce(original.value->'alsoServesOcdIds','[]'::jsonb)) ELSE '{}'::jsonb END AS value) header
+    WHERE ((original.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) AND (
+        original.value->>'ocdId' !~ '^ocd-division/country:us/(state|district|territory):[^/]+$' OR NOT EXISTS (
+          SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')
+            AND place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$')))
+      OR EXISTS (SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')
+        AND place_id=ANY(ARRAY(SELECT id FROM selected_places)))
+      OR EXISTS (SELECT 1 FROM jsonb_array_elements_text(coalesce(original.value->'alsoServesOcdIds','[]'::jsonb)) served WHERE served=ANY(ARRAY(SELECT id FROM selected_places)))
+      OR coalesce(alias.entity_id,original.value->>'id')=ANY($3::text[]) OR $5::boolean
+      OR coalesce(alias.entity_id,original.value->>'id') IN (SELECT id FROM owned WHERE kind='body'))
       AND (alias.entity_id IS NULL OR canonical.state=$1::char(2))
     ORDER BY header.value->>'id',alias.entity_id IS NOT NULL
 ), ancestors AS (
@@ -118,7 +133,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
       AND NOT EXISTS (SELECT 1 FROM domains d WHERE d.d->>'domain'=gh.host AND d.d->>'type' ~ '^(State|Federal|Interstate)')
 ), linked_bodies AS MATERIALIZED (
   -- Check shared-site ownership once per government host, then attach its held boards.
-  SELECT DISTINCT ON (b.id) b.id,a->>'divisionId' AS division FROM local_government_hosts lg
+  SELECT DISTINCT b.id,a->>'divisionId' AS division FROM local_government_hosts lg
     CROSS JOIN LATERAL jsonb_array_elements(lg.g->'associations') a
     JOIN entity_host bh ON bh.host=lg.host
     JOIN entity b ON b.id=bh.entity_id AND b.kind='body' AND b.parent_id=$4 AND b.state=$1::char(2)
@@ -409,11 +424,14 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
     WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
   coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
-    OR EXISTS (SELECT 1 FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),'division',coalesce(
-    (SELECT l.division FROM linked_bodies l WHERE l.id=b.id),
-    (SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id ORDER BY ep.place_id LIMIT 1),
+    OR EXISTS (SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id)
+    OR EXISTS (SELECT 1 FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),'divisions',ARRAY(
+      SELECT ep.place_id FROM entity_place ep WHERE ep.entity_id=b.id
+      UNION SELECT l.division FROM linked_bodies l WHERE l.id=b.id),'division',coalesce(
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
-    split_part(b.id,'#',1)),'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
+    split_part(b.id,'#',1)),'placement_basis',CASE WHEN EXISTS (
+      SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id AND ep.placement_basis='HOST_COUNTY') THEN 'HOST_COUNTY' ELSE 'SERVICE_AREA' END,
+    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
@@ -509,7 +527,13 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
-    return { id, division: String(e.division), fields: fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
+    const divisions = [...new Set([...(e.divisions as string[] | undefined ?? []),String(e.division)].filter(id => id.startsWith("ocd-division/")))];
+    const local = divisions.filter(id => id !== stateRoot);
+    const served = local.length ? local : divisions;
+    const division = served.find(id => divisionIds.includes(id)) ?? served[0] ?? String(e.division);
+    return { id, division, fields: fields[id] || e.placed === true ? {...fields[id],ocdId:division.startsWith("ocd-division/") ? division : null,
+      ...(served.some(id => id !== division) ? {alsoServesOcdIds:served.filter(id => id !== division)} : {}),
+      ...(e.placement_basis === "HOST_COUNTY" ? {placementBasis:"HOST_COUNTY" as const} : {})} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });

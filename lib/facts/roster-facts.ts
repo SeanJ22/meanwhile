@@ -7,6 +7,7 @@ import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
+import type { EntityPlace } from "./entity-places.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
 
 const rosterCopies = new WeakMap<FactDb, WeakMap<WorkerPublicationCapture, Promise<SavedCopy>>>();
@@ -31,7 +32,7 @@ export interface RosterMember {
 }
 
 interface RosterFactsInput {
-  readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null; readonly government?: string | null };
+  readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null; readonly government?: string | null; readonly places?: readonly EntityPlace[] };
   readonly capture: WorkerPublicationCapture;
   readonly members: readonly RosterMember[];
   /** Every member row on the page was read, so a member it no longer lists has left. */
@@ -93,7 +94,7 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
 async function publishRosterFields(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: RosterFactsInput, clocks: Clocks, now: Date): Promise<RosterFactsReport> {
   const { capture } = input;
-  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId, government: input.body.government });
+  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId, government: input.body.government, places: input.body.places });
   const [held] = bodyId !== input.body.id ? await db.query("SELECT name, state, parent_id FROM entity WHERE id = $1", [bodyId]) : [];
   const body = held ? { id: bodyId, name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null } : input.body;
   const bodyEntity = (await readCheckEntity(db.query, bodyId))!;
@@ -111,7 +112,8 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     else if (outcome.decision === "CONFIRM") tally.confirmed++;
     else tally.held++;
   };
-  const place = (await db.query("SELECT place_id FROM entity_place WHERE entity_id = $1 LIMIT 1", [body.id]))[0]?.place_id as string | undefined;
+  const places = (await db.query("SELECT place_id,boundary_year,placement_basis FROM entity_place WHERE entity_id=$1",[body.id]))
+    .map(row => ({placeId:String(row.place_id),boundaryYear:row.boundary_year as number | null,basis:row.placement_basis as EntityPlace["basis"]}));
   const seated = new Set<string>();
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);
@@ -122,7 +124,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
       count({ blank: reason }, member.recordId, "name");
       continue;
     }
-    const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
+    const personId = await resolvePerson(db, { name, state: body.state, places,placeId:places.length ? null : body.parentId,
       externalIds: [...(member.externalIds ?? []), ["roster-name:" + body.id, nameKey(name)],
         ...(body.id !== input.body.id ? [["roster-name:" + input.body.id, nameKey(name)] as const] : []),
         ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] });

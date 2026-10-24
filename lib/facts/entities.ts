@@ -8,6 +8,7 @@ import { hostOf, isOfficialUrl } from "./check.ts";
 import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
 import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
+import { fileEntityPlaces, type EntityPlace } from "./entity-places.ts";
 
 type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
@@ -20,13 +21,14 @@ interface EntityRow {
   readonly parentId: string | null;
   /** The registered government a reviewed door names as a board's owner. */
   readonly government?: string | null;
+  readonly places?: readonly EntityPlace[];
 }
 
 interface EntityBatch {
   readonly entities: EntityRow[];
   readonly hosts: [entityId: string, host: string][];
   readonly externalIds: [entityId: string, scheme: string, value: string][];
-  readonly places: [entityId: string, placeId: string][];
+  readonly places: [entityId: string, placeId: string, boundaryYear?: number | null, basis?: EntityPlace["basis"]][];
 }
 
 export const COUNTRY = "ocd-division/country:us";
@@ -43,6 +45,7 @@ export interface RegistryBody {
   readonly bodyClass: string;
   readonly homepageUrl: string | null;
   readonly censusId?: string | null;
+  readonly alsoServesOcdIds?: readonly string[];
 }
 
 function hostOfAddress(address: string): string | null {
@@ -66,7 +69,7 @@ function schoolPlaces(state: string, name: string): string[] {
 const BARE_ROOT = "^ocd-division/country:us/(state|district|territory):[^/]+$";
 const localPlace = (id: string) => id.startsWith(`${COUNTRY}/`) && id.slice(COUNTRY.length + 1).includes("/");
 
-/** One state's places, governments and registry bodies; a special district sits on its own territory, or on the state until a boundary draws it. */
+/** One state's places, governments and registry bodies; an undrawn district is filed under its host county. */
 export interface Legislator { readonly ocdPersonId: string; readonly name: string }
 
 function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGovernmentFacts>, bodies: readonly RegistryBody[],
@@ -89,12 +92,11 @@ function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGove
   for (const [pid6, jurisdictionId, name, govType, divisionIndex] of reg.governments) {
     const facts = census.get(pid6);
     const county = facts?.countyFips ? countyByFips.get(facts.countyFips.slice(-3)) : undefined;
-    // A special district's office county is not its territory: placed there, it would govern every ZIP in the county.
     const school = govType === "DEPENDENT SCHOOL SYSTEM" ? schoolPlaces(state, jurisdictionId.split(":").at(-1)!).find(id => known.has(id)) : undefined;
-    const place = divisionIndex >= 0 ? reg.divisions[divisionIndex]?.[0] : school ?? (govType === "SPECIAL DISTRICT" ? stateDivision : county ?? stateDivision);
+    const place = divisionIndex >= 0 ? reg.divisions[divisionIndex]?.[0] : school ?? county ?? stateDivision;
     out.entities.push({ id: jurisdictionId, kind: "government", name: titleCase(name), state, parentId: place ?? null });
     if (pid6 && /^\d+$/.test(pid6)) out.externalIds.push([jurisdictionId, "census-pid6", pid6]);
-    if (place) out.places.push([jurisdictionId, place]);
+    if (place) out.places.push([jurisdictionId, place, null, govType === "SPECIAL DISTRICT" && divisionIndex < 0 && county ? "HOST_COUNTY" : "SERVICE_AREA"]);
     const host = facts ? hostOfAddress(facts.web) : null;
     if (host) out.hosts.push([jurisdictionId, host]);
   }
@@ -110,7 +112,10 @@ function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGove
     const role = body.bodyClass === "GOVERNING" ? (place?.includes("/school_district:") ? "school board" : "governing board") : body.bodyClass.toLowerCase().replace(/_/g, " ");
     const name = body.name ?? `${ownerName} ${role}`;
     out.entities.push({ id: body.id, kind: "body", name, state, parentId: government ?? place ?? stateDivision });
-    if (place && localPlace(place)) out.places.push([body.id, place]);
+    const governmentPlaces = government ? out.places.filter(([id]) => id === government).map(([,place]) => place) : [];
+    for (const served of [...new Set([...governmentPlaces.length ? governmentPlaces : [place], ...body.alsoServesOcdIds ?? []])]) {
+      if (served && known.has(served)) out.places.push([body.id, served]);
+    }
     const host = body.homepageUrl ? hostOfAddress(body.homepageUrl) : null;
     if (host) out.hosts.push([body.id, host]);
   }
@@ -135,15 +140,6 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
           AND (entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id OR (entity.kind = 'body' AND entity.name ~ ' governing$' AND entity.name IS DISTINCT FROM EXCLUDED.name))`,
     [rows.map(r => r.id), rows.map(r => r.kind), rows.map(r => r.name), rows.map(r => r.state), rows.map(r => r.parentId)]);
   }
-  const governments = batch.entities.filter(row => row.kind === "government");
-  for (let i = 0; i < governments.length; i += size) {
-    const rows = governments.slice(i, i + size);
-    await query(`DELETE FROM entity_place ep USING unnest($1::text[], $2::text[]) AS g(id, place)
-      WHERE ep.entity_id = g.id AND ep.place_id IS DISTINCT FROM g.place`, [rows.map(r => r.id), rows.map(r => r.parentId)]);
-  }
-  const bodies = batch.entities.filter(row => row.kind === "body");
-  if (bodies.length) await query(`DELETE FROM entity_place WHERE entity_id = ANY($1::text[])
-    AND place_id ~ '${BARE_ROOT}'`, [bodies.map(row => row.id)]);
   for (let i = 0; i < batch.externalIds.length; i += size) {
     const rows = batch.externalIds.slice(i, i + size);
     await query(`INSERT INTO entity_external_id (entity_id, scheme, value)
@@ -157,9 +153,43 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   }
   for (let i = 0; i < batch.places.length; i += size) {
     const rows = batch.places.slice(i, i + size);
-    await query(`INSERT INTO entity_place (entity_id, place_id) SELECT * FROM unnest($1::text[], $2::text[]) ON CONFLICT DO NOTHING`,
-      [rows.map(r => r[0]), rows.map(r => r[1])]);
+    await query(`INSERT INTO entity_place (entity_id,place_id,boundary_year,placement_basis)
+      SELECT * FROM unnest($1::text[],$2::text[],$3::int[],$4::text[])
+      ON CONFLICT(entity_id,place_id) DO UPDATE SET boundary_year=coalesce(EXCLUDED.boundary_year,entity_place.boundary_year),placement_basis=EXCLUDED.placement_basis`,
+      [rows.map(r => r[0]), rows.map(r => r[1]), rows.map(r => r[2] ?? null), rows.map(r => r[3] ?? "SERVICE_AREA")]);
   }
+  const governments = batch.entities.filter(e => e.kind === "government").map(e => e.id);
+  await query(`DELETE FROM entity_place held WHERE held.entity_id=ANY($1::text[])
+    AND NOT EXISTS (SELECT 1 FROM unnest($2::text[],$3::text[]) AS wanted(entity_id,place_id)
+      WHERE wanted.entity_id=held.entity_id AND wanted.place_id=held.place_id)`,
+  [governments,batch.places.map(p => p[0]),batch.places.map(p => p[1])]);
+  // Boards inherit every government association, including the boundary vintage and an explicit host-county filing.
+  await query(`INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis)
+    SELECT b.id,p.place_id,p.boundary_year,p.placement_basis FROM entity b JOIN entity_place p ON p.entity_id=b.parent_id
+    WHERE (b.id=ANY($1::text[]) OR b.parent_id=ANY($2::text[])) AND b.kind='body'
+    ON CONFLICT(entity_id,place_id) DO UPDATE SET boundary_year=EXCLUDED.boundary_year,placement_basis=EXCLUDED.placement_basis`,
+  [batch.entities.filter(e => e.kind === "body").map(e => e.id),governments]);
+  await query(`INSERT INTO entity_place(entity_id,place_id,boundary_year,placement_basis)
+    SELECT f.person_id,p.place_id,max(p.boundary_year),
+      CASE WHEN bool_or(p.placement_basis='SERVICE_AREA') THEN 'SERVICE_AREA' ELSE 'HOST_COUNTY' END FROM entity b
+    JOIN entity_place p ON p.entity_id=b.id
+    CROSS JOIN LATERAL (
+      SELECT substr(field,8) AS person_id FROM fact WHERE entity_id=b.id AND status='live' AND field LIKE 'member:%'
+      UNION SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting'
+    ) f JOIN entity subject ON subject.id=f.person_id
+    WHERE b.kind='body' AND b.parent_id=ANY($1::text[])
+    GROUP BY f.person_id,p.place_id
+    ON CONFLICT(entity_id,place_id) DO UPDATE SET boundary_year=coalesce(EXCLUDED.boundary_year,entity_place.boundary_year),placement_basis=EXCLUDED.placement_basis`,
+  [governments]);
+  await query(`DELETE FROM entity_place held USING entity b WHERE b.id=held.entity_id AND b.kind='body'
+    AND b.id=ANY($1::text[]) AND NOT EXISTS (
+      SELECT 1 FROM unnest($2::text[],$3::text[]) AS wanted(entity_id,place_id)
+      WHERE wanted.entity_id=b.id AND wanted.place_id=held.place_id)
+    AND NOT EXISTS (SELECT 1 FROM entity_place p WHERE p.entity_id=b.parent_id AND p.place_id=held.place_id)`,
+  [batch.entities.filter(e => e.kind === "body").map(e => e.id),batch.places.map(p => p[0]),batch.places.map(p => p[1])]);
+  await query(`DELETE FROM entity_place root WHERE root.entity_id=ANY($1::text[]) AND root.place_id ~ '${BARE_ROOT}'
+    AND EXISTS (SELECT 1 FROM entity_place local WHERE local.entity_id=root.entity_id AND local.place_id !~ '${BARE_ROOT}')`,
+  [batch.entities.map(e => e.id)]);
 }
 
 /** Merged boards retain their former ids as data, so a later registration load cannot recreate them. */
@@ -180,6 +210,7 @@ interface PersonIds {
   /** [scheme, value]: bioguide, fec, openstates, legistar-person, ... */
   readonly externalIds: readonly (readonly [string, string])[];
   readonly placeId?: string | null;
+  readonly places?: readonly EntityPlace[];
 }
 
 /** One permanent id per person: any shared external id finds the same entity; a name alone never does. */
@@ -194,6 +225,7 @@ export async function resolvePerson(db: FactDb, person: PersonIds): Promise<stri
     await query(`INSERT INTO entity_external_id (entity_id, scheme, value) SELECT $1, * FROM unnest($2::text[], $3::text[])
       ON CONFLICT (scheme, value) DO NOTHING`, [id, schemes, values]);
     if (person.placeId) await query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM entity WHERE id = $2) ON CONFLICT DO NOTHING", [id, person.placeId]);
+    if (person.places?.length) await fileEntityPlaces(query,id,person.places);
     return id;
   });
 }
@@ -219,24 +251,26 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       .map(row => ({ ocdPersonId: row[idAt]!, name: row[nameAt]! }));
     // Published service territory is data. A Census office location never overrides a source-established local association.
     const associations = registrationHeld ? await db.query(`SELECT g->>'id' AS native_id,g->>'jurisdictionId' AS id,
-        array_agg(DISTINCT a->>'divisionId') AS places
+        jsonb_agg(DISTINCT jsonb_build_object('placeId',a->>'divisionId','boundaryYear',a->'boundaryYear','basis','SERVICE_AREA')) AS places
       FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'governments') g
       CROSS JOIN LATERAL jsonb_array_elements(g->'associations') a
       WHERE p.key=$1 AND a->>'basis' IN ('SOURCE_CODE','GOVERNING_FUNCSTAT','SOURCE_BOUNDARY','COUNTY_IN_NAME')
         AND a->>'divisionId' LIKE $2 GROUP BY g->>'id',g->>'jurisdictionId' ORDER BY g->>'id'`,
       [`REGISTRATION:US-${st.toUpperCase()}:registration:v1`, `${COUNTRY}/state:${st.toLowerCase()}/%`]) : [];
-    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["PB-03", stateBodies, legislators, associations]))]));
+    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["RB-A4", stateBodies, legislators, associations]))]));
     if (loaded.get(`registration:${st}`) === hash) continue;
     const batch = stateEntities(JSON.parse(file.toString("utf8")) as Registration, readCensusGovernmentFacts(root, [st]).byPid, stateBodies, legislators);
     const places = new Set(batch.entities.filter(row => row.kind === "place").map(row => row.id));
     for (const association of associations) {
-      const territory = association.places as string[];
-      if (territory.length !== 1 || !places.has(territory[0]!)) continue;
+      const territory = (association.places as EntityPlace[]).filter(p => places.has(p.placeId));
+      if (!territory.length) continue;
+      territory.sort((a,b) => a.placeId.localeCompare(b.placeId));
       for (const id of [association.id, association.native_id]) {
         const index = batch.entities.findIndex(row => row.id === id && row.kind === "government");
         if (index < 0) continue;
-        batch.entities[index] = { ...batch.entities[index]!, parentId: territory[0]! };
-        batch.places.splice(0, batch.places.length, ...batch.places.filter(([entity]) => entity !== id), [String(id), territory[0]!]);
+        batch.entities[index] = { ...batch.entities[index]!, parentId: territory[0]!.placeId };
+        batch.places.splice(0, batch.places.length, ...batch.places.filter(([entity]) => entity !== id),
+          ...territory.map(p => [String(id), p.placeId, p.boundaryYear, p.basis] as EntityBatch["places"][number]));
       }
     }
     await db.transaction(async query => {
@@ -273,7 +307,10 @@ async function bodyGovernment(query: Query, id: string, named: string | null | u
  * A board hangs on its registered government, and a held board left on a bare state root moves to the government or local place a writer now names. */
 export async function ensureEntity(query: Query, row: EntityRow): Promise<string> {
   const id = row.kind === "body" ? await canonicalBodyId(query, row.id) : row.id;
-  if (id !== row.id) return id;
+  if (id !== row.id) {
+    if (row.places?.length) await fileEntityPlaces(query,id,row.places);
+    return id;
+  }
   const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
   await query(`INSERT INTO entity (id, kind, name, state, parent_id)
     SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = coalesce(
@@ -282,6 +319,7 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
       WHERE entity.kind = 'body' AND EXCLUDED.kind = 'body' AND entity.state IS NOT DISTINCT FROM EXCLUDED.state
         AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'`,
   [id, row.kind, row.name, row.state, parentId]);
+  if (["body","government","meeting"].includes(row.kind)) await fileEntityPlaces(query,id,row.places ?? [],parentId);
   return id;
 }
 
@@ -401,9 +439,8 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
 }
 
 async function placeBody(query: Query, id: string, place: string): Promise<void> {
-  await query(`DELETE FROM entity_place WHERE entity_id = $1
-    AND place_id ~ '${BARE_ROOT}'`, [id]);
-  if (localPlace(place)) await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place]);
+  const [body] = await query("SELECT parent_id,EXISTS(SELECT 1 FROM entity_place WHERE entity_id=e.parent_id) AS placed FROM entity e WHERE id=$1",[id]);
+  await fileEntityPlaces(query,id,body?.placed ? [] : [{placeId:place,boundaryYear:null,basis:"SERVICE_AREA"}],body?.parent_id as string | null);
 }
 
 /** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. */

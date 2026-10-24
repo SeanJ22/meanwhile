@@ -21,8 +21,8 @@ test("every Arizona government, division, registry body and legislator becomes o
   const place = async (id: string) => (await db.query("SELECT e.parent_id, p.place_id FROM entity e JOIN entity_place p ON p.entity_id = e.id WHERE e.id = $1", [id]))[0];
   const rincon = "ocd-division/country:us/state:az/special_district:rincon_valley_fire_district";
   assert.deepEqual(await place("az:special:rincon-valley-fire-district"), { parent_id: rincon, place_id: rincon }, "a district an official layer draws sits on that territory");
-  assert.deepEqual(await place("az:special:alpine-sanitary-district"), { parent_id: "ocd-division/country:us/state:az", place_id: "ocd-division/country:us/state:az" },
-    "a district no layer draws yet waits on the state, never spread over its office's county");
+  assert.deepEqual(await place("az:special:alpine-sanitary-district"), { parent_id: "ocd-division/country:us/state:az/county:apache", place_id: "ocd-division/country:us/state:az/county:apache" },
+    "a district without a shape is filed under its host county");
   const board = "curated:az/rincon-valley-fire-district#governing";
   assert.deepEqual(await db.query("SELECT parent_id FROM entity WHERE id = $1", [board]), [{ parent_id: "az:special:rincon-valley-fire-district" }],
     "a registry board naming its Census government hangs on it, whatever website each lists");
@@ -67,14 +67,14 @@ test("statewide governments keep their own board name without spreading boards o
       ('al:special:mobile-housing-authority','government','Mobile Housing Authority','AL','ocd-division/country:us/state:al')`);
     const board = await ensureGoverningBody(db.query, "al:special:mobile-housing-authority");
     assert.equal(board?.name, "Mobile Housing Authority governing board");
-    assert.deepEqual(await db.query("SELECT * FROM entity_place WHERE entity_id=$1", [board!.id]), []);
+    assert.deepEqual(await db.query("SELECT place_id FROM entity_place WHERE entity_id=$1", [board!.id]), [{place_id:"ocd-division/country:us/state:al"}]);
     const committee = await bodyNamed(db.query, board!.id, board, "Finance Committee");
-    assert.deepEqual(await db.query("SELECT * FROM entity_place WHERE entity_id=$1", [committee!.id]), []);
-    await db.query("INSERT INTO entity_place VALUES ($1,'ocd-division/country:us/state:al')", [board!.id]);
+    assert.deepEqual(await db.query("SELECT place_id FROM entity_place WHERE entity_id=$1", [committee!.id]), [{place_id:"ocd-division/country:us/state:al"}]);
+    await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES ($1,'ocd-division/country:us/state:al') ON CONFLICT DO NOTHING", [board!.id]);
     await db.query("UPDATE entity SET name='Alabama governing' WHERE id=$1", [board!.id]);
     assert.equal((await ensureGoverningBody(db.query, board!.id))?.id, board!.id);
     assert.deepEqual(await db.query("SELECT name FROM entity WHERE id=$1", [board!.id]), [{name:"Mobile Housing Authority governing board"}], "refresh repairs a held generated label too");
-    assert.deepEqual(await db.query("SELECT * FROM entity_place WHERE entity_id=$1", [board!.id]), [], "refresh removes the old statewide pin too");
+    assert.deepEqual(await db.query("SELECT place_id FROM entity_place WHERE entity_id=$1", [board!.id]), [{place_id:"ocd-division/country:us/state:al"}], "refresh retains the only known place until a lower place is available");
   } finally { await db.pg.close(); }
 });
 

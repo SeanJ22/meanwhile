@@ -27,6 +27,7 @@ export interface MeetingBodyCrosswalkRow {
   readonly governmentId?: string;
   readonly governmentWebsite?: string;
   readonly ocdId: string;
+  readonly alsoServesOcdIds?: readonly string[];
   readonly bodyId: string;
   readonly bodyRole: "GOVERNING" | "BOARD" | "SUB_BODY";
   readonly bodyName: string;

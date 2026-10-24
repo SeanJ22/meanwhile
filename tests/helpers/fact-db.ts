@@ -11,6 +11,7 @@ const factStatement = (migration: string, statement: string) => !migration.inclu
 export async function factDb(): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
   const pg = new PGlite();
   for (const migration of MIGRATIONS) for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
+  await pg.exec(migration("_entity_places.sql"));
   const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
   return {
     pg, query,

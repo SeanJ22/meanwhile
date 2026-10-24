@@ -14,6 +14,7 @@ import { observePlatformCensus } from "./platform-census.ts";
 import { withPlatformPublisher } from "../../doors/platform-publisher.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import { recordAcquisition, deriveSanitized } from "../evidence/artifact.ts";
+import { matchRegisteredPlatformTenant, type PlatformQuery } from "./platform-registration.ts";
 import { meetingEndpointCandidates, type MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "doors" | "fieldManual" | "discoveryAttempts">;
@@ -52,6 +53,7 @@ export async function readPlatformGovernment(input: {
   readonly?: boolean;
   tenant?: PlatformTenant;
   checkedCalendars?: Readonly<Record<string, string>>;
+  query?: PlatformQuery;
 }) {
   const held = new Map<string, HeldBytes>();
   const checkedCalendars = Object.fromEntries(Object.entries(input.checkedCalendars ?? {}).filter(([, at]) => Date.parse(at) > Date.parse(input.runtime.now()) - 12 * 3_600_000));
@@ -112,7 +114,11 @@ export async function readPlatformGovernment(input: {
       const readable = await readablePublisher(source);
       authority = { ...source, artifactId: readable.artifact.id };
       if (input.tenant && platformHostedUrl(input.tenant.url)) {
-        const linked = pageLinks(readable.text, source.url).some(link => samePlatformTenant(link, input.tenant!.url));
+        const outbound = pageLinks(readable.text,source.url).filter(link => samePlatformTenant(link,input.tenant!.url));
+        const confirmed = input.query ? await matchRegisteredPlatformTenant(input.query,
+          {...input.tenant,name:null,state:need.stateCode},outbound.map(portalUrl => ({governmentWebsite:primaryWebsite!,portalUrl}))) : null;
+        const linked = outbound.length > 0 && (confirmed === null || confirmed.some(page =>
+          (page.government.jurisdictionId ?? page.government.id) === need.jurisdictionId));
         if (samePlatformTenant(source.url, input.tenant.url) || linked) {
           const portal = samePlatformTenant(source.url, input.tenant.url) ? source : await readPage(input.tenant.url);
           if (portal) { choosePublisher(portal, portal === source ? readable : await readablePublisher(portal)); tenantLinked = true; }

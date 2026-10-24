@@ -203,6 +203,8 @@ export interface Body {
   provenance: RegistryProvenance;
   /** The special district that owns this board, when the territory it serves is a city's or county's. */
   governmentName?: string;
+  /** Filing location when a district's service boundary has not been published. */
+  placementBasis?: "SERVICE_AREA" | "HOST_COUNTY";
 }
 
 export interface Registry {

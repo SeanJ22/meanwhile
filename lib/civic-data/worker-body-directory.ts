@@ -27,7 +27,8 @@ interface BodyOfficeContact { readonly bodyId: string; readonly capture: WorkerP
 
 /** A directory body's office address and phone, each a fact on the body checked against the page that listed it. */
 export async function publishBodyOffice(facts: FactDb & { readonly query: Query }, body: Body, contact: BodyOfficeContact, producedBy: string, clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
-  await ensureEntity(facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/state:([a-z]{2})/.exec(body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId });
+  await ensureEntity(facts.query, { id: body.id, kind: "body", name: body.name ?? body.id, state: /\/(?:state|district|territory):([a-z]{2})/.exec(body.ocdId ?? body.id)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId,
+    places:[body.ocdId,...body.alsoServesOcdIds ?? []].flatMap(placeId => placeId ? [{placeId,boundaryYear:null,basis:"SERVICE_AREA" as const}] : []) });
   await learnOfficialHost(facts.query, body.id, contact.capture.evidence.canonicalUrl);
   return publishBodyFacts(facts, { bodyId: body.id, capture: contact.capture, producedBy, facts: [["office_address", contact.address], ["office_phone", contact.phone]]
     .flatMap(([field, value]) => value ? [{ field: field as "office_address" | "office_phone", value, quote: value }] : []) }, clocks, now);

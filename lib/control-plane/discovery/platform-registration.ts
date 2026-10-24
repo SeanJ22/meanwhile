@@ -1,7 +1,7 @@
 import type { RegistrationGovernmentListing } from "../../registration/listings.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
 import type { RegisteredGovernment } from "./auto-crosswalk.ts";
-import type { PlatformTenant } from "./platform-enumeration.ts";
+import { samePlatformTenant, type PlatformTenant } from "./platform-enumeration.ts";
 
 export type PlatformQuery = (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 export interface PlatformRegistrationPage {
@@ -38,15 +38,18 @@ export function platformRegistrationBinding(page: PlatformRegistrationPage): Reg
   const g = page.government;
   const divisions = [...new Set(g.associations.filter(a => ["SOURCE_CODE", "GOVERNING_FUNCSTAT", "SOURCE_BOUNDARY", "COUNTY_IN_NAME"].includes(a.basis))
     .map(a => a.divisionId))];
-  // A Census county is an administrative address, not a district's service area.
-  // Its native bodies can publish at their registered state while finer place associations remain open.
+  if (!divisions.length && /SPECIAL.?DISTRICT/.test(g.governmentClass) && g.countyFips) {
+    const county = g.associations.find(a => a.layer === "county");
+    if (county) divisions.push(county.divisionId);
+  }
   if (!divisions.length) divisions.push(`ocd-division/country:us/${g.state === "DC" ? "district" : ["AS", "GU", "MP", "PR", "VI"].includes(g.state) ? "territory" : "state"}:${g.state.toLowerCase()}`);
-  if (divisions.length !== 1) return { notRegistered: `${g.name}: the registered government has several place associations; its calendar remains open work.` };
-  if (!new RegExp(`/(?:state|district|territory):${g.state.toLowerCase()}(?:/|$)`).test(divisions[0])) return { notRegistered: `${g.name}: the place association is outside its registered state.` };
+  const local = divisions.filter(id => /\/(?:state|district|territory):[^/]+\//.test(id));
+  if (local.length) divisions.splice(0,divisions.length,...local);
+  if (divisions.some(id => !new RegExp(`/(?:state|district|territory):${g.state.toLowerCase()}(?:/|$)`).test(id))) return { notRegistered: `${g.name}: the place association is outside its registered state.` };
   if (g.bodyIds.length > 1) return { notRegistered: `${g.name}: the registered government has several bodies; the native platform body must distinguish them.` };
   const aliases = g.aliases.filter(id => id.startsWith(`${divisions[0]}#`) && /#(?:governing|board)$/.test(id));
   return { governmentId: g.id, governmentClass: g.governmentClass, website: g.website,
-    bodyId: g.bodyIds[0] ?? (aliases.length === 1 ? aliases[0] : `${g.id}#${/SCHOOL|EDUCATION/i.test(g.governmentClass) ? "board" : "governing"}`), ocdId: divisions[0], publishingOrg: g.name, countyFips: g.countyFips,
+    bodyId: g.bodyIds[0] ?? (aliases.length === 1 ? aliases[0] : `${g.id}#${/SCHOOL|EDUCATION/i.test(g.governmentClass) ? "board" : "governing"}`), ocdId: divisions[0], alsoServesOcdIds: divisions.slice(1), publishingOrg: g.name, countyFips: g.countyFips,
     input: { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: `US-${g.state.toUpperCase()}:registration:v1`,
       versionId: page.versionId, readModelSha256: page.readModelHash, promotedAt: page.promotedAt } };
 }
@@ -57,19 +60,26 @@ const directoryNameSql = (value: string) => `(SELECT string_agg(word,' ' ORDER B
   WHERE word NOT IN ('of','the'))`;
 
 /** A directory name selects governments whose own sites must still be checked; it establishes no portal authority. */
-export async function platformGovernmentCandidates(query: PlatformQuery, tenant: PlatformTenant): Promise<PlatformRegistrationPage[]> {
-  if (!tenant.name || !tenant.state) return [];
+export async function platformGovernmentCandidates(query: PlatformQuery, tenant: PlatformTenant, websites: readonly string[] = []): Promise<PlatformRegistrationPage[]> {
+  const hosts = websites.flatMap(website => { try { return [new URL(website).hostname.replace(/^www\./i, "").toLowerCase()]; } catch { return []; } });
+  if ((!tenant.name || !tenant.state) && !hosts.length) return [];
   return await query(`SELECT g AS government,p.current_version_id AS "versionId", p.promoted_at AS "promotedAt", c.normalized_hash AS "readModelHash"
     FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id,
       LATERAL jsonb_array_elements(p.payload->'governments') g
-    WHERE p.record_class='REGISTRATION' AND p.scope='US-'||$1||':registration:v1'
-      AND ${directoryNameSql("g->>'name'")}=${directoryNameSql("$2::text")}
-    LIMIT 2`, [tenant.state, tenant.name]) as unknown as PlatformRegistrationPage[];
+    WHERE p.record_class='REGISTRATION' AND (
+      (p.scope='US-'||$1||':registration:v1' AND ${directoryNameSql("g->>'name'")}=${directoryNameSql("$2::text")})
+      OR ${websiteHostSql("g->>'website'")}=ANY($3::text[]))
+    LIMIT 2`, [tenant.state, tenant.name, hosts]) as unknown as PlatformRegistrationPage[];
 }
 
-/** Website or observed link evidence selects at most two records; a printed directory name alone never matches a portal. */
-export async function matchRegisteredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, governmentWebsites: readonly string[] = []): Promise<PlatformRegistrationPage[]> {
-  const hosts = [tenant.url, ...governmentWebsites].flatMap(value => { try { return [new URL(value).hostname.replace(/^www\./i, "").toLowerCase()]; } catch { return []; } });
+export interface PlatformGovernmentLink { readonly governmentWebsite: string; readonly portalUrl: string }
+
+/** Only links observed on the government's own site establish portal ownership. */
+export async function matchRegisteredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, links: readonly PlatformGovernmentLink[] = []): Promise<PlatformRegistrationPage[]> {
+  const hosts = links.filter(link => samePlatformTenant(link.portalUrl,tenant.url)).flatMap(link => {
+    try { return [new URL(link.governmentWebsite).hostname.replace(/^www\./i, "").toLowerCase()]; } catch { return []; }
+  });
+  if (!hosts.length) return [];
   const rows = await query(`SELECT g AS government,p.current_version_id AS "versionId", p.promoted_at AS "promotedAt", c.normalized_hash AS "readModelHash"
     FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id,
       LATERAL jsonb_array_elements(p.payload->'governments') g

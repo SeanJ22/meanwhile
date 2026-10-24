@@ -517,6 +517,7 @@ function CoverageBody({
                   <CouldGovernMark jurisdiction={bodyDisplayName(body)} />
                 )}
                 {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
+                {body.placementBasis === "HOST_COUNTY" && <span className="t-detail text-paper-dim">Filed under its host county; service boundary not available</span>}
               </span>
               <span
                 className={`trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}

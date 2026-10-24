@@ -1,6 +1,6 @@
 {
-  "measuredAt": "2026-10-24T14:03:22.102Z",
-  "revision": "aa30384a6",
+  "measuredAt": "2026-10-24T15:19:17.370Z",
+  "revision": "2b6dd3bb8",
   "mode": "Built branch HTTP state and ballot HTML diagnostics on read-only production holdings. These are not Chrome checks. Person links use exact identity keys; normalized display names locate rendered image alt text only.",
   "rows": [
     {
@@ -10,12 +10,12 @@
         {
           "path": "/api/reader/state?state=AZ&zip=85701",
           "status": 200,
-          "seconds": 2.027874596
+          "seconds": 2.412929667
         },
         {
           "path": "/ballot?zip=85701",
           "status": 200,
-          "seconds": 2.1170382500000002
+          "seconds": 2.447092757
         }
       ],
       "connections": [
@@ -27,6 +27,14 @@
           "officials": [
             {
               "id": "statewide:az/9c569bd1e5b6eb90ff6fb207",
+              "photoUrl": "/officials/statewide-az-governor.jpg"
+            },
+            {
+              "id": "statewide:az/9c569bd1e5b6eb90ff6fb207",
+              "photoUrl": "/officials/statewide-az-governor.jpg"
+            },
+            {
+              "id": "plural:az:6e522a2a-e7b7-4713-a40f-c897e4341a87",
               "photoUrl": "/officials/statewide-az-governor.jpg"
             },
             {
@@ -44,6 +52,14 @@
           "officials": [
             {
               "id": "statewide:az/secretary-of-state",
+              "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
+            },
+            {
+              "id": "statewide:az/secretary-of-state",
+              "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
+            },
+            {
+              "id": "plural:az:45ff1caf-0d6b-4915-9e34-5f4694907a07",
               "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
             }
           ],
@@ -81,6 +97,14 @@
           "personId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
           "ballotPhoto": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
           "officials": [
+            {
+              "id": "az-legislature:2312",
+              "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
+            },
+            {
+              "id": "az-legislature:2312",
+              "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
+            },
             {
               "id": "az-legislature:2312",
               "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
@@ -136,12 +160,12 @@
         {
           "path": "/api/reader/state?state=AK&zip=99501",
           "status": 200,
-          "seconds": 0.649243136
+          "seconds": 0.7298187749999997
         },
         {
           "path": "/ballot?zip=99501",
           "status": 200,
-          "seconds": 0.8316639759999999
+          "seconds": 0.7677158389999995
         }
       ],
       "connections": [
@@ -167,12 +191,12 @@
         {
           "path": "/api/reader/state?state=CO&zip=80202",
           "status": 200,
-          "seconds": 0.7124435670000002
+          "seconds": 0.5188747240000002
         },
         {
           "path": "/ballot?zip=80202",
           "status": 200,
-          "seconds": 1.0938237200000003
+          "seconds": 1.1405606590000006
         }
       ],
       "connections": [
@@ -198,12 +222,12 @@
         {
           "path": "/api/reader/state?state=NH&zip=03301",
           "status": 200,
-          "seconds": 1.7326609119999994
+          "seconds": 1.5707427459999999
         },
         {
           "path": "/ballot?zip=03301",
           "status": 200,
-          "seconds": 1.9148771080000007
+          "seconds": 2.032841404000001
         }
       ],
       "connections": [
@@ -215,6 +239,14 @@
           "officials": [
             {
               "id": "statewide:nh/governor",
+              "photoUrl": "/officials/statewide-nh-governor.png"
+            },
+            {
+              "id": "statewide:nh/governor",
+              "photoUrl": "/officials/statewide-nh-governor.png"
+            },
+            {
+              "id": "plural:nh:3eabef50-7d86-44cf-87db-8c549d2d21bd",
               "photoUrl": "/officials/statewide-nh-governor.png"
             }
           ],
@@ -242,6 +274,14 @@
             {
               "id": "nh-general-court:11461",
               "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
+            },
+            {
+              "id": "nh-general-court:11461",
+              "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
+            },
+            {
+              "id": "nh-general-court:11461",
+              "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
             }
           ],
           "samePhoto": true
@@ -255,12 +295,12 @@
         {
           "path": "/api/reader/state?state=NY&zip=10007",
           "status": 200,
-          "seconds": 0.9001904900000008
+          "seconds": 0.9401015790000001
         },
         {
           "path": "/ballot?zip=10007",
           "status": 200,
-          "seconds": 1.0886200800000005
+          "seconds": 1.0873624450000006
         }
       ],
       "connections": [
@@ -286,12 +326,12 @@
         {
           "path": "/api/reader/state?state=WI&zip=53703",
           "status": 200,
-          "seconds": 0.601424414000001
+          "seconds": 0.6021475789999986
         },
         {
           "path": "/ballot?zip=53703",
           "status": 200,
-          "seconds": 1.493165454
+          "seconds": 1.3142549259999996
         }
       ],
       "connections": [
@@ -307,6 +347,10 @@
             },
             {
               "id": "congress:P000607",
+              "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
+            },
+            {
+              "id": "congress-api:wi:P000607",
               "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
             }
           ],
@@ -334,12 +378,12 @@
         {
           "path": "/api/reader/state?state=ME&zip=04330",
           "status": 200,
-          "seconds": 0.7792823769999996
+          "seconds": 0.5834012000000003
         },
         {
           "path": "/ballot?zip=04330",
           "status": 200,
-          "seconds": 0.8263718419999987
+          "seconds": 0.7788777770000015
         }
       ],
       "connections": [
@@ -351,6 +395,14 @@
           "officials": [
             {
               "id": "congress:C001035",
+              "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
+            },
+            {
+              "id": "congress:C001035",
+              "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
+            },
+            {
+              "id": "congress-api:me:C001035",
               "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
             }
           ],
@@ -391,12 +443,12 @@
         {
           "path": "/api/reader/state?state=OR&zip=97204",
           "status": 200,
-          "seconds": 0.46583437699999924
+          "seconds": 0.5082049149999984
         },
         {
           "path": "/ballot?zip=97204",
           "status": 200,
-          "seconds": 0.715283405000002
+          "seconds": 0.6886067540000004
         }
       ],
       "connections": [
@@ -408,6 +460,14 @@
           "officials": [
             {
               "id": "congress:M001176",
+              "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
+            },
+            {
+              "id": "congress:M001176",
+              "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
+            },
+            {
+              "id": "congress-api:or:M001176",
               "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
             }
           ],
@@ -425,6 +485,10 @@
             },
             {
               "id": "congress:B001278",
+              "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
+            },
+            {
+              "id": "congress-api:or:B001278",
               "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
             }
           ],
@@ -452,12 +516,12 @@
         {
           "path": "/api/reader/state?state=SD&zip=57104",
           "status": 200,
-          "seconds": 0.5975769629999995
+          "seconds": 0.594910183
         },
         {
           "path": "/ballot?zip=57104",
           "status": 200,
-          "seconds": 0.8749109290000014
+          "seconds": 0.8014962780000023
         }
       ],
       "connections": [
@@ -469,6 +533,14 @@
           "officials": [
             {
               "id": "congress:R000605",
+              "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
+            },
+            {
+              "id": "congress:R000605",
+              "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
+            },
+            {
+              "id": "congress-api:sd:R000605",
               "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
             }
           ],
@@ -483,12 +555,12 @@
         {
           "path": "/api/reader/state?state=VT&zip=05602",
           "status": 200,
-          "seconds": 0.6221132450000004
+          "seconds": 0.6736763850000025
         },
         {
           "path": "/ballot?zip=05602",
           "status": 200,
-          "seconds": 0.9216780099999996
+          "seconds": 0.9799447679999975
         }
       ],
       "connections": [

@@ -18,7 +18,7 @@ import type {
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
-import { durableStateHash, immutableStateHash, immutableStateValue, statePublicationScope } from "./state-publication.ts";
+import { durableStateHash, immutableStateHash, immutableStateValue, largePayloadScope, statePublicationScope } from "./state-publication.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { promotedPayloadSha256, type AttestedPromotion } from "./attested-promotion.ts";
 import {
@@ -1212,7 +1212,8 @@ export function promotionProofIssue<T>(
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
   const scoped = statePublicationScope(scope);
   const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
-  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableCivicDataHash(candidate.readModel));
+  const large = largePayloadScope(scope);
+  const readModelHash = indexedPrior?.payloadHash ?? (large ? durableStateHash(candidate.readModel) : durableCivicDataHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
@@ -1220,7 +1221,7 @@ export function promotionProofIssue<T>(
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
   const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
-    scoped ? durableStateHash(candidate.normalizedPayload) : durableCivicDataHash(candidate.normalizedPayload);
+    large ? durableStateHash(candidate.normalizedPayload) : durableCivicDataHash(candidate.normalizedPayload);
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1256,7 +1257,7 @@ export function promotionProofIssue<T>(
     projectionReceipt.scope !== scope
   ) return "the GOOD receipt does not identify the pointed candidate";
   if (canonicalCivicDataJson(projectionReceipt) !== canonicalCivicDataJson(candidateReceipt)) return "the candidate and pointer receipts differ";
-  if (!indexedPrior && (scoped ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
+  if (!indexedPrior && (large ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
     durableCivicDataHash(projection.payload) !== readModelHash)) return "the pointer payload differs from the validated candidate read model";
   const retrievedAt = Date.parse(candidate.retrieval?.retrievedAt ?? "");
   const validatedAt = Date.parse(projectionReceipt.validatedAt);

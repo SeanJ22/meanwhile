@@ -1,0 +1,223 @@
+{
+  "state": "OK",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+      "finalUrl": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+      "publisher": "Oklahoma State Election Board"
+    },
+    {
+      "requestedUrl": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+      "finalUrl": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+      "publisher": "Oklahoma State Election Board"
+    },
+    {
+      "requestedUrl": "https://oklahoma.gov/elections/about-us/contact-us.html",
+      "finalUrl": "https://oklahoma.gov/elections/about-us/contact-us.html",
+      "publisher": "Oklahoma State Election Board"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://oklahoma.gov/elections/about-us/contact-us.html",
+          "finalUrl": "https://oklahoma.gov/elections/about-us/contact-us.html",
+          "publisher": "Oklahoma State Election Board",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:11.139723+00:00",
+          "httpStatus": 200,
+          "rawHash": "13fe5497882a78b0c83bf9d446d681cb540c3e81ca87b6f1b6728f616df5f6af",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+          "finalUrl": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+          "publisher": "Oklahoma State Election Board",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:35:56.657956+00:00",
+          "httpStatus": 200,
+          "rawHash": "54b311b2782f8e7f154a9ed67e25be292ce70a6622384a1ec737cad03a5329b3",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+          "finalUrl": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+          "publisher": "Oklahoma State Election Board",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:10.970982+00:00",
+          "httpStatus": 200,
+          "rawHash": "ff6662b3cc8e1b77da0ea4fd34d714e0037206a6c9dbe532bc71a3a415d3a335",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0c32a1bdb3c8310df6503719b6c21be7",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "registration_page",
+            "text": "https://oklahoma.gov/elections/voter-registration/register-to-vote.html",
+            "quote": "Register to Vote",
+            "dates": [],
+            "url": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+            "navigationUrl": "https://oklahoma.gov/elections/voter-registration/register-to-vote.html",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.657956+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:23d724be58b288c317d6a484840f14ee",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "October 19",
+            "quote": "2026 Voter Information Calendar\nAbsentee Ballot Deadline\nNovember 3\nOctober 19",
+            "dates": [
+              "2026-10-19"
+            ],
+            "url": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.657956+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:5f0ab009208b06f6babe84c8db2e53a6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "early_voting",
+            "text": "October 28 - 30 (8 A.M. – 6 P.M.) October 31 (8 A.M. – 2 P.M.)",
+            "quote": "2026 Voter Information Calendar\nOctober 28 - 30\n(8 A.M. – 6 P.M.)\nOctober 31\n(8 A.M. – 2 P.M.)",
+            "dates": [
+              "2026-10-28",
+              "2026-10-31"
+            ],
+            "url": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.657956+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:6f5b8a7be71ec691ebe21e9e847f2bfd",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "ballot_lookup",
+            "text": "https://okvoterportal.okelections.us/",
+            "quote": "View a Sample Ballot for Your Precinct",
+            "dates": [],
+            "url": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+            "navigationUrl": "https://okvoterportal.okelections.us/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:10.970982+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:bf4360f4fb4293b6f2fe4c4756485e11",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "polling_lookup",
+            "text": "https://okvoterportal.okelections.us/",
+            "quote": "Find Your Polling Place and Early Voting Information",
+            "dates": [],
+            "url": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+            "navigationUrl": "https://okvoterportal.okelections.us/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:10.970982+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:dc3af1ea3cbe1ae320a9466903323f35",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "registration_lookup",
+            "text": "https://okvoterportal.okelections.us/",
+            "quote": "Verify Voter Registration Information",
+            "dates": [],
+            "url": "https://oklahoma.gov/elections/voters/ok-voter-portal.html",
+            "navigationUrl": "https://okvoterportal.okelections.us/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:10.970982+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:ddfdf1958e709e8f27ac8fdc01b25ce4",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "election_office",
+            "text": "Oklahoma State Election Board",
+            "quote": "OKLAHOMA STATE ELECTION BOARD",
+            "dates": [],
+            "url": "https://oklahoma.gov/elections/about-us/contact-us.html",
+            "navigationUrl": "https://oklahoma.gov/elections.html",
+            "electionDate": "2026-11-03",
+            "phone": "(405) 521-2391",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:11.139723+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        },
+        {
+          "id": "election-field:e54b691918146e0aa8c2a21e94f20b7d",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "OK",
+            "divisionId": "ocd-division/country:us/state:ok",
+            "fieldKind": "registration_deadline",
+            "text": "October 9",
+            "quote": "2026 Voter Information Calendar\nVoter Registration Deadline\nNovember 3\nOctober 9",
+            "dates": [
+              "2026-10-09"
+            ],
+            "url": "https://oklahoma.gov/elections/elections-results/next-election/voter-information-calendar.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.657956+00:00",
+            "sourceOrg": "Oklahoma State Election Board"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -53,11 +53,11 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const divisions = [...new Set([...rawEntry?.ids ?? [], ...rawEntry?.fringe ?? [], ...selection.divisions ?? [],
     ...states.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`)])];
   const entries: { recordClass: RoutineRecordClass; scope: string }[] = states.flatMap(state => [
-    ...(["ballot-contests"] as const).flatMap(family =>
+    ...(["ballot-contests", "ballot-navigation"] as const).flatMap(family =>
       stateAuthorityPointers(family, state)),
     ...(state === "NH" && !zip ? [requiredRoutineContract("nh-members")] : []),
   ]);
-  for (const id of ["ballot-navigation", "official-filings"] as const) entries.push(requiredManualProductionContract(id));
+  entries.push(requiredManualProductionContract("official-filings"));
   for (const division of divisions) {
     if (!jurisdictionFromOcdId(division)) continue;
     entries.push({ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) });

@@ -16,6 +16,7 @@ import type { GlobalAuthorityFamily, GlobalPromotedAuthorityFamily, PromotedFami
 type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
 import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
+import { ballotNavigationScope } from "../lib/civic-data/ballot-navigation-scope.ts";
 import { stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../lib/civic-data/state-scopes.ts";
 import { ballotElectionKey, currentGenericBallotProjection, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
@@ -34,8 +35,6 @@ import {
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
-import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
-import { REGISTRATION_LINKS } from "../lib/ballot/registration-links.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { withReaderSelection, type ReaderSelection } from "../lib/db/reader-route.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
@@ -121,8 +120,9 @@ const districts: CensusDistrictEdge = { ...azDistricts, versionId: "edge-test:ba
 const navigation = {
   kind: "ballot-navigation",
   records: [
-    ...REGISTRATION_LINKS.map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
-    ...POLLING_PLACE_LINKS.map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
+    { id: "registration:AZ", kind: "REGISTRATION_LINK", value: { state: "AZ", label: "Check your registration",
+      url: "https://my.arizona.vote/WhereToVote.aspx?s=individual", sourceOrg: "Arizona Secretary of State",
+      verification: "Saved official-page fixture", verifiedAt: "2026-10-14" } },
   ],
 };
 
@@ -139,7 +139,6 @@ const EDGE = {
   stateMoney: (state: string) => `edge-test:ballot:money:${state}`,
 };
 const PROMOTED_BALLOT_FAMILIES: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
-  "ballot-navigation": promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation"),
   "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "edge-test:filings:absent"),
   "nh-members": promotedFamily([provenEdgeEntry({ recordClass: nhRoster.recordClass, scope: nhRoster.scope, sourceId: nhRoster.sourceId, versionId: EDGE.nhMembers, value: nhMembers })], EDGE.nhMembers),
   "federal-funding": promotedFamily([
@@ -160,6 +159,9 @@ const STATE_BALLOT_FAMILIES: StateValues = {
   "candidate-publications": { ...absentStates("candidate-corpus", "CANDIDATE_PUBLICATION"), AZ: promotedFamily([manual("candidate-corpus:AZ", corpus, EDGE.corpus)], EDGE.corpus) },
   "candidate-campaign-sites-derived": absentStates("candidate-campaign-sites-derived", "CURATED_READER_RECORD"),
   "voting-sites": absentStates("voting-sites", "VOTING_SITE"),
+  "ballot-navigation": { ...Object.fromEntries(["AZ", "NH", "NJ", "TX"].map(state => [state,
+    promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", ballotNavigationScope(state))], `absent:ballot-navigation:${state}`)])),
+    AZ: promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation") },
 };
 
 async function createReaderFixture(withPromoted: boolean, authorityOverrides: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {}, stateOverrides: StateValues = {}): Promise<string> {

@@ -7,6 +7,7 @@ import type { FactDb, Query } from "./publish.ts";
 import { hostOf, isOfficialUrl } from "./check.ts";
 import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
 import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
+import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 
 type EntityKind = "place" | "government" | "body" | "seat" | "person" | "meeting" | "agenda_item" | "bill" | "vote_event"
   | "election" | "contest" | "candidacy" | "measure" | "committee" | "statement" | "law_question" | "news_item";
@@ -17,6 +18,8 @@ interface EntityRow {
   readonly name: string;
   readonly state: string | null;
   readonly parentId: string | null;
+  /** The registered government a reviewed door names as a board's owner. */
+  readonly government?: string | null;
 }
 
 interface EntityBatch {
@@ -51,6 +54,18 @@ function hostOfAddress(address: string): string | null {
 
 const titleCase = (s: string) => s.toLowerCase().replace(/\b\p{L}/gu, c => c.toUpperCase());
 
+/** Census names Alaska's dependent districts as REAAs; TIGER names the same school territory as a school district. */
+function schoolPlaces(state: string, name: string): string[] {
+  const district = name.replace(/-/g, "_");
+  const stem = district.replace(/_regional_educational_attendance_area(?:_reaa)?$/, "");
+  return [...new Set([district, ...(stem !== district ? [`${stem}_school_district`] : [])])]
+    .map(slug => `ocd-division/country:us/state:${state.toLowerCase()}/school_district:${slug}`);
+}
+
+/** A state, district or territory itself: where a board waits until its government or place is known. */
+const BARE_ROOT = "^ocd-division/country:us/(state|district|territory):[^/]+$";
+const localPlace = (id: string) => id.startsWith(`${COUNTRY}/`) && id.slice(COUNTRY.length + 1).includes("/");
+
 /** One state's places, governments and registry bodies; a special district sits on its own territory, or on the state until a boundary draws it. */
 export interface Legislator { readonly ocdPersonId: string; readonly name: string }
 
@@ -75,7 +90,8 @@ function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGove
     const facts = census.get(pid6);
     const county = facts?.countyFips ? countyByFips.get(facts.countyFips.slice(-3)) : undefined;
     // A special district's office county is not its territory: placed there, it would govern every ZIP in the county.
-    const place = divisionIndex >= 0 ? reg.divisions[divisionIndex]?.[0] : govType === "SPECIAL DISTRICT" ? stateDivision : county ?? stateDivision;
+    const school = govType === "DEPENDENT SCHOOL SYSTEM" ? schoolPlaces(state, jurisdictionId.split(":").at(-1)!).find(id => known.has(id)) : undefined;
+    const place = divisionIndex >= 0 ? reg.divisions[divisionIndex]?.[0] : school ?? (govType === "SPECIAL DISTRICT" ? stateDivision : county ?? stateDivision);
     out.entities.push({ id: jurisdictionId, kind: "government", name: titleCase(name), state, parentId: place ?? null });
     if (pid6 && /^\d+$/.test(pid6)) out.externalIds.push([jurisdictionId, "census-pid6", pid6]);
     if (place) out.places.push([jurisdictionId, place]);
@@ -84,13 +100,17 @@ function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGove
   }
   const governmentByPid = new Map(reg.governments.map(g => [g[0], g[1]]));
   const governmentOnDivision = new Map(reg.governments.filter(g => g[4] >= 0).map(g => [reg.divisions[g[4]]?.[0], g[1]]));
+  const governmentNames = new Map(reg.governments.map(g => [g[1], titleCase(g[2])]));
   const divisionName = new Map(reg.divisions.map(d => [d[0], d[3]]));
   for (const body of bodies) {
+    if (body.ocdId && isCensusPlaceholderDivision({ ocdId: body.ocdId })) continue;
     const place = body.ocdId && known.has(body.ocdId) ? body.ocdId : null;
     const government = (body.censusId ? governmentByPid.get(body.censusId) : undefined) ?? (place ? governmentOnDivision.get(place) : undefined);
-    const name = body.name ?? `${(place && divisionName.get(place)) ?? body.id} ${body.bodyClass.toLowerCase().replace(/_/g, " ")}`;
+    const ownerName = (government && governmentNames.get(government)) ?? (place && divisionName.get(place)) ?? body.id;
+    const role = body.bodyClass === "GOVERNING" ? (place?.includes("/school_district:") ? "school board" : "governing board") : body.bodyClass.toLowerCase().replace(/_/g, " ");
+    const name = body.name ?? `${ownerName} ${role}`;
     out.entities.push({ id: body.id, kind: "body", name, state, parentId: government ?? place ?? stateDivision });
-    if (place) out.places.push([body.id, place]);
+    if (place && localPlace(place)) out.places.push([body.id, place]);
     const host = body.homepageUrl ? hostOfAddress(body.homepageUrl) : null;
     if (host) out.hosts.push([body.id, host]);
   }
@@ -109,8 +129,10 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
     // A government moves when its reference territory moves, and a registry body when its government does; every other held row keeps what it has.
     await query(`INSERT INTO entity (id, kind, name, state, parent_id)
       SELECT * FROM unnest($1::text[], $2::text[], $3::text[], $4::char(2)[], $5::text[])
-      ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
-        WHERE entity.kind IN ('government', 'body') AND EXCLUDED.kind = entity.kind AND entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id`,
+      ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id,
+        name = CASE WHEN entity.kind = 'body' AND entity.name ~ ' governing$' THEN EXCLUDED.name ELSE entity.name END
+        WHERE entity.kind IN ('government', 'body') AND EXCLUDED.kind = entity.kind
+          AND (entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id OR (entity.kind = 'body' AND entity.name ~ ' governing$' AND entity.name IS DISTINCT FROM EXCLUDED.name))`,
     [rows.map(r => r.id), rows.map(r => r.kind), rows.map(r => r.name), rows.map(r => r.state), rows.map(r => r.parentId)]);
   }
   const governments = batch.entities.filter(row => row.kind === "government");
@@ -119,6 +141,9 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
     await query(`DELETE FROM entity_place ep USING unnest($1::text[], $2::text[]) AS g(id, place)
       WHERE ep.entity_id = g.id AND ep.place_id IS DISTINCT FROM g.place`, [rows.map(r => r.id), rows.map(r => r.parentId)]);
   }
+  const bodies = batch.entities.filter(row => row.kind === "body");
+  if (bodies.length) await query(`DELETE FROM entity_place WHERE entity_id = ANY($1::text[])
+    AND place_id ~ '${BARE_ROOT}'`, [bodies.map(row => row.id)]);
   for (let i = 0; i < batch.externalIds.length; i += size) {
     const rows = batch.externalIds.slice(i, i + size);
     await query(`INSERT INTO entity_external_id (entity_id, scheme, value)
@@ -135,6 +160,18 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
     await query(`INSERT INTO entity_place (entity_id, place_id) SELECT * FROM unnest($1::text[], $2::text[]) ON CONFLICT DO NOTHING`,
       [rows.map(r => r[0]), rows.map(r => r[1])]);
   }
+}
+
+/** Merged boards retain their former ids as data, so a later registration load cannot recreate them. */
+async function canonicalBodies(query: Query, batch: EntityBatch): Promise<EntityBatch> {
+  const ids = batch.entities.filter(row => row.kind === "body").map(row => row.id);
+  if (!ids.length) return batch;
+  const aliases = new Map((await query("SELECT value, entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = ANY($1::text[])", [ids]))
+    .map(row => [String(row.value), String(row.entity_id)]));
+  // An alias's target is already held with its verified name, government and territory.
+  return { entities: batch.entities.filter(row => !aliases.has(row.id)),
+    hosts: batch.hosts.filter(([id]) => !aliases.has(id)), externalIds: batch.externalIds.filter(([id]) => !aliases.has(id)),
+    places: batch.places.filter(([id]) => !aliases.has(id)) };
 }
 
 interface PersonIds {
@@ -171,6 +208,7 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
   const column = (name: string) => header!.indexOf(name);
   const [idAt, nameAt, stateAt] = [column("ocd_person_id"), column("name"), column("jurisdiction")];
   const loaded = new Map((await db.query("SELECT source, sha256 FROM fact_store_load")).map(r => [String(r.source), String(r.sha256)]));
+  const registrationHeld = (await db.query("SELECT to_regclass('civic_data_promotions') IS NOT NULL AS held"))[0]?.held === true;
   await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING`, [COUNTRY]);
   const done: string[] = [];
   for (const st of states) {
@@ -179,11 +217,30 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       .map(body => [body.id, body])).values()];
     const legislators = people.filter(row => row[stateAt]?.toLowerCase() === st && row[idAt]?.startsWith("ocd-person/"))
       .map(row => ({ ocdPersonId: row[idAt]!, name: row[nameAt]! }));
-    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify([stateBodies, legislators]))]));
+    // Published service territory is data. A Census office location never overrides a source-established local association.
+    const associations = registrationHeld ? await db.query(`SELECT g->>'id' AS native_id,g->>'jurisdictionId' AS id,
+        array_agg(DISTINCT a->>'divisionId') AS places
+      FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'governments') g
+      CROSS JOIN LATERAL jsonb_array_elements(g->'associations') a
+      WHERE p.key=$1 AND a->>'basis' IN ('SOURCE_CODE','GOVERNING_FUNCSTAT','SOURCE_BOUNDARY','COUNTY_IN_NAME')
+        AND a->>'divisionId' LIKE $2 GROUP BY g->>'id',g->>'jurisdictionId' ORDER BY g->>'id'`,
+      [`REGISTRATION:US-${st.toUpperCase()}:registration:v1`, `${COUNTRY}/state:${st.toLowerCase()}/%`]) : [];
+    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["PB-03", stateBodies, legislators, associations]))]));
     if (loaded.get(`registration:${st}`) === hash) continue;
     const batch = stateEntities(JSON.parse(file.toString("utf8")) as Registration, readCensusGovernmentFacts(root, [st]).byPid, stateBodies, legislators);
+    const places = new Set(batch.entities.filter(row => row.kind === "place").map(row => row.id));
+    for (const association of associations) {
+      const territory = association.places as string[];
+      if (territory.length !== 1 || !places.has(territory[0]!)) continue;
+      for (const id of [association.id, association.native_id]) {
+        const index = batch.entities.findIndex(row => row.id === id && row.kind === "government");
+        if (index < 0) continue;
+        batch.entities[index] = { ...batch.entities[index]!, parentId: territory[0]! };
+        batch.places.splice(0, batch.places.length, ...batch.places.filter(([entity]) => entity !== id), [String(id), territory[0]!]);
+      }
+    }
     await db.transaction(async query => {
-      await insertEntities(query, batch);
+      await insertEntities(query, await canonicalBodies(query, batch));
       await query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
         ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`registration:${st}`, hash]);
     });
@@ -196,35 +253,64 @@ export function registeredStates(root: string): readonly string[] {
   return readdirSync(join(root, "data", "derived", "registration")).filter(name => /^[a-z]{2}\.json$/.test(name)).map(name => name.slice(0, 2)).sort();
 }
 
-/** Mints an entity found after the backfill; its parent is kept only when already held. */
-export async function ensureEntity(query: Query, row: EntityRow): Promise<void> {
-  await query(`INSERT INTO entity (id, kind, name, state, parent_id)
-    SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = $5) ON CONFLICT (id) DO NOTHING`,
-  [row.id, row.kind, row.name, row.state, row.parentId]);
+/** The surviving board for an exact saved identity alias; people and native source identifiers are unchanged. */
+export async function canonicalBodyId(query: Query, id: string): Promise<string> {
+  const [alias] = await query("SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1", [id]);
+  return alias ? String(alias.entity_id) : id;
 }
 
-interface GovernmentRef { readonly id: string; readonly state: string | null; readonly placeId: string; readonly placeName: string; readonly name: string }
+/** The registered government a board belongs to: the one its id names, else the one its door names; null when neither is held. */
+async function bodyGovernment(query: Query, id: string, named: string | null | undefined): Promise<string | null> {
+  for (const candidate of [splitSubject(id).root, named]) {
+    if (!candidate) continue;
+    const government = await registeredGovernment(query, candidate);
+    if ((await query("SELECT 1 FROM entity WHERE id = $1 AND kind = 'government'", [government])).length) return government;
+  }
+  return null;
+}
+
+/** Mints an entity found after the backfill and returns its durable identity; aliased boards reuse the surviving entity.
+ * A board hangs on its registered government, and a held board left on a bare state root moves to the government or local place a writer now names. */
+export async function ensureEntity(query: Query, row: EntityRow): Promise<string> {
+  const id = row.kind === "body" ? await canonicalBodyId(query, row.id) : row.id;
+  if (id !== row.id) return id;
+  const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
+  await query(`INSERT INTO entity (id, kind, name, state, parent_id)
+    SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = coalesce(
+      (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $5), $5))
+    ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
+      WHERE entity.kind = 'body' AND EXCLUDED.kind = 'body' AND entity.state IS NOT DISTINCT FROM EXCLUDED.state
+        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'`,
+  [id, row.kind, row.name, row.state, parentId]);
+  return id;
+}
+
+interface GovernmentRef { readonly id: string; readonly state: string | null; readonly placeId: string; readonly name: string }
 export interface BodyRef { readonly id: string; readonly name: string; readonly state: string | null; readonly parentId: string | null }
 
 /** The government a finding is about, with the place it sits on; the first of the given ids that is one. A dependent school system the fact store lacks is added on its district's place when that place is held. */
 async function governmentAt(query: Query, ids: readonly (string | null)[]): Promise<GovernmentRef | null> {
   for (const id of ids.flatMap(row => row ? [row.split("#")[0]!] : [])) {
-    const [government] = await query(`SELECT g.id, g.name, g.state, g.parent_id, p.name AS place_name FROM entity g JOIN entity p ON p.id = g.parent_id
+    const [government] = await query(`SELECT g.id, g.name, g.state, g.parent_id FROM entity g JOIN entity p ON p.id = g.parent_id
       WHERE g.id = $1 AND g.kind = 'government' AND p.kind = 'place'`, [id]);
-    if (government) return { id, state: government.state as string | null, placeId: String(government.parent_id), placeName: String(government.place_name), name: String(government.name) };
     const dependent = /^([a-z]{2}):depschool:([a-z0-9-]+)$/.exec(id);
-    const [place] = dependent ? await query("SELECT id, name, state FROM entity WHERE id = $1 AND kind = 'place'",
-      [`ocd-division/country:us/state:${dependent[1]}/school_district:${dependent[2]!.replace(/-/g, "_")}`]) : [];
+    if (government && (!dependent || localPlace(String(government.parent_id))))
+      return { id, state: government.state as string | null, placeId: String(government.parent_id), name: String(government.name) };
+    const candidates = dependent ? schoolPlaces(dependent[1]!, dependent[2]!) : [];
+    const [place] = candidates.length ? await query("SELECT id, name, state FROM entity WHERE id = ANY($1::text[]) AND kind = 'place' ORDER BY array_position($1::text[], id) LIMIT 1", [candidates]) : [];
     if (place) {
       await ensureEntity(query, { id, kind: "government", name: String(place.name), state: place.state as string | null, parentId: String(place.id) });
+      await query("UPDATE entity SET parent_id = $2 WHERE id = $1 AND parent_id IS DISTINCT FROM $2", [id, place.id]);
+      await query("DELETE FROM entity_place WHERE entity_id = $1 AND place_id <> $2", [id, place.id]);
       await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place.id]);
-      return { id, state: place.state as string | null, placeId: String(place.id), placeName: String(place.name), name: String(place.name) };
+      return { id, state: place.state as string | null, placeId: String(place.id), name: government ? String(government.name) : String(place.name) };
     }
+    if (government) return { id, state: government.state as string | null, placeId: String(government.parent_id), name: String(government.name) };
   }
   // A body hung straight on its place, with no government between: the place stands for the government.
   for (const id of ids.flatMap(row => row ? [row.split("#")[0]!] : [])) {
     const [place] = await query("SELECT id, name, state FROM entity WHERE id = $1 AND kind = 'place'", [id]);
-    if (place) return { id, state: place.state as string | null, placeId: id, placeName: String(place.name), name: String(place.name) };
+    if (place) return { id, state: place.state as string | null, placeId: id, name: String(place.name) };
   }
   return null;
 }
@@ -262,14 +348,16 @@ async function registeredGovernment(query: Query, id: string): Promise<string> {
 
 /** The subject under the one board name: its government's registered id, then its tail. */
 export async function canonicalSubject(query: Query, subjectId: string): Promise<string> {
+  const body = await canonicalBodyId(query, subjectId);
+  if (body !== subjectId) return body;
   const { root, tail } = splitSubject(subjectId);
   const government = await registeredGovernment(query, root);
   // A committee whose name is the governing board's, however the page dressed it ("Our Governing Board", "Mayor and Council"), is that board.
   if (tail.startsWith("#body:")) {
     const context = await governmentContext(query, government);
-    if (governingBoardName(tail.slice(6).replace(/-/g, " "), context) !== null) return `${government}${context.school ? "#board" : "#governing"}`;
+    if (governingBoardName(tail.slice(6).replace(/-/g, " "), context) !== null) return canonicalBodyId(query, `${government}${context.school ? "#board" : "#governing"}`);
   }
-  return `${government}${tail}`;
+  return canonicalBodyId(query, `${government}${tail}`);
 }
 
 /** What the fact store says kind of government this is and what it is called, for reading a body's name against it. */
@@ -281,29 +369,58 @@ async function governmentContext(query: Query, id: string): Promise<GoverningCon
 
 /** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
 export async function ensureGoverningBody(query: Query, subjectId: string): Promise<BodyRef | null> {
-  const { root } = splitSubject(subjectId);
+  const subject = await canonicalSubject(query, subjectId);
+  if (subject !== subjectId) {
+    const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [subject]);
+    if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
+  }
+  const { root } = splitSubject(subject);
   const kind = /^[a-z]{2}:(city|county|special|school|depschool):/.exec(root)?.[1]
     ?? (/^ocd-division\/.*\/school_district:[^/]+$/.test(root) ? "school" : /^ocd-division\/.*\/county:[^/]+$/.test(root) ? "county" : /^ocd-division\/.*\/place:[^/]+$/.test(root) ? "city" : undefined);
   const government = kind ? await governmentAt(query, [root]) : null;
   if (!kind || !government) return null;
   const school = kind === "school" || kind === "depschool";
+  const name = `${government.name} ${school ? "school board" : "governing board"}`;
   const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1 AND (id LIKE '%#governing' OR id LIKE '%#board') ORDER BY id LIMIT 1", [government.id]);
-  if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
+  if (held) {
+    if (String(held.name).endsWith(" governing")) {
+      await query("UPDATE entity SET name=$2 WHERE id=$1 AND name=$3", [held.id, name, held.name]);
+      held.name = name;
+    }
+    await placeBody(query, String(held.id), government.placeId);
+    return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
+  }
   const id = `${government.id}${school ? "#board" : "#governing"}`;
-  const name = kind === "special" ? `${government.name} governing board` : `${government.placeName} ${school ? "school board" : "governing"}`;
-  await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
-  await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, government.placeId]);
-  return { id, name, state: government.state, parentId: government.id };
+  const bodyId = await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
+  if (bodyId !== id) {
+    const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [bodyId]);
+    return { id: bodyId, name: String(held!.name), state: held!.state as string | null, parentId: held!.parent_id as string | null };
+  }
+  await placeBody(query, bodyId, government.placeId);
+  return { id: bodyId, name, state: government.state, parentId: government.id };
+}
+
+async function placeBody(query: Query, id: string, place: string): Promise<void> {
+  await query(`DELETE FROM entity_place WHERE entity_id = $1
+    AND place_id ~ '${BARE_ROOT}'`, [id]);
+  if (localPlace(place)) await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place]);
 }
 
 /** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. */
 async function bodyUnder(query: Query, government: GovernmentRef, find: { readonly sql: string; readonly param: string }, id: string, name: string): Promise<BodyRef> {
   const [held] = await query(`SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND (parent_id = $1 OR id LIKE $2) AND ${find.sql} LIMIT 1`,
     [government.id, `${government.placeId}#%`, find.param]);
-  if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
-  await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
-  await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, government.placeId]);
-  return { id, name, state: government.state, parentId: government.id };
+  if (held) {
+    await placeBody(query, String(held.id), government.placeId);
+    return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
+  }
+  const bodyId = await ensureEntity(query, { id, kind: "body", name, state: government.state, parentId: government.id });
+  if (bodyId !== id) {
+    const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [bodyId]);
+    return { id: bodyId, name: String(held!.name), state: held!.state as string | null, parentId: held!.parent_id as string | null };
+  }
+  await placeBody(query, bodyId, government.placeId);
+  return { id: bodyId, name, state: government.state, parentId: government.id };
 }
 
 /** The body a name on a government's page stands for: its governing board under whatever name the page gives it, a body of that name it already holds, or a new body named `<government id>#body:<slug>`. */
@@ -336,4 +453,5 @@ export async function learnDoorChannel(query: Query, entityId: string, url: stri
 }
 
 const learnSite = (query: Query, entityId: string, site: string) =>
-  query("INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = $1 ON CONFLICT DO NOTHING", [entityId, site]);
+  query(`INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = coalesce(
+    (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1), $1) ON CONFLICT DO NOTHING`, [entityId, site]);

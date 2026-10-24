@@ -7,7 +7,7 @@ import { isOfficialSource, type OfficialLinkingPage } from "../../civic-data/sou
 import { STATEWIDE_SOURCE_ID, STATEWIDE_PARSER_VERSION, STATEWIDE_REFERENCE_SOURCES, statewideJurisdiction, type StatewideReferenceSource } from "./reference.ts";
 import { parseStatewideAssociation, parseWikidataStatewide, statewideOfficeTitle, statewidePageLinks, statewideRoster, verifyStatewideOfficialPage, type StatewideLead, type StatewideGap } from "./parse.ts";
 import { acquireWikidataPortraitLicense, discoverWikidataIdentifierProperties, WIKIDATA_IDENTIFIER_PROPERTIES } from "../people/wikidata.ts";
-export { STATEWIDE_SOURCE_ID, STATEWIDE_PARSER_VERSION } from "./reference.ts";
+;
 
 const DAY=86_400_000;
 type SharedOptions=Pick<KnownReleaseOptions,"store"|"locks"|"fetchImpl"|"now">&{

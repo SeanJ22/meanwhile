@@ -17,11 +17,6 @@ export const MEETINGS_RECORD_CLASS = "MEETING" as const;
 /** Reader composition scope; no canonical pointer is ever written at this key. */
 export const MEETINGS_SCOPE = "source-wiring-partitions";
 export const MEETINGS_SOURCE_ID = "meetings-public-bodies";
-/** Observation-only fields excluded when research projections compare civic facts. */
-export const MEETINGS_SNAPSHOT_STAMPS = {
-  stampKeys: ["generatedAt", "collectedAt", "verifiedAt", "retrievedAt", "lastFreshAt"],
-  ignoreTopLevel: ["counts", "sources"],
-} as const;
 
 export interface SnapshotSourceReport {
   source: string;
@@ -109,7 +104,6 @@ export function snapshotCounts(
     total: rows.length,
   };
 }
-
 
 export function accountCarriedCollapses(
   partitions: readonly Pick<MeetingsSnapshot, "meetings" | "sources">[],

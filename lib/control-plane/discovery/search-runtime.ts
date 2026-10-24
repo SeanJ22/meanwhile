@@ -18,8 +18,6 @@ import type { DiscoverySearch, SearchRequestRecord } from "./meetings-discovery-
 
 export const DISCOVERY_SEARCH_VENDOR = "discovery-search";
 export { SEARCH_HOSTS };
-/** Conservative starting caps; shown on the dial. */
-export const DEFAULT_SEARCH_BUDGET = { perCycle: 50, perDay: 200 } as const;
 /** Time allowed per query for the budget ledger's admission and release calls, on top of the provider requests. */
 const SEARCH_LEDGER_ALLOWANCE_MS = 2_000;
 

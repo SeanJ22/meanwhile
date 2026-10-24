@@ -149,12 +149,6 @@ export function resolveAddress(samples: readonly Sample[]): AddressResolution {
   return { status: "AMBIGUOUS", levels, unheld, split };
 }
 
-/** Every division id the reader is CONFIRMED to be in, across all certain levels. */
-export function confirmedDivisionIds(resolution: AddressResolution): string[] {
-  if (resolution.status === "FAILED") return [];
-  return resolution.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
-}
-
 /** The sentence the prompt shows when it asks for a house number, with its reason. */
 export function houseNumberReason(split: readonly LevelKey[]): string {
   const parts = split.map((level) => `${LEVEL_LABEL[level]} (which decides ${LEVEL_OFFICE[level]})`);

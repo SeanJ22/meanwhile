@@ -32,6 +32,7 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 import { movedAdminPage } from "@/lib/control-plane/moved-pages.ts";
+import { BALLOT_CACHE_HEADER, ballotCacheValue } from "@/lib/reader/ballot-cache.ts";
 
 /** The command center and its authenticated API. */
 const ADMIN_PATH_PREFIXES = ["/admin", "/api/admin"] as const;
@@ -77,7 +78,13 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
    * public, so a misconfiguration never opens the control centre.
    * ---------------------------------------------------------------- */
   if (!onAdminHost) {
-    return isAdminPath(pathname) ? notFound() : NextResponse.next();
+    if (isAdminPath(pathname)) return notFound();
+    if (pathname !== "/ballot") return NextResponse.next();
+    // Only middleware may decide a ballot copy is storable; a reader-sent verdict is dropped.
+    const headers = new Headers(request.headers), verdict = ballotCacheValue(request);
+    headers.delete(BALLOT_CACHE_HEADER);
+    if (verdict) headers.set(BALLOT_CACHE_HEADER, verdict);
+    return NextResponse.next({ request: { headers } });
   }
 
   /* ---------------------------------------------------------------- *

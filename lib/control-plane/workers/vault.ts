@@ -6,6 +6,12 @@ import type { ParserInput } from "../evidence/parser-boundary.ts";
 /** The acquiring roles whose bytes may reach a worker. */
 const WORKER_READABLE_ROLES = ["ACQUIRER", "SCOUT", "DETECTIVE", "ADVERSARIAL_AUDITOR"];
 
+/** Every observation of this identity, in the same key/position order as the complete log. */
+export async function artifactRecords(repos: Pick<ControlPlaneRepositories, "artifacts">, id: string): Promise<readonly ArtifactRecord[]> {
+  return (await Promise.all((await repos.artifacts.keysWhere(["artifactId"], id))
+    .map(key => repos.artifacts.readWhere(key, ["artifactId"], id)))).flat();
+}
+
 /**
  * Resolves by held identity; cannot acquire or invent an acquisition record.
  * An artifact id names content, so several records can carry one: each complete
@@ -21,7 +27,7 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
   const snapshotHeads = new Map<string, Promise<ObjectMeta | null>>();
   const resolved = new Map<string, Promise<ParserInput>>();
   const resolve = async (artifactId: string): Promise<ParserInput> => {
-    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await repos.artifacts.readAll();
+    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await artifactRecords(repos, artifactId);
     const records = all.filter(a => a.artifactId === artifactId && !a.partial);
     if (records.length === 0) throw new Error(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${artifactId}`);
     const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);

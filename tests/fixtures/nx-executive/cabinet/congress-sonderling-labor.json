@@ -1,0 +1,42 @@
+{
+    "nomination": {
+        "actions": {
+            "count": 11,
+            "url": "https://api.congress.gov/v3/nomination/119/1129/actions?format=json"
+        },
+        "authorityDate": "2026-10-01",
+        "citation": "PN1129",
+        "committees": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/1129/committees?format=json"
+        },
+        "congress": 119,
+        "description": "Keith Sonderling, of Florida, to be Secretary of Labor, vice Lori Chavez-DeRemer, resigned.",
+        "latestAction": {
+            "actionDate": "2026-09-30",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 47 - 41. Record Vote Number: 256."
+        },
+        "nominationType": {
+            "isCivilian": true
+        },
+        "nominees": [
+            {
+                "nomineeCount": 1,
+                "ordinal": 1,
+                "organization": "Department of Labor",
+                "positionTitle": "Secretary of Labor",
+                "url": "https://api.congress.gov/v3/nomination/119/1129/1?format=json"
+            }
+        ],
+        "number": 1129,
+        "partNumber": "00",
+        "receivedDate": "2026-07-13",
+        "updateDate": "2026-10-01T11:01:11Z"
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "number": "1129"
+    }
+}

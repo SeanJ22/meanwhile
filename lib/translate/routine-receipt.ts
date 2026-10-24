@@ -1,3 +1,7 @@
+import type { BallotSet } from "../ballot/types.ts";
+import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { isCheckedMeasureTranslation } from "./provider.ts";
+import { translationScope } from "./records.ts";
 import { failedAcquisitionCandidate } from "../civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../civic-data/promotion.ts";
 import { ZERO_RELEASE_EVENTS } from "../civic-data/release.ts";
@@ -11,16 +15,26 @@ export async function measureTranslationRoutineReceipt(input: {
   readonly store: RoutineDataStore;
   readonly state: string;
   readonly now: string;
+  readonly ballots: readonly BallotSet[];
   /** Any open sentence, source, paid gate or retry prevents a successful state outcome. */
   readonly holdReason: string | null;
 }) {
   const task = measureTranslationRoutineTask(input.state);
   let holdReason = input.holdReason;
   let receipt: RoutineRunnerReceipt | null = null;
-  if (holdReason === null) {
-    const read = await readTranslationProjection({ scope: task.scope, store: input.store, now: input.now, bypassCache: true });
-    if (read.kind !== "PROMOTED") holdReason = "No checked statewide explainer is held for this translation clock.";
-    else {
+  const divisions = [...new Set(input.ballots.flatMap(ballot => ballot.contests.filter(row => row.type === "MEASURE").map(row => row.ocdId)))];
+  if (holdReason === null && (!divisions.length || divisions.some(division => jurisdictionFromOcdId(division)?.usps !== input.state.toUpperCase()))) {
+    holdReason = "No checked measure scope is held for this state's translation clock.";
+  }
+  for (const division of divisions) {
+    if (holdReason !== null) break;
+    const scope = translationScope(division);
+    const read = await readTranslationProjection({ scope, store: input.store, now: input.now, bypassCache: true });
+    if (read.kind !== "PROMOTED") holdReason = "No checked explainer is held for a measure scope on this translation clock.";
+    else if (input.ballots.some(ballot => ballot.contests.some(contest => contest.type === "MEASURE" && contest.ocdId === division &&
+      !isCheckedMeasureTranslation(ballot, { subjectId: contest.id, division }, read.value.records)))) {
+      holdReason = "A measure still has no checked explainer on its ballot card.";
+    } else {
       const current = await input.store.readCandidate(read.projection.versionId);
       const candidate = current?.candidate;
       if (!candidate?.normalization.normalizedHash || !candidate.retrieval.succeeded ||
@@ -30,7 +44,7 @@ export async function measureTranslationRoutineReceipt(input: {
         // Recompute from held, checked records. Preserve the original source's
         // retrieval date; observing held bytes today is not a new publisher fetch.
         const confirmed = await input.store.confirmUnchanged({
-          sourceId: task.sourceId, recordClass: task.recordClass, scope: task.scope,
+          sourceId: task.sourceId, recordClass: task.recordClass, scope,
           parserVersion: task.parserVersion, pointerVersionId: candidate.id,
           readModelHash: candidate.normalization.normalizedHash, basis: "READ_MODEL_RECOMPUTED",
           retrieval: {
@@ -49,7 +63,7 @@ export async function measureTranslationRoutineReceipt(input: {
       }
     }
   }
-  if (receipt === null) {
+  if (holdReason !== null || receipt === null) {
     const candidate = failedAcquisitionCandidate({
       sourceId: task.sourceId, recordClass: task.recordClass, scope: task.scope, requestedUrl: "",
       attemptedAt: input.now, parserVersion: task.parserVersion,

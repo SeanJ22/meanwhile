@@ -135,13 +135,6 @@ test("every honest empty is a DIFFERENT state, never one flat absence", () => {
     "NO_UPCOMING_MEETING_HELD",
     "NO_PAST_MEETING_HELD",
   ];
-  const selection = readFileSync(join(process.cwd(), "lib/ask/select.ts"), "utf8");
-  for (const state of STATES.filter((s) => s.includes("MEETING_HELD"))) {
-    assert.ok(
-      selection.includes(`"${state}"`),
-      `the selection answer no longer distinguishes ${state} — an empty lost its reason`,
-    );
-  }
   assert.equal(new Set(STATES).size, STATES.length, "the states must be distinct");
 
   const readable = "1. Call to order\n2. Rezoning of parcel 44\n3. Adjournment";

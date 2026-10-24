@@ -4,6 +4,7 @@ import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
 import { readFieldManualRows, type FieldManualQuery, type FieldManualRepos } from "../field-manual.ts";
+import { readMethodKnowledgeRows } from "../../method/manual-bridge.ts";
 import type { FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { BrowseFn } from "../scheduler/scout-contract.ts";
 import { join } from "node:path";
@@ -27,6 +28,7 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos; bro
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const message = JSON.parse(Buffer.concat(chunks).toString("utf8")) as { kind: string; body: unknown };
       const result = message.kind === "manual" ? await readFieldManualRows(input.repos, message.body as FieldManualQuery)
+        : message.kind === "methodKnowledge" ? await readMethodKnowledgeRows(input.repos)
         : message.kind === "manualSources" ? await (()=>{
           const {scope,url}=message.body as {scope:FieldManualSourceScope;url:string};
           return input.repos.fieldManual.sourceHints(scope,url);
@@ -80,7 +82,7 @@ export interface LeaseWorkerConfig {
   readonly wallMs?: number;
 
   readonly nationalPlaces?: readonly NationalPlaceTask[];
-  readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
+  readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null; readonly deadlineMs?: number };
 }
 
 export function workerDispatchFailure(taskId: string, error: unknown, obligationId = taskId, beforeClaim = false): DispatchResult {
@@ -197,8 +199,9 @@ export async function runLeaseWorkerProcesses(input: {
   const failures: { ids: readonly string[]; error: unknown }[] = [];
   const launch = async (): Promise<void> => {
     if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
-    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry, input.deadlineMs)
-      .catch(error => { throw new WorkerAdmissionRefusal(error); });
+    const release = await (input.slots ?? (input.config.postgres ? processMemorySlots : undefined))?.acquire(input.entry, input.deadlineMs,
+      { priority: Number.POSITIVE_INFINITY, stillNeeded: () => pending.size > 0 })
+      .catch(error => { if (pending.size) throw new WorkerAdmissionRefusal(error); return undefined; });
     try {
 
     if (!pending.size) return;

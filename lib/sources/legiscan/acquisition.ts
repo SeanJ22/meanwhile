@@ -40,8 +40,8 @@ export async function acquireDatasetList(options:BulkRequestOptions):Promise<{da
 export async function acquireDataset(dataset:Dataset,options:BulkRequestOptions):Promise<{capture:BulkCapture;bodies:string[];archiveHash:string}> {
   if(!dataset.access_key) throw Error("LEGISCAN_DATASET_ACCESS_KEY_REQUIRED");
   const acquired=await request("getDataset",{id:String(dataset.session_id),access_key:dataset.access_key,format:"json"},options);
-  const raw=(JSON.parse(acquired.body) as {dataset?:Dataset & {zip?:string;mime?:string}}).dataset;
-  if(!raw||raw.session_id!==dataset.session_id||raw.state_id!==dataset.state_id||raw.dataset_hash!==dataset.dataset_hash||raw.dataset_date!==dataset.dataset_date||raw.mime!=="application/zip"||!raw.zip) throw Error("LEGISCAN_DATASET_METADATA_MISMATCH");
+  const raw=(JSON.parse(acquired.body) as {dataset?:Dataset & {zip?:string;mime_type?:string}}).dataset;
+  if(!raw||raw.session_id!==dataset.session_id||raw.state_id!==dataset.state_id||raw.dataset_hash!==dataset.dataset_hash||raw.dataset_date!==dataset.dataset_date||raw.mime_type!=="application/zip"||!raw.zip) throw Error("LEGISCAN_DATASET_METADATA_MISMATCH");
   const archive=Buffer.from(raw.zip,"base64"),archiveHash=hash(archive);
   const root=await mkdtemp(join(tmpdir(),"meanwhile-legiscan-"));
   try {

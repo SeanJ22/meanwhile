@@ -16,7 +16,7 @@ import type {
 } from "../../../civic-data/manual-projections.ts";
 import { requiredManualProductionContract } from "../../../civic-data/manual-contracts.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../../civic-data/read-model.ts";
-import { readDerivedCampaignSites, composeCampaignLinks } from "../../../civic-data/derived-campaign-sites.ts";
+import { readDerivedCampaignSites, composeCampaignLinks, type DerivedCampaignSiteRecord } from "../../../civic-data/derived-campaign-sites.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,
@@ -97,15 +97,9 @@ export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
       zeroRowsIsMiss: true,
     },
     citation:
-      "api.wikimedia.org/core/v1/wikipedia/en/search/page, permission read + walked 2026-09-17: " +
-      "api.wikimedia.org/robots.txt permits /core/v1/ (no matching Disallow for `User-agent: *`), and " +
-      "the endpoint answered HTTP 200 application/json with a populated `pages` array to the identified " +
-      "User-Agent. The en.wikipedia.org search API path stays robots-Disallowed and unused " +
-      "(WIKI_API_DISALLOWED; tests/wikipedia-permission.test.ts); this is Wikimedia's published " +
-      "automated door on a separate host. CC BY-SA — facts are not copyrightable, and this " +
-      "route is DISCOVERY ONLY: it points at a page and is never a source of record. Wikimedia 2026 API " +
-      "policy honoured: descriptive User-Agent with contact (generic UAs are throttled to the lowest " +
-      "tier), per-host spacing under the 3-request guideline, and a 429 backs off via WALL_STATUSES.",
+      "Wikimedia REST search API: /core/v1/wikipedia/en/search/page returns a pages array. " +
+      "The person-and-office query locates source pages; facts are checked against the pages they came from. " +
+      "Requests carry the identified civic User-Agent and share publisher pacing and Retry-After handling.",
   };
 }
 
@@ -127,45 +121,12 @@ function marginaliaRoute(c: CanonicalCandidacy): RouteDescriptor {
       zeroRowsIsMiss: true,
     },
     citation:
-      "source registry — api.marginalia.nu/public/search, walked 2026-08-24, control: an impossible " +
-      "term returns a `license` field and an empty `results` array. CC-BY-NC-SA 4.0 — DISCOVERY ONLY, " +
-      "so it may point at a URL and may never be a source of record here. PERMISSION RE-READ " +
-      "2026-09-01 BEFORE THIS ROUTE WAS REGISTERED: `https://marginalia.nu/robots.txt` answers 301 " +
-      "then HTTP 404 — the publisher serves NO robots document, which is an absence of restrictions " +
-      "and never a grant. `https://api.marginalia.nu/robots.txt` answers HTTP 401 to a bare client " +
-      "and to an identified one alike, which is a TRANSPORT answer and not a permission verdict " +
-      "(CANNOT_TELL). The endpoint itself answered HTTP 200 with a `license` field and a " +
-      "populated `results` array on the same date, and that licence is the publisher's own statement " +
-      "of the terms it is served under.",
+      "Marginalia public keyword search: /public/search/<query> returns its license and a results array. " +
+      "Results locate source pages; a zero-result query stays open, and facts are checked on the underlying saved source.",
   };
 }
 
-/** The general-index wall, registered as NOT_MACHINE_EXECUTABLE so it is re-walked rather than forgotten. */
-function generalIndexWall(stateCode: string): RouteDescriptor {
-  return {
-    routeId: "candidate-web-index-4get",
-    label: `${stateCode.toUpperCase()} — general web index (4get.ca), recorded as a WALL`,
-    executorClass: "BOUNDED_MODEL_WORKER",
-    executorReason:
-      "there is nothing graduated to replay: the route answers and returns nothing. Establishing " +
-      "whether that changed is an observation, not a fetch with a fixed shape",
-    open: {
-      kind: "NOT_MACHINE_EXECUTABLE",
-      target: "https://4get.ca/web",
-      reason:
-        "GENERAL WEB SEARCH IS A WALL FOR THIS PROJECT, dated 2026-08-26. `4get.ca` is the only " +
-        "general index whose robots.txt permits the query path — an empty `Disallow:` — and rung 2 " +
-        "answers HTTP 200 with a page that is INTERFACE ONLY: 7,154 B against a 7,274 B control, with " +
-        "ZERO result links. The 2026-08-25 reading that recorded it working counted eight ECHOES of " +
-        "the query in the page's own furniture. Mojeek, Brave and Ecosia carry `Disallow: /search` and " +
-        "are DISALLOWED, which is a different fact and is never re-walked on a clock. This row is the " +
-        "WALL, and its dated reading expires and sends a session back to it.",
-    },
-    citation: "source registry — the search pool, re-measured 2026-08-26",
-  };
-}
-
-/** The whole portfolio for one candidacy, given the fields it still owes. Positions and bios come only from the candidate's own statement, so with no site held they are blocked on the campaign-site question. */
+/** Re-read a recorded site and use source indexes for the remaining fields; each fact keeps its own verification. */
 function routesForCandidacy(
   c: CanonicalCandidacy,
   owed: readonly EnrichmentField[],
@@ -189,29 +150,6 @@ function routesForCandidacy(
     );
   }
 
-  const authoredOwed = owed.filter((f) => f === "positions" || f === "bio");
-  if (authoredOwed.length > 0 && !site) {
-    out.push({
-      routeId: "candidate-authored-awaits-site",
-      label: `${displayName(c)} — ${authoredOwed.join(" and ")} await this candidate's own publication`,
-      executorClass: "BOUNDED_MODEL_WORKER",
-      executorReason:
-        "no deterministic client applies: the only permitted source for these fields is the " +
-        "candidate's own publication, and we do not hold its address",
-      open: {
-        kind: "NOT_MACHINE_EXECUTABLE",
-        target: `${displayName(c)} — the candidate's own publication`,
-        reason:
-          `${authoredOwed.join(" and ").toUpperCase()} IS ONLY EVER TAKEN FROM THE CANDIDATE'S OWN ` +
-          "STATEMENT. Every position rendered to a reader carries a source record pointing " +
-          "at a specific statement by that candidate, and a general index may point at a page but may " +
-          "never be the page. This is BLOCKED ON the campaign-site routes on this same record, which " +
-          "is a named dependency and is never an absence about this person.",
-      },
-      citation: "CLAUDE.md — never generate a candidate position",
-    });
-  }
-
   return out;
 }
 
@@ -219,6 +157,8 @@ export interface CandidateEnrichmentAuthorityHoldings {
   readonly general: GenericBallotProjection | null;
   readonly profiles: CandidateProfilesProjection | null;
   readonly corpus: CandidateCorpus | null;
+  /** Verified site and publication evidence stands alone when the optional older projections are absent. */
+  readonly derivedSites?: readonly DerivedCampaignSiteRecord[];
   readonly failures: readonly string[];
 }
 
@@ -264,16 +204,7 @@ export async function readCandidateEnrichmentAuthorities(
   const derived = results[2];
   if (derived.status === "fulfilled" && derived.value.kind === "PROMOTED") {
     const records = derived.value.value.records;
-    const profiles = loadedAuthorities.profiles;
-    const corpus = loadedAuthorities.corpus;
-    const documents = new Map(corpus?.documents.map(document => [document.id, document]) ?? []);
-    for (const record of records) for (const { document } of record.publications ?? []) {
-      if (!documents.has(document.id)) documents.set(document.id, document);
-    }
-    loadedAuthorities = { ...loadedAuthorities,
-      profiles: profiles ? { ...profiles, links: { ...profiles.links, links: composeCampaignLinks(profiles.links.links, records).links } } : null,
-      corpus: corpus ? { ...corpus, documents: [...documents.values()], attempted: Math.max(corpus.attempted,
-        new Set([...documents.values()].map(document => document.candidateKey).concat(corpus.failures.map(failure => failure.candidateKey))).size) } : null };
+    loadedAuthorities = { ...loadedAuthorities, derivedSites: records };
   } else if (derived.status === "rejected" || derived.value.kind !== "NOT_RECORDED") {
     // Keep usable prior holdings; failed reconciliation cannot mean no sites.
     failures.push("Automatically published candidate evidence is unavailable; retained profile/corpus evidence remains usable and reconciliation is still owed.");
@@ -285,12 +216,14 @@ function ballotDocument(path: string, ballot: BallotSet): BallotDocument {
   return { path, contests: ballot.contests, candidacies: ballot.candidacies };
 }
 
-function profileStores(
-  profiles: CandidateProfilesProjection,
-  corpus: CandidateCorpus,
-): EnrichmentStores {
+function profileStores(holdings: CandidateEnrichmentAuthorityHoldings): EnrichmentStores {
+  const { profiles, corpus } = holdings;
+  const documents = new Map((corpus?.documents ?? []).map(document => [document.id, document]));
+  for (const record of holdings.derivedSites ?? []) for (const { document } of record.publications ?? []) {
+    if (!documents.has(document.id)) documents.set(document.id, document);
+  }
   const huntState: EnrichmentStores["huntState"] = {};
-  for (const document of currentExtraction(corpus.documents)) {
+  for (const document of currentExtraction([...documents.values()])) {
     if (document.extraction !== "html" || !document.text) continue;
     huntState[document.candidateKey] = {
       ...(huntState[document.candidateKey] ?? {}),
@@ -299,12 +232,12 @@ function profileStores(
   }
   return {
     huntState,
-    cards: profiles.cards.cards as unknown as Record<string, Record<string, unknown>>,
-    links: Object.fromEntries(Object.entries(profiles.links.links).map(([key, links]) => [
+    cards: (profiles?.cards.cards ?? {}) as unknown as Record<string, Record<string, unknown>>,
+    links: Object.fromEntries(Object.entries(composeCampaignLinks(profiles?.links.links ?? {}, holdings.derivedSites ?? []).links).map(([key, links]) => [
       key,
       links.campaign?.url ?? null,
     ])),
-    linkHunts: profiles.links.hunts,
+    linkHunts: profiles?.links.hunts ?? [],
   };
 }
 
@@ -314,7 +247,7 @@ export function candidateEnrichmentUniversesFromHoldings(
 ): { readonly universes: Record<string, CandidateUniverse>; readonly failures: string[] } {
   const universes: Record<string, CandidateUniverse> = {};
   const failures = [...holdings.failures];
-  if (!holdings.general || !holdings.profiles || !holdings.corpus) return { universes, failures };
+  if (!holdings.general) return { universes, failures };
   const documents = new Map<string, BallotDocument[]>();
   for (const [key, ballot] of Object.entries(holdings.general.ballots)) {
     if (!ballot.candidacies.length) continue;
@@ -334,7 +267,7 @@ export function candidateEnrichmentUniversesFromHoldings(
     try {
       universes[state] = deriveCandidateUniverse({ stateCode: state.toUpperCase(), cycle: CYCLE,
         generatedBy: "canonical civic-data national ballot/profile projections", generatedOn: nowIso.slice(0, 10),
-        documents: held, stores: profileStores(holdings.profiles, holdings.corpus) });
+        documents: held, stores: profileStores(holdings) });
     } catch (error) {
       failures.push(`${state.toUpperCase()} candidate enrichment derivation failed (${error instanceof Error ? error.message : String(error)}).`);
     }
@@ -419,15 +352,6 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
           });
         }
 
-        /* The wall is one record, not one per person. */
-        records.push({
-          recordClass: "candidate-enrichment",
-          subjectId: `${stateCode}:${CYCLE}:general-web-index-availability`,
-          readerImpactAt: null,
-          observedChangeRateHours: null,
-          lastWorkedAt: "2026-08-26",
-          routes: [generalIndexWall(stateCode)],
-        });
       }
 
       return {

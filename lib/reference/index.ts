@@ -76,10 +76,6 @@ export function notePath(dataset: ReferenceDataset | ReferenceJsonDataset): stri
   return join(REFERENCE_DIR, `${dataset}.md`);
 }
 
-function jsonDataPath(dataset: ReferenceJsonDataset): string {
-  return join(REFERENCE_DIR, `${dataset}.json`);
-}
-
 /** Everything actually in the directory, for the inventory gate. */
 export function referenceFiles(): string[] {
   return readdirSync(REFERENCE_DIR).sort();
@@ -138,13 +134,6 @@ export const CENSUS_BLANK_PLACE_TX_UNITS = 13;
  * no website, and a populated one says nothing about its agenda platform.
  */
 export const CENSUS_BLANK_WEB_ADDRESS = 51_655;
-
-/**
- * NCES CCD SY 2025-26 is preliminary v.0a and WILL be revised. It is a
- * DISCOVERY surface, not a source of record: nothing in this product keys to
- * a CCD status value, and no reader-facing claim rests on one.
- */
-export const CCD_IS_PRELIMINARY = true;
 
 /**
  * The Legistar file is 39 rows of TEST FIXTURE harvested from open-source

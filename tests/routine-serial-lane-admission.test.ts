@@ -8,7 +8,7 @@ const mib = 1024 * 1024;
 const people = (id: string) => ROUTINE_SOURCE_TASKS.find(task => task.id === id)!;
 const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
 
-test("a changed parser is read first in its serial lane, then the read owed longest; the lane starts ahead of the pass", () => {
+test("overdue meetings retain first turn after serial-lane tie ordering, then first reads and steady refreshes", () => {
   const now = Date.parse("2026-10-22T18:26:00.000Z");
   const president = people("people-statewide-executive-sources-us");
   assert.equal(routineSerialLane(president.command), "serial:scripts/national-people-refresh.mts");
@@ -18,9 +18,9 @@ test("a changed parser is read first in its serial lane, then the read owed long
     { task: people("people-wikidata-people-de"), deadlineMs: undefined, baselineOwed: false, lastConsideredAt: "2026-10-21T06:00:00.000Z" },
     { task: president, deadlineMs: undefined, baselineOwed: true, lastConsideredAt: null },
   ];
-  const ordered = routineSerialLanesFirst(routinePassLaunchOrder(jobs, now)).map(job => job.task.id);
-  assert.deepEqual(ordered, ["people-statewide-executive-sources-us", "people-wikidata-people-de", "people-legiscan-api-de", meeting.id],
-    "the White House re-read goes first; a read its daily cadence owes since yesterday goes before a baseline that failed half an hour ago");
+  const ordered = routinePassLaunchOrder(routineSerialLanesFirst(jobs), now).map(job => job.task.id);
+  assert.deepEqual(ordered, [meeting.id, "people-statewide-executive-sources-us", "people-wikidata-people-de", "people-legiscan-api-de"],
+    "serial-lane preference cannot move overdue meetings behind national baselines");
   assert.deepEqual(routineSerialLanesFirst([jobs[0]!]), [jobs[0]], "a pass with no serial lane keeps its order");
 });
 

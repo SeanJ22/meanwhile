@@ -5,7 +5,6 @@ import test from "node:test";
 
 import {
   normalizedParserResult,
-  parseCivicEvents,
   parseLegistarEvents,
   PARSER_IMPLEMENTATION,
   PARSER_VERSION,
@@ -244,7 +243,7 @@ function civicClerkInput(): ParserWorkerInput {
 
 test("CivicClerk preserves every category and exact scalar spans without minting body identities", () => {
   const request = civicClerkInput();
-  const result = parseCivicEvents(request);
+  const result = parseLegistarEvents(request);
   assert.equal(result.verdict, "EXTRACTED");
   assert.equal(result.implementation, CIVICCLERK_PARSER_IMPLEMENTATION);
   assert.equal(result.recordClass, "CIVICCLERK_EVENTS");
@@ -262,7 +261,7 @@ test("CivicClerk preserves every category and exact scalar spans without minting
     assert.equal(request.evidence.text.slice(span.start, span.end), span.quote);
     assert.deepEqual(JSON.parse(span.quote), valueAt(decoded, span.jsonPointer));
   }
-  assert.deepEqual(normalizedParserResult(result), normalizedParserResult(parseCivicEvents({ ...request, attemptId: "at-civicclerk-replay" })));
+  assert.deepEqual(normalizedParserResult(result), normalizedParserResult(parseLegistarEvents({ ...request, attemptId: "at-civicclerk-replay" })));
 });
 
 test("CivicClerk source-profile mismatch refuses a sibling host or invented category-to-body binding", () => {
@@ -272,7 +271,7 @@ test("CivicClerk source-profile mismatch refuses a sibling host or invented cate
     { ...request, evidence: { ...request.evidence, canonicalUrl: "https://exampletown.api.civicclerk.com.attacker.test/v1/Events" } },
     { ...request, contract: { ...request.contract, sourceBodyId: 26, sourceBodyName: "City Council" } },
   ]) {
-    const result = parseCivicEvents(mutated);
+    const result = parseLegistarEvents(mutated);
     assert.equal(result.verdict, "FAILED");
     assert.equal(result.warnings[0].code, "SOURCE_PROFILE_MISMATCH");
     assert.deepEqual(result.records, []);

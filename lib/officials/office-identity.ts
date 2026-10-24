@@ -102,7 +102,3 @@ export function unclassifiedOfficeTitles(titles: readonly (string | null | undef
   return [...new Set(titles.map(title => stripSeatFurniture(title ?? ""))
     .filter(title => title && !MEASURE_TITLE.test(title) && officeIdentity(title) === null))].sort();
 }
-
-export function knownOfficeKeys(): OfficeKey[] {
-  return [...new Set(RULES.map(rule => rule.key))].sort();
-}

@@ -5,8 +5,6 @@ import { assertPublicUrl } from "../hunt/egress.ts";
 
 const execute = promisify(execFile);
 const running = new Set<number>();
-/** Measurement observes the public HTTP children as part of the worker's resident memory. */
-export const platformHttpProcessIds = () => [...running];
 
 /** Public platform responses, without Node's failing HTTP-parser cancellation path. The existing fleet download bound still applies. */
 export const platformFetch: typeof fetch = async (input, init) => {

@@ -3,7 +3,6 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
-import { createHash } from "node:crypto";
 import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
@@ -18,7 +17,7 @@ import type {
   ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
-import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import { durableStateHash, immutableStateHash, immutableStateValue, statePublicationScope } from "./state-publication.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { promotedPayloadSha256, type AttestedPromotion } from "./attested-promotion.ts";
@@ -48,20 +47,6 @@ function readProofCandidate(
   versionId: string,
 ): Promise<CandidateVersionRecord | null> {
   return typeof store.readCandidateProof === "function" ? store.readCandidateProof(versionId) : store.readCandidate(versionId);
-}
-
-function durableProjectionHash(value: unknown): string | null {
-  try {
-    const encoded = JSON.stringify(value);
-    if (encoded === undefined) return null;
-    const durable = JSON.parse(encoded) as unknown;
-    const currentCanonical = canonicalCivicDataJson(value);
-    const durableCanonical = canonicalCivicDataJson(durable);
-    if (currentCanonical !== durableCanonical) return null;
-    return createHash("sha256").update(durableCanonical).digest("hex");
-  } catch {
-    return null;
-  }
 }
 
 export type CivicDataStaleState = "CURRENT" | "STALE" | "UNKNOWN";
@@ -1227,7 +1212,7 @@ export function promotionProofIssue<T>(
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
   const scoped = statePublicationScope(scope);
   const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
-  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
+  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableCivicDataHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
@@ -1235,7 +1220,7 @@ export function promotionProofIssue<T>(
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
   const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
-    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
+    scoped ? durableStateHash(candidate.normalizedPayload) : durableCivicDataHash(candidate.normalizedPayload);
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1272,7 +1257,7 @@ export function promotionProofIssue<T>(
   ) return "the GOOD receipt does not identify the pointed candidate";
   if (canonicalCivicDataJson(projectionReceipt) !== canonicalCivicDataJson(candidateReceipt)) return "the candidate and pointer receipts differ";
   if (!indexedPrior && (scoped ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
-    canonicalCivicDataJson(projection.payload) !== canonicalCivicDataJson(candidate.readModel))) return "the pointer payload differs from the validated candidate read model";
+    durableCivicDataHash(projection.payload) !== readModelHash)) return "the pointer payload differs from the validated candidate read model";
   const retrievedAt = Date.parse(candidate.retrieval?.retrievedAt ?? "");
   const validatedAt = Date.parse(projectionReceipt.validatedAt);
   const promotedAt = Date.parse(projection.promotedAt);
@@ -1391,12 +1376,6 @@ export function promotedVersionOrThrow<T>(result: CivicDataReadResult<T>): strin
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
 
-/** Lets go of one pointer's proof once a caller holds what it needs of it, so a long publication holds one candidate at a time. */
-export function forgetPromotedProof(store: CivicDataReadStore | undefined, recordClass: RoutineRecordClass, scope: string, versionId: string): void {
-  provenByVersion.delete(versionId);
-  provenPointersOf(store, scope).delete(projectionKey(recordClass, scope));
-}
-
 export function clearPromotedReadModelCache(): void {
   cache.clear();
   provenByVersion.clear();
@@ -1473,7 +1452,6 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
   void read.catch(() => undefined);
   return read;
 }
-
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);

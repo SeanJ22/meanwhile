@@ -15,7 +15,7 @@ export function placePageReader(input:{open:OpenOne;vault:VaultPut;spaceOut:(hos
   await input.spaceOut(parsed.host);
   if(!input.canRead())throw new Error('HUNT_WALK_DEFERRED');
   requests.set(key,(requests.get(key)??0)+1);
-  const got=await (input.open as typeof input.open & ((request:Parameters<typeof input.open>[0] & {followRedirects:false})=>ReturnType<typeof input.open> & Promise<{location?:string|null;finalUrl?:string|null}>))({url,method:'GET',headers:{'user-agent':DEFAULT_USER_AGENT,accept:'text/html,text/plain,application/json,text/calendar,*/*'},timeoutMs:20000,followRedirects:false});
+  const got=await (input.open as typeof input.open & ((request:Parameters<typeof input.open>[0] & {followRedirects:false})=>ReturnType<typeof input.open> & Promise<{location?:string|null;finalUrl?:string|null}>))({url,method:'GET',headers:{'user-agent':DEFAULT_USER_AGENT,accept:'text/html,text/plain,application/json,text/calendar,*/*'},timeoutMs:Math.max(1,Math.min(20000,(input.endsAt??Infinity)-Date.now())),followRedirects:false});
   requestCount+=got.requestCount??1;bytesFetched+=got.bytes;
   return got;
  };

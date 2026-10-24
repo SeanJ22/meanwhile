@@ -98,11 +98,11 @@ export function stateLegislatorCoverageAuthority(
   };
 }
 
-export { WIRED_STATUSES } from "./coverage-client.ts";
+;
 
 /**
- * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is
- * never invented.
+ * A body covering the point. `divisionLabel` is the division's sourced name, or the special district's
+ * registered name for that district's board; the body's own name is never invented.
  */
 export interface CoveredBody {
   bodyId: string;
@@ -336,7 +336,7 @@ export function summarizeCoverage(
       ocdId: body.ocdId,
       name: body.name,
       // A body with no division: real, hyperlocal, and not a division.
-      divisionLabel: division?.label ?? "",
+      divisionLabel: body.governmentName ?? division?.label ?? "",
       // Null, never a placeholder type.
       divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,

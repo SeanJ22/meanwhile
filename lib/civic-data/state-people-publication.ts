@@ -5,6 +5,7 @@ import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { readOpenStatesPeopleProjection, mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { processRegisteredRoutineCandidate } from "./promotion.ts";
+import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
@@ -18,6 +19,8 @@ import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-ca
 export interface StatePeopleAcquisition {
   readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number; readonly body:string; readonly retrievedAt:string;
   readonly rawHash?:string;
+  /** Public request filters that identify a POST-only government source response. Never credentials. */
+  readonly request?: { readonly method: "POST"; readonly body: Readonly<Record<string, unknown>> };
   readonly sourceCheck?: NonNullable<import("./types.ts").RetrievalEvidence["sourceCheck"]>;
   readonly extractedFrom?: {readonly requestedUrl:string;readonly finalUrl:string;readonly sha256:string;readonly member:string};
 }
@@ -76,7 +79,7 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
     excludedFacts,normalizedPayload:payload,readModel};
 }
 
-export async function publishStatePeople(input: {store:RoutineDataStore;vault:EvidenceStore;state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string;now:string;confirmUnchanged?:boolean} & StatePeopleEvidence) {
+export async function publishStatePeople(input: {store:RoutineDataStore;vault:EvidenceStore;state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string;now:string;confirmUnchanged?:boolean;resolveOfficePoint?:OfficePointResolver} & StatePeopleEvidence) {
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
   const prior = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
   if (prior.kind === "STORE_UNREACHABLE") throw new Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
@@ -102,7 +105,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
     divisions:input.roster.currentMembershipComplete ? [] : held.divisions.filter(row=>priorIds.has(row.officeholderId) && (!row.membershipId || !explicitEnded.has(row.membershipId))),
     unmatched:input.roster.currentMembershipComplete ? [] : held.unmatched.filter(row=>priorIds.has(row.officeholderId) && !currentIds.has(row.officeholderId)),
   } : null;
-  const roster = mergeStatePeople(priorFacts,input.roster);
+  const roster = await publishRosterOfficePoints(mergeStatePeople(priorFacts,input.roster), held, input.resolveOfficePoint);
   // Keep the original captures behind still-held facts. A malformed next
   // release must not sever a prior tenure's evidence before it later ends.
   const referenced = new Set([...roster.officeholders.flatMap(person=>[person.provenance.sourceUrl,

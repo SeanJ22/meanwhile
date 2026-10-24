@@ -7,14 +7,6 @@ import type {
 
 const indexes = new WeakMap<LineupReconciliation, Map<string, LineupReconciliationRow>>();
 
-export function azContestIdentity(contestId: string) {
-  for (const ballot of Object.values(currentGenericBallotProjection("AZ").ballots)) {
-    const contest = ballot.contests.find(row => row.id === contestId);
-    if (contest) return contest.identity ?? null;
-  }
-  return null;
-}
-
 export function azLineupReconciliation(): LineupReconciliation | null {
   return Object.values(currentGenericBallotProjection("AZ").ballots).find(ballot => ballot.lineupReconciliation)?.lineupReconciliation ?? null;
 }

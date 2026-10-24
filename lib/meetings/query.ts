@@ -11,10 +11,7 @@ import {
 import type { ResolvedMeetingSource } from "./snapshot-source.ts";
 
 // Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
-export {
-  CONCLUDED_LOOKBACK_DAYS,
-  UPCOMING_HORIZON_DAYS,
-} from "./constants.ts";
+;
 export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {

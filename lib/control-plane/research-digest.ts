@@ -101,16 +101,6 @@ export interface ResearchDigestRows {
   readonly costPerOutcome: readonly DigestRow[];
 }
 
-export const METRIC_GROUP_MEANING: Readonly<Record<keyof ResearchDigestRows, string>> = {
-  /* What a group is for, never changing; `metricGroupLead` says what it currently reads. Band definitions live only in the lead. */
-  capacity: "Why this matters: it is the ceiling on how much genuinely new ground the fleet can cover in a day, and it moves when the cost of an attempt moves.",
-  queueBands: "Why the order matters: only a handful of paid attempts run each day, so which ones go first decides what a reader can see next.",
-  funnel: "How far found records have travelled toward being trusted: scouted, then confirmed, verified, audited and approved; beside it, how many scout-found methods were validated and admitted into the toolbox.",
-  share: "How much of the work needed a paid model versus plain code: a low model share means the fleet is mostly running cheap deterministic routes.",
-  cache: "How much of what the model reads is a repeat it already cached: a high hit rate means the same prefix is being reused instead of paid for again.",
-  costPerOutcome: "What each useful result has cost: the whole measured scout spend divided by how many results of each kind it produced.",
-};
-
 /** Why a stage stands at zero, in plain English. */
 /** Each useful outcome as the thing it is, so the cost row is not "Cost per ROUTE_CANDIDATE". */
 export const OUTCOME_LABEL: Readonly<Record<string, string>> = {

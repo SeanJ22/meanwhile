@@ -57,3 +57,11 @@ export function canonicalCivicDataHash(value: unknown, options: { readonly durab
   visit(root); hash.update(buffered);
   return hash.digest("hex");
 }
+
+/** Prove the JSONB round trip without allocating a second payload graph and two whole canonical strings. */
+export function durableCivicDataHash(value: unknown): string | null {
+  try {
+    const current = canonicalCivicDataHash(value);
+    return current === canonicalCivicDataHash(value, { durable: true }) ? current : null;
+  } catch { return null; }
+}

@@ -122,17 +122,34 @@ function filedSeatMatches(row:CampaignSourceRecord,person:CampaignMoneyPerson):b
   }
   return true;
 }
-export function bindCampaignMoney(row: CampaignSourceRecord, people: ReadonlyMap<string,readonly CampaignMoneyPerson[]>): CampaignSourceRecord | null {
-  const year = campaignRecordYear(row);
-  if (year === null || year < campaignFinanceSource(row.state).minimumYear || (row.cycle??0)<2020 || row.filingState !== "FILED" || !row.filerName || !row.candidateName || !row.office || row.issues.some(issue => /conflict|disagree/i.test(issue))) return null;
+export function campaignMoneyIdentityMatches(row: CampaignSourceRecord, people: ReadonlyMap<string,readonly CampaignMoneyPerson[]>): readonly CampaignMoneyPerson[] {
+  if (!row.candidateName || !row.office) return [];
   const names=[row.candidateName.replace(/\s*\([^)]*\)\s*/g," "),...Array.from(row.candidateName.matchAll(/\(([^)]+)\)/g),match=>match[1])].map(campaignName), office = campaignOffice(row.office,row.state);
   const matches=names.flatMap(name=>people.get(`${name}|${office}`)??[]).filter(person=>filedSeatMatches(row,person));
-  const unique = new Map(matches.map(person => [`${person.id}:${person.seat}`, person]));
-  if (unique.size !== 1) return null;
-  const person = [...unique.values()][0];
+  return [...new Map(matches.map(person => [`${person.id}:${person.seat}`, person])).values()];
+}
+export function bindCampaignMoney(row: CampaignSourceRecord, people: ReadonlyMap<string,readonly CampaignMoneyPerson[]>): CampaignSourceRecord | null {
+  const year = campaignRecordYear(row);
+  if (year === null || year < campaignFinanceSource(row.state).minimumYear || (row.cycle??0)<2020 || row.filingState !== "FILED" || !row.filerName || row.issues.some(issue => /conflict|disagree/i.test(issue))) return null;
+  const matches = campaignMoneyIdentityMatches(row, people);
+  if (matches.length !== 1) return null;
+  const person = matches[0];
   return { ...row, governmentOcdId: person.division, unjoinedReason: null,
     person: { id: person.id, name: person.name, seat: person.seat, sourceUrl: person.sourceUrl,office:person.office } };
 }
+
+export const CAMPAIGN_MONEY_MISSING_REASONS = {
+  period: "The source has no readable filing period",
+  old: "The filing predates January 1, 2020",
+  cycle: "The source has no mapped election cycle",
+  unfiled: "The source has not established a filed financial report",
+  identity: "The source does not bind a filed committee, candidate and office",
+  unmatched: "The filed person, office or district does not uniquely match a person we publish",
+  unsupported: "The official source has no supported committee-to-person and office binding yet",
+  unavailable: "The official campaign source could not be read on this check",
+  invalid: "The official campaign source could not be matched to verified filing records on this check",
+  absent: "No filed money has matched this published person and seat yet",
+} as const;
 
 export const campaignPersonKey = (state:string,person:Pick<CampaignMoneyPerson,"id"|"seat">) =>
   `campaign-money:person:${state}:${createHash("sha256").update(`${person.id}\0${person.seat}`).digest("hex")}`;

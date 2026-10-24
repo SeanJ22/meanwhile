@@ -1,0 +1,16 @@
+{
+  "url": "https://vote.nyc/elections",
+  "finalUrl": "https://vote.nyc/elections",
+  "capturedAt": "2026-10-23T08:13:56.944Z",
+  "contentType": "text/html; charset=UTF-8",
+  "rawHash": "8f6f72cbd47b185c0344bf72b322a74723b764efe7c09f2c70ad78a9349455fc",
+  "savedHash": "0c41a24a31e79f123bbeb20385d66f56eb9ba3561d1fc544076e17319a86d8ad",
+  "redactions": 0,
+  "bytes": 14065,
+  "storage": "TRIMMED_EXCERPT",
+  "excerpt": {
+    "of": "8f6f72cbd47b185c0344bf72b322a74723b764efe7c09f2c70ad78a9349455fc",
+    "bytes": 75562,
+    "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+  }
+}

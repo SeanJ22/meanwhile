@@ -14,7 +14,11 @@
  * of the caller's divisions or a child of one.
  */
 import { ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS, type RoutineDueRequest } from "../civic-data/routine-due-request.ts";
-import { isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { DOOR_STATUSES, isDoorRecord, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { meetingPartitionId, meetingPartitionIdentity } from "../meetings/body-scope.ts";
+
+const MARK_FIELDS = { formatVersion: true, doorId: true, kind: true, bodyIds: true, hosts: true,
+  status: true, updatedAt: true, ocdId: true, readNow: true } as const;
 
 /** An OCD id is inside a division when it is that division or a child of it (`/` for a child, `#` for a body). */
 export function ocdInside(ocdId: string, division: string): boolean {
@@ -49,14 +53,17 @@ export async function markDoorsReadNow(
   const wanted = divisions.filter((division) => division.startsWith("ocd-division/"));
   const counts = { inPlace: 0, marked: 0, alreadyMarked: 0, notRead: 0, raced: 0 };
   if (wanted.length === 0) return counts;
-  for (const row of await repo.list()) {
+  const selectors = (await Promise.all(DOOR_STATUSES.map(status => repo.listWhereNarrowed(["status"], status, MARK_FIELDS)))).flat()
+    .sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+  for (const row of selectors) {
     const door = row.value;
     if (!isDoorRecord(door) || !doorInDivisions(door, wanted)) continue;
     counts.inPlace += 1;
     if (door.status !== "OPEN") { counts.notRead += 1; continue; }
     if (door.readNow) { counts.alreadyMarked += 1; continue; }
     try {
-      await repo.compareAndSet(door.doorId, row.revision, { ...door, readNow: true, updatedAt: at }, at);
+      const current = await repo.mustRead(door.doorId);
+      await repo.compareAndSet(door.doorId, row.revision, { ...current.value, readNow: true, updatedAt: at }, at);
       counts.marked += 1;
     } catch {
       counts.raced += 1;
@@ -66,12 +73,16 @@ export async function markDoorsReadNow(
 }
 
 /**
- * The partition a meeting door is read through: a hand-wired door's id is its partition's id, and a derived member is
+ * The partition a meeting door is read through: a hand-wired door uses its current body and route, and a derived member is
  * read by its family's partition (`meeting.family`). A feed door is read by its registered source contract.
  */
 export function doorPartitionIds(door: DoorRecord): readonly string[] {
   if (door.meeting == null) return door.doorId.startsWith("feed:") && typeof door.config.contractId === "string" ? [door.config.contractId] : [];
-  return [door.meeting.family ?? door.doorId];
+  if (door.meeting.family !== null) return [door.meeting.family];
+  const identity = meetingPartitionIdentity(door.doorId);
+  return identity && door.bodyIds.length === 1
+    ? [meetingPartitionId(identity.source, door.bodyIds[0]!, typeof door.config.partitionRoute === "string" ? door.config.partitionRoute : identity.route)]
+    : [door.doorId];
 }
 
 /**
@@ -113,7 +124,9 @@ export function readNowDueRequests(
 export async function settleReadNow(repo: DoorRepository, now: string): Promise<number> {
   let cleared = 0;
   const nowMs = Date.parse(now);
-  for (const door of (await listDoors(repo)).doors) {
+  const marked = await repo.listWhereNarrowed(["readNow"], "true", { ...MARK_FIELDS, lastSuccessAt: true, lastFailureAt: true });
+  for (const { value: door } of marked) {
+    if (!isDoorRecord(door)) continue;
     if (!door.readNow) continue;
     const markedMs = Date.parse(door.updatedAt);
     const expired = !Number.isFinite(markedMs) || nowMs - markedMs >= ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS;

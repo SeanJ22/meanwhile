@@ -6,7 +6,6 @@ export const SOFTWARE_RELEASE_REVIEW_FORMAT_VERSION = 1;
 
 /** The three owner decisions a review section can carry. */
 export const REVIEW_DECISIONS = ["APPROVE", "NEEDS_CHANGES", "DISCARD"] as const;
-export type ReviewDecision = (typeof REVIEW_DECISIONS)[number];
 
 /** The Raised State variants the owner chooses among — a recorded choice, never an activation. */
 export const RAISED_STATE_CHOICES = ["A_SOFT_LIFT", "B_MATERIAL_LIFT", "C_DEEP_LIFT"] as const;
@@ -79,8 +78,4 @@ export function isProductionIntegrityLogRecord(
   row: SoftwareReleaseReviewRecord,
 ): row is ProductionIntegrityLogRecord {
   return row.decision === "POST_DEPLOY_INTEGRITY" && row.productionIntegrity !== undefined;
-}
-
-export function isOwnerReleaseReviewRecord(row: SoftwareReleaseReviewRecord): boolean {
-  return row.decision !== "POST_DEPLOY_INTEGRITY";
 }

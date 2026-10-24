@@ -1,0 +1,433 @@
+[
+  {
+    "url": "https://app.harrisvotes.com/WaitTimes",
+    "finalUrl": "https://app.harrisvotes.com/WaitTimes",
+    "file": "harris-wait.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "e39c1e9f01da407a88f0e133f54f04150fea9b00ba53a119af050c42f264a32c",
+    "capturedAt": "2026-10-23T08:14:01.272Z",
+    "storage": "TRIMMED_EXCERPT",
+    "excerpt": {
+      "of": "65a7b57783b77801224d2b3e0d50b23b66f14b8438c8baa84fb92ac5aba6b61b",
+      "bytes": 47030,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1788204670102232",
+    "finalUrl": "https://www.miamidade.gov/global/release.page?Mduid_release=rel1788204670102232",
+    "file": "miami-ev.html",
+    "status": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "savedHash": "34b5eace1a8637f5109f30f1892ac02e06c1a5c802a0c01a8284ec7a784cfad3",
+    "rawHash": "ad568a27b8e8a0e66923f6d5377e4b824a5ab5c71c0fd35e9e4edd313ed920d2",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:45.705Z",
+    "excerpt": {
+      "of": "ad568a27b8e8a0e66923f6d5377e4b824a5ab5c71c0fd35e9e4edd313ed920d2",
+      "bytes": 116211,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://browardvotes.gov/",
+    "finalUrl": "https://browardvotes.gov/",
+    "file": "broward-home.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "67dea6ca51154030a4edfbe0bb21dae092c77386afcbb1d59343f2c785163112",
+    "rawHash": "2e6dd77c0b862ea7cc2c57cc3fe18707fdae0399db0e04ed4b080a4f9c9cecc6",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:45.646Z",
+    "excerpt": {
+      "of": "2e6dd77c0b862ea7cc2c57cc3fe18707fdae0399db0e04ed4b080a4f9c9cecc6",
+      "bytes": 226776,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+    "finalUrl": "https://vote.franklincountyohio.gov/voters/absentee-and-early-voting",
+    "file": "franklin-early.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "b5cc740869264a426923d5a7565cfa8489076dba38f13b7807e8ee547db8e524",
+    "rawHash": "ae9ea73ee1bf831a67225cbcd1faa6215e538e7083d818f8c305d37ace27c8eb",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:45.655Z",
+    "excerpt": {
+      "of": "ae9ea73ee1bf831a67225cbcd1faa6215e538e7083d818f8c305d37ace27c8eb",
+      "bytes": 24348,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://appfiles.harrisvotes.com/harrisvotes/prd/docs/VotingInfo/VoteCenters_en-US.pdf",
+    "finalUrl": "https://appfiles.harrisvotes.com/harrisvotes/prd/docs/VotingInfo/VoteCenters_en-US.pdf",
+    "file": "harris-polls.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "e2eee2ab2f17db446cb8c8856be3128251fa74827e5d785aa3ea7652d5d8df0e",
+    "rawHash": "20d56b98b232b3ecd35c533bd91cb605ef7f8256a38d0c9467a4a803d954786f",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:45.696Z",
+    "excerpt": {
+      "of": "20d56b98b232b3ecd35c533bd91cb605ef7f8256a38d0c9467a4a803d954786f",
+      "bytes": 211123,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections/early-voting-locations",
+    "finalUrl": "https://fultoncountyga.gov/inside-fulton-county/fulton-county-departments/registration-and-elections/early-voting-locations",
+    "file": "fulton-early.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "e6920f4fc8d4b2c078ae05f97f8c6501beade65ecbe12a6ba3decd585d18a326",
+    "rawHash": "faf86b55eea0d93d3d60eec691eff93dacbd1899484914f5e6f3101f7223d135",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:46.093Z",
+    "excerpt": {
+      "of": "faf86b55eea0d93d3d60eec691eff93dacbd1899484914f5e6f3101f7223d135",
+      "bytes": 254907,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://www.gwinnettcounty.com/government/departments/elections/voting/advance",
+    "finalUrl": "https://www.gwinnettcounty.com/government/departments/elections/voting/advance",
+    "file": "gwinnett-early.html",
+    "status": 200,
+    "contentType": "text/html;charset=UTF-8",
+    "savedHash": "064476611698d352a2e125a4ce0189cdd51da70546306bc50fe94760f1ed1df8",
+    "rawHash": "20ad44729e08b4f424cfaf4220a63c7acd3a4072fa7a3a99af99b68b09c57322",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:46.108Z",
+    "excerpt": {
+      "of": "20ad44729e08b4f424cfaf4220a63c7acd3a4072fa7a3a99af99b68b09c57322",
+      "bytes": 124473,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://boe.cuyahogacounty.gov/elections/GetDocumentById/6e8f25be-ac4d-4f1a-86ea-978b66064f9e/",
+    "finalUrl": "https://boe.cuyahogacounty.gov/elections/GetDocumentById/6e8f25be-ac4d-4f1a-86ea-978b66064f9e/",
+    "file": "cuyahoga-polls.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "25e15436b05bc6c3e90beb4a46c4ebbf97ac71d50fa0139ea1b6af56b3d40f96",
+    "rawHash": "7e710bd71bc75e32a25fc3ccbf62c6e9c87f66d7add7d28b65041033eff00a90",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:15:46.255Z",
+    "excerpt": {
+      "of": "7e710bd71bc75e32a25fc3ccbf62c6e9c87f66d7add7d28b65041033eff00a90",
+      "bytes": 119001,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://browardvotes.gov/sites/default/files/polling-places_11032026_1.pdf",
+    "finalUrl": "https://browardvotes.gov/sites/default/files/polling-places_11032026_1.pdf",
+    "file": "broward-polls.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "441b8b10235856573765010fe9e12c398aea27ddf0ae699d2ee42815ba33d56b",
+    "rawHash": "e96d3a61df5e02e3ef2e574eb1a783f5494f545d2e0667082085727b7b2b059d",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:57.932Z",
+    "excerpt": {
+      "of": "e96d3a61df5e02e3ef2e574eb1a783f5494f545d2e0667082085727b7b2b059d",
+      "bytes": 197884,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.vote.nyc/sites/default/files/pdf/poll_site_list/GE2026/Poll_Site_List_Nov_General_2026_Early_Voting_Richmond.pdf",
+    "finalUrl": "https://www.vote.nyc/sites/default/files/pdf/poll_site_list/GE2026/Poll_Site_List_Nov_General_2026_Early_Voting_Richmond.pdf",
+    "file": "nyc-Poll_Site_List_Nov_General_2026_Early_Voting_Richmond.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "f718969296589dd2b31f2212fd3d63efd8bca99dc1e2b2b3971aedc5b38f29d8",
+    "rawHash": "4eae1c54583b8e9b0c307207943559980915559f81c142cb4c550aa1e417ec70",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:58.206Z",
+    "excerpt": {
+      "of": "4eae1c54583b8e9b0c307207943559980915559f81c142cb4c550aa1e417ec70",
+      "bytes": 140962,
+      "method": "PDF pages 1-2 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.tarrantcountytx.gov/en/elections.html",
+    "finalUrl": "https://www.tarrantcountytx.gov/en/elections.html",
+    "file": "tarrant-home.html",
+    "status": 200,
+    "contentType": "text/html;charset=utf-8",
+    "savedHash": "04a5c044b6c477e99909e10e5dbf57dc895838f7c780245bbc9def581b124d2a",
+    "rawHash": "dafc1e533765a610e68a80e2bbf8a6be13d4b7a65dbb08fa6b19cdddb209d9cc",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:58.409Z",
+    "excerpt": {
+      "of": "dafc1e533765a610e68a80e2bbf8a6be13d4b7a65dbb08fa6b19cdddb209d9cc",
+      "bytes": 379255,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://www.votepalmbeach.gov/298/2026-General-Election",
+    "finalUrl": "https://www.votepalmbeach.gov/298/2026-General-Election",
+    "file": "palmbeach-general.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "6dc33cdddc81f34d503a37e7163e1b66325063d3cd515ac762c9d9de5a38b869",
+    "rawHash": "0a26c63081c63a8cd6c43c4bfe32bab900ae968638f128b7f3bea4aca8581594",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:58.469Z",
+    "excerpt": {
+      "of": "6290e3c07ad95ff3dfdcafd698e5474295328b01e781248f51e971604ac00d44",
+      "bytes": 111205,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Voter-Information",
+    "finalUrl": "https://www.waynecountymi.gov/Government/Elected-Officials/Clerk/Elections/Voter-Information",
+    "file": "wayne-voter.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "a7ed5bfd17a958dcb11fb359238fbbc881818306844a7eda6db7a62e6f80a238",
+    "rawHash": "3a4f1e013b9cb5a344b471eab60f18ff4c40db2cde5843e3d6a2815bbb506dfe",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:58.539Z",
+    "excerpt": {
+      "of": "ea234cf227da755a245c5fe95a5993ba2cb80f9b49fcb04d02a1cb71ca653159",
+      "bytes": 132247,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://www.vote.nyc/sites/default/files/pdf/poll_site_list/GE2026/Poll_Site_List_Nov_General_2026_Election_Day_Richmond.pdf",
+    "finalUrl": "https://www.vote.nyc/sites/default/files/pdf/poll_site_list/GE2026/Poll_Site_List_Nov_General_2026_Election_Day_Richmond.pdf",
+    "file": "nyc-Poll_Site_List_Nov_General_2026_Election_Day_Richmond.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "867de81c0d567312e575e5f61305c05b6e7320f8431857aa11d478ef524bdae1",
+    "rawHash": "3369e3eaa7399d4b195b93ec32a0528ecdcbd008fbb3e00bd21e2bc50f2ca175",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:58.655Z",
+    "excerpt": {
+      "of": "3369e3eaa7399d4b195b93ec32a0528ecdcbd008fbb3e00bd21e2bc50f2ca175",
+      "bytes": 148440,
+      "method": "PDF pages 1-2 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.dallascounty.org/elections/VoteCenters/Election%20Day%20Vote%20Centers.pdf",
+    "finalUrl": "https://www.dallascounty.org/elections/VoteCenters/Election%20Day%20Vote%20Centers.pdf",
+    "file": "dallas-day.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "97307d50188dcf125fdcbd05bd7c769c6e0756b47a966a1cc2ed0b9f697e3979",
+    "rawHash": "86d50161cd23d5c8119de127c676779093238b8423b554c8f7da45231ed3a71b",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:58.907Z",
+    "excerpt": {
+      "of": "86d50161cd23d5c8119de127c676779093238b8423b554c8f7da45231ed3a71b",
+      "bytes": 612818,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.dallascounty.org/elections/VoteCenters/Early%20Voting%20Vote%20Centers.pdf",
+    "finalUrl": "https://www.dallascounty.org/elections/VoteCenters/Early%20Voting%20Vote%20Centers.pdf",
+    "file": "dallas-early.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "d18a9e05fea18311e30755527c609738f05288989dd8845dad1fef3880296fbd",
+    "rawHash": "9654066186f274f54a876590869e6eb61e6b6fd40511824f91598bd8e2bfb428",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:16:59.001Z",
+    "excerpt": {
+      "of": "9654066186f274f54a876590869e6eb61e6b6fd40511824f91598bd8e2bfb428",
+      "bytes": 529098,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.harriscountytx.gov/",
+    "finalUrl": "https://www.harriscountytx.gov/",
+    "file": "harris-gov.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "bf12bd96018a18f15bb6dfb4d9c51787f6d8312f54b0f54dfc5132ef0e76cf0b",
+    "rawHash": "4e2d3b17a8c21f45eaf15eb8b6fa056cba618ebafd8e04a37f2aa9d94b8adb64",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:18:40.720Z",
+    "excerpt": {
+      "of": "4e2d3b17a8c21f45eaf15eb8b6fa056cba618ebafd8e04a37f2aa9d94b8adb64",
+      "bytes": 139979,
+      "method": "Native excerpt around the official link(s) this test checks"
+    }
+  },
+  {
+    "url": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/locations/1126_EV_Sched.pdf",
+    "finalUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/locations/1126_EV_Sched.pdf",
+    "file": "tarrant-early.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "c2e1bef630335ad0bf669a8581863f76b3a82e1c687b2967f0d62a6b1e314677",
+    "rawHash": "5b6c1db64ee51a8555b9bff50ba2e2c5db5e7a729c805ecd86f8bd6b8b2abb99",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:18:41.184Z",
+    "excerpt": {
+      "of": "5b6c1db64ee51a8555b9bff50ba2e2c5db5e7a729c805ecd86f8bd6b8b2abb99",
+      "bytes": 265818,
+      "method": "PDF pages 1-2 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/locations/1126_Vote_Center_Locations.pdf",
+    "finalUrl": "https://www.tarrantcountytx.gov/content/dam/main/elections/2026/1126/locations/1126_Vote_Center_Locations.pdf",
+    "file": "tarrant-day.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "7580b0fbdfb646e3d10ee8d2a7bbc88cd8dacf44d78a1a12c5c44a1109781225",
+    "rawHash": "011b2506be52e14161c24fb46ff455fd04a30b9a282bcb959df9b539e45c61bd",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:18:41.251Z",
+    "excerpt": {
+      "of": "011b2506be52e14161c24fb46ff455fd04a30b9a282bcb959df9b539e45c61bd",
+      "bytes": 371631,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/early_voting_sites_wayne_county_nov-3_2026_general_election.pdf",
+    "finalUrl": "https://www.waynecountymi.gov/files/assets/mainsite/v/1/clerk/documents/elections/early_voting_sites_wayne_county_nov-3_2026_general_election.pdf",
+    "file": "wayne-early.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "c731ff3e30bbfde20f58ca50f449a83cde26797deade7b97a84c31a26c6a304d",
+    "rawHash": "e1167da70e855bac64bc3bd87a47e349c2e6f3cebf1668885b5c2b7321ff924e",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:18:41.840Z",
+    "excerpt": {
+      "of": "e1167da70e855bac64bc3bd87a47e349c2e6f3cebf1668885b5c2b7321ff924e",
+      "bytes": 1428382,
+      "method": "PDF pages 1 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://www.votepalmbeach.gov/DocumentCenter/View/2757",
+    "finalUrl": "https://www.votepalmbeach.gov/DocumentCenter/View/2757/2026-General-Election-Info-Map-English-PDF?bidId=",
+    "file": "palmbeach-map.pdf",
+    "status": 200,
+    "contentType": "application/pdf",
+    "savedHash": "59207ff337a9d02a8d25594ee25104eb77b9ad6c02b476f55c4b549fb0907123",
+    "rawHash": "9d73ac0a7605fd80b9040857501d4b5c3192acb2c047d1018424dce77d14dacf",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:18:42.395Z",
+    "excerpt": {
+      "of": "9d73ac0a7605fd80b9040857501d4b5c3192acb2c047d1018424dce77d14dacf",
+      "bytes": 2329646,
+      "method": "PDF pages 2 with embedded images removed"
+    }
+  },
+  {
+    "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
+    "finalUrl": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
+    "file": "nyc-gov-authority.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "ef235af6b585d9b0164b5be7449d287dea59ed9c4f0764ebf514b54511c6d47d",
+    "rawHash": "f71291a39416c4e04ac5713296c4f5bcfe6acb69f3da7a74135b90c58ee6fb3f",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:18:42.756Z",
+    "excerpt": {
+      "of": "f71291a39416c4e04ac5713296c4f5bcfe6acb69f3da7a74135b90c58ee6fb3f",
+      "bytes": 31694,
+      "method": "Native excerpt around the official link(s) this test checks"
+    }
+  },
+  {
+    "url": "https://rowletttx.gov/482/Elections",
+    "finalUrl": "https://rowletttx.gov/482/Elections",
+    "file": "dallas-gov-rowlett.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "15d5cdc0ea943e8fb6bfb5e4b8784104df4ee584c6570203c392b5c1287ba694",
+    "rawHash": "3bc861add6776c64f886047e95d347ef4383c621a2c34d47678e460d33f50258",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:30:31.725Z",
+    "excerpt": {
+      "of": "81695dbf24136ae8fe98f153eb207908f9fde86f5890ea870c587dc412422a15",
+      "bytes": 119564,
+      "method": "Native excerpt around the official link(s) this test checks"
+    }
+  },
+  {
+    "url": "https://wheelingil.gov/468/Election-Information",
+    "finalUrl": "https://wheelingil.gov/468/Election-Information",
+    "file": "wheeling-election.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "448420b13f609da7b6198ca2030305c3fe314374ea8f3f09db9e49ff44b3b33a",
+    "rawHash": "ccfeee24ca884736d4589ff8e6eab14d197e9cf16c36b53facf2c1c423e9a2e9",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:37:06.637Z",
+    "excerpt": {
+      "of": "24afa163579bbe19af8a2c978bb1dafde219ad65645b582d77db71e072f6380e",
+      "bytes": 202532,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://www.harrisvotes.com/Voter/Election-Information",
+    "finalUrl": "https://www.harrisvotes.com/Voter/Election-Information",
+    "file": "harris-voter-info.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "0095d602a89cd34bc6fa2f24bb280dd06918e980f9ede93542fd347c9e48edfc",
+    "rawHash": "8ddd2c9cf9cfa43dc5c914e856438316829d6c95ddf06a6ceb5d7e766132a26e",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:43:47.627Z",
+    "excerpt": {
+      "of": "8c752437ff3bd60669739fd71657403be6a72e68ecc72ccd0a48ef9a23bb2ab9",
+      "bytes": 70136,
+      "method": "Native excerpt around the official link(s) this test checks"
+    }
+  },
+  {
+    "url": "https://barringtonhills-il.gov/vote/",
+    "finalUrl": "https://barringtonhills-il.gov/vote/",
+    "file": "barringtonhills-vote.html",
+    "status": 200,
+    "contentType": "text/html; charset=UTF-8",
+    "savedHash": "04387301f6db4f4c5e66a4b45a20dd2560b05c8cfbee7a57ec6c9c6457ad2fee",
+    "rawHash": "95db6cc37eb79bb398d70fc1559895c37b574954feb5c0a7c7ad5334b91df870",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:43:48.968Z",
+    "excerpt": {
+      "of": "95db6cc37eb79bb398d70fc1559895c37b574954feb5c0a7c7ad5334b91df870",
+      "bytes": 195384,
+      "method": "HTML with styles, scripts, images, comments and presentation attributes removed"
+    }
+  },
+  {
+    "url": "https://peachtreecornersga.gov/246/Who-Do-I-Call",
+    "finalUrl": "https://peachtreecornersga.gov/246/Who-Do-I-Call",
+    "file": "gwinnett-gov-contact.html",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "savedHash": "63dd96a2689b30321dae17531bfac79ac64550ffb30131af08c639d132a94f99",
+    "rawHash": "541faba5f89d8615fa7725c7d11e46627f28d9b21c0b8a82acc471fef68cbd0a",
+    "storage": "TRIMMED_EXCERPT",
+    "capturedAt": "2026-10-23T08:54:43.089Z",
+    "excerpt": {
+      "of": "f7950b0a3e1472da5bb3b2bc98cb83e439240dbb7f8ad844c2df20524e3a5640",
+      "bytes": 117238,
+      "method": "Native excerpt around the official link(s) this test checks"
+    }
+  }
+]

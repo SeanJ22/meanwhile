@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { matchRegisteredPlatformTenant, platformRegistrationBinding, readPlatformRegistrationPage } from "../lib/control-plane/discovery/platform-registration.ts";
+import { matchRegisteredPlatformTenant, platformGovernmentCandidates, platformRegistrationBinding, readPlatformRegistrationPage, type PlatformRegistrationPage } from "../lib/control-plane/discovery/platform-registration.ts";
 
 test("native registration paging and catalogue names distinguish a county from a district sharing its website", async () => {
   const pg = new PGlite();
@@ -20,9 +20,12 @@ test("native registration paging and catalogue names distinguish a county from a
     assert.equal((await readPlatformRegistrationPage(query, "WA", 1))?.government.id, district.id);
     assert.equal(await readPlatformRegistrationPage(query, "WA", 2), null);
     const tenant = { platform: "legistar", url: "https://alpha.legistar.com/", name: "Alpha County", state: "WA", source: "public directory" };
-    const named = await matchRegisteredPlatformTenant(query, tenant);
+    assert.deepEqual(await matchRegisteredPlatformTenant(query, tenant), [], "a directory name alone never matches a portal");
+    const named = await platformGovernmentCandidates(query, tenant);
     assert.deepEqual(named.map(row => row.government.id), [county.id]);
     assert.deepEqual(await matchRegisteredPlatformTenant(query, { ...tenant, state: "OR" }), []);
+    const linked = await matchRegisteredPlatformTenant(query, tenant, ["https://www.alpha.gov/"]);
+    assert.deepEqual(linked.map(row => row.government.id), [county.id]);
     const shared = await matchRegisteredPlatformTenant(query, { ...tenant, name: null }, ["https://council.alpha.gov/"]);
     assert.equal(shared.length, 2, "a shared government website leaves identity ambiguous");
     const located = platformRegistrationBinding(shared.find(row => row.government.id === district.id)!);
@@ -34,4 +37,22 @@ test("native registration paging and catalogue names distinguish a county from a
     assert.ok("bodyId" in bound);
     assert.equal(bound.bodyId, county.aliases[0]);
   } finally { await pg.close(); }
+});
+
+test("a scheduled native platform recheck retains approved boundary and named-county territories", () => {
+  for (const [state, name, jurisdictionId, divisionId, basis] of [
+    ["AL", "Mobile Housing Authority", "al:special:mobile-housing-authority", "ocd-division/country:us/state:al/place:mobile", "SOURCE_BOUNDARY"],
+    ["CA", "Los Angeles County Metro Transit Authority", "ca:special:los-angeles-county-metro-transit-authority", "ocd-division/country:us/state:ca/county:los_angeles", "SOURCE_BOUNDARY"],
+    ["CA", "Los Angeles County District", "ca:special:los-angeles-county-district", "ocd-division/country:us/state:ca/county:los_angeles", "COUNTY_IN_NAME"],
+  ] as const) {
+    const page: PlatformRegistrationPage = { versionId: `tomorrow-${state}`, promotedAt: "2026-10-24T00:00:00Z", readModelHash: "c".repeat(64),
+      government: { id: jurisdictionId, aliases: [], jurisdictionId, state, name, kind: "GOVERNMENT", governmentClass: "SPECIAL_DISTRICT",
+        nativeIds: {}, status: "Y", sourceVintage: "official boundary", website: null, officePhone: null, officeAddress: null,
+        countyFips: null, bodyIds: [], associations: [{ divisionId, layer: divisionId.includes("/place:") ? "place" : "county", geoid: "", basis }],
+        provenance: { sourceUrl: "https://example.gov/territory", sourceOrg: name, collectedAt: "2026-10-23", verifiedAt: "2026-10-23" } } };
+    const binding = platformRegistrationBinding(page);
+    assert.ok("ocdId" in binding, name);
+    assert.equal(binding.ocdId, divisionId, name);
+    assert.equal(binding.governmentId, jurisdictionId, name);
+  }
 });

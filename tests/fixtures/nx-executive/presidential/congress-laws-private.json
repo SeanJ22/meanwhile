@@ -1,0 +1,54 @@
+{
+    "bills": [
+        {
+            "congress": 119,
+            "latestAction": {
+                "actionDate": "2026-03-26",
+                "text": "Became Private Law No: 119-2."
+            },
+            "laws": [
+                {
+                    "number": "119-2",
+                    "type": "Private Law"
+                }
+            ],
+            "number": "7194",
+            "originChamber": "House",
+            "originChamberCode": "H",
+            "title": "Nicholas Dockery Medal of Honor Act",
+            "type": "HR",
+            "updateDate": "2026-07-17",
+            "updateDateIncludingText": "2026-07-17",
+            "url": "https://api.congress.gov/v3/bill/119/hr/7194?format=json"
+        },
+        {
+            "congress": 119,
+            "latestAction": {
+                "actionDate": "2026-03-26",
+                "text": "Became Private Law No: 119-1."
+            },
+            "laws": [
+                {
+                    "number": "119-1",
+                    "type": "Private Law"
+                }
+            ],
+            "number": "3377",
+            "originChamber": "House",
+            "originChamberCode": "H",
+            "title": "To authorize the President to award the Medal of Honor to James Capers, Jr., for acts of valor as a member of the Marine Corps during the Vietnam War.",
+            "type": "HR",
+            "updateDate": "2026-07-17",
+            "updateDateIncludingText": "2026-07-17",
+            "url": "https://api.congress.gov/v3/bill/119/hr/3377?format=json"
+        }
+    ],
+    "pagination": {
+        "count": 2
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json"
+    }
+}

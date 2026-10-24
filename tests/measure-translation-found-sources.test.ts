@@ -12,6 +12,8 @@ import { hubLinks, measureLabels, measureLinkNames, measureLinks, pageLinks, pag
 import { routineMeasureFinds } from "../lib/translate/routine-finds.ts";
 import { loadRoutineMeasureSources, MEASURE_SEARCH_RETRY_MS } from "../lib/translate/routine-sources.ts";
 import { runMeasureTranslationPass } from "../lib/translate/provider.ts";
+import { readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { readTranslations, withMeasureTranslations } from "../lib/translate/projection-reader.ts";
 import { translationHash } from "../lib/translate/records.ts";
 import type { TranslationAttempt } from "../lib/translate/standing.ts";
@@ -136,7 +138,7 @@ test("an explainer written from a found page publishes and attaches to its exact
   const text = `Proposition 12. ${summary} ${yes} ${no}`, contactsText = "Election office contacts.";
   const cap = (url: string, body: string) => ({ evidence: { artifactId: url, acquiredByAttemptId: "held", sourceId: "Fixture election office", methodRouteId: "measure-text",
     canonicalUrl: url, contentHash: `sha256-${translationHash(body)}`, retrievedAt: now, text: body }, observedAt: now, partial: false, httpStatus: 200, transport: "REACHABLE" as const });
-  const held = { election: { state: "OH", id: "general", date: "2026-11-03" }, candidacies: [], measures: [],
+  const held = { election: { state: "OH", id: "general", date: "2026-11-03" }, candidacies: [], measures: [], absences: [],
     contests: [{ id: "measure:12", title: "Proposition 12", type: "MEASURE", ocdId: division, provenance: { sourceUrl: citedUrl } }] } as unknown as BallotSet;
   const store = new MemoryRoutineDataStore(), saved: TranslationAttempt[] = [];
   const base = { states: ["OH"], repos: createMemoryRepositories(), store, now, modelLaneEnabled: true as boolean | null, paidWorkerCapacity: () => 1,
@@ -160,4 +162,70 @@ test("an explainer written from a found page publishes and attaches to its exact
   assert.equal(attached.measureRecords?.[0].yesMeans, yes);
   const wrongMeasure = { ...held, contests: [{ ...held.contests[0], id: "measure:13", title: "Proposition 13" }] } as unknown as BallotSet;
   assert.equal(withMeasureTranslations(wrongMeasure, await readTranslations([division], { store, now, bypassCache: true })).measureRecords, undefined, "another measure never takes it");
+});
+
+
+test("the ballot's verified full-text URL supplies a capture when its filing page fails, even when the PDF uses its bill title", async t => {
+  const root = await localVault(t), repos = createMemoryRepositories();
+  const division = "ocd-division/country:us/state:oh", textUrl = "https://elections.example.gov/bills/sb271.pdf";
+  const officialText = "Enrolled, An Act. The levy funds library services. A YES vote adopts the levy. A NO vote keeps the current levy.";
+  const held = { election: { state: "OH", id: "general", date: "2026-11-03" }, candidacies: [], measures: [], absences: [],
+    contests: [{ id: "measure:12", title: "Statewide Amendment 1", type: "MEASURE", ocdId: division,
+      measureTextUrl: textUrl, provenance: { sourceUrl: cited } }] } as unknown as BallotSet;
+  const opened: string[] = [];
+  const sources = await loadRoutineMeasureSources({ root, repos, state: "OH", ballots: [held], now: () => now,
+    open: async url => { opened.push(url); return new Response(url === textUrl ? officialText : "Unavailable", { status: url === textUrl ? 200 : 502 }); } });
+  assert.deepEqual(opened, [textUrl, cited]);
+  assert.equal(sources.captures.length, 1);
+  assert.equal(sources.failures[0].url, cited);
+  const store = new MemoryRoutineDataStore();
+  let calls = 0;
+  const base = { states: ["OH"], repos, store, now, modelLaneEnabled: true, paidWorkerCapacity: () => 1,
+    loadBallotsForState: async () => [held], loadCapturesForState: async () => sources.captures,
+    readAttemptsForState: async () => [], saveAttempt: async () => {},
+    guardedTransportFor: () => async (request: ModelRequest) => {
+      calls++;
+      const measure = { contestId: "measure:12", whatItDoes: "The levy funds library services.", yesMeans: "A YES vote adopts the levy.",
+        noMeans: "A NO vote keeps the current levy.", parts: [], sourceUrl: textUrl, sourceHash: translationHash(officialText), writtenAt: now };
+      const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: measure[field as "whatItDoes"], quote: measure[field as "whatItDoes"] }));
+      return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 100, output_tokens: 50 },
+        content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: request.tools[0].name === "write_measure_translation"
+          ? { measure, sentences } : { checked: sentences.map(({ field, text }) => ({ field, text, supported: true })) } }] };
+    } };
+  const first = await runMeasureTranslationPass(base);
+  assert.equal(first.checkedAfter, 1, JSON.stringify(first));
+  const translated = await readTranslations([division], { store, now, bypassCache: true });
+  assert.equal(withMeasureTranslations(held, translated).measureRecords?.[0].sourceUrl, textUrl);
+  const next = await runMeasureTranslationPass({ ...base, now: "2026-10-21T18:00:00.000Z" });
+  assert.equal(next.checkedBefore, 1);
+  assert.equal(calls, 2, "tomorrow reuses both checked vote meanings without another model call");
+  const projection = await store.readPromotion("CURATED_READER_RECORD", `US:plain-english-translations:${division}`);
+  assert.ok(projection);
+  const edges = [provenEdgeEntry({ recordClass: "BALLOT_CANDIDACY", scope: "US-OH:state-election-ballots", sourceId: "official-ballot-authorities",
+    versionId: "ballot", value: { kind: "ballot-contests", ballots: { "OH:general": held } } }),
+    provenEdgeEntry({ recordClass: "CURATED_READER_RECORD", scope: projection.scope, sourceId: projection.sourceId,
+      versionId: projection.versionId, value: projection.payload })];
+  const scopedStore = Object.assign(store, { readPromotedEntry: async (recordClass: string, scope: string) =>
+    edges.find(edge => edge.projection.recordClass === recordClass && edge.projection.scope === scope) ??
+      { kind: "NOT_RECORDED" as const, recordClass: recordClass as "CURATED_READER_RECORD", scope } });
+  const readerSources = await readerBallotSourcesForDivisions([`${division}/county:franklin`], { store: scopedStore, now });
+  assert.equal(readerSources.length, 1);
+  const zipBallot = readerSources[0].source.normalize(await readerSources[0].source.fetch());
+  assert.equal(zipBallot.measureRecords?.[0].yesMeans, "A YES vote adopts the levy.", "a ZIP containing only local divisions still gets its statewide explainer");
+  const unrelated = { ...held, contests: [{ ...held.contests[0], id: "other", measureTextUrl: undefined }] };
+  assert.equal(withMeasureTranslations(unrelated, translated).measureRecords, undefined);
+});
+
+
+test("long ballot titles match the publisher's short designation and act title without matching a neighboring number", () => {
+  const labels = measureLabels({ title: "Ballot Measure No.2 — 24ESEG - An Act Restoring Political Party Primaries" });
+  assert.equal(pageNamesMeasure("Ballot Measure 2 – (24ESEG)", labels), true);
+  assert.equal(pageNamesMeasure("Ballot Measure No. 2 (24ESEG)", labels), true);
+  assert.equal(pageNamesMeasure("An Act Restoring Political Party Primaries", labels), true);
+  assert.equal(pageNamesMeasure("Ballot Measure 20 – (24OTHER)", labels), false);
+  assert.equal(pageNamesMeasure("Ballot Measure 3", labels), false);
+  const links = measureLinks([{ url: "https://ltgov.example.gov/hearings", html:
+    '<a href="/notice-2">Ballot Measure 2</a><a href="/notice-20">Ballot Measure 20</a>' }],
+  measureLinkNames(labels, labels[0]), new Set(), () => true);
+  assert.deepEqual(links.map(link => link.url), ["https://ltgov.example.gov/notice-2"]);
 });

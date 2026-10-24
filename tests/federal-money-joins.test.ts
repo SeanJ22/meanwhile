@@ -6,6 +6,7 @@ import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geograp
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { readFederalMoneyJoinInput } from "../lib/federal-money/held-identities.ts";
 import { joinFederalMoneyFacts } from "../lib/federal-money/join.ts";
+import { federalMoneyRows } from "../lib/federal-money/view.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { locateFederalMoneyFacts } from "../lib/federal-money/locations.ts";
 import { federalMoneyLookupKeys, federalMoneyPartitionOf, federalMoneyPartitionScope, type FederalMoneyFact } from "../lib/federal-money/model.ts";
@@ -19,6 +20,30 @@ const fact: FederalMoneyFact = { id: "synthetic:findings:1", source: "federal-au
   title: "Synthetic finding", amount: null, amountLabel: null, period: "2025", recipient: null, uei: null,
   identifiers: { reportId: "2025-AR-001" }, geography: [], bodyIds: [], divisionIds: [], joinStatus: "UNJOINED", joinReason: "Not joined",
   details: { table: "findings" }, provenance: { sourceUrl: "https://api.fac.gov/findings", sourceOrg: "Federal Audit Clearinghouse", publicationDate: "2025-10-01", retrievedAt: "2026-10-15T00:00:00.000Z", official: true, rawHash: "synthetic" } };
+
+test("FAC source-reported state locates audits on the state card and never assigns its recipient government", () => {
+  const state = "ocd-division/country:us/state:ar";
+  const general = { ...fact, id: "synthetic:general", details: { table: "general", reportedState: "AR" } };
+  const child = { ...fact, id: "synthetic:child" };
+  const input = { divisions: [], bodies: [], governments: [] };
+  const [report, finding] = joinFederalMoneyFacts([general, child], input);
+  for (const joined of [report, finding]) {
+    assert.deepEqual(joined.divisionIds, [state]);
+    assert.deepEqual(joined.bodyIds, []);
+    const rows = federalMoneyRows([joined], { divisionId: state });
+    assert.equal(rows.length, 1);
+    assert.match(rows[0].text, /Auditee location: AR/);
+    assert.deepEqual(federalMoneyRows([joined], { divisionId: state, bodyId: governmentId }), []);
+    assert.deepEqual(federalMoneyRows([joined], { divisionId: county }), []);
+  }
+  const later = joinFederalMoneyFacts([child], { ...input, auditReports: [{ reportId: report.identifiers.reportId, uei: report.uei, identifiers: report.identifiers, bodyIds: report.bodyIds, divisionIds: report.divisionIds }] });
+  assert.deepEqual(later[0].divisionIds, [state]);
+  for (const reportedState of [null, "CA", "ZZ"]) {
+    const [unlocated] = joinFederalMoneyFacts([{ ...general, details: { table: "general", reportedState } }], input);
+    assert.deepEqual(unlocated.divisionIds, []);
+    assert.equal(unlocated.joinStatus, "UNJOINED");
+  }
+});
 
 test("federal identity SQL reads only each page's exact native recipients and geography", async t => {
   const db = new PGlite();

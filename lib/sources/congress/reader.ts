@@ -4,7 +4,7 @@ import type { CardSource } from "../../officials/card-sources.ts";
 import { readFederalSourceProjection } from "./publication.ts";
 import type { FederalFact } from "./types.ts";
 import { federalCardSources, federalDeadlineDate } from "./presentation.ts";
-export { federalCardSources } from "./presentation.ts";
+;
 
 export const isOpenFederalRule = (row: FederalFact, now: string): boolean => {
   if (row.kind !== "RULE" || row.withdrawn || row.acceptsComments === false || !row.closesAt || !row.commentUrl) return false;

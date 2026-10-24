@@ -1,3 +1,4 @@
+import { guardPdfjsRejections } from "./pdfjs-rejections.ts";
 import { cannotRun, extracted, zeroRows } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
@@ -39,6 +40,7 @@ export async function extractTextLayer(
   let doc;
   try {
     const { getDocument } = await import("pdfjs-dist/legacy/build/pdf.mjs");
+    guardPdfjsRejections();
     doc = await getDocument({ data: bytes, useWorkerFetch: false }).promise;
   } catch (error) {
     return cannotRun(

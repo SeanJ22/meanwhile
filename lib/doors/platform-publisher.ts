@@ -26,8 +26,8 @@ export function platformPublisherFetch(rows: readonly BodySourceWiring[], fetchI
     const own = websites.get(target) ?? new Set<string>(); own.add(website); websites.set(target, own);
   }
   if (!websites.size) return fetchImpl;
-  const read = fetchImpl ?? fetch;
   return (input, init) => {
+    const read = fetchImpl ?? globalThis.fetch;
     const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const own = websites.get(origin(url) ?? "");
     return own?.size === 1 ? withPlatformPublisher([...own][0], url, () => read(input, init)) : read(input, init);

@@ -33,16 +33,6 @@ export interface V6Capabilities {
   readonly receiptLookup?: { readonly contract: string; readonly href: string };
 }
 
-export interface SectionResponse<T = unknown> {
-  readonly contract: string;
-  readonly scope: string;
-  readonly revision: string;
-  readonly asOf: string;
-  readonly data: T;
-  readonly missingParts?: readonly string[];
-  readonly page?: SectionPage;
-}
-
 export interface SectionPage {
   readonly total: number | null;
   readonly nextCursor: string | null;

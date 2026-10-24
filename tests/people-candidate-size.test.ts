@@ -45,7 +45,7 @@ test("a newer read orders after the promoted version, including one versioned by
   assert.ok(second.candidate.temporal.version > "f".repeat(64), "sorts after any earlier hash version");
 });
 
-test("a re-read with unchanged values writes no candidate, and a refused one is recorded on the candidate it repeats", async () => {
+test("an unchanged GOOD is confirmed, and an identical refused input gets its own immutable attempt", async () => {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), url = "https://office.example.gov/about-jordan";
   await publish(store, vault, release("Jordan Reader", url, T1), T1);
   await publish(store, vault, release("Jordan Reader", url, T1), T2);
@@ -60,7 +60,9 @@ test("a re-read with unchanged values writes no candidate, and a refused one is 
   assert.equal(refused.outcome.promoted, null);
   const refusedRows = candidates(refusedStore).size;
   const repeat = await publish(refusedStore, vault, unverified, T2);
-  assert.equal(candidates(refusedStore).size, refusedRows, "the same values meeting the same refusal write no second candidate");
-  assert.equal(repeat.outcome.candidate.candidate.id, refused.outcome.candidate.candidate.id);
-  assert.ok((await refusedStore.events(refused.outcome.candidate.candidate.id)).some(event => event.detail.startsWith("RECHECKED_UNCHANGED")));
+  assert.equal(candidates(refusedStore).size, refusedRows + 1);
+  assert.notEqual(repeat.outcome.candidate.candidate.id, refused.outcome.candidate.candidate.id);
+  assert.equal(repeat.outcome.candidate.candidate.retryOfCandidateId, refused.outcome.candidate.candidate.id);
+  assert.equal(repeat.outcome.candidate.state, refused.outcome.candidate.state);
+  assert.ok(!(await refusedStore.events(refused.outcome.candidate.candidate.id)).some(event => event.detail.startsWith("RECHECKED_UNCHANGED")));
 });

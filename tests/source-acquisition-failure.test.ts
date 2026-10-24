@@ -132,6 +132,7 @@ test("a registered source failure is one durable attempt with retry clock and un
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, task, store, "HELD"), null);
   assert.deepEqual(await store.clock(task.sourceId, task.recordClass, task.scope), {
     lastAttemptedAt: FAILED_AT,
+    failureStreak: 1,
     lastSucceededAt: GOOD_AT,
     lastSucceededObservedAt: GOOD_AT,
   });
@@ -162,7 +163,7 @@ test("all five registered adapters can persist a well-formed source-scoped failu
     assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, task, store, "HELD"), null, contractId);
     assert.equal((await store.events(parsed.receipt.candidateId)).length, 1, `${contractId} must write exactly one attempt event`);
     const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
-    assert.deepEqual(clock, { lastAttemptedAt: FAILED_AT });
+    assert.deepEqual(clock, { lastAttemptedAt: FAILED_AT, failureStreak: 1 });
     assert.equal(routineTaskDue(task, clock, Date.parse(FAILED_AT) + task.retryMs - 1), false, contractId);
     assert.equal(routineTaskDue(task, clock, Date.parse(FAILED_AT) + task.retryMs), true, contractId);
   }

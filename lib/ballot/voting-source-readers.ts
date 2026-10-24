@@ -8,12 +8,13 @@ import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
 import { readVotingBoundaries } from "./voting-source-boundaries.ts";
 import { votingPdfText } from "./voting-source-extraction.ts";
+import { votingOfficialLinkEvidence } from "./voting-source-evidence.ts";
 
 const normalized = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const ALIASES: Partial<Record<VotingColumn, string[]>> = {
   id: ["id", "objectid", "siteid"], name: ["name", "location", "pollinglocation", "pollingplace", "sitename", "centername", "facilityname", "building", "earlyvotinglocation"],
   address: ["address", "streetaddress", "locationaddress", "centeraddress", "pollingaddress"], room: ["room", "roomlocation"],
-  days: ["days", "dates", "day", "votingdates"], hours: ["hours", "pollinghours", "votinghours", "hoursofoperation", "earlyvotingdateandtimes"],
+  date: ["date", "scheduledate", "votingdate"], days: ["days", "dates", "day", "votingdates"], hours: ["hours", "pollinghours", "votinghours", "hoursofoperation", "earlyvotingdateandtimes"],
   precinct: ["precinct", "precinctname", "precinctnumber"], town: ["town", "municipality", "city"], countyName: ["county", "countyname"], countyFips: ["countyfips", "countyfp"],
   countySubdivisionGeoid: ["countysubdivisiongeoid", "cousubgeoid"], ward: ["ward"], phone: ["phone", "clerkphone", "countyauditorphone", "telephone"],
   email: ["email"], officeName: ["officename", "clerk"], officeAddress: ["officeaddress"],
@@ -47,11 +48,58 @@ function publishedElectionDatesIn(text: string): string[] {
   for (const match of text.matchAll(/\b(January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sept?|Oct|Nov|Dec)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:,\s*|\s+)(20\d{2})\b/gi)) add(match[3]!, months.indexOf(match[1]!.slice(0, 3).toLowerCase()) + 1, Number(match[2]));
   return [...new Set(dates)];
 }
+function votingScheduleDate(text: string): string | undefined {
+  const day = text.trim().replace(/^(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday|Mon|Tue|Wed|Thu|Fri|Sat|Sun)\.?[,]?\s+/i, "");
+  // A date range or a recurring weekday stays in the publisher's `days` text.
+  if (!/^(?:20\d{2}-\d{1,2}-\d{1,2}|\d{1,2}[/-]\d{1,2}[/-]20\d{2}|[A-Za-z]+\.?\s+\d{1,2}(?:st|nd|rd|th)?(?:,\s*|\s+)20\d{2})$/.test(day)) return undefined;
+  return publishedElectionDatesIn(day)[0];
+}
+function activeCmsElectionContent(html: string): { article: string; title: string; links: string[] }[] {
+  // CivicPlus sends the current widgets as a quoted JSON state, before the
+  // browser renders their articles. Read only the items in active widget columns.
+  const quoted = html.match(/\bwindow\.__PRELOADED_STATE__\s*=\s*'((?:\\.|[^'\\])*)'/)?.[1];
+  if (!quoted) return [];
+  try {
+    const state = JSON.parse(quoted.replace(/\\([\\'"])/g, "$1")) as { widgets?: { universal?: Record<string, { columns?: unknown; contentItems?: Record<string, { data?: { name?: { en?: string }; article?: { en?: string } }; link?: string }> }> } };
+    const contents: { article: string; title: string; links: string[] }[] = [];
+    const idsIn = (value: unknown): string[] => Array.isArray(value) ? value.flatMap(idsIn) : typeof value === "string" ? [value] : [];
+    for (const widget of Object.values(state.widgets?.universal ?? {})) {
+      for (const id of idsIn(widget.columns)) {
+        const item = widget.contentItems?.[id];
+        if (!item) continue;
+        if (typeof item.data?.article?.en === "string") contents.push({ article: item.data.article.en, title: item.data.name?.en ?? "", links: [] });
+        if (typeof item.link === "string") contents.push({ article: "", title: "", links: [item.link] });
+      }
+    }
+    return contents;
+  } catch { return []; }
+}
 function officialElectionLinkMatches(html: string, pageUrl: string, door: VotingSourceDoor): boolean {
-  if (!electionDateNamed(sourceText(html), door.electionDate)) return false;
+  const cms = activeCmsElectionContent(html);
+  const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, "").replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, "");
+  const [year, month, day] = door.electionDate.split("-");
+  const monthName = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][Number(month) - 1]!;
+  const sameArticleDate = cms.some(content => {
+    if (electionDateNamed(sourceText(content.article), door.electionDate)) return true;
+    // A publisher's explicit event year and its day heading belong to the same
+    // active article; an archived item elsewhere in the state cannot supply it.
+    const years = content.title.match(/\b20\d{2}\b/g) ?? [];
+    return years.length === 1 && years[0] === year && /election/i.test(content.title) &&
+      [...content.article.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading =>
+        new RegExp(`\\b(?:${monthName}|${monthName.slice(0, 3)}\\.?)\\s+0?${Number(day)}(?:st|nd|rd|th)?\\b`, "i").test(sourceText(heading[1]!)));
+  });
+  const activeDate = [...visible.matchAll(/<time\b[^>]*\bdatetime=["']([^"']+)["'][^>]*>/gi)]
+    .some(match => match[1]!.slice(0, 10) === door.electionDate) ||
+    [...visible.matchAll(/<iframe\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi)]
+      .some(match => match[1]!.includes(`iso${door.electionDate}T`)) ||
+    [...html.matchAll(/<script\b[^>]*\btype=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
+      .some(match => [...match[1]!.matchAll(/["']startDate["']\s*:\s*["']([^"']+)["']/g)]
+        .some(date => date[1]!.slice(0, 10) === door.electionDate));
+  if (!electionDateNamed(sourceText(visible), door.electionDate) && !activeDate && !sameArticleDate) return false;
   if (pageUrl === door.url) return true;
-  return [...html.matchAll(/\b(?:href|src)=["']([^"']+)["']/gi)].some(match => {
-    try { return new URL(match[1]!.replace(/&amp;/g, "&"), pageUrl).href.split("#")[0] === door.url.split("#")[0]; } catch { return false; }
+  const links = [...[visible, ...cms.map(content => content.article)].flatMap(document => [...document.matchAll(/\b(?:href|src)=["']([^"']+)["']/gi)].map(match => match[1]!)), ...cms.flatMap(content => content.links)];
+  return links.some(link => {
+    try { return new URL(link.replace(/&amp;/g, "&"), pageUrl).href.split("#")[0] === door.url.split("#")[0]; } catch { return false; }
   });
 }
 const kindFrom = (value: string, fallback: SiteKind): SiteKind => /drop|ballot.?box/i.test(value) ? "DROP_BOX" : /satellite/i.test(value) ? "SATELLITE" : /early/i.test(value) ? "EARLY_VOTING" : /vote.?cent[er]{2}/i.test(value) ? "VOTE_CENTER" : /mobile/i.test(value) ? "MOBILE" : fallback;
@@ -80,7 +128,7 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
     const rowOffice = phone || email ? { name: get("officeName") || get("town") || get("countyName") || door.publisher, ...(phone ? { phone } : {}), ...(email ? { email } : {}), ...(get("officeAddress") ? { address: get("officeAddress") } : {}), url: source.url } : undefined;
     if (rowOffice) officeRows.push({ label: get("town") || get("countyName") || door.scope.name, countyName: get("countyName"), office: rowOffice });
     const name = get("name"), address = get("address");
-    if (!name || !address) { if (name || address || phone || email) recordMissing(`${get("town") || get("countyName") || name || address || door.scope.name}: ${!name ? "site name" : ""}${!name && !address ? " and " : ""}${!address ? "site address" : ""}`); continue; }
+    if (!name || !address) { if ((name || address || phone || email) && !(rowOffice && !door.covers.some(isVotingSiteKind))) recordMissing(`${get("town") || get("countyName") || name || address || door.scope.name}: ${!name ? "site name" : ""}${!name && !address ? " and " : ""}${!address ? "site address" : ""}`); continue; }
     const rowEvidence = Object.values(row).filter(value => typeof value === "string" || typeof value === "number").map(String);
     const stated = (field: VotingColumn) => !config.constants?.[field] || (row.__verifiedConstants as string[] | undefined)?.includes(field) || rowEvidence
       .some(text => normalized(text).includes(normalized(config.constants![field]!)));
@@ -110,7 +158,10 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
         : [printed];
       site.assignments = site.precincts.map(precinct => ({ precinct, ward: site.ward, name, room: site.room, locationNotes: site.locationNotes, source: rowSource }));
     }
-    site.schedules = [{ kind, days: site.days, hours: site.hours, electionDate: site.electionDate, source: rowSource }];
+    const date = get("date");
+    if (date && !stated("date")) recordMissing(`${name}: published schedule date`);
+    site.schedules = [{ kind, date: votingScheduleDate(date && stated("date") ? date : site.days ?? ""),
+      days: site.days, hours: site.hours, electionDate: site.electionDate, source: rowSource }];
     const latitude = get("lat"), longitude = get("lng");
     if (latitude && longitude && Number.isFinite(Number(latitude)) && Number.isFinite(Number(longitude)) &&
       Math.abs(Number(latitude)) <= 90 && Math.abs(Number(longitude)) <= 180) {
@@ -173,10 +224,14 @@ function jsonRecords(value: unknown, path?: string): Record<string, unknown>[] {
   }
   return [];
 }
-export async function arcgisVotingRows(layerUrl: string, session: VotingFetchSession): Promise<Record<string, unknown>[]> {
+export async function arcgisVotingRows(layerUrl: string, session: VotingFetchSession, where = "1=1"): Promise<Record<string, unknown>[]> {
   const base = layerUrl.replace(/\/query\/?(?:\?.*)?$/, "").replace(/\/$/, "");
+  const queryUrl = (params: Record<string, string>) => {
+    const url = new URL(`${base}/query`); for (const [key, value] of Object.entries({ f: "json", where, ...params })) url.searchParams.set(key, value);
+    return url;
+  };
   const query = async (params: Record<string, string>) => {
-    const url = new URL(`${base}/query`); for (const [key, value] of Object.entries({ f: "json", where: "1=1", ...params })) url.searchParams.set(key, value);
+    const url = queryUrl(params);
     const capture = await session.get(url.href), value = JSON.parse(new TextDecoder().decode(capture.bytes));
     if (value.error) throw new Error(`ArcGIS: ${value.error.message ?? JSON.stringify(value.error)}`);
     return { ...value, captureHash: createHash("sha256").update(capture.bytes).digest("hex"), captureUrl: capture.url } as {
@@ -187,7 +242,12 @@ export async function arcgisVotingRows(layerUrl: string, session: VotingFetchSes
   if (!Array.isArray(ids.objectIds)) throw new Error("ArcGIS did not provide all object IDs; acquire the layer's paginated public route");
   const unique = [...new Set(ids.objectIds)], rows: Record<string, unknown>[] = [];
   const readBatch = async (batch: number[]): Promise<void> => {
-    const result = await query({ objectIds: batch.join(","), outFields: "*", returnGeometry: "false" });
+    const params = { objectIds: batch.join(","), outFields: "*", returnGeometry: "false" };
+    // IIS-backed public map services reject a long query URL with HTTP 404 before ArcGIS sees it.
+    if (batch.length > 1 && queryUrl(params).href.length > 1800) {
+      const mid = Math.ceil(batch.length / 2); await readBatch(batch.slice(0, mid)); await readBatch(batch.slice(mid)); return;
+    }
+    const result = await query(params);
     if (result.exceededTransferLimit && batch.length > 1) { const mid = Math.ceil(batch.length / 2); await readBatch(batch.slice(0, mid)); await readBatch(batch.slice(mid)); return; }
     if (result.exceededTransferLimit || !Array.isArray(result.features) || result.features.length !== batch.length) throw new Error("ArcGIS returned an incomplete object-ID batch; retain prior data and retry");
     rows.push(...result.features.map(f => ({ ...f.attributes, __captureHash: result.captureHash, __captureUrl: result.captureUrl })));
@@ -247,7 +307,7 @@ function configuredVotingRecords(text: string, config: VotingExtraction): Record
   return sections.flatMap(section => [...section.block.matchAll(new RegExp(recordConfig.pattern, "gis"))].map(match => {
     let block = match[recordConfig.group ?? 0] ?? "";
     if (recordConfig.jsonString) block = JSON.parse(block) as string;
-    return { ...section.inherited, ...fields(block, recordConfig.fields), __documentText: section.block };
+    return { ...section.inherited, ...fields(block, recordConfig.fields), __documentText: text };
   }));
 }
 async function parseVotingCaptureRows(capture: VotingCapture, door: VotingSourceDoor): Promise<Record<string, unknown>[]> {
@@ -324,7 +384,8 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     blank("missing-sites", "Public bulk location lists and precinct boundaries for the address-only lookup", [door.url]);
     return result;
   }
-  if (door.scopeUnresolved || door.covers.length === 0 && !door.boundaryLayer && !door.rules?.length && !door.publication) return result;
+  const officeDirectory = ["officeAddress", "phone", "email"].some(field => door.extraction?.columns?.[field as VotingColumn]);
+  if (door.scopeUnresolved || door.covers.length === 0 && !officeDirectory && !door.boundaryLayer && !door.rules?.length && !door.publication) return result;
   let readStage: "access" | "extraction" = "access";
   try {
     if (door.boundaryLayer) {
@@ -339,18 +400,26 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     }
     let rows: Record<string, unknown>[];
     let effectiveDoor = door;
-    if (door.electionAssociationVerified && door.electionPageUrl !== door.url) {
+    let electionPage: VotingCapture | undefined;
+    if (door.electionAssociationVerified && (door.electionPageUrl !== door.url || door.extraction?.dataUrl)) {
       try {
-        const page = await session.get(door.electionPageUrl);
+        const captured = await session.get(door.electionPageUrl);
+        const page = votingOfficialLinkEvidence(captured, now);
+        if (page !== captured) {
+          const index = session.rawBodies.lastIndexOf(captured);
+          if (index >= 0) session.rawBodies[index] = page;
+        }
         const verified = officialElectionLinkMatches(new TextDecoder().decode(page.bytes), page.url, door);
         effectiveDoor = { ...door, electionAssociationVerified: verified };
+        if (verified) electionPage = page;
         if (!verified) blank("missing-sites", "Current official election-page association for this list", [door.electionPageUrl, door.url]);
       } catch (error) {
         effectiveDoor = { ...door, electionAssociationVerified: false };
         blank("access", "Re-read the official election page linking this list", [door.electionPageUrl, String(error)]);
       }
     }
-    if (door.shape === "map-service" && /(?:FeatureServer|MapServer)\/\d+/i.test(door.url)) rows = await arcgisVotingRows(door.url, session);
+    const mapUrl = door.extraction?.dataUrl ?? door.url;
+    if (door.shape === "map-service" && /(?:FeatureServer|MapServer)\/\d+/i.test(mapUrl)) rows = await arcgisVotingRows(mapUrl, session, door.extraction?.where);
     else {
       const extraction = door.extraction ?? {}, target = new URL(extraction.dataUrl ?? door.url, door.url);
       const init: RequestInit = extraction.dataBody ? { method: extraction.dataMethod ?? "POST", headers: { "content-type": "application/json", ...extraction.requestHeaders }, body: JSON.stringify(extraction.dataBody) } : {};
@@ -370,7 +439,24 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     if (typeof rows[0]?.__fileUpdatedAt === "string" && rows[0].__fileUpdatedAt) result.fileUpdatedAt = rows[0].__fileUpdatedAt;
     source.title = result.fileTitle; source.lastUpdated = result.fileUpdatedAt;
     result.sources.push(source); result.rules = door.rules ?? [];
+    const linkedScheduleFields = electionPage ? Object.entries(door.extraction?.constants ?? {})
+      .filter(([field, value]) => ["hours", "days", "date", "election", "rules"].includes(field) &&
+        normalized(sourceText(new TextDecoder().decode(electionPage!.bytes))).includes(normalized(value)))
+      .map(([field]) => field) : [];
+    if (linkedScheduleFields.length) rows = rows.map(row => ({ ...row,
+      __verifiedConstants: [...new Set([...(row.__verifiedConstants as string[] | undefined ?? []), ...linkedScheduleFields])] }));
     const parsed = votingRowsToSites(rows, effectiveDoor, source);
+    if (electionPage) {
+      const linkingSource: VotingSource = { publisher: door.publisher, url: electionPage.url, checkedAt: now,
+        official: isOfficialSource(electionPage.url, door.officialLinkingPage), documentUrl: electionPage.url,
+        documentHash: createHash("sha256").update(electionPage.bytes).digest("hex") };
+      result.sources.push(linkingSource);
+      for (const site of parsed.sites) {
+        site.sources = [...site.sources ?? [], linkingSource];
+        if (linkedScheduleFields.length) site.schedules = site.schedules?.map(schedule => ({ ...schedule, source: linkingSource }));
+        if (linkedScheduleFields.includes("rules")) site.rules = site.rules?.map(rule => ({ ...rule, source: linkingSource }));
+      }
+    }
     parsed.missingRows.forEach((missing, index) => blank("missing-sites", `Published ${missing}`, [door.url], siteScope({ ...parsed.missingRowPlaces[index], matchingUnit: door.matchingUnit })));
     result.contacts = [];
     for (const row of parsed.officeRows) {
@@ -390,14 +476,16 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     }
     result.sites = applyVotingChangeNotices(parsed.sites, door.changeNotices ?? []); result.office = parsed.office;
     if (runtime.geocode) for (const site of result.sites.filter(site => site.lat === null || site.lng === null)) {
+      if (runtime.deadlineMs !== undefined && Date.now() >= runtime.deadlineMs) break;
       try { const point = await runtime.geocode(site.address); if (point) { site.lat = point.lat; site.lng = point.lng; site.geocodeSource = "CENSUS"; } else blank("geocode", `Census coordinates for ${site.name}`, [site.address], siteScope(site)); }
       catch (error) { blank("geocode", `Census coordinates for ${site.name}`, [String(error)], siteScope(site)); }
     }
-    if (!result.sites.length && !result.rules.length && door.publication?.status !== "NO_GENERAL_ELECTION") blank(door.publicationMessage ? "unpublished" : "missing-sites", door.publicationMessage ?? `Published ${door.covers.join(", ")} sites and hours`, result.attempts.map(a => `${a.url}: ${a.outcome}`));
+    if (!result.sites.length && !result.contacts?.length && !result.rules.length && door.publication?.status !== "NO_GENERAL_ELECTION") blank(door.publicationMessage ? "unpublished" : "missing-sites", door.publicationMessage ?? `Published ${door.covers.join(", ")} sites and hours`, result.attempts.map(a => `${a.url}: ${a.outcome}`));
     const publishedElectionDates = [...new Set(rows.flatMap(row => publishedElectionDatesIn(readValue(row, "election", door.extraction ?? {}))))];
     if (publishedElectionDates.length && publishedElectionDates.every(date => date < door.electionDate)) blank("earlier-election", "A newer election list; retain the official archive's currently published list", publishedElectionDates);
     const titleDates = publishedElectionDatesIn(result.fileTitle ?? "");
-    if (titleDates.length && titleDates.every(date => date < door.electionDate)) blank("earlier-election", "A newer election list; continue showing the file linked by the current official election page", [result.fileTitle ?? "", ...titleDates]);
+    const currentRows = result.sites.length > 0 && result.sites.every(site => site.electionDate === door.electionDate);
+    if (!currentRows && titleDates.length && titleDates.every(date => date < door.electionDate)) blank("earlier-election", "A newer election list; continue showing the file linked by the current official election page", [result.fileTitle ?? "", ...titleDates]);
     const years = [...(result.fileTitle ?? "").matchAll(/\b(20\d{2})\b/g)].map(m => Number(m[1]));
     if (years.length && Math.max(...years) < Number(door.electionDate.slice(0, 4))) blank("earlier-election", "A newer election list; continue showing the file linked by the current official election page", [result.fileTitle ?? ""]);
   } catch (error) { blank(readStage, `Published ${door.covers.join(", ")} sites and hours`, [...result.attempts.map(a => `${a.url}: ${a.outcome}`), String(error)]); }

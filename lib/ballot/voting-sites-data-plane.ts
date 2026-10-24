@@ -6,6 +6,7 @@ import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../c
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
+import type { VotingSourceDoor } from "./voting-source-types.ts";
 
 const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
 
@@ -15,9 +16,11 @@ export const votingSitesContract = (state: string) => ({
   recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", state), parserVersion: "official-voting-sites/4",
 } as const);
 
-/** One acquired source response, held as exact bytes outside the reader projection. */
+/** Source bytes or a traced sanitized official-link derivative, outside the reader projection. */
 export interface VotingRawCapture {
   readonly url: string;
+  /** The requested address when the publisher redirected to `url`. */
+  readonly requestedUrl?: string;
   readonly contentType: string;
   readonly rawHash: string;
   readonly byteLength: number;
@@ -25,6 +28,8 @@ export interface VotingRawCapture {
   readonly vaultKey?: string;
   /** The data plane deduplicates this document in its existing immutable payload parts. */
   readonly savedDocument?: { readonly encoding: "gzip-base64"; readonly body: string };
+  /** Saved official-link HTML may be the existing sanitizer's derivative. */
+  readonly derivation?: import("../control-plane/evidence/artifact.ts").ArtifactDerivation;
 }
 
 export interface VotingSiteAcquisitionFailure {
@@ -153,6 +158,8 @@ export function votingSitesCandidate(input: {
   readonly finalUrl: string;
   readonly retrievedAt: string;
   readonly carriedFromVersionId?: string | null;
+  /** Complete configured sections re-read from the saved acquisition in this candidate. */
+  readonly sourceReplacementDoors?: readonly VotingSourceDoor[];
 }): RoutineCandidate {
   const state = requireBallotState(input.state);
   const contract = votingSitesContract(state);
@@ -168,6 +175,22 @@ export function votingSitesCandidate(input: {
     const next = currentJurisdictions.get(row.ocdId);
     return next === row || next && normalizedHash(next) === normalizedHash(row);
   }).map(row => row.ocdId).sort() ?? [];
+  const removedSites = (input.prior?.jurisdictions ?? []).flatMap(previous => {
+    const ids = new Set(currentJurisdictions.get(previous.ocdId)?.sites.map(site => site.id));
+    return previous.sites.filter(site => !ids.has(site.id)).map(site => ({ jurisdiction: previous, site }));
+  });
+  const replacementDoors = input.sourceReplacementDoors ?? [];
+  const replacement = replacementDoors[0];
+  const sourceReplacement = removedSites.length && replacement && replacementDoors.every(door =>
+    door.scope.ocdId === replacement.scope.ocdId && door.electionDate === replacement.electionDate) &&
+    removedSites.every(row => row.jurisdiction.ocdId === replacement.scope.ocdId)
+    ? { jurisdictionId: replacement.scope.ocdId, electionDate: replacement.electionDate, doors: replacementDoors,
+      replaceSourceUrls: [...new Set(replacementDoors.flatMap(door => [door.url, ...(door.supersedes ?? [])]))] } : null;
+  const removalEvidence = sourceReplacement ? removedSites.map(({ jurisdiction, site }) => ({
+    key: `site:${jurisdiction.ocdId}:${site.id}`, code: "OFFICIAL_VOTING_SOURCE_REPLACED" as const,
+    jurisdictionId: jurisdiction.ocdId, electionDate: sourceReplacement.electionDate,
+    sourceUrls: [...new Set(site.sources?.length ? site.sources.map(source => source.url) : [jurisdiction.sourceUrl])],
+  })) : [];
   for (const previous of input.prior?.jurisdictions ?? []) {
     const next = currentJurisdictions.get(previous.ocdId);
     consumeStatePublicationRecord(previous, next ?? null);
@@ -175,7 +198,8 @@ export function votingSitesCandidate(input: {
     for (const site of previous.sites) consumeStatePublicationRecord(site, sites.get(site.id) ?? null);
   }
   const normalizedPayload = { projection: readModel, acquisition: input.acquisition,
-    carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds };
+    carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds,
+    ...(sourceReplacement ? { sourceReplacement } : {}) };
   const readModelHash = normalizedHash(readModel);
   return {
     id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${readModelHash}`).slice(0, 32)}`,
@@ -183,6 +207,7 @@ export function votingSitesCandidate(input: {
     recordClass: contract.recordClass,
     scope: contract.scope,
     sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
+    ...(removalEvidence.length ? { removalEvidence } : {}),
     retrieval: {
       succeeded: input.acquisition.length > 0 && input.successfulAuthorityReads > 0,
       requestedUrl: input.requestedUrl,

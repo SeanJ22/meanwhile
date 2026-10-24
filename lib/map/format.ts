@@ -262,14 +262,3 @@ export function formatRelativeDay(
 }
 
 export const formatMiles = (km: number) => Math.round(km * 0.621371);
-
-/**
- * Trim an OCD-ID to its last segment for display.
- * `ocd-division/country:us/state:az/place:tucson` → `place:tucson`
- */
-export function shortOcdId(ocdId: string | null): string {
-  // A division-less body has nothing to abbreviate; say so plainly.
-  if (ocdId === null) return "no census division";
-  const segments = ocdId.split("/");
-  return segments[segments.length - 1] ?? ocdId;
-}

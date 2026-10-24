@@ -160,18 +160,6 @@ export const IMMUTABLE_IDENTITY_FIELDS: readonly string[] = [
   "extraction",
 ];
 
-/** Attempt-scoped facts. Listed so the split is readable, not just the half that binds. */
-export const ATTEMPT_SCOPED_FIELDS: readonly string[] = [
-  "attemptId",
-  "methodRouteId",
-  "retrievedAt",
-  "httpStatus",
-  "permission",
-  "transport",
-  "canonicalUrl",
-  "retrievalUrl",
-];
-
 export interface MetaConflict {
   /** The field that disagreed. Always one of the named sets above. */
   readonly field: string;

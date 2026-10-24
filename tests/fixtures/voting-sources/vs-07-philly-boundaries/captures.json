@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=short_div_num%2Cdivision_num%2CCAST%28SUBSTRING%28division_num%2C1%2C2%29+AS+INTEGER%29+AS+ward%2CCAST%28SUBSTRING%28division_num%2C3%2C2%29+AS+INTEGER%29+AS+division&outSR=4326&returnGeometry=true&f=geojson",
+    "finalUrl": "https://services.arcgis.com/fLeGjb7u4uXqeF9q/arcgis/rest/services/Political_Divisions/FeatureServer/0/query?where=1%3D1&outFields=short_div_num%2Cdivision_num%2CCAST%28SUBSTRING%28division_num%2C1%2C2%29+AS+INTEGER%29+AS+ward%2CCAST%28SUBSTRING%28division_num%2C3%2C2%29+AS+INTEGER%29+AS+division&outSR=4326&returnGeometry=true&f=geojson",
+    "file": "political-divisions-normalized-all.geojson",
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "sha256": "e75ec33f8b0dbc3e69e62ef74d298e11519c23ed2cc0e49b40f8d892cd93200e",
+    "capturedAt": "2026-10-23T09:38:33.203Z",
+    "storage": "TRIMMED_EXCERPT",
+    "excerpt": {
+      "of": "584c0c517b97ff5739ae2863ed8b957b27c84e806d7f4c1ccea6749da70d1b23",
+      "bytes": 2594179,
+      "method": "Ward 2 divisions (the ward holding the native polling-facility point) of the native response"
+    }
+  }
+]

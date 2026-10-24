@@ -9,6 +9,7 @@ const stateFips = Object.fromEntries(Object.entries(FIPS_TO_STATE).map(([fips, i
 const object = (value: unknown): Row => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Row : {};
 function string(value: unknown): string | null { return typeof value === "string" && value.trim() && !["null", "None"].includes(value) ? value.trim() : typeof value === "number" ? String(value) : null; }
 function pick(row: Row, ...keys: string[]): string | null { for (const key of keys) { const value = string(row[key]); if (value !== null) return value; } return null; }
+function auditUei(value: string | null): string | null { return value === "GSA_MIGRATION" ? null : value; }
 function number(value: unknown): number | null { const text = string(value); if (text === null) return null; const n = Number(text.replace(/,/g, "")); return Number.isFinite(n) ? n : null; }
 function date(value: unknown): string | null { const text = string(value); if (!text) return null; const n = Date.parse(text); return Number.isFinite(n) ? new Date(n).toISOString() : null; }
 function truth(value: unknown): boolean | null { return value === true || ["Y", "Yes", "true", "1"].includes(String(value)) ? true : value === false || ["N", "No", "false", "0"].includes(String(value)) ? false : null; }
@@ -31,7 +32,7 @@ function* rows(body: string, source: FederalMoneySource): Generator<Row> {
 function identifiers(row: Row): Record<string, string> {
   const result: Record<string, string> = {};
   for (const [target, keys] of Object.entries({ uei: ["uei", "auditee_uei", "recipient_uei", "Recipient UEI"], nces_leaid: ["nces_id", "nces_leaid", "leaid"], geoid: ["geoid", "census_geoid"], ocd_id: ["ocd_id", "ocd_division_id"], duns: ["recipient_duns", "auditee_duns", "DUNS"], ein: ["auditee_ein", "EIN"] })) {
-    const value = pick(row, ...keys); if (value) result[target] = value;
+    const value = pick(row, ...keys); if (value && !(target === "uei" && auditUei(value) === null)) result[target] = value;
   }
   return result;
 }
@@ -87,7 +88,7 @@ function audit(capture: FederalMoneyCapture, state: string, row: Row): FederalMo
   if (!reportId) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Federal Audit Clearinghouse: a report has no source-native identifier.");
   const reference = pick(row, "reference_number", "finding_ref_number", "FINDINGSREFNUMS", "FINDINGREFNUMS");
   const awardReference = pick(row, "award_reference", "ELECAUDITSID");
-  const extraUei = pick(row, "additional_uei", "UEI");
+  const extraUei = auditUei(pick(row, "additional_uei", "UEI"));
   const sourceRowId = pick(row, "ELECAUDITFINDINGSID", "ELECAUDITFINDINGSTEXTID", "ELECCAPTEXTID", "ELECUEISID", "id");
   const sourceId = table === "general" ? reportId : [reportId, table, ...(sourceRowId ? [sourceRowId] : [reference, awardReference, extraUei])].filter(Boolean).join(":");
   const recipient = pick(row, "auditee_name", "AUDITEENAME");
@@ -95,7 +96,7 @@ function audit(capture: FederalMoneyCapture, state: string, row: Row): FederalMo
   const actualState = reportedState ? stateFips[reportedState] ? reportedState : "ZZ" : state;
   const year = pick(row, "audit_year", "AUDITYEAR");
   const type = table === "findings_text" ? "Audit finding" : table === "corrective_action_plans" ? "Corrective action plan" : table === "findings" ? "Audit finding" : table === "additional_ueis" ? "Additional audited entity" : "Federal single audit";
-  return fact("federal-audit-clearinghouse", capture, actualState, row, { sourceId, kind: "AUDIT", title: `${type}${reference ? ` ${reference}` : ""}${year ? `, ${year}` : ""}${recipient ? ` — ${recipient}` : ""}`, recipient, uei: extraUei ?? pick(row, "auditee_uei"), amount: table === "general" ? number(row.total_amount_expended ?? row.TOTFEDEXPEND) : null, amountLabel: table === "general" ? "Audited federal expenditures" : null, period: year, identifiers: { ...identifiers(row), reportId, ...(sourceRowId ? { sourceRowId } : {}), ...(reference ? { findingReference: reference } : {}), ...(awardReference ? { awardReference } : {}), ...(extraUei ? { uei: extraUei } : {}) },
+  return fact("federal-audit-clearinghouse", capture, actualState, row, { sourceId, kind: "AUDIT", title: `${type}${reference ? ` ${reference}` : ""}${year ? `, ${year}` : ""}${recipient ? ` — ${recipient}` : ""}`, recipient, uei: extraUei ?? auditUei(pick(row, "auditee_uei")), amount: table === "general" ? number(row.total_amount_expended ?? row.TOTFEDEXPEND) : null, amountLabel: table === "general" ? "Audited federal expenditures" : null, period: year, identifiers: { ...identifiers(row), reportId, ...(sourceRowId ? { sourceRowId } : {}), ...(reference ? { findingReference: reference } : {}), ...(awardReference ? { awardReference } : {}), ...(extraUei ? { uei: extraUei } : {}) },
     details: { table, reportedState, reference, awardReference, findingText: pick(row, "finding_text", "TEXT"), plannedAction: pick(row, "planned_action"), requirement: pick(row, "type_requirement", "TYPEREQUIREMENT"), materialWeakness: truth(row.is_material_weakness ?? row.is_internal_control_material_weakness_disclosed ?? row.MATERIALWEAKNESS), significantDeficiency: truth(row.is_significant_deficiency ?? row.is_internal_control_deficiency_disclosed ?? row.SIGNIFICANTDEFICIENCY), questionedCosts: truth(row.is_questioned_costs ?? row.QCOSTS), repeatFinding: truth(row.is_repeat_finding ?? row.REPEATFINDING), materialNoncompliance: truth(row.is_material_noncompliance_disclosed ?? row.MATERIALNONCOMPLIANCE), modifiedOpinion: truth(row.is_modified_opinion ?? row.MODIFIEDOPINION), otherMatters: truth(row.is_other_matters ?? row.OTHERNONCOMPLIANCE), lowRiskAuditee: truth(row.is_low_risk_auditee ?? row.LOWRISK), priorFindingReferences: pick(row, "prior_finding_ref_numbers", "PRIORFINDINGREFNUMS"), auditeeCity: pick(row, "auditee_city", "CITY") },
     provenance: { publicationDate: date(row.fac_accepted_date ?? row.FACACCEPTEDDATE ?? row.submitted_date) ?? capture.publicationDate } as FederalMoneyFact["provenance"] });
 }

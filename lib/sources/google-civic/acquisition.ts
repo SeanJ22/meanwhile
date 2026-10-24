@@ -1,4 +1,4 @@
-import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_CONTRACT_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
+import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import { civicElectionRows, civicLookupFromRaw, unavailableCivicLookup, type CivicLookup } from "./model.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-failure.ts";
@@ -116,6 +116,6 @@ export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<
   }
 }
 export async function recordCivicCatalogFailure(store: import("../../civic-data/store.ts").RoutineDataStore, reason: string, at: string) {
-  return recordRegisteredSourceAcquisitionFailure({ store, contractId: GOOGLE_CIVIC_CONTRACT_ID, attemptedAt: at,
+  return recordRegisteredSourceAcquisitionFailure({ store, contractId: GOOGLE_CIVIC_SOURCE_ID, attemptedAt: at,
     requestedUrl: `${GOOGLE_CIVIC_API}elections`, failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", reason) });
 }

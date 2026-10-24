@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import { repairScope } from "../lib/control-plane/workers/adapter-repair-scope.ts";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
@@ -235,7 +235,7 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
       put(work, "lib/sources/platform-adapters/shared.ts", `export const v = "${value}";\n`);
       put(work, `lib/sources/platform-adapters/${kind}.test.ts`, "// test\n");
       sh(work, ["add", "lib"]);
-      sh(work, ["commit", "--quiet", "-m", `READY: adapter ${kind} reusable source adapter`]);
+      sh(work, ["commit", "--quiet", "-m", `READY: adapter ${kind} reusable source adapter`, "-m", "Connected end to end and checked on the next scheduled run."]);
       const ready = sh(work, ["rev-parse", "HEAD"]);
       put(work, `.factory/adapter-${kind}.md`, adapterStatusRecord({ kind, readySha: ready, check: { ok: true, summary: "engineer check pass" }, runId: "engineer:x", now: new Date().toISOString(), reason: "why" }));
       sh(work, ["add", ".factory"]);
@@ -250,7 +250,7 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
     const plan = JSON.parse(river(checkout, "scan").out);
     assert.deepEqual(plan.ready_lanes, ["adapter-alpha", "adapter-beta"]);
     const alpha = plan.lanes.find((lane: { lane: string }) => lane.lane === "adapter-alpha");
-    assert.deepEqual(alpha.ready, { ready_sha: alphaReady, steps: ["adapter-alpha"], wip_after_ready: 1 }, "the stream is the step");
+    assert.deepEqual(alpha.ready, { ready_sha: alphaReady, steps: ["adapter-alpha"], wip_after_ready: 1, missing_proofs: [] }, "the stream is the step");
     assert.equal(alpha.status.worker, "adapter engineer");
     assert.equal(alpha.status.ready, `adapter-alpha ${alphaReady}`);
     assert.deepEqual(alpha.outside_adapter_path, []);

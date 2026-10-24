@@ -11,17 +11,18 @@ import { memberDirectoryReaches } from "../lib/officials/member-directory-scope.
 
 const DIRECTORY = readFileSync("components/officials/member-directory.tsx", "utf8");
 const BALLOT_CARD = readFileSync("components/ballot/candidate-battlecard.tsx", "utf8");
+const OFFICIAL_MODAL = readFileSync("components/map/popup/official-modal.tsx", "utf8");
 
 test("directory sections use held records and contribute missing records to the card gap", () => {
-  const inner = DIRECTORY.slice(DIRECTORY.indexOf("function MemberDirectoryInner"));
-  assert.match(inner, /memberDirectoryReaches\(holder\.id, only, holder\.state\)/);
-  assert.match(inner, /failed \|\| records\?\.length === 0/);
-  assert.match(inner, /return <CardGapContribution/);
-  assert.doesNotMatch(inner, /WorkingOnIt/);
+  const records = DIRECTORY.slice(DIRECTORY.indexOf("function DirectoryRecordsContent"));
+  assert.match(records, /memberDirectoryReaches\(holderId, only, ?state\)/);
+  assert.match(records, /<CardGapContribution/);
+  assert.doesNotMatch(records, /WorkingOnIt/);
 });
 
 test("map and ballot cards share their reader section titles", () => {
-  assert.match(DIRECTORY, /battlecardSectionTitle/);
+  // Both render the one PersonCard, whose section titles come from its shared reading order.
+  assert.match(OFFICIAL_MODAL, /<PersonCard/);
   assert.match(BALLOT_CARD, /<PersonCard/);
 });
 

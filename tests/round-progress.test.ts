@@ -11,6 +11,9 @@ import { CENSUS_LANE_BUDGET_MS } from "../lib/control-plane/discovery/census-lan
 
 const progressModule = JSON.stringify(new URL("../lib/control-plane/scheduler/round-progress.ts", import.meta.url).href);
 const stallModule = JSON.stringify(new URL("../lib/control-plane/scheduler/cycle-stall.ts", import.meta.url).href);
+// Cold child imports can exceed 400 ms under suite load. The 3-second wave still outlasts this guard,
+// so the reporting case must keep renewing it and the silent case must be ended before completion.
+const WAVE_QUIET_MS = 2_000;
 
 const waveChild = (report: boolean) => `
   import { roundProgressReporter } from ${progressModule};
@@ -21,13 +24,13 @@ const waveChild = (report: boolean) => `
     finished++;
     ${report ? "progress.note('worker wave');" : ""}
     if (finished === 24) { clearInterval(wave); console.log('worker fleet: 24 finished'); process.disconnect(); }
-  }, 50);
+  }, 125);
 `;
 
 test("a worker wave that finishes tasks silently for longer than the quiet allowance is ended (the live failure)", async () => {
   const [result] = await runRuntimeChildren([{ id: "research-cycle", executable: process.execPath,
     args: ["--experimental-strip-types", "--input-type=module", "-e", waveChild(false)] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 400 });
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: WAVE_QUIET_MS });
   assert.equal(result!.termination, "TIMED_OUT");
   assert.match(result!.errorMessage!, /RESEARCH_CHILD_NO_PROGRESS/);
   assert.doesNotMatch(result!.stdout, /worker fleet: 24 finished/);
@@ -36,7 +39,7 @@ test("a worker wave that finishes tasks silently for longer than the quiet allow
 test("the same wave reporting its finished tasks completes the round", async () => {
   const [result] = await runRuntimeChildren([{ id: "research-cycle", executable: process.execPath,
     args: ["--experimental-strip-types", "--input-type=module", "-e", waveChild(true)] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 400 });
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: WAVE_QUIET_MS });
   assert.equal(result!.termination, "EXITED");
   assert.equal(result!.status, 0);
   assert.match(result!.stdout, /round progress: worker wave \d+ finished/);

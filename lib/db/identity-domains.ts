@@ -59,6 +59,21 @@ const nonIdentifying = (...names: string[]): Record<string, ColumnDomain> =>
 
 /** Every table, every column. */
 export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
+  saved_ballot_picks: {
+    storeClass: "READER_COLLECTION",
+    columns: {
+      secret_hash: {
+        space: "DIGEST",
+        digestSpace: "private-ballot:",
+        why: "The digest of the reader's private picks link; the link itself is never stored.",
+      },
+      ...nonIdentifying("revision"),
+      file: {
+        space: "NON_IDENTIFYING",
+        why: "The reader's picks by contest and choice id; no contact, ZIP, account or event identity.",
+      },
+    },
+  },
   search_log: {
     storeClass: "READER_COLLECTION",
     columns: {

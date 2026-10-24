@@ -34,6 +34,12 @@ const GATES = [
     why: "a fresh-checkout type check, never behind a build",
   },
   {
+    id: "dead-code",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm exec knip --no-progress --no-config-hints",
+    why: "replaced code is deleted in the same change: no file nothing imports, no export nothing uses",
+  },
+  {
     id: "assert:browser",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm run assert:browser",

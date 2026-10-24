@@ -1011,14 +1011,3 @@ export async function persistDebts(
     clearedAsRetired: operations.filter(operation => operation.kind === "RETIRED").map(operation => operation.obligationId),
   };
 }
-
-export async function dueByStoredTime(
-  repos: ControlPlaneRepositories,
-  nowIso: string,
-): Promise<readonly StandingObligation[]> {
-  const rows = await repos.obligations.list();
-  return rows
-    .map((r) => r.value)
-    .filter((o) => o.active && o.nextDueAt !== null && o.nextDueAt <= nowIso)
-    .sort((a, b) => ((a.nextDueAt ?? "") < (b.nextDueAt ?? "") ? -1 : 1));
-}

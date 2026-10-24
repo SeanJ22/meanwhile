@@ -10,6 +10,7 @@ import {
   type ManualProductionSourceContract,
 } from "../lib/civic-data/manual-contracts.ts";
 import { civicDataFirewall } from "../lib/civic-data/firewall.ts";
+import { operationalStatePath } from "../lib/ops/operational-state-path.ts";
 import { temporaryPath } from "../lib/civic-data/temporary-path.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 
@@ -83,6 +84,10 @@ test("temporary destinations reject repository paths, traversal and symlink esca
     assert.throws(() => temporaryPath(join(process.cwd(), "data", "live.json")), /temporary|repository/);
     assert.throws(() => temporaryPath(join(root, "..", "..", "etc", "unsafe")), /temporary/);
     symlinkSync(process.cwd(), join(root, "escaped"), "dir");
+    assert.equal(operationalStatePath(join(root, "memory.json")), join(root, "memory.json"));
+    assert.throws(() => operationalStatePath(join(process.cwd(), "data", "memory.json")), /OUTSIDE|REPOSITORY/);
+    assert.throws(() => operationalStatePath(join(root, "escaped", "memory.json")), /OUTSIDE|REPOSITORY/);
+    assert.throws(() => operationalStatePath("/etc/meanwhile-memory.json"), /OUTSIDE/);
     assert.throws(() => temporaryPath(join(root, "escaped", "data", "not-created.json")), /temporary|repository/);
     const store = new LocalFileArtifactStore(root);
     await assert.rejects(store.writeJsonPointer("../escaped.json", {}, null), /escaped/);
@@ -95,6 +100,20 @@ test("temporary destinations reject repository paths, traversal and symlink esca
   } finally {
     if (previous === undefined) delete process.env.TMPDIR; else process.env.TMPDIR = previous;
     rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("persistent host metadata requires the complete confinement check", () => {
+  const files = minimalFiles();
+  const command = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
+  const original = readFileSync(new URL("../lib/ops/operational-state-path.ts", import.meta.url), "utf8");
+  files["lib/host-path.ts"] = original;
+  files[command] = 'import { operationalStatePath } from "../lib/host-path.ts"; import { writeFile } from "node:fs/promises"; await writeFile(operationalStatePath(destination), bytes);';
+  assert.deepEqual(audit(files), []);
+  for (const changed of [original.replace('"/var/lib/meanwhile"', '"/workspace"'),
+    original.replace("parent.startsWith(persistent + sep)", "true"), original.replace("target.startsWith(repository + sep)", "false")]) {
+    files["lib/host-path.ts"] = changed;
+    assert.ok(audit(files).some(row => row.code === "ROUTINE_PATH_WRITES_REPOSITORY"));
   }
 });
 

@@ -573,7 +573,7 @@ class StaleState extends Error {}
 
 interface Loaded {
   readonly totals: Persisted<StateTotals> | null;
-  readonly snapshot: Persisted<OwnerSnapshotState> | null;
+  readonly snapshot: Persisted<Pick<OwnerSnapshotState, "builtAt" | "allRowsIndex" | "bodyAttempts">> | null;
   readonly groups: Set<string>;
   readonly lists: Map<string, TimedList>;
   places: Record<string, PlaceTotals>;
@@ -1043,7 +1043,9 @@ export class OwnerSnapshotFold {
 
   async #load(state: string): Promise<void> {
     if (this.#loaded.has(state)) return;
-    const [totals, snapshot] = await Promise.all([this.#repos.ownerSnapshotStateTotals.read(stateTotalsId(state)), this.#repos.ownerSnapshotStates.read(ownerSnapshotStateId(state))]);
+    const [totals, snapshot] = await Promise.all([this.#repos.ownerSnapshotStateTotals.read(stateTotalsId(state)),
+      this.#repos.ownerSnapshotStates.readNarrowed(ownerSnapshotStateId(state), { builtAt: true, allRowsIndex: true, bodyAttempts: true })
+        .then(row => row as Loaded["snapshot"])]);
     const part = this.#states[state];
     const carried = part !== undefined && (!this.#rebuild || this.#written.has(state));
     if (carried && (totals?.value.builtAt !== part.builtAt || snapshot?.value.builtAt !== part.builtAt)) {

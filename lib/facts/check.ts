@@ -78,6 +78,9 @@ function ownSite(url: string, site: string): boolean {
   // A registered CivicClerk API and its public portal are the same tenant's publication.
   const civicClerk = /^([a-z0-9-]+)\.api\.civicclerk\.com(?:\/v1(?:\/.*)?)?$/i.exec(site);
   if (civicClerk && host === `${civicClerk[1]!.toLowerCase()}.portal.civicclerk.com`) return true;
+  const legistar = /^webapi\.legistar\.com\/v1\/([a-z0-9_-]+)(?:\/.*)?$/i.exec(site)
+    ?? /^([a-z0-9_-]+)\.legistar\.com(?:\/.*)?$/i.exec(site);
+  if (legistar && ["legistar.com", "legistar1.com"].some(domain => host === `${legistar[1]!.toLowerCase()}.${domain}`)) return true;
   if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
   const { pathname } = new URL(url);
   const at = `${host}${pathname}`.toLowerCase(), own = site.toLowerCase();

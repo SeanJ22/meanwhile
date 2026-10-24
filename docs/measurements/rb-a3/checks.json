@@ -1,23 +1,23 @@
 {
-  "observedAt": "2026-10-24T14:48:15.410950+00:00",
-  "commit": "8649ec05076bfa80b6efd44f1c7108126f7c29e9",
+  "observedAt": "2026-10-24T18:45:50.942508+00:00",
+  "commit": "3d483f027",
   "node": "v24.19.0",
   "preflight": "PASS",
   "gates": [
     {
       "id": "lint",
       "status": "PASS",
-      "seconds": 63
+      "seconds": 95
     },
     {
       "id": "tsc",
       "status": "PASS",
-      "seconds": 55
+      "seconds": 84
     },
     {
       "id": "dead-code",
       "status": "PASS",
-      "seconds": 5
+      "seconds": 7
     },
     {
       "id": "assert:browser",
@@ -27,7 +27,7 @@
     {
       "id": "test",
       "status": "PASS",
-      "seconds": 1593
+      "seconds": 1800
     },
     {
       "id": "db:gate",
@@ -37,7 +37,7 @@
     {
       "id": "build",
       "status": "PASS",
-      "seconds": 19
+      "seconds": 73
     },
     {
       "id": "test:bundle",
@@ -47,20 +47,14 @@
     {
       "id": "build:standalone",
       "status": "PASS",
-      "seconds": 32
+      "seconds": 18
     }
   ],
-  "tests": {
-    "tests": 9660,
+  "suite": {
+    "registered": 9806,
+    "passed": 9804,
     "failed": 0,
-    "passed": 9658,
-    "cancelled": 0,
-    "skipped": 2,
-    "todo": 0,
-    "topLevel": 9518,
-    "suites": 42
+    "skipped": 2
   },
-  "testFiles": 1349,
-  "timingComplete": true,
-  "databaseAccess": "specified production reader readonly role; no migrations executed"
+  "note": "Full combined implementation after the RB-A1 fold and River contract-budget update. Copy-adapter refinements have separate static checks."
 }

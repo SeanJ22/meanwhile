@@ -1,6 +1,6 @@
 {
-  "observedAt": "2026-10-24T14:14:45.285Z",
-  "clockStart": "2026-10-24T14:12:44.887Z",
+  "observedAt": "2026-10-24T18:05:46.731Z",
+  "clockStart": "2026-10-24T18:03:46.086Z",
   "official": {
     "decision": "PUBLISH",
     "factId": 2017
@@ -14,9 +14,9 @@
     "intervalMs": 60000,
     "mode": "wall-clock timer",
     "startedAt": [
-      "2026-10-24T14:12:44.908Z",
-      "2026-10-24T14:13:45.055Z",
-      "2026-10-24T14:14:45.222Z"
+      "2026-10-24T18:03:46.110Z",
+      "2026-10-24T18:04:46.144Z",
+      "2026-10-24T18:05:46.392Z"
     ],
     "passes": [
       {
@@ -108,13 +108,13 @@
   "counts": [
     {
       "state": "AZ",
-      "hour": "2026-10-24T14:00:00.000Z",
+      "hour": "2026-10-24T18:00:00.000Z",
       "step": "door_checked",
       "n": 1
     },
     {
       "state": "AZ",
-      "hour": "2026-10-24T14:00:00.000Z",
+      "hour": "2026-10-24T18:00:00.000Z",
       "step": "door_official",
       "n": 1
     }
@@ -129,47 +129,5 @@
     {
       "place_id": "ocd-division/country:us/state:az/place:mesa"
     }
-  ],
-  "chrome": {
-    "productionBaseline": {
-      "at": "2026-10-24T11:26:51.798Z",
-      "url": "https://meanwhileusa.com/?zip=85201",
-      "status": 200,
-      "bodies": 33,
-      "meetings": 36,
-      "officials": 27
-    },
-    "currentReaderWithCopiedFacts": {
-      "status": 200,
-      "addressVisible": true,
-      "governmentSourceVisible": true,
-      "pageErrors": [],
-      "observedAt": "2026-10-24T14:18:13Z"
-    },
-    "updatedLocalReader": {
-      "status": 200,
-      "bothSourcesLinked": true,
-      "officials": 27,
-      "mode": "production standalone build",
-      "observedAt": "2026-10-24T14:18:13Z"
-    },
-    "localAdmin": {
-      "rows": 57,
-      "AZ": {
-        "official": 1,
-        "checked": 1
-      },
-      "hour": "2026-10-24T14:00:00.000Z",
-      "mode": "production standalone build",
-      "observedAt": "2026-10-24T14:18:13Z"
-    }
-  },
-  "code": "8649ec050",
-  "canonicalIdCompatibility": {
-    "copy": "approved Alabama production snapshot",
-    "withIdentitySql": true,
-    "beforeIdentitySql": true,
-    "productionWrites": 0,
-    "observedAt": "2026-10-24T15:17:29Z"
-  }
+  ]
 }

@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-10-24T18:20:11Z",
+  "database": "tiny-hill-13996172/br-delicate-lab-ax02xuo5",
+  "role": "readonly",
+  "rows": [
+    {
+      "family": "ask_interactions",
+      "rows": 1,
+      "distinct_ids": 1,
+      "resolved_rows": 1
+    },
+    {
+      "family": "demand_signals",
+      "rows": 3,
+      "distinct_ids": 3,
+      "resolved_rows": 3
+    },
+    {
+      "family": "reactions",
+      "rows": 56,
+      "distinct_ids": 33,
+      "resolved_rows": 56
+    }
+  ],
+  "speak_your_mind": 0,
+  "distinctTargetIds": 36
+}

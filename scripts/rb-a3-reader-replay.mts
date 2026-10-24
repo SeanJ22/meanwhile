@@ -9,9 +9,10 @@ import { isOfficialUrl } from "../lib/facts/check.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { canonicalJson } from "../lib/control-plane/repository/types.ts";
-import { pageCopy } from "../lib/facts/source-copy.ts";
+import { pageCopy, jsonValues } from "../lib/facts/source-copy.ts";
+import { parse as parseYaml } from "yaml";
 import { openFactCopy, replayCopiedFacts, type FactSnapshot } from "./rb-a3-copy.mts";
-import { bindHeldApiSources, type ReaderSample, type HeldApiDoor } from "./rb-a3-reader-sample.mts";
+import { bindReaderSources, readerReplayField, type ReaderSample, type HeldApiDoor, type MeetingSourceHosts } from "./rb-a3-reader-sample.mts";
 
 const directory = resolve(process.argv[2] ?? ".scratch/rb-a3/snapshots");
 const states = process.argv[4] ? [process.argv[4]] : Object.values(FIPS_TO_STATE).map(s => s.postal).sort();
@@ -20,11 +21,16 @@ const digest = (v: unknown) => createHash("sha256").update(canonicalJson(v)).dig
 for (const state of states) {
   const snapshot = JSON.parse(readFileSync(resolve(directory, `${state}.json`), "utf8")) as FactSnapshot;
   const sample = JSON.parse(readFileSync(resolve(directory, "reader", `${state}.json`), "utf8")) as ReaderSample;
-  bindHeldApiSources(sample, JSON.parse(readFileSync(resolve(directory, "reader", "held-api-doors.json"), "utf8")) as HeldApiDoor[]);
+  bindReaderSources(sample, JSON.parse(readFileSync(resolve(directory, "reader", "held-api-doors.json"), "utf8")) as HeldApiDoor[],
+    JSON.parse(readFileSync(resolve(directory, "reader", "meeting-source-hosts.json"), "utf8")) as MeetingSourceHosts[],
+    JSON.parse(readFileSync(resolve(directory, "reader", "legistar-tenants.json"), "utf8")) as string[]);
   const merged = { ...snapshot };
   for (const key of ["entities", "hosts", "externalIds", "places"] as const) {
     const rows = [...snapshot[key] ?? [], ...(sample.context?.[key] ?? []) as Record<string, unknown>[]];
-    (merged as unknown as Record<string, unknown>)[key] = [...new Map(rows.map(row => [key === "entities" ? String(row.id) : canonicalJson(row), row])).values()];
+    const keyOf = (row: Record<string, unknown>) => key === "entities" ? String(row.id)
+      : canonicalJson(key === "places" ? [row.entity_id, row.place_id, row.boundary_year ?? 0]
+        : key === "hosts" ? [row.entity_id, row.host] : [row.entity_id, row.scheme, row.value]);
+    (merged as unknown as Record<string, unknown>)[key] = [...new Map(rows.map(row => [keyOf(row), row])).values()];
   }
   const db = await openFactCopy(merged);
   const beforeSample = digest(sample), failures: unknown[] = [];
@@ -38,8 +44,8 @@ for (const state of states) {
       if (!await resolveId(value.subjectId, db.query)) await db.query(
         "INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING",
         [value.subjectId, value.subjectKind, value.subjectName, state, value.parentId ?? null]);
-      if (value.heldApiHost) await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,$2) ON CONFLICT DO NOTHING",
-        [await resolveId(value.subjectId, db.query), value.heldApiHost]);
+      if (value.registeredSourceHost) await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,$2) ON CONFLICT DO NOTHING",
+        [await resolveId(value.subjectId, db.query), value.registeredSourceHost]);
     }
     const baseline = await db.query("SELECT id,value,status FROM fact ORDER BY id");
     const identityState = () => db.query(`SELECT jsonb_build_object('entities',(SELECT jsonb_agg(e ORDER BY id) FROM entity e),
@@ -56,8 +62,8 @@ for (const state of states) {
       const text = official ? "" : readFileSync(resolve(directory, "reader", savedCopy.file), "utf8");
       if (!official) assert.equal(createHash("sha256").update(text).digest("hex"), savedCopy.sha256);
       const observedAt = new Date(official ? value.observedAt : savedCopy.observedAt).toISOString();
-      const key = `reader:${value.recordClass}:${value.field}`;
-      const sha = digest({ pointer: value.pointer, version: value.version, record: value.sourceRecord });
+      const key = readerReplayField(value);
+      const sha = digest({ pointer: value.pointer, version: value.version, sourceUrl: value.sourceUrl, record: value.sourceRecord });
       const [source] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key,is_archive)
         VALUES($1,$1,$2,$3,$4,false) ON CONFLICT(blob_key) DO UPDATE SET blob_key=EXCLUDED.blob_key RETURNING id`,
       [value.sourceUrl, observedAt, official ? sha : savedCopy.sha256, `local-published-reader-copy:${sha}`]);
@@ -69,12 +75,16 @@ for (const state of states) {
         : value.recordClass === "MEETING" || value.recordClass === "MEETING_OUTCOME" ? "meeting" as const
         : value.recordClass === "FEDERAL_MONEY" ? "money" as const
         : value.recordClass === "BALLOT_CANDIDACY" ? "ballot" as const : "contact" as const;
+      const interpreted = pageCopy({ finalUrl: value.sourceUrl, body: text, contentType: "", fetchedAt: observedAt });
+      // The live Open States adapter uses this same YAML decoder; escaped scalars remain values on the saved source.
+      const checkedText = !official && /\.ya?ml$/i.test(new URL(value.sourceUrl).pathname)
+        ? `${interpreted.text}\n${jsonValues(parseYaml(text)).join("\n")}` : interpreted.text;
       const input = { subjectId: value.subjectId, field: key, fieldKind,
         value: value.value, valueText: typeof value.value === "string" ? value.value : canonicalJson(value.value),
         quote: official ? "" : typeof value.value === "string" ? value.value : canonicalJson(value.value),
         provenance: official ? "OFFICIAL" as const : "REFERENCE" as const, acquisition: official ? "loader" as const : "walker" as const,
         producedBy: "rb-a3-published-reader-replay", costUsd: 0,
-        copy: { ...pageCopy({ finalUrl: value.sourceUrl, body: text, contentType: "", fetchedAt: observedAt }), id: Number(source!.id) },
+        copy: { ...interpreted, text: checkedText, id: Number(source!.id) },
         sourceField: { record: sourceRecord, key: sourceKey } };
       const claim: DoorInput = value.linkingPage ? { ...input, linkingPage: { url: value.linkingPage.url,
         html: readFileSync(resolve(directory, "reader", value.linkingPage.file), "utf8") } } : input;

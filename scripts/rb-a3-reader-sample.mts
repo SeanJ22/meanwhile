@@ -6,7 +6,8 @@ import { selectedPointerSql } from "../lib/reader/selected-entry.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { isOfficialUrl } from "../lib/facts/check.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
-import { pageLinksSource } from "../lib/civic-data/source-authority.ts";
+import { pageLinksSource, isOfficialSource, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
+import { decide } from "../lib/core/door.ts";
 
 type Row = Record<string, unknown>;
 interface Family { recordClass: string; path: string[]; kind: string; fields: string[] }
@@ -34,21 +35,61 @@ export interface ReaderSampleValue {
   subjectId: string; subjectKind: string; subjectName: string; field: string; value: unknown;
   sourceUrl: string; observedAt: string; sourceRecord: Row; sourcePath: string; hosts?: string[]; parentId?: string;
   linkingPage?: { url: string; file: string };
-  heldApiHost?: string;
+  registeredSourceHost?: string;
   sourceBodyId?: string;
+  canonicalId?: string;
 }
 export interface ReaderSample { state: string; capturedAt: string; values: ReaderSampleValue[]; families: Row[];
   copies: Record<string, { file: string; observedAt: string; sha256: string }>; context?: Row; copyFailures?: Row[] }
 
 export interface HeldApiDoor { body_ids: string[]; api_base: string; portal_base: string | null }
-export function bindHeldApiSources(sample: Pick<ReaderSample, "values">, sourceDoors: readonly HeldApiDoor[]): void {
+export interface MeetingSourceHosts { body_ids: string[]; kind: string; hosts: string[] }
+/** Ballot-line facts retain their candidacy context when an existing reaction id resolves to a person. */
+export const readerReplayField = (value: ReaderSampleValue): string =>
+  `reader:${value.recordClass}:${value.recordClass === "BALLOT_CANDIDACY" ? `${value.subjectId}:` : ""}${value.field}`;
+
+export function bindReaderSources(sample: Pick<ReaderSample, "values">, sourceDoors: readonly HeldApiDoor[], meetingSources: readonly MeetingSourceHosts[] = [], legistarTenants: readonly string[] = []): void {
+  const offices = JSON.parse(readFileSync(new URL("../data/reference/voting-source-doors.json", import.meta.url), "utf8")) as {
+    id: string; url: string; officialLinkingPage?: OfficialLinkingPage; candidateListUrls?: string[];
+  }[];
   for (const value of sample.values) {
     const body = /:body:([^:]+)/.exec(value.pointer)?.[1];
     value.sourceBodyId = typeof value.sourceRecord.bodyId === "string" ? value.sourceRecord.bodyId : body ? decodeURIComponent(body) : undefined;
+    const fieldSource = at(value.sourceRecord, `fieldSources.${value.field}`) ?? at(value.sourceRecord, `contactProvenance.${value.field}`);
+    if (fieldSource && typeof fieldSource === "object") {
+      const source = fieldSource as Row;
+      if (typeof source.sourceUrl === "string" && URL.canParse(source.sourceUrl)) value.sourceUrl = source.sourceUrl;
+      const observed = source.collectedAt ?? source.retrievedAt;
+      if (typeof observed === "string" && Number.isFinite(Date.parse(observed))) value.observedAt = new Date(observed).toISOString();
+    }
     const sourceDoor = sourceDoors.find(d => d.portal_base && new URL(d.portal_base).hostname === new URL(value.sourceUrl).hostname);
     if (sourceDoor) {
-      value.heldApiHost = `${new URL(sourceDoor.api_base).hostname}/v1`;
-      value.hosts = [...new Set([...value.hosts ?? [], value.heldApiHost])];
+      value.registeredSourceHost = `${new URL(sourceDoor.api_base).hostname}/v1`;
+      value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
+    }
+    if (value.recordClass === "BALLOT_CANDIDACY") {
+      const office = offices.find(o => (o.candidateListUrls?.includes(value.sourceUrl)
+        || isOfficialUrl(value.sourceUrl, [new URL(o.url).hostname.replace(/^www\./, "")]))
+        && isOfficialSource(o.url, o.officialLinkingPage));
+      if (office) {
+        // The held government directory names this exact official candidate-list URL, including its delivery aliases.
+        value.registeredSourceHost = new URL(value.sourceUrl).hostname;
+        value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
+      }
+    }
+    if (value.sourceBodyId && meetingSources.some(source => source.body_ids.includes(value.sourceBodyId!)
+      && isOfficialUrl(value.sourceUrl, source.hosts))) {
+      const source = new URL(value.sourceUrl);
+      value.registeredSourceHost = `${source.hostname}${source.pathname}`;
+      value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
+    }
+    const source = new URL(value.sourceUrl);
+    const legistarTenant = /^([^.]+)\.legistar(?:1)?\.com$/i.exec(source.hostname)?.[1];
+    if (legistarTenant && (legistarTenants.includes(legistarTenant)
+      || meetingSources.some(door => door.hosts.includes(`${legistarTenant}.legistar.com`)))) {
+      // A registered government's dedicated portal serves its API's document links across its boards.
+      value.registeredSourceHost = `${source.hostname}${source.pathname}`;
+      value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
     }
   }
 }
@@ -63,6 +104,9 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
   const [connection] = await query("SELECT current_user AS role,current_setting('transaction_read_only') AS read_only", []);
   if (connection.role !== "readonly" || connection.read_only !== "on") throw Error("The production connection must be read-only");
   mkdirSync(directory, { recursive: true, mode: 0o700 });
+  const sourceDoors = JSON.parse(readFileSync(resolve(directory, "held-api-doors.json"), "utf8")) as HeldApiDoor[];
+  const meetingSources = JSON.parse(readFileSync(resolve(directory, "meeting-source-hosts.json"), "utf8")) as MeetingSourceHosts[];
+  const legistarTenants = JSON.parse(readFileSync(resolve(directory, "legistar-tenants.json"), "utf8")) as string[];
   const delegationCache = new Map<string, ReaderSampleValue["linkingPage"]>();
   const delegation = async (value: ReaderSampleValue): Promise<ReaderSampleValue["linkingPage"]> => {
     if (!/civicclerk|legistar|boarddocs|boardbook|primegov|novus|granicus/i.test(new URL(value.sourceUrl).hostname)) return;
@@ -102,7 +146,7 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
     const factCount = Math.min(100, old.facts?.length ?? 0), limit = 1_000 - factCount;
     for (const family of families) {
       // Leave room for each family rather than allowing the first large directory to fill the sample.
-      const familyLimit = family.recordClass === "REGISTRATION" ? 250 : 80;
+      const familyLimit = family.recordClass === "REGISTRATION" ? 250 : family.recordClass === "FEDERAL_MONEY" ? 500 : 80;
       const members = family.recordClass === "BALLOT_CANDIDACY"
         ? `jsonb_each(reader_payload_node(${nodePath(["ballots"])})) ballot,LATERAL reader_payload_members(reader_payload_node(ballot.value)->'candidacies') row`
         : `reader_payload_members(${nodePath(family.path)}) row`;
@@ -136,12 +180,26 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
       inventory.push({ recordClass: family.recordClass, path: family.path, selectedRecords: rows.length, availableInSlice: bucket.length,
         bounded: rows.length === familyLimit });
     }
-    for (let position = 0; values.length < limit && buckets.some(bucket => bucket.length > position); position++)
-      for (const bucket of buckets) if (bucket[position] && values.length < limit) values.push(bucket[position]);
-    for (const value of values) {
-      const body = /:body:([^:]+)/.exec(value.pointer)?.[1];
-      value.sourceBodyId = typeof value.sourceRecord.bodyId === "string" ? value.sourceRecord.bodyId : body ? decodeURIComponent(body) : undefined;
+    const candidates = buckets.flat();
+    bindReaderSources({ values: candidates }, sourceDoors, meetingSources, legistarTenants);
+    const canonicalRows = await query(`SELECT requested,coalesce((SELECT e.id FROM entity e WHERE e.id=requested),
+      reader_resolve_id(requested),requested) AS canonical FROM unnest($1::text[]) ids(requested)`,
+    [[...new Set(candidates.map(value => value.subjectId))]]);
+    const canonical = new Map(canonicalRows.map(row => [String(row.requested), String(row.canonical)]));
+    const unique = new Map<string, ReaderSampleValue>();
+    const official = (value: ReaderSampleValue) => isOfficialUrl(value.sourceUrl, value.hosts ?? []) || isSourceApiUrl(value.sourceUrl);
+    const side = (value: ReaderSampleValue) => ({ value: value.value, provenance: official(value) ? "OFFICIAL" as const : "REFERENCE" as const,
+      fetchedAt: new Date(value.observedAt) });
+    const keyOf = (value: ReaderSampleValue) => JSON.stringify([value.canonicalId, readerReplayField(value)]);
+    for (const candidate of candidates) {
+      candidate.canonicalId = canonical.get(candidate.subjectId)!;
+      const key = keyOf(candidate), held = unique.get(key);
+      if (!held || decide(side(held), side(candidate)) === "PUBLISH"
+        || JSON.stringify(held.value) === JSON.stringify(candidate.value) && official(candidate) && !official(held)) unique.set(key, candidate);
     }
+    const selected = buckets.map(bucket => bucket.filter(candidate => unique.get(keyOf(candidate)) === candidate));
+    for (let position = 0; values.length < limit && selected.some(bucket => bucket.length > position); position++)
+      for (const bucket of selected) if (bucket[position] && values.length < limit) values.push(bucket[position]);
     const seeds = [...new Set(values.flatMap(v => [v.subjectId, v.sourceBodyId, v.sourceRecord.governmentId, ...Array.isArray(v.sourceRecord.aliases) ? v.sourceRecord.aliases : []]).filter((v): v is string => typeof v === "string"))];
     const [contextRow] = await query(`WITH RECURSIVE seeds AS (SELECT unnest($1::text[]) id),
       anchors AS (SELECT e.id FROM entity e WHERE e.id IN(SELECT id FROM seeds)
@@ -154,7 +212,6 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
         'externalIds',(SELECT jsonb_agg(x) FROM entity_external_id x WHERE entity_id IN(SELECT id FROM ancestors)),
         'places',(SELECT jsonb_agg(p) FROM entity_place p WHERE entity_id IN(SELECT id FROM ancestors) AND place_id IN(SELECT id FROM ancestors))) AS context`, [seeds]);
     const context = contextRow.context as Row;
-    const sourceDoors = JSON.parse(readFileSync(resolve(directory, "held-api-doors.json"), "utf8")) as HeldApiDoor[];
     const entities = new Map(((context.entities ?? []) as Row[]).map(e => [String(e.id), e]));
     const aliases = (context.externalIds ?? []) as Row[], hosts = (context.hosts ?? []) as Row[];
     for (const value of values) {
@@ -170,7 +227,7 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
         entity = entities.get(String(entity.parent_id));
       }
     }
-    bindHeldApiSources({ values }, sourceDoors);
+    bindReaderSources({ values }, sourceDoors, meetingSources, legistarTenants);
     const copies: ReaderSample["copies"] = {}, copyFailures: Row[] = [];
     writeFileSync(resolve(directory, `${state}.json`), JSON.stringify({ state, capturedAt: new Date().toISOString(), values, families: inventory, copies, context }), { mode: 0o600 });
     mkdirSync(resolve(directory, "pages"), { recursive: true, mode: 0o700 });

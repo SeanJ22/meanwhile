@@ -140,6 +140,20 @@ test("a registered government API and its portal keep the same CivicClerk tenant
   } finally { await db.pg.close(); }
 });
 
+test("a registered Legistar API keeps its tenant's portal and document delivery host official", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'webapi.legistar.com/v1/example')", [input().entity.id]);
+    for (const [index, url] of ["https://example.legistar.com/MeetingDetail.aspx?ID=1", "https://example.legistar1.com/example/meetings/2026/agenda.pdf"].entries()) {
+      const result = await door(db, input({ field: `document_${index}`, copy: { ...input().copy, finalUrl: url,
+        get text(): string { throw Error("The held government's document searched a quote"); } } }), clocks, now, { purge });
+      assert.equal("decision" in result && result.decision, "PUBLISH");
+    }
+    assert.deepEqual(await door(db, input({ field: "wrong_tenant", copy: { ...input().copy, finalUrl: "https://other.legistar1.com/other/agenda.pdf" } }), clocks, now, { purge }),
+      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+  } finally { await db.pg.close(); }
+});
+
 test("a checked sidebar preserves the agenda while an official API field publishes its document directly", async () => {
   const db = await seeded();
   try {

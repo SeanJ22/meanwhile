@@ -14,6 +14,13 @@ test('held CivicPlus and Thrillshare API fields include their published document
   assert.equal(isSourceApiUrl('https://district.thrillshare.com/other'),false);
 });
 
+test('held ArcGIS REST fields use the service API, with no unrelated ArcGIS page treated as an API',()=>{
+  assert.equal(isSourceApiUrl('https://services2.arcgis.com/agency/arcgis/rest/services/Districts/FeatureServer/0'),true);
+  assert.equal(isSourceApiUrl('https://services.arcgis.com/agency/arcgis/rest/services/Boundaries/MapServer/0'),true);
+  assert.equal(isSourceApiUrl('https://www.arcgis.com/home/item.html?id=example'),false);
+  assert.equal(isSourceApiUrl('https://services2.arcgis.com.attacker.example/agency/arcgis/rest/services/Foo'),false);
+});
+
 test('government tools return data and source URLs without exposing provider credentials', async () => {
   const env = Object.fromEntries(['CONGRESS','CENSUS','FEC','PLURAL','LEGISCAN','LDA','DATA_GOV','GOOGLE_CIVIC','SAM_GOV'].map(name=>[name+'_API_KEY','secret-'+name]));
   const cases = ['congress_api','census_api','fec_api','plural_api','legiscan_api','lda_api','data_gov_api','google_civic_api','sam_gov_api','legistar_api'] as const;

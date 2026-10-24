@@ -27,8 +27,8 @@ Production reads use only `readonly` on tiny-hill-13996172 / br-delicate-lab-ax0
 
 Owned by RB-A6:
 
-- Complete the full checks after River contains RB-A2. The current production build and 14 affected map/hunter cases pass. The preceding combined branch passed 127 related cases, lint, TypeScript and the unused-code check. Full runs stopped for the edit-path replacement and later dependency changes are not passing full runs.
-- Follow `stream/rb-a2` on each fetch. Current merged dependency: `3b392c823` (includes RB-A1’s latest READY and RB-A2’s tribal, school identity and source-topology fixes). River has not recorded or contained RB-A2 yet.
+- Complete the full checks after River contains RB-A2. The current production build and 32 affected owed-list, map, retained-identity and River cases pass. The preceding combined branch passed 127 related cases, lint, TypeScript and the unused-code check. Full runs stopped for the edit-path replacement and later dependency changes are not passing full runs.
+- Follow `stream/rb-a2` on each fetch. Current merged dependency: `5ba76fa0c` (includes RB-A1 READY `5bde46615`, RB-A2’s source-topology fixes and its measured refresh-memory reservation). River has not recorded or contained RB-A2 yet.
 - After River folds RB-A2, merge `origin/river`, rerun every check, and push `READY: RB-A6` with the production connections, every-state counts and next-pass evidence.
 - Keep checking River's return and status until RB-A6 passes its live check. The first automatic production pass remains part of that live check.
 

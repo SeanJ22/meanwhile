@@ -82,6 +82,15 @@ test("a place's portrait run also enriches its members of Congress, on the place
   assert.equal(reader.value.roster.officeholders[0].phone,"202-225-1000");
   const marker=await readPeopleSourceProjection("US-AZ","people-portraits",{store,now:NOW,bypassCache:true});
   assert.equal(marker.kind,"PROMOTED");
+  const portrait=reader.value.roster.officeholders[0].photo;
+  let reacquired=0;
+  const nextAt=new Date(Date.parse(NOW)+60*60*1000).toISOString();
+  await refreshPeoplePortraits({vault,store,state:"az",options:{now:()=>nextAt,
+    acquire:async()=>{reacquired++;throw Error("A current congressional portrait is not due");}}});
+  assert.equal(reacquired,0,"the independent portrait holding supplies the next run's freshness clock");
+  const next=await readFederalDirectoryProjection(["AZ"],{store,now:nextAt,bypassCache:true});
+  assert.equal(next.kind,"PROMOTED");
+  if(next.kind==="PROMOTED")assert.equal(next.value.roster.officeholders[0].photo?.url,portrait?.url);
 });
 
 test("the national hourly portrait job reaches National cards and the next run retains its photo",async t=>{

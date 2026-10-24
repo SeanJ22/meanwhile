@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T12:07:09.819Z",
+  "measuredAt": "2026-10-24T13:13:42.876Z",
   "mode": "reader projection on production holdings",
   "counts": [
     {
@@ -78,7 +78,7 @@
       "state": "AL",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 38
+      "withoutPhoto": 39
     },
     {
       "state": "AL",
@@ -125,8 +125,8 @@
     {
       "state": "AR",
       "role": "Candidate",
-      "withPhoto": 3,
-      "withoutPhoto": 258
+      "withPhoto": 4,
+      "withoutPhoto": 257
     },
     {
       "state": "AS",
@@ -324,7 +324,7 @@
       "state": "CT",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 138
+      "withoutPhoto": 139
     },
     {
       "state": "CT",
@@ -335,8 +335,8 @@
     {
       "state": "CT",
       "role": "Candidate",
-      "withPhoto": 22,
-      "withoutPhoto": 426
+      "withPhoto": 23,
+      "withoutPhoto": 423
     },
     {
       "state": "DC",
@@ -444,13 +444,13 @@
       "state": "FL",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 247
+      "withoutPhoto": 248
     },
     {
       "state": "FL",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 829
+      "withoutPhoto": 831
     },
     {
       "state": "FL",
@@ -486,7 +486,7 @@
       "state": "GA",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 47
+      "withoutPhoto": 48
     },
     {
       "state": "GA",
@@ -713,8 +713,8 @@
     {
       "state": "IL",
       "role": "Candidate",
-      "withPhoto": 0,
-      "withoutPhoto": 256
+      "withPhoto": 11,
+      "withoutPhoto": 245
     },
     {
       "state": "IN",
@@ -797,8 +797,8 @@
     {
       "state": "KS",
       "role": "Candidate",
-      "withPhoto": 4,
-      "withoutPhoto": 358
+      "withPhoto": 72,
+      "withoutPhoto": 290
     },
     {
       "state": "KY",
@@ -881,8 +881,8 @@
     {
       "state": "LA",
       "role": "Candidate",
-      "withPhoto": 0,
-      "withoutPhoto": 44
+      "withPhoto": 3,
+      "withoutPhoto": 41
     },
     {
       "state": "MA",
@@ -954,7 +954,7 @@
       "state": "MD",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 29
+      "withoutPhoto": 30
     },
     {
       "state": "MD",
@@ -1217,8 +1217,8 @@
     {
       "state": "MS",
       "role": "Candidate",
-      "withPhoto": 0,
-      "withoutPhoto": 148
+      "withPhoto": 5,
+      "withoutPhoto": 143
     },
     {
       "state": "MT",
@@ -1301,8 +1301,8 @@
     {
       "state": "NC",
       "role": "Candidate",
-      "withPhoto": 13,
-      "withoutPhoto": 986
+      "withPhoto": 110,
+      "withoutPhoto": 889
     },
     {
       "state": "ND",
@@ -1338,7 +1338,7 @@
       "state": "ND",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 8
     },
     {
       "state": "ND",
@@ -1427,8 +1427,8 @@
     {
       "state": "NH",
       "role": "Candidate",
-      "withPhoto": 30,
-      "withoutPhoto": 135
+      "withPhoto": 19,
+      "withoutPhoto": 146
     },
     {
       "state": "NJ",
@@ -1469,8 +1469,8 @@
     {
       "state": "NJ",
       "role": "Candidate",
-      "withPhoto": 12,
-      "withoutPhoto": 292
+      "withPhoto": 17,
+      "withoutPhoto": 287
     },
     {
       "state": "NM",
@@ -1758,13 +1758,13 @@
       "state": "PA",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 7
     },
     {
       "state": "PA",
       "role": "Candidate",
-      "withPhoto": 15,
-      "withoutPhoto": 302
+      "withPhoto": 16,
+      "withoutPhoto": 301
     },
     {
       "state": "PR",
@@ -1847,8 +1847,8 @@
     {
       "state": "RI",
       "role": "Candidate",
-      "withPhoto": 1,
-      "withoutPhoto": 160
+      "withPhoto": 34,
+      "withoutPhoto": 127
     },
     {
       "state": "SC",
@@ -2015,8 +2015,8 @@
     {
       "state": "TX",
       "role": "Candidate",
-      "withPhoto": 12,
-      "withoutPhoto": 2154
+      "withPhoto": 36,
+      "withoutPhoto": 2130
     },
     {
       "state": "UT",
@@ -2099,8 +2099,8 @@
     {
       "state": "VA",
       "role": "Candidate",
-      "withPhoto": 0,
-      "withoutPhoto": 1068
+      "withPhoto": 11,
+      "withoutPhoto": 1057
     },
     {
       "state": "VI",
@@ -2225,8 +2225,8 @@
     {
       "state": "WA",
       "role": "Candidate",
-      "withPhoto": 0,
-      "withoutPhoto": 275
+      "withPhoto": 107,
+      "withoutPhoto": 168
     },
     {
       "state": "WI",
@@ -2267,8 +2267,8 @@
     {
       "state": "WI",
       "role": "Candidate",
-      "withPhoto": 16,
-      "withoutPhoto": 306
+      "withPhoto": 68,
+      "withoutPhoto": 254
     },
     {
       "state": "WV",
@@ -2309,8 +2309,8 @@
     {
       "state": "WV",
       "role": "Candidate",
-      "withPhoto": 1,
-      "withoutPhoto": 359
+      "withPhoto": 3,
+      "withoutPhoto": 357
     },
     {
       "state": "WY",
@@ -3464,7 +3464,7 @@
     {
       "state": "NC",
       "scope": "US-NC:people:portraits:v1",
-      "version": "cv-187359cc2020a486c691e6f9eaeb0392"
+      "version": "cv-5edaf5db76b5bd29e5985989353fc9ae"
     },
     {
       "state": "ND",
@@ -4379,6 +4379,19 @@
     },
     {
       "state": "AR",
+      "name": " Rick Crawford",
+      "candidacyId": "ar-ba01-pulaski-2026-u-s-congress-district-1-rick-crawford",
+      "personId": "congress:C001087",
+      "ballotPhoto": "/api/portraits/officials/8a08741b04cfcd6a0d45b8a0772b931f789900685d1bb9437f1f40d6bb9ff374.webp",
+      "personPhoto": "/api/portraits/officials/8a08741b04cfcd6a0d45b8a0772b931f789900685d1bb9437f1f40d6bb9ff374.webp",
+      "personKeys": [
+        "ar-ba01-pulaski-2026-u-s-congress-district-1-rick-crawford",
+        "ar-ba01-pulaski-2026-u-s-congress-district-1|Rick Crawford",
+        "congress:C001087"
+      ]
+    },
+    {
+      "state": "AR",
       "name": " Clarke Tucker",
       "candidacyId": "ar-ba01-pulaski-2026-state-senate-district-14-clarke-tucker",
       "personId": "plural:cdb599f1-f956-430d-9ba2-87ce18d3fd53",
@@ -4388,19 +4401,6 @@
         "ar-ba01-pulaski-2026-state-senate-district-14-clarke-tucker",
         "ar-ba01-pulaski-2026-state-senate-district-14|Clarke Tucker",
         "plural:ar:cdb599f1-f956-430d-9ba2-87ce18d3fd53"
-      ]
-    },
-    {
-      "state": "AR",
-      "name": " Ricky Hill",
-      "candidacyId": "ar-ba01-pulaski-2026-state-senate-district-11-ricky-hill",
-      "personId": "plural:faf89935-181a-4d19-9e4b-dce4657d4d3a",
-      "ballotPhoto": "/api/portraits/officials/5f520f6d0e0f4ae4abe99192299661d74dbc81a0406eddf4754cb4f572dee1be.webp",
-      "personPhoto": "/api/portraits/officials/5f520f6d0e0f4ae4abe99192299661d74dbc81a0406eddf4754cb4f572dee1be.webp",
-      "personKeys": [
-        "ar-ba01-pulaski-2026-state-senate-district-11-ricky-hill",
-        "ar-ba01-pulaski-2026-state-senate-district-11|Ricky Hill",
-        "plural:ar:faf89935-181a-4d19-9e4b-dce4657d4d3a"
       ]
     },
     {
@@ -4751,6 +4751,32 @@
       ]
     },
     {
+      "state": "IL",
+      "name": "DARIN LaHOOD",
+      "candidacyId": "il-sbe-2026-us-house-16-c95e4f89dfa68c40",
+      "personId": "congress:L000585",
+      "ballotPhoto": "/api/portraits/officials/9af5f55bfd534d06240f8ea6f8a1b1455ef8c01af8237683ab72c424553642f7.webp",
+      "personPhoto": "/api/portraits/officials/9af5f55bfd534d06240f8ea6f8a1b1455ef8c01af8237683ab72c424553642f7.webp",
+      "personKeys": [
+        "congress:L000585",
+        "il-sbe-2026-us-house-16-c95e4f89dfa68c40",
+        "il-sbe-2026-us-house-16|DARIN LaHOOD"
+      ]
+    },
+    {
+      "state": "IL",
+      "name": "ERIC SORENSEN",
+      "candidacyId": "il-sbe-2026-us-house-17-6381750c9af62d40",
+      "personId": "congress:S001225",
+      "ballotPhoto": "/api/portraits/officials/5a6270fdcb2850bd0ac32f24f1fd638048344228f200b63ad8e5403a3a4778a0.webp",
+      "personPhoto": "/api/portraits/officials/5a6270fdcb2850bd0ac32f24f1fd638048344228f200b63ad8e5403a3a4778a0.webp",
+      "personKeys": [
+        "congress:S001225",
+        "il-sbe-2026-us-house-17-6381750c9af62d40",
+        "il-sbe-2026-us-house-17|ERIC Sorensen"
+      ]
+    },
+    {
       "state": "IN",
       "name": "Mark Messmer",
       "candidacyId": "in-ied-2026-united-states-representative-eighth-district:e9c768301089edb2",
@@ -4826,6 +4852,32 @@
         "congress:M001220",
         "ky-sos-2026-us-representative-district-3|Morgan McGarvey",
         "ky-sos-candidate-11394"
+      ]
+    },
+    {
+      "state": "LA",
+      "name": "Steve Scalise",
+      "candidacyId": "la-sos-2026-us-house-1:4",
+      "personId": "congress:S001176",
+      "ballotPhoto": "/api/portraits/officials/48f52c8d37e72aae57566e2c62e3e18af52378077363e4a722eec3895eb56cbd.webp",
+      "personPhoto": "/api/portraits/officials/48f52c8d37e72aae57566e2c62e3e18af52378077363e4a722eec3895eb56cbd.webp",
+      "personKeys": [
+        "congress:S001176",
+        "la-sos-2026-us-house-1:4",
+        "la-sos-2026-us-house-1|Steve Scalise"
+      ]
+    },
+    {
+      "state": "LA",
+      "name": "\"Clay\" Higgins",
+      "candidacyId": "la-sos-2026-us-house-3:4",
+      "personId": "congress:H001077",
+      "ballotPhoto": "/api/portraits/officials/316a2d3ddbfda7c3a1c6ff80abe37838c90f32867650a785443f9c70fb708cd3.webp",
+      "personPhoto": "/api/portraits/officials/316a2d3ddbfda7c3a1c6ff80abe37838c90f32867650a785443f9c70fb708cd3.webp",
+      "personKeys": [
+        "congress:H001077",
+        "la-sos-2026-us-house-3:4",
+        "la-sos-2026-us-house-3|\"Clay\" Higgins"
       ]
     },
     {
@@ -4984,6 +5036,32 @@
         "congress:A000379",
         "mo-sos-2026-cd-4:1",
         "mo-sos-2026-cd-4|Mark Alford"
+      ]
+    },
+    {
+      "state": "MS",
+      "name": " Cindy Hyde-Smith",
+      "candidacyId": "ms-2026-general-us-senate-candidate-2",
+      "personId": "congress:H001079",
+      "ballotPhoto": "/api/portraits/officials/498610e761d97e4c21f57c9be022c532a103e6f945365e070cd09804494db80c.webp",
+      "personPhoto": "/api/portraits/officials/498610e761d97e4c21f57c9be022c532a103e6f945365e070cd09804494db80c.webp",
+      "personKeys": [
+        "congress:H001079",
+        "ms-2026-general-us-senate-candidate-2",
+        "ms-2026-general-us-senate|Cindy Hyde-Smith"
+      ]
+    },
+    {
+      "state": "MS",
+      "name": " Trent Kelly",
+      "candidacyId": "ms-2026-general-us-house-1-candidate-3",
+      "personId": "congress:K000388",
+      "ballotPhoto": "/api/portraits/officials/3788c7a53442b60d8bd53f1b7253b77a0c6732a725249fe8e55e0b01dba80100.webp",
+      "personPhoto": "/api/portraits/officials/3788c7a53442b60d8bd53f1b7253b77a0c6732a725249fe8e55e0b01dba80100.webp",
+      "personKeys": [
+        "congress:K000388",
+        "ms-2026-general-us-house-1-candidate-3",
+        "ms-2026-general-us-house-1|Trent Kelly"
       ]
     },
     {
@@ -5308,6 +5386,21 @@
     },
     {
       "state": "PA",
+      "name": "JOSH SHAPIRO AND AUSTIN DAVIS",
+      "candidacyId": "pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
+      "personId": "plural:ac7497c7-0a0d-495f-98ce-75dedbfeb0c7",
+      "ballotPhoto": "/api/portraits/officials/d32affa7a3c8fede71ebf36f5f2d97d3f7657d55b1d744c88dd2df0f640aa946.webp",
+      "personPhoto": "/api/portraits/officials/d32affa7a3c8fede71ebf36f5f2d97d3f7657d55b1d744c88dd2df0f640aa946.webp",
+      "personKeys": [
+        "pa-dos:pa-2026-general:candidate:2b841733e071fe18d72a",
+        "pa-dos:pa-2026-general:governor-lieutenant-governor|JOSH SHAPIRO AND AUSTIN Davis",
+        "pa-dos:pa-2026-general:governor-lieutenant-governor|Josh Shapiro",
+        "pa-dos:pa-2026-general:governor-lieutenant-governor|Josh Shapiro / Austin Davis",
+        "plural:pa:ac7497c7-0a0d-495f-98ce-75dedbfeb0c7"
+      ]
+    },
+    {
+      "state": "PA",
       "name": "BRENDAN F BOYLE",
       "candidacyId": "pa-dos:pa-2026-general:candidate:95ea821b7c6fbc52e398",
       "personId": "congress:B001296",
@@ -5317,19 +5410,6 @@
         "congress:B001296",
         "pa-dos:pa-2026-general:candidate:95ea821b7c6fbc52e398",
         "pa-dos:pa-2026-general:cd-2|BRENDAN F Boyle"
-      ]
-    },
-    {
-      "state": "PA",
-      "name": "MARY GAY SCANLON",
-      "candidacyId": "pa-dos:pa-2026-general:candidate:4059f262a5163a75b4dd",
-      "personId": "congress:S001205",
-      "ballotPhoto": "/api/portraits/officials/885cfc7e5e8e2f72d802718da4cce12f6c355485ad921b9c0fbb8fee9d12bddb.webp",
-      "personPhoto": "/api/portraits/officials/885cfc7e5e8e2f72d802718da4cce12f6c355485ad921b9c0fbb8fee9d12bddb.webp",
-      "personKeys": [
-        "congress:S001205",
-        "pa-dos:pa-2026-general:candidate:4059f262a5163a75b4dd",
-        "pa-dos:pa-2026-general:cd-5|MARY GAY Scanlon"
       ]
     },
     {
@@ -5343,6 +5423,19 @@
         "congress:M001223",
         "ri-sos-2026-general-representative-in-congress-district-2-seth-michael-magaziner-democrat",
         "ri-sos-2026-general-representative-in-congress-district-2|SETH MICHAEL Magaziner"
+      ]
+    },
+    {
+      "state": "RI",
+      "name": "REBECCA MICHELE KISLAK",
+      "candidacyId": "ri-sos-2026-general-representative-in-general-assembly-4-rebecca-michele-kislak-democrat",
+      "personId": "plural:dd5636ac-e9a1-4d98-8f21-6376b8977706",
+      "ballotPhoto": "/api/portraits/officials/861e293b785f33e539a8dd0dee17c7faec50285043f54865974d6d58c969aad9.webp",
+      "personPhoto": "/api/portraits/officials/861e293b785f33e539a8dd0dee17c7faec50285043f54865974d6d58c969aad9.webp",
+      "personKeys": [
+        "plural:ri:dd5636ac-e9a1-4d98-8f21-6376b8977706",
+        "ri-sos-2026-general-representative-in-general-assembly-4-rebecca-michele-kislak-democrat",
+        "ri-sos-2026-general-representative-in-general-assembly-4|REBECCA MICHELE Kislak"
       ]
     },
     {
@@ -5412,6 +5505,19 @@
     },
     {
       "state": "TX",
+      "name": "LANCE GOODEN",
+      "candidacyId": "tx-sos-2026-u-s-representative-district-5-4f771a2add81a2ca",
+      "personId": "congress:G000589",
+      "ballotPhoto": "/api/portraits/officials/01d18832e9698db6aa769785d05fdcd4e752ad06a8ea160e9c0d46f02a1f7812.webp",
+      "personPhoto": "/api/portraits/officials/01d18832e9698db6aa769785d05fdcd4e752ad06a8ea160e9c0d46f02a1f7812.webp",
+      "personKeys": [
+        "congress:G000589",
+        "tx-sos-2026-u-s-representative-district-5-4f771a2add81a2ca",
+        "tx-sos-2026-u-s-representative-district-5|LANCE Gooden"
+      ]
+    },
+    {
+      "state": "TX",
       "name": "GREG ABBOTT",
       "candidacyId": "tx-sos-2026-governor-ea61899fbddd1f30",
       "personId": "plural:d73f10ee-69f2-4ca8-ac00-405c453a62d7",
@@ -5424,16 +5530,29 @@
       ]
     },
     {
-      "state": "TX",
-      "name": "DAN PATRICK",
-      "candidacyId": "tx-sos-2026-lieutenant-governor-c0d75e04af13706f",
-      "personId": "plural:22c1bff3-e936-4398-8d7c-95233e85b5c5",
-      "ballotPhoto": "/api/portraits/officials/1922ef6ccd793b3720d0342a79fff7f780a36a86f331e55afd02f7bb4c3f359d.webp",
-      "personPhoto": "/api/portraits/officials/1922ef6ccd793b3720d0342a79fff7f780a36a86f331e55afd02f7bb4c3f359d.webp",
+      "state": "VA",
+      "name": "Mark R. Warner",
+      "candidacyId": "va-sbe-2026-us-senate:mark-r-warner:democratic",
+      "personId": "congress:W000805",
+      "ballotPhoto": "/api/portraits/officials/1c79b11d06586787ef3a3de726d27d80e71f81cb5e6606806e7a5f063304f24d.webp",
+      "personPhoto": "/api/portraits/officials/1c79b11d06586787ef3a3de726d27d80e71f81cb5e6606806e7a5f063304f24d.webp",
       "personKeys": [
-        "plural:tx:22c1bff3-e936-4398-8d7c-95233e85b5c5",
-        "tx-sos-2026-lieutenant-governor-c0d75e04af13706f",
-        "tx-sos-2026-lieutenant-governor|DAN Patrick"
+        "congress:W000805",
+        "va-sbe-2026-us-senate:mark-r-warner:democratic",
+        "va-sbe-2026-us-senate|Mark R. Warner"
+      ]
+    },
+    {
+      "state": "VA",
+      "name": "Robert J. \"Rob\" Wittman",
+      "candidacyId": "va-sbe-2026-us-house-1:robert-j-rob-wittman:republican",
+      "personId": "congress:W000804",
+      "ballotPhoto": "/api/portraits/officials/12300adac712748c02e8f428124711bff46b68d1bbf1beaf8829b862c36752fc.webp",
+      "personPhoto": "/api/portraits/officials/12300adac712748c02e8f428124711bff46b68d1bbf1beaf8829b862c36752fc.webp",
+      "personKeys": [
+        "congress:W000804",
+        "va-sbe-2026-us-house-1:robert-j-rob-wittman:republican",
+        "va-sbe-2026-us-house-1|Robert J. \"Rob\" Wittman"
       ]
     },
     {
@@ -5460,6 +5579,32 @@
         "plural:vt:2cb218ea-52a4-4d1f-9732-217940ba260e",
         "vt-sos-2026-lieutenant-governor:john-s-rodgers:republican",
         "vt-sos-2026-lieutenant-governor|JOHN S. Rodgers"
+      ]
+    },
+    {
+      "state": "WA",
+      "name": "Suzan DelBene",
+      "candidacyId": "wa-sos-2026-general-8992a74fe23e968c-5f65330c2e07",
+      "personId": "congress:D000617",
+      "ballotPhoto": "/api/portraits/officials/40cddd5ae40236eabf925d054ba6c3d372c7cf9f54a6a8329d017e5e42028af3.webp",
+      "personPhoto": "/api/portraits/officials/40cddd5ae40236eabf925d054ba6c3d372c7cf9f54a6a8329d017e5e42028af3.webp",
+      "personKeys": [
+        "congress:D000617",
+        "wa-sos-2026-general-8992a74fe23e968c-5f65330c2e07",
+        "wa-sos-2026-general-8992a74fe23e968c|Suzan DelBene"
+      ]
+    },
+    {
+      "state": "WA",
+      "name": "Rick Larsen",
+      "candidacyId": "wa-sos-2026-general-1481b8d0bab090b3-3bb573bec4ed",
+      "personId": "congress:L000560",
+      "ballotPhoto": "/api/portraits/officials/536b0e67ecaf63a7a8ca90da3e8d0ec35756c9161cd488253819a282899aba2e.webp",
+      "personPhoto": "/api/portraits/officials/536b0e67ecaf63a7a8ca90da3e8d0ec35756c9161cd488253819a282899aba2e.webp",
+      "personKeys": [
+        "congress:L000560",
+        "wa-sos-2026-general-1481b8d0bab090b3-3bb573bec4ed",
+        "wa-sos-2026-general-1481b8d0bab090b3|Rick Larsen"
       ]
     },
     {
@@ -5499,6 +5644,19 @@
         "congress:C001047",
         "wv-sos-2026-general-f61445944dfa80a2-276f7f1c0d63",
         "wv-sos-2026-general-f61445944dfa80a2|SHELLEY MOORE Capito"
+      ]
+    },
+    {
+      "state": "WV",
+      "name": "RILEY MOORE",
+      "candidacyId": "wv-sos-2026-general-df2749b30e55292b-76996a1870f1",
+      "personId": "congress:M001235",
+      "ballotPhoto": "/api/portraits/officials/cd8d79782d31bf54161026b6a2b03c2aee3b4b5bd28b93cfe917491c61fd3899.webp",
+      "personPhoto": "/api/portraits/officials/cd8d79782d31bf54161026b6a2b03c2aee3b4b5bd28b93cfe917491c61fd3899.webp",
+      "personKeys": [
+        "congress:M001235",
+        "wv-sos-2026-general-df2749b30e55292b-76996a1870f1",
+        "wv-sos-2026-general-df2749b30e55292b|RILEY Moore"
       ]
     }
   ]

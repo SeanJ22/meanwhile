@@ -1,0 +1,394 @@
+{
+  "measuredAt": "2026-10-24T13:15:08.822Z",
+  "revision": "e9f4ea0b2",
+  "mode": "Built branch HTTP state and ballot HTML diagnostics on read-only production holdings. These are not Chrome checks. Person links use exact identity keys; normalized display names locate rendered image alt text only.",
+  "rows": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=AZ&zip=85701",
+          "status": 200,
+          "seconds": 2.225327149
+        },
+        {
+          "path": "/ballot?zip=85701",
+          "status": 200,
+          "seconds": 2.48894648
+        }
+      ],
+      "connections": [
+        {
+          "name": "Katie Hobbs",
+          "candidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "personId": "plural:6e522a2a-e7b7-4713-a40f-c897e4341a87",
+          "ballotPhoto": "/officials/statewide-az-governor.jpg",
+          "officials": [
+            {
+              "id": "statewide:az/9c569bd1e5b6eb90ff6fb207",
+              "photoUrl": "/officials/statewide-az-governor.jpg"
+            },
+            {
+              "id": "statewide:az/governor",
+              "photoUrl": "/officials/statewide-az-governor.jpg"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Alma Hernandez",
+          "candidacyId": "ballot-az-pima:state-senate-20:hernandez-alma",
+          "personId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+          "ballotPhoto": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+          "officials": [
+            {
+              "id": "az-legislature:2312",
+              "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Sally Ann Gonzales",
+          "candidacyId": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+          "personId": "az-legislature:2381",
+          "ballotPhoto": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+          "officials": [
+            {
+              "id": "az-legislature:2381",
+              "photoUrl": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Betty Villegas",
+          "candidacyId": "ballot-az-pima:state-house-20:villegas-betty",
+          "personId": "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2",
+          "ballotPhoto": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+          "officials": [
+            {
+              "id": "az-legislature:2346",
+              "photoUrl": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "AK",
+      "zip": "99501",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=AK&zip=99501",
+          "status": 200,
+          "seconds": 0.646870766
+        },
+        {
+          "path": "/ballot?zip=99501",
+          "status": 200,
+          "seconds": 0.8672047330000004
+        }
+      ],
+      "connections": [
+        {
+          "name": "Dan S. Sullivan",
+          "candidacyId": "ak-doe-2026-general-united-states-senator-sullivan-dan-s",
+          "personId": "congress:S001198",
+          "ballotPhoto": "/api/portraits/officials/c483168d09fce16968557a7cc846c688707ec7c1df203215f914f219be182a82.webp",
+          "officials": [
+            {
+              "id": "congress:S001198",
+              "photoUrl": "/api/portraits/officials/c483168d09fce16968557a7cc846c688707ec7c1df203215f914f219be182a82.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=CO&zip=80202",
+          "status": 200,
+          "seconds": 0.5907419389999995
+        },
+        {
+          "path": "/ballot?zip=80202",
+          "status": 200,
+          "seconds": 1.0097752180000006
+        }
+      ],
+      "connections": [
+        {
+          "name": "John Hickenlooper",
+          "candidacyId": "co-sos-2026-general-us-senate-state-john-hickenlooper",
+          "personId": "congress:H000273",
+          "ballotPhoto": "/api/portraits/officials/dce1477c63366eb19dc71605cef2d7c01d683f98a723c21e4a8364151b186d57.webp",
+          "officials": [
+            {
+              "id": "congress:H000273",
+              "photoUrl": "/api/portraits/officials/dce1477c63366eb19dc71605cef2d7c01d683f98a723c21e4a8364151b186d57.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=NH&zip=03301",
+          "status": 200,
+          "seconds": 2.3483005219999997
+        },
+        {
+          "path": "/ballot?zip=03301",
+          "status": 200,
+          "seconds": 2.0278491240000003
+        }
+      ],
+      "connections": [
+        {
+          "name": "Kelly Ayotte",
+          "candidacyId": "ballot-nh-merrimack:governor:ayotte-kelly",
+          "personId": "plural:3eabef50-7d86-44cf-87db-8c549d2d21bd",
+          "ballotPhoto": "/officials/statewide-nh-governor.png",
+          "officials": [
+            {
+              "id": "statewide:nh/governor",
+              "photoUrl": "/officials/statewide-nh-governor.png"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "NY",
+      "zip": "10007",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=NY&zip=10007",
+          "status": 200,
+          "seconds": 0.8328941589999995
+        },
+        {
+          "path": "/ballot?zip=10007",
+          "status": 200,
+          "seconds": 1.062780908999999
+        }
+      ],
+      "connections": [
+        {
+          "name": "Letitia A. James",
+          "candidacyId": "ny-boe:2026-general:attorney-general:12aba842a7e6cf29",
+          "personId": "plural:a620faf8-81e3-490e-8d26-dbf84c707786",
+          "ballotPhoto": "/api/portraits/officials/e8d7f6254cbc70faf7ec65ba0aa95a2a128a2cc692a598eff95bee985a3dfc41.webp",
+          "officials": [
+            {
+              "id": "plural:ny:a620faf8-81e3-490e-8d26-dbf84c707786",
+              "photoUrl": "/api/portraits/officials/e8d7f6254cbc70faf7ec65ba0aa95a2a128a2cc692a598eff95bee985a3dfc41.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=WI&zip=53703",
+          "status": 200,
+          "seconds": 0.5289084619999994
+        },
+        {
+          "path": "/ballot?zip=53703",
+          "status": 200,
+          "seconds": 1.5786587849999996
+        }
+      ],
+      "connections": [
+        {
+          "name": "Mark Pocan",
+          "candidacyId": "wi-green-county-2026-general-representative-in-congress-district-2-candidate-mark-pocan",
+          "personId": "congress:P000607",
+          "ballotPhoto": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp",
+          "officials": [
+            {
+              "id": "congress:P000607",
+              "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
+            },
+            {
+              "id": "congress:P000607",
+              "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "ME",
+      "zip": "04330",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=ME&zip=04330",
+          "status": 200,
+          "seconds": 0.5524782349999987
+        },
+        {
+          "path": "/ballot?zip=04330",
+          "status": 200,
+          "seconds": 0.8321183709999969
+        }
+      ],
+      "connections": [
+        {
+          "name": "Susan M. Collins",
+          "candidacyId": "me-sos-2026-us:1",
+          "personId": "congress:C001035",
+          "ballotPhoto": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp",
+          "officials": [
+            {
+              "id": "congress:C001035",
+              "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "OR",
+      "zip": "97204",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=OR&zip=97204",
+          "status": 200,
+          "seconds": 0.5247243830000007
+        },
+        {
+          "path": "/ballot?zip=97204",
+          "status": 200,
+          "seconds": 0.7609899089999999
+        }
+      ],
+      "connections": [
+        {
+          "name": " Jeff Merkley",
+          "candidacyId": "ballot-or-2026:us-senate:jeff-merkley",
+          "personId": "congress:M001176",
+          "ballotPhoto": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp",
+          "officials": [
+            {
+              "id": "congress:M001176",
+              "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": " Suzanne Bonamici",
+          "candidacyId": "ballot-or-2026:us-house-1:suzanne-bonamici",
+          "personId": "congress:B001278",
+          "ballotPhoto": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp",
+          "officials": [
+            {
+              "id": "congress:B001278",
+              "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
+            },
+            {
+              "id": "congress:B001278",
+              "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "SD",
+      "zip": "57104",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=SD&zip=57104",
+          "status": 200,
+          "seconds": 0.5550066250000018
+        },
+        {
+          "path": "/ballot?zip=57104",
+          "status": 200,
+          "seconds": 0.8549839179999981
+        }
+      ],
+      "connections": [
+        {
+          "name": "Mike Rounds",
+          "candidacyId": "sd-sos-2026-general-united-states-senator-mike-rounds-rep",
+          "personId": "congress:R000605",
+          "ballotPhoto": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp",
+          "officials": [
+            {
+              "id": "congress:R000605",
+              "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    },
+    {
+      "state": "VT",
+      "zip": "05602",
+      "reads": [
+        {
+          "path": "/api/reader/state?state=VT&zip=05602",
+          "status": 200,
+          "seconds": 0.6601300049999991
+        },
+        {
+          "path": "/ballot?zip=05602",
+          "status": 200,
+          "seconds": 0.8726278840000014
+        }
+      ],
+      "connections": [
+        {
+          "name": "BECCA BALINT",
+          "candidacyId": "vt-sos-2026-us-house-at-large:becca-balint:democratic",
+          "personId": "congress:B001318",
+          "ballotPhoto": "/api/portraits/officials/6e2f72ae8d93dfd533b208f8dc167d8d5decd24cbc71bd0ee780a02f211bb1fe.webp",
+          "officials": [
+            {
+              "id": "congress:B001318",
+              "photoUrl": "/api/portraits/officials/6e2f72ae8d93dfd533b208f8dc167d8d5decd24cbc71bd0ee780a02f211bb1fe.webp"
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "JOHN S. RODGERS",
+          "candidacyId": "vt-sos-2026-lieutenant-governor:john-s-rodgers:republican",
+          "personId": "plural:2cb218ea-52a4-4d1f-9732-217940ba260e",
+          "ballotPhoto": "/api/portraits/officials/3da2e1b65e97b9fdbea550e81744479164b465464ce8c05baf734c90352e8814.webp",
+          "officials": [
+            {
+              "id": "plural:vt:2cb218ea-52a4-4d1f-9732-217940ba260e",
+              "photoUrl": "/api/portraits/officials/3da2e1b65e97b9fdbea550e81744479164b465464ce8c05baf734c90352e8814.webp"
+            }
+          ],
+          "samePhoto": true
+        }
+      ]
+    }
+  ]
+}

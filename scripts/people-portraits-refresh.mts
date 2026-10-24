@@ -4,7 +4,7 @@ import { STATE_PEOPLE_JURISDICTIONS } from "../lib/officials/people-identity.ts"
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { statePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
 import { readPeopleSourceProjection, publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
-import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
+import { readStateFederalDirectory, withFederalPortraits } from "../lib/officials/federal-directory-read-model.ts";
 import { congressPortraits } from "../lib/officials/congress-portraits.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -123,7 +123,8 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const [peopleRead,placeRead]=await Promise.all([state === "us" ? readPeopleSourceProjection("US","statewide-executive-sources",{store,now:clock(),bypassCache:true}) : readStatePeopleProjection(jurisdiction as `US-${string}`,{store,now:clock(),bypassCache:true}),
     state === "us" ? Promise.resolve(null) : readStateFederalDirectory(state,{store,now:clock(),bypassCache:true})]);
   const people=peopleRead.kind === "PROMOTED" || peopleRead.kind === "BOOTSTRAP" ? peopleRead.value.roster : null;
-  const place=placeRead?.kind === "PROMOTED" ? placeRead.value : null;
+  const place=placeRead?.kind === "PROMOTED" ? {...placeRead.value,
+    roster:prior.kind === "PROMOTED" ? withFederalPortraits(placeRead.value.roster,prior.value.roster) : placeRead.value.roster} : null;
   if(!people && !place)throw Error("PEOPLE_PORTRAIT_ROSTER_UNAVAILABLE");
   const local:Officeholder[]=[];
   if(state !== "us") {

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 103 (main d3416a24f, live 5:50 PM EDT; SO-01 + RN-03). GATING: RV-VOTE alone (river-next ebae79d1f). NEXT: DB-01 4c5b40e39; PT-01 returned (River takes it 6:30 PM EDT)
+build_state: LIVE FOR READERS: release 103 (main d3416a24f). NEXT: release 104 = RV-VOTE (PR #814, CI). READY TO OPEN after 104: release 105 = DB-01 (river-next f26f9552d). GATING: batch E = RB-A2 78a2a9f14 + RB-A3 d92e9a054 (0873f9e42)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T21:51:25Z
+heartbeat: 2026-10-24T22:57:07Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,16 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 7:00 PM EDT
+- Live: release 103 (d3416a24f). Reader checks passed at 5:51 PM EDT; Arizona's statewide card is fixed (SO-01).
+- Release 104 (RV-VOTE, polling places) is in CI on PR #814, auto-merge on. Polling places haven't refreshed in any state since late morning; this is the fix.
+- DB-01 (River-finished 4c5b40e39) on f26f9552d: gates 8 of 9, tests 9,812 pass, 1 fail: tests/congress-runner-receipt.test.ts "the Congress runner publishes core first…", which took 9,008 ms under the full parallel suite. Run alone it passes, and it takes the same time with and without DB-01 (918 ms vs 903 ms on 4040fb227). It is a load-time failure, not DB-01's. DB-01 ships as release 105 after 104 merges; CI on its PR runs the test again.
+- PT-01: the lane merged SO-01's statewide selection itself and posted READY a109cf965 at 6:36 PM EDT; return cleared, no takeover.
+- RB-A3 posted READY d92e9a054. Batch E (RB-A2 78a2a9f14 + RB-A3) gating from 7:00 PM EDT on 0873f9e42, on top of DB-01. River merged the reader migration journal (DB-01, RB-A3, RB-A2 entries by date) and both phase declarations.
+- RB-A2's reader migration is contract phase (runs after deploy under the 1-second statement limit). Timed on the local production-size copy: 173 ms for the whole migration (0051 was 1.7 s there).
+- Next: PT-01 a109cf965; RB-A5 + RB-A8 (control-plane journal and migration list merges); RB-A4 (also conflicts in lib/facts/meeting-facts.ts with today's meeting work; River reviews it at fold).
+- River pushed a stray branch river-next-e (batch E's pre-fold, 0873f9e42); deleting it is refused by the git proxy ("remote end hung up"). It is harmless; River removes it after batch E ships.
 
 ### Release 103 live, 5:50 PM EDT
 - /api/build d3416a24f (PR #813 merge commit). Sean's checks in Chromium at 5:51 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 (435 id fields, up from 409) and 60602 200, /national 200.

@@ -19,6 +19,11 @@
       "id": "RIVER-KEYS_expand",
       "phase": "expand",
       "hash": "a8e2b42fe49d0fa7043605a75c91a4809abd3cc682e7993ef7c29c9462ef262f"
+    },
+    {
+      "id": "RIVER-KEYS-FX_expand",
+      "phase": "expand",
+      "hash": "f6f55c808e14111193b0ff583988d29158158622998da10aa51aabe7df7aa372"
     }
   ]
 }

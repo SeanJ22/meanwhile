@@ -39,7 +39,7 @@ import {
 } from "./unchanged-confirmation.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import {
-  isTrustedLkgImportCandidate,
+  isImportOrStateMoveCandidate,
 } from "./trusted-lkg-import.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
@@ -603,12 +603,12 @@ interface PromotionPointerProof {
 
 /** The only candidate fields the routine clock reads. It runs for every task on every pass, so widening it is a cost decision. */
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
-  top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport"],
+  top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport", "stateRetirement"],
   retrieval: ["retrievedAt", "sourceCheck"],
   normalization: ["parserVersion"],
 } as const;
 
-type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport"> & {
+type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport" | "stateRetirement"> & {
   readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
   readonly normalization: Pick<RoutineCandidate["normalization"], "parserVersion">;
 };
@@ -649,8 +649,8 @@ function proofConsistentPointedSuccess(
   if (pointer.sourceId !== record.candidate.sourceId || pointer.recordClass !== record.candidate.recordClass || pointer.scope !== record.candidate.scope) return false;
   if (!receiptIsGoodForCandidate(receipt, record.candidate)) return false;
   if (!receiptsEqual(pointer.receipt, receipt)) return false;
-    // A frozen LKG import is not a publisher acquisition: no clock success, so the runner is due at once.
-  return !isTrustedLkgImportCandidate(record.candidate);
+    // Imports and state moves retain facts without a publisher acquisition.
+  return !isImportOrStateMoveCandidate(record.candidate);
 }
 
 export function proofConsistentSuccess(
@@ -946,8 +946,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     ) {
       return { kind: "POINTER_MOVED", detail: `The pointer ${key} no longer names ${input.pointerVersionId}.` };
     }
-    if (isTrustedLkgImportCandidate(row.candidate)) {
-      return { kind: "POINTER_IS_IMPORT", detail: `${input.pointerVersionId} is a trusted-LKG import; a live read of it promotes.` };
+    if (isImportOrStateMoveCandidate(row.candidate)) {
+      return { kind: "POINTER_IS_IMPORT", detail: `${input.pointerVersionId} retains published facts without a source read; a live read of it promotes.` };
     }
     if (row.candidate.normalization.normalizedHash !== input.readModelHash) {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s read model is not ${input.readModelHash}.` };
@@ -1038,7 +1038,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         row.candidate.recordClass === recordClass &&
         row.candidate.scope === scope &&
         (parserVersion === undefined || row.candidate.normalization.parserVersion === parserVersion) &&
-        !isTrustedLkgImportCandidate(row.candidate)
+        !isImportOrStateMoveCandidate(row.candidate)
       )
       .flatMap((row) => (this.history.get(row.candidate.id) ?? [])
         .filter(event => event.sequence === 1 || event.detail.startsWith("RECHECKED_UNCHANGED:"))
@@ -1056,7 +1056,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       ? { ...pointedRow, candidate: routineClockCandidateView(pointedRow.candidate) }
       : null;
     const sittings = recordClass === "MEETING" && pointer ? { sittingStarts: meetingPayloadSittingStarts(pointer.payload) } : {};
-    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+    if (pointer && pointedRecord && isImportOrStateMoveCandidate(pointedRecord.candidate)) {
       return { ...trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt), ...sittings };
     }
     const pointedHistory = pointedRow ? this.history.get(pointedRow.candidate.id) ?? [] : [];
@@ -2100,6 +2100,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           and ${civicDataCandidates.scope} = ${input.scope}
           and ${civicDataCandidates.normalizedHash} = ${input.readModelHash}
           and not (${civicDataCandidates.candidate} ? 'bootstrapImport')
+          and coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'
           and exists (
             select 1 from ${civicDataPromotions}
             where ${civicDataPromotions.recordClass} = ${civicDataCandidates.recordClass}
@@ -2153,7 +2154,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       this.db.select({
         state: civicDataCandidates.state,
         normalizedHash: civicDataCandidates.normalizedHash,
-        imported: sql<boolean>`${civicDataCandidates.candidate} ? 'bootstrapImport'`,
+        imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
+          OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'`,
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, id)).limit(1),
     ]);
     const pointer = pointerRows[0];
@@ -2164,7 +2166,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     ) {
       return { kind: "POINTER_MOVED", detail: `The pointer ${key} no longer names ${id}.` };
     }
-    if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} is a trusted-LKG import; a live read of it promotes.` };
+    if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} retains published facts without a source read; a live read of it promotes.` };
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
@@ -2352,8 +2354,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         eq(civicDataCandidates.recordClass, recordClass),
         eq(civicDataCandidates.scope, scope),
         parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
-                // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
-        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
+                // Transfers retain the reader record without advancing the source clock.
+        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')
+          AND coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'`,
       ))
       .orderBy(desc(attemptAt), desc(civicDataCandidates.id))
       .limit(16);
@@ -2376,7 +2379,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const sittings = pointer && sittingRows !== null
       ? { sittingStarts: sittingStartsFromRow(sittingRows[0]?.starts) }
       : {};
-    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+    if (pointer && pointedRecord && isImportOrStateMoveCandidate(pointedRecord.candidate)) {
       return {
         ...trustedLkgImportClock(
           lastAttemptedAt,

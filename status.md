@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 104 (main 2082dc9b1, live 7:05 PM EDT; RV-VOTE). GATING: batch E (RB-A2 + RB-A3 on DB-01, 0873f9e42); release 105 = DB-01 + batch E if E passes. NEXT: PT-01 + RB-A5 (pre-folded 8c7e75c18). Returned: RB-A8 (8:15 PM EDT)
+build_state: LIVE FOR READERS: release 104 (main 2082dc9b1). GATING: RB-A2 78a2a9f14 alone (Sean, 7:10 PM EDT: RB-A2 next, before DB-01, PT-01 and RB-A4; RB-A6 and RB-A10 wait on it), river-next d72cf90d0. NEXT: DB-01, then RB-A3, PT-01 + RB-A5, RB-A4
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T23:06:32Z
+heartbeat: 2026-10-24T23:19:06Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Sean's order, 7:10 PM EDT: RB-A2 next
+- "Fold RB-A2 (78a2a9f14) next, before DB-01, PT-01 and RB-A4. RB-A6 and RB-A10 are both waiting on it."
+- Done: batch E's gates (DB-01 + RB-A2 + RB-A3) stopped. RB-A2 folded alone on river 4040fb227 (clean merge, no journal conflict without DB-01) -> river-next d72cf90d0, gating from 7:12 PM EDT. It ships alone as release 105.
+- After it: DB-01 (re-fold on RB-A2; River merges the reader journal), then RB-A3, PT-01 + RB-A5, RB-A4. RB-A8 per its return.
 
 ### Release 104 live, 7:05 PM EDT (polling places)
 - /api/build 2082dc9b1 (PR #814 merge commit). Sean's checks in Chromium at 7:06 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.

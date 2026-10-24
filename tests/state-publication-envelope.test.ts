@@ -12,9 +12,44 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, immutableStateCandidate } from "../lib/civic-data/state-publication.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
+import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
+import { selectStatewideExecutives } from "../lib/officials/statewide-selection.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 
 const NOW = "2026-10-16T12:00:00.000Z";
 const URL = "https://elections.example.gov/az/locations";
+
+test("indexed statewide inheritance survives released source rows and still rejects an invented contact", () => {
+  const division="ocd-division/country:us/state:az",sourceUrl="https://official.az.gov/";
+  const holder={id:"held:first",state:"AZ",name:"Jane Example",officeTitle:"Governor",partyLabel:null,termEnd:null,birthDate:null,
+    websiteUrl:sourceUrl,sourceUrl,email:null,phone:null,contactFormUrl:null,photoUrl:null,campaignUrl:null};
+  const rows=[{stateOcdId:division,holder,sourceUrl,sourceOrg:"Official source",collectedAt:NOW,verification:"PAGE_FETCHED" as const},
+    {stateOcdId:division,holder:{...holder,id:"held:second",email:"office@official.az.gov"},sourceUrl,sourceOrg:"Official source",collectedAt:NOW,verification:"PAGE_FETCHED" as const}];
+  const payload={formatVersion:1,registry:{generatedAt:NOW,divisions:[],bodies:[]},bodyRosters:[],rosterReaderDispositions:[],
+    statewideExecutives:rows,officialCandidacies:{formatVersion:1,rule:"EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE",rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}};
+  const receipt={contractVersion:1 as const,reviewedAt:NOW,reviewedBy:"controlled source test",sources:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,
+    publisher:"Official source",sourceClass:"OFFICIAL_PUBLISHER" as const,retrievedAt:NOW,httpStatus:200,rawHash:"a".repeat(64),reviewedEvidence:"Governor Jane Example"}]};
+  const digest=canonicalCivicDataHash(payload),initial=candidate();
+  const base=withStateRecordHashes({...initial,sourceId:"registry-reviewed-bindings",recordClass:"REGISTRY_RUNTIME_BINDING",scope:"US-AZ:reader-registry-runtime",
+    retrieval:{...initial.retrieval,manualSourceReceipt:receipt},normalization:{...initial.normalization,normalizedHash:digest,normalizedPayloadHash:digest},
+    readModel:payload,normalizedPayload:payload,civicRecords:civicRecordsFor("REGISTRY_RUNTIME_BINDING",payload)});
+  const validation={...registryTransferImport().record.receipt!,candidateId:base.id,sourceId:base.sourceId,recordClass:base.recordClass,scope:base.scope};
+  const projection={key:`${base.recordClass}:${base.scope}`,recordClass:base.recordClass,scope:base.scope,versionId:base.id,lastKnownGoodVersionId:base.id,
+    sourceId:base.sourceId,promotedAt:NOW,payload,receipt:validation},store={};
+  immutableStateHash(immutableStateValue(payload));rememberStatePublicationHashes(projection,base.normalization);rememberStatePublicationPrior(store,projection);
+  const index=takeStatePublicationPrior(store,base.recordClass,base.scope)!;bindStatePublicationPrior(base,index);
+  const selected=selectStatewideExecutives(rows),key=`statewide-executive:${selected[0].holder.id}`;
+  const successor={...base,readModel:{...payload,statewideExecutives:selected},manualPriorAuthority:{kind:"VALIDATED_PRIOR_PROJECTION" as const,
+    versionId:base.id,readModelSha256:digest,retainedMembers:[{key,sha256:canonicalCivicDataHash(selected[0])}]}};
+  candidateChangeSet(successor,null,undefined,index);
+  assert.ok([...index.members.values()].every(member=>!Object.hasOwn(member,"record")),"the change set released the original statewide rows");
+  const record={candidate:base,state:"PROMOTED" as const,acquisitionSucceeded:true,receipt:validation,promotedVersion:base.id,lastKnownGoodVersion:base.id,failureCode:null,failureDetail:null};
+  assert.equal(manualPriorAuthorityIssue(successor,record),null);
+  const invented={...selected[0],holder:{...selected[0].holder,email:"unpublished@example.org"}};
+  const forged={...successor,readModel:{...payload,statewideExecutives:[invented]},manualPriorAuthority:{...successor.manualPriorAuthority,
+    retainedMembers:[{key,sha256:canonicalCivicDataHash(invented)}]}};
+  assert.match(manualPriorAuthorityIssue(forged,record)??"",/changed, duplicated, invented, or omitted/);
+});
 
 function candidate(at = NOW, replacement?: string): RoutineCandidate {
   return votingSitesCandidate({ state: "AZ", current: { generatedAt: "2026-10-16", jurisdictions: [{

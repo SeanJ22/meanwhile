@@ -7,7 +7,6 @@ import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { registryMemberCitedUrls } from "../registry/runtime-data-plane.ts";
 import { selectStatewideExecutives } from "../officials/statewide-selection.ts";
-import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = canonicalCivicDataHash;
@@ -70,9 +69,8 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   // Recombining exact prior statewide rows cannot authorize a name, contact or
   // source absent from that verified base.
   const selectedExecutives = candidate.recordClass === "REGISTRY_RUNTIME_BINDING"
-    ? new Map(selectStatewideExecutives(indexedPrior
-      ? [...indexedPrior.members.values()].flatMap(member => member.key.startsWith("statewide-executive:") && member.record ? [member.record as StatewideExecutive] : [])
-      : civicRecordsFor(base.candidate.recordClass, base.candidate.readModel).flatMap(member => member.key.startsWith("statewide-executive:") ? [member.record as StatewideExecutive] : []))
+    ? indexedPrior?.statewideExecutiveHashes ?? new Map(selectStatewideExecutives(
+      (base.candidate.readModel as { statewideExecutives: Parameters<typeof selectStatewideExecutives>[0] }).statewideExecutives)
       .map(row => [`statewide-executive:${row.holder.id}`, hash(row)]))
     : new Map<string, string>();
   const retained = new Set<string>();

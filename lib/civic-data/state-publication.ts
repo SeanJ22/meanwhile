@@ -3,6 +3,8 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope, stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { selectStatewideExecutives } from "../officials/statewide-selection.ts";
+import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import type { PromotedProjection, RoutineCandidate, NormalizationEvidence } from "./types.ts";
 
 const publicationRead = new AsyncLocalStorage<PromotedProjection>();
@@ -151,6 +153,7 @@ export interface StatePublicationPrior {
   readonly ballotCandidates: Map<string, { electionId: string; electionDate: string; contestId: string; ocdId: string;
     candidateListComplete: boolean; sourceUrl: string | null; candidacyCollectedAt: string }>;
   readonly officialIdentityAuthority: unknown;
+  readonly statewideExecutiveHashes: ReadonlyMap<string, string>;
 }
 
 type RecordHashes = NonNullable<NormalizationEvidence["stateRecordHashes"]>;
@@ -223,7 +226,12 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
   if (!payload || !immutableValues.has(payload) || immutableHashes.get(payload) !== hashes.readModelHash)
     throw new Error("STATE_PRIOR_PAYLOAD_NOT_VERIFIED");
   const prior: StatePublicationPrior = { versionId: projection.versionId, payloadHash: hashes.readModelHash, recordHashes: hashes,
-    members: new Map(), ballotCandidates: new Map(), officialIdentityAuthority: object(projection.payload)?.officialIdentityAuthority ?? null };
+    members: new Map(), ballotCandidates: new Map(), officialIdentityAuthority: object(projection.payload)?.officialIdentityAuthority ?? null,
+    // The change set releases original records before authority validation.
+    // Keep only the deterministic selection hashes needed to check a merge.
+    statewideExecutiveHashes: projection.recordClass === "REGISTRY_RUNTIME_BINDING"
+      ? new Map(selectStatewideExecutives((payload.statewideExecutives ?? []) as readonly StatewideExecutive[])
+        .map(row => [`statewide-executive:${row.holder.id}`, canonicalCivicDataHash(row)])) : new Map() };
   const index = (value: unknown, member: StatePublicationPrior["members"] extends Map<string, infer T> ? T : never,
     project?: (value: unknown) => unknown) => {
     if (!object(value)) return;

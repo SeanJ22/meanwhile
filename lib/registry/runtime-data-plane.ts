@@ -476,7 +476,6 @@ interface RegistryPriorProof {
   readonly readModelSha256: string;
   readonly hashes: ReadonlyMap<string, string>;
   readonly selectedExecutiveHashes: ReadonlyMap<string, string>;
-  readonly selectionInputKeys: ReadonlySet<string>;
   readonly bodyDivisions: ReadonlyMap<string, string | null>;
 }
 
@@ -496,8 +495,6 @@ function registerRegistryPrior(prior: RegistryRuntimePrior | null, scope: string
   return { versionId: prior.versionId, readModelSha256: prior.readModelSha256,
     selectedExecutiveHashes: new Map(selectedExecutives
       .map(row => [`statewide-executive:${row.holder.id}`, canonicalCivicDataHash(row)])),
-    selectionInputKeys: new Set(selectedExecutives.filter(row => hashes.get(`statewide-executive:${row.holder.id}`) !== canonicalCivicDataHash(row))
-      .flatMap(row => [row.holder.id, ...(row.holder.nativeIds?.reader ?? [])].map(id => `statewide-executive:${id}`))),
     hashes,
     bodyDivisions: new Map(prior.payload.registry.bodies.map(body => [body.id, body.ocdId])) };
 }
@@ -635,9 +632,7 @@ class RegistryCandidateAssembly {
       return label === undefined ? member : { ...member, record: { ...member.record, value: { ...member.record.value, label } } };
     });
     const selected = new Map(members.map(member => [member.key, member]));
-    // These few source rows must remain available while prior authority replays
-    // their exact selection, including aliases of a removed duplicate.
-    for (const previous of this.protectedPrior.values()) if (!this.prior?.selectionInputKeys.has(previous.key)) consumeRegistryMember(previous, selected.get(previous.key));
+    for (const previous of this.protectedPrior.values()) consumeRegistryMember(previous, selected.get(previous.key));
     this.protectedPrior.clear();
     const payload = rebuildRegistryRuntime(input.payload, this.priorMetadata, members);
     const finalKeys = new Set(civicRecordsFor("REGISTRY_RUNTIME_BINDING", payload).map(member => member.key));

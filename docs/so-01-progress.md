@@ -1,8 +1,8 @@
-# SO-01 — in progress, not READY
+# SO-01 — READY for River
 
-Code is implemented and tested locally. Production has not been republished, Chrome has not been checked, and River has not passed this lane.
+Code and the production-copy scheduled replay are ready for River. Per Sean’s current instruction, lanes do not write production: River ships the code, the runner publishes through the standing data path, and River plus oversight perform the live checks below. This READY does not claim deployment or a live pass.
 
-Branch `stream/so-01` was cut from `origin/river` at `21ae9bcfb663794953b07a9d7977b228cab67c2d`. No changes to `SeanJ22/meanwhile-signal`. No database writes, deployments, settings changes or pull requests.
+Branch `stream/so-01` was cut from `origin/river` at `21ae9bcfb663794953b07a9d7977b228cab67c2d`. No changes to `SeanJ22/meanwhile-signal`. No production database writes, deployments, settings changes or pull requests. The scheduled replay writes only to a disposable local PostgreSQL copy.
 
 ## Changes
 
@@ -13,6 +13,7 @@ Branch `stream/so-01` was cut from `origin/river` at `21ae9bcfb663794953b07a9d79
 - Parser versions advance so standing jobs reparse held data. The registry parser version now has one shared definition. Replaced implementations were removed.
 - Official-page parsing now decodes named HTML entities, keeps published accents and middle initials, recognizes short office titles only with their full agency on the same page, and accepts an office landing page’s explicit holder. Directory links alone cannot establish the holder. Fallback discovery follows the requested person or office and avoids unrelated biographies and news archives.
 - Duplicate commission members join across source IDs without collapsing the commission’s distinct members or local council namesakes.
+- The production-copy replay exposed the indexed inheritance path: change auditing releases prior rows before authority validation. The prior index now keeps only the deterministic statewide selection hashes, so exact merges validate after those rows are released. The replaced raw-row retention code was removed. A regression test also rejects an invented contact even if its supplied hash is changed to match it.
 
 ## Production connection traces
 
@@ -87,22 +88,44 @@ The source pass also finds New Jersey Secretary of State Shirley U. Emehelu, who
 
 ## Next scheduled run
 
-Controlled-clock tests exercise the actual daily state-binding task, its due decision and its publication handler. They remove a carried malformed row, advance to the next daily run, retain the correction and reject another attempt to publish Actions. Duplicate-record tests retain the other ID’s candidacy and portrait records.
+The actual standing `refreshStateBinding` handler was run twice on a local copy of the complete promoted Arizona record, using `PostgresRoutineDataStore` and the real integrity migrations. The copy was read with role `readonly` from reader project `tiny-hill-13996172`, branch `br-delicate-lab-ax02xuo5`:
 
-The next production scheduled run is unverified. The read-only control-plane check (`withered-sunset-39821877`, `br-tiny-frog-aeufpjeq`, role `wtp_cp_release_readonly`) found statewide source tasks deferred on release `16eead35c` with `PASS_TIME_BUDGET` at `2026-10-24T09:03:25Z`. Local tests do not resolve that delivery issue.
+- Production base: `cv-06d1655dd1d0a7e67fbbcc65e29f0410`, promoted `2026-10-24T01:14:43.264Z`.
+- The copied full reader model hashes to the production value `f0fbce7b39258ae59cf5ae6a11ade9cbc6b10fff7b0dce7b00265aef703461b1`. It contains 560 divisions, 734 bodies, 9 body rosters, 85 candidacy rows, 131 portraits and all 53 source reviews.
+- First controlled run, October 24 at 2:00 PM EDT (`18:00Z`): promotion `cv-c3b210c60e8d137fd73ecb00f3140945`; registry statewide rows 12 → 10; Actions 1 → 0; Katie Hobbs 2 → 1, with `engage@az.gov`. The malformed Actions candidacy is removed. Every prior real statewide ID remains an alias, and every unrelated civic record retains its exact hash, including portraits and candidacy links.
+- The real task clock says the next run is not due one millisecond before its daily cadence and is due at the cadence. The handler runs again on October 25 at 2:00 PM EDT (`18:00Z`), promoting `cv-c8e62ffe98fcfcf42251887b0ca6e776`. Its complete reader-model hash equals the corrected first-run model: Actions remains absent and Hobbs remains once.
+- Composing that next-run record with the saved own-page Arizona source roster and the production Open States statewide leads produces 11 officers: **Kris Mayes**, Attorney General, and **one Katie Hobbs** with `engage@az.gov`. Distinct commissioners remain present.
+
+The replay uses saved official Census reference bytes as the injected acquisition response at controlled clock dates. It makes no claim of a future network observation or a real scheduled production run. Additional intake tests reject a later attempt to publish Actions. The production runner and post-release observation belong to River and oversight.
 
 ## Validation
 
-- 146 focused tests passed, with none failed, cancelled or skipped. After the final commission and acquisition changes, the affected suites passed again: 40 identity/publication/funding tests and 53 source/publication/HTTP tests. They cover publication, aliases, reader identities, candidacy, funding, portraits, source acquisition and the standing daily refresh.
+- 173 focused tests passed at READY, with none failed, cancelled or skipped. They cover publication, aliases, reader identities, candidacy, funding, portraits, source acquisition, the standing daily refresh and the indexed inheritance regression. The production-copy replay above also passes through the PostgreSQL adapter and real integrity migrations.
 - Full `tsc --noEmit`, lint of every changed TypeScript file and `git diff --check` passed. Stale generated Next route types were regenerated or cleared before the compiler check.
 - Two broader runner tests fail on both this lane and untouched `origin/river` at `21ae9bcfb`: `the pilot outer bound contains the source and meeting frontier` (line 1449), and `scoped source passes repair only matching reader pointers, including narrow meeting domains` (line 2425). They were not changed in this lane.
 - A broader 129-test run had 127 passes and two failures in `campaign-money-people.test.ts`: its card-rendering helper refuses to run without the pinned Chromium build. These are environment failures, not passing browser checks.
 - No production Chrome checks were performed. An API response or offline replay is not counted as a live check.
 
-## Remaining work and access limits
+## After-release live checks — River and oversight
 
-Owner: SO-01 / Codex. Finish the official-page discrepancies; republish every state through the existing state-binding and people-source jobs; check reader-visible content and the current activity IDs in Chrome; observe the next production run. Only then push the lane’s READY and begin the requested River return cycle.
+Use Chrome on meanwhileusa.com as a reader. Enter each ZIP through the normal “Who governs here?” flow and open the officials’ cards. An API count does not complete these checks.
 
-The existing publication command refuses before any write because `WTP_PRODUCTION_DATABASE_URL_WRITE` is absent. Both connected database roles are read-only. No Chrome/browser-control tool is exposed in this session; discovery was repeated and the browser skill was read. No connected alternate publication workflow was found among the GitHub workflows. `origin/board/river` was checked again at `f3974cd5b`; no SO-01 return or live-check pass is present. The lane has not sent READY, so the post-READY return cycle has not begun. These are access limits, not a new approval requirement.
+| ZIP | State | What should show |
+| --- | --- | --- |
+| 85004 | AZ | Kris Mayes once as Attorney General, matching azag.gov; no Actions row. Katie Hobbs once, with engage@az.gov and the azgovernor.gov constituent-services contact. All five distinct Corporation Commissioners remain. |
+| 95814 | CA | Governor Gavin Newsom once. |
+| 80203 | CO | Governor Jared Polis once. |
+| 30303 | GA | Governor Brian Kemp once. |
+| 48933 | MI | Governor Gretchen Whitmer once. |
+| 08608 | NJ | Governor Mikie Sherrill once. |
+| 12207 | NY | Governor Kathy Hochul once. |
+| 17101 | PA | Governor Josh Shapiro once. |
+| 78701 | TX | Governor Greg Abbott once. |
+| 84111 | UT | Governor Spencer J. Cox once; existing source aliases still resolve. |
+| 98501 | WA | Governor Bob Ferguson once. |
 
-Existing job entry points: `scripts/state-binding-refresh.mts --promote --state=<STATE>` and `scripts/national-people-refresh.mts --promote --state=<state> --source=statewide-executive-sources`. Each handles one state through the established production data path. No new publication door or approval step was added.
+Check existing officials’ portraits, contacts and funding links. Follow the prior Arizona governor IDs `statewide:az/9c569bd1e5b6eb90ff6fb207`, `statewide:az/governor` and `plural:az:6e522a2a-e7b7-4713-a40f-c897e4341a87`; they must resolve to the same current person. Check the existing 60 activity references in 37 target groups across reactions, Speak your mind, Ask and demand signals without creating new posts. No real target may stop resolving. Compare the full state lists with the production baseline above; acquisition can add verified officers, and no previously visible real officer or attached fact may disappear.
+
+After the first real scheduled state-binding and statewide people-source passes on the released code, repeat 85004 and the ten governor checks: Actions stays absent, governors stay single, and official contacts continue to beat the stale Open States Secretary of State email. Review source gaps as standing acquisition work; the zero own-page counts above are not claims that those states lack officers.
+
+The existing jobs are `scripts/state-binding-refresh.mts --promote --state=<STATE>` and `scripts/national-people-refresh.mts --promote --state=<state> --source=statewide-executive-sources`. They handle one state through the established data path. No new publication door, approval step or production writer was added. Per Sean’s latest instruction, SO-01 stops when the READY commit is pushed; River and oversight own publication and live acceptance.

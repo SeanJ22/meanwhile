@@ -1,12 +1,12 @@
 # MD-01 current result
 
-Observed October 24, 2026, 5:49 PM Eastern. The requested production result is unfinished. This is not READY.
+Observed October 24, 2026, 5:55 PM Eastern. The requested production result is unfinished. This is not READY.
 
-The prepared code is on `stream/md-01`. Production is release 102, commit `4ae2e14e6db8827f741baa52e4ca8a9c62a93666`; the newer translation input and Ask changes have not shipped. No database, spending limit, pause, source record or reader target was changed by this inspection.
+The prepared code is on `stream/md-01`, merged with release 103. Production is release 103, commit `d3416a24f38edb1c331e9dab4d92bc3bfa4e399b`; the newer MD-01 translation input and Ask changes have not shipped. All database inspection used the supplied read-only roles. No direct database write, spending-limit change, pause change or reader-target change was made.
 
-The read-only production comparison retains all 276 existing measure summaries across all 56 jurisdictions: 265 independently checked translations and 23 held ballot summaries, with 12 overlaps. There are still 223 missing summaries among 499 measures. No summary ID, checked translation ID or checked part ID disappeared. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). These are current production counts before the prepared changes ship, not evidence of improved publication.
+The 5:49 PM read-only production comparison retains all 276 existing measure summaries across all 56 jurisdictions: 265 independently checked translations and 23 held ballot summaries, with 12 overlaps. There are still 223 missing summaries among 499 measures. No summary ID, checked translation ID or checked part ID disappeared. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). These are production counts before the prepared changes ship, not evidence of improved publication.
 
-Actual Google Chrome on meanwhileusa.com, release 102, October 24 at 5:30 PM Eastern:
+Actual Google Chrome on meanwhileusa.com, release 103, October 24 at 5:55 PM Eastern:
 
 | ZIP | Summaries | Missing |
 | --- | ---: | --- |
@@ -14,7 +14,7 @@ Actual Google Chrome on meanwhileusa.com, release 102, October 24 at 5:30 PM Eas
 | 94102 | 23 / 25 | California propositions 37 and 42 |
 | 98101 | 0 / 4 | Washington IL26-001, IL26-638, IP26-645; Seattle Transit Measure |
 
-No page errors occurred. These counts match the saved earlier Chrome baseline; none of those summaries was removed.
+No page errors occurred. These counts match the saved earlier Chrome baseline; none of those summaries was removed or changed. Screenshots and the live card text were inspected.
 
 ## Cost cause and prepared repair
 
@@ -47,6 +47,6 @@ MD-01 owns the remaining checks: after integration and deployment, observe the a
 
 Ask's original 20-question Chrome acceptance is still open. The last full set had only four answers below three seconds. A later seven-question diagnostic on release 102 had none below three seconds, and the secretary-of-state duty question returned its held records without the separate AI answer. The browser check now treats a missing answer without usable AI prose as a failure, regardless of a grounded mode label.
 
-Prepared Ask changes use the held candidate fields, national executive roster, election date and published state election fields without model calls. A missing published deadline still requests the separate AI answer and acquisition work. Exact office-duty questions bind the held contest in code, retain its candidate records and sources, and purchase only the separate Haiku answer when the pack has no duties evidence. Controlled replay retains 16, 10, eight and eight records for governor, secretary of state, attorney general and treasurer. This is not a live timing result. The latest connected suites passed 91 tests; the final route assertions passed 33; production build, dead-code, preflight and 16 bundle checks passed.
+Prepared Ask changes use the held candidate fields, national executive roster, election date and published state election fields without model calls. A missing published deadline still requests the separate AI answer and acquisition work. Exact office-duty questions bind the held contest in code, retain its candidate records and sources, and purchase only the separate Haiku answer when the pack has no duties evidence. Controlled replay retains 16, 10, eight and eight records for governor, secretary of state, attorney general and treasurer. This is not a live timing result. After merging release 103, 103 Ask/reader tests and 46 translation tests passed; production build, dead-code, preflight and 16 bundle checks passed. Lint reported zero errors and 56 existing warnings, none in the changed Ask files.
 
 Shipping order remains unresolved: `CLAUDE.md` and `scripts/river.mjs` fold only the exact READY commit and leave later ordinary commits behind. Sean's newer instruction requires READY only after an actual scheduled production run proves the three ballot results. The concrete prepared tip is pushed; the async request for how to integrate it before that production proof is still awaiting an answer. No premature READY has been posted. The existing cleared return is monitored every 20 minutes; River has not marked MD-01 passed its live check.

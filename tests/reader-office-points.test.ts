@@ -8,6 +8,7 @@ import { directoryOffices } from "../lib/map/office-pins.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { DirectoryOffice } from "../lib/officials/directory.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
+import {toSeatHolder} from "../lib/officials/lookup.ts";
 
 const at = "2026-10-23T12:00:00.000Z";
 const holder: Officeholder = { id: "plural:az:one", name: "Public Representative", officeTitle: "State Representative", state: "AZ", level: "STATE",
@@ -29,7 +30,7 @@ test("published office points reach the reader directory and map; tomorrow reuse
     assert.fail("the next scheduled publication must reuse the saved point");
   });
   const [entry] = stateMemberDirectories(tomorrow);
-  const offices = directoryOffices({ holder: { ...holder, social: undefined, sourceUrl: holder.provenance.sourceUrl, photoUrl: null }, tier: "state", role: "State office", seatLabel: null }, entry.directory);
+  const offices = directoryOffices({ holder: toSeatHolder(holder), tier: "state", role: "State office", seatLabel: null }, entry.directory);
   assert.deepEqual(offices[0].point, { lat: 32, lng: -110 });
   assert.equal(offices[1].point, undefined, "postal boxes remain contacts without a guessed map pin");
   assert.equal(tomorrow.officeholders[0].offices![1].pointUnavailable?.reason,"MAILING_ADDRESS");

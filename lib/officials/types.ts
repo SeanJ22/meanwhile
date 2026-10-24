@@ -44,6 +44,8 @@ export interface PersonFieldDisagreement {
 }
 
 export interface Officeholder {
+  /** Original publisher records retained behind a merged person. */
+  readonly sourceHolders?: readonly Officeholder[];
   /** Namespaced by source: `congress:A000370`. */
   id: string;
   /** Stable person identity, independent of any seat or tenure. */

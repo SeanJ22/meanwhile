@@ -83,12 +83,13 @@ export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?:
 
 export type PhotoIndex = Map<string, string>;
 
-function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
+export function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
   const portraitSource = person.photo ? {
     sourceUrl: person.photo.sourceUrl, sourceOrg: [person.provenance.sourceOrg, person.photo.attribution, person.photo.license].filter(Boolean).join(" · "),
     collectedAt: person.photo.collectedAt, verifiedAt: person.photo.verification?.checkedAt ?? null,
   } : null;
   return {
+    ...(person.sourceHolders ? {sourceHolders:person.sourceHolders.map(source=>toSeatHolder(source,photos))} : {}),
     id: person.id,
     personId: person.personId ?? person.id,
     nativeIds: person.nativeIds,

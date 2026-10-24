@@ -1,5 +1,7 @@
 "use client";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { useState } from "react";
 
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -22,14 +24,17 @@ export function IncumbentNameLink({
   name: string;
   context: ReactionViewContext | null;
 }) {
+  const hydrated = useHydrated();
   const [open, setOpen] = useState(false);
   return (
     <>
       <button
         type="button"
         data-candidate-card
+        disabled={!hydrated}
+        aria-busy={!hydrated}
         onClick={() => setOpen(true)}
-        className="cursor-pointer text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
+        className="cursor-pointer disabled:cursor-wait disabled:opacity-60 text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
       >
         {name}
       </button>

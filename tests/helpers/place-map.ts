@@ -3,7 +3,7 @@ import { join } from "node:path";
 import type { Query } from "../../lib/facts/publish.ts";
 import { legacyZipEntry, type LegacyZipShard } from "../../lib/place-map/legacy.ts";
 import { contains, type GeoFeature } from "../../lib/registry/resolve.ts";
-import { postalArea, zipNeedsAddress } from "../../lib/geo/postal.ts";
+import { postalAreaNeedsAddress } from "../../lib/geo/postal-core.ts";
 import { isTownOrCountyDivision } from "../../lib/geo/postal-core.ts";
 import { placesForCode } from "../../lib/place-map/read.ts";
 import { placeEntry } from "../../lib/place-map/reader.ts";
@@ -11,11 +11,19 @@ import { censusWorkDivision } from "../../lib/census-geography/division-id.ts";
 import type { GeographySelection } from "../../lib/census-geography/selection.ts";
 import type { CodeSlice, Slice } from "../../lib/control-plane/admin-view/promoted-slices.ts";
 import { currentReaderAuthorityEdge } from "../../lib/registry/runtime-edge.ts";
-import { fixtureZipLocation } from "./zip-location.ts";
+import { fixturePostalArea as postalArea, fixtureZipRecord } from "./zip-location.ts";
 import { parseCensusGeographies, censusGeographiesUrl } from "../../lib/geo/census-geocoder.ts";
 import { divisionsFromCensusGeographies, censusVintageFor } from "../../lib/geo/census-geographies.ts";
 
 const root = join(import.meta.dirname,"../..");
+const zipNeedsAddress=(zip:string)=>postalAreaNeedsAddress(zip,postalArea(zip));
+const shards=new Map<string,LegacyZipShard>();
+const shardOf=(prefix:string)=>{
+  let held=shards.get(prefix);
+  if(!held){const path=join(root,"data/derived/zip-divisions",`${prefix}.json`);if(!existsSync(path))return null;
+    held=JSON.parse(readFileSync(path,"utf8")) as LegacyZipShard;shards.set(prefix,held);}
+  return held;
+};
 const heldShapes = new Map<string, GeoFeature[]>();
 const shapes = (file:string):GeoFeature[] => {
   let held=heldShapes.get(file);
@@ -31,15 +39,24 @@ const row = (id:string, extra:Record<string,unknown>={}) => {
 
 /** Acquired seed data supplies rows to the new map interface in isolated reader tests. */
 export function fixturePlaceMapQuery(fallback?: Query): Query {
-  return async (sql,params=[]) => {
+  const run:Query=async (sql,params=[]) => {
     if(sql.includes("FROM zip_location"))return (params[0] as string[]).flatMap(zip=>{
-      const point=fixtureZipLocation(zip);return point?[{...point}]:[];
+      const point=fixtureZipRecord(zip);return point?[{...point}]:[];
     });
+    if(sql.includes("SELECT DISTINCT m.zip")){
+      const state=String(params[0]),manifest=JSON.parse(readFileSync(join(root,"data/derived/zip-divisions/index.json"),"utf8"));
+      return (manifest.statesToShards[state]??[]).flatMap((prefix:string)=>Object.keys(shardOf(prefix)!.zips).filter(zip=>{
+        const entry=legacyZipEntry(shardOf(prefix)!,zip)!;return entry.ids.some(id=>row(id).state===state);
+      }).map((zip:string)=>({zip})));
+    }
+    if(sql.includes("FROM zip_place m")&&sql.includes("m.zip=ANY")){
+      return (await Promise.all((params[0] as string[]).map(async zip=>(await run("FROM zip_place m WHERE m.zip=$1",[zip])).map(row=>({...row,zip}))))).flat();
+    }
     if (sql.includes("FROM zip_place m") && /m\.zip=\$1/.test(sql)) {
       const zip=String(params[0]), area=postalArea(zip), code=area?.zcta ?? zip;
-      const path=join(root,"data/derived/zip-divisions",`${code.slice(0,2)}.json`);
-      if(!existsSync(path))return [];
-      const shard=JSON.parse(readFileSync(path,"utf8")) as LegacyZipShard, entry=legacyZipEntry(shard,code);
+      const shard=shardOf(code.slice(0,2));
+      if(!shard)return [];
+      const entry=legacyZipEntry(shard,code);
       if(!entry)return [];
       const ids=zipNeedsAddress(zip)?entry.ids.filter(isTownOrCountyDivision):[...entry.ids,...entry.fringe??[]];
       const seedRows=ids.map(id=>row(id,{partial:entry.partial.includes(id)||zipNeedsAddress(zip)&&id.split('/').length>3,fringe:entry.fringe?.includes(id)??false}));
@@ -85,6 +102,7 @@ export function fixturePlaceMapQuery(fallback?: Query): Query {
     }
     return fallback ? fallback(sql,params) : [];
   };
+  return run;
 }
 
 export async function entryForCensusFixture(slice:Slice<CodeSlice>,zip:string,selection:GeographySelection){

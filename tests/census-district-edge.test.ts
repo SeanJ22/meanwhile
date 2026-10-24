@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { buildCensusDistrictEdge, censusDistrictEdgeByState, censusDistrictEdgeSlice } from "../lib/census-geography/district-edge.ts";
-import { postalArea } from "../lib/geo/postal.ts";
+import { fixturePostalArea as postalArea } from "./helpers/zip-location.ts";
 
 import { createLookup } from "../lib/census-geography/lookup.ts";
 

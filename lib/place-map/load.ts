@@ -4,7 +4,9 @@ import type { PlaceBoundary } from "./types.ts";
 import type { EntityPlace } from "../core/shapes.ts";
 import type { ZctaCentroid } from "../geo/zcta-core.ts";
 
-export interface MapZipLocation extends ZctaCentroid {
+export interface MapZipLocation extends Omit<ZctaCentroid,"lat"|"lng"> {
+  readonly lat: number | null;
+  readonly lng: number | null;
   readonly boundaryYear: number;
   readonly sourceUrls: readonly string[];
   readonly checkedAt: string;

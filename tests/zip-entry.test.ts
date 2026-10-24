@@ -11,7 +11,6 @@ import { resolveReaderZip } from "../lib/reader/zip.ts";
 import { stateZipLocations } from "../lib/place-map/location-import.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/geo/postal-core.ts";
-import { postalTable } from "../lib/geo/postal.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
 import { areaLookup, buildPostalTable } from "../lib/geo/build-postal-table.ts";
 import type { Feature } from "../lib/geo/shapefile.ts";
@@ -25,18 +24,17 @@ const fixture = (name: string) => readFileSync(new URL(`./fixtures/zip-entry/${n
 
 installFactReader(fixturePlaceMapQuery());
 
-test("server module contexts share the complete unchanged postal table", async () => {
-  const second = await import(new URL("../lib/geo/postal.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/postal.ts");
-  assert.equal(second.postalTable(), postalTable());
-  assert.deepEqual(postalTable(), postalFile.zips);
-});
-
 test("the map import preserves every acquired Census ZIP display coordinate and source", async () => {
   const rows=(await Promise.all(US_JURISDICTIONS.map(state=>stateZipLocations(process.cwd(),state.usps,"2026-10-24T00:00:00Z")))).flat();
   const byZip=new Map(rows.map(row=>[row.zip,row]));
   for(const [zip,point] of Object.entries(centroidFile.centroids)){
     const row=byZip.get(zip);assert.ok(row,zip);assert.deepEqual([row.lat,row.lng],point,zip);
     assert.ok(row.sourceUrls.includes(centroidFile.source));
+  }
+  const states=new Set(US_JURISDICTIONS.map(state=>state.usps));
+  for(const [zip,row] of Object.entries(postalFile.zips))if(states.has(row[5] as typeof US_JURISDICTIONS[number]["usps"])){
+    const imported=byZip.get(zip);assert.ok(imported,zip);
+    assert.deepEqual(imported.postal,{type:row[2],zcta:row[3],place:row[4],state:row[5],county:row[6],countyFips:row[7],placeGeoid:row[8]},zip);
   }
 });
 

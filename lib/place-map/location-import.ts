@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { lookupIn, type CentroidTable } from "../geo/zcta-core.ts";
-import type { PostalTable } from "../geo/postal-core.ts";
+import { postalAreaIn, type PostalTable } from "../geo/postal-core.ts";
 import type { MapZipLocation } from "./load.ts";
 
 /** Acquired source bytes enter the map during import, never during a reader request. */
@@ -13,7 +13,8 @@ export async function stateZipLocations(root: string, state: string, checkedAt: 
   return Object.keys(postal.zips).flatMap(zip => {
     if (postal.zips[zip][5] !== state) return [];
     const point = lookupIn(census.centroids,zip,postal.zips);
-    return point ? [{...point,boundaryYear:Number(census.vintage),checkedAt,
-      sourceUrls:[...(census.centroids[zip] ? [census.source] : [postal.source]),postal.typeSource]}] : [];
+    return [{...point,zip,lat:point?.lat??null,lng:point?.lng??null,postal:postalAreaIn(postal.zips,zip)!,
+      boundaryYear:Number(census.vintage),checkedAt,
+      sourceUrls:[...(census.centroids[zip] ? [census.source] : [postal.source]),postal.typeSource]}];
   });
 }

@@ -37,14 +37,11 @@ const nextConfig: NextConfig = {
   },
   // Computed paths need explicit traces for static geography and schema inputs.
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
-  // ZIP startup projections are browser assets, never server lookup inputs.
   // No function packs state geometry: the reader edge store serves each file (lib/geo/state-geometry.ts).
   outputFileTracingExcludes: { "/*": ["./data/states/*/geo/**"] },
   outputFileTracingIncludes: {
     "/api/reader/state": stateOfficeTrace,
-    "/api/location/zip": ["./lib/geo/zcta-centroids.json", "./lib/geo/postal-zips.json"],
-    // The country view counts each state's ZIPs and reads the divisions of a district's ZIPs from the same shards, and a
-    // district's place score (the Checklist view of a district) reads them too; the shard names are computed, so the tracer cannot see them.
+    // The geography preview uses generated source references; readers query the place map.
     "/api/admin/geography-preview": [
       "./data/derived/place-reference/**",
     ],

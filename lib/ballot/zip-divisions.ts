@@ -1,8 +1,8 @@
 import { readZipPlace, type PlaceEntry } from "../place-map/reader.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
 import { currentRepresentationSelection, type GeographySelection } from "../census-geography/selection.ts";
-import { zipNeedsAddress } from "../geo/postal.ts";
-import { isTownOrCountyDivision } from "../geo/postal-core.ts";
+import { readZipPostalAreas } from "../place-map/locations.ts";
+import { isTownOrCountyDivision, postalAreaNeedsAddress } from "../geo/postal-core.ts";
 
 const OFFICES: Record<string, string> = { cd: "U.S. House", sldu: "State Senate", sldl: "State House" };
 
@@ -16,7 +16,8 @@ export async function divisionIdsForZipArea(
 ): Promise<string[]> {
   if (!zip) return [...new Set(pointDivisionIds)];
   const entry = supplied === undefined ? await readZipPlace(zip, selection) : supplied;
-  const local = pointDivisionIds.filter(id => !districtFamilyKey(id) && (!zipNeedsAddress(zip) || isTownOrCountyDivision(id)));
+  const needsAddress=postalAreaNeedsAddress(zip,(await readZipPostalAreas([zip])).get(zip)??null);
+  const local = pointDivisionIds.filter(id => !districtFamilyKey(id) && (!needsAddress || isTownOrCountyDivision(id)));
   return [...new Set([...local, ...entry?.ids ?? [], ...entry?.fringe ?? []])];
 }
 

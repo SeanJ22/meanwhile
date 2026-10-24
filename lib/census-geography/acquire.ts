@@ -225,7 +225,10 @@ export async function acquireDataset(options: AcquireOptions = {}): Promise<Buil
 
   const selected = [...scopes.values()].map(scope => options.states
     ? scope.type === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states)
-    : scope).filter(scope => !options.states || scope.groupings.length > 0);
+    : scope).filter(scope => !options.states || scope.groupings.length > 0 ||
+      // A checked GRF file can explicitly assign no districts in a family.
+      // Keep that evidence so the next source check can reuse its empty rows.
+      scope.versionMeta.retrievalComplete === true && /^CENSUS_GRF_CUR/.test(scope.versionMeta.provenance.sourceDataset));
   const zctaUniverse = new Set<string>();
   for (const scope of selected) for (const grouping of scope.groupings) for (const overlap of grouping.overlaps) zctaUniverse.add(overlap.zcta5);
   const coverage = options.states

@@ -1,14 +1,18 @@
-import { zipNeedsAddress } from '../../geo/postal.ts';
+import { readZipPostalAreas } from '../../place-map/locations.ts';
+import { postalAreaNeedsAddress } from '../../geo/postal-core.ts';
 import { readStateZipPlaces } from '../../place-map/reader.ts';
 import { REGISTRY_STATES } from '../../civic-data/state-scopes.ts';
+import { stateOcdIdFrom } from '../../ocd/state-division.ts';
 
 /** Prefer a ZIP wholly within the selected place over one crossing it. */
 export async function readerDestinations(state: string): Promise<ReadonlyMap<string, string>> {
   const choices = new Map<string, { zip: string; partial: boolean }>();
   for (const code of state.toUpperCase() === 'US' ? REGISTRY_STATES : [state]) {
-    for (const [zip, entry] of await readStateZipPlaces(code)) {
-      if (zipNeedsAddress(zip)) continue;
-      for (const division of entry.ids) {
+    const entries=await readStateZipPlaces(code),postal=await readZipPostalAreas([...entries.keys()]);
+    for (const [zip, entry] of entries) {
+      if (postalAreaNeedsAddress(zip,postal.get(zip)??null)) continue;
+      const ids=new Set([...entry.ids,'ocd-division/country:us',...entry.ids.flatMap(id=>stateOcdIdFrom(id)??[])]);
+      for (const division of ids) {
         const partial = entry.partial.includes(division), prior = choices.get(division);
         if (!prior || prior.partial && !partial) choices.set(division, { zip, partial });
       }
@@ -40,11 +44,13 @@ export async function readDestinationDelta(reader:Sql,from:string,through:string
  seed?DESTINATIONS_SQL.replace(' AND p.promoted_at >= $1::timestamptz AND p.promoted_at <= greatest($2::timestamptz,statement_timestamp())',''):DESTINATIONS_SQL,seed?[]:[from,through]) as Record<string,unknown>[];
  if(!rows.length)return null;
  const scopes=[...new Map(rows.map(r=>[`${r.type}:${r.version}`,{...r.metadata as object,key:String(r.version),type:r.type}])).values()] as GeographyVersion[];
+ const postal=await readZipPostalAreas(rows.flatMap(row=>row.zips as string[]),async(text,params)=>
+  await boundedQuery(reader,{operation:'line-keeper.destination-postal-areas',callClass:'PAGE'},text,params) as Record<string,unknown>[]);
  const out:Record<string,string>={};
  for(const r of rows){
   const selected=selectGeographyVersion(scopes,r.type as GeographyVersion['type'],currentRepresentationSelection(),String(r.state));
   if(!selected||selected.key!==r.version)continue;
-  const id=censusWorkDivision({type:r.type,geoid:r.geoid,ocdId:r.ocd_id,label:r.label,stateAbbr:r.state} as GeographyRef),zip=(r.zips as string[]).find(z=>!zipNeedsAddress(z));
+  const id=censusWorkDivision({type:r.type,geoid:r.geoid,ocdId:r.ocd_id,label:r.label,stateAbbr:r.state} as GeographyRef),zip=(r.zips as string[]).find(z=>!postalAreaNeedsAddress(z,postal.get(z)??null));
   if(id&&zip)out[id]=zip;
  }
  return out;

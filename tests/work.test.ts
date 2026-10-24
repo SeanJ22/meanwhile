@@ -26,13 +26,15 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.equal(await list.finish(first!), true);
   const before = (await query("select not_before from work_row where id=$1", [added.id]))[0]!.not_before;
   at = new Date("2026-10-24T12:00:01Z");
-  const repeated = await list.add({ ...input, source: { report: "two" }, priority: 99 });
+  const reportTwo = { report: "two", url: "https://www.pima.gov/directory" };
+  const repeated = await list.add({ ...input, source: reportTwo, priority: 99 });
   assert.equal(repeated.status, "done");
   assert.equal(new Date(repeated.notBefore).getTime(), new Date(before as string).getTime());
   assert.equal(repeated.priority, 0);
   assert.equal(repeated.reports.length, 2);
+  assert.equal(repeated.reports[1]!.url, reportTwo.url, "a finding's referring page stays in its note separately from the work URL");
   assert.equal((await list.claim("check", 1)).length, 0);
-  assert.equal((await list.add({ ...input, source: { report: "two" } })).reports.length, 2, "a replayed report is retained once");
+  assert.equal((await list.add({ ...input, source: reportTwo })).reports.length, 2, "a replayed report is retained once");
   await list.add({ ...input, url: "https://www.pima.gov/new-contact", quote: "New contact Phone: 520-724-4330", source: { report: "three" } });
   const [changed] = await list.claim("check", 1);
   assert.equal(changed!.url, "https://www.pima.gov/new-contact", "changed evidence keeps the source URL that supplied it");

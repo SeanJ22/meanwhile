@@ -88,12 +88,13 @@ const ADD_WORK_SQL = `INSERT INTO work_row
 
 /** Each transition and its hourly count commit together. */
 export function workList(query: Query, options: { readonly owner: string; readonly leaseMs?: number; readonly now?: () => Date }) {
-  const leaseMs = options.leaseMs ?? 30_000, now = options.now ?? (() => new Date());
+  // PostgreSQL binds "now" at execution; worker clock skew cannot expire another worker's lease.
+  const leaseMs = options.leaseMs ?? 30_000, timestamp = () => options.now?.().toISOString() ?? "now";
   if (!options.owner.trim() || !Number.isInteger(leaseMs) || leaseMs < 1 || leaseMs > 300_000) throw new Error("WORK_INVALID_LEASE");
-  const recover = async (limit = 1_000): Promise<number> => (await query(EXPIRE_WORK_SQL, [now().toISOString(), limit])).length;
+  const recover = async (limit = 1_000): Promise<number> => (await query(EXPIRE_WORK_SQL, [timestamp(), limit])).length;
   const fenced = (claim: WorkRow) => {
     if (claim.status !== "taken" || !claim.leaseOwner) throw new Error("WORK_CLAIM_REQUIRED");
-    return [claim.id, claim.leaseOwner, now().toISOString()];
+    return [claim.id, claim.leaseOwner, timestamp()];
   };
   return {
     async add(input: WorkInput): Promise<WorkRow> {
@@ -103,14 +104,14 @@ export function workList(query: Query, options: { readonly owner: string; readon
       const state = (input.state ?? registryJurisdictions(input.placeId)[0] ?? registryJurisdictions(input.subjectId)[0] ?? "US").toUpperCase();
       if (state !== "US" && !(REGISTRY_STATES as readonly string[]).includes(state)) throw new Error("WORK_INVALID_STATE");
       const [saved] = await query(ADD_WORK_SQL, [workId(input), input.kind, input.placeId, input.subjectId, input.url ? link(input.url) : null,
-        canonicalJson({ ...input.source, placeId: input.placeId, subjectId: input.subjectId, url: input.url ?? null }), input.priority ?? 0,
-        now().toISOString(), input.field ?? null, canonicalJson(input.value ?? null), input.quote ?? null, state, canonicalJson(input.sources ?? [])]);
+        canonicalJson({ placeId: input.placeId, subjectId: input.subjectId, url: input.url ?? null, ...input.source }), input.priority ?? 0,
+        timestamp(), input.field ?? null, canonicalJson(input.value ?? null), input.quote ?? null, state, canonicalJson(input.sources ?? [])]);
       return row(saved!);
     },
     async claim(kind: WorkKind, n: number): Promise<readonly WorkRow[]> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
       await recover();
-      return (await query(CLAIM_WORK_SQL, [kind, now().toISOString(), n, `${options.owner}:${randomUUID()}`, leaseMs])).map(row);
+      return (await query(CLAIM_WORK_SQL, [kind, timestamp(), n, `${options.owner}:${randomUUID()}`, leaseMs])).map(row);
     },
     recover,
     async finish(claim: WorkRow): Promise<boolean> {

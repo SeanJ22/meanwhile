@@ -5,6 +5,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { buildStatePlaceMap, registeredPlaceIds } from "../lib/place-map/build.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import { placesAtPoint, placesForCode } from "../lib/place-map/read.ts";
+import { placeMapCounts } from "../lib/place-map/counts.ts";
 import { divisionIdsAt, type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import type { RegistrationReference } from "../lib/registration/reference.ts";
@@ -74,6 +75,9 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     const transaction = <T>(run: (q: Query) => Promise<T>) => db.transaction(tx => run(async (sql, params = []) => (await tx.query(sql, [...params])).rows as Record<string, unknown>[]));
     await loadStatePlaceMap({ transaction }, map);
     await loadStatePlaceMap({ transaction }, map);
+    assert.deepEqual((await placeMapCounts(query)).find(row => row.state === "AZ"), {
+      state: "AZ", places: 5, zips: 1, zctas: 0, countyAttachments: 1,
+    });
     assert.equal((await query("SELECT count(*)::int n FROM zip_place"))[0].n, 2);
     const before = calls;
     assert.deepEqual((await placesForCode(query, "zip", "85701", { purpose: "representation", asOf: "2026-10-24" })).memberships.map(m => m.placeId), [`${state}/cd:6`]);
@@ -90,6 +94,13 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     }] });
     const moved = await placesAtPoint(query, [-111, 32.5]);
     assert.ok(!moved.memberships.some(m => m.placeId === county || m.countyAttachment));
+    await loadStatePlaceMap({ transaction }, { places: [], boundaries: [],
+      zipEdges: [{ ...map.zipEdges[0], code: "85702" }], zctaEdges: [map.zipEdges[0]] });
+    assert.deepEqual((await placeMapCounts(query)).find(row => row.state === "AZ"), {
+      state: "AZ", places: 5, zips: 2, zctas: 1, countyAttachments: 1,
+    });
+    assert.deepEqual((await placesForCode(query, "zip", "85702", { purpose: "election", asOf: "2026-10-24", electionDate: "2026-11-03" })).memberships.map(m => m.placeId), [`${state}/cd:6`]);
+    assert.deepEqual((await placesForCode(query, "zip", "85701", { purpose: "election", asOf: "2026-10-24", electionDate: "2024-11-05" })).memberships.map(m => m.placeId), [`${state}/cd:6`]);
   } finally { await db.close(); }
 });
 

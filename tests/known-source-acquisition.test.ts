@@ -6,6 +6,8 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { acquireKnownRelease, SOURCE_CHECK_AFTER_ENV, type KnownRelease } from "../lib/sources/known-release.ts";
 import { RepositoryLockHeld, type LockManager } from "../lib/control-plane/repository/types.ts";
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
+import { netlifyEvidenceStoreFromEnv } from "../lib/control-plane/evidence/netlify-store.ts";
+import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 
 const T0 = "2026-10-01T00:00:00.000Z", T1 = "2026-10-03T00:00:00.000Z", DAY = 86_400_000;
 const url = "https://publisher.example/releases/current.csv";
@@ -207,4 +209,37 @@ test("an owner's read-now request reaches the publisher even inside the cache in
   await acquireKnownRelease(h.options);
   assert.equal(h.requests(), 3, "the runner hands its request time to every source read in the child");
   assert.equal(cached.checkedAt, T0);
+});
+test("a source read records its publisher's bytes, never the Netlify vault requests its release cache makes", async t => {
+  // The runner's vault is Netlify Blobs, spoken to over the same global fetch a composite read traces.
+  const blobs = new Map<string, { body: ArrayBuffer; metadata: string | null }>();
+  const publisher = "https://il-peoriacounty.civicplus.com/RSSFeed.aspx?CID=All-0&ModID=65";
+  const network = (async (input: Parameters<typeof fetch>[0], init: RequestInit = {}) => {
+    const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url);
+    const method = (init.method ?? "GET").toUpperCase(), headers = new Headers(init.headers);
+    if (url.href === publisher) return new Response("<rss></rss>", { headers: { "content-type": "application/rss+xml" } });
+    const key = decodeURIComponent(url.pathname.replace(/^\/(api\/v1\/blobs\/)?/, ""));
+    const held = blobs.get(key);
+    if (url.hostname === "api.netlify.com" && method === "HEAD") {
+      return held ? new Response(null, { headers: held.metadata ? { "netlify-blobs-metadata": held.metadata } : {} }) : new Response(null, { status: 404 });
+    }
+    if (url.hostname === "api.netlify.com") return Response.json({ url: `https://blobs.signed.example/${encodeURIComponent(key)}` });
+    if (method === "PUT") {
+      if (headers.get("if-none-match") === "*" && held) return new Response(null, { status: 412 });
+      blobs.set(key, { body: await new Response(init.body).arrayBuffer(), metadata: headers.get("x-amz-meta-user") });
+      return new Response(null, { status: 200, headers: { etag: `"${blobs.size}"` } });
+    }
+    return held ? new Response(held.body, { headers: held.metadata ? { "x-amz-meta-user": held.metadata } : {} }) : new Response(null, { status: 404 });
+  }) as typeof fetch;
+  t.mock.method(globalThis, "fetch", network);
+  const vault = netlifyEvidenceStoreFromEnv({ ...process.env, WTP_VAULT_PROVIDER: "netlify", WTP_BLOBS_SITE_ID: "site", WTP_BLOBS_TOKEN: "token" })!;
+  const read = (now: string) => captureSourceAcquisitions(run => run("civicplus", () => acquireKnownRelease({
+    store: vault, locks: createMemoryRepositories().locks, sourceId: "civicplus", releaseId: "rss", url: publisher, parserVersion: "civicplus/2",
+    signal: AbortSignal.timeout(10_000), maxBytes: 1024, checkAfterMs: 0, now: () => now,
+  })));
+  for (const now of [T0, T1]) {
+    const { evidence } = await read(now);
+    assert.deepEqual(evidence.map(row => row.finalUrl), [publisher]);
+  }
+  assert.ok(blobs.size > 0, "the release was held in the vault");
 });

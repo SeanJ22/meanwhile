@@ -1,6 +1,7 @@
 import { getStore, type Store } from "@netlify/blobs";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { contentHash } from "../ids.ts";
+import { outsideSourceAcquisition } from "../../sources/acquisition-trace.ts";
 import { EvidenceStoreRefusal, objectClassOf, reconcileExistingObject, type EvidenceStore, type ObjectMeta, type StoredObject } from "./store.ts";
 
 const ENVELOPE_FORMAT = "evidence-envelope@1";
@@ -176,7 +177,7 @@ export function netlifyEvidenceStoreFromEnv(env: NodeJS.ProcessEnv = process.env
     // failure response stops that loop; the read rejects with signal.reason.
     const expired = () => new Response(null, { status: 408, statusText: "Vault request aborted" });
     if (signal.aborted) return expired();
-    try { return await fetch(input, { ...init, signal }); }
+    try { return await outsideSourceAcquisition(() => fetch(input, { ...init, signal })); }
     catch (error) { if (signal.aborted) return expired(); throw error; }
   };
   return new NetlifyEvidenceStore(getStore({ name: env.WTP_VAULT_STORE ?? "meanwhile-evidence", siteID, token, consistency: "strong",fetch:boundedFetch }), signals);

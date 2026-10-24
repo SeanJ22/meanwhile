@@ -4414,5 +4414,17 @@
     "tested_sha": "0fd58dd5a",
     "gates": "pass",
     "at": "2026-10-24T21:26:21Z"
+  },
+  {
+    "lane": "river-vote",
+    "steps": [
+      "RV-VOTE"
+    ],
+    "ready_sha": "c618f6973",
+    "merge_sha": "ebae79d1f",
+    "river_sha": "4040fb227",
+    "tested_sha": "ebae79d1f",
+    "gates": "pass",
+    "at": "2026-10-24T22:15:54Z"
   }
 ]

@@ -1,0 +1,96 @@
+{
+  "productionCommit": "96b6ea5e758f1ef0b21251135e17e0f168919c8e",
+  "deployId": "6adcd2d3e6f2eaacb2114163",
+  "function": "___netlify-server-handler",
+  "observedReaderPaths": [
+    "/ballot?zip=85701",
+    "/ballot?zip=80202",
+    "/ballot?zip=53703"
+  ],
+  "httpStatus": 200,
+  "renderedContests": 0,
+  "readerErrorDigest": "3045718373",
+  "source": "Read-only Netlify request/function observability",
+  "logs": [
+    {
+      "at": "2026-10-24T15:57:12.906Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:12.913Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'NJ',\n  key: 'CURATED_READER_RECORD:US-NJ:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:12.251Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'NJ',\n  key: 'CURATED_READER_RECORD:US-NJ:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:12.254Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:11.385Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:12.125Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'NJ',\n  key: 'CURATED_READER_RECORD:US-NJ:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:09.912Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'NH',\n  key: 'CURATED_READER_RECORD:US-NH:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:09.952Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:06.933Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:09.696Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'DE',\n  key: 'CURATED_READER_RECORD:US-DE:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:05.201Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:57:05.212Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'UT',\n  key: 'CURATED_READER_RECORD:US-UT:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:56:57.052Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'MI',\n  key: 'CURATED_READER_RECORD:US-MI:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:56:57.053Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:55:55.673Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'WI',\n  key: 'CURATED_READER_RECORD:US-WI:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:55:55.694Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:55:11.271Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:55:11.278Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'TX',\n  key: 'CURATED_READER_RECORD:US-TX:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:55:05.493Z",
+      "message": "⨯ error: unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: https://neon.com/docs/connect/connection-errors#unsupported-startup-parameter\n    at <unknown> (.next/server/chunks/ssr/_0epyd03._.js:25:27965)\n    at async (.next/server/chunks/ssr/lib_04zz__j._.js:45:125512) {\n  length: 241,\n  severity: 'ERROR',\n  code: '08P01',\n  detail: undefined,\n  hint: undefined,\n  position: undefined,\n  internalPosition: undefined,\n  internalQuery: undefined,\n  where: undefined,\n  schema: undefined,\n  table: undefined,\n  column: undefined,\n  dataType: undefined,\n  constraint: undefined,\n  file: undefined,\n  line: undefined,\n  routine: undefined,\n  digest: '3045718373'\n}\n"
+    },
+    {
+      "at": "2026-10-24T15:55:08.783Z",
+      "message": "READER_STATE_DATABASE_MISS {\n  family: 'ballot-navigation',\n  state: 'FL',\n  key: 'CURATED_READER_RECORD:US-FL:official-ballot-navigation',\n  error: 'error(08P01): unsupported startup parameter in options: jit. Please use unpooled connection or remove this parameter from the startup package. More details: [url-redacted]'\n}\n"
+    }
+  ]
+}

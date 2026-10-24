@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 96 OPEN (#806, auto-merge on; river bd77dcb0f = RV-REPAIR, gates 9/9, 9,631 pass). Release 95 live until it merges. Batch on river-next: RV-TOOLS, RN-03, CL-01, MD-01, RB-A1 (gates running). RIVER-KEYS, RN-01 and BL-21-FX being finished on their branches
+build_state: RELEASE 96 LIVE (38b470355 from 6:32 AM EDT; RV-REPAIR). Runner still on 16eead35c at 6:35 AM EDT; repair check waits for it. Batch 2 (RV-TOOLS, RN-03, CL-01, MD-01, RB-A1) gating on river-next 3d013c360. Ready behind it: RN-01 (merged onto RN-03), BL-21-FX, PB-02, LV-01
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,16 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 96 live, 6:32 AM EDT
+- /api/build 38b4703557c7 (merge of #806) from 6:32 AM EDT. Reader walk in Chromium at 6:35 AM EDT, no console errors: /ballot 85003 Phoenix 6 dated deadlines (DOM elements, data-dated-event), 07102 Newark 8, 03301 Concord 3, 85653 Marana 6 plus Pima County Recorder 520-724-4330; 19147 PA office line 717/787-5280; 98101 WA 800/448-4881 · 360/902-4180. (Earlier River notes counted 12/16/6: each deadline appears twice in the streamed HTML; the DOM has 6/8/3.)
+- Job 1 baseline continues on release 95's runner code: reader-repair passes at 5:05, 5:30, 5:55 and 6:19 AM EDT each report 1,310 to 1,311 READER_READBACK_REPAIR_FAILED. Done when the first 2 repair passes on 38b470355 are under 60.
+- Batch 2: CL-01 left cardForNominee, linksForNominee and an exported BallotCandidateTicket behind; the dead-code gate refused the combination; River deleted them (3d013c360) and re-gated.
+- RN-01 (finished by River's helper, READY a5601eec9): 47 of 78 state planners on release 95 died on a file race (ENOENT on /var/lib/meanwhile/meanwhile-worker-memory.json.lock, introduced in release 95); the system planner's work read took 262 s and timed out (now 4.7 s); voting-sites read "not due" because the 00:11 UTC Oct 24 pointer move counted as a read (0 of 56 due before, 52 after); overdue meetings launched before all cadence work. RN-03 landed first and covers the clock and next-due parts the same way, so River folded RN-01 onto it keeping one of each (ba5669a5a; 119 focused tests pass).
+- BL-21-FX (finished by River's helper, READY 13918a9c8): per state, the page uses the state's own navigation record once published, and until then shows exactly release 94's dates, office line and local offices. Production render harness, one ZIP per state + Marana: 49 of 52 identical to release 94 in every field; DC, DE, FL (the only states with their own record today) gain Election Day and 6, 4, 3 dated deadlines and keep their office line. Open question for Sean: the hunt's held-place capture still reads only each state's own record (feeds hunts/Admin, not readers).
+- PB-02 (River wrote its READY 31f0cb8b3 from the lane's own evidence in docs/pb-02.md, after merging river; 71 tests pass): 144 of 477 seven-day refusals publish; the cohort and intake cover 20 states.
+- LV-01's second READY (f786ce81f) carried both proofs and every state; it was never refolded. Folding next.
+- Still being finished by helpers: RIVER-KEYS, BL-01 (10 failing tests). Waiting on BL-01: CS-01 (READY wording only). Then SRC-01.
 
 ### Folds, 5:50 AM EDT
 - RV-REPAIR: gates 9 of 9 on 39c3037f4 (9,631 pass, 0 fail); main's release-95 merge commit merged in (tree identical, b5af0a2ad); river bd77dcb0f; release 96 = PR #806, auto-merge on.

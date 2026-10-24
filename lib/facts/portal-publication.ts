@@ -36,9 +36,14 @@ export async function withdrawPlatformPublication(db: FactDb, door: DoorRecord, 
 }
 
 /** A newly observed government link closes this source's standing blank; normal acquisition refreshes its facts. */
-export async function confirmPlatformPublication(db:FactDb,door:DoorRecord):Promise<void> {
+export async function confirmPlatformPublication(db:FactDb,door:DoorRecord,purge?:ReaderCachePurger):Promise<void> {
   const partition=meetingPartitionOfId(door.doorId);
   if(!partition) return;
-  await db.transaction(query=>query("DELETE FROM blank WHERE entity_id=ANY($1::text[]) AND field=ANY($2::text[]) AND reason='PORTAL_AUTHORITY_UNCONFIRMED'",
-    [door.bodyIds,[`calendar:${partition.scope}`,`calendar:${partition.scope}:history`]]));
+  const changed=await db.transaction(async query=>{
+    const bodies=await Promise.all(door.bodyIds.map(async id=>await resolveId(id,query) ?? id));
+    const removed=await query("DELETE FROM blank WHERE entity_id=ANY($1::text[]) AND field=ANY($2::text[]) AND reason='PORTAL_AUTHORITY_UNCONFIRMED' RETURNING entity_id",
+      [bodies,[`calendar:${partition.scope}`,`calendar:${partition.scope}:history`]]);
+    return Promise.all([...new Set(removed.map(row=>String(row.entity_id)))].map(id=>readerCacheScopeForEntity(query,id)));
+  });
+  for(const scope of changed) if(scope) await invalidateReaderCache(scope,purge);
 }

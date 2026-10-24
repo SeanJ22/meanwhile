@@ -6,6 +6,8 @@ import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
 import { fileEntityPlaces } from "../lib/facts/entity-places.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import {door} from '../lib/core/door.ts';
+import {factClocks} from '../lib/facts/clocks.ts';
 
 test("a board keeps one identity and reaches every served city in ten states, including after the next write", async () => {
   const {pg} = await migratedReaderDb();
@@ -39,6 +41,28 @@ test("a board keeps one identity and reaches every served city in ten states, in
         cities.slice(0,2).sort().map(place_id => ({place_id,boundary_year:2025})));
     }
   } finally { await pg.close(); }
+});
+
+test('an identical saved fact can file a newly served city and refresh its reader without counting another fact',async()=>{
+  const db=await factDb(),id='az:special:regional#governing',city='ocd-division/country:us/state:az/place:served',now=new Date('2026-10-24T00:00:00.000Z');
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Regional Board','AZ'),($2,'place','Served','AZ')",[id,city]);
+    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov/board','https://example.gov/board',$1,$2,'source')",[now.toISOString(),'a'.repeat(64)]);
+    const input={subjectId:id,field:'office_phone',fieldKind:'contact' as const,value:'520-555-0100',valueText:'520-555-0100',quote:'',provenance:'OFFICIAL' as const,producedBy:'fixture',costUsd:0,
+      copy:{id:1,finalUrl:'https://example.gov/board',text:'',fetchedAt:now,isArchive:false}};
+    let purges=0;const options={purge:async()=>{purges++;return {purged:true};}};
+    assert.equal((await door(db,input,factClocks(null),now,options) as {decision:string}).decision,'PUBLISH');
+    const before=purges;
+    const served={...input,places:[{placeId:city,boundaryYear:2025,basis:'SERVICE_AREA' as const}]};
+    assert.equal((await door(db,served,factClocks(null),now,options) as {decision:string}).decision,'CONFIRM');
+    assert.ok(purges>before);
+    assert.deepEqual(await db.query('SELECT place_id FROM rebuild_queue'),[{place_id:city}]);
+    assert.equal((await db.query('SELECT count(*)::int AS n FROM fact'))[0]!.n,1);
+    assert.equal((await db.query('SELECT sum(n)::int AS n FROM count_hour'))[0]!.n,1);
+    const after=purges;await db.query('DELETE FROM rebuild_queue');
+    await door(db,served,factClocks(null),now,options);
+    assert.equal(purges,after);assert.deepEqual(await db.query('SELECT * FROM rebuild_queue'),[]);
+  } finally {await db.pg.close();}
 });
 
 test("the next registration import retains all published territory and removes only superseded state links", async () => {

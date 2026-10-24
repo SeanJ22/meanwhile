@@ -29,7 +29,9 @@ if(existsSync(out)) for(const row of JSON.parse(readFileSync(out,'utf8')).result
 }
 if(existsSync(`${directory}/portal-read-index.json`)) Object.assign(sourceIndex,JSON.parse(readFileSync(`${directory}/portal-read-index.json`,'utf8')));
 for(const [url,source] of Object.entries(sourceIndex)) {
-  saved.set(url,Promise.resolve({...source,body:readFileSync(`${directory}/portal-sources/${source.hash}`,'utf8')}));
+  const body=readFileSync(`${directory}/portal-sources/${source.hash}`,'utf8');
+  if(source.status>=500 && body.includes('envoy://cloudflare_https_tunnel/')) continue;
+  saved.set(url,Promise.resolve({...source,body}));
   const host=new URL(url).hostname;requests.set(host,(requests.get(host)??0)+1);
 }
 async function read(first:string) {
@@ -102,10 +104,11 @@ await Promise.all(Array.from({length:16},async()=>{
       }
       matches=[...new Map(matches.map(m=>[m.government.id,m])).values()];
       const target=matches.length===1?matches[0]!.government:null;
-      const readable=(sources[0] as {status:number}|undefined)?.status===200;
-      const action=target?(target.jurisdictionId===row.government_id || target.id===row.government_id?'KEEP':'MOVE'):readable?'WITHDRAW':'RETRY';
+      const status=(sources[0] as {status:number}|undefined)?.status;
+      const checked=status===200 || status===404 || status===410 || !row.website;
+      const action=target?(target.jurisdictionId===row.government_id || target.id===row.government_id?'KEEP':'MOVE'):checked?'WITHDRAW':'RETRY';
       results.push({...publicRow,action,destination:target?{id:target.id,jurisdictionId:target.jurisdictionId,state:target.state,name:target.name,website:target.website}:null,
-        reason:target?'The government site links this exact tenant':readable?'The checked sources did not confirm a unique government-to-portal link':'The own site could not be read; preserve the last verified publication and retry',sources});
+        reason:target?'The government site links this exact tenant':checked?'The checked sources did not confirm a unique government-to-portal link':'The own site could not be read; preserve the last verified publication and retry',sources});
     } catch(error) {results.push({...publicRow,action:'RETRY',destination:null,reason:error instanceof Error?error.message:String(error),sources});}
     if(results.length%25===0) console.log(`${results.length}/${input.length}`);
   }

@@ -185,7 +185,7 @@ export async function readPlatformGovernment(input: {
       const page = held.get(step.artifactId); if (page) ownLinks.push(...pageLinks(page.text,step.url));
     }
     for (const row of existing) {
-      if (!authority) break; // A failed source read preserves the last verified publication.
+      if (!authority && [...pages.values()].some(page=>page.transportError || page.status===null || page.status===403 || page.status===429 || page.status>=500)) break;
       const config = (row.value as {config?:Record<string,unknown>}).config;
       if (!config?.crosswalkRowId) continue;
       const portal = config.platformPublisherUrl ?? config.route;

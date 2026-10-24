@@ -13,7 +13,7 @@ import { resolveId } from "./resolve.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
 
-export interface Side { readonly value: unknown; readonly provenance: Provenance; readonly fetchedAt: Date; readonly sourceUrl?: string }
+interface Side { readonly value: unknown; readonly provenance: Provenance; readonly fetchedAt: Date; readonly sourceUrl?: string }
 
 export type DoorInput = Omit<PublishInput, "entity"> & (
   { readonly entity: CheckEntity; readonly subjectId?: string }
@@ -159,7 +159,10 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       return { refused: verdict.reason };
     }
     const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
-    await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null);
+    if(await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null)) {
+      await queueEntityPlaces(query,entity.id,now);
+      changed=await readerCacheScopeForEntity(query,entity.id);
+    }
     if (repeated) return {decision:"CONFIRM",factId:Number(row!.id)};
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
@@ -210,10 +213,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
 
 /** A changed fact queues every served place filed by the same transaction. */
 async function filePublication(query: Query, entityId: string, step: string, now: Date): Promise<void> {
-  const places = await query(`SELECT DISTINCT e.id,e.state FROM entity_place p JOIN entity e ON e.id=p.place_id WHERE p.entity_id=$1`,[entityId]);
-  if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
-    SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
-  [places.map(place => place.id), now.toISOString()]);
+  const places=await queueEntityPlaces(query,entityId,now);
   const [subject] = await query("SELECT state FROM entity WHERE id=$1", [entityId]);
   const states = [...new Set([...places.map(place => place.state), subject?.state]
     .flatMap(state => state && state !== "US" ? [String(state).toUpperCase()] : []))];
@@ -223,13 +223,10 @@ async function filePublication(query: Query, entityId: string, step: string, now
   [states.length ? states : ["US"], now.toISOString(), step]);
 }
 
-/** Preserve an official agenda or calendar page when a newer sidebar points to an unrelated page. */
-function agendaPage(value: unknown, sourceUrl?: string): boolean {
-  if (typeof value !== "string" || !URL.canParse(value)) return false;
-  const url = new URL(value);
-  if (/youtube|facebook|twitter|instagram|vimeo/i.test(url.hostname + url.pathname)) return false;
-  const purpose = /agenda|calendar|meeting|council[-_/]?archives|boarddocs|legistar/i.test(`${url.pathname} ${url.search} ${url.hostname}`);
-  // A council/board page already published as the agenda route is the government's own meeting page, even when its URL says only "city-council-2".
-  if (!purpose && !(sourceUrl && /council|board|commission/i.test(url.pathname))) return false;
-  return sourceUrl === undefined || URL.canParse(sourceUrl) && url.hostname.replace(/^www\./, "") === new URL(sourceUrl).hostname.replace(/^www\./, "");
+async function queueEntityPlaces(query:Query,entityId:string,now:Date) {
+  const places = await query(`SELECT DISTINCT e.id,e.state FROM entity_place p JOIN entity e ON e.id=p.place_id WHERE p.entity_id=$1`,[entityId]);
+  if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
+    SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
+  [places.map(place => place.id), now.toISOString()]);
+  return places;
 }

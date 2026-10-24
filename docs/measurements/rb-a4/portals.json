@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-24T17:32:01.971Z",
+  "observedAt": "2026-10-24T17:57:30.712Z",
   "productionRole": "readonly",
   "productionWrites": 0,
   "scope": "Every OPEN platform-census portal/government pair in the production door registry. WITHDRAW means unconfirmed in the checked sources, not a proved wrong owner.",
@@ -35,7 +35,7 @@
       "reason": "The own site could not be read; preserve the last verified publication and retry",
       "sources": [
         {
-          "url": "https://www.cityofsitka.com/",
+          "url": "https://www.cityofsitka.com/Home",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -52,7 +52,7 @@
       "reason": "The own site could not be read; preserve the last verified publication and retry",
       "sources": [
         {
-          "url": "https://www.cityofsitka.com/",
+          "url": "https://www.cityofsitka.com/Home",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -98,12 +98,33 @@
       "portal": "https://webapi.legistar.com/v1/kpb/events",
       "state": "ak",
       "boardCount": 22,
-      "action": "RETRY",
-      "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "action": "KEEP",
+      "destination": {
+        "id": "government:US-AK:cog:160739",
+        "jurisdictionId": "ak:county:borough-of-kenai-peninsula",
+        "state": "AK",
+        "name": "BOROUGH OF KENAI PENINSULA",
+        "website": "http://www.borough.kenai.ak.us/"
+      },
+      "reason": "The government site links this exact tenant",
       "sources": [
         {
-          "url": "https://www.borough.kenai.ak.us/",
+          "url": "https://www.kpb.us/",
+          "status": 200,
+          "sha256": "6c90e418c9bfc1b0de3da5e0636192bbd277bb903201d79c05fafd49beb57801"
+        },
+        {
+          "url": "https://www.kpb.us/local-governance-and-permitting/borough-information/board-of-equalization/board-of-equalization-overview",
+          "status": 200,
+          "sha256": "c556a4d8cb29d4ebfe42e79fe1679a7d326f48e02958c9c9f6ed2a0627f06742"
+        },
+        {
+          "url": "https://www.kpb.us/local-governance-and-permitting/learn-about-service-areas/service-area-board-appointment",
+          "status": 503,
+          "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
+        },
+        {
+          "url": "https://www.kpb.us/local-governance-and-permitting/learn-about-service-areas/board-meeting-archive",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -120,7 +141,7 @@
       "reason": "The own site could not be read; preserve the last verified publication and retry",
       "sources": [
         {
-          "url": "https://www.matsugov.us/",
+          "url": "https://matsugov.us/",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -137,7 +158,7 @@
       "reason": "The own site could not be read; preserve the last verified publication and retry",
       "sources": [
         {
-          "url": "https://www.cityoffoley.org/",
+          "url": "https://cityoffoley.org/",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -154,7 +175,7 @@
       "reason": "The own site could not be read; preserve the last verified publication and retry",
       "sources": [
         {
-          "url": "https://www.cityoffoley.org/",
+          "url": "https://cityoffoley.org/",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -205,7 +226,7 @@
       "reason": "The own site could not be read; preserve the last verified publication and retry",
       "sources": [
         {
-          "url": "https://www.cityofmobile.org/",
+          "url": "https://www.cityofmobile.gov/",
           "status": 503,
           "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
         }
@@ -239,8 +260,8 @@
         },
         {
           "url": "https://www.cityofsatsuma.com/calendar.aspx?CID=14",
-          "status": 503,
-          "sha256": "971f01aae81a63c435e602a1a728c8894b1527150a621d70d735aaca6ff930ea"
+          "status": 200,
+          "sha256": "a6e313d8fc92278ea487534b892b89e83732af9c0451a8b5eabf8f1b7c18a33f"
         }
       ]
     },
@@ -1276,9 +1297,9 @@
       "portal": "https://www.escalon.gov/agendacenter",
       "state": "ca",
       "boardCount": 4,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -2174,9 +2195,9 @@
       "portal": "https://salinas.legistar.com/Calendar.aspx",
       "state": "ca",
       "boardCount": 11,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.ci.salinas.ca.us/",
@@ -2536,9 +2557,9 @@
       "portal": "https://temeculaca.legistar.com/Calendar.aspx",
       "state": "ca",
       "boardCount": 2,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.cityoftemecula.org/",
@@ -2553,9 +2574,9 @@
       "portal": "https://webapi.legistar.com/v1/temeculaca/events",
       "state": "ca",
       "boardCount": 3,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.cityoftemecula.org/",
@@ -3402,9 +3423,9 @@
       "portal": "https://inyococa.api.civicclerk.com/v1/Events",
       "state": "ca",
       "boardCount": 1,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.inyocounty.us/imaaa",
@@ -3451,9 +3472,9 @@
       "portal": "https://lossan.legistar.com/Calendar.aspx",
       "state": "ca",
       "boardCount": 2,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.lossan.org/",
@@ -3468,9 +3489,9 @@
       "portal": "https://webapi.legistar.com/v1/lossan/events",
       "state": "ca",
       "boardCount": 3,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.lossan.org/",
@@ -3948,9 +3969,9 @@
       "portal": "https://tdpud.api.civicclerk.com/v1/Events",
       "state": "ca",
       "boardCount": 1,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": [
         {
           "url": "https://www.tdpud.org/index.php?cid2",
@@ -8478,9 +8499,9 @@
       "portal": "https://ma-cohasset.civicplus.com/AgendaCenter",
       "state": "ma",
       "boardCount": 20,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -8902,9 +8923,9 @@
       "portal": "https://cityofinkstermi.gov/AgendaCenter",
       "state": "mi",
       "boardCount": 7,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -8913,9 +8934,9 @@
       "portal": "https://cityofinkstermi.gov/common/modules/iCalendar/iCalendar.aspx",
       "state": "mi",
       "boardCount": 14,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -9457,9 +9478,9 @@
       "portal": "https://www.brookfieldcitymo.gov/AgendaCenter",
       "state": "mo",
       "boardCount": 1,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -12111,9 +12132,9 @@
       "portal": "https://boxelder.granicus.com/ViewPublisher.php",
       "state": "sd",
       "boardCount": 8,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -12459,9 +12480,9 @@
       "portal": "https://brookshiretexas.granicus.com/ViewPublisher.php",
       "state": "tx",
       "boardCount": 4,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {
@@ -14857,9 +14878,9 @@
       "portal": "https://elkinswv.api.civicclerk.com/v1/Events",
       "state": "wv",
       "boardCount": 18,
-      "action": "RETRY",
+      "action": "WITHDRAW",
       "destination": null,
-      "reason": "The own site could not be read; preserve the last verified publication and retry",
+      "reason": "The checked sources did not confirm a unique government-to-portal link",
       "sources": []
     },
     {

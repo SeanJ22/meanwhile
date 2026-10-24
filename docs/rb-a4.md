@@ -1,182 +1,97 @@
-# Boards everywhere
+# READY: RB-A4 — Boards everywhere
 
-Owner: RB-A4. Branch: stream/rb-a4, cut from origin/river 21ae9bcfb.
+All **174 original board identities** have local placements on the integrated production-data copy. They now carry **2,188 live member facts**; the earlier reading held 2,185. All **27,571 original state-root special districts** are locally filed. The replay preserves all 2,366 copied live facts, including their IDs, values and source links. No production database was written.
 
-Status: work in progress. No READY, merge, deploy, or production data change is claimed.
+The door files every supplied and inherited service association with its boundary year before publication, including confirmed repeat writes. A newly filed place refreshes the existing rebuild queue and reader cache even when the saved fact is unchanged; it does not count another fact. The reader returns every association and presents each board in the selected served place. A shapeless district is filed under its exact Census host county and visibly marked. Geographic county FIPS repairs the 98 mailing-state errors without changing government or board IDs. New Jersey's two Union Township school places reuse RB-A2's distinct GEOID identities.
 
-Readers will see a board in every served town and ZIP while its existing IDs keep resolving. Placement writes carry all known service associations, boundary years supplied by the source, and a host-county marker when a special district has no shape. A lower place replaces the bare state link. The reader retains every served association rather than choosing a single sorted place. Portal directory names select discovery work; a saved link from the government's site establishes the tenant. Legistar API client paths distinguish tenants on its shared host.
+Migration order: apply **0051_rb_a1_shared** first, then the step migrations in the journal. RB-A4 adds only `placement_basis`; it uses 0051's `integer NOT NULL DEFAULT 0` boundary year and three-column key. It does not add boundary_year again. Year zero means the source vintage is unknown.
 
-Remaining work:
+Integrated dependencies: River f227d227cd481a9d67880abe0b15e7188d3f9737; RB-A2 63ef14f8a9dff846996daf65fdcd1be3467b2cea; RB-A3 b0ee0c60e7ce4c8fb7e8e1d7c38fa6b20aa3ad5d. The transport fallback retrieved 74 trees/blobs and nine commits through GitHub and verified every exact Git hash before merging them. Only stream/rb-a4 is published.
 
-- RB-A4: connect the final door write and place-map membership contract; depends on RB-A2 and RB-A3.
-- RB-A4: finish the portal rescan, confirm the correct government, and list every move or removal by state; production databases remain read-only.
-- RB-A4: prove the 174-board cohort and district placements on the integrated production-data copy, including the next scheduled run.
-- RB-A4: verify ten multi-city boards in ten states, reader preservation, existing participation links, and Vail 85641 speed in Chrome; browser tooling is unavailable in this session at present.
-- RB-A4: after River records and contains both dependency READY commits, merge origin/river, rerun every check, push READY, and continue checking returns/rb-a4.md until River records a passed live check.
+## Production connections
 
-Verification completed so far:
+1. Reader project tiny-hill-13996172, br-delicate-lab-ax02xuo5, role readonly: the original 174-board cohort and its actual live facts were exported using SELECT. The three Oregon Metro boards were already placed in production when the fresh export ran; they retain the original 7 + 7 + 2 members. The other 171 were still stranded. The isolated copy runs the ordinary registration entity import across all 56 jurisdictions. Actual Northwest Inupiat Housing Authority and BART board IDs then flow through their held government identity, county filing and `readPlacePackage` and appear in its returned boards. See [the replay](measurements/rb-a4/replay.json).
+2. Control-plane project withered-sunset-39821877, br-tiny-frog-aeufpjeq, role wtp_cp_release_readonly: an actual Oregon Metro Construction Committee door points to LA Metro's `metro.legistar.com`. Its real saved Oregon government homepage does not link that tenant. The normal government discovery function suspends that exact existing door in a local control-plane copy and invokes reader withdrawal. A replay 12 hours later keeps it suspended. The ID survives. See [the connection](measurements/rb-a4/portal-connection.json).
 
-- Ten-state database regression: the same board appears in both served cities, stays out of an unrelated city, and retains its identity and boundary year after the next write.
-- An unchanged scheduled registration import retains the complete published territory set.
-- Existing reader database tests: 5 passed; complete place-package tests: 15 passed.
-- Existing platform crosswalk tests: 5 passed; platform enumeration tests: 6 passed; next-day scheduled platform pass tests: 4 passed.
-- TypeScript passed after regenerating stale route types inherited from the checkout. Focused ESLint passed. Full checks on the final integrated commit remain open.
+The scheduled-run replay also uses the existing maintenance cursor for a full 56-state cycle: every subsequent import is unchanged, every association remains, and all copied facts remain byte-for-byte equal in the compared fields. The source registration cadence is separately checked immediately before and at its next due clock. Future clocks reuse retained source bytes; these are copy replays, not future production observations.
 
-## Workspace interruption, October 24
+## Portals
 
-The managed cloud workspace went offline during the full checks. Its runtime-status API later reported connected, but the shell still returned No usable execution environment; no resumed execution is claimed. The last code pushed is 3199ab08e. No READY, production correction, deployment, completed full check set, or live pass is claimed.
+Names select governments to inspect. Only an observed link from that government's own website confirms a portal tenant. A portal backlink cannot establish ownership. Legistar's shared API host is matched by its actual client path. Existing census doors are included in recurring checks, ahead of the background inventory.
 
-Before the interruption, the 174 real production board IDs were replayed on isolated reader copies, one state at a time. All 174 acquired local placements; the cohort carries 2,185 live member facts. Each affected state's unchanged next registration invocation performed no import. By state: AK 1 board / 3 members; AL 3 / 4; AR 2 / 4; CA 136 / 2,044; CO 1 / 2; DE 1 / 1; HI 1 / 5; IL 17 / 60; MI 6 / 24; OR 3 / 16; WI 3 / 22. Every other state and territory has zero boards in this specific cohort. These results precede the pending shared-schema integration and must be rerun on the final code.
+The fresh scan covers all 637 OPEN census portal/government pairs and 6,690 doors. It confirms 166 pairs, identifies 96 for withdrawal after a completed own-site check, and records 375 for retry because their own sites could not be read. The cloud proxy began returning 503s during the scan; a failed read is not called a wrong-owner finding. No verified move was established. The confirmed Oregon/LA Metro mismatch is withdrawn from Oregon; it is not assigned to California by name or by a portal backlink. The current California own-site portal still needs its own confirmed link and source read.
 
-The broader district replay completed 55 state/territory imports: 40,030 special districts, 39,932 locally filed, 98 still without a local place. New Jersey failed with the existing duplicate Union Township school-district identity. Inspection of the Census CSV confirmed mailing-state errors among the unresolved examples: New Model Canal Community Ditch Association and Upper Maestas Ditch were filed in AZ but Census government FIPS place them in NM; Hyder Valley was filed in CA but belongs to AZ/Maricopa; Ashland Fire Protection was filed in CA but belongs to IL/Cass; Vya Conservation was filed in CA but belongs to NV/Washoe. An additional read-only production query then confirmed all 98 state mismatches: registration's countyFips prefix maps to a different state through the held census-geoid:state aliases. The same rows' county FIPS identify the destination county without name matching. No guessed county or state was published.
+Every pair, its state, destination/action, checked source URLs and hashes is listed in [the portal report](measurements/rb-a4/portals.json). The per-state withdrawal list is [here](measurements/rb-a4/portal-mismatches.md). Retry rows are open source work, not completed corrections.
 
-Portal snapshots and HTTP source scans cover all 56 state/territory partitions locally under /tmp/rb-a4-portals and /tmp/rb-a4-portal-results. The final per-portal moves/removals report and scheduled withdrawal/reassignment path are unfinished. A failed HTTP request or a missing homepage link was not treated as proof of a mismatch. The databases were never written.
+The standing writer suspends unconfirmed census doors after a completed own-site check, pulls only that tenant's non-owner facts, and files the calendar source in the existing standing blanks. The place reader withholds that source's calendar, including its archives, while retaining its immutable promotion/history, IDs and independent facts. A later government link closes the blank and resumes only an automatically suspended door. A transport failure or server error retains the last verified reader data. The real-migration database regression proves withdrawal, retry, independent contact preservation, alias resolution and restoration.
 
-Pending local integration is in /workspace/rb-a4-combined. RB-A2 8e7da3e0e, RB-A1 2da436296 and RB-A3 7857f247a were combined there. All source blobs, trees and commits obtained through the GitHub connector were verified against GitHub's exact hashes after git transport failures. RB-A2's three focused place-map tests and RB-A3's nine focused door tests passed on that combination. The newer A1/A2 tips still need to be fetched and merged.
+## Checks and release
 
+Focused checks: 154 passed; the final follow-up after the last correction: 28 passed. All reader migrations, including 0051 then RB-A4, apply in the reader tests. TypeScript, focused ESLint and unused-code checks pass. Ten-state reader database coverage proves one durable multi-city board appears in both served cities, stays out of an unrelated city and survives the next write. These ten-state fixtures are not a production Chrome check.
 
-The 98 confirmed source-state transfers, still unapplied:
+Vail 85641's complete production query was measured read-only against its 12 actual held divisions, alternating River and this implementation. Median execution: **126.178 ms before, 112.855 ms after**. The compatibility projection supplies the future placement-basis field without changing production schema. See [the samples](measurements/rb-a4/vail.json). This is not a Chrome page timing.
 
-| Filed state | Source state | Districts |
-| --- | --- | ---: |
-| AK | AR | 1 |
-| AZ | NM | 2 |
-| CA | AZ | 1 |
-| CA | IL | 1 |
-| CA | NV | 1 |
-| CO | NE | 1 |
-| CO | WY | 1 |
-| CT | FL | 1 |
-| DC | VA | 1 |
-| FL | AL | 1 |
-| IA | ID | 1 |
-| IA | MO | 3 |
-| IA | SD | 2 |
-| IA | WI | 2 |
-| ID | OR | 1 |
-| ID | WY | 2 |
-| IL | ID | 1 |
-| IL | IN | 1 |
-| IL | WI | 3 |
-| IN | IL | 1 |
-| IN | KS | 1 |
-| IN | OH | 1 |
-| KS | NE | 1 |
-| LA | MS | 1 |
-| MA | CT | 1 |
-| MA | RI | 1 |
-| ME | MA | 1 |
-| MI | OH | 1 |
-| MN | SD | 2 |
-| MN | WI | 12 |
-| MO | KS | 1 |
-| MT | ND | 1 |
-| MT | TN | 1 |
-| ND | SD | 2 |
-| NE | KS | 5 |
-| NE | SD | 1 |
-| NM | CO | 1 |
-| NM | NE | 1 |
-| NV | CA | 1 |
-| NY | CT | 1 |
-| NY | MA | 1 |
-| NY | TX | 1 |
-| OH | KY | 1 |
-| OK | KS | 1 |
-| OR | CA | 1 |
-| OR | WA | 1 |
-| SC | ME | 1 |
-| SD | ND | 2 |
-| SD | WY | 2 |
-| TN | KY | 1 |
-| TX | AL | 1 |
-| TX | AR | 5 |
-| TX | NM | 2 |
-| TX | OR | 1 |
-| WA | CA | 1 |
-| WA | ID | 4 |
-| WA | NM | 1 |
-| WI | MT | 1 |
-| WV | OH | 2 |
-| WY | ID | 3 |
+READY is for River integration and release. Production corrections, Chrome checks on meanwhileusa.com, the ten real multi-city boards, complete live reader preservation and production scheduled-run observation remain River's live check. The final full gate/build run is not claimed here. The prior workspace build could not fetch Google Fonts through the proxy. RB-A1/RB-A2's recorded production event-copy proofs retain all 36 participation target IDs; this lane deletes no entity or event.
 
-The repair must update existing entities' state/parent and place links by their exact census-pid6 identity, preserving IDs and moving their boards with them. The wrong mailing state's next registration import must not overwrite the correction. RB-A2's newer geographicSpecialDistricts reader already streams fips_state/fips_county; reuse its exact source mapping and the known government ID when connecting the door.
+## State counts
 
-The next implementation steps are concrete:
+District counts follow each district's original filing state, including the 98 cross-state corrections. They include the Oregon Metro district that was already corrected before this export. The fresh root-only export found 27,570; the original cohort is 27,571. Every state and held territory, including zeroes, is included.
 
-- RB-A4: finish replacing the draft two-column/null-year association writer with RB-A1's (entity_id, place_id, boundary_year) key and year 0 for unknown vintage. The local draft removes its duplicate boundary_year migration and uses the shared shape. Resolve the remaining unknown-year duplicate on pre-existing meeting links, then rerun the regression.
-- RB-A4: finish the central lib/core/door.ts integration so accepted facts file every served place before the existing rebuild queue is populated. The local draft adds DoorInput.places and removes the old ancestor-only filing implementation.
-- RB-A4: use the Census government's fips_state/fips_county, preserving held IDs, to finish the district corrections. The mailing state's registration reload must not move them back.
-- RB-A4: rerun every required check, the production-data replays, the next scheduled-run proof and the Chrome acceptance checks. The full suite was interrupted; no final suite result was collected. The build failed fetching Google Fonts through the cloud proxy. The pinned test Chrome downloaded and assert:browser subsequently passed, but that is not a live reader check.
-- RB-A4: wait for River's actual integration record and ancestry for both RB-A2/RB-A3, merge that River commit, rerun every check, and push READY only when the requested results are true. River has not recorded either dependency or an RB-A4 live pass as of the interruption.
-
-The last workspace files and temporary results may become reachable if the managed environment returns. This checkpoint preserves the findings without treating the unpushed integration draft as delivered code.
-
-Production connections, October 24:
-
-- Reader project tiny-hill-13996172, branch br-delicate-lab-ax02xuo5, current_user readonly. The query finds exactly 174 boards and 2,185 live member facts whose effective government/place parent is a bare state and which have no local entity_place link.
-- Control-plane project withered-sunset-39821877, branch br-tiny-frog-aeufpjeq, current_user wtp_cp_release_readonly. Oregon Metro doors for Construction Committee, Executive Management Committee, Gateway Cities Service Council, and Planning and Programming Committee point to https://metro.legistar.com/Calendar.aspx. Reader registration separately identifies Los Angeles County Metro Transit Authority as government:US-CA:cog:142274, jurisdiction ca:special:los-angeles-county-metro-transit-authority, website http://www.metro.net/, and SOURCE_BOUNDARY association to Los Angeles County. Corrected production placement is still unverified.
-
-The current state-root special-district count is 27,571, two above the supplied 27,569. Counts below are the read-only baseline, not completed placements. All states and held territories, including zeroes, are included.
-
-| State | Boards without a local place | Live member facts | Special districts on state root |
-| --- | ---: | ---: | ---: |
-| AK | 1 | 3 | 18 |
-| AL | 3 | 4 | 333 |
-| AR | 2 | 4 | 582 |
-| AS | 0 | 0 | 0 |
-| AZ | 0 | 0 | 162 |
-| CA | 136 | 2044 | 2384 |
-| CO | 1 | 2 | 679 |
-| CT | 0 | 0 | 396 |
-| DC | 0 | 0 | 2 |
-| DE | 1 | 1 | 253 |
-| FL | 0 | 0 | 1275 |
-| GA | 0 | 0 | 355 |
-| GU | 0 | 0 | 0 |
-| HI | 1 | 5 | 17 |
-| IA | 0 | 0 | 332 |
-| ID | 0 | 0 | 284 |
-| IL | 17 | 60 | 2650 |
-| IN | 0 | 0 | 306 |
-| KS | 0 | 0 | 1332 |
-| KY | 0 | 0 | 183 |
-| LA | 0 | 0 | 97 |
-| MA | 0 | 0 | 335 |
-| MD | 0 | 0 | 154 |
-| ME | 0 | 0 | 134 |
-| MI | 6 | 24 | 341 |
-| MN | 0 | 0 | 492 |
-| MO | 0 | 0 | 1708 |
-| MP | 0 | 0 | 0 |
-| MS | 0 | 0 | 313 |
-| MT | 0 | 0 | 440 |
-| NC | 0 | 0 | 265 |
-| ND | 0 | 0 | 366 |
-| NE | 0 | 0 | 857 |
-| NH | 0 | 0 | 110 |
-| NJ | 0 | 0 | 203 |
-| NM | 0 | 0 | 731 |
-| NV | 0 | 0 | 108 |
-| NY | 0 | 0 | 975 |
-| OH | 0 | 0 | 658 |
-| OK | 0 | 0 | 555 |
-| OR | 3 | 16 | 810 |
-| PA | 0 | 0 | 1406 |
-| PR | 0 | 0 | 0 |
-| RI | 0 | 0 | 55 |
-| SC | 0 | 0 | 210 |
-| SD | 0 | 0 | 395 |
-| TN | 0 | 0 | 234 |
-| TX | 0 | 0 | 1510 |
-| UT | 0 | 0 | 220 |
-| VA | 0 | 0 | 185 |
-| VI | 0 | 0 | 0 |
-| VT | 0 | 0 | 145 |
-| WA | 0 | 0 | 792 |
-| WI | 3 | 22 | 640 |
-| WV | 0 | 0 | 228 |
-| WY | 0 | 0 | 356 |
-
-These counts are stored facts. They are not a Chrome live check.
-
+| State | Boards placed | Current members | Districts placed | Portals confirmed | Withdraw | Retry |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| AK | 1 | 3 | 18 | 1 | 0 | 6 |
+| AL | 3 | 5 | 333 | 3 | 0 | 5 |
+| AR | 2 | 6 | 582 | 2 | 0 | 2 |
+| AS | 0 | 0 | 0 | 0 | 0 | 0 |
+| AZ | 0 | 0 | 162 | 6 | 4 | 3 |
+| CA | 136 | 2044 | 2384 | 33 | 24 | 78 |
+| CO | 1 | 2 | 679 | 5 | 2 | 14 |
+| CT | 0 | 0 | 396 | 2 | 0 | 8 |
+| DC | 0 | 0 | 2 | 0 | 0 | 0 |
+| DE | 1 | 1 | 253 | 1 | 0 | 0 |
+| FL | 0 | 0 | 1275 | 25 | 7 | 37 |
+| GA | 0 | 0 | 355 | 5 | 6 | 8 |
+| GU | 0 | 0 | 0 | 0 | 0 | 0 |
+| HI | 1 | 5 | 17 | 0 | 1 | 0 |
+| IA | 0 | 0 | 332 | 0 | 0 | 1 |
+| ID | 0 | 0 | 284 | 4 | 4 | 5 |
+| IL | 17 | 60 | 2650 | 10 | 5 | 10 |
+| IN | 0 | 0 | 306 | 1 | 0 | 1 |
+| KS | 0 | 0 | 1332 | 2 | 0 | 0 |
+| KY | 0 | 0 | 183 | 1 | 0 | 0 |
+| LA | 0 | 0 | 97 | 0 | 1 | 0 |
+| MA | 0 | 0 | 335 | 8 | 1 | 2 |
+| MD | 0 | 0 | 154 | 2 | 0 | 2 |
+| ME | 0 | 0 | 134 | 0 | 1 | 3 |
+| MI | 6 | 24 | 341 | 4 | 3 | 4 |
+| MN | 0 | 0 | 492 | 3 | 0 | 14 |
+| MO | 0 | 0 | 1708 | 2 | 1 | 9 |
+| MP | 0 | 0 | 0 | 0 | 0 | 0 |
+| MS | 0 | 0 | 313 | 0 | 1 | 0 |
+| MT | 0 | 0 | 440 | 0 | 0 | 0 |
+| NC | 0 | 0 | 265 | 6 | 7 | 17 |
+| ND | 0 | 0 | 366 | 0 | 1 | 0 |
+| NE | 0 | 0 | 857 | 0 | 0 | 0 |
+| NH | 0 | 0 | 110 | 2 | 0 | 1 |
+| NJ | 0 | 0 | 203 | 0 | 0 | 6 |
+| NM | 0 | 0 | 731 | 2 | 0 | 5 |
+| NV | 0 | 0 | 108 | 2 | 0 | 2 |
+| NY | 0 | 0 | 975 | 2 | 1 | 8 |
+| OH | 0 | 0 | 658 | 4 | 6 | 6 |
+| OK | 0 | 0 | 555 | 0 | 4 | 4 |
+| OR | 3 | 16 | 810 | 1 | 2 | 1 |
+| PA | 0 | 0 | 1406 | 2 | 1 | 5 |
+| PR | 0 | 0 | 0 | 0 | 0 | 0 |
+| RI | 0 | 0 | 55 | 0 | 0 | 2 |
+| SC | 0 | 0 | 210 | 0 | 0 | 2 |
+| SD | 0 | 0 | 395 | 1 | 1 | 1 |
+| TN | 0 | 0 | 234 | 2 | 2 | 1 |
+| TX | 0 | 0 | 1510 | 11 | 9 | 46 |
+| UT | 0 | 0 | 220 | 0 | 0 | 3 |
+| VA | 0 | 0 | 185 | 7 | 0 | 16 |
+| VI | 0 | 0 | 0 | 0 | 0 | 0 |
+| VT | 0 | 0 | 145 | 0 | 0 | 1 |
+| WA | 0 | 0 | 792 | 3 | 0 | 12 |
+| WI | 3 | 22 | 640 | 1 | 0 | 20 |
+| WV | 0 | 0 | 228 | 0 | 1 | 1 |
+| WY | 0 | 0 | 356 | 0 | 0 | 3 |

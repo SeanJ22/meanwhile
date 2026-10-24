@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,statSync} from 'node:fs';
 import {PGlite} from '@electric-sql/pglite';
 import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {readPlatformGovernment} from '../lib/control-plane/discovery/platform-government.ts';
@@ -18,14 +18,15 @@ for(const page of pages) {
   await pg.query('INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5::jsonb)',['REGISTRATION',`US-${page.government.state}:registration:v1`,page.versionId,page.promotedAt,JSON.stringify({governments:[page.government]})]);
 }
 const query=async(sql:string,params:readonly unknown[]) => (await pg.query<Record<string,unknown>>(sql,[...params])).rows;
-let now='2026-10-24T18:00:00.000Z';
+let now=new Date().toISOString();
 const observed:unknown[]=[];
 const open=async(input:{url:string})=>{
   const source=index[input.url] ?? Object.values(index).find(source=>source.url===input.url);
   if(!source) return {status:null,body:'',bytes:0,contentType:'text/html',location:null,transportError:'No held source for this local replay'};
   const body=readFileSync(`${directory}/portal-sources/${source.hash}`,'utf8');
   observed.push({url:source.url,status:source.status,sha256:source.hash});
-  return {status:source.status,body,bytes:Buffer.byteLength(body),contentType:source.contentType,location:null,transportError:null,retrievedAt:'2026-10-24T17:18:00.000Z'};
+  return {status:source.status,body,bytes:Buffer.byteLength(body),contentType:source.contentType,location:null,transportError:null,
+    retrievedAt:statSync(`${directory}/portal-sources/${source.hash}`).mtime.toISOString()};
 };
 const withdrawals:string[]=[];
 try {
@@ -38,7 +39,7 @@ try {
   assert.ok(first.withdrawn.some(row=>row.doorId===door.doorId));
   assert.equal((await repos.doors.mustRead(door.doorId)).value.status,'SUSPENDED');
   assert.equal(first.doors.some(row=>row.config?.platformPublisherUrl===door.config.platformPublisherUrl),false);
-  now='2026-10-25T06:00:00.000Z';
+  now=new Date(Date.parse(now)+12*3_600_000).toISOString();
   const next=await readPlatformGovernment(input);
   assert.equal((await repos.doors.mustRead(door.doorId)).value.status,'SUSPENDED');
   assert.equal(next.doors.some(row=>row.config?.platformPublisherUrl===door.config.platformPublisherUrl),false);

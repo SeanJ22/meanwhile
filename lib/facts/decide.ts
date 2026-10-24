@@ -1,1 +1,1 @@
-export { decide, type Side } from "../core/door.ts";
+export { decide } from "../core/door.ts";

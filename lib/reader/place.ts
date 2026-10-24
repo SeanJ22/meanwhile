@@ -97,22 +97,18 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     CROSS JOIN LATERAL (SELECT reader_payload_node(b.item) AS value) original
     LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=original.value->>'id'
     LEFT JOIN entity canonical ON canonical.id=alias.entity_id
+    LEFT JOIN LATERAL (SELECT array_agg(DISTINCT place_id) AS ids,
+      bool_or(place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$') AS local
+      FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')) served_places ON true
     CROSS JOIN LATERAL (SELECT CASE WHEN alias.entity_id IS NULL THEN original.value ELSE original.value || jsonb_build_object(
-      'id',alias.entity_id) END || jsonb_build_object('ocdId',CASE WHEN EXISTS (
-        SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')
-          AND place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$')
+      'id',alias.entity_id) END || jsonb_build_object('ocdId',CASE WHEN served_places.local
         AND original.value->>'ocdId' ~ '^ocd-division/country:us/(state|district|territory):[^/]+$'
-        THEN NULL ELSE original.value->>'ocdId' END) || CASE WHEN EXISTS (
-          SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id'))
-        THEN jsonb_build_object('alsoServesOcdIds',coalesce((
-        SELECT jsonb_agg(DISTINCT place_id) FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')),'[]'::jsonb)
+        THEN NULL ELSE original.value->>'ocdId' END) || CASE WHEN served_places.ids IS NOT NULL
+        THEN jsonb_build_object('alsoServesOcdIds',to_jsonb(served_places.ids)
         || coalesce(original.value->'alsoServesOcdIds','[]'::jsonb)) ELSE '{}'::jsonb END AS value) header
     WHERE ((original.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) AND (
-        original.value->>'ocdId' !~ '^ocd-division/country:us/(state|district|territory):[^/]+$' OR NOT EXISTS (
-          SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')
-            AND place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$')))
-      OR EXISTS (SELECT 1 FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')
-        AND place_id=ANY(ARRAY(SELECT id FROM selected_places)))
+        original.value->>'ocdId' !~ '^ocd-division/country:us/(state|district|territory):[^/]+$' OR NOT coalesce(served_places.local,false)))
+      OR served_places.ids && ARRAY(SELECT id FROM selected_places)
       OR EXISTS (SELECT 1 FROM jsonb_array_elements_text(coalesce(original.value->'alsoServesOcdIds','[]'::jsonb)) served WHERE served=ANY(ARRAY(SELECT id FROM selected_places)))
       OR coalesce(alias.entity_id,original.value->>'id')=ANY($3::text[]) OR $5::boolean
       OR coalesce(alias.entity_id,original.value->>'id') IN (SELECT id FROM owned WHERE kind='body'))

@@ -683,7 +683,7 @@ const supervisorFailures: SupervisorFailure[] = [];
 const crashedTasks: { readonly taskId: string; readonly detail: string }[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
-const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined }[] = [];
+const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined; readonly owedAtMs: number | undefined }[] = [];
 
 const launchDecisions: RoutineLaunchDecision[] = [];
 let decisionBatch = 0;
@@ -1127,8 +1127,12 @@ for (const read of clockReads) {
         "offered to the normal frontier",
     );
   }
+  // A changed input owes its read now; cadence work has owed it since its clock came due. Work due "at once" (a first
+  // read, a reparse) has no owed instant and keeps its baseline place.
+  const nextDueMs = routineTaskNextDueMs(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
   dueCandidates.push({
     clock: durableClock,
+    owedAtMs: !cadenceDue ? admissionNowMs : nextDueMs < admissionNowMs ? nextDueMs : undefined,
     pending: {
     kind: MEETING_PARTITION_TASK_IDS.has(task.id) ? "MEETING_PARTITION" : "SINGLE",
     id: task.id,
@@ -1140,8 +1144,9 @@ for (const read of clockReads) {
   });
 }
 
-const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
+const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock, owedAtMs }) => ({
   task: pending.task,
+  owedAtMs,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
   baselineOwed: routineBaselineOwed(pending.task, clock),
   deadlineMs: routineDueRequestDeadlineMs(

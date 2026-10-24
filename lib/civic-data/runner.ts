@@ -144,6 +144,8 @@ export interface RoutineTaskAdmissionCandidate {
   readonly task: RoutineSourceTask;
   readonly lastConsideredAt: string | null;
   readonly deadlineMs?: number;
+  /** When cadence work became owed (routineTaskNextDueMs); orders the pass, never admission. */
+  readonly owedAtMs?: number;
   readonly baselineOwed?: boolean;
 }
 
@@ -212,10 +214,16 @@ export function routineFailureDomainFrontier(
   return candidates.filter(({ task }) => admitted.has(task.id));
 }
 
-/** Overdue meetings and first reads lead; equal no-deadline work rotates by its actual last attempt. */
-export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly baselineOwed?: boolean; readonly lastConsideredAt?: string | null; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
-  // A meeting without its first read has deadline -Infinity: it is already owed, ahead of baseline work.
-  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && candidate.deadlineMs <= nowMs ? 0
+/**
+ * Overdue work leads, longest owed first whatever its kind, so a backlog of overdue meetings cannot hold a state's
+ * voting sites out of every pass's memory; first reads follow; equal no-deadline work rotates by its actual last attempt.
+ */
+export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly owedAtMs?: number; readonly baselineOwed?: boolean; readonly lastConsideredAt?: string | null; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
+  // A meeting without its first read has deadline -Infinity: it is already owed, ahead of baseline work. Other work is
+  // owed from its cadence or retry instant (routineTaskNextDueMs); a never-read task keeps its baseline place.
+  const owedAt = (candidate: T) => candidate.deadlineMs !== undefined ? candidate.deadlineMs
+    : candidate.owedAtMs !== undefined && Number.isFinite(candidate.owedAtMs) ? candidate.owedAtMs : undefined;
+  const group = (candidate: T) => nowMs !== undefined && (owedAt(candidate) ?? Number.NaN) <= nowMs ? 0
     : candidate.baselineOwed && !candidate.lastConsideredAt ? 1 : candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 2 : 3;
   // National sources have many independent state projections of the same held release.
   // Offer one from each source before the next state so one portfolio cannot occupy the whole pool.
@@ -230,7 +238,7 @@ export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number;
     .sort((left, right) =>
       group(left.candidate) - group(right.candidate) ||
       (group(left.candidate) === 1 ? left.position - right.position : 0) ||
-      ([0, 3].includes(group(left.candidate)) ? (left.candidate.deadlineMs! < right.candidate.deadlineMs! ? -1 : left.candidate.deadlineMs! > right.candidate.deadlineMs! ? 1 : 0) : 0) ||
+      ([0, 3].includes(group(left.candidate)) ? (owedAt(left.candidate)! < owedAt(right.candidate)! ? -1 : owedAt(left.candidate)! > owedAt(right.candidate)! ? 1 : 0) : 0) ||
       ([1, 2].includes(group(left.candidate)) ? Math.sign(consideredAtMs({ lastConsideredAt: left.candidate.lastConsideredAt ?? null }) - consideredAtMs({ lastConsideredAt: right.candidate.lastConsideredAt ?? null })) || 0 : 0) ||
       left.index - right.index)
     .map(({ candidate }) => candidate);

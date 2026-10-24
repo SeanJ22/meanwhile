@@ -39,7 +39,7 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
         const rows=hour?.counts?.filter(c=>c.state===code&&c.stage===stage&&(!family||c.family===family));
         const waiting=hour?.waiting?.filter(w=>w.state===code&&w.count>0);
         const oldest=waiting?.filter(w=>w.oldestAt).sort((a,b)=>a.oldestAt!.localeCompare(b.oldestAt!))[0];
-        const value=(field:"total"|"closedTotal"|"incoming"|"outgoing"|"changed")=>rows===undefined||rows.some(c=>c[field]===null)?"—":n(rows.reduce((sum,c)=>sum+c[field]!,0));
+        const value=(field:"total"|"closedTotal"|"incoming"|"outgoing"|"changed")=>rows===undefined||hour?.counts?.some(c=>c[field]===null)?"—":n(rows.reduce((sum,c)=>sum+c[field]!,0));
         return <tr key={code}><th scope="row">{code}</th><td>{value("total")}</td><td>{value("closedTotal")}</td><td>{value("incoming")}</td><td>{value("outgoing")}</td><td>{value("changed")}</td>
           <td>{waiting===undefined?"—":oldest?`${formatEastern(oldest.oldestAt!)} · ${n(Math.max(0,Math.floor((Date.parse(data.at)-Date.parse(oldest.oldestAt!))/60_000)))} minutes`:waiting.length?"—":"None"}</td></tr>;
       })}</tbody>

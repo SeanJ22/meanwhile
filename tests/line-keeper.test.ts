@@ -16,6 +16,7 @@ import { readLineReport } from "../lib/control-plane/line-keeper/report.ts";
 import { keeperStatus } from "../lib/control-plane/line-keeper/model.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { countProblems, countWindow } from "../lib/counts/hour.ts";
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { config as schedule } from "../netlify/functions/line-keeper.mts";
 const migration=readFileSync(new URL('../lib/db/migrations/RB-A8_count_hour.sql',import.meta.url),'utf8');
 const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query(text,[...params])).rows});
@@ -121,6 +122,22 @@ test('a waiting pile becomes owned Admin work and a brief item on the next hourl
     assert.equal(schedule.schedule,'5 * * * *');
     const rows=new Map(keeperRows(report,next));
     assert.match(renderToStaticMarkup(createElement(HourlyCounts,{data:rows.get('Facts live per hour (fact store)')!.hourlyCounts!})),/Oldest work waiting/);
+    const states=[...REGISTRY_STATES,'US'];
+    await control.query(`INSERT INTO work_row(id,kind,state,not_before)
+      SELECT 'pile:'||state,'read',state,$2::timestamptz FROM unnest($1::text[]) AS s(state)`,[states,'2026-10-20T07:00:00Z']);
+    for(let hour=2;hour<=4;hour++)await runLineKeeper(query(control),query(reader),new Date(Date.parse(first)+hour*3_600_000).toISOString());
+    const retained=(await control.query<{n:number;states:number;bytes:number}>(`SELECT count(*)::int AS n,
+      min((SELECT count(*) FROM jsonb_object_keys(oldest)))::int AS states,
+      sum(octet_length(row_to_json(r)::text))::int AS bytes FROM line_keeper_run r`)).rows[0];
+    assert.equal(retained.n,3,'hourly retention stays bounded');
+    assert.equal(retained.states,57,'the saved oldest summaries cover every state, territory and national queue');
+    assert.ok(retained.bytes<100_000,`${retained.bytes} bytes saved with waiting work in every state`);
+    const finalAt=new Date(Date.parse(first)+4*3_600_000).toISOString(),window=countWindow(finalAt);
+    const counts=await readCounts(query(control),window.from,window.through,finalAt);
+    const direct=(await control.query<{state:string;n:number}>('SELECT state,count(*)::int AS n FROM work_row GROUP BY state')).rows;
+    assert.equal(direct.length,57);
+    for(const row of direct)assert.equal(counts.filter(c=>c.state===row.state&&c.family==='read'&&c.stage==='work list:WAITING')
+      .reduce((n,c)=>n+c.total,0),row.n,`${row.state}: hourly Admin counts equal direct SQL`);
   }finally{await Promise.all([control.close(),reader.close()]);}
 });
 

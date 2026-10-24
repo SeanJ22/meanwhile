@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 96's deploy (38b470355, rolled back 12:09 PM EDT). NEXT: release 98 = jit fix alone (PR #808, CI last test job running, auto-merge on). QUEUED behind it, each its own release: 99 = 0051 contract budget (RV-0051 178151d61, gating), 100 = reader pool error handler (RV-POOL 207b50f5e)
+build_state: LIVE FOR READERS: release 98 (main 5a09ea42d, live 1:07 PM EDT; the jit fix). Reader checks pass. QUEUED, each its own release: 99 = 0051 contract budget (RV-0051 178151d61, gating), 100 = reader pool error handler (RV-POOL 207b50f5e)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T17:00:57Z
+heartbeat: 2026-10-24T17:09:28Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,19 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 98 live, 1:07 PM EDT: readers have the site back on release 97's features
+- /api/build shows 5a09ea42d (PR #808 merge commit) from 1:07 PM EDT.
+- Sean's checks on meanwhileusa.com in Chromium at 1:08 PM EDT, all pass:
+  - /ballot?zip=85701: 200, renders, no console errors.
+  - /ballot?zip=03255: 200, renders, no console errors.
+  - Ask on the 85701 ballot ("Who represents me in Congress?"): /api/ask/grounded 200, grounded answer (Kelly, Gallego, Grijalva AZ-7, with sources).
+  - /api/meetings?zip=85701: 200 (409 id fields).
+  - /api/meetings?zip=60602: 200 (556 id fields).
+  - /national: 200, renders.
+- The 14 ZIPs that failed on release 97, re-walked at 1:09 PM EDT: all 200, render, 0 console errors: AZ 85003 and 85653, NJ 07102, NH 03301, PA 19147, WA 98101, DC 20001, DE 19901, FL 32301, CA 90012, TX 78701, IL 60602, GA 30303, NY 10007. /api/reader/state?state=AZ 200.
+- Readers now have release 97's lane work: RN-03, RB-A1 code, BL-21-FX, RN-01, BL-01, LV-01, RIVER-KEYS, MT-01, SRC-01, CL-01 (first READY), PB-02, MD-01. Outage total: 11:48 AM to 12:24 PM EDT.
+- Still missing: 0051 isn't in production. Until release 99 ships and the runner applies it, a reaction on a renamed candidate (reader_resolve_id) fails. Next: release 99 (0051 budget) after its gates; then release 100 (pool error handler).
 
 ### Live for readers, 1:00 PM EDT
 - Live: release 96's deploy (/api/build 38b470355). Readers have /ballot (dates, offices), /national, place answers, meetings (checked 12:30 PM EDT). Reactions, Speak your mind and Ask work on release 96's code; release 96 doesn't call reader_resolve_id.

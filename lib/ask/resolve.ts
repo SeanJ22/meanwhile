@@ -85,14 +85,14 @@ export function resolveInterpretation(
     const active = focused.length ? focused : eligible;
     const last = context.priorSubjects?.[context.priorSubjects.length - 1];
     const pool = active.length ? active : last ? [last] : [];
-    const unresolved = pool.find((ref) => ref.id && !entities.some((entity) => entity.id === ref.id));
+    const unresolved = pool.find((ref) => ref.id && !entities.some((entity) => entity.id === ref.id || entity.aliases?.includes(ref.id!)));
     if (unresolved) return { binding: { kind: "UNRESOLVED", mention: unresolved.name }, basis: active.length ? "PAGE_CONTEXT" : "PRIOR_TURN", boundOn: unresolved.id!, unresolvedCanonicalId: unresolved.id! };
   }
 
   if (held?.binding.kind === "AMBIGUOUS") {
     const focused = (context.activeSubjects ?? []).filter((ref) => ref.focused && ref.id);
     if (focused.length === 1) {
-      const entity = held.binding.candidates.find((candidate) => candidate.id === focused[0].id);
+      const entity = held.binding.candidates.find((candidate) => candidate.id === focused[0].id || candidate.aliases?.includes(focused[0].id!));
       if (entity) return { binding: { kind: "BOUND", entity, matchedOn: entity.name }, basis: "PAGE_CONTEXT", boundOn: focused[0].id! };
     }
   }

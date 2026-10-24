@@ -5,6 +5,8 @@ import { useState } from "react";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { OfficialModal } from "@/components/map/popup/official-modal";
+import { CardSourceContext } from "@/components/ui/card-source-context";
+import { CardGapContext } from "@/components/ui/card-gap-context";
 
 /**
  * The candidate's name as the door to their battlecard, only where we hold the
@@ -32,13 +34,13 @@ export function IncumbentNameLink({
         {name}
       </button>
       {open && (
-        <OfficialModal
+        <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><OfficialModal
           holder={holder}
           seatLabel={null}
           tier="national"
           reactionContext={context}
           onClose={() => setOpen(false)}
-        />
+        /></CardGapContext.Provider></CardSourceContext.Provider>
       )}
     </>
   );

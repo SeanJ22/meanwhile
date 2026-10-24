@@ -120,7 +120,7 @@ test("M134 — a derived pick says where it came from", () => {
     "utf8",
   );
   // The derived pick is read from the device's own answer record, never from the server or an aggregate.
-  assert.match(control, /getStoredReaction\("CANDIDATE", o\.reactionTargetId\)/);
+  assert.match(control, /getStoredReaction\("CANDIDATE", o\.reactionTargetId, o\.reactionTargetAliases\)/);
   assert.ok(
     !/\/api\/reactions/.test(control),
     "the pick control must not read the server for an answer",

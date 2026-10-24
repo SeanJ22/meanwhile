@@ -24,30 +24,26 @@ test("an explicit projection resolves only a matching source and body and never 
   assert.deepEqual(reviewedVenueEntries("ical", venue.bodyOcdId, null, [venue]), [venue]);
 });
 
-test("the exact Pima native adapter uses its supplied empty or verified venue slice instead of the national cache", () => {
+test("the exact Pima adapter preserves source text without consulting a venue table", () => {
   const row = FIXTURE_DOOR_ROWS.find(row => row.agendaSourceType === "LEGISTAR" && row.config.slug === "pima")!;
   const partition = meetingPartitionForRow("legistar", row.bodyId);
   const event = (JSON.parse(readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8")) as LegistarEvent[])[0]!;
   const raw = [{ source: "legistar", raw: { event, slug: "pima", collectedAt: "2026-09-25T12:00:00.000Z", items: [] } }];
-  const empty = scopedMeetingSource(partition, [])!.normalize(raw);
+  const empty = scopedMeetingSource(partition)!.normalize(raw);
   assert.equal(empty.length, 1);
   assert.equal(empty[0]!.bodyId, row.bodyId);
-  assert.equal(empty[0]!.location, null, "the national fixture has this room; an explicit empty slice must not borrow it");
-  const held: VenueEntry = { ...venue, sourceId: "legistar", bodyOcdId: row.ocdId, match: event.EventLocation!, name: "Verified held room" };
-  const placed = scopedMeetingSource(partition, [held])!.normalize(raw);
-  assert.equal(placed.length, 1);
-  assert.equal(placed[0]!.location!.name, held.name);
-  assert.equal(placed[0]!.location!.lat, held.lat);
+  assert.equal(empty[0]!.location, null, "publication places the published text");
+  assert.equal(empty[0]!.venueGap?.publishedText, event.EventLocation);
 });
 
-test("the exact Mesa InSite adapter retains the body's calendar with an empty venue slice", () => {
+test("the exact Mesa InSite adapter retains the body's calendar before placement", () => {
   const row = FIXTURE_DOOR_ROWS.find(row => row.agendaSourceType === "LEGISTAR" && row.config.slug === "mesa")!;
   const partition = meetingPartitionForRow("legistar-insite", row.bodyId);
   const raw: LegistarInSiteRaw = { slug: "mesa", calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
     windows: [{ range: "This Year", rendered: "This Year", html: readFileSync(new URL("./fixtures/legistar-insite-mesa-minutes/calendar-2026-09-25.html", import.meta.url), "utf8"),
       pager: null, pages: [], noRecords: false }], feedXml: null, feedUrl: null, icalByInsiteId: {},
     clerkScheduleHtml: null, clerkScheduleUrl: null, collectedAt: "2026-09-25T12:00:00.000Z" };
-  const source = scopedMeetingSource(partition, [])!;
+  const source = scopedMeetingSource(partition)!;
   const meetings = source.normalize([{ source: "legistar-insite", raw }], new Date("2026-09-25T12:00:00.000Z"));
   assert.ok(meetings.length > 0, JSON.stringify(source.lastReport));
   assert.ok(meetings.every(meeting => meeting.bodyId === row.bodyId && meeting.location === null));

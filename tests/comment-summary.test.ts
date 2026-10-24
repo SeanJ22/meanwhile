@@ -50,7 +50,8 @@ const summary = RULES.join(" ");
 
 test("a long page about taking part becomes the board's plain-English comment rule: each sentence quoted from the page and checked by a second model", async () => {
   const { facts, repos, vault, clocks, handed } = await world();
-  assert.equal(handed.handed, 1, "the page is handed to the comment-rules writer, not published as a link");
+  // Intake hands the page to the comment-rules writer when it arrives; the publisher spends no turn on it and never publishes it as a link.
+  assert.deepEqual([handed.looked, handed.handed, handed.published], [0, 0, 0], "the page is handed to the comment-rules writer at intake, not published as a link");
   assert.equal((await repos.boxFindings.list())[0]!.value.waitingFor?.reason, COMMENT_SUMMARY_LEAD);
   let calls = 0;
   const transportFor = () => async (request: ModelRequest) => {

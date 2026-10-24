@@ -54,6 +54,9 @@ export function tracedResponses(sources: readonly { readonly source: string; rea
 }
 
 export function retainMeetingCandidateEvidence(candidate: RoutineCandidate, snapshot: MeetingsSnapshot, responses: readonly RetainedSourceResponse[]): RetainedMeetingCandidate {
-  const retainedSourceResponses = tracedResponses(snapshot.sources, responses).map(({ bytes, ...metadata }) => ({ ...metadata, base64: Buffer.from(bytes).toString("base64") }));
+  const pointUrls=new Set(snapshot.meetings.flatMap(meeting=>meeting.mapPin?.coordinateSourceUrl??[]));
+  const references=responses.filter(response=>pointUrls.has(response.finalUrl)&&new URL(response.finalUrl).hostname==="geocoding.geo.census.gov");
+  const owned=new Map([...tracedResponses(snapshot.sources,responses),...references].map(response=>[`${response.finalUrl}:${response.rawHash}`,response]));
+  const retainedSourceResponses = [...owned.values()].map(({ bytes, ...metadata }) => ({ ...metadata, base64: Buffer.from(bytes).toString("base64") }));
   return retainedSourceResponses.length ? { ...candidate, retainedSourceResponses } : candidate;
 }

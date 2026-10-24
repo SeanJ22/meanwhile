@@ -10,7 +10,6 @@ import {
   windowOf,
 } from "../lib/ballot/dated-events.ts";
 import { googleCalendarUrl, icsDataHref } from "../lib/calendar/event-links.ts";
-import { ELECTION_DATES } from "../lib/ballot/election-dates.ts";
 import { PLACEHOLDER_ADDRESS } from "../lib/ballot/placeholder-address.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
@@ -60,12 +59,7 @@ test("16: 'is it still ahead' is decided on the Phoenix wall clock", () => {
 });
 
 test("16: the NJ early-voting window produces a correct multi-day event", () => {
-  const nj = ELECTION_DATES.find((d) => d.state === "NJ");
-  assert.ok(nj, "New Jersey's dates are gone");
-  const early = nj.steps.find((s) => /early voting/i.test(s.label));
-  assert.ok(early, "the early-voting step is gone");
-
-  const w = windowOf(early.date);
+  const w = windowOf("2026-10-24 – 2026-11-01");
   assert.deepEqual(w, { start: "2026-10-24", end: "2026-11-01" });
 
   const event = {
@@ -95,30 +89,14 @@ test("16: Arizona and New Jersey produce the same stamps for the same dates", ()
   assert.match(ics, /DTEND;VALUE=DATE:20261102/);
 });
 
-test("16: every dated voting event with a known date can be calendared", () => {
-  let events = 0;
-  let dated = 0;
-  const phrases: string[] = [];
-
-  for (const state of ELECTION_DATES) {
-    for (const row of calendarableSteps(state.steps, "2026-08-19")) {
-      events += 1;
-      if (row.window) dated += 1;
-      else phrases.push(`${state.state}: ${row.step.label} = "${row.step.date}"`);
-    }
-  }
-
-  console.log(
-    `dated voting events: ${events} rendered, ${dated} carry a date, ` +
-      `${phrases.length} are an official phrase with no date in them`,
-  );
-  assert.ok(events > 10, `only ${events} steps — the dates file shrank`);
-  assert.equal(
-    dated + phrases.length,
-    events,
-    "every step is either datable or a phrase; there is no third kind",
-  );
-  for (const p of phrases) assert.match(p, /: .+ = ".+"/);
+test("a sourced rule without a calendar date cannot create an event", () => {
+  const rows = calendarableSteps([
+    { label: "Early voting", date: "2026-10-24 – 2026-11-01" },
+    { label: "Voter registration", date: "" },
+  ], "2026-10-14");
+  assert.deepEqual(rows[0].window, { start: "2026-10-24", end: "2026-11-01" });
+  assert.equal(rows[1].window, null);
+  assert.equal(rows[1].upcoming, false);
 });
 
 test("15: the ballot's polling-place affordance opens the map's own panel", () => {

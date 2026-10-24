@@ -1,5 +1,3 @@
-import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
 import type { ElectionFieldKind } from "../civic-data/election-fields.ts";
 import { CHECKLIST_FAMILIES } from "../coverage/checklist-map.ts";
 
@@ -22,14 +20,25 @@ export type FindingSlot =
   | { readonly class: "comment summary"; readonly handoff: "comment-summary" }
   | { readonly class: string; readonly waiting: string };
 
-/** The code that sorts a finding and publishes it; a change to any of it can change what a parked finding does. */
-const SORTING_AND_PUBLISHING_CODE = ["finding-slots.ts", "box-publication.ts", "entities.ts", "roster-facts.ts", "publish.ts", "check.ts"] as const;
+/** Bump only the class whose routing or publication changes. Routing fixtures bind each version to its behavior. */
+export const FINDING_SLOT_VERSIONS: Readonly<Record<string, number>> = Object.freeze({
+  rosters: 3, contacts: 1, "office contacts": 1, "body links": 1, bodies: 1, "other offices": 1,
+  schedules: 1, "meeting routes": 2, sittings: 2, "comment rules": 1, "official hosts": 1,
+  "ballot navigation": 1, "campaign sites": 1, candidates: 1, "site walk": 1, "comment summary": 1,
+  meetings: 1, other: 1,
+  geography: 1, governments: 1, officeholders: 1, "agendas and documents": 1, "laws and votes": 1, elections: 1,
+  "campaign finance": 1, "government money": 1, "taking part": 1, "reference data": 1, "executive actions": 1,
+  "public statement profiles": 1, ask: 1, "setup and safety checks": 1, "finding sources": 1, recovery: 1,
+  publishing: 1, "safety and privacy": 1, "reader participation": 1,
+});
+export const slotVersion = (slotClass: string): string => String(FINDING_SLOT_VERSIONS[slotClass] ?? FINDING_SLOT_VERSIONS.other);
 
-/** A short hash of the given sources, in order. */
-export const slotsVersionOf = (sources: readonly string[]): string => createHash("sha256").update(JSON.stringify(sources)).digest("hex").slice(0, 16);
-
-/** The hash of the sorting and publishing code, so any change to it makes findings parked under the old code look again, in every state. */
-export const FINDING_SLOTS_VERSION = slotsVersionOf(SORTING_AND_PUBLISHING_CODE.map(file => readFileSync(new URL(file, import.meta.url), "utf8")));
+/** Findings without a publisher slot are addressed to their consumer at intake. */
+export function waitingForSlot(slot: FindingSlot): { class: string; reason: string; slots: string } | undefined {
+  const reason = "waiting" in slot ? slot.waiting : "handoff" in slot ? slot.handoff === "site-walk" ? SITE_WALK_LEAD : COMMENT_SUMMARY_LEAD
+    : "lead" in slot ? slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD : null;
+  return reason === null ? undefined : { class: slot.class, reason, slots: slotVersion(slot.class) };
+}
 
 /** The reason a link finding waits in the Box: a page the government linked is a page to go read, and the next walk of that government's own site reads it first. */
 export const SITE_WALK_LEAD = "SITE_WALK_TAKES_IT";

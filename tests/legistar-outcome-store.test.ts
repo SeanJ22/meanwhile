@@ -330,7 +330,6 @@ test("a request failure persists as a named open failure and never as an empty s
       publishingOrg: "Pima County Clerk of the Board",
       timeZone: "America/Phoenix",
       insiteHost: "pima.legistar.com",
-      venues: [],
     },
     collected: {
       slug: "pima",

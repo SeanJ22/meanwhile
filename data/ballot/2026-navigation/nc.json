@@ -1,0 +1,232 @@
+{
+  "state": "NC",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://www.ncsbe.gov/voting/upcoming-election",
+      "finalUrl": "https://www.ncsbe.gov/voting/upcoming-election",
+      "publisher": "North Carolina State Board of Elections"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://www.ncsbe.gov/voting/upcoming-election",
+          "finalUrl": "https://www.ncsbe.gov/voting/upcoming-election",
+          "publisher": "North Carolina State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:35:56.497662+00:00",
+          "httpStatus": 200,
+          "rawHash": "a42ad620f69eae8f63157e236238e8dfe22fd030ba627d55f384102342b17266",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:0658393f84f1118ec79bfff608d5d56b",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "registration_deadline",
+            "text": "Oct. 9: Voter registration deadline (5 p.m.).*",
+            "quote": "Oct. 9: Voter registration deadline (5 p.m.).*\nOct. 15: In-person early voting begins; same-day registration available.\nOct. 31: In-person early voting ends (3 p.m.).",
+            "dates": [
+              "2026-10-09"
+            ],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:0bde07319659a5d979ab1981ec0e097f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "Oct. 20: Absentee ballot request deadline (5 p.m.).*",
+            "quote": "Oct. 20: Absentee ballot request deadline (5 p.m.).*",
+            "dates": [
+              "2026-10-20"
+            ],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:7d1a6a71ad1da7d1957960c1521f1857",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "registration_lookup",
+            "text": "https://vt.ncsbe.gov/RegLkup/",
+            "quote": "Voters can check to make sure their registration information is accurate and up to date using the Voter Search tool.",
+            "dates": [],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": "https://vt.ncsbe.gov/RegLkup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:927e3927c0bb58bf2cb00a8691248b67",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "ballot_lookup",
+            "text": "https://vt.ncsbe.gov/RegLkup/",
+            "quote": "All eligible, registered voters will find their sample ballot(s) in the “Your Sample Ballot” section of their Voter Search profile when sample ballots become available.",
+            "dates": [],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": "https://vt.ncsbe.gov/RegLkup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:9b7f8ede85594a1f3af6a1c07f5f49e3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "registration_page",
+            "text": "https://www.ncsbe.gov/registering/how-register",
+            "quote": "How to Register",
+            "dates": [],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": "https://www.ncsbe.gov/registering/how-register",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:9f0d02bfd0980eb628cd979de73e71af",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "election_office",
+            "text": "North Carolina State Board of Elections",
+            "quote": "North Carolina State Board of Elections (NCSBE)",
+            "dates": [],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": "https://www.ncsbe.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "919-814-0700",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:a5505f4149265ca68d6d9c25fb1364c8",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "early_voting",
+            "text": "Oct. 31: In-person early voting ends (3 p.m.).",
+            "quote": "Oct. 31: In-person early voting ends (3 p.m.).",
+            "dates": [
+              "2026-10-31"
+            ],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:d1c1b0ce250bbfd104b63f28e54bfa3f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "early_voting",
+            "text": "in-person early voting (Oct. 15 to Oct. 31)",
+            "quote": "in-person early voting (Oct. 15 to Oct. 31)\nOct. 31: In-person early voting ends (3 p.m.).",
+            "dates": [
+              "2026-10-15",
+              "2026-10-31"
+            ],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:d295ce855dad3ad3e8703404a5ea707f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "registration_deadline",
+            "text": "Oct. 15: In-person early voting begins; same-day registration available.",
+            "quote": "Oct. 15: In-person early voting begins; same-day registration available.\nOct. 31: In-person early voting ends (3 p.m.).",
+            "dates": [
+              "2026-10-15",
+              "2026-10-31"
+            ],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:dfcfc05d88b43918e15f1d9f7f010e7a",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "NC",
+            "divisionId": "ocd-division/country:us/state:nc",
+            "fieldKind": "polling_lookup",
+            "text": "https://vt.ncsbe.gov/RegLkup/",
+            "quote": "Find your polling place in the Voter Search tool and navigate to \"Your Voting Locations.\"",
+            "dates": [],
+            "url": "https://www.ncsbe.gov/voting/upcoming-election",
+            "navigationUrl": "https://vt.ncsbe.gov/RegLkup/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:35:56.497662+00:00",
+            "sourceOrg": "North Carolina State Board of Elections"
+          }
+        }
+      ]
+    }
+  }
+}

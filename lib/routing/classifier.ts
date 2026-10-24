@@ -2,6 +2,7 @@ import { askPlaybook, askPlaybookVersion, askSettings } from "../ask/runtime-set
 import { ASK_CLASSIFIER_CAP_SETTING } from "../ask/model.ts";
 import { scrubFreeText } from "../log/scrub.ts";
 import { ASK_MODEL_ROLES, resolveAskRoleModel } from "../ask/model.ts";
+import { askModelLadder } from "../ask/model-ladder.ts";
 import { modelRequestFields, servedModelOf } from "../models.ts";
 
 import { TOPIC_ROUTES } from "./topics.ts";
@@ -154,50 +155,51 @@ export async function classifyQuestion(
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return { kind: "UNAVAILABLE", why: "no-key" };
-  if (!noteCall()) return { kind: "UNAVAILABLE", why: "ceiling" };
 
   const impl = meteredAskFetch(options.fetchImpl ?? fetch, "classifier", options.recordCost);
-  // Resolved once: the same id is sent and recorded. Thinking is off where the model accepts
-  // `{type: "disabled"}`; on a model that always thinks it is omitted, effort stays low and `max_tokens`
-  // leaves room for the thinking (lib/models.ts).
-  const model = askModel();
-  const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.CLASSIFIER.thinking, effort: ASK_MODEL_ROLES.CLASSIFIER.effort });
   try {
-    const response = await impl(MESSAGES_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model,
-        max_tokens: Math.max(64, fields.minMaxTokens),
-        ...(fields.thinking ? { thinking: fields.thinking } : {}),
-        output_config: {
-          ...(fields.effort ? { effort: fields.effort } : {}),
-          format: { type: "json_schema", schema: classifierSchema() },
+    return await askModelLadder<ClassifierOutcome>(async (model, signal) => {
+      if (!noteCall()) return { kind: "UNAVAILABLE", why: "ceiling" };
+      const fields = modelRequestFields(model, { thinking: ASK_MODEL_ROLES.CLASSIFIER.thinking, effort: ASK_MODEL_ROLES.CLASSIFIER.effort });
+      const response = await impl(MESSAGES_URL, {
+        method: "POST", signal,
+        headers: {
+          "content-type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
         },
-        system: [{ type: "text", text: classifierPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
-        // The scrub the refusal log already runs. Nothing shaped like a
-        // phone number, an email address or a street address leaves here.
-        messages: [{ role: "user", content: scrubFreeText(question) }],
-      }),
-    });
-    if (!response.ok) return { kind: "UNAVAILABLE", why: "error" };
+        body: JSON.stringify({
+          model,
+          max_tokens: Math.max(64, fields.minMaxTokens),
+          ...(fields.thinking ? { thinking: fields.thinking } : {}),
+          output_config: {
+            ...(fields.effort ? { effort: fields.effort } : {}),
+            format: { type: "json_schema", schema: classifierSchema() },
+          },
+          system: [{ type: "text", text: classifierPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
+          // The scrub the refusal log already runs. Nothing shaped like a
+          // phone number, an email address or a street address leaves here.
+          messages: [{ role: "user", content: scrubFreeText(question) }],
+        }),
+      });
+      if (!response.ok) throw new Error(`Ask classifier HTTP ${response.status}`);
 
-    const body = (await response.json()) as {
-      model?: unknown;
-      content?: Array<{ type?: string; text?: string }>;
-    };
-    const text = body.content?.find((b) => b.type === "text")?.text ?? "";
-    const parsed = JSON.parse(text) as { topic?: unknown };
-    /* The label, plus the model asked and the model the API says served it. */
-    const label = readClassifierAnswer(parsed.topic);
-    const outcome: ClassifierOutcome = label.kind === "UNAVAILABLE" ? label : { ...label, model, servedModel: servedModelOf(body) };
-    if (cache.size >= CACHE_MAX) cache.clear();
-    cache.set(key, outcome);
-    return outcome;
+      const body = (await response.json()) as {
+        model?: unknown;
+        stop_reason?: string;
+        content?: Array<{ type?: string; text?: string }>;
+      };
+      const text = body.content?.find((b) => b.type === "text")?.text ?? "";
+      const parsed = JSON.parse(text) as { topic?: unknown };
+      if (body.stop_reason === "max_tokens" || typeof parsed.topic !== "string" ||
+        ![...classifiableTopicIds(), NO_TOPIC].includes(parsed.topic)) throw new Error("Invalid Ask topic");
+      /* The label, plus the model asked and the model the API says served it. */
+      const label = readClassifierAnswer(parsed.topic);
+      const outcome: ClassifierOutcome = label.kind === "UNAVAILABLE" ? label : { ...label, model, servedModel: servedModelOf(body) };
+      if (cache.size >= CACHE_MAX) cache.clear();
+      cache.set(key, outcome);
+      return outcome;
+    });
   } catch {
     // Every failure is the same answer to the reader: the keyword refusal.
     return { kind: "UNAVAILABLE", why: "error" };

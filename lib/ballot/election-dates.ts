@@ -1,21 +1,35 @@
 export interface DatedStep {
   label: string;
-  /** ISO date, or a short official phrase where no single date exists. */
   date: string;
   detail: string | null;
+  sourceUrl: string;
+  sourceOrg: string;
+  collectedAt: string;
+  verifiedAt: string;
 }
 
 export interface ElectionDates {
   state: string;
   electionDay: string;
   steps: DatedStep[];
+}
+
+export function electionDatesFor(state: string, projection: readonly ElectionDates[], electionDay = "2026-11-03"): ElectionDates | null {
+  return projection.find(calendar => calendar.state === state && calendar.electionDay === electionDay) ?? null;
+}
+
+/** The dates a state's readers see until that state's own navigation record is published. */
+interface BuiltInElectionDates {
+  state: string;
+  electionDay: string;
+  steps: { label: string; date: string; detail: string | null }[];
   sourceUrl: string;
   sourceOrg: string;
   collectedAt: string;
   verifiedAt: string | null;
 }
 
-export const ELECTION_DATES: ElectionDates[] = [
+const BUILT_IN_ELECTION_DATES: readonly BuiltInElectionDates[] = [
   {
     state: "NJ",
     electionDay: "2026-11-03",
@@ -117,6 +131,6 @@ export const ELECTION_DATES: ElectionDates[] = [
   },
 ];
 
-export function electionDatesFor(state: string): ElectionDates | null {
-  return ELECTION_DATES.find((d) => d.state === state) ?? null;
+export function builtInElectionDatesFor(state: string): BuiltInElectionDates | null {
+  return BUILT_IN_ELECTION_DATES.find((d) => d.state === state) ?? null;
 }

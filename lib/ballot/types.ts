@@ -16,6 +16,9 @@ export interface Election {
 export type ContestType = "CANDIDACY" | "MEASURE" | "RETENTION";
 
 export interface Contest {
+  /** Earlier source keys for this same election, office and division. */
+  aliases?: readonly string[];
+  sources?: readonly Provenance[];
   identity?: Pick<AzContestIdentity, "identityId" | "level" | "financeFilingAuthority">;
   filing?: { id: string; publishedTitle: string; provenance: Provenance };
   /** True only when every candidate on this saved authoritative list was independently verified. */
@@ -36,6 +39,18 @@ export interface Contest {
 }
 
 export interface Candidacy {
+  /** Every previously published candidacy and card key for this person in this race. */
+  aliases?: readonly string[];
+  sources?: readonly Provenance[];
+  personId?: string;
+  /** Historical running-mate keys remain distinct from the lead's person aliases. */
+  runningMateAliases?: readonly string[];
+  /** The ballot choice is joint; each member retains their own person identity. */
+  ticket?: {
+    id: string;
+    runningMate: Candidacy & { office?: string };
+    provenance: Provenance;
+  };
   identity?: Omit<AzCandidateIdentity, "displayName" | "givenName" | "familyName" | "partyLabel" | "canonicalCandidacyId" | "contestIdentityId">;
   filing?: {
     id: string;
@@ -95,6 +110,9 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  /** Pairings stated by the election authority, never inferred from party. */
+  candidateTickets?: readonly { id: string; leadCandidacyId: string;
+    runningMate: Candidacy & { office?: string }; provenance: Provenance }[];
   sourceAggregates?: readonly {
     id: string;
     sourceId: string;

@@ -12,16 +12,16 @@ const make = (id: string, fields: Partial<Meeting> = {}): Meeting => ({ id, ocdI
 test("online-only venues use only the exact body's published office, without changing the meeting", () => {
   const online = make("online", { online: { label: "Zoom", joinUrl: "https://example.gov/join" } });
   const unknown = make("unknown");
-  const office = { bodyId: "body:one", name: "Council office", address: "1 Public Street", lat: 32.2, lng: -110.9, provenance };
+  const office = { meetingId: "online", basis: "BODY_OFFICE" as const, bodyId: "body:one", name: "Council office", address: "1 Public Street", lat: 32.2, lng: -110.9, provenance };
   assert.deepEqual(groupByVenue([online, unknown]), []);
   const venues = groupByVenue([online, unknown], undefined, [office]);
   assert.equal(venues.length, 1);
   assert.equal(venues[0].kind, "ONLINE_ONLY");
   assert.deepEqual(venues[0].meetings.map(meeting => meeting.id), ["online"]);
-  assert.equal(venues[0].officeAddressSource, provenance);
+  assert.equal(venues[0].pinBasis, "BODY_OFFICE");
   assert.equal(online.location, null);
   assert.equal(online.online?.joinUrl, "https://example.gov/join");
-  assert.deepEqual(groupByVenue([online], undefined, [{ ...office, bodyId: "body:other" }]), []);
+  assert.deepEqual(groupByVenue([online], undefined, [{ ...office, meetingId: "other", bodyId: "body:other" }]), []);
   const physical = make("physical", { location: { name: office.name, address: office.address, lat: office.lat, lng: office.lng } });
   assert.equal(groupByVenue([physical, online], undefined, [office]).length, 2);
 });

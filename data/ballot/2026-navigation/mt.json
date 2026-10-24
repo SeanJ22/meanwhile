@@ -1,0 +1,264 @@
+{
+  "state": "MT",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://votemt.gov",
+      "finalUrl": "https://votemt.gov/",
+      "publisher": "Montana Secretary of State"
+    },
+    {
+      "requestedUrl": "https://votemt.gov/voter-calendar/",
+      "finalUrl": "https://votemt.gov/voter-calendar/",
+      "publisher": "Montana Secretary of State"
+    },
+    {
+      "requestedUrl": "https://leg.mt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0110/0130-0130-0020-0110.html",
+      "finalUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0110/0130-0130-0020-0110.html",
+      "publisher": "Montana Legislature"
+    },
+    {
+      "requestedUrl": "https://leg.mt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0050/0130-0130-0020-0050.html",
+      "finalUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0050/0130-0130-0020-0050.html",
+      "publisher": "Montana Legislature"
+    }
+  ],
+  "gaps": [
+    {
+      "kind": "registration_deadline",
+      "detail": "Excluded conflicting federal registration noon versus 8 p.m. wording on the same-weekend page; regular close and late-registration start are verified on the state calendar."
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0050/0130-0130-0020-0050.html",
+          "finalUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0050/0130-0130-0020-0050.html",
+          "publisher": "Montana Legislature",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:45:03.067519+00:00",
+          "httpStatus": 200,
+          "rawHash": "c428e9b901ef314d4c079f906cb501bb0dd277681f7b5ebc5f26b71b51a1c589",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0110/0130-0130-0020-0110.html",
+          "finalUrl": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0110/0130-0130-0020-0110.html",
+          "publisher": "Montana Legislature",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:45:51.433944+00:00",
+          "httpStatus": 200,
+          "rawHash": "079551587753eedf12274912f299a7f8d5526169e852f478ac11404443e5758a",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://votemt.gov/",
+          "finalUrl": "https://votemt.gov/",
+          "publisher": "Montana Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:17.256960+00:00",
+          "httpStatus": 200,
+          "rawHash": "584af66401c9d2ca8102e2ec28a83b48ed0b9d3e7e69bd6a3eaefe0beaf09bf9",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://votemt.gov/voter-calendar/",
+          "finalUrl": "https://votemt.gov/voter-calendar/",
+          "publisher": "Montana Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:49.252174+00:00",
+          "httpStatus": 200,
+          "rawHash": "32b01a5a8ac0d68f449093b13a52a43676fe4c791fe892c65c74dbbc24760924",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:20070a4d63cd46a1dab85607e3115937",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "polling_lookup",
+            "text": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+            "quote": "During certain elections, find your sample ballot and polling place or track your ballot.",
+            "dates": [],
+            "url": "https://votemt.gov/",
+            "navigationUrl": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:17.256960+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:29b08a1ba771b476cdd724a5d6747a50",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "registration_page",
+            "text": "https://votemt.gov/voter-registration/",
+            "quote": "Voter Registration",
+            "dates": [],
+            "url": "https://votemt.gov/",
+            "navigationUrl": "https://votemt.gov/voter-registration/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:17.256960+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:3ff993c8094228ba89a0d93187a27718",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "registration_deadline",
+            "text": "Late Registration Begins – General Election",
+            "quote": "Late Registration Begins – General Election\nAfter the close of regular registration 13-2-304.\nOctober 6, 2026 8:00 am",
+            "dates": [
+              "2026-10-06"
+            ],
+            "url": "https://votemt.gov/voter-calendar/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:49.252174+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:494fd779026bb7762df2157a40a450bb",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "registration_lookup",
+            "text": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+            "quote": "Registration Status",
+            "dates": [],
+            "url": "https://votemt.gov/",
+            "navigationUrl": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:17.256960+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:4bc9c2274ccb23d5e4b6c63878e607c3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "registration_deadline",
+            "text": "Close of Regular Registration",
+            "quote": "Close of Regular Registration\nClose of regular voter registration for general election.\nOctober 5, 2026 5:00 pm",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://votemt.gov/voter-calendar/",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:49.252174+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:5a3b67913decea97198bbc8adf4041d8",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "early_voting",
+            "text": "30 days prior to election day for absentee voting in person;",
+            "quote": "30 days prior to election day for absentee voting in person;",
+            "dates": [
+              "2026-10-04"
+            ],
+            "url": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0050/0130-0130-0020-0050.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:45:03.067519+00:00",
+            "sourceOrg": "Montana Legislature"
+          }
+        },
+        {
+          "id": "election-field:752a5af08f64ac2e019beebffc8faa39",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "election_office",
+            "text": "Montana Elections Division",
+            "quote": "Montana Secretary of State Montana Elections Division",
+            "dates": [],
+            "url": "https://votemt.gov/",
+            "navigationUrl": "https://votemt.gov/",
+            "electionDate": "2026-11-03",
+            "phone": "406-444-9608",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:17.256960+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        },
+        {
+          "id": "election-field:abe7cc07c6c8a396f160100fb7ba3ac3",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "an application for an absentee ballot must be made before noon on the day before the election.",
+            "quote": "an application for an absentee ballot must be made before noon on the day before the election.",
+            "dates": [
+              "2026-11-02"
+            ],
+            "url": "https://mca.legmt.gov/bills/mca/title_0130/chapter_0130/part_0020/section_0110/0130-0130-0020-0110.html",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:45:51.433944+00:00",
+            "sourceOrg": "Montana Legislature"
+          }
+        },
+        {
+          "id": "election-field:bdaec78e1e348174a4bb99d5e42af8c4",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "MT",
+            "divisionId": "ocd-division/country:us/state:mt",
+            "fieldKind": "ballot_lookup",
+            "text": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+            "quote": "During certain elections, find your sample ballot and polling place or track your ballot.",
+            "dates": [],
+            "url": "https://votemt.gov/",
+            "navigationUrl": "https://prodvoterportal.mt.gov/WhereToVote.aspx",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:17.256960+00:00",
+            "sourceOrg": "Montana Secretary of State"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -11,9 +11,9 @@ import { placeMapCounts } from "../lib/place-map/counts.ts";
 import { readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
-const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases");
+const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report");
 const states = Object.values(FIPS_TO_STATE).map(state => state.postal).sort();
-const db = await openMapCopy("national", !measuring && !verifying && !aliasesOnly);
+const db = await openMapCopy("national", !measuring && !verifying && !aliasesOnly && !shapesOnly && !reporting);
 try {
   if (measuring) {
     const codes = await db.query("SELECT DISTINCT zip FROM zip_place ORDER BY zip");
@@ -29,6 +29,26 @@ try {
     await writeFile("/tmp/rb-a2-replay/national-benchmark.json", JSON.stringify(result, null, 2));
     console.log(JSON.stringify(result));
     if (!result.passed) process.exitCode = 1;
+  } else if (reporting) {
+    const counts = await placeMapCounts(db.query), rows = [];
+    await db.exec("CREATE TEMP TABLE baseline_zip_place(zip text,place_id text,PRIMARY KEY(zip,place_id))");
+    for (const row of counts) {
+      const baseline = await readLegacyStateMemberships(process.cwd(), row.state);
+      const links = [...baseline].flatMap(([zip, entry]) => [...new Set([...entry.ids, ...entry.fringe ?? []])].map(place_id => ({ zip, place_id })));
+      await db.exec("TRUNCATE baseline_zip_place");
+      await db.query("INSERT INTO baseline_zip_place SELECT zip,place_id FROM jsonb_to_recordset($1::jsonb) AS b(zip text,place_id text)", [JSON.stringify(links)]);
+      const [gains] = await db.query(`SELECT count(DISTINCT (m.zip,m.place_id))::int AS n
+        FROM zip_place m JOIN entity e ON e.id=m.place_id JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
+        WHERE e.state=$1 AND b.layer IN('cd','sldu','sldl','district','unsd','elsd','scsd')
+          AND NOT EXISTS(SELECT 1 FROM baseline_zip_place old WHERE old.zip=m.zip AND old.place_id=m.place_id)`, [row.state]);
+      const [plans] = await db.query(`SELECT count(*) FILTER(WHERE b.version='cd:120' AND b.geometry IS NOT NULL)::int AS cd120_shapes,
+        count(*) FILTER(WHERE b.version IN('cd:120','sldu:2026','sldl:2026') AND b.geometry IS NULL)::int AS missing_current_shapes
+        FROM place_boundary b JOIN entity e ON e.id=b.place_id WHERE e.state=$1`, [row.state]);
+      assert.equal(plans.missing_current_shapes, 0, `${row.state} current district shapes`);
+      rows.push({ ...row, baselineZips: baseline.size, gainedDistrictRelationships: gains.n, cd120Shapes: plans.cd120_shapes });
+      console.log(`${row.state}: ${row.places} mapped places, ${row.zips} ZIPs, ${gains.n} gained district links`);
+    }
+    await writeFile("/tmp/rb-a2-replay/final-state-results.json", JSON.stringify(rows, null, 2));
   } else if (verifying) {
     const results = [];
     for (const state of states) {
@@ -44,10 +64,10 @@ try {
       console.log(`${state}: ${baseline.size} legacy ZIPs, no missing districts including fringe and adjacent-state IDs`);
     }
     await writeFile("/tmp/rb-a2-replay/national-preservation.json", JSON.stringify(results, null, 2));
-  } else if (aliasesOnly) {
+  } else if (aliasesOnly || shapesOnly) {
     for (const state of states) {
       const map = JSON.parse(gunzipSync(await readFile(`/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`)).toString("utf8")) as StatePlaceMap;
-      await loadStatePlaceMap(db, { places: map.places, boundaries: [], zipEdges: [], zctaEdges: [] });
+      await loadStatePlaceMap(db, { places: map.places, boundaries: shapesOnly ? map.boundaries : [], zipEdges: [], zctaEdges: [] });
       console.log(`${state}: source aliases loaded`);
     }
   } else {

@@ -62,7 +62,7 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   neonConfig.webSocketConstructor ??= globalThis.WebSocket;
   const pool = serverReaderValue(`database-pool:${connectionString}`, () => new Pool({
     connectionString, max: 4, allowExitOnIdle: true,
-    options: "-c default_transaction_read_only=on -c jit=off",
+    options: "-c default_transaction_read_only=on",
   }));
   return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs));
 }

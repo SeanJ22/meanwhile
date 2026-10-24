@@ -4354,5 +4354,41 @@
     "tested_sha": "c09c1e606",
     "gates": "pass",
     "at": "2026-10-24T19:10:38Z"
+  },
+  {
+    "lane": "mt-01",
+    "steps": [
+      "MT-01"
+    ],
+    "ready_sha": "db4cd927b",
+    "merge_sha": "ca26d9092",
+    "river_sha": "720bc77b6",
+    "tested_sha": "ca26d9092",
+    "gates": "pass (deploy-paths rerun on fresh build)",
+    "at": "2026-10-24T20:30:11Z"
+  },
+  {
+    "lane": "rb-a1",
+    "steps": [
+      "RB-A1"
+    ],
+    "ready_sha": "1d6df41d9",
+    "merge_sha": "ca26d9092",
+    "river_sha": "720bc77b6",
+    "tested_sha": "ca26d9092",
+    "gates": "pass (deploy-paths rerun on fresh build)",
+    "at": "2026-10-24T20:30:11Z"
+  },
+  {
+    "lane": "river-meet",
+    "steps": [
+      "RV-MEET"
+    ],
+    "ready_sha": "6be91744f",
+    "merge_sha": "ca26d9092",
+    "river_sha": "720bc77b6",
+    "tested_sha": "ca26d9092",
+    "gates": "pass (deploy-paths rerun on fresh build)",
+    "at": "2026-10-24T20:30:11Z"
   }
 ]

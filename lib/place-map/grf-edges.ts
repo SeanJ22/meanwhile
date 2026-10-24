@@ -11,7 +11,7 @@ export async function currentGrfPlaceEdges(fips: string, places: readonly MapPla
   const lines = censusTextLines(release.bytes), header = parseGrfHeader(lines.next().value ?? "");
   const at = (name: string) => { const i = header.indexOf(name); if (i < 0) throw new Error(`Census GRF is missing ${name}`); return i; };
   const columns = { state: at("CURSTATE"), county: at("CURCOUNTY"), cousub: at("COUSUBFP"), place: at("PLACEFP"),
-    elsd: at("SDELMLEA"), scsd: at("SDSECLEA"), unsd: at("SDUNILEA"), zcta: at("ZCTA5CE"), land: at("AREALAND") };
+    elsd: at("SDELMLEA"), scsd: at("SDSECLEA"), unsd: at("SDUNILEA"), aiannh: at("AIANNHCE"), zcta: at("ZCTA5CE"), land: at("AREALAND") };
   const totals = new Map<string, number>(), parts = new Map<string, { code: string; placeId: string; land: number }>();
   for (const line of lines) {
     if (!line.trim()) continue;
@@ -22,10 +22,10 @@ export async function currentGrfPlaceEdges(fips: string, places: readonly MapPla
     const land = Number(row[columns.land]);
     if (!/^\d{5}$/.test(code) || !Number.isFinite(land) || land < 0) throw new Error("Census GRF land or ZCTA is invalid");
     totals.set(code, (totals.get(code) ?? 0) + land);
-    for (const layer of ["state", "county", "cousub", "place", "elsd", "scsd", "unsd"] as const) {
+    for (const layer of ["state", "county", "cousub", "place", "elsd", "scsd", "unsd", "aiannh"] as const) {
       const raw = row[columns[layer]];
       if (!raw || /^9+$/.test(raw)) continue;
-      const geoid = layer === "state" ? fips : layer === "county" ? fips + raw
+      const geoid = layer === "aiannh" ? raw : layer === "state" ? fips : layer === "county" ? fips + raw
         : layer === "cousub" ? fips + row[columns.county] + raw : fips + raw;
       const placeId = byGeoid.get(`${layer}:${geoid}`);
       if (!placeId) {

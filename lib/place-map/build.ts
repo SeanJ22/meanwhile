@@ -15,6 +15,18 @@ import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 
 const layers: Readonly<Record<string, string>> = { congressional_district: "cd", state_leg_upper: "sldu", state_leg_lower: "sldl", county_subdivision: "cousub" };
 const key = (id: string, year: number) => `${id}|${year}`;
+
+/** Distinct school GEOIDs name distinct districts even when the held names
+ * collided. Keep the old id for the first GEOID and retain every other id. */
+export function registeredPlaceIds(reg: RegistrationReference): Map<string, string> {
+  const schoolCodes = new Map<string, string[]>();
+  for (const [id, layer, geoid] of reg.divisions) if (["unsd", "elsd", "scsd"].includes(layer)) {
+    const codes = schoolCodes.get(id) ?? []; codes.push(geoid); schoolCodes.set(id, codes);
+  }
+  return new Map(reg.divisions.map(([id, layer, geoid]) => [`${layer}:${geoid}`,
+    ["unsd", "elsd", "scsd"].includes(layer) && geoid !== schoolCodes.get(id)?.slice().sort()[0] ? `${id}_${geoid}` : id]));
+}
+
 export function boundaryYear(version: string): number {
   const match = /^([a-z]+):(\d+)$/.exec(version);
   if (!match) throw new Error(`Boundary version has no source year: ${version}`);
@@ -44,7 +56,7 @@ export function buildStatePlaceMap(input: {
   const boundaries = new Map(input.boundaries.map(row => [key(row.placeId, row.boundaryYear), row]));
   const zipEdges = new Map<string, MapEdge>(), zctaEdges = new Map<string, MapEdge>();
   const entityPlaces: EntityPlace[] = [];
-  const byGeoid = new Map(reg.divisions.map(row => [`${row[1]}:${row[2]}`, row[0]]));
+  const byGeoid = registeredPlaceIds(reg);
   for (const place of input.additionalPlaces ?? []) for (const alias of place.aliases) {
     if (alias.scheme.startsWith("census-geoid:")) byGeoid.set(`${alias.scheme.slice("census-geoid:".length)}:${alias.value}`, place.id);
   }
@@ -61,7 +73,8 @@ export function buildStatePlaceMap(input: {
     if (!boundaries.has(key(id, year))) boundaries.set(key(id, year), { placeId: id, boundaryYear: year, layer, version,
       geometry: null, hostCountyId: null, countyAttachment: false, sourceUrls, checkedAt: input.checkedAt });
   };
-  for (const [id, layer, geoid, name] of reg.divisions) {
+  for (const [legacyId, layer, geoid, name] of reg.divisions) {
+    const id = byGeoid.get(`${layer}:${geoid}`) ?? legacyId;
     const year = layer === "district" ? 2022 : 2023;
     put(id, name, layer, geoid, year, `${layer}:${year}`);
   }
@@ -79,6 +92,7 @@ export function buildStatePlaceMap(input: {
     const layer = layers[scope.type] ?? scope.type, year = boundaryYear(scope.version);
     for (const group of scope.groupings) {
       if (group.stateAbbr !== state) continue;
+      if (["cd", "sldu", "sldl"].includes(layer) && (/^Z+$/i.test(group.geoid.slice(2)) || group.geoid.slice(2) === "999")) continue;
       const ref: GeographyRef = { ...group, type: scope.type, version: scope.version };
       const label = group.label.replace(new RegExp(`^${state}\\s+`), "");
       const inferred = layer === "county" ? countyIdentity(group.stateFips, label.replace(/\s+(County|Parish|Borough|Census Area)$/i, ""))?.ocdId
@@ -100,10 +114,10 @@ export function buildStatePlaceMap(input: {
   }
   for (const [zip, entry] of input.legacyZips) {
     for (const id of [...entry.ids, ...entry.fringe ?? []]) {
-      if (ocdStateCode(id)?.toUpperCase() !== state && id !== "ocd-division/country:us") continue;
+      if (ocdStateCode(id) && ocdStateCode(id)?.toUpperCase() !== state) continue;
       const family = /\/(cd|sldu|sldl):/.exec(id)?.[1];
       const registered = byId.get(id);
-      const layer = family ?? registered?.[1] ?? "place";
+      const layer = family ?? registered?.[1] ?? (id.includes("/aiannh:") ? "aiannh" : "place");
       const year = family ? 2024 : layer === "district" ? 2022 : 2023;
       const version = family === "cd" ? "cd:119" : `${layer}:${year}`;
       put(id, registered?.[3] ?? id.split("/").at(-1)!.split(":").slice(1).join(":").replaceAll("_", " "), layer, "", year, version);
@@ -147,12 +161,19 @@ export function buildStatePlaceMap(input: {
       for (const edge of index.get(county) ?? []) addEdge(target, { ...edge, placeId: id, boundaryYear: 2022, share: null, shareBasis: "county_attachment", partial: true });
     }
   }
+  const latestBoundaryYear = new Map<string, number>();
+  for (const boundary of boundaries.values()) latestBoundaryYear.set(boundary.placeId, Math.max(latestBoundaryYear.get(boundary.placeId) ?? 0, boundary.boundaryYear));
+  for (const [, governmentId, , , division] of reg.governments) {
+    const registered = division >= 0 ? reg.divisions[division] : undefined;
+    if (!registered) continue;
+    const placeId = byGeoid.get(`${registered[1]}:${registered[2]}`) ?? registered[0];
+    entityPlaces.push({ entityId: governmentId, placeId, boundaryYear: latestBoundaryYear.get(placeId) ?? 0 });
+  }
   const byZcta = new Map<string, MapEdge[]>();
   for (const edge of zctaEdges.values()) { const found = byZcta.get(edge.code) ?? []; found.push(edge); byZcta.set(edge.code, found); }
+  const addressRequiredZips = new Set((input.postalLinks ?? []).filter(link => link.addressRequired).map(link => link.zip));
+  for (const [id, edge] of zipEdges) if (addressRequiredZips.has(edge.code) && !isTownOrCountyDivision(edge.placeId)) zipEdges.delete(id);
   for (const link of input.postalLinks ?? []) {
-    if (link.addressRequired) for (const [id, edge] of zipEdges) {
-      if (edge.code === link.zip && !isTownOrCountyDivision(edge.placeId)) zipEdges.delete(id);
-    }
     for (const edge of byZcta.get(link.zcta) ?? []) if (!link.addressRequired || isTownOrCountyDivision(edge.placeId)) {
       addEdge(zipEdges, { ...edge, code: link.zip });
     }
@@ -164,5 +185,6 @@ export function buildStatePlaceMap(input: {
       edges.set(id, { ...edge, share: null, shareBasis: "unknown", partial: true });
     }
   }
-  return { places: [...places.values()], boundaries: [...boundaries.values()].filter(row => places.has(row.placeId)), zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()], entityPlaces };
+  return { places: [...places.values()], boundaries: [...boundaries.values()].filter(row => places.has(row.placeId)), zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()],
+    entityPlaces: [...new Map(entityPlaces.map(row => [`${row.entityId}|${row.placeId}|${row.boundaryYear}`, row])).values()] };
 }

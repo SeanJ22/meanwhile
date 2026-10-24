@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 102 (main 4ae2e14e6). NEXT: release 103 (SO-01 + RN-03, PR #813, CI). GATING: batch D = DB-01 4c5b40e39 alone (river-next 1c99a381e). Returned: PT-01 (conflict with SO-01, River takes it at 6:30 PM EDT)
+build_state: LIVE FOR READERS: release 102 (main 4ae2e14e6). NEXT: release 103 (SO-01 + RN-03, PR #813, CI). GATING: RV-VOTE alone (voting sites can never get a worker; river-next ebae79d1f). DB-01 batch paused behind it. Returned: PT-01
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T21:34:23Z
+heartbeat: 2026-10-24T21:36:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,17 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Why polling places stopped refreshing, and the fix (RV-VOTE), 5:50 PM EDT
+- Cause (River helper; real code and production records, read-only):
+  1. Worker memory goes in launch order (scripts/routine-civic-data-runner.mts:1283, lib/control-plane/workers/worker-slots.ts:475). Work started at the top of a pass holds its memory until the pass's launch deadline. Waiters expire at that same moment (worker-slots.ts:366), so no wait can ever succeed. Source children were never told the pass deadline (sourceChildCommand had no withPassDeadline), so fetch-voting-sites ran its own 20-minute read and was killed before printing a receipt. 27 of 35 voting runs at 12:24Z ended PASS_TIME_BUDGET; only 8 voting receipts all day. At 21:16Z fifteen 1,447 MiB state meeting-calendar programs held the pool (278 MiB spare).
+  2. Voting always launched last. 31 states (AZ and IL among them) are due only through RN-03's door-input stamps; runner.mts:1146 marks them owed "now" every pass, so they never age and sort behind 56 candidate-campaign tasks also owed "now". Because the stamp is recorded only after a completed run, they stay due forever. 21 states have never had a state-level read and sort as first reads behind overdue work. AK, KY, ME, MT sit behind older meeting deadlines.
+  3. The ballot-first ordering only broke ties: it ran inside routinePassLaunchOrder, not after it.
+- Fix RV-VOTE (stream/river-vote READY c618f6973): electionLaunchOrder (lib/civic-data/ballot-publication.ts:44, replacing ballotPublicationLaunchOrder, deleted) puts due ballot-contests and voting-sites first, after the owed-time order. sourceChildCommand passes the pass deadline, so a voting child saves, prints its receipt, records its stamp and frees memory inside the pass.
+- Proof: offline replay from production clocks and the 21:32Z heartbeat. On the next pass, 49 of 56 voting tasks start at the top of the pass (all but WI, WY, PR, VI, AS, GU, MP, which are next in line); before the fix the same model starts 4 and production started 0. If voting's real memory peak is 1,024 MiB rather than the 512 MiB floor, 24 start. A new test with the production shapes shows IL, TX and AK start with the fix; IL doesn't without it. tsc and eslint clean.
+- Trade-off: on the first fixed pass voting takes most of the pool at the start, and meeting programs get memory as voting runs finish (about 13 minutes in). From Oct 27 the voting check runs hourly (Sean's voting.checkEveryMinutes), so voting would lead about every other pass. That cadence is Sean's setting; River didn't change it.
+- Open, not changed: the owed-"now" rule (runner.mts:1146) also keeps registration-xx and candidate-campaign-sites-derived due forever.
+- Order: RV-VOTE gates alone now (batch D with DB-01 stopped and re-queued right after), then a release, then River watches the next pass for voting receipts, Cochise drop boxes on 85603 and Wheeling on 60090, with counts by state.
 
 ### Meeting calendars after release 102, 5:40 PM EDT
 - First full supervisor pass on 102 (5:32 PM EDT): 148 source tasks promoted, 62 held their last good copy, MEETING_PARTITION_READ_FAILED 0 (195 to 339 a pass all day before). Total supervisor failures 10 (4 RECEIPT_COUNT_INVALID, 4 CHILD_EXIT_CONTRADICTED_PARTITION_RECEIPT, 1 PUBLICATION_INPUT_CLOCK_UNREAD, 1 MEETING_PIN_PUBLICATION_FAILED: Census rejects a Carmel-by-the-Sea council address written as a description).

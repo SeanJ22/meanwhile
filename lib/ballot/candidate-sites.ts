@@ -63,14 +63,6 @@ export function linksForCandidacy(state: string, candidacyId: string): Candidate
     campaign: rows.find(row => row.campaign)?.campaign ?? null } : null;
 }
 
-export function linksForNominee(
-  state: string,
-  contestId: string,
-  name: string,
-): CandidateLinks | null {
-  return linksForCandidacy(state, `${contestId}|${name}`);
-}
-
 export function allCandidateLinks(state: string): CandidateLinksFile {
   return load(state);
 }

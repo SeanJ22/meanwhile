@@ -59,10 +59,6 @@ export function cardForCandidacy(state: string, candidacyId: string): CandidateC
   return cardForKey(state, candidacyId);
 }
 
-export function cardForNominee(state: string, contestId: string, name: string): CandidateCardData | null {
-  return cardForKey(state, `${contestId}|${name}`);
-}
-
 export function allCandidateCards(state: string): CandidateCardsFile {
   return load(state);
 }

@@ -4,13 +4,6 @@ import { sameSeatDiscriminators } from "../officials/office-seat.ts";
 import type { BallotSet, Candidacy, Contest } from "./types.ts";
 import type { Provenance } from "../sources/types.ts";
 
-/** A pairing stated by the election authority, never a join on party. */
-export interface BallotCandidateTicket {
-  id: string;
-  leadCandidacyId: string;
-  runningMate: Candidacy & { office?: string };
-  provenance: Provenance;
-}
 export type BallotWithTickets = BallotSet;
 
 const nameKey = (name: string) => name.normalize("NFKC").toLocaleLowerCase("en-US")

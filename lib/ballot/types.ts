@@ -110,7 +110,9 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
-  candidateTickets?: readonly import("./tickets.ts").BallotCandidateTicket[];
+  /** Pairings stated by the election authority, never inferred from party. */
+  candidateTickets?: readonly { id: string; leadCandidacyId: string;
+    runningMate: Candidacy & { office?: string }; provenance: Provenance }[];
   sourceAggregates?: readonly {
     id: string;
     sourceId: string;

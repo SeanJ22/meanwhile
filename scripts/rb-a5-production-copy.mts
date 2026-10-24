@@ -61,7 +61,7 @@ try {
         const isLink = typeof value.fact?.value === "string" && /^https?:\/\//i.test(value.fact.value);
         const input: WorkInput = { kind: isLink ? "read" : "check", placeId: value.subjectId.split("#")[0]!, subjectId: value.subjectId,
           url: isLink ? String(value.fact!.value) : value.sourceUrl,
-          ...(isLink ? {} : { field: value.fact?.field ?? `box:${row.id}` }),
+          ...(isLink ? {} : { field: value.fact?.field ?? "unclassified", claimKey: String(row.id) }),
           value: isLink ? null : value.fact?.value ?? null, quote: isLink ? null : value.exactQuote,
           source: { boxId: row.id, subjectId: value.subjectId, url: value.sourceUrl, quote: value.exactQuote, reports: value.origins.length } };
         await list.add(input);

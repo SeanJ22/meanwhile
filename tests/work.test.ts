@@ -65,6 +65,10 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.deepEqual(hours[0], { state: "az", hour: "2026-10-24T12:00:00.000Z", incoming: 2, done: 1, refused: 2 });
   assert.equal((await workCounts(query, "wy", at))[0]!.incoming, 0);
   await assert.rejects(workCounts(query, "invalid", at), /INVALID_STATE/);
+  await list.add({ ...input, field: "member", claimKey: "seat-a", value: "Person A", source: { report: "seat-a" } });
+  await list.add({ ...input, field: "member", claimKey: "seat-b", value: "Person B", source: { report: "seat-b" } });
+  const members = await list.claim("check", 2);
+  assert.deepEqual(members.map(row => row.value).sort(), ["Person A", "Person B"], "a multivalued field retains both claims");
 });
 
 test("link reports share a row across subjects; claim ids survive changed values", () => {
@@ -72,6 +76,8 @@ test("link reports share a row across subjects; claim ids survive changed values
     workId({ ...input, subjectId: "another-subject", field: undefined, url: "https://example.gov/a" }));
   assert.equal(workId(input), workId({ ...input, url: "https://www.pima.gov/new-contact" }));
   assert.notEqual(workId(input), workId({ ...input, field: "email" }));
+  assert.notEqual(workId({ ...input, field: "member", claimKey: "seat-a" }), workId({ ...input, field: "member", claimKey: "seat-b" }),
+    "two people on the same board are two claims");
 });
 
 test("a counter failure rolls back the work transition", async t => {

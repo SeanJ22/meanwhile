@@ -12,6 +12,8 @@ export interface WorkInput {
   readonly url?: string | null;
   /** Absent for a link. A claim's field identifies its slot, independently of its value. */
   readonly field?: string;
+  /** Stable identity within a multivalued field, such as the seat or person in a membership claim. */
+  readonly claimKey?: string;
   readonly value?: unknown;
   readonly quote?: string | null;
   /** A source reference or report, retained even when the content has not changed. */
@@ -48,9 +50,9 @@ function link(value: string): string {
 }
 
 /** A URL is one piece of work across reports; a claim keeps its id when its value changes. */
-export function workId(input: Pick<WorkInput, "kind" | "url" | "subjectId" | "field">): string {
+export function workId(input: Pick<WorkInput, "kind" | "url" | "subjectId" | "field" | "claimKey">): string {
   return `work-${createHash("sha256").update(canonicalJson(input.field
-    ? [input.kind, input.subjectId, input.field] : input.url ? [input.kind, link(input.url)] : [input.kind, input.subjectId])).digest("hex")}`;
+    ? [input.kind, input.subjectId, input.field, input.claimKey ?? null] : input.url ? [input.kind, link(input.url)] : [input.kind, input.subjectId, input.claimKey ?? null])).digest("hex")}`;
 }
 
 export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (

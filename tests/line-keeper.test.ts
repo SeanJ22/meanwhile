@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
-import { countHourMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A8.ts";
+import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition } from "../lib/control-plane/repository/migrations/RB-A8.ts";
 import { SHARED_WORK_DDL } from "../lib/control-plane/repository/migrations/RB-A1.ts";
 import { REJECT_REWRITE_FUNCTION_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
@@ -18,7 +18,7 @@ import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts
 import { countProblems, countWindow } from "../lib/counts/hour.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { config as schedule } from "../netlify/functions/line-keeper.mts";
-const migration=readFileSync(new URL('../lib/db/migrations/RB-A8_count_hour.sql',import.meta.url),'utf8');
+const migration=readFileSync(COUNT_SCHEMA_SOURCE,'utf8');
 const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query(text,[...params])).rows});
 async function readerDatabase() {
   const db=new PGlite();

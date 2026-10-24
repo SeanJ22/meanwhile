@@ -51,32 +51,32 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
   }
   const previous = data.setting.undo ? JSON.parse(data.setting.undo.value) as OwedTable : null;
   return <fieldset className={s.stack} disabled={saving} style={{ border: 0, padding: 0, minWidth: 0 }}>
-    <label className={s.small}>Applies in <select aria-label="Where items are owed" value={scope} onChange={event => setScope(event.target.value)}>
+    <label className={s.small}>Applies in <select className={s.select} aria-label="Where items are owed" value={scope} onChange={event => setScope(event.target.value)}>
       <option value="">Every state</option>{US_STATES.map(state => <option key={state.code} value={state.code.toUpperCase()}>{state.name} additions</option>)}
     </select></label>
-    <div className={s.tableWrap}><table className={s.table}>
-      <thead><tr><th scope="col">Kind of place or record</th><th scope="col">What readers are owed</th><th scope="col">Changes</th></tr></thead>
-      <tbody>{rows.map((row, index) => <tr key={index}>
-        <td><select aria-label={`Kind for item ${index + 1}`} value={row.kind} onChange={event => edit(index, { kind: event.target.value, placeKind: undefined })}>
-          {Object.entries(kindWords).map(([kind, words]) => <option key={kind} value={kind}>{words}</option>)}
-        </select>{row.kind === "place" && <select aria-label={`Place kind for item ${index + 1}`} value={row.placeKind ?? ""} onChange={event => edit(index, { placeKind: event.target.value || undefined })}>
-          <option value="">Every kind</option>{DEFAULT_KINDS.division.map(kind => <option key={kind.key} value={kind.key}>{placeWords[kind.key] ?? kind.label}</option>)}
-        </select>}</td>
-        <td><input aria-label={`What is owed for item ${index + 1}`} value={row.label} maxLength={200} onChange={event => edit(index, { label: event.target.value })} />
-          <details><summary>Technical details</summary><label>Field <input value={row.field} onChange={event => edit(index, { field: event.target.value })} /></label>
-            <label>Freshness clock <select value={row.clock} onChange={event => edit(index, { clock: event.target.value as OwedRule["clock"] })}>
-              {Object.entries(clockWords).map(([clock, words]) => <option key={clock} value={clock}>{words}</option>)}
-            </select></label></details></td>
-        <td><button type="button" className={s.btn} disabled={saving} onClick={() => update(rows.filter((_, n) => n !== index))}>Remove</button></td>
-      </tr>)}</tbody>
-    </table></div>
-    {!rows.length && <Empty>No additions for this state.</Empty>}
     <div className={s.inline}>
       <button type="button" className={s.btn} disabled={saving} onClick={() => update([...rows, { kind: "body", field: "", label: "", clock: "officeholder", checklist: [] }])}>Add item</button>
       <button type="button" className={s.btn} disabled={saving || !draft} onClick={() => void save(table)}>Save list</button>
       {draft && <button type="button" className={s.btn} disabled={saving} onClick={() => setDraft(null)}>Discard edits</button>}
       {previous && data.setting.undo && <button type="button" className={s.btn} disabled={saving} onClick={() => void save(previous, data.setting.undo!.changeId)}>Undo last change</button>}
     </div>
+    <div className={s.tableWrap}><table className={s.table}>
+      <thead><tr><th scope="col">Kind of place or record</th><th scope="col">What readers are owed</th><th scope="col">Changes</th></tr></thead>
+      <tbody>{rows.map((row, index) => <tr key={index}>
+        <td><select className={s.select} aria-label={`Kind for item ${index + 1}`} value={row.kind} onChange={event => edit(index, { kind: event.target.value, placeKind: undefined })}>
+          {Object.entries(kindWords).map(([kind, words]) => <option key={kind} value={kind}>{words}</option>)}
+        </select>{row.kind === "place" && <select className={s.select} aria-label={`Place kind for item ${index + 1}`} value={row.placeKind ?? ""} onChange={event => edit(index, { placeKind: event.target.value || undefined })}>
+          <option value="">Every kind</option>{DEFAULT_KINDS.division.map(kind => <option key={kind.key} value={kind.key}>{placeWords[kind.key] ?? kind.label}</option>)}
+        </select>}</td>
+        <td><input className={s.input} style={{ width: "100%", boxSizing: "border-box" }} aria-label={`What is owed for item ${index + 1}`} value={row.label} maxLength={200} onChange={event => edit(index, { label: event.target.value })} />
+          <details><summary>Technical details</summary><label>Field <input className={s.input} value={row.field} onChange={event => edit(index, { field: event.target.value })} /></label>
+            <label>Freshness clock <select className={s.select} value={row.clock} onChange={event => edit(index, { clock: event.target.value as OwedRule["clock"] })}>
+              {Object.entries(clockWords).map(([clock, words]) => <option key={clock} value={clock}>{words}</option>)}
+            </select></label></details></td>
+        <td><button type="button" className={s.btn} disabled={saving} onClick={() => update(rows.filter((_, n) => n !== index))}>Remove</button></td>
+      </tr>)}</tbody>
+    </table></div>
+    {!rows.length && <Empty>No additions for this state.</Empty>}
     {message && <p role="status" className={s.small}>{message}</p>}
     <p className={s.meta}>{data.setting.changedAt ? `Changed ${mst(data.setting.changedAt)}` : "No changes yet"}</p>
     {previous && <details><summary>Previous list ({size(previous).toLocaleString("en-US")} items)</summary>
@@ -98,7 +98,7 @@ export function OwedPanel() {
       {reading.kind === "failed" && <p className={s.p}>—</p>}
       {reading.kind === "ready" && reading.stale && <p className={s.small}>Showing the last reading. Refresh is pending.</p>}
       {data && <>
-        <label className={s.small}>State <select aria-label="State counts" value={countState} onChange={event => setCountState(event.target.value)}>
+        <label className={s.small}>State <select className={s.select} aria-label="State counts" value={countState} onChange={event => setCountState(event.target.value)}>
           <option value="US">National government</option>{US_STATES.map(state => <option key={state.code} value={state.code.toUpperCase()}>{state.name}</option>)}
         </select></label>
         <div className={s.tableWrap}><table className={s.table}><caption>What readers have by state</caption>

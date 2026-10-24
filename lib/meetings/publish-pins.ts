@@ -17,6 +17,7 @@ import type { Meeting } from "../sources/types.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
 import {
   meetingPinAddresses,
+  withPublishedPin,
   type MeetingPinAddress,
   type MeetingPinLocation,
   type MeetingPinBody,
@@ -309,22 +310,6 @@ export async function placePublishedMeetingPins(input: {
     return input.meetings[row.index];
   });
   return { meetings, placedCount, held, responses };
-}
-
-function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
-  return pin.basis === "MEETING" && !meeting.online
-    ? {
-        ...meeting,
-        mapPin: pin,
-        location: {
-          name: pin.name,
-          address: pin.address,
-          lat: pin.lat,
-          lng: pin.lng,
-        },
-        venueGap: undefined,
-      }
-    : { ...meeting, mapPin: pin };
 }
 
 /** Resolve a relative event citation against the exact promoted publisher route. */

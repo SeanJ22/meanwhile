@@ -1,6 +1,7 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
 import type { Query } from "./publish.ts";
 import { repeatsPublishedVenue } from "../geo/address-query.ts";
+import { withPublishedPin } from "../meetings/pin-location.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
@@ -62,9 +63,17 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if (index === undefined) continue;
     const meeting = out[index]!;
     const published = meetings[index]!;
+    const factAt = Date.parse(source.collectedAt);
+    const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
+    if(factAt<locationAt) {
+      const stated=published.venueGap?.kind==="STATED_NOT_PLACED"?published.venueGap.publishedText:null;
+      if(field==="online"&&stated&&!published.online)continue;
+      if(field==="location") {
+        const prior=value as {name?:string;address?:string|null};
+        if(published.online||stated&&!repeatsPublishedVenue(stated,prior.name??"",prior.address??null))continue;
+      }
+    }
     if (published.mapPin) {
-      const factAt = Date.parse(source.collectedAt);
-      const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
       const pinAt = Math.max(...[locationAt,Date.parse(published.provenance.collectedAt),
         Date.parse(published.mapPin.coordinateCheckedAt ?? "")].filter(Number.isFinite));
       // A once-saved point remains older than later calendar reads. Its old fact row cannot roll back a newer publication.
@@ -81,7 +90,7 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if(!pin)return meeting;
     const agrees=meeting.location ? pin.basis!=="MEETING"||repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)
       :pin.publishedLocation===(meeting.venueGap?.publishedText??null);
-    if(agrees)return meeting;
+    if(agrees)return withPublishedPin(meeting,pin);
     const {mapPin:_stale,...rest}=meeting;return rest;
   });
 }

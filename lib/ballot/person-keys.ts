@@ -1,4 +1,4 @@
-import { currentGenericBallotProjection } from "./generic-projection.ts";
+import { currentBallotPeopleProjection } from "./generic-projection.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 import { verifiedCandidateProfilePerson, type HeldCandidatePerson } from "./held-person.ts";
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
@@ -10,7 +10,7 @@ const indexes = new WeakMap<object, ReadonlyMap<string, readonly string[]>>();
 /** Source aliases are race-specific and never join the two members of a ticket. */
 export function candidateKeysForState(state: string, subjectId: string): readonly string[] {
   let projection;
-  try { projection = currentGenericBallotProjection(state); } catch { return []; }
+  try { projection = currentBallotPeopleProjection(state); } catch { return []; }
   let index = indexes.get(projection);
   if (!index) {
     const rows = new Map<string, readonly string[]>();
@@ -30,7 +30,7 @@ const profileMatches = new WeakMap<object, { inputs: readonly unknown[]; keys: R
 function heldProfileMatches(state: string) {
   let ballot, profiles, registry;
   try {
-    ballot = currentGenericBallotProjection(state);
+    ballot = currentBallotPeopleProjection(state);
     profiles = currentCandidateProfilesProjection(state);
     registry = getRegistryRuntimeReadModel();
   } catch { return null; }

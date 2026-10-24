@@ -86,8 +86,13 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
 
 export function currentGenericBallotProjection(state: string): GenericBallotProjection {
   const read = currentStateAuthorityProjection<GenericBallotProjection>("ballot-contests", state)?.result;
-  if (read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP") return ballotPeopleProjection(read.value);
+  if (read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP") return read.value;
   throw new Error(`Ballot for ${state} is ${read?.kind ?? "UNREAD"}; read its authority before using the projection.`);
+}
+
+/** The person/choice view is derived from, and never replaces, the published source holding. */
+export function currentBallotPeopleProjection(state: string): GenericBallotProjection {
+  return ballotPeopleProjection(currentGenericBallotProjection(state));
 }
 
 export async function readGenericBallotProjection(state: string, options: PromotedCivicDataReadOptions = {}) {

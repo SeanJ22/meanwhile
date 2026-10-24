@@ -70,7 +70,7 @@ Each jurisdiction was read separately from Reader project `tiny-hill-13996172`, 
 | WY | 0 | 0 | 40 | 0 |
 | Total | 178 | 0 | 3083 | 89 |
 
-40,033 person and source keys resolve; zero earlier raw/displayed keys are missing. The 18 candidate targets already used by 30 production reaction/demand records all resolve. Existing Speak posts retain their submitted subject IDs, and Ask resolves those aliases to the correct person.
+40,032 person and source keys resolve; zero earlier raw/displayed keys are missing. The 18 candidate targets already used by 30 production reaction/demand records all resolve. Existing Speak posts retain their submitted subject IDs, and Ask resolves those aliases to the correct person.
 
 ## Two production connections
 
@@ -104,3 +104,15 @@ Pending: River must fold and deploy this READY, then the same Chrome journeys an
 PT-01 can use `Candidacy.aliases`, its person-specific `ticket.runningMate`, and the verified person graph; a ticket-wide historical key resolves to the lead, while the mate’s historical keys resolve only to the mate.
 
 The per-person audit found no lost current general-election candidate links. Horne and Myers remain retained primary filings with their old IDs; the complete sourced general lineup omits them.
+
+## River return repair
+
+The return exposed five regional school-board contests in New Jersey being collapsed into two. Their shared board division and office title did not identify the constituent township seat. Race matching now retains the published scope, number of seats and term; all five original contests and their candidates remain. Already joint office titles keep the authority's wording, and unchanged historical filings retain their exact source fields.
+
+The raw ballot accessor again returns the exact published holding. Person and ticket consumers explicitly request the cached derived view. During publication, candidacy history remains available until alias enrichment and retirement finish; releasing it earlier caused otherwise valid updates to be held. The unchanged all-state Postgres publication test exercises the real migrations and retains every prior ballot ID.
+
+Ticket assertions now check the displayed pair, two distinct person IDs and the exact official pairing source. Reader assertions resolve each historical nominee alias to exactly one visible choice and check its own card's filing source. Original contest and candidate count/hash assertions remain in place.
+
+Verification after merging `origin/river` at `bd77dcb0f`: all seven returned suites pass, plus the ticket, alias and scheduled-refresh suites (83 distinct checks, zero skipped; the final changed Wisconsin and reader suites were rerun together, 32/32). TypeScript, changed-file lint, the existing dead-code check and diff whitespace checks pass. The unchanged worker/publication suites additionally pass 23/23. The production-snapshot recount remains 178 duplicates before, zero after, 3,083 linked candidacies and 89 tickets, with no original key or existing activity target missing.
+
+Google Chrome comparison of meanwhileusa.com and the repaired branch at Morristown `07960` retains all 22 contest IDs and 53 choices. None of the original candidate aliases, biographies, candidate links or source links are missing; no candidate changes race. All five allocated regional-board seats remain separate. The live page's first visible contests took 1.824 seconds; the cold development branch took 5.842 seconds, recorded above three seconds and not a production speed pass. No page errors occurred; four event writes were blocked. [Mendham live](measurements/cl-01/nj-mendham-live.png) · [Mendham repaired branch](measurements/cl-01/nj-mendham-branch.png).

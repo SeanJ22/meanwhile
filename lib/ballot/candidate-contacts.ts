@@ -1,4 +1,4 @@
-import { currentGenericBallotProjection } from "./generic-projection.ts";
+import { currentBallotPeopleProjection } from "./generic-projection.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 import { candidateKeysForState } from "./person-keys.ts";
 
@@ -13,7 +13,7 @@ export interface CandidateContact {
 const contactIndexes = new WeakMap<object, ReadonlyMap<string, CandidateContact>>();
 
 export function candidateContactForCandidacy(state: string, candidacyId: string): CandidateContact | null {
-  const projection = currentGenericBallotProjection(state);
+  const projection = currentBallotPeopleProjection(state);
   let index = contactIndexes.get(projection);
   if (!index) {
     const ballots = Object.values(projection.ballots);

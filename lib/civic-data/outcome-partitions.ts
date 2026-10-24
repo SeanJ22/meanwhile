@@ -180,16 +180,25 @@ export interface OutcomePartitionRefresh {
   readonly reason: string | null;
 }
 
+/**
+ * The one way outcome contracts become live in a process: the outcome list, the runtime contracts the store
+ * authorizes candidates against, the door pointers and the sitting windows all move together. The routine
+ * pass installs every door's contract; a reader-repair child installs the exact selection its parent handed it.
+ */
+export function installOutcomePartitions(contracts: readonly OutcomePartitionContract[]): void {
+  OUTCOME_PARTITION_CONTRACTS.splice(0, OUTCOME_PARTITION_CONTRACTS.length, ...contracts);
+  RUNTIME_ROUTINE_CONTRACTS.splice(0, RUNTIME_ROUTINE_CONTRACTS.length, ...contracts);
+  setDoorOutcomePointers(contracts.map((contract) => ({
+    contractId: contract.id, scope: contract.scope, recordClass: "MEETING_OUTCOME" as const, slug: contract.tenant.slug, kind: contract.kind,
+  })));
+  setExtraSittingWindowSources(new Map(contracts.map((contract) => [contract.id, [contract.doorId]] as const)));
+}
+
 /** Swapped in only if every door builds; otherwise the last good list stays. */
 export function refreshOutcomePartitions(doors: readonly DoorRecord[]): OutcomePartitionRefresh {
   try {
     const { contracts, skipped } = buildOutcomePartitions(doors);
-    OUTCOME_PARTITION_CONTRACTS.splice(0, OUTCOME_PARTITION_CONTRACTS.length, ...contracts);
-    RUNTIME_ROUTINE_CONTRACTS.splice(0, RUNTIME_ROUTINE_CONTRACTS.length, ...contracts);
-    setDoorOutcomePointers(contracts.map((contract) => ({
-      contractId: contract.id, scope: contract.scope, recordClass: "MEETING_OUTCOME" as const, slug: contract.tenant.slug, kind: contract.kind,
-    })));
-    setExtraSittingWindowSources(new Map(contracts.map((contract) => [contract.id, [contract.doorId]] as const)));
+    installOutcomePartitions(contracts);
     outcomePartitionsCurrent = true;
     return { refreshed: true, partitions: contracts.length, skipped, reason: null };
   } catch (error) {

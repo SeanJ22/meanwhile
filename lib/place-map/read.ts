@@ -49,7 +49,9 @@ export async function placesForCode(query: Query, kind: "zip" | "zcta", code: st
   const rows = await query(`SELECT coalesce(jsonb_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year),'[]'::jsonb) AS memberships
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.${kind}=$1`, [code]);
+    WHERE m.${kind}=$1 AND e.kind='place'`, [code]);
+  // RB-A10 also supplies already fetched state rows through Query, sharing
+  // the same selection across every ZIP without another database round trip.
   const normalized = rows.length === 1 && "memberships" in rows[0] ? rows[0].memberships : rows.map(membership);
   if (!Array.isArray(normalized)) throw new Error("The place map lookup could not be read");
   const memberships = selected(normalized as PlaceMembership[], selection);

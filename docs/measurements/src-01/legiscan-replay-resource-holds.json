@@ -1,0 +1,77 @@
+{
+  "kind": "cohort-c-v4-resource-and-measurement-holds",
+  "recordedAt": "2026-10-23T12:22:47.450Z",
+  "productionWrites": 0,
+  "sourceProcessNeverRestarted": true,
+  "coldCardInterrupted": false,
+  "events": "resource-events.jsonl",
+  "measuredIntervals": [
+    {
+      "reason": "US first cold-card isolation",
+      "parentPausedAt": "2026-10-23T11:57:11.955Z",
+      "sourceConfirmedPausedBy": "2026-10-23T11:58:11.374Z",
+      "resumedAt": "2026-10-23T12:00:34.183Z",
+      "parentPauseMs": 202228,
+      "sourcePauseMs": {
+        "minimum": 142809,
+        "maximum": 202228
+      },
+      "sourcePauseStartMeasured": false,
+      "notes": "The initial main-thread-only child enumeration omitted a nonleader-spawned child. Its source/proxy were then stopped explicitly. The source confirmation time bounds the interval rather than identifying its exact start."
+    },
+    {
+      "reason": "US native binary PG comparison",
+      "pausedAt": "2026-10-23T12:03:41.159Z",
+      "resumedAt": "2026-10-23T12:07:27.898Z",
+      "sourcePauseMs": 226739
+    },
+    {
+      "reason": "Resource floor while EPA producer/cache occupied the replay host",
+      "pausedAt": "2026-10-23T12:11:10.378Z",
+      "resumedAt": "2026-10-23T12:18:32.260Z",
+      "sourcePauseMs": 441882
+    }
+  ],
+  "additionalMemoryPause": {
+    "durationMs": null,
+    "timestampsMeasured": false,
+    "observedTriggerHeadroomBytes": 762101760,
+    "paused": [
+      209636,
+      209994
+    ],
+    "nativeProxyPaused": false,
+    "notes": "An earlier memory hold was reported to the coordinator before event logging began; it is not silently counted as zero."
+  },
+  "knownSourcePauseMs": {
+    "minimum": 811430,
+    "maximum": 870849
+  },
+  "totalSourcePauseMs": null,
+  "unpausedPublicationWallMs": null,
+  "nySourceWorkerWallMs": 2043056,
+  "nyColdCard": {
+    "status": "SLOW",
+    "parserVersion": "legiscan-bulk/4",
+    "elapsedMs": 3404,
+    "personId": "plural:ny:dff234fa-8563-4028-982e-c0a221d99fd9",
+    "personName": "Al Stirpe",
+    "officeTitle": "Assemblymember",
+    "visibleBills": 20,
+    "totalPersonBills": 575,
+    "firstBill": {
+      "id": "legiscan:bill:2150364",
+      "number": "A11437",
+      "title": "Requires wholesale beer licensees to only need to pay a one time additional license fee to sell cider.",
+      "sourceUrl": "https://legiscan.com/NY/bill/A11437/2025"
+    },
+    "exactTitleAndLinkVisible": true,
+    "apiReaderElapsedMs": 2259,
+    "apiTransport": "Local HTTP invokes actual readerRoute \u2192 canonical GOOD/hash SQL shelf \u2192 readBillsForState exact member selection; exact production-held identity supplied from saved readonly roster",
+    "browser": "system Chromium substitute for pinned1234",
+    "runId": "src-01-legiscan-all-states@2026-10-23T12:20:16.939Z"
+  },
+  "limitation": "Source wall duration includes these laboratory admission/isolation holds and an unmeasured earlier hold; it is not an unpaused production publication latency. Cold card timing was never paused.",
+  "nyPublicationWallMsIncludingHolds": 1957496,
+  "nyPublicationDeadlineAssessment": "The recorded1957496ms publication includes known source holds of at least811430ms plus an unmeasured earlier hold. The exact unpaused duration is unknown; do not present the laboratory wall duration as production publication latency."
+}

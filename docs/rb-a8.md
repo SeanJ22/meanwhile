@@ -88,5 +88,6 @@ Direct production SQL at about 6:26 AM EDT, October 24, before these counters ar
 - First full run: 7/9 gates; 9,617 tests passed, two assertions failed and two were skipped. The failures were the new selects' missing shell class and missing identity-domain declarations for the new tables. Both are fixed and their focused checks pass.
 - The schema gate's first connection attempt could not reach Neon because Node had not enabled the environment proxy. With `NODE_USE_ENV_PROXY=1`, the same read-only gate passes, including all 51 applied migration hashes.
 - All 52 focused tests pass with complete test-runner reports. The full rerun found an existing Now render expectation for the former metric label; it now requires “Facts marked live” and still requires a dash for unmeasured hours. The 21 keeper, vital-sign and Now checks pass together.
+- The second full run passed 8/9 checks (9,615 tests passed, two failed, two skipped). Besides the corrected Now expectation, Node 24 aborted in native V8 WebAssembly code cleanup during ZIP-people tests. The unchanged ZIP tests and their adjacent ZIP-place test pass all eight assertions in the same canonical runner on replay; the final full combined run remains owed.
 - Latest RB-A1 builds pass on the 20-minute cadence; final combined full checks and the deployed scheduled run are still pending.
 

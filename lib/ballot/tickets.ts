@@ -15,11 +15,10 @@ const sources = (...rows: readonly (readonly Provenance[])[]) => [...new Map(row
 
 /** Person aliases exclude the running mate: a ticket is a choice, never a person. */
 export function ballotCandidateAliases(candidate: Candidacy): string[] {
-  // Funding slices can hold only the exact filing ID. Keep that ID usable
-  // without inventing a name alias or requiring the full profile projection.
-  const named=typeof candidate.givenName === "string" && typeof candidate.familyName === "string";
-  return [...new Set([candidate.id, ...named ? [`${candidate.contestId}|${personName(candidate)}`] : [],
-    ...candidate.aliases ?? [], ...(named && candidate.ticket ? [`${candidate.contestId}|${ballotCandidateDisplayName(candidate)}`] : [])])];
+  const name = personName(candidate), ticketName = candidate.ticket && name.trim() && personName(candidate.ticket.runningMate).trim()
+    ? ballotCandidateDisplayName(candidate) : "";
+  return [...new Set([candidate.id, ...(name.trim() ? [`${candidate.contestId}|${name}`] : []),
+    ...candidate.aliases ?? [], ...(ticketName.trim() ? [`${candidate.contestId}|${ticketName}`] : [])])];
 }
 
 export function ballotCandidatePeople(candidate: Candidacy): Candidacy[] {

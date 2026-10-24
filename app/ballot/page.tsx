@@ -603,9 +603,10 @@ export default readerRoute("/ballot", async function BallotPage({
     return (await Promise.all([...offices].map(async ([title, people]) => {
       const candidates = people.map(candidate => ({ key: candidate.id,
         display: ballotCandidateDisplayName(candidate), targetKey: candidate.id }));
-      const result = await contestIncumbency({ ...contest, title, candidates,
+      const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest({ ...contest, title }),
+        title, voteFor: contest.voteFor,
         candidateListComplete: contest.candidateListComplete === true && people.length === choices.length,
-        federal: isFederalContest({ ...contest, title }) }, incumbentHolderFor).catch(() => null);
+      }, incumbentHolderFor).catch(() => null);
       return people.map(candidate => [candidate.id, result] as const);
     }))).flat();
   }))).flat());

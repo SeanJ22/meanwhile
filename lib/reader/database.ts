@@ -71,7 +71,7 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
     // A dropped or refused connection fails only the read using it. An unheard error
     // event would end the function and every other reader it is serving.
     created.on("error", readerConnectionError);
-    created.on("connect", client => client.on("error", readerConnectionError));
+    created.on("connect", (client: PoolClient) => client.on("error", readerConnectionError));
     return created;
   });
   return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs));

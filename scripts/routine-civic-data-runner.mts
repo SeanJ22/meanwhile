@@ -10,6 +10,7 @@ import { routineTasksWithoutClocks } from "../lib/civic-data/clock-presence.ts";
 import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
+import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
@@ -743,6 +744,10 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 
 async function runFactMaintenance(deadlineMs: number): Promise<void> {
   const facts = readerFactDb(), states = registeredStates(ROOT);
+  try { console.log(`fact store reader identities: ${await syncReaderIds(facts.query)} targets resolve`); }
+  catch (error) {
+    supervisorFailures.push({ taskId: "reader-entity-ids", code: "READER_ENTITY_IDS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
   const prior = await readPassCursor(facts.query, "routine-fact-maintenance-state");
   const state = states[(states.indexOf(prior ?? "") + 1) % states.length];
   if (!state || Date.now() >= deadlineMs) return;

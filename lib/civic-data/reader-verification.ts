@@ -70,6 +70,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (contract.recordClass === "CENSUS_GEOGRAPHY") return "lib/census-geography/reader.ts#readCensusGeographyProjection";
   if (contract.id === "campaign-money") return "lib/funding/campaign-finance-reader.ts#readCampaignMoneyWork";
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
   if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
@@ -209,7 +210,7 @@ export async function verifyRoutineReaderProjection(
         store: options.store, now: options.now, bypassCache: true,
       }), options.expectedVersionId, `${registryState} registry-runtime`);
     }
-    const family = contract.id;
+    const family = contract.recordClass === "CENSUS_GEOGRAPHY" ? "census-geography-overlaps" : contract.id;
     switch (family) {
       case "legiscan-bulk": {
         const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
@@ -426,7 +427,7 @@ export async function verifyRoutineReaderProjection(
       }
       case "census-geography-overlaps": {
         const { readCensusGeographyProjection } = await import("../census-geography/reader.ts");
-        return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "census-geography");
+        return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now, bypassCache: true }, options.scope ?? contract.scope), options.expectedVersionId, "census-geography");
       }
       default: {
         if (contract.recordClass === "REGISTRATION") {

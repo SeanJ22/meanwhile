@@ -16,6 +16,17 @@ export function sourceCheckIssue(value: unknown, observedAt: string): string | n
   return null;
 }
 
+/** A state-authority transfer asserts no new HTTP acquisition: its source was last read when the inherited response was
+ * retrieved, not when the transfer was stored, so moving a pointer to a state never makes an overdue source look fresh. */
+export function inheritedObservedAt(
+  candidate: { readonly stateRetirement?: unknown; readonly retrieval: Pick<RetrievalEvidence, "retrievedAt" | "sourceCheck"> },
+  observedAt: string,
+): string {
+  if (candidate.stateRetirement === undefined || candidate.retrieval.sourceCheck !== undefined) return observedAt;
+  const retrieved = Date.parse(candidate.retrieval.retrievedAt);
+  return Number.isFinite(retrieved) && retrieved < Date.parse(observedAt) ? candidate.retrieval.retrievedAt : observedAt;
+}
+
 /** Legacy direct-fetch candidates use their local observation; retained releases name the real provider check. */
 export function sourceCheckedAt(retrieval: Pick<RetrievalEvidence, "sourceCheck">, observedAt: string | null | undefined): string | undefined {
   if (typeof observedAt !== "string" || !Number.isFinite(Date.parse(observedAt))) return undefined;

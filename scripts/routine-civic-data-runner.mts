@@ -54,6 +54,7 @@ import {
   routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
+  routineTaskDueAtMs,
   routineBaselineOwed,
   routineCodeChangeRetryTaskIds,
   routineAdmissionClock,
@@ -677,7 +678,7 @@ const supervisorFailures: SupervisorFailure[] = [];
 const crashedTasks: { readonly taskId: string; readonly detail: string }[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
-const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined }[] = [];
+const dueCandidates: { readonly pending: PendingRun; readonly clock: RoutineTaskClock | undefined; readonly owedAtMs: number | undefined }[] = [];
 
 const launchDecisions: RoutineLaunchDecision[] = [];
 let decisionBatch = 0;
@@ -1066,8 +1067,10 @@ for (const read of clockReads) {
   if (!FORCE && !taskDue && dueRequest === null && !publicationDue && !discoveryDue) {
     const retryMs = failureRetryMs(task.retryMs, durableClock);
     const backoff = retryMs > task.retryMs ? `Repeated source failure; ${retryMs >= 3_600_000 ? `${retryMs / 3_600_000} hours` : `${retryMs / 60_000} minutes`} between tries` : null;
+    // Name the instant that governs: a success waits for its cadence, not for the retry interval.
+    const dueAt = routineTaskDueAtMs(task, durableClock, admissionNowMs, observedEveryMs);
     recordLaunchDecision(task, "SKIP", ballotState?.family === "ballot-contests" ? "State file unchanged" : backoff ?? "Next check is not due",
-      `Next source check is not due${sittingSignals.has(task.id) ? `; meeting schedule ${sittingHot === false ? "twice daily" : "hourly"}` : ""}. Last attempted ${durableClock?.lastAttemptedAt ?? "never"}; retry ${retryMs}ms.`);
+      `Next source check is not due${sittingSignals.has(task.id) ? `; meeting schedule ${sittingHot === false ? "twice daily" : "hourly"}` : ""}. Last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last read ${durableClock?.lastSucceededObservedAt ?? "never"}; retry ${retryMs}ms${dueAt !== undefined && Number.isFinite(dueAt) ? `; due ${new Date(dueAt).toISOString()}` : ""}.`);
     continue;
   }
   if (publicationDue) {
@@ -1086,6 +1089,8 @@ for (const read of clockReads) {
   }
   dueCandidates.push({
     clock: durableClock,
+    // A changed input owes its read now; cadence work has owed it since its clock came due.
+    owedAtMs: cadenceDue ? routineTaskDueAtMs(task, durableClock, admissionNowMs, observedEveryMs) : admissionNowMs,
     pending: {
     kind: MEETING_PARTITION_TASK_IDS.has(task.id) ? "MEETING_PARTITION" : "SINGLE",
     id: task.id,
@@ -1097,8 +1102,9 @@ for (const read of clockReads) {
   });
 }
 
-const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
+const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock, owedAtMs }) => ({
   task: pending.task,
+  owedAtMs,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
   baselineOwed: routineBaselineOwed(pending.task, clock),
   deadlineMs: routineDueRequestDeadlineMs(

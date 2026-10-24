@@ -3,7 +3,7 @@ import { readRetirementProgress, retirementProofTarget } from "./state-retiremen
 import type { Division } from "../registry/types.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
-import { sourceCheckedAt } from "./source-check.ts";
+import { inheritedObservedAt, sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, heldStatePublication, heldStatePublicationHashes, statePublicationScope } from "./state-publication.ts";
@@ -1044,7 +1044,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         .filter(event => event.sequence === 1 || event.detail.startsWith("RECHECKED_UNCHANGED:"))
         .flatMap(event => {
           const at = event.sequence === 1 && row.state === "PROMOTED" && row.acquisitionSucceeded
-            ? sourceCheckedAt(row.candidate.retrieval, event.at) : event.at;
+            ? sourceCheckedAt(row.candidate.retrieval, inheritedObservedAt(row.candidate, event.at)) : event.at;
           return at && Number.isFinite(Date.parse(at)) ? [{ at, failureCode: row.failureCode, failureDetail: row.failureDetail }] : [];
         }))
       .sort((a, b) => Date.parse(b.at) - Date.parse(a.at));
@@ -1060,7 +1060,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       return { ...trustedLkgImportClock(lastAttemptedAt, pointer.promotedAt), ...sittings };
     }
     const pointedHistory = pointedRow ? this.history.get(pointedRow.candidate.id) ?? [] : [];
-    const pointedObservedAt = pointedHistory.find((event) => event.sequence === 1)?.at;
+    const firstEventAt = pointedHistory.find((event) => event.sequence === 1)?.at;
+    const pointedObservedAt = firstEventAt && pointedRow ? inheritedObservedAt(pointedRow.candidate, firstEventAt) : firstEventAt;
     const confirmation = pointedRow ? latestUnchangedConfirmation(pointedHistory, pointedRow.candidate.id) : null;
     return confirmedClock({
       lastAttemptedAt,
@@ -1208,14 +1209,20 @@ export function routineClockConfirmationRead(db: RoutineClockDb, recordClass: Ro
     .limit(1);
 }
 
+/** A state transfer keeps its inherited response's retrieval as the source's last read (see inheritedObservedAt). */
+const INHERITED_RETRIEVED_AT = sql`(${civicDataCandidates.candidate}#>>'{retrieval,retrievedAt}')::timestamptz`;
+
 export function routineClockPointedObservedRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
   return db
-    .select({ observedAt: civicDataCandidateEvents.at })
+    .select({ observedAt: sql`CASE WHEN ${civicDataCandidates.candidate} ? 'stateRetirement'
+      AND ${civicDataCandidates.candidate}#>'{retrieval,sourceCheck}' IS NULL
+      THEN LEAST(${INHERITED_RETRIEVED_AT}, ${civicDataCandidateEvents.at}) ELSE ${civicDataCandidateEvents.at} END`.mapWith(civicDataCandidateEvents.at) })
     .from(civicDataPromotions)
     .innerJoin(civicDataCandidateEvents, and(
       eq(civicDataCandidateEvents.candidateId, civicDataPromotions.currentVersionId),
       eq(civicDataCandidateEvents.sequence, 1),
     ))
+    .innerJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
     .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
     .limit(1);
 }
@@ -2339,6 +2346,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       AND ${civicDataCandidates.acquisitionSucceeded} = true
       AND ${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
       THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
+      WHEN ${civicDataCandidates.state} = 'PROMOTED' AND ${civicDataCandidates.acquisitionSucceeded} = true
+      AND ${civicDataCandidateEvents.sequence} = 1 AND ${civicDataCandidates.candidate} ? 'stateRetirement'
+      THEN LEAST(${INHERITED_RETRIEVED_AT}, ${civicDataCandidateEvents.at})
       ELSE ${civicDataCandidateEvents.at} END`;
     const attemptQuery = this.db
       .select({ attemptedAt: attemptAt, failureCode: civicDataCandidates.failureCode, failureDetail: civicDataCandidates.failureDetail })

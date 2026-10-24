@@ -15,6 +15,7 @@ import {
   routineCodeChangeRetryTaskIds,
   routineTaskDeadlineMs,
   routineTaskDue,
+  routineTaskDueAtMs,
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineUnreceiptedSupervisorAttemptHistory,
@@ -22,6 +23,7 @@ import {
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
 import { sittingWindowHotByConclusion } from "../lib/civic-data/sitting-window-admission.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -84,6 +86,47 @@ test("unread and overdue meeting deadlines precede national baseline work", () =
     { task: { ...meeting, id: "later-meeting" }, deadlineMs: now + 1, baselineOwed: false },
   ];
   assert.deepEqual(routinePassLaunchOrder(jobs, now).map(row => row.task.id), ["unbuilt-meeting", meeting.id, people.id, "later-meeting"]);
+});
+
+test("a state's overdue voting sites start ahead of meetings owed more recently, and first reads keep their place", () => {
+  // Release 92-95 passes: hundreds of overdue meeting reads always led, so voting-sites waited for memory until the
+  // pass ended (WORKER_MEMORY_DEADLINE) every pass while its daily read went days overdue.
+  const now = Date.parse("2026-10-24T08:47:56.000Z"), HOUR = 3_600_000, DAY = 24 * HOUR;
+  const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
+  const sites = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:CA")!;
+  const people = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("openstates-people-"))!;
+  const meetings = Array.from({ length: 300 }, (_, index) => ({ task: { ...meeting, id: `meeting-${index}` }, deadlineMs: now - 3 * HOUR + index * 30_000, lastConsideredAt: null }));
+  const californiaClock = { lastAttemptedAt: "2026-10-07T09:45:58.000Z", lastSucceededObservedAt: "2026-10-07T09:45:58.000Z" };
+  const californiaOwed = routineTaskDueAtMs(sites, californiaClock, now)!;
+  assert.ok(californiaOwed > Date.parse(californiaClock.lastSucceededObservedAt) && californiaOwed <= Date.parse(californiaClock.lastSucceededObservedAt) + DAY);
+  assert.equal(routineTaskDue(sites, californiaClock, now), true);
+  const jobs = [
+    ...meetings,
+    { task: sites, owedAtMs: californiaOwed, lastConsideredAt: californiaClock.lastAttemptedAt },
+    { task: { ...sites, id: "voting-sites:recent" }, owedAtMs: now - HOUR, lastConsideredAt: "2026-10-23T07:00:00.000Z" },
+    { task: people, owedAtMs: routineTaskDueAtMs(people, undefined, now), baselineOwed: true, lastConsideredAt: null },
+    { task: { ...meeting, id: "unbuilt-meeting" }, deadlineMs: Number.NEGATIVE_INFINITY, lastConsideredAt: null },
+  ];
+  const order = routinePassLaunchOrder(jobs, now).map(row => row.task.id);
+  assert.deepEqual(order.slice(0, 2), ["unbuilt-meeting", "voting-sites:CA"]);
+  assert.ok(order.indexOf("voting-sites:recent") > order.indexOf("meeting-0") && order.indexOf("voting-sites:recent") < order.indexOf("meeting-299"),
+    "work owed an hour ago sits among meetings owed as long");
+  assert.equal(order.indexOf(people.id), meetings.length + 3, "a never-read baseline keeps its place behind overdue meetings");
+});
+
+test("routineTaskDue decides by the same instant the pass orders by", () => {
+  const sites = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:AZ")!;
+  const read = "2026-10-22T00:34:19.699Z", HOUR = 3_600_000;
+  for (const clock of [undefined, { lastAttemptedAt: read, lastSucceededObservedAt: read },
+    { lastAttemptedAt: "2026-10-23T05:00:00.000Z", lastSucceededObservedAt: read, failureStreak: 3 },
+    { lastAttemptedAt: read, lastSucceededObservedAt: read, lastSucceededParserVersion: "official-voting-sites/3" }]) {
+    const dueAt = routineTaskDueAtMs(sites, clock, Date.parse(read))!;
+    for (const offset of [-HOUR, 0, HOUR, 4 * HOUR, 25 * HOUR, 50 * HOUR]) {
+      const at = Date.parse(read) + offset;
+      assert.equal(routineTaskDue(sites, clock, at), at >= (routineTaskDueAtMs(sites, clock, at) ?? Number.NaN), `${JSON.stringify(clock)} at ${offset}`);
+    }
+    assert.ok(Number.isFinite(dueAt) || dueAt === Number.NEGATIVE_INFINITY);
+  }
 });
 
 test("one pass admits one least-recently-considered task per provider domain", () => {

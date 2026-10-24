@@ -149,7 +149,7 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LevelTag } from "@/components/ui/level-tag";
 import { BallotCapture } from "@/components/ballot/ballot-capture";
-import { tierForOffice } from "@/lib/ocd/tiers";
+import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { RetentionCard } from "@/components/ballot/retention-card";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
@@ -1220,7 +1220,8 @@ export default readerRoute("/ballot", async function BallotPage({
       {retentionContests.length > 0 && (
         <section className="mt-7" data-retention-contests>
           <h2 className="t-structure level-heading">Judicial retention votes</h2>
-          <div className="ballot-card-grid">
+          {/* A retention vote is a judge's seat: like every office it reads top to bottom, never in measure columns. */}
+          <div className="mt-4 grid grid-cols-1 gap-3">
             {retentionContests.map(contest => <RetentionCard key={contest.id} contest={contest} candidates={candidatesOf(set!, contest)} />)}
           </div>
         </section>
@@ -1383,7 +1384,8 @@ export default readerRoute("/ballot", async function BallotPage({
         </section>
       ))}
 
-      {matched && !drawnContests.some((c) => tierForOffice(c.title, c.ocdId) === "local") && (
+      {/* An office's tier comes from the office (a county-drawn Supreme Court seat is a state race); a measure holds no office, so its electorate is its tier. */}
+      {matched && !drawnContests.some((c) => (c.type === "MEASURE" ? tierForOcdId(c.ocdId) : tierForOffice(c.title, c.ocdId)) === "local") && (
         <section
           className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl"
           data-ballot-no-local-races

@@ -694,9 +694,9 @@ export function routineTaskDue(
     const attempted = Date.parse(clock.lastAttemptedAt ?? "");
     return !Number.isFinite(attempted) || attempted > nowMs || nowMs - attempted >= failureRetryMs(task.retryMs, clock);
   }
-  if (task.contract.cadence.requiredScopeVersions?.some(version => !clock?.publishedScopeVersions?.includes(version))) {
+  if (task.contract?.cadence.requiredScopeVersions?.some(version => !clock?.publishedScopeVersions?.includes(version))) {
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs || nowMs - attempted >= task.retryMs;
+    return !Number.isFinite(attempted) || attempted > nowMs || nowMs - attempted >= failureRetryMs(task.retryMs, clock);
   }
   const schedule = task.contract?.schedule;
   if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);

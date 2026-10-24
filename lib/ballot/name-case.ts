@@ -33,6 +33,9 @@ function caseWord(word: string): string {
   return word.charAt(0) + word.slice(1).toLowerCase();
 }
 
+/** The generational suffixes written Jr/Sr however they were filed; other two-letter capitals may be initials. */
+const CASED_SHORT_SUFFIX = /^(?:JR|SR)$/;
+
 /** Case each filed all-capitals word; preserve mixed-case words and initials. */
 export function surnameDisplayCase(surname: string): string {
   const trimmed = surname.trim();
@@ -40,7 +43,7 @@ export function surnameDisplayCase(surname: string): string {
   // Single letters with periods (initials like "B.") and suffixes keep form.
   return trimmed
     .split(/(\s+|-)/)
-    .map((part) => (part.length <= 2 || part !== part.toUpperCase() || /^\s+$/.test(part) || part === "-" ? part : caseWord(part)))
+    .map((part) => ((part.length <= 2 && !CASED_SHORT_SUFFIX.test(part)) || part !== part.toUpperCase() || /^\s+$/.test(part) || part === "-" ? part : caseWord(part)))
     .join("");
 }
 

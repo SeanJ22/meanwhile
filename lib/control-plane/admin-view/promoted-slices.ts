@@ -41,20 +41,24 @@ function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: 
     (withOverlaps ? overlapZipParam
       ? `, (SELECT jsonb_agg(overlap) FROM jsonb_array_elements(g->'overlaps') overlap WHERE overlap->>'zcta5'=$${overlapZipParam}::text)`
       : ", g->'overlaps'" : ", NULL::jsonb");
+  // Each SRF output stays small (a scope's type, version and versionMeta, then only the groupings that match the
+  // state), so the national payload is never collected into a spilled tuplestore. A scope's type and version are
+  // read from the scope itself, never from its versionMeta copy; one shared filter keeps the three lists aligned.
+  const stateFilter = stateParam ? " ? (@.stateAbbr == $state || @.memberStates[*] == $state)" : "";
+  const scope = "$.scopes[*] ? (exists(@.type) && exists(@.version) && exists(@.versionMeta))";
   return `WITH scopes AS MATERIALIZED (
-    SELECT meta FROM civic_data_promotions p,
-      LATERAL jsonb_path_query(p.payload, '$.scopes[*].versionMeta') meta
-    WHERE p.record_class=$1 AND p.scope=$2
-  ) SELECT 'scope' AS row_kind, meta->>'type' AS type, meta->>'key' AS version, meta->>'plan' AS plan,
+    SELECT jsonb_build_object('type', s.type, 'version', s.version, 'versionMeta', s.meta) AS scope FROM civic_data_promotions p
+      CROSS JOIN LATERAL ROWS FROM (jsonb_path_query(p.payload, '${scope}.type'), jsonb_path_query(p.payload, '${scope}.version'),
+        jsonb_path_query(p.payload, '${scope}.versionMeta')) WITH ORDINALITY s(type, version, meta, position)
+    WHERE p.record_class = $1 AND p.scope = $2 ORDER BY s.position
+  ) SELECT 'scope' AS row_kind, scope->>'type' AS type, scope->>'version' AS version, scope->'versionMeta'->>'plan' AS plan,
     NULL::text AS geoid, NULL::text AS ocd_id, NULL::text AS label, NULL::text AS state_fips, NULL::text AS state_abbr,
-    NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, meta AS version_meta FROM scopes
-  UNION ALL SELECT 'grouping', meta->>'type', meta->>'key', meta->>'plan', ${grouping}, NULL::jsonb
-    FROM civic_data_promotions p CROSS JOIN scopes
-    CROSS JOIN LATERAL jsonb_path_query(p.payload,
-      '$.scopes[*] ? (@.version == $version).groupings[*]${stateParam ? ' ? (@.stateAbbr == $state || @.memberStates[*] == $state)' : ''}',
-      jsonb_build_object('version', meta->>'key'${stateParam ? `, 'state', $${stateParam}::text` : ''})) g
-    WHERE p.record_class=$1 AND p.scope=$2 AND meta->>'type'=ANY($3::text[]) AND ${where}`;
-
+    NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, scope->'versionMeta' AS version_meta FROM scopes
+  UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', ${grouping}, NULL::jsonb FROM scopes CROSS JOIN LATERAL jsonb_path_query(
+      (SELECT held.payload FROM civic_data_promotions held WHERE held.record_class = $1 AND held.scope = $2),
+      '$.scopes[*] ? (@.type == $type && @.version == $version).groupings[*]${stateFilter}',
+      jsonb_build_object('type', scope->'type', 'version', scope->'version'${stateParam ? `, 'state', $${stateParam}::text` : ""})) g
+    WHERE scope->>'type' = ANY($3::text[]) AND ${where}`;
 }
 
 export interface ScopeSlice {

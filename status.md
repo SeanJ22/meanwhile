@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T21:00:42Z
+heartbeat: 2026-10-24T21:13:15Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,22 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### River finished DB-01 on its branch, 5:30 PM EDT (standing order: no READY within 60 minutes of the return)
+- What: merged river 720bc77b6 into stream/db-01 (no conflicts), fixed its 6 failing tests and two production bugs, READY: DB-01 4c5b40e39 (fast-forward from befe7b6f1).
+- Fixes:
+  - lib/db/identity-domains.ts:582 classifies civic_data_clock_versions (operational; identifies no one).
+  - Admin Money (app/(admin)/_mw/admin-v6/screen-money.tsx:67): the hour select gets the shell select class.
+  - screen-money.tsx:52: Admin Money crashed before any runner hour existed. An empty `hour` matched an empty load, then read null; this took down the whole Money view and was what failed tests 4-6.
+  - lib/civic-data/store.ts readStatePromotion: DB-01 split the single keyed state-publication read into one read per nesting level, which broke serving reads (the TypeError in test 3). Serving processes again read pointer, metadata and parts in one keyed read, using DB-01's indexed hash lookup. Runner children keep DB-01's slim read with shared copies (cache test: 645,813 bytes cold, 2,550 on the next pass).
+  - lib/civic-data/place-payload-slices.ts:29: DB-01's slice query failed in production for every MEETING read ("could not determine data type of parameter $5"); the typed CTE is restored. A new regression test at tests/db01-read-versions.test.ts:44 fails without the fix.
+- Checks: 248 tests pass, 0 fail (the six, DB-01's own, migration tests, store integrity); tsc, eslint, knip clean.
+- Proof, read-only production, river vs branch:
+  - AZ registry binding: same 1 row, same digests.
+  - AZ state publication: same row, 672 parts, same digests.
+  - Cincinnati meetings: same 2 rows and the same decoded meetings; the promotions scan goes from a 20,579-row sequential scan to 1 indexed row.
+  - Not rerun: DB-01's copy replay and write benchmark (they need the lane's throwaway Neon branch credentials). The fix doesn't touch the clock path.
+- Folds in the next small batch.
 
 ### Found: no state's polling places have refreshed since late morning, 5:10 PM EDT
 - Every source-launch pass since 1:42 PM EDT defers voting-sites in all 56 jurisdictions: "WORKER_MEMORY_DEADLINE: memory wait deferred", "Waiting for a worker slot". 25 states (AK, AS, GU, KY, ME, MP, MT, ND, OK, OR, PA, PR, RI, SC, SD, TN, TX, UT, VA, VI, VT, WA, WI, WV, WY) were deferring on alternating passes from 11:09 AM; before that they were not yet due. The last known IL voting read was 8:28 AM.

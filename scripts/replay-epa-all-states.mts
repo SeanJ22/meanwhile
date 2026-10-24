@@ -82,7 +82,7 @@ async function main() {
   const nationalSpool=await OpenDataSpool.create(),nationalIngestStarted=realNow(),initialRunId=`national-${randomUUID()}`;
   disposeNational=nationalSpool.dispose;const ingestCpu=process.cpuUsage();
   const sourceMetrics=new Map<string,{rows:number;valid:number;program:number;noZip:number;coordinates:number;sample:{id:string;zip:string}|null;gaps:EchoMinimumGap[]}>();
-  const archive=await openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},heldArchiveFetch(meta),openDataArchiveStore(rawVault,initialRunId));
+  const archive=await openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},heldArchiveFetch(meta),openDataArchiveStore(rawVault));
   assert.equal(archive.sourceSha256,meta.sha256);assert.equal(archive.member,"ECHO_EXPORTER.csv");
   const capture:OpenDataCapture={url:ECHO_EXPORT,retrievedAt:meta.retrievedAt,rawHash:meta.sha256,sourceRows:[],
     sourceCheck:{requestedUrl:ECHO_EXPORT,finalUrl:meta.finalUrl,httpStatus:200,checkedAt:meta.retrievedAt,rawHash:meta.sha256},archive:{sha256:meta.sha256,member:archive.member,publishedAt:archive.publishedAt}};
@@ -103,17 +103,16 @@ async function main() {
   const distribution={rows:nationalRows,states:[...sourceMetrics].map(([state,metrics])=>({state,rows:metrics.rows}))};
   const nationalIngestMs=realNow()-nationalIngestStarted,nationalSpoolBytes=await diskBytes(temporaryRoot);
   console.log(JSON.stringify({stage:"national-source-spool-complete",rows:nationalRows,elapsedMs:nationalIngestMs,diskBytes:nationalSpoolBytes,rss:process.memoryUsage().rss}));
-  const weeklyRunId=`next-weekly-${randomUUID()}`;
-  const weeklyArchive=await openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},heldArchiveFetch(meta),openDataArchiveStore(rawVault,weeklyRunId),meta.sha256);
+  const weeklyArchive=await openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},heldArchiveFetch(meta),openDataArchiveStore(rawVault),meta.sha256);
   assert.equal(weeklyArchive.sourceSha256,meta.sha256);assert.equal(weeklyArchive.unchanged,true);await weeklyArchive.dispose();
   const rawKeys=await rawVault.list("project/freshness/source/src-so/archive/");
-  assert.ok(rawKeys.includes(`project/freshness/source/src-so/archive/${initialRunId}/epa-echo/source.json`));
-  assert.ok(rawKeys.includes(`project/freshness/source/src-so/archive/${weeklyRunId}/epa-echo/source.json`));
+  assert.ok(rawKeys.includes("project/freshness/source/src-so/archive/index/epa-echo/source.json"));
+  assert.equal(rawKeys.filter(key=>key.includes("/epa-echo/sources/")).length,Math.ceil(meta.byteLength/(4*1024*1024)),"The next run reuses the held content-addressed bytes.");
   const proof:{[key:string]:unknown;states:Record<string,unknown>[]}={source:"epa-echo",scope:"Every exporter row and every state/territory named by the source, plus all 56 registered US jurisdictions",productionWrites:0,
     production:{project:"tiny-hill-13996172",branch:"br-delicate-lab-ax02xuo5",role:access.role,candidateTableWritePrivilege:access.can_write},archive:meta,sourceRows:distribution.rows,sourceStateCounts:distribution.states.map(({state,rows})=>({state,rows})),
     nationalIngest:{mode:"One actual production OpenDataSpool holds every real national row before materialization; source HTTP bytes are held from the actual official capture.",elapsedMs:nationalIngestMs,cpuMs:Object.values(process.cpuUsage(ingestCpu)).reduce((sum,value)=>sum+value,0)/1000,diskBytes:nationalSpoolBytes,rows:nationalRows},
     implementation:{spoolSha256:await fileHash("lib/sources/open-data/spool.ts"),replaySha256:await fileHash("scripts/replay-epa-all-states.mts")},
-    archiveRuns:{initial:initialRunId,nextWeekly:weeklyRunId,uniqueKeys:true,nextArchiveUnchanged:true,heldBytesReplay:true},
+    archiveRuns:{initial:initialRunId,contentAddressedBodies:true,nextArchiveUnchanged:true,heldBytesReplay:true},
     pipeline:"actual archive reader and CSV parser -> normalizeEcho + held production registration joins -> saveOpenDataPartition -> registered publishOpenData -> typed reader partitions -> readerOpenData -> grounded Ask evidence and OpenDataFacts renderer",
     clockScope:"Future clocks replay held real publisher bytes and preserve source dates; they do not claim future HTTP observations.",states:[]};
   const sourceByState=new Map(distribution.states.map(row=>[row.state,row]));

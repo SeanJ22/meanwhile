@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { crc32, deflateRawSync } from "node:zlib";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
@@ -16,7 +17,7 @@ import { openDataEvidence, openDataText } from "../lib/ask/open-data.ts";
 import { OPEN_DATA_CLOCKS, ECHO_EXPORT, openDataFactIssue, openDataReaderRecord, divisionPartition, zipPartition, type OpenDataFact } from "../lib/sources/open-data/model.ts";
 import { streamCsvObjects } from "../lib/sources/prl/streaming.ts";
 import { OpenDataSpool } from "../lib/sources/open-data/spool.ts";
-import { parseOpenDataArguments, openDataArchiveStore } from "../scripts/open-data-refresh.mts";
+import { parseOpenDataArguments, openDataArchiveStore, refreshEchoNational } from "../scripts/open-data-refresh.mts";
 import { portalBindingsFromPage,stateDirectoryPage,stateGovernmentWebsite } from "../lib/sources/open-data/portals.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import { facilityCell,facilityPoint,nearbyFacilityCells,facilityNear } from "../lib/sources/open-data/geography.ts";
@@ -25,7 +26,7 @@ import { saveSocrataLeads } from "../lib/sources/open-data/leads.ts";
 import { readFieldManual } from "../lib/control-plane/field-manual.ts";
 import { readPublicKindOwed } from "../lib/coverage/public-kind-owed.ts";
 import { openArchiveSource } from "../lib/sources/archive-download.ts";
-import { saveOpenDataPartition } from "../lib/sources/open-data/artifacts.ts";
+import { saveOpenDataPartition, readOpenDataPartition } from "../lib/sources/open-data/artifacts.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { refreshSocrata, socrataStateDivisionId } from "../lib/sources/open-data/socrata.ts";
 import type { OpenDataCapture } from "../lib/sources/open-data/publication.ts";
@@ -184,18 +185,46 @@ test("Shared disk acquisition holds real raw fixture bytes and confirms a condit
   try{let rows=0;for await(const _row of streamCsvObjects(first.textChunks))rows++;assert.equal(rows,9);await first.accept?.();assert.equal(first.publishedAt,"2026-10-11T02:25:45.000Z");}finally{await first.dispose();}
   const second=await openArchiveSource(spec,fetchImpl,archive,first.sourceSha256);try{assert.equal(second.unchanged,true);assert.equal(second.retrievedAt,first.retrievedAt);assert.equal(second.publishedAt,first.publishedAt);}finally{await second.dispose();}
 });
-test("EPA archive evidence gets a fresh key on the next scheduled run",async()=>{
-  const vault=new MemoryEvidenceStore(),spec={id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv" as const};
-  const firstBytes=fixture("echo-exporter-sample.csv"),secondBytes=firstBytes.replace("TITAN CLEANERS & LAUNDRY","TITAN CLEANERS & LAUNDRY UPDATED");
-  assert.notEqual(firstBytes,secondBytes);
-  for(const [run,body]of [["first-run",firstBytes],["next-run",secondBytes]]) {
-    const source=await openArchiveSource(spec,(async()=>new Response(body,{headers:{etag:`"${run}"`}})) as typeof fetch,openDataArchiveStore(vault,run));
-    try {for await(const _row of streamCsvObjects(source.textChunks)){}await source.accept?.();}
-    finally {await source.dispose();}
+/** The ECHO Exporter ships one deflated CSV member, as the real echo_exporter.zip does. */
+function echoExporterZip(csv:string):Uint8Array<ArrayBuffer> {
+  const name=Buffer.from("ECHO_EXPORTER.csv"),bytes=Buffer.from(csv),body=deflateRawSync(bytes),crc=crc32(bytes);
+  const local=Buffer.alloc(30);local.writeUInt32LE(0x04034b50);local.writeUInt16LE(20,4);local.writeUInt16LE(8,8);local.writeUInt32LE(crc,14);local.writeUInt32LE(body.length,18);local.writeUInt32LE(bytes.length,22);local.writeUInt16LE(name.length,26);
+  const central=Buffer.alloc(46);central.writeUInt32LE(0x02014b50);central.writeUInt16LE(20,4);central.writeUInt16LE(20,6);central.writeUInt16LE(8,10);central.writeUInt32LE(crc,16);central.writeUInt32LE(body.length,20);central.writeUInt32LE(bytes.length,24);central.writeUInt16LE(name.length,28);
+  const end=Buffer.alloc(22);end.writeUInt32LE(0x06054b50);end.writeUInt16LE(1,8);end.writeUInt16LE(1,10);end.writeUInt32LE(central.length+name.length,12);end.writeUInt32LE(local.length+name.length+body.length,16);
+  return new Uint8Array(Buffer.concat([local,name,body,central,name,end]));
+}
+test("EPA's next scheduled runs publish a new edition and then confirm it, with no archive key collision (production 2026-10-23)",async()=>{
+  // Production held the first run's pointer at the old fixed key and refused every later edition offered there.
+  const archiveVault=new MemoryEvidenceStore(),vault=new MemoryEvidenceStore(),store=new MemoryRoutineDataStore(),legacySha="1".repeat(64);
+  const legacy=Buffer.from(JSON.stringify({version:1,url:ECHO_EXPORT,finalUrl:ECHO_EXPORT,sha256:legacySha,bytes:445388175,retrievedAt:"2026-10-22T14:00:00.000Z",etag:'"legacy"',lastModified:null,chunks:[`epa-echo/sources/${legacySha}/part-00000`]}));
+  await archiveVault.put("project/freshness/source/src-so/archive/epa-echo/source.json",legacy,{contentType:"application/json",contentHash:`sha256-${createHash("sha256").update(legacy).digest("hex")}`,byteLength:legacy.length,objectClass:"MUTABLE_INDEX"});
+  const first=fixture("echo-exporter-sample.csv"),edition=first.replace("TITAN CLEANERS & LAUNDRY","TITAN CLEANERS & LAUNDRY UPDATED");
+  const served=[echoExporterZip(first),echoExporterZip(edition)],conditional:(string|null)[]=[];
+  const fetchImpl=(async(_url:string|URL|Request,init?:RequestInit)=>{
+    const etag=new Headers(init?.headers).get("if-none-match");conditional.push(etag);
+    const at=conditional.length-1;
+    if(at>=served.length)return etag==='"edition-1"'?new Response(null,{status:304}):new Response(served[1],{headers:{etag:'"edition-1"'}});
+    return new Response(served[at],{headers:{etag:`"edition-${at}"`,"last-modified":"Sun, 18 Oct 2026 06:44:46 GMT"}});
+  }) as typeof fetch;
+  const runs=[];
+  for(let run=0;run<3;run++) {
+    const spool=await OpenDataSpool.create();
+    try {runs.push(await refreshEchoNational({store,vault,archive:openDataArchiveStore(archiveVault),spool,signal:AbortSignal.timeout(30_000),now:()=>new Date().toISOString(),readStateJoins:async()=>[],fetchImpl}));}
+    finally {await spool.dispose();}
   }
-  const keys=await vault.list("project/freshness/source/src-so/archive/");
-  assert.ok(keys.some(key=>key.includes("/first-run/epa-echo/source.json")));
-  assert.ok(keys.some(key=>key.includes("/next-run/epa-echo/source.json")));
+  assert.deepEqual(conditional,[null,'"edition-0"','"edition-1"'],"each next run checks the edition it holds");
+  assert.ok(runs[0].publication.outcome.promoted);
+  assert.ok(runs[1].publication.outcome.promoted,"a changed edition publishes a clean new version");
+  assert.notEqual(runs[1].publication.candidate.id,runs[0].publication.candidate.id);
+  assert.equal(runs[2].unchanged,true);assert.ok(runs[2].publication.outcome.confirmed,"an unchanged edition is confirmed, not rebuilt");
+  const keys=await archiveVault.list("project/freshness/source/src-so/archive/");
+  assert.equal(keys.filter(key=>key.includes("/epa-echo/sources/")).length,2,"one held copy of each edition's bytes");
+  assert.ok(keys.includes("project/freshness/source/src-so/archive/index/epa-echo/source.json"));
+  const read=await readOpenDataProjection("epa-echo","national",{store,bypassCache:true});
+  assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
+  const loaded=read.value.reports.reduce((n,r)=>n+r.loaded,0);assert.equal(loaded,runs[1].reports.reduce((n,r)=>n+r.loaded,0));assert.ok(loaded>0);
+  const facility=(await Promise.all((read.value.partitions??[]).map(reference=>readOpenDataPartition("epa-echo",reference,vault)))).flatMap(part=>part.records).find(row=>row.title.includes("TITAN CLEANERS"));
+  assert.equal(facility?.title,"TITAN CLEANERS & LAUNDRY UPDATED","readers see the newer edition");
 });
 test("Socrata native facts reach the place reader before portal enrichment on consecutive scheduled runs",async()=>{
   const division="ocd-division/country:us/state:ny",store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore(),repos=createMemoryRepositories();

@@ -1,7 +1,7 @@
 /** One national bulk clock, publishing one bounded session at a time. */
 import { pathToFileURL } from "node:url";
 import { acquireDatasetList,acquireDataset } from "../lib/sources/legiscan/acquisition.ts";
-import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,LEGISCAN_API,billScope,stateOfDataset,type BillSession,type HeldPerson,type Dataset } from "../lib/sources/legiscan/bills.ts";
+import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,type BillSession,type HeldPerson,type Dataset } from "../lib/sources/legiscan/bills.ts";
 import { publishBulkCandidate,confirmBulkSession } from "../lib/sources/legiscan/publication.ts";
 import { PostgresRoutineDataStore,type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";

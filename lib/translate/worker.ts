@@ -18,6 +18,20 @@ export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRe
 import { translationHash, translationDraftIssue, translationChecksIssue, translationSourceContains, translationSourceNames, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 import { translationPassages } from "./passages.ts";
 
+interface TranslationModelUsage {
+  readonly model: string;
+  /** Older attempts predate the role carried by the existing cost ledger. */
+  readonly role?: "TRANSLATOR" | "TRANSLATION_CHECKER";
+  readonly usage: ReturnType<typeof readMeteredUsage>;
+  readonly usd: number | null;
+}
+
+export function translationModelUsage(request: ModelRequest, response: ModelResponse): TranslationModelUsage {
+  const usage = readMeteredUsage(response.usage, response.batch === true);
+  return { model: response.model, role: request.tools[0]?.name.startsWith("check_") ? "TRANSLATION_CHECKER" : "TRANSLATOR",
+    usage, usd: priceMeteredUsage(response.model, usage, "1h").usd };
+}
+
 export interface TranslationPlaybook {
   readonly writerText: string;
   readonly checkerText: string;
@@ -223,9 +237,9 @@ export async function translateMeasure(input: {
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
-  const responses: ModelResponse[] = [];
+  const responses: TranslationModelUsage[] = [];
   const recordedSend: ModelTransport = async request => {
-    const response = await send(request); responses.push(response); return response;
+    const response = await send(request); responses.push(translationModelUsage(request, response)); return response;
   };
   return translationLadder(async (writerModel, checkerModel, feedback) => {
     const writer = await recordedSend(request(writerModel, writerTool, { subject: modelSubject, feedback,
@@ -265,8 +279,7 @@ export async function translateMeasure(input: {
     const record: MeasureTranslation = { ...draft, checkerModel: canonicalModelId(checker.model), checked: result?.checked };
     const issue = translationChecksIssue(record);
     if (issue) throw new TranslationCheckFailed(`${issue} ${JSON.stringify(result?.checked)}`);
-    return { record, usage: responses.map(response => ({ model: response.model,
-      usage: readMeteredUsage(response.usage, response.batch === true), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "1h").usd })) };
+    return { record, usage: responses };
   });
 }
 

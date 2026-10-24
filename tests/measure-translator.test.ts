@@ -123,6 +123,7 @@ test("a missing sentence annotation is rewritten before paying an independent ch
   assert.equal(result.record.writerModel, "claude-sonnet-5-5");
   assert.equal(result.record.checkerModel, "claude-opus-5-5");
   assert.equal(result.usage.length, 3);
+  assert.deepEqual(result.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATOR", "TRANSLATION_CHECKER"]);
   assert.equal(translationRecordIssue(result.record), null);
 });
 
@@ -233,6 +234,7 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
   rejectCheck = true;
   const changed = { ...evidence, text: `${source} The next review is in 2028.`, contentHash: `sha256-${translationHash(`${source} The next review is in 2028.`)}` };
   const refused = await run(changed); assert.equal(refused.status, "HELD"); assert.equal(refused.usage.length, 4);
+  assert.deepEqual(refused.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATION_CHECKER", "TRANSLATOR", "TRANSLATION_CHECKER"]);
   assert.deepEqual((await readTranslations([subject.ocdId], { store, now, bypassCache: true }))[0], first.record);
   rejectCheck = false;
   const rewritten = await run(changed); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
@@ -334,6 +336,7 @@ test("a failed Sonnet check buys a Sonnet rewrite and an Opus check, metering al
   assert.equal(result.record.checkerModel, "claude-opus-5-5");
   assert.equal(result.record.subjectId, subject.contestId);
   assert.equal(result.usage.length, 4);
+  assert.deepEqual(result.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATION_CHECKER", "TRANSLATOR", "TRANSLATION_CHECKER"]);
   assert.ok(result.usage.every(row => row.usd !== null));
   const costs = await repos.costs.readAll();
   assert.equal(costs.length, 4);

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import type { UpdateLine, UpdatesView } from "@/lib/control-plane/admin-view/updates-read.ts";
 
-import { Actions, Card, cx, Pill } from "./ui.tsx";
+import { Card, cx, Pill } from "./ui.tsx";
 import s from "./v6.module.css";
 
 export function UpdatesPanel() {
@@ -38,7 +38,6 @@ export function UpdatesPanel() {
             <span className={cx(s.p, s.meta)}>{u.when}</span>
             {(u.before || u.after) && <p className={cx(s.p, s.small)}>Before: {u.before ?? "—"} · After: {u.after ?? "—"}</p>}
             {u.evidenceHref && <a className={s.btnLink} href={u.evidenceHref}>See the before and after</a>}
-            {u.decline && <Actions actions={[{ kind: "owed-decline", target: u.decline.placeKey, label: "Decline", payload: { rows: JSON.stringify(u.decline.rows), what: u.decline.what } }]} />}
           </div>
         ))}
       </div>

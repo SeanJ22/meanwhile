@@ -1,6 +1,5 @@
 import checklist from "../control-plane/readiness/checklist-profile.json" with { type: "json" };
 import { divisionOwesGatedItem } from "./checklist-map.ts";
-import { activeOwedOverlay } from "./owed-overlay-slot.ts";
 import { rowStatuses, type HuntEvidence, type RowStatuses } from "./place-statuses.ts";
 import { CHECKLIST_GROUPS, DEADLINE_ITEMS, canonicalItemId, checklistItem, checklistItemApplies, subjectKindOfUnit } from "./checklist-map.ts";
 
@@ -152,9 +151,6 @@ export function buildPlaceOwedList(input: {
     if (subject.kind === "calendar") return firstSeen.get(subject.id.replace(/#calendar$/, "")) ?? null;
     return DISCOVERED_SUBJECT_KINDS.has(subject.kind) && !subject.id.includes("#inventory:") ? firstSeen.get(subject.id) ?? null : null;
   };
-  // Admin's added items join the checklist's definitions; declined rows are dropped below.
-  const overlay = activeOwedOverlay();
-  const allDefinitions = overlay.definitions.length === 0 ? checklist.definitions : [...checklist.definitions, ...overlay.definitions];
   return [...subjects.values()].sort((a, b) => a.id.localeCompare(b.id)).flatMap(subject => {
     const inventory = subject.id.includes("#inventory:");
     const owedSince = owedSinceOf(subject);
@@ -166,7 +162,7 @@ export function buildPlaceOwedList(input: {
       return owes === "held-only" ? heldHere(d) : owes;
     };
     // Held evidence always keeps its row, even for an item the subject's unit would not owe. Shared items count once, under their own ID.
-    const definitions = allDefinitions.filter(d => checklistItem(d.id)?.countsAs !== "shared" && (!inventory && heldHere(d) ||
+    const definitions = checklist.definitions.filter(d => checklistItem(d.id)?.countsAs !== "shared" && (!inventory && heldHere(d) ||
       owedByKind(subject.kind, d) && gated(d) && (subject.kind !== "deadline" || DEADLINE_ITEMS.has(d.id)) && (inventory || appliesToRecord(subject, d))));
     // The inventory is one discovery item, not a fictitious seat or contest.
     const wanted = inventory ? definitions.slice(0, 1) : definitions;
@@ -184,7 +180,7 @@ export function buildPlaceOwedList(input: {
           : state === "stale" ? `${requirement} — captured; source refresh due`
           : state === "held" ? `${requirement} — captured, not published yet`
           : state === "unpublished" ? `${requirement} — not published by the government` : requirement };
-    }).filter(row => !overlay.declinedRows.has(row.id));
+    });
   });
 }
 

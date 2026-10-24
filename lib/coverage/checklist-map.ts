@@ -1,8 +1,6 @@
 import map from "./checklist-map.json" with { type: "json" };
-import { activeOwedOverlay } from "./owed-overlay-slot.ts";
 
-/** The rules of the State Run Checklist v1.1 as data. The loader only reads
- * the overlay; it holds no rule of its own and never gates publication. */
+/** The rules of the State Run Checklist v1.1 as data. The loader never gates publication. */
 export interface AppliesRule {
   readonly groups?: readonly string[];
   readonly ids?: readonly string[];
@@ -53,9 +51,9 @@ export const LIFECYCLE = map.lifecycle;
 export const PRODUCERS = map.producers as unknown as Readonly<Record<string, { readonly file: string; readonly label: string } | string>>;
 export const REPLACED_BY_ADMIN = map.replacedByAdmin as Readonly<Record<string, string>>;
 
-/** The rule for an item: the checklist's own, or the rule of an item added in Admin. */
+/** The checklist rule for an item. */
 export function checklistItem(id: string): ChecklistItemRule | undefined {
-  return CHECKLIST_ITEMS[id] ?? activeOwedOverlay().rules[id];
+  return CHECKLIST_ITEMS[id];
 }
 
 /** The squad that takes this item's family, from the starting setting unless Admin has set another. */

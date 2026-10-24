@@ -4,7 +4,6 @@ import { readHeldPlaceCapture, type HeldPlaceCapture } from "../../civic-data/he
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { countyIdentity, stateBase } from "../../ocd/divisions.ts";
-import { refreshOwedOverlay } from "./owed-overlay-read.ts";
 import { parseV6PlaceKey } from "./v6-hunts-read.ts";
 import { districtDivisions, readStateDistricts } from "./v6-national-geography.ts";
 
@@ -30,8 +29,6 @@ export interface PlaceOwedDeps {
   readonly resolveDivisions: (place: ResolvedPlace) => Promise<{ readonly label: string; readonly covers: string; readonly divisions: readonly PlaceDivisionLike[];
     readonly zips?: readonly string[] }>;
   readonly readHeld: (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
-    /** Makes the owner's owed overlay the one this list is built with; returns its revision. Absent means none. */
-  readonly refreshOverlay?: () => Promise<string>;
 }
 export interface PlaceDivisionLike {
   readonly id: string;
@@ -104,20 +101,17 @@ export const defaultPlaceOwedDeps: PlaceOwedDeps = {
     return { label: place.state.toUpperCase(), covers: "The state’s own government: statewide offices, the legislature, state agencies and statewide elections and funding. Counties and towns are read in their own views.", divisions: [{ id: base.base, label: place.state.toUpperCase() }] };
   },
   readHeld: (ids, now) => readHeldPlaceCapture(ids, { now }),
-  refreshOverlay: refreshOwedOverlay,
 };
 
 const MEMO_MS = 5 * 60_000;
 const MEMO_PLACES = 24;
-const memo = new Map<string, { at: number; overlay: string; read: PlaceOwedRead }>();
+const memo = new Map<string, { at: number; read: PlaceOwedRead }>();
 
 export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defaultPlaceOwedDeps, options: { readonly fresh?: boolean } = {}): Promise<PlaceOwedRead | PlaceOwedRefusal> {
   const place = resolvePlaceKey(placeKey);
   if ("says" in place) return place;
-    // A remembered list is only reused while the owed overlay is the same.
-  const overlay = deps.refreshOverlay ? await deps.refreshOverlay() : "none";
   const cached = memo.get(placeKey);
-  if (!options.fresh && cached && cached.overlay === overlay && Date.now() - cached.at < MEMO_MS) return cached.read;
+  if (!options.fresh && cached && Date.now() - cached.at < MEMO_MS) return cached.read;
   const t0 = Date.now();
   let resolved: Awaited<ReturnType<PlaceOwedDeps["resolveDivisions"]>>;
   try { resolved = await deps.resolveDivisions(place); }
@@ -134,7 +128,7 @@ export async function readPlaceOwed(placeKey: string, deps: PlaceOwedDeps = defa
   const rows = buildPlaceOwedList({ divisions: resolved.divisions, subjects: held.subjects, held: held.held, now, ...(resolved.zips ? { zips: resolved.zips } : {}) });
   const read: PlaceOwedRead = { state: "READ", placeKey, label: resolved.label, covers: resolved.covers,
     divisions: resolved.divisions.map((d) => ({ id: d.id, label: d.label })), rows, observedAt: now, readMs: { geography: t1 - t0, held: Date.now() - t1 } };
-  memo.set(placeKey, { at: Date.now(), overlay, read });
+  memo.set(placeKey, { at: Date.now(), read });
   // A long-lived server holds at most a couple of dozen places; the oldest goes first.
   while (memo.size > MEMO_PLACES) memo.delete(memo.keys().next().value as string);
   return read;

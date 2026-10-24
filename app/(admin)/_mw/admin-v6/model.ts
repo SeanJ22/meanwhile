@@ -744,7 +744,7 @@ export type ActionKind =
   "ballot-publish" |
   "officials-check" |
   "focus" |
-  "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "hunt-stop-state" | "hunt-stop-all" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo" | "owed-add" | "owed-decline" | "owed-undo";
+  "decide" | "leads-send" | "hunt-start" | "hunt-start-many" | "hunt-pause" | "hunt-resume" | "hunt-limit" | "hunt-stop" | "hunt-stop-state" | "hunt-stop-all" | "global-paid" | "global-paid-resume" | "global-runner-pause" | "global-runner-resume" | "global-ceiling" | "global-search-on" | "global-search-off" | "send-agents" | "cancel-send" | "order-schedule" | "order-unschedule" | "target-set" | "target-clear" | "data-switch-on" | "data-switch-off" | "setting-set" | "setting-undo";
 
 export type ReceiptStatus = "queued" | "read" | "running" | "done" | "partial" | "refused" | "failed" | "unknown";
 export const PENDING_STATUSES: readonly ReceiptStatus[] = ["queued", "read", "running", "unknown"];

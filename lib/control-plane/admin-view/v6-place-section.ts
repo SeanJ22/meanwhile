@@ -67,7 +67,7 @@ export interface AdminV6PlaceItem {
   readonly statuses: RowStatuses | null;
   readonly nextCheckAt: string | null;
   readonly addedAt: string | null;
-  readonly actions: readonly { readonly kind: "send-agents" | "owed-decline"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }[];
+  readonly actions: readonly { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }[];
 }
 export interface AdminV6PlaceChecklistView {
   readonly profileVersion: string;
@@ -116,8 +116,7 @@ function itemOf(item: OwedListItem, placeKey: string, words: string | null, miss
     addedAt: item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart) ? item.owedSince : null,
     actions: [
       ...(open && words !== null ? [{ kind: "send-agents" as const, target: placeKey, label: "Send agents", payload: { words } }] : []),
-      ...(item.owedSince !== null && missionStart !== null && !onStartingList(item, missionStart)
-        ? [{ kind: "owed-decline" as const, target: placeKey, label: "Decline", payload: { rows: JSON.stringify([{ rowId: item.key, subjectLabel: item.subject, requirement: item.requirement }]), what: item.requirement.split(" — ")[0] ?? item.requirement } }] : []),
+
     ],
   };
 }

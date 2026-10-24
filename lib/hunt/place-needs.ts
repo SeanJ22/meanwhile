@@ -22,5 +22,5 @@ export async function placeNeeds(repos: Pick<ControlPlaneRepositories, "adminCon
   }
   const placeId = typeof place === "string" ? place : place.kind === "point" ? `point:${place.point.join(",")}` : `${place.kind}:${place.code}`;
   return { ...await readPlaceNeeds(query, row?.value ?? null, placeId, now,
-    typeof place === "string" ? [place] : memberships.map(row => row.placeId)), memberships };
+    typeof place === "string" ? [place] : memberships.map(row => row.placeId), typeof place === "string" ? undefined : memberships), memberships };
 }

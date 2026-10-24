@@ -4,9 +4,10 @@ import { FIELD_KINDS, type FieldKind } from "../facts/check.ts";
 import { readSetting, registerSetting, type SettingValue } from "../control-plane/settings.ts";
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { stateEntry } from "../control-plane/readiness/catalog.ts";
+import type { EntityKind } from "../core/shapes.ts";
 
 export type OwedRule = {
-  readonly kind: string;
+  readonly kind: EntityKind;
   readonly field: string;
   readonly label: string;
   readonly clock: FieldKind;
@@ -19,9 +20,9 @@ export type OwedTable = {
 };
 export const OWED_TABLE_SETTING = "coverage.owedTable";
 const kinds = new Set(["place", "government", "body", "seat", "person", "meeting", "agenda_item", "bill", "vote_event",
-  "election", "contest", "candidacy", "measure", "committee", "statement", "law_question", "news_item"]);
+  "election", "contest", "candidacy", "measure", "measure_provision", "committee", "statement", "law_question", "news_item"]);
 const checklistIds = new Set(profile.definitions.map(row => row.id));
-const rule = (kind: string, field: string, label: string, clock: FieldKind, checklist: string[]): OwedRule =>
+const rule = (kind: EntityKind, field: string, label: string, clock: FieldKind, checklist: string[]): OwedRule =>
   ({ kind, field, label, clock, checklist: checklist.filter(id => checklistIds.has(id)) });
 
 /** Seeded from the place planner's subject families, packet fields, registered geography kinds and State Run Checklist. */
@@ -70,6 +71,7 @@ export const DEFAULT_OWED_TABLE: OwedTable = {
     rule("election", "deadlines", "Registration and voting deadlines", "ballot", ["ELE-01"]),
     rule("election", "voting_sites", "Voting places", "ballot", ["ELE-01"]),
     rule("measure", "text", "Ballot measure text", "ballot", ["ELE-01"]),
+    rule("measure_provision", "text", "Part of the ballot measure", "ballot", ["ELE-01"]),
     rule("committee", "campaign-money", "Campaign funding and filings", "money", ["CAM-01"]),
     rule("bill", "text", "Bill text", "law", ["LEG-01"]),
     rule("vote_event", "votes", "Who voted and how", "vote", ["LEG-01"]),

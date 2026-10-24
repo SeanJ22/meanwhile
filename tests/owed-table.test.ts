@@ -106,9 +106,11 @@ test("the hunter entry point uses RB-A2's selected ZIP places without adding ano
     await db.pg.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
       CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
     await db.pg.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
+    await db.pg.exec("ALTER TABLE entity_place ADD COLUMN boundary_year int NOT NULL DEFAULT 0");
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('county','place','County','AZ'),('town','place','Town','AZ'),('elsewhere','place','Another town','AZ')");
     await db.query("UPDATE entity SET parent_id='county' WHERE id IN ('town','elsewhere')");
-    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('county-board','body','County board','AZ','county'),('town-board','body','Town board','AZ','town'),('other-board','body','Other board','AZ','elsewhere')");
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('county-board','body','County board','AZ','county'),('town-board','body','Town board','AZ','town'),('other-board','body','Other board','AZ','elsewhere'),('old-plan-board','body','Old plan board','AZ','county')");
+    await db.query("INSERT INTO entity_place VALUES ('old-plan-board','county',2020)");
     await db.query(`INSERT INTO place_boundary(place_id,boundary_year,layer,version,checked_at)
       VALUES ('county',2023,'county','county:2023',$1),('town',2023,'place','place:2023',$1)`, [now]);
     await db.query("INSERT INTO zip_place(zip,place_id,boundary_year) VALUES ('85701','county',2023),('85701','town',2023)");

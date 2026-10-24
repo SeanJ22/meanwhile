@@ -278,7 +278,7 @@ test('real migrated Admin storage keeps keeper fixes outside config and preserve
 
 test('a missed country input interval stays unread until the separate initializer repairs it',async()=>{
  const caches=US_STATES.map(s=>({state:s.code,score:0,measuredAt:'2026-10-20T04:00:00Z',error:null,capture:{subjects:[],held:[]}}));
- const sql={query:async(text:string)=>text.includes('owedOverlay')?[{overlay:null}]:text.includes('civic_data_promotions')?[{place:'US-AZ:directory',record_class:'FEDERAL_DIRECTORY',scope:'US-AZ:directory'}]:[]} as never;
+ const sql={query:async(text:string)=>text.includes('civic_data_promotions')?[{place:'US-AZ:directory',record_class:'FEDERAL_DIRECTORY',scope:'US-AZ:directory'}]:[]} as never;
  const result=await publishCountryScores(sql,sql,from,through,at,{readOnly:true,previewCache:caches});
  assert.ok(result.every(s=>s.error?.startsWith('The country inputs missed an hourly interval.')));
 });

@@ -3,6 +3,7 @@ import { US_STATES } from "../control-plane/readiness/catalog.ts";
 import { factClocks } from "../facts/clocks.ts";
 import type { Query } from "../facts/publish.ts";
 import { owedTable, type OwedTable } from "./owed-table.ts";
+import type { PlaceMembership } from "../place-map/types.ts";
 
 export interface OwedCounts { readonly owed: number; readonly held: number; readonly missing: number; readonly stale: number; readonly stuck: number }
 export interface StateOwedCounts extends OwedCounts { readonly state: string; readonly name: string }
@@ -116,14 +117,18 @@ export async function readStateOwedCounts(query: Query, config: AdminConfig | nu
 
 /** Hunters call once before spending: exact place, map-linked subjects and descendants, their missing fields and every held value/source. */
 export async function readPlaceNeeds(query: Query, config: AdminConfig | null, placeId: string, now: string,
-  placeIds: readonly string[] = [placeId]): Promise<PlaceNeeds> {
+  placeIds: readonly string[] = [placeId], memberships?: readonly Pick<PlaceMembership, "placeId" | "boundaryYear">[]): Promise<PlaceNeeds> {
   if (!placeId || placeId.length > 500) throw new Error("Choose a place");
   const rows = await query(`${slots(`root AS MATERIALIZED (SELECT * FROM entity WHERE id=ANY($4::text[]) AND kind='place'),
-    mapped AS (SELECT id FROM root UNION SELECT ep.entity_id FROM entity_place ep JOIN root r ON ep.place_id=r.id),
+    mapped AS (SELECT id FROM root UNION SELECT ep.entity_id FROM entity_place ep JOIN root r ON ep.place_id=r.id
+      ${memberships ? `WHERE ep.boundary_year=0 OR EXISTS(SELECT 1 FROM jsonb_to_recordset($5::jsonb)
+        AS selected(place_id text,boundary_year int) WHERE selected.place_id=ep.place_id AND selected.boundary_year=ep.boundary_year)` : ""}),
     family(id) AS (SELECT id FROM mapped UNION SELECT e.id FROM entity e JOIN family p ON e.parent_id=p.id
-      WHERE e.kind<>'place' AND EXISTS(SELECT 1 FROM root r WHERE e.state IS NOT DISTINCT FROM r.state)),
+      JOIN entity parent ON parent.id=p.id WHERE e.kind<>'place'
+        AND EXISTS(SELECT 1 FROM root r WHERE coalesce(e.state,'US')=coalesce(r.state,'US'))
+        AND (parent.kind<>'place' OR NOT EXISTS(SELECT 1 FROM entity_place ep WHERE ep.entity_id=e.id))),
     subjects AS MATERIALIZED (SELECT e.id,e.name,e.kind,coalesce(e.state,'US') AS state FROM entity e JOIN family f ON f.id=e.id
-      WHERE EXISTS(SELECT 1 FROM root r WHERE e.state IS NOT DISTINCT FROM r.state))`)}
+      WHERE EXISTS(SELECT 1 FROM root r WHERE coalesce(e.state,'US')=coalesce(r.state,'US')))`)}
     SELECT roots.n AS root_count,m.*,e.name,e.kind,
       coalesce(label.label,replace(split_part(m.field,':',1),'_',' ')) AS label,b.stage,b.reason,b.next_try_at,
       coalesce((SELECT jsonb_agg(jsonb_build_object('id',f.id,'value',f.value,'status',f.status,'sourceUrl',s.final_url,
@@ -137,7 +142,7 @@ export async function readPlaceNeeds(query: Query, config: AdminConfig | null, p
         AND (r.place_kind IS NULL OR r.place_kind=split_part(regexp_replace(e.id,'^.*/',''),':',1))
         AND (m.field=r.field OR starts_with(m.field,r.field||':')) ORDER BY length(r.field) DESC LIMIT 1) label ON true
       LEFT JOIN blank b ON b.entity_id=m.id AND b.field=m.field ORDER BY m.id,m.field`,
-  [...parameters(config, now), [...new Set(placeIds)]]);
+  [...parameters(config, now), [...new Set(placeIds)], ...(memberships ? [JSON.stringify(memberships.map(row => ({ place_id: row.placeId, boundary_year: row.boundaryYear })))] : [])]);
   if (!Number(rows[0]?.root_count)) throw new Error("The place map has no coverage for this place yet");
   const missing: PlaceMissingItem[] = [], held: PlaceHeldItem[] = [];
   let stale = 0, stuck = 0;

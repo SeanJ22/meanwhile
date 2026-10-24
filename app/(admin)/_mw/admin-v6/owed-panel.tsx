@@ -15,7 +15,7 @@ import s from "./v6.module.css";
 type OwedData = { readonly table: OwedTable; readonly setting: SettingRow; readonly counts: readonly StateOwedCounts[] | null };
 const kindWords: Record<string, string> = { place: "Place", government: "Government", body: "Board or commission", seat: "Seat", person: "Officeholder",
   meeting: "Meeting", agenda_item: "Agenda item", bill: "Bill", vote_event: "Vote", election: "Election", contest: "Contest", candidacy: "Candidate",
-  measure: "Ballot measure", committee: "Campaign committee", statement: "Public statement", law_question: "Law question", news_item: "Government news" };
+  measure: "Ballot measure", measure_provision: "Part of a ballot measure", committee: "Campaign committee", statement: "Public statement", law_question: "Law question", news_item: "Government news" };
 const clockWords: Record<string, string> = { officeholder: "Officeholder", contact: "Contact", comment_rule: "Taking part", meeting: "Meeting", agenda: "Agenda",
   outcome: "Decision", vote: "Vote", money: "Funding", statement: "Statement", portrait: "Portrait", ballot: "Election", law: "Law", news: "News", same_person_link: "Person identity" };
 const placeWords: Record<string, string> = { county: "County", place: "City or town", school_district: "School district", sldu: "State senate district",
@@ -63,7 +63,7 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
     <div className={s.tableWrap}><table className={s.table}>
       <thead><tr><th scope="col">Kind of place or record</th><th scope="col">What readers are owed</th><th scope="col">Changes</th></tr></thead>
       <tbody>{rows.map((row, index) => <tr key={index}>
-        <td><select className={s.select} aria-label={`Kind for item ${index + 1}`} value={row.kind} onChange={event => edit(index, { kind: event.target.value, placeKind: undefined })}>
+        <td><select className={s.select} aria-label={`Kind for item ${index + 1}`} value={row.kind} onChange={event => edit(index, { kind: event.target.value as OwedRule["kind"], placeKind: undefined })}>
           {Object.entries(kindWords).map(([kind, words]) => <option key={kind} value={kind}>{words}</option>)}
         </select>{row.kind === "place" && <select className={s.select} aria-label={`Place kind for item ${index + 1}`} value={row.placeKind ?? ""} onChange={event => edit(index, { placeKind: event.target.value || undefined })}>
           <option value="">Every kind</option>{DEFAULT_KINDS.division.map(kind => <option key={kind.key} value={kind.key}>{placeWords[kind.key] ?? kind.label}</option>)}

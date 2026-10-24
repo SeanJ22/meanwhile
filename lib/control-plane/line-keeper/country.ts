@@ -6,7 +6,6 @@ import { readHeldPlaceCapture, type HeldPlaceCapture } from "../../civic-data/he
 import { scoreTargets } from "../admin-view/place-target-scores.ts";
 import { stateDivisionId } from "../admin-view/v6-national-geography.ts";
 import { keeperState } from "./state.ts";
-import { setActiveOwedOverlay } from "../../coverage/owed-overlay.ts";
 import { meetingFreshnessHours } from '../../coverage/checklist-map.ts';
 import { buildPlaceOwedList } from '../../coverage/place-owed.ts';
 import { placeMeasures } from '../../coverage/place-measures.ts';
@@ -33,16 +32,14 @@ export function captureAt(capture:HeldPlaceCapture,at:string):HeldPlaceCapture {
 }
 export async function publishCountryScores(control:Sql,reader:Sql,from:string,through:string,at:string,options:{initialize?:boolean;readOnly?:boolean;previewCache?:readonly CountryCache[];onCache?:(row:CountryCache)=>void}={}) {
   if(options.previewCache&&!options.readOnly)throw Error('Injected country inputs are only allowed for a read-only preview');
-  const [saved,changed,overlayRows]=await Promise.all([
+  const [saved,changed]=await Promise.all([
     options.previewCache?Promise.resolve(options.previewCache.map(value=>({value}))):boundedQuery(control,{operation:'line-keeper.country-inputs',callClass:'PAGE'},"SELECT value - 'inputs' AS value FROM cp_owner_snapshots WHERE id=ANY($1::text[])",[ids]),
     options.initialize?Promise.resolve([]):boundedQuery(reader,{operation:"line-keeper.country-changes",callClass:"PAGE"},COUNTRY_CHANGES_SQL,[from,through]),
-    boundedQuery(control,{operation:"line-keeper.owed-overlay",callClass:"POINT"},"SELECT value->'owedOverlay' AS overlay FROM cp_admin_config WHERE id='current'",[]),
-  ]) as [{value:CountryCache}[],{place:string;record_class:string;scope:string}[],{overlay:Parameters<typeof setActiveOwedOverlay>[0]}[]];
+  ]) as [{value:CountryCache}[],{place:string;record_class:string;scope:string}[]];
   const caches=new Map(saved.map(r=>[r.value.state,r.value]));
   const consumed=new Set(['REGISTRY_RUNTIME_BINDING','MEETING','MEETING_OUTCOME','STATE_LEGISLATOR','FEDERAL_DIRECTORY','FEC_FUNDING','STATE_CAMPAIGN_FINANCE','CURATED_READER_RECORD','BALLOT_CANDIDACY','CANDIDATE_PROFILE','CANDIDATE_PUBLICATION','VOTING_SITE','CENSUS_GEOGRAPHY']);
   const relevant=changed.filter(r=>consumed.has(r.record_class));
   const affected=new Set(relevant.flatMap(r=>{const state=keeperState(r.place??'','');return state?[state]:US_STATES.map(s=>s.code);}));
-  setActiveOwedOverlay(overlayRows[0]?.overlay??null);
   const scores:CountryScore[]=[];
   for(const {code:state} of US_STATES){
     const id=stateDivisionId(state);if(!id)continue;

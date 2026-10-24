@@ -59,6 +59,10 @@ const nonIdentifying = (...names: string[]): Record<string, ColumnDomain> =>
 
 /** Every table, every column. */
 export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
+  place_map_counts: {
+    storeClass: "OPERATIONAL",
+    columns: nonIdentifying("state", "places", "zips", "zctas", "county_attachments", "updated_at"),
+  },
   place_boundary: {
     storeClass: "CIVIC_CONTENT",
     columns: {

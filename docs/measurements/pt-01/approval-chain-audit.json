@@ -1,0 +1,20 @@
+{
+  "measuredAt": "2026-10-24T13:26:10Z",
+  "mode": "Production aggregate SELECT statements only; no writes",
+  "reader": {
+    "project": "tiny-hill-13996172",
+    "branch": "br-delicate-lab-ax02xuo5",
+    "role": "readonly",
+    "portraitOrPhotoFacts": 0
+  },
+  "controlPlane": {
+    "project": "withered-sunset-39821877",
+    "branch": "br-tiny-frog-aeufpjeq",
+    "role": "wtp_cp_release_readonly",
+    "allScoutedDistinctItems": 2408,
+    "allApprovedDistinctItems": 68,
+    "candidateEnrichmentScoutedDistinctItems": 1765,
+    "candidateEnrichmentApprovedDistinctItems": 68
+  },
+  "source": "cp_log_promotion_pipeline accepted record stage; count(DISTINCT record->>itemId), excluding refused offers. Reader fact field matches portrait or photo."
+}

@@ -5,13 +5,14 @@ import { readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
-import { normalizeSession,type Dataset } from "../lib/sources/legiscan/bills.ts";
+import { hydrateBillPart,normalizeSession,type Dataset } from "../lib/sources/legiscan/bills.ts";
 
 test("a legislator card shows sourced bulk bills and one Sources list at the bottom on first use",async()=>{
   const dc=JSON.parse(readFileSync(new URL("./fixtures/legiscan/dc-card.json",import.meta.url),"utf8"));
   const bodies=["HB1","HB2"].map(name=>readFileSync(new URL(`./fixtures/legiscan/bill/${name}.json`,import.meta.url),"utf8"));
   const dataset:Dataset={state_id:2,session_id:122,session_name:"27th Legislature",dataset_date:"2012-12-30",dataset_hash:"fixture"};
-  const recorded=normalizeSession(dataset,bodies,"2026-10-12T12:00:00.000Z").bills;
+  // The reader serves bills hydrated from their stored part, as /api/bills does.
+  const recorded=hydrateBillPart(normalizeSession(dataset,bodies,"2026-10-12T12:00:00.000Z"));
   // Local synthetic tail exercises the reader's other Show all control.
   const bills=[...recorded,...Array.from({length:19},(_,i)=>({...recorded[0],id:`synthetic:bill:${i}`,title:`Synthetic bill ${i}`}))];
   const output=await build({stdin:{contents:`
@@ -26,7 +27,7 @@ test("a legislator card shows sourced bulk bills and one Sources list at the bot
   const server=createServer((request,response)=>{
     if(request.url==="/fixture.js") response.writeHead(200,{"content-type":"application/javascript"}).end(js);
     else if(request.url?.startsWith("/api/bills?")) response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify(new URL(request.url,"http://localhost").searchParams.get("state")==="DC"?dc.read:{bills,complete:true,checkedAt:"2026-10-12T12:00:00.000Z"}));
-    else if(new URL(request.url??"/","http://localhost").pathname==="/") response.writeHead(200,{"content-type":"text/html"}).end('<!doctype html><meta name="viewport" content="width=device-width"><div id="root"></div><script src="/fixture.js"></script>');
+    else if((request.url??"/").split("?")[0]==="/") response.writeHead(200,{"content-type":"text/html"}).end('<!doctype html><meta name="viewport" content="width=device-width"><div id="root"></div><script src="/fixture.js"></script>');
     else response.writeHead(200,{"content-type":"application/json"}).end("{}");
   });
   await new Promise<void>(resolve=>server.listen(0,"127.0.0.1",resolve));

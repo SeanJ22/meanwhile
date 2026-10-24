@@ -250,7 +250,7 @@ async function CandidateFunding({
   try {
     const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
     partial = settled.kind !== "ANSWER" || settled.holdingStatus === "PARTIAL";
-    if (settled.kind === "ANSWER" && (settled.answer.kind === "funding" || settled.answer.kind === "absence"))
+    if (settled.kind === "ANSWER" && (settled.answer?.kind === "funding" || settled.answer?.kind === "absence"))
       answer = settled.answer;
   } catch {
     partial = true;

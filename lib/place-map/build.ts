@@ -1,4 +1,6 @@
-import type { RegistrationReference } from "../registration/reference.ts";
+import type { RegistrationReference, ReferenceLayer } from "../registration/reference.ts";
+import { boundarySource } from "../registration/candidate.ts";
+import { REGISTRATION_SOURCE_URL } from "../registration/publication.ts";
 import type { CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { BuiltScope } from "../census-geography/dataset.ts";
 import { censusWorkDivision } from "../census-geography/division-id.ts";
@@ -188,6 +190,15 @@ export function buildStatePlaceMap(input: {
       edges.set(id, { ...edge, share: null, shareBasis: "unknown", partial: true });
     }
   }
-  return { places: [...places.values()], boundaries: [...boundaries.values()].filter(row => places.has(row.placeId)), zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()],
+  const sourcedBoundaries = [...boundaries.values()].filter(row => places.has(row.placeId)).map(row => {
+    if (row.sourceUrls.length) return row;
+    const geoid = byId.get(row.placeId)?.[2] ?? "", layer = row.layer;
+    const source = layer === "district" && !geoid ? REGISTRATION_SOURCE_URL
+      : layer === "state" ? "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_state_500k.zip"
+      : ["county", "place", "cousub", "unsd", "elsd", "scsd", "district", "aiannh"].includes(layer)
+        ? boundarySource(layer as Exclude<ReferenceLayer, "state">, geoid, reg).url : null;
+    return source ? { ...row, sourceUrls: [source] } : row;
+  });
+  return { places: [...places.values()], boundaries: sourcedBoundaries, zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()],
     entityPlaces: [...new Map(entityPlaces.map(row => [`${row.entityId}|${row.placeId}|${row.boundaryYear}`, row])).values()] };
 }

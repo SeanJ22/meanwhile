@@ -30,6 +30,10 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  // RB-A2: complete California source acquisition, native map import and
+  // Census publication on a production-data copy peaked at 2,813,325,312
+  // bytes (2026-10-24, Node 24.19), plus 5%, rounded up to MiB.
+  "place-map-refresh.mts": 2818,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
@@ -317,7 +321,7 @@ function routineMinimumPeakBytes(entry: string): number {
   if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
   if (entry.split(/[\\/]/).at(-1) === "routine-civic-data-reader-repair.mts") return READER_REPAIR_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
-  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts"].includes(script)
+  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);
 }
 

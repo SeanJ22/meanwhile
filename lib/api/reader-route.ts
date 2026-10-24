@@ -12,6 +12,7 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
 }> {
   const keys = new Set<string>();
   let lat: number | undefined, lng: number | undefined, zip: string | undefined;
+  let namedState: string | undefined;
   let question: string | undefined;
   let governmentWindow: readonly [number, number] | undefined;
   const collect = (value: unknown, field = "") => {
@@ -24,7 +25,9 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
       if ((field === "zip" || field === "approximateLocation" || field === "address") && /^\d{5}$/.test(value)) { zip = value; keys.add(value); }
       const fecState = /^(?:fec:)?[HS]\d([A-Z]{2})\d{5}$/.exec(value)?.[1];
       if (fecState) keys.add(`state:${fecState}`);
-      if (field === "state" && /^[A-Za-z]{2}$/.test(value)) keys.add(`state:${value.toUpperCase()}`);
+      if (field === "state" && /^[A-Za-z]{2}$/.test(value)) {
+        namedState = value.toUpperCase(); keys.add(`state:${namedState}`);
+      }
     } else if (typeof value === "number") {
       if (field === "lat") lat = value;
       if (field === "lng" || field === "lon") lng = value;
@@ -55,9 +58,13 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   if (zip) {
     const { readZipPlace, readPointPlace } = await import("../place-map/reader.ts");
     zipPlace = await readZipPlace(zip);
-    if ([...keys].some(key => /^state:[A-Z]{2}$/.test(key)) && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!)<=90 && Math.abs(lng!)<=180) {
-      exactPoint = await readPointPlace(lat!,lng!);
-      if (!exactPoint.states?.some(state => zipPlace?.states?.includes(state))) { keys.delete(zip); zip = undefined; }
+    if (namedState && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!)<=90 && Math.abs(lng!)<=180) {
+      const { resolveZipLocation } = await import("../place-map/locations.ts");
+      const location = await resolveZipLocation(zip);
+      if (!(location.ok && location.centroid.postal?.state === namedState)) {
+        exactPoint = await readPointPlace(lat!,lng!);
+        keys.delete(zip); zip = undefined;
+      }
     }
     if (zip) for (const state of zipPlace?.states ?? []) keys.add(`state:${state}`);
   }

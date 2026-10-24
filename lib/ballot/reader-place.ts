@@ -21,7 +21,7 @@ export async function ballotPlaceFromParams(params: { zip?: string; state?: stri
   const jurisdiction = US_JURISDICTIONS.find(row => row.usps === params.state?.toUpperCase());
   const lat = params.lat ? Number(params.lat) : NaN, lng = params.lng ? Number(params.lng) : NaN;
   const point = Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lng) && Math.abs(lng) <= 180 ? { lat, lng } : null;
-  if (jurisdiction && point && !(zip && (await readZipPlace(zip))?.states?.includes(jurisdiction.usps))) {
+  if (jurisdiction && point && !(resolution?.ok && resolution.centroid.postal?.state === jurisdiction.usps)) {
     const selected = currentReaderSelection();
     const place = selected?.point?.[0] === lng && selected.point[1] === lat && !selected.zip && selected.place
       ? selected.place : await readPointPlace(lat,lng);
@@ -55,7 +55,7 @@ export async function ballotPlaceDivisions(place: {
   if (zip) return [...(await readZipPlace(zip))?.ids ?? []];
   if (typeof place.lat !== "number" || !Number.isFinite(place.lat) || typeof place.lng !== "number" || !Number.isFinite(place.lng)) return [];
   const selected = currentReaderSelection();
-  if (selected?.point?.[0] === place.lng && selected.point[1] === place.lat && selected.divisions) return [...selected.divisions];
+  if (selected?.point?.[0] === place.lng && selected.point[1] === place.lat && !selected.zip && selected.divisions) return [...selected.divisions];
   return [...(await readPointPlace(place.lat, place.lng)).ids];
 }
 

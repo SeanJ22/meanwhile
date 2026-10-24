@@ -13,6 +13,9 @@ import type { Query } from "../lib/facts/publish.ts";
 import { readZipLocation } from "../lib/place-map/locations.ts";
 import { placeBoundaryMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
 import { legacyZipEntry, type LegacyZipShard } from "../lib/place-map/legacy.ts";
+import { ballotPlaceFromParams, ballotPlaceDivisions } from "../lib/ballot/reader-place.ts";
+import { currentReaderSelection } from "../lib/db/reader-route.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 
 const state = (code: string) => `ocd-division/country:us/state:${code.toLowerCase()}`;
 const row = (id: string, code: string, layer: string, version: string, extra: Record<string, unknown> = {}) => ({
@@ -146,6 +149,54 @@ test("a fringe-only Ohio overlap keeps all 19 held memberships of Indiana ZIP 47
       const ballot = await divisionIdsForZipArea("47025",[]);
       assert.ok([...held].every(id => ballot.includes(id)));
     });
+  } finally { installPlaceMapQuery(undefined); }
+});
+
+test("a named map point across a fringe state line replaces the saved ZIP through one lookup", async () => {
+  const ohio = state("OH"), county = `${ohio}/county:hamilton`, lat = 39.2, lng = -84.75;
+  const feature = JSON.parse(readFileSync("public/geo/state-outlines.geojson","utf8")).features
+    .find((feature: {properties:{ocdId:string}}) => feature.properties.ocdId === ohio);
+  const fixture = fixturePlaceMapQuery(); let points = 0;
+  installPlaceMapQuery(async (sql,params=[]) => {
+    if (sql.includes("WITH candidates AS MATERIALIZED")) { points++; return [row(ohio,"OH","state","state:2023",{geometry:feature.geometry})]; }
+    if (sql.includes("FROM zip_place m")) return fixtureCodeRows([
+      row(state("IN"),"IN","state","state:2023"),row(county,"OH","county","county:2020",{fringe:true}),
+    ]);
+    return fixture(sql,params);
+  });
+  try {
+    const params = {zip:"47025",state:"OH",lat:String(lat),lng:String(lng)};
+    await readerRoute("/ballot",async (input: typeof params) => {
+      const place = await ballotPlaceFromParams(input);
+      assert.equal(place.zip,null); assert.equal(place.state?.code,"OH");
+      assert.equal(currentReaderSelection()?.zip,undefined);
+      assert.deepEqual(currentReaderSelection()?.states,["OH"]);
+      assert.equal((await readerLocation(lat,lng)).state,"OH");
+      assert.deepEqual(await ballotPlaceDivisions({lat,lng}),[ohio]);
+    })(params);
+    assert.equal(points,1);
+  } finally { installPlaceMapQuery(undefined); }
+});
+
+test("a crossing ZIP's display point stays a ZIP selection when its mailing state is named", async () => {
+  const resolved = fixtureZipResolution("42223"); assert.ok(resolved.ok);
+  assert.equal(resolved.centroid.postal?.state,"TN");
+  const fixture = fixturePlaceMapQuery();
+  installPlaceMapQuery(async (sql,params=[]) => {
+    assert.ok(!sql.includes("WITH candidates AS MATERIALIZED"),"a typed ZIP must not become a point lookup");
+    if (sql.includes("FROM zip_place m")) return fixtureCodeRows([
+      row(state("KY"),"KY","state","state:2023"),row(state("TN"),"TN","state","state:2023"),
+    ]);
+    return fixture(sql,params);
+  });
+  try {
+    const params = {zip:"42223",state:"TN",lat:String(resolved.centroid.lat),lng:String(resolved.centroid.lng)};
+    await readerRoute("/ballot",async (input: typeof params) => {
+      const place = await ballotPlaceFromParams(input);
+      assert.equal(place.zip,"42223"); assert.equal(place.state,null);
+      assert.equal(currentReaderSelection()?.zip,"42223");
+      assert.deepEqual(currentReaderSelection()?.states,["TN","KY"]);
+    })(params);
   } finally { installPlaceMapQuery(undefined); }
 });
 

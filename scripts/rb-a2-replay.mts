@@ -49,6 +49,7 @@ for (const state of states) {
       await identityEventTables(db);
       await db.exec(readerIdentityMigration());
       await db.exec(await readFile(join(root, "lib/db/migrations/RB-A2_place_boundaries.sql"), "utf8"));
+      await db.exec(await readFile(join(root, "lib/db/migrations/RB-A10_zip_locations.sql"), "utf8"));
       const query: Query = async (text, params = []) => (await db.query(text, [...params])).rows as Record<string, unknown>[];
       const transaction = <T,>(work: (query: Query) => Promise<T>) => db.transaction(tx => work(async (text, params = []) => (await tx.query(text, [...params])).rows as Record<string, unknown>[]));
       const held = await production("SELECT id,kind,name,state FROM entity WHERE kind='place' AND (state=$1 OR id='ocd-division/country:us')", [state]);

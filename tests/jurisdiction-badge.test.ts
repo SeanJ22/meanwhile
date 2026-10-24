@@ -1,5 +1,3 @@
-import fsPromises from "node:fs/promises";
-import { syncBuiltinESMExports } from "node:module";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -130,7 +128,7 @@ test("M81: the badge derives from the map's own geometry, never a second source"
   }
 });
 
-test("M81: the API sends resolved divisions and refuses an unavailable lookup", async t => {
+test("M81: the API sends resolved divisions and refuses an unavailable lookup", async () => {
   const { installRegistryAuthority } = await import("./helpers/promoted-fixtures.ts");
   const { GET } = await import("../app/api/meetings/route.ts");
   const { readZipPlace } = await import("../lib/place-map/reader.ts");
@@ -144,20 +142,14 @@ test("M81: the API sends resolved divisions and refuses an unavailable lookup", 
   assert.ok(divisions.includes(HERE) && divisions.includes(COUNTY));
   assert.ok(!divisions.includes(ELSEWHERE), "the nearby town does not govern the resolved point");
 
-  const original = fsPromises.readFile;
-  t.mock.method(fsPromises, "readFile", async (...args: Parameters<typeof fsPromises.readFile>) => {
-    if (String(args[0]).endsWith("data/derived/resolver-geometry.json")) {
-      throw new Error("fixture geometry unavailable");
-    }
-    return Reflect.apply(original, fsPromises, args);
-  });
-  syncBuiltinESMExports();
+  const { installPlaceMapQuery } = await import("../lib/place-map/reader.ts");
+  const { fixturePlaceMapQuery } = await import("./helpers/place-map.ts");
+  installPlaceMapQuery(async () => { throw new Error("fixture place map unavailable"); });
   try {
     await assert.rejects(GET(new Request("https://wtp.test/api/meetings?lat=20.82916&lng=-156.29722")),
-      /fixture geometry unavailable/, "an unavailable lookup cannot emit an empty or fallback governing claim");
+      /fixture place map unavailable/, "an unavailable lookup cannot emit an empty or fallback governing claim");
   } finally {
-    t.mock.restoreAll();
-    syncBuiltinESMExports();
+    installPlaceMapQuery(fixturePlaceMapQuery());
   }
 });
 

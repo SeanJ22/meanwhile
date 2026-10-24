@@ -11,7 +11,7 @@ import {
   CENSUS_GEO_SOURCE_ROUTE,
 } from "./publication.ts";
 
-export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidate {
+export function censusGeographyCandidate(dataset: BuiltDataset, scope: string = CENSUS_GEO_SCOPE): RoutineCandidate {
   const edges = dataset.scopes.reduce((n, s) => n + s.zctaEdgeCount, 0);
   const groupings = dataset.scopes.reduce((n, s) => n + s.instanceCount, 0);
 
@@ -40,7 +40,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     })),
   );
 
-  const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
+  const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${scope}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
   const readModelHash = sha256(canonicalCivicDataJson(dataset));
   // A compact descriptor bound to the read model by its hash, never a second copy: the promotion response has a size cap.
@@ -63,8 +63,8 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     id,
     sourceId: CENSUS_GEO_SOURCE_ID,
     recordClass: CENSUS_GEO_RECORD_CLASS,
-    scope: CENSUS_GEO_SCOPE,
-    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
+    scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, scope),
     retrieval: {
       succeeded: true,
       requestedUrl: CENSUS_GEO_SOURCE_ROUTE,

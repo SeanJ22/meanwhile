@@ -8,6 +8,8 @@ import { placesAtPoint, placesForCode } from "../lib/place-map/read.ts";
 import { divisionIdsAt, type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import type { RegistrationReference } from "../lib/registration/reference.ts";
+import { identitySourceTables, identityEventTables, readerIdentityMigration } from "./helpers/reader-identity-db.ts";
+import { ROUTINE_SOURCE_TASKS, routineTaskDue } from "../lib/civic-data/runner.ts";
 
 const date = "2026-10-24T08:00:00.000Z";
 const state = "ocd-division/country:us/state:az", county = `${state}/county:pima`;
@@ -28,10 +30,10 @@ test("20 real points within two miles of state lines resolve to their own state 
 test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resolve a point in one query", async () => {
   const db = new PGlite();
   try {
-    await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,name text,state char(2));
-      CREATE TABLE entity_external_id(entity_id text REFERENCES entity(id),scheme text,value text,PRIMARY KEY(scheme,value));
-      CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
-      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+    await db.exec(readFileSync("lib/db/migrations/0035_r1_fact_store.sql", "utf8"));
+    await identitySourceTables(db);
+    await identityEventTables(db);
+    await db.exec(readerIdentityMigration());
     await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
     let calls = 0;
     const query: Query = async (sql, params = []) => { calls++; return (await db.query(sql, [...params])).rows as Record<string, unknown>[]; };
@@ -61,6 +63,17 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     assert.deepEqual(point.states, ["AZ"]);
     assert.ok(point.memberships.some(m => m.countyAttachment && m.hostCountyId === county));
   } finally { await db.close(); }
+});
+
+test("every state's place job is due on its next monthly cycle without routineTaskDue throwing", () => {
+  const jobs = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("place-map-"));
+  assert.equal(jobs.length, 56);
+  for (const job of jobs) {
+    assert.equal(routineTaskDue(job, undefined, Date.parse(date)), true);
+    const clock = { lastAttemptedAt: date, lastSucceededAt: date, lastSucceededObservedAt: date, lastSucceededParserVersion: job.parserVersion };
+    assert.equal(routineTaskDue(job, clock, Date.parse(date) + job.cadenceMs - 1), false);
+    assert.equal(routineTaskDue(job, clock, Date.parse(date) + job.cadenceMs), true);
+  }
 });
 
 test("the state builder preserves every legacy district and NCES/GEOID aliases", () => {

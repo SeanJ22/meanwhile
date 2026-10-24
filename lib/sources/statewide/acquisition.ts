@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { officeIdentity } from "../../officials/office-identity.ts";
 import type { Officeholder, OfficeholderSet } from "../../officials/types.ts";
 import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck, type KnownReleaseOptions, type KnownRelease } from "../known-release.ts";
@@ -10,6 +11,7 @@ import { acquireWikidataPortraitLicense, discoverWikidataIdentifierProperties, W
 ;
 
 const DAY=86_400_000;
+const words=(value:string)=>value.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 type SharedOptions=Pick<KnownReleaseOptions,"store"|"locks"|"fetchImpl"|"now">&{
   readonly signal:AbortSignal;
   /** Controlled tests/replays use the same saved-byte acquisition API. */
@@ -79,7 +81,7 @@ function sourceUrl(source:StatewideReferenceSource,asOf:string,properties?:Reado
 function mergeLeads(leads:readonly StatewideLead[]):StatewideLead[]{
   const merged=new Map<string,StatewideLead>();
   for(const lead of leads){
-    const key=[lead.state,lead.name.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim(),statewideOfficeTitle(lead.officeTitle,lead.state).toLowerCase().replace(/^state /,"")].join("|");
+    const key=[lead.state,words(lead.name),statewideOfficeTitle(lead.officeTitle,lead.state).toLowerCase().replace(/^state /,"")].join("|");
     const held=merged.get(key);if(!held){merged.set(key,lead);continue;}
     const nativeIds:Record<string,readonly string[]>={...held.nativeIds};
     for(const [source,ids]of Object.entries(lead.nativeIds??{}))nativeIds[source]=[...new Set([...(nativeIds[source]??[]),...ids])];
@@ -182,10 +184,13 @@ export async function acquireStatewidePeople(options:SharedOptions&{
           }
           gaps.push({sourceUrl:captured.finalUrl,detail:`${result.reason}:${state}:${lead.name}:${lead.officeTitle}`});
           for(const link of statewidePageLinks(html,captured.finalUrl)){
-            const sameName=link.label.toLowerCase().includes(lead.name.toLowerCase());
-            const biography=/(?:about|bio|biography|meet|leadership|commissioner|secretary|governor|attorney)/i.test(link.label)&&
-              new URL(link.url).hostname===new URL(captured.finalUrl).hostname;
-            if((sameName||biography)&&!visited.has(link.url)&&!candidates.includes(link.url)&&!/[?&](?:page|search)=/.test(link.url))candidates.push(link.url);
+            const name=words(lead.name),label=words(link.label),surname=name.split(" ").at(-1)!;
+            const sameName=label.includes(name)||/\b(?:about|bio|biography|meet)\b/.test(label)&&label.split(" ").includes(surname);
+            const title=link.label.replace(/^(?:about|meet|office of)\s+(?:the\s+)?/i,"").replace(/(?:'s)?\s+office$/i,"").trim();
+            const office=officeIdentity(lead.officeTitle),sameOffice=office!==null&&officeIdentity(title)===office;
+            const target=new URL(link.url),profileHost=target.hostname===new URL(captured.finalUrl).hostname||isOfficialSource(link.url);
+            const archive=/\/(?:news|press|articles?|blog|events?|category|tag)(?:\/|$)/i.test(target.pathname);
+            if((sameName||sameOffice)&&profileHost&&!archive&&!visited.has(link.url)&&!candidates.includes(link.url)&&!/[?&](?:page|search)=/.test(link.url))candidates.push(link.url);
           }
         }catch(error){options.signal.throwIfAborted();gaps.push({sourceUrl:url,detail:`STATEWIDE_OFFICIAL_PAGE_READ_FAILED:${state}:${lead.name}:${error instanceof Error?error.message:String(error)}`});}
       }

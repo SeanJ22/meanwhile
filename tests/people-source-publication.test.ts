@@ -28,6 +28,21 @@ function person(id:string,changes:Partial<Officeholder>={}):Officeholder {
 }
 const set=(...officeholders:Officeholder[]):OfficeholderSet=>({scope:"US-AZ",generatedAt:at,officeholders,divisions:[],unmatched:[]});
 
+test("a named-entity accent and the office's short title publish through the normal statewide source path",async()=>{
+  const url="https://www.azcc.gov/commissioner/biography";
+  const body='<title>Arizona Corporation Commission</title><h1>Commissioner Ren&eacute; Lopez</h1><p>Arizona Corporation Commission</p>';
+  const checked=verifyStatewideOfficialPage({state:"az",name:"René Lopez",officeTitle:"Corporation Commissioner",profileUrls:[url],
+    sourceId:"held",sourceOrg:"Arizona Corporation Commission",sourceUrl:url,collectedAt:at},{url,html:body,retrievedAt:at});
+  assert.ok("person"in checked);
+  const store=new MemoryRoutineDataStore();
+  const result=await publishPeopleSource({store,vault:new MemoryEvidenceStore(),state:"az",sourceId:"statewide-executive-sources",releaseId:"accented-commissioner",now:at,
+    roster:statewideRoster("az",[checked.person],at),acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,body,retrievedAt:at}]});
+  assert.ok(result.outcome.promoted,JSON.stringify(result.outcome.candidate.receipt));
+  const read=await readStatePeopleProjection("US-AZ",{store,now:at,bypassCache:true});
+  assert.ok(read.kind==="PROMOTED"||read.kind==="BOOTSTRAP");
+  assert.ok(read.value.roster.officeholders.some(row=>row.name==="René Lopez"&&row.officeTitle==="Corporation Commissioner"));
+});
+
 test("shared cross-source IDs join transitively and every source's IDs survives",()=>{
   const a=person("openstates:a",{nativeIds:{"ocd-person":["ocd-person/a"],votesmart:["27"]}});
   const b=person("legiscan:9",{name:"J. Reader",nativeIds:{legiscan:["9"],wikidata:["Q91"]}});

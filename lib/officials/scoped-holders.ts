@@ -39,13 +39,15 @@ export function scopedHolders(primary: readonly SeatHolder[], additional: readon
   for (const holder of [...primary, ...additional]) {
     if (isStatewideExecutive(holder) && !personName(holder.name)) continue;
     const mine = infoOf(holder);
-    // Only a single-seat office is a person's identity: two councilmembers with one name are two seats, never one person.
+    // Statewide names can join their duplicate source rows; local multi-seat
+    // offices still need shared identifiers to distinguish namesakes.
     const singleSeat = SINGLE_OFFICES.has(officeIdentity(holder.officeTitle) ?? "");
+    const statewide = isStatewideExecutive(holder);
     const sameOffice = byOffice.get(mine.office) ?? [];
-    const candidates = singleSeat ? sameOffice : [...new Set([...mine.keys].flatMap(key=>[...byIdentity.get(key) ?? []]))].sort((a,b)=>a-b);
+    const candidates = singleSeat || statewide ? sameOffice : [...new Set([...mine.keys].flatMap(key=>[...byIdentity.get(key) ?? []]))].sort((a,b)=>a-b);
     const matching = candidates.find(at=>{
       const row = holders[at], theirs = infoOf(row);
-      return mine.office === theirs.office && samePlace(row,holder) && ([...mine.keys].some(key=>theirs.keys.has(key)) || singleSeat && theirs.name === mine.name &&
+      return mine.office === theirs.office && samePlace(row,holder) && ([...mine.keys].some(key=>theirs.keys.has(key)) || (singleSeat || statewide && isStatewideExecutive(row)) && theirs.name === mine.name &&
         Boolean(theirs.state && mine.state && theirs.state === mine.state));
     }) ?? -1;
     if (matching >= 0) {

@@ -57,8 +57,10 @@ test("a newer official incumbent replaces a stale single seat without conflating
 test("statewide page furniture never displays and a multi-member commission keeps distinct holders", () => {
   const result = scopedHolders([statewideHolder("bad", "AZ", "Actions", "Attorney General"),
     statewideHolder("one", "AZ", "René Lopez", "Corporation Commissioner"),
-    statewideHolder("two", "AZ", "Rachel Walden", "Corporation Commissioner")], []);
+    statewideHolder("two", "AZ", "Rachel Walden", "Corporation Commissioner")],
+    [statewideHolder("another-source-for-one", "AZ", "René Lopez", "Corporation Commissioner")]);
   assert.deepEqual(result.map(row => row.id), ["one", "two"]);
+  assert.ok(personIdentityKeys(result[0]).has("another-source-for-one"));
 });
 
 test("stored statewide selection is repeatable and retains the prior IDs through a later source refresh", () => {

@@ -91,6 +91,39 @@ test("the office's own published contact page accompanies the statewide holder",
   assert.equal(result.person.fieldSources?.contactFormUrl.sourceUrl,url);
 });
 
+test("an office landing page's explicit holder publishes without requiring a personal biography heading",()=>{
+  const url="https://official.az.gov/",candidate=lead("az","Kris Mayes","Attorney General",url);
+  const html='<title>Arizona Office of the Attorney General</title><h1>Attorney General</h1><p>Attorney General Kris Mayes announced the office’s action.</p>';
+  assert.ok("person"in verifyStatewideOfficialPage(candidate,{url,html,retrievedAt:at}));
+  const wrong='<title>Arizona Governor’s Office</title><h1>Governor</h1><p>Governor Morgan Example and Lieutenant Governor Kris Mayes attended.</p>';
+  assert.ok("reason"in verifyStatewideOfficialPage({...candidate,officeTitle:"Governor"},{url,html:wrong,retrievedAt:at}));
+});
+
+test("short statewide titles require the office's full agency on the same saved page",()=>{
+  for(const [title,short,agency]of [["Corporation Commissioner","Commissioner","Arizona Corporation Commission"],
+    ["Superintendent of Public Instruction","State Superintendent","Arizona Department of Education"]]){
+    const url="https://official.az.gov/leader",candidate=lead("az","Morgan Example",title,url);
+    const html=`<title>${short} Morgan Example</title><h1>${short} Morgan Example</h1><p>${agency}</p>`;
+    const verified=verifyStatewideOfficialPage(candidate,{url,html,retrievedAt:at});
+    assert.ok("person"in verified);assert.equal(verified.person.officeTitle,title);
+    assert.ok("reason"in verifyStatewideOfficialPage(candidate,{url,html:html.replace(agency,"Arizona government"),retrievedAt:at}));
+  }
+  const url="https://official.az.gov/leader",candidate=lead("az","Morgan Example","Superintendent of Public Instruction",url);
+  assert.ok("reason"in verifyStatewideOfficialPage(candidate,{url,html:'<h1>County Superintendent Morgan Example</h1><p>Arizona Department of Education</p>',retrievedAt:at}));
+});
+
+test("a middle initial or a quoted nickname on the official profile supplies its exact published name",()=>{
+  const url="https://official.utah.gov/governor";
+  for(const [input,actual]of [["Spencer Cox","Spencer J. Cox"],[`Jerrauld C. "Jay" Jones`,"Jay Jones"]]){
+    const candidate=lead("ut",input,"Governor",url);
+    const verified=verifyStatewideOfficialPage(candidate,{url,html:document("Utah",actual,"Governor","is elected statewide"),retrievedAt:at});
+    assert.ok("person"in verified);assert.equal(verified.person.name,actual);
+  }
+  const candidate=lead("ut","Spencer Cox","Governor",url);
+  assert.ok("reason"in verifyStatewideOfficialPage(candidate,{url,html:document("Utah","Different Cox","Governor","is elected statewide"),retrievedAt:at}));
+  assert.ok("reason"in verifyStatewideOfficialPage({...candidate,name:"Spencer K. Cox"},{url,html:document("Utah","Spencer J. Cox","Governor","is elected statewide"),retrievedAt:at}));
+});
+
 test("a verified statewide office publishes while an unrelated election or appointment leaves its selection method unknown",()=>{
   const url="https://official.az.gov/about",candidate=lead("az","Adrian Fontes","Secretary of State",url);
   for(const method of ["was elected by the voters of District 9","Adrian Fontes appointed a school board member"]){
@@ -124,6 +157,21 @@ test("national and held Open States leads for one officer verify once and preser
   assert.deepEqual(result.roster.officeholders[0]?.nativeIds?.plural,["exact-native-id"]);
   assert.deepEqual(result.roster.officeholders[0]?.nativeIds?.wikidata,["Q123"]);
   assert.equal(result.roster.officeholders[0]?.provenance.sourceUrl,url);
+});
+
+test("an office-profile fallback follows the requested office and leaves unrelated biographies alone",async()=>{
+  const url="https://official.utah.gov/",profile="https://official.utah.gov/governor/biography",requests:string[]=[];
+  const {locks}=createMemoryRepositories();
+  const result=await acquireStatewidePeople({state:"ut",signal:new AbortController().signal,store:new MemoryEvidenceStore(),locks,now:()=>at,acquire:acquireKnownRelease,
+    national:{leads:[],acquisitions:[],gaps:[],coverage:[]},leads:[lead("ut","Spencer Cox","Governor",url)],
+    fetchImpl:(async resource=>{
+      const requested=String(resource);requests.push(requested);
+      if(requested===url)return new Response('<h1>Utah</h1><a href="/about-state">About Utah</a><a href="https://news.example.org/spencer-cox">Spencer Cox</a><a href="/news/spencer-cox">Spencer Cox</a><a href="/governor/biography">About the Governor</a><a href="/attorney-general">About the Attorney General</a>');
+      if(requested===profile)return new Response(document("Utah","Spencer J. Cox","Governor","is elected statewide"));
+      throw new Error(`Unrelated profile requested: ${requested}`);
+    })as typeof fetch});
+  assert.deepEqual(requests,[url,profile]);
+  assert.equal(result.roster.officeholders[0]?.name,"Spencer J. Cox");
 });
 
 test("Wikidata current holders preserve source identifiers and portrait leads without publishing photos",()=>{

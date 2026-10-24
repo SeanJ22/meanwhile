@@ -27,7 +27,8 @@ const places = national ? await (async () => {
   const places = [];
   for (const state of US_JURISDICTIONS) {
     const entries = await readStateZipPlaces(state.usps);
-    const rows = [...(await readZipLocations([...entries.keys()])).values()].sort((a, b) => a.zip.localeCompare(b.zip));
+    const rows = [...(await readZipLocations([...entries.keys()])).values()]
+      .filter(row => row.postal?.state === state.usps).sort((a, b) => a.zip.localeCompare(b.zip));
     const place = rows.find(row => row.postal?.type === "standard") ?? rows[0];
     assert.ok(place, `${state.usps}: no held ZIP with coordinates`);
     places.push({ state: state.usps, zip: place.zip });

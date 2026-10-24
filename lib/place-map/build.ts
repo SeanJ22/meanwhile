@@ -6,6 +6,7 @@ import type { GeographyRef } from "../census-geography/contract.ts";
 import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { MapEdge, MapPlace, StatePlaceMap } from "./load.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 
 const layers: Readonly<Record<string, string>> = { congressional_district: "cd", state_leg_upper: "sldu", state_leg_lower: "sldl", county_subdivision: "cousub" };
 const key = (id: string, year: number) => `${id}|${year}`;
@@ -24,15 +25,20 @@ export function buildStatePlaceMap(input: {
   /** Codes confirmed by the source Census ZCTA file, independently of USPS. */
   readonly legacyZctas: ReadonlySet<string>;
   readonly boundaries: readonly PlaceBoundary[];
+  readonly additionalPlaces?: readonly MapPlace[];
+  readonly acquiredEdges?: readonly MapEdge[];
   readonly censusFacts?: ReadonlyMap<string, CensusGovernmentFacts>;
   readonly sourceCounties?: ReadonlyMap<string, string | null>;
   readonly checkedAt: string;
 }): StatePlaceMap {
   const { registration: reg } = input;
-  const places = new Map<string, MapPlace>();
+  const places = new Map<string, MapPlace>((input.additionalPlaces ?? []).map(place => [place.id, place]));
   const boundaries = new Map(input.boundaries.map(row => [key(row.placeId, row.boundaryYear), row]));
   const zipEdges = new Map<string, MapEdge>(), zctaEdges = new Map<string, MapEdge>();
   const byGeoid = new Map(reg.divisions.map(row => [`${row[1]}:${row[2]}`, row[0]]));
+  for (const place of input.additionalPlaces ?? []) for (const alias of place.aliases) {
+    if (alias.scheme.startsWith("census-geoid:")) byGeoid.set(`${alias.scheme.slice("census-geoid:".length)}:${alias.value}`, place.id);
+  }
   const byId = new Map(reg.divisions.map(row => [row[0], row]));
   const countyByGeoid = new Map(reg.divisions.filter(row => row[1] === "county").map(row => [row[2], row[0]]));
   const state = reg.state.toUpperCase();
@@ -53,6 +59,10 @@ export function buildStatePlaceMap(input: {
     target.set(identity, previous ? { ...edge, share: edge.share ?? previous.share, shareBasis: edge.share === null ? previous.shareBasis : edge.shareBasis,
       partial: edge.partial && previous.partial, fringe: edge.fringe && previous.fringe } : edge);
   };
+  for (const edge of input.acquiredEdges ?? []) {
+    addEdge(zctaEdges, edge);
+    if (input.legacyZips.has(edge.code)) addEdge(zipEdges, edge);
+  }
   for (const scope of input.scopes) {
     if (scope.type === "cbsa") continue;
     const layer = layers[scope.type] ?? scope.type, year = boundaryYear(scope.version);
@@ -74,7 +84,7 @@ export function buildStatePlaceMap(input: {
   }
   for (const [zip, entry] of input.legacyZips) {
     for (const id of [...entry.ids, ...entry.fringe ?? []]) {
-      if (!id.includes(`:${state.toLowerCase()}`) && id !== "ocd-division/country:us") continue;
+      if (ocdStateCode(id)?.toUpperCase() !== state && id !== "ocd-division/country:us") continue;
       const family = /\/(cd|sldu|sldl):/.exec(id)?.[1];
       const registered = byId.get(id);
       const layer = family ?? registered?.[1] ?? "place";

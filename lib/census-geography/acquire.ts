@@ -83,11 +83,13 @@ async function buildScope(src: Source, options: AcquireOptions): Promise<BuiltSc
   const parse = (bytes: Uint8Array): ScopeAccumulator => {
     const lines = new TextDecoder().decode(bytes).split(/\r?\n/);
     const header = parseTab20Header(lines.shift() ?? "");
-    const acc = new ScopeAccumulator(src, resolveTab20Columns(header, src.geoTag));
+    const columns = resolveTab20Columns(header, src.geoTag);
+    const acc = new ScopeAccumulator(src, columns);
     for (const line of lines) {
       if (line.trim() === "") continue;
       const fields = line.split("|");
       if (fields.length !== header.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 malformed row in ${src.url}`);
+      if (options.states && !options.states.has(fields[columns.geoGeoid]?.slice(0, 2))) continue;
       acc.add(fields);
     }
     if (acc.stats().rows === 0) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);

@@ -167,7 +167,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
           state: jurisdictionFromOcdId(contest.ocdId)!.usps,
           sourceQuote: labels.find(value => pageNamesMeasure(primary.evidence.text, [value])) ?? primary.evidence.text,
-          prior: measure ? { ...measure, parts: measure.parts.filter(part => part.number) } : null } });
+          prior: measure } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
         versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };
       outcomes.push(finished);

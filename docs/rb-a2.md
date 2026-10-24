@@ -2,9 +2,11 @@
 
 Owner: RB-A2. Branch: stream/rb-a2, based on river 21ae9bcfb.
 
+Merged integrated River 59b7c5577 after its integration record listed RB-A1 5bde46615 and the River history contained that commit. The merge is e4cc78826.
+
 Remaining work (RB-A2 owns each item):
 
-- RB-A2: merge integrated river, rerun checks and push READY only after RB-A1 is folded; remain until River's live check passes.
+- RB-A2: finish checks on the integrated revision, push READY and remain until River's live check passes.
 
 Production read on October 24: 104,047 place entities; Census holds cd:119 (443 districts), county:2020 (3,232), cbsa:2023 (935), sldu:2024 (1,963), sldl:2024 (4,878). ZIP source index: September 23, 33,791 ZIPs, 272,526 edges. These are baselines, not completed import counts.
 
@@ -26,7 +28,11 @@ Source lessons used by the standing importer: Census geographic FIPS establishes
 
 The Texas cold refresh exposed an additional consequence of repeated special-district keys: using those keys for the registry-to-place join collapsed distinct districts. Special districts now retain their own held OCD IDs throughout import, and all source geometry parts for one district are combined. The builder refuses a membership without its place and boundary. The corrected Idaho regression checks every registered district ID. The production-data copies are rebuilt after this fix; earlier intermediate counts are not final acceptance counts. Tribal areas retain the source's full reservation/trust GEOIDs (for example 2430R and 2430T) as well as their common Census area code.
 
-Controlled next scheduled run: the complete California refresh acquired sources, loaded the native PostgreSQL copy and passed the existing Census publication path. A second import preserved the data and its next monthly candidate also reached PROMOTED. The measured first pass took 297,400 ms and peaked at 2,065,084,416 bytes RSS. The job is due on November 23, 2026 at 6:22 AM Eastern and is not due immediately before that boundary. The corrected Texas full refresh also reached PROMOTED, took 399,931 ms and peaked at 3,383,668,736 bytes RSS. Existing worker admission reserves 3,389 MiB per place-map job (the larger observed peak plus 5%). At the documented 8 GiB production host size and 0.75 GiB margin, two such reservations fit alone, or one alongside the existing 2,928 MiB research-parent reservation. These are memory ceilings; current production concurrency was not observed and fleet limits were not changed. The next-run proof uses the existing controlled publication path and local PostgreSQL writes, not a claimed future production pass.
+Controlled next scheduled run: the complete California refresh acquired sources, loaded the native PostgreSQL copy and passed the existing Census publication path. A second import preserved the data and its next monthly candidate also reached PROMOTED. The merged-code pass took 205,689 ms and peaked at 3,045,617,664 bytes RSS. The job is due on November 23, 2026 at 10:35 AM Eastern and is not due immediately before that boundary. Texas's first and controlled next publications also reached PROMOTED; its pass took 196,915 ms and peaked at 3,437,907,968 bytes RSS. Existing worker admission reserves 3,443 MiB per place-map job (the larger observed peak plus 5%). At the documented 8 GiB production host size and 0.75 GiB margin, two such reservations fit alone, or one alongside the existing 2,928 MiB research-parent reservation. These are memory ceilings; current production concurrency was not observed and fleet limits were not changed. The next-run proof uses the existing controlled publication path and local PostgreSQL writes, not a claimed future production pass.
+
+The held Census read follows the existing stored-payload parts at the root, scope, grouping and overlap levels, returning only the requested state's groupings. The regression uses the real payload encoder to verify that inline and partitioned storage return the same state data. Direct JSON array access failed once the source stored its arrays in parts.
+
+Census GRF codes `99999`, `00000` and blanks identify land outside assigned ZCTAs. They establish no ZCTA membership. The parser change invalidates saved parsed source scopes through the existing version mechanism, and the migration removes only those unassigned derived ZCTA links. The corrected national copy contains 33,791 real ZCTAs; no ZIP membership was removed.
 
 The full national point lookup resolved 20 points, each within two miles of a Census state line, to the expected state using one query per point. The complete SQL query's native EXPLAIN uses `place_boundary_point_idx`. The containment operator compares against a zero-area box; PostgreSQL does not use that GiST index for its superficially similar box-contains-point operator.
 

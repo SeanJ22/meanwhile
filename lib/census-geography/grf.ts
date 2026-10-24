@@ -1,5 +1,5 @@
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
-import type { GeographyType, GeographyVersion } from "./contract.ts";
+import { isUnassignedZcta, type GeographyType, type GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 import { WHOLE_THRESHOLD } from "./build.ts";
 import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, censusTextLines, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
@@ -85,7 +85,7 @@ export class GrfAccumulator {
   add(fields: readonly string[]): void {
     this.blocks += 1;
     const zcta = (fields[this.cols.zcta] ?? "").trim();
-    if (zcta === "") return; // a block in no ZCTA (e.g. open water)
+    if (isUnassignedZcta(zcta)) return;
     const land = toNonNegative(fields[this.cols.land]);
     this.zctaLand.set(zcta, (this.zctaLand.get(zcta) ?? 0) + land);
     const district = (fields[this.cols.district] ?? "").trim();

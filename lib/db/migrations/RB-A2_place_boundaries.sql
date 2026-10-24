@@ -44,6 +44,8 @@ ALTER TABLE zcta_place DROP CONSTRAINT zcta_place_pkey,
 --> statement-breakpoint
 CREATE INDEX "entity_place_name_lookup_idx" ON entity(id) INCLUDE(name,state) WHERE kind='place';
 --> statement-breakpoint
+DELETE FROM zcta_place WHERE zcta IN('00000','99999');
+--> statement-breakpoint
 CREATE TABLE place_map_counts (
   state char(2) PRIMARY KEY,
   places integer NOT NULL,

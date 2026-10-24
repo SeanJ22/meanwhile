@@ -10,6 +10,7 @@ import { placeMapCounts } from "../lib/place-map/counts.ts";
 import { readLegacyStateMemberships, heldStateDataset } from "../lib/place-map/refresh.ts";
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { CD_REDRAWN_FOR_2026 } from "../lib/census-geography/selection.ts";
+import { isUnassignedZcta } from "../lib/census-geography/contract.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
 const verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), productionBaseline = process.argv.includes("--production-baseline"), zipLinksOnly = process.argv.includes("--zip-links");
@@ -32,7 +33,10 @@ try {
         for (const group of scope.groupings) {
           const id = censusWorkDivision({ ...group, type: scope.type, version: scope.version });
           if (!id) continue;
-          for (const edge of group.overlaps) { const found = byZip.get(edge.zcta5) ?? new Set<string>(); found.add(id); byZip.set(edge.zcta5, found); }
+          for (const edge of group.overlaps) {
+            if (isUnassignedZcta(edge.zcta5)) continue;
+            const found = byZip.get(edge.zcta5) ?? new Set<string>(); found.add(id); byZip.set(edge.zcta5, found);
+          }
         }
       }
       const missing = [];

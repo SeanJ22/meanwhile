@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 104 (main 2082dc9b1). GATING: RB-A2 78a2a9f14 alone (Sean, 7:10 PM EDT: RB-A2 next, before DB-01, PT-01 and RB-A4; RB-A6 and RB-A10 wait on it), river-next d72cf90d0. NEXT: DB-01, then RB-A3, PT-01 + RB-A5, RB-A4
+build_state: LIVE FOR READERS: release 104 (main 2082dc9b1); polling places refreshing again; Cochise's 5 drop boxes live. NEXT: release 105 = RB-A2 alone (PR #816, CI). THEN: DB-01, RB-A3, PT-01 + RB-A5, RB-A4. Returned: RB-A8 (8:15 PM EDT)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T23:19:06Z
+heartbeat: 2026-10-24T23:59:48Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,14 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Verified: polling places refresh again, and Cochise's drop boxes are live, 8:05 PM EDT
+- Release 104 (RV-VOTE) works in production: voting-sites tasks launched from 7:25 PM EDT (DC and DE checked at 7:35 PM; MT, AK and ME failed and retry hourly).
+- Voting doors read since 7:05 PM EDT, published/failed by state: AL 2/2, AR 4/2, AZ 4/7, CA 10/2, CO 3/0, CT 1/1, DE 1/1, FL 7/1, GA 2/1, HI 1/1, IA 3/10, ID 7/2, IL 2/1, IN 2/2, KS 4/2, KY 2/0, LA 4/1. Total 59 published, 36 failed, 17 states so far; the rest follow as passes run.
+- Sean's item 3, live on meanwhileusa.com (POST /api/voting-sites):
+  - 85603 Cochise County: 5 drop boxes + 18 vote centers. cochise:ballot-box-table published at 7:51 PM EDT (RIVER-KEYS-FX reopened it in release 101).
+  - 60090: still 0 sites. The Wheeling door (page:wheelingil.gov:14d010f03f2c) failed again at 7:51 PM EDT with the same transport error: "robots.txt could not be retrieved with this client: TypeError: fetch failed". From River's container wheelingil.gov answers in 0.5 s (robots.txt 200), so the failure is between the runner host and the site, possibly the site blocking the runner. FOR SEAN: run `curl -I https://wheelingil.gov/robots.txt` on the runner machine; if it fails there, Wheeling needs another route (e.g. the Cook County Clerk's early-voting list).
+- El Paso 79901 and Cochise's vote centers were already live per Sean.
 
 ### Sean's order, 7:10 PM EDT: RB-A2 next
 - "Fold RB-A2 (78a2a9f14) next, before DB-01, PT-01 and RB-A4. RB-A6 and RB-A10 are both waiting on it."

@@ -73,6 +73,7 @@ export async function acquireStateBoundaries(reg: RegistrationReference, options
         if (!byGeoid.has(`${layer}:${geoid}`) && byId.has(id) && byId.get(id)?.[2] !== geoid) id = `${id}_${geoid}`;
         const previous = places.get(id);
         const aliases = [...previous?.aliases ?? [], { scheme: `census-geoid:${layer}`, value: geoid },
+          ...(layer === "aiannh" && p.GEOID && p.GEOID !== geoid ? [{ scheme: "census-geoid:aiannh", value: p.GEOID }] : []),
           ...(["unsd", "elsd", "scsd"].includes(layer) ? [{ scheme: "nces", value: geoid }] : [])];
         places.set(id, { id, name, state: reg.state.toUpperCase(), aliases: [...new Map(aliases.map(a => [`${a.scheme}:${a.value}`, a])).values()] });
         byGeoid.set(`${layer}:${geoid}`, id);

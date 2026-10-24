@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { Client } from "pg";
 import type { Query } from "../../lib/facts/publish.ts";
-import { identitySourceTables, identityEventTables, readerIdentityMigration } from "../../tests/helpers/reader-identity-db.ts";
+import { identitySourceTables, identityEventTables, readerIdentityMigration, placeBoundaryMigration } from "../../tests/helpers/reader-identity-db.ts";
 
 /** The socket and role are fixed to this workspace's disposable PostgreSQL.
  * A copy never consults DATABASE_URL or opens a production write connection. */
@@ -19,7 +19,7 @@ export async function openMapCopy(name: string, reset = true) {
   if (reset) {
     await exec(await readFile("lib/db/migrations/0035_r1_fact_store.sql", "utf8"));
     await identitySourceTables({ exec }); await identityEventTables({ exec }); await exec(readerIdentityMigration());
-    await exec(await readFile("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
+    await exec(placeBoundaryMigration());
     await exec(await readFile("lib/db/migrations/RB-A10_zip_locations.sql", "utf8"));
   }
   const query: Query = async (text, params = []) => (await client.query(text, [...params])).rows as Record<string, unknown>[];

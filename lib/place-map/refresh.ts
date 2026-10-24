@@ -8,13 +8,11 @@ import type { PlaceEntry } from "./reader.ts";
 import { acquireDataset } from "../census-geography/acquire.ts";
 import type { BuiltDataset } from "../census-geography/dataset.ts";
 import type { CensusSourceOptions } from "../census-geography/source-release.ts";
-import type { GeoFeature } from "../registry/resolve.ts";
-import type { PlaceBoundary } from "./types.ts";
 import { acquireStateBoundaries } from "./acquire.ts";
 import { acquireBoundaryOverlaps } from "./overlap.ts";
 import { buildStatePlaceMap } from "./build.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "./load.ts";
-import { geographicSpecialDistricts } from "./special-districts.ts";
+import { geographicSpecialDistricts, heldSpecialDistrictBoundaries } from "./special-districts.ts";
 import { statePostalLinks } from "./postal-links.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { stateZipLocations } from "./location-import.ts";
@@ -77,20 +75,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   }
   const crossStateZctas = new Set([...stateLandShares].filter(([, share]) => share > 0 && share < 1 - 1e-8).map(([code]) => code));
   const shapes = await acquireStateBoundaries(registration, options, [...legacyZips.values()].flatMap(entry => [...entry.ids, ...entry.fringe ?? []]));
-  const boundaries: PlaceBoundary[] = [...shapes.boundaries];
-  const territory = join(root, "data/states", state.toLowerCase(), "geo", `territory-${fips}.geojson`);
-  const special = new Map(registration.divisions.filter(d => d[1] === "district").map(d => [d[0], d]));
-  let features: GeoFeature[] = [];
-  try { features = (JSON.parse(await readFile(territory, "utf8")) as { features: GeoFeature[] }).features; }
-  catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
-  for (const feature of features) {
-    const division = special.get(feature.properties.ocdId);
-    if (!division) continue;
-    const source = registration.boundarySources?.[division[2].split("#")[0]];
-    if (!source) throw new Error(`District source missing for ${division[0]}`);
-    boundaries.push({ placeId: division[0], boundaryYear: 2022, layer: "district", version: "district:2022", geometry: feature.geometry,
-      countyAttachment: false, hostCountyId: null, sourceUrls: [source.url], checkedAt: source.readAt });
-  }
+  const boundaries = [...shapes.boundaries, ...await heldSpecialDistrictBoundaries(root, registration)];
   const legacyZctas = new Set(dataset.zctaUniverse);
   // The source index and the Census tabulation are distinct from postal aliases.
   const zctas = new Set([...legacyZctas, ...dataset.scopes.flatMap(s => s.groupings.flatMap(g => g.overlaps.map(o => o.zcta5)))]);

@@ -32,7 +32,7 @@ const at = (record: unknown, path: string): unknown => path.split(".").reduce<un
 const nodePath = (path: readonly string[]) => path.reduce((v, k) => `reader_payload_node(${v})->'${k}'`, "pointer.payload");
 
 export interface ReaderSampleValue {
-  table: "civic_data_promotions"; pointer: string; version: string; recordClass: string;
+  table: "civic_data_promotions" | "civic_data_candidates"; pointer: string; version: string; recordClass: string;
   subjectId: string; subjectKind: string; subjectName: string; field: string; value: unknown;
   sourceUrl: string; observedAt: string; sourceRecord: Row; sourcePath: string; hosts?: string[]; parentId?: string;
   linkingPage?: { url: string; file: string };
@@ -48,6 +48,37 @@ export interface MeetingSourceHosts { body_ids: string[]; kind: string; hosts: s
 /** Ballot-line facts retain their candidacy context when an existing reaction id resolves to a person. */
 export const readerReplayField = (value: ReaderSampleValue): string =>
   `reader:${value.recordClass}:${value.recordClass === "BALLOT_CANDIDACY" ? `${value.subjectId}:` : ""}${value.field}`;
+
+export async function loadReaderContext(values: ReaderSampleValue[], query: (text: string, params: unknown[]) => Promise<Row[]>): Promise<Row> {
+  const seeds = [...new Set(values.flatMap(v => [v.subjectId, v.sourceBodyId, v.sourceRecord.governmentId, ...Array.isArray(v.sourceRecord.aliases) ? v.sourceRecord.aliases : []]).filter((v): v is string => typeof v === "string"))];
+  const [row] = await query(`WITH RECURSIVE seeds AS (SELECT unnest($1::text[]) id),
+    anchors AS (SELECT e.id FROM entity e WHERE e.id IN(SELECT id FROM seeds)
+      OR e.id IN(SELECT 'meeting:'||id FROM seeds) OR e.id IN(SELECT 'congress-api:'||substring(id FROM '^congress:([A-Z][0-9]{6})$') FROM seeds)
+      OR e.id IN(SELECT entity_id FROM entity_external_id WHERE value IN(SELECT id FROM seeds))),
+    members AS(SELECT id FROM anchors UNION SELECT place_id FROM entity_place WHERE entity_id IN(SELECT id FROM anchors)),
+    ancestors(id) AS(SELECT id FROM members UNION SELECT e.parent_id FROM entity e JOIN ancestors a ON a.id=e.id WHERE e.parent_id IS NOT NULL)
+    SELECT jsonb_build_object('entities',(SELECT jsonb_agg(e) FROM entity e WHERE id IN(SELECT id FROM ancestors)),
+      'hosts',(SELECT jsonb_agg(h) FROM entity_host h WHERE entity_id IN(SELECT id FROM ancestors)),
+      'externalIds',(SELECT jsonb_agg(x) FROM entity_external_id x WHERE entity_id IN(SELECT id FROM ancestors)),
+      'places',(SELECT jsonb_agg(p) FROM entity_place p WHERE entity_id IN(SELECT id FROM ancestors) AND place_id IN(SELECT id FROM ancestors))) AS context`, [seeds]);
+  const context = row.context as Row;
+  const entities = new Map(((context.entities ?? []) as Row[]).map(e => [String(e.id), e]));
+  const aliases = (context.externalIds ?? []) as Row[], hosts = (context.hosts ?? []) as Row[];
+  for (const value of values) {
+    const resolveEntity = (id: string) => entities.get(id) ?? entities.get(String(aliases.find(a => a.value === id)?.entity_id))
+      ?? entities.get(`meeting:${id}`) ?? entities.get(id.replace(/^congress:/, "congress-api:"));
+    let entity = resolveEntity(value.subjectId);
+    const parent = value.sourceBodyId ?? value.sourceRecord.governmentId;
+    if (!entity && typeof parent === "string") { entity = resolveEntity(parent); value.parentId = entity ? String(entity.id) : undefined; }
+    value.hosts = [];
+    const seen = new Set<string>();
+    while (entity && !seen.has(String(entity.id))) {
+      seen.add(String(entity.id)); value.hosts.push(...hosts.filter(h => h.entity_id === entity!.id).map(h => String(h.host)));
+      entity = entities.get(String(entity.parent_id));
+    }
+  }
+  return context;
+}
 
 export function bindReaderSources(sample: Pick<ReaderSample, "values">, sourceDoors: readonly HeldApiDoor[], meetingSources: readonly MeetingSourceHosts[] = [], legistarTenants: readonly string[] = []): void {
   const offices = JSON.parse(readFileSync(new URL("../data/reference/voting-source-doors.json", import.meta.url), "utf8")) as {
@@ -208,33 +239,7 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
     const selected = buckets.map(bucket => bucket.filter(candidate => unique.get(keyOf(candidate)) === candidate));
     for (let position = 0; values.length < limit && selected.some(bucket => bucket.length > position); position++)
       for (const bucket of selected) if (bucket[position] && values.length < limit) values.push(bucket[position]);
-    const seeds = [...new Set(values.flatMap(v => [v.subjectId, v.sourceBodyId, v.sourceRecord.governmentId, ...Array.isArray(v.sourceRecord.aliases) ? v.sourceRecord.aliases : []]).filter((v): v is string => typeof v === "string"))];
-    const [contextRow] = await query(`WITH RECURSIVE seeds AS (SELECT unnest($1::text[]) id),
-      anchors AS (SELECT e.id FROM entity e WHERE e.id IN(SELECT id FROM seeds)
-        OR e.id IN(SELECT 'meeting:'||id FROM seeds) OR e.id IN(SELECT 'congress-api:'||substring(id FROM '^congress:([A-Z][0-9]{6})$') FROM seeds)
-        OR e.id IN(SELECT entity_id FROM entity_external_id WHERE value IN(SELECT id FROM seeds))),
-      members AS(SELECT id FROM anchors UNION SELECT place_id FROM entity_place WHERE entity_id IN(SELECT id FROM anchors)),
-      ancestors(id) AS(SELECT id FROM members UNION SELECT e.parent_id FROM entity e JOIN ancestors a ON a.id=e.id WHERE e.parent_id IS NOT NULL)
-      SELECT jsonb_build_object('entities',(SELECT jsonb_agg(e) FROM entity e WHERE id IN(SELECT id FROM ancestors)),
-        'hosts',(SELECT jsonb_agg(h) FROM entity_host h WHERE entity_id IN(SELECT id FROM ancestors)),
-        'externalIds',(SELECT jsonb_agg(x) FROM entity_external_id x WHERE entity_id IN(SELECT id FROM ancestors)),
-        'places',(SELECT jsonb_agg(p) FROM entity_place p WHERE entity_id IN(SELECT id FROM ancestors) AND place_id IN(SELECT id FROM ancestors))) AS context`, [seeds]);
-    const context = contextRow.context as Row;
-    const entities = new Map(((context.entities ?? []) as Row[]).map(e => [String(e.id), e]));
-    const aliases = (context.externalIds ?? []) as Row[], hosts = (context.hosts ?? []) as Row[];
-    for (const value of values) {
-      const resolveEntity = (id: string) => entities.get(id) ?? entities.get(String(aliases.find(a => a.value === id)?.entity_id))
-        ?? entities.get(`meeting:${id}`) ?? entities.get(id.replace(/^congress:/, "congress-api:"));
-      let entity = resolveEntity(value.subjectId);
-      const parent = value.sourceBodyId ?? value.sourceRecord.governmentId;
-      if (!entity && typeof parent === "string") { entity = resolveEntity(parent); value.parentId = entity ? String(entity.id) : undefined; }
-      value.hosts = [];
-      const seen = new Set<string>();
-      while (entity && !seen.has(String(entity.id))) {
-        seen.add(String(entity.id)); value.hosts.push(...hosts.filter(h => h.entity_id === entity!.id).map(h => String(h.host)));
-        entity = entities.get(String(entity.parent_id));
-      }
-    }
+    const context = await loadReaderContext(values, query);
     bindReaderSources({ values }, sourceDoors, meetingSources, legistarTenants);
     const copies: ReaderSample["copies"] = {}, copyFailures: Row[] = [];
     writeFileSync(resolve(directory, `${state}.json`), JSON.stringify({ state, capturedAt: new Date().toISOString(), values, families: inventory, copies, context }), { mode: 0o600 });

@@ -101,8 +101,9 @@ for (const state of states) {
         : value.recordClass === "FEDERAL_MONEY" ? "money" as const
         : value.recordClass === "BALLOT_CANDIDACY" ? "ballot" as const : "contact" as const;
       const interpreted = pageCopy({ finalUrl, body: text, contentType: "", fetchedAt: observedAt });
+      const sourceAddress = new URL(value.sourceUrl);
       // The live Open States adapter uses this same YAML decoder; escaped scalars remain values on the saved source.
-      const checkedText = !official && /\.ya?ml$/i.test(new URL(value.sourceUrl).pathname)
+      const checkedText = !official && /\.ya?ml$/i.test(sourceAddress.pathname)
         ? `${interpreted.text}\n${jsonValues(parseYaml(text)).join("\n")}` : interpreted.text;
       const input = { subjectId: value.subjectId, field: key, fieldKind,
         value: value.value, valueText: typeof value.value === "string" ? value.value : canonicalJson(value.value),

@@ -32,7 +32,7 @@ for (const state of process.argv.slice(2)) {
     const previous = places.get(place.id);
     places.set(place.id, { ...place, aliases: [...new Map([...previous?.aliases ?? [], ...place.aliases].map(a => [`${a.scheme}|${a.value}`, a])).values()] });
   }
-  const unique = <T>(rows: readonly T[], key: (row: T) => string): T[] => [...new Map(rows.map(row => [key(row), row])).values()];
+  const unique = <T,>(rows: readonly T[], key: (row: T) => string): T[] => [...new Map(rows.map(row => [key(row), row])).values()];
   const map: StatePlaceMap = { places: [...places.values()], boundaries: update.boundaries,
     zipEdges: unique([...held.zipEdges, ...update.zipEdges], e => `${e.code}|${e.placeId}|${e.boundaryYear}`),
     zctaEdges: unique([...held.zctaEdges, ...update.zctaEdges], e => `${e.code}|${e.placeId}|${e.boundaryYear}`),

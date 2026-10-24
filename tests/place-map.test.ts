@@ -63,6 +63,12 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     assert.equal(calls - start, 1);
     assert.deepEqual(point.states, ["AZ"]);
     assert.ok(point.memberships.some(m => m.countyAttachment && m.hostCountyId === county));
+    await loadStatePlaceMap({ transaction }, { places: [], zipEdges: [], zctaEdges: [], boundaries: [{
+      placeId: county, layer: "county", boundaryYear: 2026, version: "county:2026", geometry: square(-110, -109),
+      countyAttachment: false, hostCountyId: null, sourceUrls: ["https://www.census.gov/"], checkedAt: date,
+    }] });
+    const moved = await placesAtPoint(query, [-111, 32.5]);
+    assert.ok(!moved.memberships.some(m => m.placeId === county || m.countyAttachment));
   } finally { await db.close(); }
 });
 

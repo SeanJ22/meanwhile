@@ -1,0 +1,515 @@
+{
+  "observedAt": "2026-10-24T10:24:17.690Z",
+  "project": "tiny-hill-13996172",
+  "branch": "br-delicate-lab-ax02xuo5",
+  "role": "readonly",
+  "totalReplayed": 31627,
+  "statesAt1000": 25,
+  "meetsEveryStateMinimum": false,
+  "states": [
+    {
+      "state": "AK",
+      "capturedAt": "2026-10-24T09:43:51.375562+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "AL",
+      "capturedAt": "2026-10-24T09:43:57.017297+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "AR",
+      "capturedAt": "2026-10-24T09:44:04.296238+00:00",
+      "copied": 464,
+      "replayed": 464,
+      "unchanged": 464,
+      "unavailable": 0,
+      "shortfall": 536
+    },
+    {
+      "state": "AS",
+      "capturedAt": "2026-10-24T10:07:47.485108+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "AZ",
+      "capturedAt": "2026-10-24T09:42:47.922496+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "CA",
+      "capturedAt": "2026-10-24T09:44:10.157223+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "CO",
+      "capturedAt": "2026-10-24T09:45:48.02191+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "CT",
+      "capturedAt": "2026-10-24T09:45:53.758621+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "DC",
+      "capturedAt": "2026-10-24T09:45:59.597276+00:00",
+      "copied": 13,
+      "replayed": 13,
+      "unchanged": 13,
+      "unavailable": 0,
+      "shortfall": 987
+    },
+    {
+      "state": "DE",
+      "capturedAt": "2026-10-24T09:46:03.959892+00:00",
+      "copied": 137,
+      "replayed": 137,
+      "unchanged": 137,
+      "unavailable": 0,
+      "shortfall": 863
+    },
+    {
+      "state": "FL",
+      "capturedAt": "2026-10-24T09:48:41.05116+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "GA",
+      "capturedAt": "2026-10-24T09:48:46.288645+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "GU",
+      "capturedAt": "2026-10-24T10:07:58.227751+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "HI",
+      "capturedAt": "2026-10-24T10:10:47.575934+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "IA",
+      "capturedAt": "2026-10-24T09:48:59.585836+00:00",
+      "copied": 178,
+      "replayed": 178,
+      "unchanged": 178,
+      "unavailable": 0,
+      "shortfall": 822
+    },
+    {
+      "state": "ID",
+      "capturedAt": "2026-10-24T09:53:21.745322+00:00",
+      "copied": 727,
+      "replayed": 727,
+      "unchanged": 727,
+      "unavailable": 0,
+      "shortfall": 273
+    },
+    {
+      "state": "IL",
+      "capturedAt": "2026-10-24T09:53:30.296978+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "IN",
+      "capturedAt": "2026-10-24T09:53:36.002205+00:00",
+      "copied": 70,
+      "replayed": 70,
+      "unchanged": 70,
+      "unavailable": 0,
+      "shortfall": 930
+    },
+    {
+      "state": "KS",
+      "capturedAt": "2026-10-24T09:53:42.582361+00:00",
+      "copied": 36,
+      "replayed": 36,
+      "unchanged": 36,
+      "unavailable": 0,
+      "shortfall": 964
+    },
+    {
+      "state": "KY",
+      "capturedAt": "2026-10-24T10:01:31.036808+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "LA",
+      "capturedAt": "2026-10-24T10:01:25.997497+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "MA",
+      "capturedAt": "2026-10-24T10:01:36.918445+00:00",
+      "copied": 481,
+      "replayed": 481,
+      "unchanged": 481,
+      "unavailable": 0,
+      "shortfall": 519
+    },
+    {
+      "state": "MD",
+      "capturedAt": "2026-10-24T10:01:42.918825+00:00",
+      "copied": 802,
+      "replayed": 802,
+      "unchanged": 802,
+      "unavailable": 0,
+      "shortfall": 198
+    },
+    {
+      "state": "ME",
+      "capturedAt": "2026-10-24T10:04:57.676346+00:00",
+      "copied": 412,
+      "replayed": 412,
+      "unchanged": 412,
+      "unavailable": 0,
+      "shortfall": 588
+    },
+    {
+      "state": "MI",
+      "capturedAt": "2026-10-24T10:05:08.087657+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "MN",
+      "capturedAt": "2026-10-24T10:04:52.09004+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "MO",
+      "capturedAt": "2026-10-24T10:05:03.065803+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "MP",
+      "capturedAt": "2026-10-24T10:08:03.763635+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "MS",
+      "capturedAt": "2026-10-24T10:05:19.802819+00:00",
+      "copied": 36,
+      "replayed": 36,
+      "unchanged": 36,
+      "unavailable": 0,
+      "shortfall": 964
+    },
+    {
+      "state": "MT",
+      "capturedAt": "2026-10-24T10:05:14.779327+00:00",
+      "copied": 9,
+      "replayed": 9,
+      "unchanged": 9,
+      "unavailable": 0,
+      "shortfall": 991
+    },
+    {
+      "state": "NC",
+      "capturedAt": "2026-10-24T10:05:25.599279+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "ND",
+      "capturedAt": "2026-10-24T10:05:31.327572+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "NE",
+      "capturedAt": "2026-10-24T10:05:50.228342+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "NH",
+      "capturedAt": "2026-10-24T10:05:44.586472+00:00",
+      "copied": 797,
+      "replayed": 797,
+      "unchanged": 797,
+      "unavailable": 0,
+      "shortfall": 203
+    },
+    {
+      "state": "NJ",
+      "capturedAt": "2026-10-24T10:05:37.619293+00:00",
+      "copied": 709,
+      "replayed": 709,
+      "unchanged": 709,
+      "unavailable": 0,
+      "shortfall": 291
+    },
+    {
+      "state": "NM",
+      "capturedAt": "2026-10-24T10:05:54.872972+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "NV",
+      "capturedAt": "2026-10-24T10:06:09.530315+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "NY",
+      "capturedAt": "2026-10-24T10:06:04.777877+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "OH",
+      "capturedAt": "2026-10-24T10:06:14.570003+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "OK",
+      "capturedAt": "2026-10-24T10:06:20.772307+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "OR",
+      "capturedAt": "2026-10-24T10:06:27.417565+00:00",
+      "copied": 789,
+      "replayed": 789,
+      "unchanged": 789,
+      "unavailable": 0,
+      "shortfall": 211
+    },
+    {
+      "state": "PA",
+      "capturedAt": "2026-10-24T10:06:33.369172+00:00",
+      "copied": 330,
+      "replayed": 330,
+      "unchanged": 330,
+      "unavailable": 0,
+      "shortfall": 670
+    },
+    {
+      "state": "PR",
+      "capturedAt": "2026-10-24T10:08:08.816179+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "RI",
+      "capturedAt": "2026-10-24T10:06:38.92283+00:00",
+      "copied": 62,
+      "replayed": 62,
+      "unchanged": 62,
+      "unavailable": 0,
+      "shortfall": 938
+    },
+    {
+      "state": "SC",
+      "capturedAt": "2026-10-24T10:06:44.535218+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "SD",
+      "capturedAt": "2026-10-24T10:06:57.729011+00:00",
+      "copied": 55,
+      "replayed": 55,
+      "unchanged": 55,
+      "unavailable": 0,
+      "shortfall": 945
+    },
+    {
+      "state": "TN",
+      "capturedAt": "2026-10-24T10:07:04.810591+00:00",
+      "copied": 8,
+      "replayed": 8,
+      "unchanged": 8,
+      "unavailable": 0,
+      "shortfall": 992
+    },
+    {
+      "state": "TX",
+      "capturedAt": "2026-10-24T10:06:51.981337+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "UT",
+      "capturedAt": "2026-10-24T10:07:10.498712+00:00",
+      "copied": 244,
+      "replayed": 244,
+      "unchanged": 244,
+      "unavailable": 0,
+      "shortfall": 756
+    },
+    {
+      "state": "VA",
+      "capturedAt": "2026-10-24T10:07:23.583565+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "VI",
+      "capturedAt": "2026-10-24T10:08:13.420599+00:00",
+      "copied": 2,
+      "replayed": 2,
+      "unchanged": 2,
+      "unavailable": 0,
+      "shortfall": 998
+    },
+    {
+      "state": "VT",
+      "capturedAt": "2026-10-24T10:07:29.858024+00:00",
+      "copied": 0,
+      "replayed": 0,
+      "unchanged": 0,
+      "unavailable": 0,
+      "shortfall": 1000
+    },
+    {
+      "state": "WA",
+      "capturedAt": "2026-10-24T10:07:18.404388+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "WI",
+      "capturedAt": "2026-10-24T10:07:33.545229+00:00",
+      "copied": 1000,
+      "replayed": 1000,
+      "unchanged": 1000,
+      "unavailable": 0,
+      "shortfall": 0
+    },
+    {
+      "state": "WV",
+      "capturedAt": "2026-10-24T10:07:40.483888+00:00",
+      "copied": 102,
+      "replayed": 102,
+      "unchanged": 102,
+      "unavailable": 0,
+      "shortfall": 898
+    },
+    {
+      "state": "WY",
+      "capturedAt": "2026-10-24T10:07:51.739756+00:00",
+      "copied": 164,
+      "replayed": 164,
+      "unchanged": 164,
+      "unavailable": 0,
+      "shortfall": 836
+    }
+  ]
+}

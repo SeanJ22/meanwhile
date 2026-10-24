@@ -8,6 +8,8 @@ import { currentCandidateProfilesProjection } from "../civic-data/manual-read-mo
 import { currentDerivedCandidatePortraits } from "../civic-data/derived-campaign-sites.ts";
 import type { Officeholder } from "../officials/types.ts";
 import type { Provenance } from "../sources/types.ts";
+import { sameSourcedExecutivePerson } from "../registry/candidacy-holder-identity.ts";
+import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 
 export interface PersonPhoto {
   url: string;
@@ -34,6 +36,31 @@ function aliasIndex(source:object,people:()=>readonly NativePerson[]):ReadonlyMa
   return index;
 }
 
+const statewideAliases=new WeakMap<readonly StatewideExecutive[],ReadonlyMap<string,readonly string[]>>();
+function statewideAliasIndex(people:readonly StatewideExecutive[]):ReadonlyMap<string,readonly string[]> {
+  const index=statewideAliases.get(people);
+  if(index)return index;
+  const aliases=new Map(aliasIndex(people,()=>people.map(row=>row.holder)));
+  const holders=people.map(row=>({...row.holder,authority:'REGISTRY_STATEWIDE_EXECUTIVE' as const,
+    sourceUrl:row.sourceUrl,officialProfileUrl:row.holder.websiteUrl,divisions:[row.stateOcdId]}));
+  const remaining=new Set(holders);
+  while(remaining.size){
+    const pending=[remaining.values().next().value!],linked:typeof holders=[];
+    while(pending.length){
+      const holder=pending.pop()!;
+      if(!remaining.delete(holder))continue;
+      linked.push(holder);
+      for(const other of remaining)if(sameSourcedExecutivePerson(holder,other))pending.push(other);
+    }
+    // Use CL-01's same pairwise rule as its publication path. An unidentified
+    // office slot cannot bridge two conflicting native people.
+    if(!linked.every(left=>linked.every(right=>sameSourcedExecutivePerson(left,right))))continue;
+    const keys=[...new Set(linked.flatMap(person=>[...personIdentityKeys(person)]))];
+    for(const key of keys)aliases.set(key,[...new Set([...aliases.get(key) ?? [],...keys])]);
+  }
+  statewideAliases.set(people,aliases);return aliases;
+}
+
 /** CL-01's person links and the held sources' native aliases form one person. */
 function portraitPersonKeys(subjectId:string,state?:string):Set<string> {
   const indexes:ReadonlyMap<string,readonly string[]>[]=[];
@@ -44,13 +71,15 @@ function portraitPersonKeys(subjectId:string,state?:string):Set<string> {
   try {const people=getFederalOfficeholderSet().officeholders;indexes.push(aliasIndex(people,()=>people));} catch { /* This request has no federal directory. */ }
   try {
     const runtime=getRegistryRuntimeReadModel();
-    indexes.push(aliasIndex(runtime.statewideExecutives,()=>runtime.statewideExecutives.map(row=>row.holder)),
+    indexes.push(statewideAliasIndex(runtime.statewideExecutives),
       aliasIndex(runtime.bodyRosters,()=>runtime.bodyRosters.flatMap(row=>row.members)));
   } catch { /* Source-native identities remain usable without registry enrichment. */ }
   const keys=new Set<string>(),pending=[subjectId];
   while(pending.length){const key=pending.shift()!;if(keys.has(key))continue;keys.add(key);
-    try {const identity=readerPersonKeys(key);if(identity.status === 'IDENTITY_UNRESOLVED' && key === subjectId)return new Set();
-      for(const related of identity.keys)if(!keys.has(related))pending.push(related);
+    try {const identity=readerPersonKeys(key);
+      // An unresolved ballot/funding bridge supplies no extra aliases. It does
+      // not suppress this person's independently verified official portrait.
+      if(identity.status !== 'IDENTITY_UNRESOLVED')for(const related of identity.keys)if(!keys.has(related))pending.push(related);
     } catch { /* An unavailable enrichment never discards an exact native identity. */ }
     for(const index of indexes)for(const related of index.get(key) ?? [])if(!keys.has(related))pending.push(related);
   }

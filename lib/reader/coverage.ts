@@ -17,6 +17,7 @@ import type { Meeting } from "../sources/types.ts";
 import type { BodyTerritoryFile } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { primeStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 
 /** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
 export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
@@ -25,7 +26,7 @@ export function withPlaceRegistry<T extends { readonly registry: RegistryRuntime
 }
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
-  "people" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
+  "people" | "peopleRead" | "legislativePeople" | "federal" | "president" | "stateLegislatorAuthority">>;
 type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
 
@@ -83,8 +84,11 @@ export function stateCoverage(
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;
-  const { officials } = stateOfficials(state);
-  return withReaderSelection(undefined, () => withReaderAuthorityEdge(null, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
+  return withReaderSelection(undefined, () => withReaderAuthorityEdge({}, () => withRegistryRuntimeProjection(runtime, [state.state], () => {
+    // Carry the already loaded source identities into this composition context.
+    // A cached state answer must not depend on another request's resident state.
+    if(state.peopleRead?.kind === 'PROMOTED' || state.peopleRead?.kind === 'BOOTSTRAP')primeStatePeopleProjection(state.peopleRead.value);
+    const { officials } = stateOfficials(state);
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
     const seats = coverage.seats.map(seat => {
       const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]

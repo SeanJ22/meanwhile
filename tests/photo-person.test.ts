@@ -45,3 +45,25 @@ test("a canonical person and its declared source aliases use one portrait withou
     });
   }));
 });
+
+test("CL-01's official statewide source links share a photo before the next source rebuild",()=>{
+  const executive=STATEWIDE_EXECUTIVES.find(row=>row.holder.id === 'statewide:az/governor')!;
+  const alias={...executive,sourceUrl:'https://raw.githubusercontent.com/openstates/people/current/katie.yml',
+    holder:{...executive.holder,id:'statewide:az/native-source',photoUrl:null,websiteUrl:'https://www.usa.gov/states/arizona',
+      nativeIds:{plural:['native-person-one']}}};
+  const runtime={formatVersion:1,registry:{generatedAt:executive.collectedAt,divisions:[],bodies:[]},statewideExecutives:[alias,executive],
+    officialPhotos:{photos:[]},officialCandidacies:{formatVersion:1,rule:'EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE',rows:[]},
+    bodyRosters:[],rosterPhotos:{},rosterReaderDispositions:[]} as RegistryRuntimeReadModel;
+  withReaderAuthorityEdge({},()=>withRegistryRuntimeProjection(runtime,['AZ'],()=>{
+    assert.equal(photoForPerson(alias.holder.id,'AZ')?.url,executive.holder.photoUrl);
+    assert.equal(photoForPerson('plural:native-person-one','AZ')?.url,executive.holder.photoUrl);
+    assert.deepEqual(statewideExecutivesFor([executive.stateOcdId]).map(holder=>holder.photoUrl),
+      [executive.holder.photoUrl,executive.holder.photoUrl]);
+    const conflicting={...alias,holder:{...alias.holder,id:'statewide:az/other-native-source',nativeIds:{plural:['native-person-two']}}};
+    withRegistryRuntimeProjection({...runtime,statewideExecutives:[alias,executive,conflicting]},['AZ'],()=>{
+      assert.equal(photoForPerson(alias.holder.id,'AZ'),null);
+      assert.equal(photoForPerson(conflicting.holder.id,'AZ'),null);
+      assert.equal(photoForPerson(executive.holder.id,'AZ')?.url,executive.holder.photoUrl);
+    });
+  }));
+});

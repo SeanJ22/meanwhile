@@ -368,3 +368,4 @@ One line per batch folded into river.
 - 2026-10-23T17:19:27Z · vs-07-fx · VS-07 · ready f48331d9dc91 · river cd82fdc4a96e · pnpm gates pass on cd82fdc4a96e
 - 2026-10-23T17:19:27Z · pb-03-fx · PB-03 · ready e6514658370f · river cd82fdc4a96e · pnpm gates pass on cd82fdc4a96e
 - 2026-10-23T19:14:26Z · ballot-parity-fx · BL-21-FX · ready 41f20be9a620 · river 5ddf41bb8036 · pnpm gates pass on 5ddf41bb8036
+- 2026-10-24T00:48:29Z · river-revert · REVERT-BL-21-FX · river 60ac4852e · tree identical to cd82fdc4a (pnpm gates pass, release 92); Sean approved the revert

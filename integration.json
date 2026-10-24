@@ -4065,5 +4065,18 @@
     "tested_sha": "5ddf41bb803664bcbadabab00ec61c682228ce42",
     "gates": "pass",
     "at": "2026-10-23T19:14:26Z"
+  },
+  {
+    "lane": "river-revert",
+    "steps": [
+      "REVERT-BL-21-FX"
+    ],
+    "ready_sha": "60ac4852e4b0022a6edda20fa4597bbe616e1aa7",
+    "merge_sha": "60ac4852e4b0022a6edda20fa4597bbe616e1aa7",
+    "river_sha": "60ac4852e4b0022a6edda20fa4597bbe616e1aa7",
+    "tested_sha": "cd82fdc4a96ea9f417b1c990658850c3687373b5",
+    "gates": "pass",
+    "at": "2026-10-24T00:48:29Z",
+    "note": "revert of BL-21-FX approved by Sean; tree 8b7f6a407 is byte-identical to cd82fdc4a, which passed pnpm gates (release 92)"
   }
 ]

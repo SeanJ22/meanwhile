@@ -561,3 +561,29 @@ test("an unambiguous published street and city can match without a stated state,
     null,
   );
 });
+
+
+test("a changed published room keeps its saved office point when earlier live facts are composed",async()=>{
+  const before=await placePublishedMeetingPins({meetings:[meeting("Room 101")],offices,clock:()=>NOW,fetchImpl:async()=>response(BOARD_GEO)});
+  const newer={...meeting("Room 202"),provenance:{...SOURCE,collectedAt:"2026-10-24T01:00:00Z"}};
+  const after=await placePublishedMeetingPins({meetings:[newer],previous:before.meetings,offices,fetchImpl:async()=>response(missing)});
+  const [read]=withSittingFacts(after.meetings,[
+    {meetingId:meeting().id,field:"location",value:{name:"Room 101",address:null},source:SOURCE},
+    {meetingId:meeting().id,field:"mapPin",value:before.meetings[0].mapPin,source:SOURCE},
+  ]);
+  assert.equal(read.venueGap?.publishedText,"Room 202");
+  assert.equal(read.mapPin?.basis,"BODY_OFFICE");
+  assert.equal(read.mapPin?.publishedLocation,"Room 202");
+  assert.equal(read.mapPin?.coordinateCheckedAt,before.meetings[0].mapPin?.coordinateCheckedAt);
+});
+
+test("older live location and coordinate facts cannot replace a newer published meeting address",async()=>{
+  const before=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,fetchImpl:async()=>response(OWN_GEO)});
+  const newer={...meeting(BOARD),provenance:{...SOURCE,collectedAt:"2026-10-24T01:00:00Z"}};
+  const after=await placePublishedMeetingPins({meetings:[newer],offices:new Map(),clock:()=>"2026-10-24T01:00:01Z",fetchImpl:async()=>response(BOARD_GEO)});
+  const [read]=withSittingFacts(after.meetings,[
+    {meetingId:meeting().id,field:"location",value:before.meetings[0].location,source:SOURCE},
+    {meetingId:meeting().id,field:"mapPin",value:before.meetings[0].mapPin,source:SOURCE},
+  ]);
+  assert.equal(read.location?.address,BOARD);assert.equal(read.mapPin?.address,BOARD);
+});

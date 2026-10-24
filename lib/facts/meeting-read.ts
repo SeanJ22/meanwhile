@@ -61,6 +61,15 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     const index = owner.get(meetingId);
     if (index === undefined) continue;
     const meeting = out[index]!;
+    const published = meetings[index]!;
+    if (published.mapPin) {
+      const factAt = Date.parse(source.collectedAt);
+      const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
+      const pinAt = Math.max(...[locationAt,Date.parse(published.provenance.collectedAt),
+        Date.parse(published.mapPin.coordinateCheckedAt ?? "")].filter(Number.isFinite));
+      // A once-saved point remains older than later calendar reads. Its old fact row cannot roll back a newer publication.
+      if (field === "mapPin" && factAt <= pinAt || (field === "location" || field === "online") && factAt < locationAt) continue;
+    }
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
       : field === "location" ? publishedLocation(meeting,value,source)
       : field==="mapPin" ? {mapPin:{...value as NonNullable<Meeting["mapPin"]>,meetingId:meeting.id}}

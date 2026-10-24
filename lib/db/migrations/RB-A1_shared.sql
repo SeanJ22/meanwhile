@@ -43,6 +43,9 @@ BEGIN
     UNION SELECT entity_id FROM entity_external_id WHERE value=any_id
     UNION SELECT entity_id FROM entity_external_id WHERE scheme='fec'
       AND value=substring(any_id FROM '^fec:([HSP][0-9][A-Z]{2}[0-9]{5})$')
+    UNION SELECT id FROM entity WHERE kind='meeting' AND id='meeting:'||any_id
+    UNION SELECT id FROM entity WHERE kind='person'
+      AND id='congress-api:'||substring(any_id FROM '^congress:([A-Z][0-9]{6})$')
   ) found;
   IF cardinality(matches)>1 THEN RAISE EXCEPTION 'Ambiguous reader entity id: %',any_id; END IF;
   RETURN matches[1];
@@ -88,7 +91,8 @@ BEGIN
       IF cardinality(matches)>1 THEN RAISE EXCEPTION 'Ambiguous FEC person: %',native; END IF;
       found:=matches[1];
       IF found IS NULL THEN
-        SELECT min(value) INTO found FROM unnest(targets) value WHERE value ~ '^congress:[A-Z][0-9]{6}$';
+        SELECT min('congress-api:'||substring(value FROM '^congress:([A-Z][0-9]{6})$')) INTO found
+          FROM unnest(targets) value WHERE value ~ '^congress:[A-Z][0-9]{6}$';
         found:=coalesce(found,'fec:'||native);
         INSERT INTO entity(id,kind,name,state) VALUES(found,'person',candidate->>'name',candidate->>'state') ON CONFLICT DO NOTHING;
       END IF;

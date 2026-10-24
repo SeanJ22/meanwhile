@@ -22,6 +22,7 @@ import { heldLegistarMemberTasks, legistarMemberClocks } from "../lib/sources/le
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-refresh-contracts.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
+import { routineInputState, routineInputStamp, routineInputChanged, readRoutineInput, recordRoutineInput, type RoutineInput } from "../lib/civic-data/routine-input.ts";
 import { ballotPublicationDue, ballotPublicationHasNoInput, ballotPublicationLaunchOrder, ballotPublicationSummary, parseBallotPublicationResult,
   readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
@@ -54,6 +55,7 @@ import {
   routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
+  routineTaskNextDueMs,
   routineBaselineOwed,
   routineCodeChangeRetryTaskIds,
   routineAdmissionClock,
@@ -952,6 +954,8 @@ const publicationInputLines: string[] = [...candidateFindingLines];
 const ballotStamps = new Map<BallotState, string>();
 const priorBallotPublications = new Map<BallotState, BallotPublicationSummary>();
 const ballotPublications = new Map<BallotState, BallotPublicationSummary>();
+const inputStamps = new Map<string, string>();
+const priorInputs = new Map<string, RoutineInput>();
 let ballotPublicationRepos: Awaited<ReturnType<typeof createPgRepositories>> | null = null;
 async function recordBallotReport(report: BallotPublicationResult): Promise<void> {
   ballotPublications.set(report.state, ballotPublicationSummary(report));
@@ -985,6 +989,24 @@ if (ballotStates.size) {
     if (prior) priorBallotPublications.set(state, prior);
   } catch (error) {
     console.error(`RCD_INPUT_CHANGED ballot-contests:${state}: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
+  }
+}
+for (const task of selectedTasks) {
+  if (!routineInputState(task.id)) continue;
+  try {
+    if (!ballotPublicationRepos) {
+      const connection = controlPlaneUrlFromEnv();
+      if (!connection) throw new Error("Source input history has no reporting connection.");
+      ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+    }
+    const stamp = await routineInputStamp(ROOT, task.id, ballotPublicationRepos);
+    if (stamp !== null) inputStamps.set(task.id, stamp);
+    const prior = await readRoutineInput(ballotPublicationRepos, task.id);
+    if (prior) priorInputs.set(task.id, prior);
+  } catch (error) {
+    const detail = safeFailure(sanitizedErrorDiagnostic(error));
+    supervisorFailures.push({ taskId: task.id, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
+    console.error(`RCD_INPUT_CHANGED ${task.id}: ${detail}; input refresh remains owed`);
   }
 }
 for (const task of selectedTasks) {
@@ -1044,7 +1066,9 @@ for (const read of clockReads) {
   const ballotState = parseStateBallotContractId(task.id);
   const ballotsDue = ballotState?.family === "ballot-contests" && ballotPublicationDue(task.id,
     ballotStamps.get(ballotState.state) ?? null, priorBallotPublications.get(ballotState.state) ?? null, read.clock);
-  if (!FORCE && !ballotsDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
+  const inputDue = routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
+    routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
+  if (!FORCE && !ballotsDue && !inputDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     recordLaunchDecision(task, "SKIP", "Waiting for a changed source or repair", "unchanged receipt failure; awaiting changed code, Send or source evidence");
     continue;
   }
@@ -1063,13 +1087,16 @@ for (const read of clockReads) {
   const taskDue = ballotState?.family === "ballot-contests"
     ? ballotsDue || (!ballotStamps.has(ballotState.state) || priorBallotPublications.get(ballotState.state)?.status === "HELD") && cadenceDue
     : cadenceDue;
-  if (!FORCE && !taskDue && dueRequest === null && !publicationDue && !discoveryDue) {
-    const retryMs = failureRetryMs(task.retryMs, durableClock);
-    const backoff = retryMs > task.retryMs ? `Repeated source failure; ${retryMs >= 3_600_000 ? `${retryMs / 3_600_000} hours` : `${retryMs / 60_000} minutes`} between tries` : null;
-    recordLaunchDecision(task, "SKIP", ballotState?.family === "ballot-contests" ? "State file unchanged" : backoff ?? "Next check is not due",
-      `Next source check is not due${sittingSignals.has(task.id) ? `; meeting schedule ${sittingHot === false ? "twice daily" : "hourly"}` : ""}. Last attempted ${durableClock?.lastAttemptedAt ?? "never"}; retry ${retryMs}ms.`);
+  if (!FORCE && !taskDue && !inputDue && dueRequest === null && !publicationDue && !discoveryDue) {
+    const fileOnly = ballotState?.family === "ballot-contests" && ballotStamps.has(ballotState.state) && priorBallotPublications.get(ballotState.state)?.status !== "HELD";
+    const next = routineTaskNextDueMs(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
+    const retrying = Date.parse(durableClock?.lastAttemptedAt ?? "") > Date.parse(durableClock?.lastSucceededObservedAt ?? "") || !durableClock?.lastSucceededObservedAt;
+    recordLaunchDecision(task, "SKIP", fileOnly ? "State file unchanged" : retrying ? "Waiting to retry the source" : "Waiting for the next scheduled source check",
+      fileOnly ? "Next publication is due when the state ballot file changes." :
+        `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? `Source retry after ${failureRetryMs(task.retryMs, durableClock)}ms` : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
     continue;
   }
+  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
   if (publicationDue) {
     const detail = `${task.id}: ${campaignPublicationInputs.get(task.id)!.approvals - campaignPublicationInputs.get(task.id)!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);
@@ -1401,6 +1428,16 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
+  const inputStamp = inputStamps.get(pending.task.id);
+  if (inputStamp && ballotPublicationRepos && child.kind !== "SUPERVISOR_FAILURE") {
+    try {
+      await withControlPlaneConnectRetry(() => recordRoutineInput(ballotPublicationRepos!, {
+        taskId: pending.task.id, inputStamp, at: new Date().toISOString(),
+      }, { cycleId: SUPERVISOR_CYCLE_ID, testedSha: RUNNING_CODE_SHA }));
+    } catch (error) {
+      supervisorFailures.push({ taskId: pending.task.id, code: "PUBLICATION_INPUT_HISTORY_UNWRITTEN", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+    }
+  }
   if (ballotTask?.family === "ballot-contests") {
     const report = ballotReport;
     if (report?.state === ballotTask.state) {

@@ -298,6 +298,7 @@ export interface OwnerDigestRecord {
   readonly routineDecisions?: readonly import("../civic-data/launch-decisions.ts").RoutineLaunchDecision[];
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
+  readonly routineInput?: import("../civic-data/routine-input.ts").RoutineInput;
   readonly runtimeOutcome?:
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome

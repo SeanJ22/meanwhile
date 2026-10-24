@@ -14,6 +14,7 @@ import { resolveRollingCeiling } from "../lib/control-plane/fleet-safety.ts";
 import { lookModelCall, lookReviewBoundUsd, lookSpendDecision } from "../lib/frontend/look-spend.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
+import { createMemoryRepositories } from "./helpers/playbooks.ts";
 
 const SHA = "0123456789abcdef0123456789abcdef01234567";
 const AT = "2026-10-06T02:00:00.000Z";
@@ -26,6 +27,22 @@ const reviewed = (verdicts: ("red" | "green")[]): LookReviewOutcome => ({
   screens: verdicts.map((verdict, i) => ({ label: `s${i}`, answers, verdict, element: verdict === "red" ? "a 9px date label" : null })),
 });
 const url = (key: string) => `/shot/${key}`;
+
+it("look-review climbs only for an invalid answer and accepts a valid red review on any tier", async () => {
+  for (const failures of [0, 1, 2]) {
+    const repos = createMemoryRepositories(), sent: string[] = [];
+    await repos.adminConfig.put("current", { apiFallback: { enabled: false }, updatedAt: AT,
+      fleetSpendCeiling: { rollingCeilingUsd: 100, decidedAt: AT, decidedBy: "session", receiptId: "test", previousUsd: 10 } } as AdminConfig, AT);
+    const raw = JSON.stringify({ screens: [{ label: "ballot", answers, verdict: "red", element: "A small date label" }] });
+    const call = lookModelCall(repos, "test", async (_url, init) => {
+      const model = JSON.parse(String(init?.body)).model; sent.push(model);
+      return Response.json({ model, usage: { input_tokens: 10, output_tokens: 10 }, content: [{ type: "text", text: sent.length <= failures ? "invalid" : raw }] });
+    }, { env: { WTP_BACKGROUND_WORKER_BATCH: "0" } });
+    assert.equal(await call({ prompt: "p", schema: {}, images: [{ label: "ballot", mediaType: "image/png", base64: "AAAA" }] }), raw);
+    assert.deepEqual(sent, ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"].slice(0, failures + 1));
+    assert.equal((await repos.costs.read("look-review")).length, sent.length);
+  }
+});
 const emptyQueue = { items: [], counts: { queued: 0, sent: 0, opened: 0, refused: 0 } } as unknown as Parameters<typeof v6FixesView>[0];
 
 describe("FE-21: every deploy is looked at on the live site", () => {
@@ -124,11 +141,11 @@ describe("FE-21: the reviewer's model call", () => {
     let sent: { model: string; messages: { content: { type: string; text?: string; source?: { data: string } }[] }[]; output_config: unknown } | null = null;
     const fake = (async (_url: string, init: RequestInit) => {
       sent = JSON.parse(String(init.body));
-      return new Response(JSON.stringify({ model: "claude-sonnet-5-5", usage: { input_tokens: 10, output_tokens: 5 }, content: [{ type: "text", text: "{\"screens\":[]}" }] }), { status: 200 });
+      return new Response(JSON.stringify({ model: "claude-sonnet-5-5", usage: { input_tokens: 10, output_tokens: 5 }, content: [{ type: "text", text: JSON.stringify({ screens: [{ label: "screen", verdict: "green", element: null, answers: { beautiful: "Clear", easy: "Clear", instant: "Clear", come_back: "Clear", show_a_friend: "Clear" } }] }) }] }), { status: 200 });
     }) as unknown as typeof fetch;
     const call = lookModelCall({} as ControlPlaneRepositories, "key", fake, { env: { WTP_BACKGROUND_WORKER_BATCH: "0" } });
     const text = await call({ prompt: "p", schema: { type: "object", properties: { a: { type: "string", minLength: 1, maxLength: 9 } } }, images: [{ label: "ballot page, phone", mediaType: "image/png", base64: "AAAA" }] });
-    assert.equal(text, "{\"screens\":[]}");
+    assert.equal(text, JSON.stringify({ screens: [{ label: "screen", verdict: "green", element: null, answers: { beautiful: "Clear", easy: "Clear", instant: "Clear", come_back: "Clear", show_a_friend: "Clear" } }] }));
     const content = sent!.messages[0].content;
     assert.equal(content[0].text, "Screen: ballot page, phone");
     assert.equal(content[1].type, "image");
@@ -152,7 +169,7 @@ describe("FE-21: the reviewer's model call", () => {
       }
       if (url.endsWith("/r/b1")) {
         const id = submitted!.requests[0].custom_id;
-        return new Response(`${JSON.stringify({ custom_id: id, result: { type: "succeeded", message: { model: "claude-sonnet-5-5", usage: { input_tokens: 1_000_000, output_tokens: 0 }, content: [{ type: "text", text: "{\"screens\":[]}" }] } } })}\n`);
+        return new Response(`${JSON.stringify({ custom_id: id, result: { type: "succeeded", message: { model: "claude-sonnet-5-5", usage: { input_tokens: 1_000_000, output_tokens: 0 }, content: [{ type: "text", text: JSON.stringify({ screens: [{ label: "screen", verdict: "green", element: null, answers: { beautiful: "Clear", easy: "Clear", instant: "Clear", come_back: "Clear", show_a_friend: "Clear" } }] }) }] } } })}\n`);
       }
       throw new Error(`unexpected ${url}`);
     }) as unknown as typeof fetch;
@@ -160,7 +177,7 @@ describe("FE-21: the reviewer's model call", () => {
     const repos = { costs: { append: async (_w: string, _id: string, e: never) => { costs.push(e); } } } as unknown as ControlPlaneRepositories;
     const call = lookModelCall(repos, "key", fake, { env: {}, sleep: async () => {}, pollIntervalMs: 0 });
     const text = await call({ prompt: "p", schema: { type: "object" }, images: [{ label: "home, phone", mediaType: "image/png", base64: "AAAA" }] });
-    assert.equal(text, "{\"screens\":[]}");
+    assert.equal(text, JSON.stringify({ screens: [{ label: "screen", verdict: "green", element: null, answers: { beautiful: "Clear", easy: "Clear", instant: "Clear", come_back: "Clear", show_a_friend: "Clear" } }] }));
     assert.equal(submitted!.requests.length, 1);
     assert.ok(submitted!.requests[0].custom_id.startsWith("look-review-"));
     assert.ok(!urls.some((u) => u.endsWith("/v1/messages")), "no Messages request when batched");

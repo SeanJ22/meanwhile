@@ -242,6 +242,7 @@ export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | 
   const last = rolling?.[0];
   const number = (value: unknown) => value == null ? null : Number(value);
   const modelRows: ModelSpendRaw[] = (modelRaw ?? []).map(r => ({ day: String(r.day), role: String(r.role), model: typeof r.model === "string" ? r.model : null,
+    job: typeof r.job === "string" ? r.job : null,
     listPrice: number(r.list_price),
     window: r.window as ModelSpendRaw["window"], jobs: Number(r.jobs), calls: number(r.calls), usd: number(r.usd), uncached: number(r.uncached),
     reads: number(r.reads), writes: number(r.writes), writes1h: number(r.writes1h), output: number(r.output), eligible: number(r.eligible),

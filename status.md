@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 99 (main 388d02c51, live 1:59 PM EDT); 0051 applied in production. NEXT: release 100 = reader pool error handler (RV-POOL, gating on river-next c125bfa59), then batches A (CL-01 + RV-TOOLS + RIVER-KEYS-FX), B (SO-01 + DB-01), C (PT-01), D (RB-A5 + RB-A8)
+build_state: LIVE FOR READERS: release 99 (main 388d02c51, live 1:59 PM EDT); 0051 applied. NEXT: release 100 RV-POOL (PR #810, CI last test job); release 101 = batch A (gates 9/9 on c09c1e606); batch B gating (DB-01 + MT-01 + RB-A1 doc, c1b0199fa)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T18:00:37Z
+heartbeat: 2026-10-24T19:07:27Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 3:05 PM EDT
+- Live: release 99 (388d02c51). Reader checks passed at 2:00 PM EDT. Migration 0051 applied, and all 35 event ids resolve.
+- Release 100 (RV-POOL, PR #810): admission, verify, both builds green; "test (affected)" running since 2:31 PM EDT; auto-merge on. Local gates: tests 9,775 pass. tsc, build and build:standalone ran out of memory at this container's default 2 GB Node heap; with the 4 GB heap netlify.toml and CI use, all pass. River's gates now run with NODE_OPTIONS=--max-old-space-size=4096.
+- Batch A (release 101 when 100 merges): CL-01 88af51ae2 + RV-TOOLS 2645e12d5 + RIVER-KEYS-FX 33a304632 on river-next c09c1e606. Gates 9 of 9, 9,780 pass, 0 fail. Preview against the production database: /ballot 85701 and 03255 render, /national 200, /api/meetings 60602 200. The Raleigh 27601 ballot mentions Deborah K. Ross 73 times on the preview vs 87 live, consistent with CL-01 removing her duplicate card (Chrome check after release).
+- Batch B gating from 3:07 PM EDT (c1b0199fa): DB-01 befe7b6f1 (reader migration DB-01_read_versions, expand), MT-01 0b0674d8d (restores held meetings' saved pins, Sunnyside), RB-A1 1d6df41d9 (docs only).
+- SO-01 dropped from batch B and returned (returns/so-01.md): 5 files, 8 hunks conflict with CL-01's person-merge code. Exact merge written; River does it at 4:08 PM EDT if the lane hasn't.
+- Found: MEETING_PARTITION_READ_FAILED, 195 to 339 meeting calendars failing per supervisor pass since 2 AM EDT (release 95, from RN-02's calendar changes), 0 before. Detail: FINAL_ROUTE_NOT_REGISTERED, "outside meetings-public-bodies's registered publication routes" (lib/civic-data/source-authority.ts:1095), on Granicus, CivicPlus and PrimeGov calendars. Those bodies' meeting calendars aren't refreshing. A River helper is root-causing it on stream/river-meet against real failing tasks (read-only), with counts by state before and after; it ships as its own batch.
+- RB-A4 READY ef7987b1e: its boundary_year collision is gone (its migration now only adds placement_basis; boundary_year comes from 0051). It merged RB-A3's un-READY work, so it folds after RB-A3 posts READY. Queue after B: C PT-01 660cb878f; D RB-A2 9900bc396 + RB-A5 f7ab065e3 + RB-A8 (latest READY); SO-01 when re-READY; RV-MEET when proven.
 
 ### Live for readers, 2:00 PM EDT: release 99 live, migration 0051 applied
 - Release 99 (PR #809, RV-0051 only) live 1:59 PM EDT: /api/build 388d02c51.

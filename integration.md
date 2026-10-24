@@ -386,3 +386,4 @@ One line per batch folded into river.
 - 2026-10-24T15:25:14Z · rn-03 · RN-03 · ready 13f6eb19f47b · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
 - 2026-10-24T15:25:14Z · pb-02 · PB-02 · ready 2bfa981e1423 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
 - 2026-10-24T15:25:14Z · md-01 · MD-01 · ready f16a1d8a26c9 · river 166fa32ab0c8 · pnpm gates pass on 166fa32ab0c8
+- 2026-10-24T17:39:44Z · river-0051 · RV-0051 · ready 178151d61 · river f227d227c · pnpm gates on 178151d61: 8 of 9 (tsc out of memory beside a parallel typecheck; tsc rerun alone passes), tests 9,774 pass · release 99 PR #809

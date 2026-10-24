@@ -4282,5 +4282,17 @@
     "tested_sha": "166fa32ab0c8213c98b1f150735bf932d3f8e3ee",
     "gates": "pass",
     "at": "2026-10-24T15:25:14Z"
+  },
+  {
+    "lane": "river-0051",
+    "steps": [
+      "RV-0051"
+    ],
+    "ready_sha": "178151d61",
+    "merge_sha": "f227d227c",
+    "river_sha": "f227d227c",
+    "tested_sha": "178151d61",
+    "gates": "pass (tsc rerun alone; gates run OOM)",
+    "at": "2026-10-24T17:39:44Z"
   }
 ]

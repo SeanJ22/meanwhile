@@ -110,6 +110,19 @@ test("a hunter's claim is checked against its saved copy even when it cites a go
   } finally { await db.pg.close(); }
 });
 
+test("an unchanged saved fact replays after its freshness window without refreshing it or opening a blank", async () => {
+  const db = await seeded();
+  try {
+    const claim = input({ provenance: "NEWS", quote: "Call 520-555-0100", copy: { ...input().copy, id: 2,
+      finalUrl: "https://news.example/", text: "Example City Council Arizona Call 520-555-0100" } });
+    await door(db, claim, clocks, now, { purge });
+    const before = await db.query("SELECT * FROM fact");
+    assert.deepEqual(await door(db, claim, clocks, new Date(now.getTime() + 900 * 3_600_000), { purge }), { decision: "CONFIRM", factId: 1 });
+    assert.deepEqual(await db.query("SELECT * FROM fact"), before);
+    assert.deepEqual(await db.query("SELECT * FROM blank"), []);
+  } finally { await db.pg.close(); }
+});
+
 test("one call creates the board a government names and publishes its fact under that board", async () => {
   const db = await seeded();
   try {

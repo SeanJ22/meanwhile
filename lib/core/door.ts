@@ -109,12 +109,6 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };
     const campaignSelf = c.provenance !== "CAMPAIGN" || c.sourceSubjectId !== undefined
       && await canonicalSubject(query, c.sourceSubjectId) === entity.id;
-    const verdict = !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
-      : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
-    if (!verdict.ok) {
-      await options.refusal?.(query, c, verdict.reason);
-      return { refused: verdict.reason };
-    }
     // Also serialize the first value for a field, before there is a head row to lock.
     await query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))", [canonicalJson([entity.id, c.field])]);
     // Scope first: a sparse live-status index can otherwise scan every published fact for one claim.
@@ -122,11 +116,22 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       SELECT id FROM fact WHERE entity_id = $1 AND field = $2
       ORDER BY (status = 'live') DESC, id DESC LIMIT 1 FOR UPDATE
     ), own AS MATERIALIZED (
-      SELECT id, value, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
-    ) SELECT f.id, f.value, f.provenance_kind, f.status, f.held_reason, f.source_copy_id,
+      SELECT id, value, value_text, quote, second_copy_id, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
+    ) SELECT f.id, f.value, f.value_text, f.quote, f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id,
       coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at
       FROM own f`, [c.entity.id, c.field]);
     const row = head?.status === "live" ? head : undefined;
+    // Replaying an already checked source is a no-op, including after its freshness window.
+    // It does not refresh the checked date, publish a value, or count another delivery.
+    if (campaignSelf && row && Number(row.source_copy_id) === c.copy.id && row.provenance_kind === c.provenance
+      && row.quote === c.quote && row.value_text === c.valueText && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
+      && canonicalJson(row.value) === canonicalJson(c.value)) return { decision: "CONFIRM", factId: Number(row.id) };
+    const verdict = !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
+      : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
+    if (!verdict.ok) {
+      await options.refusal?.(query, c, verdict.reason);
+      return { refused: verdict.reason };
+    }
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,

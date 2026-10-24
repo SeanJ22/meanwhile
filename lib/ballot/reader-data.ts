@@ -24,6 +24,7 @@ import {lineupForContest} from "./general-lineup.ts";
 import {reconciledCandidacyIdForCard} from "../identity/az-2026.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry} from "../reader/selected-entry.ts";
 import {readerDatabaseQuery} from "../reader/database.ts";
+import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 
 /** The ballot shares the map's state and indexed local records; its own records use canonical batches. */
 export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
@@ -98,7 +99,8 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
 /** Every card key and its held Arizona alias, including earlier filing candidacies. */
 function ballotCandidateKeys(set: BallotSet, contests: readonly Contest[]): string[] {
   const ids = new Set(contests.map(contest=>contest.id));
-  const keys = new Set([...set.candidacies,...set.filingCandidacies ?? []].filter(candidate=>ids.has(candidate.contestId)).map(candidate=>candidate.id));
+  const keys = new Set([...set.candidacies,...set.filingCandidacies ?? []].filter(candidate=>ids.has(candidate.contestId))
+    .flatMap(candidate => [...ballotCandidateAliases(candidate), ...ballotCandidatePeople(candidate).flatMap(ballotCandidateAliases)]));
   for (const contest of contests) {
     const lineup = lineupForContest(set.election.state,contest.id) ?? set.generalLineup?.contests.find(row=>row.contestId===contest.id);
     for (const nominee of lineup?.nominees ?? []) {

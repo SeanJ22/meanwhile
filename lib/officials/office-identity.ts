@@ -12,7 +12,7 @@ export function stripSeatFurniture(title: string): string {
     .replace(/—|–/g, "-")
     .replace(/\s*\(\s*\d+\s*(?:st|nd|rd|th)?\s*(?:congressional\s+)?district[^)]*\)/gi, " ")
     .replace(/\s*\([^)]*(?:seats?|unexpired|full term)[^)]*\)/gi, " ")
-    .replace(/[,\-\s]*\b(?:district|ward|position|seat|division|group)\b[\s:#-]*(?:no\.?\s*)?[0-9ivxlc]+[a-z]?\b/gi, " ")
+    .replace(/[,\-\s]*\b(?:district|dist\.?|ward|position|seat|division|group)\b[\s.:#-]*(?:no\.?\s*)?[0-9ivxlc]+[a-z]?\b/gi, " ")
     .replace(/[,\-\s]*\b(?:first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|\d+(?:st|nd|rd|th))\s+(?:congressional\s+)?district\b/gi, " ")
     .replace(/\b(?:unexpired|full)\s+term\b/gi, " ")
     .replace(/\bat[-\s]large\b/gi, " ")

@@ -3,8 +3,10 @@ import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../reg
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
 import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
-import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
-import { officialCandidacySeatMatches, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
+import { getRegistryRuntimeReadModel, selectedRegistryStates } from "../registry/runtime-read-model.ts";
+import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
+import { currentGenericBallotProjection } from "../ballot/generic-projection.ts";
+import type { BallotSet } from "../ballot/types.ts";
 import { directFundingTargetPlan } from "./target-authorities.ts";
 import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { statePeopleScopeForDivision } from "../officials/people-identity.ts";
@@ -35,28 +37,56 @@ export interface CampaignMoneyReadSelection {
 type BridgeRow = OfficialCandidacyBridgeRow;
 let indexedBridge: {
   source: ReturnType<typeof getRegistryRuntimeReadModel>["officialCandidacies"];
+  inputs: readonly unknown[];
   byHolder: Map<string, BridgeRow>;
   byCandidacy: Map<string, BridgeRow[]>;
 } | null = null;
 
 function bridgeIndex() {
   const source = getRegistryRuntimeReadModel().officialCandidacies;
-  if (indexedBridge?.source === source) return indexedBridge;
-  const byHolder = new Map(source.rows.map(row => [row.holder.id, row]));
-  const byCandidacy = new Map<string, BridgeRow[]>();
-  for (const row of source.rows) if (officialCandidacySeatMatches(row) && row.candidacy) {
-    const rows = byCandidacy.get(row.candidacy.candidacyId) ?? [];
-    rows.push(row);
-    byCandidacy.set(row.candidacy.candidacyId, rows);
+  const ballots: BallotSet[] = [], inputs: unknown[] = [];
+  const rosters: NonNullable<ReturnType<typeof currentStatePeopleProjection>>["roster"][] = [];
+  for (const state of selectedRegistryStates()) {
+    try {
+      const ballot = currentGenericBallotProjection(state);
+      inputs.push(ballot); ballots.push(...Object.values(ballot.ballots));
+    } catch { /* A person page can read before this state's ballot is held. */ }
+    const roster = currentStatePeopleProjection(`US-${state}`)?.roster;
+    inputs.push(roster);
+    if (roster) rosters.push(roster);
   }
-  indexedBridge = { source, byHolder, byCandidacy };
+  let federal: ReturnType<typeof getFederalOfficeholderSet> | null = null;
+  try { federal = getFederalOfficeholderSet(); } catch { /* Independent state ballots retain their held state links. */ }
+  inputs.push(federal);
+  if (indexedBridge?.source === source && inputs.length === indexedBridge.inputs.length &&
+      inputs.every((value, index) => indexedBridge!.inputs[index] === value)) return indexedBridge;
+  const holders: BridgeRow["holder"][] = [];
+  for (const roster of [...rosters, ...federal ? [federal] : []]) {
+    const divisions = new Map<string, string[]>();
+    for (const row of roster.divisions) divisions.set(row.officeholderId, [...divisions.get(row.officeholderId) ?? [], row.ocdId]);
+    for (const holder of roster.officeholders) holders.push({ id: holder.id, name: holder.name,
+      personId: holder.personId, nativeIds: holder.nativeIds,
+      officialProfileUrl: holder.websiteUrl,
+      officeTitle: holder.officeTitle, divisions: divisions.get(holder.id) ?? [],
+      authority: roster === federal ? "FEDERAL_DIRECTORY" : "STATE_PEOPLE", sourceUrl: holder.provenance.sourceUrl });
+  }
+  const resolved = ballots.length ? reconcileOfficialCandidacies({ bridge: source, ballots, holders }) : source;
+  const byHolder = new Map(resolved.rows.map(row => [row.holder.id, row]));
+  const byCandidacy = new Map<string, BridgeRow[]>();
+  for (const row of resolved.rows) if (officialCandidacySeatMatches(row) && row.candidacy) {
+    for (const id of new Set([row.candidacy.candidacyId, ...row.candidacy.aliases ?? []])) {
+      const rows = byCandidacy.get(id) ?? [];
+      rows.push(row); byCandidacy.set(id, rows);
+    }
+  }
+  indexedBridge = { source, inputs, byHolder, byCandidacy };
   return indexedBridge;
 }
 /** A reusable office/roster slot must never give its successor the predecessor's money. */
 export function officialFinanceIdentityMatches(row: BridgeRow, current: { id: string; name: string; officeTitle: string; divisions: readonly string[] } | null): boolean {
   return current !== null && current.id === row.holder.id && current.name === row.holder.name
     && current.officeTitle === row.holder.officeTitle
-    && JSON.stringify([...current.divisions].sort()) === JSON.stringify([...row.holder.divisions].sort());
+    && JSON.stringify([...new Set(current.divisions)].sort()) === JSON.stringify([...new Set(row.holder.divisions)].sort());
 }
 
 function currentHolder(row: BridgeRow) {

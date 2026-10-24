@@ -2,6 +2,7 @@ import { currentCandidateProfilesProjection, candidateProfilesReadState } from "
 import { currentDerivedCandidatePortraits, type DerivedCandidatePortraitRecord } from "../civic-data/derived-campaign-sites.ts";
 import type { PortraitVerification } from "../photos/binding.ts";
 import { officialPhotoForPerson } from "../photos/person.ts";
+import { candidateKeysForState } from "./person-keys.ts";
 
 export interface CandidateCardData {
   personId?: string;
@@ -43,9 +44,20 @@ function portraitFor(state: string, key: string) {
 function cardForKey(state: string, key: string): CandidateCardData | null {
   const read = candidateProfilesReadState(state);
   const cards = read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? load(state).cards : {};
-  const card = Object.hasOwn(cards, key) ? cards[key] : null;
+  const keys = [...new Set([key, ...candidateKeysForState(state, key)])];
+  const held = keys.flatMap(id => Object.hasOwn(cards, id) ? [cards[id]] : []);
+  const combined = held.length ? held.reduce((kept, other) => Object.fromEntries(
+    [...new Set([...Object.keys(kept), ...Object.keys(other)])].map(field =>
+      [field, kept[field as keyof CandidateCardData] ?? other[field as keyof CandidateCardData]])) as unknown as CandidateCardData) : null;
+  const photoCard = held.find(row => row.photoUrl), bioCard = held.find(row => row.bio), phoneCard = held.find(row => row.phone);
+  const card = combined ? { ...combined,
+    ...(photoCard ? { photoUrl: photoCard.photoUrl, photoSource: photoCard.photoSource,
+      photoVerification: photoCard.photoVerification, personId: photoCard.personId } : {}),
+    ...(bioCard ? { bio: bioCard.bio, bioSourceUrl: bioCard.bioSourceUrl, bioSourceLabel: bioCard.bioSourceLabel } : {}),
+    ...(phoneCard ? { phone: phoneCard.phone, phoneSource: phoneCard.phoneSource, phoneLabel: phoneCard.phoneLabel } : {}),
+  } : null;
   if (card?.photoUrl) return card;
-  const portrait = portraitFor(state, key);
+  const portrait = keys.map(id => portraitFor(state, id)).find(Boolean);
   const official = officialPhotoForPerson(card?.personId ?? key);
   const photo = portrait ?? (official ? { personId: official.verification?.personId ?? card?.personId,
     photoUrl: official.url, photoSource: official.source, photoVerification: official.verification } : null);

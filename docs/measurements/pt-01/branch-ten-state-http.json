@@ -1,7 +1,7 @@
 {
-  "measuredAt": "2026-10-24T16:57:48.710Z",
-  "revision": "ec27d4291",
-  "mode": "Built branch HTTP state and ballot HTML diagnostics on read-only production holdings. These are not Chrome checks. Person links use exact identity keys; normalized display names locate rendered image alt text only.",
+  "measuredAt": "2026-10-24T22:37:15.479Z",
+  "revision": "e6b37cd30",
+  "mode": "Built branch HTTP state cards and ballot HTML diagnostics on read-only production holdings; retained sourceHolders are citations, not displayed cards. These are not Chrome checks. Person links use exact identity keys; normalized display names locate rendered image alt text only.",
   "rows": [
     {
       "state": "AZ",
@@ -10,12 +10,12 @@
         {
           "path": "/api/reader/state?state=AZ&zip=85701",
           "status": 200,
-          "seconds": 2.1585290880000003
+          "seconds": 2.039707698
         },
         {
           "path": "/ballot?zip=85701",
           "status": 200,
-          "seconds": 2.4324536799999996
+          "seconds": 2.0211386269999996
         }
       ],
       "connections": [
@@ -27,18 +27,6 @@
           "officials": [
             {
               "id": "statewide:az/9c569bd1e5b6eb90ff6fb207",
-              "photoUrl": "/officials/statewide-az-governor.jpg"
-            },
-            {
-              "id": "statewide:az/9c569bd1e5b6eb90ff6fb207",
-              "photoUrl": "/officials/statewide-az-governor.jpg"
-            },
-            {
-              "id": "plural:az:6e522a2a-e7b7-4713-a40f-c897e4341a87",
-              "photoUrl": "/officials/statewide-az-governor.jpg"
-            },
-            {
-              "id": "statewide:az/governor",
               "photoUrl": "/officials/statewide-az-governor.jpg"
             }
           ],
@@ -53,14 +41,19 @@
             {
               "id": "statewide:az/secretary-of-state",
               "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
-            },
+            }
+          ],
+          "samePhoto": true
+        },
+        {
+          "name": "Kris Mayes",
+          "candidacyId": "ballot-az-pima:attorney-general:mayes-kris",
+          "personId": "plural:a94ae259-7b2d-4756-9c9b-d9fc778e6c1f",
+          "ballotPhoto": "/api/portraits/officials/8f97e01860a30d18e7a2cd840701f3b29b72d8f60b6cd8108b8a936afbb19a59.webp",
+          "officials": [
             {
-              "id": "statewide:az/secretary-of-state",
-              "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
-            },
-            {
-              "id": "plural:az:45ff1caf-0d6b-4915-9e34-5f4694907a07",
-              "photoUrl": "/officials/statewide-az-secretary-of-state.jpg"
+              "id": "plural:az:a94ae259-7b2d-4756-9c9b-d9fc778e6c1f",
+              "photoUrl": "/api/portraits/officials/8f97e01860a30d18e7a2cd840701f3b29b72d8f60b6cd8108b8a936afbb19a59.webp"
             }
           ],
           "samePhoto": true
@@ -97,14 +90,6 @@
           "personId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
           "ballotPhoto": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
           "officials": [
-            {
-              "id": "az-legislature:2312",
-              "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
-            },
-            {
-              "id": "az-legislature:2312",
-              "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
-            },
             {
               "id": "az-legislature:2312",
               "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp"
@@ -160,12 +145,12 @@
         {
           "path": "/api/reader/state?state=AK&zip=99501",
           "status": 200,
-          "seconds": 0.6604823299999998
+          "seconds": 0.7944218650000002
         },
         {
           "path": "/ballot?zip=99501",
           "status": 200,
-          "seconds": 0.8455643280000004
+          "seconds": 1.0978063550000006
         }
       ],
       "connections": [
@@ -191,12 +176,12 @@
         {
           "path": "/api/reader/state?state=CO&zip=80202",
           "status": 200,
-          "seconds": 0.6923376109999999
+          "seconds": 0.6014554360000002
         },
         {
           "path": "/ballot?zip=80202",
           "status": 200,
-          "seconds": 1.1269306960000003
+          "seconds": 1.1781765919999998
         }
       ],
       "connections": [
@@ -222,12 +207,12 @@
         {
           "path": "/api/reader/state?state=NH&zip=03301",
           "status": 200,
-          "seconds": 1.674130647
+          "seconds": 1.5646865319999996
         },
         {
           "path": "/ballot?zip=03301",
           "status": 200,
-          "seconds": 1.984529104000001
+          "seconds": 1.8778802059999997
         }
       ],
       "connections": [
@@ -239,14 +224,6 @@
           "officials": [
             {
               "id": "statewide:nh/governor",
-              "photoUrl": "/officials/statewide-nh-governor.png"
-            },
-            {
-              "id": "statewide:nh/governor",
-              "photoUrl": "/officials/statewide-nh-governor.png"
-            },
-            {
-              "id": "plural:nh:3eabef50-7d86-44cf-87db-8c549d2d21bd",
               "photoUrl": "/officials/statewide-nh-governor.png"
             }
           ],
@@ -274,14 +251,6 @@
             {
               "id": "nh-general-court:11461",
               "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
-            },
-            {
-              "id": "nh-general-court:11461",
-              "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
-            },
-            {
-              "id": "nh-general-court:11461",
-              "photoUrl": "/officials/plural-db4dc6cd-8c68-487f-a1e3-dd80995ba786.jpg"
             }
           ],
           "samePhoto": true
@@ -295,12 +264,12 @@
         {
           "path": "/api/reader/state?state=NY&zip=10007",
           "status": 200,
-          "seconds": 1.0013497329999992
+          "seconds": 0.9740027460000001
         },
         {
           "path": "/ballot?zip=10007",
           "status": 200,
-          "seconds": 1.1705553820000005
+          "seconds": 1.0363557239999992
         }
       ],
       "connections": [
@@ -326,12 +295,12 @@
         {
           "path": "/api/reader/state?state=WI&zip=53703",
           "status": 200,
-          "seconds": 0.6639529880000009
+          "seconds": 0.5714078009999993
         },
         {
           "path": "/ballot?zip=53703",
           "status": 200,
-          "seconds": 1.678661179999999
+          "seconds": 1.759313859
         }
       ],
       "connections": [
@@ -343,14 +312,6 @@
           "officials": [
             {
               "id": "congress:P000607",
-              "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
-            },
-            {
-              "id": "congress:P000607",
-              "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
-            },
-            {
-              "id": "congress-api:wi:P000607",
               "photoUrl": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp"
             }
           ],
@@ -378,12 +339,12 @@
         {
           "path": "/api/reader/state?state=ME&zip=04330",
           "status": 200,
-          "seconds": 0.5946258250000009
+          "seconds": 0.6155230360000005
         },
         {
           "path": "/ballot?zip=04330",
           "status": 200,
-          "seconds": 0.8128684050000011
+          "seconds": 0.8055378320000018
         }
       ],
       "connections": [
@@ -395,14 +356,6 @@
           "officials": [
             {
               "id": "congress:C001035",
-              "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
-            },
-            {
-              "id": "congress:C001035",
-              "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
-            },
-            {
-              "id": "congress-api:me:C001035",
               "photoUrl": "/api/portraits/officials/03978c0c75b2ac27aa0707ecaebce72ebf21c8cd14262ae2e5fcf6bf793630e4.webp"
             }
           ],
@@ -443,12 +396,12 @@
         {
           "path": "/api/reader/state?state=OR&zip=97204",
           "status": 200,
-          "seconds": 0.5313695320000006
+          "seconds": 0.5032191889999995
         },
         {
           "path": "/ballot?zip=97204",
           "status": 200,
-          "seconds": 0.7513288099999991
+          "seconds": 0.7229296130000002
         }
       ],
       "connections": [
@@ -460,14 +413,6 @@
           "officials": [
             {
               "id": "congress:M001176",
-              "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
-            },
-            {
-              "id": "congress:M001176",
-              "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
-            },
-            {
-              "id": "congress-api:or:M001176",
               "photoUrl": "/api/portraits/officials/e29f5815342e78d7da11fe01bf5846026bd12c15163c41d5adbc77cef03f9b01.webp"
             }
           ],
@@ -481,14 +426,6 @@
           "officials": [
             {
               "id": "congress:B001278",
-              "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
-            },
-            {
-              "id": "congress:B001278",
-              "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
-            },
-            {
-              "id": "congress-api:or:B001278",
               "photoUrl": "/api/portraits/officials/ce2f4d05e11b0972a1b2420ab315f0ba4dcfa29f34b50461fd152a7d9cfecd0b.webp"
             }
           ],
@@ -516,12 +453,12 @@
         {
           "path": "/api/reader/state?state=SD&zip=57104",
           "status": 200,
-          "seconds": 0.5847988169999989
+          "seconds": 0.5669705890000005
         },
         {
           "path": "/ballot?zip=57104",
           "status": 200,
-          "seconds": 0.7839663279999987
+          "seconds": 0.7671714179999981
         }
       ],
       "connections": [
@@ -533,14 +470,6 @@
           "officials": [
             {
               "id": "congress:R000605",
-              "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
-            },
-            {
-              "id": "congress:R000605",
-              "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
-            },
-            {
-              "id": "congress-api:sd:R000605",
               "photoUrl": "/api/portraits/officials/53021c142c0dd452fb9af38cd1f3f9c6435add4bbfb5fcae3e2228d544d9532f.webp"
             }
           ],
@@ -555,12 +484,12 @@
         {
           "path": "/api/reader/state?state=VT&zip=05602",
           "status": 200,
-          "seconds": 0.6719810949999991
+          "seconds": 0.8007300269999977
         },
         {
           "path": "/ballot?zip=05602",
           "status": 200,
-          "seconds": 0.8394663349999973
+          "seconds": 0.781096336999999
         }
       ],
       "connections": [
@@ -592,8 +521,5 @@
         }
       ]
     }
-  ],
-  "linkedStateCandidateRecordsExamined": 331,
-  "visibleCardBallotPairs": 25,
-  "mismatches": 0
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-10-24T15:52:51.219Z",
+  "measuredAt": "2026-10-24T21:43:36.929Z",
   "mode": "reader projection on production holdings",
   "counts": [
     {
@@ -30,13 +30,13 @@
       "state": "AK",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 62
+      "withoutPhoto": 79
     },
     {
       "state": "AK",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 9
+      "withoutPhoto": 10
     },
     {
       "state": "AK",
@@ -66,19 +66,19 @@
       "state": "AL",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 24
+      "withoutPhoto": 31
     },
     {
       "state": "AL",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 79
+      "withoutPhoto": 84
     },
     {
       "state": "AL",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 39
+      "withoutPhoto": 43
     },
     {
       "state": "AL",
@@ -114,13 +114,13 @@
       "state": "AR",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 6
+      "withoutPhoto": 7
     },
     {
       "state": "AR",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 48
+      "withoutPhoto": 51
     },
     {
       "state": "AR",
@@ -192,19 +192,19 @@
       "state": "AZ",
       "role": "County",
       "withPhoto": 5,
-      "withoutPhoto": 33
+      "withoutPhoto": 35
     },
     {
       "state": "AZ",
       "role": "City",
       "withPhoto": 6,
-      "withoutPhoto": 145
+      "withoutPhoto": 166
     },
     {
       "state": "AZ",
       "role": "School",
       "withPhoto": 11,
-      "withoutPhoto": 108
+      "withoutPhoto": 127
     },
     {
       "state": "AZ",
@@ -240,13 +240,13 @@
       "state": "CA",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 998
+      "withoutPhoto": 1004
     },
     {
       "state": "CA",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 15
+      "withoutPhoto": 16
     },
     {
       "state": "CA",
@@ -282,7 +282,7 @@
       "state": "CO",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 69
+      "withoutPhoto": 70
     },
     {
       "state": "CO",
@@ -324,7 +324,7 @@
       "state": "CT",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 139
+      "withoutPhoto": 147
     },
     {
       "state": "CT",
@@ -408,7 +408,7 @@
       "state": "DE",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 17
+      "withoutPhoto": 20
     },
     {
       "state": "DE",
@@ -444,13 +444,13 @@
       "state": "FL",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 251
+      "withoutPhoto": 264
     },
     {
       "state": "FL",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 851
+      "withoutPhoto": 857
     },
     {
       "state": "FL",
@@ -486,13 +486,13 @@
       "state": "GA",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 48
+      "withoutPhoto": 52
     },
     {
       "state": "GA",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 103
+      "withoutPhoto": 118
     },
     {
       "state": "GA",
@@ -570,7 +570,7 @@
       "state": "HI",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 10
+      "withoutPhoto": 15
     },
     {
       "state": "HI",
@@ -624,7 +624,7 @@
       "state": "IA",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 36
+      "withoutPhoto": 49
     },
     {
       "state": "IA",
@@ -654,19 +654,19 @@
       "state": "ID",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 6
+      "withoutPhoto": 9
     },
     {
       "state": "ID",
       "role": "City",
       "withPhoto": 0,
-      "withoutPhoto": 26
+      "withoutPhoto": 32
     },
     {
       "state": "ID",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 6
+      "withoutPhoto": 7
     },
     {
       "state": "ID",
@@ -708,7 +708,7 @@
       "state": "IL",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 6
+      "withoutPhoto": 8
     },
     {
       "state": "IL",
@@ -750,7 +750,7 @@
       "state": "IN",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 32
+      "withoutPhoto": 38
     },
     {
       "state": "IN",
@@ -792,7 +792,7 @@
       "state": "KS",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 7
+      "withoutPhoto": 8
     },
     {
       "state": "KS",
@@ -834,7 +834,7 @@
       "state": "KY",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 7
+      "withoutPhoto": 8
     },
     {
       "state": "KY",
@@ -948,7 +948,7 @@
       "state": "MD",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 4
+      "withoutPhoto": 7
     },
     {
       "state": "MD",
@@ -1074,7 +1074,7 @@
       "state": "MN",
       "role": "County",
       "withPhoto": 0,
-      "withoutPhoto": 14
+      "withoutPhoto": 21
     },
     {
       "state": "MN",
@@ -1338,7 +1338,7 @@
       "state": "ND",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 8
+      "withoutPhoto": 10
     },
     {
       "state": "ND",
@@ -1506,7 +1506,7 @@
       "state": "NM",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 1
+      "withoutPhoto": 2
     },
     {
       "state": "NM",
@@ -1674,7 +1674,7 @@
       "state": "OK",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 2
+      "withoutPhoto": 6
     },
     {
       "state": "OK",
@@ -1716,7 +1716,7 @@
       "state": "OR",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 4
+      "withoutPhoto": 5
     },
     {
       "state": "OR",
@@ -1884,7 +1884,7 @@
       "state": "SC",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 0
+      "withoutPhoto": 7
     },
     {
       "state": "SC",
@@ -2346,7 +2346,7 @@
       "state": "WY",
       "role": "School",
       "withPhoto": 0,
-      "withoutPhoto": 3
+      "withoutPhoto": 4
     },
     {
       "state": "WY",
@@ -2359,7 +2359,7 @@
     {
       "state": "AK",
       "scope": "US-AK:state-election-ballots",
-      "version": "cv-bb28178310f6d8cdd8a24ea5bce97f2e"
+      "version": "official-ballot-authorities:1ecf946b2052f50742116a10f10ee0bb"
     },
     {
       "state": "AK",
@@ -2394,7 +2394,7 @@
     {
       "state": "AL",
       "scope": "US-AL:state-election-ballots",
-      "version": "cv-70ab11ac5e541fdcb1976003bdf76fae"
+      "version": "official-ballot-authorities:0df0e110ad75158a95a78883c51d3626"
     },
     {
       "state": "AL",
@@ -2429,7 +2429,7 @@
     {
       "state": "AR",
       "scope": "US-AR:state-election-ballots",
-      "version": "cv-fd0f1a013bd623ae3239c9e9001a6e48"
+      "version": "official-ballot-authorities:c2e0dc9d94df81c72ca97c7e2da55f0b"
     },
     {
       "state": "AR",
@@ -2464,7 +2464,7 @@
     {
       "state": "AS",
       "scope": "US-AS:state-election-ballots",
-      "version": "cv-714771e926d1580d97bf6769ea38fbee"
+      "version": "official-ballot-authorities:d273267784f79f1020578b27b3e2a081"
     },
     {
       "state": "AS",
@@ -2484,7 +2484,7 @@
     {
       "state": "AS",
       "scope": "US-AS:reader-registry-runtime",
-      "version": "cv-f948727d4d0193de6469503d356ed53f"
+      "version": "cv-490c6dd8ad308b5fa1fe45f7628c6155"
     },
     {
       "state": "AS",
@@ -2494,7 +2494,7 @@
     {
       "state": "AZ",
       "scope": "US-AZ:state-election-ballots",
-      "version": "cv-9015276228f16597cc83a46351ffa385"
+      "version": "official-ballot-authorities:2830a67bc91e9b89253f7d3c187080d3"
     },
     {
       "state": "AZ",
@@ -2514,7 +2514,7 @@
     {
       "state": "AZ",
       "scope": "US-AZ:reader-registry-runtime",
-      "version": "cv-06d1655dd1d0a7e67fbbcc65e29f0410"
+      "version": "cv-af4b71af1f595e9c716b433e47e98745"
     },
     {
       "state": "AZ",
@@ -2529,7 +2529,7 @@
     {
       "state": "CA",
       "scope": "US-CA:state-election-ballots",
-      "version": "cv-57924294b899ae5a8a11d17c17bd6cb8"
+      "version": "official-ballot-authorities:c1f97443e4fe3b32257be3379ef46b2c"
     },
     {
       "state": "CA",
@@ -2564,7 +2564,7 @@
     {
       "state": "CO",
       "scope": "US-CO:state-election-ballots",
-      "version": "cv-2659c15c7ae592644b7ac51188951469"
+      "version": "official-ballot-authorities:685f981ea8861d2fbb0254e570718e99"
     },
     {
       "state": "CO",
@@ -2599,7 +2599,7 @@
     {
       "state": "CT",
       "scope": "US-CT:state-election-ballots",
-      "version": "cv-70bd5737cc3c89cf04c3489c6e29882d"
+      "version": "official-ballot-authorities:7c6ba27cd6d13fbbae0fec9f7326cd8c"
     },
     {
       "state": "CT",
@@ -2634,7 +2634,7 @@
     {
       "state": "DC",
       "scope": "US-DC:state-election-ballots",
-      "version": "cv-e79ab3a2fd48a419a28c5ca86c9b1cfa"
+      "version": "official-ballot-authorities:696ef710169c4b6a562c97b6e9d9fecd"
     },
     {
       "state": "DC",
@@ -2654,7 +2654,7 @@
     {
       "state": "DC",
       "scope": "US-DC:reader-registry-runtime",
-      "version": "cv-2d7d937231f4771aeece0a57db3aa36c"
+      "version": "cv-ecaebc1f54b666449dc3d2ec56cd15a6"
     },
     {
       "state": "DC",
@@ -2674,7 +2674,7 @@
     {
       "state": "DE",
       "scope": "US-DE:state-election-ballots",
-      "version": "cv-d2601def7d4ba0aedf1c45a11dd23154"
+      "version": "official-ballot-authorities:b49ad5dcbc6f9ccd0a5504d8c354484f"
     },
     {
       "state": "DE",
@@ -2719,7 +2719,7 @@
     {
       "state": "FL",
       "scope": "US-FL:state-election-ballots",
-      "version": "cv-da0aa22f7449661a18822fb550927aa1"
+      "version": "official-ballot-authorities:7f7aa01779374668a8385bb91e90616b"
     },
     {
       "state": "FL",
@@ -2759,7 +2759,7 @@
     {
       "state": "GA",
       "scope": "US-GA:state-election-ballots",
-      "version": "cv-7c4a672addc30551ec0ba484c4de9967"
+      "version": "official-ballot-authorities:1aff7c2381f7f64541e993c17077e7f7"
     },
     {
       "state": "GA",
@@ -2814,7 +2814,7 @@
     {
       "state": "GU",
       "scope": "US-GU:reader-registry-runtime",
-      "version": "cv-6ce50a6327be081da146ab59b12f669e"
+      "version": "cv-a205ff7dd4f2b55bc3c0ee9708e844ad"
     },
     {
       "state": "GU",
@@ -2824,7 +2824,7 @@
     {
       "state": "HI",
       "scope": "US-HI:state-election-ballots",
-      "version": "cv-b193601d102b999ea2bbc35102b808ad"
+      "version": "official-ballot-authorities:08ed37e4ba9f4374a7477ebe03b70837"
     },
     {
       "state": "HI",
@@ -2844,7 +2844,7 @@
     {
       "state": "HI",
       "scope": "US-HI:reader-registry-runtime",
-      "version": "cv-186d84e1af362eb0d531816d759012c2"
+      "version": "cv-b957a7e1b2347950698045f446c24402"
     },
     {
       "state": "HI",
@@ -2864,7 +2864,7 @@
     {
       "state": "IA",
       "scope": "US-IA:state-election-ballots",
-      "version": "cv-2ad238a208d6d2f3ec9d77b173d8d03c"
+      "version": "official-ballot-authorities:ed90298abc9a6de2413459709a86d444"
     },
     {
       "state": "IA",
@@ -2899,7 +2899,7 @@
     {
       "state": "ID",
       "scope": "US-ID:state-election-ballots",
-      "version": "cv-73d36d3745d3cda8392c9a6a1069d7e3"
+      "version": "official-ballot-authorities:193e3d9f01b4e33fb2651c946f890158"
     },
     {
       "state": "ID",
@@ -2944,7 +2944,7 @@
     {
       "state": "IL",
       "scope": "US-IL:state-election-ballots",
-      "version": "cv-501d8234d24479412af71f6e423fa60d"
+      "version": "official-ballot-authorities:295c716a6d1f2e96e953d35db8c66e14"
     },
     {
       "state": "IL",
@@ -2974,7 +2974,7 @@
     {
       "state": "IL",
       "scope": "US-IL:people:portraits:v1",
-      "version": "cv-d4affcdfa444bf591cf6dc7736c5615e"
+      "version": "cv-b59fc942f4be051ea23d34c8ecaf115e"
     },
     {
       "state": "IL",
@@ -2984,7 +2984,7 @@
     {
       "state": "IN",
       "scope": "US-IN:state-election-ballots",
-      "version": "cv-26f21c5415efb31c566bc05453cb8500"
+      "version": "official-ballot-authorities:2ca68230d6e613b141136781fb639a2d"
     },
     {
       "state": "IN",
@@ -3019,7 +3019,7 @@
     {
       "state": "KS",
       "scope": "US-KS:state-election-ballots",
-      "version": "cv-9fd760f3ac9147474e0c5533ab4a4901"
+      "version": "official-ballot-authorities:3b07f6985667da20eda3c909da8d525c"
     },
     {
       "state": "KS",
@@ -3054,7 +3054,7 @@
     {
       "state": "KY",
       "scope": "US-KY:state-election-ballots",
-      "version": "cv-c3657fff14705730c8fbc619b2a53da6"
+      "version": "official-ballot-authorities:9ac14244c2b1e124508b2b76da0a4694"
     },
     {
       "state": "KY",
@@ -3089,7 +3089,7 @@
     {
       "state": "LA",
       "scope": "US-LA:state-election-ballots",
-      "version": "cv-f6892620cf087bf7122ae8b92ab2b632"
+      "version": "official-ballot-authorities:dd508fbacc35c11509160fe13ee7892f"
     },
     {
       "state": "LA",
@@ -3109,7 +3109,7 @@
     {
       "state": "LA",
       "scope": "US-LA:reader-registry-runtime",
-      "version": "cv-539dbc005cff066623952ac86171fc33"
+      "version": "cv-adb77a435ce5d1ad204b1d92e393991c"
     },
     {
       "state": "LA",
@@ -3124,7 +3124,7 @@
     {
       "state": "MA",
       "scope": "US-MA:state-election-ballots",
-      "version": "cv-009ced3cb0710331b461d1fbab609777"
+      "version": "official-ballot-authorities:93dfa4bd4230e7068e8ce89d754085a7"
     },
     {
       "state": "MA",
@@ -3159,7 +3159,7 @@
     {
       "state": "MD",
       "scope": "US-MD:state-election-ballots",
-      "version": "cv-db2a3ed0e7020bdb35448ee3cf349507"
+      "version": "official-ballot-authorities:1b11f78cca07b02c4c4695f42ca7191e"
     },
     {
       "state": "MD",
@@ -3194,7 +3194,7 @@
     {
       "state": "ME",
       "scope": "US-ME:state-election-ballots",
-      "version": "cv-191bb4afcefa03c0ec224ce9d29d23a0"
+      "version": "official-ballot-authorities:b26ac6fcec7ad2aba6281743596f7f5d"
     },
     {
       "state": "ME",
@@ -3229,7 +3229,7 @@
     {
       "state": "MI",
       "scope": "US-MI:state-election-ballots",
-      "version": "cv-9544d160b4412b2f66b0cb6313714781"
+      "version": "official-ballot-authorities:65472941ed5003076f175aa55766ee77"
     },
     {
       "state": "MI",
@@ -3264,7 +3264,7 @@
     {
       "state": "MN",
       "scope": "US-MN:state-election-ballots",
-      "version": "cv-6f871e780775bfd394b7ec4283767e29"
+      "version": "official-ballot-authorities:a571ab05153fbbf958af50613b8d751c"
     },
     {
       "state": "MN",
@@ -3299,7 +3299,7 @@
     {
       "state": "MO",
       "scope": "US-MO:state-election-ballots",
-      "version": "cv-bd3547f73e3d96adafe9ad4eaf038987"
+      "version": "official-ballot-authorities:1920b9e561e19b0c77dd7602fcad48c3"
     },
     {
       "state": "MO",
@@ -3334,7 +3334,7 @@
     {
       "state": "MP",
       "scope": "US-MP:state-election-ballots",
-      "version": "cv-1be6ba33931b1d75fc47f9c5428fa214"
+      "version": "official-ballot-authorities:85557fcd525b3e0dad154fc6cfdc2791"
     },
     {
       "state": "MP",
@@ -3354,7 +3354,7 @@
     {
       "state": "MP",
       "scope": "US-MP:reader-registry-runtime",
-      "version": "cv-a2f4deb8a1b78acd32a7a318c3b8900d"
+      "version": "cv-858024b7ec6cb6362d284be59e65bb4f"
     },
     {
       "state": "MP",
@@ -3364,7 +3364,7 @@
     {
       "state": "MS",
       "scope": "US-MS:state-election-ballots",
-      "version": "cv-8af61719bcaa03d4f969720558aef16d"
+      "version": "official-ballot-authorities:e5dd85817d2d3ec6e4ed91079436ce4a"
     },
     {
       "state": "MS",
@@ -3384,7 +3384,7 @@
     {
       "state": "MS",
       "scope": "US-MS:reader-registry-runtime",
-      "version": "cv-67724fcd97165563c1058513ea43ac02"
+      "version": "cv-6109ebb62cff8b4e909ea9dc7fa8cedf"
     },
     {
       "state": "MS",
@@ -3399,7 +3399,7 @@
     {
       "state": "MT",
       "scope": "US-MT:state-election-ballots",
-      "version": "cv-4286ff604f0a2e850ab808b8b1febed3"
+      "version": "official-ballot-authorities:605e651e91844200d3c98dc805351903"
     },
     {
       "state": "MT",
@@ -3434,7 +3434,7 @@
     {
       "state": "NC",
       "scope": "US-NC:state-election-ballots",
-      "version": "cv-5167eb7f1790b247f630afd325e7d8b8"
+      "version": "official-ballot-authorities:9362cb360ddf39ce1e38dadba4fba4a3"
     },
     {
       "state": "NC",
@@ -3469,7 +3469,7 @@
     {
       "state": "ND",
       "scope": "US-ND:state-election-ballots",
-      "version": "cv-654cb38df5884c390fc1a9dabce2cbf3"
+      "version": "official-ballot-authorities:0024ae2ffe12c4a28e5456003833e122"
     },
     {
       "state": "ND",
@@ -3504,7 +3504,7 @@
     {
       "state": "NE",
       "scope": "US-NE:state-election-ballots",
-      "version": "cv-2571727a165046fae20c06d2ef3daa76"
+      "version": "official-ballot-authorities:a82c9593a22a4e41642360ccced1297d"
     },
     {
       "state": "NE",
@@ -3539,7 +3539,7 @@
     {
       "state": "NH",
       "scope": "US-NH:state-election-ballots",
-      "version": "cv-25463a96bbc2fef2238150d45c051f4a"
+      "version": "official-ballot-authorities:949b9b4901444147a69e1d1be14f5058"
     },
     {
       "state": "NH",
@@ -3574,7 +3574,7 @@
     {
       "state": "NJ",
       "scope": "US-NJ:state-election-ballots",
-      "version": "cv-02903e28b288f78e9c6ac5dc612c7228"
+      "version": "official-ballot-authorities:c3e29650b6bc662ce6b61d8754516255"
     },
     {
       "state": "NJ",
@@ -3609,7 +3609,7 @@
     {
       "state": "NM",
       "scope": "US-NM:state-election-ballots",
-      "version": "cv-fa82e52fd7771e6415bbbb5da7ad874c"
+      "version": "official-ballot-authorities:a17be39d92fcf9793e47c351ce7a6f29"
     },
     {
       "state": "NM",
@@ -3644,7 +3644,7 @@
     {
       "state": "NV",
       "scope": "US-NV:state-election-ballots",
-      "version": "cv-3d279d71ca9c8d05c823f0928a1ad09a"
+      "version": "official-ballot-authorities:ad341a54c7be88552300fd7ab195b308"
     },
     {
       "state": "NV",
@@ -3679,7 +3679,7 @@
     {
       "state": "NY",
       "scope": "US-NY:state-election-ballots",
-      "version": "cv-15d29f8e0d152c1adefdd6489b4e01d2"
+      "version": "official-ballot-authorities:7e7a512aade0d522632698237aed63b7"
     },
     {
       "state": "NY",
@@ -3714,7 +3714,7 @@
     {
       "state": "OH",
       "scope": "US-OH:state-election-ballots",
-      "version": "cv-75df3e2123c0172073a8fbd1180f3b85"
+      "version": "official-ballot-authorities:4a3baa26c778019b90e963f1f36d2f4c"
     },
     {
       "state": "OH",
@@ -3749,7 +3749,7 @@
     {
       "state": "OK",
       "scope": "US-OK:state-election-ballots",
-      "version": "cv-b6646e60fd2290cc1693c9a849c70b05"
+      "version": "official-ballot-authorities:c981e80912b7ac0a1b07e5e4fd22c19b"
     },
     {
       "state": "OK",
@@ -3784,7 +3784,7 @@
     {
       "state": "OR",
       "scope": "US-OR:state-election-ballots",
-      "version": "cv-45e45ceb85f71d3c368972d03d679d42"
+      "version": "official-ballot-authorities:7778ea2365bd9034bc64244b1e94ac62"
     },
     {
       "state": "OR",
@@ -3819,7 +3819,7 @@
     {
       "state": "PA",
       "scope": "US-PA:state-election-ballots",
-      "version": "cv-e37780feb57229d732a8364e06cecb18"
+      "version": "official-ballot-authorities:6acb0931c848de41291dae8acbcc969b"
     },
     {
       "state": "PA",
@@ -3874,7 +3874,7 @@
     {
       "state": "PR",
       "scope": "US-PR:reader-registry-runtime",
-      "version": "cv-54876411506b88e650654d176284ecfc"
+      "version": "cv-570c89e588a336ef0e3601022276aaa3"
     },
     {
       "state": "PR",
@@ -3889,7 +3889,7 @@
     {
       "state": "RI",
       "scope": "US-RI:state-election-ballots",
-      "version": "cv-ddb15956a6bfe6bc96514f57e10d8745"
+      "version": "official-ballot-authorities:fc3fb0462e06999a3ab343f2181d7a40"
     },
     {
       "state": "RI",
@@ -3924,7 +3924,7 @@
     {
       "state": "SC",
       "scope": "US-SC:state-election-ballots",
-      "version": "cv-b83dd93eb985b4312c08e7fc7b81e738"
+      "version": "official-ballot-authorities:9a98aee823940281f7db3432f425d696"
     },
     {
       "state": "SC",
@@ -3959,7 +3959,7 @@
     {
       "state": "SD",
       "scope": "US-SD:state-election-ballots",
-      "version": "cv-34f1a3788af3f7c3b388ff3ad2284f51"
+      "version": "official-ballot-authorities:7ad3f26be180b2d0ef935bcf6c478e7a"
     },
     {
       "state": "SD",
@@ -3994,7 +3994,7 @@
     {
       "state": "TN",
       "scope": "US-TN:state-election-ballots",
-      "version": "cv-edc7de3439155757d88c602db3e019cc"
+      "version": "official-ballot-authorities:8d6d6d1d66e5a2d8a5aef0a03c02582c"
     },
     {
       "state": "TN",
@@ -4029,7 +4029,7 @@
     {
       "state": "TX",
       "scope": "US-TX:state-election-ballots",
-      "version": "cv-4a69f7f93d2ce76a575136ce44ead99a"
+      "version": "official-ballot-authorities:3b2c61d6ad5c76a8db39fe54dc34f6cb"
     },
     {
       "state": "TX",
@@ -4064,7 +4064,7 @@
     {
       "state": "UT",
       "scope": "US-UT:state-election-ballots",
-      "version": "cv-b3a0ea4c24bad5837c50932f3832b4b2"
+      "version": "official-ballot-authorities:ea47a26c3afedbe0df6b14094f9be95a"
     },
     {
       "state": "UT",
@@ -4099,7 +4099,7 @@
     {
       "state": "VA",
       "scope": "US-VA:state-election-ballots",
-      "version": "cv-7b9cce7ddeb801804b4b566ee27e6997"
+      "version": "official-ballot-authorities:d173102da65f6c4878c74a8be1db11d9"
     },
     {
       "state": "VA",
@@ -4119,7 +4119,7 @@
     {
       "state": "VA",
       "scope": "US-VA:reader-registry-runtime",
-      "version": "cv-d38c9d1dcd19cb71b14f027f4864f459"
+      "version": "cv-324c8e3177cdc2332bdc9530bf4ca206"
     },
     {
       "state": "VA",
@@ -4134,7 +4134,7 @@
     {
       "state": "VI",
       "scope": "US-VI:state-election-ballots",
-      "version": "cv-b7fdd2ae75682e6a613f85a8bcfd4505"
+      "version": "official-ballot-authorities:546527e3f558b20c9bdcad8a02af60b1"
     },
     {
       "state": "VI",
@@ -4154,7 +4154,7 @@
     {
       "state": "VI",
       "scope": "US-VI:reader-registry-runtime",
-      "version": "cv-1835935d08dec1beeee909a30070864e"
+      "version": "cv-23f25fb6a9eb0b205cb57f2127d6825d"
     },
     {
       "state": "VI",
@@ -4164,7 +4164,7 @@
     {
       "state": "VT",
       "scope": "US-VT:state-election-ballots",
-      "version": "cv-ee0344c65ec16019a5cbb9a7406829b9"
+      "version": "official-ballot-authorities:e6a565fc2726bc626de6bc17c1234e92"
     },
     {
       "state": "VT",
@@ -4199,7 +4199,7 @@
     {
       "state": "WA",
       "scope": "US-WA:state-election-ballots",
-      "version": "cv-1a5216b4e9396130228214be9634d7ab"
+      "version": "official-ballot-authorities:169f296910c3ea3db108cd1e07b456d3"
     },
     {
       "state": "WA",
@@ -4219,7 +4219,7 @@
     {
       "state": "WA",
       "scope": "US-WA:reader-registry-runtime",
-      "version": "cv-bacfbfde6e3c99caeb04868b3ee769b0"
+      "version": "cv-2f5855495c99855d9975ee9e024ec073"
     },
     {
       "state": "WA",
@@ -4234,7 +4234,7 @@
     {
       "state": "WI",
       "scope": "US-WI:state-election-ballots",
-      "version": "cv-467d935ab8c6e139771f88fb4263d758"
+      "version": "official-ballot-authorities:c49c81a3f73870d0e5f4cceb24d13622"
     },
     {
       "state": "WI",
@@ -4269,7 +4269,7 @@
     {
       "state": "WV",
       "scope": "US-WV:state-election-ballots",
-      "version": "cv-107155a40436225542c78ea1ab454a11"
+      "version": "official-ballot-authorities:a9c478dee15fb96885e3352ab251333c"
     },
     {
       "state": "WV",
@@ -4304,7 +4304,7 @@
     {
       "state": "WY",
       "scope": "US-WY:state-election-ballots",
-      "version": "cv-932597153aad967377ae987f4b2f5d8a"
+      "version": "official-ballot-authorities:c7d9c67e9bc4f151c65d9ea180fe2db8"
     },
     {
       "state": "WY",

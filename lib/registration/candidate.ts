@@ -97,7 +97,7 @@ const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const STATUS_LAYERS = new Set<ReferenceLayer>(["county", "cousub", "place"]);
 
 /** Where a division's boundary was read: a 2023 cartographic boundary file, the AIANNH code list, or a district's own layer. */
-function boundarySource(layer: Exclude<ReferenceLayer, "state">, geoid: string, ref: LoadedReference["reference"]): { url: string; org: string; dataset: RegistrationDivision["sourceDataset"] } {
+export function boundarySource(layer: Exclude<ReferenceLayer, "state">, geoid: string, ref: LoadedReference["reference"]): { url: string; org: string; dataset: RegistrationDivision["sourceDataset"] } {
   if (layer === "aiannh") return { url: "https://www2.census.gov/geo/docs/reference/codes2020/national_aiannh2020.txt", org: "U.S. Census Bureau", dataset: "CENSUS_AIANNH2020" };
   if (layer === "district") {
     const source = ref.boundarySources?.[geoid.split("#")[0]!];

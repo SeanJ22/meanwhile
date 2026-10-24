@@ -20,8 +20,8 @@ CREATE TABLE "place_boundary" (
   "source_urls" jsonb NOT NULL DEFAULT '[]',
   "checked_at" timestamptz NOT NULL,
   PRIMARY KEY (place_id, boundary_year),
-  CHECK ((geometry IS NULL) = (bounds IS NULL)),
-  CHECK (NOT county_attachment OR (host_county_id IS NOT NULL AND geometry IS NULL))
+  CONSTRAINT "place_boundary_shape_bounds" CHECK ((geometry IS NULL) = (bounds IS NULL)),
+  CONSTRAINT "place_boundary_county_attachment" CHECK (NOT county_attachment OR (host_county_id IS NOT NULL AND geometry IS NULL))
 );
 --> statement-breakpoint
 CREATE INDEX "place_boundary_point_idx" ON place_boundary USING gist (bounds);

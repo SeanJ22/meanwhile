@@ -93,7 +93,9 @@ function jurisdictionAllowed(candidate: RoutineCandidate, allowed: readonly stri
 }
 
 /** For these classes the version names a publication, not an order: which is newer is decided by acquisition and source-through order. */
-const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE", "FEDERAL_DIRECTORY"]);
+// Geography's edition is a set of coexisting plans; adding cd:120 sorts before
+// county:2020 and is not a chronological regression.
+const UNORDERED_VERSION_CLASSES: ReadonlySet<RoutineCandidate["recordClass"]> = new Set(["DOTGOV_REFERENCE", "FEDERAL_DIRECTORY", "CENSUS_GEOGRAPHY"]);
 
 function hasOpaqueWorkerEdition(candidate: RoutineCandidate): boolean {
   return (candidate.sourceId === "registry-reviewed-bindings" && candidate.recordClass === "REGISTRY_RUNTIME_BINDING" &&

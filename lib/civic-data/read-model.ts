@@ -1257,8 +1257,8 @@ export function promotionProofIssue<T>(
     projectionReceipt.scope !== scope
   ) return "the GOOD receipt does not identify the pointed candidate";
   if (canonicalCivicDataJson(projectionReceipt) !== canonicalCivicDataJson(candidateReceipt)) return "the candidate and pointer receipts differ";
-  if (!indexedPrior && (large ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
-    durableCivicDataHash(projection.payload) !== readModelHash)) return "the pointer payload differs from the validated candidate read model";
+  if (!indexedPrior && projection.payload !== candidate.readModel &&
+    (large ? durableStateHash(projection.payload) : durableCivicDataHash(projection.payload)) !== readModelHash) return "the pointer payload differs from the validated candidate read model";
   const retrievedAt = Date.parse(candidate.retrieval?.retrievedAt ?? "");
   const validatedAt = Date.parse(projectionReceipt.validatedAt);
   const promotedAt = Date.parse(projection.promotedAt);

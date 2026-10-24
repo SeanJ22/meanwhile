@@ -50,13 +50,31 @@ export function parseGrfHeader(headerLine: string): string[] {
   return headerLine.replace(/^﻿/, "").trim().split("|");
 }
 
+/** Decode a block archive a chunk at a time; the largest state must never
+ * coexist in memory as both a complete byte buffer and a complete string. */
+function* grfLines(bytes: Uint8Array): Generator<string> {
+  const decoder = new TextDecoder();
+  let remainder = "";
+  for (let offset = 0; offset < bytes.byteLength; offset += 64 * 1024) {
+    const chunk = remainder + decoder.decode(bytes.subarray(offset, offset + 64 * 1024), { stream: true });
+    let start = 0, end: number;
+    while ((end = chunk.indexOf("\n", start)) >= 0) {
+      yield chunk.slice(start, end).replace(/\r$/, "");
+      start = end + 1;
+    }
+    remainder = chunk.slice(start);
+  }
+  remainder += decoder.decode();
+  if (remainder) yield remainder.replace(/\r$/, "");
+}
+
 export function resolveGrfColumns(header: readonly string[], column: GrfTarget["column"]): GrfColumns {
   const at = (name: string): number => {
     const i = header.indexOf(name);
     if (i < 0) throw new Error(`grf header is missing column "${name}"`);
     return i;
   };
-  return { state: at("TABBLKST"), zcta: at("ZCTA5CE"), land: at("AREALAND"), district: at(column) };
+  return { state: header.includes("CURSTATE") ? at("CURSTATE") : at("TABBLKST"), zcta: at("ZCTA5CE"), land: at("AREALAND"), district: at(column) };
 }
 
 function toNonNegative(raw: string | undefined): number {
@@ -172,16 +190,23 @@ export function legislativeTarget(column: "SLDUST" | "SLDLST", year: number): Gr
 export function grfTargetsFromNames(text: string): readonly GrfTarget[] {
   const lines = text.trim().split(/\r?\n/);
   const header = parseGrfHeader(lines.shift() ?? "");
-  const valueOf = (name: string): number => {
+  const vintage = header.indexOf("VINTAGE");
+  // GRFN also lists historical (70) districts. The CUR columns in GRFC
+  // correspond to GRFN's current (90) rows, never its decennial rows.
+  const current = lines.map(line => line.split("|")).filter(row => vintage < 0 || row[vintage] === "90");
+  const stateColumn = header.indexOf("STATEFP");
+  const territory = stateColumn >= 0 && current.length > 0 && current.every(row => FIPS_TO_STATE[row[stateColumn]]?.prefix === "territory");
+  const valueOf = (name: string): number | null => {
     const index = header.indexOf(name);
     if (index < 0) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grfn header is missing ${name}`);
-    const values = new Set(lines.map(line => line.split("|")[index]?.trim()).filter(value => value && /^\d+$/.test(value) && Number(value) > 0));
+    const values = new Set(current.map(row => row[index]?.trim()).filter(value => value && /^\d+$/.test(value) && Number(value) > 0));
+    if (name === "LSY" && values.size === 0 && territory) return null;
     if (values.size !== 1) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grfn does not establish one ${name}: ${[...values].join(", ")}`);
     return Number([...values][0]);
   };
   const session = valueOf("CDSESSN"), legislativeYear = valueOf("LSY");
-  if (session < 100 || legislativeYear < 2020) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "grfn plan metadata is out of range");
-  return [congressionalTarget(session), legislativeTarget("SLDUST", legislativeYear), legislativeTarget("SLDLST", legislativeYear)];
+  if (session === null || session < 100 || legislativeYear !== null && legislativeYear < 2020) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "grfn plan metadata is out of range");
+  return [congressionalTarget(session), ...(legislativeYear === null ? [] : [legislativeTarget("SLDUST", legislativeYear), legislativeTarget("SLDLST", legislativeYear)])];
 }
 
 export interface GrfRelease {
@@ -263,21 +288,16 @@ export async function acquireGrfScopes(targets: readonly GrfTarget[], options: A
       blockValidator = provenance.sourceValidators!.find(row => row.url === blockUrl)!;
     } else {
       const parse = (bytes: Uint8Array): readonly BuiltScope[] => {
-        const text = new TextDecoder().decode(bytes);
-        let newline = text.indexOf("\n");
-        const header = parseGrfHeader(text.slice(0, newline).replace(/\r$/, ""));
+        const lines = grfLines(bytes);
+        const header = parseGrfHeader(lines.next().value ?? "");
         const accs = plans.map(target => new GrfAccumulator(target, resolveGrfColumns(header, target.column)));
-        let offset = newline + 1;
-        while (offset < text.length) {
-          newline = text.indexOf("\n", offset);
-          const line = text.slice(offset, newline < 0 ? undefined : newline).replace(/\r$/, "");
+        const currentState = header.indexOf(header.includes("CURSTATE") ? "CURSTATE" : "TABBLKST");
+        for (const line of lines) {
           if (line !== "") {
             const fields = line.split("|");
-            if (fields.length !== header.length || fields[header.indexOf("TABBLKST")] !== state) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grf malformed block row for ${state}`);
+            if (fields.length !== header.length || fields[currentState] !== state) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grf malformed block row for ${state}`);
             for (const acc of accs) acc.add(fields);
           }
-          if (newline < 0) break;
-          offset = newline + 1;
         }
         if (accs.some(acc => acc.stats().blocks === 0)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `grf returned no blocks for ${state}`);
         return accs.map((acc, index) => acc.finish({ key: plans[index].version, type: plans[index].type, plan: plans[index].plan,

@@ -518,6 +518,7 @@ export function routineTaskSelection(
 }
 
 export interface RoutineTaskClock {
+  readonly publishedScopeVersions?: readonly string[];
   readonly failureStreak?: number;
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
@@ -672,6 +673,10 @@ export function routineTaskNextDueMs(
     // The store scopes attempts to this parser. A prior parser's GOOD remains live,
     // but cannot postpone a held-byte reparse for the source's full refresh cadence.
     const attempted = Date.parse(clock.lastAttemptedAt ?? "");
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+  }
+  if (task.contract?.cadence.requiredScopeVersions?.some(version => !clock?.publishedScopeVersions?.includes(version))) {
+    const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
     return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
   }
   if (!clock?.lastAttemptedAt) return nowMs;

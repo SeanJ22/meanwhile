@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { launchGuarded } from "./browser.mts";
+import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 const browser = await launchGuarded({ label: "rb-a6-reader", blockWrites: true, executablePath: process.env.RB_A6_CHROME,
   proxy: process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined, args: ["--no-sandbox"] });
@@ -12,7 +13,7 @@ try {
   for (const zip of ["85003", "19147", "98101"]) {
     const page = await context.newPage();
     const started = performance.now();
-    const response = await page.goto(`https://meanwhileusa.com/ballot?zip=${zip}`, { waitUntil: "domcontentloaded" });
+    const response = await page.goto(`${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`, { waitUntil: "domcontentloaded" });
     assert.equal(response?.status(), 200);
     await page.getByText(/election/i).first().waitFor({ state: "visible" });
     writeFileSync(`.scratch/rb-a6-reader/${zip}-first.txt`, await page.locator("body").innerText());

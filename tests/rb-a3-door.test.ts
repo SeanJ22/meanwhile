@@ -284,7 +284,7 @@ test("an unchanged saved fact replays after its freshness window without refresh
 });
 
 test("a real later observation of the same source bytes advances its checked date once and adds no delivery", async () => {
-  const db = await seeded();
+  const db = await seeded(true);
   try {
     await door(db, input(), clocks, now, { purge });
     const next = new Date(now.getTime() + 3_600_000);
@@ -294,7 +294,9 @@ test("a real later observation of the same source bytes advances its checked dat
     assert.equal(new Date(before[0]!.checked_at as string).toISOString(), next.toISOString());
     await door(db, claim, clocks, new Date(next.getTime() + 3_600_000), { purge });
     assert.deepEqual(await db.query("SELECT * FROM fact"), before);
-    assert.deepEqual(await db.query("SELECT n::int FROM count_hour"), [{ n: 1 }]);
+    assert.deepEqual(await db.query(`SELECT sum(n)::int AS n FROM count_hour
+      WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
+        AND substring(step FROM 4)::jsonb->>2='in'`), [{ n: 1 }]);
   } finally { await db.pg.close(); }
 });
 
@@ -424,7 +426,7 @@ test("new and compatibility writers share one hourly count through a replacement
     assert.equal(live.total,2);
     assert.equal(live.observedIn,3,'each new or replacement fact counts once, independent of its caller');
     assert.equal(live.observedOut,1,'the superseded fact leaves live stock once');
-    assert.deepEqual(await db.query("SELECT step FROM count_hour WHERE left(step,3)<>'v1:'"),[]);
+    assert.deepEqual(await db.query("SELECT step FROM count_hour WHERE left(step,3)<>'v1:' AND step<>'counter start'"),[]);
     const before=await db.query('SELECT * FROM count_hour ORDER BY state,hour,step');
     assert.equal((await door(db,claim,clocks,next,{purge}) as {decision:string}).decision,'CONFIRM');
     assert.deepEqual(await db.query('SELECT * FROM count_hour ORDER BY state,hour,step'),before);

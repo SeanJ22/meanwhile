@@ -54,7 +54,7 @@ async function controlDatabase(withLeasedWork = false) {
 test('the merged work list counts completed work as done and delayed retries as scheduled',async()=>{
   const db=await controlDatabase(true);
   try {
-    const at=new Date(),list=workList(async(text,params=[])=>query(db).query(text,params),{owner:'counter-test',now:()=>at});
+    const at=new Date(Date.now()+5*60_000),list=workList(async(text,params=[])=>query(db).query(text,params),{owner:'counter-test',now:()=>at});
     const input={kind:'check' as const,placeId:'ocd-division/country:us/state:az/county:pima',subjectId:'body:pima',url:'https://www.pima.gov/contact',field:'phone',value:'520-724-4330',quote:'Phone: 520-724-4330',source:{report:'one'}};
     const first=await list.add(input);
     const [leased]=await list.claim('check',1);

@@ -5,7 +5,7 @@ import { bodyNamed, canonicalSubject, ensureEntity, governmentAt, placeBody, spl
 import { readCheckEntity } from "../facts/entity-read.ts";
 import type { FactDb, Query, PublishInput, Clocks } from "../facts/publish.ts";
 import { isSourceApiUrl } from "../control-plane/scheduler/scout-api.ts";
-import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
+import { isOfficialSource, pageLinksSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import {fileEntityPlaces, type EntityPlace} from "../facts/entity-places.ts";
@@ -35,8 +35,10 @@ interface DoorOptions {
 
 const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
 
-const officialSource = (url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null) =>
-  isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage);
+function officialSource(url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null): boolean {
+  return isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage)
+    || !!linkingPage && officialSource(linkingPage.url, hosts, linkingPage.linkingPage) && pageLinksSource(url, linkingPage);
+}
 
 /** Newer and more official wins; a value Sean typed changes only through him. */
 export function decide(current: Side | null, incoming: Side, field?: string): Decision {
@@ -44,9 +46,20 @@ export function decide(current: Side | null, incoming: Side, field?: string): De
   if (canonicalJson(current.value) === canonicalJson(incoming.value)) return "CONFIRM";
   if (incoming.provenance === "OWNER") return "PUBLISH";
   if (current.provenance === "OWNER") return "FLAG_OWNER";
-  if (field === "agenda_url" && ["OFFICIAL","FILING"].includes(current.provenance) && agendaPage(current.value,current.sourceUrl) && !agendaPage(incoming.value)) return "KEEP_CURRENT";
+  if (field === "agenda_url" && (current.provenance === "OFFICIAL" || current.provenance === "FILING")
+    && agendaPage(current.value, current.sourceUrl) && !agendaPage(incoming.value)) return "KEEP_CURRENT";
   if (rank[current.provenance] !== rank[incoming.provenance]) return rank[incoming.provenance] < rank[current.provenance] ? "PUBLISH" : "KEEP_CURRENT";
   return incoming.fetchedAt > current.fetchedAt ? "PUBLISH" : "KEEP_CURRENT";
+}
+
+/** A checked sidebar link cannot replace the government's held agenda page. */
+function agendaPage(value: unknown, sourceUrl?: string): boolean {
+  if (typeof value !== "string" || !URL.canParse(value)) return false;
+  const url = new URL(value);
+  if (/youtube|facebook|twitter|instagram|vimeo/i.test(url.hostname + url.pathname)) return false;
+  const purpose = /agenda|calendar|meeting|council[-_/]?archives|boarddocs|legistar/i.test(`${url.pathname} ${url.search} ${url.hostname}`);
+  if (!purpose && !(sourceUrl && /council|board|commission/i.test(url.pathname))) return false;
+  return sourceUrl === undefined || URL.canParse(sourceUrl) && url.hostname.replace(/^www\./, "") === new URL(sourceUrl).hostname.replace(/^www\./, "");
 }
 
 /** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
@@ -152,8 +165,8 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const currentProvenance = row?.provenance_kind === "OWNER" || row?.provenance_kind === "FILING" ? row.provenance_kind
       : row?.source_url && (isOfficialUrl(String(row.source_url),entity.hosts) || isSourceApiUrl(String(row.source_url))) ? "OFFICIAL" : row?.provenance_kind;
-    const decision = decide(row ? { value: row.value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string),sourceUrl:row.source_url as string } : null,
-      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt },c.field);
+    const decision = decide(row ? { value: row.value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string), sourceUrl: row.source_url as string } : null,
+      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, fast ? undefined : c.field);
     if (decision === "CONFIRM") {
       if (row!.provenance_kind !== "OWNER" && rank[c.provenance] <= rank[row!.provenance_kind as Provenance]
         && (rank[c.provenance] < rank[row!.provenance_kind as Provenance] || c.copy.fetchedAt > new Date(row!.fetched_at as string))) {

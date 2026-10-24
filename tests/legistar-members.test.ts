@@ -300,6 +300,8 @@ test("each Legistar body is published with its name, quoted from the saved bodie
   }
   assert.deepEqual(await db.query("SELECT 1 FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.kind = 'body' AND f.status = 'live' GROUP BY e.id HAVING bool_or(f.field = 'name') = false"), [],
     "no body holds verified facts without a verified name");
+  assert.deepEqual(await db.query("SELECT DISTINCT step FROM count_hour"), [{ step: "door_official" }], "structured API fields take the official lane");
+  assert.deepEqual(await db.query("SELECT DISTINCT quote_start FROM fact WHERE status='live'"), [{ quote_start: null }], "API fields need no quote search");
 });
 
 test("pages saved after the pass began publish on the first pass", async t => {

@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readSourceApi } from '../lib/control-plane/scheduler/scout-api.ts';
+import { readSourceApi, isSourceApiUrl } from '../lib/control-plane/scheduler/scout-api.ts';
+
+test('the held CivicClerk API is recognized only on its HTTPS API endpoint',()=>{
+  assert.equal(isSourceApiUrl('https://example.api.civicclerk.com/v1/Events(1)'),true);
+  for(const url of ['https://example.portal.civicclerk.com/event/1','https://example.api.civicclerk.com.attacker.example/v1/Events','http://example.api.civicclerk.com/v1/Events','https://example.api.civicclerk.com/other'])assert.equal(isSourceApiUrl(url),false);
+});
 
 test('government tools return data and source URLs without exposing provider credentials', async () => {
   const env = Object.fromEntries(['CONGRESS','CENSUS','FEC','PLURAL','LEGISCAN','LDA','DATA_GOV','GOOGLE_CIVIC','SAM_GOV'].map(name=>[name+'_API_KEY','secret-'+name]));

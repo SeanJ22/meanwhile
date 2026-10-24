@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       const [keeper,pipeline]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
         data:buildScoreboard({lineKeeper:keeper,observedAt,vital:keeperVital(keeper),places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
-          learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:keeper?.hours[0]?.gates??null,readiness:readinessCounts(keeper?.hours[0]?.readiness??{})}),
+          learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:null,readiness:readinessCounts({})}),
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
@@ -130,11 +130,11 @@ export async function GET(request: NextRequest) {
       speedLimits: { share: readSetting(config, SLOW_SURFACE_SHARE_SETTING, SLOW_SURFACE_SHARE_DEFAULT), deadLinks: readSetting(config, DEAD_LINKS_SURFACE_SETTING, DEAD_LINKS_SURFACE_DEFAULT) },
       provenFixes,
       reportAccuracy: claims,
-      gates: keeper?.hours[0]?.gates ?? (opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null })),
+      gates: (opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null })),
       readiness: readinessCounts({...recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,
         failureDebts: null, failureDebtsWithReason: null, absences: null, absencesWithRecheck: null, manualWriteBacks: null,
-      }),...(keeper?.hours[0]?.readiness ?? {})}),
+      })}),
     };
     return {
       contract: "admin-v6/scoreboard@1",

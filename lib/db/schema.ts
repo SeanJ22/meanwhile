@@ -928,3 +928,18 @@ export const readerEventTotals = pgTable("reader_event_totals", {
   ...readerEventDimensions(), events: bigint("events", { mode: "number" }).notNull(), users: bigint("users", { mode: "number" }).notNull(),
 }, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType] }),
   index("reader_event_totals_period_idx").on(t.period, t.periodStart)]);
+
+/** Writer totals and hourly movement; no source payloads or reader identities. */
+export const countHour = pgTable("count_hour", {
+  hour: timestamp("hour", {withTimezone:true}).notNull(),
+  state: text("state").notNull(), family: text("family").notNull(), stage: text("stage").notNull(),
+  delta: bigint("delta",{mode:"number"}).notNull().default(0),
+  incoming: bigint("incoming",{mode:"number"}).notNull().default(0),
+  outgoing: bigint("outgoing",{mode:"number"}).notNull().default(0),
+  changed: bigint("changed",{mode:"number"}).notNull().default(0),
+}, table=>[primaryKey({columns:[table.hour,table.state,table.family,table.stage]})]);
+export const lineKeeperRun = pgTable("line_keeper_run", {
+  hour: timestamp("hour",{withTimezone:true}).primaryKey(),
+  checkedAt: timestamp("checked_at",{withTimezone:true}).notNull(),
+  problems: integer("problems").notNull(), bytesRead: bigint("bytes_read",{mode:"number"}).notNull(),
+}, table=>[check("line_keeper_run_check",sql`${table.problems} >= 0 AND ${table.bytesRead} >= 0`)]);

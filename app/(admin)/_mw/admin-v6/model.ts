@@ -604,6 +604,14 @@ export interface LearningView {
   readonly notMeasured: readonly NotMeasured[];
 }
 
+export interface HourlyCountTableData {
+  readonly at: string;
+  readonly status: string;
+  readonly states: readonly string[];
+  readonly hours: readonly { readonly from:string; readonly through:string;
+    readonly counts:readonly import("../../../../lib/counts/hour.ts").HourCount[]|null;
+    readonly waiting:readonly import("../../../../lib/counts/hour.ts").OldestWaiting[]|null }[];
+}
 export interface ScoreboardRow {
   readonly id: string;
   readonly name: string;
@@ -617,6 +625,7 @@ export interface ScoreboardRow {
 
   readonly trend?: readonly { readonly label: string; readonly value: number | null }[];
   readonly images?: readonly { readonly label: string; readonly src: string }[];
+  readonly hourlyCounts?: HourlyCountTableData;
 }
 
 export interface ScoreboardGateRow {

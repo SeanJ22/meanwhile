@@ -1,3 +1,4 @@
+import { countReaderInvalidation } from "../counts/cache.ts";
 import { createHash } from "node:crypto";
 import { REGISTRY_STATES, registryJurisdictions } from "../civic-data/state-scopes.ts";
 import {FIPS_TO_STATE} from "../ocd/fips.ts";
@@ -120,7 +121,9 @@ export function readerCacheScopeForPublication(scope: string, context: {
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
 export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
   // Explicit global owner actions and outcomes without a known place still clear place answers.
-  return invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
+  const result=await invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
+  await countReaderInvalidation(scope,result.purged);
+  return result;
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {

@@ -9,6 +9,11 @@
       "id": "DT-01_expand",
       "phase": "expand",
       "hash": "718a37d2e51e8f17943e79903c4de9300a31ff7df1f6c04be1fdd26311b8aa05"
+    },
+    {
+      "id": "RB-A8_expand",
+      "phase": "expand",
+      "hash": "3a584cf98e4da61a3ce174b6b72dfe266a09ca9e10a69ec5b143a92cabe0a0d9"
     }
   ]
 }

@@ -20,7 +20,7 @@ try {
  await page.getByRole('button',{name:'Skip',exact:true}).click({timeout:20000}).catch(()=>{});
  await page.getByText('Keep current view',{exact:true}).click({timeout:1000}).catch(()=>{});
  await page.getByRole('button',{name:'Who governs here?',exact:true}).click({timeout:15000});
- await page.getByRole('button',{name:'City Council',exact:true}).click({timeout:15000});
+ await page.getByRole('button',{name:'City Council',exact:true}).first().click({timeout:15000});
  await page.getByText('20 E. Main Street',{exact:false}).first().waitFor({state:'visible',timeout:15000});
  await page.locator('button').filter({hasText:/27\s*Officials/}).waitFor({state:'visible',timeout:15000});
  await page.screenshot({path:`${dir}/${prefix}.png`,fullPage:true});

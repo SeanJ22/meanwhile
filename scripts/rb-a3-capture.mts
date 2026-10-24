@@ -39,7 +39,7 @@ try {
   assert.equal(response?.status(), 200);
   await page.getByRole("button", { name: "Skip", exact: true }).click({ timeout: 15_000 }).catch(() => {});
   await page.getByRole("button", { name: "Who governs here?", exact: true }).click();
-  await page.getByRole("button", { name: "City Council", exact: true }).click();
+  await page.getByRole("button", { name: "City Council", exact: true }).first().click();
   await page.screenshot({ path: `${directory}/mesa-reader.png`, fullPage: true });
   writeFileSync(`${directory}/mesa-reader-body.txt`, await page.locator("body").innerText());
   await Promise.all(pending);

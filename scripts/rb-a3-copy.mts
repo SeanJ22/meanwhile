@@ -1,4 +1,9 @@
 import { factDb } from "../tests/helpers/fact-db.ts";
+import { door } from "../lib/core/door.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import type { FieldKind, Provenance } from "../lib/facts/check.ts";
+import type { FactDb, Query } from "../lib/facts/publish.ts";
+import assert from "node:assert/strict";
 
 type Row = Record<string, unknown>;
 export interface FactSnapshot {
@@ -33,4 +38,30 @@ export async function openFactCopy(snapshot: FactSnapshot) {
     await db.pg.close();
     throw error;
   }
+}
+
+/** Replay actual live fact rows against the restored copy, preserving their permanent ids. */
+export async function replayCopiedFacts(db: FactDb & { query: Query }, snapshot: FactSnapshot, limit = Infinity) {
+  const sources = new Map((snapshot.sourceCopies ?? []).map(copy => [Number(copy.id), copy]));
+  let unchanged = 0, unavailable = 0;
+  const kindOf = (field: string): FieldKind => /^member:|^name$|^office:/.test(field) ? "officeholder"
+    : /money|contribution|expenditure|receipt|funding/.test(field) ? "money"
+    : /agenda/.test(field) ? "agenda" : /meeting|sitting/.test(field) ? "meeting" : /vote/.test(field) ? "vote"
+    : /portrait|photo/.test(field) ? "portrait" : /statement/.test(field) ? "statement" : /comment:/.test(field) ? "comment_rule" : "contact";
+  const saved = (copy: Row) => ({ id: Number(copy.id), finalUrl: String(copy.final_url), text: snapshot.texts?.[String(copy.id)] ?? "",
+    fetchedAt: new Date(String(copy.fetched_at)), isArchive: copy.is_archive === true });
+  for (const fact of (snapshot.facts ?? []).slice(0, limit)) {
+    const copy = sources.get(Number(fact.source_copy_id));
+    if (!copy) { unavailable++; continue; }
+    const second = sources.get(Number(fact.second_copy_id));
+    const input = { subjectId: String(fact.entity_id), field: String(fact.field), fieldKind: kindOf(String(fact.field)), value: fact.value,
+      valueText: String(fact.value_text), quote: String(fact.quote), provenance: fact.provenance_kind as Provenance,
+      producedBy: String(fact.produced_by), costUsd: Number(fact.cost_usd), copy: saved(copy),
+      ...(second ? { second: { copy: saved(second), quote: String(fact.quote) } } : {}) };
+    const outcome = await door(db, input, factClocks(null), new Date(snapshot.capturedAt), { purge: async () => ({ purged: true }) });
+    assert.equal("decision" in outcome && outcome.decision, "CONFIRM", `${snapshot.state} fact ${fact.id}: ${JSON.stringify(outcome)}`);
+    const [after] = await db.query("SELECT id,value FROM fact WHERE entity_id=$1 AND field=$2 AND status='live'", [fact.entity_id, fact.field]);
+    assert.equal(Number(after!.id), Number(fact.id)); assert.deepEqual(after!.value, fact.value); unchanged++;
+  }
+  return { replayed: unchanged, unchanged, unavailable };
 }

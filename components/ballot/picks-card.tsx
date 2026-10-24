@@ -15,7 +15,7 @@ import { PRODUCT_NAME } from "@/lib/brand";
 
 /**
  * The reader's own picks drawn onto a `<canvas>` in the browser for a
- * screenshot. Device-local picks only: no aggregates, reactions, photos or
+ * screenshot. The reader's own picks only: no aggregates, reactions, photos or
  * commentary. Creating or downloading it transmits nothing.
  */
 

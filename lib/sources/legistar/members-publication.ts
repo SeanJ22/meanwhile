@@ -69,11 +69,12 @@ export async function publishLegistarMembers(input: {
   // A real full reread confirms unchanged facts; a row-version probe does not redate the retained source pages.
   const fullEvidenceMoved = input.raw.readings.some(reading => !memberProbe(new URL(reading.artifact.canonicalUrl)) &&
     Date.parse(reading.artifact.retrievedAt) > loadedAt);
-  let records = 0, held = 0;
+  let records = 0, held = 0, blanks = 0;
+  const blankReasons: Record<string, number> = {};
   if (!unchanged || fullEvidenceMoved) {
     const offices = new Map(input.raw.offices.map(office => [office.OfficeRecordId, office]));
     const bodyFor = (owner: BodySourceWiring) => ({ id: owner.bodyId, name: owner.config.bodyName ?? owner.bodyId,
-      state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId });
+      state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId, government: owner.config.governmentId });
     for (const owner of prepared.bound) {
       const body = bodyFor(owner);
       await ensureEntity(input.facts.query, { ...body, kind: "body" });
@@ -88,7 +89,7 @@ export async function publishLegistarMembers(input: {
         if (!row) continue;
         const [outcome] = await publishBodyFacts(input.facts, { bodyId: owner.bodyId, capture, producedBy: source, purge: input.purge,
           facts: [{ field: "name", value: row.BodyName.trim(), quote: jsonValues(row).join("\n") }] }, input.clocks, new Date(input.now));
-        if (outcome && "blank" in outcome) throw new Error(`LEGISTAR_MEMBERS_FACTS_BLANK:body name ${owner.bodyId}:${outcome.blank}`);
+        if (outcome && "blank" in outcome) { blanks++; blankReasons[`name:${outcome.blank}`] = (blankReasons[`name:${outcome.blank}`] ?? 0) + 1; }
         if (outcome && "decision" in outcome) { if (outcome.decision === "PUBLISH") records++; else if (outcome.decision !== "CONFIRM") held++; }
       }
     }
@@ -112,7 +113,8 @@ export async function publishLegistarMembers(input: {
         }, input.clocks, new Date(input.now));
         if (report.blanks) {
           const reasons = [...report.outcomes.values()].flatMap(fields => [...fields].flatMap(([field, outcome]) => "blank" in outcome ? [`${field}:${outcome.blank}`] : []));
-          throw new Error(`LEGISTAR_MEMBERS_FACTS_BLANK:blanks=${report.blanks};${[...new Set(reasons)].join(",")}`);
+          blanks += report.blanks;
+          for (const reason of reasons) blankReasons[reason] = (blankReasons[reason] ?? 0) + 1;
         }
         held += report.held;
         records += report.live;
@@ -134,6 +136,6 @@ export async function publishLegistarMembers(input: {
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256, loaded_at) VALUES ($1, $2, $3)
     ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = EXCLUDED.loaded_at`,
   [source, prepared.signature, input.now]);
-  return { records, held, signature: prepared.signature, versionId: `${source}:${prepared.signature}`, checkedAt: input.now, unchanged,
+  return { records, held, blanks, blankReasons, signature: prepared.signature, versionId: `${source}:${prepared.signature}`, checkedAt: input.now, unchanged,
     members: prepared.members, bodies: prepared.bound.length, gaps: prepared.unbound };
 }

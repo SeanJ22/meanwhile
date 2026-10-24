@@ -369,17 +369,6 @@ export function bindNamedEntity(
 }
 
 /**
- * Did the reader name a government? True for every verdict except `NONE`.
- *
- * The single predicate callers use to decide whether a ZIP default is still
- * allowed to speak, so no surface can implement its own slightly different
- * version of the rule this module exists to enforce.
- */
-export function namedAnEntity(binding: NamedEntityBinding): boolean {
-  return binding.kind !== "NONE";
-}
-
-/**
  * Is this reader asking what a named government is about to discuss? About the shape of the asking,
  * not a subject: the answer is the body's own item list, not a keyword search.
  */

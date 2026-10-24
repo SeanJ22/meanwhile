@@ -75,10 +75,6 @@ export interface ActionDef {
   readonly dependency: Dependency | null;
 }
 
-export const DEP = {
-  receiptLookup: { id: "DEP-RECEIPT-LOOKUP", owner: "Codex (gateway)", need: "A read-only receipt lookup by action key." },
-} as const satisfies Record<string, Dependency>;
-
 function localOrGlobal(ctx: PreviewContext): "local" | "global" {
   return ctx.scopeIsCountry ? "global" : "local";
 }

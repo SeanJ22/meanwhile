@@ -911,6 +911,11 @@ export const readerEventBatches = pgTable("reader_event_batches", {
   payloadSha256: text("payload_sha256").notNull(),
   eventCount: integer("event_count").notNull(),
 });
+export const savedBallotPicks = pgTable("saved_ballot_picks", {
+  secretHash: text("secret_hash").primaryKey(),
+  revision: integer("revision").notNull(),
+  file: jsonb("file").notNull(),
+});
 const readerEventDimensions = () => ({
   period: text("period").notNull(), periodStart: date("period_start").notNull(),
   zip: text("zip").notNull(), district: text("district").notNull(),

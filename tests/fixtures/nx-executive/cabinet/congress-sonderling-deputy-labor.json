@@ -1,0 +1,46 @@
+{
+    "nomination": {
+        "actions": {
+            "count": 11,
+            "url": "https://api.congress.gov/v3/nomination/119/12-42/actions?format=json"
+        },
+        "authorityDate": "2026-06-01",
+        "citation": "PN12-42",
+        "committees": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/12-42/committees?format=json"
+        },
+        "congress": 119,
+        "description": "Keith Sonderling, of Florida, to be Deputy Secretary of Labor, vice Julie A. Su, resigned.",
+        "hearings": {
+            "count": 1,
+            "url": "https://api.congress.gov/v3/nomination/119/12-42/hearings?format=json"
+        },
+        "latestAction": {
+            "actionDate": "2025-03-12",
+            "text": "Confirmed by the Senate by Yea-Nay Vote. 53 - 46. Record Vote Number: 119."
+        },
+        "nominationType": {
+            "isCivilian": true
+        },
+        "nominees": [
+            {
+                "nomineeCount": 1,
+                "ordinal": 1,
+                "organization": "Department of Labor",
+                "positionTitle": "Deputy Secretary of Labor",
+                "url": "https://api.congress.gov/v3/nomination/119/12-42/1?format=json"
+            }
+        ],
+        "number": 12,
+        "partNumber": "42",
+        "receivedDate": "2025-01-20",
+        "updateDate": "2026-06-02T11:00:33Z"
+    },
+    "request": {
+        "congress": "119",
+        "contentType": "application/json",
+        "format": "json",
+        "number": "12-42"
+    }
+}

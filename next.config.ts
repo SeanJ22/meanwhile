@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { BALLOT_CACHE_RULES } from "./lib/reader/ballot-cache.ts";
 
 // Static geography is file-backed; mutable civic facts resolve production pointers.
 const staticGeographyTrace = [
@@ -73,6 +74,7 @@ const nextConfig: NextConfig = {
   // The unlisted demo stays out of search indexes alongside robots.txt and Netlify headers.
   async headers() {
     return [
+      ...BALLOT_CACHE_RULES,
       {
         source: "/:path*",
         headers: [

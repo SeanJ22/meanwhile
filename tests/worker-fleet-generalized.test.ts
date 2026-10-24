@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import { parseCivicRecords } from "../lib/control-plane/workers/parser.ts";
+import { parseLegistarEvents } from "../lib/control-plane/workers/parser.ts";
 import { validateExtraction } from "../lib/control-plane/workers/validator.ts";
 import { auditExtraction } from "../lib/control-plane/workers/auditor.ts";
 import { bundleProcedure, runIsolatedSource } from "../lib/control-plane/workers/isolation.ts";
@@ -20,12 +20,12 @@ function request(text = '{"records":[{"id":"1","name":"Member A"},{"id":"2","nam
       requiredFields: ["id", "name"], completenessScope: "Every mapped record in the held official roster fixture; no source-universe claim.", expectedSourceDate: null, extraction, verification: { required: false, authorities: [] } } };
 }
 function validator(input = request()): ValidatorWorkerInput {
-  return { ...input, attemptId: "validator-attempt", worker: { role: "VALIDATOR", instance: "validator-instance", provider: "deterministic", version: "2.0.0" }, producer: input.worker, producerAttemptId: input.attemptId, candidate: parseCivicRecords(input), verifiedAt: timestamp };
+  return { ...input, attemptId: "validator-attempt", worker: { role: "VALIDATOR", instance: "validator-instance", provider: "deterministic", version: "2.0.0" }, producer: input.worker, producerAttemptId: input.attemptId, candidate: parseLegistarEvents(input), verifiedAt: timestamp };
 }
 function auditor(input = request()): AuditorWorkerInput {
   return { attemptId: "auditor-attempt", worker: { role: "ADVERSARIAL_AUDITOR", instance: "auditor-instance", provider: "deterministic", version: "2.0.0" }, context: { subjectId: input.contract.subjectId, contract: input.contract, publisherSurfaces: [input.evidence.canonicalUrl], methodVersion: input.contract.methodVersion,
       routes: [{ routeId: input.evidence.methodRouteId, canonicalUrl: input.evidence.canonicalUrl, applicable: true, status: "HELD", artifactIds: [input.evidence.artifactId], reason: "Fixture source observation" }], evidence: [input.evidence], scope: "CAPTURED_ARTIFACT", startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"] },
-    candidate: { producer: input.worker, validator: validator(input).worker, producerAttemptId: input.attemptId, validatorAttemptId: "validator-attempt", extraction: parseCivicRecords(input), coveredRouteIds: [input.evidence.methodRouteId], claimsAbsence: false, claimsUniverseComplete: false, renderedRecordCount: null } };
+    candidate: { producer: input.worker, validator: validator(input).worker, producerAttemptId: input.attemptId, validatorAttemptId: "validator-attempt", extraction: parseLegistarEvents(input), coveredRouteIds: [input.evidence.methodRouteId], claimsAbsence: false, claimsUniverseComplete: false, renderedRecordCount: null } };
 }
 function withAuthority(input = request()): { parser: ReturnType<typeof request>; held: WorkerEvidence } {
   const held = evidence("<table><tr><th>ID</th><th>Name</th></tr><tr><td>1</td><td>Member A</td></tr><tr><td>2</td><td>Member B</td></tr></table>", "register", "fixture-state-register", "https://state.example.gov/register");
@@ -33,7 +33,7 @@ function withAuthority(input = request()): { parser: ReturnType<typeof request>;
 }
 
 test("v2 roster JSON retains source occurrence, jurisdiction and identity through independent validation and audit", () => {
-  const input = request(); const parsed = parseCivicRecords(input);
+  const input = request(); const parsed = parseLegistarEvents(input);
   assert.equal(parsed.verdict, "EXTRACTED"); assert.equal(parsed.schemaVersion, 2); assert.equal(parsed.actualRowCount, 2);
   assert.equal(parsed.contractMetadata?.jurisdiction.state, "nh");
   for (const span of parsed.spans) assert.equal(input.evidence.text.slice(span.start, span.end), span.quote);
@@ -47,7 +47,7 @@ test("v2 office rows in HTML and tabular election records preserve exact markup 
     request('<table><tr><th>ID</th><th>Name</th></tr><tr><td>1</td><td><strong>Member</strong> A &amp; B</td></tr></table>', { format: "HTML_TABLE", tableIndex: 0, headerRows: 1, fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" } } }),
     request('ID,Name\r\n1,"District, East"\r\n2,"District ""West"""\r\n', { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" } } }, "ELECTION_DISTRICT")
   ]) {
-    const parsed = parseCivicRecords(input); assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
+    const parsed = parseLegistarEvents(input); assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
     assert.equal(validateExtraction(validator(input)).verdict, "PASS");
     const audited = auditExtraction(auditor(input)); assert.equal(audited.verdict, "SURVIVED", JSON.stringify(audited.findings));
     for (const span of parsed.spans) assert.equal(input.evidence.text.slice(span.start, span.end), span.quote);
@@ -59,7 +59,7 @@ test("CSV range decoding preserves escaped quotes, embedded newlines, Unicode an
   const text = 'ID,Name\r\n1,"李 ""West""\r\nDistrict 😀"\r\n2,' + names[1] + '\r\n3,"""Quoted"""';
   const input = request(text, { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1,
     fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" } } }, "ELECTION_DISTRICT");
-  const parsed = parseCivicRecords(input);
+  const parsed = parseLegistarEvents(input);
   assert.equal(parsed.verdict, "EXTRACTED");
   assert.deepEqual(parsed.records.map(row => row.fields.name), names);
   for (const span of parsed.spans) assert.equal(text.slice(span.start, span.end), span.quote);
@@ -67,7 +67,7 @@ test("CSV range decoding preserves escaped quotes, embedded newlines, Unicode an
     '"李 ""West""\r\nDistrict 😀"');
   assert.equal(validateExtraction(validator(input)).verdict, "PASS");
   for (const malformed of ['ID,Name\n1,"unterminated', 'ID,Name\n1,"closed"tail', 'ID,Name\n1,un"quoted']) {
-    assert.equal(parseCivicRecords(request(malformed, input.contract.extraction, "ELECTION_DISTRICT")).verdict, "FAILED");
+    assert.equal(parseLegistarEvents(request(malformed, input.contract.extraction, "ELECTION_DISTRICT")).verdict, "FAILED");
   }
 });
 
@@ -84,7 +84,7 @@ test("retained document text uses literal record boundaries; a contradicting off
   const source = request("[Page 1]\nID: 1 Name: Member A End of record\nID: 2 Name: Member B End of record", extraction);
   const { held, parser: authority } = withAuthority();
   const parser = { ...source, contract: { ...source.contract, verification: authority.contract.verification } };
-  const parsed = parseCivicRecords(parser);
+  const parsed = parseLegistarEvents(parser);
   assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
   assert.equal(parsed.actualRowCount, 2);
   assert.equal(validateExtraction(validator(parser)).verdict, "PASS", "no second source is needed for facts that are not judgment calls");
@@ -94,7 +94,7 @@ test("retained document text uses literal record boundaries; a contradicting off
   for (const span of parsed.spans) assert.equal(parser.evidence.text.slice(span.start, span.end), span.quote);
   for (const bad of [parser.evidence.text.replace("Name: Member A", "Name: Member A Name: Duplicate"), parser.evidence.text.replace("End of record", "No ending")]) {
     const broken = request(bad, extraction);
-    assert.notEqual(parseCivicRecords(broken).verdict, "EXTRACTED");
+    assert.notEqual(parseLegistarEvents(broken).verdict, "EXTRACTED");
   }
   const conflict = evidence(held.text.replace("Member B", "Wrong person"), held.artifactId, held.sourceId, held.canonicalUrl);
   const disputed = validateExtraction({ ...validator(parser), authorityEvidence: [conflict] });
@@ -128,23 +128,23 @@ test("a row whose quotation points at another row is held on its own; missing fi
   const candidate = { ...original.candidate, spans }; const repeated = validateExtraction({ ...original, candidate });
   assert.deepEqual(repeated.validatedRecordIds, [original.candidate.records[0].id], "the row with a borrowed quotation is held; its neighbour is not");
   const audit = auditor(input); assert.equal(auditExtraction({ ...audit, candidate: { ...audit.candidate, extraction: candidate } }).verdict, "BROKE");
-  assert.equal(parseCivicRecords({ ...input, evidence: { ...input.evidence, methodRouteId: "UNOBSERVED_ROUTE" } }).verdict, "FAILED");
-  assert.equal(parseCivicRecords(request('{"records":[{"id":"1"}]}')).verdict, "FAILED");
-  const duplicate = request('{"records":[{"id":"1","name":"A"},{"id":"1","name":"B"}]}'); assert.equal(parseCivicRecords(duplicate).verdict, "AMBIGUOUS");
+  assert.equal(parseLegistarEvents({ ...input, evidence: { ...input.evidence, methodRouteId: "UNOBSERVED_ROUTE" } }).verdict, "FAILED");
+  assert.equal(parseLegistarEvents(request('{"records":[{"id":"1"}]}')).verdict, "FAILED");
+  const duplicate = request('{"records":[{"id":"1","name":"A"},{"id":"1","name":"B"}]}'); assert.equal(parseLegistarEvents(duplicate).verdict, "AMBIGUOUS");
   const ambiguous = validateExtraction(validator(duplicate)); assert.notEqual(ambiguous.verdict, "PASS"); assert.equal(ambiguous.validatedRecordCount, 0);
 });
 
 test("XML sitemap is record inventory with exact loc spans, never a derived meeting date or universe claim", () => {
   const input = request('<urlset><url><loc>https://district.example.gov/2026-01-02-meeting</loc></url></urlset>', { format: "XML_RECORDS", rowTag: "url", fields: { id: { source: "loc", type: "STRING" }, name: { source: "loc", type: "STRING" } } }, "PUBLISHED_RECORD_ROUTE");
-  const parsed = parseCivicRecords(input); assert.equal(parsed.verdict, "EXTRACTED"); assert.deepEqual(Object.keys(parsed.records[0].fields).sort(), ["id", "name"]); assert.equal(validateExtraction(validator(input)).verdict, "PASS"); assert.equal(auditExtraction(auditor(input)).verdict, "SURVIVED");
-  const incomplete = { ...input, evidence: evidence(input.evidence.text.replace('</urlset>', '<url><loc>unfinished</loc></urlset>')) }; assert.equal(parseCivicRecords(incomplete).verdict, "FAILED");
-  assert.equal(parseCivicRecords(request('{"records":[]}')).verdict, "FAILED");
-  assert.equal(parseCivicRecords({ ...input, evidence: evidence(input.evidence.text.replace("</urlset>", "")) }).verdict, "FAILED");
+  const parsed = parseLegistarEvents(input); assert.equal(parsed.verdict, "EXTRACTED"); assert.deepEqual(Object.keys(parsed.records[0].fields).sort(), ["id", "name"]); assert.equal(validateExtraction(validator(input)).verdict, "PASS"); assert.equal(auditExtraction(auditor(input)).verdict, "SURVIVED");
+  const incomplete = { ...input, evidence: evidence(input.evidence.text.replace('</urlset>', '<url><loc>unfinished</loc></urlset>')) }; assert.equal(parseLegistarEvents(incomplete).verdict, "FAILED");
+  assert.equal(parseLegistarEvents(request('{"records":[]}')).verdict, "FAILED");
+  assert.equal(parseLegistarEvents({ ...input, evidence: evidence(input.evidence.text.replace("</urlset>", "")) }).verdict, "FAILED");
 });
 
 test("unsupported acquired media retains its media type and adapter reason without manufacturing parsed records", () => {
   const input=request("%PDF-fixture-binary-header",{format:"UNSUPPORTED",fields:{},mediaType:"application/pdf",reason:"PDF text extraction adapter required for this publication."},"MEETING_NOTICE");
-  const parsed=parseCivicRecords(input); assert.equal(parsed.verdict,"FAILED"); assert.deepEqual(parsed.records,[]); assert.equal(parsed.warnings[0].code,"SOURCE_SHAPE_UNSUPPORTED");
+  const parsed=parseLegistarEvents(input); assert.equal(parsed.verdict,"FAILED"); assert.deepEqual(parsed.records,[]); assert.equal(parsed.warnings[0].code,"SOURCE_SHAPE_UNSUPPORTED");
   assert.match(parsed.warnings[0].detail,/application\/pdf: PDF text extraction adapter required/); assertFleetResult(parsed,"PARSER",input.attemptId);
 });
 

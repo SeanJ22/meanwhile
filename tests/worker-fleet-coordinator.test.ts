@@ -21,6 +21,7 @@ import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { huntRoundComparator } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { withPromotedFixturesInChildren } from "./helpers/promoted-fixtures.ts";
+import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground } from "../lib/control-plane/workers/held-digger-priority.ts";
 
 test("PDC: the production standing runtime refuses queued or newly due legacy meeting acquisitions without opening the source", async () => {
   const h = await autonomousHarness({
@@ -243,7 +244,7 @@ test("coordinator selection hands out canonical tasks without running tools or o
   } finally { await rm(root, { recursive: true, force: true }); }
 });
 
-test("memory wait rechecks the emptied wave before forking queued lease workers", async () => {
+test("memory wait ends when the wave empties even if no queued worker can fit", { timeout: 10_000 }, async () => {
   const root = await mkdtemp(join(tmpdir(), "s18-process-queue-"));
   try {
     await mkdir(join(root, "scripts"));
@@ -251,12 +252,12 @@ test("memory wait rechecks the emptied wave before forking queued lease workers"
     await writeFile(join(root, "worker.mjs"), `process.on('message', config => {
       process.send({ kind: 'finished', body: config.taskIds }); process.disconnect();
     });`);
-    let forks = 0;
+    let forks = 0, available = 1000;
     await runLeaseWorkerProcesses({ entry: "worker.mjs", config: { root, postgres: false,
       taskIds: Array.from({ length: 40 }, (_, i) => `task:${i}`), modelEnabled: false, searchEnabled: false,
       ceilingUsd: 0, fundedSubjects: [] }, capacity: () => 40,
-      slots: workerProcessSlots(() => 1, { availableBytes: () => 1000, headroomBytes: 0, peakBytes: () => 1 }),
-      onStarted: () => { forks++; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
+      slots: workerProcessSlots(() => 1, { availableBytes: () => available, headroomBytes: 0, peakBytes: () => 1 }),
+      onStarted: () => { forks++; available = 0; }, transportFor: () => async () => { throw new Error("no model in this fixture"); } });
     assert.equal(forks, 1, "queued admissions release without spawning after the first child drains all tasks");
   } finally { await rm(root, { recursive: true, force: true }); }
 });
@@ -323,13 +324,15 @@ test("the autonomous wave loop stops at its dispatch slice even while waves keep
   let orderingReads = 0;
   const unreadable = () => { orderingReads++; throw new Error("ordering must reuse the selected metadata"); };
   const selected = await new Function("held", "fleet", "runAutonomousCoordinator", "placeOrder", "paidWorkerCapacity",
-    "placeRankFor", "huntRoundComparator", "repos", "squadReading", ordering)(held, {},
+    "placeRankFor", "huntRoundComparator", "repos", "squadReading", "readHeldDiggerWorkItems", "readHeldDiggerPriorities",
+    "heldDiggerNamedOrder", "compareNamedBeforeBackground", "dispatchTargets", "dispatchPriority", "plannedOrder", ordering)(held, {},
     async (_fleet: unknown, options: { onSelectionSnapshot: (items: readonly WorkItem[]) => void }) => {
       options.onSelectionSnapshot([legacy, current]);
       return { decisions: [{ action: "WORKER", task: plannedTask }] };
     }, placeOrder, () => 1,
     (subject: string) => subject === legacy.subject ? placeOrder.indexOf("hunt:legacy") : null,
-    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } });
+    huntRoundComparator, { routeTasks: { read: unreadable }, workItems: { read: unreadable } }, undefined,
+    readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, [], new Set(), new Map());
   assert.equal(selected.remainingSnapshotItems, 0, "the whole selection index is released after retaining only queued metadata");
   assert.equal(selected.metadata.get(held[0]!.id), legacy);
   assert.equal(selected.metadata.get(plannedTask.id), current);
@@ -441,7 +444,9 @@ test("ZIP process reports return after parent registry and election publication,
     };
     const reports = await runNationalPlaceWorkerProcesses({ root, places: ["10001", "10002", "10003"].map(zip => ({ id: `national-place:${zip}`, zip, state: "NY" })), capacity: () => 2, store,
       orderPending: async ids => [...ids].reverse(),
-      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
+      slots: workerProcessSlots(() => 2, { availableBytes: () => 1000 * 1024 * 1024,
+        headroomBytes: 100 * 1024 * 1024, peakBytes: () => 600 * 1024 * 1024,
+        minimumPeakBytes: () => 600 * 1024 * 1024 }),
       onStarted: pid => {
         if (pids.length === 1) assert.equal(delivered.length, 1, "The second ready ZIP stays queued until the first process finishes.");
         pids.push(pid);

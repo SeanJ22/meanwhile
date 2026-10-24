@@ -1,0 +1,710 @@
+{
+  "capturedAt": "2026-10-23T08:08:48.296Z",
+  "database": {
+    "projectId": "tiny-hill-13996172",
+    "branchId": "br-delicate-lab-ax02xuo5",
+    "databaseName": "neondb"
+  },
+  "identity": {
+    "current_user": "readonly",
+    "read_only": "on",
+    "can_write": false
+  },
+  "pointers": [
+    {
+      "scope": "US-AK:voting-sites",
+      "versionId": "cv-4ecd227e81490222763b9df122430706",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-AL:voting-sites",
+      "versionId": "cv-a5ec5d53d67a9120f8be3ae3bd8bb7e2",
+      "promotedAt": "2026-10-22T00:35:27.229Z",
+      "jurisdictions": 2,
+      "sites": "78"
+    },
+    {
+      "scope": "US-AR:voting-sites",
+      "versionId": "cv-67370c886aa1f2fa1c7ff814627fcbd9",
+      "promotedAt": "2026-10-18T03:33:50.155Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-AZ:voting-sites",
+      "versionId": "cv-944805da3baf9d6106975079b06359fe",
+      "promotedAt": "2026-10-22T00:34:19.699Z",
+      "jurisdictions": 1,
+      "sites": "345"
+    },
+    {
+      "scope": "US-CA:voting-sites",
+      "versionId": "cv-0dba9d55af111c6406805e17b6c74563",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-CO:voting-sites",
+      "versionId": "cv-dcb3a9309e77160867187a5870f0e458",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-CT:voting-sites",
+      "versionId": "cv-fafbc9485bd22416c83116eecf1e7c23",
+      "promotedAt": "2026-10-18T03:44:46.730Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-DC:voting-sites",
+      "versionId": "cv-79cf4d3f40225ca97586cb3ca5dde9a8",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-DE:voting-sites",
+      "versionId": "cv-7c16952ed26e81a4e5273c102df75058",
+      "promotedAt": "2026-10-22T00:35:29.900Z",
+      "jurisdictions": 1,
+      "sites": "297"
+    },
+    {
+      "scope": "US-FL:voting-sites",
+      "versionId": "cv-087831d0e4a209e5fcdae04c7d570dde",
+      "promotedAt": "2026-10-22T01:36:13.905Z",
+      "jurisdictions": 1,
+      "sites": "1"
+    },
+    {
+      "scope": "US-GA:voting-sites",
+      "versionId": "cv-39331bdc350861011a3175ff92f0d294",
+      "promotedAt": "2026-10-22T02:16:17.040Z",
+      "jurisdictions": 1,
+      "sites": "132"
+    },
+    {
+      "scope": "US-HI:voting-sites",
+      "versionId": "cv-d5bd3e10e7eac21cb7c22df0d63633d8",
+      "promotedAt": "2026-10-22T02:18:39.766Z",
+      "jurisdictions": 4,
+      "sites": "60"
+    },
+    {
+      "scope": "US-IA:voting-sites",
+      "versionId": "cv-6ff699967e400f559008e7ac4771267f",
+      "promotedAt": "2026-10-22T03:08:32.968Z",
+      "jurisdictions": 1,
+      "sites": "64"
+    },
+    {
+      "scope": "US-ID:voting-sites",
+      "versionId": "cv-25ced86e18f72a173a4fafab3b71130f",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-IL:voting-sites",
+      "versionId": "cv-d3f7ace4accad4eac4d55a79eb721437",
+      "promotedAt": "2026-10-22T02:17:21.309Z",
+      "jurisdictions": 1,
+      "sites": "24"
+    },
+    {
+      "scope": "US-IN:voting-sites",
+      "versionId": "cv-a494dbcaadad4de3f24ea57becc6367f",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-KS:voting-sites",
+      "versionId": "cv-310b80a20ba2ce85a0e1ff008e10e09e",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-KY:voting-sites",
+      "versionId": "cv-8b0c91f8e341a21d3d66daf00029be08",
+      "promotedAt": "2026-10-22T03:31:35.185Z",
+      "jurisdictions": 1,
+      "sites": "1690"
+    },
+    {
+      "scope": "US-LA:voting-sites",
+      "versionId": "cv-cbe4940aa1e37de7f1714356c88e3f30",
+      "promotedAt": "2026-10-18T10:19:12.477Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-MA:voting-sites",
+      "versionId": "cv-1e10d57c8c77aa7a2842a0f50b6d2264",
+      "promotedAt": "2026-10-22T03:31:58.547Z",
+      "jurisdictions": 1,
+      "sites": "164"
+    },
+    {
+      "scope": "US-MD:voting-sites",
+      "versionId": "cv-253afde61422b10433b455005a0ca8bf",
+      "promotedAt": "2026-10-22T03:30:35.187Z",
+      "jurisdictions": 24,
+      "sites": "102"
+    },
+    {
+      "scope": "US-ME:voting-sites",
+      "versionId": "cv-c0f3ef7a81001ddb14af6bf8693b02de",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-MI:voting-sites",
+      "versionId": "cv-0807f155a2d2baf334580c199d83d995",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-MN:voting-sites",
+      "versionId": "cv-c19c4e918ca9404d3f7d013e433ee4dd",
+      "promotedAt": "2026-10-18T20:18:15.657Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-MO:voting-sites",
+      "versionId": "cv-92e24908804e4f013d1b5e8991dd4481",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-MS:voting-sites",
+      "versionId": "cv-b463780f3a3642a21b6b2d59f66d5555",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-MT:voting-sites",
+      "versionId": "cv-6d9c1f8954f3c625af9c0e72c4aae61d",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-NC:voting-sites",
+      "versionId": "cv-9dc02720850c689bbf1a29331fa74fe8",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-ND:voting-sites",
+      "versionId": "cv-60645108c1013e395ce36bfcbc146781",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-NE:voting-sites",
+      "versionId": "cv-811614130aafc34bc2b251131b6f3c8e",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-NH:voting-sites",
+      "versionId": "cv-53a6584c9d57218ce14f8cdeb0e218d7",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 4,
+      "sites": "1"
+    },
+    {
+      "scope": "US-NJ:voting-sites",
+      "versionId": "cv-f184f76649c5f0b9a60f8938ca3341ed",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 39,
+      "sites": "156"
+    },
+    {
+      "scope": "US-NM:voting-sites",
+      "versionId": "cv-33813dafea8b917e3cb8892b4f18d600",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-NV:voting-sites",
+      "versionId": "cv-f9b18d9320e73d2374778c9f6b81d815",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-NY:voting-sites",
+      "versionId": "cv-8712f98cef019855c7423d66a8017243",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-OH:voting-sites",
+      "versionId": "cv-1dca9077b1a52fe114b415fa4160c4b2",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-OK:voting-sites",
+      "versionId": "cv-36417a520707d253d4a3dbfdd642e077",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-OR:voting-sites",
+      "versionId": "cv-977c84e2e58981977e4511266e5ab8ad",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-PA:voting-sites",
+      "versionId": "cv-c846249f08dae128b39c6183b091fff3",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-RI:voting-sites",
+      "versionId": "cv-e5905dab59950cb654e679073c6dfb3d",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-SC:voting-sites",
+      "versionId": "cv-fe97d1168451ef720dea687f9721293f",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-SD:voting-sites",
+      "versionId": "cv-ac1774126ecdbdffe9d9148004513b59",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-TN:voting-sites",
+      "versionId": "cv-ea9559e7ccb1a25aab0d7606a5064431",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-TX:voting-sites",
+      "versionId": "cv-00bd0627cbc70d32dd56c8bdc08c9015",
+      "promotedAt": "2026-10-18T10:24:08.043Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-UT:voting-sites",
+      "versionId": "cv-bf13da913908b251a84de0a193ba74d5",
+      "promotedAt": "2026-10-18T10:24:06.036Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-VA:voting-sites",
+      "versionId": "cv-319e52d38c4c04c49360563b017e1984",
+      "promotedAt": "2026-10-18T10:24:40.481Z",
+      "jurisdictions": 1,
+      "sites": "0"
+    },
+    {
+      "scope": "US-VT:voting-sites",
+      "versionId": "cv-fc9abc6ed2b30399ccc8a12db81d5879",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-WA:voting-sites",
+      "versionId": "cv-4fcfe4da1dd51bc978e76b23009ef971",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-WI:voting-sites",
+      "versionId": "cv-db30b3aeacff3502af571ec32b96a168",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-WV:voting-sites",
+      "versionId": "cv-0d4ba243476c487e58dae1be390560e1",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    },
+    {
+      "scope": "US-WY:voting-sites",
+      "versionId": "cv-814743ac7ae3aca5e1e43d31b9b532d8",
+      "promotedAt": "2026-10-07T09:45:56.967Z",
+      "jurisdictions": 0,
+      "sites": "0"
+    }
+  ],
+  "clocks": [
+    {
+      "scope": "US-AK:voting-sites",
+      "lastAttemptedAt": "2026-10-23T05:25:07.756Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-AL:voting-sites",
+      "lastAttemptedAt": "2026-10-22T00:35:26.288Z",
+      "lastSucceededObservedAt": "2026-10-22T00:35:26.288Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-AR:voting-sites",
+      "lastAttemptedAt": "2026-10-18T03:34:50.494Z",
+      "lastSucceededObservedAt": "2026-10-18T03:33:48.757Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-AS:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:19.335Z",
+      "lastSucceededObservedAt": null,
+      "lastSucceededParserVersion": null
+    },
+    {
+      "scope": "US-AZ:voting-sites",
+      "lastAttemptedAt": "2026-10-22T00:34:17.886Z",
+      "lastSucceededObservedAt": "2026-10-22T00:34:17.886Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-CA:voting-sites",
+      "lastAttemptedAt": "2026-10-23T06:01:36.981Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-CO:voting-sites",
+      "lastAttemptedAt": "2026-10-23T05:30:00.875Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-CT:voting-sites",
+      "lastAttemptedAt": "2026-10-18T03:45:51.407Z",
+      "lastSucceededObservedAt": "2026-10-18T03:44:45.424Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-DC:voting-sites",
+      "lastAttemptedAt": "2026-10-23T05:28:19.694Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-DE:voting-sites",
+      "lastAttemptedAt": "2026-10-22T00:35:25.769Z",
+      "lastSucceededObservedAt": "2026-10-22T00:35:25.769Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-FL:voting-sites",
+      "lastAttemptedAt": "2026-10-22T01:36:11.471Z",
+      "lastSucceededObservedAt": "2026-10-22T01:36:11.471Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-GA:voting-sites",
+      "lastAttemptedAt": "2026-10-22T02:15:59.067Z",
+      "lastSucceededObservedAt": "2026-10-22T02:15:59.067Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-GU:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:19.878Z",
+      "lastSucceededObservedAt": null,
+      "lastSucceededParserVersion": null
+    },
+    {
+      "scope": "US-HI:voting-sites",
+      "lastAttemptedAt": "2026-10-22T02:18:35.634Z",
+      "lastSucceededObservedAt": "2026-10-22T02:18:35.634Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-IA:voting-sites",
+      "lastAttemptedAt": "2026-10-22T03:08:25.908Z",
+      "lastSucceededObservedAt": "2026-10-22T03:08:25.908Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-ID:voting-sites",
+      "lastAttemptedAt": "2026-10-21T08:37:28.416Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-IL:voting-sites",
+      "lastAttemptedAt": "2026-10-22T02:17:18.020Z",
+      "lastSucceededObservedAt": "2026-10-22T02:17:18.020Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-IN:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:45:48.647Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-KS:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:48:03.703Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-KY:voting-sites",
+      "lastAttemptedAt": "2026-10-22T03:28:27.452Z",
+      "lastSucceededObservedAt": "2026-10-22T03:28:27.452Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-LA:voting-sites",
+      "lastAttemptedAt": "2026-10-18T10:20:32.792Z",
+      "lastSucceededObservedAt": "2026-10-18T10:19:11.239Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-MA:voting-sites",
+      "lastAttemptedAt": "2026-10-22T03:31:41.315Z",
+      "lastSucceededObservedAt": "2026-10-22T03:31:41.315Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-MD:voting-sites",
+      "lastAttemptedAt": "2026-10-22T03:36:50.466Z",
+      "lastSucceededObservedAt": "2026-10-22T03:30:33.679Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-ME:voting-sites",
+      "lastAttemptedAt": "2026-10-22T22:59:28.102Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-MI:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:09.902Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-MN:voting-sites",
+      "lastAttemptedAt": "2026-10-18T20:19:38.219Z",
+      "lastSucceededObservedAt": "2026-10-18T20:18:13.929Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-MO:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:48:50.641Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-MP:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:26.904Z",
+      "lastSucceededObservedAt": null,
+      "lastSucceededParserVersion": null
+    },
+    {
+      "scope": "US-MS:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:48:43.829Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-MT:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:49:07.834Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NC:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:50:48.533Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-ND:voting-sites",
+      "lastAttemptedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NE:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:50:58.351Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NH:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:49:17.326Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NJ:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:49:19.281Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NM:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:51:24.573Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NV:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:49:04.206Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-NY:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:49:45.595Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-OH:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:50:44.867Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-OK:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:52:43.200Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-OR:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:51:17.069Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-PA:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:51:31.934Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-PR:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:00.209Z",
+      "lastSucceededObservedAt": null,
+      "lastSucceededParserVersion": null
+    },
+    {
+      "scope": "US-RI:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:51:36.220Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-SC:voting-sites",
+      "lastAttemptedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-SD:voting-sites",
+      "lastAttemptedAt": "2026-10-21T07:50:29.069Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-TN:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:52:27.198Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-TX:voting-sites",
+      "lastAttemptedAt": "2026-10-18T10:24:20.842Z",
+      "lastSucceededObservedAt": "2026-10-18T10:24:06.689Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-UT:voting-sites",
+      "lastAttemptedAt": "2026-10-18T10:25:08.615Z",
+      "lastSucceededObservedAt": "2026-10-18T10:24:04.762Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-VA:voting-sites",
+      "lastAttemptedAt": "2026-10-18T10:25:39.819Z",
+      "lastSucceededObservedAt": "2026-10-18T10:24:39.130Z",
+      "lastSucceededParserVersion": "official-voting-sites/4"
+    },
+    {
+      "scope": "US-VI:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:10.996Z",
+      "lastSucceededObservedAt": null,
+      "lastSucceededParserVersion": null
+    },
+    {
+      "scope": "US-VT:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:53:53.469Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-WA:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:54:54.472Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-WI:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:54:23.455Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-WV:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:38.213Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    },
+    {
+      "scope": "US-WY:voting-sites",
+      "lastAttemptedAt": "2026-10-21T10:55:37.146Z",
+      "lastSucceededObservedAt": "2026-10-07T09:45:56.353Z",
+      "lastSucceededParserVersion": "official-voting-sites/3"
+    }
+  ]
+}

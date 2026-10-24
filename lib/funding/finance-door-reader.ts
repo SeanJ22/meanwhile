@@ -5,7 +5,7 @@ import type { DoorRecord } from "../doors/registry.ts";
 import { stateMoneyFundingIssue, type StateMoneyFunding, type FiledOrganizationAmount } from "./state-money-funding.ts";
 
 import { FINANCE_DOOR_KINDS } from "./finance-door-kinds.ts";
-export { FINANCE_DOOR_KINDS, type FinanceDoorKind } from "./finance-door-kinds.ts";
+export {  type FinanceDoorKind } from "./finance-door-kinds.ts";
 export interface FinanceFiling {
   readonly id: string;
   readonly doorId: string;

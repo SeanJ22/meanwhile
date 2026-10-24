@@ -852,14 +852,6 @@ function reattestationCopyIssue(
   return null;
 }
 
-export function trustedLkgPredecessorPointerSha256(pointer: PromotedProjection): string {
-  return trustedLkgEvidenceSha256(pointer);
-}
-
-export function trustedLkgPredecessorRecordSha256(row: CandidateVersionRecord): string {
-  return trustedLkgEvidenceSha256(row);
-}
-
 export function trustedLkgReattestationEvidenceIssue(
   candidate: RoutineCandidate,
   predecessor: CandidateVersionRecord | null,

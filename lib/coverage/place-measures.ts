@@ -101,11 +101,6 @@ export function measuresByFamily(rows: readonly MeasureRow[], order: readonly st
       || entry.measures.completeness.beside.unresolved + entry.measures.completeness.beside.notYetDue > 0);
 }
 
-/** One-line labels for a figure and what sits beside it. */
-export function measureWords(name: string, measure: Measure): string {
-  return `${name}: ${measure.n} of ${measure.of}${measure.percent === null ? "" : ` · ${measure.percent.toFixed(1)}%`}`;
-}
-
 /** The place's completeness: the one number Admin's place card, the national list and the runner's order share. */
 export function placePercent(rows: readonly MeasureRow[]): number | null {
   return placeMeasures(rows).completeness.percent;

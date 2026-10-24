@@ -528,10 +528,6 @@ export function minutesOutcomeScopeIssue(snapshot: OutcomeSnapshot, tenant: Outc
   return stray ? `${stray.meetingId} crosses the ${tenant.label} tenant or its portal meeting-id scope.` : null;
 }
 
-export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string | null {
-  return minutesOutcomeScopeIssue(snapshot, MESA_OUTCOME_TENANT);
-}
-
 /**
  * A minutes-outcome candidate built only from exact HTTP-response receipts. A failed minutes request refuses the
  * candidate; a read whose extraction failed is held as a failed extraction with its bytes; minutes not yet published

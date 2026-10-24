@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-10-23T08:14:51.821Z",
+  "electionDate": "2026-11-03",
+  "readOnly": true,
+  "homeAddressesVerifiedFrom": "https://www.zillow.com/tucson-az/",
+  "heldSiteCount": 345,
+  "heldSourceUrls": [
+    "https://www.pima.gov/3199/Pima-Votes",
+    "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_Vote_Centers/FeatureServer/0",
+    "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Primary_2024_EVS_Locations/FeatureServer/0",
+    "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/mobileVotingSites/FeatureServer/0",
+    "https://services2.arcgis.com/UTBp78iglGpbqp1B/arcgis/rest/services/Ballot_Drop_Boxes/FeatureServer/0"
+  ],
+  "samples": [
+    {
+      "sample": 1,
+      "available": true,
+      "pollingLocations": 127,
+      "earlyVoteSites": 16,
+      "dropOffLocations": 150,
+      "withHours": 293,
+      "heldNameMatches": 293,
+      "heldStreetMatches": 207,
+      "elapsedMs": 596
+    },
+    {
+      "sample": 2,
+      "available": true,
+      "pollingLocations": 127,
+      "earlyVoteSites": 16,
+      "dropOffLocations": 150,
+      "withHours": 293,
+      "heldNameMatches": 293,
+      "heldStreetMatches": 207,
+      "elapsedMs": 440
+    },
+    {
+      "sample": 3,
+      "available": true,
+      "pollingLocations": 127,
+      "earlyVoteSites": 16,
+      "dropOffLocations": 150,
+      "withHours": 293,
+      "heldNameMatches": 293,
+      "heldStreetMatches": 207,
+      "elapsedMs": 466
+    },
+    {
+      "sample": 4,
+      "available": true,
+      "pollingLocations": 127,
+      "earlyVoteSites": 16,
+      "dropOffLocations": 150,
+      "withHours": 293,
+      "heldNameMatches": 293,
+      "heldStreetMatches": 207,
+      "elapsedMs": 301
+    },
+    {
+      "sample": 5,
+      "available": true,
+      "pollingLocations": 127,
+      "earlyVoteSites": 16,
+      "dropOffLocations": 150,
+      "withHours": 293,
+      "heldNameMatches": 293,
+      "heldStreetMatches": 207,
+      "elapsedMs": 491
+    }
+  ]
+}

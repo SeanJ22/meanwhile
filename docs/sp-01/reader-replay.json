@@ -1,0 +1,94 @@
+{
+  "productionHost": "ep-dry-river-axwtolzc-pooler.c-4.us-east-2.aws.neon.tech",
+  "identity": {
+    "current_user": "readonly",
+    "read_only": "on"
+  },
+  "productionWrites": 0,
+  "statements": 18,
+  "scopeReplay": [
+    {
+      "key": "CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:meeting-body-crosswalk",
+      "scope": "US-AZ+US-NH+US-NJ:meeting-body-crosswalk",
+      "version": "curated-reader-primary-sources:c779ced457037578feef1e6cf48592e5",
+      "tags": [
+        "reader-state:AZ",
+        "reader-state:NH",
+        "reader-state:NJ"
+      ]
+    },
+    {
+      "key": "STATE_LEGISLATOR:US:people:statewide-executive-sources:v1",
+      "scope": "US:people:statewide-executive-sources:v1",
+      "version": "cv-4f1d106e03a3b311e8ae2bf05d8b571c",
+      "tags": [
+        "reader-national-people"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "state": "NH",
+      "zip": "03301",
+      "productionVersion": "cv-e6b245badb451d61c77b3456c998adc8",
+      "replayedVersion": "cv-e7ccd55772baa0ab7906d7a214515d9e",
+      "directoryCards": 3,
+      "pinPoints": 13,
+      "savedNativePoints": 0,
+      "nativeOfficePublicationVersion": null,
+      "nativeOfficeNextConfirmed": false,
+      "scheduledNow": "2026-10-23T09:39:55.422Z",
+      "scheduledNext": "2026-10-24T09:39:55.422Z",
+      "nextRunDue": true,
+      "nextPublicationConfirmed": true,
+      "nextReaderVersion": "cv-e7ccd55772baa0ab7906d7a214515d9e",
+      "presidentInvalidatesPage": true,
+      "statePurge": [
+        "reader-state:NH"
+      ]
+    },
+    {
+      "state": "NJ",
+      "zip": "07102",
+      "productionVersion": "cv-259dd729ba3788db965ae5637e60ded1",
+      "replayedVersion": "cv-0ef0afe160fbb2c48bd12602760e9cc9",
+      "directoryCards": 7,
+      "pinPoints": 9,
+      "savedNativePoints": 106,
+      "nativeOfficePublicationVersion": "curated-reader-primary-sources:b6b2908f1b3b2fd514ffdcbf03f6d630",
+      "nativeOfficeNextConfirmed": true,
+      "scheduledNow": "2026-10-23T09:39:55.422Z",
+      "scheduledNext": "2026-10-24T09:39:55.422Z",
+      "nextRunDue": true,
+      "nextPublicationConfirmed": true,
+      "nextReaderVersion": "cv-0ef0afe160fbb2c48bd12602760e9cc9",
+      "presidentInvalidatesPage": true,
+      "statePurge": [
+        "reader-state:NJ"
+      ]
+    }
+  ],
+  "transferBaseline": [
+    {
+      "day": "2026-10-23T00:00:00.000Z",
+      "database_name": "reader",
+      "client": "reader",
+      "requests": "1557",
+      "response_bytes": "1961656030"
+    },
+    {
+      "day": "2026-10-22T00:00:00.000Z",
+      "database_name": "reader",
+      "client": "reader",
+      "requests": "4735",
+      "response_bytes": "3979092173"
+    },
+    {
+      "day": "2026-10-22T00:00:00.000Z",
+      "database_name": "control-plane",
+      "client": "reader",
+      "requests": "1211",
+      "response_bytes": "970150827"
+    }
+  ]
+}

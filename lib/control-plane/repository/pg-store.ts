@@ -1,6 +1,6 @@
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
-import { PLANNING_STATES, PLANNING_SUMMARY_SQL, planningStateOf } from "../scheduler/state-planning.ts";
+import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
 import type { HuntOrder, HuntOrderRepository } from "../hunt-orders.ts";
 import { pgAdminConfigRepository } from "./admin-config.ts";
 import { archivedAggregateRepository, createPgDispatchState } from "./dispatch-state.ts";
@@ -1397,6 +1397,42 @@ export async function readPlanningIntents(repos:ControlPlaneRepositories,state:s
   const sql=placeReadConnection(repos);
   if(!sql)return (await repos.researchIntents.read("level-1")).filter(record=>record.kind!=="INTENT" || record.action!=="DISPATCH" || stoppedAt===null || record.requestedAt>stoppedAt);
   return pgPlanningIntents(sql,state,stoppedAt);
+}
+
+export async function readPlanningStateOrder(repos: ControlPlaneRepositories, states: readonly string[]): Promise<string[]> {
+  const sql = placeReadConnection(repos);
+  const rows = sql
+    ? await boundedRunner(sql, "cp_log_owner_digests", CONTROL_PLANE_REQUEST_BOUNDS_MS)("planningFinishedTimes", "PAGE", PLANNING_FINISHED_TIMES_SQL, [[...states]]) as { state: string; finished_at: string | null }[]
+    : await Promise.all(states.map(async state => ({ state, finished_at:
+      ((await repos.ownerDigests.readRecentWhere(`owner-digest:${state}`, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE", 1, { runtimeOutcome: ["finishedAt"] }))[0] as Partial<OwnerDigestRecord> | undefined)?.runtimeOutcome?.finishedAt ?? null })));
+  return planningStateOrder(states, new Map(rows.map(row => [row.state, row.finished_at])));
+}
+
+/** Source admission only needs the runner pause, never pending hunts or work-item history. */
+export const RUNNER_PAUSE_INTENTS_SQL = `SELECT latest.record FROM unnest($2::text[]) actions(action)
+  CROSS JOIN LATERAL (SELECT record, position FROM cp_log_research_intents
+    WHERE log_key=$1 AND record->>'kind'='INTENT' AND record->>'action'=actions.action
+    ORDER BY record->>'requestedAt' DESC, position DESC LIMIT 1) latest`;
+export async function readRunnerPauseIntents(repos: ControlPlaneRepositories): Promise<readonly ResearchIntent[]> {
+  const sql = placeReadConnection(repos);
+  if (!sql) return (await repos.researchIntents.read("level-1")).filter(row => row.kind === "INTENT" && ["PAUSE_RUNNER", "RESUME_RUNNER"].includes(row.action));
+  const rows = await boundedRunner(sql, "cp_log_research_intents", CONTROL_PLANE_REQUEST_BOUNDS_MS)("runnerPause", "PAGE",
+    RUNNER_PAUSE_INTENTS_SQL, ["level-1", ["PAUSE_RUNNER", "RESUME_RUNNER"]]) as { record: unknown }[];
+  return rows.map(row => parseValue<ResearchIntent>(row.record, "runner pause controls"));
+}
+
+export const SOURCE_WORK_STATES_SQL = `SELECT DISTINCT lower(value #>> '{geography,stateAbbr}') AS state
+  FROM cp_admin_expansion_scopes WHERE config_id=$1 AND value->>'sourceWorkVersion'='1'
+  ORDER BY state`;
+/** Only states with current owner source work need geography resolution. */
+export async function readSourceWorkStates(repos: ControlPlaneRepositories): Promise<readonly string[]> {
+  const sql = placeReadConnection(repos);
+  if (!sql) return [...new Set((await repos.adminConfig.read("current", { expansionScopes: true }))?.value.expansionScopes
+    ?.filter(scope => scope.sourceWorkVersion === 1).map(scope => scope.geography.stateAbbr.toLowerCase()) ?? [])];
+  const rows = await boundedRunner(sql, "cp_admin_expansion_scopes", CONTROL_PLANE_REQUEST_BOUNDS_MS)("sourceWorkStates", "PAGE",
+    SOURCE_WORK_STATES_SQL, ["current"]) as { state: string }[];
+  if (rows.some(row => !PLANNING_STATES.includes(row.state))) throw new Error("The owner's source work has an unreadable state.");
+  return rows.map(row => row.state);
 }
 
 export async function pgPlanningIntents(sql:Sql,state:string|null,stoppedAt:string|null):Promise<readonly ResearchIntent[]> {

@@ -177,8 +177,8 @@ function interleaved(): { repos: FieldManualRepos; gate: () => void } {
   const base = createMemoryRepositories();
   let waiting: (() => void)[] = [];
   let reads = 0;
-  const fieldManual = { ...base.fieldManual, readMany: async (ids: readonly string[]) => {
-    const rows = await base.fieldManual.readMany(ids);
+  const fieldManual = { ...base.fieldManual, readManyNarrowed: async (ids: readonly string[], projection: import("../lib/control-plane/repository/types.ts").RecordProjection) => {
+    const rows = await base.fieldManual.readManyNarrowed!(ids, projection);
     reads += 1;
     if (reads <= 2) await new Promise<void>((resolve) => { waiting.push(resolve); if (waiting.length === 2) { waiting.forEach((go) => go()); waiting = []; } });
     return rows;

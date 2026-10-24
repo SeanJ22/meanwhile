@@ -20,6 +20,8 @@ import {
 import { SOURCE_AUTHORITIES } from "../lib/civic-data/source-authority.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { PRL_CONTRACT, prlCandidate } from "../lib/sources/prl/data-plane.ts";
+import { refreshPrl } from "../scripts/prl-refresh.mts";
+import { parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import {
   prlProfileForSubject,
   readPrlProjection,
@@ -31,6 +33,28 @@ const ROOT = process.cwd();
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T13:00:00.000Z";
 const SOURCE_URL = "https://elections.example.gov/az/locations";
+
+test("both PRL tasks durably report unavailable archive configuration with one exact receipt", async () => {
+  for (const archives of [false, true]) {
+    const store = new MemoryRoutineDataStore(), lines: string[] = [];
+    const original = console.log;
+    let exit: number;
+    try {
+      console.log = line => { lines.push(String(line)); };
+      exit = await refreshPrl({ archives, store, resolveArchive: () => { throw new Error("PRL_ARCHIVE_S3_NOT_CONFIGURED"); },
+        fetchImpl: (() => { throw new Error("no source read is possible without its archive"); }) as typeof fetch });
+    } finally { console.log = original; }
+    assert.equal(exit, 2);
+    const receipt = parseRoutineRunnerReceipt(lines.join("\n"));
+    assert.equal(receipt.ok, true, JSON.stringify(receipt));
+    if (!receipt.ok) continue;
+    assert.equal(receipt.receipt.source, archives ? "prl-archives" : "prl");
+    assert.equal(receipt.receipt.state, "SOURCE_BLOCKED");
+    const stored = await store.readCandidate(receipt.receipt.candidateId);
+    assert.equal(stored?.state, "SOURCE_BLOCKED");
+    assert.match(stored?.failureDetail ?? "", /PRL_ARCHIVE_S3_NOT_CONFIGURED/);
+  }
+});
 // Hash-only refs: these candidates never read their bytes back.
 const capture = (body: string, url = SOURCE_URL) => [{ url, contentType: "text/html", vaultKey: `test/${body}`,
   rawHash: createHash("sha256").update(body).digest("hex"), byteLength: Buffer.byteLength(body) }];

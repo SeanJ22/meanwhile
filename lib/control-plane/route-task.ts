@@ -10,15 +10,6 @@ import { leavesReclaimable, mayWriteDisposition, type Attempt } from "./attempt.
 import { routeTaskId } from "./ids.ts";
 import type { WorkerTaskSpec } from "./workers/types.ts";
 
-export const DESIGN_DOC_DISPOSITION_READING: Readonly<Record<string, Disposition>> = {
-  YIELDED: "INGESTED",
-  ZERO: "WALKED_NO_YIELD",
-  ROUTE_BLOCKED: "BLOCKED_CURRENTLY",
-  NOT_APPLICABLE: "NOT_APPLICABLE",
-  // "FAILED" has no single mapping: a transport fact (not a disposition), a
-  // capability gap (REQUIRES_NEW_ADAPTER), or a wall (BLOCKED_CURRENTLY).
-};
-
 export const ROUTE_TASK_STATES = [
   "RESULT_RECORDED",
   "PENDING",

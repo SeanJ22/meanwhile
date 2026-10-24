@@ -13,7 +13,7 @@ export interface ProbeResponse {
 export type ProbeFetch = (url: string, headers: Readonly<Record<string, string>>) => Promise<ProbeResponse>;
 
 /** Settings that name the one page or feed a door's read starts from, most specific first. */
-const PROBE_URL_KEYS = ["feedUrl", "icalUrl", "pageUrl", "schedulePage", "documentsPage", "documentsUrl", "portalUrl", "serviceBase", "apiBase", "baseUrl", "base", "route", "url"] as const;
+export const PROBE_URL_KEYS = ["feedUrl", "icalUrl", "pageUrl", "schedulePage", "documentsPage", "documentsUrl", "portalUrl", "serviceBase", "apiBase", "baseUrl", "base", "route", "url"] as const;
 
 export function probeUrlFor(door: DoorRecord): string | null {
   for (const key of PROBE_URL_KEYS) {

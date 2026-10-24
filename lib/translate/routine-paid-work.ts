@@ -7,7 +7,7 @@ import { durableSearchBudget } from "../control-plane/discovery/search-runtime.t
 import { makeHuntSearch } from "../hunt/search.ts";
 import { huntSearchCost } from "../hunt/runtime.ts";
 import type { MeasurePageSearch } from "./routine-sources.ts";
-import { FleetSafetyController, resolveRollingCeiling, type ProviderCircuit } from "../control-plane/fleet-safety.ts";
+import { FleetSafetyController, FleetSafetyRefusal, FleetPreSendRefusal, resolveRollingCeiling, type ProviderCircuit } from "../control-plane/fleet-safety.ts";
 import { readSpendWindow } from "../control-plane/spend-window.ts";
 import { loadExpansionPlan, type ExpansionLoad } from "../control-plane/expansion/runner-load.ts";
 import { armExpansionBudget, readScopeHistory, type TerritoryIndex } from "../control-plane/expansion/membership.ts";
@@ -63,6 +63,25 @@ export async function armRoutineTranslationPaidWork(input: RoutineTranslationPai
     },
   };
 
+  const mergeCircuits = (...groups: readonly (readonly ProviderCircuit[])[]) => {
+    const merged = new Map<string, ProviderCircuit>();
+    for (const circuit of groups.flat()) {
+      const held = merged.get(circuit.provider);
+      if (!held || Date.parse(circuit.eligibleAt) > Date.parse(held.eligibleAt)) merged.set(circuit.provider, circuit);
+    }
+    return [...merged.values()];
+  };
+  const providerClosure = (circuits: readonly ProviderCircuit[]) => {
+    const held = circuits.find(circuit => circuit.provider === "anthropic" && Date.parse(circuit.eligibleAt) > Date.parse(input.now()));
+    return held ? { code: "PROVIDER_CIRCUIT_BROKEN", reason: held.condition } : null;
+  };
+
+  const messages: ModelTransport = async request => {
+    const closed = providerClosure(localCircuits);
+    if (closed) throw new FleetPreSendRefusal(new FleetSafetyRefusal("PROVIDER_CIRCUIT_BROKEN", closed.reason));
+    return input.messages(request);
+  };
+
   async function readGate() {
     const now = input.now(), unreadable: string[] = [];
     let log: readonly ResearchIntent[] = [];
@@ -89,6 +108,9 @@ export async function armRoutineTranslationPaidWork(input: RoutineTranslationPai
         ? null : `the owner's $${ceiling.rollingCeilingUsd.toFixed(2)} model ceiling is reached`,
     });
     if (closed || !spend) return { closed: closed ?? { code: "LANE_DISABLED", reason: "the cost ledger could not be read" }, guards: null, searchOn: false };
+    const activeCircuits = mergeCircuits(circuits, localCircuits);
+    const providerHeld = providerClosure(activeCircuits);
+    if (providerHeld) return { closed: providerHeld, guards: null, searchOn: false };
     let expansion: ExpansionLoad;
     try {
       expansion = await (input.loadExpansion ?? loadExpansionPlan)({ repos: scopeRepos, root: input.root, now,
@@ -113,25 +135,20 @@ export async function armRoutineTranslationPaidWork(input: RoutineTranslationPai
         return "refusal" in found ? found : { lines: [fleetLine, ...found.lines] };
       },
     } };
-    const byProvider = new Map(circuits.map(circuit => [circuit.provider, circuit]));
-    for (const circuit of localCircuits) {
-      const held = byProvider.get(circuit.provider);
-      if (!held || Date.parse(circuit.eligibleAt) > Date.parse(held.eligibleAt)) byProvider.set(circuit.provider, circuit);
-    }
     const fleetSafety = new FleetSafetyController({ now, spend, costLedgerReadable: true,
-      circuits: [...byProvider.values()], rollingCeilingUsd: ceiling.rollingCeilingUsd, websitePacing: input.repos.websitePacing,
+      circuits: activeCircuits, rollingCeilingUsd: ceiling.rollingCeilingUsd, websitePacing: input.repos.websitePacing,
       clock: () => Date.parse(input.now()) });
     const guards = paidWorkGuards({ repos: input.repos, now: input.now, armedAt: `${now}:${randomUUID()}`,
       fleetSafety, providerQueue: queue, spendHolds: holds, assignmentBudget: { linesFor: () => ({ lines: [] }) }, expansionBudget,
-      messages: input.messages, batch: input.batch, batchEnv: input.batchEnv, modelLaneEnabled: true,
+      messages, batch: input.batch, batchEnv: input.batchEnv, modelLaneEnabled: true,
       ceilingUsd: () => ceiling.rollingCeilingUsd, onCondition: say });
     return { closed: null, guards, fleetSafety, searchOn: !holdPaidWork && discoverySearchEnabled(config) };
   }
 
   let current = await readGate();
   return {
-    get closed() { return current.closed; },
-    paidWorkerCapacity: (readyWork?: number) => current.guards?.paidWorkerCapacity(readyWork) ?? 0,
+    get closed() { return current.closed ?? providerClosure(mergeCircuits(localCircuits, current.fleetSafety?.snapshot(input.now()).providerCircuits ?? [])); },
+    paidWorkerCapacity: (readyWork?: number) => providerClosure(localCircuits) ? 0 : current.guards?.paidWorkerCapacity(readyWork) ?? 0,
     /** The existing paid discovery search, only while Admin has it on and paid work is open. Each request is
      * admitted by the fleet's search guard and recorded in the cost ledger. */
     measurePageSearch(keys: { readonly braveKey?: string | null; readonly exaKey?: string | null }): MeasurePageSearch | null {
@@ -157,8 +174,13 @@ export async function armRoutineTranslationPaidWork(input: RoutineTranslationPai
       current = await readGate();
       const admitted = current;
       if (!admitted.guards) throw new SendBudgetRefusal(admitted.closed!.code, admitted.closed!.reason);
-      try { return await admitted.guards.autonomousTransportFor(input.messages)(subject)(request); }
-      finally { localCircuits = admitted.fleetSafety?.snapshot(input.now()).providerCircuits ?? localCircuits; }
+      try { return await admitted.guards.autonomousTransportFor(messages)(subject)(request); }
+      finally {
+        localCircuits = mergeCircuits(localCircuits.filter(circuit => Date.parse(circuit.eligibleAt) > Date.parse(input.now())),
+          admitted.fleetSafety?.snapshot(input.now()).providerCircuits ?? []);
+        const closed = providerClosure(localCircuits);
+        if (closed) say(closed.reason);
+      }
     },
   };
 }

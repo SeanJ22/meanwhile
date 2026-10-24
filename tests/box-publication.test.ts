@@ -402,7 +402,7 @@ test("a board name with no board is added and named; a recorder's phone goes on 
   assert.deepEqual(await facts.query(`SELECT e.id, e.name, f.field, f.value_text FROM fact f JOIN entity e ON e.id = f.entity_id
     WHERE e.parent_id = $1 AND f.status = 'live' ORDER BY e.id, f.field`, [CLIFTON]), [
     { id: `${CLIFTON}#body:board-of-adjustment`, name: "Board of Adjustment", field: "name", value_text: "Board of Adjustment" },
-    { id: `${CLIFTON}#governing`, name: "Clifton town governing", field: "office_phone", value_text: "(928) 865-4146" },
+    { id: `${CLIFTON}#governing`, name: "Town Of Clifton governing board", field: "office_phone", value_text: "(928) 865-4146" },
     { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "name", value_text: "Greenlee County Recorder" },
     { id: `${CLIFTON}#office-recorder`, name: "Greenlee County Recorder", field: "office_phone", value_text: "(928) 865-2632" }]);
   assert.equal((await facts.query("SELECT 1 FROM entity_place WHERE entity_id = $1", [`${CLIFTON}#body:board-of-adjustment`])).length, 1);

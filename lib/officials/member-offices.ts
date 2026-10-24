@@ -6,6 +6,8 @@
 import type { DirectoryOffice } from "./directory.ts";
 import type { Officeholder } from "./types.ts";
 import type { FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
+import type {PublishedOfficePoint} from "./office-points-publication.ts";
+const readerOfficePoint = ({census:_evidence,...point}:PublishedOfficePoint):PublishedOfficePoint => point;
 
 export type MemberOfficeKind = "CAPITOL" | "DISTRICT";
 import { createHash } from "node:crypto";
@@ -38,7 +40,7 @@ export function parseOfficeAddress(text: string): Pick<DirectoryOffice, "address
 }
 
 /** Rich native office arrays retain distinct district offices and per-field attribution. */
-export function officeRecordsForHolder(holder: Officeholder): readonly MemberOfficeRecord[] {
+export function officeRecordsForHolder(holder: Officeholder, options:{readonly includePointEvidence?:boolean} = {}): readonly MemberOfficeRecord[] {
   const seen = new Set<string>();
   return (holder.offices ?? []).flatMap(office => {
     if (!office.address && !office.phone && !office.email) return [];
@@ -49,7 +51,9 @@ export function officeRecordsForHolder(holder: Officeholder): readonly MemberOff
     const federal = holder.level === "FEDERAL";
     const officialPhone = !federal && kind === "CAPITOL" && holder.provenance.sourceOrg !== OPEN_STATES_ORG && !/plural|open states/i.test(holder.provenance.sourceOrg) ? holder.phone : null;
     return [{id:`member-office:${holder.id}:${officeKey}`,kind:"MEMBER_OFFICE" as const,officeholderId:holder.id,officeKind:kind,
-      office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null},
+      office:{...parseOfficeAddress(office.address ?? ""),phone:officialPhone || office.phone || null,...(office.email ? {email:office.email} : {}),lat:null,lng:null,
+        ...(office.geocodedPoint ? {geocodedPoint:options.includePointEvidence ? office.geocodedPoint : readerOfficePoint(office.geocodedPoint)} : {}),
+        ...(office.pointUnavailable ? {pointUnavailable:office.pointUnavailable} : {})},
       sourceUrl:office.sourceUrl,sourceOrg:federal ? holder.fieldSources?.offices?.sourceOrg ?? holder.provenance.sourceOrg : OPEN_STATES_ORG,
       official:federal && /^https:\/\/(?:[^/]+\.)?(?:house|senate|congress)\.gov\//.test(office.sourceUrl),collectedAt:office.collectedAt,
       ...(officialPhone ? {fieldSources:{phone:holder.fieldSources?.phone ?? holder.provenance}} : {})}];
@@ -62,7 +66,7 @@ export function federalOfficeRecordsForMember(value: FederalDirectoryReadModel, 
   const source = holder?.fieldSources?.districtOffices;
   const district = (value.directory.byMember[officeholderId.slice(9)]?.districtOffices ?? []).map((office): MemberOfficeRecord => ({
     id:`member-office:${officeholderId}:${createHash("sha256").update(JSON.stringify(office)).digest("hex").slice(0,20)}`,
-    kind:"MEMBER_OFFICE",officeholderId,officeKind:"DISTRICT",office,
+    kind:"MEMBER_OFFICE",officeholderId,officeKind:"DISTRICT",office:{...office,...(office.geocodedPoint?{geocodedPoint:readerOfficePoint(office.geocodedPoint)}:{})},
     sourceUrl:source?.sourceUrl ?? `https://raw.githubusercontent.com/unitedstates/congress-legislators/${value.directory.source.sha}/legislators-district-offices.yaml`,
     sourceOrg:source?.sourceOrg ?? value.directory.source.sourceOrg,official:false,
     collectedAt:source?.collectedAt ?? value.directory.source.collectedAt,

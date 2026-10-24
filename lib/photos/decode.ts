@@ -41,10 +41,3 @@ export async function normalizePortrait(input: Uint8Array): Promise<NormalizedPo
 export async function decodeImage(input: Uint8Array): Promise<DecodeVerdict> {
   return (await normalizePortrait(input)).verdict;
 }
-export interface PortraitDecodeRecord {
-  ok: boolean; format?: ImageFormat; width?: number; height?: number; bytes?: number; reason?: string; detail?: string;
-  decodedAt: string;
-}
-export function decodeRecord(verdict: DecodeVerdict, decodedAt: string): PortraitDecodeRecord {
-  return {...verdict,decodedAt};
-}

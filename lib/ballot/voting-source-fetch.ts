@@ -2,8 +2,10 @@ import { pageAddress } from "../doors/page-doors.ts";
 import { evaluatePermission } from "../control-plane/scheduler/robots.ts";
 import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import type { VotingSourceAttempt, VotingSourceRuntime } from "./voting-source-types.ts";
+import type { ArtifactDerivation } from "../control-plane/evidence/artifact.ts";
 
-export interface VotingCapture { url: string; contentType: string; bytes: Uint8Array }
+/** `requestedUrl` names the address that redirected to `url`, so a saved-byte replay can answer the original request. */
+export interface VotingCapture { url: string; requestedUrl?: string; contentType: string; bytes: Uint8Array; derivation?: ArtifactDerivation }
 export interface VotingFetchSession {
   attempts: VotingSourceAttempt[];
   rawBodies: VotingCapture[];
@@ -23,10 +25,13 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
   const robots = new Map<string, { text: string | null; status: number | null; error: string | null; type: string | null }>();
   const recorded = new Set<string>();
   const send = async (url: string, init: RequestInit, route: "direct" | "browser-ua") => {
+    const remaining = runtime.deadlineMs === undefined ? 20_000 : Math.min(20_000, runtime.deadlineMs - Date.now());
+    if (remaining <= 0) throw new Error("Voting source acquisition deadline reached");
     const fetcher = route === "browser-ua" ? runtime.browserFetch : runtime.fetch;
     if (!fetcher) throw new Error("Browser-UA rung unavailable; follow the next official route");
     if (Object.keys(init.headers ?? {}).some(key => /^(?:authorization|cookie|proxy-authorization)$/i.test(key))) throw new Error("Authenticated election source requests are forbidden");
-    const response = await fetcher(url, { ...init, redirect: "manual", credentials: "omit", signal: init.signal ?? AbortSignal.timeout(20_000), headers: { "user-agent": DEFAULT_USER_AGENT, ...init.headers } });
+    const timeout = AbortSignal.timeout(Math.ceil(remaining));
+    const response = await fetcher(url, { ...init, redirect: "manual", credentials: "omit", signal: init.signal ? AbortSignal.any([init.signal, timeout]) : timeout, headers: { "user-agent": DEFAULT_USER_AGENT, ...init.headers } });
     attempts.push({ url, route, outcome: `HTTP ${response.status}` });
     return response;
   };
@@ -59,8 +64,9 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
   };
   const fetchCapture = async (value: string, init: RequestInit = {}): Promise<VotingCapture> => {
     let url = publicUrl(value);
+    const requested = url.href;
     for (let hops = 0; hops < 8; hops++) {
-      if (runtime.deadlineMs !== undefined && Date.now() >= runtime.deadlineMs) throw new Error("Reader lookup deadline reached");
+      if (runtime.deadlineMs !== undefined && Date.now() >= runtime.deadlineMs) throw new Error("Voting source acquisition deadline reached");
       await readRobots(url);
       let response = await send(url.href, init, "direct");
       if ([403, 503].includes(response.status) && runtime.browserFetch) {
@@ -74,7 +80,8 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
       if (!response.ok) throw new Error(`Source returned HTTP ${response.status}${response.headers.get("retry-after") ? `; retry after ${response.headers.get("retry-after")}` : ""}`);
       const bytes = new Uint8Array(await response.arrayBuffer()), contentType = response.headers.get("content-type") ?? "";
       if ((contentType.includes("html") || bytes[0] === 60) && blockedBody(new TextDecoder().decode(bytes))) throw new Error("Source presents a CAPTCHA, login, or bot wall; follow the next official route");
-      const capture = { url: url.href, contentType, bytes }; rawBodies.push(capture); return capture;
+      const capture: VotingCapture = { url: url.href, ...(url.href !== requested ? { requestedUrl: requested } : {}), contentType, bytes };
+      rawBodies.push(capture); return capture;
     }
     throw new Error("Source redirect chain did not resolve");
   };

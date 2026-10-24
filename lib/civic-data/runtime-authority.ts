@@ -350,10 +350,28 @@ export function assertRegisteredRuntimeContract(
     assertRuntimeAuthority({ capabilities: ["FEDERAL_PEOPLE_SPLIT"] }, env);
     return;
   }
+  // One admitted national Congress read publishes its registered place projections.
+  if (kind === "manual" && runtimeAuthorityEnvelope(env)?.contract === "congress-bulk-roster" &&
+      /^congress-bulk-roster:[A-Z]{2}$/.test(contractId)) {
+    assertRuntimeAuthority({ capabilities: ["MANUAL_CONTRACT"], contract: "congress-bulk-roster" }, env);
+    return;
+  }
+  const authority = runtimeAuthorityEnvelope(env);
+  if (kind === "manual" && authority && candidacyRegistryAuthority(authority, contractId)) {
+    assertRuntimeAuthority({ capabilities: [authority.capability], contract: authority.contract! }, env);
+    return;
+  }
   assertRuntimeAuthority({
     capabilities: [kind === "routine" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT"],
     contract: contractId,
   }, env);
+}
+
+/** Verified state rosters and ballots also refresh their own state's holder/candidacy join. */
+export function candidacyRegistryAuthority(authority: RuntimeAuthorityEnvelope, targetContract: string): boolean {
+  const state = authority.capability === "ROUTINE_CONTRACT" ? /^openstates-people-([a-z]{2})$/.exec(authority.contract ?? "")?.[1]
+    : authority.capability === "MANUAL_CONTRACT" ? /^ballot-contests:([A-Z]{2})$/.exec(authority.contract ?? "")?.[1] : undefined;
+  return state !== undefined && targetContract === `registry-runtime:${state.toUpperCase()}`;
 }
 
 export function assertSanctionedRuntimeAuthority(

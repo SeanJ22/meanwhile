@@ -9,6 +9,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { getTableColumns } from "drizzle-orm";
 
 import * as schema from "../lib/db/schema.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
@@ -445,7 +446,7 @@ test("candidate event time is a bounded local clock and never moves backward by 
   assert.equal((await futureStore.readCandidate(future.id))?.state, "TEMPORAL_INVALID");
   assert.deepEqual((await futureStore.events(future.id)).map(({ at }) => at), [observedAt, observedAt, observedAt]);
   assert.deepEqual(await futureStore.clock(future.sourceId, future.recordClass, future.scope), {
-    lastAttemptedAt: observedAt,
+    lastAttemptedAt: observedAt, failureStreak: 1,
   }, "a refused future claim must not postpone the scheduler until the claimed year");
 
   const futureEventStore = new MemoryRoutineDataStore();
@@ -1156,9 +1157,9 @@ test("the Postgres retry clock keeps failed attempts local and uses an observed 
   const clock = postgres.slice(postgres.indexOf("  async clock("));
   assert.match(clock, /CASE WHEN \$\{civicDataCandidates\.state\} = 'PROMOTED'[\s\S]*\$\{civicDataCandidates\.acquisitionSucceeded\} = true/);
   assert.match(clock, /THEN LEAST\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*civicDataCandidateEvents\.at[\s\S]*ELSE \$\{civicDataCandidateEvents\.at\} END/);
-  assert.match(clock, /select\(\{ attemptedAt: attemptAt \}\)/);
+  assert.match(clock, /select\(\{ attemptedAt: attemptAt[,} ]/);
   assert.match(clock, /eq\(civicDataCandidateEvents\.sequence, 1\)/);
-  assert.match(clock, /orderBy\(desc\(attemptAt\)\)/);
+  assert.match(clock, /orderBy\(desc\(attemptAt\)[,)]/);
   assert.doesNotMatch(
     clock,
     /orderBy\(desc\(civicDataCandidates\.retrievedAt\)\)/,
@@ -1212,13 +1213,13 @@ test("terminal store exposes no one-time import or aggregate retirement door", (
 });
 
 
-test("every jurisdiction roll-call candidate uses bounded immutable parts before insertion", async () => {
-  const contract = ROUTINE_SOURCE_CONTRACTS.find(row => row.recordClass === "STATE_ROLL_CALL")!;
+for (const recordClass of ["STATE_ROLL_CALL", "MEETING"] as const) test(`${recordClass} candidates use bounded immutable parts before insertion`, async () => {
+  const contract = recordClass === "MEETING" ? MEETING_PARTITION_CONTRACTS[0]! : ROUTINE_SOURCE_CONTRACTS.find(row => row.recordClass === recordClass)!;
   const base = candidate("bounded-roll-call", "2026-09-08T12:00:00.000Z", contract.sourceId);
   const evidence = { positions: Array.from({ length: 160 }, (_, index) => ({ id: String(index), text: "published ".repeat(1000) })) };
   const value: RoutineCandidate = { ...base, recordClass: contract.recordClass, scope: contract.scope,
-    normalizedPayload: evidence, readModel: { rollCalls: evidence.positions },
-    normalization: { ...base.normalization, normalizedHash: normalizedHash({ rollCalls: evidence.positions }), normalizedPayloadHash: normalizedHash(evidence) },
+    normalizedPayload: evidence, readModel: { records: evidence.positions },
+    normalization: { ...base.normalization, normalizedHash: normalizedHash({ records: evidence.positions }), normalizedPayloadHash: normalizedHash(evidence) },
   };
   await withCannedNeon(() => ({ columns: [], rows: [] }), async (store, sent) => {
     Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: {
@@ -1361,8 +1362,8 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
 });
 
 
-test("state promotion reuses its validated payload and reads only persisted envelope metadata", async () => {
-  const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === "ballot-contests:AZ")!;
+for (const family of ["state", "meeting"] as const) test(`${family} promotion reuses its validated payload and reads only persisted envelope metadata`, async () => {
+  const contract = family === "meeting" ? MEETING_PARTITION_CONTRACTS[0]! : MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === "ballot-contests:AZ")!;
   const payload = { ballots: { "US-AZ:2026-general": { contests: [] } } };
   const value = immutableStateCandidate({ ...candidate("state-held-promotion", "2026-09-08T12:00:00.000Z", contract.sourceId),
     recordClass: contract.recordClass, scope: contract.scope, readModel: payload, normalizedPayload: payload,
@@ -1390,7 +1391,7 @@ test("state promotion reuses its validated payload and reads only persisted enve
     return { columns: [], rows: [] };
   }, async (store, sent) => {
     Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: { repo: ROOT, sha: "1".repeat(40),
-      capability: "MANUAL_CONTRACT", contract: contract.id, parentPid: 123, nonce: "2".repeat(64) } });
+      capability: family === "meeting" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: contract.id, parentPid: 123, nonce: "2".repeat(64) } });
     const published = await store.promote(value.id, receipt, at, { candidate: value });
     assert.equal(published.payload, value.readModel);
     assert.equal(sent.filter(row => row.query.includes('from "civic_data_candidates"') && row.query.startsWith("select")).length, 1);

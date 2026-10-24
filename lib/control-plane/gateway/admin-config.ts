@@ -123,28 +123,6 @@ export function defaultAdminConfig(updatedAt: string = ADMIN_CONFIG_NEVER_WRITTE
   };
 }
 
-export function withApiFallback(
-  current: AdminConfig,
-  change: {
-    readonly enabled: boolean;
-    readonly decidedAt: string;
-    readonly decidedBy: string;
-    readonly receiptId: string;
-  },
-): AdminConfig {
-  return {
-    ...current,
-    formatVersion: ADMIN_CONFIG_FORMAT_VERSION,
-    apiFallback: {
-      enabled: change.enabled,
-      decidedAt: change.decidedAt,
-      decidedBy: change.decidedBy,
-      receiptId: change.receiptId,
-    },
-    updatedAt: change.decidedAt,
-  };
-}
-
 export function withFleetSpendCeiling(
   current: AdminConfig,
   change: {
@@ -270,8 +248,3 @@ export function adminConfigForPaidWork(read: AdminConfigRead): {
   }
   return { config: value, holdPaidWork: null };
 }
-
-export const API_FALLBACK_MISSING_SEAM =
-  "The autonomous worker runtime (lib/control-plane/workers/runtime.ts and research-runtime.ts, where the credential named by " +
-  "WORKER_CREDENTIAL_VAR is used) spends under its own RESEARCH_BOUNDS ceiling and " +
-  "does not consult this switch; turning this off does not stop that.";

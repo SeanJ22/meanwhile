@@ -307,11 +307,6 @@ export function substantiveAssertions(p: MethodProjection): ProjectedAssertion[]
   return p.routes.flatMap((r) => r.substantive);
 }
 
-/** Ids only, for a report or an assertion that does not care about the text. */
-export function inheritedRouteIds(p: MethodProjection): string[] {
-  return p.routes.map((r) => r.identity.id);
-}
-
 /** Does this projection offer this route at all? */
 export function projectionHasRoute(p: MethodProjection, routeId: string): boolean {
   return p.routes.some((r) => r.identity.id === routeId);

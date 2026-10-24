@@ -115,9 +115,11 @@ async function readMeetingOutcomes(states: readonly string[], selectors: readonl
   const keys = [...new Set([...(ids ?? []), ...selectors])];
   const doorKeys = selectors.flatMap(bodyId => ["legistar", "legistar-insite"].map(kind =>
     `MEETING_OUTCOME:${outcomePartitionScope(meetingPartitionId(kind, bodyId))}`));
-  const doorPrefixes = ids === null ? selectedStates.flatMap(state => ["state", "district", "territory"].flatMap(type =>
+  const routedPrefixes = selectors.flatMap(bodyId => ["legistar", "legistar-insite"].map(kind =>
+    outcomePartitionScope(meetingPartitionId(kind, bodyId)).slice(0, -":outcomes".length) + encodeURIComponent(":route:")));
+  const doorPrefixes = [...routedPrefixes, ...(ids === null ? selectedStates.flatMap(state => ["state", "district", "territory"].flatMap(type =>
     ["legistar", "legistar-insite"].map(kind => outcomePartitionScope(meetingPartitionId(kind,
-      `ocd-division/country:us/${type}:${state.toLowerCase()}/`)).slice(0, -":outcomes".length)))) : [];
+      `ocd-division/country:us/${type}:${state.toLowerCase()}/`)).slice(0, -":outcomes".length)))) : [])];
   const [rows] = await query([{ text: SELECTED_OUTCOMES, params: [selectedStates.map(state => `US-${state}:%`), keys, ids === null ? null : [...ids], doorKeys,
     selectedStates, doorPrefixes.map(prefix => prefix.replace(/[\\%_]/g, "\\$&") + "%")] }]);
   const snapshots: OutcomeSnapshot[] = [];
@@ -263,13 +265,6 @@ export async function refreshOutcomeSnapshotFromPromoted(
     throw new CivicDataStoreUnavailableError(unreachable);
   }
   return combinedOutcomeVersionId(doorOutcomeParts().map((part) => ({ contractId: part.pointer.contractId, versionId: part.versionId })));
-}
-
-/** The doors whose read failed (neither promoted nor honestly not recorded yet); a publisher leaves these out whole. */
-export function doorOutcomesUnreadable(): readonly string[] {
-  return [...readStates.values()]
-    .filter(({ state }) => state.kind !== "PROMOTED" && state.kind !== "NOT_RECORDED" && state.kind !== "BOOTSTRAP")
-    .map(({ pointer }) => pointer.contractId);
 }
 
 export function doorOutcomeParts(): readonly { readonly pointer: DoorOutcomePointer; readonly value: OutcomeSnapshot; readonly versionId: string }[] {
@@ -675,15 +670,4 @@ export function publicationObservationsFor(
     meetingId,
     sitting?.publicationObservations ?? [],
   );
-}
-
-/** Every meeting id the store holds outcome records for. */
-export function answerableMeetingIds(): ReadonlySet<string> {
-  const ids = new Set<string>();
-  for (const sitting of getOutcomeSnapshot().sittings) {
-    if (sitting.extraction === "RETRIEVED" && sitting.outcomes.length > 0) {
-      ids.add(sitting.meetingId);
-    }
-  }
-  return ids;
 }

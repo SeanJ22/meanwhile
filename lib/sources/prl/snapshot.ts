@@ -120,10 +120,6 @@ export async function refreshPrlFromPromoted(
   return promotedVersionOrThrow(await readPrlProjection(options));
 }
 
-export function prlReadState(): CivicDataReadResult<PrlSnapshot> {
-  return readState;
-}
-
 function snapshot(): PrlSnapshot {
   if (cache) return cache;
   throw new Error(

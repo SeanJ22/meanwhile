@@ -29,7 +29,9 @@ export type ExecutiveActionKind =
   | "VETO"
   /** A letter we hold, with a URL, that nobody has read yet. OURS, not theirs. */
   | "BILL_LETTER_UNREAD"
-  | "PROCLAMATION";
+  | "PROCLAMATION"
+  | "MEMORANDUM"
+  | "DEPARTMENT_ACTION";
 
 /** Why a row has no date, and whose fact that is. */
 export type OccurredAtState =
@@ -152,8 +154,6 @@ export async function refreshExecutiveActionsFromPromoted(
 /** The executive-action preload, edge first: the reader edge's proven copy, else the database. */
 export const settleExecutiveActionsRead = (): Promise<string | null> =>
   readPromotedEdgeFirst(AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, AZ_OFFICIAL_ACTIONS_CONTRACT.scope, refreshExecutiveActionsFromPromoted, "The Arizona executive actions");
-
-export const executiveActionsReadState = (): CivicDataReadResult<ExecutiveActionStore> => actionReadState;
 
 /** The held store, or null: "we hold no action records" is a fact about us, never about a government. */
 export function executiveActionStore(): ExecutiveActionStore | null {
@@ -280,5 +280,11 @@ export function actionText(action: ExecutiveAction): string {
 
     case "PROCLAMATION":
       return `${action.designation},${title} proclaimed${on}.`;
+
+    case "MEMORANDUM":
+      return `${action.designation},${title} issued${on}.`;
+
+    case "DEPARTMENT_ACTION":
+      return `${action.designation},${title} published${on}.`;
   }
 }

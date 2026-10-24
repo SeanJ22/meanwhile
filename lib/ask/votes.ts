@@ -78,10 +78,6 @@ function loadRoster(): VoteSubjectSeat[] {
   return out;
 }
 
-export function resetVoteRosterCache(): void {
-  rosterCache = null;
-}
-
 /** Only case, accents, punctuation and generational suffixes come off; middle names, initials, aliases and variants stay. */
 export function identityKey(display: string): string {
   const { givenName, familyName } = splitDisplayName(display);

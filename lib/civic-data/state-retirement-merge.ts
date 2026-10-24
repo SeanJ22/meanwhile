@@ -37,7 +37,13 @@ const recordAliases = (row: Row): string[] => [row.id, object(row.filing).id, ob
   .filter((id): id is string => typeof id === "string" && !!id);
 const stamp = (value: unknown, fallback: number): number => {
   const row = object(value), provenance = object(row.provenance), evidence = object(row.evidence);
-  for (const at of [provenance.collectedAt, row.collectedAt, row.retrievedAt, row.checkedAt, row.writtenAt, evidence.readAt,
+  // A later verified classification can correct an unchanged capture (for example an unopposed race).
+  for (const source of [provenance, row]) {
+    const sourceTimes = [source.collectedAt, source.verifiedAt]
+      .filter((at): at is string => typeof at === "string" && Number.isFinite(Date.parse(at))).map(Date.parse);
+    if (sourceTimes.length) return Math.max(...sourceTimes);
+  }
+  for (const at of [row.retrievedAt, row.checkedAt, row.writtenAt, evidence.readAt,
     object(row.campaign).attemptedAt, row.updatedAt, row.curatedAt, row.generatedAt]) {
     if (typeof at === "string" && Number.isFinite(Date.parse(at))) return Date.parse(at);
   }
@@ -284,7 +290,12 @@ class StateRows {
   }
 }
 
-export async function reconcileRetirementStateInput(input: { file: string; sha256: string; seal: string; contractId: string; store: RoutineDataStore; now: string }): Promise<{ family: string; state: string; status: "PUBLISHED" | "CURRENT"; currentSelections: readonly { key: string; code: string; detail: string }[] }> {
+type RetirementInput = { file: string; sha256: string; seal: string; contractId: string; store: RoutineDataStore; now: string };
+type PreparedRetirement = { family: string; state: string; currentSelections: readonly { key: string; code: string; detail: string }[];
+  candidate: RoutineCandidate | null; baseVersion: string | null; payload: unknown };
+
+/** The normal publisher and read-only replay share exactly the same source proof and state merge. */
+async function withRetirementStateInput<T>(input: RetirementInput, accept: (prepared: PreparedRetirement) => Promise<T>): Promise<T> {
   const digest = createHash("sha256");
   const streamed = new Set(["members", "candidate.identities", "candidate.excludedFacts", "candidate.manualPriorAuthority.retainedMembers",
     "receipt.excludedFacts", "candidate.retrieval.manualSourceReceipt.sources"]);
@@ -339,8 +350,10 @@ export async function reconcileRetirementStateInput(input: { file: string; sha25
     }
     const baseVersion = current?.versionId ?? null;
     const currentSelections = rows.selections;
-    const result = (status: "PUBLISHED" | "CURRENT") => ({ family: unit.family, state: unit.state, status, currentSelections });
-    if (current && !rows.expected.size && !rows.metadataChanged) return result("CURRENT");
+    const prepared = (candidate: RoutineCandidate | null, payload: unknown) => accept({ family: unit.family, state: unit.state, currentSelections, candidate, baseVersion, payload });
+    if (current && !rows.expected.size && !rows.metadataChanged && await input.store.hasStateRetirementProof?.(contractId, {
+      versionId: unit.originId, recordClass: unit.originRecordClass, scope: unit.originScope, readModelHash: unit.originReadModelHash, sourceAuthenticity: source.sourceAuthenticity!,
+    })) return prepared(null, current.payload);
     const selected = new Map(civicRecordsFor(contract.recordClass, rows.payload).map(member => [member.key, member.record]));
     for (const member of civicRecordsFor(contract.recordClass, current?.payload)) consumeStatePublicationRecord(member.record, selected.get(member.key) ?? null, member.key);
     unit.candidate = { ...unit.candidate, excludedFacts: [...unit.candidate.excludedFacts ?? [], ...currentSelections] };
@@ -351,8 +364,21 @@ export async function reconcileRetirementStateInput(input: { file: string; sha25
     selected.clear(); shared.clear(); sourceStrings.clear(); exclusions.clear();
     authorized.set(candidate.stateRetirement!, { envelopeHash: envelopeHash(candidate), priorVersionId: baseVersion });
     rows = null; current = null; metadata = null; read = null;
-    const published = await processRegisteredStateRetirementCandidate(input.store, contractId, candidate, input.now, baseVersion);
-    if (!published.promoted) throw new Error(`STATE_RETIREMENT_PUBLICATION_FAILED:${published.candidate.failureDetail ?? published.candidate.receipt?.decision ?? "NO_RECEIPT"}`);
-    return result("PUBLISHED");
+    return prepared(candidate, candidate.readModel);
   });
+}
+
+export async function reconcileRetirementStateInput(input: RetirementInput) {
+  return withRetirementStateInput(input, async prepared => {
+    if (prepared.candidate) {
+      const published = await processRegisteredStateRetirementCandidate(input.store, input.contractId, prepared.candidate, input.now, prepared.baseVersion);
+      if (!published.promoted) throw new Error(`STATE_RETIREMENT_PUBLICATION_FAILED:${published.candidate.failureDetail ?? published.candidate.receipt?.decision ?? "NO_RECEIPT"}`);
+    }
+    return { family: prepared.family, state: prepared.state, status: prepared.candidate ? "PUBLISHED" as const : "CURRENT" as const, currentSelections: prepared.currentSelections };
+  });
+}
+
+/** Stops before the publisher; production read-only roles are sufficient for every database operation. */
+export async function previewRetirementStateInput(input: RetirementInput) {
+  return withRetirementStateInput(input, async prepared => ({ ...prepared, status: prepared.candidate ? "PREVIEW" as const : "CURRENT" as const }));
 }

@@ -2,8 +2,6 @@ export type OfficePoint = { lat: number; lng: number };
 
 const MAILBOX_ONLY = /^\s*(?:p[\s.]*o[\s.]*box|post\s+office\s+box)(?=\s|#|\d)/i;
 export const isOfficeStreetAddress = (address: string) => !MAILBOX_ONLY.test(address);
-const validPoint = (point: OfficePoint) => Number.isFinite(point.lat) && Number.isFinite(point.lng)
-  && Math.abs(point.lat) <= 90 && Math.abs(point.lng) <= 180;
 
 /** One slow Census request must not hold up an otherwise complete office map. */
 function locateOffice(address: string, fetchImpl: typeof fetch): Promise<OfficePoint | null> {
@@ -55,10 +53,5 @@ export function createOfficeLocator(fetchImpl: typeof fetch = (...args) => fetch
     points.set(address, { promise, expires: Infinity });
     return promise;
   };
-  return Object.assign(locate, { prime(held: Readonly<Record<string, OfficePoint>>) {
-    for (const [address, point] of Object.entries(held)) if (isOfficeStreetAddress(address) && validPoint(point)) {
-      if (points.size >= 256) points.delete(points.keys().next().value!);
-      points.set(address, { promise: Promise.resolve(point), expires: now() + 30_000 });
-    }
-  } });
+  return locate;
 }

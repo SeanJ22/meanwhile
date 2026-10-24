@@ -1,11 +1,17 @@
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
+import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
+import { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
+export { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
 import { pathToFileURL } from "node:url";
+import { readFile } from "node:fs/promises";
+import { withRetainedSourceResponse } from "./lib/retained-source-replay.ts";
 
 import {
   agendaDocumentStore,
+  canonicalAgendaDocument,
   retrieveAgendaDocument,
+  AgendaDocumentStore,
   type AgendaDocument,
-  type AgendaDocumentStore,
 } from "../lib/meetings/agenda-documents.ts";
 import {
   MEETING_HELD_HORIZON_DAYS,
@@ -23,7 +29,6 @@ import {
 } from "../lib/meetings/attribution.ts";
 import { agendaItems } from "../lib/routing/agenda-search.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
-import { ROUTINE_SAME_DOMAIN_CHILD_GAP_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { calendarReadOrder } from "../lib/civic-data/state-calendars.ts";
 import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
 import { isAnotherBodysNoticePage, isWiredNoticePage } from "../lib/meetings/notice-pages.ts";
@@ -41,7 +46,7 @@ import {
 } from "../lib/meetings/snapshot.ts";
 import { failedAcquisitionCandidate, meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
-import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
+import { agendaDocumentRecordKey, candidateChangeSet } from "../lib/civic-data/changes.ts";
 import {
   processRegisteredMeetingHistoryCandidate,
   processRegisteredMeetingPartitionCandidate,
@@ -55,6 +60,7 @@ import {
 import type { RoutineCandidate, RoutineRemovalEvidence } from "../lib/civic-data/types.ts";
 import {
   meetingPartitionContract,
+  refreshMeetingPartitions,
   type MeetingPartitionContract,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
@@ -73,8 +79,11 @@ import { makeRevizeSource } from "../lib/sources/revize/index.ts";
 import { makeLegistarSource } from "../lib/sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
-import { activeWiring, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
-import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
+import { activeWiring, installMeetingDoors, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
+import { ensureMeetingDoors, installDoorRecords, installMeetingWiring } from "../lib/doors/meeting-doors.ts";
+import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
+import { hostsOfConfig } from "../lib/doors/seed-meetings.ts";
+import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
@@ -86,6 +95,7 @@ import type { ManualProjectionPackage } from "../lib/civic-data/manual-projectio
 import { publishVenueResolutions } from "../lib/meetings/venue-publication.ts";
 import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
 import { currentVenueCache, resolveVenue, venueResolutionRecordId, type VenueEntry } from "../lib/meetings/venue-cache.ts";
+import { scopedMeetingSource } from "./lib/scoped-meeting-source.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -105,13 +115,17 @@ import {
 } from "../lib/civic-data/derived-meeting-family.ts";
 import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
-import { readerFactDb } from "../lib/facts/db.ts";
+import { factReader, readerFactDb } from "../lib/facts/db.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { join } from "node:path";
+import { diggerMeasurement, type DiggerMeasurement } from "./lib/digger-measurement.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
+import { currentMeetingClock, installMeetingClock, type MeetingClock } from "../lib/civic-data/contracts.ts";
+import { readHeldMeetingInput } from "../lib/control-plane/scheduler/providers/held-meeting-input.ts";
 
 let REGISTRY: Registry | null = null;
 
@@ -148,7 +162,12 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
     .map((arg) => arg.slice("--only-partition=".length));
   const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
   if (handed && flags.length > 0) throw new Error("MEETING_PARTITION_SELECTION_AMBIGUOUS");
-  const requested = handed ? readContractHandoff<string>(args) : flags;
+  if (handed) {
+    const contracts = readContractHandoff<MeetingPartitionContract>(args);
+    installMeetingPartitionSelection(contracts);
+    return contracts;
+  }
+  const requested = flags;
   if (requested.length === 0 || requested.some((id) => typeof id !== "string" || !id)) throw new Error("MEETING_PARTITION_REQUIRED");
   if (new Set(requested).size !== requested.length) throw new Error("MEETING_PARTITION_NAMED_TWICE");
   return requested.map((id) => {
@@ -215,36 +234,6 @@ export class AgendaRedirectRefused extends Error {
 
 const AGENDA_REDIRECT_LIMIT = 5;
 
-export function readOncePerRun(base: typeof fetch): typeof fetch & { readonly distinctReads: () => number } {
-  type Held = { readonly status: number; readonly statusText: string; readonly headers: [string, string][]; readonly bytes: Uint8Array };
-  const reads = new Map<string, Promise<Held>>();
-  const wrapped = (async (input: RequestInfo | URL, init?: RequestInit) => {
-    const url = String(input instanceof Request ? input.url : input);
-    let read = reads.get(url);
-    if (!read) {
-      read = (async () => {
-        const response = await base(input, init);
-        return {
-          status: response.status,
-          statusText: response.statusText,
-          headers: [...response.headers.entries()],
-          bytes: new Uint8Array(await response.arrayBuffer()),
-        };
-      })();
-      reads.set(url, read);
-    }
-    const held = await read;
-    const nullBody = held.status === 204 || held.status === 205 || held.status === 304;
-    return new Response(nullBody ? null : held.bytes.slice(), {
-      status: held.status,
-      statusText: held.statusText,
-      headers: held.headers,
-    });
-  }) as typeof fetch & { readonly distinctReads: () => number };
-  Object.defineProperty(wrapped, "distinctReads", { value: () => reads.size });
-  return wrapped;
-}
-
 export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   return (async (input: RequestInfo | URL, init?: RequestInit) => {
     const impl = base ?? globalThis.fetch;
@@ -274,10 +263,10 @@ function readsThroughPortal(meeting: Meeting, url: string): boolean {
   return isLegistarDocumentHost(url) && portalDetailPageFor(meeting) !== null;
 }
 
-async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): Promise<string | null> {
+async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch, store: AgendaDocumentStore = agendaDocumentStore): Promise<string | null> {
   const page = portalDetailPageFor(meeting);
   if (!page) return null;
-  const held = agendaDocumentStore.latestFor(meeting.id)?.documentUrl ?? null;
+  const held = store.latestFor(meeting.id)?.documentUrl ?? null;
   // The link passes the same refusal rule as the page before its first byte;
   // `fetchImpl` asks it again at every redirect hop of both requests.
   if (held && isPortalAgendaLinkFor(held, page) && agendaRetrievalRefusal(held) === null) return held;
@@ -374,7 +363,7 @@ export function agendaRetrievalOrder(
     .map(({ meeting }) => meeting);
 }
 
-export async function retrieveAgendas(meetings: Meeting[]) {
+export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocumentStore = agendaDocumentStore, nowMs = Date.now()) {
 
   const heldAsLinks = meetings.filter((m) => {
     const url = documentUrlFor(m);
@@ -403,15 +392,18 @@ export async function retrieveAgendas(meetings: Meeting[]) {
     return url !== null && agendaRetrievalRefusal(url) === null;
   });
   // A link never read for its sitting goes first (`agendaRetrievalOrder`).
-  const ordered = agendaRetrievalOrder(withAgenda);
+  const ordered = agendaRetrievalOrder(withAgenda, nowMs, store);
   let stored = 0;
   let revised = 0;
   /* Documents refused as landing pages — stated, never silently dropped. */
   let landingPages = 0;
   let unchanged = 0;
   let failed = 0;
+  let failedExtractions = 0;
   /* Failed reads kept off a sitting that already holds a version. */
   let failedOverHeld = 0;
+  let reusedFresh = 0;
+  const readableMeetingIds: string[] = [];
   /* Links that redirected into a refused host: held, never followed. */
   let redirectsRefused = 0;
   /* Vendor-host links read through the portal, and those read from the vendor's file instead. */
@@ -422,98 +414,125 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   /* A notice page is one body's page: read once per run, however many sittings reach it. */
   const noticePageRefusedThisRun = new Set<string>();
   const fetchImpl = readOncePerRun(refusalCheckedFetch());
+  const clock = currentMeetingClock();
+  const freshForMs = meetings.some(meeting => Math.abs(Date.parse(meeting.startsAt) - nowMs) <= clock.windowMs)
+    ? clock.hotEveryMs : clock.baseEveryMs;
 
-  for (const meeting of ordered) {
-    try {
-      const url = documentUrlFor(meeting);
-      const viaNoticePage = readThroughNoticePage(meeting);
-      if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
-        noticePagesRefused++;
-        continue;
-      }
-      let override = url && url !== meeting.agendaUrl ? url : null;
-      let fromPortal = false;
-      let fromVendor = false;
-      if (url !== null && readsThroughPortal(meeting, url)) {
-        let portalLink: string | null = null;
-        let portalFailure: string | null = null;
-        try {
-          portalLink = await portalAgendaLinkFor(meeting, fetchImpl);
-        } catch (error) {
-          portalFailure = error instanceof Error ? error.message : String(error);
+  try {
+    for (const meeting of ordered) {
+      try {
+        const url = documentUrlFor(meeting);
+        const saved = store.latestFor(meeting.id);
+        const savedAt = saved ? Date.parse(saved.retrievedAt) : Number.NaN;
+        const sourcePostedAt = meeting.postedAt ? Date.parse(meeting.postedAt) : Number.NaN;
+        if (saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
+          savedAt <= nowMs && nowMs - savedAt < freshForMs && !(sourcePostedAt > savedAt)) {
+          reusedFresh++;
+          readableMeetingIds.push(meeting.id);
+          continue;
         }
-        if (portalLink) {
-          override = portalLink;
-          fromPortal = true;
-        } else {
-          // The other public route to the same agenda: the vendor's own file.
-          fromVendor = true;
-          console.log(
-            `  agenda for ${meeting.id} read from the vendor's file: its portal detail page ` +
-              (portalFailure === null ? "links no agenda yet" : `could not be read (${portalFailure})`),
+        const viaNoticePage = readThroughNoticePage(meeting);
+        if (viaNoticePage && url !== null && noticePageRefusedThisRun.has(url)) {
+          noticePagesRefused++;
+          continue;
+        }
+        let override = url && url !== meeting.agendaUrl ? url : null;
+        let fromPortal = false;
+        let fromVendor = false;
+        if (url !== null && readsThroughPortal(meeting, url)) {
+          let portalLink: string | null = null;
+          let portalFailure: string | null = null;
+          try {
+            portalLink = await portalAgendaLinkFor(meeting, fetchImpl, store);
+          } catch (error) {
+            portalFailure = error instanceof Error ? error.message : String(error);
+          }
+          if (portalLink) {
+            override = portalLink;
+            fromPortal = true;
+          } else {
+            // The other public route to the same agenda: the vendor's own file.
+            fromVendor = true;
+            console.log(
+              `  agenda for ${meeting.id} read from the vendor's file: its portal detail page ` +
+                (portalFailure === null ? "links no agenda yet" : `could not be read (${portalFailure})`),
+            );
+          }
+        }
+        const doc = await retrieveAgendaDocument(
+          meeting,
+          override ? { fetchImpl, held: store, urlOverride: override } : { fetchImpl, held: store },
+        );
+        if (!doc) continue;
+        if (fromPortal) readViaPortal++;
+        if (fromVendor) readFromVendor++;
+        if (doc.extraction === "failed") {
+          failedExtractions++;
+          console.warn(
+            `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
           );
         }
-      }
-      const doc = await retrieveAgendaDocument(
-        meeting,
-        override ? { fetchImpl, urlOverride: override } : { fetchImpl },
-      );
-      if (!doc) continue;
-      if (fromPortal) readViaPortal++;
-      if (fromVendor) readFromVendor++;
-      if (doc.extraction === "failed") {
-        console.warn(
-          `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
+
+        const alreadyOnAnotherMeeting = store.isUrlOnAnotherMeeting(
+          doc.documentUrl,
+          doc.meetingId,
         );
-      }
+        if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
+          landingPages++;
+          continue;
+        }
 
-      const alreadyOnAnotherMeeting = agendaDocumentStore.isUrlOnAnotherMeeting(
-        doc.documentUrl,
-        doc.meetingId,
-      );
-      if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
-        landingPages++;
-        continue;
-      }
+        if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
+          noticePagesRefused++;
+          if (url !== null) noticePageRefusedThisRun.add(url);
+          continue;
+        }
 
-      if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
-        noticePagesRefused++;
-        if (url !== null) noticePageRefusedThisRun.add(url);
-        continue;
-      }
+        if (doc.extraction === "failed" && store.latestFor(doc.meetingId)) {
+          failedOverHeld++;
+          continue;
+        }
 
-      if (doc.extraction === "failed" && agendaDocumentStore.latestFor(doc.meetingId)) {
-        failedOverHeld++;
-        continue;
-      }
+        if (doc.extraction !== "failed" && doc.text) readableMeetingIds.push(doc.meetingId);
 
-      const result = agendaDocumentStore.append(doc);
-      if (!result.stored) unchanged++;
-      else {
-        stored++;
-        if (result.revised) revised++;
+        const result = store.append(doc);
+        if (!result.stored) unchanged++;
+        else {
+          stored++;
+          if (result.revised) revised++;
+        }
+      } catch (error) {
+        if (error instanceof AgendaRedirectRefused) {
+          redirectsRefused++;
+          console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
+          continue;
+        }
+        failed++;
+        console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
       }
-    } catch (error) {
-      if (error instanceof AgendaRedirectRefused) {
-        redirectsRefused++;
-        console.log(`  agenda link held as a link for ${meeting.id}: ${error.message}`);
-        continue;
-      }
-      failed++;
-      console.warn(`  agenda fetch failed for ${meeting.id}: ${error}`);
     }
+  } finally {
+    fetchImpl.close();
   }
 
   console.log(
-    `agenda documents: ${withAgenda.length} linked, ${ordered.length} fetched ` +
+    `agenda documents: ${withAgenda.length} linked, ${ordered.length} considered ` +
       `(${fetchImpl.distinctReads()} distinct URL(s) requested, each once), ` +
       `${stored} stored, ${revised} revisions, ` +
       `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed, ` +
       `${failedOverHeld} failed read(s) not stored over a held version, ` +
       `${redirectsRefused} redirect(s) into a refused host not followed, ` +
       `${readViaPortal} vendor-host link(s) read through the portal, ${readFromVendor} read from the vendor's file, ` +
-      `${noticePagesRefused} notice-page read(s) stating no agenda item not held as a sitting's agenda`,
+      `${noticePagesRefused} notice-page read(s) stating no agenda item not held as a sitting's agenda, ${reusedFresh} fresh saved agenda(s) reused with their original capture time`,
   );
+  return { failed, failedExtractions, failedOverHeld, redirectsRefused, noticePagesRefused, readableMeetingIds, requests: fetchImpl.distinctReads() };
+}
+
+/** Recurring meeting details follow the held calendar window; permanent outcome readers own older history. */
+export async function retrieveHeldAgendas(meetings: readonly Meeting[], store: AgendaDocumentStore, nowMs = Date.now()) {
+  const window = meetingHeldWindowAt(new Date(nowMs).toISOString())!;
+  const held = meetings.filter(meeting => Date.parse(meeting.startsAt) >= Date.parse(window.lowerBound) && Date.parse(meeting.startsAt) <= Date.parse(window.upperBound));
+  return { ...await retrieveAgendas(held, store, nowMs), heldMeetingIds: held.map(meeting => meeting.id) };
 }
 
 async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): Promise<void> {
@@ -545,27 +564,26 @@ export async function promoteDerivedMeetingFamily(
   /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
   prepare: () => Promise<void> = async () => {},
   facts?: Omit<MeetingFactsTarget, "responses">,
-): Promise<void> {
+): Promise<PromotionOutcome> {
   const generatedAt = new Date().toISOString();
-  const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
+  const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<PromotionOutcome> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
     const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, failed, generatedAt);
     printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
+    return outcome;
   };
   const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
   if (wiring.kind !== "PROMOTED") {
-    await refuse(
+    return refuse(
       wiring.kind === "NOT_RECORDED"
         ? "No meeting-source wiring version is promoted yet, so this family has no member to read."
         : jobFailureDetail(`The meeting-source wiring could not be read (${wiring.kind}): ${"detail" in wiring ? wiring.detail : ""}`),
       "JOB",
     );
-    return;
   }
   const members = familyMembers(wiring.value, partition.derivedFamily!);
   if (members.length === 0) {
-    await refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
-    return;
+    return refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
   }
   await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
@@ -583,8 +601,7 @@ export async function promoteDerivedMeetingFamily(
   const versionId = wiring.metadata.versionId;
   const promotedAt = wiring.metadata.promotedAt;
   if (versionId === null || promotedAt === null) {
-    await refuse(jobFailureDetail("The promoted meeting-source wiring carries no version id or promotion time."), "JOB");
-    return;
+    return refuse(jobFailureDetail("The promoted meeting-source wiring carries no version id or promotion time."), "JOB");
   }
   const history = await moveConcludedMeetingsForPartition(store, partition, previous, generatedAt);
   const restoredPrevious = await restoreRemovedHistoryForPartition(store, partition, previous, generatedAt);
@@ -640,14 +657,15 @@ export async function promoteDerivedMeetingFamily(
     await publishVenuePins(store, partition.id, census.package);
     for (const read of facts ? reads.filter(row => row.ok) : []) {
       await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        read.freshMeetings, read.acquisitions, candidate.id, generatedAt);
+        read.freshMeetings, read.acquisitions, outcome.candidate.candidate.id, generatedAt);
     }
   }
-  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
+  console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: outcome.candidate.candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
     held: census.held.length, decision: outcome.candidate.receipt?.decision ?? null,
     promotedVersion: outcome.promoted?.versionId ?? null })}`);
+  return outcome;
 }
 
 /** BX-09: the pins this pass matched go into the venue-resolutions pointer on their own; a hold there never stops the pass. */
@@ -658,118 +676,252 @@ async function publishVenuePins(store: RoutineDataStore, partitionId: string, pk
     promoted: published.outcome?.promoted?.versionId ?? null, held: published.held })}`);
 }
 
-async function main() {
-  installNeonRequestDeadline();
-  const name = process.argv[2];
-  const promote = process.argv.slice(3).includes("--promote");
+export interface MeetingIngestResult {
+  readonly measurement: DiggerMeasurement | null;
+  readonly partitions: readonly MeetingPartitionPromotionResult[];
+  readonly succeeded: boolean;
+  readonly sourceSucceeded: boolean;
+  readonly exitCode: 0 | 2;
+  readonly sourceReads: readonly Omit<RetainedSourceResponse, "bytes">[];
+}
+
+export interface MeetingIngestOptions {
+  readonly facts?: Omit<MeetingFactsTarget, "responses">;
+  readonly initialResponse?: RetainedSourceResponse;
+  /** A caller that already holds this body's records passes its exact slice. */
+  readonly partition?: MeetingPartitionContract;
+  readonly registry?: Registry;
+  readonly store?: RoutineDataStore;
+  readonly previous?: MeetingsSnapshot | null;
+  readonly venues?: readonly VenueEntry[];
+  readonly venuesUnavailable?: string;
+  readonly meetingClock?: MeetingClock;
+}
+
+/** The ordinary registered child acquires exactly its own door and reader slice. */
+export async function readHeldMeetingCliOptions(args: readonly string[], dependencies?: {
+  readonly readDoor: (id: string) => Promise<DoorRecord | null>;
+  readonly query: Query;
+}): Promise<Omit<MeetingIngestOptions, "initialResponse" | "store">> {
+  if (args[0] !== "composite") return {};
+  // The state program receives the parent's exact contracts; its normal selection validates that handoff.
+  if (args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg))) return {};
+  const selected = args.filter(arg => arg.startsWith("--only-partition="));
+  if (selected.length === 0) throw new Error("INGEST_EXACT_PARTITION_REQUIRED");
+  if (selected.length > 1) return {}; // The state program loads its shared dependencies once.
+  const id = selected[0]!.slice("--only-partition=".length);
+  if (meetingPartitionContract(id)?.derivedFamily) return {};
+  let readDoor = dependencies?.readDoor;
+  if (!readDoor) {
+    const url = controlPlaneUrlFromEnv();
+    if (!url) throw new Error("HELD_MEETING_DOOR_STORE_UNAVAILABLE");
+    const repos = await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true });
+    readDoor = async id => {
+      const held = await repos.doors.read(id);
+      return held && isDoorRecord(held.value) ? held.value : null;
+    };
+  }
+  const door = await readDoor(id);
+  if (!door || door.bodyIds.length !== 1) throw new Error(`HELD_MEETING_DOOR_NOT_ONE_BODY:${id}`);
+  installDoorRecords([door], "the ordinary registered subject's own door");
+  const partition = meetingPartitionContract(id);
+  if (!partition || partition.derivedFamily !== null || partition.bodyId !== door.bodyIds[0]) throw new Error(`HELD_MEETING_DOOR_PARTITION_MISMATCH:${id}`);
+  const query = dependencies?.query ?? factReader();
+  if (!query) throw new Error("HELD_MEETING_READER_STORE_UNAVAILABLE");
+  return readHeldMeetingInput(query, partition);
+}
+
+function measureMeetingFields(measurement: ReturnType<typeof diggerMeasurement>, partition: MeetingPartitionContract,
+  meetings: readonly Meeting[], previous: MeetingsSnapshot | null, store: AgendaDocumentStore,
+  readableMeetingIds: readonly string[], attachable: boolean): void {
+  const prior = new Map((previous?.meetings ?? []).map(meeting => [meeting.id, meeting]));
+  const documents = new Map(inRetrievalOrder(previous?.agendaDocuments ?? []).map(document => [document.meetingId, document]));
+  for (const meeting of meetings) {
+    if (meeting.bodyId !== partition.bodyId) { measurement.fail(`Out-of-body row ${meeting.id}`); continue; }
+    const held = prior.get(meeting.id);
+    measurement.fact("calendar", { title: meeting.title, startsAt: meeting.startsAt, timeZone: meeting.timeZone },
+      held && { title: held.title, startsAt: held.startsAt, timeZone: held.timeZone }, attachable);
+    if (meeting.location) measurement.fact("location", meeting.location, held?.location, attachable);
+    if (meeting.agendaUrl) measurement.fact("agenda", meeting.agendaUrl, held?.agendaUrl, attachable);
+    if (meeting.status === "CANCELED" || held && held.status !== meeting.status) measurement.fact("changes", meeting.status, held?.status, attachable);
+    const document = store.latestFor(meeting.id);
+    if (document?.extraction === "failed") measurement.fail(`${meeting.id}: ${document.extractionNote}`);
+    else if (document?.text && readableMeetingIds.includes(meeting.id)) {
+      const last = documents.get(meeting.id);
+      measurement.fact("agenda", { documentUrl: document.documentUrl, contentHash: document.contentHash },
+        last && { documentUrl: last.documentUrl, contentHash: last.contentHash }, attachable);
+    }
+  }
+}
+
+/** Process each body on its own; a saved acquisition is consumed once with its original evidence clock. */
+export async function runMeetingIngest(args: readonly string[], options: MeetingIngestOptions = {}): Promise<MeetingIngestResult> {
+  const priorWiring = activeWiring();
+  const priorClock = currentMeetingClock();
+  if (options.venues !== undefined) {
+    const partition = options.partition, wiring = partition?.wiring;
+    if (!partition || !wiring || options.venues.some(venue =>
+      venue.bodyOcdId !== partition.ocdId || ![partition.meetingSource, wiring.config.venueSourceId].includes(venue.sourceId) ||
+      partition.ocdId === null && venue.tenant !== (wiring.config.venueTenant ?? wiring.config.slug) ||
+      !Number.isFinite(venue.lat) || Math.abs(venue.lat) > 90 || !Number.isFinite(venue.lng) || Math.abs(venue.lng) > 180 ||
+      ![venue.addressSourceUrl, venue.coordinateSourceUrl].every(url => { try { return new URL(url).protocol === "https:"; } catch { return false; } }))) {
+      throw new Error("INGEST_PREPARED_VENUES_NOT_ONE_BODY");
+    }
+  }
+  try {
+    if (options.meetingClock) installMeetingClock(options.meetingClock);
+    if (options.partition?.wiring) {
+      installMeetingDoors([options.partition.wiring]);
+      const refreshed = refreshMeetingPartitions([options.partition.wiring]);
+      if (!refreshed.refreshed) throw new Error(`INGEST_PREPARED_PARTITION_UNREADABLE:${refreshed.reason}`);
+    }
+    const execute = () => executeMeetingIngest(args, options);
+    return (await withRetainedSourceResponse(options.initialResponse, execute)).value;
+  } finally { installMeetingDoors(priorWiring); if (options.partition?.wiring) refreshMeetingPartitions(priorWiring); installMeetingClock(priorClock); REGISTRY = null; }
+}
+
+async function executeMeetingIngest(args: readonly string[], options: MeetingIngestOptions): Promise<MeetingIngestResult> {
+  const name = args[0];
+  const promote = args.slice(1).includes("--promote");
+  const dryRun = args.slice(1).includes("--dry-run");
+  if (promote && dryRun) throw new Error("INGEST_MODE_AMBIGUOUS: choose --promote or --dry-run");
+  if (dryRun && name !== "composite") throw new Error("INGEST_READ_ONLY_PARTITION_REQUIRED: --dry-run requires composite and exactly one body partition");
 
   if (!name || (name !== "composite" && !(name in SOURCES))) {
     console.error(
       `Usage: pnpm ingest <source>\nKnown sources: ${[...Object.keys(SOURCES), "composite"].join(", ")}`,
     );
-    process.exitCode = 1;
-    return;
+    throw new Error("INGEST_SOURCE_REQUIRED");
   }
 
   if (promote && name !== "composite") {
     console.error("--promote is defined only for the canonical composite meetings contract");
-    process.exitCode = 1;
-    return;
+    throw new Error("INGEST_PROMOTION_REQUIRES_COMPOSITE");
   }
-  if (name === "composite" && !promote) {
+  if (name === "composite" && !promote && !dryRun) {
     console.error(
-      "composite is a production-capable meetings refresh and requires --promote",
+      "composite requires --promote or --dry-run",
     );
-    process.exitCode = 1;
-    return;
+    throw new Error("INGEST_MODE_REQUIRED");
   }
   // The meeting doors are the door registry's, as the runner published them for this pass. There is no other list.
   const diagnosticState = name === "composite" ? null : requireRegistryState(
-    process.argv.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
+    args.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
   );
-  const doors = await ensureMeetingDoors();
-  if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
+  const handed = args.some(arg => /^--contracts-(?:file|count|sha256)=/.test(arg));
+  if (!options.partition && !handed) {
+    const doors = await ensureMeetingDoors();
+    if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
+  }
   const partitions = name === "composite"
-    ? selectedMeetingPartitions(process.argv.slice(3))
+    ? options.partition ? [options.partition] : selectedMeetingPartitions(args.slice(1))
     : [];
+  if (options.partition && (args.filter(arg => arg.startsWith("--only-partition=")).length !== 1 ||
+    !args.includes(`--only-partition=${options.partition.id}`))) throw new Error("INGEST_PREPARED_PARTITION_MISMATCH");
+  if (dryRun && (partitions.length !== 1 || partitions[0]?.derivedFamily !== null)) throw new Error("INGEST_READ_ONLY_BODY_REQUIRED: select the held body's own partition");
   const selectedStates = name === "composite"
     ? statesForRegistryDivisions(partitions.flatMap(partition => [partition.derivedFamily ?? "", partition.ocdId ?? "", partition.bodyId]))
     : [diagnosticState!];
   if (selectedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
   const state = selectedStates[0]!;
+  if (handed) {
+    const wiring = partitions.flatMap(partition => partition.wiring ? [partition.wiring] : []);
+    installMeetingWiring(wiring, [...new Set(partitions.flatMap(partition => [
+      partition.acquisitionFailureDomain.replace(/^meeting-upstream:/, "").split("/")[0]!,
+      ...(partition.wiring ? hostsOfConfig(partition.wiring.config, [partition.wiring.noticeUrl]) : []),
+    ]))]);
+  }
   return withRegistryRuntimeStates([state], async () => {
     if (name !== "composite") {
       await preloadCanonicalMeetingDependencies({ sourceName: name, state });
       REGISTRY = getRegistryRuntimeReadModel().registry;
-      await readMeetingSource(SOURCES[name](state), [], null);
-      return;
+      return readMeetingSource(SOURCES[name](state), [], null, options);
     }
-    await readStateCalendars(partitions, state);
+    return readStateCalendars(partitions, state, options, dryRun);
   });
 }
 
-/**
- * One state's calendar program: the state's data and door list load once, then each due board is read in turn, each
- * starting with only its own held agenda documents. A board that throws is named and the next board is still read.
- * Boards not started before the pass deadline are named as still owed.
- */
-async function readStateCalendars(partitions: readonly MeetingPartitionContract[], state: string): Promise<void> {
-  const store = new PostgresRoutineDataStore();
+/** Load the state once, then read each due board with its own agenda store and receipt. */
+async function readStateCalendars(partitions: readonly MeetingPartitionContract[], state: string,
+  options: MeetingIngestOptions, dryRun: boolean): Promise<MeetingIngestResult> {
+  const store = options.store ?? new PostgresRoutineDataStore();
   let prepared = false;
   const prepare = async () => {
     if (prepared) return;
-    await preloadCanonicalMeetingDependencies({ sourceName: "composite", state });
-    REGISTRY = getRegistryRuntimeReadModel().registry;
+    if (options.registry) {
+      if (partitions.length !== 1 || options.registry.bodies.length !== 1 || options.registry.bodies[0]!.id !== partitions[0]!.bodyId) {
+        throw new Error("INGEST_PREPARED_REGISTRY_NOT_ONE_BODY");
+      }
+      REGISTRY = options.registry;
+    } else {
+      await preloadCanonicalMeetingDependencies({ sourceName: "composite", state });
+      REGISTRY = getRegistryRuntimeReadModel().registry;
+    }
     prepared = true;
   };
-  const facts = { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) };
-  // A read started later than this could not finish its acquisition before the runner ends the pass.
+  const results: MeetingIngestResult[] = [];
   const lastStartMs = passDeadlineFromEnv() - STANDING_PARTITION_ACQUISITION_TIMEOUT_MS;
-  const lastEnded = new Map<string, number>();
   const ordered = calendarReadOrder(partitions);
   for (const [index, partition] of ordered.entries()) {
-    const gapEndsMs = (lastEnded.get(partition.acquisitionFailureDomain) ?? Number.NEGATIVE_INFINITY) + ROUTINE_SAME_DOMAIN_CHILD_GAP_MS;
-    if (Math.max(Date.now(), gapEndsMs) >= lastStartMs) {
+    if (Date.now() >= lastStartMs) {
       for (const owed of ordered.slice(index)) console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: owed.id })}`);
       break;
     }
-    if (gapEndsMs > Date.now()) await new Promise((resolve) => setTimeout(resolve, gapEndsMs - Date.now()));
     agendaDocumentStore.clear();
+    clearPromotedReadModelCache();
     try {
-      if (partition.derivedFamily !== null) await promoteDerivedMeetingFamily(store, partition, prepare, facts);
-      else {
+      if (partition.derivedFamily !== null) {
+        const outcome = await promoteDerivedMeetingFamily(store, partition, prepare,
+          options.facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
+        const succeeded = outcome.promoted !== null || outcome.confirmed !== undefined;
+        results.push({ measurement: null, partitions: [{ partition, candidate: outcome.candidate.candidate, outcome }],
+          succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: [] });
+      } else {
         await prepare();
-        await readMeetingPartition(partition, store);
+        results.push(await readMeetingPartition(partition, store, options, dryRun));
       }
     } catch (error) {
+      // A one-body caller owns its failure; a state program keeps the next board moving.
+      if (partitions.length === 1) throw error;
       console.error(error);
       console.log(`RCD_MEETING_PARTITION_UNREAD=${JSON.stringify({ partitionId: partition.id,
         detail: (error instanceof Error ? error.stack ?? error.message : String(error)).split("\n").slice(0, 8).join(" | ") })}`);
     }
-    lastEnded.set(partition.acquisitionFailureDomain, Date.now());
     console.log("RCD_PROGRESS=" + JSON.stringify({ key: partition.id, records: 1 }));
   }
+  if (results.length === 1 && partitions.length === 1) return results[0]!;
+  const succeeded = results.length === partitions.length && results.every(result => result.succeeded);
+  return { measurement: null, partitions: results.flatMap(result => result.partitions), succeeded,
+    sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: results.flatMap(result => result.sourceReads) };
 }
 
-async function readMeetingPartition(partition: MeetingPartitionContract, promotionStore: RoutineDataStore): Promise<void> {
-  const source = buildCompositeSource({
+async function readMeetingPartition(partition: MeetingPartitionContract, promotionStore: RoutineDataStore,
+  options: MeetingIngestOptions, dryRun: boolean): Promise<MeetingIngestResult> {
+  const source = (options.venues !== undefined ? scopedMeetingSource(partition, options.venues) : null) ?? buildCompositeSource({
     timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
     captureAcquisitionEvidence: true,
     sourceNames: [partition.meetingSource],
     meetingPartitions: [{ sourceName: partition.meetingSource, bodyId: partition.bodyId, route: partition.wiring?.config.partitionRoute }],
   });
-  await readMeetingSource(source, [partition], promotionStore);
+  return readMeetingSource(source, [partition], promotionStore, options, dryRun);
 }
 
-async function readMeetingSource(source: MeetingSource<unknown>, partitions: readonly MeetingPartitionContract[], promotionStore: RoutineDataStore | null): Promise<void> {
-  const previous = source instanceof CompositeSource && promotionStore
+async function readMeetingSource(source: MeetingSource<unknown>, partitions: readonly MeetingPartitionContract[],
+  promotionStore: RoutineDataStore | null, options: MeetingIngestOptions, dryRun = false): Promise<MeetingIngestResult> {
+  const { initialResponse } = options;
+  const measurement = partitions.length === 1 ? diggerMeasurement(partitions[0]!.bodyId, dryRun) : null;
+  measurement?.worked();
+  if (options.venuesUnavailable) measurement?.fail(`Verified venue projection unavailable: ${options.venuesUnavailable}; calendar facts remain independently readable.`);
+  const agendaStore = new AgendaDocumentStore();
+  const previous = options.previous !== undefined ? options.previous : source instanceof CompositeSource && promotionStore
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;
+  if (previous && partitions.length === 1 && previous.meetings.some(meeting => meeting.bodyId !== partitions[0]!.bodyId)) throw new Error("INGEST_PREVIOUS_NOT_ONE_BODY");
 
   // Registered bodies select the work. Geography covers every state and territory; the date window is stated
   // because some upstreams default to upcoming-only when it is omitted.
   const now = Date.now();
-  const retained = await retainMeetingFetchBytes(() => source.fetch({
+  const fetchMeetings = () => retainMeetingFetchBytes(() => source.fetch({
     ...STANDING_MEETING_GEOGRAPHY,
     startsAfter: new Date(
       now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000,
@@ -778,6 +930,14 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       now + MEETING_HELD_HORIZON_DAYS * 86_400_000,
     ).toISOString(),
   }));
+  const retained = measurement ? await measurement.read(fetchMeetings) : await fetchMeetings();
+  if (initialResponse) for (let index = 0; index < retained.responses.length; index++) {
+    const response = retained.responses[index]!;
+    if (response.rawHash === initialResponse.rawHash && response.requestedUrl === initialResponse.requestedUrl && response.finalUrl === initialResponse.finalUrl) {
+      retained.responses[index] = initialResponse;
+    }
+  }
+  const sourceReads = retained.responses.map(({ bytes: _bytes, ...read }) => read);
   const workerResponses = retained.responses.filter(response => {
     const url = new URL(response.finalUrl);
     return url.hostname === "webapi.legistar.com" && partitions.some(partition =>
@@ -786,8 +946,17 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
   const raw = retained.value;
 
   const meetings: Meeting[] = resolveAttribution(
-    (source as MeetingSource<unknown>).normalize(raw as unknown[]),
+    [...retainPreviouslyVerifiedVenuePoints((source as MeetingSource<unknown>).normalize(raw as unknown[]), previous?.meetings ?? [])]
+      .map(meeting => {
+        const prior = previous?.meetings.find(row => row.id === meeting.id);
+        return prior?.location && meeting.location === prior.location ? { ...meeting,
+          fieldSources: { ...meeting.fieldSources, location: prior.fieldSources?.location ?? prior.provenance } } : meeting;
+      }),
   );
+  if (initialResponse && retained.responses.some(response => response === initialResponse || response.retrievedAt === initialResponse.retrievedAt && response.rawHash === initialResponse.rawHash)) {
+    const oldestRead = retained.responses.map(response => response.retrievedAt).sort()[0]!;
+    for (const meeting of meetings) meeting.provenance = { ...meeting.provenance, collectedAt: oldestRead, verifiedAt: null };
+  }
   const result = await source.upsert(meetings);
 
   console.log(`${source.name}: ${raw.length} fetched, ${meetings.length} normalized`);
@@ -811,7 +980,7 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
 
     if (previous) {
 
-      const { carried, refused, refusedUrls, noticePagesSetAside, noticePageUrlsSetAside } = seedHeldAgendaDocuments(previous);
+      const { carried, refused, refusedUrls, noticePagesSetAside, noticePageUrlsSetAside } = seedHeldAgendaDocuments(previous, agendaStore);
       console.log(
         `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
       );
@@ -830,15 +999,19 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       }
     }
 
-    await retrieveAgendas(meetings);
+    const readAgendas = () => retrieveHeldAgendas(meetings, agendaStore, now);
+    const agendaRead = measurement ? await measurement.read(readAgendas) : await readAgendas();
+    const heldMeetingIds = new Set(agendaRead.heldMeetingIds);
+    if (agendaRead.failed || agendaRead.failedExtractions || agendaRead.redirectsRefused) measurement?.fail(
+      `Agenda reads: ${agendaRead.failed} failed requests, ${agendaRead.failedExtractions} failed extractions, ${agendaRead.redirectsRefused} refused redirects.`);
 
     const agendaPlaced = placeUnplacedFromAgendas(
-      source.lastPartitionRows,
+      meetings,
       (meetingId) => {
-        const document = agendaDocumentStore.latestFor(meetingId);
+        const document = agendaStore.latestFor(meetingId);
         return document && document.extraction !== "failed" ? document.text : null;
       },
-      currentVenueCache(),
+      options.venues ?? currentVenueCache(),
     );
     const placedReport = agendaPlaced.report;
     if (placedReport.placed + placedReport.noReviewedVenue + placedReport.ambiguous > 0) {
@@ -849,7 +1022,33 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       for (const line of placedReport.lines) console.log(line);
     }
     if (!promotionStore) throw new Error("composite promotion store was not initialized");
-    await promoteSelectedMeetingPartitions(
+    if (dryRun) {
+      const partition = partitions[0]!;
+      for (const child of source.lastReport.children) if (!child.ok) measurement!.fail(`${child.source}: ${child.error}`);
+      const report = source.lastReport.children[0]!;
+      const fresh = agendaPlaced.rows.filter(meeting => meeting.bodyId === partition.bodyId);
+      const generatedAt = new Date().toISOString();
+      const reconciled = reconcileSuccessfulMeetingPartition({ sourceName: partition.meetingSource, generatedAt,
+        freshMeetings: fresh, freshAgendaDocuments: fresh.flatMap(meeting => agendaStore.versionsFor(meeting.id)), previous,
+        reviewedVenues: options.venues === undefined ? undefined : () => options.venues! });
+      const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt,
+        counts: snapshotCounts(reconciled.meetings, 0), sources: [{ source: partition.meetingSource,
+          ok: report.ok, error: report.error, fetched: report.fetched, normalized: report.normalized,
+          drops: report.drops, acquisitions: report.acquisitions }],
+        meetings: [...reconciled.meetings], agendaDocuments: [...reconciled.agendaDocuments] };
+      const candidate = candidateForMeetingPartition(partition, snapshot, [], reconciled.removalEvidence);
+      const pointer = await promotionStore.readPromotionIdentity("MEETING", partition.scope);
+      const base = pointer ? await promotionStore.readCandidate(pointer.versionId) : null;
+      const validation = validateRoutineCandidate({ ...candidate, changeSet: candidateChangeSet(candidate, previous) }, base, snapshot.generatedAt);
+      const attachable = validation.receipt.decision === "GOOD";
+      if (!attachable) measurement!.fail(validation.receipt.checks.filter(check => check.verdict !== "PASS").map(check => check.detail).join("; "));
+      measureMeetingFields(measurement!, partition, agendaPlaced.rows.filter(meeting => heldMeetingIds.has(meeting.id)), previous, agendaStore, agendaRead.readableMeetingIds, attachable);
+      for (const failure of retained.refusals) measurement!.fail(failure);
+      const measured = measurement!.result();
+      const sourceSucceeded = report.ok && attachable;
+      return { measurement: measured, partitions: [], succeeded: sourceSucceeded, sourceSucceeded, exitCode: sourceSucceeded ? 0 : 2, sourceReads };
+    }
+    const partitionResults = await promoteSelectedMeetingPartitions(
       source,
       agendaPlaced.rows,
       previous,
@@ -857,13 +1056,22 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       partitions,
       workerResponses,
       retained.responses,
+      agendaStore,
+      options.facts,
+      options.venues,
     );
     for (const refusal of retained.refusals) console.error(refusal);
+    for (const result of partitionResults) if (measurement) measureMeetingFields(measurement, result.partition, agendaPlaced.rows.filter(meeting => heldMeetingIds.has(meeting.id)), previous,
+      agendaStore, agendaRead.readableMeetingIds, result.outcome.promoted !== null || result.outcome.confirmed !== undefined);
+    const succeeded = partitionResults.every(result => result.outcome.promoted !== null || result.outcome.confirmed !== undefined);
+    for (const result of partitionResults) if (!result.outcome.promoted && !result.outcome.confirmed) measurement?.fail(result.outcome.candidate.failureDetail ?? result.outcome.candidate.state);
+    return { measurement: measurement?.result() ?? null, partitions: partitionResults, succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads };
   } else {
     const dropped = raw.length - meetings.length;
     if (dropped > 0) {
       console.warn(`  ${dropped} record(s) dropped — unplaceable in time or space`);
     }
+    return { measurement: null, partitions: [], succeeded: true, sourceSucceeded: true, exitCode: 0, sourceReads };
   }
 }
 
@@ -1286,13 +1494,19 @@ export async function promoteMeetingPartition(
   retainedResponses: readonly RetainedSourceResponse[] = [],
   heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
   idSuffix = "",
+  sourceResponse?: Omit<RetainedSourceResponse, "bytes">,
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
+  snapshot = { ...snapshot, agendaDocuments: snapshot.agendaDocuments.map(canonicalAgendaDocument) };
   validateSnapshot(snapshot);
+  const base = candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts);
+  const clocked = sourceResponse ? { ...base, retrieval: { ...base.retrieval, retrievedAt: sourceResponse.retrievedAt,
+    ...(sourceResponse.httpStatus === 200 ? { sourceCheck: { requestedUrl: sourceResponse.requestedUrl, finalUrl: sourceResponse.finalUrl,
+      checkedAt: sourceResponse.retrievedAt, httpStatus: 200 as const, rawHash: sourceResponse.rawHash } } : {}) } } : base;
   const built = retainMeetingCandidateEvidence(
-    candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts),
+    clocked,
     snapshot,
     retainedResponses,
   );
@@ -1365,6 +1579,7 @@ export async function promoteMeetingPartitions(input: {
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
   readonly facts?: MeetingFactsTarget;
+  readonly venues?: readonly VenueEntry[];
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
@@ -1413,7 +1628,7 @@ export async function promoteMeetingPartitions(input: {
         freshAgendaDocuments: freshDocuments,
         previous: restoredPrevious,
         publisherExclusions: recurrence.exclusions,
-        reviewedVenues: currentVenueCache,
+        reviewedVenues: () => input.venues ?? currentVenueCache(),
         movedToHistory: moved,
       });
       // BX-08: a hand-wired body's newly published address gets its pin the same way a derived family's does.
@@ -1424,7 +1639,7 @@ export async function promoteMeetingPartitions(input: {
           census = await placeMeetingsFromCensusVenues({
             snapshot: { generatedAt: input.generatedAt, meetings: [...reconciled.meetings],
               sources: [{ source: partition.meetingSource, acquisitions: report.acquisitions }] } as unknown as MeetingsSnapshot,
-            existingIds: new Set(currentVenueCache().map((venue) => venueResolutionRecordId(venue))),
+            existingIds: new Set((input.venues ?? currentVenueCache()).map((venue) => venueResolutionRecordId(venue))),
             memberRoutes: new Map([[`${partition.meetingSource}:${partition.bodyId}`, acquired.finalUrl]]),
             fetchImpl: input.venueFetch,
           });
@@ -1470,6 +1685,8 @@ export async function promoteMeetingPartitions(input: {
         input.retainedResponses,
         recurrence.held,
         idSuffix,
+        tracedResponses([{ source: partition.meetingSource, acquisitions: report.acquisitions }], input.facts?.responses ?? input.retainedResponses ?? [])
+          .sort((a, b) => a.retrievedAt.localeCompare(b.retrievedAt))[0],
       );
       return { reconciled, candidate, outcome, census };
     };
@@ -1490,7 +1707,7 @@ export async function promoteMeetingPartitions(input: {
     );
     if (outcome.promoted || outcome.confirmed) {
       await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }
@@ -1505,7 +1722,10 @@ async function promoteSelectedMeetingPartitions(
   partitions: readonly MeetingPartitionContract[],
   retainedResponses: readonly RetainedSourceResponse[],
   readResponses: readonly RetainedSourceResponse[],
-): Promise<void> {
+  agendaStore: AgendaDocumentStore = agendaDocumentStore,
+  facts?: Omit<MeetingFactsTarget, "responses">,
+  venues?: readonly VenueEntry[],
+): Promise<readonly MeetingPartitionPromotionResult[]> {
   const report = source.lastReport;
   if (!report) {
     throw new Error("MEETING_PARTITION_REPORT_MISSING");
@@ -1543,7 +1763,7 @@ async function promoteSelectedMeetingPartitions(
     })),
     meetings: finalRows,
     agendaDocuments: [
-      ...finalRows.flatMap((m) => agendaDocumentStore.versionsFor(m.id)),
+      ...finalRows.flatMap((m) => agendaStore.versionsFor(m.id)),
       ...(previous?.agendaDocuments ?? []),
     ].filter(
       (doc, i, all) =>
@@ -1561,7 +1781,8 @@ async function promoteSelectedMeetingPartitions(
     generatedAt: snapshot.generatedAt,
     previousByContract: new Map(partitions.map((partition) => [partition.id, previous])),
     retainedResponses,
-    facts: { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), responses: readResponses },
+    venues,
+    facts: { ...(facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) }), responses: readResponses },
   });
   const promotedCount = partitionResults.filter((result) => result.outcome.promoted !== null).length;
   const heldCount = partitionResults.length - promotedCount;
@@ -1604,10 +1825,41 @@ async function promoteSelectedMeetingPartitions(
         "source/body partitions; independently valid partitions remain promoted.",
     );
   }
+  return partitionResults;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch((error) => {
+  installNeonRequestDeadline();
+  const args = process.argv.slice(2);
+  const argument = (flag: string) => args.find(arg => arg.startsWith(`${flag}=`))?.slice(flag.length + 1);
+  const execute = async () => {
+    if (args[0] === "composite" && !args.includes("--promote") && !args.includes("--dry-run")) {
+      throw new Error("composite requires --promote or --dry-run");
+    }
+    const preparedFile = argument("--prepared-file");
+    const prepared: Omit<MeetingIngestOptions, "store" | "initialResponse"> & {
+      initialResponse?: Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string };
+      doorRecord?: DoorRecord;
+    } = preparedFile ? JSON.parse(await readFile(preparedFile, "utf8")) : await readHeldMeetingCliOptions(args);
+    if (prepared.doorRecord) {
+      if (prepared.doorRecord.bodyIds.length !== 1 || prepared.doorRecord.bodyIds[0] !== prepared.partition?.bodyId) throw new Error("INGEST_PREPARED_DOOR_NOT_ONE_BODY");
+      installDoorRecords([prepared.doorRecord], "the prepared subject's held door");
+    }
+    const result = await runMeetingIngest(args, { partition: prepared.partition, registry: prepared.registry, previous: prepared.previous, venues: prepared.venues, venuesUnavailable: prepared.venuesUnavailable, meetingClock: prepared.meetingClock,
+      ...(prepared.initialResponse ? { initialResponse: { ...prepared.initialResponse, bytes: new Uint8Array(Buffer.from(prepared.initialResponse.base64, "base64")) } } : {}) });
+    const summary = { ...result, partitions: result.partitions.map(({ partition, candidate, outcome }) => ({
+      partitionId: partition.id, candidateId: candidate.id, state: outcome.candidate.state,
+      failureCode: outcome.candidate.failureCode, failureDetail: outcome.candidate.failureDetail,
+      promotedVersion: outcome.promoted?.versionId ?? null, confirmedAt: outcome.confirmed?.at ?? null,
+    })) };
+    console.log(`DIGGER_RESULT=${JSON.stringify(summary)}`);
+    if (process.send) process.send(summary);
+    return result;
+  };
+  execute().then(result => {
+    if (result.measurement) console.log(`DIGGER_MEASUREMENT=${JSON.stringify(result.measurement)}`);
+    process.exitCode = result.exitCode;
+  }).catch((error) => {
     console.error(error);
     process.exitCode = 1;
   });

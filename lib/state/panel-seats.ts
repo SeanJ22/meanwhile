@@ -27,7 +27,6 @@
 import type { CoverageSummary, Seat } from "../registry/coverage.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 
-import { divisionTypeLabel } from "./derive.ts";
 import {
   excludedByAddress,
   scopedToAddress,
@@ -161,4 +160,4 @@ export function panelSeatsFor(
 }
 
 /** Re-exported so the panel names a division type without a second table. */
-export { divisionTypeLabel };
+;

@@ -560,10 +560,6 @@ export const ACQUISITION_DEPTHS = [
 ] as const;
 export type AcquisitionDepth = (typeof ACQUISITION_DEPTHS)[number];
 
-export function depthRank(depth: AcquisitionDepth): number {
-  return ACQUISITION_DEPTHS.indexOf(depth);
-}
-
 /** Why one candidate is covered differently from another. Required for any asymmetry, with a source. */
 export interface AsymmetryExplanation {
   /** The filed, sourced reason. */

@@ -10,7 +10,7 @@ import { personIdentityKeys, statePeopleScopeForId } from "./people-identity.ts"
 import { readerRecordsWithOwnerChoices } from "../facts/owner-flags.ts";
 import { factReader } from "../facts/db.ts";
 
-export { refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../civic-data/curated-reader-read-model.ts";
+export { refreshMemberOfficesFromPromoted,  } from "../civic-data/curated-reader-read-model.ts";
 
 /** Core people publication makes its offices immediately available; one request loads one state. */
 export async function readMemberOffices(officeholderId: string, state?: string, options: PromotedCivicDataReadOptions = {}): Promise<readonly MemberOfficeRecord[]> {
@@ -69,9 +69,4 @@ export function currentMemberOffices(officeholderId: string): readonly MemberOff
     return [];
   }
   return officesForMember(records, officeholderId);
-}
-
-/** The same held offices as the one office-location shape, for Ask and cards. */
-export function currentOfficeLocations(officeholderId: string): readonly OfficeLocation[] {
-  return currentMemberOffices(officeholderId).map(fromMemberOffice).filter((row): row is OfficeLocation => row !== null);
 }

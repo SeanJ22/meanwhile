@@ -1,7 +1,7 @@
 import { csvRows } from "../../reference/csv.ts";
 import { platformHostedUrl, matchPlatformGovernment, type PlatformTenant } from "./platform-enumeration.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
-import { matchRegisteredPlatformTenant, type PlatformQuery } from "./platform-registration.ts";
+import { matchRegisteredPlatformTenant, platformGovernmentCandidates, type PlatformQuery } from "./platform-registration.ts";
 import type { DiscoveryRuntime } from "./meetings-discovery-executor.ts";
 import { pageLinks } from "../../hunt/meetings-site-discovery.ts";
 import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
@@ -42,7 +42,8 @@ export function dotgovTenantForGovernment(csv: string, sourceVersion: string, ne
   if (need.ownWebAddress) return undefined;
   let selected: PlatformTenant | undefined;
   for (const tenant of dotgovPlatformTenants(csv, sourceVersion)) {
-    if (matchPlatformGovernment(tenant, [need]).kind !== "MATCHED") continue;
+    const match = matchPlatformGovernment(tenant, [need]);
+    if (match.kind !== "MATCHED" && match.kind !== "CANDIDATE") continue;
     if (selected && selected.url !== tenant.url) return undefined;
     selected = tenant;
   }
@@ -67,6 +68,8 @@ export function platformPublisherIdentity(name: string) {
 export async function registeredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, runtime: DiscoveryRuntime) {
   let matches = await matchRegisteredPlatformTenant(query, tenant);
   if (matches.length) return matches;
+  const candidates = await platformGovernmentCandidates(query, tenant);
+  if (candidates.length) return candidates;
   let url = tenant.url;
   const open = async () => {
     if (runtime.budget.spent()) throw new Error("Platform directory reading interrupted");
@@ -92,6 +95,8 @@ export async function registeredPlatformTenant(query: PlatformQuery, tenant: Pla
     const printed = platformPublisherIdentity(name);
     matches = await matchRegisteredPlatformTenant(query, { ...tenant, name: printed.name, state: tenant.state ?? printed.state }, links);
     if (matches.length) return matches;
+    const candidates = await platformGovernmentCandidates(query, { ...tenant, name: printed.name, state: tenant.state ?? printed.state });
+    if (candidates.length) return candidates;
   }
   return matchRegisteredPlatformTenant(query, { ...tenant, name: null }, links);
 }

@@ -1,7 +1,7 @@
 import { checkFact, normalizeText, type Claim, type FieldKind, type SavedCopy } from "./check.ts";
 import { decide, type Decision } from "./decide.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, withBatchedReaderInvalidation, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -68,7 +68,6 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
         [row!.id,now.toISOString(),c.copy.id,c.quote,verdict.quoteStart,c.second?.copy.id ?? null,c.provenance,c.valueText]);
       }
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      changed = await readerCacheScopeForEntity(query, c.entity.id);
       return { decision, factId: Number(row!.id) };
     }
     const live = decision === "PUBLISH";
@@ -105,23 +104,16 @@ async function restamp(query: Query, fact: { readonly id: unknown; readonly enti
 
 /** Live facts a fresh read of their page still shows: each one's checked date and receipt move to that saved copy. Returns how many moved. */
 export async function restampFacts(db: FactDb, facts: readonly { readonly id: number; readonly entityId: string; readonly field: string; readonly quote: string }[],
-  copy: Pick<SavedCopy, "id" | "text" | "fetchedAt">, options: { readonly purge?: ReaderCachePurger } = {}): Promise<number> {
+  copy: Pick<SavedCopy, "id" | "text" | "fetchedAt">): Promise<number> {
   if (!facts.length) return 0;
   const page = normalizeText(copy.text);
-  return withBatchedReaderInvalidation(async purge => {
-    const moved = await db.transaction(async query => {
-      let count = 0;
-      const entities = new Set<string>(), scopes: ReaderCacheScope[] = [];
-      for (const fact of facts) {
-        const start = fact.quote ? page.indexOf(normalizeText(fact.quote)) : -1;
-        if (!await restamp(query, fact, copy.fetchedAt, { copyId: copy.id, quoteStart: start < 0 ? null : start })) continue;
-        count++;
-        if (!entities.has(fact.entityId)) scopes.push(await readerCacheScopeForEntity(query, fact.entityId));
-        entities.add(fact.entityId);
-      }
-      return { count, scopes };
-    });
-    for (const scope of moved.scopes) await invalidateReaderCache(scope, purge);
-    return moved.count;
-  }, options.purge);
+  return db.transaction(async query => {
+    let count = 0;
+    for (const fact of facts) {
+      const start = fact.quote ? page.indexOf(normalizeText(fact.quote)) : -1;
+      if (!await restamp(query, fact, copy.fetchedAt, { copyId: copy.id, quoteStart: start < 0 ? null : start })) continue;
+      count++;
+    }
+    return count;
+  });
 }

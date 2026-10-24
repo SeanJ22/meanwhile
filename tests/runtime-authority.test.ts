@@ -8,6 +8,7 @@ import test from "node:test";
 import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
+  assertRegisteredRuntimeContract,
   GIT_READ_ATTEMPTS,
   inspectRuntimeCheckout,
   runtimeAuthorityEnvelope,
@@ -22,6 +23,32 @@ const ROOT = realpathSync(process.cwd());
 const SHA = "a".repeat(40);
 const PID = 4312;
 
+test("every state roster may refresh only its own registry join, with no authority transfer", async () => {
+  const { REGISTRY_STATES } = await import("../lib/civic-data/state-scopes.ts");
+  const { MANUAL_PRODUCTION_SOURCE_CONTRACTS } = await import("../lib/civic-data/manual-contracts.ts");
+  const { routineDataStoreCandidateAuthorityIssue } = await import("../lib/civic-data/store.ts");
+  const parentEnv: NodeJS.ProcessEnv = { NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
+    DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
+  for (const state of REGISTRY_STATES) {
+    const child = admittedRuntimeChildEnvironment({ parentEnv, capability: "ROUTINE_CONTRACT", contract: `openstates-people-${state.toLowerCase()}` });
+    const authority = runtimeAuthorityEnvelope(child)!;
+    for (const target of REGISTRY_STATES) {
+      const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === `registry-runtime:${target}`)!;
+      const candidate = { id: "roster-join", sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope };
+      const issue = routineDataStoreCandidateAuthorityIssue(candidate, authority, "candidate");
+      if (state === target) {
+        assert.equal(issue, null);
+        assert.doesNotThrow(() => assertRegisteredRuntimeContract(contract.id, "manual", child));
+        assert.notEqual(routineDataStoreCandidateAuthorityIssue({ ...candidate, bootstrapImport: {} } as never, authority, "candidate"), null);
+      } else {
+        assert.notEqual(issue, null);
+        assert.throws(() => assertRegisteredRuntimeContract(contract.id, "manual", child));
+      }
+    }
+    assert.throws(() => assertRegisteredRuntimeContract(`voting-sites:${state}`, "manual", child));
+  }
+});
+
 test("staging ordinary child carries readable exact mutation authority and keeps its contract", async () => {
   const { assertRoutineDataStoreMutationAuthority, routineDataStoreCandidateAuthorityIssue } = await import("../lib/civic-data/store.ts");
   const parentEnv: NodeJS.ProcessEnv = { NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
@@ -31,6 +58,7 @@ test("staging ordinary child carries readable exact mutation authority and keeps
   for (const [capability, contract, sourceId, recordClass, scope] of [
     ["MANUAL_CONTRACT", "voting-sites:AZ", "voting-sites", "VOTING_SITE", "US-AZ:voting-sites"],
     ["ROUTINE_CONTRACT", "fec-funding", "fec-open-api", "FEC_FUNDING", "federal-supported"],
+    ["MANUAL_CONTRACT", "congress-bulk-roster", "congress-directory-project", "FEDERAL_DIRECTORY", "US-AZ:current-congress-directory"],
   ] as const) {
     const child = admittedRuntimeChildEnvironment({ parentEnv, capability, contract });
     const authority = assertRoutineDataStoreMutationAuthority(child);
@@ -39,6 +67,12 @@ test("staging ordinary child carries readable exact mutation authority and keeps
     assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "staging-child", sourceId, recordClass, scope }, authority, "candidate"), null);
     assert.throws(() => assertRuntimeAuthority({ capabilities: [capability], contract: "wrong-contract" }, child), /does not match/);
   }
+  const national = assertRoutineDataStoreMutationAuthority(admittedRuntimeChildEnvironment({ parentEnv,
+    capability: "MANUAL_CONTRACT", contract: "congress-bulk-roster" }));
+  for (const scope of ["US-AL:current-congress-directory", "US-PR:current-congress-directory", "US-WY:current-congress-directory"]) {
+    assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "national", sourceId: "congress-directory-project", recordClass: "FEDERAL_DIRECTORY", scope }, national, "candidate"), null);
+  }
+  assert.notEqual(routineDataStoreCandidateAuthorityIssue({ id: "other", sourceId: "fec-open-api", recordClass: "FEC_FUNDING", scope: "federal-supported" }, national, "candidate"), null);
   assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_DB_ROLE: "production" }, capability: "ROUTINE_SUPERVISOR" }), /local/);
   assert.throws(() => admittedRuntimeChildEnvironment({ parentEnv: { ...parentEnv, WTP_CONTROL_PLANE_DATABASE_URL: "" }, capability: "ROUTINE_SUPERVISOR" }), /staging database/);
 });

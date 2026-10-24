@@ -19,6 +19,8 @@ export interface BodyFacts {
   readonly dispositions: readonly RosterReaderDisposition[];
   readonly comment: CommentAccess | null;
   readonly sittings: readonly SittingFact[];
+  /** The special district a board belongs to, when it is not the general government of the place it serves. */
+  readonly government?: string;
 }
 
 async function bodyFields(query: Query, bodyIds: readonly string[]): Promise<Record<string, Partial<Body>>> {

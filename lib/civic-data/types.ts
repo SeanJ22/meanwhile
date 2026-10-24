@@ -320,7 +320,18 @@ export type RoutineRemovalEvidence =
   | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence
   | MovedToFactStoreRemovalEvidence
-  | FederalRepartitionRemovalEvidence;
+  | FederalRepartitionRemovalEvidence
+  | VotingSourceReplacementRemovalEvidence;
+
+/** One old site belonging entirely to a completely re-read official source group. */
+export interface VotingSourceReplacementRemovalEvidence {
+  readonly key: string;
+  readonly code: "OFFICIAL_VOTING_SOURCE_REPLACED";
+  readonly jurisdictionId: string;
+  readonly electionDate: string;
+  /** All publishers of the old row, never just the publisher being replaced. */
+  readonly sourceUrls: readonly string[];
+}
 
 export interface FederalRepartitionRemovalEvidence {
   readonly key: string;
@@ -532,6 +543,8 @@ export interface StateRetirementEvidence {
 
 /** `readModel` is the bounded projection Reader consumes; Reader never queries staging rows. */
 export interface RoutineCandidate {
+  /** A new attempt of the exact same captured version; the prior attempt remains immutable. */
+  readonly retryOfCandidateId?: string;
   readonly id: string;
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;

@@ -10,7 +10,6 @@ import type { StatementCorpus } from "./types.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 const CONTRACT = requiredManualProductionContract("officeholder-statements");
-export const OFFICEHOLDER_STATEMENT_SCOPE = CONTRACT.scope;
 const SHA256 = /^[a-f0-9]{64}$/;
 
 function validate(value: StatementCorpus, version: string): void {
@@ -62,10 +61,6 @@ export async function refreshOfficeholderStatementsFromPromoted(
 /** Reads the reader edge's copy first, else the database. */
 export const settleOfficeholderStatementsRead = (): Promise<string | null> =>
   readPromotedEdgeFirst(CONTRACT.recordClass, CONTRACT.scope, refreshOfficeholderStatementsFromPromoted, "The officeholder statements");
-
-export function officeholderStatementsReadState(): CivicDataReadResult<StatementCorpus> {
-  return readState;
-}
 
 export function currentOfficeholderStatements(): StatementCorpus {
   if (readState.kind === "PROMOTED" || readState.kind === "BOOTSTRAP") return readState.value;

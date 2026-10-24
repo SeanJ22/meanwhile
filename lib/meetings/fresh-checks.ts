@@ -1,21 +1,7 @@
-import { createHash } from "node:crypto";
 
 import type { Meeting } from "../sources/types.ts";
 import type { UnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
 import type { MeetingsSnapshot, SnapshotSourceReport } from "./snapshot.ts";
-
-/**
- * A partition version's newest confirmation counts as a successful fresh check only when it confirms the version the
- * pointer names now and that version reads at least one source. Carried rows keep their own `lastFreshAt` and
- * `collectedAt`: a re-check that confirmed them confirmed only that they are still carried.
- */
-
-export interface MeetingPartitionFreshCheck {
-  /** The route of every fresh (not carried) row the version holds, sorted. */
-  readonly routes: readonly string[];
-  /** The newest successful fresh check that found nothing new, when later than the version's own; null when none. */
-  readonly checkedAt: string | null;
-}
 
 /**
  * The route a row was read through: its adapter (the id's namespace) and body.
@@ -145,23 +131,4 @@ export function meetingFreshChecks(couplings: readonly FreshCheckCoupling[]): {
     }
   }
   return { checkedAt, routes: Object.fromEntries(Object.entries(routes).sort(([left], [right]) => left.localeCompare(right))) };
-}
-
-export function sameMeetingFreshChecks(
-  left: Readonly<Record<string, string>> | undefined,
-  right: Readonly<Record<string, string>> | undefined,
-): boolean {
-  const l = Object.entries(left ?? {}).sort(([a], [b]) => a.localeCompare(b));
-  const r = Object.entries(right ?? {}).sort(([a], [b]) => a.localeCompare(b));
-  return l.length === r.length && l.every(([route, at], index) => r[index]![0] === route && r[index]![1] === at);
-}
-
-/**
- * The identity of a composition: the exact partition versions it was composed
- * from. The same versions compose the same rows, whatever checks came after, so
- * the edge can tell a check from a new composition without reading either.
- */
-export function meetingCompositionId(couplings: readonly Pick<FreshCheckCoupling, "contractId" | "versionId">[]): string {
-  const fingerprint = couplings.map((entry) => `${entry.contractId}=${entry.versionId}`).sort().join("|");
-  return createHash("sha256").update(fingerprint).digest("hex");
 }

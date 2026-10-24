@@ -11,6 +11,7 @@ WorkingDirectory=/opt/meanwhile
 EnvironmentFile=/etc/meanwhile/runner.env
 Environment=PLAYWRIGHT_BROWSERS_PATH=/var/lib/meanwhile/browsers
 Environment=WTP_MIRROR=/var/lib/meanwhile/digests
+Environment=WTP_WORKER_MEMORY_DIRECTORY=/var/lib/meanwhile
 ExecStart=/usr/bin/node /opt/meanwhile/scripts/pilot-runtime-launch.mjs
 Restart=always
 RestartSec=10

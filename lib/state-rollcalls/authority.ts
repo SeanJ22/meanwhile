@@ -71,8 +71,6 @@ export const OFFICIAL_STATE_LEGISLATOR_TARGETS = [
 export type OfficialStateCode = (typeof OFFICIAL_STATE_ROLL_CALL_TARGETS)[number]["state"];
 export type OfficialStateVoteScope = (typeof OFFICIAL_STATE_ROLL_CALL_TARGETS)[number]["jurisdiction"];
 export type OfficialStateRollCallSourceId = (typeof OFFICIAL_STATE_ROLL_CALL_TARGETS)[number]["sourceId"];
-export type OfficialStateRollCallContractId = (typeof OFFICIAL_STATE_ROLL_CALL_TARGETS)[number]["contractId"];
-export type OfficialStateLegislatorContractId = (typeof OFFICIAL_STATE_LEGISLATOR_TARGETS)[number]["contractId"];
 
 export function officialStateRollCallTargetByState(state: string) {
   return OFFICIAL_STATE_ROLL_CALL_TARGETS.find((target) => target.state === state.toUpperCase()) ?? null;

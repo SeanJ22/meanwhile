@@ -103,10 +103,6 @@ export const SCOUT_STEPS = {
 export type ScoutStepName = keyof typeof SCOUT_STEPS;
 export const SCOUT_STEP_NAMES = Object.keys(SCOUT_STEPS) as readonly ScoutStepName[];
 
-export function routeForStep(step: ScoutStepName): StepRoute {
-  return SCOUT_STEPS[step];
-}
-
 export class DeterministicStepInvokedModel extends Error {
   readonly step: string;
   constructor(step: string, implementedIn: string) {
@@ -146,7 +142,6 @@ export function assertStepMayInvokeModel(
   return { model: MODEL_FOR_CLASS[modelClass], modelClass, effort: ROLE_EFFORT[route.role], role: route.role };
 }
 
-
 /** Why a model step moved up a class: a closed list of reasons observed on the cheaper attempt, never the model's own claim. Not the owner escalation in `work-item.ts`. */
 export const MODEL_ESCALATION_REASONS = [
   /** The cheaper attempt reached its turn, tool-call or token bound (or the early stop) and still produced no accepted typed result. */
@@ -161,19 +156,6 @@ export const MODEL_ESCALATION_REASONS = [
   "PROVIDER_UNAVAILABLE",
 ] as const;
 export type ModelEscalationReason = (typeof MODEL_ESCALATION_REASONS)[number];
-
-/** Why an escalation the ladder called for did not run. Recorded; the Attempt ends on the cheaper attempt's outcome. */
-export const MODEL_ESCALATION_REFUSALS = [
-  /** No reservation seam was supplied, so the second attempt could not be reserved first: fail closed. */
-  "NOT_RESERVED",
-  /** The rolling spend ceiling cannot cover the second attempt's worst case (or its spend is unmeasured). */
-  "CEILING",
-  /** The cheaper attempt's own cost is unmeasured, so the combined cost could not be known or reserved against. */
-  "UNMEASURED_SPEND",
-  /** Too little of the Attempt's shared wall clock remains for a second attempt. */
-  "WALL_CLOCK",
-] as const;
-export type ModelEscalationRefusal = (typeof MODEL_ESCALATION_REFUSALS)[number];
 
 export class UnrecordedEscalation extends Error {
   constructor(step: string, why: string) {
@@ -219,7 +201,6 @@ export function assertStepMayEscalate(
   if (violation !== null) throw new ModelAboveCeiling(up.modelClass, up.model, violation);
   return { ...up, escalatedFrom: from ?? base.modelClass };
 }
-
 
 /**
  * The model ceiling: nothing routes above the frontier class or to a model named Fable. Checked at module
@@ -282,7 +263,6 @@ export function assertModelClassesWithinCeiling(
 // Module-load invariant: a routing edit that breaches the ceiling fails at import.
 assertModelClassesWithinCeiling();
 
-
 /** The outer byte bound on a whole tool result handed to the model. Past it the result is truncated with a stated truncation and the artifact id(s). */
 export const REPRESENTATION_BUDGETS: Readonly<Record<string, number>> = {
   fetch_public: 9_000,
@@ -318,7 +298,6 @@ export function fitRepresentation(tool: string, text: string, artifactIds: reado
   const room = Math.max(0, budget - Buffer.byteLength(notice, "utf8"));
   return { text: Buffer.from(text, "utf8").subarray(0, room).toString("utf8") + notice, bytes, budget, truncated: true };
 }
-
 
 /** Share the role's stable prefix across jobs for an hour; conversation turns keep a moving five-minute breakpoint. */
 export const SCOUT_CACHE_POLICY = {

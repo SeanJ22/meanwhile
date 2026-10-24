@@ -5,6 +5,7 @@ import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { officeIdentity } from "./office-identity.ts";
 import { personIdentityKeys } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
+import { mergeExecutiveFacts } from "./national-executive.ts";
 import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./types.ts";
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -105,7 +106,14 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
       }
     }
     merged.profileUrls = [...new Set([...(left.profileUrls ?? []), ...(right.profileUrls ?? []), left.websiteUrl, right.websiteUrl].filter((url): url is string => Boolean(url)))];
-    merged.offices = [...new Map([...(left.offices ?? []), ...(right.offices ?? [])].map(row => [canonicalCivicDataJson(row), row])).values()];
+    const offices = new Map<string, NonNullable<Officeholder["offices"]>[number]>();
+    for (const row of [...(left.offices ?? []), ...(right.offices ?? [])]) {
+      const { geocodedPoint, pointUnavailable, ...sourceOffice } = row;
+      const key = canonicalCivicDataJson(sourceOffice), saved = geocodedPoint ?? offices.get(key)?.geocodedPoint;
+      const missing = pointUnavailable ?? offices.get(key)?.pointUnavailable;
+      offices.set(key, { ...sourceOffice, ...(saved ? { geocodedPoint: saved } : missing ? {pointUnavailable:missing} : {}) });
+    }
+    merged.offices = [...offices.values()];
     const memberships = new Map<string, NonNullable<Officeholder["memberships"]>[number]>();
     for (const row of [...(left.memberships ?? []), ...(right.memberships ?? [])]) {
       const held = memberships.get(row.id);
@@ -116,6 +124,12 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
     merged.memberships = [...memberships.values()];
     merged.fecCandidateIds = [...new Set([...(left.fecCandidateIds ?? []), ...(right.fecCandidateIds ?? [])])];
     merged.social = right.social ?? left.social;
+    for (const [field, source] of Object.entries(right.fieldSources ?? {})) {
+      if (!(fields as readonly string[]).includes(field) && (!merged.fieldSources?.[field] || source.collectedAt >= merged.fieldSources[field].collectedAt)) {
+        merged.fieldSources = { ...merged.fieldSources, [field]: source };
+      }
+    }
+    if (left.executive || right.executive) merged.executive = mergeExecutiveFacts(left.executive, right.executive);
     if (prefers(right, left, "name")) merged.provenance = right.provenance;
     return merged;
   };

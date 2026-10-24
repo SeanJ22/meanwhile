@@ -1,0 +1,1074 @@
+{
+  "checkedAt": "2026-10-23T09:15:23.659Z",
+  "replayClockEastern": [
+    "2026-10-23 04:30 EDT",
+    "2026-10-24 04:30 EDT"
+  ],
+  "huntScopeElapsedMs": 480.47010899999987,
+  "scheduledCallbacks": 38,
+  "planningOrder": [
+    "system",
+    "la",
+    "ma",
+    "md",
+    "me",
+    "mi",
+    "mn",
+    "mo",
+    "mp",
+    "ms",
+    "mt",
+    "nc",
+    "nd",
+    "ne",
+    "nh",
+    "nj",
+    "nm",
+    "nv",
+    "ny",
+    "oh",
+    "ok",
+    "or",
+    "pa",
+    "pr",
+    "ri",
+    "sc",
+    "sd",
+    "tn",
+    "tx",
+    "ut",
+    "va",
+    "vi",
+    "vt",
+    "wa",
+    "wi",
+    "wv",
+    "wy",
+    "hi",
+    "ia",
+    "id",
+    "il",
+    "in",
+    "ks",
+    "ky",
+    "ct",
+    "dc",
+    "de",
+    "fl",
+    "ga",
+    "gu",
+    "co",
+    "ak",
+    "al",
+    "ar",
+    "as",
+    "az",
+    "ca"
+  ],
+  "planningDigestKeys": 57,
+  "launches": [
+    {
+      "total": 57,
+      "distinct": 51,
+      "first56Distinct": 51
+    },
+    {
+      "total": 57,
+      "distinct": 56,
+      "first56Distinct": 56
+    }
+  ],
+  "rows": [
+    {
+      "state": "AL",
+      "planningTurn": 53,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 9,
+      "jurisdictions": 2,
+      "heldSites": 78,
+      "readerSites": 78,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "AK",
+      "planningTurn": 52,
+      "today": 0,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 3,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "AZ",
+      "planningTurn": 56,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 734,
+      "congressMembers": 11,
+      "jurisdictions": 1,
+      "heldSites": 345,
+      "readerSites": 345,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "AR",
+      "planningTurn": 54,
+      "today": 2,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 6,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:ar",
+          "name": "Arkansas",
+          "refusal": {
+            "wall": "We're working on getting this info",
+            "rungs": [
+              {
+                "rung": 1,
+                "what": "https://www.sos.arkansas.gov/elections",
+                "result": "Held capture reused in this pass",
+                "attemptedAt": "2026-10-18T03:33:48.757Z"
+              }
+            ]
+          },
+          "source": "https://www.sos.arkansas.gov/elections",
+          "sites": 0
+        }
+      ],
+      "readerResult": "R"
+    },
+    {
+      "state": "CA",
+      "planningTurn": 57,
+      "today": 0,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 54,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "CO",
+      "planningTurn": 51,
+      "today": 0,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 10,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "CT",
+      "planningTurn": 45,
+      "today": 2,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 7,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:ct",
+          "name": "Connecticut",
+          "refusal": {
+            "wall": "We're working on getting this info",
+            "rungs": [
+              {
+                "rung": 1,
+                "what": "https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page",
+                "result": "Held capture reused in this pass",
+                "attemptedAt": "2026-10-18T03:44:45.424Z"
+              }
+            ]
+          },
+          "source": "https://portal.ct.gov/en/SOTS/Common-Elements/V5-Template---Redesign/Elections--Voting--Home-Page",
+          "sites": 0
+        }
+      ],
+      "readerResult": "R"
+    },
+    {
+      "state": "DE",
+      "planningTurn": 47,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 3,
+      "jurisdictions": 1,
+      "heldSites": 297,
+      "readerSites": 19,
+      "browserPasses": 2,
+      "issues": [
+        "voting:278_HELD_SITES_WITHOUT_MATCHING_READER_GEOGRAPHY"
+      ],
+      "readerResult": "G"
+    },
+    {
+      "state": "DC",
+      "planningTurn": 46,
+      "today": 0,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 1,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "FL",
+      "planningTurn": 48,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 29,
+      "jurisdictions": 1,
+      "heldSites": 1,
+      "readerSites": 1,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "GA",
+      "planningTurn": 49,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 16,
+      "jurisdictions": 1,
+      "heldSites": 132,
+      "readerSites": 132,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "HI",
+      "planningTurn": 38,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 4,
+      "jurisdictions": 4,
+      "heldSites": 60,
+      "readerSites": 60,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "ID",
+      "planningTurn": 40,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 4,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "IL",
+      "planningTurn": 41,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 19,
+      "jurisdictions": 1,
+      "heldSites": 24,
+      "readerSites": 24,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "IN",
+      "planningTurn": 42,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 11,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "IA",
+      "planningTurn": 39,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 6,
+      "jurisdictions": 1,
+      "heldSites": 64,
+      "readerSites": 64,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "KS",
+      "planningTurn": 43,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 6,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "KY",
+      "planningTurn": 44,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 8,
+      "jurisdictions": 1,
+      "heldSites": 1690,
+      "readerSites": 1690,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "LA",
+      "planningTurn": 2,
+      "today": 2,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 8,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:la",
+          "name": "Louisiana",
+          "refusal": {
+            "wall": "We're working on getting this info",
+            "rungs": [
+              {
+                "rung": 1,
+                "what": "https://www.sos.la.gov/elections-voting",
+                "result": "Held capture reused in this pass",
+                "attemptedAt": "2026-10-18T10:19:11.239Z"
+              }
+            ]
+          },
+          "source": "https://www.sos.la.gov/elections-voting",
+          "sites": 0
+        }
+      ],
+      "readerResult": "R"
+    },
+    {
+      "state": "ME",
+      "planningTurn": 5,
+      "today": 0,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 4,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "MD",
+      "planningTurn": 4,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 10,
+      "jurisdictions": 24,
+      "heldSites": 102,
+      "readerSites": 102,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "MA",
+      "planningTurn": 3,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 11,
+      "jurisdictions": 1,
+      "heldSites": 164,
+      "readerSites": 164,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "MI",
+      "planningTurn": 6,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 15,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "MN",
+      "planningTurn": 7,
+      "today": 1,
+      "tomorrow": 2,
+      "registryBodies": 0,
+      "congressMembers": 10,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:mn",
+          "name": "Minnesota",
+          "refusal": {
+            "wall": "We're working on getting this info",
+            "rungs": [
+              {
+                "rung": 1,
+                "what": "https://www.sos.mn.gov/elections-voting",
+                "result": "Held capture reused in this pass",
+                "attemptedAt": "2026-10-18T20:18:13.929Z"
+              }
+            ]
+          },
+          "source": "https://www.sos.mn.gov/elections-voting",
+          "sites": 0
+        }
+      ],
+      "readerResult": "R"
+    },
+    {
+      "state": "MS",
+      "planningTurn": 10,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 6,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "MO",
+      "planningTurn": 8,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 10,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "MT",
+      "planningTurn": 11,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 4,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "NE",
+      "planningTurn": 14,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 5,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "NV",
+      "planningTurn": 18,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 6,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "NH",
+      "planningTurn": 15,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 650,
+      "congressMembers": 4,
+      "jurisdictions": 4,
+      "heldSites": 1,
+      "readerSites": 1,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "NJ",
+      "planningTurn": 16,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 693,
+      "congressMembers": 14,
+      "jurisdictions": 39,
+      "heldSites": 156,
+      "readerSites": 156,
+      "browserPasses": 2,
+      "issues": [],
+      "readerResult": "OK"
+    },
+    {
+      "state": "NM",
+      "planningTurn": 17,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 5,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "NY",
+      "planningTurn": 19,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 28,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "NC",
+      "planningTurn": 12,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 16,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "ND",
+      "planningTurn": 13,
+      "today": 2,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 3,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "OH",
+      "planningTurn": 20,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 17,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "OK",
+      "planningTurn": 21,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 7,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "OR",
+      "planningTurn": 22,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 8,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "PA",
+      "planningTurn": 23,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 19,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "RI",
+      "planningTurn": 25,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 4,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "SC",
+      "planningTurn": 26,
+      "today": 2,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 9,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "SD",
+      "planningTurn": 27,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 3,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "TN",
+      "planningTurn": 28,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 11,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "TX",
+      "planningTurn": 29,
+      "today": 2,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 39,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:tx",
+          "name": "Texas",
+          "publication": {
+            "text": "Certified statewide and district candidates are listed by all 254 counties. The linked sample ballot contains no statewide measure questions; a statewide measure certification was not found.",
+            "source": {
+              "url": "https://www.sos.state.tx.us/elections/index.shtml",
+              "title": "Texas chief election office discovery root",
+              "checkedAt": "2026-10-18T10:24:06.688Z",
+              "publisher": "Elections Division, Office of the Secretary of State, Austin, TX"
+            },
+            "status": "POSTED_LATER"
+          },
+          "refusal": null,
+          "source": "https://www.sos.state.tx.us/elections/index.shtml",
+          "sites": 0
+        }
+      ],
+      "readerResult": "L"
+    },
+    {
+      "state": "UT",
+      "planningTurn": 30,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 6,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:ut",
+          "name": "Utah",
+          "refusal": {
+            "wall": "We're working on getting this info",
+            "rungs": [
+              {
+                "rung": 1,
+                "what": "https://vote.utah.gov/",
+                "result": "Held capture reused in this pass",
+                "attemptedAt": "2026-10-18T10:24:04.762Z"
+              }
+            ]
+          },
+          "source": "https://vote.utah.gov/",
+          "sites": 0
+        }
+      ],
+      "readerResult": "R"
+    },
+    {
+      "state": "VT",
+      "planningTurn": 33,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 3,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "VA",
+      "planningTurn": 31,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 13,
+      "jurisdictions": 1,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 2,
+      "issues": [],
+      "blankReasons": [
+        {
+          "ocdId": "ocd-division/country:us/state:va",
+          "name": "Virginia",
+          "refusal": {
+            "wall": "We're working on getting this info",
+            "rungs": [
+              {
+                "rung": 1,
+                "what": "https://www.elections.virginia.gov/",
+                "result": "Held capture reused in this pass",
+                "attemptedAt": "2026-10-18T10:24:39.130Z"
+              }
+            ]
+          },
+          "source": "https://www.elections.virginia.gov/",
+          "sites": 0
+        }
+      ],
+      "readerResult": "R"
+    },
+    {
+      "state": "WA",
+      "planningTurn": 34,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 12,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "WV",
+      "planningTurn": 36,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 4,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "WI",
+      "planningTurn": 35,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 10,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "WY",
+      "planningTurn": 37,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 3,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:EMPTY_PUBLISHED_JURISDICTIONS"
+      ],
+      "readerResult": "E"
+    },
+    {
+      "state": "PR",
+      "planningTurn": 24,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 1,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:NOT_RECORDED"
+      ],
+      "readerResult": "N"
+    },
+    {
+      "state": "VI",
+      "planningTurn": 32,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 1,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:NOT_RECORDED"
+      ],
+      "readerResult": "N"
+    },
+    {
+      "state": "AS",
+      "planningTurn": 55,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 1,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:NOT_RECORDED"
+      ],
+      "readerResult": "N"
+    },
+    {
+      "state": "GU",
+      "planningTurn": 50,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 1,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:NOT_RECORDED"
+      ],
+      "readerResult": "N"
+    },
+    {
+      "state": "MP",
+      "planningTurn": 9,
+      "today": 1,
+      "tomorrow": 1,
+      "registryBodies": 0,
+      "congressMembers": 1,
+      "jurisdictions": 0,
+      "heldSites": 0,
+      "readerSites": 0,
+      "browserPasses": 0,
+      "issues": [
+        "voting:NOT_RECORDED"
+      ],
+      "readerResult": "N"
+    }
+  ]
+}

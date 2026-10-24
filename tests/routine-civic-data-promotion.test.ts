@@ -503,6 +503,47 @@ test("a Reader code-version change re-verifies the same LKG immediately without 
   assert.equal((await store.readPromotion("FEC_FUNDING", "federal-supported"))?.lastKnownGoodVersionId, exact.id);
 });
 
+for (const phase of ["before-reader", "before-evidence"] as const) test(`a repair follows a concurrently promoted pointer ${phase} without recording a false failure`, async () => {
+  class MovingStore extends MemoryRoutineDataStore {
+    armed = false;
+    pointerReads = 0;
+    move: (() => Promise<unknown>) | null = null;
+    override async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string) {
+      if (this.armed && phase === "before-reader" && ++this.pointerReads === 2) {
+        this.armed = false;
+        await this.move!();
+      }
+      return super.readPromotionIdentity(recordClass, scope);
+    }
+    override async appendEvidence(...args: Parameters<MemoryRoutineDataStore["appendEvidence"]>) {
+      if (this.armed && phase === "before-evidence") {
+        this.armed = false;
+        await this.move!();
+      }
+      return super.appendEvidence(...args);
+    }
+  }
+  const store = new MovingStore();
+  const holding = (id: string, moved = false) => candidate(id, {
+    scope: "federal-supported",
+    sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
+    readModel: { formatVersion: 1, candidates: moved ? [{ id: "moved" }] : [], absences: [] },
+  });
+  const before = holding(`reader-race-before-${phase}`), after = holding(`reader-race-after-${phase}`, true);
+  await processRoutineCandidate(store, before, NOW);
+  const oldEvents = await store.events(before.id);
+  store.move = async () => {
+    const moved = await processRoutineCandidate(store, after, new Date(Date.parse(NOW) + 2).toISOString(), before.id);
+    assert.equal(moved.promoted?.versionId, after.id, moved.candidate.failureDetail ?? "the concurrent source must actually move its pointer");
+  };
+  store.armed = true;
+  const result = await repairRoutineReaderProjectionReadback(store, ROUTINE_SOURCE_CONTRACTS[0], new Date(Date.parse(NOW) + 5).toISOString(), READER_CODE_SHA_A);
+  assert.equal(result.kind, "RECORDED");
+  assert.equal(result.receipt?.status, "PASS", result.receipt?.detail);
+  assert.equal(result.receipt?.versionId, after.id);
+  assert.deepEqual(await store.events(before.id), oldEvents, "the superseded holding receives no false failure or PASS");
+});
+
 test("a Reader readback moves identity around the typed Reader, never another copy of the dataset", async () => {
   class CountingReadStore extends MemoryRoutineDataStore {
     readonly reads = { promotion: 0, candidate: 0, identity: 0 };

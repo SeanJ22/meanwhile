@@ -1,11 +1,4 @@
-import {
-  civicDataReadNotInitialized,
-  mayUseTestFixture,
-  promotedVersionOrThrow,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "../civic-data/read-model.ts";
+import { civicDataReadNotInitialized, mayUseTestFixture, readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import {
   manualProjectionCandidate,
@@ -82,22 +75,6 @@ export async function readEverydayRoutingProjection(
   }
   state = result;
   return result;
-}
-
-export async function refreshEverydayRoutingFromPromoted(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<string> {
-  const result = await readEverydayRoutingProjection(options);
-  if (result.kind === "NOT_RECORDED") {
-    throw new Error("The everyday-routing store answered without a canonical promoted projection.");
-  }
-  const version = promotedVersionOrThrow(result);
-  if (version === null) throw new Error("The everyday-routing canonical projection was not promoted.");
-  return version;
-}
-
-export function everydayRoutingReadState(): CivicDataReadResult<EverydayRoutingProjection> {
-  return state;
 }
 
 export function currentEverydayRoutingProjection(): EverydayRoutingProjection {

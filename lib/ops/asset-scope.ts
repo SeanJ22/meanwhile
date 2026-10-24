@@ -19,9 +19,3 @@ export const STAYS_IN_REPO: readonly RegExp[] = [
   // Test inputs: real bytes whose properties only real bytes can demonstrate.
   /^tests\/fixtures\//,
 ];
-
-/** Does this repo-relative path stay in the repository rather than the store? */
-export function staysInRepo(repoRelativePath: string): boolean {
-  const normalized = repoRelativePath.replace(/\\/g, "/");
-  return STAYS_IN_REPO.some((rule) => rule.test(normalized));
-}

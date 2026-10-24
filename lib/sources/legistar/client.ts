@@ -231,15 +231,6 @@ export async function fetchEventItems<T>(
     row => (row as { EventItemId: number }).EventItemId, undefined, options);
 }
 
-/** One event record by id. Carries the minutes status and minutes pointer. */
-export async function fetchEvent<T>(
-  slug: string,
-  eventId: number,
-  options: RequestOptions = {},
-): Promise<T> {
-  return getJson<T>(`${slug}/events/${eventId}`, options);
-}
-
 export async function fetchEventItemVotes<T>(
   slug: string,
   eventItemId: number,

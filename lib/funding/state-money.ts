@@ -187,59 +187,6 @@ export function stateMoneyRecordKey(record: {
 }
 
 /**
- * The matching bar, in one function so no caller can lower it. The join is on
- * a name, which can always drop or mismatch rows, so the bar is a
- * conjunction and its failure is `LEAD`, never a silent drop.
- */
-export function judgeMatch(input: {
-  registeredName: string;
-  candidateNameAsFiled: string;
-  ballotName: string;
-  officeAsFiled: string | null;
-  officeOnBallot: string | null;
-  electionYearAsFiled: number | null;
-  electionYearOnBallot: number;
-}): MatchBasis {
-  const nameAgrees = namesAgree(input.candidateNameAsFiled, input.ballotName);
-  const officeAgrees =
-    input.officeAsFiled !== null &&
-    input.officeOnBallot !== null &&
-    officesAgree(input.officeAsFiled, input.officeOnBallot);
-  const yearAgrees =
-    input.electionYearAsFiled !== null && input.electionYearAsFiled === input.electionYearOnBallot;
-
-  const failures: string[] = [];
-  if (!nameAgrees) failures.push("the filed name does not agree with the certified-ballot name");
-  if (!officeAgrees) {
-    failures.push(
-      input.officeAsFiled === null
-        ? "the agency states no office for this committee"
-        : `office '${input.officeAsFiled}' does not agree with ballot office '${input.officeOnBallot ?? "(none recorded)"}'`,
-    );
-  }
-  if (!yearAgrees) {
-    failures.push(
-      input.electionYearAsFiled === null
-        ? "the agency states no election year"
-        : `filed year ${input.electionYearAsFiled} is not the ballot year ${input.electionYearOnBallot}`,
-    );
-  }
-
-  const allThreeAgree = nameAgrees && officeAgrees && yearAgrees;
-  return {
-    registeredName: input.registeredName,
-    officeAsFiled: input.officeAsFiled,
-    officeOnBallot: input.officeOnBallot,
-    electionYearAsFiled: input.electionYearAsFiled,
-    electionYearOnBallot: input.electionYearOnBallot,
-    allThreeAgree,
-    note: allThreeAgree
-      ? "name, office and election year all agree with the certified-ballot row"
-      : `LEAD — ${failures.join("; ")}`,
-  };
-}
-
-/**
  * Name agreement, deliberately conservative. Agencies file
  * `SURNAME, FORENAME MIDDLE SUFFIX`; ballots carry `Forename Surname`. Token
  * sets are compared after stripping punctuation, suffixes and single-letter
@@ -254,39 +201,6 @@ export function nameTokens(name: string): string[] {
     .split(/\s+/)
     .map((t) => t.trim())
     .filter((t) => t.length > 1 && !SUFFIXES.has(t));
-}
-
-/**
- * A deliberately weak test that may only ever withhold a claim: could the row
- * the agency handed us be about this person? It forbids claiming an absence;
- * it never licenses a match, fills a field or reaches a reader. `namesAgree`
- * stays the strict matching bar.
- *
- * Surname must agree exactly. Forenames are compatible when equal, or one is
- * a prefix of the other of at least two characters (`Jon`/`Jonathan`).
- */
-export function mayBeSamePerson(a: string, b: string): boolean {
-  const ta = nameTokens(a);
-  const tb = nameTokens(b);
-  if (ta.length < 2 || tb.length < 2) return false;
-  // Agencies file `SURNAME, FORENAME`; ballots carry `Forename Surname`. The
-  // surname is whichever token the two share exactly, so compare SETS for it
-  // rather than trusting either side's word order.
-  const setB = new Set(tb);
-  const shared = ta.filter((t) => setB.has(t));
-  if (shared.length === 0) return false;
-  const restA = ta.filter((t) => !shared.includes(t));
-  const restB = tb.filter((t) => !shared.includes(t));
-  // Nothing left to disagree about: the shared tokens already carry both names.
-  if (restA.length === 0 || restB.length === 0) return true;
-  for (const x of restA) {
-    for (const y of restB) {
-      const short = x.length <= y.length ? x : y;
-      const long = x.length <= y.length ? y : x;
-      if (short.length >= 2 && long.startsWith(short)) return true;
-    }
-  }
-  return false;
 }
 
 export function namesAgree(a: string, b: string): boolean {
@@ -346,14 +260,6 @@ export function officeClassOf(office: string): OfficeClass | null {
   const s = office.toLowerCase().replace(/\s+/g, " ").trim();
   for (const { cls, pattern } of OFFICE_CLASS_RULES) if (pattern.test(s)) return cls;
   return null;
-}
-
-export function officesAgree(a: string, b: string): boolean {
-  const ca = officeClassOf(a);
-  const cb = officeClassOf(b);
-  // An office neither side can classify is never agreement.
-  if (ca === null || cb === null) return false;
-  return ca === cb;
 }
 
 /**

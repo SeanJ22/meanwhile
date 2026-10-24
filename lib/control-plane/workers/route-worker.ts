@@ -30,7 +30,7 @@ const broker = workerBroker<LeaseWorkerConfig>(async config => {
     workerFor: ({ holder }: { holder: string }) => ({ role: "ACQUIRER" as const, provider: "we-the-people",
       version: `route-executor/1.0 (${route?.routeId ?? "unrouted"})`, instance: holder }),
     run: (route as typeof route & {placeHunt?:import("../../hunt/own-site-runtime.ts").HuntSourceScope})?.placeHunt
-      ? placeSourceExecutor({repos,root:config.root,...(config.postgres?{prepareBody:liveHuntBodyPreparer({repos,root:config.root,now:clock})}:{}),scope:(route as NonNullable<typeof route> & {placeHunt:import("../../hunt/own-site-runtime.ts").HuntSourceScope}).placeHunt,now:clock,open:tools.openOne,vault:tools.vault,spaceOut:tools.spaceOut})
+      ? placeSourceExecutor({repos,root:config.root,...(config.postgres?{prepareBody:liveHuntBodyPreparer({repos,root:config.root,now:clock})}:{}),deadlineMs:config.routeDispatch.deadlineMs,scope:(route as NonNullable<typeof route> & {placeHunt:import("../../hunt/own-site-runtime.ts").HuntSourceScope}).placeHunt,now:clock,open:tools.openOne,vault:tools.vault,spaceOut:tools.spaceOut})
       : routeExecutor({root:config.root,routeFor:()=>route,now:clock,...tools}) };
   const result = await dispatchOne(repos, { ...input, holder: `${input.holder}:worker:${process.pid}`,
     clock, maturity: () => input.maturity, executor });

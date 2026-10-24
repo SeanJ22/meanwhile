@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-24T22:45:21.372Z",
+  "observedAt": "2026-10-24T23:22:06.284Z",
   "productionRoles": [
     "readonly",
     "wtp_cp_release_readonly"
@@ -216,14 +216,14 @@
       "memberships": 5,
       "productionEntities": 465,
       "owed": 5061,
-      "held": 2329,
-      "missing": 2732,
+      "held": 2330,
+      "missing": 2731,
       "stale": 0,
       "stuck": 205,
       "nextPass": {
         "owed": 5061,
-        "held": 2329,
-        "missing": 2732,
+        "held": 2330,
+        "missing": 2731,
         "stale": 0,
         "stuck": 205
       },
@@ -399,18 +399,18 @@
       "state": "WI",
       "zip": "53703",
       "memberships": 4,
-      "productionEntities": 1802,
-      "owed": 21347,
-      "held": 7589,
-      "missing": 13758,
+      "productionEntities": 1833,
+      "owed": 21591,
+      "held": 7717,
+      "missing": 13874,
       "stale": 0,
-      "stuck": 1153,
+      "stuck": 1178,
       "nextPass": {
-        "owed": 21347,
-        "held": 7589,
-        "missing": 13758,
+        "owed": 21591,
+        "held": 7717,
+        "missing": 13874,
         "stale": 0,
-        "stuck": 1153
+        "stuck": 1178
       },
       "heldExample": {
         "entityId": "government:US-WI:cog:209777#body:affirmative-action-commission",

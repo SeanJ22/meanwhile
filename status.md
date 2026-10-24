@@ -23,6 +23,10 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
 
+### RIVER-KEYS (Job 2) baseline, 5:30 AM EDT (release 95)
+- Reader walk in Chromium (/ballot, "Where can I vote?", ZIP typed, "Show me"): 79901 El Paso, 60090 Wheeling and 85603 Bisbee (Cochise) show "We're working on getting this info." and 0 sites. 40202 Louisville 226, 85701 Tucson 345. Capital ZIPs with sites: KY 226, SC 135 (29201), MA 164 (02108), ND 19, HI 18, MD 10, DE 4; 0 at the capital ZIP in the other 44 states and DC (incl. FL 32301, MT 59601). No console errors.
+- Polling places published in the reader DB (VOTING_SITE, decoded): 5,279 in 15 states. SC 1,956, KY 1,690, AZ 345, DE 297, ND 209, MA 164, NJ 156, GA 132, MD 102, AL 78, IA 64, HI 60, IL 24, FL 1, NH 1; 0 in the other 36 states and DC (MT 0). After RIVER-KEYS's first polling-place run, none of these may drop, and TX (El Paso), IL (Wheeling) and AZ (Cochise) must rise.
+
 ## Waiting on Sean (from FX-01's returns/sean.md on stream/fx-01-fx, Oct 23 ~12:10 PM EDT)
 
 Items 1 (Vice President) and 2 (planning round) are answered above and shipped or folding. New:

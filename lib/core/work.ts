@@ -82,6 +82,7 @@ const ADD_WORK_SQL = `INSERT INTO work_row
     status = CASE WHEN work_row.status <> 'taken' AND (work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote) THEN 'ready' ELSE work_row.status END,
     not_before = CASE WHEN work_row.status <> 'taken' AND (work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote) THEN EXCLUDED.not_before ELSE work_row.not_before END,
     refusal = CASE WHEN work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote THEN NULL ELSE work_row.refusal END,
+    url = CASE WHEN work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote THEN EXCLUDED.url ELSE work_row.url END,
     value = EXCLUDED.value, quote = EXCLUDED.quote
   RETURNING *`;
 
@@ -146,7 +147,7 @@ export function workList(query: Query, options: { readonly owner: string; readon
         ON CONFLICT (id) DO UPDATE SET reports = work_row.reports || EXCLUDED.reports,
           sources = (SELECT coalesce(jsonb_agg(DISTINCT item),'[]'::jsonb) FROM jsonb_array_elements(work_row.sources || EXCLUDED.sources) item),
           status = CASE WHEN work_row.status = 'taken' THEN 'taken' ELSE 'ready' END,
-          content_version = work_row.content_version + 1, value = EXCLUDED.value, quote = EXCLUDED.quote,
+          content_version = work_row.content_version + 1, value = EXCLUDED.value, quote = EXCLUDED.quote, url = EXCLUDED.url,
           not_before = EXCLUDED.not_before, refusal = NULL
       ) SELECT status FROM refused`, [...fenced(claim), reason]);
       return saved?.status === "refused";

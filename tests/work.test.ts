@@ -33,8 +33,9 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.equal(repeated.reports.length, 2);
   assert.equal((await list.claim("check", 1)).length, 0);
   assert.equal((await list.add({ ...input, source: { report: "two" } })).reports.length, 2, "a replayed report is retained once");
-  await list.add({ ...input, quote: "New contact Phone: 520-724-4330", source: { report: "three" } });
+  await list.add({ ...input, url: "https://www.pima.gov/new-contact", quote: "New contact Phone: 520-724-4330", source: { report: "three" } });
   const [changed] = await list.claim("check", 1);
+  assert.equal(changed!.url, "https://www.pima.gov/new-contact", "changed evidence keeps the source URL that supplied it");
   await list.add({ ...input, value: "520-724-4444", quote: "Phone: 520-724-4444", source: { report: "four" } });
   assert.equal((await list.claim("check", 1)).length, 0, "changed evidence cannot revoke a live lease");
   assert.equal(await list.finish(changed!), false, "the old value cannot mark the new value done");
@@ -64,12 +65,13 @@ test("work list retains reports without reopening, fences changed work, backs of
   assert.deepEqual(hours[0], { state: "az", hour: "2026-10-24T12:00:00.000Z", incoming: 2, done: 1, refused: 2 });
   assert.equal((await workCounts(query, "wy", at))[0]!.incoming, 0);
   await assert.rejects(workCounts(query, "invalid", at), /INVALID_STATE/);
-  await list.add({ ...input, value: "520-724-5555", quote: "Phone: 520-724-5555", sources: ["source-new"], source: { report: "six" } });
+  await list.add({ ...input, url: "https://www.pima.gov/updated-contact", value: "520-724-5555", quote: "Phone: 520-724-5555", sources: ["source-new"], source: { report: "six" } });
   const [revised] = await list.claim("check", 1);
   assert.ok(await list.refuse(revised!, "Changed claim is still unsupported"));
   const [reopenedDetect] = await list.claim("detect", 1);
   assert.equal(reopenedDetect!.id, detect!.id);
   assert.deepEqual(reopenedDetect!.sources, ["source-new"], "the existing detective retains the new source evidence");
+  assert.equal(reopenedDetect!.url, "https://www.pima.gov/updated-contact");
   assert.ok(await list.finish(reopenedDetect!));
   assert.equal((await query("select count(*)::int n from work_row where kind='detect'"))[0]!.n, 1);
   await list.add({ ...input, field: "member", claimKey: "seat-a", value: "Person A", source: { report: "seat-a" } });

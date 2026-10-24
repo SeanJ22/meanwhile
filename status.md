@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 101 (main 6cd25dd09, live 3:37 PM EDT; CL-01, RV-TOOLS, RIVER-KEYS-FX). NEXT: batch B gating (DB-01 + MT-01 + RB-A1 doc), then RV-MEET alone, then PT-01
+build_state: LIVE FOR READERS: release 101 (main 6cd25dd09, live 3:37 PM EDT). GATING: batch B (MT-01 db4cd927b + RB-A1 doc + RV-MEET 6be91744f, river-next ca26d9092). Returned: DB-01 (6 tests), SO-01 (River finishing after its 60-min window)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T19:44:07Z
+heartbeat: 2026-10-24T20:09:45Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,14 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 4:10 PM EDT
+- Live: release 101 (6cd25dd09). Reader checks passed at 3:38 PM EDT. Readers have CL-01's one card per person, 0051's id lookup, the pool error handler, and Cochise's reopened doors (publishing waits on a voting-sites run, see 3:37 PM).
+- Batch B split: DB-01 befe7b6f1 made 6 tests fail when folded. It was dropped and returned (returns/db-01.md, exact fixes): civic_data_clock_versions unclassified; the hour select on Admin Money lacks the shell select rule; the registry runtime read throws STORE_READ_FAILED in its test; 3 Admin Money/view tests. Without DB-01 all six files pass. River fixes it on stream/db-01 at 4:55 PM EDT if the lane hasn't.
+- Batch B re-formed and gating from 3:48 PM EDT on river-next ca26d9092: MT-01 db4cd927b (latest READY), RB-A1 1d6df41d9 (docs), RV-MEET 6be91744f (meeting calendars: about 170 bodies a pass).
+- SO-01: no new READY in its 60-minute window (4:08 PM EDT). Per the standing order a River helper is merging river into stream/so-01, keeping both CL-01's and SO-01's reader behavior, with proofs on production data (AZ AG Kris Mayes, one governor with the official contact, old IDs as aliases; Raleigh's single Ross). Then READY: SO-01 and the next batch.
+- New READY: RN-03 953466400 (supersedes 13f6eb19f; on river e2ee3657a; NC 2,806 voting sites, Metro boards reach 97204). Next batch.
+- Queue: C RN-03 + SO-01; D PT-01; E RB-A2 + RB-A5 + RB-A8; DB-01 when re-READY; RB-A4 after RB-A3.
 
 ### Release 101 live, 3:37 PM EDT
 - /api/build 6cd25dd09 (PR #811 merge commit). Sean's checks in Chromium at 3:38 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.

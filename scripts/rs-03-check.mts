@@ -8,7 +8,7 @@ import { once } from "node:events";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { neon } from "@neondatabase/serverless";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { readZipLocation } from "../lib/place-map/locations.ts";
 import { readerMeetingsPath, warmAfterDeploy } from "../lib/ops/post-deploy-warm.ts";
 
 const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
@@ -26,7 +26,7 @@ const output = resolve(process.argv.find(arg => arg.startsWith("--out="))?.slice
 await mkdir(output, { recursive: true });
 const buildId = (await readFile(".next/BUILD_ID", "utf8")).trim();
 const zips = ["85701", "03301", "07960", "77002", "10001"];
-const places = zips.map(zip => ({ ...lookupZcta(zip)!, zip }));
+const places = await Promise.all(zips.map(async zip => { const point=await readZipLocation(zip);assert.ok(point,zip);return point; }));
 const rows: Record<string, unknown>[] = [];
 const child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "-p", "3303", "-H", "127.0.0.1"], {
   env: { ...process.env, DATABASE_URL: connection, WTP_DB_ROLE: "production", WTP_VITAL_SIGNS_REPORT: "1", NODE_ENV: "production" },

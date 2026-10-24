@@ -23,6 +23,8 @@ import { EVERYDAY_ROUTING_POINTER } from "../routing/everyday-data-plane.ts";
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import type { PublicBodyAttempt } from "../registry/body-attempt-read.ts";
 import { attemptFamilyOf } from "../registry/attempt-families.ts";
+import { combineStateRegistries } from "../registry/state-composition.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 
 import { serverReaderValue } from "./memory.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
@@ -474,6 +476,29 @@ export function readPlacePackageHttp(input: PlaceInput): Promise<PlacePackage> {
     const http=factReader(),socket=http ? null : readerDatabaseQuery();
     return http ?? (socket ? statementQuery(socket) : null);
   });
+}
+
+/** A ZIP crossing a state line keeps the boards and calendars on both sides. */
+export async function readPlacesForStates(states: readonly string[], input: Omit<PlaceInput,"state">): Promise<PlacePackage> {
+  const values = await Promise.all([...new Set(states)].map(state => {
+    const own = (id:string) => !ocdStateCode(id) || ocdStateCode(id) === state.toLowerCase();
+    return readPlacePackageHttp({...input,state,divisionIds:input.divisionIds.filter(own),
+      bodyIds:input.bodyIds?.filter(own),namedDivisionIds:input.namedDivisionIds?.filter(own)});
+  }));
+  if (!values.length || values.some(value => !value.registry)) throw new Error("The place's government records could not be loaded");
+  if (values.length === 1) return values[0];
+  const by = <T>(rows:readonly T[], key:(row:T)=>string):T[] => [...new Map(rows.map(row=>[key(row),row])).values()];
+  const meetings=by(values.flatMap(value=>value.meetings),row=>row.id);
+  const dates=values.flatMap(value=>value.snapshotHeldAt??[]).sort();
+  return {...values[0],registry:combineStateRegistries(values.map(value=>value.registry!)),
+    publicationAttempts:by(values.flatMap(value=>value.publicationAttempts),row=>JSON.stringify(row)),
+    bodies:by(values.flatMap(value=>value.bodies),row=>row.id),governments:by(values.flatMap(value=>value.governments),row=>row.id),
+    divisions:by(values.flatMap(value=>value.divisions),row=>row.ocdId),registrationHeld:values.every(value=>value.registrationHeld),
+    meetings,snapshotHeldAt:dates.at(-1)??null,snapshot:{...values[0].snapshot,generatedAt:dates.at(-1)??values[0].snapshot.generatedAt,
+      meetings,counts:snapshotCounts(meetings,values.reduce((sum,value)=>sum+(value.snapshot.counts.duplicatesCollapsed??0),0)),
+      sources:values.flatMap(value=>value.snapshot.sources),agendaDocuments:by(values.flatMap(value=>value.snapshot.agendaDocuments),row=>row.id)},
+    agendaDocumentLinks:by(values.flatMap(value=>value.agendaDocumentLinks),row=>`${row.meetingId}|${row.documentUrl}`),
+    bodySnapshots:Object.assign({},...values.map(value=>value.bodySnapshots))};
 }
 
 function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<PlacePackage> {

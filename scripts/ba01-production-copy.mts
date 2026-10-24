@@ -82,7 +82,7 @@ async function prepareCopy(connection: string, files: string[]) {
 }
 
 const checkZip = readerRoute("/ballot", async ({ zip }: { zip: string }) => {
-  const place = ballotPlaceFromParams({ zip });
+  const place = await ballotPlaceFromParams({ zip });
   assert.ok(place.centroid, `${zip}: centroid is available`);
   const selection = currentReaderSelection();
   const pointRead = ballotPointDivisions(selection?.states ?? [], place.centroid.lat, place.centroid.lng);

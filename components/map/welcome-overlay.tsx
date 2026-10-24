@@ -83,6 +83,7 @@ export function WelcomeOverlay({
       (position) => {
         setLocating(false);
         if (request !== choiceRequest.current) return;
+        recordLocationOrigin(null, "DEVICE_LOCATION");
         onPointLocated(position.coords.latitude, position.coords.longitude);
       },
       (err) => {

@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import { summarizeCoverage, type CoverageSummary } from "../lib/registry/coverage.ts";
 import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
@@ -63,7 +63,7 @@ test("pre-resolving the divisions produces the identical coverage answer", () =>
   // Passing the pre-resolved divisions yields the same coverage object.
   let checked = 0;
   for (const zip of PROBES) {
-    const resolved = resolveZip(zip);
+    const resolved = fixtureZipResolution(zip);
     if (!resolved.ok) continue;
     const point: [number, number] = [resolved.centroid.lng, resolved.centroid.lat];
 
@@ -86,7 +86,7 @@ test("pre-resolving the divisions produces the identical coverage answer", () =>
 test("an EMPTY pre-resolved set is not silently treated as an answer", () => {
   // Passing `[]` would empty coverage and render a lookup failure as "no body governs here", so `undefined`
   // (resolve again) and `[]` must not be the same call.
-  const resolved = resolveZip("85701");
+  const resolved = fixtureZipResolution("85701");
   assert.ok(resolved.ok);
   const point: [number, number] = [resolved.centroid.lng, resolved.centroid.lat];
 
@@ -169,7 +169,7 @@ test("parallel indexed ZIP requests show held meetings and officials without a p
 
 test("the counter can read two, so a one is a measurement and not a constant", () => {
   // Control: withholding the pre-resolved set makes summarizeCoverage resolve again, and the counter reads 2.
-  const resolved = resolveZip("85701");
+  const resolved = fixtureZipResolution("85701");
   assert.ok(resolved.ok);
   const point: [number, number] = [resolved.centroid.lng, resolved.centroid.lat];
 

@@ -150,9 +150,9 @@ function missingHeld(before: ReaderPayload, after: ReaderPayload): { missing: st
 }
 
 async function child(probe: Probe): Promise<Result> {
-  const [{ GET: stateRoute }, { GET: placeRoute }, { GET: zipRoute }, { GET: directoryRoute }, { lookupZcta }, client, national] = await Promise.all([
+  const [{ GET: stateRoute }, { GET: placeRoute }, { GET: zipRoute }, { GET: directoryRoute }, client, national] = await Promise.all([
     import("../app/api/reader/state/route.ts"), import("../app/api/meetings/route.ts"),
-    import("../app/api/location/zip/route.ts"), import("../app/api/directory/route.ts"), import("../lib/geo/zcta.ts"), import("../lib/reader/client.ts"), import("../lib/place-map/reader.ts"),
+    import("../app/api/location/zip/route.ts"), import("../app/api/directory/route.ts"), import("../lib/reader/client.ts"), import("../lib/place-map/reader.ts"),
   ]);
   const importMs = Math.round(performance.now() - scriptStarted), rounds: Round[] = [];
   let firstState: ReaderStateResponse | null = null, firstPlace: ReaderPayload | null = null;
@@ -206,7 +206,7 @@ async function child(probe: Probe): Promise<Result> {
   await round(probe.zip, "cold");
   await round(probe.zip, "repeat");
   const stateValue = firstState as ReaderStateResponse | null;
-  const nextZip = [...(await national.readStateZipPlaces(probe.state)).keys()].find(zip => zip !== probe.zip && lookupZcta(zip)?.postal?.state === probe.state);
+  const nextZip = [...(await national.readStateZipPlaces(probe.state)).keys()].find(zip => zip !== probe.zip);
   if (nextZip) await round(nextZip, "next-zip");
   const result: Result = { state: probe.state, zip: probe.zip, importMs, coldWithImportsMs: importMs + rounds[0]!.usableMs, rounds, errors: rounds.flatMap(row => row.errors) };
   if (result.coldWithImportsMs! >= 3000) result.errors.push("Cold data result including route imports took at least three seconds");

@@ -29,7 +29,7 @@ import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 
 import { POST as ballotScope } from "../app/api/ballot/scope/route.ts";
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { Contest } from "../lib/ballot/types.ts";
@@ -236,7 +236,7 @@ test("ballot scope reports an unavailable state ballot without using another aut
   await installRegistryAuthority();
   const edge = failedBallotEdge(["AZ", "NH"]);
   for (const zip of ["85701", "03255"]) {
-    const location = resolveZip(zip);
+    const location = fixtureZipResolution(zip);
     assert.ok(location.ok);
     const response = await withReaderAuthorityEdge(edge, () => ballotScope(new Request("https://fixture.test/api/ballot/scope", {
       method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(location.centroid),
@@ -416,24 +416,18 @@ test("state registry requests retain their state's photos and never expose a nei
   }
 });
 
-test("coordinate ballot requests derive their place directly from Census geography", async () => {
-  const fixture = JSON.parse(readFileSync("tests/fixtures/census-address-tx.json", "utf8"));
-  const geographies = fixture.result.addressMatches[0].geographies;
-  const previous = globalThis.fetch;
-  const urls: URL[] = [];
-  globalThis.fetch = async input => {
-    const url = new URL(typeof input === "string" ? input : input instanceof URL ? input.href : input.url);
-    urls.push(url);
-    return Response.json({ result: { geographies } });
-  };
+test("coordinate ballot requests derive their place from one map query without a second geocoder lookup", async () => {
+  const {installPlaceMapQuery}=await import("../lib/place-map/reader.ts");
+  const {fixturePlaceMapQuery}=await import("./helpers/place-map.ts");
+  const query=fixturePlaceMapQuery();let reads=0;
+  const previous=globalThis.fetch;
+  globalThis.fetch=async()=>{throw new Error("A map point must not call the Census geocoder");};
+  installPlaceMapQuery(async(sql,params)=>{reads++;return query(sql,params);});
   try {
-    const ids = await ballotPlaceDivisions({ lat: 30.2712, lng: -97.7431 });
+    const ids=await ballotPlaceDivisions({lat:30.27644199222,lng:-97.739754035328});
     assert.ok(ids.includes("ocd-division/country:us/state:tx"));
-    assert.ok(ids.some(id => id.includes("/county:travis")));
-    assert.ok(ids.every(id => id.startsWith("ocd-division/country:us/state:tx")));
-    assert.equal(urls.length, 1);
-    assert.equal(urls[0].pathname, "/geocoder/geographies/coordinates");
-    assert.equal(urls[0].searchParams.get("x"), "-97.7431");
-    assert.equal(urls[0].searchParams.get("y"), "30.2712");
-  } finally { globalThis.fetch = previous; }
+    assert.ok(ids.some(id=>id.includes("/county:travis")));
+    assert.ok(ids.every(id=>id.startsWith("ocd-division/country:us/state:tx")));
+    assert.equal(reads,1);
+  } finally {globalThis.fetch=previous;installPlaceMapQuery(fixturePlaceMapQuery());}
 });

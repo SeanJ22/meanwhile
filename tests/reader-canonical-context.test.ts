@@ -209,7 +209,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
     return [[]];
   });
   try {
-    const data=await withReaderSelection(selection("AZ"),()=>readBallotReaderData(ballotPlaceFromParams({zip:"85701"})));
+    const data=await withReaderSelection(selection("AZ"),async()=>readBallotReaderData(await ballotPlaceFromParams({zip:"85701"})));
     assert.ok(data);
     assert.deepEqual(order,["state","place","auxiliary"],
       "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
@@ -245,7 +245,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
   });
   try {
     await withReaderSelection(selection("AZ"),async()=>{
-      const data=await readBallotReaderData(ballotPlaceFromParams({zip:"85701"}),async()=>{ throw failure; });
+      const data=await readBallotReaderData(await ballotPlaceFromParams({zip:"85701"}),async()=>{ throw failure; });
       assert.ok(data,"a registry-local failure cannot abort ballot initialization");
       await assert.rejects(data.registryRead,error=>error === failure);
       await data.districtRead;

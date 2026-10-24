@@ -17,13 +17,12 @@ import type { LocationOrigin } from "../ask/residency.ts";
 const STORAGE_KEY = "wtp.location_origin";
 
 interface StoredOrigin {
-  zip: string;
+  zip: string | null;
   origin: LocationOrigin;
 }
 
 /** Record how the reader arrived at this ZIP. Never throws. */
 export function recordLocationOrigin(zip: string | null, origin: LocationOrigin): void {
-  if (!zip) return;
   try {
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ zip, origin } satisfies StoredOrigin));
   } catch {
@@ -33,7 +32,6 @@ export function recordLocationOrigin(zip: string | null, origin: LocationOrigin)
 
 /** How the reader arrived at THIS ZIP, or `UNKNOWN`; a record about another ZIP is ignored. */
 export function readLocationOriginFor(zip: string | null): LocationOrigin {
-  if (!zip) return "UNKNOWN";
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return "UNKNOWN";

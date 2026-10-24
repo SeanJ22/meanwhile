@@ -1,3 +1,6 @@
+import { fixturePlaceMapQuery } from "./place-map.ts";
+import { installPlaceMapQuery } from "../../lib/place-map/reader.ts";
+installPlaceMapQuery(fixturePlaceMapQuery());
 
 import { currentReaderAuthorityEdge, withReaderAuthorityEdge } from "../../lib/registry/runtime-edge.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";

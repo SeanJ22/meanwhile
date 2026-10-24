@@ -4,7 +4,7 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
-import { readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
+import { readPlacesForStates } from "@/lib/reader/place";
 import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
@@ -18,7 +18,7 @@ import { bindGovernmentBodies } from "@/lib/registration/listings";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
 import {readerStateResponse} from "@/lib/reader/state-response";
-import { lookupZcta } from "@/lib/geo/zcta";
+import { readZipLocation } from "@/lib/place-map/locations";
 import type { ReaderStateResponse } from "@/lib/reader/client";
 
 export const runtime = "nodejs";
@@ -31,7 +31,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
   if (!zipRead.ok) return refuse(zipRead.error);
   if (zipRead.value && !params.has("lat") && !params.has("lng")) {
-    const location = lookupZcta(zipRead.value);
+    const location = await readZipLocation(zipRead.value);
     if (!location) return refuse("That ZIP could not be located");
     params.set("lat", String(location.lat)); params.set("lng", String(location.lng));
   }
@@ -55,7 +55,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const territoryRead = readerTerritory(location.state);
     const fringe = zipRead.value ? location.fringe : [];
-    const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
+    const placeRead = timing.time("place", async () => readPlacesForStates(location.states, { divisionIds: location.divisionIds,
       bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe }));
     const [state, place, territory, settings] = await Promise.all([
       stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
@@ -78,7 +78,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       publicationAttempts: attemptsByFamily(place.publicationAttempts.filter(attempt => attempt.bodyId === body.bodyId)) }));
     const partial = new Set(location.partial);
     if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
-    const listingIdentity = withRegistryRuntimeProjection(registry, [location.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+    const listingIdentity = withRegistryRuntimeProjection(registry, location.states, () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
     const stateAnswer = await stateAnswerRead;
     return Response.json({
       ...result, coverage, listingIdentity, ...(stateAnswer ? {stateResponse:stateAnswer} : {}),
@@ -89,7 +89,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",
       snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
-    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerCacheHeaders({ states: [location.state], places: ids })),
+    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerCacheHeaders({ states: location.states, places: ids })),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });
   } catch (error) {
     console.error("READER_PLACE_LOAD_FAILED", error);

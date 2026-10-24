@@ -17,6 +17,7 @@ import { loadStatePlaceMap, type StatePlaceMap } from "./load.ts";
 import { geographicSpecialDistricts } from "./special-districts.ts";
 import { statePostalLinks } from "./postal-links.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
+import { stateZipLocations } from "./location-import.ts";
 
 /** Read only the legacy shards touching this state. Their source is explicitly
  * Census ZCTAs; the independent Census universe confirms each ZCTA row. */
@@ -93,7 +94,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
     geographicDistricts: geographicDistricts.map(d => ({ ...d, governmentId: governmentIds.get(d.pid) })),
     postalLinks,
     sourceCounties: new Map(sources.sources.map(source => [source.id, source.countyFips])), checkedAt: dataset.builtAt });
-  return { map, dataset };
+  return { map:{...map,zipLocations:await stateZipLocations(root,state,dataset.builtAt)}, dataset };
 }
 
 /** The standing Census job uses this same import on every scheduled refresh. */

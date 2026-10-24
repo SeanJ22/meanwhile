@@ -1,3 +1,5 @@
+import { installPlaceMapQuery } from "../lib/place-map/reader.ts";
+import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -88,6 +90,20 @@ test("R2B address: three real redrawn-state addresses use their representation a
       assert.equal(new URL(url).searchParams.get("layers"), "all");
       const wrong = divisionsFromCensusGeographies(point.geographies, selection.purpose === "representation" ? election : representation, url, at);
       assert.ok(!wrong.some(row => row.divisionType === "cd"), "the other plan cannot inherit certainty from this vintage");
+      const mapRows = [representation,election].flatMap(plan => {
+        const reply=JSON.parse(fixture(`census-address-${state}${plan.purpose === "representation" ? "-representation" : ""}.json`));
+        const located=parseCensusGeographies(reply)!;
+        return [{ocdId:`ocd-division/country:us/state:${state}`,label:state,state:state.toUpperCase(),divisionType:"state"},...divisionsFromCensusGeographies(located.geographies!,plan,censusGeographiesUrl("public building",censusVintageFor(plan)),at)].map(division=>({
+          place_id:division.ocdId,name:division.label,state:division.state,layer:division.divisionType,
+          version:division.divisionType === "cd" ? `cd:${plan.purpose === "representation" ? 119 : 120}` : `${division.divisionType}:2024`,
+          boundary_year:plan.purpose === "representation" ? 2024 : 2026,partial:false,
+          geometry:{type:"Polygon",coordinates:[[[located.lng-.001,located.lat-.001],[located.lng+.001,located.lat-.001],
+            [located.lng+.001,located.lat+.001],[located.lng-.001,located.lat+.001],[located.lng-.001,located.lat-.001]]]},
+        }));
+      });
+      let mapReads=0;
+      const otherMapReads=fixturePlaceMapQuery();
+      installPlaceMapQuery(async(sql,params)=>{if(sql.includes("WITH candidates AS MATERIALIZED")){mapReads++;return mapRows;}return otherMapReads(sql,params);});
       const matched = raw.result.addressMatches[0];
       const number = raw.result.input.address.address.split(" ")[0];
       const street = [matched.addressComponents.preDirection, matched.addressComponents.streetName,
@@ -108,6 +124,8 @@ test("R2B address: three real redrawn-state addresses use their representation a
       assert.equal(answer.resolution.status, "RESOLVED");
       assert.ok(answer.resolution.levels.find((row: { level: string }) => row.level === "cd").divisionIds.includes(cd.ocdId));
       assert.ok(answer.resolution.levels.some((row: { level: string }) => row.level === "county"));
+      assert.equal(mapReads,1,"each resolved address uses one selected point lookup");
+      installPlaceMapQuery(fixturePlaceMapQuery());
     }
   }
 });

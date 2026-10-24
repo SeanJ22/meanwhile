@@ -5,10 +5,11 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import centroidFile from "../lib/geo/zcta-centroids.json" with { type: "json" };
 import postalFile from "../lib/geo/postal-zips.json" with { type: "json" };
-import { lookupZcta, resolveZip, COVERAGE_IS_COMPLETE, CENTROID_SOURCE } from "../lib/geo/zcta.ts";
-import { lookupIn, resolveIn, type CentroidTable } from "../lib/geo/zcta-core.ts";
+import { fixtureZipLocation, fixtureZipResolution } from "./helpers/zip-location.ts";
+import { lookupIn, resolveIn } from "../lib/geo/zcta-core.ts";
 import { resolveReaderZip } from "../lib/reader/zip.ts";
-import { readerZipStarts } from "../lib/geo/reader-zip-start.ts";
+import { stateZipLocations } from "../lib/place-map/location-import.ts";
+import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/geo/postal-core.ts";
 import { postalTable } from "../lib/geo/postal.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
@@ -30,17 +31,12 @@ test("server module contexts share the complete unchanged postal table", async (
   assert.deepEqual(postalTable(), postalFile.zips);
 });
 
-test("server module contexts retain complete Census ZIP coordinates and source metadata", async () => {
-  const second = await import(new URL("../lib/geo/zcta.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/zcta.ts");
-  assert.deepEqual(CENTROID_SOURCE, { url: centroidFile.source, org: centroidFile.sourceOrg, vintage: centroidFile.vintage });
-  assert.deepEqual(second.CENTROID_SOURCE, CENTROID_SOURCE);
-  assert.equal(COVERAGE_IS_COMPLETE, centroidFile.complete === true);
-  assert.equal(second.COVERAGE_IS_COMPLETE, COVERAGE_IS_COMPLETE);
-  for (const [zip, point] of Object.entries(centroidFile.centroids)) {
-    const location = second.lookupZcta(zip);
-    assert.ok(location, zip);
-    assert.deepEqual([location.lat, location.lng], point, zip);
-    assert.deepEqual(location, lookupZcta(zip), zip);
+test("the map import preserves every acquired Census ZIP display coordinate and source", async () => {
+  const rows=(await Promise.all(US_JURISDICTIONS.map(state=>stateZipLocations(process.cwd(),state.usps,"2026-10-24T00:00:00Z")))).flat();
+  const byZip=new Map(rows.map(row=>[row.zip,row]));
+  for(const [zip,point] of Object.entries(centroidFile.centroids)){
+    const row=byZip.get(zip);assert.ok(row,zip);assert.deepEqual([row.lat,row.lng],point,zip);
+    assert.ok(row.sourceUrls.includes(centroidFile.source));
   }
 });
 
@@ -50,17 +46,15 @@ test("ZIP-01: every government-index ZIP resolves in the complete 2020 ZCTA tabl
   assert.equal(zips.length, 33791);
   assert.equal(Object.keys(centroidFile.centroids).length, 33791);
   assertGovernmentZipCoverage(centroidFile.centroids as unknown as Record<string, [number, number]>, zips);
-  assert.deepEqual(zips.filter(zip => !resolveZip(zip).ok), []);
+  assert.deepEqual(zips.filter(zip => !fixtureZipResolution(zip).ok), []);
   assert.throws(() => assertGovernmentZipCoverage({}, zips), /omits 33791/);
 });
 
 test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each sample's location and postal type", async (t) => {
-  const shards = readerZipStarts(centroidFile.centroids as unknown as CentroidTable, postalFile.zips as unknown as PostalTable);
   t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
     const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
-    const match = /^\/geo\/reader-zips\/(\d{2})\.json$/.exec(requestUrl.pathname);
-    assert.ok(match, requestUrl.pathname);
-    return Response.json(shards[Number(match[1])]);
+    assert.equal(requestUrl.pathname,"/api/location/zip");
+    return Response.json({location:fixtureZipLocation(requestUrl.searchParams.get("zip")!)});
   });
   const centroids = parseGazetteer(fixture("gazetteer.tsv"));
   const geonames = parseGeoNames(fixture("geonames.tsv"));
@@ -69,10 +63,10 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
   const table = buildPostalTable(centroids, geonames, types, boundaries);
   for (const zip of Object.keys(geonames)) {
     assert.deepEqual(table[zip], (postalFile.zips as unknown as PostalTable)[zip], zip);
-    const sync = resolveZip(zip), asyncResult = await resolveReaderZip(zip);
+    const sync = fixtureZipResolution(zip), asyncResult = await resolveReaderZip(zip);
     assert.ok(sync.ok, zip);
     assert.deepEqual(asyncResult, sync, "resident server table and browser projection agree");
-    assert.deepEqual(lookupZcta(zip), sync.centroid);
+    assert.deepEqual(fixtureZipLocation(zip), sync.centroid);
   }
   assert.equal(table["73960"][2], "po-box");
   assert.equal(table["05009"][2], "unique");
@@ -86,17 +80,17 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
 
 test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, without claiming nonexistence", () => {
   assert.deepEqual(resolveIn({}, "73960"), { ok: false, reason: "uncovered" });
-  assert.deepEqual(resolveZip("00000"), { ok: false, reason: "uncovered" });
+  assert.deepEqual(fixtureZipResolution("00000"), { ok: false, reason: "uncovered" });
   const postal: PostalTable = { "73960": [null, null, "po-box", null, "Texhoma", "TX", "Sherman County", "48421", null] };
   assert.equal(lookupIn({}, "73960", postal), null);
   assert.deepEqual(resolveIn({}, "73960", postal), { ok: false, reason: "uncovered" });
-  assert.deepEqual(resolveZip("0509"), { ok: false, reason: "malformed" });
+  assert.deepEqual(fixtureZipResolution("0509"), { ok: false, reason: "malformed" });
   assert.equal(ZIP_AREA_MISSING, "We don't have that ZIP's area yet. Enter your street address and we'll find your districts.");
-  const text = postalAreaMessage(lookupZcta("73960")!.postal!);
+  const text = postalAreaMessage(fixtureZipLocation("73960")!.postal!);
   assert.match(text, /Texhoma, TX · Sherman County/);
   assert.match(text, /P.O. Box only/);
   assert.match(text, /Your districts depend on where you live/);
-  assert.match(postalAreaMessage(lookupZcta("05009")!.postal!), /unique to one institution/);
+  assert.match(postalAreaMessage(fixtureZipLocation("05009")!.postal!), /unique to one institution/);
 });
 
 test("ZIP-01: a mail-only ZIP that is its own Census ZCTA keeps its residents' school district", async () => {

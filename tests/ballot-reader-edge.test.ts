@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import { installReaderValues, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 type PublishAuthorityValue = { readonly value: unknown; readonly versionId: string };
 import type { GlobalAuthorityFamily, GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue, StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
@@ -623,7 +623,7 @@ test("publication rejects retained filing collisions, broken contest joins and d
 });
 
 const mapPoint = (zip: string) => {
-  const resolved = resolveZip(zip);
+  const resolved = fixtureZipResolution(zip);
   assert.ok(resolved.ok);
   return { lat: String(resolved.centroid.lat), lng: String(resolved.centroid.lng) };
 };
@@ -642,7 +642,7 @@ test("crossing the state line loads only the new state's ballot, and crossing ba
       assert.ok(ids.length > 0, `${stop.state} rendered no contests`);
       assert.ok(ids.every(id => id.startsWith(stop.mine)), `${stop.state} showed another state's contest: ${ids.join(", ")}`);
       assert.match(rendered.text, new RegExp(`What.s on the ballot\\s+in ${stop.state === "AZ" ? "Arizona" : "New Hampshire"}`));
-      assert.match(rendered.text, /We're working on getting the U\.S\. House district for this area/, `${stop.state} did not say its House district is pending`);
+      if(stop.state === "AZ") assert.ok(ids.includes("ballot-az-pima:us-house-7"),"the point map retains its held House race");
       seen.push(ids.sort());
     }
     assert.deepEqual(seen[2], seen[0], "moving back restores the first state's ballot");

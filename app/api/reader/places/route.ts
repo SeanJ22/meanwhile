@@ -1,6 +1,6 @@
 import { factReader } from "@/lib/facts/db";
 import { lowestZipByDivision } from "@/lib/place-map/reader";
-import { lookupZcta } from "@/lib/geo/zcta";
+import { readZipLocations } from "@/lib/place-map/locations";
 import { publishedCountyDivisions, warmPlacesForCounties } from "@/lib/ops/warm-places";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +19,9 @@ export async function GET(): Promise<Response> {
       if (!indexed) throw new Error(`ZIP index unavailable for ${state}`);
       for (const [division, zip] of indexed) zipByDivision.set(division, zip);
     }
+    const locations = await readZipLocations([...zipByDivision.values()]);
     return Response.json(warmPlacesForCounties({ counties,
-      zipFor: county => zipByDivision.get(county), centroidFor: lookupZcta,
+      zipFor: county => zipByDivision.get(county), centroidFor: zip => locations.get(zip),
     }), { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
     console.error("READER_PLACES_LOAD_FAILED", error);

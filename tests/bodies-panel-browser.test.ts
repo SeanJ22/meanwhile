@@ -7,7 +7,7 @@ import { build } from "esbuild";
 import tailwindcss from "@tailwindcss/postcss";
 import { launchGuarded } from "../scripts/browser.mts";
 import { geometryFiles } from "../lib/holdings/discovery.ts";
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import { summarizeCoverage, type CoverageSummary } from "../lib/registry/coverage.ts";
 import type { GeoFeature } from "../lib/registry/resolve.ts";
 import type { Registry } from "../lib/registry/types.ts";
@@ -24,7 +24,7 @@ test("Bodies stays compact and opens the correct body with next and last meeting
   const regions: Record<string, { coverage: CoverageSummary; meetings: Meeting[] }> = {};
   const now = "2026-09-23T23:00:00.000Z";
   for (const zip of ["85701", "03255", "07960"]) {
-    const resolved = resolveZip(zip);
+    const resolved = fixtureZipResolution(zip);
     assert.ok(resolved.ok);
     const coverage = summarizeCoverage([resolved.centroid.lng, resolved.centroid.lat], features, divisions, registry.bodies, 0);
     assert.ok(coverage.bodies.some(body => body.bodyClass === "GOVERNING"), zip);

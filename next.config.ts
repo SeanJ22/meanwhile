@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
   // ZIP startup projections are browser assets, never server lookup inputs.
   // No function packs state geometry: the reader edge store serves each file (lib/geo/state-geometry.ts).
-  outputFileTracingExcludes: { "/*": ["./public/geo/reader-zips/**", "./data/states/*/geo/**"] },
+  outputFileTracingExcludes: { "/*": ["./data/states/*/geo/**"] },
   outputFileTracingIncludes: {
     "/api/reader/state": stateOfficeTrace,
     "/api/location/zip": ["./lib/geo/zcta-centroids.json", "./lib/geo/postal-zips.json"],

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
-import { installFactReader } from "../lib/facts/db.ts";
+import { installPlaceMapQuery } from "../lib/place-map/reader.ts";
 import { readerRoute } from "../lib/api/reader-route.ts";
 import { readerLocation } from "../lib/reader/location.ts";
 import { readPointPlace, readZipPlace, withPlaceMapReads } from "../lib/place-map/reader.ts";
@@ -9,6 +9,7 @@ import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import type { Query } from "../lib/facts/publish.ts";
+import { readZipLocation } from "../lib/place-map/locations.ts";
 
 const state = (code: string) => `ocd-division/country:us/state:${code.toLowerCase()}`;
 const row = (id: string, code: string, layer: string, version: string, extra: Record<string, unknown> = {}) => ({
@@ -26,7 +27,7 @@ test("a map request uses one exact point lookup for its state and every downstre
   try {
     for (const [expected, lat, lng] of points) {
       let calls = 0;
-      installFactReader(async (sql, params) => {
+      installPlaceMapQuery(async (sql, params) => {
         calls++;
         assert.match(sql, /place_boundary/);
         assert.deepEqual(params, [lng,lat]);
@@ -45,13 +46,13 @@ test("a map request uses one exact point lookup for its state and every downstre
       await handler(new Request(`https://example.test/api/meetings?lat=${lat}&lng=${lng}`));
       assert.equal(calls,1, `${expected}: request selection and both readers must share the exact point answer`);
     }
-  } finally { installFactReader(undefined); }
+  } finally { installPlaceMapQuery(undefined); }
 });
 
 test("one set of point source rows answers current representation and the selected election plan", async () => {
   let calls = 0;
   const geometry = {type:"Polygon",coordinates:[[[-102,30],[-100,30],[-100,32],[-102,32],[-102,30]]]};
-  installFactReader(async () => { calls++; return [
+  installPlaceMapQuery(async () => { calls++; return [
     row(state("TX"),"TX","state","state:2023",{geometry}),
     row(`${state("TX")}/cd:1`,"TX","cd","cd:119",{geometry,boundary_year:2024}),
     row(`${state("TX")}/cd:2`,"TX","cd","cd:120",{geometry,boundary_year:2026}),
@@ -66,13 +67,13 @@ test("one set of point source rows answers current representation and the select
       assert.ok(!election.ids.includes(`${state("TX")}/cd:1`));
     });
     assert.equal(calls,1);
-  } finally { installFactReader(undefined); }
+  } finally { installPlaceMapQuery(undefined); }
 });
 
 test("ZIP ballots retain every selected race including fringe membership without adding a point's other districts", async () => {
   const base = state("AZ"), county = `${base}/county:pima`, district = `${base}/sldl:20`, fringe = `${base}/sldl:21`;
   let calls = 0;
-  installFactReader(async () => {calls++;return [
+  installPlaceMapQuery(async () => {calls++;return [
     row(county,"AZ","county","county:2020"),
     row(district,"AZ","sldl","sldl:2024",{partial:true}),
     row(fringe,"AZ","sldl","sldl:2024",{partial:true,fringe:true}),
@@ -86,7 +87,7 @@ test("ZIP ballots retain every selected race including fringe membership without
       assert.deepEqual(await divisionIdsForZipArea("85701",[`${base}/sldl:1`]),[county,district,fringe]);
     });
     assert.equal(calls,1);
-  } finally { installFactReader(undefined); }
+  } finally { installPlaceMapQuery(undefined); }
 });
 
 test("the next map refresh changes point and ZIP membership while preserving the place's id and older boundaries", async () => {
@@ -97,6 +98,7 @@ test("the next map refresh changes point and ZIP membership while preserving the
       CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
       CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
     await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql","utf8"));
+    await db.exec(readFileSync("lib/db/migrations/RB-A10_zip_locations.sql","utf8"));
     const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});
     const map = (year:number,west:number,east:number,zip:string):StatePlaceMap => ({
       places:[state("AZ"),county].map(id=>({id,name:id,state:"AZ",aliases:[]})),
@@ -105,22 +107,25 @@ test("the next map refresh changes point and ZIP membership while preserving the
         .map(value=>({...value,countyAttachment:false,hostCountyId:null,sourceUrls:["https://www.census.gov/"],checkedAt:`${year}-01-01T00:00:00Z`})),
       zipEdges:[{code:zip,placeId:county,boundaryYear:year,share:1,shareBasis:"area",partial:false,fringe:false},
         {code:zip,placeId:state("AZ"),boundaryYear:2023,share:1,shareBasis:"area",partial:false,fringe:false}],zctaEdges:[],
+      zipLocations:[{zip:"85701",lat:32,lng:west,boundaryYear:year,sourceUrls:["https://www.census.gov/"],checkedAt:`${year}-01-01T00:00:00Z`}],
     });
     const query:Query=async(sql,params=[]) => (await db.query(sql,[...params])).rows as Record<string,unknown>[];
     const transaction=<T,>(read:(query:Query)=>Promise<T>)=>db.transaction(tx=>read(async(sql,params=[]) => (await tx.query(sql,[...params])).rows as Record<string,unknown>[]));
-    installFactReader(query);
+    installPlaceMapQuery(query);
     await loadStatePlaceMap({transaction},map(2023,-112,-110,"85701"));
     await withPlaceMapReads(async()=>{
       assert.ok((await readPointPlace(32,-111)).ids.includes(county));
       assert.ok((await readZipPlace("85701"))?.ids.includes(county));
+      assert.equal((await readZipLocation("85701"))?.lng,-112);
     });
     await loadStatePlaceMap({transaction},map(2026,-116,-114,"86001"));
     await withPlaceMapReads(async()=>{
       assert.ok(!(await readPointPlace(32,-111)).ids.includes(county),"a removed point membership cannot revive its older boundary");
       assert.ok(!(await readZipPlace("85701"))?.ids.includes(county),"a removed ZIP membership cannot revive its older boundary");
       assert.ok((await readZipPlace("86001"))?.ids.includes(county));
+      assert.equal((await readZipLocation("85701"))?.lng,-116,"the next import updates the ZIP's display point without a build-time projection");
     });
     assert.equal((await query("SELECT count(*)::int n FROM entity WHERE id=$1",[county]))[0].n,1);
     assert.equal((await query("SELECT count(*)::int n FROM place_boundary WHERE place_id=$1",[county]))[0].n,2);
-  } finally {installFactReader(undefined);await db.close();}
+  } finally {installPlaceMapQuery(undefined);await db.close();}
 });

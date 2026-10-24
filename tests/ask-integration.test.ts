@@ -962,7 +962,7 @@ test("RESIDENCY: the wire carries the ACT and the server decides what it proves"
 test("RESIDENCY: ZIP and device entry retain their origin without a pilot showcase", () => {
   const welcome = code(readFileSync(join(ROOT, "components", "map", "welcome-overlay.tsx"), "utf8"));
   assert.match(welcome, /recordLocationOrigin\(result\.centroid\.zip, origin\)/, "a typed zip");
-  assert.match(welcome, /recordLocationOrigin\(near\.zip, "DEVICE_LOCATION"\)/, "a device fix");
+  assert.match(welcome, /recordLocationOrigin\(null, "DEVICE_LOCATION"\)/, "a device fix retains its origin without assigning a ZIP");
   assert.doesNotMatch(welcome, /QUICK_ZIPS|submit\(quick\.zip/, "FE-39 removes the pilot showcase");
   assert.match(welcome, /submit\(zip, "UNKNOWN"\)/, "recent ZIPs retain their unknown origin");
 

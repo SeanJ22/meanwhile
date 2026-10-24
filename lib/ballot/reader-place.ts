@@ -1,6 +1,6 @@
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { registryJurisdictions } from "../civic-data/state-scopes.ts";
-import { resolveZip } from "../geo/zcta.ts";
+import { resolveZipLocation } from "../place-map/locations.ts";
 import { currentRepresentationSelection, type GeographySelection } from "../census-geography/selection.ts";
 import { readZipPlace, readPointPlace } from "../place-map/reader.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
@@ -15,15 +15,20 @@ export interface BallotPlace {
 }
 
 /** A ZIP names the place unless the named state says the reader is elsewhere; then the map point does. */
-export function ballotPlaceFromParams(params: { zip?: string; state?: string; lat?: string; lng?: string }): BallotPlace {
+export async function ballotPlaceFromParams(params: { zip?: string; state?: string; lat?: string; lng?: string }): Promise<BallotPlace> {
   const zip = params.zip && /^\d{5}$/.test(params.zip) ? params.zip : null;
-  const resolution = zip ? resolveZip(zip) : null;
+  const resolution = zip ? await resolveZipLocation(zip) : null;
   const jurisdiction = US_JURISDICTIONS.find(row => row.usps === params.state?.toUpperCase());
   const lat = params.lat ? Number(params.lat) : NaN, lng = params.lng ? Number(params.lng) : NaN;
   const point = Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lng) && Math.abs(lng) <= 180 ? { lat, lng } : null;
-  if (jurisdiction && point && !(resolution?.ok && resolution.centroid.postal?.state === jurisdiction.usps)) {
-    return { zip: null, centroid: point, state: { code: jurisdiction.usps, name: stateName(jurisdiction.usps)!,
-      ocdId: `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}` } };
+  if (jurisdiction && point && !(zip && (await readZipPlace(zip))?.states?.includes(jurisdiction.usps))) {
+    const selected = currentReaderSelection();
+    const place = selected?.point?.[0] === lng && selected.point[1] === lat && !selected.zip && selected.place
+      ? selected.place : await readPointPlace(lat,lng);
+    const actual = US_JURISDICTIONS.find(row => row.usps === place.states?.[0]);
+    if (!actual) return {zip:null,centroid:null,state:null};
+    return { zip: null, centroid: point, state: { code: actual.usps, name: stateName(actual.usps)!,
+      ocdId: `ocd-division/country:us/${actual.prefix}:${actual.slug}` } };
   }
   return { zip, centroid: resolution?.ok ? resolution.centroid : null, state: null };
 }

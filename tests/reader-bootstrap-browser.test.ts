@@ -59,12 +59,12 @@ test("the arriving page starts one state/place read before hydration and the rea
   const nextLocation = new Promise<void>(resolve => { releaseNextLocation = resolve; });
   const server = createServer(async (request, response) => {
     const url = request.url!;
-    if (url.startsWith("/api/") || url.startsWith("/geo/reader-zips/") || url === "/geo/state-outlines.geojson" || url === "/archive.pmtiles") requests.push(url);
-    if (url.startsWith("/geo/reader-zips/")) {
-      const zip = url.includes("/85.json") ? "85701" : url.includes("/86.json") ? "86001" : "10001";
+    if (url.startsWith("/api/") || url === "/geo/state-outlines.geojson" || url === "/archive.pmtiles") requests.push(url);
+    if (url.startsWith("/api/location/zip?")) {
+      const zip = new URL(url,"http://localhost").searchParams.get("zip")!;
       if (zip === "86001") await nextLocation;
-      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ locations: { [zip]: { zip, lat: zip === "86001" ? 33 : 32, lng: -110,
-        postal: { state: "AZ", place:"Fixture place",county:"Fixture county" } } } }));
+      response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify({ location: { zip, lat: zip === "86001" ? 33 : 32, lng: -110,
+        postal: { state: "AZ", place:"Fixture place",county:"Fixture county" } } }));
     }
     else if (url.startsWith("/api/meetings")) { releaseWorker(); const value={ state: "AZ", version: "held",
       coverage: { seats: [{ocdId:"ocd-division/country:us/state:az/cd:7",divisionType:"cd",label:"District 7",representatives:[{id:"congress:A000001",name:"Selected member",state:"AZ"}]}],senators:[] },
@@ -121,9 +121,9 @@ test("the arriving page starts one state/place read before hydration and the rea
     await page.waitForFunction(() => "delayedAnswer" in window);
     assert.deepEqual(await page.evaluate(() => (window as unknown as { delayedAnswer: unknown }).delayedAnswer), { value: { held: true }, bodyUsed: true, cancellationResolved: false }, "parsed data is available while original-stream cancellation is still pending");
     await page.evaluate(() => (window as unknown as { releaseCancellation: () => void }).releaseCancellation());
-    assert.deepEqual(requests.sort(), ["/api/geocode", "/geo/reader-zips/85.json", "/api/meetings?zip=85701&include=state", "/api/reader/settings", "/geo/state-outlines.geojson", "/archive.pmtiles", "/archive.pmtiles"].sort());
-    const starts = ["/geo/reader-zips/86.json","/api/meetings"].map(path => page.waitForRequest(request => {
-      const url = new URL(request.url());return url.pathname===path && (path.startsWith("/geo/") || url.searchParams.get("zip")==="86001");
+    assert.deepEqual(requests.sort(), ["/api/geocode", "/api/location/zip?zip=85701", "/api/meetings?zip=85701&include=state", "/api/reader/settings", "/geo/state-outlines.geojson", "/archive.pmtiles", "/archive.pmtiles"].sort());
+    const starts = ["/api/location/zip?zip=86001","/api/meetings"].map(path => page.waitForRequest(request => {
+      const url = new URL(request.url());return url.pathname===path.split("?")[0] && url.searchParams.get("zip")==="86001";
     }));
     await page.evaluate(() => {
       const reader = window as unknown as {openZip:(zip:string)=>Promise<unknown>;nextAnswer?:unknown};
@@ -137,7 +137,7 @@ test("the arriving page starts one state/place read before hydration and the rea
     await page.waitForFunction(() => "nextAnswer" in window);
     const next = await page.evaluate(() => (window as unknown as {nextAnswer:{location:{zip:string};state:{state:string};place:{meetings:string[]};bodyUsed:boolean}}).nextAnswer);
     assert.equal(next.location.zip,"86001");assert.equal(next.state.state,"AZ");assert.deepEqual(next.place.meetings,["held"]);assert.equal(next.bodyUsed,true);
-    assert.deepEqual(requests.sort(),["/api/geocode","/api/reader/settings","/geo/state-outlines.geojson","/archive.pmtiles","/archive.pmtiles",...["85701","86001"].flatMap(zip=>[`/geo/reader-zips/${zip.slice(0,2)}.json`,`/api/meetings?zip=${zip}&include=state`])].sort(),
+    assert.deepEqual(requests.sort(),["/api/geocode","/api/reader/settings","/geo/state-outlines.geojson","/archive.pmtiles","/archive.pmtiles",...["85701","86001"].flatMap(zip=>[`/api/location/zip?zip=${zip}`,`/api/meetings?zip=${zip}&include=state`])].sort(),
       "the new ZIP consumes state and place once without fetching their resolved aliases again");
     const beforeReverse = requests.length;
     const reverse = await page.evaluate(async () => {
@@ -150,7 +150,7 @@ test("the arriving page starts one state/place read before hydration and the rea
       history.pushState(null,"","/ballot");
       await (window as unknown as {lookupZip:(zip:string)=>Promise<unknown>}).lookupZip("10001");
     });
-    assert.deepEqual(requests.slice(-1),["/geo/reader-zips/10.json"],"a lookup outside the map starts only its location request");
+    assert.deepEqual(requests.slice(-1),["/api/location/zip?zip=10001"],"a lookup outside the map starts only its location request");
     assert.equal(requests.length,beforeReverse+1);
     assert.deepEqual(errors, []);
   } finally { releaseClient();releaseNextLocation(); await browser?.close(); await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve())); }
@@ -162,7 +162,7 @@ test("a bundled state failure preserves meetings, including when the optional wo
       const url=request.url!;
       response.setHeader("content-type","application/json");
       if(url.startsWith("/api/meetings"))return response.end(JSON.stringify({meetings:["held"],stateResponse:{status:503,headers:[["cache-control","no-store"]],value:{error:"State unavailable"}}}));
-      if(url==="/geo/reader-zips/85.json")return response.end(JSON.stringify({locations:{"85701":{zip:"85701",lat:32,lng:-110,postal:{state:"AZ"}}}}));
+      if(url==="/api/location/zip?zip=85701")return response.end(JSON.stringify({location:{zip:"85701",lat:32,lng:-110,postal:{state:"AZ"}}}));
       if(url==="/map-boundary-worker.mjs"){
         response.setHeader("content-type","application/javascript");return response.end('throw new Error("Worker unavailable");');
       }

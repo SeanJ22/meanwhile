@@ -3,7 +3,7 @@ import test from "node:test";
 import {readFileSync} from "node:fs";
 import {postalRow,postalArea,postalTable} from "../lib/geo/postal.ts";
 import {postalAreaIn,type PostalTable} from "../lib/geo/postal-core.ts";
-import {lookupZcta,resolveZip} from "../lib/geo/zcta.ts";
+import {fixtureZipLocation,fixtureZipResolution} from "./helpers/zip-location.ts";
 import {lookupIn,resolveIn,type CentroidTable} from "../lib/geo/zcta-core.ts";
 
 test("cold postal point reads preserve regional rows, postal aliases and ZIP coordinates before and after enumeration",()=>{
@@ -19,8 +19,8 @@ test("cold postal point reads preserve regional rows, postal aliases and ZIP coo
   for(const zip of selected){
     assert.deepEqual(postalRow(zip),table[zip]??null,zip);
     assert.deepEqual(postalArea(zip),postalAreaIn(table,zip),zip);
-    assert.deepEqual(lookupZcta(zip),lookupIn(centroids,zip,table),zip);
-    assert.deepEqual(resolveZip(zip),resolveIn(centroids,zip,table),zip);
+    assert.deepEqual(fixtureZipLocation(zip),lookupIn(centroids,zip,table),zip);
+    assert.deepEqual(fixtureZipResolution(zip),resolveIn(centroids,zip,table),zip);
   }
   assert.equal(postalRow("85701 "),null);
   assert.equal(postalRow('85701"'),null);

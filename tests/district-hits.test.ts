@@ -66,7 +66,7 @@ interface Hit {
   label: string;
 }
 
-/** Centroids are read off disk: lib/geo/zcta.ts imports its JSON with a plain specifier `node --test` cannot load. */
+/** Captured coordinates position the isolated map checks. */
 let centroids: Record<string, [number, number]> | null = null;
 
 async function loadCentroids(): Promise<Record<string, [number, number]>> {

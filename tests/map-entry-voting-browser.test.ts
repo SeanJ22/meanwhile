@@ -8,7 +8,7 @@ import { build } from "esbuild";
 import tailwindcss from "@tailwindcss/postcss";
 import type { Map as MapLibreMap } from "maplibre-gl";
 import { launchGuarded, seedZip } from "../scripts/browser.mts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { fixtureZipLocation } from "./helpers/zip-location.ts";
 import type { VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 import type { CoverageSummary } from "../lib/registry/coverage.ts";
 
@@ -72,15 +72,14 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
   const stateAnswer = { state: "CA", version: "protocol", coverage, zipPlaces: {}, directory: null };
   const server = createServer(async (request, response) => {
     const url = new URL(request.url!, "http://localhost");
-    if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/geo/reader-zips/")) requests.push(url.pathname + url.search);
+    if (url.pathname.startsWith("/api/") || url.pathname === "/api/location/zip") requests.push(url.pathname + url.search);
     const json = (value: unknown, status = 200) => response.writeHead(status, { "content-type": "application/json" }).end(JSON.stringify(value));
     if (scripts.has(url.pathname)) response.writeHead(200, { "content-type": url.pathname.endsWith(".css") ? "text/css" : "application/javascript" }).end(scripts.get(url.pathname));
     else if (url.pathname === "/styles.css") response.writeHead(200, { "content-type": "text/css" }).end(stylesheet);
     else if (url.pathname === "/maplibre-gl-worker.mjs") response.writeHead(200, { "content-type": "application/javascript" }).end(worker.outputFiles[0].contents);
     else if (url.pathname === "/geo/state-outlines.geojson") json(JSON.parse(readFileSync("public/geo/state-outlines.geojson", "utf8")));
-    else if (url.pathname.startsWith("/geo/reader-zips/")) {
-      const prefix = /(\d{2})\.json$/.exec(url.pathname)?.[1] ?? "";
-      json({ locations: Object.fromEntries(["95814"].filter(zip => zip.startsWith(prefix)).map(zip => [zip, lookupZcta(zip)])) });
+    else if (url.pathname === "/api/location/zip") {
+      json({location:fixtureZipLocation(url.searchParams.get("zip")!)});
     } else if (url.pathname === "/api/reader/state") json(stateAnswer);
     else if (url.pathname === "/api/meetings") json({ meetings: [], coverage, tier: "none", radiusKm: 40, center: { lat: 38.58, lng: -121.49 }, stateResponse: { status: 200, headers: [], value: stateAnswer } });
     else if (url.pathname === "/api/voting-sites") {
@@ -113,7 +112,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
       await page.waitForFunction(() => (window as unknown as MapWindow).__wtpMapProbe?.().focusOcdId === "ocd-division/country:us/state:ca");
       await page.getByRole("button", { name: "Where can I vote?", exact: true }).filter({ visible: true }).first().click();
       await page.getByLabel("Your street address or ZIP").waitFor();
-      const readsBefore = requests.filter(url => /\/api\/(meetings|reader\/state)|\/geo\/reader-zips\//.test(url));
+      const readsBefore = requests.filter(url => /\/api\/(meetings|reader\/state)|\/api\/location\/zip/.test(url));
       for (const place of places) {
         for (const input of [place.address, place.zip]) {
           await page.getByLabel("Your street address or ZIP").fill(input);
@@ -139,7 +138,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
           await page.waitForFunction(({ id, selected }) => document.querySelector<HTMLElement>(`.wtp-vote-pin[data-site-id="${id}"]`)?.dataset.selected === String(selected), { id: `${place.state}-1`, selected: !wasSelected });
         }
       }
-      assert.deepEqual(requests.filter(url => /\/api\/(meetings|reader\/state)|\/geo\/reader-zips\//.test(url)), readsBefore, "voting answers must not reload the meeting or ZIP view");
+      assert.deepEqual(requests.filter(url => /\/api\/(meetings|reader\/state)|\/api\/location\/zip/.test(url)), readsBefore, "voting answers must not reload the meeting or ZIP view");
       const centerBefore = await page.evaluate(() => (window as unknown as MapWindow).__wtpMap.getCenter().toArray());
       await page.getByLabel("Your street address or ZIP").fill("Unmatched protocol lookup");
       await page.getByRole("button", { name: "Show me", exact: true }).click();

@@ -1,13 +1,13 @@
 import { readPromotedCivicDataBatch, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { assertOpenDataProjection } from "./publication.ts";
-import { lookupZcta } from "../../geo/zcta.ts";
+import { readZipLocation } from "../../place-map/locations.ts";
 import { nearbyFacilityCells,facilityNear,FACILITY_RADIUS_KM } from "./geography.ts";
 import { openDataScope,divisionPartition, zipPartition, type OpenDataFact,type OpenDataProjection } from "./model.ts";
 import { readOpenDataPartition } from "./artifacts.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 export async function readerOpenData(input:{divisionIds?:readonly string[];zip?:string|null;bodyId?:string|null}, options:PromotedCivicDataReadOptions&{vault?:EvidenceStore}={}) {
   const partitions=[...new Set(input.divisionIds ?? [])].map(id=>({source:"socrata-discovery" as const,partition:divisionPartition(id)}));
-  const point=input.zip?lookupZcta(input.zip):null;
+  const point=input.zip?await readZipLocation(input.zip):null;
   const requested=[...partitions,...(input.zip && /^\d{5}$/.test(input.zip)?[zipPartition(input.zip),...(point?nearbyFacilityCells(point):[])].map(partition=>({source:"epa-echo" as const,partition})):[])];
   const sourceIds=[...new Set(requested.map(r=>r.source))];
   const manifests=await readPromotedCivicDataBatch<OpenDataProjection>("CURATED_READER_RECORD",sourceIds.map(source=>openDataScope(source)),options);

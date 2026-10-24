@@ -4,7 +4,7 @@ import test from "node:test";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { GET as directoryGET } from "../app/api/directory/route.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import {
   matching,
   numeric,
@@ -68,7 +68,7 @@ test("/api/meetings resolves a ZIP-only request to its own centroid rather than 
   assert.equal(response.status, 200);
 
   const body = (await response.json()) as { center: { lat: number; lng: number }; nearZip: string };
-  const zip = resolveZip("85701");
+  const zip = fixtureZipResolution("85701");
   assert.ok(zip.ok);
   assert.deepEqual(body.center, { lat: zip.centroid.lat, lng: zip.centroid.lng });
   assert.equal(body.nearZip, "85701");

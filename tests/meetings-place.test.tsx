@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { CoverageNotice } from "../components/map/coverage-notice.tsx";
 import { DataProvider } from "../lib/state/data.tsx";
@@ -216,7 +216,7 @@ test("unresolved divisions cannot borrow a physically nearby meeting", async () 
 
 for (const zip of ["85643", "85122", "85701"]) {
   test(`/api/meetings keeps ${zip}'s divisions and shows a plain gap for an empty place`, async (context) => {
-    const resolved = resolveZip(zip);
+    const resolved = fixtureZipResolution(zip);
     assert.ok(resolved.ok);
     const dir = mkdtempSync(join(tmpdir(), "mt01-edge-"));
     const previous = process.env.WTP_READER_EDGE_DIR;

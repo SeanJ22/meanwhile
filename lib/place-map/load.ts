@@ -2,6 +2,13 @@ import type { FactDb, Query } from "../facts/publish.ts";
 import { boundingBoxOf } from "../registry/resolve.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { EntityPlace } from "../core/shapes.ts";
+import type { ZctaCentroid } from "../geo/zcta-core.ts";
+
+export interface MapZipLocation extends ZctaCentroid {
+  readonly boundaryYear: number;
+  readonly sourceUrls: readonly string[];
+  readonly checkedAt: string;
+}
 
 export interface MapPlace {
   readonly id: string;
@@ -24,6 +31,7 @@ export interface StatePlaceMap {
   readonly zipEdges: readonly MapEdge[];
   readonly zctaEdges: readonly MapEdge[];
   readonly entityPlaces?: readonly EntityPlace[];
+  readonly zipLocations?: readonly MapZipLocation[];
 }
 
 async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Promise<void>): Promise<void> {
@@ -34,6 +42,15 @@ async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Prom
  * rows; older plans and every existing id remain available on later runs. */
 export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise<void> {
   await db.transaction(async query => {
+    await batches(map.zipLocations ?? [], async locations => {
+      await query(`INSERT INTO zip_location(zip,boundary_year,lat,lng,postal,source_urls,checked_at)
+        SELECT zip,boundary_year,lat,lng,postal,source_urls,checked_at FROM jsonb_to_recordset($1::jsonb)
+          AS p(zip text,boundary_year integer,lat float8,lng float8,postal jsonb,source_urls jsonb,checked_at timestamptz)
+        ON CONFLICT(zip,boundary_year) DO UPDATE SET lat=EXCLUDED.lat,lng=EXCLUDED.lng,postal=EXCLUDED.postal,
+          source_urls=EXCLUDED.source_urls,checked_at=EXCLUDED.checked_at`,
+      [JSON.stringify(locations.map(row => ({zip:row.zip,boundary_year:row.boundaryYear,lat:row.lat,lng:row.lng,
+        postal:row.postal ?? null,source_urls:row.sourceUrls,checked_at:row.checkedAt})))]);
+    });
     await batches(map.places, async places => {
       await query(`INSERT INTO entity(id,kind,name,state)
         SELECT id,'place',name,state FROM jsonb_to_recordset($1::jsonb) AS p(id text,name text,state char(2))

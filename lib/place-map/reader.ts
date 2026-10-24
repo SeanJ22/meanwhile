@@ -18,12 +18,18 @@ export interface PlaceEntry {
 }
 
 const reads = new AsyncLocalStorage<Map<string, ReturnType<Query>>>();
+let installed: Query | null | undefined;
+
+/** Use a connection already held by a script or an isolated map fixture. */
+export function installPlaceMapQuery(query: Query | null | undefined): void {
+  installed = query;
+}
 
 /** A request shares source rows across representation and election selections. */
 export const withPlaceMapReads = <T>(read: () => T): T => reads.getStore() ? read() : reads.run(new Map(), read);
 
 export function placeMapQuery(): Query {
-  const query = factReader();
+  const query = installed === undefined ? factReader() : installed;
   if (!query) throw new Error("The place map could not be loaded");
   return (sql, params = []) => {
     const cache = reads.getStore();
@@ -44,6 +50,11 @@ export function placeEntry(result: PlaceMapResult): PlaceEntry {
   const states = [...new Set(result.memberships.filter(row => !row.fringe).flatMap(row => row.state ? [row.state] : []))].sort();
   return { ids, partial, samples: 0, states: result.states.filter(state => states.includes(state)),
     qualifiedDistricts: [...new Set(ids.flatMap(id => districtFamilyKey(id) ?? []))], ...(fringe.length ? { fringe } : {}) };
+}
+
+export function placeDivisionType(layer: string, id: string): string {
+  return ["unsd","elsd","scsd"].includes(layer) ? "school_district" : layer === "cousub" ? "place"
+    : layer === "district" && id.includes("/special_district:") ? "special_district" : layer;
 }
 
 export async function readZipPlace(zip: string | null, selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceEntry | null> {
@@ -101,8 +112,7 @@ export async function readZipDivisions(zip: string, selection: GeographySelectio
   return result.memberships.flatMap(row => {
     const source = sources.get(`${row.placeId}|${row.boundaryYear}`), url = (source?.source_urls as string[] | undefined)?.[0];
     if (!url || !source?.checked_at || !row.state) return [];
-    const divisionType = ["unsd","elsd","scsd"].includes(row.layer) ? "school_district" : row.layer === "cousub" ? "place"
-      : row.layer === "district" && row.placeId.includes("/special_district:") ? "special_district" : row.layer;
+    const divisionType = placeDivisionType(row.layer,row.placeId);
     return [{ ocdId:row.placeId,divisionType,tier:row.layer === "cd" ? "national" as const : ["state","sldu","sldl"].includes(row.layer) ? "state" as const : "local" as const,
       state:row.state,label:row.name,parentOcdId:row.placeId.slice(0,row.placeId.lastIndexOf("/")),lsad:null,funcstat:null,classfp:null,geoid:null,
       canonicalOcdId:null,canonicalMatch:"none" as const,canonicalGap:"UNDETERMINED" as const,sourceDataset:"DERIVED" as const,

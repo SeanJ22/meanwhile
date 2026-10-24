@@ -27,13 +27,16 @@ const KINDS = ["city", "town", "township", "borough", "village"] as const;
 const title = (slug: string) => slug.split("_").filter(Boolean).map(word => word[0]!.toUpperCase() + word.slice(1)).join(" ");
 const nameSlug = (words: string) => words.toLowerCase().replace(/&/g, " and ").replace(/['’.]/g, "").replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
 
-/** Every town and city in the national ZIP index, by its name and by its name without its kind. Census county divisions are left out. */
-async function readNamedPlaces(): Promise<ReadonlyMap<string, readonly NamedPlace[]>> {
+/** Read only places matching the requested name or id, with the supplied state. */
+async function readNamedPlaces(words: string, state?: string | null): Promise<ReadonlyMap<string, readonly NamedPlace[]>> {
   const zipsOf = new Map<string, string[]>();
   const rows = await placeMapQuery()(`SELECT e.id,array_agg(DISTINCT m.zip ORDER BY m.zip) zips
     FROM zip_place m JOIN entity e ON e.id=m.place_id
     WHERE e.id ~ '^ocd-division/country:us/state:[a-z]{2}/(county:[^/]+/)?place:[^/]+$'
-    GROUP BY e.id ORDER BY e.id`);
+      AND ($2::text IS NULL OR e.state=upper($2)::char(2))
+      AND (e.id=$1 OR regexp_replace(e.id,'.*/place:','')=$1
+        OR regexp_replace(regexp_replace(e.id,'.*/place:',''),'_(city|town|township|borough|village)$','')=$1)
+    GROUP BY e.id ORDER BY e.id`,[words,state??null]);
   for (const row of rows) {
     const id = String(row.id);
     if (!id.endsWith("_ccd")) zipsOf.set(id, row.zips as string[]);
@@ -52,19 +55,15 @@ async function readNamedPlaces(): Promise<ReadonlyMap<string, readonly NamedPlac
   return byName;
 }
 
-let named: Promise<ReadonlyMap<string, readonly NamedPlace[]>> | null = null;
-const namedPlaces = (): Promise<ReadonlyMap<string, readonly NamedPlace[]>> =>
-  named ??= readNamedPlaces().catch(error => { named = null; throw error; });
-
 interface PlaceWordsDeps {
-  readonly named: () => Promise<ReadonlyMap<string, readonly NamedPlace[]>>;
+  readonly named: (words: string, state?: string | null) => Promise<ReadonlyMap<string, readonly NamedPlace[]>>;
   readonly zipState: (zip: string) => Promise<string | null>;
   readonly zipDivisions: (zips: readonly string[]) => Promise<ReadonlyMap<string, readonly string[]>>;
   readonly resolveDivisions: PlaceOwedDeps["resolveDivisions"];
 }
 
 const defaultPlaceWordsDeps: PlaceWordsDeps = {
-  named: namedPlaces, zipState: stateOfZip, zipDivisions: zips => zipDivisionIds(zips, divisionIdsOfZip),
+  named: readNamedPlaces, zipState: stateOfZip, zipDivisions: zips => zipDivisionIds(zips, divisionIdsOfZip),
   resolveDivisions: defaultPlaceOwedDeps.resolveDivisions,
 };
 
@@ -97,9 +96,11 @@ export async function readPlaceWords(words: string, deps: PlaceWordsDeps = defau
   if (key !== null && (!key.startsWith("st:") || key === text.toLowerCase())) return keyedPlace(key, deps);
   const wholeState = stateNamed(text);
   if (wholeState !== null) return keyedPlace(`st:${wholeState.code}`, deps);
-  const places = await deps.named();
-  const exact = PLACE_ID.test(text) ? [...places.values()].flat().find(place => place.divisionId === text) : undefined;
-  if (exact) return cityPlace(exact, deps);
+  if (PLACE_ID.test(text)) {
+    const places = await deps.named(text,PLACE_ID.exec(text)?.[1]);
+    const exact = [...places.values()].flat().find(place => place.divisionId === text);
+    if (exact) return cityPlace(exact,deps);
+  }
   const parts = text.split(",").map(part => part.trim()).filter(Boolean);
   let state: string | null = null;
   let county: string | null = null;
@@ -109,6 +110,7 @@ export async function readPlaceWords(words: string, deps: PlaceWordsDeps = defau
     if (tail && stateNamed(tail[1]!)) { state = tail[1]!.toLowerCase(); parts[0] = parts[0]!.slice(0, -3); }
   }
   if (parts.length > 1 && / county$/i.test(parts.at(-1)!)) county = nameSlug(parts.pop()!.replace(/ county$/i, ""));
+  const places = await deps.named(nameSlug(parts.join(" ")),state);
   const matched = [...new Map((places.get(nameSlug(parts.join(" "))) ?? [])
     .filter(place => (state === null || place.state === state) && (county === null || place.county === county))
     .map(place => [place.divisionId, place] as const)).values()];

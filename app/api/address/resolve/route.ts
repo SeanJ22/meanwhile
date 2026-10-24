@@ -11,12 +11,12 @@ import {
   type Sample,
 } from "@/lib/geo/address-resolution";
 import { placesAtPoint } from "@/lib/place-map/read";
-import { placeMapQuery } from "@/lib/place-map/reader";
+import { placeMapQuery, placeDivisionType } from "@/lib/place-map/reader";
 import { censusVintageFor } from "@/lib/geo/census-geographies";
 import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
-import { lookupZcta } from "@/lib/geo/zcta";
+import { readZipLocation } from "@/lib/place-map/locations";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -73,7 +73,7 @@ export const POST = readerRoute("/api/address/resolve", async function POST(requ
   if (!/^\d{5}$/.test(zip)) return bad();
   if (street.length < 3 || street.length > 120) return bad();
   if (houseNumber.length > 12) return bad();
-  const omitZip = postalEntry && (zipNeedsAddress(zip) || !lookupZcta(zip));
+  const omitZip = postalEntry && (zipNeedsAddress(zip) || !await readZipLocation(zip));
   const area = postalArea(zip);
   const queryStreet = omitZip && !street.includes(",") && area?.place && area.state
     ? `${street}, ${area.place}, ${area.state}` : street;
@@ -105,7 +105,7 @@ export const POST = readerRoute("/api/address/resolve", async function POST(requ
   for (const p of points) {
     const { memberships } = await placesAtPoint(placeMapQuery(), [p.lng, p.lat], selection);
     samples.push(
-      memberships.map(row => ({ ocdId: row.placeId, divisionType: row.layer, label: row.name })),
+      memberships.map(row => ({ ocdId: row.placeId, divisionType: placeDivisionType(row.layer,row.placeId), label: row.name })),
     );
   }
 

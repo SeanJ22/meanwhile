@@ -64,10 +64,10 @@ else if(!previous){requests[outlines]=early(outlines);requests[outlines].catch((
 if(previous?.requests[settings])requests[settings]=previous.requests[settings];
 else if(!previous){requests[settings]=early(settings);requests[settings].catch(()=>{})}
 state.catch(()=>{});place.catch(()=>{});
-start.location=fetch("/geo/reader-zips/"+zip.slice(0,2)+".json").then(r=>{
+start.location=fetch("/api/location/zip?zip="+zip).then(r=>{
 if(!r.ok)throw new Error("ZIP lookup failed: "+r.status);return r.json()}).then(d=>{
-if(!d?.locations||typeof d.locations!=="object")throw new Error("Invalid ZIP location response");
-const p=d.locations[zip]??null;
+if(!d||!("location" in d))throw new Error("Invalid ZIP location response");
+const p=d.location??null;
 if(p===null){if(window.__readerStart===start)start.expires=0;return null}
 if(!p||typeof p!=="object")throw new Error("Invalid ZIP location response");
 start.value=p;

@@ -2,17 +2,18 @@
 
 Owner: RB-A10. Branch: stream/rb-a10, cut from river 21ae9bcfb. Current dependency: RB-A2 a9295c221, including RB-A1. Work in progress; no READY claim.
 
-Reader and Admin memberships now use the place map. The request shares the point result and raw rows across current-representation and election-year selections. Nearest-centroid lookup and the second resolver-geometry pass are deleted. The acquired ZIP seed decoder remains only in the map import and isolated test fixtures; no reader loads a seed shard.
+Reader and Admin memberships and typed-ZIP display points now use the place map. The recurring state import writes `zip_location` from the acquired Census and postal coordinates; reader requests and browser startup query those imported rows. The old server ZIP coordinate module and browser shard projection are deleted. Typed ZIPs that cross a state line read every touched state’s boards and calendars. The request shares the point result and raw rows across current-representation and election-year selections. Nearest-centroid lookup and the second resolver-geometry pass are deleted. The acquired ZIP seed decoder remains only in the map import and isolated test fixtures; no reader loads a seed shard.
 
 Remaining work, owned by RB-A10:
 
-- Finish typed-ZIP display coordinates: RB-A2 currently exposes membership and point queries, without a forward ZIP-coordinate interface. `/api/location/zip`, the ZIP-only meetings coordinate path, browser ZIP startup, `/ballot` place startup, `/about-area`, and nearby open-data facilities still use the existing coordinate source. They must move before READY.
-- Verify complete ZIP coverage and every referenced identity against the production map. Depends on the RB-A1 schema and RB-A2 import. Production had no `zip_place`, `zcta_place` or `place_boundary` tables at the October 24 read.
+- Move the remaining postal metadata reads in address resolution, ballot qualification and line-keeper destinations to the imported map, and remove the retired postal-file adapter.
+
+- Verify complete ZIP coverage and every referenced identity against the production map. Depends on the RB-A1 schema and RB-A2 import. Production had no `zip_place`, `zcta_place` or `place_boundary` tables at the October 24 read. The new additive `RB-A10_zip_locations` migration and an import must also be applied by the production pipeline; this session has only read-only database authorization.
 - Complete the Chrome 20-ZIP comparison and ten boundary map moves, including each first visit under three seconds. This session currently exposes no browser-control tool. HTTP snapshots below are not Chrome verification.
 - Verify the next scheduled production refresh and two complete reader connections on real production data. Local refresh tests are useful evidence but are not a claim that a production run occurred.
 - After board/river integration.md names rb-a2 and origin/river contains its folded commit, merge river, rerun every check, push READY, then handle returns until River records the live-check pass.
 
-Verification so far: starting reader and geography checks passed; the newest focused run passed 94 checks. A regression test reproduced stale local memberships returning an older boundary after refresh; selecting the current local boundary before intersection fixes it. Eight map tests pass after that repair, retaining earlier boundary rows and the place ID. The imported RB-A1 test type errors were fixed. The build against RB-A2 a9295c221 passes, including deployment trace checks.
+Verification so far: the imported-coordinate preservation test checks all 33,791 acquired Census ZIPs across all 56 jurisdictions. Type checking and lint pass after the switch (lint has 30 existing warnings). Four focused address and state-crossing checks pass after repairing string latitude/longitude selection. Starting reader and geography checks passed; the newest focused run passed 94 checks. A regression test reproduced stale local memberships returning an older boundary after refresh; selecting the current local boundary before intersection fixes it. Eight map tests pass after that repair, retaining earlier boundary rows and the place ID. The imported RB-A1 test type errors were fixed. The build against RB-A2 a9295c221 passes, including deployment trace checks.
 
 Production references captured read-only: 56 reactions referring to 33 distinct target IDs, three demand signals, one Ask interaction, and zero Speak your mind rows. No production database writes were made.
 

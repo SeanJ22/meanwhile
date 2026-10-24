@@ -1,8 +1,3 @@
-import { fixturePlaceMapQuery } from "./place-map.ts";
-
-
-
-
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -157,7 +152,7 @@ async function installRegistryRuntime(states?: readonly string[]): Promise<{ rea
   const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];
   for (const state of selected) installPromotedValue({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state),
     sourceId: projection.sourceId, versionId: `${projection.versionId}:${state}`, value: registryFixtureForState(state) });
-  installFactReader(fixturePlaceMapQuery(rosterFactReader(projection.payload.bodyRosters)));
+  installFactReader(rosterFactReader(projection.payload.bodyRosters));
   const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
   return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
 }

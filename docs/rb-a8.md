@@ -1,6 +1,6 @@
 # RB-A8 — Hourly counts
 
-Work in progress on `stream/rb-a8`. River recorded RB-A1 (`5bde46615`) at 11:25 AM EDT on October 24; `origin/river` (`59b7c5577`) contains that exact commit. This lane has merged the promoted River tree, keeping River's numbered RB-A1 migration and RIVER-KEYS migration before RB-A8. The complete combined check run is next; READY waits for its results.
+READY on `stream/rb-a8`. River recorded RB-A1 (`5bde46615`) at 11:25 AM EDT on October 24; merged `origin/river` (`59b7c5577`) contains that exact commit. The combined code commit `c38165a10` passes all nine required checks. River's numbered RB-A1 migration and RIVER-KEYS migration precede RB-A8. Deployment, the actual hourly invocation and River's Chrome live check remain pending.
 
 Readers keep their current facts, civic payloads and identifiers. Writer transactions update `count_hour`; the observer reads counters and grouped oldest ages. Admin shows counts by state, kind, step and Eastern hour. Counting coverage starts after every hook and baseline is installed, so the first partial hour is unknown, and timestamp-only rechecks earn no movement. Doors have a unique source count plus a separate family breakdown, so a source serving two families still counts once in the source total.
 
@@ -17,11 +17,11 @@ A local replay uses only the counter input projections captured at 5:56 AM EDT o
 
 ## Next-run proof
 
-With the clock advanced to the configured :05 boundary, the same observer runs at 11:05 AM and 12:05 PM EDT, October 24. Both complete; the two saved checkpoints total 332 bytes. The real copied reader inputs are unchanged. With a waiting pile in all 57 buckets, five invocations retain three checkpoints totalling 8,901 bytes. A focused integration test compares the hourly work counts with direct SQL in every bucket. Focused tests additionally check lease expiry and future due boundaries while the runner is stopped, rechecks, rollback, archival, new families, and a missing or late keeper. These are controlled-clock scheduling checks. An actual deployed hourly invocation and River's Chrome live check remain owed after integration.
+With the clock advanced to the configured :05 boundary, the same observer runs at 12:05 PM and 1:05 PM EDT, October 24. Both complete; the two saved checkpoints total 332 bytes. The real copied reader inputs are unchanged. With a waiting pile in all 57 buckets, five invocations retain three checkpoints totalling 8,901 bytes. A focused integration test compares the hourly work counts with direct SQL in every bucket. Focused tests additionally check lease expiry and future due boundaries while the runner is stopped, rechecks, rollback, archival, new families, and a missing or late keeper. These are controlled-clock scheduling checks. An actual deployed hourly invocation and River's Chrome live check remain owed after integration.
 
 ## Counts for every state
 
-Direct production SQL at 11:15 AM EDT, October 24, before these counters are installed. Live means the stored fact status; it does not claim that each record was seen on a page. Published sets count pointers, sources count distinct door rows, and waiting work counts currently effective work-list segments. All 50 states, DC, five territories and the national/system bucket are present, including zeros.
+Direct production SQL at 11:15 AM EDT, October 24, before these counters are installed. Live means the stored fact status; it does not claim that each record was seen on a page. Published sets count pointers, sources count distinct door rows, and waiting work counts currently effective work-list segments. All 50 states, DC, five territories and the national/system bucket are present, including zeros. RB-A1's shared work table did not exist at this capture; the waiting-work column counts the legacy work list then present.
 
 | State | Live | Held | Superseded | Pulled | Published sets | Doors | Open doors | Waiting findings | Waiting work |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -85,11 +85,9 @@ Direct production SQL at 11:15 AM EDT, October 24, before these counters are ins
 
 ## Checks
 
-- First full run: 7/9 gates; 9,617 tests passed, two assertions failed and two were skipped. The failures were the new selects' missing shell class and missing identity-domain declarations for the new tables. Both are fixed and their focused checks pass.
-- The schema gate's first connection attempt could not reach Neon because Node had not enabled the environment proxy. With `NODE_USE_ENV_PROXY=1`, the same read-only gate passes, including all 51 applied migration hashes.
-- All 52 focused tests pass with complete test-runner reports. The full rerun found an existing Now render expectation for the former metric label; it now requires “Facts marked live” and still requires a dash for unmeasured hours. The 21 keeper, vital-sign and Now checks pass together.
-- The second full run passed 8/9 checks (9,615 tests passed, two failed, two skipped). Besides the corrected Now expectation, Node 24 aborted in native V8 WebAssembly code cleanup during ZIP-people tests. The unchanged ZIP tests and their adjacent ZIP-place test pass all eight assertions in the same canonical runner on replay; the final full combined run remains owed.
-- The coverage-start correction passes 58 focused tests. The current tested River revision merges cleanly and builds with this lane; its focused keeper, cache, outcome and migration checks pass all 42 tests.
-- The missing-age correction also passes all 58 focused tests and the real-input copy replay: a group containing a row with no waiting timestamp stays visibly unknown. Chrome checks confirm that changing the step clears an irrelevant kind filter and shows only kinds for that step; all 57 state rows remain available on desktop and mobile.
-- Latest RB-A1 builds pass on the 20-minute cadence; final combined full checks and the deployed scheduled run are still pending.
-
+- After the required River fold and merge, all nine checks pass on `c38165a10`: lint, TypeScript, dead code, browser policy, the complete test suite, schema, default build, bundle checks and standalone build.
+- The complete suite registers 9,759 tests: 9,757 pass, zero fail and two are skipped. All 16 bundle tests pass. No native runtime crash occurred in this combined run.
+- The final copy replay compares every stock dimension with direct SQL on both databases across all 57 buckets. The injected pile produces an owned fix and a daily-brief item; subsequent hourly invocations retain three checkpoints totalling 8,901 bytes. Reader rows and spending settings remain unchanged.
+- Focused coverage includes future due boundaries, leases, refusal, rollback, archival, new families, missing waiting times, and a missing or late keeper. A group with any unknown waiting timestamp stays unknown rather than hiding the row.
+- Chrome checks cover the real production reader connections above and the Admin component on desktop and mobile: changing the step clears an irrelevant kind filter; all 57 state rows remain available and the mobile page does not overflow.
+- The 20-minute dependency builds pass against RB-A1 through 11:46 AM EDT. The actual deployed schedule, SQL parity and River's Chrome live check remain for release verification.

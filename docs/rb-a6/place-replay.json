@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-24T10:16:44.632Z",
+  "observedAt": "2026-10-24T10:50:37.242Z",
   "productionRoles": [
     "readonly",
     "wtp_cp_release_readonly"
@@ -106,16 +106,16 @@
       "state": "CO",
       "zip": "80012",
       "memberships": 10,
-      "productionEntities": 187,
-      "owed": 1422,
-      "held": 449,
-      "missing": 973,
-      "stale": 0,
+      "productionEntities": 193,
+      "owed": 1464,
+      "held": 465,
+      "missing": 999,
+      "stale": 6,
       "stuck": 86,
       "nextPass": {
-        "owed": 1422,
-        "held": 449,
-        "missing": 973,
+        "owed": 1464,
+        "held": 465,
+        "missing": 999,
         "stale": 0,
         "stuck": 86
       },
@@ -132,7 +132,7 @@
             "stale": false,
             "value": "https://arapahoe.legistar.com/View.ashx?M=M&ID=1425727&GUID=8D41B166-863B-4ADF-B932-88B455805FB8",
             "status": "live",
-            "checkedAt": "2026-10-23T19:41:18.724+00:00",
+            "checkedAt": "2026-10-24T10:39:57.625+00:00",
             "sourceUrl": "https://arapahoe.legistar.com/Calendar.aspx"
           }
         ]
@@ -337,16 +337,16 @@
       "state": "NJ",
       "zip": "07601",
       "memberships": 4,
-      "productionEntities": 48,
-      "owed": 329,
-      "held": 84,
-      "missing": 245,
+      "productionEntities": 71,
+      "owed": 490,
+      "held": 154,
+      "missing": 336,
       "stale": 0,
       "stuck": 24,
       "nextPass": {
-        "owed": 329,
-        "held": 84,
-        "missing": 245,
+        "owed": 490,
+        "held": 154,
+        "missing": 336,
         "stale": 0,
         "stuck": 24
       },
@@ -417,16 +417,16 @@
       "state": "WI",
       "zip": "53703",
       "memberships": 4,
-      "productionEntities": 1603,
-      "owed": 19895,
-      "held": 6938,
-      "missing": 12957,
+      "productionEntities": 1617,
+      "owed": 19988,
+      "held": 6972,
+      "missing": 13016,
       "stale": 0,
       "stuck": 1096,
       "nextPass": {
-        "owed": 19895,
-        "held": 6938,
-        "missing": 12957,
+        "owed": 19988,
+        "held": 6972,
+        "missing": 13016,
         "stale": 0,
         "stuck": 1096
       },

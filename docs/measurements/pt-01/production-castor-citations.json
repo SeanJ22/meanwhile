@@ -1,0 +1,23 @@
+{
+  "measuredAt": "2026-10-24T15:16:24.740943+00:00",
+  "revision": "2b6dd3bb8",
+  "mode": "Actual branch state-response handler on read-only production holdings; no Chrome or deployment claim",
+  "state": "FL",
+  "zip": "33602",
+  "name": "Kathy Castor",
+  "expectedOriginalImage": "https://www.congress.gov/img/member/c001066_200.jpg",
+  "expectedCurrentImage": "https://castor.house.gov/images/kathy_castor.jpg",
+  "visibleHolders": [
+    {
+      "id": "congress:C001066",
+      "photoUrl": "/api/portraits/officials/e0912e27362004462c6931096b7839c2474a70945c24e7bc02fe9326101d73f8.webp",
+      "sourceHolders": 2,
+      "portraitSources": [
+        "https://api.congress.gov/v3/member/C001066?format=json",
+        "https://castor.house.gov/images/kathy_castor.jpg",
+        "https://www.congress.gov/img/member/c001066_200.jpg"
+      ],
+      "retainsBoth": true
+    }
+  ]
+}

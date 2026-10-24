@@ -36,6 +36,9 @@ try {
   await pg.exec((BOOTSTRAP_DDL as string[]).find(sql => sql.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
 
   const original = snapshot.facts[0]!, source = snapshot.sourceCopies[0]!, place = snapshot.places[0]!;
+  const phone = original.field === "office_phone";
+  assert.ok(phone || original.field === "meeting_cadence", "Use a held contact or meeting claim for the connection probe");
+  assert.equal((await query("SELECT count(*)::int n FROM fact WHERE entity_id=$1 AND field=$2", [original.entity_id, original.field]))[0]!.n, 0);
   const list = workList(async (text, params = []) => (await pool.query(text, [...params])).rows, { owner: "connection-copy" });
   const added = await list.add({ kind: "check", state: String(place.state), placeId: String(place.id), subjectId: String(original.entity_id),
     url: String(source.final_url), field: String(original.field), value: original.value, quote: String(original.quote),
@@ -45,7 +48,7 @@ try {
   const { door } = await connected("lib/core/door.ts");
   const now = new Date();
   const outcome = await door(facts, { subjectId: claim!.subjectId, field: claim!.field,
-    fieldKind: "meeting", value: claim!.value, valueText: String(claim!.value), quote: claim!.quote,
+    fieldKind: phone ? "contact" : "meeting", value: claim!.value, valueText: String(claim!.value), quote: claim!.quote,
     provenance: original.provenance_kind, acquisition: "loader", producedBy: "rb-a5-production-copy", costUsd: 0,
     sourceField: { record: original, key: "value" },
     copy: { id: Number(source.id), finalUrl: String(source.final_url), fetchedAt: new Date(String(source.fetched_at)),
@@ -55,16 +58,45 @@ try {
   assert.equal(await list.finish(claim!), true);
   const { readPlacePackage } = await connected("lib/reader/place.ts");
   const page = await readPlacePackage({ state: String(place.state), divisionIds: [String(place.id)], bodyFactsOnly: true }, query) as {
-    bodies: { id: string; fields: { meetingCadence?: string; meetingCadenceSource?: { sourceUrl: string } } }[];
+    bodies: { id: string; fields: { officePhone?: string; fieldSources?: Record<string, { sourceUrl: string }>;
+      meetingCadence?: string; meetingCadenceSource?: { sourceUrl: string } } }[];
   };
   const shown = page.bodies.find(body => body.id === original.entity_id);
-  assert.equal(shown?.fields.meetingCadence, original.value);
-  assert.equal(shown?.fields.meetingCadenceSource?.sourceUrl, source.url);
+  const shownValue = phone ? shown?.fields.officePhone : shown?.fields.meetingCadence;
+  const shownSource = phone ? shown?.fields.fieldSources?.officePhone : shown?.fields.meetingCadenceSource;
+  assert.equal(shownValue, original.value);
+  assert.equal(shownSource?.sourceUrl, source.url);
   assert.equal((await query("SELECT count(*)::int n FROM rebuild_queue WHERE place_id=$1", [place.id]))[0]!.n, 1);
+  if (process.argv[4]) {
+    type Body = Record<string, unknown> & { bodyId: string };
+    const baseline = JSON.parse(await readFile(resolve(process.argv[4]), "utf8")) as { coverage: { bodies: Body[] };
+      stateResponse?: { value: { coverage?: { bodies?: Body[] } } }; meetings: unknown[] };
+    const projected = structuredClone(baseline);
+    const before = structuredClone(baseline);
+    for (const body of [...before.coverage.bodies, ...(before.stateResponse?.value.coverage?.bodies ?? [])]) {
+      if (body.bodyId !== original.entity_id) continue;
+      if (phone) body.officeContact = { ...(body.officeContact as object), phone: null };
+      else body.meetingCadence = null;
+    }
+    let updated = 0;
+    for (const body of [...projected.coverage.bodies, ...(projected.stateResponse?.value.coverage?.bodies ?? [])]) {
+      if (body.bodyId !== original.entity_id) continue;
+      if (phone) {
+        body.officeContact = { ...(body.officeContact as object), phone: shownValue, provenance: shownSource };
+        body.fieldSources = { ...(body.fieldSources as object), officePhone: shownSource };
+      } else body.meetingCadence = { text: shownValue, sourceUrl: shownSource!.sourceUrl };
+      updated++;
+    }
+    assert.ok(updated > 0, "The copied fact must belong to a body already on this place page");
+    assert.deepEqual(projected.meetings, baseline.meetings);
+    assert.deepEqual(projected.coverage.bodies.map(body => body.bodyId), baseline.coverage.bodies.map(body => body.bodyId));
+    await writeFile(resolve(dirname(file), "place-copy-response.json"), JSON.stringify(projected));
+    await writeFile(resolve(dirname(file), "place-before-response.json"), JSON.stringify(before));
+  }
   const result = { at: now.toISOString(), sourceRole: snapshot.role, capturedAt: snapshot.capturedAt, workId: claim!.id,
     placeId: place.id, subjectId: original.entity_id, sourceCopyId: source.id, sourceUrl: source.url,
     originalProductionFactId: original.id, doorDecision: outcome.decision,
-    placePageReaderValue: shown!.fields.meetingCadence, reader: "readPlacePackage", queuedForPageRebuild: true };
+    field: original.field, placePageReaderValue: shownValue, reader: "readPlacePackage", queuedForPageRebuild: true };
   await writeFile(resolve(dirname(file), "connection-proof.json"), JSON.stringify(result, null, 2));
   console.log(result);
 } finally { await pool.end(); await pg.close(); }

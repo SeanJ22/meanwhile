@@ -1,0 +1,348 @@
+{
+  "at": "2026-10-24T13:32:34.326Z",
+  "countsEqual": true,
+  "states": [
+    {
+      "state": "AK",
+      "incoming": 11090,
+      "done": 20,
+      "refused": 0
+    },
+    {
+      "state": "AL",
+      "incoming": 18669,
+      "done": 29,
+      "refused": 0
+    },
+    {
+      "state": "AR",
+      "incoming": 14906,
+      "done": 21,
+      "refused": 0
+    },
+    {
+      "state": "AS",
+      "incoming": 1,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "AZ",
+      "incoming": 20032,
+      "done": 21,
+      "refused": 0
+    },
+    {
+      "state": "CA",
+      "incoming": 30723,
+      "done": 23,
+      "refused": 1
+    },
+    {
+      "state": "CO",
+      "incoming": 13584,
+      "done": 12,
+      "refused": 0
+    },
+    {
+      "state": "CT",
+      "incoming": 22599,
+      "done": 10,
+      "refused": 0
+    },
+    {
+      "state": "DC",
+      "incoming": 4014,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "DE",
+      "incoming": 12635,
+      "done": 12,
+      "refused": 0
+    },
+    {
+      "state": "FL",
+      "incoming": 19823,
+      "done": 9,
+      "refused": 0
+    },
+    {
+      "state": "GA",
+      "incoming": 25318,
+      "done": 23,
+      "refused": 0
+    },
+    {
+      "state": "GU",
+      "incoming": 160,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "HI",
+      "incoming": 5158,
+      "done": 3,
+      "refused": 0
+    },
+    {
+      "state": "IA",
+      "incoming": 7334,
+      "done": 5,
+      "refused": 0
+    },
+    {
+      "state": "ID",
+      "incoming": 16780,
+      "done": 20,
+      "refused": 0
+    },
+    {
+      "state": "IL",
+      "incoming": 3389,
+      "done": 4,
+      "refused": 0
+    },
+    {
+      "state": "IN",
+      "incoming": 5888,
+      "done": 5,
+      "refused": 0
+    },
+    {
+      "state": "KS",
+      "incoming": 1711,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "KY",
+      "incoming": 948,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "LA",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MA",
+      "incoming": 964,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "MD",
+      "incoming": 6449,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "ME",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MI",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MN",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MO",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MP",
+      "incoming": 8,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MS",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "MT",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NC",
+      "incoming": 5,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ND",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NE",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NH",
+      "incoming": 259,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NJ",
+      "incoming": 647,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NM",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NV",
+      "incoming": 100,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "NY",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "OH",
+      "incoming": 291,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "OK",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "OR",
+      "incoming": 70,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "PA",
+      "incoming": 3,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "PR",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "RI",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "SC",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "SD",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "TN",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "TX",
+      "incoming": 7,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "US",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "UT",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "VA",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "VI",
+      "incoming": 2,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "VT",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "WA",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "WI",
+      "incoming": 116,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "WV",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "WY",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    }
+  ]
+}

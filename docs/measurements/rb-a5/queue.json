@@ -1,0 +1,579 @@
+{
+  "at": "2026-10-24T12:21:16.569Z",
+  "snapshot": {
+    "sourceProject": "withered-sunset-39821877",
+    "sourceBranch": "br-tiny-frog-aeufpjeq",
+    "role": "wtp_cp_release_readonly",
+    "startedAt": "2026-10-24T08:55:15.427Z",
+    "endedAt": "2026-10-24T08:57:32.194Z",
+    "rowsBefore": 328791,
+    "rowsAfter": 328791,
+    "copied": 328791,
+    "sha256": "da80058267dc394af20e66d7b606b0799f05096017880861852ad7e8b93f964f"
+  },
+  "claimsMs": [
+    32.13549899999998,
+    2.9368299999999863,
+    2.4733059999999796,
+    2.514002000000005,
+    1.4012279999999464,
+    3.4299049999999625,
+    2.580404999999928,
+    2.7674799999999777,
+    5.188910999999962,
+    1.2120939999999791,
+    1.7241470000000163,
+    2.864231000000018,
+    1.3809199999999464,
+    1.1146340000000237,
+    1.1799730000000181,
+    1.451893000000041,
+    2.575109999999995,
+    1.4582279999999628,
+    2.885022000000049,
+    2.3937909999999647
+  ],
+  "maxClaimMs": 32.13549899999998,
+  "concurrentWorkers": 200,
+  "duplicateClaims": 0,
+  "killedWorkerRecovered": "work-d441e32a3c36e6199bfadf9e62a3842f4916b22cb7af27a25f34642b820c8325",
+  "killedSignal": "SIGKILL",
+  "scheduledRuns": [
+    {
+      "at": "2026-10-24T12:21:13.517Z",
+      "ids": [
+        "work-242717f72b343e2ee6f2e6108227712f219968bb6410d3ddebb87739e73df1dd"
+      ]
+    },
+    {
+      "at": "2026-10-24T12:21:14.518Z",
+      "ids": [
+        "work-d441e32a3c36e6199bfadf9e62a3842f4916b22cb7af27a25f34642b820c8325"
+      ]
+    }
+  ],
+  "countsEqual": true,
+  "countsPerHourEqual": true,
+  "boxReports": {
+    "original_rows": 328791,
+    "notes": 328791,
+    "distinct_box_ids": 328791,
+    "missing": 0
+  },
+  "countsByState": [
+    {
+      "state": "ak",
+      "incoming": 11090,
+      "done": 20,
+      "refused": 0
+    },
+    {
+      "state": "al",
+      "incoming": 18669,
+      "done": 29,
+      "refused": 0
+    },
+    {
+      "state": "ar",
+      "incoming": 14906,
+      "done": 21,
+      "refused": 0
+    },
+    {
+      "state": "as",
+      "incoming": 1,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "az",
+      "incoming": 20031,
+      "done": 20,
+      "refused": 0
+    },
+    {
+      "state": "ca",
+      "incoming": 30723,
+      "done": 23,
+      "refused": 1
+    },
+    {
+      "state": "co",
+      "incoming": 13584,
+      "done": 12,
+      "refused": 0
+    },
+    {
+      "state": "ct",
+      "incoming": 22599,
+      "done": 10,
+      "refused": 0
+    },
+    {
+      "state": "dc",
+      "incoming": 4014,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "de",
+      "incoming": 12635,
+      "done": 12,
+      "refused": 0
+    },
+    {
+      "state": "fl",
+      "incoming": 19823,
+      "done": 9,
+      "refused": 0
+    },
+    {
+      "state": "ga",
+      "incoming": 25318,
+      "done": 23,
+      "refused": 0
+    },
+    {
+      "state": "gu",
+      "incoming": 160,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "hi",
+      "incoming": 5158,
+      "done": 3,
+      "refused": 0
+    },
+    {
+      "state": "ia",
+      "incoming": 7334,
+      "done": 5,
+      "refused": 0
+    },
+    {
+      "state": "id",
+      "incoming": 16780,
+      "done": 20,
+      "refused": 0
+    },
+    {
+      "state": "il",
+      "incoming": 3389,
+      "done": 4,
+      "refused": 0
+    },
+    {
+      "state": "in",
+      "incoming": 5888,
+      "done": 5,
+      "refused": 0
+    },
+    {
+      "state": "ks",
+      "incoming": 1711,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "ky",
+      "incoming": 948,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "la",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ma",
+      "incoming": 964,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "md",
+      "incoming": 6449,
+      "done": 1,
+      "refused": 0
+    },
+    {
+      "state": "me",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "mi",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "mn",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "mo",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "mp",
+      "incoming": 8,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ms",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "mt",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "nc",
+      "incoming": 5,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "nd",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ne",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "nh",
+      "incoming": 259,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "nj",
+      "incoming": 647,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "nm",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "nv",
+      "incoming": 100,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ny",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "oh",
+      "incoming": 291,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ok",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "or",
+      "incoming": 70,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "pa",
+      "incoming": 3,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "pr",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ri",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "sc",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "sd",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "tn",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "tx",
+      "incoming": 7,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "us",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "ut",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "va",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "vi",
+      "incoming": 2,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "vt",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "wa",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "wi",
+      "incoming": 116,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "wv",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    },
+    {
+      "state": "wy",
+      "incoming": 0,
+      "done": 0,
+      "refused": 0
+    }
+  ],
+  "sourceCountsByState": [
+    {
+      "state": "ak",
+      "n": 25667
+    },
+    {
+      "state": "al",
+      "n": 34052
+    },
+    {
+      "state": "ar",
+      "n": 24187
+    },
+    {
+      "state": "as",
+      "n": 1
+    },
+    {
+      "state": "az",
+      "n": 29791
+    },
+    {
+      "state": "ca",
+      "n": 39179
+    },
+    {
+      "state": "co",
+      "n": 21972
+    },
+    {
+      "state": "ct",
+      "n": 25892
+    },
+    {
+      "state": "dc",
+      "n": 5075
+    },
+    {
+      "state": "de",
+      "n": 17212
+    },
+    {
+      "state": "fl",
+      "n": 21574
+    },
+    {
+      "state": "ga",
+      "n": 26757
+    },
+    {
+      "state": "gu",
+      "n": 168
+    },
+    {
+      "state": "hi",
+      "n": 6000
+    },
+    {
+      "state": "ia",
+      "n": 8187
+    },
+    {
+      "state": "id",
+      "n": 17596
+    },
+    {
+      "state": "il",
+      "n": 4768
+    },
+    {
+      "state": "in",
+      "n": 7227
+    },
+    {
+      "state": "ks",
+      "n": 2336
+    },
+    {
+      "state": "ky",
+      "n": 1057
+    },
+    {
+      "state": "ma",
+      "n": 1366
+    },
+    {
+      "state": "md",
+      "n": 7072
+    },
+    {
+      "state": "mp",
+      "n": 12
+    },
+    {
+      "state": "nc",
+      "n": 5
+    },
+    {
+      "state": "nh",
+      "n": 259
+    },
+    {
+      "state": "nj",
+      "n": 647
+    },
+    {
+      "state": "nv",
+      "n": 179
+    },
+    {
+      "state": "oh",
+      "n": 324
+    },
+    {
+      "state": "or",
+      "n": 84
+    },
+    {
+      "state": "pa",
+      "n": 3
+    },
+    {
+      "state": "system",
+      "n": 11
+    },
+    {
+      "state": "tx",
+      "n": 7
+    },
+    {
+      "state": "vi",
+      "n": 2
+    },
+    {
+      "state": "wi",
+      "n": 122
+    }
+  ],
+  "plan": {
+    "QUERY PLAN": [
+      {
+        "Plan": {
+          "Node Type": "Limit",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 0.42,
+          "Total Cost": 0.77,
+          "Plan Rows": 1,
+          "Plan Width": 82,
+          "Disabled": false,
+          "Plans": [
+            {
+              "Node Type": "Index Only Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Scan Direction": "Forward",
+              "Index Name": "work_row_claim_ready",
+              "Relation Name": "work_row",
+              "Alias": "work_row",
+              "Startup Cost": 0.42,
+              "Total Cost": 76015.02,
+              "Plan Rows": 220894,
+              "Plan Width": 82,
+              "Disabled": false,
+              "Index Cond": "((kind = 'read'::text) AND (not_before <= now()))"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-24T11:30:52.520Z",
+  "workerClockAheadMs": 600000,
+  "leaseMs": 5000,
+  "actualLeaseFromServerBeforeMs": 5024,
+  "existingLeaseRetained": true,
+  "passed": true
+}

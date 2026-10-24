@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-24T12:53:43.247Z",
+  "sourceRole": "readonly",
+  "capturedAt": "2026-10-24T12:52:10.692023+00:00",
+  "workId": "work-bd914e099d0889ef5fc4f17c4bcdf64e5b4fc8e0bc4c14a2735646bdcc1d7cd1",
+  "placeId": "ocd-division/country:us/state:az/county:pinal",
+  "subjectId": "az:county:county-of-pinal#office-recorder",
+  "sourceCopyId": 62692,
+  "sourceUrl": "https://www.azcleanelections.gov/november-3-2026/pinal",
+  "originalProductionFactId": 1711874,
+  "doorDecision": "PUBLISH",
+  "field": "office_phone",
+  "placePageReaderValue": "520-866-6854",
+  "reader": "readPlacePackage",
+  "queuedForPageRebuild": true,
+  "browserAt": "2026-10-24T13:26:38.285Z",
+  "contexts": [
+    {
+      "stage": "before",
+      "url": "https://meanwhileusa.com/?zip=85139",
+      "copiedResponsesServed": 1,
+      "phoneVisible": false
+    },
+    {
+      "stage": "copy",
+      "url": "https://meanwhileusa.com/?zip=85139",
+      "copiedResponsesServed": 1,
+      "phoneVisible": true
+    }
+  ],
+  "writesBlocked": {
+    "count": 5,
+    "paths": [
+      "/api/log",
+      "/api/events"
+    ]
+  }
+}

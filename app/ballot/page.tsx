@@ -1,3 +1,4 @@
+import { readPointPlace } from "@/lib/place-map/reader";
 import {Suspense} from "react";
 import {preload as preloadResource} from "react-dom";
 import { readBallotReaderData, primeBallotFundingRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
@@ -28,7 +29,7 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
-import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOfficesForFamilies } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, unestablishedDistrictOfficesForFamilies } from "@/lib/ballot/zip-divisions";
 import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
@@ -457,7 +458,7 @@ export default readerRoute("/ballot", async function BallotPage({
   let askOcdIds: string[] = [];
   const readerSelection = currentReaderSelection();
   const startRead = ballotAuxiliaryReads();
-  const pointDivisionsRead = centroid ? place.state
+  const pointDivisionsRead = centroid && !zip ? readerSelection?.divisions ? Promise.resolve([...readerSelection.divisions]) : place.state
     ? ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
     : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
   void pointDivisionsRead.catch(() => undefined);
@@ -481,14 +482,15 @@ export default readerRoute("/ballot", async function BallotPage({
     try {
       pointDivisionIds.push(...await pointDivisionsRead);
     } catch { divisionHoldingUnavailable = true; }
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, zipEntry);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
     const missingDistrictOffices = new Map<string, string[]>();
     await readerData?.districtRead.catch(() => undefined);
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, {}, async (election, districtFamilies) => {
       const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
-      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
+      const electionPointIds = zip ? pointDivisionIds : [...(await readPointPlace(centroid.lat, centroid.lng, geography)).ids];
+      const ids = await divisionIdsForZipArea(zip, electionPointIds, geography, readerData ? await readerData.entry(geography) : undefined);
       electionDivisions.set(election.id, ids);
       missingDistrictOffices.set(election.id, unestablishedDistrictOfficesForFamilies(districtFamilies, ids));
       return ids;

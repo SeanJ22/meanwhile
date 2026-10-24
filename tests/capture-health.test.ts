@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { CAPTURE_DAYS, captureWindow, failuresView, headlineOf, readCaptureHealth } from "../lib/control-plane/admin-view/v6-capture-health.ts";
 import { readCaptureFailures, type HistoryStore, type Query } from "../lib/control-plane/data-business/live.ts";
-import { shardPlaceIndex } from "../lib/control-plane/data-business/places.ts";
+import { placeIndex } from "../lib/control-plane/data-business/places.ts";
 import { defaultAdminConfig, withDataSwitch } from "../lib/control-plane/gateway/admin-config.ts";
 import type { ReadDeps, Sources } from "../lib/control-plane/data-business/read.ts";
 import type { TotalsRow } from "../lib/control-plane/data-business/types.ts";
@@ -23,7 +23,7 @@ const WEEK_ROWS: TotalsRow[] = [
   row({ grain: "week", period: "2026-09-28", district: FL7, topic: "*", type: "*", events: 5, users: 2 }),
 ];
 const sources = (over: Partial<Sources> = {}): Sources => ({
-  places: shardPlaceIndex(async () => null),
+  places: placeIndex(async () => null, async () => { throw new Error("Map unavailable"); }),
   totals: async (q) => ({ kind: "ROWS", rows: (q.grain === "week" ? WEEK_ROWS : DAY_ROWS).filter((r) => (q.family === "district" ? r.district !== null : r.district === null && r.zip === null)) }),
   cohorts: async () => ({ kind: "ROWS", rows: [{ grain: "day", period: "2026-09-30", readers: 8, newReaders: 5 }, { grain: "day", period: "2026-10-01", readers: 10, newReaders: 3 }] }),
   events: async () => ({ kind: "ROWS", rows: [] }),

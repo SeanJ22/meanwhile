@@ -1,5 +1,7 @@
+import { installFactReader } from "../lib/facts/db.ts";
+import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
-import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
+import { readZipPlace } from "../lib/place-map/reader.ts";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,7 +13,7 @@ import {
   COULD_GOVERN_TEXT,
 } from "../lib/ballot/could-govern.ts";
 import { needsPill, zipCertainty } from "../lib/geo/zip-certainty.ts";
-import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
+import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { buildCensusDistrictEdge, censusDistrictEdgeSlice } from "../lib/census-geography/district-edge.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -31,6 +33,8 @@ const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, 
 const current = { purpose: "representation" as const, asOf: "2026-10-09" };
 const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
 const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
+
+installFactReader(fixturePlaceMapQuery());
 
 test("3.2: a county and school district every 2020 resident lives in govern the whole ZIP", async () => {
   const c = await sampledZipCertainty("07866");
@@ -57,7 +61,7 @@ test("3.2: at 07866 the two Rockaways each govern PART — pill; Denville, home 
     assert.equal(c.certaintyOf(id), "AMBIGUOUS", `${id} covers only part of 07866`);
     assert.equal(needsPill(c.certaintyOf(id)), true);
   }
-  assert.ok((await zipDivisionEntry("07866"))?.fringe?.includes("ocd-division/country:us/state:nj/county:morris/place:denville_township"));
+  assert.ok((await readZipPlace("07866"))?.fringe?.includes("ocd-division/country:us/state:nj/county:morris/place:denville_township"));
 });
 
 test("3.7: a qualified whole-area district needs no pill while sampled local divisions stay uncertain", async () => {
@@ -334,11 +338,11 @@ test("3.1: the held election plans widen 85641 to both legislative districts and
   const local = "ocd-division/country:us/state:az/place:vail";
   const stale = "ocd-division/country:us/state:az/cd:7";
   const point = [local, stale, "ocd-division/country:us/state:az"];
-  const serving = await withDistricts(() => divisionIdsForZipArea("85641", point, current, POINT_GEOMETRY_PLANS));
+  const serving = await withDistricts(() => divisionIdsForZipArea("85641", point, current));
   assert.ok(serving.includes(local));
   assert.ok(serving.includes("ocd-division/country:us/state:az/cd:6"));
   assert.ok(!serving.includes(stale), "the previous point assignment does not survive a qualified replacement");
-  const election = await withDistricts(() => divisionIdsForZipArea("85641", point, electionSelection, POINT_GEOMETRY_PLANS));
+  const election = await withDistricts(() => divisionIdsForZipArea("85641", point, electionSelection));
   assert.ok(election.includes(local));
   const districtContests = contestsForDivisions(azBallot, election).contests.filter(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId));
   assert.deepEqual(districtContests.map(contest => contest.id.split(":").at(-1)).sort(), ["state-house-17", "state-house-19", "state-senate-17", "state-senate-19", "us-house-6"]);

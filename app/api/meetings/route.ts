@@ -61,8 +61,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
     ]);
     if (!place.registry) throw new Error("The place's government records could not be loaded");
-    const point = zipRead.value ? null : await (await import("@/lib/registry/server")).divisionsAt(lat, lng);
-    const ids = point?.map(division => division.ocdId) ?? location.divisionIds;
+    const ids = location.divisionIds;
     const divisionIds = new Set(ids);
     const registry = place.registry;
     const bodies = registry.registry.bodies;

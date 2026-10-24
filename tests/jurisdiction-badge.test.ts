@@ -133,7 +133,7 @@ test("M81: the badge derives from the map's own geometry, never a second source"
 test("M81: the API sends resolved divisions and refuses an unavailable lookup", async t => {
   const { installRegistryAuthority } = await import("./helpers/promoted-fixtures.ts");
   const { GET } = await import("../app/api/meetings/route.ts");
-  const { readZipPlace } = await import("../lib/reader/national.ts");
+  const { readZipPlace } = await import("../lib/place-map/reader.ts");
   await installRegistryAuthority();
   const zip = await GET(new Request("https://wtp.test/api/meetings?lat=32.21696&lng=-110.971&zip=85701"));
   assert.equal(zip.status, 200);

@@ -1,3 +1,5 @@
+import { installFactReader } from "../lib/facts/db.ts";
+import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -12,13 +14,15 @@ import { postalTable } from "../lib/geo/postal.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
 import { areaLookup, buildPostalTable } from "../lib/geo/build-postal-table.ts";
 import type { Feature } from "../lib/geo/shapefile.ts";
-import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
+import { readZipPlace } from "../lib/place-map/reader.ts";
 import { zipCertainty } from "../lib/geo/zip-certainty.ts";
-import { publishedDivisionsForZip } from "../lib/geo/zip-census-districts.ts";
-import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "../lib/ballot/zip-divisions.ts";
+import { readZipDivisions } from "../lib/place-map/reader.ts";
+import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { locateAddressInZip, parseCensusPoint, sampleStreetPoints } from "../lib/geo/census-geocoder.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/zip-entry/${name}`, import.meta.url), "utf8");
+
+installFactReader(fixturePlaceMapQuery());
 
 test("server module contexts share the complete unchanged postal table", async () => {
   const second = await import(new URL("../lib/geo/postal.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/postal.ts");
@@ -97,14 +101,14 @@ test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, wi
 
 test("ZIP-01: a mail-only ZIP that is its own Census ZCTA keeps its residents' school district", async () => {
   // Bethel's residents get their mail at the post office; the Census still counts them in ZCTA 99559.
-  const bethel = await zipDivisionEntry("99559");
+  const bethel = await readZipPlace("99559");
   assert.ok(bethel?.ids.includes("ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district"));
-  for (const zip of ["73960", "10540"]) assert.ok((await zipDivisionEntry(zip))?.ids.some(id => /\/school_district:/.test(id)), zip);
+  for (const zip of ["73960", "10540"]) assert.ok((await readZipPlace(zip))?.ids.some(id => /\/school_district:/.test(id)), zip);
 });
 
 test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school districts from a ZCTA or its point", async () => {
   for (const zip of ["10008", "00501"]) {
-    const entry = await zipDivisionEntry(zip);
+    const entry = await readZipPlace(zip);
     assert.ok(entry, zip);
     assert.equal(entry.samples, 0);
     assert.ok(entry.ids.length > 0, "town and county remain available");
@@ -112,12 +116,12 @@ test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school di
     const certainty = await zipCertainty(zip);
     assert.ok(certainty);
     assert.ok(entry.ids.filter(id => id.split("/").length > 3).every(id => certainty.certaintyOf(id) !== "CERTAIN"));
-    assert.deepEqual(await publishedDivisionsForZip(zip), []);
+    assert.deepEqual(await readZipDivisions(zip), []);
     const point = ["ocd-division/country:us/state:tx/cd:13", "ocd-division/country:us/state:tx/sldu:31", "ocd-division/country:us/state:tx/school_district:texhoma"];
     assert.ok((await divisionIdsForZipArea(zip, point)).every(id => !point.includes(id)));
     const withQualifiedPoint = await divisionIdsForZipArea(zip, point, {
       purpose: "representation", asOf: "2026-10-13",
-    }, POINT_GEOMETRY_PLANS);
+    });
     assert.ok(withQualifiedPoint.every(id => !point.includes(id)), "a valid point plan still cannot assign districts from a mail-only ZIP");
   }
 });

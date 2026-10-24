@@ -1,7 +1,7 @@
 /** ZIP certainty comes from a selected published Census relationship. Held
  * lattice intersections remain useful orientation data with uncertainty. */
 
-import { zipDivisionEntry, type ZipDivisionEntry } from "./zip-division-index.ts";
+import { readZipPlace, type PlaceEntry } from "../place-map/reader.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 
 /**
@@ -32,10 +32,10 @@ export interface ZipCertainty {
   certaintyOf(ocdId: string): GovernCertainty;
 }
 
-export async function zipCertainty(zip: string | null, selection?: GeographySelection, supplied?: ZipDivisionEntry | null): Promise<ZipCertainty | null> {
+export async function zipCertainty(zip: string | null, selection?: GeographySelection, supplied?: PlaceEntry | null): Promise<ZipCertainty | null> {
   if (!zip || !/^\d{5}$/.test(zip)) return null;
   // An unindexed zip or an unreadable shard is OUR gap, and it degrades to "we cannot say", never to a claim.
-  const entry = supplied === undefined ? await zipDivisionEntry(zip, selection) : supplied;
+  const entry = supplied === undefined ? await readZipPlace(zip, selection) : supplied;
   if (entry === null) return null;
 
   const all = [...entry.ids];

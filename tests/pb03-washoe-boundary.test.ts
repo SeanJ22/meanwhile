@@ -5,7 +5,7 @@ import { districtSourceName, type DistrictBoundarySources } from "../lib/registr
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { shardEntry, type ZipDivisionShard } from "../lib/geo/zip-division-index.ts";
+import { legacyZipEntry, type LegacyZipShard } from "../lib/place-map/legacy.ts";
 
 const root = process.cwd();
 const sources = (JSON.parse(readFileSync("data/reference/district-boundary-sources.json", "utf8")) as DistrictBoundarySources).sources;
@@ -43,12 +43,12 @@ test("Nevada imports its reconciled territory and preserves it on an unchanged s
 test("the map and every affected ZIP use one Washoe Rural territory with unchanged Census residents", () => {
   const geo = JSON.parse(readFileSync("data/states/nv/geo/territory-32.geojson", "utf8")) as { features: { properties: { ocdId: string } }[] };
   assert.deepEqual(geo.features.filter(f => f.properties.ocdId.includes("washoe_rural_fire")).map(f => f.properties.ocdId), [place]);
-  const shard = JSON.parse(readFileSync("data/derived/zip-divisions/89.json", "utf8")) as ZipDivisionShard;
+  const shard = JSON.parse(readFileSync("data/derived/zip-divisions/89.json", "utf8")) as LegacyZipShard;
   assert.deepEqual(shard.divisions.filter(id => id.includes("washoe_rural_fire")), [place]);
   for (const [zip, residents] of Object.entries({ "89405": 49, "89412": 253, "89424": 525, "89506": 3, "89508": 895, "89510": 651 })) {
     const at = shard.zips[zip].findIndex(i => shard.divisions[i] === place);
     assert.equal(shard.residents![zip][at], residents);
-    const entry = shardEntry(shard, zip)!;
+    const entry = legacyZipEntry(shard, zip)!;
     assert.equal([...entry.ids, ...(entry.fringe ?? [])].filter(id => id === place).length, 1);
     assert.equal(entry.fringe?.includes(place) ?? false, zip === "89506", "a three-resident fringe must not become a claim about the whole ZIP");
   }
@@ -61,8 +61,8 @@ test("Oregon Metro's own boundary gives Metro a territory, so the Portland-area 
   const ref = loadRegistrationReference(root, "or").reference;
   const [row] = ref.governments.filter(g => g[1] === metro);
   assert.deepEqual([ref.divisions[row![4]]![0], row![5]], [territory, "BOUNDARY_SOURCE"]);
-  const shard = JSON.parse(readFileSync("data/derived/zip-divisions/97.json", "utf8")) as ZipDivisionShard;
-  const governs = (zip: string) => shardEntry(shard, zip)!.ids.includes(territory);
+  const shard = JSON.parse(readFileSync("data/derived/zip-divisions/97.json", "utf8")) as LegacyZipShard;
+  const governs = (zip: string) => legacyZipEntry(shard, zip)!.ids.includes(territory);
   for (const zip of ["97204", "97232", "97225"]) assert.ok(governs(zip), `${zip} lies inside Metro`);
   for (const zip of ["97301", "97401", "97701"]) assert.ok(!governs(zip), `${zip} lies outside Metro`);
   const db = await factDb();

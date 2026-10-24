@@ -1,5 +1,5 @@
 import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites.ts";
-import { lowestZipByDivision } from "../geo/zip-division-index.ts";
+import { lowestZipByDivision } from "../place-map/reader.ts";
 import { canonicalContestId, canonicalCandidacyId } from "../hunt/candidate-universe.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { collectServedReader } from "./served-reader-collector.ts";

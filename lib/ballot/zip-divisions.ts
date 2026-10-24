@@ -1,47 +1,26 @@
-import { zipDivisionEntry, type ZipDivisionEntry } from "../geo/zip-division-index.ts";
+import { readZipPlace, type PlaceEntry } from "../place-map/reader.ts";
+import { districtFamilyKey } from "../census-geography/division-id.ts";
+import { currentRepresentationSelection, type GeographySelection } from "../census-geography/selection.ts";
 import { zipNeedsAddress } from "../geo/postal.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
-import { districtFamilyKey } from "../census-geography/division-id.ts";
-import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../census-geography/selection.ts";
-import type { GeographyType } from "../census-geography/contract.ts";
 
-/** Plans used to build the held point geometry and sampled ZIP index. */
-export const POINT_GEOMETRY_PLANS = { cd: "cd:119", sldu: "sldu:2024", sldl: "sldl:2024" } as const;
-type DistrictFamily = keyof typeof POINT_GEOMETRY_PLANS;
-type PointPlans = Partial<Readonly<Record<DistrictFamily, string>>>;
-const TYPES: Record<DistrictFamily, GeographyType> = { cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower" };
-const OFFICES: Record<DistrictFamily, string> = { cd: "U.S. House", sldu: "State Senate", sldl: "State House" };
+const OFFICES: Record<string, string> = { cd: "U.S. House", sldu: "State Senate", sldl: "State House" };
 
+/** A ZIP keeps every selected membership, including its named fringe races.
+ * Point callers supply the place map's selection for the election being read. */
 export async function divisionIdsForZipArea(
   zip: string | null,
   pointDivisionIds: readonly string[],
   selection: GeographySelection = currentRepresentationSelection(),
-  pointPlans?: PointPlans,
-  supplied?: ZipDivisionEntry | null,
+  supplied?: PlaceEntry | null,
 ): Promise<string[]> {
-  const entry = supplied === undefined ? zip && /^\d{5}$/.test(zip) ? await zipDivisionEntry(zip, selection) : null : supplied;
-  if (zip && zipNeedsAddress(zip)) {
-    return [...new Set([...pointDivisionIds, ...(entry?.ids ?? [])].filter(isTownOrCountyDivision))];
-  }
-  // A ballot keeps the divisions few of the ZIP's residents live in: a missing contest costs more than a hedged one.
-  const areaIds = new Set([...entry?.ids ?? [], ...entry?.fringe ?? []]);
-  const qualified = new Set(entry?.qualifiedDistricts ?? []);
-  const out = new Set([...pointDivisionIds, ...areaIds]);
-  for (const id of out) {
-    const key = districtFamilyKey(id);
-    if (!key) continue;
-    if (qualified.has(key)) {
-      if (!areaIds.has(id)) out.delete(id);
-      continue;
-    }
-    const [state, family] = key.split("/") as [string, DistrictFamily];
-    const plan = pointPlans?.[family];
-    if (!plan || !selectGeographyVersion([{ key: plan, type: TYPES[family] }], TYPES[family], selection, state)) out.delete(id);
-  }
-  return [...out];
+  if (!zip) return [...new Set(pointDivisionIds)];
+  const entry = supplied === undefined ? await readZipPlace(zip, selection) : supplied;
+  const local = pointDivisionIds.filter(id => !districtFamilyKey(id) && (!zipNeedsAddress(zip) || isTownOrCountyDivision(id)));
+  return [...new Set([...local, ...entry?.ids ?? [], ...entry?.fringe ?? []])];
 }
 
 export function unestablishedDistrictOfficesForFamilies(families: readonly string[], electionIds: readonly string[]): string[] {
   const established = new Set(electionIds.map(districtFamilyKey).filter(key => key !== null));
-  return [...new Set(families.filter(key => !established.has(key)).map(key => OFFICES[key.split("/")[1] as DistrictFamily]))];
+  return [...new Set(families.filter(key => !established.has(key)).map(key => OFFICES[key.split("/")[1]]))];
 }

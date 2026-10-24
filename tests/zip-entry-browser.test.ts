@@ -22,7 +22,7 @@ test("ZIP-01: first entry and ZIP changes open real places; unplaced ZIPs and ma
       async function pick(zip,lat,lng) { setLocation(await lookupReaderZip(zip)); setChanging(false); }
       function addressLocated(zip,lat,lng) { setAddress({zip,lat,lng}); pick(zip,lat,lng); }
       return <>
-        <WelcomeOverlay open={!location} onResolved={pick} onAddressLocated={addressLocated} onDismiss={null}/>
+        <WelcomeOverlay open={!location} onResolved={pick} onAddressLocated={addressLocated} onPointLocated={()=>{}} onDismiss={null}/>
         {location && <><p data-opened-zip>{location.zip}</p><button onClick={()=>setChanging(true)}>Change ZIP</button>
           <PostalZipNotice location={location} onLocated={addressLocated} hidden={changing}/></>}
         {changing && <ZipSwitcher current={location?.zip??null} onPick={pick} onAddressLocated={addressLocated} onClose={()=>setChanging(false)}/>}

@@ -1,10 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { readerMemory, readZipPlaces, stateForZip, readNationalPresident, readNationalShelf, readStateZipPlaces } from "../lib/reader/national.ts";
+import { readerMemory, readNationalPresident, readNationalShelf } from "../lib/reader/national.ts";
 import { Pool } from "@neondatabase/serverless";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
-import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 test("cold readers share one load and refresh keeps already verified information usable", async () => {
   let loads = 0, complete: ((value: string) => void) | undefined;
@@ -31,35 +30,6 @@ test("a failed refresh retains the last verified publication", async () => {
   assert.equal(await read(), "verified");
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(await read(), "verified");
-});
-
-test("the national ZIP shelf is shared and identifies place and state without waiting on people", async () => {
-  assert.equal(stateForZip("85701"), "AZ");
-  assert.equal(stateForZip("not-a-zip"), null);
-  const [first, second] = await Promise.all([readZipPlaces(), readZipPlaces()]);
-  assert.equal(first, second);
-  assert.ok(first.size > 30_000);
-  assert.ok(first.get("85701")?.ids.includes("ocd-division/country:us/state:az/county:pima"));
-  const mailOnly = first.get("85001");
-  assert.ok(mailOnly?.ids.includes("ocd-division/country:us/state:az/county:maricopa"));
-  assert.ok(!mailOnly?.ids.some(id => /\/(?:cd|sldu|sldl):/.test(id)));
-  assert.equal(mailOnly?.samples, 0);
-});
-
-test("every state ZIP index exactly preserves the national shelf's touching ZIPs and postal uncertainty", async () => {
-  const places = await readZipPlaces();
-  assert.equal(places.size,41831);
-  for (const state of REGISTRY_STATES) {
-    const own = new RegExp(`/(?:state|territory|district):${state.toLowerCase()}(?:/|$)`);
-    const expected = [...places].filter(([,entry]) => entry.ids.some(id => own.test(id)));
-    const indexed = await readStateZipPlaces(state);
-    assert.deepEqual([...indexed],expected,`${state}: exact ZIP ordering, IDs, partial divisions, and sample counts`);
-  }
-  assert.ok((await readStateZipPlaces("TN")).has("42223"),"a Kentucky postal ZIP where 7,307 Tennesseans live is in Tennessee's package");
-  assert.ok((await readStateZipPlaces("KY")).has("42223"));
-  assert.ok(!(await readStateZipPlaces("AL")).has("30165"),"51 of 30165's 41,943 residents live in Alabama: its Alabama places are named, not governing");
-  assert.ok((await readStateZipPlaces("GA")).has("30165"));
-  assert.equal((await readStateZipPlaces("US-AZ")).get("85001"),places.get("85001"),"mail-only aliases reuse their filtered town and county facts");
 });
 
 test("separately loaded server module contexts share the same shelf and pending read", async () => {

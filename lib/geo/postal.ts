@@ -29,7 +29,7 @@ export function postalRow(zip: string): PostalRow | null {
   return row;
 }
 
-/** Server-only postal metadata; the browser loads it through zcta-table's lazy import. */
+/** Source postal metadata for display and address-entry requirements. */
 export function postalArea(zip: string) {
   const row = postalRow(zip);
   return row ? postalAreaIn({[zip]:row},zip) : null;

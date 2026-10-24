@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
 import { ZipAddressPrompt } from "./zip-address-prompt";
 
-import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { isWellFormedZip, resolveReaderZip } from "@/lib/reader/zip";
 
 import { useRecentZips } from "@/hooks/use-recent-zips";
@@ -28,6 +27,7 @@ interface WelcomeOverlayProps {
   open: boolean;
   onResolved: (zip: string, lat: number, lng: number) => void;
   onAddressLocated: (zip: string, lat: number, lng: number) => void;
+  onPointLocated: (lat: number, lng: number) => void;
   /** Null while no zip is stored: there is nothing behind the card to dismiss into. */
   onDismiss: (() => void) | null;
 }
@@ -36,6 +36,7 @@ export function WelcomeOverlay({
   open,
   onResolved,
   onAddressLocated,
+  onPointLocated,
   onDismiss,
 }: WelcomeOverlayProps) {
   const [zip, setZip] = useState("");
@@ -79,20 +80,10 @@ export function WelcomeOverlay({
 
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
+      (position) => {
         setLocating(false);
-        const near = await nearestZctaAsync(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
         if (request !== choiceRequest.current) return;
-        if (!near) {
-          setError("Couldn't match that location to a zip code.");
-          return;
-        }
-        /* A device fix proves presence, never residence. */
-        recordLocationOrigin(near.zip, "DEVICE_LOCATION");
-        onResolved(near.zip, near.lat, near.lng);
+        onPointLocated(position.coords.latitude, position.coords.longitude);
       },
       (err) => {
         if (request !== choiceRequest.current) return;

@@ -1,14 +1,10 @@
-import { nearestZcta } from "../geo/zcta.ts";
-import { stateForZip } from "../reader/national.ts";
+import { readPointPlace, readZipDivisions } from "../place-map/reader.ts";
 import { readStatePackage } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
 import { stateCoverage, withPlaceRegistry } from "../reader/coverage.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "../reader/location.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
-import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { Meeting } from "../sources/types.ts";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 import {
   indexByDivision,
@@ -36,7 +32,6 @@ import {
   type CoverageSummary,
   type StateLegislatorCoverageAuthority,
 } from "./coverage.ts";
-import { divisionIdsAt, divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
 import { currentReaderAuthorityEdge, currentCampaignSitesEdge, currentCommentAccessEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
@@ -54,9 +49,7 @@ import { readRegistrationProjection, readRegistrationDivision, type DivisionMeta
 import jurisdictionLabels from "../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { stateOf } from "./wording.ts";
-import { publishedDivisionsForZip } from "../geo/zip-census-districts.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
-import { divisionsFromCensusGeographies, type CensusGeographies } from "../geo/census-geographies.ts";
 import {
   heldOfficialStateLegislatorsFromRead,
   primeStatePeopleProjection,
@@ -91,7 +84,6 @@ export class RegistryHoldingReadError extends Error {
 
 const loadedCaches = new WeakMap<Registry, { authorityKey: string; value: Promise<Loaded> }>();
 const registryCaches = new WeakMap<Registry, Promise<RegistryLoaded>>();
-const geometryReads = new Map<string, Promise<GeoFeature[]>>();
 let territoryRead: Promise<BodyTerritoryFile> | null = null;
 
 function held<T>(current: Promise<T> | null, start: () => Promise<T>, keep: (value: Promise<T> | null) => void): Promise<T> {
@@ -102,21 +94,11 @@ function held<T>(current: Promise<T> | null, start: () => Promise<T>, keep: (val
   return read;
 }
 
-function resolverGeometry(states: readonly string[] = selectedRegistryStates()): Promise<GeoFeature[]> {
-  const key = [...states].sort().join("|");
-  const held = geometryReads.get(key);
-  if (held) return held;
-  const read = readResolverGeometry(states).catch(error => { geometryReads.delete(key); throw error; });
-  geometryReads.set(key, read);
-  return read;
-}
-
 function bodyTerritories(): Promise<BodyTerritoryFile> {
   return held(territoryRead, readBodyTerritories, (read) => { territoryRead = read; });
 }
 
 export function prefetchReaderGeography(): void {
-  if (registryRuntimeReadState().kind === "PROMOTED" || registryRuntimeReadState().kind === "BOOTSTRAP") void resolverGeometry().catch(() => undefined);
   if (selectedRegistryStates().includes("AZ")) void bodyTerritories().catch(() => undefined);
 }
 
@@ -129,50 +111,6 @@ async function loadRegistry(): Promise<RegistryLoaded> {
     divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
     registry,
   };
-}
-
-async function readResolverGeometry(states: readonly string[]): Promise<GeoFeature[]> {
-  const root = process.cwd();
-  const stateCodes = new Set(Object.values(FIPS_TO_STATE).map(state => state.postal.toLowerCase()));
-
-  // The manifest separates resolver geometry from downloads and superseded derivatives.
-  const manifest = JSON.parse(
-    await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
-  ) as { files: string[] };
-  const selected = new Set(states.map(state => state.toLowerCase()));
-  const names = manifest.files.filter(name => !name.startsWith("data/states/") || selected.has(name.split("/")[2]));
-  // Read every geometry file concurrently; feature order does not matter. Literal roots keep dynamic
-  // reads bounded in the server deployment trace.
-  const perFile = await Promise.all(
-    names.map(async (name): Promise<GeoFeature[]> => {
-      const stateFile = /^data\/states\/([a-z]{2})\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
-      const nationalFile = /^public\/geo\/([a-z0-9][a-z0-9.-]*\.geojson)$/.exec(name);
-      let raw: string;
-      if (stateFile) {
-        const [, state, file] = stateFile;
-        if (!stateCodes.has(state)) throw new Error(`Unknown state in resolver manifest: ${name}`);
-        const fips = /-(\d{2})\.geojson$/.exec(file)?.[1];
-        if (fips && FIPS_TO_STATE[fips]?.postal.toLowerCase() !== state) {
-          throw new Error(`State/FIPS mismatch in resolver manifest: ${name}`);
-        }
-        // Not packed into any function: the reader edge store serves it (lib/geo/state-geometry.ts).
-        try { raw = await readStateGeometryText(state, file); }
-        catch (error) {
-          console.warn(`resolver geometry ${name} is unavailable; points in it resolve without it: ${error instanceof Error ? error.message : String(error)}`);
-          return [];
-        }
-      } else if (nationalFile) {
-        raw = await readFile(join(root, "public", "geo", nationalFile[1]), "utf8");
-      } else {
-        throw new Error(`Invalid canonical geometry path in resolver manifest: ${name}`);
-      }
-      return (JSON.parse(raw) as { features: GeoFeature[] }).features.filter(feature => {
-        const state = /\/(?:state|territory|district):([a-z]{2})(?:\/|$)/.exec(feature.properties.ocdId)?.[1];
-        return state === undefined || selected.has(state);
-      });
-    }),
-  );
-  return perFile.flat();
 }
 
 async function readBodyTerritories(): Promise<BodyTerritoryFile> {
@@ -466,13 +404,13 @@ export async function divisionsAt(lat: number, lng: number): Promise<Division[]>
   if (selected?.point?.[0] === lng && selected.point[1] === lat && selected.divisions) {
     return selected.divisions.flatMap(id => divisionsById.has(id) ? [divisionsById.get(id)!] : []);
   }
-  return resolveDivisionsAt([lng, lat], await resolverGeometry(), divisionsById);
+  return (await readerDivisionIdsAt(lat, lng)).flatMap(id => divisionsById.has(id) ? [divisionsById.get(id)!] : []);
 }
 
 export async function readerDivisionIdsAt(lat: number, lng: number): Promise<string[]> {
-  const zip = nearestZcta(lat, lng)?.zip;
-  const state = zip ? stateForZip(zip) : null;
-  return divisionIdsAt([lng, lat], await resolverGeometry(state ? [state] : selectedRegistryStates()));
+  const selected = currentReaderSelection();
+  if (selected?.point?.[0] === lng && selected.point[1] === lat && selected.divisions) return [...selected.divisions];
+  return [...(await readPointPlace(lat, lng)).ids];
 }
 
 /** Special districts and tribal areas at a point: territories the Census geocoder does not report. */
@@ -487,26 +425,11 @@ export async function territoryDivisionsAt(lat: number, lng: number): Promise<Di
   }
 }
 
-export async function divisionsForCensusGeographies(geographies: CensusGeographies, selection: GeographySelection, vintage: string,
-  geographyVintages: Readonly<Record<string, string>>): Promise<Division[]> {
-  const rows = divisionsFromCensusGeographies(geographies, selection,
-    `https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?benchmark=Public_AR_Current&vintage=${vintage}&layers=all&format=json`, new Date().toISOString(), geographyVintages);
-  if (!rows.length) return [];
-  const states = statesForRegistryDivisions(rows.map(row => row.ocdId));
-  await settleRegistryRuntimeRead(states);
-  const held = getRegistryRuntimeReadModel().registry.divisions;
-  return rows.map(row => {
-    const matches = held.filter(division => division.divisionType === row.divisionType && division.geoid === row.geoid);
-    return matches.length === 1 ? { ...row, ocdId: matches[0].ocdId, canonicalOcdId: matches[0].canonicalOcdId,
-      canonicalMatch: matches[0].canonicalMatch, canonicalGap: matches[0].canonicalGap } : row;
-  });
-}
-
 export async function divisionsByOcdIds(ocdIds: readonly string[], context?: { zip: string; selection?: GeographySelection }): Promise<Division[]> {
   const { divisionsById } = await registryLoaded(statesForRegistryDivisions(ocdIds));
   // An id the reviewed registry does not hold may be one its state registered.
   const registered = await registrationsFor(ocdIds.filter((id) => !divisionsById.has(id)));
-  const published = new Map((context ? await publishedDivisionsForZip(context.zip, context.selection) : []).map(row => [row.ocdId, row]));
+  const published = new Map((context ? await readZipDivisions(context.zip, context.selection) : []).map(row => [row.ocdId, row]));
   const out: Division[] = [];
   for (const id of ocdIds) {
     const division = published.get(id) ?? divisionsById.get(id) ?? registered.find((r) => r.divisionsById.has(id))?.divisionsById.get(id);
@@ -738,7 +661,7 @@ export async function coverageAt(
 ): Promise<CoverageSummary> {
   const location = await readerLocation(lat, lng);
   const state = statesForRegistryDivisions(resolvedDivisions?.map(division => division.ocdId) ?? [])[0] ?? location.state;
-  const ids = resolvedDivisions?.map(division => division.ocdId) ?? await readerDivisionIdsAt(lat, lng);
+  const ids = resolvedDivisions?.map(division => division.ocdId) ?? location.divisionIds;
   const territory = await readerTerritory(state);
   const [bundle, place] = await Promise.all([
     readStatePackage(state), readPlacePackage({ state, divisionIds: ids, bodyIds: territoryBodies(lat, lng, territory) }),

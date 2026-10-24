@@ -74,19 +74,6 @@ test("the ballot link carries the active map state and point even when the neare
   }
 });
 
-test("the nearest ZIP to a map point stays inside the point's state", async () => {
-  const { nearestZctaAsync } = await import("../lib/geo/zcta-table.ts");
-  const { resolveZip } = await import("../lib/geo/zcta.ts");
-  const stateOf = (zip: string) => {
-    const resolved = resolveZip(zip);
-    return resolved.ok ? resolved.centroid.postal?.state : undefined;
-  };
-  const point = { lat: 32.1, lng: -108.95 };
-  assert.equal(stateOcdIdAt(outlines, point.lat, point.lng), "ocd-division/country:us/state:nm");
-  assert.equal(stateOf((await nearestZctaAsync(point.lat, point.lng))!.zip), "AZ");
-  assert.equal(stateOf((await nearestZctaAsync(point.lat, point.lng, "NM"))!.zip), "NM");
-});
-
 test("the ballot place is the map point whenever the named state disagrees with the ZIP", async () => {
   const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
   assert.deepEqual(ballotPlaceFromParams({}), { zip: null, centroid: null, state: null });

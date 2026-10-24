@@ -2,8 +2,8 @@ import { postalAreaIn, type PostalArea, type PostalTable } from "./postal-core.t
 
 /**
  * The zip→coordinate logic, with the table passed in, so the server's
- * synchronous module (`./zcta.ts`) and the client's lazy one
- * (`./zcta-table.ts`) share one implementation. Nothing here imports the JSON.
+ * synchronous module and the projected browser startup values share one
+ * implementation. Nothing here imports the JSON.
  */
 
 export interface ZctaCentroid {
@@ -38,37 +38,6 @@ export function lookupIn(centroids: CentroidTable, input: string, postal: Postal
 
   const area = postalAreaIn(postal, zip);
   return { zip, lat: point[0], lng: point[1], ...(area ? { postal: area } : {}) };
-}
-
-/**
- * The ZCTA whose centroid is closest to a coordinate, for "Use my location".
- * Orientation only, like a typed zip: not a reverse geocoder and not district
- * truth. A linear scan; it runs once, on a click.
- */
-export function nearestIn(
-  centroids: CentroidTable,
-  lat: number,
-  lng: number,
-  zips: Iterable<string> = Object.keys(centroids),
-): ZctaCentroid | null {
-  let best: ZctaCentroid | null = null;
-  let bestDistance = Infinity;
-
-  for (const zip of zips) {
-    const [zLat, zLng] = centroids[zip];
-
-    // Squared degrees with longitude scaled by cos(latitude): for ranking only.
-    const dLat = zLat - lat;
-    const dLng = (zLng - lng) * Math.cos((lat * Math.PI) / 180);
-    const distance = dLat * dLat + dLng * dLng;
-
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      best = { zip, lat: zLat, lng: zLng };
-    }
-  }
-
-  return best;
 }
 
 /**

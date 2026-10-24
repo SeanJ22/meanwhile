@@ -1,3 +1,4 @@
+import { fixturePlaceMapQuery } from "./place-map.ts";
 
 
 
@@ -156,7 +157,7 @@ async function installRegistryRuntime(states?: readonly string[]): Promise<{ rea
   const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];
   for (const state of selected) installPromotedValue({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state),
     sourceId: projection.sourceId, versionId: `${projection.versionId}:${state}`, value: registryFixtureForState(state) });
-  installFactReader(rosterFactReader(projection.payload.bodyRosters));
+  installFactReader(fixturePlaceMapQuery(rosterFactReader(projection.payload.bodyRosters)));
   const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
   return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
 }

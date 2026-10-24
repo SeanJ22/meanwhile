@@ -1,6 +1,7 @@
+import { placeMapQuery } from "../place-map/reader.ts";
 /** The place an owner's words name: a ZIP, county, district, state or a town or city by name, read from the national ZIP index. */
 import { askedPlace } from "../control-plane/operator-chat/place-key.ts";
-import { divisionIdsOfZip, stateOfZip, visitZipShards } from "../control-plane/bulk-hunts/zip-state.ts";
+import { divisionIdsOfZip, stateOfZip } from "../control-plane/bulk-hunts/zip-state.ts";
 import { defaultPlaceOwedDeps, resolvePlaceKey, type PlaceOwedDeps } from "../control-plane/admin-view/place-owed-read.ts";
 import { stateDivisionId, zipDivisionIds } from "../control-plane/admin-view/v6-national-geography.ts";
 import { US_STATES } from "../control-plane/readiness/catalog.ts";
@@ -29,14 +30,14 @@ const nameSlug = (words: string) => words.toLowerCase().replace(/&/g, " and ").r
 /** Every town and city in the national ZIP index, by its name and by its name without its kind. Census county divisions are left out. */
 async function readNamedPlaces(): Promise<ReadonlyMap<string, readonly NamedPlace[]>> {
   const zipsOf = new Map<string, string[]>();
-  await visitZipShards(shard => {
-    for (const [zip, refs] of Object.entries(shard.zips)) for (const i of refs) {
-      const id = shard.divisions[i];
-      if (id === undefined || !PLACE_ID.test(id) || id.endsWith("_ccd")) continue;
-      const held = zipsOf.get(id);
-      if (held) held.push(zip); else zipsOf.set(id, [zip]);
-    }
-  });
+  const rows = await placeMapQuery()(`SELECT e.id,array_agg(DISTINCT m.zip ORDER BY m.zip) zips
+    FROM zip_place m JOIN entity e ON e.id=m.place_id
+    WHERE e.id ~ '^ocd-division/country:us/state:[a-z]{2}/(county:[^/]+/)?place:[^/]+$'
+    GROUP BY e.id ORDER BY e.id`);
+  for (const row of rows) {
+    const id = String(row.id);
+    if (!id.endsWith("_ccd")) zipsOf.set(id, row.zips as string[]);
+  }
   const byName = new Map<string, NamedPlace[]>();
   for (const [divisionId, zips] of zipsOf) {
     const [, state, county, slug] = PLACE_ID.exec(divisionId)!;

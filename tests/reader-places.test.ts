@@ -4,7 +4,7 @@ import { GET } from "../app/api/reader/places/route.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 
 test("published-place discovery returns indexed county ZIPs and deduplicates shared counties", async () => {
-  installFactReader(async () => [
+  installFactReader(async sql => sql.includes("SELECT DISTINCT m.zip") ? [{zip:"85701"}] : sql.includes("FROM zip_place m") ? [{zip:"85701",place_id:"ocd-division/country:us/state:az/county:pima",name:"Pima County",state:"AZ",layer:"county",version:"county:2020",boundary_year:2020,partial:false,fringe:false}] : [
     { place_id: "ocd-division/country:us/state:az/county:pima" },
     { place_id: "ocd-division/country:us/state:az/county:pima#board" },
     { place_id: "ocd-division/country:us/state:az/place:tucson" },

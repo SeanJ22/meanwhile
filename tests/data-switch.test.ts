@@ -6,7 +6,7 @@ import { ADMIN_CONFIG_ID, dataSwitchOf, defaultAdminConfig, withDataSwitch, with
 import { RECIPES } from "../lib/control-plane/data-business/recipes.ts";
 import { customersOf, defaultOn, switchOn, switchTable } from "../lib/control-plane/data-business/switches.ts";
 import { readRecipe } from "../lib/control-plane/data-business/read.ts";
-import { shardPlaceIndex } from "../lib/control-plane/data-business/places.ts";
+import { placeIndex } from "../lib/control-plane/data-business/places.ts";
 
 const at = "2026-10-01T22:00:00.000Z";
 const flip = (c: ReturnType<typeof defaultAdminConfig>, recipe: string, audience: string, on: boolean, receiptId = "r1") => withDataSwitch(c, { recipe, audience, on, decidedAt: at, decidedBy: "owner", receiptId });
@@ -50,7 +50,7 @@ test("THE TABLE: every recipe by Admin, the dashboard and each customer the owne
 
 test("A SWITCH GATES THE READ: flipping it on opens the door, flipping it off closes it, with no data read while it is off", async () => {
   let reads = 0;
-  const sources = { places: shardPlaceIndex(async () => null), totals: async () => { reads += 1; return { kind: "ROWS" as const, rows: [] }; }, cohorts: async () => ({ kind: "ROWS" as const, rows: [] }), events: async () => ({ kind: "ROWS" as const, rows: [] }) };
+  const sources = { places: placeIndex(async () => null, async () => { throw new Error("Map unavailable"); }), totals: async () => { reads += 1; return { kind: "ROWS" as const, rows: [] }; }, cohorts: async () => ({ kind: "ROWS" as const, rows: [] }), events: async () => ({ kind: "ROWS" as const, rows: [] }) };
   let config = defaultAdminConfig(at);
   const ask = () => readRecipe({ recipe: "topic-share", slice: { from: "2026-10-01", to: "2026-10-01" }, audience: "customer:acme" }, { sources, switchOn: (recipe, audience) => switchOn(config, recipe, audience) });
   assert.equal((await ask()).kind, "REFUSED");

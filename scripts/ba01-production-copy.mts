@@ -16,7 +16,7 @@ import { readerRoute } from "../lib/api/reader-route.ts";
 import { currentReaderSelection } from "../lib/db/reader-route.ts";
 import { ballotPlaceFromParams, ballotPointDivisions } from "../lib/ballot/reader-place.ts";
 import { readBallotReaderData } from "../lib/ballot/reader-data.ts";
-import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOfficesForFamilies } from "../lib/ballot/zip-divisions.ts";
+import { divisionIdsForZipArea, unestablishedDistrictOfficesForFamilies } from "../lib/ballot/zip-divisions.ts";
 import { zipCertainty } from "../lib/geo/zip-certainty.ts";
 import { readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { phoenixToday } from "../lib/ballot/dated-events.ts";
@@ -91,12 +91,12 @@ const checkZip = readerRoute("/ballot", async ({ zip }: { zip: string }) => {
   const entry = readerData ? await readerData.entry() : undefined;
   const certainty = await zipCertainty(zip, undefined, entry);
   const point = [...certainty?.all ?? [], ...await pointRead];
-  const initial = await divisionIdsForZipArea(zip, point, undefined, POINT_GEOMETRY_PLANS, entry);
+  const initial = await divisionIdsForZipArea(zip, point, undefined, entry);
   await readerData?.districtRead;
   const electionIds = new Map<string, string[]>(), gaps = new Map<string, string[]>();
   const sources = await readerBallotSourcesForDivisions(initial, {}, async (election, families) => {
     const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
-    const ids = await divisionIdsForZipArea(zip, point, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
+    const ids = await divisionIdsForZipArea(zip, point, geography, readerData ? await readerData.entry(geography) : undefined);
     electionIds.set(election.id, ids); gaps.set(election.id, unestablishedDistrictOfficesForFamilies(families, ids)); return ids;
   });
   for (const row of sources) {

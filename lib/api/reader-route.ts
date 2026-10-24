@@ -1,10 +1,11 @@
+import { withPlaceMapReads } from "../place-map/reader.ts";
 import { withReaderRoute, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
 export function readerRoute<A extends unknown[], R>(path: string, read: (...args: A) => Promise<R>): (...args: A) => Promise<R> {
-  return (...args) => withReaderRoute(path, async () => {
+  return (...args) => withReaderRoute(path, () => withPlaceMapReads(async () => {
     const { selection } = await selectionForReader(args);
     return withReaderSelection(selection, () => read(...args));
-  });
+  }));
 }
 async function selectionForReader(args: readonly unknown[]): Promise<{
   selection: ReaderSelection | undefined;
@@ -48,8 +49,8 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
     }
   }
   if (zip) {
-    const { stateForZip } = await import("../reader/national.ts");
-    const state = stateForZip(zip);
+    const { stateForZip } = await import("../place-map/reader.ts");
+    const state = await stateForZip(zip);
     if (state) keys.add(`state:${state}`);
   }
   const namedStates = question ? (await import("../ask/reader-officials.ts")).statesNamedInQuestion(question) : [];
@@ -69,14 +70,17 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
     if (resolved.ok) { lat = resolved.centroid.lat; lng = resolved.centroid.lng; }
   }
   let point: readonly [number, number] | undefined, divisions: readonly string[] | undefined;
+  let place: import("../place-map/reader.ts").PlaceEntry | undefined;
   if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!) <= 90 && Math.abs(lng!) <= 180) {
     point = [lng!, lat!];
     if (zip) {
-      const { readZipPlace } = await import("../reader/national.ts");
-      divisions = (await readZipPlace(zip))?.ids ?? [];
+      const { readZipPlace } = await import("../place-map/reader.ts");
+      place = await readZipPlace(zip) ?? undefined;
+      divisions = place?.ids ?? [];
     } else {
-      const { readerDivisionIdsAt } = await import("../registry/server.ts");
-      divisions = await readerDivisionIdsAt(lat!, lng!);
+      const { readPointPlace } = await import("../place-map/reader.ts");
+      place = await readPointPlace(lat!, lng!);
+      divisions = place.ids;
     }
     for (const id of divisions) keys.add(id);
   }
@@ -95,6 +99,6 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
     return explicit ? [explicit.toUpperCase()] : registryJurisdictions(key).length ? registryJurisdictions(key) : governmentStateOf(key) ? [governmentStateOf(key)!] : [];
   }))];
   const selection = keys.size || point || governmentWindow || states.length
-    ? { keys, states, ...(point ? { point } : {}), ...(divisions ? { divisions } : {}), ...(governmentWindow ? { governmentWindow } : {}) } : undefined;
+    ? { keys, states: place?.states?.length ? place.states : states, ...(place ? { place } : {}), ...(zip ? { zip } : {}), ...(point ? { point } : {}), ...(divisions ? { divisions } : {}), ...(governmentWindow ? { governmentWindow } : {}) } : undefined;
   return { selection };
 }

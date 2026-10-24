@@ -2,7 +2,7 @@ import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStatePackage, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
-import { readZipPlace, stateForZip } from "../reader/national.ts";
+import { readZipPlace } from "../place-map/reader.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
 import { primeReaderCanonicalStore, readerCanonicalEntry } from "../reader/canonical-context.ts";
@@ -13,8 +13,6 @@ import { requiredRoutineContract } from "../civic-data/contracts.ts";
 import { translationScope } from "../translate/records.ts";
 import { withStateRegistryFacts, combineStateRegistries } from "../registry/state-composition.ts";
 import { withRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
-import { withCensusDistricts } from "../geo/zip-census-districts.ts";
-import { postalArea } from "../geo/postal.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
@@ -29,19 +27,16 @@ import {readerDatabaseQuery} from "../reader/database.ts";
 export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
   const selection = currentReaderSelection();
   if (!place.centroid || !selection || currentReaderAuthorityEdge()) return null;
-  const states = place.state ? [place.state.code] : place.zip && stateForZip(place.zip)
-    ? [...new Set([stateForZip(place.zip)!, ...selection.states ?? []])] : [...selection.states ?? []];
+  const rawEntry = place.zip ? await readZipPlace(place.zip) : null;
+  const states = place.state ? [place.state.code] : [...new Set([...rawEntry?.states ?? [], ...selection.states ?? []])];
   if (!states.length) return null;
   const point = place.centroid;
-  const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
+  const zip = place.zip ?? undefined;
   const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip, {earlyDistricts:true}), districts: readStateDistricts(state) }));
   // Reserve these promises now: the ballot's early incumbent and portrait reads
   // consume the state query's verified ZIP slices instead of opening another read.
   if (zip) for (const {state,read} of packages) void primeStateReaderPointers(state,read).catch(()=>undefined);
-  const [rawEntry, territories] = await Promise.all([
-    place.zip ? readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : Promise.resolve(null),
-    Promise.allSettled(states.map(readTerritory)),
-  ]);
+  const territories = await Promise.allSettled(states.map(readTerritory));
   const places = packages.map(async ({ state, read }, index) => {
     const territory = territories[index];
     if (territory.status === "rejected") throw territory.reason;
@@ -68,13 +63,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const baseRead = primeReaderCanonicalStore(unique, readCanonicalPackages([ballots, other]));
   const entry = async (geography?: GeographySelection) => {
     if (!place.zip) return rawEntry;
-    let value = rawEntry ?? { ids: [], partial: [], samples: 0 };
-    for (const { districts } of packages) {
-      const held = await districts;
-      if (held.kind === "HELD") value = withCensusDistricts(value,
-        { ...held, value: { ...held.value, known: true } }, place.zip, geography);
-    }
-    return value;
+    return geography ? readZipPlace(place.zip, geography) : rawEntry;
   };
   const districtRead = entry().then(async value => {
     const pointersRead = Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));

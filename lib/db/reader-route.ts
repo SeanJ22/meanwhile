@@ -31,6 +31,8 @@ export interface ReaderSelection {
   readonly keys: Set<string>;
   readonly point?: readonly [number, number];
   readonly divisions?: readonly string[];
+  readonly place?: import("../place-map/reader.ts").PlaceEntry;
+  readonly zip?: string;
   readonly governmentWindow?: readonly [number, number];
 }
 

@@ -3,7 +3,7 @@ import { parseDispatchTarget } from "../scheduler/dispatch-target.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { ownerPlatformGovernments } from "./platform-census-pass.ts";
 import type { PlatformQuery, PlatformRegistrationPage } from "./platform-registration.ts";
-import { readZipPlace } from "../../reader/national.ts";
+import { readZipPlace } from "../../place-map/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
 
 /** Read only current order fields and the last pause instruction, never the research log or Admin's full value. */

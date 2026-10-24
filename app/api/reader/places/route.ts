@@ -1,5 +1,5 @@
 import { factReader } from "@/lib/facts/db";
-import { lowestZipByDivision } from "@/lib/geo/zip-division-index";
+import { lowestZipByDivision } from "@/lib/place-map/reader";
 import { lookupZcta } from "@/lib/geo/zcta";
 import { publishedCountyDivisions, warmPlacesForCounties } from "@/lib/ops/warm-places";
 

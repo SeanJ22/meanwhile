@@ -1,34 +1,16 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 
-import { zipShardFiles } from "../geo/zip-division-index.ts";
 
 export interface ReaderTraceRequirement { route: string; loader: string; files: string[] }
 /** Input contracts, independently checked against Next's emitted deployment manifests. */
-export function readerTraceRequirements(root: string): ReaderTraceRequirement[] {
-  const resolver = "data/derived/resolver-geometry.json";
-  const geometry = JSON.parse(readFileSync(join(root, resolver), "utf8")) as { files: string[] };
-  // State geometry is read from the reader edge store by the sha its manifest names; only national files are packed.
-  const staticGeography = [...new Set([
-    resolver,
-    "data/derived/state-geometry.json",
-    ...geometry.files.filter(file => !file.startsWith("data/states/")),
-  ])];
-  if (geometry.files.length === 0) throw new Error("Reader trace denominator is empty");
-  // The national ZIP index is read one shard per request, and any ZIP can be asked for, so every shard must be traced.
-  const shardDir = join(root, "data", "derived", "zip-divisions");
-  const zipShards = zipShardFiles(shardDir).map((f) => `data/derived/zip-divisions/${f}`);
-  if (zipShards.length === 0) throw new Error("Reader trace denominator is empty: no ZIP index shard");
-  const zipArea = [
-    "data/derived/zip-coverage-tiers-runtime.json",
-    ...zipShards,
-  ];
+export function readerTraceRequirements(_root: string): ReaderTraceRequirement[] {
+  // Place and point memberships are database reads. The body-territory reader
+  // still selects its remote geometry from this manifest.
+  const staticGeography = ["data/derived/state-geometry.json"];
+  const zipArea = ["data/derived/zip-coverage-tiers-runtime.json"];
   return [
     ...["api/meetings/route", "api/representation/[...division]/route", "api/votes/route", "api/ask/grounded/route", "ballot/page", "about-area/page"].map((route) => ({ route, loader: "lib/registry/server.ts", files: staticGeography })),
-    { route: "api/voting-sites/route", loader: "lib/geo/zip-division-index.ts + lib/geo/postal.ts", files: [...zipShards, "lib/geo/postal-zips.json"] },
-    // The map reads only the ZIP index; the tier ledger's reader for it is `/api/log`.
-    { route: "api/meetings/route", loader: "lib/geo/zip-division-index.ts + lib/registry/server.ts", files: zipShards },
-    { route: "api/reader/places/route", loader: "lib/geo/zip-division-index.ts", files: [...zipShards, "data/derived/zip-divisions/index.json"] },
     { route: "ballot/page", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
     { route: "api/ask/grounded/route", loader: "lib/coverage/zip-tier.ts + lib/registry/server.ts", files: zipArea },
     { route: "about-area/page", loader: "lib/coverage/zip-tier.ts", files: [zipArea[0]] },

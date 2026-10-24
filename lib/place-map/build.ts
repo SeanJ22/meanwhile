@@ -3,7 +3,7 @@ import type { CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { BuiltScope } from "../census-geography/dataset.ts";
 import { censusWorkDivision } from "../census-geography/division-id.ts";
 import type { GeographyRef } from "../census-geography/contract.ts";
-import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
+import type { PlaceEntry } from "../place-map/reader.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { MapEdge, MapPlace, StatePlaceMap } from "./load.ts";
 
@@ -20,7 +20,7 @@ export function boundaryYear(version: string): number {
 export function buildStatePlaceMap(input: {
   readonly registration: RegistrationReference;
   readonly scopes: readonly BuiltScope[];
-  readonly legacyZips: ReadonlyMap<string, ZipDivisionEntry>;
+  readonly legacyZips: ReadonlyMap<string, PlaceEntry>;
   /** Codes confirmed by the source Census ZCTA file, independently of USPS. */
   readonly legacyZctas: ReadonlySet<string>;
   readonly boundaries: readonly PlaceBoundary[];

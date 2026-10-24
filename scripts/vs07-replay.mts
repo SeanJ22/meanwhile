@@ -22,8 +22,7 @@ import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import { votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
-import { indexedZipDivisionEntry } from "../lib/geo/zip-division-index.ts";
-import { postalArea } from "../lib/geo/postal.ts";
+import { readZipPlace } from "../lib/place-map/reader.ts";
 import { VotingJurisdictionRecords } from "../components/map/voting-sites-panel.tsx";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -292,7 +291,7 @@ for (const day of [0, 1]) {
   }
   const zipPages: unknown[] = [];
   for (const zip of zips) {
-    const entry = await indexedZipDivisionEntry(zip) ?? await indexedZipDivisionEntry(postalArea(zip)?.zcta ?? null);
+    const entry = await readZipPlace(zip);
     const place = votingPlaceFromZip(entry?.ids ?? []);
     const answer = place.states.includes(state) && held ? await answerVotingSites({ ...held, jurisdictions: held.jurisdictions }, place) : null;
     const sites = answer?.jurisdictions.flatMap(row => row.sites) ?? [];

@@ -152,7 +152,7 @@ function missingHeld(before: ReaderPayload, after: ReaderPayload): { missing: st
 async function child(probe: Probe): Promise<Result> {
   const [{ GET: stateRoute }, { GET: placeRoute }, { GET: zipRoute }, { GET: directoryRoute }, { lookupZcta }, client, national] = await Promise.all([
     import("../app/api/reader/state/route.ts"), import("../app/api/meetings/route.ts"),
-    import("../app/api/location/zip/route.ts"), import("../app/api/directory/route.ts"), import("../lib/geo/zcta.ts"), import("../lib/reader/client.ts"), import("../lib/reader/national.ts"),
+    import("../app/api/location/zip/route.ts"), import("../app/api/directory/route.ts"), import("../lib/geo/zcta.ts"), import("../lib/reader/client.ts"), import("../lib/place-map/reader.ts"),
   ]);
   const importMs = Math.round(performance.now() - scriptStarted), rounds: Round[] = [];
   let firstState: ReaderStateResponse | null = null, firstPlace: ReaderPayload | null = null;

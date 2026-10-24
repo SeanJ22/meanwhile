@@ -5,7 +5,6 @@ import { serverReaderValue } from "../reader/memory.ts";
 import {
   isWellFormedZip,
   lookupIn,
-  nearestIn,
   resolveIn,
   type CentroidTable,
   type ZctaCentroid,
@@ -15,7 +14,7 @@ import {
 /**
  * Zip → map coordinate, synchronously, with the whole table in the module.
  * Server and scripts only. Typed/restored browser ZIPs use `../reader/zip.ts`;
- * `./zcta-table.ts` loads lazily for explicit nearest-ZIP location actions.
+ * Exact point entry reads the place map without inferring a ZIP.
  *
  * Orientation only: a ZCTA crosses city, county, school district and
  * legislative lines. Anything that needs actual districts asks for a street
@@ -44,10 +43,6 @@ export const CENTROID_SOURCE = {
 export function lookupZcta(input: string): ZctaCentroid | null {
   const zip = input.trim(), row = postalRow(zip);
   return lookupIn(CENTROIDS, input, row ? {[zip]:row} : {});
-}
-
-export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
-  return nearestIn(CENTROIDS, lat, lng);
 }
 
 export function resolveZip(input: string): ZipResolution {

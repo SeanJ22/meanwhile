@@ -2,7 +2,7 @@
 
 Owner: RB-A3. Branch: `stream/rb-a3`, cut from River `21ae9bcfb`.
 
-Status: the door, production connections and complete 56-state replay are built and verified on River `e2ee3657a`. RB-A1's shared implementation `5bde46615` is folded in River and listed in `board/river`'s integration record. This branch also contains and builds against its newest commit, `1d6df41d9` (documentation only), which River is currently testing in batch B. After that newest commit folds, RB-A3 merges River and runs every check again before READY. No READY has been posted.
+Status: River `720bc77b6` contains RB-A1's newest READY commit, `1d6df41d9`, and `board/river`'s integration record lists that exact fold at 4:30 PM Eastern. RB-A3 has merged that River revision. The complete checks and 56-state replay are repeating on the combination with the pinned browser path set. No READY has been posted.
 
 The one publisher is `lib/core/door.ts`. It resolves existing IDs first, creates a government-named missing board, selects the official or checked lane, chooses the winning value, writes it once, files its existing served places, queues their rebuilds and increments state/hour counts. The old publisher keeps its blank on refusal; new callers supply the refusal handoff once, after the fact transaction releases. RB-A4's service-map implementation is queued after A3; the current filing walks existing subject and parent associations.
 

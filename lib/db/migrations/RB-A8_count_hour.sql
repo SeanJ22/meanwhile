@@ -6,8 +6,6 @@ CREATE TABLE IF NOT EXISTS count_hour (
   PRIMARY KEY (state,hour,step)
 );
 --> statement-breakpoint
-INSERT INTO count_hour(state,hour,step,n) VALUES('US',statement_timestamp(),'counter start',0);
---> statement-breakpoint
 CREATE FUNCTION count_state(scope text) RETURNS text LANGUAGE sql IMMUTABLE AS $$
   SELECT CASE WHEN candidate=ANY(ARRAY['AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','PR','VI','AS','GU','MP','US']) THEN candidate ELSE 'US' END
   FROM (SELECT upper(coalesce(
@@ -151,3 +149,5 @@ CREATE TRIGGER count_hour_subject AFTER INSERT OR UPDATE OR DELETE ON entity
 INSERT INTO count_hour(state,hour,step,n)
  SELECT count_state(state),statement_timestamp(),'v1:'||jsonb_build_array(kind,'subjects','stock in')::text,count(*)
  FROM entity GROUP BY 1,3;
+--> statement-breakpoint
+INSERT INTO count_hour(state,hour,step,n) VALUES('US',statement_timestamp(),'counter start',0);

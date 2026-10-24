@@ -182,7 +182,8 @@ INSERT INTO count_hour(state,hour,step,n)
 DO $$ BEGIN IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname='wtp_cp_release_readonly') THEN
   GRANT EXECUTE ON FUNCTION count_oldest_waiting(timestamptz) TO wtp_cp_release_readonly;
   GRANT SELECT ON work_row TO wtp_cp_release_readonly;
-END IF; END $$;`;
+END IF; END $$;
+INSERT INTO count_hour(state,hour,step,n) VALUES('US',statement_timestamp(),'counter start',0);`;
   return definition.replace(/(\$\$;|;(?=\n+(?:CREATE|INSERT|DO)))/g,"$1\n--> statement-breakpoint\n");
 }
 export async function installHourlyCounts(sql: Sql): Promise<void> {

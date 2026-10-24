@@ -194,6 +194,9 @@ test('RB-A1 work rows feed the same counters and oldest ages through scheduling,
     let rows=await readCounts(query(db),window.from,window.through);
     assert.equal(rows.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.total,1);
     assert.equal((await readOldest(query(db))).find(r=>r.family==='read')!.oldestAt,due);
+    const full=countWindow(new Date(Date.now()+2*3_600_000).toISOString());
+    const recorded=await readCounts(query(db),full.from,full.through,full.through);
+    assert.equal(recorded.find(r=>r.family==='read'&&r.stage==='work list:WAITING')!.incoming,0,'the first complete control-plane hour is measured');
     const lease=new Date(Date.now()+5*60_000).toISOString();
     await db.query(`UPDATE work_row SET lease_until=$1::timestamptz,lease_owner='runner' WHERE id='new-work'`,[lease]);
     rows=await readCounts(query(db),window.from,window.through);

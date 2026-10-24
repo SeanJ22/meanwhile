@@ -1,0 +1,88 @@
+READY: DB-02
+
+Readers keep every registry fact and ID. The runner reuses each validated registry prior until DB-01’s scope version changes, then reloads and re-proves it. Every state still runs. No throttling, skipped states, connection startup settings or production writes were added.
+
+Dependency: DB-01 4c5b40e39 is merged into stream/db-02; River must ship its per-scope version migration with this change. Baseline for this isolated DB-02 comparison is 7841c872c.
+
+Next-pass proof on a production copy:
+- Copy br-summer-paper-ax3y1xri, parent br-delicate-lab-ax02xuo5, snapshot LSN 23/A7021CB8.
+- Frozen pass 2026-10-24T23:30:00.000Z: all 56 state and territory registry priors. Both versions include DB-01, warm once, then replay in fresh processes through the real bounded runner cache host.
+- Target registry/candidate-events caller: 3,079,150 bytes before -> 0 after. Its source line moved from incident line 756 to baseline line 784; it is the same readRegistryRuntimePrior call.
+- Replacement scope-version checks: 10,640 bytes for the same 56 states.
+- Total reader response bytes including identical snapshot probes: 3,080,052 -> 11,542 (99.625% fewer).
+- All 10,493 records, full prior results, payload hashes, receipt contents, version IDs and record ID hashes match for every state across all four runs.
+- Measured next-pass read time: 4,237 ms before -> 3,016 ms after. This proves the affected database-read work; River checks full acquisition/publication live after release.
+
+Two production proofs:
+- Read-only role and read-only transactions on the production reader; disposable caching disabled for parity because DB-01’s migration is not deployed yet. Cache savings above are proved on the production copy.
+- AZ: 1,613 records before/after; complete result hash 7c6dfbc78899e85267e76fcb6449bb0a58412c2e500f9801d16818248690f5c0; ID hash d12a6c8421966eb0174b4c4b0c2daeed9354187ec37dae09e95c5efaa7cac8f2; identical version cv-5ae36d699a0a72d20caa9dff40505c00.
+- OH: 166 records before/after; complete result hash 69e559ecedd54b019b33f4b8409d23bbb9dbf6d712e65bf1156b181df4478808; ID hash 3a34d07853c8f69ca431425b402a85d34de32ce69522c895c8b0aaeaaaf98674; identical version cv-4806176179d4ad67b7d2689946ba1d23.
+
+Counts by state (production live-fact baseline sampled 2026-10-24T23:23:30.709Z). Live facts are fact.status=live joined to entity.state; registry counts cover civic_data registry records and are a different population. Every-state result and ID equality is also in the JSON evidence.
+
+State | Registry records before/after | Prior read bytes before/after | Production live facts
+--- | ---: | ---: | ---:
+AK | 8/8 | 8647/190 | 1772
+AL | 172/172 | 50359/190 | 1492
+AR | 138/138 | 38668/190 | 495
+AS | 4/4 | 6941/190 | 0
+AZ | 1613/1613 | 414137/190 | 5776
+CA | 262/262 | 73819/190 | 31765
+CO | 118/118 | 35235/190 | 7944
+CT | 208/208 | 57845/190 | 94516
+DC | 4/4 | 6944/190 | 17
+DE | 61/61 | 22482/190 | 180
+FL | 225/225 | 61581/190 | 14291
+GA | 285/285 | 76494/190 | 1473
+GU | 4/4 | 6931/190 | 0
+HI | 11/11 | 8448/190 | 37574
+IA | 142/142 | 41838/190 | 237
+ID | 50/50 | 18939/190 | 816
+IL | 103/103 | 59532/190 | 7963
+IN | 158/158 | 47583/190 | 150
+KS | 19/19 | 13591/190 | 44
+KY | 142/142 | 41586/190 | 98770
+LA | 23/23 | 11108/190 | 0
+MA | 35/35 | 15449/190 | 1930
+MD | 206/206 | 65789/190 | 847
+ME | 198/198 | 56473/190 | 638
+MI | 84/84 | 26587/190 | 2820
+MN | 213/213 | 58857/190 | 6434
+MO | 200/200 | 58687/190 | 9042
+MP | 4/4 | 6951/190 | 0
+MS | 17/17 | 9782/190 | 86
+MT | 136/136 | 40270/190 | 9
+NC | 47/47 | 17233/190 | 3804
+ND | 82/82 | 31059/190 | 41
+NE | 16/16 | 10333/190 | 0
+NH | 1682/1682 | 436603/190 | 905
+NJ | 1956/1956 | 504998/190 | 3039
+NM | 84/84 | 28314/190 | 1945
+NV | 74/74 | 27950/190 | 1654
+NY | 296/296 | 82787/190 | 2944
+OH | 166/166 | 44768/190 | 4618
+OK | 90/90 | 28601/190 | 2194
+OR | 99/99 | 30766/190 | 858
+PA | 202/202 | 87283/190 | 724
+PR | 4/4 | 6938/190 | 0
+RI | 15/15 | 14666/190 | 126
+SC | 151/151 | 44374/190 | 117409
+SD | 115/115 | 35126/190 | 60
+TN | 33/33 | 15459/190 | 23
+TX | 283/283 | 78408/190 | 12303
+UT | 17/17 | 12796/190 | 422
+VA | 38/38 | 14430/190 | 4268
+VI | 4/4 | 6946/190 | 2
+VT | 12/12 | 10399/190 | 5
+WA | 35/35 | 13767/190 | 5652
+WI | 49/49 | 16173/190 | 22936
+WV | 11/11 | 7207/190 | 121
+WY | 89/89 | 30213/190 | 397
+
+Checks and delivery:
+- 106 focused checks pass: registry prior reuse and proof registration, invalidation/deletion/failure/races/corruption, actual DB-01 triggers, cache host limits, store integrity, source isolation, roster publication, state binding and byte accounting.
+- ESLint and tsc --noEmit pass. Stale generated Next route types were regenerated first.
+- Additional worker-reader checks: 15 pass; two browser render checks are blocked by missing Chromium build 1234 on both baseline and changed code. They are not reported as passing.
+- Built and READY for River; no deployment or live hourly saving is claimed. River owns shipping and the live check.
+- Complete before/after per-state hashes, counts, raw replay metrics and production comparisons: docs/measurements/db-02/evidence.json.
+- Reproduce: scripts/db-02-copy-replay.mts warm|next <code-root> <explicit-copy-credentials.json> <side-directory>, then compare <replay-directory>; scripts/db-02-production-proof.mts <before-root> <after-root> <explicit-readonly-production-credentials.json> <output.json>.

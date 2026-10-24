@@ -60,6 +60,7 @@ import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
 import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
 import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
@@ -90,6 +91,96 @@ function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataS
   held.promotions.set(projection.key, projection);
   return store;
 }
+
+function registryPriorCache(memory: MemoryRoutineDataStore) {
+  const saved = new Map<string, string>(), versions = new Map<string, number>();
+  let reads = 0;
+  const pass = () => {
+    const store = new PostgresRoutineDataStore();
+    Object.assign(store, {
+      readCache: new CivicReadCache({ read: async key => saved.get(key) ?? null,
+        write: async (key, value) => { saved.set(key, value); } }),
+      db: { execute: async (statement: SQL) => {
+        const query = new PgDialect().sqlToQuery(statement);
+        assert.match(query.sql, /from civic_data_clock_versions/);
+        assert.equal(query.params[0], "REGISTRY_RUNTIME_BINDING");
+        return { rows: [{ etag: String(versions.get(String(query.params[1])) ?? 0) }] };
+      } },
+      readPromotion: async <T>(recordClass: RoutineRecordClass, scope: string) => {
+        reads++;
+        return memory.readPromotion<T>(recordClass, scope);
+      },
+      readCandidate: memory.readCandidate.bind(memory),
+      readPublishedCandidateMetadata: memory.readPublishedCandidateMetadata.bind(memory),
+    });
+    return store;
+  };
+  return { pass, saved, versions, reads: () => reads };
+}
+
+test("registry priors survive fresh passes with complete records and a fresh consumable proof", async () => {
+  const memory = stateRegistryRuntimeStore("AZ"), cache = registryPriorCache(memory);
+  const expected = (await readRegistryRuntimePrior(memory, T0, "AZ"))!;
+  for (let pass = 0; pass < 3; pass++) {
+    const store = cache.pass(), prior = (await readRegistryRuntimePrior(store, T1, "az"))!;
+    assert.deepEqual(prior, expected);
+    assert.ok(Object.isFrozen(prior.payload.registry.bodies[0]));
+    const input = await registryPackage(T1, "cached-prior");
+    registryRuntimeCandidate(input, { prior });
+    const proof = takeStatePublicationPrior(store, "REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("AZ"));
+    assert.ok(proof, "each assembly gets its own prior proof even after the previous assembly consumed records");
+    assert.equal(proof.members.size, civicRecordsFor("REGISTRY_RUNTIME_BINDING", expected.payload).length);
+  }
+  assert.equal(cache.reads(), 1, "unchanged passes do not reload the registry or its proof events");
+});
+
+test("registry priors invalidate by scope version, including unchanged pointer proof changes and deletion", async () => {
+  const memory = stateRegistryRuntimeStore("AZ"), cache = registryPriorCache(memory), scope = stateRegistryRuntimeScope("AZ");
+  const read = () => readRegistryRuntimePrior(cache.pass(), T1, "AZ");
+  await read();
+  cache.versions.set(stateRegistryRuntimeScope("NH"), 1);
+  await read();
+  assert.equal(cache.reads(), 1, "an unrelated state keeps the AZ prior");
+  cache.versions.set(scope, 1);
+  await read(); await read();
+  assert.equal(cache.reads(), 2, "a candidate/event change re-proves even the same pointer ID");
+  const held = memory as unknown as { promotions: Map<string, PromotedProjection> };
+  const pointer = held.promotions.get(`REGISTRY_RUNTIME_BINDING:${scope}`)!;
+  held.promotions.delete(pointer.key);
+  cache.versions.set(scope, 2);
+  assert.equal(await read(), null);
+  assert.equal(await read(), null);
+  assert.equal(cache.reads(), 3, "a missing pointer is also reused until this scope changes");
+  held.promotions.set(pointer.key, pointer);
+  cache.versions.set(scope, 3);
+  assert.ok(await read());
+  const candidates = (memory as unknown as { candidates: Map<string, CandidateVersionRecord> }).candidates;
+  const row = candidates.get(pointer.versionId)!;
+  candidates.set(pointer.versionId, { ...row, state: "SEMANTIC_INVALID" });
+  cache.versions.set(scope, 4);
+  await assert.rejects(read(), /REGISTRY_RUNTIME_BASE_UNAVAILABLE/);
+  candidates.set(pointer.versionId, row);
+  assert.ok(await read(), "a failed proof must not replace the cached good prior");
+  assert.equal(cache.reads(), 6);
+});
+
+test("registry prior cache corruption and a version racing the read reload the actual prior", async () => {
+  const memory = stateRegistryRuntimeStore("AZ"), cache = registryPriorCache(memory), scope = stateRegistryRuntimeScope("AZ");
+  const read = () => readRegistryRuntimePrior(cache.pass(), T1, "AZ");
+  const expected = await read();
+  for (const key of cache.saved.keys()) cache.saved.set(key, "broken JSON");
+  assert.deepEqual(await read(), expected);
+  const original = memory.readPromotion.bind(memory);
+  memory.readPromotion = async <T>(recordClass: RoutineRecordClass, selected: string) => {
+    const result = await original<T>(recordClass, selected);
+    cache.versions.set(scope, (cache.versions.get(scope) ?? 0) + 1);
+    return result;
+  };
+  cache.versions.set(scope, 1);
+  assert.deepEqual(await read(), expected);
+  assert.deepEqual(await read(), expected);
+  assert.equal(cache.reads(), 4, "a racing read is returned but never saved with an incorrect version");
+});
 
 function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
   const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());

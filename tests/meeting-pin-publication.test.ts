@@ -7,7 +7,7 @@ import {
   normalizeFamilyMeetingCitations,
 } from "../lib/meetings/publish-pins.ts";
 import { publishedOnlineAccess } from "../lib/meetings/published-online.ts";
-import { censusAddressQuery } from "../lib/geo/address-query.ts";
+import { censusAddressQuery, repeatsPublishedVenue } from "../lib/geo/address-query.ts";
 import { verifiedCensusVenuePoint } from "../lib/geo/census-address-match.ts";
 import { publishedMeetingPins } from "../lib/meetings/pin-location.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
@@ -586,4 +586,12 @@ test("older live location and coordinate facts cannot replace a newer published 
     {meetingId:meeting().id,field:"mapPin",value:before.meetings[0].mapPin,source:SOURCE},
   ]);
   assert.equal(read.location?.address,BOARD);assert.equal(read.mapPin?.address,BOARD);
+});
+
+test("a shortened published street repeats its prior point, but a conflicting stated city, street or ZIP does not",()=>{
+  const prior="1 E. Broadway Boulevard, Suite 401, Tucson, AZ 85701";
+  assert.ok(repeatsPublishedVenue("1 E. Broadway, 4th Floor","PAG Office",prior));
+  for(const changed of ["1 E. Broadway Boulevard, Phoenix, AZ 85701","1 E. Congress Street, Tucson, AZ 85701",
+    "1 E. Broadway Boulevard, Tucson, AZ 85702"])
+    assert.equal(repeatsPublishedVenue(changed,"PAG Office",prior),false,changed);
 });

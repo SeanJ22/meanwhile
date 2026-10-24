@@ -1,3 +1,7 @@
+import { addressWords } from "./address-words.ts";
+
+const STREET_ADDRESS = /\b\d+[a-z]?(?:-\d+)?\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?/i;
+
 /** Extract the published street address from a venue heading and attendance instructions. */
 export function censusAddressQuery(published: string): string {
   const text = published
@@ -6,10 +10,7 @@ export function censusAddressQuery(published: string): string {
     .replace(/&nbsp;|&#160;/gi, " ")
     .replace(/&amp;/gi, "&")
     .replace(/Hawai[‘’']i/gi, "Hawaii");
-  const street =
-    /\b\d+[a-z]?(?:-\d+)?\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?/i.exec(
-      text,
-    );
+  const street = STREET_ADDRESS.exec(text);
   const bare = /(?:^|[\r\n,;:]|\bat\s+)\s*(\d+\s+[a-z][\s\S]*)/i.exec(
     text,
   )?.[1];
@@ -46,12 +47,25 @@ export function repeatsPublishedVenue(
   const suffix =
     /\b(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq)\b/g;
   const priorName = words(name);
+  const currentAddress = addressWords(censusAddressQuery(published));
+  const priorAddress = addressWords(censusAddressQuery(address ?? name));
+  const withoutZip = (value: string) => value.replace(/\s+\d{5}(?:\s+\d{4})?$/, "");
+  const sameStreetAddress = /^\d+[a-z]?(?:-\d+)?\s/.test(currentAddress) &&
+    (currentAddress === priorAddress ||
+      (withoutZip(currentAddress) === currentAddress || withoutZip(priorAddress) === priorAddress) &&
+        withoutZip(currentAddress) === withoutZip(priorAddress));
+  const currentStreet = addressWords(STREET_ADDRESS.exec(censusAddressQuery(published))?.[0] ?? "");
+  const priorStreet = addressWords(STREET_ADDRESS.exec(censusAddressQuery(address ?? name))?.[0] ?? "");
+  const streetSuffix = /\s+(?:st|ave|rd|dr|ln|blvd|ct|cir|pl|pkwy|hwy|ter|trl|sq|way|expy|plz|ctr)$/;
+  const repeatedShortStreet = Boolean(currentStreet) && currentAddress === currentStreet &&
+    (currentStreet === priorStreet || !streetSuffix.test(currentStreet) &&
+      currentStreet === priorStreet.replace(streetSuffix,""));
   const sameStreetWithoutSuffix =
     !suffix.test(text) &&
     text === priorName.replace(suffix, "").replace(/\s+/g, " ").trim();
   return (
     Boolean(text) &&
-    (text === words(address ?? "") ||
+    (sameStreetAddress || repeatedShortStreet || text === words(address ?? "") ||
       text === priorName ||
       sameStreetWithoutSuffix ||
       (text.length >= 12 && priorName.endsWith(` ${text}`)))

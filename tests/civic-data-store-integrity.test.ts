@@ -1283,7 +1283,7 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       })[0];
       return none;
     }
-    if (query.includes("WITH state_promotion")) {
+    if (query.includes("WITH RECURSIVE state_promotion")) {
       const { receipt: _receipt, ...metadata } = publishedCandidateMetadata({ candidate: envelope, state: "PROMOTED", acquisitionSucceeded: true,
         receipt, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });
       return { columns: [["value", "jsonb"], ["coupled", "bool"], ["reuse", "bool"], ["confirmation", "text"], ["parts", "jsonb"]],
@@ -1336,7 +1336,7 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
     assert.equal(read.kind, "PROMOTED", JSON.stringify(read.kind === "PROMOTED" ? {} : read));
     if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
     assert.ok(sent.slice(readAt).every(row => !row.params.includes(lineageRef)), "metadata and published reads leave lineage parts unopened");
-    const partReads = () => sent.filter(row => row.query.includes("WITH state_promotion") ||
+    const partReads = () => sent.filter(row => row.query.includes("WITH RECURSIVE state_promotion") ||
       row.query.includes('from "civic_data_payload_parts"') && !row.query.startsWith('select "hash" from')).length;
     let readCount = partReads();
     const repeatedMetadata = await store.readPublishedCandidateMetadata(value.id);
@@ -1409,7 +1409,7 @@ test("state readback reuses only a proven index and consumes its coupled metadat
   rememberStatePublicationHashes(projection, value.normalization);
   let moved = false, coupled = true;
   await withCannedNeon(({ query, params }) => {
-    if (!query.includes("WITH state_promotion")) return { columns: [], rows: [] };
+    if (!query.includes("WITH RECURSIVE state_promotion")) return { columns: [], rows: [] };
     const reuse = params.includes(value.id) && !moved;
     const metadata = publishedCandidateMetadata({ candidate: value, state: "PROMOTED", acquisitionSucceeded: true,
       receipt: null, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });

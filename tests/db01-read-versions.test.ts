@@ -40,3 +40,17 @@ test("clock copies survive the next pass and invalidate on every committed input
   await read();
   assert.equal(fullReads, before, "an unrelated state and rolled-back work leave the AZ version unchanged");
 });
+
+test("a place slice read types every passed list, including the ones its record class never filters on", async t => {
+  const { readPlacePayloadParts } = await import("../lib/civic-data/place-payload-slices.ts");
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,payload jsonb);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+    INSERT INTO civic_data_promotions VALUES('m','MEETING','cincinnati','v1','{"meetings":[{"bodyId":"body#governing","title":"Council"}]}');`);
+  const query = async (batch: readonly { text: string; params: readonly unknown[] }[]) =>
+    Promise.all(batch.map(async row => (await pg.query<Record<string, unknown>>(row.text, [...row.params])).rows));
+  // MEETING reads ids and bodies but never targets; an untyped targets list fails the whole read on a real server.
+  const read = await readPlacePayloadParts(query as never, "MEETING", ["cincinnati"], [], ["body#governing"], [], new Map([["cincinnati", "v1"]]));
+  assert.deepEqual(read.get("cincinnati"), { meetings: [{ bodyId: "body#governing", title: "Council" }] });
+});

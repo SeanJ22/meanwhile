@@ -48,7 +48,9 @@ function RunnerReadsPanel({ reads, totals, span }: { reads: SpendView["neon"]["r
     }).catch(() => { if (active) setLoaded({ hour, reads: [], failed: true }); });
     return () => { active = false; };
   }, [hour, reads]);
-  const inHour = (reads?.some(row => row.hour === hour) ? reads : loaded?.hour === hour ? loaded.reads : []).filter(row => row.hour === hour);
+  // Before any hour is recorded both are undefined; only a fetched hour may answer for the chosen one.
+  const fetched = hour !== undefined && loaded?.hour === hour ? loaded : null;
+  const inHour = (reads?.some(row => row.hour === hour) ? reads : fetched ? fetched.reads : []).filter(row => row.hour === hour);
   const total = totals?.find(row => row.hour === hour);
   const shown = all ? inHour : inHour.slice(0, TOP);
   const words = (value: string) => value.replace(/\.m?[jt]s$/, "").replaceAll(/[_:-]+/g, " ");
@@ -62,11 +64,11 @@ function RunnerReadsPanel({ reads, totals, span }: { reads: SpendView["neon"]["r
     : /pilot-runner/i.test(job) ? "Scheduler" : /freshness-shadow/i.test(job) ? "Standing coverage" : words(job.split(":")[0]);
   return <Card title="Runner database reads by hour">
     {!hours.length ? <p className={cx(s.p, s.small)}>{DASH}</p> : <>
-      <label className={s.small}>Hour · Eastern time <select value={hour} onChange={event => { setSelected(event.target.value); setAll(false); }}>
+      <label className={s.small}>Hour · Eastern time <select className={s.select} value={hour} onChange={event => { setSelected(event.target.value); setAll(false); }}>
         {hours.map(value => <option key={value} value={value}>{mst(value)}</option>)}
       </select></label>
       <Facts rows={[["Reader database", gigabytes(total?.readerBytes ?? null)], ["Control plane", gigabytes(total?.controlPlaneBytes ?? null)]]} />
-      {!inHour.length && <p className={cx(s.p, s.small)}>{loaded?.hour === hour ? loaded.failed ? "This hour could not be read just now." : DASH : "Reading this hour…"}</p>}
+      {!inHour.length && <p className={cx(s.p, s.small)}>{fetched ? fetched.failed ? "This hour could not be read just now." : DASH : "Reading this hour…"}</p>}
       <div className={s.tableWrap}><table className={s.table}>
         <thead><tr>{["Job", "Data", "Database", "Received", "Sent"].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
         <tbody>{shown.map(row => <tr key={`${row.database}:${row.job}:${row.table}`}>

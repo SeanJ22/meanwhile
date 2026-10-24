@@ -1677,7 +1677,18 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       AND p.validation_receipt->>'decision' = 'GOOD' AND p.validation_receipt->>'candidateId' = c.id
       AND p.validation_receipt->>'sourceId' = c.source_id AND p.validation_receipt->>'recordClass' = c.record_class
       AND p.validation_receipt->>'scope' = c.scope` : sql`false`;
-    const result = await this.db.execute(sql`WITH state_promotion AS MATERIALIZED (
+    // Runner children read parts from their shared copies; serving processes keep the parts in this one keyed read.
+    const sharedParts = this.readCache !== null;
+    const partsRead = sharedParts ? sql`SELECT value, coupled, reuse, confirmation FROM roots` : sql`, hashes(hash) AS (
+      SELECT ref#>>'{}' FROM roots, LATERAL jsonb_path_query(value, 'strict $.**."$civicPayloadPart"', '{}', true) ref WHERE coupled
+      UNION
+      SELECT ref#>>'{}' FROM hashes h JOIN LATERAL (SELECT hash, payload FROM civic_data_payload_parts WHERE hash = h.hash OFFSET 0) part ON true,
+        LATERAL jsonb_path_query(part.payload, 'strict $.**."$civicPayloadPart"', '{}', true) ref
+    ) SELECT value, coupled, reuse, confirmation,
+      COALESCE((SELECT jsonb_object_agg(part.hash, part.payload) FROM hashes h
+        JOIN LATERAL (SELECT hash, payload FROM civic_data_payload_parts WHERE hash = h.hash OFFSET 0) part ON true), '{}'::jsonb) AS parts
+      FROM roots`;
+    const result = await this.db.execute(sql`WITH ${sharedParts ? sql`` : sql`RECURSIVE `}state_promotion AS MATERIALIZED (
       SELECT p.*, c.candidate, c.state, c.acquisition_succeeded, c.promoted_version_id, c.last_known_good_version_id AS candidate_lkg,
         c.failure_code, c.failure_detail,
         (p.payload = c.candidate->'readModel' AND p.validation_receipt = c.validation_receipt) AS coupled,
@@ -1701,11 +1712,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           'state', state, 'acquisitionSucceeded', acquisition_succeeded, 'promotedVersion', promoted_version_id,
           'lastKnownGoodVersion', candidate_lkg, 'failureCode', failure_code, 'failureDetail', failure_detail)) AS value,
         coupled, reuse, confirmation FROM state_promotion
-    ) SELECT value, coupled, reuse, confirmation FROM roots`);
-    const row = result.rows[0] as { value: unknown; coupled: boolean; reuse: boolean; confirmation: string | null } | undefined;
+    ) ${partsRead}`);
+    const row = result.rows[0] as { value: unknown; coupled: boolean; reuse: boolean; confirmation: string | null; parts?: Record<string, unknown> } | undefined;
     if (!row) return null;
     if (!row.coupled) throw new Error(`STATE_PUBLICATION_POINTER_PROOF_INVALID:${recordClass}:${scope}`);
-    const decoded = await this.ownedPayloadParts.loadOwned(row.value) as {
+    const decoded = await this.ownedPayloadParts.loadOwned(row.value, sharedParts ? undefined : row.parts ?? {}) as {
       projection: PromotedProjection<T>; candidate: PublishedCandidateMetadata;
     };
     const projection = { ...decoded.projection,

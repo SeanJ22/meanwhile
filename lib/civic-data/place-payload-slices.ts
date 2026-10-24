@@ -25,7 +25,8 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
     throw new Error("STATE_AUTHORITY_REQUIRES_KEYED_READ");
   const fields = collections(recordClass), paths = Object.keys(fields);
   const predicate = Object.entries(fields).map(([field, where]) => `(field='${field.replaceAll("'", "''")}' AND (${where}))`).join(" OR ");
-  const [rows] = await query([{ text: `WITH RECURSIVE
+  // Every class passes ids, bodies and targets; this unread CTE types them even where the class's predicate never reads one.
+  const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
   projections AS (SELECT record_class,scope,current_version_id,payload FROM civic_data_promotions
     WHERE record_class=$1 AND scope=ANY($2::text[])),
   walk(scope,path,step,node) AS (

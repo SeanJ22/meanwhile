@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { factDb } from "./helpers/fact-db.ts";
-import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
+import { publishHeldMeetingPins, HELD_PIN_PRIOR_VENUES_SQL } from "../lib/civic-data/held-meeting-pins.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { readSittingFacts,withSittingFacts } from "../lib/facts/meeting-read.ts";
@@ -136,4 +136,19 @@ test("an already-promoted address for the same source sitting fills an abbreviat
       }
     }finally{await db.pg.close();}
   }
+});
+
+test("an unreadable earlier calendar cannot hold a directly matched meeting address",async()=>{
+  const physical:Meeting={...online,id:"legistar:held:readable",online:undefined,carried:undefined,
+    venueGap:{kind:"STATED_NOT_PLACED",publishedText:OWN,publisher:"District"}};
+  const db=await setup([physical]);
+  try {
+    const result=await publishHeldMeetingPins({facts:{...db,query:(text,params)=>{
+      if(text===HELD_PIN_PRIOR_VENUES_SQL)throw new Error("earlier calendar unavailable");
+      return db.query(text,params);
+    }},vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000,
+      fetchImpl:async()=>new Response(JSON.stringify(geocode("1415","MELODY","LN","W","BISBEE","85603")))});
+    assert.equal(result.published,1);assert.equal(result.unplaced,0);
+    assert.deepEqual(result.failures,["Earlier meeting addresses could not be read: earlier calendar unavailable"]);
+  }finally{await db.pg.close();}
 });

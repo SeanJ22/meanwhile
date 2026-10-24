@@ -82,7 +82,7 @@ export async function publishHeldMeetingPins(input: {
       .filter(meeting=>!meeting.location&&!meeting.mapPin);
     const retainedAddresses = new Map<string,MeetingPinAddress>();
     const stated = new Map(current.filter(meeting=>!meeting.online && meeting.venueGap?.publishedText).map(meeting=>[meeting.id,meeting]));
-    if(stated.size) {
+    if(stated.size) try {
       const prior = await facts.query(HELD_PIN_PRIOR_VENUES_SQL,[[...new Set(rows.map(row=>String(row.key)))],[...stated.keys()]]);
       for(const row of prior) {
         const old=row.value as Meeting,meeting=stated.get(old.id);
@@ -92,7 +92,7 @@ export async function publishHeldMeetingPins(input: {
           retainedAddresses.set(meeting.id,{meetingId:meeting.id,bodyId:meeting.bodyId,name:old.location.name,
             address:old.location.address,basis:"MEETING",provenance:old.fieldSources?.location??old.provenance});
       }
-    }
+    } catch(error) { failures.push(`Earlier meeting addresses could not be read: ${error instanceof Error?error.message:String(error)}`); }
     const census=await placePublishedMeetingPins({meetings:current,previous:placed,offices,retainedAddresses,
       fetchImpl:input.fetchImpl,clock:()=>new Date(now()).toISOString()});
     failures.push(...census.held);

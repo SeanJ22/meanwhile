@@ -176,9 +176,8 @@ test("official and candidacy profile answers share exact holdings without attach
   assert.ok(other.records.every(row => !row.candidateProfile?.holdingKey.includes("Katie Hobbs")));
   assert.deepEqual(candidateProfileEvidenceFor("AZ", { kind: "PERSON", id: "unknown:candidate", name: "Katie Hobbs" }).records, []);
   const conflict = "ballot-az-pima:governor|Teri Ann Hourihan";
-  const conflictKeys = [conflict, "ballot-az-pima:governor:hourihan-teri-ann"].sort();
-  assert.deepEqual(readerPersonKeys(conflict).keys, conflictKeys, "Party labels do not split a person in the same sourced race");
-  assert.ok(candidateProfileEvidenceFor("AZ", { kind: "PERSON", id: conflict, name: "Teri Ann Hourihan" }).records.every(row => conflictKeys.includes(row.canonicalSubjectId!)));
+  assert.deepEqual(readerPersonKeys(conflict).keys, [conflict], "A certified-card party conflict must not acquire a filed-candidacy identity");
+  assert.ok(candidateProfileEvidenceFor("AZ", { kind: "PERSON", id: conflict, name: "Teri Ann Hourihan" }).records.every(row => row.canonicalSubjectId === conflict));
 });
 
 test("profile fields without their verification/source remain withheld instead of becoming claims or publisher absence", async () => {

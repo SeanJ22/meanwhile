@@ -47,8 +47,9 @@ export function surnameDisplayCase(surname: string): string {
 
 export function ballotCandidateDisplayName(candidate: Pick<Candidacy, "givenName" | "familyName" | "ticket">): string {
   if (candidate.ticket) return `${ballotCandidateDisplayName({ ...candidate, ticket: undefined })} / ${ballotCandidateDisplayName(candidate.ticket.runningMate)}`;
-  if (candidate.givenName.trim()) return `${candidate.givenName} ${surnameDisplayCase(candidate.familyName)}`.trim();
-  return candidate.familyName.split(/\s*\/\s*/).map(person => {
+  const givenName = candidate.givenName ?? "", familyName = candidate.familyName ?? "";
+  if (givenName.trim()) return `${givenName} ${surnameDisplayCase(familyName)}`.trim();
+  return familyName.split(/\s*\/\s*/).map(person => {
     const [family, given, ...suffixes] = person.split(",").map(part => part.trim());
     if (!given || /^(?:jr\.?|sr\.?|[ivx]+)$/i.test(given)) return surnameDisplayCase(person.trim());
     const name = `${surnameDisplayCase(given)} ${surnameDisplayCase(family)}`;

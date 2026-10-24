@@ -2,11 +2,15 @@ import { currentOfficialIdentityStatus, officialIdsForCandidacy, resolvedCandida
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "./az-2026.ts";
 import { currentRosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 import { fecPersonKeys } from "../funding/snapshot.ts";
-import { candidateKeysForState, heldCandidatePersonKeys } from "../ballot/person-keys.ts";
+import { candidateCardIdentityUnresolved, candidateKeysForState, heldCandidatePersonKeys } from "../ballot/person-keys.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
 
 /** Exact committed person relationships; no names participate in reader joins. */
 export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIRECT" | "IDENTITY_UNRESOLVED"; keys: string[] } {
+  const namedState = /^(?:ballot-)?([a-z]{2})[-:]/i.exec(subjectId)?.[1]?.toUpperCase();
+  const states = [...new Set([...selectedRegistryStates(), ...namedState ? [namedState] : []])];
+  const unresolvedCard = (key: string) => states.some(state => candidateCardIdentityUnresolved(state, key));
+  if (unresolvedCard(subjectId)) return { status: "DIRECT", keys: [subjectId] };
   const rosterIdentity = currentRosterMemberReaderDisposition(subjectId);
   if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return { status: "IDENTITY_UNRESOLVED", keys: [] };
   if (rosterIdentity?.state === "EXACT_DUPLICATE") return readerPersonKeys(rosterIdentity.canonicalId!);
@@ -15,7 +19,7 @@ export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIR
   const pending = [subjectId];
   while (pending.length) {
     const key = pending.shift()!;
-    if (!key || keys.has(key)) continue;
+    if (!key || keys.has(key) || unresolvedCard(key)) continue;
     keys.add(key);
     const namedState = /^(?:ballot-)?([a-z]{2})[-:]/i.exec(key)?.[1]?.toUpperCase();
     for (const state of new Set([...selectedRegistryStates(), ...namedState ? [namedState] : []]))

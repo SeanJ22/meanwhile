@@ -110,6 +110,8 @@ export function ballotAskInventory(
   const entities: BindableEntity[] = [];
   const subjects = new Map<string, BallotSubjectRecord>();
   if (!set) return { entities, subjects };
+  const unresolvedCards = new Set(set.lineupReconciliation?.rows.filter(row => row.outcome !== "RECONCILED")
+    .map(row => row.cardKey) ?? []);
 
   const add = (
     id: string,
@@ -176,6 +178,7 @@ export function ballotAskInventory(
     const nominees = nomineesFor(contest.id);
     const listed = nominees.length ? nominees.map(nominee => {
       const key = candidateTargetKey(contest.id, nominee.name);
+      if (unresolvedCards.has(key)) return { nominee, candidate: null };
       let candidate = filed.find(candidate => ballotCandidateAliases(candidate).includes(key)) ?? null;
       if (!candidate) {
         let legacy: string | null = null;
@@ -199,7 +202,8 @@ export function ballotAskInventory(
         const name = candidacyDisplayName(person);
         if (!name) continue;
         const id = nominee && !candidate.ticket ? candidateTargetKey(contest.id, nominee.name) : person.id;
-        const aliases = [...new Set([person.id, ...ballotCandidateAliases(person)])].filter(key => key !== id);
+        const aliases = [...new Set([person.id, ...ballotCandidateAliases(person)])]
+          .filter(key => key !== id && !unresolvedCards.has(key));
         const office = "office" in person && typeof person.office === "string" ? person.office
           : candidate.ticket ? contest.title.split(/\s*(?:\/|\band\b|&)\s*/i)[0] : contest.title;
         const personRecord: BallotSubjectRecord = { kind: "PERSON", id, name, contestId: contest.id,
@@ -225,7 +229,7 @@ export function ballotAskInventory(
     add(candidacy.id, name, "person", "person", {
       kind: "PERSON", id: candidacy.id, candidacyId: candidacy.id, name, contestId: contest.id, contestTitle: contest.title, ocdId: contest.ocdId,
       ...(matched ? { historicalFiling: true } : { outsideReaderDivisions: true }),
-    }, ballotCandidateAliases(candidacy));
+    }, ballotCandidateAliases(candidacy).filter(key => !unresolvedCards.has(key)));
   }
   return { entities, subjects };
 }

@@ -15,8 +15,10 @@ const sources = (...rows: readonly (readonly Provenance[])[]) => [...new Map(row
 
 /** Person aliases exclude the running mate: a ticket is a choice, never a person. */
 export function ballotCandidateAliases(candidate: Candidacy): string[] {
-  return [...new Set([candidate.id, `${candidate.contestId}|${personName(candidate)}`,
-    ...candidate.aliases ?? [], ...(candidate.ticket ? [`${candidate.contestId}|${ballotCandidateDisplayName(candidate)}`] : [])])];
+  const name = personName(candidate), ticketName = candidate.ticket && name.trim() && personName(candidate.ticket.runningMate).trim()
+    ? ballotCandidateDisplayName(candidate) : "";
+  return [...new Set([candidate.id, ...(name.trim() ? [`${candidate.contestId}|${name}`] : []),
+    ...candidate.aliases ?? [], ...(ticketName.trim() ? [`${candidate.contestId}|${ticketName}`] : [])])];
 }
 
 export function ballotCandidatePeople(candidate: Candidacy): Candidacy[] {

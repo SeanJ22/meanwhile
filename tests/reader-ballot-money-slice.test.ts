@@ -33,10 +33,10 @@ async function directoryRead(state:string, officeholders:Officeholder[]=[], divi
 test("partitioned federal ballot money keeps full selected filings and committee books without following a shared donor into another candidate",async()=>{
   const {pg,publish}=await migratedReaderDb(),contract=requiredRoutineContract("fec-funding");
   const contest={id:"ballot-nj-federal",ocdId:"ocd-division/country:us/state:nj/cd:11"}as Contest;
-  const set={election:{state:"NJ"},candidacies:[{id:"ballot-nj-current",contestId:contest.id,givenName:"Current",familyName:"Fixture"},
-    {id:"ballot-nj-missing",contestId:contest.id,givenName:"Missing",familyName:"Fixture"}],
-    filingCandidacies:[{id:"ballot-nj-earlier",contestId:contest.id,givenName:"Earlier",familyName:"Fixture"},
-      {id:"elsewhere",contestId:"another-contest",givenName:"Elsewhere",familyName:"Fixture"}]}as BallotSet;
+  const set={election:{state:"NJ"},candidacies:[{id:"ballot-nj-current",contestId:contest.id},
+    {id:"ballot-nj-missing",contestId:contest.id}],
+    filingCandidacies:[{id:"ballot-nj-earlier",contestId:contest.id},
+      {id:"elsewhere",contestId:"another-contest"}]}as BallotSet;
   const receipt={contributorCommitteeId:"C_SHARED",amount:500,sourceUrl:"https://www.fec.gov/data/receipt/held"};
   const candidates=[{fecCandidateId:"H0NJ00001",targetKeys:["ballot-nj-current","congress:A000001"],cycle:2026,
     totals:{receipts:12345,coverageEndDate:"2026-09-30"},topContributions:[receipt],detail:"complete-source-detail".repeat(2000)},

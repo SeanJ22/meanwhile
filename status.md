@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 96 LIVE (38b470355). Job 1 DONE. Batch 5 gating from 9:52 AM EDT = release 97 candidate (14 lanes incl. RIVER-KEYS, MT-01, CL-01, MD-01, PB-02, SRC-01)
+build_state: RELEASE 97 OPEN (#807, auto-merge; river 59b7c5577, 14 lanes). Release 96 live. Next batch (CL-01 6c3578d48, RV-TOOLS) gating from 11:30 AM EDT
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 97 open, 11:25 AM EDT
+- Gates 9 of 9 on 166fa32ab (9,770 pass, 0 fail). river promoted to 166fa32ab, main's release-96 merge commit merged (tree identical) -> river 59b7c5577. Release 97 = PR #807, auto-merge on. 14 lane READYs recorded in integration.md: RV-TOOLS, RN-03 (x2), RB-A1, BL-21-FX, RN-01, BL-01, LV-01, RIVER-KEYS, MT-01, SRC-01, CL-01, PB-02, MD-01.
+- Live checks after deploy: Job 2 (79901, 60090, 85603 polling places; counts by state; KY/FL/MT no drop) after the next polling-place run on release 97; BL-21-FX (/ballot dates and offices kept; DC, DE, FL own records); BL-01 retention cards; MT-01 meeting pins; LV-01 voting panel; CL-01 one card per person; MD-01 Ask in Chrome (20 questions); PB-02 live hour; SRC-01 EPA/FEMA first run; RN-01 planning rounds.
+- Next batch gating from 11:30 AM EDT: CL-01 6c3578d48 (merges a federal member listed under a bare and an explicit chamber title: the Raleigh "Deborah K. Ross twice" card) + RV-TOOLS 2645e12d5 (River's parser refused CL-01 on the plural "connection proofs"; fixed; the auto-return is superseded). 199 focused tests pass.
 
 ### Batch 5 re-gate, 10:39 AM EDT
 - Batch 5 gates: 9,767 pass, 3 fail. River fixed all three on river-next (166fa32ab): SRC-01 (River-finished) stores legiscan bills as compact parts the reader hydrates, and its browser test still served the compact part as bills (no bill showed) and compared a URL pathname the path rule flags; the test now hydrates as /api/bills does. CL-01 read settled.answer.kind on a held funding answer with no records, which threw and showed readers a "campaign money records" gap; held empty answers render nothing again (tests/pdc-reader-remaining-repairs.test.ts:55). Re-gating from 10:39 AM EDT.

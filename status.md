@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 97 OPEN (#807, auto-merge; river 59b7c5577, 14 lanes). Release 96 live. Next batch (CL-01 6c3578d48, RV-TOOLS) gating from 11:30 AM EDT
+build_state: RELEASE 97 LIVE AND BROKEN (reader DB connections refused since 11:48 AM EDT). RELEASE 98 hotfix = PR #808, auto-merge on 12:25 PM EDT. Next batch (CL-01 6c3578d48, RV-TOOLS) gated 9/9, waits for release 98
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,16 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### INCIDENT: release 97 broke every reader database read, 11:48 AM EDT; release 98 hotfix
+- Release 97 live 11:48 AM EDT (/api/build 96b6ea5e7). Reader walk in Chromium at ~11:50: every /ballot page "didn't load" (React #441 server-render error, "[ballot] render failed", 0 deadlines, 0 offices) in 14 ZIPs: AZ 85003 and 85653, NJ 07102, NH 03301, PA 19147, WA 98101, DC 20001, DE 19901, FL 32301, CA 90012, TX 78701, IL 60602, GA 30303, NY 10007. Also /national 500, /api/reader/state 503, /api/meetings 502. The home map page loaded.
+- Cause, exact line: lib/reader/database.ts:65, `options: "-c default_transaction_read_only=on -c jit=off"`, added by SRC-01 (River-finished lane; River's miss). Neon's pooled endpoint (production's reader connection) refuses `jit` at connect: "unsupported startup parameter in options: jit". Proven on the production pooled URL, read-only: with the option FAIL with that error; without it, 104,048 places read. Gates and River's local builds passed because they connect without the pooler.
+- What readers lost: the ballot (dates, deadlines, offices, contests, candidates), /national, place answers and meetings, from 11:48 AM EDT until release 98 is live.
+- Fix: release 98 = PR #808, one line (startup option removed; SRC-01's EPA reader already sets jit per transaction). Sean's new preview check, run on a local Netlify-like standalone build of release 98 against the production pooled database (the repo has no Netlify PR previews): /ballot 85701 200 renders, 03255 200 renders, /api/meetings 60602 200, /national 200; /api/meetings 85701 503 locally only (data/states/az/geo is excluded from the Netlify bundle and production reads it from the asset store; same code as release 96). Ask not run locally (model spend). Auto-merge on 12:25 PM EDT; the live checks run within 5 minutes of release 98.
+- Rollback: Sean's new step says to publish the previous good deploy in Netlify when the live check fails. River's Netlify connector needs re-authorizing (claude.ai connector settings), so River could not publish release 96's deploy; the fix-forward is release 98. FOR SEAN: re-authorize the Netlify connector so River can roll back next time.
+- Release steps now include Sean's preview check (board/river README.md, "Release steps").
+- RIVER-KEYS migration (control plane) applied at 11:46 AM EDT but reports "0 held door(s) reopened": Cochise's door was not reopened by it. River checks the door's status.
+- RB-A1's reader migration 0051 is declared contract-phase; the runner applies it after deploy; not applied yet at 12:00 PM EDT.
 
 ### Release 97 open, 11:25 AM EDT
 - Gates 9 of 9 on 166fa32ab (9,770 pass, 0 fail). river promoted to 166fa32ab, main's release-96 merge commit merged (tree identical) -> river 59b7c5577. Release 97 = PR #807, auto-merge on. 14 lane READYs recorded in integration.md: RV-TOOLS, RN-03 (x2), RB-A1, BL-21-FX, RN-01, BL-01, LV-01, RIVER-KEYS, MT-01, SRC-01, CL-01, PB-02, MD-01.

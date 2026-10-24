@@ -7,7 +7,7 @@ export function stateOfOcdId(ocdId: string | null | undefined): string | null {
   return ocdStateCode(ocdId);
 }
 
-export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "federal-directory", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "federal-directory", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived", "ballot-navigation"] as const;
 export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
 export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily>;
 export type GlobalPromotedAuthorityFamily = PromotedAuthorityFamily;
@@ -15,7 +15,6 @@ export type GlobalPromotedAuthorityFamily = PromotedAuthorityFamily;
 export type PromotedAuthorityFamily =
   | "other-reader-data"
   | "state-votes"
-  | "ballot-navigation"
   | "official-filings"
   | "member-offices"
   | "nh-members"

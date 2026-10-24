@@ -68,7 +68,7 @@ export function MyPicks({
             .filter(
               (o) =>
                 o.reactionTargetId &&
-                getStoredReaction("CANDIDATE", o.reactionTargetId) === "YES",
+                getStoredReaction("CANDIDATE", o.reactionTargetId, o.reactionTargetAliases) === "YES",
             )
             .map((o) => o.reactionTargetId as string)
             .sort(),
@@ -149,7 +149,8 @@ export function MyPicks({
         <button type="button" className="cursor-pointer text-signal underline decoration-dotted" onClick={() => {
           const derived = pickable.flatMap(contest => {
             const yes = contest.options.filter(option => option.reactionTargetId && yesTargets.has(option.reactionTargetId)).map(option => option.id);
-            const resolution = resolveWithSuppression(picks.find(pick => pick.contestId === contest.contestId) ?? null, yes, contest.voteFor, cleared[contest.contestId]);
+            const resolution = resolveWithSuppression(picks.find(pick => pick.contestId === contest.contestId || contest.aliases?.includes(pick.contestId)) ?? null,
+              yes, contest.voteFor, [contest.contestId, ...contest.aliases ?? []].map(id => cleared[id]).find(Boolean), contest.options);
             return resolution.basis === "DERIVED" ? [{ contestId: contest.contestId, contestTitle: contest.contestTitle,
               choiceIds: resolution.chosen, labels: Object.fromEntries(contest.options.map(option => [option.id, option.label])) }] : [];
           });

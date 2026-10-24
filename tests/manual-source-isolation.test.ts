@@ -83,7 +83,7 @@ test("receiptless bases contribute no inherited members to a fresh sourced publi
     const record = { ...base.candidate, candidate: { ...base.candidate.candidate,
       retrieval: { ...base.candidate.candidate.retrieval, manualSourceReceipt: undefined } } };
     Object.assign(store, { candidates: new Map([[record.candidate.id, record]]) });
-    assert.equal(await readManualProjectionPrior(contractId, store, T1), null);
+    assert.equal(await readManualProjectionPrior(contractId, store, T1, base.candidate.candidate.scope), null);
     const input = packageFor(contractId, T1, "new", false, true);
     const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
     assert.equal(expectedBaseVersionId, record.candidate.id);
@@ -118,7 +118,7 @@ test("an existing malformed source receipt still refuses inherited records", asy
   const record = { ...base.candidate, candidate: { ...base.candidate.candidate,
     retrieval: { ...base.candidate.candidate.retrieval, manualSourceReceipt: badReceipt } } };
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]) });
-  await assert.rejects(readManualProjectionPrior("ballot-navigation", store, T1), /MANUAL_PROMOTION_BASE_PROOF_INVALID/);
+  await assert.rejects(readManualProjectionPrior("ballot-navigation", store, T1, base.candidate.candidate.scope), /MANUAL_PROMOTION_BASE_PROOF_INVALID/);
   await assert.rejects(prepareManualProjectionSuccessor(packageFor("ballot-navigation", T1, "new", false, true), store, T1),
     /MANUAL_(?:PROMOTION_BASE_PROOF_INVALID|SOURCE_RECEIPT_MALFORMED)/);
 });
@@ -175,10 +175,10 @@ function records(id: CuratedId, at: string, revision: string): CuratedReaderProj
   const [one, two] = urls(id);
   if (id === "ballot-navigation") {
     return [one, two].map((url, index) => ({
-      id: `polling-place:${index === 0 ? "AZ" : "NH"}`,
+      id: `polling-place:AZ:${index}`,
       kind: "POLLING_PLACE_LINK",
       value: {
-        state: index === 0 ? "AZ" : "NH",
+        state: "AZ",
         url,
         verifiedAt: at,
         label: `route-${revision}-${index + 1}`,

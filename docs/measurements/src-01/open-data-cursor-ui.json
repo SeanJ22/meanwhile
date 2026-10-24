@@ -1,0 +1,79 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "sourceRequests": 0,
+  "scope": "Actual PlaceOpenData/Card → local HTTP → actual GET readerRoute → existing accepted national native PostgreSQL publication → Netlify SDK local held artifacts; first50 then100records",
+  "division": null,
+  "zip": "90001",
+  "clock": "Actual current clock; existing initial publication only, no new promotion or synthetic dates",
+  "sourceCapture": {
+    "url": "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+    "retrievedAt": "2026-10-23T09:06:56.174Z",
+    "rawHash": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+    "sourceRows": [],
+    "sourceCheck": {
+      "requestedUrl": "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+      "finalUrl": "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+      "httpStatus": 200,
+      "checkedAt": "2026-10-23T09:06:56.174Z",
+      "rawHash": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899"
+    },
+    "archive": {
+      "sha256": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+      "member": "ECHO_EXPORTER.csv",
+      "publishedAt": "2026-10-18T06:44:46.000Z"
+    }
+  },
+  "sourceManifestSha256": "2f4266f42b4a4eb58059310e20b0ec91f2747ba1e6760b03718d2054031d1a1e",
+  "implementation": [
+    {
+      "path": "components/map/open-data.tsx",
+      "sha256": "de05babb412ffe8080199e2e3fa1ab972a4daa4190c25e51f3a0bc806ec2abf7"
+    },
+    {
+      "path": "lib/sources/open-data/reader.ts",
+      "sha256": "a31d6d09c18990e1307ed5bfa87238e04b0bc8b251ef8c0f9f55f37f82368c42"
+    },
+    {
+      "path": "app/api/open-data/route.ts",
+      "sha256": "e374104c00e650f0352f9b538d00030ca8fda0fa0a76c02726d25b55b6616faf"
+    }
+  ],
+  "firstPageMs": 1677,
+  "showMoreMs": 2332,
+  "rowsAfterFirst": 50,
+  "rowsAfterMore": 100,
+  "distinctRows": 100,
+  "furtherRecordsReachable": true,
+  "pages": [
+    {
+      "elapsedMs": 963,
+      "status": 200,
+      "rows": 50,
+      "nextCursor": true,
+      "requestedCursor": false,
+      "checkedAt": {
+        "epa-echo": "2026-10-23T09:06:56.174Z"
+      },
+      "idSha256": "ec168cdba281cc42a3e73a314676aa2fb2e6a113f28a59443d857543854dbb7e"
+    },
+    {
+      "elapsedMs": 2149,
+      "status": 200,
+      "rows": 50,
+      "nextCursor": true,
+      "requestedCursor": true,
+      "checkedAt": {
+        "epa-echo": "2026-10-23T09:06:56.174Z"
+      },
+      "idSha256": "e7e47a90ecdc26e570b94ab4f13178a765f8878c5e9fa77286504b72669727f1"
+    }
+  ],
+  "browser": "/usr/bin/chromium substituted for missing pinned1234",
+  "runId": "src01-open-data-real-cursor-ui@2026-10-23T14:05:09.321Z",
+  "screenshots": [
+    "/workspace/meanwhile/docs/measurements/src-01/open-data-cursor-first.png",
+    "/workspace/meanwhile/docs/measurements/src-01/open-data-cursor-more.png"
+  ],
+  "limitations": "Local read-only PostgreSQL and artifact transport substitute for production network latency. This is an unstyled real component, not a deployed production page. Accepted-version409 UI behavior is separately verified against the frozen API contract; actual API changed-publication regression belongs to the source owner."
+}

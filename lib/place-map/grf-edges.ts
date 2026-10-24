@@ -1,5 +1,6 @@
 import { censusSourceRelease, censusTextLines, type CensusSourceOptions } from "../census-geography/source-release.ts";
 import { parseGrfHeader } from "../census-geography/grf.ts";
+import { isUnassignedZcta } from "../census-geography/contract.ts";
 import type { MapEdge, MapPlace } from "./load.ts";
 
 /** The same 2026 GRF block parts that establish CD120 also carry every current
@@ -18,7 +19,7 @@ export async function currentGrfPlaceEdges(fips: string, places: readonly MapPla
     const row = line.split("|");
     if (row.length !== header.length || row[columns.state] !== fips) throw new Error("Census GRF record belongs to another state");
     const code = row[columns.zcta];
-    if (!code) continue;
+    if (isUnassignedZcta(code)) continue;
     const land = Number(row[columns.land]);
     if (!/^\d{5}$/.test(code) || !Number.isFinite(land) || land < 0) throw new Error("Census GRF land or ZCTA is invalid");
     totals.set(code, (totals.get(code) ?? 0) + land);

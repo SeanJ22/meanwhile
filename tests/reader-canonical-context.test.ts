@@ -214,7 +214,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
     assert.deepEqual(order,["state","place","auxiliary"],
       "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
     for (const prefix of ["BALLOT_CANDIDACY:",
-      "CURATED_READER_RECORD:US:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
+      "CURATED_READER_RECORD:US-AZ:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
     assert.ok(auxiliaryKeys.every(key=>!key.startsWith("CANDIDATE_PROFILE:")&&!key.startsWith("CANDIDATE_PUBLICATION:")&&!key.endsWith(":candidate-campaign-sites-derived")),
       "candidate details wait for the displayed contests instead of reading the whole state's candidates");
     release!();

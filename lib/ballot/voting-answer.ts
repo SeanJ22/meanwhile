@@ -117,5 +117,5 @@ export async function answerVotingSites(file: VotingSitesFile, place: VotingRead
   const projected = covering.map(j => projectVotingJurisdiction(j, place));
   const hasLocations = projected.some(j => j.sites.length > 0 || j.publication?.status === "NO_GENERAL_ELECTION");
   return { match: place.states.length > 0, point: place.precision === "ADDRESS" ? place.point : null,
-    precision: place.precision, jurisdictions: projected, outsideCoverage: !hasLocations, pollingPlaceLinks: [] };
+    precision: place.precision, jurisdictions: projected, outsideCoverage: !hasLocations };
 }

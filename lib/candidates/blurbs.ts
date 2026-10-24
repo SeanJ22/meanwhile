@@ -1,5 +1,6 @@
 import { getCandidateCorpus, candidateDocumentsByKey } from "./positions.ts";
 import type { CandidateDocument } from "./corpus.ts";
+import { candidateKeysForState } from "../ballot/person-keys.ts";
 
 export interface DerivedBlurb {
   text: string;
@@ -31,7 +32,9 @@ function rank(doc: CandidateDocument): number {
 
 export function derivedBlurbFor(state: string, candidateKey: string): DerivedBlurb | null {
   const corpus = getCandidateCorpus(state);
-  const candidates = (candidateDocumentsByKey(corpus).get(candidateKey) ?? []).filter((d) => d.metaDescription && !candidateDescriptionQualityIssue(d))
+  const index = candidateDocumentsByKey(corpus);
+  const candidates = [...new Set([candidateKey, ...candidateKeysForState(state, candidateKey)])]
+    .flatMap(key => index.get(key) ?? []).filter((d) => d.metaDescription && !candidateDescriptionQualityIssue(d))
     .sort((a, b) => {
       const byRank = rank(a) - rank(b);
       if (byRank !== 0) return byRank;

@@ -10,7 +10,7 @@ const sources = (meeting: Meeting) => [...new Set([meeting.id, ...(meeting.merge
 const present = (value: unknown) => value !== null && value !== undefined && value !== "" && (!Array.isArray(value) || value.length > 0);
 const meta = new Set(["id", "bodyId", "ocdId", "jurisdiction", "provenance", "fieldSources", "publicationConflicts", "mergedMeetingIds", "carried"]);
 const timing = ["startsAt", "timeZone", "startPrecision"];
-const venue = ["location", "online", "venueGap"];
+const venue = ["location", "online", "venueGap", "mapPin"];
 
 /** Same body/day across doors. When a door lists multiple sittings that day,
  * only an unambiguous exact sitting identity can join them. */
@@ -68,6 +68,7 @@ export function mergeReaderSittings(input: readonly Meeting[]) {
       const keys = new Set(candidates.flatMap(row => Object.keys(row)));
       for (const key of keys) if (!meta.has(key) && !timing.includes(key) && !venue.includes(key)) merge([key]);
       if (result.actingBodies) result.actingBodies = result.actingBodies.map(row => ({ ...row, meetingId: result.id }));
+      if (result.mapPin) result.mapPin={...result.mapPin,meetingId:result.id};
       if (result.agendaUrl) delete result.agendaSlotObservedEmpty;
       result.fieldSources = fieldSources;
       result.mergedMeetingIds = [...new Set(candidates.flatMap(row => [row.id, ...(row.mergedMeetingIds ?? [])]))].sort();

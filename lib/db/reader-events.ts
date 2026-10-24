@@ -73,11 +73,11 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
     return {
       id: event.id, type: event.type, occurredAt: new Date(event.occurredAt).toISOString(), zip, district,
       residencyRelation: event.residencyRelation ?? "UNKNOWN",
-      cardId: event.cardId == null ? null : stableId(event.cardId, "CARD"),
-      cardKind: event.cardKind == null ? null : stableId(event.cardKind, "CARD_KIND"),
+      cardId: pick?.contestId ?? (event.cardId == null ? null : stableId(event.cardId, "CARD")),
+      cardKind: pick ? "CONTEST" : event.cardKind == null ? null : stableId(event.cardKind, "CARD_KIND"),
       durationMs: event.durationMs ?? null,
       question: text?.text ?? null, selfDisclosureFlags: text?.flags ?? [],
-      topic: event.topic == null ? readerTopicInCode(text?.text ?? "") ?? "free-form" : stableId(event.topic, "TOPIC"),
+      topic: pick ? "elections-voting" : event.topic == null ? readerTopicInCode(text?.text ?? "") ?? "free-form" : stableId(event.topic, "TOPIC"),
       reaction: event.reaction == null ? null : stableId(event.reaction, "REACTION"), ballotPick: pick,
     };
   });

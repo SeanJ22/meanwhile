@@ -1,0 +1,262 @@
+{
+  "state": "KY",
+  "electionDate": "2026-11-03",
+  "sources": [
+    {
+      "requestedUrl": "https://elect.ky.gov/Pages/default.aspx",
+      "finalUrl": "https://elect.ky.gov/Pages/default.aspx",
+      "publisher": "Kentucky State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://vrsws.sos.ky.gov/ovrweb/govoteky",
+      "finalUrl": "https://vrsws.sos.ky.gov/ovrweb/govoteky/",
+      "publisher": "Kentucky State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+      "finalUrl": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+      "publisher": "Kentucky State Board of Elections"
+    },
+    {
+      "requestedUrl": "https://elect.ky.gov/About-Us/Pages/Contact-Us.aspx",
+      "finalUrl": "https://elect.ky.gov/About-Us/Pages/Contact-Us.aspx",
+      "publisher": "Kentucky State Board of Elections"
+    }
+  ],
+  "package": {
+    "contractId": "ballot-navigation",
+    "version": "2026-10-14T21:32:20.096Z",
+    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "sourceReceipt": {
+      "contractVersion": 1,
+      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedBy": "code:section3Record",
+      "sources": [
+        {
+          "requestedUrl": "https://elect.ky.gov/About-Us/Pages/Contact-Us.aspx",
+          "finalUrl": "https://elect.ky.gov/About-Us/Pages/Contact-Us.aspx",
+          "publisher": "Kentucky State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:37:09.122744+00:00",
+          "httpStatus": 200,
+          "rawHash": "0a3e191888f05759e9f892ed5c27b7dc84bd7b50267f58a9a7a7cd899017c85f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://elect.ky.gov/Pages/default.aspx",
+          "finalUrl": "https://elect.ky.gov/Pages/default.aspx",
+          "publisher": "Kentucky State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:36:09.964775+00:00",
+          "httpStatus": 200,
+          "rawHash": "4033ea90fc5f6c508042d09d02ac0d9de00cbdd56afb36001758febe73be2efe",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+          "finalUrl": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+          "publisher": "Kentucky State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:40:44.063163+00:00",
+          "httpStatus": 200,
+          "rawHash": "b363a9408eb2b1cd986a559cf91b0749ceed92c5ac218dfbbc8b46f9cdedba2a",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://vrsws.sos.ky.gov/ovrweb/govoteky/",
+          "finalUrl": "https://vrsws.sos.ky.gov/ovrweb/govoteky/",
+          "publisher": "Kentucky State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-14T19:39:02.846522+00:00",
+          "httpStatus": 200,
+          "rawHash": "fe88498e7160327b7a71a86cbd014a360d7acb03378212431dd988bd0f9eb510",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        }
+      ]
+    },
+    "payload": {
+      "kind": "ballot-navigation",
+      "records": [
+        {
+          "id": "election-field:1a75a75356649bbc07f93e75e48a0f95",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "registration_lookup",
+            "text": "https://vrsws.sos.ky.gov/VIC",
+            "quote": "Review Your Registration or Absentee Ballot Status",
+            "dates": [],
+            "url": "https://vrsws.sos.ky.gov/ovrweb/govoteky/",
+            "navigationUrl": "https://vrsws.sos.ky.gov/VIC",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:39:02.846522+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:34910e807ced5fa4efea2f25811b9c23",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "early_voting",
+            "text": "Early in-person, no excuse absentee voting will take place Thursday, October 29, Friday, October 30, and Saturday, October 31, 2026.",
+            "quote": "Early in-person, no excuse absentee voting will take place Thursday, October 29, Friday, October 30, and Saturday, October 31, 2026.",
+            "dates": [
+              "2026-10-29",
+              "2026-10-31"
+            ],
+            "url": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:44.063163+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:5530578373f78c601744c7444f344eff",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "election_office",
+            "text": "State Board of Elections",
+            "quote": "State Board of Elections",
+            "dates": [],
+            "url": "https://elect.ky.gov/About-Us/Pages/Contact-Us.aspx",
+            "navigationUrl": "https://elect.ky.gov/Pages/default.aspx",
+            "electionDate": "2026-11-03",
+            "phone": "502-573-7100",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:37:09.122744+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:73fdccf3726df38f050bf9db71a60c85",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "early_voting",
+            "text": "In-person, excused absentee voting October 21, 22, 23, and October 26, 27, 28, 2026.",
+            "quote": "In-person, excused absentee voting October 21, 22, 23, and October 26, 27, 28, 2026.",
+            "dates": [
+              "2026-10-21",
+              "2026-10-22",
+              "2026-10-26",
+              "2026-10-27"
+            ],
+            "url": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:44.063163+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:76b959b72c870f003fb43b9132fb26c6",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "mail_ballot_request_deadline",
+            "text": "October 20, 2026, 11:59PM (Eastern Time) – Last day to request a mail-in absentee ballot.",
+            "quote": "October 20, 2026, 11:59PM (Eastern Time) – Last day to request a mail-in absentee ballot.",
+            "dates": [
+              "2026-10-20"
+            ],
+            "url": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:44.063163+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:979b3be34ffe185455b9d34331989e07",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "registration_page",
+            "text": "https://vrsws.sos.ky.gov/ovrweb/govoteky",
+            "quote": "Register Online to Vote",
+            "dates": [],
+            "url": "https://elect.ky.gov/Pages/default.aspx",
+            "navigationUrl": "https://vrsws.sos.ky.gov/ovrweb/govoteky",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:09.964775+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:addf9e9e1c27b305a9a03edecdad9fa5",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "ballot_lookup",
+            "text": "http://web.sos.ky.gov/electionballots/",
+            "quote": "Sample Ballot",
+            "dates": [],
+            "url": "https://vrsws.sos.ky.gov/ovrweb/govoteky/",
+            "navigationUrl": "http://web.sos.ky.gov/electionballots/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:39:02.846522+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:dadd346a81556c1442b73cca29755ff4",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "polling_lookup",
+            "text": "https://vrsws.sos.ky.gov/vic/",
+            "quote": "Where to Vote",
+            "dates": [],
+            "url": "https://elect.ky.gov/Pages/default.aspx",
+            "navigationUrl": "https://vrsws.sos.ky.gov/vic/",
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:36:09.964775+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        },
+        {
+          "id": "election-field:f61bd30db07f1f5850f86d2ef6b6ae7f",
+          "kind": "ELECTION_FIELD",
+          "value": {
+            "state": "KY",
+            "divisionId": "ocd-division/country:us/state:ky",
+            "fieldKind": "registration_deadline",
+            "text": "Monday October 5, 2026: Register Online by 4pm local time. Mailed Registration Cards can be Postmarked on 10/5 to be accepted. Cards taken to the Clerk's Office can be accepted by close of business.",
+            "quote": "Monday October 5, 2026: Register Online by 4pm local time. Mailed Registration Cards can be Postmarked on 10/5 to be accepted. Cards taken to the Clerk's Office can be accepted by close of business.",
+            "dates": [
+              "2026-10-05"
+            ],
+            "url": "https://elect.ky.gov/Voters/Pages/Voting-In-Person-and-By-Mail.aspx",
+            "navigationUrl": null,
+            "electionDate": "2026-11-03",
+            "verifiedAt": "2026-10-14T21:32:20.096Z",
+            "collectedAt": "2026-10-14T19:40:44.063163+00:00",
+            "sourceOrg": "Kentucky State Board of Elections"
+          }
+        }
+      ]
+    }
+  }
+}

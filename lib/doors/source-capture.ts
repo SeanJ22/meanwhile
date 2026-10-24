@@ -1,5 +1,6 @@
 import { contentHash } from "../control-plane/ids.ts";
-import { artifactId, classifyAcquisition, defaultRetention, type Artifact } from "../control-plane/evidence/artifact.ts";
+import { artifactId, defaultRetention, type Artifact } from "../control-plane/evidence/artifact.ts";
+import { savedVotingCopy } from "../ballot/voting-source-evidence.ts";
 import { newFieldManualEntry, writeFieldManual } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { CycleVault } from "../control-plane/scheduler/vault.ts";
@@ -27,13 +28,16 @@ export async function recordSourceObservation(repos: Repos, observation: SourceO
   const { disposition } = observation;
   let copyId: string | null = null;
   if (observation.capture) {
-    const { bytes, contentType } = observation.capture;
-    const hash = contentHash(bytes), tier = classifyAcquisition(new TextDecoder().decode(bytes)).tier;
+    // Same rule as every fetched official page: the saved copy has any key-like string blanked, so it is never held.
+    const copy = await savedVotingCopy({ url: address.url, ...observation.capture }, at);
+    const { bytes, contentType } = copy;
+    const hash = contentHash(bytes), tier = copy.derivation ? "SANITIZED_DERIVED" : "RAW";
     const workItemId = observation.workItemId ?? `source:${observation.ocdId}`;
     const artifact: Artifact = { id: artifactId(tier, hash), tier, contentHash: hash, byteLength: bytes.byteLength,
       contentType, canonicalUrl: address.url, retrievalUrl: observation.url, retrievedAt: at, httpStatus: 200,
       headers: {}, sourceId: "source-discovery", methodRouteId: "source-discovery", workItemId,
-      attemptId: `source-discovery:${workItemId}:${at}`, permission: "ALLOWED", transport: "REACHABLE", retentionPolicy: defaultRetention(tier) };
+      attemptId: `source-discovery:${workItemId}:${at}`, permission: "ALLOWED", transport: "REACHABLE", retentionPolicy: defaultRetention(tier),
+      ...(copy.derivation ? { derivation: copy.derivation } : {}) };
     const saved = await vault.putBytes(artifact, bytes);
     if (!saved.stored) throw new Error(saved.why);
     if ((await repos.artifacts.readWhere(workItemId, ["artifactId"], artifact.id)).length === 0) await repos.artifacts.append(workItemId, artifact.id, { artifactId: artifact.id, workItemId, routeTaskId: null,

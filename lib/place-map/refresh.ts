@@ -53,13 +53,18 @@ export async function knownPostalZips(root: string, requested: ReadonlySet<strin
 
 /** Only one state's held Census payload crosses the database connection. */
 export async function heldStateDataset(query: Query, state: string): Promise<BuiltDataset | undefined> {
-  const [row] = await query(`SELECT jsonb_build_object('formatVersion',1,'builtAt',p.payload->>'builtAt','coverage',$1::text,
+  const [row] = await query(`WITH held AS (
+      SELECT reader_payload_node(payload) AS root FROM civic_data_promotions
+      WHERE record_class='CENSUS_GEOGRAPHY' AND scope='US:zcta-geography-overlaps'
+    ) SELECT jsonb_build_object('formatVersion',1,'builtAt',h.root->>'builtAt','coverage',$1::text,
     'zctaUniverse','[]'::jsonb,'scopes',coalesce(jsonb_agg(s.scope),'[]'::jsonb)) AS dataset
-    FROM civic_data_promotions p CROSS JOIN LATERAL (
-      SELECT (held.value - 'groupings') || jsonb_build_object('groupings',
-        (SELECT coalesce(jsonb_agg(g),'[]'::jsonb) FROM jsonb_array_elements(held.value->'groupings') g WHERE g->>'stateAbbr'=$1)) AS scope
-      FROM jsonb_array_elements(p.payload->'scopes') AS held(value) WHERE held.value->>'type'<>'cbsa'
-    ) s WHERE p.record_class='CENSUS_GEOGRAPHY' AND p.scope='US:zcta-geography-overlaps' GROUP BY p.payload->>'builtAt'`, [state]);
+    FROM held h CROSS JOIN LATERAL (
+      SELECT reader_payload_value(reader_payload_node(held_scope.item) - 'groupings') || jsonb_build_object('groupings',
+        (SELECT coalesce(jsonb_agg(reader_payload_value(g.item)),'[]'::jsonb)
+          FROM reader_payload_members(reader_payload_node(held_scope.item)->'groupings') g
+          WHERE reader_payload_node(g.item)->>'stateAbbr'=$1)) AS scope
+      FROM reader_payload_members(h.root->'scopes') held_scope WHERE reader_payload_node(held_scope.item)->>'type'<>'cbsa'
+    ) s GROUP BY h.root->>'builtAt'`, [state]);
   return row?.dataset as BuiltDataset | undefined;
 }
 

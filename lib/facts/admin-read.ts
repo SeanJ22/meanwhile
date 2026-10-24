@@ -25,7 +25,7 @@ export async function readFactStore(query: ReadOnlyQuery, now = new Date()): Pro
       CROSS JOIN generate_series(date_trunc('hour',$2::timestamptz)-interval '23 hours',date_trunc('hour',$2::timestamptz),interval '1 hour') AS hours(hour)
       LEFT JOIN count_hour c ON c.state=regions.state AND c.hour=hours.hour AND c.step IN ('door_official','door_checked')
       GROUP BY regions.state,hours.hour ORDER BY hours.hour DESC,regions.state`,
-      params:[[...REGISTRY_STATES.map(state => state.toLowerCase()), "system"],now.toISOString()]},
+      params:[[...REGISTRY_STATES, "US"],now.toISOString()]},
   ]);
   return { blanks: blanks!.map(r => ({stage:String(r.stage),reason:String(r.reason),n:Number(r.n)})),
     hours: (hours ?? []).map(row => ({ state:String(row.state), hour:new Date(row.hour as string | Date).toISOString(),

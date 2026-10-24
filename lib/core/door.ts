@@ -8,6 +8,7 @@ import { isSourceApiUrl } from "../control-plane/scheduler/scout-api.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
+import { resolveId } from "./resolve.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
 
@@ -27,7 +28,7 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
 export type DoorOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly refused: string };
 interface DoorOptions {
   readonly purge?: ReaderCachePurger;
-  readonly refusal?: (query: Query, claim: PublishInput, reason: string) => Promise<void>;
+  readonly refusal?: (claim: PublishInput, reason: string) => Promise<void>;
 }
 
 const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
@@ -44,7 +45,7 @@ export function decide(current: Side | null, incoming: Side): Decision {
 
 /** A city's, county's, special district's or school district's governing board when the fact store holds none: a board named `<government id>#governing` (`#board` for schools) on the government, and on its place, where readers look for it. */
 export async function ensureGoverningBody(query: Query, subjectId: string): Promise<BodyRef | null> {
-  const subject = await canonicalSubject(query, subjectId);
+  const subject = await resolveId(subjectId, query) ?? await canonicalSubject(query, subjectId);
   if (subject !== subjectId) {
     const [held] = await query("SELECT id, name, state, parent_id FROM entity WHERE id = $1 AND kind = 'body'", [subject]);
     if (held) return { id: String(held.id), name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null };
@@ -80,12 +81,14 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
 export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Date = new Date(),
   options: DoorOptions = {}): Promise<DoorOutcome> {
   let changed: ReaderCacheScope | undefined;
+  let refusedClaim: PublishInput | undefined;
   const outcome = await db.transaction<DoorOutcome>(async (query) => {
     const requested = input.subjectId ?? input.entity!.id;
-    const subjectId = await canonicalSubject(query, requested);
+    const subjectId = await resolveId(requested, query) ?? await canonicalSubject(query, requested);
     let entity = await readCheckEntity(query, subjectId);
     const sourceUrl = input.capture?.evidence.canonicalUrl ?? input.copy.finalUrl;
-    const government = input.board ? await readCheckEntity(query, await canonicalSubject(query, input.board.governmentId)) : null;
+    const government = input.board ? await readCheckEntity(query,
+      await resolveId(input.board.governmentId, query) ?? await canonicalSubject(query, input.board.governmentId)) : null;
     if (input.board && government && isOfficialUrl(sourceUrl, government.hosts)) {
       const body = await bodyNamed(query, government.id, null, input.board.name);
       if (body) entity = await readCheckEntity(query, body.id);
@@ -95,7 +98,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       if (body) entity = await readCheckEntity(query, body.id);
     }
     if (!entity) {
-      await options.refusal?.(query, { ...input, entity: input.entity ?? { id: requested, fullName: requested, stateName: null, hosts: [], externalIds: [] } }, "SUBJECT_NOT_FOUND");
+      refusedClaim = { ...input, entity: input.entity ?? { id: requested, fullName: requested, stateName: null, hosts: [], externalIds: [] } };
       return { refused: "SUBJECT_NOT_FOUND" };
     }
     const copy = input.capture ? await saveCaptureCopy(query, input.capture) : input.copy;
@@ -108,7 +111,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
     const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };
     const campaignSelf = c.provenance !== "CAMPAIGN" || c.sourceSubjectId !== undefined
-      && await canonicalSubject(query, c.sourceSubjectId) === entity.id;
+      && await resolveId(c.sourceSubjectId, query) === entity.id;
     // Also serialize the first value for a field, before there is a head row to lock.
     await query("SELECT pg_advisory_xact_lock(hashtextextended($1, 0))", [canonicalJson([entity.id, c.field])]);
     // Scope first: a sparse live-status index can otherwise scan every published fact for one claim.
@@ -117,24 +120,27 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       ORDER BY (status = 'live') DESC, id DESC LIMIT 1 FOR UPDATE
     ), own AS MATERIALIZED (
       SELECT id, value, value_text, quote, second_copy_id, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
-    ) SELECT f.id, f.value, f.value_text, f.quote, f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id,
-      coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at
-      FROM own f`, [c.entity.id, c.field]);
+    ) SELECT f.id, f.value, f.value_text, f.quote, f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id, f.checked_at,
+      coalesce(s.fetched_at,f.checked_at) AS fetched_at,s.final_url AS source_url
+      FROM own f LEFT JOIN source_copy s ON s.id=f.source_copy_id`, [c.entity.id, c.field]);
     const row = head?.status === "live" ? head : undefined;
     // Replaying an already checked source is a no-op, including after its freshness window.
     // It does not refresh the checked date, publish a value, or count another delivery.
-    if (campaignSelf && row && Number(row.source_copy_id) === c.copy.id && row.provenance_kind === c.provenance
+    if (campaignSelf && row && Number(row.source_copy_id) === c.copy.id && (row.provenance_kind === c.provenance || row.provenance_kind === input.provenance)
+      && c.copy.fetchedAt.getTime() <= Math.max(new Date(row.fetched_at as string).getTime(), new Date(row.checked_at as string).getTime())
       && row.quote === c.quote && row.value_text === c.valueText && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
       && canonicalJson(row.value) === canonicalJson(c.value)) return { decision: "CONFIRM", factId: Number(row.id) };
     const verdict = !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
-      await options.refusal?.(query, c, verdict.reason);
+      refusedClaim = c;
       return { refused: verdict.reason };
     }
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
-    const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
+    const currentProvenance = row?.provenance_kind === "OWNER" || row?.provenance_kind === "FILING" ? row.provenance_kind
+      : row?.source_url && (isOfficialUrl(String(row.source_url),entity.hosts) || isSourceApiUrl(String(row.source_url))) ? "OFFICIAL" : row?.provenance_kind;
+    const decision = decide(row ? { value: row.value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {
       if (row!.provenance_kind !== "OWNER" && rank[c.provenance] <= rank[row!.provenance_kind as Provenance]
@@ -171,6 +177,8 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     }
     return { decision, factId };
   });
+  // The work list can be on another database. Release the fact transaction before handing off a refusal.
+  if ("refused" in outcome && refusedClaim) await options.refusal?.(refusedClaim, outcome.refused);
   if (changed) await invalidateReaderCache(changed, options.purge);
   return outcome;
 }
@@ -190,9 +198,9 @@ async function filePublication(query: Query, entityId: string, step: string, now
   [places.map(place => place.id), now.toISOString()]);
   const [subject] = await query("SELECT state FROM entity WHERE id=$1", [entityId]);
   const states = [...new Set([...places.map(place => place.state), subject?.state]
-    .flatMap(state => state && state !== "US" ? [String(state).toLowerCase()] : []))];
+    .flatMap(state => state && state !== "US" ? [String(state).toUpperCase()] : []))];
   await query(`INSERT INTO count_hour(state,hour,step,n)
     SELECT state,date_trunc('hour',$2::timestamptz),$3,1 FROM unnest($1::text[]) AS state
     ON CONFLICT(state,hour,step) DO UPDATE SET n=count_hour.n+1`,
-  [states.length ? states : ["system"], now.toISOString(), step]);
+  [states.length ? states : ["US"], now.toISOString(), step]);
 }

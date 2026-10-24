@@ -40,11 +40,11 @@ export async function openBlank(query: Query, input: { readonly entityId: string
 /** Older callers retain their blank result; every fact is written by the same door. */
 export async function publishClaim(db: FactDb, input: PublishInput, clocks: Clocks, now = new Date(),
   options: { readonly purge?: ReaderCachePurger } = {}): Promise<PublishOutcome> {
-  const outcome = await door(db, input, clocks, now, { ...options, refusal: async (query, claim, reason) => {
+  const outcome = await door(db, input, clocks, now, { ...options, refusal: async (claim, reason) => {
     if (reason === "SUBJECT_NOT_FOUND") return;
-    await openBlank(query, { entityId: claim.entity.id, field: claim.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
+    await db.transaction(query => openBlank(query, { entityId: claim.entity.id, field: claim.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
       detail: JSON.stringify({ sourceUrl: claim.copy.finalUrl, copyId: claim.copy.id, fieldKind: claim.fieldKind, provenance: claim.provenance,
-        value: claim.value, valueText: claim.valueText, quote: claim.quote, producedBy: claim.producedBy }), retryMinutes: clocks.retryMinutes(claim.fieldKind) });
+        value: claim.value, valueText: claim.valueText, quote: claim.quote, producedBy: claim.producedBy }), retryMinutes: clocks.retryMinutes(claim.fieldKind) }));
   } });
   return "refused" in outcome ? { blank: outcome.refused } : outcome;
 }

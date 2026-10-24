@@ -2,15 +2,21 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import type { FactDb, Query } from "../../lib/facts/publish.ts";
+import { readerIdentityMigration } from "./reader-identity-db.ts";
 
 const MIGRATIONS = ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "0044_rs01_retire_copies.sql", "0048_r3_legistar_members.sql", "0049_r3_legistar_members_retire_index.sql", "0046_ck01_audit_flags.sql", "0047_ck01_flag_target.sql", "RB-A3_expand.sql"].map(file => join(import.meta.dirname, "..", "..", "lib", "db", "migrations", file));
 /** The retirement migration also edits meeting tables this store does not have; only its fact trigger and queue drop apply here. */
 const factStatement = (migration: string, statement: string) => !migration.includes("0044_") || /fact_changed|rebuild_queue/.test(statement);
 
 /** A real Postgres with the fact store migration applied. */
-export async function factDb(): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
+export async function factDb(options: { readonly withResolver?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
   const pg = new PGlite();
   for (const migration of MIGRATIONS) for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
+  // Standalone fact-store tests need the real resolver, without the unrelated event-reconciliation tables.
+  if (options.withResolver !== false) {
+    const resolve = readerIdentityMigration().split("--> statement-breakpoint").find(statement => /CREATE FUNCTION reader_resolve_id\(/.test(statement));
+    await pg.exec(resolve!);
+  }
   const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
   return {
     pg, query,

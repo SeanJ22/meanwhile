@@ -116,7 +116,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
   const seated = new Set<string>();
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);
-    if (!name || !written || !personName(name)) {
+    if (!name || !written || input.acquisition !== "loader" && !personName(name)) {
       const reason = name ? "NAME_NOT_A_PERSON" : "NAME_NOT_READ";
       await openBlank(db.query, { entityId: body.id, field: `member-row:${member.recordId}`, stage: "READ", reason,
         detail: capture.evidence.canonicalUrl, retryMinutes: clocks.retryMinutes("officeholder") });
@@ -145,14 +145,14 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     for (const [from, field] of TERMS) {
       const value = text(member.fields[from]);
       const quote = member.fieldSources?.[from]?.quote;
-      if (!value || (from !== "termNote" && !quote)) continue;
-      if (from !== "termNote" && boundedIndexOf(normalizeText(quote!).toLowerCase(), normalizeText(written).toLowerCase()) === -1) {
+      if (!value || (input.acquisition !== "loader" && from !== "termNote" && !quote)) continue;
+      if (input.acquisition !== "loader" && from !== "termNote" && boundedIndexOf(normalizeText(quote!).toLowerCase(), normalizeText(written).toLowerCase()) === -1) {
         await openBlank(db.query, { entityId: personId, field: `${field}:${body.id}`, stage: "CHECK", reason: "TERM_QUOTE_NOT_ABOUT_MEMBER",
           detail: quote!, retryMinutes: clocks.retryMinutes("officeholder") });
         count({ blank: "TERM_QUOTE_NOT_ABOUT_MEMBER" }, member.recordId, from);
         continue;
       }
-      await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" ? value : quote!, from);
+      await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" || input.acquisition === "loader" ? value : quote!, from);
     }
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {

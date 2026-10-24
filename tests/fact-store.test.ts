@@ -96,6 +96,18 @@ test("newer and more official wins; Sean's value changes only through him", () =
   assert.equal(decide(official, { value: "S", provenance: "OWNER", fetchedAt: at("2026-03-01") }), "PUBLISH");
 });
 
+test("Dadeville keeps its own agenda page when a newer sidebar offers a video page", () => {
+  const current = { value: "https://cityofdadevilleal.org/city-council-2/", provenance: "OFFICIAL" as const,
+    sourceUrl: "http://www.cityofdadevilleal.org/", fetchedAt: new Date("2026-10-21T22:37:19.484Z") };
+  const incoming = { provenance: "OFFICIAL" as const, fetchedAt: new Date("2026-10-24T08:00:00Z") };
+  for (const value of ["https://www.youtube.com/@CityOfDadeville", "https://cityofdadevilleal.org/youtube/", "https://cityofdadevilleal.org/contact/"]) {
+    assert.equal(decide(current, { ...incoming, value }, "agenda_url"), "KEEP_CURRENT");
+  }
+  assert.equal(decide(current, { ...incoming, value: "https://cityofdadevilleal.org/council-archives/" }, "agenda_url"), "PUBLISH");
+  assert.equal(decide(current, { ...incoming, value: "https://cityofdadevilleal.org/agendas/" }, "agenda_url"), "PUBLISH");
+  assert.equal(decide(current, { ...incoming, value: "https://cityofdadevilleal.org/youtube/" }, "video_url"), "PUBLISH");
+});
+
 async function seeded() {
   const db = await factDb();
   await db.query("INSERT INTO entity (id, kind, name, state) VALUES ('ocd-division/country:us/state:az/place:tucson', 'place', 'Tucson', 'AZ')");

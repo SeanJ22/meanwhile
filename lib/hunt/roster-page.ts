@@ -111,12 +111,12 @@ const OFFICE_WORD =
 
 /** Words a page puts in a heading, a notice, a menu or a place's name, never in a person's: a cell holding one is not a name. */
 const NOT_A_NAME =
-  /\b(?:announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses|date|dates|elected|expires|expiration|term|terms|seat|title|position|bid|bids|package|packages|name|town|village|of|the|and|for|at|in|on|to|by|from|with)\b/i;
+  /\b(?:scholarships?|fund[- ]?raising|accounts payable|readi[- ]ride|remote work|field trips|controversial issues|announcements?|notices?|elections?|portal|calendar|events?|news|agenda|minutes|meetings?|departments?|services?|online|links?|ticket|tickets|permits?|forms?|applications?|apply|resources?|information|contact|directory|archives?|documents?|reports?|budget|ordinances?|resolutions?|hearings?|public|works|safety|municipal|complex|center|centre|building|courthouse|library|home|about|welcome|search|login|subscribe|facebook|twitter|instagram|youtube|webcam|police|utilities|airport|inspections?|licenses?|zoning|planning|recycling|trash|sewer|taxes|careers|employment|volunteer|history|visit|visiting|living|working|business|businesses|date|dates|elected|expires|expiration|term|terms|seat|title|position|bid|bids|package|packages|name|town|village|of|the|and|for|at|in|on|to|by|from|with)\b/i;
 
 export function looksLikeNameCell(text: string): boolean {
   const first = splitPersonTitle(text.split("\n")[0]?.trim() ?? "").name;
   if (first.length < 5 || first.length > 60 || /^(?:contact|email|meet|about|biography of)\b/i.test(first)) return false;
-  if (OFFICE_WORD.test(first) || NOT_A_NAME.test(first)) return false;
+  if (OFFICE_WORD.test(first) || NOT_A_NAME.test(first) || /^(?:(?:vice|deputy|acting|interim)\s+)?president$/i.test(first)) return false;
   if (EMAIL.test(first) || PHONE.test(first) || /\d/.test(first)) return false;
   const tokens = first.replace(/[,.]$/, "").split(/\s+/);
   if (tokens.length < 2 || tokens.length > 5) return false;
@@ -137,10 +137,10 @@ export function looksLikeNameCell(text: string): boolean {
  * office or a seat, is the title; "Sr", "Jr", "M.Ed." and a nickname are parts of the name and are never in it.
  */
 const TITLE_HEAD = /^(?:president|chair|chairs|chairman|chairwoman|chairperson|chairs?|mayor|councilmember|councilmembers|councilman|councilwoman|councilor|councillor|councilperson|trustee|commissioner|alderman|alderwoman|alderperson|alderperson|selectman|selectwoman|selectperson|supervisor|secretary|treasurer|clerk|member|members|director|representative|delegate|legislator|assemblymember|assemblyman|assemblywoman|designee|freeholder|justice|superintendent|chief|manager|attorney|administrator|engineer|planner|officer|technician|mechanic|mech|coordinator|specialist|analyst|inspector|captain|lieutenant|sergeant|sheriff|judge|assistant|deputy|enforcement)$/i;
-const TITLE_FILL = /^(?:permit|code|building|planning|billing|utility|payroll|records|it|police|fire|executive|administrative|hr|finance|public|works|human|resources|vice|deputy|pro|tem|temp|temporary|assistant|acting|interim|co|ex|officio|ex-officio|board|council|city|town|village|borough|county|township|school|district|governing|elected|appointed|of|the|and|for|at|large|at-large|ward|seat|position|place|zone|no|number|vice-president|vice-chair|vice-chairman|vice-chairwoman|vice-chairperson|vice-mayor|president-elect|pro-tem|member-at-large|clerk|trustee|trustees|[a-f]|\d{1,2}(?:st|nd|rd|th)?)$/i;
-const SEAT_SPEC = /^(?:(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?(?:\d+|[a-f])|at[- ]large)$/i;
+const TITLE_FILL = /^(?:permit|code|building|planning|billing|utility|payroll|records|it|police|fire|executive|administrative|hr|finance|public|works|human|resources|vice|deputy|pro|tem|temp|temporary|assistant|acting|interim|co|ex|officio|ex-officio|board|council|commission|alternate|city|town|village|borough|county|township|school|district|governing|elected|appointed|of|the|and|for|at|large|at-large|ward|seat|position|place|zone|no|number|vice-president|vice-chair|vice-chairman|vice-chairwoman|vice-chairperson|vice-mayor|president-elect|pro-tem|member-at-large|clerk|trustee|trustees|[a-f]|\d{1,2}(?:st|nd|rd|th)?)$/i;
+const SEAT_SPEC = /^(?:(?:commission\s+)?(?:district|ward|seat|position|place|zone)\s*(?:no\.?\s*)?(?:\d+|[a-f])|at[- ]large)$/i;
 
-function titleish(rest: string): boolean {
+export function isOfficeTitle(rest: string): boolean {
   const words = rest.replace(/[,;&/|\-–—]/g, " ").split(/\s+/).map(word => word.replace(/^[("']+|[)".'’,:;]+$/g, "")).filter(Boolean);
   if (!words.length || words.length > 8) return false;
   if (!words.every(word => TITLE_HEAD.test(word) || TITLE_FILL.test(word))) return false;
@@ -166,7 +166,7 @@ export function splitPersonTitle(raw: string): { readonly name: string; readonly
   for (const sep of text.matchAll(/\s+[-–—]\s+|\s*,\s*|\s*\(/g)) {
     const rest = text.slice(sep.index! + sep[0].length).replace(/\)$/, "").trim();
     const head = text.slice(0, sep.index!).replace(/[,;\s]+$/, "").trim();
-    if (head && rest && titleish(rest)) return { name: head, title: rest.replace(/^[,;\s-–—]+|[,;\s]+$/g, "") };
+    if (head && rest && isOfficeTitle(rest)) return { name: head, title: rest.replace(/^[,;\s-–—]+|[,;\s]+$/g, "") };
   }
   return { name: text.replace(/[,;]$/, "").trim(), title: null };
 }

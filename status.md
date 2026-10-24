@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T20:56:57Z
+heartbeat: 2026-10-24T21:00:42Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Found: no state's polling places have refreshed since late morning, 5:10 PM EDT
+- Every source-launch pass since 1:42 PM EDT defers voting-sites in all 56 jurisdictions: "WORKER_MEMORY_DEADLINE: memory wait deferred", "Waiting for a worker slot". 25 states (AK, AS, GU, KY, ME, MP, MT, ND, OK, OR, PA, PR, RI, SC, SD, TN, TX, UT, VA, VI, VT, WA, WI, WV, WY) were deferring on alternating passes from 11:09 AM; before that they were not yet due. The last known IL voting read was 8:28 AM.
+- Readers keep the polling places already published. But no new or changed site can publish, including Cochise's 5 drop boxes, Wheeling's early-voting site, or any county's updated early-voting list. The election is in 10 days.
+- A River helper is root-causing this from the runner's admission code and real records (read-only). Possible trigger: release 97's RN-03 made every state's voting input due at once (all 56 first deferred at 12:22 PM EDT, after 97 went live at 11:48). The fix ships as its own small batch.
 
 ### Live for readers, 5:00 PM EDT
 - Live: release 102 (4ae2e14e6, 4:54 PM EDT). Reader checks pass. The first supervisor digest on 102 is owed to confirm meeting calendar failures drop.

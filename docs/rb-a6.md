@@ -28,7 +28,7 @@ Production reads use only `readonly` on tiny-hill-13996172 / br-delicate-lab-ax0
 Owned by RB-A6:
 
 - Rerun every check after River contains RB-A2. All nine `pnpm gates` checks pass on snapshot `43229fd4a`: 9,646 cases passed, none failed, five existing cases skipped, with all 1,348 file summaries complete. Both production builds and the bundle check pass. The newest RB-A2 update also builds and passes its 17 affected map/owed cases. Earlier incomplete runs are not counted as passes.
-- Follow `stream/rb-a2` on each fetch. Current merged dependency: `9b7681df3` (includes RB-A1 READY `5bde46615`, event-preservation/next-refresh evidence, indexed point/source-shape fixes, border-ZIP district links and covering indexes for ZIP lookups). River has not recorded or contained RB-A2 yet.
+- Follow `stream/rb-a2` on each fetch. Current merged dependency: `6f1cc7c55` (includes RB-A1 READY `5bde46615`, indexed/border-ZIP fixes, the national bulk handoff and plan-selection evidence for all ten redrawn states). River has not recorded or contained RB-A2 yet.
 - After River folds RB-A2, merge `origin/river`, rerun every check, and push `READY: RB-A6` with the production connections, every-state counts and next-pass evidence.
 - Keep checking River's return and status until RB-A6 passes its live check. The first automatic production pass remains part of that live check.
 

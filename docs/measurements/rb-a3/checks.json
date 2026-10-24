@@ -1,0 +1,66 @@
+{
+  "observedAt": "2026-10-24T14:48:15.410950+00:00",
+  "commit": "8649ec05076bfa80b6efd44f1c7108126f7c29e9",
+  "node": "v24.19.0",
+  "preflight": "PASS",
+  "gates": [
+    {
+      "id": "lint",
+      "status": "PASS",
+      "seconds": 63
+    },
+    {
+      "id": "tsc",
+      "status": "PASS",
+      "seconds": 55
+    },
+    {
+      "id": "dead-code",
+      "status": "PASS",
+      "seconds": 5
+    },
+    {
+      "id": "assert:browser",
+      "status": "PASS",
+      "seconds": 1
+    },
+    {
+      "id": "test",
+      "status": "PASS",
+      "seconds": 1593
+    },
+    {
+      "id": "db:gate",
+      "status": "PASS",
+      "seconds": 1
+    },
+    {
+      "id": "build",
+      "status": "PASS",
+      "seconds": 19
+    },
+    {
+      "id": "test:bundle",
+      "status": "PASS",
+      "seconds": 1
+    },
+    {
+      "id": "build:standalone",
+      "status": "PASS",
+      "seconds": 32
+    }
+  ],
+  "tests": {
+    "tests": 9660,
+    "failed": 0,
+    "passed": 9658,
+    "cancelled": 0,
+    "skipped": 2,
+    "todo": 0,
+    "topLevel": 9518,
+    "suites": 42
+  },
+  "testFiles": 1349,
+  "timingComplete": true,
+  "databaseAccess": "specified production reader readonly role; no migrations executed"
+}

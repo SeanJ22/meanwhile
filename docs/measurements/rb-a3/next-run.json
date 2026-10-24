@@ -1,0 +1,118 @@
+{
+  "observedAt": "2026-10-24T14:14:45.285Z",
+  "subject": "ocd-division/country:us/state:az/place:mesa#governing",
+  "sources": [
+    "https://webapi.legistar.com/v1/mesa/Bodies?$filter=BodyActiveFlag%20eq%201",
+    "https://www.mesaaz.gov/Government/Mayor-City-Council"
+  ],
+  "nextRun": {
+    "intervalMs": 60000,
+    "mode": "wall-clock timer",
+    "startedAt": [
+      "2026-10-24T14:12:44.908Z",
+      "2026-10-24T14:13:45.055Z",
+      "2026-10-24T14:14:45.222Z"
+    ],
+    "passes": [
+      {
+        "looked": 0,
+        "deferred": 0,
+        "published": 0,
+        "publishedByRoute": {},
+        "handed": 0,
+        "refused": 0,
+        "seats": {
+          "flagged": 0
+        },
+        "labels": {
+          "flagged": 0,
+          "moved": 0,
+          "cut": 0,
+          "renamed": 0
+        },
+        "errorExamples": [],
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {}
+      },
+      {
+        "looked": 1,
+        "deferred": 0,
+        "published": 1,
+        "publishedByRoute": {
+          "office contacts": 1
+        },
+        "handed": 0,
+        "refused": 0,
+        "seats": {
+          "flagged": 0
+        },
+        "labels": {
+          "flagged": 0,
+          "moved": 0,
+          "cut": 0,
+          "renamed": 0
+        },
+        "errorExamples": [],
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {
+          "ocd-division/country:us/state:az/place:mesa#governing": {
+            "published": 1,
+            "refused": 0,
+            "waiting": 0
+          }
+        }
+      },
+      {
+        "looked": 0,
+        "deferred": 0,
+        "published": 0,
+        "publishedByRoute": {},
+        "handed": 0,
+        "refused": 0,
+        "seats": {
+          "flagged": 0
+        },
+        "labels": {
+          "flagged": 0,
+          "moved": 0,
+          "cut": 0,
+          "renamed": 0
+        },
+        "errorExamples": [],
+        "waitingByClass": {},
+        "failuresByReason": {},
+        "byPlace": {}
+      }
+    ],
+    "repeatUnchanged": true
+  },
+  "counts": [
+    {
+      "state": "AZ",
+      "hour": "2026-10-24T14:00:00.000Z",
+      "step": "door_checked",
+      "n": 1
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-24T14:00:00.000Z",
+      "step": "door_official",
+      "n": 1
+    }
+  ],
+  "queue": [
+    {
+      "place_id": "ocd-division/country:us"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az/place:mesa"
+    }
+  ],
+  "doorCode": "7184516ef",
+  "environment": "approved local production copy; no production writes"
+}

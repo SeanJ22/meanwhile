@@ -43,6 +43,19 @@ const config: Partial<Record<SourceApiTool, { base: string; key: string; param?:
   sam_gov_api: {base:'https://api.sam.gov/opportunities/v2/',key:'SAM_GOV_API_KEY',param:'api_key',path:'search'},
 };
 const credentialName = /^(api[_-]?key|key|apikey|token|access_token|authorization|secret|app_token)$/i;
+
+/** The captured response of an API we hold is published directly from its fields. */
+export function isSourceApiUrl(value: string): boolean {
+  const url = new URL(value);
+  const bases = [...Object.values(config).map(provider => provider.base),
+    'https://api.govinfo.gov/', 'https://webapi.legistar.com/v1/',
+    'https://api.us.socrata.com/api/catalog/v1', 'https://data.openstates.org/', 'https://open.pluralpolicy.com/'];
+  return bases.some(base => {
+    const provider = new URL(base);
+    return url.origin === provider.origin && url.pathname.startsWith(provider.pathname);
+  });
+}
+
 export async function readSourceApi(name: SourceApiTool, raw: unknown, options: SourceApiOptions = {}): Promise<SourceApiResult> {
   const env = options.env ?? process.env;
   const input = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;

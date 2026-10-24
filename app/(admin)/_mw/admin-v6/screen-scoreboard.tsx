@@ -1,6 +1,7 @@
 "use client";
 
 import { WeeklyColumns } from "./charts.tsx";
+import { FactHours } from "./fact-hours.tsx";
 import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import type { ScoreboardGateRow } from "./model.ts";
 import { mst } from "./model.ts";
@@ -22,6 +23,7 @@ export function ScoreboardScreen() {
         <h1 className={s.h1}>Scoreboard</h1>
       </header>
       {!b && <Card title="Numbers"><span className={s.big}>—</span></Card>}
+      <FactHours hours={b?.factHours ?? null} />
       {b && (
         <>
           <section aria-label="Numbers" className={s.grid3}>

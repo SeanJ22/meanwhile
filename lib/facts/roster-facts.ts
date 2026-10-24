@@ -114,7 +114,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     else tally.held++;
   };
   const places = (await db.query("SELECT place_id,boundary_year,placement_basis FROM entity_place WHERE entity_id=$1",[body.id]))
-    .map(row => ({placeId:String(row.place_id),boundaryYear:row.boundary_year as number | null,basis:row.placement_basis as EntityPlace["basis"]}));
+    .map(row => ({placeId:String(row.place_id),boundaryYear:Number(row.boundary_year),basis:row.placement_basis as EntityPlace["basis"]}));
   const seated = new Set<string>();
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);

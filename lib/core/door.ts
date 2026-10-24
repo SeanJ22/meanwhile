@@ -8,6 +8,7 @@ import { isSourceApiUrl } from "../control-plane/scheduler/scout-api.ts";
 import { isOfficialSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
+import {fileEntityPlaces, type EntityPlace} from "../facts/entity-places.ts";
 import { resolveId } from "./resolve.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
@@ -24,6 +25,7 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
   readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
   /** A board named by the government's own source, when it has no entity yet. */
   readonly board?: { readonly governmentId: string; readonly name: string };
+  readonly places?: readonly EntityPlace[];
 };
 export type DoorOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly refused: string };
 interface DoorOptions {
@@ -143,6 +145,8 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       refusedClaim = c;
       return { refused: verdict.reason };
     }
+    const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
+    await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null);
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const currentProvenance = row?.provenance_kind === "OWNER" || row?.provenance_kind === "FILING" ? row.provenance_kind
@@ -190,16 +194,9 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   return outcome;
 }
 
-/** Existing subject-to-place links keep serving readers until RB-A4 supplies the full service map. */
+/** A changed fact queues every served place filed by the same transaction. */
 async function filePublication(query: Query, entityId: string, step: string, now: Date): Promise<void> {
-  const places = await query(`WITH RECURSIVE subjects AS (
-      SELECT id,kind,state,parent_id,ARRAY[id] AS path FROM entity WHERE id=$1
-      UNION ALL SELECT e.id,e.kind,e.state,e.parent_id,s.path || e.id FROM entity e JOIN subjects s ON e.id=s.parent_id
-        WHERE NOT e.id=ANY(s.path)
-    ), places AS (
-      SELECT ep.place_id AS id FROM entity_place ep JOIN subjects s ON ep.entity_id=s.id
-      UNION SELECT id FROM subjects WHERE kind='place'
-    ) SELECT e.id,e.state FROM places p JOIN entity e ON e.id=p.id`, [entityId]);
+  const places = await query(`SELECT DISTINCT e.id,e.state FROM entity_place p JOIN entity e ON e.id=p.place_id WHERE p.entity_id=$1`,[entityId]);
   if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
     SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
   [places.map(place => place.id), now.toISOString()]);

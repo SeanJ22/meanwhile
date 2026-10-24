@@ -242,3 +242,22 @@ test("an address in an agenda item or a conflicting state never becomes a board 
   const header=readFileSync(new URL("./fixtures/mt01-wake-agenda-header.txt",import.meta.url),"utf8");
   assert.equal(agendaLetterheadOffice(header,"COUNTY OF WAKE","AZ"),null);
 });
+
+test("pin publication uses its saved Census citation even when an old calendar source URL is relative",async()=>{
+  for(const kind of ["office","meeting","blank"]){
+    const placed=kind!=="blank";
+    const meeting:Meeting={...online,provenance:{...online.provenance,sourceUrl:"/Calendar.aspx?EID=755"},
+      ...(kind!=="office"?{online:undefined,venueGap:{kind:"STATED_NOT_PLACED" as const,publishedText:OWN,publisher:"District"}}:{})};
+    const db=await setup([meeting],kind==="office"?OFFICE:"P.O. Box 123");
+    try{
+      const result=await publishHeldMeetingPins({facts:db,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,
+        clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000,fetchImpl:async()=>new Response(JSON.stringify(
+          !placed?{result:{addressMatches:[]}}:kind==="office"?geocode("2238","GINTER","RD","E","TUCSON","85706"):
+            geocode("1415","MELODY","LN","W","BISBEE","85603")))});
+      assert.deepEqual(result,{considered:1,published:Number(placed),unplaced:Number(!placed),failures:[]});
+      const [saved]=await db.query("SELECT payload FROM civic_data_promotions WHERE key='MEETING:held'");
+      assert.equal((saved.payload as {meetings:Meeting[]}).meetings[0].provenance.sourceUrl,meeting.provenance.sourceUrl);
+      assert.equal((await db.query("SELECT field FROM blank WHERE entity_id=$1",[`meeting:${meeting.id}`])).length,Number(!placed));
+    }finally{await db.pg.close();}
+  }
+});

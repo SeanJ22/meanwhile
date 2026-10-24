@@ -61,7 +61,7 @@ export interface MeetingFactsReport { readonly live: number; readonly confirmed:
 
 type MeetingFactDb = FactDb & { readonly query: Query };
 
-async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl = meeting.provenance.sourceUrl): Promise<CheckEntity> {
+async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl: string): Promise<CheckEntity> {
   const id = meetingEntityId(meeting.id);
   let state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
   let owner = meeting.bodyId ?? meeting.ocdId;
@@ -94,7 +94,8 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
 export async function publishMeetingPinFact(db: MeetingFactDb, input: {
   readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
-  const entity = await meetingFactEntity(db, input.meeting);
+  // The pin claim cites its saved Census copy; it does not register the old calendar as a new source door.
+  const entity = await meetingFactEntity(db, input.meeting, "");
   if (input.meeting.mapPin?.matchedAddress && input.capture) return publishPinClaim(db, entity, {...input, capture:input.capture}, clocks, now);
   await openBlank(db.query, {entityId:entity.id, field:"map_pin", stage:"ACQUIRE", reason:"MEETING_ADDRESS_NOT_PLACED",
     detail:input.meeting.venueGap?.publishedText ?? input.meeting.online?.label ?? null, retryMinutes:clocks.retryMinutes("meeting")});

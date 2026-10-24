@@ -23,6 +23,7 @@ import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { mergeWorkerBallotMeasures } from "./worker-ballot-measures.ts";
 import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
+import { withCandidateTickets, ballotCandidateAliases } from "../ballot/tickets.ts";
 
 const words = (value: unknown) => String(value ?? "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const text = (value: unknown) => typeof value === "string" ? value : "";
@@ -230,6 +231,7 @@ export class BallotContestMerge {
   private readonly checkAuthority: boolean;
   private readonly onContest?: (id: string, value: unknown, previous: Contest | undefined) => void;
   private readonly states = new Map<string, BallotRows>();
+  private readonly priorCandidacies = new WeakMap<BallotRows, ReadonlyMap<string, unknown>>();
   private readonly official = new Set<string>();
   private readonly priorSources: ManualProjectionPackage["sourceReceipt"]["sources"];
   private readonly currentAuthorities = new Map<string, string>();
@@ -308,6 +310,7 @@ export class BallotContestMerge {
   private takeRows(state: BallotRows, field: string, values: unknown[]) {
     const rows = new Map<string, unknown>();
     for (const row of values) rows.set(rowKey(field, row), row);
+    if (field === "candidacies") this.priorCandidacies.set(state, new Map(rows));
     state.rows.set(field, rows);
     this.setField(state.ballot, field, []);
   }
@@ -393,7 +396,7 @@ export class BallotContestMerge {
     if (old && (observedAt(value) || state.incomingTimes.get(parent) || 0) < (observedAt(old) || state.beforeTimes.get(parent) || 0)) return;
     if (field === "measures") state.measures.add(contestId);
     const next = reuseStatePublicationRecord(old, value) ?? immutableStateValue(field === "candidacies" && old ? { ...old as object, ...row } : value);
-    consumeStatePublicationRecord(old, next);
+    if (field !== "candidacies") consumeStatePublicationRecord(old, next);
     rows.set(id, next);
   }
 
@@ -401,12 +404,38 @@ export class BallotContestMerge {
     const ballots: Record<string, BallotSet> = {};
     for (const [key, state] of this.states) {
       const candidates = state.rows.get("candidacies") ?? new Map();
+      // Keep aliases before a complete refreshed list retires an earlier source id.
+      // The source rows remain evidence; readers use one person/choice projection.
+      const aliasBallot = { ...state.ballot };
+      for (const field of ["generalLineup", "measureAnalyses", "lineupReconciliation"] as const)
+        if (aliasBallot[field]) (aliasBallot as unknown as MutableRow)[field] = { ...aliasBallot[field] };
+      for (const [field, rows] of state.rows) this.setField(aliasBallot, field, [...rows.values()]);
+      const aliases = new Map<string, Candidacy>();
+      for (const choice of withCandidateTickets(aliasBallot).candidacies) {
+        for (const id of ballotCandidateAliases(choice)) aliases.set(id, choice);
+        if (choice.ticket) for (const id of ballotCandidateAliases(choice.ticket.runningMate)) aliases.set(id, choice.ticket.runningMate);
+      }
+      for (const [id, value] of candidates) {
+        const row = value as Candidacy, person = aliases.get(id);
+        if (!person) continue;
+        const next = { ...row, aliases: ballotCandidateAliases(person), ...(person.sources ? { sources: person.sources } : {}),
+          ...(person.ticket ? { runningMateAliases: ballotCandidateAliases(person.ticket.runningMate) } : {}) };
+        if (canonicalCivicDataJson(row) !== canonicalCivicDataJson(next)) {
+          candidates.set(id, immutableStateValue(next));
+        }
+      }
       for (const [id, value] of candidates) {
         const row = value as Candidacy;
         if (state.holds.has(row.contestId) || state.complete.has(row.contestId) && !state.candidates.has(id)) {
-          consumeStatePublicationRecord(value, null); candidates.delete(id);
+          candidates.delete(id);
         }
       }
+      // Candidate aliases are completed only after all source rows arrive.
+      // Release an unchanged prior only after both enrichment and retirement
+      // have finished, so a changed record keeps its exact history value.
+      for (const [id, previous] of this.priorCandidacies.get(state) ?? [])
+        consumeStatePublicationRecord(previous, candidates.get(id) ?? null);
+      this.priorCandidacies.delete(state);
       for (const field of ["contacts", "filingCandidacies"]) for (const [id, row] of state.rows.get(field) ?? []) {
         if (field === "contacts" && state.seen.get(field)?.has(id)) requirePublication(candidates.has(id) || state.seen.get("candidacies")?.has(id), "BALLOT_INPUT_CONTACT_CANDIDATE_MISSING");
         if (field === "contacts" ? !candidates.has(String((row as MutableRow).candidacyId)) : candidates.has(id)) {

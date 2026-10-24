@@ -1,6 +1,7 @@
 import { settleFundingSnapshotRead } from "./snapshot.ts";
 import { REGISTRY_STATES,type BallotState } from "../civic-data/state-scopes.ts";
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
+import { ballotCandidateAliases, ballotCandidatePeople, withCandidateTickets } from "../ballot/tickets.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "../registry/server.ts";
 import { directFundingTargetPlan, stateFromContest, FEDERAL_CONTEST, type FundingTargetPlan } from "./target-authorities.ts";
@@ -131,15 +132,20 @@ async function currentFundingTargetPlan(target: string, divisions: readonly stri
   if (candidacy) currentReaderSelection()?.keys.add(candidacy.candidacyId);
   const contestId = direct.contestId ?? candidacy?.contestId ?? null;
   for (const { source } of await readerBallotSourcesForDivisions(divisions)) {
-    const ballot = source.normalize(await source.fetch());
-    const filed = [...ballot.candidacies, ...ballot.filingCandidacies ?? []].find(row => row.id === target || row.id === candidacy?.candidacyId);
-    const contest = ballot.contests.find(row => row.id === (filed?.contestId ?? contestId));
+    const ballot = withCandidateTickets(source.normalize(await source.fetch()));
+    const matches = (person: (typeof ballot.candidacies)[number]) => ballotCandidateAliases(person)
+      .some(id => id === target || id === candidacy?.candidacyId);
+    const choice = [...ballot.candidacies, ...ballot.filingCandidacies ?? []].find(row => ballotCandidatePeople(row).some(matches));
+    const filed = choice && ballotCandidatePeople(choice).find(matches);
+    const contest = ballot.contests.find(row => row.id === (choice?.contestId ?? contestId) || row.aliases?.includes(contestId ?? ""));
     if (!contest) continue;
-    const office = officeIdentity(contest.title);
+    if (filed) currentReaderSelection()?.keys.add(filed.id);
+    const memberOffice = filed && choice?.ticket?.runningMate.id === filed.id ? choice.ticket.runningMate.office : null;
+    const office = officeIdentity(memberOffice ?? contest.title, contest.ocdId);
     const federal = office === "us_senator" || office === "us_representative";
     const state = ballot.election.state as BallotState;
     return { contestId: contest.id, federal, state: !federal && REGISTRY_STATES.includes(state) ? state : null,
-      ballotIdentity: target.includes("|") };
+      ballotIdentity: target.includes("|") || Boolean(filed && target !== filed.id) };
   }
   return { contestId, federal: direct.federal || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
     state: direct.state ?? stateFromContest(contestId), ballotIdentity: target.includes("|") };

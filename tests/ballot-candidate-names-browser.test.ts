@@ -5,7 +5,7 @@ import test from "node:test";
 import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 
-test("candidate tickets display spoken name order while Sources keeps the official quote", async () => {
+test("candidate names keep the official quote and the held portrait preserves candidate background", async () => {
   const quote = "Democratic Party | Benson, Jocelyn / Brinks, Winnie | 04/16/2026 | Petitions";
   const candidate = { givenName: "", familyName: "Benson, Jocelyn / Brinks, Winnie", provenance: {
     sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "Fixture election authority",
@@ -19,7 +19,10 @@ test("candidate tickets display spoken name order while Sources keeps the offici
     import {ballotCandidateDisplayName} from "./lib/ballot/name-case.ts";
     const candidate = ${JSON.stringify(candidate)};
     createRoot(document.getElementById("root")).render(<Card title="Governor and Lieutenant Governor" sources={[]}>
-      <CandidateCard name={ballotCandidateDisplayName(candidate)} partyLine="Democratic Party" card={null}
+      <CandidateCard name={ballotCandidateDisplayName(candidate)} partyLine="Democratic Party"
+        card={{photoUrl:"/campaign-portrait.jpg",photoSource:"Campaign's own site",bio:"Campaign biography retained"}}
+        holder={{id:"held-governor",photoUrl:"/official-portrait.jpg",provenance:{sourceUrl:"https://governor.example.gov/about",
+          sourceOrg:"Governor's office",collectedAt:"2026-10-14T00:00:00.000Z",verifiedAt:null}}}
         links={null} filingProvenance={candidate.provenance}/>
     </Card>);`, resolveDir: process.cwd(), sourcefile: "candidate-names-fixture.tsx", loader: "tsx" },
     bundle: true, write: false, outfile: ".scratch/ci/candidate-names-fixture.js", platform: "browser",
@@ -48,9 +51,13 @@ test("candidate tickets display spoken name order while Sources keeps the offici
     await page.locator(".candidate-row").getByText("Jocelyn Benson / Winnie Brinks", { exact: true }).waitFor();
     assert.ok(Date.now() - startedAt < 3000, "the first candidate card is usable within three seconds");
     assert.doesNotMatch(await page.locator(".candidate-row").innerText(), /Benson, Jocelyn/);
+    assert.equal(await page.locator(".candidate-row img").getAttribute("src"), "/official-portrait.jpg");
+    await page.locator(".candidate-row").getByText("“Campaign biography retained”", {exact:true}).waitFor();
     await page.getByRole("button", { name: /^Sources/ }).click();
     await page.getByText(`“${quote}”`, { exact: true }).waitFor();
-    assert.equal(await page.locator("[data-source-list] a").getAttribute("href"), candidate.provenance.sourceUrl);
+    const sourceUrls = await page.locator("[data-source-list] a").evaluateAll(links => links.map(link => link.getAttribute("href")));
+    assert.ok(sourceUrls.includes(candidate.provenance.sourceUrl));
+    assert.ok(sourceUrls.includes("https://governor.example.gov/about"));
     assert.deepEqual(errors, []);
     mkdirSync(".scratch/ci", { recursive: true });
     await page.screenshot({ path: ".scratch/ci/BL-10-candidate-name-order.png", fullPage: true });

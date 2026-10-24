@@ -1,8 +1,8 @@
 # MD-01 current result
 
-Observed October 24, 2026, 5:55 PM Eastern. The requested production result is unfinished. This is not READY.
+Latest observation October 24, 2026, 7:11 PM Eastern. The requested production result is unfinished. This is not READY.
 
-The prepared code is on `stream/md-01`, merged with release 103. Production is release 103, commit `d3416a24f38edb1c331e9dab4d92bc3bfa4e399b`; the newer MD-01 translation input and Ask changes have not shipped. All database inspection used the supplied read-only roles. No direct database write, spending-limit change, pause change or reader-target change was made.
+The prepared code is on `stream/md-01`. Production is release 104, commit `2082dc9b1d79e901330984b607b94be1ba5c2597`; the newer MD-01 translation input and Ask changes have not shipped. All database inspection used the supplied read-only roles. No direct database write, spending-limit change, pause change or reader-target change was made.
 
 The 5:49 PM read-only production comparison retains all 276 existing measure summaries across all 56 jurisdictions: 265 independently checked translations and 23 held ballot summaries, with 12 overlaps. There are still 223 missing summaries among 499 measures. No summary ID, checked translation ID or checked part ID disappeared. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). These are production counts before the prepared changes ship, not evidence of improved publication.
 
@@ -35,6 +35,8 @@ Two production source connections were exercised through that encoder:
 
 [Compaction measurements](md-01-source-compaction.json) are byte measurements from saved production sources. They are not measured token savings, dollar savings or publication gains.
 
+The Washington IL26-001 failed attempt at 11:01:37 AM Eastern selected a 173,127-byte voter pamphlet over its 18,276-byte full initiative text solely because the pamphlet had been captured three seconds later. Both were already held. Source selection now prefers the ballot's explicit measure-text URL after the same capture, identity and freshness checks; unavailable, partial, stale or unsupported direct captures retain the existing guide fallback. A replay downloaded both public PDFs, matched the production original and extracted-text hashes, reproduced the old selection and selected the full initiative with the new code. This removes 89.44% of that source-text input before lossless passage encoding. The replay stops before paying a model; it is not a publication or dollar-saving result. [Exact URLs and hashes](md-01-source-choice.json). The 48 affected standing/provider/writer/paid-work tests, TypeScript and targeted lint pass.
+
 The 165 unpublished reader candidate rows are not 165 paid writer failures. Their recorded reasons include publication races, missing captures, unavailable state outcomes and budget refusals. In the paid-attempt cohort, 63 attempts were held on sentence support, 12 on writer fields/passages and two on missing structured output. Failed raw drafts were not retained, so their exact malformed fields cannot be reconstructed.
 
 The existing scheduled caller already excludes older unnumbered reader sections from a checked rewrite, because draft validation requires an official section number. The prepared code moves that existing rule into the writer and deletes the caller's duplicate filtering. Existing unnumbered sections remain in reader composition with their exact text, reaction IDs, original source and original date. Arizona proposition 318 has five such sections and still lacks a checked summary; its failure cannot be attributed to unnumbered sections, which the scheduled caller already excluded. Its saved failed attempt does not contain the raw draft.
@@ -43,7 +45,7 @@ A controlled replay with the actual production Arizona ballot and ten published 
 
 ## Next scheduled run and remaining work
 
-The release-103 supervisor again deferred Arizona, California and Washington translations at 6:22:09 PM Eastern with `WORKER_MEMORY_DEADLINE`. At 6:27:55 PM Eastern, the latest metered translation call was still 11:08:57 AM Eastern. No later call has exercised the prepared passage protocol. Post-change spend per publication and checker pass rates therefore remain unmeasured.
+The release-103 supervisor again deferred Arizona, California and Washington translations at 6:48:10 PM Eastern with `WORKER_MEMORY_DEADLINE`. At 7:07:42 PM Eastern, the latest metered translation call was still 11:08:57 AM Eastern. Release 104's voting-worker change is now live. No later call has exercised the prepared passage protocol. Post-change spend per publication and checker pass rates therefore remain unmeasured.
 
 River's RV-VOTE change addresses voting workers waiting until the shared launch deadline; its reported first-pass trade-off gives voting work most of the initial pool. MD-01 extends that existing order so due measure explainers follow ballots and voting sites, ahead of the meeting backlog. Every admitted job remains in the same pool, and the existing paid-work controls still decide every model call. In a controlled three-GiB worker-memory allocation, the prior voting-first order admits one of the three deferred state translators; the prepared order admits all three, with voting still first. This is a worker-admission test, not a production run. The affected scheduler, voting and translation suites pass 125 tests with the canonical two-file concurrency.
 

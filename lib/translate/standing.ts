@@ -132,7 +132,12 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         (!measure || (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash ||
           Date.parse(capture.evidence.retrievedAt) >= Date.parse(measure.writtenAt)))
         .sort((a, b) => Date.parse(b.evidence.retrievedAt) - Date.parse(a.evidence.retrievedAt));
-      const primary = candidates[0];
+      // Retrieval order across different URLs is not a document revision.
+      // Prefer the ballot's own measure text over a guide fetched seconds later.
+      const sourcePage = (capture: WorkerPublicationCapture) => section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text,
+        retrievedAt: capture.evidence.retrievedAt, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, pages.map(row => row.evidence)), sourcePolicy: capture.sourcePolicy },
+      PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
+      const primary = candidates.find(capture => capture.evidence.canonicalUrl === contest.measureTextUrl && sourcePage(capture).ok) ?? candidates[0];
       if (!primary) { deferred.push({ subjectId: contest.id, reason: "No complete current source capture is held." }); continue; }
       const sourceHash = (primary.evidence.sourceDocument?.contentHash ?? primary.evidence.contentHash).replace(/^sha256-/, "");
       const sourceTextHash = translationHash(primary.evidence.text);
@@ -142,9 +147,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
           (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") !== sourceHash)) {
         deferred.push({ subjectId: contest.id, reason: "Current source captures disagree." }); continue;
       }
-      const page = section3Page({ url: primary.evidence.canonicalUrl, text: primary.evidence.text,
-        retrievedAt: primary.evidence.retrievedAt, linkingPage: linkingPageFrom(primary.evidence.canonicalUrl, pages.map(row => row.evidence)), sourcePolicy: primary.sourcePolicy },
-      PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
+      const page = sourcePage(primary);
       if (!page.ok) { deferred.push({ subjectId: contest.id, reason: page.reason ?? "Source is not yet verified." }); continue; }
       const matchingAttempts = input.attempts.filter(attempt => attempt.scope === scope && attempt.subjectId === contest.id &&
         attempt.sourceHash === sourceHash && attempt.sourceTextHash === sourceTextHash);

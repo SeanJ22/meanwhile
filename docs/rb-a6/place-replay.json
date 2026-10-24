@@ -1,0 +1,456 @@
+{
+  "observedAt": "2026-10-24T10:16:44.632Z",
+  "productionRoles": [
+    "readonly",
+    "wtp_cp_release_readonly"
+  ],
+  "geography": "Held registration and indexed ZIP references through RB-A2",
+  "results": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "memberships": 5,
+      "productionEntities": 428,
+      "owed": 3705,
+      "held": 624,
+      "missing": 3081,
+      "stale": 3,
+      "stuck": 578,
+      "nextPass": {
+        "owed": 3705,
+        "held": 624,
+        "missing": 3081,
+        "stale": 3,
+        "stuck": 578
+      },
+      "heldExample": {
+        "entityId": "az:county:county-of-pima#board-of-adjustment-district-1",
+        "entityName": "Board of Adjustment, District 1",
+        "kind": "body",
+        "field": "name",
+        "label": "Board or commission name",
+        "blank": null,
+        "facts": [
+          {
+            "id": 1711701,
+            "stale": false,
+            "value": "Board of Adjustment, District 1",
+            "status": "live",
+            "checkedAt": "2026-10-22T05:01:32.755+00:00",
+            "sourceUrl": "https://www.pima.gov/2363/Board-of-Adjustment-District-1"
+          }
+        ]
+      }
+    },
+    {
+      "state": "CA",
+      "zip": "94553",
+      "memberships": 17,
+      "productionEntities": 727,
+      "owed": 9407,
+      "held": 3338,
+      "missing": 6069,
+      "stale": 0,
+      "stuck": 595,
+      "nextPass": {
+        "owed": 9407,
+        "held": 3338,
+        "missing": 6069,
+        "stale": 0,
+        "stuck": 595
+      },
+      "heldExample": {
+        "entityId": "ca:city:city-of-martinez#governing",
+        "entityName": "City Of Martinez governing board",
+        "kind": "body",
+        "field": "comment:detail",
+        "label": "comment",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2119280,
+            "stale": false,
+            "value": "Each body follows a structured meeting process that generally includes staff presentations, opportunities for public comment, and discussion or action by the legislative body.",
+            "status": "live",
+            "checkedAt": "2026-10-23T08:04:25.275+00:00",
+            "sourceUrl": "http://www.cityofmartinez.org/government/meetings-and-agendas"
+          },
+          {
+            "id": 2164386,
+            "stale": false,
+            "value": "If you wish to speak, you may fill out a speaker card (encouraged, not required).",
+            "status": "held",
+            "checkedAt": "2026-10-23T11:59:09.682+00:00",
+            "sourceUrl": "http://www.cityofmartinez.org/government/meetings-and-agendas"
+          },
+          {
+            "id": 2347643,
+            "stale": false,
+            "value": "Written comments are not read aloud during the meeting but become part of the public record and are included in the published agenda packet.",
+            "status": "held",
+            "checkedAt": "2026-10-23T22:05:49.272+00:00",
+            "sourceUrl": "http://www.cityofmartinez.org/government/meetings-and-agendas"
+          },
+          {
+            "id": 2351269,
+            "stale": false,
+            "value": "To submit public comments by email, send them directly to the clerk or staff liaison for the appropriate legislative or advisory body:",
+            "status": "held",
+            "checkedAt": "2026-10-23T22:32:46.607+00:00",
+            "sourceUrl": "http://www.cityofmartinez.org/government/meetings-and-agendas"
+          }
+        ]
+      }
+    },
+    {
+      "state": "CO",
+      "zip": "80012",
+      "memberships": 10,
+      "productionEntities": 187,
+      "owed": 1422,
+      "held": 449,
+      "missing": 973,
+      "stale": 0,
+      "stuck": 86,
+      "nextPass": {
+        "owed": 1422,
+        "held": 449,
+        "missing": 973,
+        "stale": 0,
+        "stuck": 86
+      },
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-co-county-arapahoe-body-arapahoe-county-board-of-health:1425727",
+        "entityName": "Arapahoe County Board of Health",
+        "kind": "meeting",
+        "field": "minutes_url",
+        "label": "Minutes",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2264718,
+            "stale": false,
+            "value": "https://arapahoe.legistar.com/View.ashx?M=M&ID=1425727&GUID=8D41B166-863B-4ADF-B932-88B455805FB8",
+            "status": "live",
+            "checkedAt": "2026-10-23T19:41:18.724+00:00",
+            "sourceUrl": "https://arapahoe.legistar.com/Calendar.aspx"
+          }
+        ]
+      }
+    },
+    {
+      "state": "FL",
+      "zip": "32601",
+      "memberships": 4,
+      "productionEntities": 15,
+      "owed": 51,
+      "held": 2,
+      "missing": 49,
+      "stale": 0,
+      "stuck": 0,
+      "nextPass": {
+        "owed": 51,
+        "held": 2,
+        "missing": 49,
+        "stale": 0,
+        "stuck": 0
+      },
+      "heldExample": {
+        "entityId": "fl:county:county-of-alachua#governing",
+        "entityName": "Alachua County governing",
+        "kind": "body",
+        "field": "meeting_cadence",
+        "label": "Meeting calendar",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2257814,
+            "stale": false,
+            "value": "second and fourth Tuesday of each month",
+            "status": "held",
+            "checkedAt": "2026-10-23T12:41:28.488+00:00",
+            "sourceUrl": "http://www.alachuacounty.us/Depts/BOCC"
+          },
+          {
+            "id": 2257816,
+            "stale": false,
+            "value": "second and fourth Tuesday of each month",
+            "status": "held",
+            "checkedAt": "2026-10-23T12:41:28.488+00:00",
+            "sourceUrl": "http://www.alachuacounty.us/Depts/BOCC/Pages/BOCC.aspx"
+          },
+          {
+            "id": 2257818,
+            "stale": false,
+            "value": "second and fourth Tuesday of each month",
+            "status": "live",
+            "checkedAt": "2026-10-23T12:41:28.488+00:00",
+            "sourceUrl": "https://www.alachuacounty.us/Depts/BOCC"
+          }
+        ]
+      }
+    },
+    {
+      "state": "GA",
+      "zip": "30120",
+      "memberships": 13,
+      "productionEntities": 27,
+      "owed": 92,
+      "held": 7,
+      "missing": 85,
+      "stale": 0,
+      "stuck": 0,
+      "nextPass": {
+        "owed": 92,
+        "held": 7,
+        "missing": 85,
+        "stale": 0,
+        "stuck": 0
+      },
+      "heldExample": {
+        "entityId": "ga:city:city-of-euharlee#body:planning-and-zoning-commission",
+        "entityName": "Planning & Zoning Commission",
+        "kind": "body",
+        "field": "name",
+        "label": "Board or commission name",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2338961,
+            "stale": false,
+            "value": "Planning & Zoning Commission",
+            "status": "live",
+            "checkedAt": "2026-10-23T20:17:44.397+00:00",
+            "sourceUrl": "https://euharlee.com/events/planning-zoning-commission/"
+          }
+        ]
+      }
+    },
+    {
+      "state": "IL",
+      "zip": "60602",
+      "memberships": 5,
+      "productionEntities": 354,
+      "owed": 3882,
+      "held": 1777,
+      "missing": 2105,
+      "stale": 0,
+      "stuck": 131,
+      "nextPass": {
+        "owed": 3882,
+        "held": 1777,
+        "missing": 2105,
+        "stale": 0,
+        "stuck": 131
+      },
+      "heldExample": {
+        "entityId": "government:US-IL:cog:145624#body:budget-forum",
+        "entityName": "Budget Forum",
+        "kind": "body",
+        "field": "name",
+        "label": "Board or commission name",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2388536,
+            "stale": false,
+            "value": "Budget Forum",
+            "status": "live",
+            "checkedAt": "2026-10-24T03:15:22.566+00:00",
+            "sourceUrl": "https://webapi.legistar.com/v1/chicagoparkdistrict/bodies?$filter=BodyId%20gt%200&$orderby=BodyId&$top=1000&$select=BodyId%2CBodyName%2CBodyRowVersion"
+          }
+        ]
+      }
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "memberships": 5,
+      "productionEntities": 63,
+      "owed": 556,
+      "held": 41,
+      "missing": 515,
+      "stale": 0,
+      "stuck": 87,
+      "nextPass": {
+        "owed": 556,
+        "held": 41,
+        "missing": 515,
+        "stale": 0,
+        "stuck": 87
+      },
+      "heldExample": {
+        "entityId": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+        "entityName": "Peter Shephard",
+        "kind": "person",
+        "field": "campaign-cycle:campaign-committee:NH:8fda1e92ff394ed2eba0a74f2c318677028704d3aef033f8a4bf5359a45ac0c6:2026",
+        "label": "campaign-cycle",
+        "blank": null,
+        "facts": [
+          {
+            "id": 1777387,
+            "stale": false,
+            "value": {
+              "id": "campaign-committee:NH:8fda1e92ff394ed2eba0a74f2c318677028704d3aef033f8a4bf5359a45ac0c6:2026",
+              "cycle": 2026,
+              "person": {
+                "id": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+                "name": "Peter Shephard",
+                "seat": "ballot-nh-merrimack:county-sheriff"
+              },
+              "totals": [
+                {
+                  "label": "Receipts",
+                  "amount": 0
+                },
+                {
+                  "label": "Expenditures",
+                  "amount": 16428.42
+                }
+              ],
+              "sources": [
+                {
+                  "url": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
+                  "rawHash": "c216b827bb6a3da1ff0d8c9d3e3ca2e160bc72ba2a5d244e8c6853c0bd0276f1",
+                  "vaultKey": "project/meanwhile/campaign-money/held/c216b827bb6a3da1ff0d8c9d3e3ca2e160bc72ba2a5d244e8c6853c0bd0276f1",
+                  "checkedAt": "2026-09-08",
+                  "filingUrl": "https://cfs.sos.nh.gov/",
+                  "publisher": "New Hampshire Secretary of State — Campaign Finance System",
+                  "byteLength": 1152,
+                  "retrievedAt": "2026-09-08",
+                  "publicationDate": null
+                }
+              ],
+              "committee": "Shephard, Peter H.",
+              "organizations": [],
+              "individualTotal": null,
+              "smallDonorShare": null
+            },
+            "status": "live",
+            "checkedAt": "2026-09-08T00:00:00+00:00",
+            "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails"
+          }
+        ]
+      }
+    },
+    {
+      "state": "NJ",
+      "zip": "07601",
+      "memberships": 4,
+      "productionEntities": 48,
+      "owed": 329,
+      "held": 84,
+      "missing": 245,
+      "stale": 0,
+      "stuck": 24,
+      "nextPass": {
+        "owed": 329,
+        "held": 84,
+        "missing": 245,
+        "stale": 0,
+        "stuck": 24
+      },
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-nj-county-bergen-governing:1409378",
+        "entityName": "BOARD OF COUNTY COMMISSIONERS",
+        "kind": "meeting",
+        "field": "starts_at",
+        "label": "Meeting date and time",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2646526,
+            "stale": false,
+            "value": {
+              "startsAt": "2026-07-01T00:00:00-04:00",
+              "timeZone": "America/New_York",
+              "precision": "MINUTE"
+            },
+            "status": "live",
+            "checkedAt": "2026-10-24T09:39:04.209+00:00",
+            "sourceUrl": "https://cobergennj.legistar.com/View.ashx?M=IC&ID=1409378&GUID=CE20022C-1050-4D1D-81DF-35878DA77F98"
+          }
+        ]
+      }
+    },
+    {
+      "state": "TX",
+      "zip": "77515",
+      "memberships": 16,
+      "productionEntities": 93,
+      "owed": 682,
+      "held": 138,
+      "missing": 544,
+      "stale": 0,
+      "stuck": 42,
+      "nextPass": {
+        "owed": 682,
+        "held": 138,
+        "missing": 544,
+        "stale": 0,
+        "stuck": 42
+      },
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-tx-county-brazoria-body-tax-resale-committee:1456036",
+        "entityName": "Tax Resale Committee",
+        "kind": "meeting",
+        "field": "starts_at",
+        "label": "Meeting date and time",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2403824,
+            "stale": false,
+            "value": {
+              "startsAt": "2026-10-27T14:00:00-05:00",
+              "timeZone": "America/Chicago",
+              "precision": "MINUTE"
+            },
+            "status": "live",
+            "checkedAt": "2026-10-24T07:44:18.018+00:00",
+            "sourceUrl": "https://brazoriacountytx.legistar.com/Calendar.aspx"
+          }
+        ]
+      }
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "memberships": 4,
+      "productionEntities": 1603,
+      "owed": 19895,
+      "held": 6938,
+      "missing": 12957,
+      "stale": 0,
+      "stuck": 1096,
+      "nextPass": {
+        "owed": 19895,
+        "held": 6938,
+        "missing": 12957,
+        "stale": 0,
+        "stuck": 1096
+      },
+      "heldExample": {
+        "entityId": "government:US-WI:cog:209777#body:affirmative-action-commission",
+        "entityName": "AFFIRMATIVE ACTION COMMISSION",
+        "kind": "body",
+        "field": "member:ocd-person/1962a204-2379-40cb-a425-478efa926907",
+        "label": "Every member and seat",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2380393,
+            "stale": false,
+            "value": {
+              "name": "Virginia V. Lee",
+              "office": "Adult City Resident"
+            },
+            "status": "live",
+            "checkedAt": "2026-10-24T02:49:44.417+00:00",
+            "sourceUrl": "https://webapi.legistar.com/v1/madison/officerecords?$filter=OfficeRecordId%20gt%200%20and%20(OfficeRecordEndDate%20eq%20null%20or%20OfficeRecordEndDate%20ge%20datetime'2026-10-22T00%3A00%3A00')&$orderby=OfficeRecordId&$top=1000&$select=OfficeRecordId%2COfficeRecordPersonId%2COfficeRecordBodyId%2COfficeRecordFullName%2COfficeRecordTitle%2COfficeRecordMemberType%2COfficeRecordStartDate%2COfficeRecordEndDate%2COfficeRecordRowVersion"
+          }
+        ]
+      }
+    }
+  ]
+}

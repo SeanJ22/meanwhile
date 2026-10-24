@@ -103,11 +103,13 @@ test("every state's totals match direct SQL and a hunter read preserves duplicat
 test("the hunter entry point uses RB-A2's selected ZIP places without adding another town in the county", async () => {
   const db = await factDb();
   try {
-    await db.pg.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
-      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8,boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+    await db.pg.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
+      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
     await db.pg.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
     await db.pg.exec("ALTER TABLE entity_place ADD COLUMN boundary_year int NOT NULL DEFAULT 0");
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('county','place','County','AZ'),('town','place','Town','AZ'),('elsewhere','place','Another town','AZ')");
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('ocd-division/country:us','place','United States',NULL),('national-board','body','National board','US')");
+    await db.query("INSERT INTO entity_place VALUES ('national-board','ocd-division/country:us',2026)");
     await db.query("UPDATE entity SET parent_id='county' WHERE id IN ('town','elsewhere')");
     await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('county-board','body','County board','AZ','county'),('town-board','body','Town board','AZ','town'),('other-board','body','Other board','AZ','elsewhere'),('old-plan-board','body','Old plan board','AZ','county')");
     await db.query("INSERT INTO entity_place VALUES ('old-plan-board','county',2020)");
@@ -118,7 +120,7 @@ test("the hunter entry point uses RB-A2's selected ZIP places without adding ano
     await repos.adminConfig.save(null, config(), now);
     const needs = await placeNeeds(repos, { kind: "zip", code: "85701" }, now, db.query);
     assert.deepEqual(needs.memberships.map(row => row.placeId), ["county", "town"]);
-    assert.deepEqual([...new Set(needs.missing.map(row => row.entityId))], ["county-board", "town-board"]);
+    assert.deepEqual([...new Set(needs.missing.map(row => row.entityId))], ["county-board", "national-board", "town-board"]);
     await assert.rejects(placeNeeds(repos, { kind: "zcta", code: "85701" }, now, db.query), /no coverage/);
   } finally { await db.pg.close(); }
 });

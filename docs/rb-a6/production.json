@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-24T09:29:19.427Z",
+  "observedAt": "2026-10-24T10:23:27.889Z",
   "reader": {
     "role": "readonly",
     "database": "neondb"
@@ -10,521 +10,521 @@
     "history_rows": "0"
   },
   "table": {
-    "base": 59,
+    "base": 64,
     "states": []
   },
-  "countMs": 12125,
+  "countMs": 28411,
   "counts": [
     {
       "state": "AL",
       "name": "Alabama",
-      "owed": 19300,
-      "held": 1299,
-      "missing": 18001,
+      "owed": 19363,
+      "held": 1312,
+      "missing": 18051,
       "stale": 0,
       "stuck": 593
     },
     {
       "state": "AK",
       "name": "Alaska",
-      "owed": 11218,
-      "held": 1308,
-      "missing": 9910,
+      "owed": 11468,
+      "held": 1381,
+      "missing": 10087,
       "stale": 0,
-      "stuck": 508
+      "stuck": 519
     },
     {
       "state": "AZ",
       "name": "Arizona",
-      "owed": 31190,
-      "held": 3565,
-      "missing": 27625,
+      "owed": 31214,
+      "held": 3569,
+      "missing": 27645,
       "stale": 5,
-      "stuck": 1756
+      "stuck": 1760
     },
     {
       "state": "AR",
       "name": "Arkansas",
-      "owed": 19861,
+      "owed": 19862,
       "held": 464,
-      "missing": 19397,
+      "missing": 19398,
       "stale": 0,
       "stuck": 553
     },
     {
       "state": "CA",
       "name": "California",
-      "owed": 107071,
-      "held": 26347,
-      "missing": 80724,
+      "owed": 108569,
+      "held": 26861,
+      "missing": 81708,
       "stale": 0,
-      "stuck": 4305
+      "stuck": 4411
     },
     {
       "state": "CO",
       "name": "Colorado",
-      "owed": 36779,
-      "held": 2881,
-      "missing": 33898,
+      "owed": 37400,
+      "held": 3155,
+      "missing": 34245,
       "stale": 0,
       "stuck": 893
     },
     {
       "state": "CT",
       "name": "Connecticut",
-      "owed": 106978,
-      "held": 89831,
-      "missing": 17147,
+      "owed": 107281,
+      "held": 89911,
+      "missing": 17370,
       "stale": 0,
-      "stuck": 819
+      "stuck": 866
     },
     {
       "state": "DE",
       "name": "Delaware",
-      "owed": 5544,
-      "held": 133,
-      "missing": 5411,
+      "owed": 5573,
+      "held": 137,
+      "missing": 5436,
       "stale": 0,
       "stuck": 199
     },
     {
       "state": "DC",
       "name": "District of Columbia",
-      "owed": 1393,
+      "owed": 1394,
       "held": 13,
-      "missing": 1380,
+      "missing": 1381,
       "stale": 0,
       "stuck": 66
     },
     {
       "state": "FL",
       "name": "Florida",
-      "owed": 49837,
-      "held": 8449,
-      "missing": 41388,
+      "owed": 50907,
+      "held": 8789,
+      "missing": 42118,
       "stale": 0,
-      "stuck": 2298
+      "stuck": 2476
     },
     {
       "state": "GA",
       "name": "Georgia",
-      "owed": 25276,
-      "held": 1281,
-      "missing": 23995,
+      "owed": 25277,
+      "held": 1284,
+      "missing": 23993,
       "stale": 0,
       "stuck": 907
     },
     {
       "state": "HI",
       "name": "Hawaii",
-      "owed": 42987,
-      "held": 37353,
-      "missing": 5634,
+      "owed": 43114,
+      "held": 37425,
+      "missing": 5689,
       "stale": 0,
       "stuck": 215
     },
     {
       "state": "ID",
       "name": "Idaho",
-      "owed": 20746,
+      "owed": 20747,
       "held": 727,
-      "missing": 20019,
+      "missing": 20020,
       "stale": 0,
       "stuck": 976
     },
     {
       "state": "IL",
       "name": "Illinois",
-      "owed": 62838,
-      "held": 6847,
-      "missing": 55991,
+      "owed": 63401,
+      "held": 7040,
+      "missing": 56361,
       "stale": 0,
-      "stuck": 1425
+      "stuck": 1474
     },
     {
       "state": "IN",
       "name": "Indiana",
-      "owed": 23518,
+      "owed": 23519,
       "held": 70,
-      "missing": 23448,
+      "missing": 23449,
       "stale": 0,
       "stuck": 388
     },
     {
       "state": "IA",
       "name": "Iowa",
-      "owed": 21233,
+      "owed": 21234,
       "held": 178,
-      "missing": 21055,
+      "missing": 21056,
       "stale": 0,
       "stuck": 378
     },
     {
       "state": "KS",
       "name": "Kansas",
-      "owed": 30130,
+      "owed": 30131,
       "held": 36,
-      "missing": 30094,
+      "missing": 30095,
       "stale": 0,
       "stuck": 546
     },
     {
       "state": "KY",
       "name": "Kentucky",
-      "owed": 113358,
+      "owed": 113359,
       "held": 98751,
-      "missing": 14607,
+      "missing": 14608,
       "stale": 0,
       "stuck": 193
     },
     {
       "state": "LA",
       "name": "Louisiana",
-      "owed": 9353,
+      "owed": 9354,
       "held": 0,
-      "missing": 9353,
+      "missing": 9354,
       "stale": 0,
       "stuck": 199
     },
     {
       "state": "ME",
       "name": "Maine",
-      "owed": 18987,
+      "owed": 18988,
       "held": 412,
-      "missing": 18575,
+      "missing": 18576,
       "stale": 0,
       "stuck": 823
     },
     {
       "state": "MD",
       "name": "Maryland",
-      "owed": 19828,
+      "owed": 19829,
       "held": 802,
-      "missing": 19026,
+      "missing": 19027,
       "stale": 0,
       "stuck": 851
     },
     {
       "state": "MA",
       "name": "Massachusetts",
-      "owed": 18149,
-      "held": 481,
-      "missing": 17668,
+      "owed": 18189,
+      "held": 486,
+      "missing": 17703,
       "stale": 0,
-      "stuck": 643
+      "stuck": 645
     },
     {
       "state": "MI",
       "name": "Michigan",
-      "owed": 38224,
-      "held": 2321,
-      "missing": 35903,
+      "owed": 38422,
+      "held": 2378,
+      "missing": 36044,
       "stale": 0,
-      "stuck": 1320
+      "stuck": 1339
     },
     {
       "state": "MN",
       "name": "Minnesota",
-      "owed": 39035,
-      "held": 1359,
-      "missing": 37676,
+      "owed": 39218,
+      "held": 1451,
+      "missing": 37767,
       "stale": 0,
       "stuck": 934
     },
     {
       "state": "MS",
       "name": "Mississippi",
-      "owed": 13159,
+      "owed": 13160,
       "held": 36,
-      "missing": 13123,
+      "missing": 13124,
       "stale": 0,
       "stuck": 353
     },
     {
       "state": "MO",
       "name": "Missouri",
-      "owed": 47313,
-      "held": 5521,
-      "missing": 41792,
+      "owed": 47780,
+      "held": 5694,
+      "missing": 42086,
       "stale": 0,
-      "stuck": 1509
+      "stuck": 1531
     },
     {
       "state": "MT",
       "name": "Montana",
-      "owed": 14985,
+      "owed": 14986,
       "held": 9,
-      "missing": 14976,
+      "missing": 14977,
       "stale": 0,
-      "stuck": 367
+      "stuck": 368
     },
     {
       "state": "NE",
       "name": "Nebraska",
-      "owed": 18057,
+      "owed": 18058,
       "held": 0,
-      "missing": 18057,
+      "missing": 18058,
       "stale": 0,
       "stuck": 152
     },
     {
       "state": "NV",
       "name": "Nevada",
-      "owed": 8453,
-      "held": 1190,
-      "missing": 7263,
+      "owed": 8468,
+      "held": 1196,
+      "missing": 7272,
       "stale": 0,
       "stuck": 419
     },
     {
       "state": "NH",
       "name": "New Hampshire",
-      "owed": 25925,
+      "owed": 25926,
       "held": 797,
-      "missing": 25128,
+      "missing": 25129,
       "stale": 5,
       "stuck": 1181
     },
     {
       "state": "NJ",
       "name": "New Jersey",
-      "owed": 26781,
-      "held": 661,
-      "missing": 26120,
+      "owed": 26959,
+      "held": 709,
+      "missing": 26250,
       "stale": 2,
-      "stuck": 954
+      "stuck": 971
     },
     {
       "state": "NM",
       "name": "New Mexico",
-      "owed": 18259,
-      "held": 1723,
-      "missing": 16536,
+      "owed": 18304,
+      "held": 1728,
+      "missing": 16576,
       "stale": 0,
-      "stuck": 779
+      "stuck": 781
     },
     {
       "state": "NY",
       "name": "New York",
-      "owed": 39666,
-      "held": 2058,
-      "missing": 37608,
+      "owed": 40161,
+      "held": 2258,
+      "missing": 37903,
       "stale": 0,
-      "stuck": 1047
+      "stuck": 1064
     },
     {
       "state": "NC",
       "name": "North Carolina",
-      "owed": 31988,
-      "held": 1469,
-      "missing": 30519,
+      "owed": 32047,
+      "held": 1493,
+      "missing": 30554,
       "stale": 0,
       "stuck": 1530
     },
     {
       "state": "ND",
       "name": "North Dakota",
-      "owed": 27046,
+      "owed": 27047,
       "held": 0,
-      "missing": 27046,
+      "missing": 27047,
       "stale": 0,
       "stuck": 719
     },
     {
       "state": "OH",
       "name": "Ohio",
-      "owed": 36277,
-      "held": 1400,
-      "missing": 34877,
+      "owed": 36527,
+      "held": 1499,
+      "missing": 35028,
       "stale": 0,
       "stuck": 845
     },
     {
       "state": "OK",
       "name": "Oklahoma",
-      "owed": 20536,
-      "held": 1289,
-      "missing": 19247,
+      "owed": 20896,
+      "held": 1429,
+      "missing": 19467,
       "stale": 0,
-      "stuck": 597
+      "stuck": 621
     },
     {
       "state": "OR",
       "name": "Oregon",
-      "owed": 15839,
-      "held": 777,
-      "missing": 15062,
+      "owed": 15933,
+      "held": 796,
+      "missing": 15137,
       "stale": 0,
-      "stuck": 430
+      "stuck": 433
     },
     {
       "state": "PA",
       "name": "Pennsylvania",
-      "owed": 41171,
-      "held": 275,
-      "missing": 40896,
+      "owed": 41270,
+      "held": 330,
+      "missing": 40940,
       "stale": 0,
       "stuck": 601
     },
     {
       "state": "RI",
       "name": "Rhode Island",
-      "owed": 6454,
-      "held": 58,
-      "missing": 6396,
+      "owed": 6478,
+      "held": 62,
+      "missing": 6416,
       "stale": 0,
       "stuck": 280
     },
     {
       "state": "SC",
       "name": "South Carolina",
-      "owed": 132222,
-      "held": 117359,
-      "missing": 14863,
+      "owed": 132233,
+      "held": 117369,
+      "missing": 14864,
       "stale": 0,
-      "stuck": 528
+      "stuck": 422
     },
     {
       "state": "SD",
       "name": "South Dakota",
-      "owed": 16889,
+      "owed": 16890,
       "held": 55,
-      "missing": 16834,
+      "missing": 16835,
       "stale": 0,
       "stuck": 322
     },
     {
       "state": "TN",
       "name": "Tennessee",
-      "owed": 14922,
+      "owed": 14923,
       "held": 8,
-      "missing": 14914,
+      "missing": 14915,
       "stale": 0,
       "stuck": 418
     },
     {
       "state": "TX",
       "name": "Texas",
-      "owed": 86385,
-      "held": 6167,
-      "missing": 80218,
+      "owed": 87120,
+      "held": 6406,
+      "missing": 80714,
       "stale": 0,
-      "stuck": 3559
+      "stuck": 3634
     },
     {
       "state": "UT",
       "name": "Utah",
-      "owed": 11231,
-      "held": 218,
-      "missing": 11013,
+      "owed": 11333,
+      "held": 244,
+      "missing": 11089,
       "stale": 0,
-      "stuck": 484
+      "stuck": 504
     },
     {
       "state": "VT",
       "name": "Vermont",
-      "owed": 13495,
+      "owed": 13496,
       "held": 0,
-      "missing": 13495,
+      "missing": 13496,
       "stale": 0,
       "stuck": 554
     },
     {
       "state": "VA",
       "name": "Virginia",
-      "owed": 27277,
-      "held": 1065,
-      "missing": 26212,
+      "owed": 27384,
+      "held": 1083,
+      "missing": 26301,
       "stale": 0,
-      "stuck": 1468
+      "stuck": 1477
     },
     {
       "state": "WA",
       "name": "Washington",
-      "owed": 26837,
-      "held": 3026,
-      "missing": 23811,
+      "owed": 27777,
+      "held": 3297,
+      "missing": 24480,
       "stale": 0,
-      "stuck": 977
+      "stuck": 1102
     },
     {
       "state": "WV",
       "name": "West Virginia",
-      "owed": 13421,
-      "held": 89,
-      "missing": 13332,
+      "owed": 13611,
+      "held": 107,
+      "missing": 13504,
       "stale": 0,
-      "stuck": 656
+      "stuck": 691
     },
     {
       "state": "WI",
       "name": "Wisconsin",
-      "owed": 76463,
-      "held": 17732,
-      "missing": 58731,
+      "owed": 77692,
+      "held": 18215,
+      "missing": 59477,
       "stale": 0,
-      "stuck": 3603
+      "stuck": 3724
     },
     {
       "state": "WY",
       "name": "Wyoming",
-      "owed": 9457,
+      "owed": 9458,
       "held": 164,
-      "missing": 9293,
+      "missing": 9294,
       "stale": 0,
       "stuck": 245
     },
     {
       "state": "AS",
       "name": "American Samoa",
-      "owed": 1185,
+      "owed": 1186,
       "held": 0,
-      "missing": 1185,
+      "missing": 1186,
       "stale": 0,
       "stuck": 44
     },
     {
       "state": "GU",
       "name": "Guam",
-      "owed": 161,
+      "owed": 162,
       "held": 0,
-      "missing": 161,
+      "missing": 162,
       "stale": 0,
       "stuck": 0
     },
     {
       "state": "MP",
       "name": "Northern Mariana Islands",
-      "owed": 1275,
+      "owed": 1276,
       "held": 0,
-      "missing": 1275,
+      "missing": 1276,
       "stale": 0,
       "stuck": 72
     },
     {
       "state": "PR",
       "name": "Puerto Rico",
-      "owed": 5089,
+      "owed": 5090,
       "held": 0,
-      "missing": 5089,
+      "missing": 5090,
       "stale": 0,
       "stuck": 83
     },
     {
       "state": "VI",
       "name": "U.S. Virgin Islands",
-      "owed": 1000,
+      "owed": 1001,
       "held": 2,
-      "missing": 998,
+      "missing": 999,
       "stale": 0,
       "stuck": 70
     },
     {
       "state": "US",
       "name": "National government",
-      "owed": 302,
+      "owed": 303,
       "held": 14,
-      "missing": 288,
+      "missing": 289,
       "stale": 1,
       "stuck": 34
     }
@@ -539,7 +539,7 @@
       "missing": 150,
       "stale": 0,
       "stuck": 3,
-      "readMs": 789,
+      "readMs": 499,
       "heldExample": {
         "entityId": "az:county:county-of-cochise#office-election",
         "entityName": "Elections",
@@ -578,12 +578,12 @@
       "state": "CA",
       "placeId": "ocd-division/country:us/state:ca/county:contra_costa",
       "name": "Contra Costa County",
-      "owed": 9300,
-      "held": 3327,
-      "missing": 5973,
+      "owed": 9314,
+      "held": 3333,
+      "missing": 5981,
       "stale": 0,
       "stuck": 594,
-      "readMs": 2137,
+      "readMs": 4758,
       "heldExample": {
         "entityId": "meeting:legistar-insite:derived-state-ca-county-contra-costa-body-bay-point-municipal-advisory-council:1427242",
         "entityName": "Bay Point Municipal Advisory Council",
@@ -611,9 +611,9 @@
         "blank": null
       },
       "nextPass": {
-        "owed": 9300,
-        "held": 3327,
-        "missing": 5973,
+        "owed": 9314,
+        "held": 3333,
+        "missing": 5981,
         "stale": 0,
         "stuck": 594
       }
@@ -622,12 +622,12 @@
       "state": "CO",
       "placeId": "ocd-division/country:us/state:co/county:arapahoe",
       "name": "Arapahoe County",
-      "owed": 1335,
-      "held": 435,
-      "missing": 900,
+      "owed": 1370,
+      "held": 449,
+      "missing": 921,
       "stale": 0,
       "stuck": 86,
-      "readMs": 845,
+      "readMs": 741,
       "heldExample": {
         "entityId": "meeting:legistar-insite:derived-state-co-county-arapahoe-body-arapahoe-county-board-of-health:1425727",
         "entityName": "Arapahoe County Board of Health",
@@ -655,9 +655,9 @@
         "blank": null
       },
       "nextPass": {
-        "owed": 1335,
-        "held": 435,
-        "missing": 900,
+        "owed": 1370,
+        "held": 449,
+        "missing": 921,
         "stale": 0,
         "stuck": 86
       }
@@ -671,7 +671,7 @@
       "missing": 33,
       "stale": 0,
       "stuck": 0,
-      "readMs": 235,
+      "readMs": 267,
       "heldExample": {
         "entityId": "fl:county:county-of-alachua#governing",
         "entityName": "Alachua County governing",
@@ -731,7 +731,7 @@
       "missing": 12,
       "stale": 0,
       "stuck": 0,
-      "readMs": 281,
+      "readMs": 225,
       "heldExample": {
         "entityId": "ga:county:county-of-bartow#governing",
         "entityName": "Bartow County governing",
@@ -778,12 +778,12 @@
       "state": "IL",
       "placeId": "ocd-division/country:us/state:il/county:cook",
       "name": "Cook County",
-      "owed": 3434,
-      "held": 1636,
-      "missing": 1798,
+      "owed": 3702,
+      "held": 1715,
+      "missing": 1987,
       "stale": 0,
-      "stuck": 101,
-      "readMs": 1242,
+      "stuck": 126,
+      "readMs": 1687,
       "heldExample": {
         "entityId": "meeting:legistar-insite:derived-state-il-county-cook-body-asset-management-committee:1425804",
         "entityName": "Asset Management Committee",
@@ -815,11 +815,11 @@
         "blank": null
       },
       "nextPass": {
-        "owed": 3434,
-        "held": 1636,
-        "missing": 1798,
+        "owed": 3702,
+        "held": 1715,
+        "missing": 1987,
         "stale": 0,
-        "stuck": 101
+        "stuck": 126
       }
     },
     {
@@ -831,7 +831,7 @@
       "missing": 466,
       "stale": 0,
       "stuck": 87,
-      "readMs": 609,
+      "readMs": 297,
       "heldExample": {
         "entityId": "ballot-nh-merrimack:county-sheriff:shephard-peter",
         "entityName": "Peter Shephard",
@@ -905,47 +905,52 @@
       "state": "NJ",
       "placeId": "ocd-division/country:us/state:nj/county:bergen",
       "name": "Bergen County",
-      "owed": 136,
-      "held": 36,
-      "missing": 100,
+      "owed": 313,
+      "held": 84,
+      "missing": 229,
       "stale": 0,
-      "stuck": 7,
-      "readMs": 383,
+      "stuck": 24,
+      "readMs": 307,
       "heldExample": {
-        "entityId": "ocd-division/country:us/state:nj/county:bergen#body:board-of-county-commissioners",
+        "entityId": "meeting:legistar-insite:derived-state-nj-county-bergen-governing:1409378",
         "entityName": "BOARD OF COUNTY COMMISSIONERS",
-        "kind": "body",
-        "field": "member:ocd-person/05c97334-aa1a-4eb5-bed1-0d9c6d8f6fcc",
-        "label": "Every member and seat",
+        "kind": "meeting",
+        "field": "starts_at",
+        "label": "Meeting date and time",
         "blank": null,
         "facts": [
           {
-            "id": 2070904,
+            "id": 2646526,
             "stale": false,
             "value": {
-              "name": "Tracy Silna Zur",
-              "office": "Vice Chairwoman"
+              "startsAt": "2026-07-01T00:00:00-04:00",
+              "timeZone": "America/New_York",
+              "precision": "MINUTE"
             },
             "status": "live",
-            "checkedAt": "2026-10-24T03:17:52.54+00:00",
-            "sourceUrl": "https://webapi.legistar.com/v1/cobergennj/officerecords?$filter=OfficeRecordId%20gt%200%20and%20(OfficeRecordEndDate%20eq%20null%20or%20OfficeRecordEndDate%20ge%20datetime'2026-10-21T00%3A00%3A00')&$orderby=OfficeRecordId&$top=1000&$select=OfficeRecordId%2COfficeRecordPersonId%2COfficeRecordBodyId%2COfficeRecordFullName%2COfficeRecordTitle%2COfficeRecordMemberType%2COfficeRecordStartDate%2COfficeRecordEndDate%2COfficeRecordRowVersion"
+            "checkedAt": "2026-10-24T09:39:04.209+00:00",
+            "sourceUrl": "https://cobergennj.legistar.com/View.ashx?M=IC&ID=1409378&GUID=CE20022C-1050-4D1D-81DF-35878DA77F98"
           }
         ]
       },
       "missingExample": {
-        "entityId": "nj:county:county-of-bergen",
-        "entityName": "County Of Bergen",
-        "kind": "government",
-        "field": "bodies",
-        "label": "Every board and commission",
-        "blank": null
+        "entityId": "meeting:legistar-insite:derived-state-nj-county-bergen-governing:1409378",
+        "entityName": "BOARD OF COUNTY COMMISSIONERS",
+        "kind": "meeting",
+        "field": "agenda_url",
+        "label": "Agenda",
+        "blank": {
+          "stage": "CHECK",
+          "reason": "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",
+          "nextTryAt": "2026-10-24T10:39:41.850Z"
+        }
       },
       "nextPass": {
-        "owed": 136,
-        "held": 36,
-        "missing": 100,
+        "owed": 313,
+        "held": 84,
+        "missing": 229,
         "stale": 0,
-        "stuck": 7
+        "stuck": 24
       }
     },
     {
@@ -957,7 +962,7 @@
       "missing": 460,
       "stale": 0,
       "stuck": 42,
-      "readMs": 568,
+      "readMs": 338,
       "heldExample": {
         "entityId": "meeting:legistar-insite:derived-state-tx-county-brazoria-body-tax-resale-committee:1456036",
         "entityName": "Tax Resale Committee",
@@ -1000,12 +1005,12 @@
       "state": "WI",
       "placeId": "ocd-division/country:us/state:wi/county:dane",
       "name": "Dane County",
-      "owed": 11198,
-      "held": 4234,
-      "missing": 6964,
+      "owed": 11470,
+      "held": 4327,
+      "missing": 7143,
       "stale": 0,
       "stuck": 651,
-      "readMs": 1867,
+      "readMs": 6463,
       "heldExample": {
         "entityId": "meeting:legistar-insite:derived-state-wi-county-dane-body-aging-and-disability-resource-center-governing-board:1427541",
         "entityName": "Aging & Disability Resource Center Governing Board",
@@ -1033,9 +1038,9 @@
         "blank": null
       },
       "nextPass": {
-        "owed": 11198,
-        "held": 4234,
-        "missing": 6964,
+        "owed": 11470,
+        "held": 4327,
+        "missing": 7143,
         "stale": 0,
         "stuck": 651
       }

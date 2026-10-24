@@ -29,6 +29,7 @@ const rule = (kind: EntityKind, field: string, label: string, clock: FieldKind, 
 export const DEFAULT_OWED_TABLE: OwedTable = {
   base: [
     ...DEFAULT_KINDS.division.map(kind => ({ ...rule("place", "governments", "Every government serving this place", "officeholder", ["GOV-01"]), placeKind: kind.key })),
+    ...["country", "state", "district", "territory"].map(placeKind => ({ ...rule("place", "governments", "Every government serving this place", "officeholder", ["GOV-01"]), placeKind })),
     rule("place", "boundaries", "Government boundaries", "officeholder", ["GEO-01"]),
     rule("government", "bodies", "Every board and commission", "officeholder", ["GOV-02"]),
     rule("government", "seats", "Every seat and officeholder", "officeholder", ["OFF-01"]),

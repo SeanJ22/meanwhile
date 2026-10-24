@@ -121,7 +121,9 @@ export async function readPlaceNeeds(query: Query, config: AdminConfig | null, p
   if (!placeId || placeId.length > 500) throw new Error("Choose a place");
   const rows = await query(`${slots(`root AS MATERIALIZED (SELECT * FROM entity WHERE id=ANY($4::text[]) AND kind='place'),
     mapped AS (SELECT id FROM root UNION SELECT ep.entity_id FROM entity_place ep JOIN root r ON ep.place_id=r.id
-      ${memberships ? `WHERE ep.boundary_year=0 OR EXISTS(SELECT 1 FROM jsonb_to_recordset($5::jsonb)
+      ${memberships ? `WHERE ep.boundary_year=0 OR NOT EXISTS(SELECT 1 FROM jsonb_to_recordset($5::jsonb)
+        AS selected(place_id text,boundary_year int) WHERE selected.place_id=ep.place_id)
+        OR EXISTS(SELECT 1 FROM jsonb_to_recordset($5::jsonb)
         AS selected(place_id text,boundary_year int) WHERE selected.place_id=ep.place_id AND selected.boundary_year=ep.boundary_year)` : ""}),
     family(id) AS (SELECT id FROM mapped UNION SELECT e.id FROM entity e JOIN family p ON e.parent_id=p.id
       JOIN entity parent ON parent.id=p.id WHERE e.kind<>'place'

@@ -57,7 +57,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
       stateAuthorityPointers(family, state)),
     ...(state === "NH" && !zip ? [requiredRoutineContract("nh-members")] : []),
   ]);
-  entries.push(requiredManualProductionContract("official-filings"));
+  for (const id of ["ballot-navigation", "official-filings"] as const) entries.push(requiredManualProductionContract(id));
   for (const division of divisions) {
     if (!jurisdictionFromOcdId(division)) continue;
     entries.push({ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) });

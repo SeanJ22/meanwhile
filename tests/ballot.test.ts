@@ -97,8 +97,11 @@ test("AZ-4/AZ-5: the ballot reads each state's navigation once, and registration
   const reads = page.split("readBallotNavigationProjection(state)").length - 1;
   assert.equal(reads, 1, `the navigation is read ${reads} time(s) per state; there is one read`);
 
+  // A state shows its own record's pill once that record is published, and the national record's pill until then; never both.
   const pills = page.split("data-registration-pill").length - 1;
-  assert.equal(pills, 1, `${pills} registration pill(s) rendered; exactly one is expected`);
+  assert.equal(pills, 2, `${pills} registration pill sites; one for a published state record and one until it is published`);
+  const resolves = page.split("registrationLinkFor(set.election.state, registrationLinks)").length - 1;
+  assert.equal(resolves, 1, `the until-published registration link resolves ${resolves} time(s); there is one pill`);
 
   assert.ok(
     /data-leaves-app[\s\S]{0,160}voting-open-button/.test(page),
@@ -107,5 +110,9 @@ test("AZ-4/AZ-5: the ballot reads each state's navigation once, and registration
   assert.ok(
     /aria-label=\{`\$\{link\.label\}[\s\S]{0,80}opens the official site in a new tab`\}/.test(page),
     "the leaving warning is not in the pill's accessible name, so a reader who cannot see the arrow is never told",
+  );
+  assert.ok(
+    /aria-label=\{`\$\{reg\.label\}[\s\S]{0,200}leaves this app`\}/.test(page),
+    "the until-published pill's leaving warning is not in its accessible name",
   );
 });

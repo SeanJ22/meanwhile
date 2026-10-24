@@ -20,6 +20,7 @@ import { factReader } from "../facts/db.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
+  "ballot-navigation",
   "stances",
   "campaign-sites",
   "member-offices",
@@ -152,6 +153,10 @@ export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<Cura
   return readPromotedEdgeFirst(contract.recordClass, contract.scope,
     options => readCuratedReaderProjection("official-filings", options), "Official filing records");
 };
+/** The national navigation record, read only for states whose own record is not yet published. */
+export const settleBallotNavigationRead = (): Promise<string> =>
+  readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope,
+    options => refreshCuratedReaderProjection("ballot-navigation", options), "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
 export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>

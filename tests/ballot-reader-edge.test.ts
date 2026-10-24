@@ -231,7 +231,8 @@ const houstonFixtures = await Promise.all([false, true].map(async withSuccessor 
 }));
 
 /** One cold render: the page, then every async component it returned, called from outside the page. */
-async function renderBallot(place: string | Record<string, string>): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; readerSelection: ReaderSelection | undefined }> {
+async function renderBallot(place: string | Record<string, string>): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; readerSelection: ReaderSelection | undefined;
+  datedEvents: number; navigationCards: Set<string>; stateElectionOffices: Set<string> }> {
   activateCanonicalFixture(activeFixture!);
   clearPromotedReadModelCache();
   const { default: BallotPage } = await import("../app/ballot/page.tsx");
@@ -244,6 +245,8 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
   const sourceUrls = new Set<string>();
   const candidateSources = new Map<string, string[]>();
   let readerSelection: ReaderSelection | undefined;
+  let datedEvents = 0;
+  const navigationCards = new Set<string>(), stateElectionOffices = new Set<string>();
   // A card hands some sections down inside a plain object prop (the battlecard's
   // `money`, which is `CandidateFunding`), so plain objects are walked too, once each.
   const seen = new WeakSet<object>();
@@ -262,6 +265,12 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
       return;
     }
     if (element.props?.readerSelection) readerSelection = element.props.readerSelection as ReaderSelection;
+    if (element.props && "data-dated-event" in element.props) datedEvents++;
+    const navigationCard = (element.props?.attrs as Record<string, unknown> | undefined)?.["data-ballot-navigation"];
+    if (typeof navigationCard === "string") navigationCards.add(navigationCard);
+    if (typeof element.type === "function" && element.type.name === "StateOfficeContacts") {
+      for (const office of element.props!.offices as { kind: string; state: string }[]) if (office.kind === "ELECTION_OFFICE") stateElectionOffices.add(office.state);
+    }
     const contestId = element.props?.["data-contest-id"] ?? (element.props?.attrs as Record<string, unknown> | undefined)?.["data-contest-id"];
     if (typeof contestId === "string") contestIds.add(contestId);
     const filingCandidateId = element.props?.["data-filing-candidacy"];
@@ -283,7 +292,7 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
     for (const value of Object.values(element.props ?? {})) await walk(value);
   };
   await walk(tree);
-  return { components, text: text.join(" "), contestIds, candidateIds, filingCandidateIds, sourceUrls, candidateSources, readerSelection };
+  return { components, text: text.join(" "), contestIds, candidateIds, filingCandidateIds, sourceUrls, candidateSources, readerSelection, datedEvents, navigationCards, stateElectionOffices };
 }
 
 test("React async cards retain the page's supplied place selection", () => {
@@ -350,6 +359,27 @@ test("a cold /ballot?zip=85701 reads one state registry and all ballot families 
     assert.equal(state.kind, "PROMOTED", `${what} was not read as the promoted version`);
     assert.equal(state.metadata.versionId, version, `${what} was not served from the edge`);
   }
+});
+
+test("until a state's own navigation record is published its readers keep the built-in dates and state election office; a published record replaces them", async () => {
+  activeFixture = ballotFixture;
+  // New Jersey and New Hampshire have no navigation record of their own in this fixture.
+  for (const [zip, state, dated, deadlines] of [["07960", "NJ", 8, ["October 13th, 2026", "October 27th, 2026"]], ["03255", "NH", 3, ["September 8th, 2026"]]] as const) {
+    const page = await renderBallot(zip);
+    assert.ok(page.contestIds.size > 0, `${zip}: the fixture ballot did not render`);
+    assert.match(page.text, /The next election/, `${zip}: the next election line disappeared`);
+    assert.ok(page.text.includes("November 3rd, 2026"), `${zip}: Election Day disappeared`);
+    for (const date of deadlines) assert.ok(page.text.includes(date), `${zip}: ${date} disappeared`);
+    assert.equal(page.datedEvents, dated, `${zip}: dated deadlines changed`);
+    assert.ok(page.stateElectionOffices.has(state), `${zip}: the ${state} election office line disappeared`);
+    assert.ok(!page.navigationCards.has(state), `${zip}: an empty ${state} card replaced what the reader had`);
+    assert.doesNotMatch(page.text, /Still gathering/, `${zip}: a gap was shown for information the reader already had`);
+  }
+  // Arizona's own record is published here, so it replaces the built-in dates and the national office line.
+  const az = await renderBallot("85701");
+  assert.ok(az.navigationCards.has("AZ"), "the published Arizona record did not reach the page");
+  assert.doesNotMatch(az.text, /The next election/, "the built-in dates stood in for a published state record");
+  assert.ok(!az.stateElectionOffices.has("AZ"), "the national office line stood in for a published state record");
 });
 
 test("a cold /ballot?zip=85641 renders both LD17 and LD19 and U.S. House 6 from the Census holdings", async () => {

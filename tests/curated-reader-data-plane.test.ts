@@ -22,7 +22,7 @@ import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts"
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 
-const FAMILIES = [...CURATED_READER_CONTRACT_IDS, "ballot-navigation"] as const;
+const FAMILIES = [...CURATED_READER_CONTRACT_IDS.filter(id => id !== "ballot-navigation"), "ballot-navigation"] as const;
 type Family = (typeof FAMILIES)[number];
 const readFamily = (id: Family, options: Parameters<typeof readCuratedReaderProjection>[1]) =>
   id === "ballot-navigation" ? readBallotNavigationProjection("AZ", options) : readCuratedReaderProjection(id, options);

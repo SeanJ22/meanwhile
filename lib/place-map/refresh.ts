@@ -43,7 +43,7 @@ export async function knownPostalZips(root: string, requested: ReadonlySet<strin
     const prefix = code.slice(0, 2), codes = prefixes.get(prefix) ?? []; codes.push(code); prefixes.set(prefix, codes);
   }
   for (const [prefix, codes] of prefixes) {
-    let shard: ZipDivisionShard;
+    let shard: LegacyZipShard;
     try { shard = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${prefix}.json`), "utf8")); }
     catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") continue; throw error; }
     for (const code of codes) if (Object.hasOwn(shard.zips, code)) result.add(code);

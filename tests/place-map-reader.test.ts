@@ -1,11 +1,11 @@
-import { fixtureCodeRows } from "./helpers/place-map.ts";
+import { fixtureCodeRows, fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { installPlaceMapQuery } from "../lib/place-map/reader.ts";
 import { readerRoute } from "../lib/api/reader-route.ts";
 import { readerLocation } from "../lib/reader/location.ts";
-import { readPointPlace, readZipPlace, withPlaceMapReads } from "../lib/place-map/reader.ts";
+import { readPointPlace, readZipPlace, readStateZipPlaces, stateForZip, withPlaceMapReads } from "../lib/place-map/reader.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
@@ -90,6 +90,34 @@ test("ZIP ballots retain every selected race including fringe membership without
       assert.deepEqual(await divisionIdsForZipArea("85701",[`${base}/sldl:1`]),[base,county,district,fringe]);
     });
     assert.equal(calls,1);
+  } finally { installPlaceMapQuery(undefined); }
+});
+
+test("a border ZIP retains its mailing state's officials and every sourced place across the state line", async () => {
+  const texas = state("TX"), arkansas = `${state("AR")}/cd:4`, tribal = "ocd-division/country:us/tribal_area:shared";
+  const memberships = fixtureCodeRows([
+    row(texas,"TX","state","state:2023"),
+    row(arkansas,"AR","cd","cd:119",{boundary_year:2024,partial:true}),
+    row(tribal,"OK","aiannh","aiannh:2026"),
+  ]);
+  const fixture = fixturePlaceMapQuery();
+  installPlaceMapQuery(async (sql,params=[]) => {
+    if (sql.includes("SELECT DISTINCT m.zip")) return [{zip:"75556"}];
+    if (sql.includes("FROM zip_place m")) return memberships.map(row => ({...row,zip:"75556"}));
+    return fixture(sql,params);
+  });
+  try {
+    await withPlaceMapReads(async () => {
+      const entry = await readZipPlace("75556");
+      assert.deepEqual(entry?.states,["TX","AR"]);
+      assert.ok(entry?.ids.includes(texas)); assert.ok(entry?.ids.includes(arkansas));
+      assert.equal(await stateForZip("75556"),"TX");
+      const location = await readerLocation(33.15479,-94.06241,"75556");
+      assert.equal(location.state,"TX"); assert.deepEqual(location.states,["TX","AR"]);
+      const inArkansas = await readStateZipPlaces("AR");
+      assert.deepEqual(inArkansas.get("75556")?.states,["TX","AR"]);
+      assert.ok(inArkansas.get("75556")?.ids.includes(arkansas));
+    });
   } finally { installPlaceMapQuery(undefined); }
 });
 

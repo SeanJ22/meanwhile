@@ -60,7 +60,20 @@ export function placeDivisionType(layer: string, id: string): string {
 export async function readZipPlace(zip: string | null, selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceEntry | null> {
   if (!zip || !/^\d{5}$/.test(zip)) return null;
   const result = await placesForCode(placeMapQuery(), "zip", zip, selection);
-  return result.memberships.length ? placeEntry(result) : null;
+  if (!result.memberships.length) return null;
+  return (await orderZipStates(new Map([[zip,placeEntry(result)]]))).get(zip)!;
+}
+
+/** Keep a crossing ZIP's existing statewide shelf while showing every touched state's places. */
+async function orderZipStates(entries: Map<string,PlaceEntry>): Promise<Map<string,PlaceEntry>> {
+  const crossing = [...entries].filter(([,entry]) => (entry.states?.length ?? 0) > 1).map(([zip]) => zip);
+  if (!crossing.length) return entries;
+  const { readZipPostalAreas } = await import("./locations.ts");
+  for (const [zip,postal] of await readZipPostalAreas(crossing)) {
+    const entry = entries.get(zip)!;
+    if (entry.states?.includes(postal.state)) entries.set(zip,{...entry,states:[postal.state,...entry.states.filter(state => state !== postal.state)]});
+  }
+  return entries;
 }
 
 export async function readPointPlace(lat: number, lng: number, selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceEntry> {
@@ -87,7 +100,7 @@ export async function readStateZipPlaces(input: string, selection: GeographySele
     const entry = placeEntry(result);
     if (entry.states?.includes(state) && entry.ids.length) out.set(code, entry);
   }
-  return out;
+  return orderZipStates(out);
 }
 
 export async function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, string>> {

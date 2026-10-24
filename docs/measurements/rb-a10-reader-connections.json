@@ -114,5 +114,307 @@
     "read_only": "on",
     "method": "Production SELECT through replay map connection while local vault transport is installed"
   },
-  "liveAcceptance": "Production Chrome comparison for 20 ZIPs and ten boundary map moves remains open for the post-release live check."
+  "liveAcceptance": "Production Chrome comparison for 20 ZIPs and ten boundary map moves remains open for the post-release live check.",
+  "deployedReferenceResolution": {
+    "identity": {
+      "role": "readonly",
+      "read_only": "on",
+      "checked_at": "2026-10-24T18:15:25.203Z"
+    },
+    "method": "Actual deployed reader_resolve_id function over every current reaction, Speak your mind, Ask and demand target; SELECT only",
+    "references": 60,
+    "distinctIds": 36,
+    "allResolve": true,
+    "mappings": [
+      {
+        "id": "H2AZ02360",
+        "canonical": "ballot-az-pima:us-house-6:ciscomani-juan",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "S0AZ00350",
+        "canonical": "congress-api:K000377",
+        "references": 2,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "S0NH00219",
+        "canonical": "congress-api:S001181",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "S4NJ00185",
+        "canonical": "ballot-nj-morris:us-senate:booker",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "S6NH00091",
+        "canonical": "congress-api:H001076",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "S6NH00141",
+        "canonical": "ballot-nh-merrimack:us-senate:pappas-chris",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:attorney-general|Kris Mayes",
+        "canonical": "plural:a94ae259-7b2d-4756-9c9b-d9fc778e6c1f",
+        "references": 3,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:governor|Andy Biggs",
+        "canonical": "ballot-az-pima:governor:biggs-andy",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:governor|Katie Hobbs",
+        "canonical": "plural:6e522a2a-e7b7-4713-a40f-c897e4341a87",
+        "references": 8,
+        "sources": [
+          "demand",
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:prop-145#later-laws-void",
+        "canonical": "ballot-az-pima:prop-145#later-laws-void",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:prop-145#no-confiscation",
+        "canonical": "ballot-az-pima:prop-145#no-confiscation",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:prop-212#income-limit",
+        "canonical": "ballot-az-pima:prop-212#income-limit",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:secretary-of-state|Adrian Fontes",
+        "canonical": "plural:45ff1caf-0d6b-4915-9e34-5f4694907a07",
+        "references": 4,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:state-treasurer|Nick Mansour",
+        "canonical": "ballot-az-pima:state-treasurer:mansour-nick",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:superintendent|Kimberly Yee",
+        "canonical": "ballot-az-pima:superintendent:yee-kimberly",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+        "canonical": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-az-pima:us-house-7|Adelita Grijalva",
+        "canonical": "ballot-az-pima:us-house-7:grijalva-adelita",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-nh-merrimack:governor:ayotte-kelly",
+        "canonical": "plural:3eabef50-7d86-44cf-87db-8c549d2d21bd",
+        "references": 2,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-nh-merrimack:governor:warmington-cinde",
+        "canonical": "ballot-nh-merrimack:governor:warmington-cinde",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+        "canonical": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ballot-nh-merrimack:us-senate:pappas-chris",
+        "canonical": "ballot-nh-merrimack:us-senate:pappas-chris",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "co-sos-2026-general-attorney-general-state-michael-j-allen",
+        "canonical": "co-sos-2026-general-attorney-general-state-michael-j-allen",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "co-sos-2026-general-governor-state-phil-weiser",
+        "canonical": "co-sos-2026-general-governor-state-phil-weiser",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "co-sos-2026-general-secretary-of-state-state-sean-vadney",
+        "canonical": "co-sos-2026-general-secretary-of-state-state-sean-vadney",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "co-sos-2026-general-state-treasurer-state-jeff-bridges",
+        "canonical": "co-sos-2026-general-state-treasurer-state-jeff-bridges",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "co-sos-2026-general-us-senate-state-john-hickenlooper",
+        "canonical": "co-sos-2026-general-us-senate-state-john-hickenlooper",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "house:119-2:264",
+        "canonical": "house:119-2:264",
+        "references": 4,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "house:119-2:283",
+        "canonical": "house:119-2:283",
+        "references": 7,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/county:pima",
+        "canonical": "ocd-division/country:us/state:az/county:pima",
+        "references": 1,
+        "sources": [
+          "demand"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/county:pima#stadium-district",
+        "canonical": "ocd-division/country:us/state:az/county:pima#stadium-district",
+        "references": 1,
+        "sources": [
+          "demand"
+        ]
+      },
+      {
+        "id": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+        "canonical": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+        "references": 1,
+        "sources": [
+          "ask"
+        ]
+      },
+      {
+        "id": "senate:119-2:227",
+        "canonical": "senate:119-2:227",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "senate:119-2:228",
+        "canonical": "senate:119-2:228",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "senate:119-2:229",
+        "canonical": "senate:119-2:229",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "senate:119-2:230",
+        "canonical": "senate:119-2:230",
+        "references": 2,
+        "sources": [
+          "reactions"
+        ]
+      },
+      {
+        "id": "senate:119-2:231",
+        "canonical": "senate:119-2:231",
+        "references": 1,
+        "sources": [
+          "reactions"
+        ]
+      }
+    ]
+  }
 }

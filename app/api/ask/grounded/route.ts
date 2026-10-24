@@ -80,6 +80,7 @@ import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficial
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
 import { composeBallotOnlyAnswer, composeSelectedBallots } from "@/lib/ask/ballot-only-answer";
 import { ballotQuestionHint, ballotQuestionShape, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
+import { electionInformationQuestion, readElectionInformation } from "@/lib/ask/election-information";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeOwnWordsAnswer } from "@/lib/ask/own-words";
 import { composeMeasureMeaningAnswer, requestedMeasureVotes } from "@/lib/ask/measure-meaning";
@@ -510,6 +511,8 @@ async function answerWithSettings(request: Request, started: number) {
   const leanAsk = Boolean(officialsAsk || areaMeetingsAsk || districtAsk || campaignRecordsAsk);
   const ballotOnlyHint = !ballotReference && !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused);
+  const electionInfoAsk = !ballotReference && !topicRoute && !leanAsk && ocdIds.length > 0 &&
+    readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) ? electionInformationQuestion(question) : null;
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
 
   const noPersonRecordShapes = new Set([...sittingShapes, "CONTACT", "BODY_ROSTER", "BODY_CIVICS", "GOVERNMENT_MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
@@ -532,7 +535,7 @@ async function answerWithSettings(request: Request, started: number) {
     }
   };
   const production = process.env.NODE_ENV === "production";
-  let outcomesFromDatabase = !registryStates.length || leanAsk || ballotOnlyHint || !needsOutcomePreload || sittingShapes.has(registryQuestionShape ?? "") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  let outcomesFromDatabase = !registryStates.length || leanAsk || ballotOnlyHint || electionInfoAsk || !needsOutcomePreload || sittingShapes.has(registryQuestionShape ?? "") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
   if (fecRaceMoneyQuestion(question)) {
     await timed("funding", settleFundingRead)().catch(() => undefined);
@@ -581,34 +584,43 @@ async function answerWithSettings(request: Request, started: number) {
     return askResponse(payload);
   }
 
-  if (ballotOnlyHint) {
-    const ballot = await timed("ballot", () => loadBallotForDivisions(ocdIds, {}, ballotZip))();
+  if (ballotOnlyHint || electionInfoAsk) {
+    const ballotDivisions = electionInfoAsk?.field === "election_office" ? [] : electionInfoAsk?.divisionId ? [electionInfoAsk.divisionId] : ocdIds;
+    const ballot = await timed("ballot", () => loadBallotForDivisions(ballotDivisions, {}, ballotZip))();
     const today = typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today)
       ? body.today : new Date().toISOString().slice(0, 10);
-    const direct = composeBallotOnlyAnswer(ballot, question, today);
+    const direct = electionInfoAsk
+      ? await timed("electionInformation", () => readElectionInformation({ ask: electionInfoAsk, question, today, ballot }))().catch(() => null)
+      : composeBallotOnlyAnswer(ballot, question, today);
     if (direct) {
       const { pack, composed, verdict, shape } = direct;
+      const missingAnswer = "missingAnswer" in direct && direct.missingAnswer;
+      const mode = missingAnswer ? "NO_EVIDENCE" : "STRUCTURED_GROUNDED";
       const interpretation = { ...unavailableInterpretation(), intent: pack.intent, temporal: pack.temporal };
       trace.interpretation = { ran: false, why: "ballot-shape", intent: pack.intent, temporal: pack.temporal, fellBackToDeterministic: true };
       trace.resolution = { state: "NONE", basis: "HELD_BALLOT" };
       trace.retrieval = { selection: "HELD_BALLOT", recordCount: pack.records.length,
         sourceCount: composed.citedUrls.length, gapCount: pack.gaps.length, denominators: pack.denominators };
-      trace.composition = { kind: "BALLOT", shape: shape.kind === "SUMMARY" ? "SUMMARY" : `OFFICE_${shape.key ?? shape.phrase}`,
+      trace.composition = { kind: "BALLOT", shape: shape.kind === "OFFICE" ? `OFFICE_${shape.key ?? shape.phrase}`
+        : shape.kind === "ELECTION_INFORMATION" ? `${shape.kind}_${shape.field}` : shape.kind,
         basis: "HELD_BALLOT", composed: true, passed: true };
       trace.synthesis = { ran: false, why: "composed-from-ballot-records" };
       trace.validation = { ran: true, passed: true, checked: verdict.checked };
       trace.sourcesLoaded = "ESSENTIAL";
       trace.preloads = preloadMs;
-      trace.answerMode = "STRUCTURED_GROUNDED";
+      trace.answerMode = mode;
       trace.totalMs = Date.now() - started;
+      const payload = askAnswer({ mode, pack, answer: composed.answer, contacts: [], trace });
+      if (missingAnswer) await completeMissingAnswer(payload);
       await captureDelivered({ request, question, interpretation, resolutionState: "NONE",
-        mode: "STRUCTURED_GROUNDED", subjectIds: [], answer: composed.answer, answerModel: null,
+        mode, subjectIds: [], answer: payload.answer, answerModel: null,
         validationPassed: true, records: [...pack.records], gaps: [...pack.gaps],
         surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
         approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
         ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
         continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
-      return askResponse(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer: composed.answer, contacts: [], trace }));
+      trace.totalMs = Date.now() - started;
+      return askResponse(payload);
     }
 
   }

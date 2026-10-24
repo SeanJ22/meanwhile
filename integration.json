@@ -4294,5 +4294,17 @@
     "tested_sha": "178151d61",
     "gates": "pass (tsc rerun alone; gates run OOM)",
     "at": "2026-10-24T17:39:44Z"
+  },
+  {
+    "lane": "river-hotfix",
+    "steps": [
+      "RV-JIT"
+    ],
+    "ready_sha": "dfb076b40",
+    "merge_sha": "dfb076b40",
+    "river_sha": "dfb076b40",
+    "tested_sha": "dfb076b40",
+    "gates": "57 reader-database tests; CI on PR #808",
+    "at": "2026-10-24T16:10:35Z"
   }
 ]

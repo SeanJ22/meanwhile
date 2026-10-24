@@ -9,8 +9,8 @@ let installed: ReadOnlyQuery | null | undefined;
 const queryOn = (client: PoolClient, text: string, params: readonly unknown[] = []) =>
   withDatabaseQuery(text, async () => (await client.query(text, [...params])).rows);
 
-async function queryWithDeadline(pool: Pool, statements: readonly Statement[], deadlineMs?: number) {
-  if (deadlineMs === undefined && statements.length === 1) {
+async function queryWithDeadline(pool: Pool, statements: readonly Statement[], deadlineMs?: number, transactionLocalJit = false) {
+  if (deadlineMs === undefined && statements.length === 1 && !transactionLocalJit) {
     const statement = statements[0];
     return withDatabaseQuery(statement.text, async () => [(await pool.query(statement.text, [...statement.params])).rows]);
   }
@@ -27,17 +27,18 @@ async function queryWithDeadline(pool: Pool, statements: readonly Statement[], d
     let released = false;
     release = error => { if (!released) { released = true; client.release(error); } };
     try {
-      if (statements.length === 1) {
+      if (statements.length === 1 && !transactionLocalJit) {
         const statement = statements[0];
         return [await queryOn(client, statement.text, statement.params)];
       }
       await queryOn(client, "BEGIN READ ONLY");
+      if (transactionLocalJit) await queryOn(client, "SET LOCAL jit = off");
       const rows = [];
       for (const statement of statements) rows.push(await queryOn(client, statement.text, statement.params));
       await queryOn(client, "COMMIT");
       return rows;
     } catch (error) {
-      if (!expired && statements.length !== 1) await queryOn(client, "ROLLBACK").catch(() => {});
+      if (!expired && (statements.length !== 1 || transactionLocalJit)) await queryOn(client, "ROLLBACK").catch(() => {});
       release(error instanceof Error ? error : new Error(String(error)));
       throw error;
     } finally { release(); }
@@ -60,9 +61,12 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   if (!connectionString) return null;
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   neonConfig.webSocketConstructor ??= globalThis.WebSocket;
+  // Neon's transaction pooler rejects jit in the startup packet. Keep it
+  // transaction-local there; direct connections retain the single-query path.
+  const transactionLocalJit = new URL(connectionString).hostname.includes("-pooler.");
   const pool = serverReaderValue(`database-pool:${connectionString}`, () => new Pool({
     connectionString, max: 4, allowExitOnIdle: true,
-    options: "-c default_transaction_read_only=on -c jit=off",
+    options: `-c default_transaction_read_only=on${transactionLocalJit ? "" : " -c jit=off"}`,
   }));
-  return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs));
+  return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs, transactionLocalJit));
 }

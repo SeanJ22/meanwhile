@@ -6,6 +6,26 @@ import type { Statement } from "../lib/control-plane/admin-view/promoted-slices.
 
 const statement: Statement = { text: "SELECT $1::text AS selected", params: ["this place"] };
 
+test("a Neon pooled reader disables JIT inside its read-only transaction instead of the startup packet", async () => {
+  const originalUrl=process.env.DATABASE_URL,originalConnect=Pool.prototype.connect;
+  process.env.DATABASE_URL="postgresql://fixture:fixture@reader-pooler.invalid/fixture";
+  const calls:string[]=[],releases:(Error|boolean|undefined)[]=[],startup:(string|undefined)[]=[];
+  const client=Object.assign(new Client(),{release(error?:Error|boolean){releases.push(error);}});
+  client.query=(async(text:string,values:unknown[])=>{
+    calls.push(text);return {command:"SELECT",rowCount:1,oid:0,fields:[],rows:[{selected:values[0]}]};
+  }) as typeof client.query;
+  Pool.prototype.connect=(async function(this:Pool){startup.push(this.options.options);return client;}) as typeof Pool.prototype.connect;
+  try {
+    assert.deepEqual(await readerDatabaseQuery(1800)!([statement]),[[{selected:"this place"}]]);
+    assert.deepEqual(startup,["-c default_transaction_read_only=on"]);
+    assert.deepEqual(calls,["BEGIN READ ONLY","SET LOCAL jit = off",statement.text,"COMMIT"]);
+    assert.deepEqual(releases,[undefined]);
+  } finally {
+    Pool.prototype.connect=originalConnect;
+    if(originalUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=originalUrl;
+  }
+});
+
 test("a bounded reader query uses the shared socket client once and returns it after a complete answer", async () => {
   const originalUrl = process.env.DATABASE_URL, originalConnect = Pool.prototype.connect, originalFetch = neonConfig.fetchFunction;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@reader-socket.invalid/fixture";

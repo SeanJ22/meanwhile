@@ -11,7 +11,8 @@ published sets, work states, and door states. Work-list clock boundaries are
 saved as timed counter changes, so leases and due times keep changing the count
 correctly while the runner is stopped.
 
-The independent Netlify function runs at five minutes past every hour. It reads
+The production deploy takes the first reading. The independent Netlify function
+then runs at five minutes past every hour. It reads
 only the counters and grouped oldest waiting times. Its saved rows contain an
 hour, finish time, problem count, bytes read and one oldest-waiting summary per
 state; at most three rows are retained. Admin reads those small summaries; the

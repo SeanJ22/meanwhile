@@ -1,7 +1,7 @@
 import { neon } from "@neondatabase/serverless";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { withStoreBudget } from "../repository/request-bounds.ts";
-import { runLineKeeper, retireLineInventory } from "./keep.ts";
+import { runLineKeeper } from "./keep.ts";
 function clients() {
   const control=process.env.WTP_CONTROL_PLANE_DATABASE_URL,reader=process.env.DATABASE_URL;
   if(!control||!reader)throw Error("The line keeper needs both database connections");
@@ -15,5 +15,5 @@ export async function hourlyLineKeeper(at=new Date().toISOString()) {
   return result;
 }
 export async function seedLineKeeper() {
-  await retireLineInventory(clients().control);
+  await hourlyLineKeeper();
 }

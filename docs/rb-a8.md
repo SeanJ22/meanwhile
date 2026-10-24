@@ -2,9 +2,9 @@
 
 Work in progress on `stream/rb-a8`. At 9:26 AM EDT on October 24, the latest RB-A1 commit (`5bde46615`) builds successfully with this lane; River is testing its fourth combined batch and has not promoted RB-A1. READY waits for RB-A1 in both River's integration log and `origin/river`, then the River merge and a complete check run.
 
-Readers keep their current facts, civic payloads and identifiers. Writer transactions update `count_hour`; the observer reads counters and grouped oldest ages. Admin shows counts by state, kind, step and Eastern hour. The first partial hour is unknown, and timestamp-only rechecks earn no movement. Doors have a unique source count plus a separate family breakdown, so a source serving two families still counts once in the source total.
+Readers keep their current facts, civic payloads and identifiers. Writer transactions update `count_hour`; the observer reads counters and grouped oldest ages. Admin shows counts by state, kind, step and Eastern hour. Counting coverage starts after every hook and baseline is installed, so the first partial hour is unknown, and timestamp-only rechecks earn no movement. Doors have a unique source count plus a separate family breakdown, so a source serving two families still counts once in the source total.
 
-The independent Netlify schedule is five minutes past every hour (Eastern: :05 in both EDT and EST). Each run updates the existing owned fix list and daily brief, removes `line-keeper:current`, and retains at most three small run checkpoints. Admin states when the keeper is late. No settings, budgets, publishing conditions or reader identifiers change.
+The production deploy initializer takes a first reading. The independent Netlify schedule is five minutes past every hour (Eastern: :05 in both EDT and EST). Each run updates the existing owned fix list and daily brief, removes `line-keeper:current`, and retains at most three small run checkpoints. Admin states when the keeper is late. No settings, budgets, publishing conditions or reader identifiers change.
 
 ## Production connection proofs
 
@@ -17,7 +17,7 @@ A local replay uses only the counter input projections captured at 5:56 AM EDT o
 
 ## Next-run proof
 
-With the clock advanced to the configured :05 boundary, the same observer runs at 7:05 AM and 8:05 AM EDT, October 24. Both complete; the two saved checkpoints total 332 bytes. The real copied reader inputs are unchanged. With a waiting pile in all 57 buckets, five invocations retain three checkpoints totalling 8,901 bytes. A focused integration test compares the hourly work counts with direct SQL in every bucket. Focused tests additionally check lease expiry and future due boundaries while the runner is stopped, rechecks, rollback, archival, new families, and a missing or late keeper. These are controlled-clock scheduling checks. An actual deployed hourly invocation and River's Chrome live check remain owed after integration.
+With the clock advanced to the configured :05 boundary, the same observer runs at 11:05 AM and 12:05 PM EDT, October 24. Both complete; the two saved checkpoints total 332 bytes. The real copied reader inputs are unchanged. With a waiting pile in all 57 buckets, five invocations retain three checkpoints totalling 8,901 bytes. A focused integration test compares the hourly work counts with direct SQL in every bucket. Focused tests additionally check lease expiry and future due boundaries while the runner is stopped, rechecks, rollback, archival, new families, and a missing or late keeper. These are controlled-clock scheduling checks. An actual deployed hourly invocation and River's Chrome live check remain owed after integration.
 
 ## Counts for every state
 
@@ -89,5 +89,6 @@ Direct production SQL at about 6:26 AM EDT, October 24, before these counters ar
 - The schema gate's first connection attempt could not reach Neon because Node had not enabled the environment proxy. With `NODE_USE_ENV_PROXY=1`, the same read-only gate passes, including all 51 applied migration hashes.
 - All 52 focused tests pass with complete test-runner reports. The full rerun found an existing Now render expectation for the former metric label; it now requires “Facts marked live” and still requires a dash for unmeasured hours. The 21 keeper, vital-sign and Now checks pass together.
 - The second full run passed 8/9 checks (9,615 tests passed, two failed, two skipped). Besides the corrected Now expectation, Node 24 aborted in native V8 WebAssembly code cleanup during ZIP-people tests. The unchanged ZIP tests and their adjacent ZIP-place test pass all eight assertions in the same canonical runner on replay; the final full combined run remains owed.
+- The coverage-start correction passes 58 focused tests. The current tested River revision merges cleanly and builds with this lane; its focused keeper, cache, outcome and migration checks pass all 42 tests.
 - Latest RB-A1 builds pass on the 20-minute cadence; final combined full checks and the deployed scheduled run are still pending.
 

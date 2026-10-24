@@ -3,6 +3,7 @@ import { CivicDataStoreUnavailableError, civicDataReadNotInitialized, type Civic
 import { readStateAuthorityProjection } from "../civic-data/state-reader.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
+import type { BodyRoster, RosterReaderDisposition } from "./body-rosters.ts";
 import { currentReaderAuthorityEdge, reportReaderStateFailure } from "./runtime-edge.ts";
 import { readStateRegistryRuntimeProjection } from "../civic-data/read-model.ts";
 import { combineStateRegistries, withStateRegistryFacts } from "./state-composition.ts";
@@ -93,4 +94,13 @@ export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
   const state = registryRuntimeReadState();
   if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value;
   throw new Error(`The requested registry records are ${state.kind}.`);
+}
+
+/** The published roster and its identity decisions, without loading card composition. */
+export function currentBodyRosters(): readonly BodyRoster[] {
+  return getRegistryRuntimeReadModel().bodyRosters;
+}
+
+export function currentRosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
+  return getRegistryRuntimeReadModel().rosterReaderDispositions.find(row => row.sourceId === id) ?? null;
 }

@@ -1,6 +1,6 @@
 import { currentOfficialIdentityStatus, officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../funding/campaign-money.ts";
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "./az-2026.ts";
-import { currentRosterMemberReaderDisposition } from "../registry/body-rosters.ts";
+import { currentRosterMemberReaderDisposition } from "../registry/runtime-read-model.ts";
 import { fecPersonKeys } from "../funding/snapshot.ts";
 import { candidateKeysForState, heldCandidatePersonKeys } from "../ballot/person-keys.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";

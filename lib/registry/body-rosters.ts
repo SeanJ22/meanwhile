@@ -5,7 +5,7 @@
 
 import type { Provenance } from "../sources/types.ts";
 
-import { getRegistryRuntimeReadModel } from "./runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, currentBodyRosters } from "./runtime-read-model.ts";
 import { photoForPerson } from "../photos/person.ts";
 
 export interface RosterMember {
@@ -84,16 +84,6 @@ export interface RosterReaderDisposition {
   canonicalId: string | null;
   state: "READER_ELIGIBLE" | "EXACT_DUPLICATE" | "IDENTITY_UNRESOLVED";
   reason: string;
-}
-
-/** The one promoted body-person/contact projection initialized at a request boundary. */
-export function currentBodyRosters(): readonly BodyRoster[] {
-  return getRegistryRuntimeReadModel().bodyRosters;
-}
-
-/** Reader eligibility derived from the normalized promoted roster, never a retired held row. */
-export function currentRosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
-  return getRegistryRuntimeReadModel().rosterReaderDispositions.find((row) => row.sourceId === id) ?? null;
 }
 
 export interface RosterReaderGap {

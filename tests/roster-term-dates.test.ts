@@ -7,7 +7,8 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-const { rosterHoldersForBody, currentBodyRosters } = await import("../lib/registry/body-rosters.ts");
+const { rosterHoldersForBody } = await import("../lib/registry/body-rosters.ts");
+const { currentBodyRosters } = await import("../lib/registry/runtime-read-model.ts");
 
 const words = (html: string) => pageWords(html);
 

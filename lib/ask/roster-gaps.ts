@@ -1,4 +1,5 @@
-import { currentBodyRosters, rosterGapForBody } from "../registry/body-rosters.ts";
+import { rosterGapForBody } from "../registry/body-rosters.ts";
+import { currentBodyRosters } from "../registry/runtime-read-model.ts";
 import type { AskContact } from "./contacts.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 

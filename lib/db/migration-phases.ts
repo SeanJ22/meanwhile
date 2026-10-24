@@ -41,6 +41,8 @@ export interface PhaseDeclaration {
   readonly phase: MigrationPhase;
   /** Why this migration sits on that side. Never a shrug. */
   readonly why: string;
+  /** A contract that must rebuild an index over a large reader table holds its locks this long, not the default second. */
+  readonly contractStatementTimeoutMs?: number;
 }
 
 /** The ordering each phase requires; `sentence` is what a failing run prints. */
@@ -163,7 +165,9 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
-  "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy." },
+  "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",
+    // Rebuilding the entity_place key and indexing 593k external ids takes about 1.7s at production size.
+    contractStatementTimeoutMs: 10_000 },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },
   "0046_ck01_audit_flags": { phase: "expand", why: "Adds nullable owner flag metadata and indexes and permits null fact_id for a named legacy reader record. Every old writer still supplies fact_id and keeps working; apply before code that uses the new columns." },

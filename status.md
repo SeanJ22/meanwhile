@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 96 LIVE (38b470355). Job 1 DONE. Batch 4 gating from 8:38 AM EDT (incl. RIVER-KEYS, MT-01) = release 97 candidate. Returned 8:39 AM EDT: MD-01, CL-01. PB-02 and SRC-01 being finished by River's helpers
+build_state: RELEASE 96 LIVE (38b470355). Job 1 DONE. Batch 5 gating from 9:52 AM EDT = release 97 candidate (14 lanes incl. RIVER-KEYS, MT-01, CL-01, MD-01, PB-02, SRC-01)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Batch 5 (release 97 candidate), 9:52 AM EDT
+- Batch 4 gates: tests 9,699 pass, 0 fail. The build was cut off when GitHub returned 502 to the lock heartbeat, so River ran it directly: it really fails. build-output REFUSED, 21 tests/ files traced into the admin bundles. Bisected by building each fold: RIVER-KEYS. lib/doors/source-capture.ts (admin routes) now calls savedVotingCopy, whose PDF path loaded the runner's OCR extraction (computed-path reads), against that module's own rule that runner-only extraction stays out of deployed routes. River fix 497dfb06f: a PDF door copy is blanked from its text layer. Build passes, tests/ traced 0.
+- Batch 5 on river-next, gating from 9:52 AM EDT (lock heartbeat now a separate loop that tolerates GitHub errors): RV-TOOLS, RN-03 (13f6eb19f), RB-A1, BL-21-FX, RN-01, BL-01, LV-01, RIVER-KEYS + fix, MT-01, SRC-01 (421534831), CL-01 (16159c59d), PB-02 (2bfa981e1), MD-01 (f16a1d8a2). Pre-gate: tsc, dead-code clean; 337 focused tests incl. every file that failed this morning pass; build passes with tests/ traced 0.
+- CL-01 16159c59d fixed both returned failures itself (204 tests on its tip). Folded with BL-01: initials keep the filing's form, all-capitals given names are cased; both lanes' name tests kept; 359 tests pass. Return cleared.
+- MD-01 f16a1d8a2 fixed its 3 tests. Its READY states the Admin "Ask reader model" and per-role starting-model overrides are removed on purpose (its prompt: every AI step starts on Haiku 5.5). FOR SEAN: Admin loses those model controls in release 97; say if you want them kept.
+- PB-02 (River's helper, READY 2bfa981e1): the two tests checked the old hand-off point (PB-02 hands comment and walk pages at intake; reader-facing assertions unchanged). PB-02 had deleted board naming on purpose; restored (readers lose names without it: 86 of 101 production bodies re-named in replay). A replay on today's data caught 9 wrong publishes (a school social worker, 6 page labels, 2 misreads), fixed. 179 publish from the seven-day cohort (AZ 90, AL 34, AR 10, GA 9, ...). FOR SEAN: Rebecca Romo (Casa Grande AZ) publishes from a chamber of commerce page; the checks allow third-party pages.
+- SRC-01 (River's helper, READY 421534831): EPA never published (archive pointer keyed by its own content hash; release 90's workaround re-stored the 445 MB file every run); OpenFEMA served the first states in list order until time ran out (7 of 56 published). Fixed; on live publisher data EPA 3,229,294 facilities and FEMA 70,487 disasters reach readers in all 56 jurisdictions, first and next run. Risk: the EPA proof took 1,856 s on this shared host vs production's 1,800 s cap; first post-ship run will show.
+- Raleigh 27601 (MT-01's note) on release 96: no crash in a reader walk; "Who governs here?" shows Deborah K. Ross twice under NC-2 (one card with portrait, one without). CL-01's area; recheck after release 97.
 
 ### Batch 4 (release 97 candidate), 8:38 AM EDT
 - Batch 3 gates (river-next c4ced5044): 9,687 pass, 10 fail. Traced each:

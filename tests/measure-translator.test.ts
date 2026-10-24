@@ -105,6 +105,39 @@ test("an unsupported writer sentence or failed independent check never publishes
   }
 });
 
+test("a missing sentence annotation is rewritten before paying an independent checker", async () => {
+  const requests: ModelRequest[] = [];
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      if (request.tools[0].name === "write_measure_translation") {
+        const draft = measureDraft(measure, sentences);
+        if (requests.length === 1) draft.sentences.splice(1, 1);
+        else assert.match(measureRequestContext(request).feedback, /source passage/);
+        return response(request, draft);
+      }
+      assert.equal(request.model, "claude-opus-5-5");
+      return response(request, { checked });
+    } });
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
+  assert.equal(result.record.writerModel, "claude-sonnet-5-5");
+  assert.equal(result.record.checkerModel, "claude-opus-5-5");
+  assert.equal(result.usage.length, 3);
+  assert.equal(translationRecordIssue(result.record), null);
+});
+
+test("a writer grouping two sentences under one citation cannot buy a checker or publish", async () => {
+  const requests: ModelRequest[] = [];
+  const proposed = { ...measure, whatItDoes: `${measure.whatItDoes} ${measure.yesMeans}` };
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      assert.equal(request.tools[0].name, "write_measure_translation");
+      return response(request, measureDraft(proposed, [{ ...sentences[0], text: proposed.whatItDoes }, ...sentences.slice(1)]));
+    } }), /source passage/);
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
+});
+
 test("source replay accepts official HTML entities and PDF line breaks while rejecting invented passages", async () => {
   const text = source.replace("library services", "library\nservices").replace("adopts the levy", "adopts&nbsp;the levy");
   const primary = { ...evidence, text, contentHash: `sha256-${translationHash(text)}` };

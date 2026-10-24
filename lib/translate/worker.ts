@@ -15,7 +15,7 @@ import { registeredKind } from "../registry/kinds.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs" | "spend">;
 export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRepositories, "adminConfig">;
-import { translationHash, translationRecordIssue, translationSourceContains, translationSourceNames, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
+import { translationHash, translationDraftIssue, translationChecksIssue, translationSourceContains, translationSourceNames, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
 import { translationPassages } from "./passages.ts";
 
 export interface TranslationPlaybook {
@@ -173,15 +173,18 @@ export async function translateText(input: {
     if (typeof proposal?.text !== "string" || !proposal.text.trim() || !Array.isArray(proposal.sentences) ||
         proposal.sentences.some(row => !row || row.field !== "text" || typeof row.quote !== "string" || !row.quote.trim() || !evidence.text.includes(row.quote))) throw new TranslationCheckFailed("Text translator returned unsupported source passages.");
     if (input.preservedText && proposal.text !== input.preservedText.text) throw new TranslationCheckFailed("Curated migration would rewrite the existing text.");
-    const checked = await send(request(checkerModel, checkerTool, { originalSource: evidence.text, subject, instruction, preservation, proposal }));
-    const result = toolResult(checked, checkerTool.name, checkerModel) as { checked: TextTranslation["checked"] };
-    const record: TextTranslation = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
+    const draft: Omit<TextTranslation, "checked"> = { id: `translation:${subject.subjectId}`, kind: subject.kind, subjectId: subject.subjectId,
       ocdId: subject.ocdId, ...(input.preservedText ? { curatedOrigin: input.preservedText.origin } : {}), label: subject.label, text: proposal.text, sourceUrl: evidence.canonicalUrl,
       sourceHash: hash, ...(subject.meeting ? { meeting: subject.meeting } : {}),
       sourceText: evidence.text, sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt,
-      writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel: canonicalModelId(checked.model),
-      playbookVersion: playbook.version, sentences: proposal.sentences, checked: result?.checked };
-    const issue = translationRecordIssue(record);
+      writtenAt: now, writerModel: canonicalModelId(written.model), checkerModel,
+      playbookVersion: playbook.version, sentences: proposal.sentences };
+    const draftIssue = translationDraftIssue(draft);
+    if (draftIssue) throw new TranslationCheckFailed(draftIssue);
+    const checked = await send(request(checkerModel, checkerTool, { originalSource: evidence.text, subject, instruction, preservation, proposal }));
+    const result = toolResult(checked, checkerTool.name, checkerModel) as { checked: TextTranslation["checked"] };
+    const record: TextTranslation = { ...draft, checkerModel: canonicalModelId(checked.model), checked: result?.checked };
+    const issue = translationChecksIssue(record);
     if (issue) throw new TranslationCheckFailed(`${issue} ${JSON.stringify(result?.checked)}`);
     return { record };
   });
@@ -247,17 +250,20 @@ export async function translateMeasure(input: {
     if (measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new TranslationCheckFailed("Translation part kind is absent from the current kinds setting.");
     if (subject.prior?.parts.some(part => !measure.parts.some(proposed => proposed.id === part.id &&
         (part.number === null || proposed.number === part.number)))) throw new TranslationCheckFailed("Translation would lose or reassign an existing measure part's reaction identity.");
+    const draft: Omit<MeasureTranslation, "checked"> = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
+      ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
+      sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,
+      writerModel: canonicalModelId(writer.model), checkerModel, playbookVersion: playbook.version,
+      measure, sentences };
+    const draftIssue = translationDraftIssue(draft);
+    if (draftIssue) throw new TranslationCheckFailed(draftIssue);
     const checker = await recordedSend(request(checkerModel, checkerTool, { subject: modelSubject,
       proposal: { measure: { whatItDoes: measure.whatItDoes, yesMeans: measure.yesMeans, noMeans: measure.noMeans, parts: measure.parts },
         sentences: proposal.sentences.map(({ field, text, passageFrom, passageThrough }) => ({ field, text, passageFrom, passageThrough })) },
       instruction: "Check every written sentence against its cited source span and every material condition and exception in the full original source. Passage labels are references, not source text. Verify what a YES vote would enact and what a NO vote would reject without assuming unstated consequences. Reject recommendations, judgments, persuasion or language favoring either side. Every official part number must appear there. Return a false check for any unsupported or non-neutral sentence." }));
     const result = toolResult(checker, checkerTool.name, checkerModel) as { checked: MeasureTranslation["checked"] };
-    const record: MeasureTranslation = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
-      ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
-      sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,
-      writerModel: canonicalModelId(writer.model), checkerModel: canonicalModelId(checker.model), playbookVersion: playbook.version,
-      measure, sentences, checked: result?.checked };
-    const issue = translationRecordIssue(record);
+    const record: MeasureTranslation = { ...draft, checkerModel: canonicalModelId(checker.model), checked: result?.checked };
+    const issue = translationChecksIssue(record);
     if (issue) throw new TranslationCheckFailed(`${issue} ${JSON.stringify(result?.checked)}`);
     return { record, usage: responses.map(response => ({ model: response.model,
       usage: readMeteredUsage(response.usage, response.batch === true), usd: priceMeteredUsage(response.model, readMeteredUsage(response.usage, response.batch === true), "1h").usd })) };

@@ -12,6 +12,7 @@ import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts"
 import type { Query } from "../lib/facts/publish.ts";
 import { readZipLocation } from "../lib/place-map/locations.ts";
 import { placeBoundaryMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
+import { legacyZipEntry, type LegacyZipShard } from "../lib/place-map/legacy.ts";
 
 const state = (code: string) => `ocd-division/country:us/state:${code.toLowerCase()}`;
 const row = (id: string, code: string, layer: string, version: string, extra: Record<string, unknown> = {}) => ({
@@ -117,6 +118,33 @@ test("a border ZIP retains its mailing state's officials and every sourced place
       const inArkansas = await readStateZipPlaces("AR");
       assert.deepEqual(inArkansas.get("75556")?.states,["TX","AR"]);
       assert.ok(inArkansas.get("75556")?.ids.includes(arkansas));
+    });
+  } finally { installPlaceMapQuery(undefined); }
+});
+
+test("a fringe-only Ohio overlap keeps all 19 held memberships of Indiana ZIP 47025", async () => {
+  const legacy = legacyZipEntry(JSON.parse(readFileSync("data/derived/zip-divisions/47.json","utf8")) as LegacyZipShard,"47025")!;
+  const fringe = legacy.fringe!, held = new Set([...legacy.ids,...fringe]);
+  assert.equal(held.size,19); assert.equal(fringe.filter(id => id.includes("/state:oh/")).length,3);
+  const memberships = fixtureCodeRows([
+    ...legacy.ids.map(id => row(id,"IN","place","place:2023")),
+    ...fringe.map(id => row(id,id.includes("/state:oh/") ? "OH" : "IN","place","place:2023",{fringe:true})),
+  ]);
+  const fixture = fixturePlaceMapQuery();
+  installPlaceMapQuery(async (sql,params=[]) => {
+    if (sql.includes("SELECT DISTINCT m.zip")) return [{zip:"47025"}];
+    if (sql.includes("FROM zip_place m")) return memberships.map(row => ({...row,zip:"47025"}));
+    return fixture(sql,params);
+  });
+  try {
+    await withPlaceMapReads(async () => {
+      const entry = (await readStateZipPlaces("OH")).get("47025");
+      assert.ok(entry);
+      assert.deepEqual(entry.states,["IN","OH"]);
+      assert.deepEqual(new Set(entry.fringe),new Set(fringe));
+      assert.deepEqual(new Set([...entry.ids,...entry.fringe ?? []]),held);
+      const ballot = await divisionIdsForZipArea("47025",[]);
+      assert.ok([...held].every(id => ballot.includes(id)));
     });
   } finally { installPlaceMapQuery(undefined); }
 });

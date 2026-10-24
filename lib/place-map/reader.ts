@@ -47,8 +47,7 @@ export function placeEntry(result: PlaceMapResult): PlaceEntry {
   const ids = [...new Set(result.memberships.filter(row => !row.fringe).map(row => row.placeId))];
   const partial = [...new Set(result.memberships.filter(row => !row.fringe && (row.partial || row.countyAttachment)).map(row => row.placeId))];
   const fringe = [...new Set(result.memberships.filter(row => row.fringe).map(row => row.placeId))];
-  const states = [...new Set(result.memberships.filter(row => !row.fringe).flatMap(row => row.state ? [row.state] : []))].sort();
-  return { ids, partial, samples: 0, states: result.states.filter(state => states.includes(state)),
+  return { ids, partial, samples: 0, states: result.states,
     qualifiedDistricts: [...new Set(ids.flatMap(id => districtFamilyKey(id) ?? []))], ...(fringe.length ? { fringe } : {}) };
 }
 

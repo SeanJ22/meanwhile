@@ -12,7 +12,7 @@
         {
           "id": "nd-sos-2026-general:representative-in-congress",
           "electionId": "nd-2026-11-03",
-          "ocdId": "ocd-division/country:us/state:nd/cd:0",
+          "ocdId": "ocd-division/country:us/state:nd/cd:at-large",
           "divisionVintage": "2026",
           "title": "Representative in Congress",
           "type": "CANDIDACY",
@@ -23,10 +23,21 @@
           "provenance": {
             "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
             "sourceOrg": "North Dakota Secretary of State",
-            "collectedAt": "2026-10-14T05:05:21.988741+00:00",
-            "verifiedAt": "2026-10-14T05:05:21.988741+00:00",
+            "collectedAt": "2026-10-23T08:31:41.317Z",
+            "verifiedAt": "2026-10-23T08:31:41.317Z",
             "doorId": "fec-nd-chief",
             "quote": "Representative in Congress"
+          },
+          "scopeCorrection": {
+            "previousOcdId": "ocd-division/country:us/state:nd/cd:0",
+            "provenance": {
+              "sourceUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+              "sourceOrg": "North Dakota Secretary of State",
+              "collectedAt": "2026-10-23T08:31:41.317Z",
+              "verifiedAt": "2026-10-23T08:31:41.317Z",
+              "doorId": "fec-nd-chief",
+              "quote": "Representative in Congress"
+            }
           }
         },
         {
@@ -19050,8 +19061,8 @@
   },
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-21T00:54:53.729316+00:00",
-    "reviewedBy": "Codex BA-01 official court/county source replay",
+    "reviewedAt": "2026-10-23T08:31:41.317Z",
+    "reviewedBy": "BL-01 North Dakota congressional division correction",
     "sources": [
       {
         "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
@@ -19220,6 +19231,16 @@
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "NDCC27-05-02 elects judges in each judicial district; official general list supplies every filed general candidate and named judicial district.",
         "reviewOutcome": "SUPPORTED"
+      },
+      {
+        "requestedUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "finalUrl": "https://vip.sos.nd.gov/candidatelist.aspx?eid=348",
+        "httpStatus": 200,
+        "rawHash": "967514bcb075daf469ea2af5298aef0c49c4159a447d44794302dceca857139c",
+        "retrievedAt": "2026-10-23T08:31:41.317Z",
+        "publisher": "North Dakota Secretary of State",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "The current official portal names Representative in Congress. Corrected the internal zero district spelling to cd:at-large using the shared Census seat rule; candidate names and their original captures are retained."
       }
     ]
   }

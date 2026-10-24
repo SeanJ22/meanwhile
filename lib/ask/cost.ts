@@ -6,6 +6,7 @@ import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/r
 import { recordCost } from "../control-plane/repository/coordinator.ts";
 import { canonicalModelId } from "../models.ts";
 import { afterResponse } from "../log/after-response.ts";
+import { askJobId } from "./runtime-settings.ts";
 
 export type AskCostWriter = (entry: CostEntry) => Promise<void>;
 let repositories: ReturnType<typeof createPgRepositories> | undefined;
@@ -38,7 +39,7 @@ export function meteredAskFetch(impl: typeof fetch, lane: string, write: AskCost
       const metering = readMeteredUsage(body?.usage);
       const model = typeof body?.model === "string" ? body.model : params.model ?? null;
       const usd = model === null ? null : priceMeteredUsage(canonicalModelId(model), metering, ttl).usd;
-      const entry = costEntryWithModel({ attemptId: id, workItemId: "ask", routeTaskId: null,
+      const entry = costEntryWithModel({ attemptId: id, workItemId: askJobId() ?? id, routeTaskId: null,
         costPolicy: "R7",
         requestedModel: params.model ?? null, servedModel: typeof body?.model === "string" ? body.model : null,
         ...(requestBound && usd === null ? { modelRequestBound: requestBound } : {}),

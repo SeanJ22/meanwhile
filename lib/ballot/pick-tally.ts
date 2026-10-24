@@ -1,12 +1,21 @@
 import { resolvePick, type PickResolution } from "./derived-picks.ts";
 import type { StoredPick } from "./picks.ts";
 
+export interface PickOption {
+  id: string;
+  label: string;
+  aliases?: readonly string[];
+  reactionTargetId?: string;
+  reactionTargetAliases?: readonly string[];
+}
+
 export interface PickableContest {
   contestId: string;
+  aliases?: readonly string[];
   contestTitle: string;
   contestOcdId?: string;
   voteFor: number;
-  options: { id: string; label: string; reactionTargetId?: string }[];
+  options: PickOption[];
 }
 
 export interface TalliedPick {
@@ -28,13 +37,18 @@ export function resolveWithSuppression(
   yesChoiceIds: readonly string[],
   voteFor: number,
   suppressedDerived: readonly string[] | undefined,
+  options: readonly PickOption[] = [],
 ): PickResolution {
-  const resolution = resolvePick(explicit, yesChoiceIds, voteFor);
+  const canonical = (id: string) => {
+    const matches = options.filter(option => option.id === id || option.aliases?.includes(id));
+    return matches.length === 1 ? matches[0].id : id;
+  };
+  const picked = explicit ? { ...explicit, choiceIds: [...new Set(explicit.choiceIds.map(canonical))] } : null;
+  const resolution = resolvePick(picked, yesChoiceIds.map(canonical), voteFor);
   if (resolution.basis !== "DERIVED") return resolution;
   if (!suppressedDerived || suppressedDerived.length === 0) return resolution;
-  const same =
-    suppressedDerived.length === resolution.chosen.length &&
-    resolution.chosen.every((id) => suppressedDerived.includes(id));
+  const cleared = new Set(suppressedDerived.map(canonical));
+  const same = cleared.size === resolution.chosen.length && resolution.chosen.every(id => cleared.has(id));
   if (!same) return resolution;
   return { chosen: [], basis: "NONE", conflicting: [], asks: true };
 }
@@ -46,21 +60,22 @@ export function tallyPicks(
   suppressedDerived: Readonly<Record<string, string[]>>,
 ): PickTally {
   const byId = new Map(explicitPicks.map((p) => [p.contestId, p]));
-  const onThisBallot = new Set(pickable.map((c) => c.contestId));
+  const onThisBallot = new Set(pickable.flatMap(contest => [contest.contestId, ...contest.aliases ?? []]));
   const rows: TalliedPick[] = [];
 
   for (const contest of pickable) {
     const yes = contest.options
-      .filter((o) => o.reactionTargetId && yesTargetIds.has(o.reactionTargetId))
+      .filter((o) => [o.reactionTargetId, ...o.reactionTargetAliases ?? []].some(id => id && yesTargetIds.has(id)))
       .map((o) => o.id);
     const resolution = resolveWithSuppression(
-      byId.get(contest.contestId) ?? null,
+      byId.get(contest.contestId) ?? (contest.aliases ?? []).map(id => byId.get(id)).find(Boolean) ?? null,
       yes,
       contest.voteFor,
-      suppressedDerived[contest.contestId],
+      [contest.contestId, ...contest.aliases ?? []].map(id => suppressedDerived[id]).find(Boolean),
+      contest.options,
     );
     if (resolution.basis === "NONE" || resolution.chosen.length === 0) continue;
-    const explicit = byId.get(contest.contestId);
+    const explicit = byId.get(contest.contestId) ?? (contest.aliases ?? []).map(id => byId.get(id)).find(Boolean);
     rows.push({
       contestId: contest.contestId,
       contestTitle: contest.contestTitle,
@@ -91,9 +106,9 @@ export function derivedToSuppress(
   const out: Record<string, string[]> = { ...suppressedDerived };
   for (const contest of pickable) {
     const yes = contest.options
-      .filter((o) => o.reactionTargetId && yesTargetIds.has(o.reactionTargetId))
+      .filter((o) => [o.reactionTargetId, ...o.reactionTargetAliases ?? []].some(id => id && yesTargetIds.has(id)))
       .map((o) => o.id);
-    const resolution = resolvePick(null, yes, contest.voteFor);
+    const resolution = resolveWithSuppression(null, yes, contest.voteFor, undefined, contest.options);
     if (resolution.basis === "DERIVED" && resolution.chosen.length > 0) {
       out[contest.contestId] = [...resolution.chosen];
     }

@@ -1,4 +1,5 @@
 import { currentCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
+import { candidateKeysForState } from "./person-keys.ts";
 import {
   composeCampaignLinks,
   currentDerivedCampaignSiteRecords,
@@ -53,15 +54,13 @@ export function campaignLinkIsDerived(state: string, key: string): boolean {
 }
 
 export function linksForCandidacy(state: string, candidacyId: string): CandidateLinks | null {
-  return load(state).links[candidacyId] ?? null;
-}
-
-export function linksForNominee(
-  state: string,
-  contestId: string,
-  name: string,
-): CandidateLinks | null {
-  return load(state).links[`${contestId}|${name}`] ?? null;
+  const links = load(state).links;
+  const keys = [...new Set([candidacyId, ...candidateKeysForState(state, candidacyId)])];
+  // The published person card's verified links carry through when filing ids are merged.
+  const rows = [...keys.filter(key => key.includes("|")), ...keys.filter(key => !key.includes("|"))]
+    .flatMap(key => links[key] ? [links[key]] : []);
+  return rows.length ? { official: rows.find(row => row.official)?.official ?? null,
+    campaign: rows.find(row => row.campaign)?.campaign ?? null } : null;
 }
 
 export function allCandidateLinks(state: string): CandidateLinksFile {

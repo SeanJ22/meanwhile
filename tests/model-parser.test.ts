@@ -115,16 +115,16 @@ test("windows cover the whole document with overlap, and a very long document is
   assert.deepEqual(whole, { windows: [{ start: 0, end: 5 }], unreadFrom: null });
 });
 
-test("the manual routes the parse: nothing recorded starts cheapest; a tier that failed here is skipped", () => {
+test("each parse starts cheapest even after a previous publisher or audit failure", () => {
   let store = readEmpty();
   assert.equal(routeParse(store, { recordClass: "PLANNING_MEETING", host: "www.exampletonaz.gov" }).tier, "haiku");
   store = learn(store, { tier: "haiku", confirmed: 0 });
   const route = routeParse(store, { recordClass: "PLANNING_MEETING", host: "www.exampletonaz.gov" });
-  assert.equal(route.tier, "sonnet");
-  assert.match(route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
-  assert.equal(route.inheritedEntryIds.length, 1);
-  // another publisher of the same record class where haiku failed and nothing yielded: skipped there too
-  assert.equal(routeParse(store, { recordClass: "PLANNING_MEETING", host: "www.other.gov" }).tier, "sonnet");
+  assert.equal(route.tier, "haiku");
+  assert.match(route.reason, /each source/);
+  assert.equal(route.inheritedEntryIds.length, 0);
+  // A different publisher also gets a fresh Haiku attempt.
+  assert.equal(routeParse(store, { recordClass: "PLANNING_MEETING", host: "www.other.gov" }).tier, "haiku");
   // once haiku yields on this publisher, it is the start again
   store = learn(store, { tier: "haiku", confirmed: 3 });
   assert.equal(routeParse(store, { recordClass: "PLANNING_MEETING", host: "www.exampletonaz.gov" }).tier, "haiku");
@@ -138,7 +138,7 @@ function learn(store: FieldManualStore, o: { tier: "haiku" | "sonnet"; confirmed
   return { formatVersion: 1 as const, updatedOn: NOW, entries: [...byId.values()] };
 }
 
-test("a parse with no rule: cheapest tier is asked, escalates once when no quote confirms, and the next parse starts where the last one succeeded", async () => {
+test("a parse starts cheapest, climbs when no quote confirms, and restarts cheapest on the next document", async () => {
   const repos = createMemoryRepositories();
   const seen: string[] = [];
   const transport: ModelTransport = async (request: ModelRequest) => {
@@ -166,14 +166,14 @@ test("a parse with no rule: cheapest tier is asked, escalates once when no quote
   assert.ok(manual.projection.lines.some((l) => /PARSE_OUTCOME YIELDED/.test(l) && /sonnet/.test(l)));
   assert.ok(manual.projection.lines.some((l) => /PARSE_FIELDS/.test(l) && /location, title, when/.test(l)));
 
-  // ...so the next agent to parse this record type routes differently.
+  // The next document reuses learned fields while starting at Haiku.
   seen.length = 0;
   const second = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse({ ...input(), attemptId: "parse-2" }, input().worker);
-  assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the second parse skips the tier that failed here before");
+  assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku, MODEL_FOR_CLASS.sonnet], "a previous failure does not skip this document’s Haiku attempt");
   assert.equal(second.result.verdict, "EXTRACTED");
-  assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
+  assert.match(second.review.route.reason, /each source/);
   assert.ok(second.review.route.inheritedEntryIds.length >= 1);
-  assert.equal(second.review.escalation, undefined);
+  assert.equal(second.review.escalation?.from, "haiku");
 });
 
 test("no proposed field confirming is a failed extraction, never an empty document", async () => {
@@ -221,7 +221,7 @@ test("a failed window waits for answered windows and preserves their paid tier s
   assert.equal(calls, 2, "the same failed request is never resent or escalated");
 });
 
-test("an audit that breaks a model-parsed publisher sends the next parse one tier up", async () => {
+test("an audit failure keeps its learning without skipping the next document’s Haiku attempt", async () => {
   const repos = createMemoryRepositories();
   const seen: string[] = [];
   const transport: ModelTransport = async (request: ModelRequest) => { seen.push(request.model); return respond(request.model, GOOD_PROPOSAL); };
@@ -240,8 +240,8 @@ test("an audit that breaks a model-parsed publisher sends the next parse one tie
 
   seen.length = 0;
   const second = await modelParseReasoner(repos, transport, () => NOW, { ceilingUsd: 100 }).parse({ ...input(), attemptId: "parse-2" }, input().worker);
-  assert.deepEqual(seen, [MODEL_FOR_CLASS.sonnet], "the next Parser reads what the Auditor wrote and starts a tier up");
-  assert.match(second.review.route.reason, /haiku failed to confirm quotes on www\.exampletonaz\.gov/);
+  assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku], "the next Parser starts with Haiku and stops when its quotes pass");
+  assert.match(second.review.route.reason, /each source/);
 });
 
 for (const [shape, text] of Object.entries({
@@ -285,4 +285,15 @@ test("CP-19: a wrapped name retains the same record's fields and exact source of
   assert.equal(result.records.length, 1);
   assert.equal(result.records[0].fields.email, "alice@example.test");
   assert.equal(quotesHoldAgainst(result, text).ok, true);
+});
+
+test("a parser reaches Opus only after neither Haiku nor Sonnet confirms a source quote", async () => {
+  const seen: string[] = [];
+  const out = await modelParseReasoner(createMemoryRepositories(), async request => {
+    seen.push(request.model);
+    return respond(request.model, request.model === MODEL_FOR_CLASS.frontier ? GOOD_PROPOSAL : []);
+  }, () => NOW, { ceilingUsd: 100 }).parse(input(), input().worker);
+  assert.deepEqual(seen, [MODEL_FOR_CLASS.haiku, MODEL_FOR_CLASS.sonnet, MODEL_FOR_CLASS.frontier]);
+  assert.equal(out.result.actualRowCount, 2);
+  assert.equal(out.review.byModel?.length, 3);
 });

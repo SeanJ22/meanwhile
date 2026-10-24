@@ -1,4 +1,5 @@
 import type { AttemptCost, WorkerRef } from "../attempt.ts";
+import type { Artifact } from "../evidence/artifact.ts";
 import type { AttackMode, AuditEvidenceBase } from "../audit.ts";
 import { ATTACK_MODES, AUDIT_EVIDENCE_BASES } from "../audit.ts";
 import type { CapabilityGrant } from "../capability.ts";
@@ -25,7 +26,7 @@ export interface WorkerEvidence {
   readonly retrievedAt: string;
   readonly sourceId: string;
   readonly methodRouteId: string;
-  readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: "PDF_TEXT" | "PDF_TABLES" };
+  readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: NonNullable<Artifact["extraction"]>["kind"] };
 }
 export interface LegacyCivicExtractionContract {
   readonly recordClass: "LEGISTAR_EVENTS" | "CIVICCLERK_EVENTS";

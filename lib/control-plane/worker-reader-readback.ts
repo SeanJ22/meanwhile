@@ -258,7 +258,7 @@ export async function collectWorkerManualReadback(input: {
   previous: ServedReaderReadback | null;
   zipForDivision: (division: string) => Promise<string | null>;
   observe: (input: PublishedManualRead) => Promise<Awaited<ReturnType<typeof observePublishedManual>>>;
-  currentVersion?: (contractId: "everyday-routing" | "ballot-navigation") => Promise<string | null>;
+  currentVersion?: (contractId: "everyday-routing" | "ballot-navigation", scope: string) => Promise<string | null>;
 }): Promise<ServedReaderReadback> {
   const contracts = new Set(["comment-access", "everyday-routing", "ballot-navigation"]);
   // Comment rules are facts: their published reading names them, with no partition version.
@@ -292,12 +292,13 @@ export async function collectWorkerManualReadback(input: {
       continue;
     }
     try {
-      const currentVersion = input.currentVersion ? await input.currentVersion(contractId) : await (async () => {
+      const candidate = await input.store.readCandidate(outcome.versionId!);
+      if (!candidate) throw Error("MANUAL_VERSION_UNAVAILABLE");
+      const currentVersion = input.currentVersion ? await input.currentVersion(contractId, candidate.candidate.scope) : await (async () => {
         const contract = requiredManualProductionContract(contractId);
-        const current = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope);
+        const current = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, candidate.candidate.scope);
         return current.kind === "PROMOTED" ? current.metadata.versionId : null;
       })();
-      const candidate = await input.store.readCandidate(outcome.versionId!);
       const payload = candidate?.candidate.readModel as CuratedReaderProjection | undefined;
       const ids = outcome.acceptedRecordIds ?? [];
       const rows = payload?.kind === contractId ? payload.records.filter(row => ids.includes(row.id)) : [];

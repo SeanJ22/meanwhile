@@ -84,7 +84,10 @@ test("plan step ids from R, platform and source lanes count as steps", () => {
   assert.deepEqual(stepIds("READY: R3-CIVICCLERK"), ["R3-CIVICCLERK"]);
   assert.deepEqual(stepIds("READY: SRC-LS"), ["SRC-LS"]);
   assert.deepEqual(stepIds("READY: SRC-AC"), ["SRC-AC"]);
+  assert.deepEqual(stepIds("READY: RB-A1, RB-A10, RB-A11"), ["RB-A1", "RB-A10", "RB-A11"]);
   assert.deepEqual(stepIds("READY: R2B, SRC-LS and DB-09"), ["R2B", "SRC-LS", "DB-09"]);
+  assert.deepEqual(stepIds("READY: RB-A1"), ["RB-A1"]);
+  assert.deepEqual(stepIds("READY: RB-A10 and RB-A2"), ["RB-A10", "RB-A2"]);
   assert.deepEqual(stepIds("WIP: still working"), []);
 });
 
@@ -105,6 +108,7 @@ test("a READY message carries both connection proofs or names the ones it lacks"
   assert.deepEqual(missingProofs("READY: DB-09"), ["connected end to end", "still working on the next scheduled run"]);
   assert.deepEqual(missingProofs("READY: PB-01\n\nFeeds into: reader body cards.\n\nControlled next/tomorrow scheduler replays preserve the roster."), []);
   assert.deepEqual(missingProofs("READY: SRC-01\n\nConnection proof 1 — upstream to reader.\n\nConnection proof 2 — next configured run."), []);
+  assert.deepEqual(missingProofs("READY: RB-A1\n\nConnection proof 1: reader copy.\n\nNext-run proof: the same reconciliation ran again unchanged."), []);
   assert.deepEqual(missingProofs("READY: EX-03\n\nTomorrow proof: the scheduled pass is due."), ["connected end to end"]);
   assert.deepEqual(missingProofs("READY: PK-01\n\nWhat PK-01 feeds: BL-01's ballot controls.\n\nTomorrow-clock connection proof: the next poll syncs."), []);
   assert.deepEqual(missingProofs("READY: NX-02\n\nFeeds: NationalSection.\n\nNext scheduled-run proof: due at the boundary."), []);

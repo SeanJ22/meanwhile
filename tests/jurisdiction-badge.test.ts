@@ -31,6 +31,11 @@ const COUNTY = "ocd-division/country:us/state:nh/county:merrimack";
 
 const AT_POINT = new Set([HERE, COUNTY]);
 
+test("unknown and newly registered body classes always produce safe badge copy", () => {
+  assert.deepEqual(badgeCopyFor("NOT_GOVERNING", "UNCLASSIFIED"), { label:"Body",detail:BADGE_COPY.NOT_GOVERNING.detail });
+  assert.equal(badgeCopyFor("NOT_GOVERNING", "SPECIAL_DISTRICT").label, "Special district body");
+});
+
 test("M81: a body whose division contains the reader governs them", () => {
   assert.equal(badgeFor({ ocdId: HERE }, AT_POINT), "GOVERNS");
   // The whole point of the row: the county seat is forty miles away and it

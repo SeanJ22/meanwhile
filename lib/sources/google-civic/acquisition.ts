@@ -20,8 +20,40 @@ export interface CivicReadOptions {
   signal?: AbortSignal;
   now?: () => string;
   sleep?: (ms: number, signal?: AbortSignal) => Promise<void>;
+  /** Request-local public catalog read while Census runs; carries no reader address. */
+  electionCatalog?: Promise<Awaited<ReturnType<typeof readCivicApi>> | null>;
 }
-export async function readCivicApi(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions = {}): Promise<{ raw: string; checkedAt: string }> {
+
+/** Server diagnostics only. Response bodies never enter a lookup, candidate or source record. */
+function logCivicCallFailure(route: "elections" | "voterinfo", status: number | null, body: string, params: Record<string, string>, options: CivicReadOptions, stage: "transport" | "body" | "http" | "parse"): void {
+  if (typeof window !== "undefined") return;
+  let preview = body;
+  for (const secret of [options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY, params.address].filter((value): value is string => !!value)) {
+    preview = preview.split(secret).join("[redacted]").split(encodeURIComponent(secret)).join("[redacted]");
+  }
+  console.error(JSON.stringify({ event: "google_civic_call_failed", route, stage, httpStatus: status, body: preview.slice(0, 300) }));
+}
+
+async function civicResponseBody(response: Response, route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions): Promise<string> {
+  const reader = response.body?.getReader();
+  if (!reader) return "";
+  const decoder = new TextDecoder();
+  let raw = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      raw += decoder.decode(value, { stream: !done });
+      if (done) break;
+      if (!response.ok && raw.length >= 300) { await reader.cancel(); break; }
+    }
+    return raw;
+  } catch {
+    logCivicCallFailure(route, response.status, raw, params, options, "body");
+    throw new CivicSourceError(response.status, "Google Civic's response body could not be read.");
+  } finally { reader.releaseLock(); }
+}
+
+export async function readCivicApi(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions = {}): Promise<{ raw: string; checkedAt: string; status: number }> {
   const key = options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY;
   if (!key) throw new CivicSourceError(null, "Google Civic API key is not configured.", "KEY_MISSING");
   const url = new URL(`${GOOGLE_CIVIC_API}${route}`);
@@ -31,37 +63,53 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
   for (let attempt = 0; attempt < 3; attempt++) {
     let response: Response;
     try { response = await (options.fetchImpl ?? fetch)(url, { signal, cache: "no-store", headers: { accept: "application/json" } }); }
-    catch { throw new CivicSourceError(null, "Google Civic could not be reached."); }
-    if (response.ok) return { raw: await response.text(), checkedAt: (options.now ?? (() => new Date().toISOString()))() };
+    catch {
+      logCivicCallFailure(route, null, "", params, options, "transport");
+      throw new CivicSourceError(null, "Google Civic could not be reached.");
+    }
+    const raw = await civicResponseBody(response, route, params, options);
+    if (response.ok) return { raw, checkedAt: (options.now ?? (() => new Date().toISOString()))(), status: response.status };
+    logCivicCallFailure(route, response.status, raw, params, options, "http");
     if ((response.status === 429 || response.status >= 500) && attempt < 2) {
       const retry = response.headers.get("retry-after"), seconds = retry === null ? NaN : Number(retry);
       const delay = retry !== null && Number.isFinite(seconds) ? Math.max(0, seconds * 1000)
         : retry !== null && Number.isFinite(Date.parse(retry)) ? Math.max(0, Date.parse(retry) - Date.now()) : 1000 * 2 ** attempt;
-      await response.body?.cancel();
-      await (options.sleep ?? sourceAcquisitionSleep)(delay, signal);
+      try { await (options.sleep ?? sourceAcquisitionSleep)(delay, signal); }
+      catch { throw new CivicSourceError(response.status, "Google Civic's retry exceeded the lookup deadline."); }
       continue;
     }
-    // Never copy provider errors: they can echo a reader address or a key-bearing URL.
-    await response.body?.cancel();
+    // Only the safe reason enters the answer; the body stays in the server log.
     throw new CivicSourceError(response.status, response.status === 404 ? "Google Civic has no information for this address (HTTP 404)."
       : response.status === 400 ? "Google Civic could not resolve this address (HTTP 400)." : `Google Civic request failed (HTTP ${response.status}).`,
     route === "voterinfo" && (response.status === 400 || response.status === 404) ? "NO_DATA" : "GOOGLE_UNAVAILABLE");
   }
   throw new CivicSourceError(null, "Google Civic could not be reached.");
 }
+
+export function parseCivicResponse<T>(route: "elections" | "voterinfo", response: Awaited<ReturnType<typeof readCivicApi>>, parse: (raw: string) => T, params: Record<string, string>, options: CivicReadOptions): T {
+  try { return parse(response.raw); }
+  catch {
+    logCivicCallFailure(route, response.status, response.raw, params, options, "parse");
+    throw new CivicSourceError(response.status, `Google Civic returned an unreadable ${route} response.`);
+  }
+}
+
 export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<string> = new Set(), options: CivicReadOptions & { electionId?: string } = {}): Promise<CivicLookup> {
   const checkedAt = (options.now ?? (() => new Date().toISOString()))();
   try {
     let electionId = options.electionId;
     if (!electionId) {
-      const catalog = await readCivicApi("elections", {}, options);
-      const elections = civicElectionRows(catalog.raw, catalog.checkedAt, knownIds);
+      const catalog = await options.electionCatalog ?? await readCivicApi("elections", {}, options);
+      const elections = parseCivicResponse("elections", catalog, raw => civicElectionRows(raw, catalog.checkedAt, knownIds), {}, options);
       // Explicit election id prevents the API's default from selecting an earlier election.
       electionId = elections.find(row => row.ocdId === "ocd-division/country:us")?.electionId;
-      if (!electionId) throw new CivicSourceError(null, `Google Civic has not listed the ${GOOGLE_CIVIC_ELECTION_DAY} national election.`);
+      if (!electionId) {
+        logCivicCallFailure("elections", catalog.status, catalog.raw, {}, options, "parse");
+        throw new CivicSourceError(catalog.status, `Google Civic has not listed the ${GOOGLE_CIVIC_ELECTION_DAY} national election.`);
+      }
     }
     const result = await readCivicApi("voterinfo", { address, electionId }, options);
-    return civicLookupFromRaw(result.raw, electionId, result.checkedAt, knownIds);
+    return parseCivicResponse("voterinfo", result, raw => civicLookupFromRaw(raw, electionId!, result.checkedAt, knownIds), { address }, options);
   } catch (error) {
     const reason = error instanceof CivicSourceError ? error.reason : "Google Civic returned an unreadable voterinfo response.";
     return unavailableCivicLookup(reason, checkedAt, options.electionId, error instanceof CivicSourceError ? error.failureReason : "GOOGLE_UNAVAILABLE");

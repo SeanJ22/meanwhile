@@ -15,7 +15,7 @@ export interface CampaignMoneyPerson {
   readonly sourceUrl: string;
 }
 
-export const CAMPAIGN_PEOPLE_SQL = `WITH roots AS MATERIALIZED (
+export const CAMPAIGN_PEOPLE_SQL = `WITH RECURSIVE roots AS MATERIALIZED (
   SELECT record_class,reader_payload_node(payload) AS value FROM civic_data_promotions
   WHERE (scope=$1 OR scope LIKE $1||':%') AND record_class IN ('STATE_LEGISLATOR','FEDERAL_DIRECTORY','REGISTRY_RUNTIME_BINDING','BALLOT_CANDIDACY')
 ), holders AS (
@@ -43,6 +43,18 @@ export const CAMPAIGN_PEOPLE_SQL = `WITH roots AS MATERIALIZED (
 ), executives AS (
   SELECT reader_payload_node(e.item) AS value FROM roots r,LATERAL reader_payload_members(r.value->'statewideExecutives') e
   WHERE r.record_class='REGISTRY_RUNTIME_BINDING'
+), state_place AS MATERIALIZED (
+  SELECT id AS division FROM entity WHERE kind='place' AND state=$2
+    AND id ~ '^ocd-division/country:us/(state|district|territory):[^/]+$' ORDER BY id LIMIT 1
+), body_parents(body_id,id,depth) AS (
+  SELECT id,id,0 FROM entity WHERE kind='body' AND state=$2
+  UNION ALL SELECT p.body_id,e.parent_id,p.depth+1 FROM body_parents p JOIN entity e ON e.id=p.id
+    WHERE e.parent_id IS NOT NULL AND p.depth<8
+), body_places AS MATERIALIZED (
+  SELECT DISTINCT ON(body_id) body_id,division FROM (
+    SELECT p.body_id,p.depth,ep.place_id AS division FROM body_parents p JOIN entity_place ep ON ep.entity_id=p.id
+    UNION ALL SELECT p.body_id,p.depth,e.id FROM body_parents p JOIN entity e ON e.id=p.id WHERE e.kind='place'
+  ) places WHERE division LIKE 'ocd-division/%' ORDER BY body_id,depth,division
 ), people AS (
   SELECT coalesce(person->>'personId',person->>'id') AS id,person->>'name' AS name,seat->>'officeId' AS seat,
     seat->>'officeTitle' AS office,seat->>'divisionId' AS division,true AS incumbent,
@@ -51,13 +63,15 @@ export const CAMPAIGN_PEOPLE_SQL = `WITH roots AS MATERIALIZED (
   UNION SELECT person->>'id',concat_ws(' ',person->>'givenName',person->>'familyName'),seat->>'id',seat->>'title',seat->>'ocdId',false,
     reader_payload_node(person->'provenance')->>'sourceUrl',jsonb_build_array(person->>'id')||
       coalesce((SELECT jsonb_agg(alias) FROM lineup_aliases l WHERE l.id=person->>'id'),'[]'::jsonb) FROM candidates
-  UNION SELECT coalesce(person->>'personId',person->>'id'),person->>'name',body->>'bodyId',person->>'officeTitle',split_part(body->>'bodyId','#',1),true,
+  UNION SELECT coalesce(person->>'personId',person->>'id'),person->>'name',body->>'bodyId',person->>'officeTitle',
+    coalesce((SELECT division FROM body_places WHERE body_id=body->>'bodyId'),
+      CASE WHEN body->>'bodyId' LIKE 'ocd-division/%' THEN split_part(body->>'bodyId','#',1) END,(SELECT division FROM state_place)),true,
     coalesce(reader_payload_node(person->'membershipSource')->>'sourceUrl',body->>'sourceUrl'),jsonb_build_array(person->>'id',person->>'personId') FROM local_members
   UNION SELECT coalesce(reader_payload_node(value->'holder')->>'personId',reader_payload_node(value->'holder')->>'id'),
     reader_payload_node(value->'holder')->>'name',reader_payload_node(value->'holder')->>'id',reader_payload_node(value->'holder')->>'officeTitle',value->>'stateOcdId',true,
     value->>'sourceUrl',jsonb_build_array(reader_payload_node(value->'holder')->>'id',reader_payload_node(value->'holder')->>'personId') FROM executives
   UNION SELECT substr(f.field,8),coalesce(f.value->>'name',p.name),f.entity_id,f.value->>'office',
-    coalesce((SELECT place_id FROM entity_place WHERE entity_id=f.entity_id LIMIT 1),b.parent_id),true,s.url,jsonb_build_array(p.id,(SELECT value FROM entity_external_id WHERE entity_id=p.id AND scheme='roster-member' LIMIT 1))
+    coalesce((SELECT division FROM body_places WHERE body_id=f.entity_id),(SELECT division FROM state_place)),true,s.url,jsonb_build_array(p.id,(SELECT value FROM entity_external_id WHERE entity_id=p.id AND scheme='roster-member' LIMIT 1))
     FROM entity b JOIN fact f ON f.entity_id=b.id AND f.field LIKE 'member:%' AND f.status='live'
     JOIN entity p ON p.id=substr(f.field,8) LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE b.state=$2 AND b.kind='body'

@@ -1,0 +1,65 @@
+{
+  "status": "READER_DEADLINE_EXCEEDED",
+  "scope": "Complete real EPA national manifest; selected normal reader locations",
+  "productionWrites": 0,
+  "sourceRows": 3229311,
+  "publishedRows": 3229294,
+  "rejectedRows": 17,
+  "references": 55806,
+  "vaultRoot": "/workspace/meanwhile/.scratch/src01-epa/national-reader-vault-national-fc8b79c7-5f7b-4a48-ab7b-b623f31ba1e0",
+  "readerDeadlineMs": 1800,
+  "clocks": [
+    {
+      "label": "initial",
+      "at": "2026-10-23T12:17:33.687Z",
+      "due": true,
+      "version": "cv-6771e0cd435d0e08fedf65aacfab3aad",
+      "confirmed": false,
+      "publishMs": 42001.620221000005
+    }
+  ],
+  "readers": [
+    {
+      "state": "CT",
+      "zip": "00660",
+      "id": "epa-echo:110022872550",
+      "label": "initial",
+      "apiElapsedMs": 3089.707914999999,
+      "apiPages": 1,
+      "apiTotalRows": 715,
+      "recordId": "epa-echo:110022872550",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110022872550",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "553ce7126e68d83b6a947680543525a3cb40e29a3d5afdb81a21803cfb2fd572"
+    },
+    {
+      "state": "CA",
+      "zip": "01702",
+      "id": "epa-echo:110071115320",
+      "label": "initial",
+      "apiElapsedMs": 8761.105090999998,
+      "apiPages": 1,
+      "apiTotalRows": 9666,
+      "recordId": "epa-echo:110071115320",
+      "sourceUrl": "https://echo.epa.gov/detailed-facility-report?fid=110071115320",
+      "sourceRetrievedAt": "2026-10-23T09:06:56.174Z",
+      "sourcePublishedAt": "2026-10-18T06:44:46.000Z",
+      "askKind": "REGULATED_FACILITY",
+      "renderedHtmlSha256": "4cb5754d7c82e8613fc39e67fa0358460914f340c22b1834cfe9e2976e5fee15"
+    }
+  ],
+  "database": {
+    "read": 119827355,
+    "written": 33633849,
+    "requests": 37,
+    "statements": 49,
+    "largestRead": 33303217,
+    "largestWrite": 33227575,
+    "databasePeakRssBytes": 471003136,
+    "databaseElapsedMs": 22991.717360000006,
+    "largestLatencyMs": 3551.527970000003,
+    "databaseProxyPeakRssBytes": 474685440
+  }
+}

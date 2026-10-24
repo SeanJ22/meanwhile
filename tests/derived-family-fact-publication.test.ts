@@ -11,11 +11,12 @@ import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-
 import { DERIVED_WIRING_SOURCE_NAMES, derivedWiringKey, familyMembers, type DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
-import { retainingFetch, tracedResponses } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { retainingFetch, tracedResponses, retainMeetingCandidateEvidence } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
+import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -65,15 +66,14 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       const built = buildDerivedFamily(input); snapshots.push(built.snapshot); return built;
     },
     DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE, sha256, canonicalCivicDataJson, DERIVED_WIRING_SOURCE_NAMES,
-    reconcileSuccessfulMeetingPartition, readCuratedReaderProjection: async () => ({ kind: "NOT_RECORDED" }),
-    normalizeFamilyMeetingCitations: (meetings: unknown[]) => meetings, retainPreviouslyVerifiedVenuePoints: (meetings: unknown[]) => meetings,
-    placeMeetingsFromVerifiedVenues: (meetings: unknown[]) => ({ meetings, placedCount: 0 }),
-    placeMeetingsFromCensusVenues: async ({ snapshot }: { snapshot: { meetings: unknown[] } }) => ({ meetings: snapshot.meetings, held: [], venueReferenceEvidence: [], package: null }),
+    reconcileSuccessfulMeetingPartition, retainMeetingCandidateEvidence,
+    normalizeFamilyMeetingCitations: (meetings: unknown[]) => meetings,
+    placePublishedMeetingPins: (input: Parameters<typeof placePublishedMeetingPins>[0]) => placePublishedMeetingPins({...input,offices:new Map()}),
     derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async (_store: MemoryRoutineDataStore, _partition: string, candidate: RoutineCandidate) => ({
       promoted: disposition === "promoted" ? { versionId: acceptedCandidateId } : null, confirmed: disposition === "confirmed" ? { at: new Date().toISOString() } : null,
       candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
     }),
-    printMeetingPartitionReceipt: () => {}, publishVenuePins: async () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
+    printMeetingPartitionReceipt: () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
   });
   await run(new MemoryRoutineDataStore(), requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ")), async () => {}, { db, vault: new MemoryEvidenceStore() });
   assert.equal(fetched, 1);

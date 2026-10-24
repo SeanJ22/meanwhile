@@ -4,6 +4,8 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { ballotForDivisions } from "../lib/ballot/contests.ts";
+import { ballotCandidateDisplayName } from "../lib/ballot/name-case.ts";
+import { ballotCandidatePeople } from "../lib/ballot/tickets.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 
 const root = new URL("../", import.meta.url);
@@ -58,8 +60,15 @@ export function madisonAddressComparison() {
     for (const line of row.sourceLines) assert.ok(source.includes(line), line);
     const contest = projected.contests.find(contest => contest.title === row.title);
     assert.ok(contest, row.title);
-    const actual = projected.candidacies.filter(candidate => candidate.contestId === contest.id)
-      .map(candidate => [normalize(`${candidate.givenName} ${candidate.familyName}`), candidate.partyLabel]);
+    const choices = projected.candidacies.filter(candidate => candidate.contestId === contest.id);
+    const actual = choices.map(candidate => [normalize(ballotCandidateDisplayName(candidate)), candidate.partyLabel]);
+    if (row.title === "Governor / Lieutenant Governor") for (const choice of choices) {
+      assert.ok(choice.ticket, "the joint choice keeps both individual person cards");
+      const original = ballot.candidateTickets?.find(ticket => ticket.leadCandidacyId === choice.id);
+      assert.ok(original, "the projected choice keeps its source's explicit ticket");
+      assert.equal(choice.ticket.runningMate.id, original.runningMate.id);
+      assert.deepEqual(ballotCandidatePeople(choice).map(person => person.id), [choice.id, original.runningMate.id]);
+    }
     assert.deepEqual(actual, row.choices, row.title);
     return { title: row.title, type: "CANDIDACY", expectedChoices: row.choices.length, actualChoices: actual.length,
       choices: actual, matched: true, sourceUrl: row.sourceLines.length ? listUrl : "https://www.kenoshacountywi.gov/DocumentCenter/View/31758/11-3-2026-RACES-CANDIDATES-REFERENDUMS" };
@@ -124,12 +133,20 @@ export function madisonPrintedSampleComparison() {
   assert.ok(!source.printedMadisonWards.includes(51), "This printed style must not be generalized to the separately checked Ward 51 address");
   const certified = madisonAddressComparison();
   const data = JSON.parse(readFileSync(new URL("data/ballot/2026-general/wi.json", root), "utf8"));
-  const projected = ballotForDivisions(Object.values(data.ballots)[0] as BallotSet, certified.divisions);
+  const ballot = Object.values(data.ballots)[0] as BallotSet;
+  const projected = ballotForDivisions(ballot, certified.divisions);
   const rows = source.candidateContests.map(row => {
     const contest = projected.contests.find(contest => contest.title === row.title);
     assert.ok(contest, row.title);
-    const actual = projected.candidacies.filter(candidate => candidate.contestId === contest.id)
-      .map(candidate => [normalize(`${candidate.givenName} ${candidate.familyName}`), candidate.partyLabel]);
+    const choices = projected.candidacies.filter(candidate => candidate.contestId === contest.id);
+    const actual = choices.map(candidate => [normalize(ballotCandidateDisplayName(candidate)), candidate.partyLabel]);
+    if (row.title === "Governor / Lieutenant Governor") for (const choice of choices) {
+      assert.ok(choice.ticket, "the joint choice keeps both individual person cards");
+      const original = ballot.candidateTickets?.find(ticket => ticket.leadCandidacyId === choice.id);
+      assert.ok(original, "the projected choice keeps its source's explicit ticket");
+      assert.equal(choice.ticket.runningMate.id, original.runningMate.id);
+      assert.deepEqual(ballotCandidatePeople(choice).map(person => person.id), [choice.id, original.runningMate.id]);
+    }
     assert.deepEqual(actual, row.choices, row.title);
     return { title: row.title, type: "CANDIDACY", expectedChoices: row.choices.length, actualChoices: actual.length,
       choices: actual, matched: true, sourceUrl: sample.capture.url };

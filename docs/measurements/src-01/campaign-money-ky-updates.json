@@ -1,0 +1,70 @@
+{
+  "state": "KY",
+  "kind": "official-source-update-explanation",
+  "productionWrites": 0,
+  "productionCycleFacts": 321,
+  "sameAmounts": 319,
+  "samePersonIdNameSeatOfficeAndRosterSourceUrl": 321,
+  "samePublicSourceLocations": 321,
+  "officialSourceCaptures": [
+    {
+      "url": "https://secure.kentucky.gov/kref/publicsearch/ExportContributors?ContributionSearchType=All&ElectionDate=11%2F3%2F2026",
+      "status": 200,
+      "sha256": "452f65933978b0298a07ac50b20994e0bb663aceba2118c88d4994eb4cb90b46",
+      "byteLength": 5903919,
+      "capturedAt": "2026-10-23T10:37:22.181Z"
+    },
+    {
+      "url": "https://secure.kentucky.gov/kref/publicsearch/ExportContributors?ContributionSearchType=All&ElectionDate=5%2F19%2F2026",
+      "status": 200,
+      "sha256": "0fe5ec1756c62d8bc1f23cd0e9ec5ed4b518b42f9371972a4c9dcd97c17fb84e",
+      "byteLength": 13378873,
+      "capturedAt": "2026-10-23T10:37:51.695Z"
+    }
+  ],
+  "updates": [
+    {
+      "entity": "ky-sos-candidate-11574",
+      "person": "Darrell Billings",
+      "cycle": 2026,
+      "before": [
+        {
+          "label": "Receipts",
+          "amount": 140452.11
+        }
+      ],
+      "after": [
+        {
+          "label": "Receipts",
+          "amount": 155502.11
+        }
+      ],
+      "independentlySummedNativeAmount": "155502.11",
+      "nativeRows": 216,
+      "matchesReplayedAmount": true
+    },
+    {
+      "entity": "plural:bc34f3ad-05ad-494c-bb80-bd2eb99e4fe9",
+      "person": "Vanessa Grossl",
+      "cycle": 2026,
+      "before": [
+        {
+          "label": "Receipts",
+          "amount": 105450.95
+        }
+      ],
+      "after": [
+        {
+          "label": "Receipts",
+          "amount": 109950.95
+        }
+      ],
+      "independentlySummedNativeAmount": "109950.95",
+      "nativeRows": 89,
+      "matchesReplayedAmount": true
+    }
+  ],
+  "explanation": "Both changed receipts totals independently equal sums of the native 2026 official CSV rows, grouped by their filed candidate, office and district. The other held totals, all person bindings, and all public source-location sets remain equal. Capture hash sets advance where official bytes changed; source-array ordering differences are counted separately.",
+  "updatedCaptureBindingSets": 174,
+  "sourceArrayOrderOnlyDifferences": 0
+}

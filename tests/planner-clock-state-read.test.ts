@@ -31,11 +31,12 @@ test("planner source clocks match the original clock on real migrations without 
   await assert.rejects(readPlannerRoutineClock(task,"nh",query),/PLANNER_CLOCK_STATE_BOUNDARY/);
   const receipt = (id: string) => ({ contractVersion: 2,decision: "GOOD",candidateId: id,...task,
     validatedAt: "2026-10-10T00:00:00.000Z",excludedFacts: [],checks: VALIDATION_CHECKS.map(check => ({ check,verdict: "PASS",code: "OK",detail: "verified" })) });
-  const put = async (id: string,observed: string,options: { state?: string;check?: string;imported?: boolean;parser?: string } = {}) => {
+  const put = async (id: string,observed: string,options: { state?: string;check?: string;imported?: boolean;moved?: boolean;parser?: string } = {}) => {
     const candidate = { id,...task,retrieval: { retrievedAt: "2026-10-10T00:00:00.000Z",...(options.check ? { sourceCheck: {
       checkedAt: options.check,httpStatus: 200,rawHash: "a".repeat(64),requestedUrl: "https://pima.gov/meetings",finalUrl: "https://pima.gov/meetings",
     } } : {}) },normalization: { parserVersion: options.parser ?? "v1" },
       ...(options.imported ? { bootstrapImport: { kind: "TRUSTED_LKG_IMPORT" } } : {}),
+      ...(options.moved ? { stateRetirement: { kind: "STATE_AUTHORITY_RETIREMENT" } } : {}),
       readModel: { unused: "evidence".repeat(options.imported ? 2 : 100_000) } };
     await pg.query(`INSERT INTO civic_data_candidates(id,source_id,record_class,scope,state,acquisition_succeeded,retrieved_at,source_through,parser_version,identity,candidate,validation_receipt,promoted_version_id,last_known_good_version_id)
       VALUES($1,$2,$3,$4,$5,true,'2026-10-10','2026',$6,'{}',$7,$8,$1,$1)`,
@@ -47,7 +48,12 @@ test("planner source clocks match the original clock on real migrations without 
     ON CONFLICT(key) DO UPDATE SET current_version_id=EXCLUDED.current_version_id,last_known_good_version_id=EXCLUDED.last_known_good_version_id,
       promoted_at=EXCLUDED.promoted_at,validation_receipt=EXCLUDED.validation_receipt`,
     [`${task.recordClass}:${task.scope}`,task.sourceId,task.recordClass,task.scope,id,at,JSON.stringify(receipt(id))]);
+  await put("moved","2026-10-09T01:00:00Z",{moved:true}); await point("moved","2026-10-09T02:00:00Z"); await parity();
+  assert.deepEqual(await readPlannerRoutineClock(task,"az",query),{});
   await put("good","2026-10-10T01:00:00Z"); await point("good","2026-10-10T02:00:00Z"); await parity();
+  assert.equal((await readPlannerRoutineClock(task,"az",query)).lastSucceededObservedAt,"2026-10-10T01:00:00.000Z");
+  await put("history-move","2026-10-10T03:00:00Z",{moved:true}); await parity();
+  assert.equal((await readPlannerRoutineClock(task,"az",query)).lastAttemptedAt,"2026-10-10T01:00:00.000Z");
   await put("failed","2026-10-11T01:00:00Z",{state:"PARSE_INVALID"}); await parity();
   await put("replay","2026-10-12T01:00:00Z",{check:"2026-10-10T03:00:00Z"});
   await point("replay","2026-10-12T02:00:00Z"); await parity();

@@ -3,7 +3,7 @@ import {
   type BallotNavigationProjectionRecord,
 } from "../civic-data/curated-reader-read-model.ts";
 
-export interface RegistrationLink {
+interface RegistrationLink {
   state: string;
   label: string;
   url: string;
@@ -12,7 +12,7 @@ export interface RegistrationLink {
   verifiedAt: string;
 }
 
-export const REGISTRATION_LINKS: RegistrationLink[] = [
+const REGISTRATION_LINKS: RegistrationLink[] = [
   {
     state: "AZ",
     label: "Check whether you're registered to vote",

@@ -38,11 +38,11 @@ test("each sitting a body's door reads becomes facts found on the saved feed; a 
     const report = await publishMeetingFacts(db, { meeting, capture: capture(bytes, FEED), producedBy: "door:legistar:pima" }, factClocks(null), NOW);
     totals.live += report.live; totals.blanks += report.blanks;
   }
-  assert.equal(totals.blanks, meetings.filter(m => m.location).length, "only places stay open: the feed names the room, not the reviewed venue name");
+  assert.equal(totals.blanks,0,"the exact published room and online labels are facts before their pins are placed");
   const first = meetings[0]!;
   const facts = await db.query("SELECT field, quote FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [meetingEntityId(first.id)]);
-  assert.deepEqual(facts.map(row => [row.field, row.quote]), [["agenda_url", first.agendaUrl], ["starts_at", "2026-05-12T00:00:00 1:00 PM"], ["title", "Study Session"]]);
-  assert.deepEqual(await db.query("SELECT DISTINCT stage, reason FROM blank"), [{ stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
+  assert.deepEqual(facts.map(row => [row.field, row.quote]), [["agenda_url", first.agendaUrl], ["location",first.venueGap?.publishedText], ["starts_at", "2026-05-12T00:00:00 1:00 PM"], ["title", "Study Session"]]);
+  assert.deepEqual(await db.query("SELECT DISTINCT stage, reason FROM blank"), []);
 });
 
 test("a promoted partition's fresh sittings become facts on the very bytes its door read, saved to the vault", async () => {

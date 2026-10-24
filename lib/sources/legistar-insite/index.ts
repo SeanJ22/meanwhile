@@ -12,7 +12,7 @@ import {
   MEETING_HELD_LOOKBACK_DAYS,
 } from "../../meetings/constants.ts";
 import { toZonedIso } from "../../time/zoned.ts";
-import { isPlaceless, venuesWithinRadius } from "../legistar/client-registry.ts";
+import { publishedOnlineAccess } from "../../meetings/published-online.ts";
 import {
   accountedNormalize,
   type Accounted,
@@ -67,7 +67,6 @@ import { InSiteSession } from "./http.ts";
 import {
   INSITE_TENANTS,
   inSiteTenantsFromWiring,
-  findTenantVenue,
   isWiredBody,
   type InSiteTenant,
 } from "./tenant-registry.ts";
@@ -367,7 +366,7 @@ export function normalizeWithDrops(
     /**
      * Why a future instance this adapter saw did not become a `Meeting`, or became one that still owes
      * something, keyed on canonical identity and recorded at the point of the decision. Two verdicts ride on a
-     * produced sitting: `CANCELED_BY_PUBLISHER` and `VENUE_NOT_RESOLVED`.
+     * produced canceled sitting: `CANCELED_BY_PUBLISHER`.
      */
     const withheldBy = new Map<string, { verdict: DispositionVerdict; because: string }>();
     /**
@@ -494,37 +493,17 @@ export function normalizeWithDrops(
 
         const location = row.location.trim();
 
-        // D18 — a meeting held online is KEPT. `label` is the published string
-        // verbatim; the portal publishes no join link on the grid, so
-        // `joinUrl` is null and renders as the gap it is.
-        const online = location && isPlaceless(location) ? { label: location, joinUrl: null } : null;
+        // Keep the exact online-only label and any join link stated on the grid.
+        const online = publishedOnlineAccess(location);
         if (online) {
           drops.placeless++;
           keptButPlaceless += 1;
         }
 
-        const venue = online || !location ? null : findTenantVenue(tenant, location) ?? null;
-        // No reviewed place never suppresses the sitting. A room name is never geocoded at runtime, so the sitting
-        // is published with `location: null` and its gap: the location cell verbatim (`STATED_NOT_PLACED`), or the
-        // publisher's silence for an empty cell (`NOT_STATED_BY_PUBLISHER`). Tallied as `unknownVenue` and
-        // dispositioned `VENUE_NOT_RESOLVED`, an open obligation for the reviewed venue row.
-        const venueGap = !online && !venue ? unplacedVenueGap(location, tenant.publishingOrg) : null;
+        const venueGap = !online ? unplacedVenueGap(location, tenant.publishingOrg) : null;
         if (venueGap) {
           drops.unknownVenue++;
           keptButPlaceless += 1;
-          if (futureKey) {
-            withheldBy.set(futureKey, {
-              verdict: "VENUE_NOT_RESOLVED",
-              because: location
-                ? `${tenant.host} published the location "${location}". OURS: this ` +
-                  "tenant states no reviewed venue matching it, and a room name is never " +
-                  "geocoded at runtime. The sitting IS published, with the publisher's " +
-                  "words as its place and no pin; the reviewed venue row is what is owed."
-                : `${tenant.host} Calendar.aspx published this sitting with an EMPTY ` +
-                  "location cell. OURS: we hold no place for it and will not invent one. " +
-                  "The sitting IS published, its place named as the publisher's own gap.",
-            });
-          }
         }
 
         const id = `${SOURCE_NAME}:${tenant.slug}:${row.insiteId ?? dedupeRef}`;
@@ -552,14 +531,7 @@ export function normalizeWithDrops(
           title: row.kind ?? row.bodyName,
           startsAt,
           timeZone: tenant.timeZone,
-          location: venue
-            ? {
-                name: venue.name,
-                address: venue.address,
-                lat: venue.lat,
-                lng: venue.lng,
-              }
-            : null,
+          location: null,
           ...(online ? { online } : {}),
           ...(venueGap ? { venueGap } : {}),
           // Null when the portal says "Not Available", and never the portal's search page dressed up as an agenda.
@@ -703,7 +675,7 @@ export function normalizeWithDrops(
 
       const missing =
         verdict === "PUBLISHED_BUT_UNPLACED_BY_US"
-          ? missingForPlacement(instance, tenant)
+          ? missingForPlacement(instance)
           : null;
 
       dispositions.push({
@@ -841,21 +813,8 @@ function dispositionClaim(verdict: DispositionVerdict, because: string | null): 
  * The named gap, in field terms: only fields that actually block construction are listed (a missing kind
  * is not one; `title` falls back to the body name). Never empty.
  */
-function missingForPlacement(instance: UnionInstance, tenant: InSiteTenant): string[] {
+function missingForPlacement(instance: UnionInstance): string[] {
   const missing: string[] = [];
-
-  if (!instance.location) {
-    missing.push(
-      "a published location — no route carrying this sitting states a room or a " +
-        "placeless label, and a place is never inferred",
-    );
-  } else if (!isPlaceless(instance.location) && !findTenantVenue(tenant, instance.location)) {
-    missing.push(
-      `a resolvable venue — the published location "${instance.location}" matches no ` +
-        `venue this registry states for ${tenant.slug}, and a room name is never ` +
-        "geocoded at runtime",
-    );
-  }
 
   // The identity limitation, stated even when every field is present: the routes that carried this sitting
   // are corroboration, and `SittingRoute` cannot name `CLERK_SCHEDULE_PAGE` as a field's supplier, so a
@@ -863,7 +822,7 @@ function missingForPlacement(instance: UnionInstance, tenant: InSiteTenant): str
   missing.push(
     `a record on a meeting-producing route (${MEETING_PRODUCING_ROUTES.join(", ")}) — ` +
       `this sitting is carried only by ${instance.routes.join(", ")}, which this adapter ` +
-      "reads as corroboration; promoting one to an ingestion source is an ask-before",
+      "reads as corroboration and has not yet published as calendar records",
   );
 
   return missing;
@@ -1084,9 +1043,6 @@ export function makeLegistarInSiteSource(
       // Serialized across tenants as well as within one; the session paces itself at the vendor's
       // `Crawl-delay: 2`.
       for (const tenant of tenants) {
-        // A tenant with no reviewed venue is read, never skipped for want of a coordinate.
-        if (!venuesWithinRadius(tenant.venues, query)) continue;
-
         const session = new InSiteSession({
           fetchImpl: options.fetchImpl,
           signal: query.signal,

@@ -21,6 +21,12 @@ import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import { sealStateRetirementUnit, STATE_RETIREMENT_KEY_ENV } from "../lib/civic-data/state-retirement-proof.ts";
 import { reconcileRetirementStateInput } from "../lib/civic-data/state-retirement-merge.ts";
 import { durableRoutineRunnerReceiptIssue } from "../lib/civic-data/runner-receipt.ts";
+import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
+import { ballotPublicationDue } from "../lib/civic-data/ballot-publication.ts";
+import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
+import { ballotCandidateAliases, withCandidateTickets } from "../lib/ballot/tickets.ts";
+import { reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../lib/registry/runtime-data-plane.ts";
 
 async function runBallotState(options: Parameters<typeof runBallotPublication>[0]) {
   const environment = { WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local", DATABASE_URL: "postgresql://local:local@staging.invalid/reader",
@@ -49,12 +55,79 @@ type BallotStateFile = Awaited<ReturnType<typeof import("../lib/civic-data/ballo
 
 const now = "2026-10-13T12:00:00.000Z";
 
+test("the automatic next ballot refresh preserves old person targets when a source rotates its candidate ids", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "cl01-scheduled-ballot-"));
+  try {
+    const store = new MemoryRoutineDataStore(), input = await fixture();
+    const lead = ballotOf(input).candidacies[0];
+    const mateId = `${lead.id}:running-mate`;
+    lead.ticket = { id: "source-ticket", runningMate: { ...lead, id: mateId, givenName: "Bea", familyName: "Baker" }, provenance: lead.provenance };
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(input));
+    const first = await runBallotState({ state: "TX", directory, store, now });
+    assert.equal(first.report.status, "PUBLISHED", first.report.reason ?? "");
+    const oldIds = ballotOf(input).candidacies.map(row => row.id);
+    const person = ballotOf(input).candidacies[0], office = ballotOf(input).contests.find(row => row.id === person.contestId)!;
+    const holder: OfficialCandidacyBridgeRow["holder"] = { id: "held:source-person", name: [person.givenName, person.familyName].filter(Boolean).join(" "),
+      officeTitle: office.title, divisions: [office.ocdId], authority: "REGISTRY_STATEWIDE_EXECUTIVE", sourceUrl: "https://office.example.gov/person" };
+    const bridge = reconcileOfficialCandidacies({ bridge: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] },
+      ballots: [ballotOf(input)], holders: [holder] });
+    assert.equal(bridge.rows[0].status, "RESOLVED");
+    const task = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:TX")!;
+    const clock = { lastAttemptedAt: now, lastSucceededAt: now, lastSucceededObservedAt: now, lastSucceededParserVersion: task.parserVersion };
+    assert.equal(routineTaskDue(task, clock, Date.parse(now)), false);
+    assert.equal(ballotPublicationDue(task.id, await ballotInputStamp(directory, "TX"), first.report, clock), false);
+    for (const row of ballotOf(input).candidacies) {
+      row.id = `refreshed:${row.id}`;
+      if (row.ticket) row.ticket.runningMate.id = `refreshed:${row.ticket.runningMate.id}`;
+    }
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(input));
+    const nextAt = new Date(Date.parse(now) + task.cadenceMs).toISOString();
+    assert.equal(routineTaskDue(task, clock, Date.parse(nextAt)), true, "the registered daily schedule admits the next run");
+    assert.equal(ballotPublicationDue(task.id, await ballotInputStamp(directory, "TX"), first.report, clock), true,
+      "changed source bytes launch from the automatic publication decision");
+    const next = await runBallotState({ state: "TX", directory, store, now: nextAt });
+    assert.equal(next.report.status, "PUBLISHED", next.report.reason ?? "");
+    const pointer = await store.readPromotion<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"));
+    const view = withCandidateTickets(Object.values(pointer!.payload.ballots)[0]);
+    const aliases = new Set(view.candidacies.flatMap(ballotCandidateAliases));
+    assert.ok(oldIds.every(id => aliases.has(id)), "every earlier reaction/Ask/demand target still resolves after refreshed ids replace it");
+    const mate = view.candidacies.find(row => row.ticket)!.ticket!.runningMate;
+    assert.ok(ballotCandidateAliases(mate).includes(mateId), "running-mate aliases survive source id rotation independently");
+    assert.ok(!aliases.has(mateId), "the lead's person aliases never absorb their running mate");
+    assert.ok(view.candidacies.every(row => row.id.startsWith("refreshed:")));
+    const refreshedPerson = reconcileOfficialCandidacies({ bridge, ballots: [view], holders: [holder] }).rows[0];
+    assert.equal(refreshedPerson.status, "RESOLVED");
+    assert.equal(refreshedPerson.candidacy!.personId, holder.id);
+    assert.ok(refreshedPerson.candidacy!.aliases!.includes(oldIds[0]));
+    assert.deepEqual(withCandidateTickets(view), view);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
 const fixture = async () => JSON.parse(await readFile("tests/fixtures/ballot-national/tx.json", "utf8")) as BallotStateFile;
 
 const ballotOf = (input: Pick<BallotStateFile, "ballots">) => Object.values(input.ballots)[0];
+const sourceFacts = (value: unknown): unknown => JSON.parse(JSON.stringify(value, (_key, child) =>
+  child && typeof child === "object" && typeof child.contestId === "string" && typeof child.givenName === "string" && typeof child.familyName === "string"
+    ? { ...child, aliases: undefined, runningMateAliases: undefined, sources: undefined } : child));
 
 const packageFor = (state: BallotStateFile): ManualProjectionPackage => ({ contractId: stateBallotContractId("ballot-contests", ballotOf(state).election.state), version: "fixture",
   sourceThrough: state.sourceReceipt.reviewedAt, sourceReceipt: state.sourceReceipt, payload: { kind: "ballot-contests", ballots: state.ballots } });
+
+test("ballot publication canonicalizes every congressional code through the shared Census seat rule", async () => {
+  const input = JSON.parse(await readFile("data/ballot/2026-general/nd.json", "utf8")) as BallotStateFile;
+  const ballot = ballotOf(input);
+  const contest = ballot.contests.find(row => row.ocdId.endsWith("/cd:at-large"))!;
+  for (const code of ["0", "00", "98", "at-large"]) {
+    contest.ocdId = `ocd-division/country:us/state:nd/cd:${code}`;
+    const candidate = manualProjectionCandidate(packageFor(input));
+    const normalized = candidate.readModel as GenericBallotProjection;
+    assert.equal(Object.values(normalized.ballots)[0].contests.find(row => row.id === contest.id)?.ocdId,
+      "ocd-division/country:us/state:nd/cd:at-large", code);
+    assert.equal(contest.ocdId, `ocd-division/country:us/state:nd/cd:${code}`, "the source input remains as filed");
+  }
+  contest.ocdId = "ocd-division/country:us/state:nd/cd:ZZ";
+  assert.ok(manualProjectionCandidate(packageFor(input)).semantics.violations.some(row => row.includes("carries no seat")));
+});
 
 async function publish(store: MemoryRoutineDataStore, input: ManualProjectionPackage) {
   const result = await processRegisteredManualCandidate(store, input.contractId, manualProjectionCandidate(input), now);
@@ -316,7 +389,7 @@ test("a newer complete official list replaces candidates across election authori
     assert.equal(result.sourceReceipt.sources.length, 3);
     await writeFile(resolve(scratch, "tx.json"), JSON.stringify(old));
     const stale = await publishBallotState({ state: "TX", directory: scratch, store, now });
-    assert.deepEqual(stale.payload, result.payload);
+    assert.deepEqual(sourceFacts(stale.payload), sourceFacts(result.payload));
     const conflict = changeSource(await fixture(), "TX", now, "Different election authority");
     await writeFile(resolve(scratch, "tx.json"), JSON.stringify(conflict));
     const updated = await publishBallotState({ state: "TX", directory: scratch, store, now });
@@ -520,7 +593,7 @@ test("incomplete lists remain named, same-date complete corrections publish, and
       for (const [key, expected] of Object.entries(file.ballots)) {
         const actual = payload.ballots[key];
         for (const field of Object.keys(expected) as (keyof BallotSet)[]) {
-          assert.deepEqual(actual[field], expected[field], `${state} retains ${field}`);
+          assert.deepEqual(sourceFacts(actual[field]), sourceFacts(expected[field]), `${state} retains ${field}`);
         }
         assert.deepEqual(actual.heldContests ?? [], []);
       }

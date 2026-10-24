@@ -1,5 +1,5 @@
 import type { Provenance } from "../sources/types.ts";
-import { currentGenericBallotProjection } from "./generic-projection.ts";
+import { currentBallotPeopleProjection } from "./generic-projection.ts";
 
 export interface LineupNominee {
   provenance?: Provenance;
@@ -28,7 +28,7 @@ export interface GeneralLineup {
 }
 
 export function getGeneralLineup(state: string): GeneralLineup | null {
-  return Object.values(currentGenericBallotProjection(state).ballots).find(ballot => ballot.generalLineup)?.generalLineup ?? null;
+  return Object.values(currentBallotPeopleProjection(state).ballots).find(ballot => ballot.generalLineup)?.generalLineup ?? null;
 }
 
 /** Null when the ballot projection holding it cannot be read in this process. */

@@ -3,6 +3,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope, stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import type { PromotedProjection, RoutineCandidate, NormalizationEvidence } from "./types.ts";
 
 const publicationRead = new AsyncLocalStorage<PromotedProjection>();
@@ -19,6 +20,11 @@ export function heldStatePublication(recordClass: string, scope: string): Promot
 export function statePublicationScope(scope: string): boolean {
   return STATE_BALLOT_FAMILIES.some(family => stateFromBallotScope(scope, family) !== null) ||
     stateFromRegistryRuntimeScope(scope) !== null;
+}
+
+/** Payloads of this size are hashed once, incrementally, and are never round-tripped through JSON strings. */
+export function largePayloadScope(scope: string): boolean {
+  return statePublicationScope(scope) || ballotNavigationState(scope) !== null;
 }
 
 const immutableValues = new WeakSet<object>();

@@ -2,7 +2,7 @@ import type { ReadOnlyQuery, Row } from "../control-plane/admin-view/promoted-sl
 import type { RoutineSourceTask } from "./runner.ts";
 import { proofConsistentObservedSuccess, proofConsistentSuccess, trustedLkgImportClock,
   type RoutineClockRecord, type RoutineStoreClock } from "./store.ts";
-import { isTrustedLkgImportCandidate } from "./trusted-lkg-import.ts";
+import { isImportOrStateMoveCandidate } from "./trusted-lkg-import.ts";
 import { parseUnchangedConfirmation } from "./unchanged-confirmation.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import type { RoutineRecordClass, ValidationReceipt } from "./types.ts";
@@ -11,7 +11,7 @@ const POINTER_SQL = `SELECT p.source_id,p.record_class,p.scope,p.current_version
   p.validation_receipt AS pointer_receipt,c.state,c.acquisition_succeeded,c.promoted_version_id,
   c.last_known_good_version_id AS candidate_lkg,c.validation_receipt AS candidate_receipt,c.failure_code,c.failure_detail,
   jsonb_strip_nulls(jsonb_build_object('id',c.candidate->'id','sourceId',c.candidate->'sourceId',
-    'recordClass',c.candidate->'recordClass','scope',c.candidate->'scope','bootstrapImport',c.candidate->'bootstrapImport',
+    'recordClass',c.candidate->'recordClass','scope',c.candidate->'scope','bootstrapImport',c.candidate->'bootstrapImport','stateRetirement',c.candidate->'stateRetirement',
     'retrieval',jsonb_build_object('retrievedAt',c.candidate#>'{retrieval,retrievedAt}','sourceCheck',c.candidate#>'{retrieval,sourceCheck}'),
     'normalization',jsonb_build_object('parserVersion',c.candidate#>'{normalization,parserVersion}'))) AS candidate,
   (SELECT e.at FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND e.sequence=1) AS observed_at,
@@ -27,7 +27,7 @@ const ATTEMPTS_SQL = `SELECT c.id,c.state,c.acquisition_succeeded,e.at::text AS 
     AND ($5::timestamptz IS NULL OR (e.at,c.id)<($5::timestamptz,$6::text))
   ORDER BY e.at DESC,c.id DESC LIMIT 32`;
 
-const ATTEMPT_METADATA_SQL = `SELECT c.candidate#>>'{bootstrapImport,kind}' AS import_kind,
+const ATTEMPT_METADATA_SQL = `SELECT c.candidate#>>'{bootstrapImport,kind}' AS import_kind,c.candidate#>>'{stateRetirement,kind}' AS state_move_kind,
   CASE WHEN c.state='PROMOTED' AND c.acquisition_succeeded
     THEN c.candidate#>>'{retrieval,sourceCheck,checkedAt}' END AS checked_at
   FROM civic_data_candidates c WHERE c.id=$1 AND c.source_id=$2 AND c.record_class=$3 AND c.scope=$4`;
@@ -75,13 +75,13 @@ export async function readPlannerRoutineClock(task: Pick<RoutineSourceTask, "sou
       if (lastAttemptedAt !== undefined && Date.parse(observed) <= Date.parse(lastAttemptedAt)) break outer;
       let imported: boolean, checked: string | undefined;
       if (record && record.candidate.id === attempt.id) {
-        imported = isTrustedLkgImportCandidate(record.candidate);
+        imported = isImportOrStateMoveCandidate(record.candidate);
         checked = attempt.state === "PROMOTED" && attempt.acquisition_succeeded === true
           ? instant(record.candidate.retrieval.sourceCheck?.checkedAt) : undefined;
       } else {
         const [metadata] = await query([{ text: ATTEMPT_METADATA_SQL, params: [attempt.id,sourceId,recordClass,scope] }]);
         if (!metadata[0]) throw new Error(`PLANNER_CLOCK_ATTEMPT_MISSING:${String(attempt.id)}`);
-        imported = ["TRUSTED_LKG_IMPORT", "TRUSTED_LKG_REATTESTATION"].includes(String(metadata[0].import_kind));
+        imported = isImportOrStateMoveCandidate({ bootstrapImport: { kind: metadata[0].import_kind }, stateRetirement: { kind: metadata[0].state_move_kind } });
         checked = instant(metadata[0].checked_at);
       }
       if (!imported) lastAttemptedAt = later(lastAttemptedAt,
@@ -95,7 +95,7 @@ export async function readPlannerRoutineClock(task: Pick<RoutineSourceTask, "sou
   const sittings = recordClass === "MEETING" && row ? {
     sittingStarts: (await query([{ text: STARTS_SQL, params: [`${recordClass}:${scope}`] }]))[0][0]?.starts as readonly string[] ?? [],
   } : {};
-  if (row && record && row.source_id === sourceId && isTrustedLkgImportCandidate(record.candidate)) {
+  if (row && record && row.source_id === sourceId && isImportOrStateMoveCandidate(record.candidate)) {
     return { ...trustedLkgImportClock(lastAttemptedAt,instant(row.promoted_at)!),...sittings };
   }
   const pointer = row ? { sourceId: String(row.source_id),recordClass: row.record_class as RoutineRecordClass,scope: String(row.scope),

@@ -219,7 +219,6 @@ export type DispositionVerdict =
    * Ours: no reviewed venue record for the room the publisher named (or the location cell is empty). The
    * sitting itself is produced with its place as a named gap; what stays open is the venue record.
    */
-  | "VENUE_NOT_RESOLVED"
   /** OURS: the route published no hour, so it has no canonical identity. */
   | "TIME_NOT_PUBLISHED"
   /** THEIRS: the publisher's own text calls the sitting off. */
@@ -362,7 +361,6 @@ export interface InstanceDisposition {
  */
 export const OPEN_OBLIGATION_VERDICTS: readonly DispositionVerdict[] = [
   "PUBLISHED_BUT_UNPLACED_BY_US",
-  "VENUE_NOT_RESOLVED",
   "TIME_NOT_PUBLISHED",
 ];
 

@@ -19,23 +19,26 @@ interface BenchmarkStorageBytes {
   databasePeakRssBytes: number;
   databaseElapsedMs: number;
   largestLatencyMs: number;
+  databaseProxyPeakRssBytes: number;
 }
-interface Answer { id: number; type?: string; status?: number; body?: string; databasePeakRssBytes?: number }
+interface Answer { id: number; type?: string; status?: number; body?: string; databasePeakRssBytes?: number; databaseProxyPeakRssBytes?: number }
 
 export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
   readonly bytes: BenchmarkStorageBytes;
   readonly query: ReadOnlyQuery;
-  private readonly shutdown: () => Promise<void>;
+  private readonly shutdown: (dropNativeDatabase?:boolean) => Promise<void>;
+  private readonly replayClock: (at: number) => Promise<void>;
 
-  private constructor(bytes: BenchmarkStorageBytes, query: ReadOnlyQuery, shutdown: () => Promise<void>, source: SourceAuthorityId) {
-    super(); this.bytes = bytes; this.query = query; this.shutdown = shutdown;
-    Object.assign(this, { writeAuthority: assertRuntimeAuthority({ capabilities: ["ROUTINE_CONTRACT"], contract: source }) });
+  private constructor(bytes: BenchmarkStorageBytes, query: ReadOnlyQuery, shutdown: (dropNativeDatabase?:boolean) => Promise<void>, contract: string, replayClock: (at: number) => Promise<void>) {
+    super(); this.bytes = bytes; this.query = query; this.shutdown = shutdown; this.replayClock = replayClock;
+    Object.assign(this, { writeAuthority: assertRuntimeAuthority({ capabilities: ["ROUTINE_CONTRACT"], contract }) });
   }
 
-  static async open(directory: string, source: SourceAuthorityId): Promise<FederalMoneyBenchmarkStore> {
+  static async open(directory: string, source: SourceAuthorityId, contract: string = source, options:{nativeConnectionFile?:string}={}): Promise<FederalMoneyBenchmarkStore> {
     const original = { fetch: neonConfig.fetchFunction, url: process.env.DATABASE_URL, reporting: process.env.WTP_VITAL_SIGNS_REPORT, mode: process.env.WTP_RUNTIME_MODE, role: process.env.WTP_DB_ROLE, control: process.env.WTP_CONTROL_PLANE_DATABASE_URL };
-    const bytes: BenchmarkStorageBytes = { read: 0, written: 0, requests: 0, statements: 0, largestRead: 0, largestWrite: 0, databasePeakRssBytes: 0, databaseElapsedMs: 0, largestLatencyMs: 0 };
-    const child: ChildProcessWithoutNullStreams = spawn(process.execPath, ["--experimental-strip-types", resolve("scripts/lib/federal-money-postgres-server.mts"), resolve(directory), String(Date.now())], { stdio: ["pipe", "pipe", "pipe"] });
+    const bytes: BenchmarkStorageBytes = { read: 0, written: 0, requests: 0, statements: 0, largestRead: 0, largestWrite: 0, databasePeakRssBytes: 0, databaseElapsedMs: 0, largestLatencyMs: 0, databaseProxyPeakRssBytes:0 };
+    const child: ChildProcessWithoutNullStreams = spawn(process.execPath, ["--experimental-strip-types", resolve("scripts/lib/federal-money-postgres-server.mts"), resolve(directory), String(Date.now()),
+      ...(options.nativeConnectionFile?["--native-connection-file",resolve(options.nativeConnectionFile)]:[])], { stdio: ["pipe", "pipe", "pipe"] });
     child.stderr.pipe(process.stderr);
     let serial = 0;
     const pending = new Map<number, { resolve: (answer: Answer) => void; reject: (reason: Error) => void }>();
@@ -56,7 +59,7 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
       pending.clear(); lines.close();
     });
     await ready;
-    const send = (message: { type?: string; body?: string }): Promise<Answer> => new Promise((accept, reject) => {
+    const send = (message: { type?: string; body?: string; replayAt?: number; dropNativeDatabase?:boolean }): Promise<Answer> => new Promise((accept, reject) => {
       const id = ++serial; pending.set(id, { resolve: accept, reject });
       child.stdin.write(`${JSON.stringify({ id, ...message })}\n`, error => { if (error) { pending.delete(id); reject(error); } });
     });
@@ -87,10 +90,11 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
     process.env.WTP_CONTROL_PLANE_DATABASE_URL = process.env.DATABASE_URL;
     const client = neon(process.env.DATABASE_URL);
     const query: ReadOnlyQuery = statements => client.transaction(statements.map(statement => client.query(statement.text, [...statement.params])));
-    return new FederalMoneyBenchmarkStore(bytes, query, async () => {
+    return new FederalMoneyBenchmarkStore(bytes, query, async dropNativeDatabase => {
       const exited = once(child, "exit");
-      const answer = await send({ type: "close" });
+      const answer = await send({ type: "close",dropNativeDatabase });
       bytes.databasePeakRssBytes = answer.databasePeakRssBytes ?? 0;
+      bytes.databaseProxyPeakRssBytes=answer.databaseProxyPeakRssBytes??0;
       child.stdin.end(); await exited;
       neonConfig.fetchFunction = original.fetch;
       if (original.url === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = original.url;
@@ -98,8 +102,10 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
       if (original.control === undefined) delete process.env.WTP_CONTROL_PLANE_DATABASE_URL; else process.env.WTP_CONTROL_PLANE_DATABASE_URL = original.control;
       if (original.mode === undefined) delete process.env.WTP_RUNTIME_MODE; else process.env.WTP_RUNTIME_MODE = original.mode;
       if (original.reporting === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = original.reporting;
-    }, source);
+    }, contract, async at => { await send({ type: "replay-clock", replayAt: at }); });
   }
 
-  async close() { await this.shutdown(); }
+  async close(options:{dropNativeDatabase?:boolean}={}) { await this.shutdown(options.dropNativeDatabase); }
+  /** Only the isolated benchmark child observes this explicit synthetic clock. */
+  async setReplayClock(at: number) { if (!Number.isFinite(at)) throw new Error("Replay clock must be finite."); await this.replayClock(at); }
 }

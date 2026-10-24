@@ -7,7 +7,7 @@
  * One sitting, from `/v1/{client}/events`. `EventDate` and `EventTime` are separate strings and neither
  * carries a zone: `EventDate` is a full ISO timestamp whose time is always midnight; `EventTime` is a
  * 12-hour wall clock. They are reassembled against the client's IANA zone (`lib/time/zoned.ts`). There are
- * no coordinates: `EventLocation` is a room name, so a pin requires a venue table.
+ * no coordinates: the publication pass geocodes the published `EventLocation` and saves its point.
  */
 export interface LegistarEvent {
   EventId: number;
@@ -17,7 +17,7 @@ export interface LegistarEvent {
   EventDate: string;
   /** `h:mm AM/PM`, local wall clock, no zone. */
   EventTime: string | null;
-  /** A room name, not an address, and never coordinates. */
+  /** The publisher's location text: an address, a room, online access, or an empty field. */
   EventLocation: string | null;
   /** Free text, e.g. null, "Study Session", "Special Meeting", "Joint Meeting". */
   EventComment: string | null;

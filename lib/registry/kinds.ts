@@ -35,3 +35,17 @@ export function kindFromSource(table: KindTable, group: KindGroup, value: unknow
 export function kindLabel(table: KindTable, group: KindGroup, key: string): string | null {
   return table[group].find(row => row.key === key)?.label ?? null;
 }
+
+/** Canonical body identities carry the structural kind independently of their sourced name. */
+export function bodyClassFromIdentity(id: string, kind?: string | null, table: KindTable = DEFAULT_KINDS): string | null {
+  const suffix = id.split("#")[1] ?? "";
+  if (suffix === "governing" || suffix === "board") return "GOVERNING";
+  const structural = suffix.replace(/^body:/, "");
+  const registered = kindFromSource(table, "body", kind) ?? kindFromSource(table, "body", structural);
+  if (registered) return registered;
+  if (suffix.startsWith("office-")) return "EXECUTIVE_AGENCY";
+  if (/(?:^|[-:])(?:advisory|committee)(?:-|$)/.test(suffix)) return "ADVISORY";
+  if (/^(?:(?:city|town|county|village|borough|municipal|common)-council|board-of-(?:supervisors|commissioners|legislators|directors|education)|(?:governing|school)-board|county-commission|town-meeting)(?:-|$)/.test(structural)) return "GOVERNING";
+  if (/(?:^|[-:])commission(?:-|$)/.test(suffix)) return "COMMISSION";
+  return kind ?? null;
+}

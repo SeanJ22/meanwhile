@@ -1,6 +1,8 @@
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import type { OpenDataFact, OpenDataReport } from "./model.ts";
+import { echoSourceIdentity, ECHO_PROGRAM_ID_FIELDS } from "./echo-identity.ts";
+const STATE_TO_FIPS=new Map(Object.entries(FIPS_TO_STATE).map(([fips,state])=>[state.postal,fips]));
 export interface GovernmentJoin {
   readonly divisionId: string;
   readonly bodyIds: readonly string[];
@@ -55,31 +57,44 @@ export function normalizeSocrata(row: Record<string, unknown>, capturedAt: strin
       createdAt:sourceDate(resource.createdAt), metadataUpdatedAt:sourceDate(resource.metadata_updated_at)}, sourceRow:row };
 }
 /** ECHO exporter keeps program-specific identifiers and all the publisher's status/history fields. */
+const ECHO_FIELDS={
+  name:["FAC_NAME","FacName"],state:["FAC_STATE","FacState"],zip:["FAC_ZIP","FacZip"],county:["FAC_FIPS_CODE","FacDerivedStctyFIPS"],
+  compliance:["FAC_COMPLIANCE_STATUS","FacComplianceStatus"],inspectionCount:["FAC_INSPECTION_COUNT","FacInspectionCount"],
+  lastInspection:["FAC_DATE_LAST_INSPECTION","FacDateLastInspection"],quarters:["FAC_QTRS_WITH_NC","FacQtrsWithNC"],
+  significant:["FAC_SNC_FLG","FacSNCFlg"],latitude:["FAC_LAT","FacLat"],longitude:["FAC_LONG","FacLong"],
+  air:["CAA_COMPLIANCE_STATUS","CAAComplianceStatus"],water:["CWA_COMPLIANCE_STATUS","CWAComplianceStatus"],
+  waste:["RCRA_COMPLIANCE_STATUS","RCRAComplianceStatus"],drinkingWater:["SDWA_COMPLIANCE_STATUS","SDWAComplianceStatus"],
+} as const;
+const ECHO_READER_SOURCE_FIELDS=new Set<string>(["REGISTRY_ID","RegistryID","DFR_URL",...ECHO_PROGRAM_ID_FIELDS,...Object.values(ECHO_FIELDS).flat()]);
+/** Reader bytes retain every exact source cell the normalizer uses; the complete exporter stays in its archive. */
+export function echoReaderArtifactRecord(row:OpenDataFact):OpenDataFact {
+  return {...row,sourceRow:Object.fromEntries(Object.entries(row.sourceRow).filter(([key])=>ECHO_READER_SOURCE_FIELDS.has(key)))};
+}
 export function normalizeEcho(row: Record<string, unknown>, capturedAt: string, publishedAt: string | null, held: readonly GovernmentJoin[] = []): OpenDataFact {
-  const get = (bulk: string, api: string) => string(row[bulk] ?? row[api]);
-  const id = get("REGISTRY_ID", "RegistryID"), title = get("FAC_NAME", "FacName");
-  if (!id || !title) throw Error("EPA row has no native facility ID or name.");
-  const state = get("FAC_STATE", "FacState").toUpperCase() || null;
-  const stateFips = Object.entries(FIPS_TO_STATE).find(([,s]) => s.postal === state)?.[0];
-  const nativeIds: Record<string,string> = {registry_id:id, ...(stateFips ? {state_fips:stateFips} : {})};
-  const countyFips = get("FAC_FIPS_CODE", "FacDerivedStctyFIPS");
+  const get = (field:keyof typeof ECHO_FIELDS) => {const [bulk,api]=ECHO_FIELDS[field];return string(row[bulk] ?? row[api]);};
+  const identity=echoSourceIdentity(row),title=get("name");
+  if (!identity || !title) throw Error("EPA row has no unambiguous native facility ID or name.");
+  const state = get("state").toUpperCase() || null;
+  const stateFips = STATE_TO_FIPS.get(state??"");
+  const nativeIds: Record<string,string> = {...identity.identifiers, ...(stateFips ? {state_fips:stateFips} : {})};
+  const countyFips = get("county");
   if (/^\d{5}$/.test(countyFips)) nativeIds.county_fips = countyFips;
-  for (const key of ["AIR_IDS", "NPDES_IDS", "RCRA_IDS", "SDWA_IDS", "TRI_IDS"]) if (string(row[key])) nativeIds[key.toLowerCase()] = string(row[key]);
-  const joins = nativeGovernmentJoins(nativeIds, held);
-  const zip = /^\d{5}/.exec(get("FAC_ZIP", "FacZip"))?.[0] ?? null;
-  return {id:`epa-echo:${id}`,kind:"EPA_FACILITY",sourceId:"epa-echo",nativeIds,title,state,
+  for (const key of ECHO_PROGRAM_ID_FIELDS) if (string(row[key])) nativeIds[key.toLowerCase()] = string(row[key]);
+  const joins = held.length?nativeGovernmentJoins(nativeIds, held):[];
+  const zip = /^\d{5}/.exec(get("zip"))?.[0] ?? null;
+  return {id:`epa-echo:${identity.key}`,kind:"EPA_FACILITY",sourceId:"epa-echo",nativeIds,title,state,
     divisionIds:[...new Set(joins.map(j=>j.divisionId))].sort(),bodyIds:[],zip,
     sourceUrl:string(row.DFR_URL).replace(/^http:/,"https:") || "https://echodata.epa.gov/echo/echo_rest_services.get_facilities",sourceOrg:"U.S. Environmental Protection Agency",official:true,
-    publishedAt,updatedAt:publishedAt,capturedAt,description:get("FAC_COMPLIANCE_STATUS","FacComplianceStatus"),
-    fields:{inspectionCount:get("FAC_INSPECTION_COUNT","FacInspectionCount") || null,
-      lastInspection:sourceDate(get("FAC_DATE_LAST_INSPECTION","FacDateLastInspection")),
-      quartersWithNoncompliance:get("FAC_QTRS_WITH_NC","FacQtrsWithNC") || null,
-      significantNoncompliance:get("FAC_SNC_FLG","FacSNCFlg") || null,
-      latitude:get("FAC_LAT","FacLat") || null,longitude:get("FAC_LONG","FacLong") || null,
-      airCompliance:get("CAA_COMPLIANCE_STATUS","CAAComplianceStatus") || null,
-      waterCompliance:get("CWA_COMPLIANCE_STATUS","CWAComplianceStatus") || null,
-      wasteCompliance:get("RCRA_COMPLIANCE_STATUS","RCRAComplianceStatus") || null,
-      drinkingWaterCompliance:get("SDWA_COMPLIANCE_STATUS","SDWAComplianceStatus") || null},sourceRow:row};
+    publishedAt,updatedAt:publishedAt,capturedAt,description:get("compliance"),
+    fields:{inspectionCount:get("inspectionCount") || null,
+      lastInspection:sourceDate(get("lastInspection")),
+      quartersWithNoncompliance:get("quarters") || null,
+      significantNoncompliance:get("significant") || null,
+      latitude:get("latitude") || null,longitude:get("longitude") || null,
+      airCompliance:get("air") || null,
+      waterCompliance:get("water") || null,
+      wasteCompliance:get("waste") || null,
+      drinkingWaterCompliance:get("drinkingWater") || null},sourceRow:row};
 }
 export function openDataReports(rows: readonly OpenDataFact[]): OpenDataReport[] {
   const counts = new Map<string, {loaded:number;joined:number;unjoined:number}>();

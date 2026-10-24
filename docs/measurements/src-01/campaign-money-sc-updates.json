@@ -1,0 +1,36 @@
+{
+  "state": "SC",
+  "kind": "official-source-update-explanation",
+  "sourceStatus": 200,
+  "sourceHash": "8e82aa78ded04edd533d30d4c4696b0209777658e14498ecd87afa8c0dbb3ada",
+  "sourceCapturedAt": "2026-10-23T10:46:39.264Z",
+  "rawContributionRowsRead": 515223,
+  "productionCycleFacts": 405,
+  "sameAmounts": 404,
+  "samePersonIdNameSeatAndOffice": 405,
+  "changedPersonFields": {
+    "sourceUrl": 322
+  },
+  "samePublicSourceLocations": 405,
+  "change": {
+    "entity": "plural:aa158d61-1373-4c4a-9ad3-ea74bf422cc3",
+    "person": "Brandon Newton",
+    "cycle": 2026,
+    "before": [
+      {
+        "label": "Contribution",
+        "amount": 109241.54
+      }
+    ],
+    "after": [
+      {
+        "label": "Contribution",
+        "amount": 122179.29
+      }
+    ],
+    "verifiedDistinctNativeRows": 249,
+    "independentlySummedContributionAmount": 122179.29,
+    "equalToReplayedAmount": true
+  },
+  "explanation": "The newer retained official contribution extract independently sums to the replayed total for Brandon Newton. Other held amounts remain equal. Person source-URL revisions and source-capture hashes are reported separately from identity and public filing locations."
+}

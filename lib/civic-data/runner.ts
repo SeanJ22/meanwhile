@@ -7,7 +7,6 @@ import {
   ROUTINE_SOURCE_CONTRACTS,
   cadenceMsAt,
   type RoutineSourceContract,
-  type SittingWindowSchedule,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, onMeetingPartitionsRefreshed, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { sittingWindowHotByConclusion, sittingWindowObligation } from "./sitting-window-admission.ts";
@@ -145,6 +144,8 @@ export interface RoutineTaskAdmissionCandidate {
   readonly task: RoutineSourceTask;
   readonly lastConsideredAt: string | null;
   readonly deadlineMs?: number;
+  /** When cadence work became owed (routineTaskNextDueMs); orders the pass, never admission. */
+  readonly owedAtMs?: number;
   readonly baselineOwed?: boolean;
 }
 
@@ -213,10 +214,16 @@ export function routineFailureDomainFrontier(
   return candidates.filter(({ task }) => admitted.has(task.id));
 }
 
-/** Overdue meetings and first reads lead; equal no-deadline work rotates by its actual last attempt. */
-export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly baselineOwed?: boolean; readonly lastConsideredAt?: string | null; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
-  // A meeting without its first read has deadline -Infinity: it is already owed, ahead of baseline work.
-  const group = (candidate: T) => nowMs !== undefined && candidate.deadlineMs !== undefined && candidate.deadlineMs <= nowMs ? 0
+/**
+ * Overdue work leads, longest owed first whatever its kind, so a backlog of overdue meetings cannot hold a state's
+ * voting sites out of every pass's memory; first reads follow; equal no-deadline work rotates by its actual last attempt.
+ */
+export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number; readonly owedAtMs?: number; readonly baselineOwed?: boolean; readonly lastConsideredAt?: string | null; readonly task?: Pick<RoutineSourceTask, "sourceId"> }>(admitted: readonly T[], nowMs?: number): T[] {
+  // A meeting without its first read has deadline -Infinity: it is already owed, ahead of baseline work. Other work is
+  // owed from its cadence or retry instant (routineTaskNextDueMs); a never-read task keeps its baseline place.
+  const owedAt = (candidate: T) => candidate.deadlineMs !== undefined ? candidate.deadlineMs
+    : candidate.owedAtMs !== undefined && Number.isFinite(candidate.owedAtMs) ? candidate.owedAtMs : undefined;
+  const group = (candidate: T) => nowMs !== undefined && (owedAt(candidate) ?? Number.NaN) <= nowMs ? 0
     : candidate.baselineOwed && !candidate.lastConsideredAt ? 1 : candidate.deadlineMs === undefined || Number.isNaN(candidate.deadlineMs) ? 2 : 3;
   // National sources have many independent state projections of the same held release.
   // Offer one from each source before the next state so one portfolio cannot occupy the whole pool.
@@ -231,7 +238,7 @@ export function routinePassLaunchOrder<T extends { readonly deadlineMs?: number;
     .sort((left, right) =>
       group(left.candidate) - group(right.candidate) ||
       (group(left.candidate) === 1 ? left.position - right.position : 0) ||
-      ([0, 3].includes(group(left.candidate)) ? (left.candidate.deadlineMs! < right.candidate.deadlineMs! ? -1 : left.candidate.deadlineMs! > right.candidate.deadlineMs! ? 1 : 0) : 0) ||
+      ([0, 3].includes(group(left.candidate)) ? (owedAt(left.candidate)! < owedAt(right.candidate)! ? -1 : owedAt(left.candidate)! > owedAt(right.candidate)! ? 1 : 0) : 0) ||
       ([1, 2].includes(group(left.candidate)) ? Math.sign(consideredAtMs({ lastConsideredAt: left.candidate.lastConsideredAt ?? null }) - consideredAtMs({ lastConsideredAt: right.candidate.lastConsideredAt ?? null })) || 0 : 0) ||
       left.index - right.index)
     .map(({ candidate }) => candidate);
@@ -511,6 +518,7 @@ export function routineTaskSelection(
 }
 
 export interface RoutineTaskClock {
+  readonly publishedScopeVersions?: readonly string[];
   readonly failureStreak?: number;
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
@@ -562,32 +570,6 @@ export function sittingWindowSignals(
     signals.set(read.task.id, sittingWindowHotByConclusion(schedule, lists, nowMs, ends));
   }
   return signals;
-}
-
-/**
- * A sitting-window task owes its next read an hour (hot) or twelve hours after its last success, eligible 15 minutes
- * or 2 hours before. A failed later attempt retries on the contract clock; a partition never published owes one
- * twice daily.
- */
-function sittingWindowTaskDue(
-  task: RoutineSourceTask,
-  schedule: SittingWindowSchedule,
-  clock: RoutineTaskClock | undefined,
-  nowMs: number,
-  hot: boolean | undefined,
-): boolean {
-  if (!clock?.lastAttemptedAt) return true;
-  const attempted = Date.parse(clock.lastAttemptedAt);
-  const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
-  if (!Number.isFinite(attempted)) return true;
-  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
-  const { eligibleAtMs } = sittingWindowObligation(
-    schedule,
-    failureRetryMs(task.retryMs, clock),
-    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
-    hot,
-  );
-  return nowMs >= eligibleAtMs;
 }
 
 export function routineTaskDeadlineMs(
@@ -671,41 +653,60 @@ export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRe
   ) ? [read.task.id] : []));
 }
 
-export function routineTaskDue(
+export function routineTaskNextDueMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
   nowMs: number,
   sittingHot?: boolean,
   observedEveryMs?: number,
-): boolean {
+): number {
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
     if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
-      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) || nowMs - attempted >= failureRetryMs(task.retryMs, clock);
-    if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return false;
-    return !Number.isFinite(attempted) || attempted < requested || nowMs - attempted >= failureRetryMs(task.retryMs, clock);
+      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return Number.POSITIVE_INFINITY;
+    return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
   }
   if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
     // The store scopes attempts to this parser. A prior parser's GOOD remains live,
     // but cannot postpone a held-byte reparse for the source's full refresh cadence.
     const attempted = Date.parse(clock.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs || nowMs - attempted >= failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
   }
-  const schedule = task.contract?.schedule;
-  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowTaskDue(task, schedule, clock, nowMs, sittingHot);
-  if (!clock?.lastAttemptedAt) return true;
+  if (task.contract?.cadence.requiredScopeVersions?.some(version => !clock?.publishedScopeVersions?.includes(version))) {
+    const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+  }
+  if (!clock?.lastAttemptedAt) return nowMs;
   const attempted = Date.parse(clock.lastAttemptedAt);
   const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
-  if (!Number.isFinite(attempted)) return true;
-  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return true;
-  if (!Number.isFinite(succeeded)) return nowMs - attempted >= failureRetryMs(task.retryMs, clock);
+  if (!Number.isFinite(attempted)) return nowMs;
+  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return nowMs;
+  const schedule = task.contract?.schedule;
+  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowObligation(schedule, failureRetryMs(task.retryMs, clock),
+    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) }, sittingHot).eligibleAtMs;
+  if (!Number.isFinite(succeeded)) return attempted + failureRetryMs(task.retryMs, clock);
     // Once a due read fails, the source's retry clock owns the next attempt.
-  if (attempted > succeeded) return nowMs - attempted >= failureRetryMs(task.retryMs, clock);
+  if (attempted > succeeded) return attempted + failureRetryMs(task.retryMs, clock);
   if (task.recordClass === "FEDERAL_MONEY" && task.contract.fanOut === true &&
-      task.scope === `${task.sourceId}:US` && clock.continuationPending === true) return true;
-  const policyMs = cadenceMsAt(task.contract, nowMs);
-  return nowMs - succeeded >= (observedEveryMs === undefined ? policyMs
-    : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS)));
+      task.scope === `${task.sourceId}:US` && clock.continuationPending === true) return nowMs;
+  const boundaries = [...new Set((task.contract.cadence.phases ?? []).map(phase => Date.parse(phase.through))
+    .filter(at => Number.isFinite(at) && at > nowMs))].sort((a, b) => a - b);
+  const starts = [nowMs, ...boundaries];
+  for (const [index, start] of starts.entries()) {
+    const policyMs = cadenceMsAt(task.contract, start);
+    const everyMs = observedEveryMs === undefined ? policyMs
+      : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS));
+    const due = index === 0 ? succeeded + everyMs : Math.max(start, succeeded + everyMs);
+    if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return due;
+  }
+  return Number.POSITIVE_INFINITY;
+}
+
+export function routineTaskDue(
+  task: RoutineSourceTask, clock: RoutineTaskClock | undefined, nowMs: number, sittingHot?: boolean, observedEveryMs?: number,
+): boolean {
+  return nowMs >= routineTaskNextDueMs(task, clock, nowMs, sittingHot, observedEveryMs);
 }

@@ -1,0 +1,154 @@
+{
+  "status": "BOUNDED_PERFORMANCE_EVIDENCE_ONLY",
+  "productionWrites": 0,
+  "fullNationalBudgetClaim": false,
+  "finalSpoolSha256": "0538269f1322926594a5b002164d6a80eb52a17d5d0cfc2d0623d5af10b09551",
+  "nativeFirst500k": {
+    "archiveHash": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+    "scope": "matched first500000 actual full-national archive source rows in native order; no complete-universe or national timing claim",
+    "results": [
+      {
+        "mode": "baseline",
+        "sourceRows": 500000,
+        "facts": 500000,
+        "gaps": 0,
+        "refs": 990430,
+        "prefixHash": "ec587f9e4417ff6dad531462db84587416fd4c3e617546fc78c3c5dc7138c8e7",
+        "elapsedMs": 591215.326757,
+        "cpuMs": 326515.225,
+        "appendCpuMs": 208682.652,
+        "diskBytes": 881631280,
+        "rssBytes": 229228544,
+        "prepareAndFirstReader": {
+          "elapsedMs": 126.58848400006536,
+          "cpuMs": 67.862,
+          "rows": 1,
+          "hash": "672b23bc505253eb0cdc51970b85d488058f3dbd88f2a66066f9c2050d08081d",
+          "diskBytes": 878039040
+        },
+        "factBytesHash": "e7c20224365e81c9177953890aa2d76574c368b0811065e913988eeb0bb20f22",
+        "memberBindingsHash": "254dc8336f119e1bf90899474060a35fb4bd65acc020c7235febd2f59141c88b"
+      },
+      {
+        "mode": "deferred",
+        "sourceRows": 500000,
+        "facts": 500000,
+        "gaps": 0,
+        "refs": 990430,
+        "prefixHash": "ec587f9e4417ff6dad531462db84587416fd4c3e617546fc78c3c5dc7138c8e7",
+        "elapsedMs": 141535.62349100003,
+        "cpuMs": 84120.864,
+        "appendCpuMs": 32293.032,
+        "diskBytes": 821817920,
+        "rssBytes": 380149760,
+        "prepareAndFirstReader": {
+          "elapsedMs": 5593.2788539999165,
+          "cpuMs": 3891.64,
+          "rows": 1,
+          "hash": "672b23bc505253eb0cdc51970b85d488058f3dbd88f2a66066f9c2050d08081d",
+          "diskBytes": 881618944
+        },
+        "factBytesHash": "e7c20224365e81c9177953890aa2d76574c368b0811065e913988eeb0bb20f22",
+        "memberBindingsHash": "254dc8336f119e1bf90899474060a35fb4bd65acc020c7235febd2f59141c88b"
+      }
+    ]
+  },
+  "completeHeldConnecticut": {
+    "sourceSha256": "116f6e53117b52f7891c6d2466d662f4ee5e29946b065fdb7b97eaf095615899",
+    "snapshot": "/tmp/src-01-held-ct.sqlite",
+    "counts": {
+      "facts": 25152,
+      "members": 50304,
+      "partitions": 395
+    },
+    "factsSha256": "79851571d1b4e8943648dba1fce952a310269b6a8cbf9a3591b12b53c67e1397",
+    "membersSha256": "cb5e50b3acc7ecf05470cde1f357147d74bad8b56ca83f38059f16439712c592",
+    "runtimeSha256": "6e428fcbe46168717078c066836cef87471b2399a6dbcae769681bfd48ce33d8",
+    "scope": "Complete held CT state copied only after producer stopped. Uses identical production partition iteration/save/readback with local level1-compressed EvidenceStore; does not claim whole national deadline.",
+    "results": [
+      {
+        "mode": "baseline",
+        "facts": 25152,
+        "members": 50304,
+        "partitions": 395,
+        "readerRows": 50304,
+        "references": 426,
+        "wallMs": 42154.116966999994,
+        "cpuMs": 33612.518,
+        "iteratorMs": 16070.131574000061,
+        "saveMs": 12180.209447000077,
+        "readbackMs": 9085.980052999956,
+        "artifactDiskBytes": 18619082,
+        "readerRowsSha256": "93db3f69cdb051ee6a020d09fb23c9e9f194d2353a70ba127f7f028ae60eebad",
+        "artifactReferencesSha256": "0f2ce8da48a8cc5cfc5085238c88b31306aeb27df26bbd02b26b34f684f49f1e",
+        "rss": 511012864
+      },
+      {
+        "mode": "no-delete",
+        "facts": 25152,
+        "members": 50304,
+        "partitions": 395,
+        "readerRows": 50304,
+        "references": 426,
+        "wallMs": 41803.829014999996,
+        "cpuMs": 29023.401,
+        "iteratorMs": 9224.685772999976,
+        "saveMs": 17699.752681999977,
+        "readbackMs": 8976.242225999813,
+        "artifactDiskBytes": 18619082,
+        "readerRowsSha256": "93db3f69cdb051ee6a020d09fb23c9e9f194d2353a70ba127f7f028ae60eebad",
+        "artifactReferencesSha256": "0f2ce8da48a8cc5cfc5085238c88b31306aeb27df26bbd02b26b34f684f49f1e",
+        "rss": 425152512
+      }
+    ]
+  },
+  "offlineSnapshot": {
+    "sourcePath": "/workspace/src01-scratch/epa-tmp/src-so-spool-GmtFJS/rows.sqlite",
+    "output": "/tmp/src-01-held-ct.sqlite",
+    "partitions": 395,
+    "facts": 25152,
+    "members": 50304,
+    "snapshotCopyMs": 3810.9033640000007,
+    "elapsedMs": 8997.328324,
+    "cpuMs": 7838.128
+  },
+  "interferenceFailure": {
+    "attempt": "Readonly snapshot during active DELETE-journal consumption",
+    "status": "INFRASTRUCTURE_INTERFERENCE",
+    "script": "/tmp/src-01-snapshot-held-ct.mjs",
+    "scriptCreatedAt": "2026-10-23T11:09:33.148175396Z",
+    "targetCreatedAt": "2026-10-23T11:09:37.716160393Z",
+    "query": "Group members by partition_id and read one first fact per partition, followed by explicit BEGIN and first CT member SELECT",
+    "failure": "database is locked",
+    "cleanup": "finally ROLLBACK and source.close executed; snapshot Node process exited 1; no live source attachment remains",
+    "timingLimit": "These are filesystem timestamps, not an exact measured lock interval. No process PID was recorded before exit."
+  },
+  "finalChange": "Consuming readers no longer delete each chunk and update three SQLite indexes. The consuming lock prevents reuse; completed consume/dispose removes the whole temporary database. Removed unused deletion helper, member buffer and row-reference index. Append encoding and uniqueness refusal unchanged.",
+  "validation": {
+    "command": "node --experimental-strip-types --import ./scripts/register-test-loader.mjs tests/open-data-spool.test.ts",
+    "passed": 6,
+    "failed": 0
+  },
+  "limits": [
+    "Connecticut snapshot is a bounded state-only SQLite copy, so its timings do not establish national I/O or total deadline performance.",
+    "Artifact-write wall time varied between comparison passes; the complete state comparison showed a 42.6% iterator reduction and 13.7% total CPU reduction, with 0.8% total wall reduction.",
+    "The earlier545.565s all-source result belongs to the earlier drain implementation. Final full-national materialization and exact all-partition equivalence are recorded separately in epa-four-writer-performance.json; normal reader clocks and SQL performance are recorded in epa-reader-all-states.json.",
+    "An attempted live read-only snapshot interfered with a DELETE-journal consumer. That replay is invalid infrastructure evidence; all further snapshot work occurred only after producer termination."
+  ],
+  "performanceComparisonSpoolSha256": "00e4ed4aa7392757fbcfa4af085ed3b15089e58c7aa51bb49670f08bad4d9afd",
+  "readerExtraction": {
+    "beforeSpoolSha256": "00e4ed4aa7392757fbcfa4af085ed3b15089e58c7aa51bb49670f08bad4d9afd",
+    "afterSpoolSha256": "0538269f1322926594a5b002164d6a80eb52a17d5d0cfc2d0623d5af10b09551",
+    "sharedReaderSha256": "22a4be37c9ac099092f47f410c332d5f7e7621dc75339d92d96050aa8d1f083e",
+    "sharedMaterializerSha256": "7271752130833a6cc4bfa17f68ffc820adfd1b0908cedd3c5b873600b2364856",
+    "scope": "Pure extraction of existing SQL iterator, fact decoder, and four-writer materialization. No source path, acquisition, parser, schema, limits, ordering, or publication change. Running baseline retains its originally loaded code.",
+    "appendAndGlobalIndexBodiesByteIdentical": true,
+    "checks": {
+      "spoolFocusedPassed": 6,
+      "srcSoFocusedPassed": 26,
+      "scopedEslint": "PASS"
+    },
+    "sqliteAccess": "None; held full national snapshot is untouched while producer is active."
+  },
+  "fullNationalProof": "docs/measurements/src-01/epa-four-writer-performance.json"
+}

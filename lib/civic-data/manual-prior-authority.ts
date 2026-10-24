@@ -1,7 +1,8 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { civicRecordsFor } from "./changes.ts";
-import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
+import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { publicationBaseHash } from "./navigation-publication-base.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
@@ -17,7 +18,7 @@ function memberIdentity(recordClass: string, member: { readonly key: string; rea
   return recordClass === "CURATED_READER_RECORD" ? (member.record as { readonly id: string }).id : member.key;
 }
 function assertedSources(recordClass: string, key: string, record: unknown): Iterable<string> {
-  return recordClass === "REGISTRY_RUNTIME_BINDING" ? registryMemberCitedUrls(key, record) : directPositiveSourceUrls(record);
+  return recordClass === "REGISTRY_RUNTIME_BINDING" ? registryMemberCitedUrls(key, record) : manualRecordSourceUrls(record);
 }
 
 export interface ManualPriorAuthority {
@@ -46,7 +47,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
       base.promotedVersion !== prior.versionId || base.lastKnownGoodVersion !== prior.versionId ||
       base.candidate.id !== prior.versionId || base.candidate.sourceId !== candidate.sourceId ||
       base.candidate.recordClass !== candidate.recordClass || base.candidate.scope !== candidate.scope ||
-      (indexedPrior?.payloadHash ?? hash(base.candidate.readModel)) !== prior.readModelSha256) {
+      (indexedPrior?.payloadHash ?? publicationBaseHash(base)) !== prior.readModelSha256) {
     return "The inherited authority does not identify the exact GOOD current base and its payload.";
   }
   if (indexedPrior) {

@@ -3547,12 +3547,15 @@ button.jurisdiction-badge-action:focus-visible {
 }
 
 .voting-site {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
   border: 1px solid var(--panel-border);
   border-radius: var(--radius-sm);
   padding: 0.5rem 0.6rem;
 }
 
 .voting-site[data-selected="true"] {
+  content-visibility: visible;
   border-color: var(--accent-voting);
   box-shadow: 0 0 0 1px var(--accent-voting);
 }

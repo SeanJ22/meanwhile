@@ -1,0 +1,118 @@
+{
+  "status": "PASS",
+  "productionWrites": 0,
+  "sourceRequests": 0,
+  "scope": "Actual retention function over the complete accepted manifest and17 real minimum gaps; no changed future archive is invented.",
+  "manifestSha256": "2f4266f42b4a4eb58059310e20b0ec91f2747ba1e6760b03718d2054031d1a1e",
+  "priorPrimaryReferences": 47274,
+  "priorPrimaryRows": 3229294,
+  "gaps": [
+    {
+      "id": "epa-echo:110051568932",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051590177",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051482409",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051535647",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051468960",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051537798",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051460110",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051778867",
+      "state": "UNRESOLVED",
+      "reason": "UNRESOLVED: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051012603",
+      "state": "AK",
+      "reason": "AK: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110011332502",
+      "state": "FL",
+      "reason": "FL: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110051494726",
+      "state": "IL",
+      "reason": "IL: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110063920761",
+      "state": "KY",
+      "reason": "KY: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110041271058",
+      "state": "ME",
+      "reason": "ME: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110048570159",
+      "state": "MO",
+      "reason": "MO: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110020799457",
+      "state": "TN",
+      "reason": "TN: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110020990178",
+      "state": "TX",
+      "reason": "TX: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    },
+    {
+      "id": "epa-echo:110043673539",
+      "state": "WY",
+      "reason": "WY: Publisher FAC_NAME is blank. Prior verified facts for this identity remain live; retry the source on its next scheduled run."
+    }
+  ],
+  "retainedRows": 0,
+  "elapsedMs": 105505.177292,
+  "cpuMs": 135779.665,
+  "peakRss": 453767168,
+  "artifactEncoding": "gzip-level1",
+  "artifactRequests": 47274,
+  "artifactBytes": 4893273962,
+  "artifactLocalGetMs": 208842.88202299934,
+  "artifactReplayDecodeHashMs": 19991.25474600002,
+  "implementationSha256": "9608294551afb9d21c43bcd36a0427ca26cfee84bbfa1d69e44eececa6a7fe41",
+  "strategy": "Four settled artifact reads per bounded batch, processing facts and failures in original reference order.",
+  "readAheadConcurrency": 4,
+  "serialBaseline": {
+    "file": "docs/measurements/src-01/epa-retention-performance-serial.json",
+    "implementationSha256": "d5e772e58de95b5ee1edcd9013594716162069d1e7d99393b3595a922c398cd5",
+    "elapsedMs": 174258.07565299998,
+    "cpuMs": 220261.334,
+    "peakRss": 379940864,
+    "elapsedSavedMs": 68752.89836099999,
+    "sameCompleteInputReadsGapsAndRetainedResult": true
+  },
+  "artifactLocalGetTimingScope": "Sum of individual overlapping GET elapsed times, not wall-clock duration; diagnostic only, nothing deducted from elapsedMs."
+}

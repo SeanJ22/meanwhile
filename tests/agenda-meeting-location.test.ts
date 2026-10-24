@@ -56,16 +56,14 @@ test("two spellings of one building agree; units, spelled numbers and suffix-les
   assert.equal(streetKeyOf("Tuesday, September 22, 2026 at 5:00 PM"), null, "a date and a time are not an address");
 });
 
-test("a Mesa study session is placed at City Hall from its own agenda: the agenda's words, the reviewed venue's pin", () => {
+test("Legistar publication keeps the source location ahead of an agenda venue-table match", () => {
   const row = {
     id: MESA_STUDY.meetingId, ocdId: MESA, location: null,
     venueGap: { kind: "STATED_NOT_PLACED", publishedText: "Study Session", publisher: "City of Mesa" },
   };
   const { rows, report } = placeUnplacedFromAgendas([row], () => MESA_STUDY.text, [MESA_CITY_HALL]);
-  assert.equal(report.placed, 1);
-  const placed = rows[0] as { location: { name: string; address: string | null; lat: number; lng: number } | null; venueGap?: unknown };
-  assert.deepEqual(placed.location, { name: "City Hall", address: "20 East Main Street", lat: 33.415155, lng: -111.830942 });
-  assert.equal("venueGap" in placed, false, "a placed sitting carries no venue gap");
+  assert.equal(report.placed, 0);
+  assert.equal(rows[0],row,"the publisher resolves EventLocation before any office fallback");
 });
 
 test("never across divisions, never over an adapter's placement or an online sitting, and never between disagreeing venues", () => {
@@ -88,7 +86,7 @@ test("never across divisions, never over an adapter's placement or an online sit
 });
 
 test("an agenda address with no reviewed venue keeps the sitting's named gap, and says so", () => {
-  const row = { id: MESA_ARTS.meetingId, ocdId: MESA, location: null, venueGap: { kind: "STATED_NOT_PLACED", publishedText: "Piper Theater at the Mesa Arts Center" } };
+  const row = { id: "ical:example:42", ocdId: MESA, location: null, venueGap: { kind: "STATED_NOT_PLACED", publishedText: "Piper Theater at the Mesa Arts Center" } };
   const { rows, report } = placeUnplacedFromAgendas([row], () => MESA_ARTS.text, [MESA_CITY_HALL]);
   assert.deepEqual(rows, [row]);
   assert.equal(report.noReviewedVenue, 1);

@@ -17,7 +17,7 @@ export async function legiscanBillEvidence(input:{question:string;states:readonl
   const designation=/\b([HS](?:B|R|JR|CR))\s*0*(\d+)\b/i.exec(input.question);
   for(const state of new Set(input.states)) {
     let read:Awaited<ReturnType<typeof readBillsForState>>;
-    try {read=await readBillsForState(state,options);} catch {missing++;continue;}
+    try {read=await readBillsForState(state,{...options,...(input.subject?.kind==="PERSON"&&input.person?{person:input.person}:{})});} catch {missing++;continue;}
     if(!read.complete) missing++;
     const bodyDivision=input.subject?.kind==="BODY"?input.subject.id.split("#")[0]:null;
     const candidates=input.subject?.kind==="PERSON"?(input.person?billsForPerson(read.bills,input.person):[]):input.subject?.kind==="BODY"?read.bills.filter(row=>row.ocdId===bodyDivision):read.bills;

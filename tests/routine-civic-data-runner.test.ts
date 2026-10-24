@@ -587,6 +587,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "dotgov",
 
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    ...REGISTRATION_TARGETS.map(({ state }) => `place-map-${state.toLowerCase()}`),
     "meeting-body-crosswalk-derived",
     "meeting-doors",
     "meeting-source-wiring",

@@ -2,8 +2,10 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const directory = join(import.meta.dirname, "../../lib/db/migrations");
-export const readerIdentityMigration = () => readFileSync(join(directory,
-  readdirSync(directory).find(name => name.endsWith("RB-A1_shared.sql"))!), "utf8");
+const stepMigration = (step: string) => readFileSync(join(directory,
+  readdirSync(directory).find(name => name.endsWith(`${step}.sql`))!), "utf8");
+export const readerIdentityMigration = () => stepMigration("RB-A1_shared");
+export const placeBoundaryMigration = () => stepMigration("RB-A2_place_boundaries");
 
 export async function identitySourceTables(pg: { exec(sql: string): Promise<unknown> }): Promise<void> {
   await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb);

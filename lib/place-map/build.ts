@@ -25,7 +25,7 @@ export function registeredPlaceIds(reg: RegistrationReference): Map<string, stri
   for (const [id, layer, geoid] of reg.divisions) if (["unsd", "elsd", "scsd"].includes(layer)) {
     const codes = schoolCodes.get(id) ?? []; codes.push(geoid); schoolCodes.set(id, codes);
   }
-  return new Map(reg.divisions.map(([id, layer, geoid]) => [`${layer}:${geoid}`,
+  return new Map(reg.divisions.filter(([, layer]) => layer !== "district").map(([id, layer, geoid]) => [`${layer}:${geoid}`,
     ["unsd", "elsd", "scsd"].includes(layer) && geoid !== schoolCodes.get(id)?.slice().sort()[0] ? `${id}_${geoid}` : id]));
 }
 
@@ -199,6 +199,11 @@ export function buildStatePlaceMap(input: {
         ? boundarySource(layer as Exclude<ReferenceLayer, "state">, geoid, reg).url : null;
     return source ? { ...row, sourceUrls: [source] } : row;
   });
+  for (const edges of [zipEdges, zctaEdges]) for (const edge of edges.values()) {
+    if (!places.has(edge.placeId) || !boundaries.has(key(edge.placeId, edge.boundaryYear))) {
+      throw new Error(`Membership has no source place and boundary: ${state} ${edge.code} ${edge.placeId} ${edge.boundaryYear}`);
+    }
+  }
   return { places: [...places.values()], boundaries: sourcedBoundaries, zipEdges: [...zipEdges.values()], zctaEdges: [...zctaEdges.values()],
     entityPlaces: [...new Map(entityPlaces.map(row => [`${row.entityId}|${row.placeId}|${row.boundaryYear}`, row])).values()] };
 }

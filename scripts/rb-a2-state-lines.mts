@@ -11,7 +11,7 @@ import { stateBase } from "../lib/ocd/divisions.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import { placesAtPoint } from "../lib/place-map/read.ts";
 import type { Query } from "../lib/facts/publish.ts";
-import { identitySourceTables, identityEventTables, readerIdentityMigration } from "../tests/helpers/reader-identity-db.ts";
+import { identitySourceTables, identityEventTables, readerIdentityMigration, placeBoundaryMigration } from "../tests/helpers/reader-identity-db.ts";
 
 const output = "/tmp/rb-a2-replay";
 await mkdir(output, { recursive: true });
@@ -33,7 +33,7 @@ const db = new PGlite();
 try {
   await db.exec(await readFile("lib/db/migrations/0035_r1_fact_store.sql", "utf8"));
   await identitySourceTables(db); await identityEventTables(db); await db.exec(readerIdentityMigration());
-  await db.exec(await readFile("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
+  await db.exec(placeBoundaryMigration());
   const query: Query = async (text, params = []) => (await db.query(text, [...params])).rows as Record<string, unknown>[];
   const transaction = <T,>(run: (query: Query) => Promise<T>) => db.transaction(tx => run(async (text, params = []) => (await tx.query(text, [...params])).rows as Record<string, unknown>[]));
   await loadStatePlaceMap({ transaction }, map);

@@ -11,9 +11,9 @@ import { placeMapCounts } from "../lib/place-map/counts.ts";
 import { readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
-const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify");
+const measuring = process.argv.includes("--measure"), verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases");
 const states = Object.values(FIPS_TO_STATE).map(state => state.postal).sort();
-const db = await openMapCopy("national", !measuring && !verifying);
+const db = await openMapCopy("national", !measuring && !verifying && !aliasesOnly);
 try {
   if (measuring) {
     const codes = await db.query("SELECT DISTINCT zip FROM zip_place ORDER BY zip");
@@ -44,6 +44,12 @@ try {
       console.log(`${state}: ${baseline.size} legacy ZIPs, no missing districts including fringe and adjacent-state IDs`);
     }
     await writeFile("/tmp/rb-a2-replay/national-preservation.json", JSON.stringify(results, null, 2));
+  } else if (aliasesOnly) {
+    for (const state of states) {
+      const map = JSON.parse(gunzipSync(await readFile(`/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`)).toString("utf8")) as StatePlaceMap;
+      await loadStatePlaceMap(db, { places: map.places, boundaries: [], zipEdges: [], zctaEdges: [] });
+      console.log(`${state}: source aliases loaded`);
+    }
   } else {
     const url = process.env.RB_A2_READER_URL;
     if (!url || new URL(url).username !== "readonly") throw new Error("Production read-only role is required");

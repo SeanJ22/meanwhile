@@ -8,7 +8,7 @@ import { placesAtPoint, placesForCode } from "../lib/place-map/read.ts";
 import { divisionIdsAt, type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import type { RegistrationReference } from "../lib/registration/reference.ts";
-import { identitySourceTables, identityEventTables, readerIdentityMigration } from "./helpers/reader-identity-db.ts";
+import { identitySourceTables, identityEventTables, readerIdentityMigration, placeBoundaryMigration } from "./helpers/reader-identity-db.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue } from "../lib/civic-data/runner.ts";
 import { geographicSpecialDistricts } from "../lib/place-map/special-districts.ts";
 import { currentGrfPlaceEdges } from "../lib/place-map/grf-edges.ts";
@@ -35,7 +35,7 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     await identitySourceTables(db);
     await identityEventTables(db);
     await db.exec(readerIdentityMigration());
-    await db.exec(readFileSync("lib/db/migrations/RB-A2_place_boundaries.sql", "utf8"));
+    await db.exec(placeBoundaryMigration());
     let calls = 0;
     const query: Query = async (sql, params = []) => { calls++; return (await db.query(sql, [...params])).rows as Record<string, unknown>[]; };
     const map: StatePlaceMap = {
@@ -102,6 +102,7 @@ test("the state builder preserves every legacy district and NCES/GEOID aliases",
 test("Idaho district type keys cannot become shared entity aliases", () => {
   const registration = JSON.parse(readFileSync("data/derived/registration/id.json", "utf8")) as RegistrationReference;
   const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map(), legacyZctas: new Set(), boundaries: [], checkedAt: date });
+  for (const [id, layer] of registration.divisions) if (layer === "district") assert.ok(map.places.some(place => place.id === id), id);
   const aliases = new Map<string, string>();
   for (const place of map.places) for (const alias of place.aliases) {
     const key = `${alias.scheme}:${alias.value}`;

@@ -445,6 +445,8 @@ async function answerWithSettings(request: Request, started: number) {
   const statewideOffice = readerOfficialsQuestion(question, namedStates.map(state => state.toLowerCase()));
   const stateExecutiveOnly = Boolean(statewideOffice?.keys.length && statewideOffice.keys.every(key =>
     ["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction"].includes(key)));
+  const nationalExecutiveOnly = Boolean(statewideOffice?.keys.length && statewideOffice.keys.every(key =>
+    key === "us_president" || key === "us_vice_president"));
   // Statewide officeholders live in this canonical authority. District shapes,
   // Congress, campaign sites and member offices do not supply these positions.
   const memberMeetingVote = memberMeetingVoteQuestion(question);
@@ -455,7 +457,7 @@ async function answerWithSettings(request: Request, started: number) {
   const ballotReference = Boolean(relativeContest || relativeMeasure);
   const registryQuestionShape = lexicalQuestionShape(question)?.shape;
   const bodyContactQuestion = registryQuestionShape === "CONTACT" && readerBodyClassQuestion(question);
-  const readAskRegistry = ballotReference || relativeFederalMoney ? readAskIdentityAuthority : stateExecutiveOnly || memberMeetingVote || registryQuestionShape &&
+  const readAskRegistry = ballotReference || relativeFederalMoney || nationalExecutiveOnly ? readAskIdentityAuthority : stateExecutiveOnly || memberMeetingVote || registryQuestionShape &&
     (["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"].includes(registryQuestionShape) || bodyContactQuestion)
     ? readStateRegistryAuthority : readRegistryRuntimeProjection;
   const ballotZip = !namedStates.length && typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
@@ -684,7 +686,7 @@ async function answerWithSettings(request: Request, started: number) {
   meetingsRead?.catch(() => undefined);
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
-    ...(stateExecutiveOnly ? [async () => undefined] : earlyFederalDirectory ? [() => earlyFederalDirectory] : [timed("federalDirectory", () => settleFederalDirectoryRead())]),
+    ...(stateExecutiveOnly || nationalExecutiveOnly ? [async () => undefined] : earlyFederalDirectory ? [() => earlyFederalDirectory] : [timed("federalDirectory", () => settleFederalDirectoryRead())]),
     ...(needsOutcomePreload && !(calendarReading && !calendarReading.subjectId) ? [outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead)] : []),
 
   ];
@@ -705,7 +707,7 @@ async function answerWithSettings(request: Request, started: number) {
     executiveActions: promotedSource("executive-actions"),
   };
   if (!needsOutcomePreload) delete trace.preloadSources.outcomes;
-  if (areaMeetingsAsk || stateExecutiveOnly) delete trace.preloadSources.federalDirectory;
+  if (areaMeetingsAsk || stateExecutiveOnly || nationalExecutiveOnly) delete trace.preloadSources.federalDirectory;
   let stateMoneyFilers: Awaited<ReturnType<typeof requestedStateMoneySubjects>> = [];
   if (deferPersonRecords && selectStateMoneyNames(question).length && readSubjectRefs(body.activeSubjects).every(ref => !ref.focused)) {
     await earlyFederalDirectory?.catch(() => undefined);

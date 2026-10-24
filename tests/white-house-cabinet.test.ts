@@ -61,7 +61,7 @@ function readerState(president: ReaderStatePackage["president"]): ReaderStatePac
 }
 
 test("the national executive source is re-read under a new parser version", () => {
-  assert.equal(sourceAuthority(SOURCE)?.parserVersion, "people-sources/2");
+  assert.equal(sourceAuthority(SOURCE)?.parserVersion, "people-sources/3");
   assert.equal(sourceAuthority("official-state-people")?.parserVersion, "people-sources/1");
 });
 
@@ -102,7 +102,7 @@ test("today's real whitehouse.gov pages yield the President, the Vice President 
   const published = await publishPeopleSource({ store, vault, state: "us", sourceId: SOURCE, roster: release.roster, acquisitions: release.acquisitions,
     gaps: release.gaps, releaseId: release.releaseId, now: at });
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome));
-  assert.equal(published.candidate.normalization.parserVersion, "people-sources/2");
+  assert.equal(published.candidate.normalization.parserVersion, "people-sources/3");
   assert.deepEqual(published.candidate.excludedFacts ?? [], []);
   const read = await readPeopleSourceProjection("US", SOURCE, { store, now: at });
   assert.equal(read.kind, "PROMOTED");

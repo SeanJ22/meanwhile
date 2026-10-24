@@ -1,0 +1,286 @@
+{
+  "measuredAt": "2026-10-24T15:37:24.470Z",
+  "mode": "Read-only production state registry roster role classification audit; live fact rosters use the census explicit body-ID role matches.",
+  "proofs": [
+    {
+      "state": "AK",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "AL",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "AR",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "AS",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "AZ",
+      "rosters": 9,
+      "unclassified": []
+    },
+    {
+      "state": "CA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "CO",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "CT",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "DC",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "DE",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "FL",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "GA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "GU",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "HI",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "IA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "ID",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "IL",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "IN",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "KS",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "KY",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "LA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MD",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "ME",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MI",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MN",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MO",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MP",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MS",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "MT",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "NC",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "ND",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "NE",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "NH",
+      "rosters": 13,
+      "unclassified": []
+    },
+    {
+      "state": "NJ",
+      "rosters": 23,
+      "unclassified": []
+    },
+    {
+      "state": "NM",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "NV",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "NY",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "OH",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "OK",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "OR",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "PA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "PR",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "RI",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "SC",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "SD",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "TN",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "TX",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "UT",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "VA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "VI",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "VT",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "WA",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "WI",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "WV",
+      "rosters": 0,
+      "unclassified": []
+    },
+    {
+      "state": "WY",
+      "rosters": 0,
+      "unclassified": []
+    }
+  ]
+}

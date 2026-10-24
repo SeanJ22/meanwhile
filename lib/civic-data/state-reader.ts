@@ -38,6 +38,16 @@ export function currentStateAuthorityProjection<T>(family: StateAuthorityFamily,
   return context ? requests.get(context)?.get(stateKey(family, state).key)?.result as StateRead<T> ?? null : null;
 }
 
+/** A cached state answer carries its already read canonical sources into composition. */
+export function primeStateAuthorityProjection<T>(family: StateAuthorityFamily, state: string, result: CivicDataReadResult<T>): void {
+  const context = currentReaderSelection() ?? currentReaderAuthorityEdge();
+  if (!context) return;
+  const held = requests.get(context) ?? new Map<string, Held>();
+  const read: StateRead<T> = { source: "DATABASE", result };
+  held.set(stateKey(family, state).key, { result: read, pending: Promise.resolve(read) });
+  requests.set(context, held);
+}
+
 export function readStateAuthorityProjection<T>(family: StateAuthorityFamily, state: string, query?: Query): Promise<StateRead<T>> {
   const { recordClass, scope } = stateKey(family, state);
   return readStateAuthorityEntry<T>(family, state, recordClass, scope, query);

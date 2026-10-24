@@ -29,13 +29,20 @@ import type { MemberOfficeRecord } from "../officials/member-offices.ts";
 import type { Division } from "../registry/types.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { primeReaderCanonicalStore } from "./canonical-context.ts";
-import { settleCandidateProfilesRead } from "../civic-data/manual-read-models.ts";
+import { readCandidateProfilesProjection } from "../civic-data/manual-read-models.ts";
+import type { CandidateProfilesProjection } from "../civic-data/manual-projections.ts";
+import { readDerivedCampaignSites, type DerivedCampaignSitesProjection } from "../civic-data/derived-campaign-sites.ts";
+import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
+import { readGenericBallotProjection, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 
 export interface ReaderStatePackage {
   readonly state: string;
   readonly registryRead: CivicDataReadResult<RegistryRuntimeReadModel>;
   readonly federalRead: CivicDataReadResult<FederalDirectoryReadModel>;
   readonly peopleRead: CivicDataReadResult<OfficialStateLegislatorReadModel>;
+  readonly candidateProfilesRead?: CivicDataReadResult<CandidateProfilesProjection>;
+  readonly candidatePortraitsRead?: CivicDataReadResult<DerivedCampaignSitesProjection>;
+  readonly ballotRead?: CivicDataReadResult<GenericBallotProjection>;
   readonly everyday: CivicDataReadResult<EverydayRoutingProjection>;
   readonly districts: Slice<GeographySlice>;
   readonly localDivisions?: readonly Division[];
@@ -103,6 +110,9 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     { recordClass: "CURATED_READER_RECORD" as const, scope: "US:verified-officeholder-campaign-sites" },
     { recordClass: "CURATED_READER_RECORD" as const, scope: "US:state-legislator-member-offices" },
     EVERYDAY_ROUTING_POINTER,
+    ...stateAuthorityPointers("candidate-profiles", state),
+    ...stateAuthorityPointers("candidate-campaign-sites-derived", state),
+    ...stateAuthorityPointers("ballot-contests", state),
     ...(!zip ? [{ recordClass: "STATE_LEGISLATOR" as const, scope: `${jurisdiction}:openstates-people:v1` }] : []),
     ...(!zip ? PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })) : []),
   ];
@@ -155,7 +165,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     selected.has(`${recordClass}:${scope}`) ? Promise.resolve(selected.get(`${recordClass}:${scope}`)!) : canonical.readPromotedEntry!(recordClass,scope)} : canonical};
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const officialRead = target ? readOfficialStateLegislatorsProjection(target.jurisdiction,options) : Promise.resolve(null);
-  const [runtime, people, federal, official, campaigns, everyday, president, offices] = await Promise.all([
+  const [runtime, people, federal, official, campaigns, everyday, president, offices, profiles, portraits, ballot] = await Promise.all([
     readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options),
     readStatePeopleProjection(`US-${state}`, options),
     readStateFederalDirectory(state, options),
@@ -164,7 +174,9 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     readEverydayRoutingProjection(options),
     presidentRead,
     readCuratedReaderProjection("member-offices", options),
-    settleCandidateProfilesRead(state).catch(error=>{console.error(`Portrait profile enrichment remains unavailable for ${state}: ${error instanceof Error ? error.message : String(error)}`);}),
+    readCandidateProfilesProjection(state, options),
+    readDerivedCampaignSites(state, options),
+    readGenericBallotProjection(state, options),
   ]);
   if (runtime.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(runtime);
   if (runtime.kind !== "PROMOTED" && runtime.kind !== "BOOTSTRAP") throw new Error(`STATE_PACKAGE_NOT_RECORDED:${state}`);
@@ -184,10 +196,11 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   } } : null;
   const memberOffices = offices.kind === "PROMOTED" || offices.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
   const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices.metadata.versionId,
+    profiles.metadata.versionId, portraits.metadata.versionId, ballot.metadata.versionId,
     districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)].join("|")).digest("hex");
   const result: ReaderStatePackage = {
     state, version, districts, localDivisions,
-    registryRead: runtime, peopleRead: people, everyday,
+    registryRead: runtime, peopleRead: people, candidateProfilesRead: profiles, candidatePortraitsRead: portraits, ballotRead: ballot, everyday,
     federalRead: directory ? { kind: "BOOTSTRAP", value: directory, metadata: federal.metadata, detail: "The state's current delegation, loaded with its offices and contact details." } : federal,
     registry: runtime.value, people: roster, legislativePeople,
     stateLegislatorAuthority: stateLegislatorCoverageAuthority(`US-${state}`, people),

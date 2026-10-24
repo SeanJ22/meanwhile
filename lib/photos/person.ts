@@ -18,6 +18,14 @@ export interface PersonPhoto {
   provenance?: Provenance;
 }
 
+function candidatePhoto(id:string,url:string,source:string,verification?:PortraitVerification,collectedAt=""):PersonPhoto & {id:string} {
+  const capture=verification?.sources[0];
+  return {id,url,source,verification,provenance:{
+    sourceUrl:verification?.attribution?.sourceUrl ?? capture?.url ?? (/^https?:\/\//.test(source) ? source : url),
+    sourceOrg:source,collectedAt:capture?.retrievedAt ?? collectedAt,verifiedAt:verification?.checkedAt ?? null,
+  }};
+}
+
 const rosterPhotos=new WeakMap<readonly Officeholder[],ReadonlyMap<string,Officeholder[]>>();
 function matchingPortraits(people:readonly Officeholder[],keys:ReadonlySet<string>):Officeholder[] {
   let index=rosterPhotos.get(people);
@@ -123,13 +131,14 @@ export function photoForPerson(subjectId:string, state?:string):PersonPhoto|null
   if(official)return official;
   const keys=portraitPersonKeys(subjectId,state);
   if(!keys.size)return null;
-  const candidates:{id:string;url:string;source:string;verification?:PortraitVerification}[]=[];
+  const candidates:(PersonPhoto & {id:string})[]=[];
   for(const selected of state ? [state.toUpperCase()] : selectedRegistryStates()) {
     try {
-      for(const [id,card] of Object.entries(currentCandidateProfilesProjection(selected).cards.cards)) if(card.photoUrl && (keys.has(id) || card.personId && keys.has(card.personId)))
-        candidates.push({id,url:card.photoUrl,source:card.photoSource ?? "Campaign portrait",verification:card.photoVerification});
+      const profiles=currentCandidateProfilesProjection(selected);
+      for(const [id,card] of Object.entries(profiles.cards.cards)) if(card.photoUrl && (keys.has(id) || card.personId && keys.has(card.personId)))
+        candidates.push(candidatePhoto(id,card.photoUrl,card.photoSource ?? "Campaign portrait",card.photoVerification,profiles.cards.curatedAt));
       for(const row of currentDerivedCandidatePortraits(selected)) if(row.portrait.photoUrl && [row.id,row.candidacyId,row.portrait.personId].some(id=>id && keys.has(id)))
-        candidates.push({id:row.id,url:row.portrait.photoUrl,source:row.portrait.photoSource ?? "Campaign portrait",verification:row.portrait.photoVerification});
+        candidates.push(candidatePhoto(row.id,row.portrait.photoUrl,row.portrait.photoSource ?? "Campaign portrait",row.portrait.photoVerification));
     } catch { /* Unavailable enrichment retains the photo already on the reader's record. */ }
   }
   return candidates.sort((a,b)=>(b.verification?.checkedAt ?? "").localeCompare(a.verification?.checkedAt ?? "") || a.id.localeCompare(b.id))[0] ?? null;

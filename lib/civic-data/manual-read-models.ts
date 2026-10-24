@@ -18,7 +18,7 @@ import type {
   CandidateProfilesProjection,
 } from "./manual-projections.ts";
 
-async function readCandidateProfilesProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CandidateProfilesProjection>> {
+export async function readCandidateProfilesProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CandidateProfilesProjection>> {
   const key = requireBallotState(state);
   return Object.keys(options).length
     ? readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", key), options)

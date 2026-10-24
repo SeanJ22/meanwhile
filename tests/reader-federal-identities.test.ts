@@ -10,6 +10,7 @@ import { stateMemberDirectories, zipMemberDirectories } from "../lib/reader/memb
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
+import { civicDataReadNotInitialized } from "../lib/civic-data/read-model.ts";
 
 const ROOT = "ocd-division/country:us/state:fl", AT = "2026-10-12T00:00:00.000Z";
 function person(id: string, name: string, bioguides: string[], source = "https://www.senate.gov/member", collectedAt = AT): Officeholder {
@@ -30,6 +31,22 @@ function packageFor(federal: Officeholder[], additional: Officeholder[]): Reader
     stateLegislatorAuthority: { scope: "US-FL", kind: "NOT_RECORDED", metadata: {}, code: null, detail: "fixture" },
   } as ReaderStatePackage;
 }
+
+test("cached state coverage carries a person's held candidate photo into its own composition context", () => {
+  const canonical=person("congress:Z000001","Photo Reader",["Z000001"]);
+  const base=packageFor([canonical],[]);
+  const state={...base,candidateProfilesRead:{kind:"BOOTSTRAP" as const,detail:"Held candidate profiles",
+    metadata:civicDataReadNotInitialized("CANDIDATE_PROFILE","US-FL:profiles","fixture").metadata,
+    value:{cards:{curatedAt:AT,note:"",hunts:[],cards:{[canonical.id]:{personId:canonical.id,
+      photoUrl:"/candidates/photo-reader.jpg",photoSource:"Reader campaign",bio:null,bioSourceUrl:null,bioSourceLabel:null,
+      email:null,phone:null,phoneLabel:null,filedAddress:null,filedAddressSource:null}}},
+      links:{curatedAt:AT,note:"",hunts:[],links:{}}}}};
+  for(let read=0;read<2;read++){
+    const shown=stateCoverage(state,[ROOT],25,-80).senators[0];
+    assert.equal(shown.id,canonical.id);
+    assert.equal(shown.photoUrl,"/candidates/photo-reader.jpg");
+  }
+});
 
 test("Congress directory identity stays canonical when source-native people sort before or after it", () => {
   for (const [canonicalName, apiName] of [["Zed Reader", "Aaron Reader"], ["Aaron Reader", "Zed Reader"]]) {

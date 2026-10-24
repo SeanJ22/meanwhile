@@ -54,9 +54,9 @@ test("with paid work paused, every hunt says Paused and why, gathered by state, 
 
 test("Now has the things that matter, each with a sentence, and none of the old status stack", () => {
   const html = page("now");
-  for (const title of ["Needs me", "Facts live", "Cost per fact", "Orders in motion"]) assert.match(html, new RegExp(title), title);
+  for (const title of ["Needs me", "Facts marked live", "Cost per fact", "Orders in motion"]) assert.match(html, new RegExp(title), title);
   assert.doesNotMatch(html, /Not measured yet\. Higher means the factory is producing|Not measured yet\. Lower is better/);
-  assert.match(html, /Facts live<.*?—/);
+  assert.match(html, /Facts marked live<.*?—/);
   assert.match(html, /Cost per fact<.*?—/);
   for (const gone of ["What’s stuck", "What it has cost", "What’s happening now", "What’s still missing", "Your recent instructions", "Suggested next steps", "Reader demand"]) assert.doesNotMatch(html, new RegExp(gone), gone);
 });

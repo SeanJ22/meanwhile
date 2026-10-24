@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 95 LIVE (16eead35c). River session session_01KQeVtrq9c4dWXSpaNnogn3 from 4:40 AM EDT Oct 24. Folding RV-REPAIR (the meeting-outcome reader-repair fix) on river-next 39c3037f4; gates running. RIVER-KEYS (Sean's key-like-page order) building on stream/river-keys
+build_state: RELEASE 96 OPEN (#806, auto-merge on; river bd77dcb0f = RV-REPAIR, gates 9/9, 9,631 pass). Release 95 live until it merges. Batch on river-next: RV-TOOLS, RN-03, CL-01, MD-01, RB-A1 (gates running). RIVER-KEYS, RN-01 and BL-21-FX being finished on their branches
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Folds, 5:50 AM EDT
+- RV-REPAIR: gates 9 of 9 on 39c3037f4 (9,631 pass, 0 fail); main's release-95 merge commit merged in (tree identical, b5af0a2ad); river bd77dcb0f; release 96 = PR #806, auto-merge on.
+- Batch 2 on river-next (Sean's order; RIVER-KEYS and MT-01 not posted yet): RV-TOOLS (River reads RB-A1-style step ids and "next-run proof"), RN-03, CL-01, MD-01, RB-A1. Job 4 review: all four lane READYs carry two production proofs, counts for every state and a next-run proof; CL-01 keeps all 18 candidate targets behind 30 reactions/demand records as aliases; RB-A1 keeps all 36 reader ids (56 reactions, 1 Ask, 3 demand). RB-A1 clashed with CL-01 in lib/ballot/candidate-targets.ts (imports only); River kept both sides; 50 focused tests pass. RB-A1's migration numbered 0051 (additive). MD-01's 20-question Chrome Ask check is owed after deploy.
+- Sent-back lanes being finished by River (standing order): RN-01 (planning rounds: 3 of 57 states at the last round, 10:26 PM EDT; none since) on stream/rn-01-fx; BL-21-FX (keep old dates and offices until each state's own record is published) on stream/ballot-parity-fx. Next: LV-01, BL-01, CS-01, PB-02, SRC-01, CAL-01.
 
 ### RIVER-KEYS (Job 2) baseline, 5:15 AM EDT (release 95)
 - Reader walk in Chromium (/ballot, "Where can I vote?", ZIP typed, "Show me"): 79901 El Paso, 60090 Wheeling and 85603 Bisbee (Cochise) show "We're working on getting this info." and 0 sites. 40202 Louisville 226, 85701 Tucson 345. Capital ZIPs with sites: KY 226, SC 135 (29201), MA 164 (02108), ND 19, HI 18, MD 10, DE 4; 0 at the capital ZIP in the other 44 states and DC (incl. FL 32301, MT 59601). No console errors.

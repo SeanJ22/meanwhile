@@ -1,27 +1,37 @@
 {
-  "observedAt": "2026-10-24T20:09:52.649Z",
+  "observedAt": "2026-10-24T21:44:30.752Z",
   "database": "tiny-hill-13996172/br-delicate-lab-ax02xuo5",
   "role": "readonly",
-  "rows": [
+  "counts": [
     {
       "family": "ask_interactions",
-      "rows": 1,
-      "distinct_ids": 1,
-      "resolved_rows": 1
+      "tableRows": 7,
+      "subjectReferences": 1,
+      "distinctIds": 1,
+      "resolvedReferences": 1
     },
     {
       "family": "demand_signals",
-      "rows": 3,
-      "distinct_ids": 3,
-      "resolved_rows": 3
+      "tableRows": 3,
+      "subjectReferences": 3,
+      "distinctIds": 3,
+      "resolvedReferences": 3
     },
     {
       "family": "reactions",
-      "rows": 56,
-      "distinct_ids": 33,
-      "resolved_rows": 56
+      "tableRows": 56,
+      "subjectReferences": 56,
+      "distinctIds": 33,
+      "resolvedReferences": 56
+    },
+    {
+      "family": "speak_your_mind",
+      "tableRows": 0,
+      "subjectReferences": 0,
+      "distinctIds": 0,
+      "resolvedReferences": 0
     }
   ],
-  "speak_your_mind": 0,
-  "distinctTargetIds": 36
+  "distinctTargetIds": 36,
+  "note": "Ask rows with empty subject lists contribute no subject reference. No interaction content was selected."
 }

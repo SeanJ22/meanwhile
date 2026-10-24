@@ -1,7 +1,7 @@
 {
-  "observedAt": "2026-10-24T21:28:11.618257+00:00",
-  "testedCommit": "1bdca4f7e",
-  "riverCommit": "720bc77b6",
+  "observedAt": "2026-10-24T22:24:14.043680+00:00",
+  "testedCommit": "41999aa8c5ea42440d9407747571467a55463b1d",
+  "riverCommit": "f6c4cba25",
   "a1FoldedReady": "1d6df41d9",
   "latestA1Documentation": "3a8b176aa",
   "latestA1Delta": "Six lines in docs/rb-a1.md; no application or test change. Merged and build passed.",
@@ -10,12 +10,12 @@
     {
       "id": "lint",
       "status": "PASS",
-      "seconds": 103
+      "seconds": 72
     },
     {
       "id": "tsc",
       "status": "PASS",
-      "seconds": 60
+      "seconds": 64
     },
     {
       "id": "dead-code",
@@ -30,7 +30,7 @@
     {
       "id": "test",
       "status": "PASS",
-      "seconds": 2742
+      "seconds": 1585
     },
     {
       "id": "db:gate",
@@ -40,22 +40,22 @@
     {
       "id": "build",
       "status": "PASS",
-      "seconds": 199
+      "seconds": 81
     },
     {
       "id": "test:bundle",
       "status": "PASS",
-      "seconds": 2
+      "seconds": 1
     },
     {
       "id": "build:standalone",
       "status": "PASS",
-      "seconds": 37
+      "seconds": 18
     }
   ],
   "tests": {
-    "registered": 9829,
-    "passed": 9824,
+    "registered": 9846,
+    "passed": 9841,
     "failed": 0,
     "suites": 42,
     "skipped": 5,
@@ -97,6 +97,18 @@
       "runner": "Canonical node scripts/ci-tests.mjs with an explicit file list"
     },
     "build": "PASS",
-    "note": "Newly promoted River changes merge cleanly. The complete nine-check result above remains attached to its tested code revision."
+    "fullGateSet": "9 of 9 PASS on 41999aa8c",
+    "note": "This complete run checks the current integration, including RN-03 and SO-01."
+  },
+  "preflightSeconds": 28.04,
+  "latestPeriodicA1Build": {
+    "a1Commit": "3a8b176aa",
+    "streamCommit": "41999aa8c",
+    "startedAt": "2026-10-24T22:13:59Z",
+    "result": "PASS",
+    "runtimeHoldingTrace": {
+      "files": 107,
+      "failures": 0
+    }
   }
 }

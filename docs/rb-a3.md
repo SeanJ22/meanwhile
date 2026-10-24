@@ -2,7 +2,7 @@
 
 Owner: RB-A3. Branch: `stream/rb-a3`, cut from River `21ae9bcfb`.
 
-Status: all nine checks, the complete 56-state replay and the refreshed Chrome connections pass after merging River `720bc77b6`, which contains A1 READY `1d6df41d9`. A1 then posted `3a8b176aa`, adding only six handoff lines to its documentation. That newest commit is merged here and its build passes; no application or test code changed. READY remains unposted because River does not yet contain that newest A1 READY. After it folds, A3 merges River and repeats the required checks.
+Status: READY for River integration and its live check. All nine checks pass after merging River `f6c4cba25`. A1's implementation prerequisite is met: River's integration record lists READY `1d6df41d9` and `origin/river` contains it. The latest A1 follow-up, `3a8b176aa`, adds six documentation lines; it is also merged and its periodic build passes. The 56-state reader replay, two production-data connections, Chrome reader checks and next scheduled run are proven in local production copies. A3 is not yet declared deployed or live.
 
 The one publisher is `lib/core/door.ts`. It resolves existing IDs first, creates a government-named missing board, selects the official or checked lane, chooses the winning value, writes it once, files its existing served places, queues their rebuilds and increments state/hour counts. The old publisher keeps its blank on refusal; new callers supply the refusal handoff once, after the fact transaction releases. RB-A4's service-map implementation is queued after A3; the current filing walks existing subject and parent associations.
 
@@ -18,7 +18,7 @@ The sample combines up to 100 live fact values per state with already-published 
 
 The complete replay preserves **56,000 of 56,000** selected values: **1,000 in every state, DC and the five territories**. Of these, 4,191 come from `fact`, 51,795 from current published reader projections and 14 from promoted archived meeting read models. Payload-part decoders supply the underlying shard-backed values without counting their references again. Every repeat leaves facts, sources, hourly counts and queues unchanged. No region has fewer than 1,000 selected values and no region has zero. Counts are actual selected values, not totals invented for the entire database. See [every state's counts](measurements/rb-a3/counts.md) and [the full report](measurements/rb-a3/replay.json).
 
-The read-only participation check at 4:09 PM Eastern resolved all 56 reaction rows, all three demand-signal rows and the one Ask row. Speak your mind had no rows. All 36 distinct target IDs resolved. See [the counts](measurements/rb-a3/live-id-resolution.json).
+The read-only participation check at 5:44 PM Eastern resolved all 56 reaction references, all three demand-signal references and the one Ask subject reference. Ask had seven rows, six with no subject reference; Speak your mind had no rows. All 36 distinct target IDs resolved. See [the counts](measurements/rb-a3/live-id-resolution.json).
 
 ## Two connections on production data
 
@@ -35,6 +35,6 @@ See [the connection results](measurements/rb-a3/connections.json), [production b
 
 The normal Box publisher ran on a real one-minute timer at 4:43:46, 4:44:46 and 4:45:46 PM Eastern. The middle tick published the checked address; the following tick changed no fact, source, queue or count. This used wall-clock scheduling in the local production copy, not an advanced test clock. See [the scheduled passes](measurements/rb-a3/next-run.json).
 
-All nine checks pass in one complete run: lint, TypeScript, unused-code checks, the pinned browser check, full tests, the read-only database check, both builds and the client-bundle tests. The full suite registered 9,829 tests: 9,824 passed, none failed and five were skipped. The three skips requiring built output are covered after the builds: all 16 bundle tests and all 17 deployment/last-mile checks pass without skips. Two optional acquisition repair tests remain skipped and are not claimed as passing. All 41 focused door, API and source-path checks also pass. See [checks.json](measurements/rb-a3/checks.json).
+All nine checks pass in one complete run: lint, TypeScript, unused-code checks, the pinned browser check, full tests, the read-only database check, both builds and the client-bundle tests. The full suite registered 9,846 tests: 9,841 passed, none failed and five were skipped. The three skips requiring built output are covered after the builds: all 16 bundle tests and all 17 deployment/last-mile checks pass without skips. Two optional acquisition repair tests remain skipped and are not claimed as passing. All 41 focused door, API and source-path checks also pass. See [checks.json](measurements/rb-a3/checks.json).
 
 The branch is pushed only to its own stream. After READY it continues watching `origin/board/river` for a return and for the explicit RB-A3 live-check result.

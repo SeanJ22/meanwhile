@@ -1,6 +1,6 @@
 # River status
 
-build_state: RELEASE 96 LIVE (38b470355, 6:32 AM EDT); runner on it from ~6:40 AM EDT. Batch 3 gating on river-next from 7:08 AM EDT: RV-TOOLS, RN-03, MD-01, RB-A1, BL-21-FX, PB-02, RN-01, BL-01, LV-01. CL-01 returned 6:55 AM EDT (drops ballot contests). RIVER-KEYS still building
+build_state: RELEASE 96 LIVE (38b470355, 6:32 AM EDT). Job 1 first pass PASS (0 repair failures, 4,142 Reader PASS, 7:10 AM EDT). Batch 3 + CL-01 gating from 7:20 AM EDT. RIVER-KEYS and SRC-01 being finished by helpers
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -22,6 +22,10 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### WIN, Job 1 (RV-REPAIR), first pass, 7:10 AM EDT
+- First routine pass on release 96's code (38b470355, started 6:45, written 7:10 AM EDT): "4142 Reader PASS receipt(s) recorded; 1 Reader failure receipt(s); 0 Reader repair mechanism failure(s)". Supervisor failures 207 (release 95 passes: 1,476 to 1,746, with 1,308 to 1,311 repair failures and 0 to 91 Reader PASS). Meeting outcomes for all 3,831 Legistar boards are re-checked again instead of refused. Second qualifying pass due ~7:35 AM EDT.
+- CL-01 posted a new READY d4f23a337 at 7:02 AM EDT fixing the return (Morristown 22 contests back; 54 of 54 ballot tests on its tip). Folded into batch 3 at 7:20 AM EDT; River resolved clashes with BL-01, BL-21-FX and RB-A1 and kept initials ("S.K.", a quoted "BJ") as the official filing prints them (BL-01's given-name casing had turned them into words). 296 ballot tests pass. Gates restarted 7:20 AM EDT.
 
 ### Batch 3, 7:08 AM EDT
 - Batch 2 failed gates (9,626 pass, 18 fail): all in the ballot suites, caused by CL-01 alone (7 files pass 50 of 50 just before CL-01, fail 11 on CL-01's own tip). Readers would lose: 07960 Morristown 22 contests -> 19; Arizona's verified Hobbs / Giles filing; races in Minneapolis 55415, Madison 53703 Wards 51 and 52, CNMI's 13 specimen fronts, both Virgin Islands districts, a Texas write-in-only court; BA-01 publication HELD. Returned to CL-01 at 6:55 AM EDT with the exact lines (returns/cl-01.md). If no new READY by 7:55 AM EDT, River fixes it on stream/cl-01.

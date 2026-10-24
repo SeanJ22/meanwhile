@@ -4,7 +4,6 @@ Owner: RB-A5. Branch: `stream/rb-a5`, based on River `21ae9bcfb` and merged with
 
 Remaining work:
 
-- RB-A5: prove work-to-door-to-place on production evidence; depends on the published RB-A3 door contract.
 - RB-A5: merge River after its RB-A1 integration, rerun every check, push READY, and handle River returns through the passed live check.
 
 The Box remains in service until Phase D. No production rows have been changed.
@@ -23,11 +22,20 @@ A child worker was killed with SIGKILL. Two timer-driven runs used the normal cl
 
 Counter totals matched direct SQL both by state and by hour. The authenticated local Admin Work screen rendered the copy's actual hourly query results in Eastern time. Its obsolete redirect to Queue was removed so these counts are reachable without the former work-row read. The Chrome screenshot is .scratch/rb-a5/admin-work.png.
 
+## Connection proofs
+
+1. All 328,791 production Box reports passed through work.add() and became 243,681 distinct links or claims. Source references and per-report notes were retained. This used the read-only export and wrote only the local copy.
+2. A real work row (work-3023ba8a38d6ced9c9444229bef2cf62560ea341ab13a0c8eab7c1a8e5002489) was claimed, passed through RB-A3 door snapshot 7857f247a, finished, and appeared in the ordinary readPlacePackage payload for ocd-division/country:us/state:az/school_district:mobile_elementary_district. Production fact 2395707, source-copy 84662, became “second Tuesday of each month at 10:30 a.m.” with [its original source](https://www.mobileesd.org/governing-board). The door also queued that place for page rebuilding. The reader copy used role readonly and preserved its actual parent entities and source records. No production row was written. The replay script is scripts/rb-a5-connection-copy.mts; its input is the narrow public production snapshot in .scratch/rb-a5/reader-source.json.
+
+The isolated connected checkout also compiled and passed seven focused identity, candidate-reaction and queue checks against the newer RB-A1 READY (0ecd029ab). The main stream awaits River's foundation fold before its final merge and full rerun.
+
 ## Live reader check
 
 Google Chrome for Testing 156 read meanwhileusa.com/ballot?zip=85003. The November 3 election, deadlines, candidates, measures and Sources remained visible. The walk blocked three attempted event writes. DOM arrival was 2.24 s; the observed usable time was 3.07 s, over the three-second target. No page speed improvement is claimed. Chrome used a disposable container with a task-only CA store and TLS verification enabled; the container was removed.
 
 ## Counts by state
+
+After the concurrency and connection probes: 2026-10-24T09:56:17.517Z. Direct counts equal the hourly totals for all states.
 
 | State | Rows in | Done | Refused |
 | --- | ---: | ---: | ---: |
@@ -35,7 +43,7 @@ Google Chrome for Testing 156 read meanwhileusa.com/ballot?zip=85003. The Novemb
 | AL | 18669 | 29 | 0 |
 | AR | 14906 | 22 | 0 |
 | AS | 1 | 0 | 0 |
-| AZ | 20031 | 20 | 0 |
+| AZ | 20032 | 21 | 0 |
 | CA | 30724 | 23 | 1 |
 | CO | 13584 | 12 | 0 |
 | CT | 22599 | 10 | 0 |

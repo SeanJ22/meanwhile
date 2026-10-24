@@ -17,6 +17,10 @@ test('held CivicPlus and Thrillshare API fields include their published document
 test('held ArcGIS REST fields use the service API, with no unrelated ArcGIS page treated as an API',()=>{
   assert.equal(isSourceApiUrl('https://services2.arcgis.com/agency/arcgis/rest/services/Districts/FeatureServer/0'),true);
   assert.equal(isSourceApiUrl('https://services.arcgis.com/agency/arcgis/rest/services/Boundaries/MapServer/0'),true);
+  assert.equal(isSourceApiUrl('https://gis.agency.example/server/rest/services/Districts/FeatureServer/0'),true);
+  assert.equal(isSourceApiUrl('https://gis.agency.example/arcgis/rest/services/Districts/MapServer/0/query'),true);
+  assert.equal(isSourceApiUrl('https://gis.agency.example/host/rest/services/Hosted/Districts/FeatureServer/0'),true);
+  assert.equal(isSourceApiUrl('https://gis.agency.example/arcgis/rest/services/Directory'),false);
   assert.equal(isSourceApiUrl('https://www.arcgis.com/home/item.html?id=example'),false);
   assert.equal(isSourceApiUrl('https://services2.arcgis.com.attacker.example/agency/arcgis/rest/services/Foo'),false);
 });

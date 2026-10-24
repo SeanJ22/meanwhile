@@ -144,13 +144,25 @@ test("a registered Legistar API keeps its tenant's portal and document delivery 
   const db = await seeded();
   try {
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'webapi.legistar.com/v1/example')", [input().entity.id]);
-    for (const [index, url] of ["https://example.legistar.com/MeetingDetail.aspx?ID=1", "https://example.legistar1.com/example/meetings/2026/agenda.pdf"].entries()) {
+    for (const [index, url] of ["https://example.legistar.com/MeetingDetail.aspx?ID=1", "https://example.legistar1.com/example/meetings/2026/agenda.pdf", "https://legistar2.granicus.com/example/meetings/2026/agenda.pdf"].entries()) {
       const result = await door(db, input({ field: `document_${index}`, copy: { ...input().copy, finalUrl: url,
         get text(): string { throw Error("The held government's document searched a quote"); } } }), clocks, now, { purge });
       assert.equal("decision" in result && result.decision, "PUBLISH");
     }
     assert.deepEqual(await door(db, input({ field: "wrong_tenant", copy: { ...input().copy, finalUrl: "https://other.legistar1.com/other/agenda.pdf" } }), clocks, now, { purge }),
       { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+    assert.deepEqual(await door(db, input({ field: "wrong_granicus_tenant", copy: { ...input().copy, finalUrl: "https://legistar2.granicus.com/other/meetings/2026/agenda.pdf" } }), clocks, now, { purge }),
+      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+  } finally { await db.pg.close(); }
+});
+
+test("a registered government site keeps its www spelling official", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'www.example.org')", [input().entity.id]);
+    const result = await door(db, input({ copy: { ...input().copy, finalUrl: "https://www.example.org/council",
+      get text(): string { throw Error("The registered government site searched a quote"); } } }), clocks, now, { purge });
+    assert.equal("decision" in result && result.decision, "PUBLISH");
   } finally { await db.pg.close(); }
 });
 

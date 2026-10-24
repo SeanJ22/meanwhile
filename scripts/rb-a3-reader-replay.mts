@@ -1,12 +1,13 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { door, type DoorInput } from "../lib/core/door.ts";
 import { resolveId } from "../lib/core/resolve.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { isOfficialUrl } from "../lib/facts/check.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
+import { isOfficialSource, pageLinksSource } from "../lib/civic-data/source-authority.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { canonicalJson } from "../lib/control-plane/repository/types.ts";
 import { pageCopy, jsonValues } from "../lib/facts/source-copy.ts";
@@ -15,15 +16,23 @@ import { openFactCopy, replayCopiedFacts, type FactSnapshot } from "./rb-a3-copy
 import { bindReaderSources, readerReplayField, type ReaderSample, type HeldApiDoor, type MeetingSourceHosts } from "./rb-a3-reader-sample.mts";
 
 const directory = resolve(process.argv[2] ?? ".scratch/rb-a3/snapshots");
-const states = process.argv[4] ? [process.argv[4]] : Object.values(FIPS_TO_STATE).map(s => s.postal).sort();
+const states = process.argv[4] ? process.argv[4].split(",") : Object.values(FIPS_TO_STATE).map(s => s.postal).sort();
+if (states.some(state => !Object.values(FIPS_TO_STATE).some(entry => entry.postal === state))) throw Error("Unknown replay state");
 const report = [];
 const digest = (v: unknown) => createHash("sha256").update(canonicalJson(v)).digest("hex");
+const linkingPagesFile = resolve(directory, "reader", "official-linking-pages.json");
+const linkingPages = existsSync(linkingPagesFile) ? (JSON.parse(readFileSync(linkingPagesFile, "utf8")) as { url: string; file: string }[])
+  .map(page => ({ ...page, html: readFileSync(resolve(directory, "reader", page.file), "utf8") })).filter(page => isOfficialSource(page.url)) : [];
 for (const state of states) {
   const snapshot = JSON.parse(readFileSync(resolve(directory, `${state}.json`), "utf8")) as FactSnapshot;
   const sample = JSON.parse(readFileSync(resolve(directory, "reader", `${state}.json`), "utf8")) as ReaderSample;
   bindReaderSources(sample, JSON.parse(readFileSync(resolve(directory, "reader", "held-api-doors.json"), "utf8")) as HeldApiDoor[],
     JSON.parse(readFileSync(resolve(directory, "reader", "meeting-source-hosts.json"), "utf8")) as MeetingSourceHosts[],
     JSON.parse(readFileSync(resolve(directory, "reader", "legistar-tenants.json"), "utf8")) as string[]);
+  for (const value of sample.values) {
+    const page = linkingPages.find(page => pageLinksSource(value.sourceUrl, page));
+    if (page) value.linkingPage = { url: page.url, file: page.file };
+  }
   const merged = { ...snapshot };
   for (const key of ["entities", "hosts", "externalIds", "places"] as const) {
     const rows = [...snapshot[key] ?? [], ...(sample.context?.[key] ?? []) as Record<string, unknown>[]];

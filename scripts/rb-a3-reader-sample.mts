@@ -6,7 +6,7 @@ import { selectedPointerSql } from "../lib/reader/selected-entry.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { isOfficialUrl } from "../lib/facts/check.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
-import { pageLinksSource, isOfficialSource, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
+import { pageLinksSource, isOfficialSource, SOURCE_AUTHORITIES, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
 import { decide } from "../lib/core/door.ts";
 
 type Row = Record<string, unknown>;
@@ -73,14 +73,21 @@ export function bindReaderSources(sample: Pick<ReaderSample, "values">, sourceDo
         && isOfficialSource(o.url, o.officialLinkingPage));
       if (office) {
         // The held government directory names this exact official candidate-list URL, including its delivery aliases.
-        value.registeredSourceHost = new URL(value.sourceUrl).hostname;
+        value.registeredSourceHost = new URL(value.sourceUrl).hostname.replace(/^www\./, "");
         value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
       }
     }
     if (value.sourceBodyId && meetingSources.some(source => source.body_ids.includes(value.sourceBodyId!)
-      && isOfficialUrl(value.sourceUrl, source.hosts))) {
+      && isOfficialUrl(value.sourceUrl, source.hosts.map(host => host.replace(/^www\./, ""))))) {
       const source = new URL(value.sourceUrl);
       value.registeredSourceHost = `${source.hostname}${source.pathname}`;
+      value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
+    }
+    if (Object.values(SOURCE_AUTHORITIES).some(authority => ["T1_AUTHORITATIVE_STRUCTURED", "T2_AUTHORITATIVE_DOCUMENT"].includes(authority.trust)
+      && authority.recordClasses.includes(value.recordClass as never)
+      && authority.routePrefixes.some(prefix => value.sourceUrl.startsWith(prefix)))) {
+      const source = new URL(value.sourceUrl);
+      value.registeredSourceHost = `${source.hostname.replace(/^www\./, "")}${source.pathname}`;
       value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
     }
     const source = new URL(value.sourceUrl);

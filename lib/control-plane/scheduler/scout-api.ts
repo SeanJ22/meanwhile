@@ -51,6 +51,7 @@ export function isSourceApiUrl(value: string): boolean {
   if (url.protocol === 'https:' && url.hostname === 'content.civicplus.com' && url.pathname.startsWith('/api/')) return true;
   if (url.protocol === 'https:' && /^(?:[a-z0-9-]+\.)?thrillshare\.com$/i.test(url.hostname) && url.pathname.startsWith('/api/')) return true;
   if (url.protocol === 'https:' && /^services\d*\.arcgis\.com$/i.test(url.hostname) && /\/arcgis\/rest\/services\//i.test(url.pathname)) return true;
+  if (url.protocol === 'https:' && /\/(?:arcgis|server|host)\/rest\/services\/.+\/(?:Feature|Map)Server(?:\/\d+)?(?:\/query)?\/?$/i.test(url.pathname)) return true;
   const bases = [...Object.values(config).map(provider => provider.base),
     'https://api.govinfo.gov/', 'https://webapi.legistar.com/v1/',
     'https://api.us.socrata.com/api/catalog/v1', 'https://data.openstates.org/', 'https://open.pluralpolicy.com/'];

@@ -40,10 +40,12 @@ const publicationLogKey = (state: BallotState, family: BallotPublicationFamily =
  * Election work leads the pass, after the pass is ordered by how long its work is owed: a due state ballot file already
  * holds its source evidence, and a due state's voting sites tell readers where to vote before a fixed date. Memory goes
  * in launch order and the overdue meeting backlog holds it to the pass deadline, so work queued behind it never starts.
+ * Due measure explainers follow voting work; their existing paid-work controls still decide every model call.
  */
 export function electionLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
   const election = (job: T) => ["ballot-contests", "voting-sites"].includes(parseStateBallotContractId(job.task.id)?.family ?? "");
-  return [...jobs.filter(election), ...jobs.filter(job => !election(job))];
+  const translation = (job: T) => /^measure-translations:[A-Z]{2}$/.test(job.task.id);
+  return [...jobs.filter(election), ...jobs.filter(translation), ...jobs.filter(job => !election(job) && !translation(job))];
 }
 
 export function ballotPublicationHasNoInput(report: BallotPublicationResult): boolean {

@@ -131,3 +131,35 @@ test("a due state's voting sites take memory at the start of the pass, ahead of 
   assert.equal(votingAcquisitionDeadline(now, passDeadlineFromEnv({})), wall);
   assert.ok(votingAcquisitionDeadline(now, passDeadlineFromEnv(withPassDeadline({ NODE_ENV: "test" }, wall))) <= wall - 6 * 60_000);
 });
+
+test("due explainers follow voting and can obtain memory before meeting programs hold the rest to the pass deadline", async () => {
+  // AZ, CA and WA were deferred at 2026-10-24T21:53:43Z before a single translation model call.
+  const translations = ["AZ", "CA", "WA"].map(state => ({ task: ROUTINE_SOURCE_TASKS.find(task => task.id === `measure-translations:${state}`)! }));
+  assert.ok(translations.every(job => job.task));
+  const voting = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:IL")! };
+  const calendars = Array.from({ length: 4 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
+  const before = [voting, ...calendars, ...translations];
+  const after = electionLaunchOrder([...calendars, ...translations, voting]);
+  assert.equal(after[0].task.id, voting.task.id, "voting keeps its first turn");
+  assert.deepEqual(after.map(job => job.task.id).sort(), before.map(job => job.task.id).sort(), "every admitted job remains in the pool");
+  const admitted = async (jobs: typeof before) => {
+    let open = true;
+    const slots = routineProcessSlots({ admissionsOpen: () => open, host: workerMemoryHost({ processes: () => [] }),
+      availableBytes: () => 3072 * mib,
+      peakBytes: entry => (entry.startsWith("voting-sites:") ? 512 : entry.startsWith("measure-translations:") ? 342 : 1447) * mib });
+    const started: string[] = [], releases: (() => void)[] = [];
+    const pending = jobs.map(({ task }, priority) => slots.acquire(task.id, Date.now() + 10_000, { priority }).then(release => {
+      started.push(task.id); releases.push(release);
+    }));
+    await new Promise(resolve => setImmediate(resolve));
+    // Observe only the initial allocation, with no child releasing its memory. Close and drain every waiter afterward.
+    open = false;
+    for (const release of releases) release();
+    await Promise.allSettled(pending);
+    return started;
+  };
+  const oldStarted = await admitted(before), newStarted = await admitted(after);
+  assert.equal(oldStarted.filter(id => id.startsWith("measure-translations:")).length, 1);
+  assert.deepEqual(newStarted.filter(id => id.startsWith("measure-translations:")), translations.map(job => job.task.id));
+  assert.equal(newStarted[0], voting.task.id);
+});

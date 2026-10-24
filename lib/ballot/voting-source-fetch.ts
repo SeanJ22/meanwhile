@@ -3,8 +3,10 @@ import { evaluatePermission } from "../control-plane/scheduler/robots.ts";
 import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
 import type { VotingSourceAttempt, VotingSourceRuntime } from "./voting-source-types.ts";
 import type { ArtifactDerivation } from "../control-plane/evidence/artifact.ts";
+import { cleanVotingCapture } from "./voting-source-evidence.ts";
 
-/** `requestedUrl` names the address that redirected to `url`, so a saved-byte replay can answer the original request. */
+/** `requestedUrl` names the address that redirected to `url`, so a saved-byte replay can answer the original request.
+ * `bytes` are the cleaned copy: a key-like string the page printed is already blanked, and `derivation` says what was blanked. */
 export interface VotingCapture { url: string; requestedUrl?: string; contentType: string; bytes: Uint8Array; derivation?: ArtifactDerivation }
 export interface VotingFetchSession {
   attempts: VotingSourceAttempt[];
@@ -24,6 +26,7 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
   const attempts: VotingSourceAttempt[] = [], rawBodies: VotingCapture[] = [];
   const robots = new Map<string, { text: string | null; status: number | null; error: string | null; type: string | null }>();
   const recorded = new Set<string>();
+  const readAt = () => runtime.now?.() ?? new Date().toISOString();
   const send = async (url: string, init: RequestInit, route: "direct" | "browser-ua") => {
     const remaining = runtime.deadlineMs === undefined ? 20_000 : Math.min(20_000, runtime.deadlineMs - Date.now());
     if (remaining <= 0) throw new Error("Voting source acquisition deadline reached");
@@ -49,7 +52,7 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
         }
         const text = await response.text(), type = response.headers.get("content-type");
         robots.set(url.origin, { text, status: response.status, error: null, type });
-        rawBodies.push({ url: at.href, contentType: type ?? "text/plain", bytes: new TextEncoder().encode(text) });
+        rawBodies.push(cleanVotingCapture({ url: at.href, contentType: type ?? "text/plain", bytes: new TextEncoder().encode(text) }, readAt()));
       } catch (error) { robots.set(url.origin, { text: null, status: null, error: String(error), type: null }); }
     }
     const read = robots.get(url.origin)!;
@@ -82,7 +85,8 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
       if (!response.ok) throw new Error(`Source returned HTTP ${response.status}${response.headers.get("retry-after") ? `; retry after ${response.headers.get("retry-after")}` : ""}`);
       const bytes = new Uint8Array(await response.arrayBuffer()), contentType = response.headers.get("content-type") ?? "";
       if ((contentType.includes("html") || bytes[0] === 60) && blockedBody(new TextDecoder().decode(bytes))) throw new Error("Source presents a CAPTCHA, login, or bot wall; follow the next official route");
-      const capture: VotingCapture = { url: url.href, ...(url.href !== requested ? { requestedUrl: requested } : {}), contentType, bytes };
+      // Cleaned before anything reads, classifies or saves it.
+      const capture = cleanVotingCapture<VotingCapture>({ url: url.href, ...(url.href !== requested ? { requestedUrl: requested } : {}), contentType, bytes }, readAt());
       rawBodies.push(capture); return capture;
     }
     throw new Error("Source redirect chain did not resolve");

@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE FOR READERS: release 108 (main c0500807b), live 11:32 PM EDT, reader checks green. NEXT: release 109 = PT-01 + MT-01 (PR #819, preview check passed 11:40 PM EDT, auto-merge on, CI tests running). GATING: RV-MEET2 c02e4bf30 alone (meeting calendars fix), ships as release 110 right after 109. HELD: DB-02 + BL-02 (gates stopped to give RV-MEET2 the machine; re-gate after). Queue: RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline)
+build_state: LIVE FOR READERS: release 108 (main c0500807b), live 11:32 PM EDT, reader checks green. NEXT: release 109 = PT-01 + MT-01 (PR #819, preview check passed 11:40 PM EDT, auto-merge on, CI tests running). GATING: RV-MEET2 c02e4bf30 alone (meeting calendars fix), ships as release 110 right after 109. HELD: DB-02 + BL-02 (gates stopped to give RV-MEET2 the machine; re-gate after). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce (published header address, intersections, street-only state), RB-A3 follow-up be0bef2bf (lane counts start on publication)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3

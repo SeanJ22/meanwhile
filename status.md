@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. NEXT: river-portraits (building in River session session_012UDbgz3sjA8QN2m7CY78QS), then RB-A4 catch-up b2bbdc183 (gates 9 of 9 on 456454204, 9,913 tests; waits behind river-portraits), GB-01 900dd1427, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. NEXT: river-portraits (building in River session session_012UDbgz3sjA8QN2m7CY78QS), then RB-A4 catch-up b2bbdc183 (gates 9 of 9 on 456454204, 9,913 tests; waits behind river-portraits), GB-01 1636195c9, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T18:27:00Z
+heartbeat: 2026-10-25T19:08:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1014,7 +1014,7 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 
 ### 2 PM EDT status
 - Release 118 (DB-03 readback, PR #830): build, standalone build, verify and admission pass; the test (affected) job is still running. Production is still release 117 (03e0526b6).
-- RB-A4 catch-up b2bbdc183: gating alone on river-next 456454204, in the test gate. GB-01 900dd1427 follows it alone.
+- RB-A4 catch-up b2bbdc183: gating alone on river-next 456454204, in the test gate. GB-01 1636195c9 follows it alone.
 - Lanes: DB-03 posted READY 2cce7754c, "DB-03 portraits". It cuts the portrait job's reads: a replay on OK, WI and KY read 98.7 MB before and 7.6 MB after. It also carries River's readback test and dead-code fixes. It sits on top of the lane's line, so folding it brings every DB-03 step below it. River folds the DB-03 steps in lane order after GB-01: Admin, state doors, then the rest through portraits. No other new READYs.
 - Neon, both databases, 1 PM EDT hour: 13,368 MB. Portraits 7,834 (59%), research cycle 1,043. Readback was 56: with no readback release live yet, that low figure comes from the runner, not from us.
 - Time correction: the GB-01 entry's heartbeat said 18:20Z but was written at about 18:00Z. Times on this board now come from the clock.
@@ -1034,5 +1034,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 
 ### 2:27 PM EDT
 - RB-A4 catch-up b2bbdc183 passed alone: 9 of 9 gates on 456454204, 9,913 tests, 0 failing. River stays at be0b41a4f so river-portraits lands first. After it, catch-up is re-merged on top and re-gated.
-- Pre-gating GB-01 900dd1427 on top of catch-up (77cdd6784) to find problems early. The real gate runs again on whatever river is then.
+- Pre-gating GB-01 1636195c9 on top of catch-up (77cdd6784) to find problems early. The real gate runs again on whatever river is then.
+
+### 3 PM EDT status
+- Release 118 (DB-03 readback) has been live since 2:19 PM EDT.
+- river-portraits (other River session): no branch pushed yet. RB-A4 catch-up stays held behind it (9 of 9 on 456454204).
+- GB-01's pre-gate on catch-up caught a tsc error in River's own budget change: release 118 renamed PASS_REPAIR_DEADLINE_MS to PASS_MAINTENANCE_DEADLINE_MS. Fixed in READY 1636195c9 (merges river be0b41a4f); 8/8 focused tests, tsc and knip clean. Pre-gating again on 68ebfa0aa.
+- Lanes: no new READYs (DB-03 2cce7754c is superseded by river-portraits).
+- Neon, both databases, 2 PM EDT hour (release 118 live from 2:19): 9,242 MB total (1 PM: 13,368). Readback 21, portraits 367 (1 PM: 7,834), member offices 1,525, research cycle 2,229. Portraits fell without a release; the runner just ran less portrait work this hour. Readback savings get measured on the 3 PM and 4 PM hours.
 

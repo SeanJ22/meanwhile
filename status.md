@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 115 (main 61d7ecc06, MD-01), live 8:40 AM EDT. SHIPPING: release 116 (CL-01 69ca09c83, gates 9 of 9) PR #828, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 624ac2d3d alone (river-next 3aef51fa3). DB-03A proof: cp_doors 382 MB in the 8 AM hour, down from 2.2-5.0 GB/h overnight. Queue (each its own batch): RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (04681516c, e4305907d, f2d76ac1f, ef74ed82e, 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 f26ebab8d, RB-A3 be0bef2bf, RN-03 1307d4e03. HELD: RB-A10 7b5eacd03 (place map)
+build_state: LIVE FOR READERS: release 116 (main 1d2ac473a, CL-01), live 9:31 AM EDT; reader checks green. GATING: RB-A4 624ac2d3d alone (river-next 3aef51fa3). Queue (each its own batch): RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (04681516c, e4305907d, f2d76ac1f, ef74ed82e, 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 f26ebab8d, RB-A3 be0bef2bf, RN-03 1307d4e03. HELD: RB-A10 7b5eacd03 (place map)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T13:06:00Z
+heartbeat: 2026-10-25T13:35:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -933,3 +933,8 @@ Per fold: claim the lock, fold the exact READY, merge main in, number migrations
   - Control-plane total: 4.8 to 8.4 GB/h overnight, now 3.2 GB (7 AM) and 1.6 GB (8 AM).
   - The runner was on release 114 (0e3cdce42, which contains 113's 0c8f1ee0e) for the 6, 7 and 8 AM hours, and on 113 for 5 AM.
   - What's left on cp_doors: voting-source-publication.ts:41 (~200 MB/h) and platform-census.ts:85 (126 to 183 MB/h, same as before DB-03A).
+
+### Release 116 live, 9:31 AM EDT (main 1d2ac473a: CL-01)
+- PR #828 merged at 9:29 AM EDT. /api/build showed 1d2ac473a at 9:31:55 AM; checks ran right after.
+- Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
+- Random ZIPs, seed 1116: 20/20 load (ballot 200, meetings 200). All 20 resolve to their county and city, across IN, AK, OH, VT, MO, TN, DE, FL, TX, IL, WI, OK, NC, AR, ME, NY, MN, VA, VI and WV.

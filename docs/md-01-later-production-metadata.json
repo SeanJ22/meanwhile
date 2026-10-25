@@ -239,5 +239,22 @@
     "partsVisible": 5,
     "sources": 1
   },
-  "limits": "Counts and bounded metadata only. One 908-character checker diagnostic is a small sample, not the failed writer draft. No source payload/table export, production copy, bulk replay, manual production job or DB write."
+  "limits": "Counts and bounded metadata only. One 908-character checker diagnostic is a small sample, not the failed writer draft. No source payload/table export, production copy, bulk replay, manual production job or DB write.",
+  "localSentenceRepair": {
+    "productionSample": "The approved sentence containing Initiative Measure No. IL26-001 is rejected by the original sentence-break regex. The failed writer draft is absent, so this is not claimed to be its only failure.",
+    "red": "Synthetic transport/source: one approved-sentence test fails; real-second-sentence test passes before the fix.",
+    "green": "The exact approved sentence passes with Haiku writing and Sonnet checking; a real second sentence still fails before a checker. Reader text remains byte-identical.",
+    "checks": {
+      "focused": 180,
+      "preflight": 19,
+      "bundle": 16,
+      "total": 215,
+      "typeScript": 0,
+      "eslint": 0,
+      "knip": 0,
+      "productionBuildAndPostbuild": 0
+    },
+    "neonReplayConnections": 0,
+    "paidModelCalls": 0
+  }
 }

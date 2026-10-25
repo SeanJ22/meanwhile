@@ -141,6 +141,42 @@ test("a writer grouping two sentences under one citation cannot buy a checker or
   assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
 });
 
+test("an approved measure sentence containing No. IL26-001 reaches the independent checker without a rewrite", async () => {
+  // One bounded production checker diagnostic retained this approved sentence.
+  // This is a synthetic source/transport fixture, not a production source replay.
+  const meaning = "If approved by voters, Initiative Measure No. IL26-001 would restore RCW 28A.605.005 as originally passed by the Legislature in the 2024 session.";
+  const text = `${source}\n${meaning}`;
+  const primary = { ...evidence, text, contentHash: `sha256-${translationHash(text)}` };
+  const proposed = { ...measure, whatItDoes: meaning, sourceHash: translationHash(text) };
+  const annotated = [{ field: "whatItDoes", text: meaning, quote: meaning }, ...sentences.slice(1)];
+  const requests: ModelRequest[] = [];
+  const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      return response(request, request.tools[0].name === "write_measure_translation"
+        ? measureDraft(proposed, annotated)
+        : { checked: annotated.map(({ field, text }) => ({ field, text, supported: true })) });
+    } });
+  assert.deepEqual(requests.map(request => request.model), [MODELS.haiku.model, MODELS.sonnet.model]);
+  assert.equal(record.measure.whatItDoes, meaning);
+  assert.equal(translationRecordIssue(record), null);
+});
+
+test("a numbered-measure abbreviation cannot hide a second sentence from independent checking", async () => {
+  const meaning = "Initiative Measure No. IL26-001 would restore the law. It would repeal the amendments.";
+  const text = `${source}\n${meaning}`;
+  const proposed = { ...measure, whatItDoes: meaning, sourceHash: translationHash(text) };
+  const requests: ModelRequest[] = [];
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(),
+    evidence: { ...evidence, text, contentHash: `sha256-${translationHash(text)}` }, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      assert.equal(request.tools[0].name, "write_measure_translation");
+      return response(request, measureDraft(proposed, [{ field: "whatItDoes", text: meaning, quote: meaning }, ...sentences.slice(1)]));
+    } }), /source passage/);
+  assert.deepEqual(requests.map(request => request.model), [MODELS.haiku.model, MODELS.sonnet.model]);
+});
+
 test("source replay accepts official HTML entities and PDF line breaks while rejecting invented passages", async () => {
   const text = source.replace("library services", "library\nservices").replace("adopts the levy", "adopts&nbsp;the levy");
   const primary = { ...evidence, text, contentHash: `sha256-${translationHash(text)}` };

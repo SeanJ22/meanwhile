@@ -80,6 +80,11 @@ const outputFields = (measure: MeasureRecord) => [
 
 export type TranslationDraft = Omit<MeasureTranslation, "checked"> | Omit<TextTranslation, "checked">;
 
+function hasSentenceBreak(text: string): boolean {
+  // A measure identifier such as "No. IL26-001" continues the same sentence.
+  return /[.!?]\s+[A-Z]/.test(text.replace(/\bNo\.(?=\s+[A-Z]+\d[\w-]*\b)/g, "No"));
+}
+
 /** The existing source, identity and sentence checks run before buying an independent check. */
 export function translationDraftIssue(row: TranslationDraft): string | null {
   if (!row || !["MEASURE", "BODY_CLASS", "BODY", "OFFICE", "AGENDA", "MINUTES", "COMMENT_RULES"].includes(row.kind) || !row.subjectId || row.id !== `translation:${row.subjectId}` ||
@@ -106,7 +111,7 @@ export function translationDraftIssue(row: TranslationDraft): string | null {
   for (const [field, value] of fieldsAndValues) {
     const sentences = row.sentences.filter(sentence => sentence.field === field);
     if (!sentences.length || sentences.map(sentence => sentence.text).join(" ") !== value ||
-        sentences.some(sentence => typeof sentence.text !== "string" || !sentence.text.trim() || /[.!?]\s+[A-Z]/.test(sentence.text) || !translationSourceContains(row.sourceText, sentence.quote))) {
+        sentences.some(sentence => typeof sentence.text !== "string" || !sentence.text.trim() || hasSentenceBreak(sentence.text) || !translationSourceContains(row.sourceText, sentence.quote))) {
       return "A translated sentence lacks a confirmed source passage or independent support.";
     }
   }

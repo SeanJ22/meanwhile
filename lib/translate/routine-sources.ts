@@ -19,6 +19,8 @@ import { contentHash } from "../control-plane/ids.ts";
 import type { VotingSourceDoor } from "../ballot/voting-source-types.ts";
 import { hubLinks, measureLabels, measureLinkNames, measureLinks, measureSearchQueries, pageNamesMeasure } from "./routine-measure-pages.ts";
 import type { MeasureFind } from "./routine-finds.ts";
+import { translationScope } from "./records.ts";
+import type { TranslationAttempt } from "./standing.ts";
 
 /** Pages followed per measure from the election office's own lists, hubs followed once for the whole state, and pages read from search. */
 const LINKS_PER_MEASURE = 3, HUBS_PER_STATE = 6, SEARCH_PAGES_PER_MEASURE = 3, DOOR_PAGES_PER_MEASURE = 4;
@@ -34,6 +36,7 @@ export async function loadRoutineMeasureSources(input: {
   readonly root: string;
   readonly state: string;
   readonly ballots: readonly BallotSet[];
+  readonly priorAttempts?: readonly TranslationAttempt[];
   readonly now: () => string;
   readonly open: (url: string) => Promise<Response>;
   /** Pages found earlier for measures with no readable official text, and searches that found nothing. */
@@ -44,6 +47,16 @@ export async function loadRoutineMeasureSources(input: {
   const urls = new Set<string>();
   const doorIds = new Set<string>();
   const blanks: MeasureBlank[] = [];
+  const sourceKey = (scope: string, subjectId: string, sourceHash: string, textHash: string) => JSON.stringify([scope, subjectId, sourceHash, textHash]);
+  const latest = new Map<string, TranslationAttempt>();
+  for (const attempt of input.priorAttempts ?? []) {
+    const at = Date.parse(attempt.at);
+    if (!Number.isFinite(at)) continue;
+    const key = sourceKey(attempt.scope, attempt.subjectId, attempt.sourceHash, attempt.sourceTextHash), prior = latest.get(key);
+    if (!prior || at > Date.parse(prior.at) || at === Date.parse(prior.at) && ["PUBLISHED", "REUSED"].includes(attempt.status)) latest.set(key, attempt);
+  }
+  const failedSources = new Set([...latest].filter(([, attempt]) => attempt.status === "HELD" &&
+    attempt.detail?.startsWith("A translated sentence lacks a confirmed source passage or independent support.")).map(([key]) => key));
   for (const ballot of input.ballots) for (const contest of ballot.contests.filter(row => row.type === "MEASURE")) {
     const measure = ballot.measures?.find(row => row.contestId === contest.id);
     const analysis = ballot.measureAnalyses?.analyses.find(row => row.contestId === contest.id);
@@ -139,13 +152,18 @@ export async function loadRoutineMeasureSources(input: {
 
   for (const url of urls) await acquire(url);
 
-  // A measure whose cited pages never name it has no readable official text. Its own page on the
-  // state or county election office's site is found, saved like any cited source, and the
-  // explainer is written from it. Every other measure and state is untouched.
+  // A hearing notice can name the measure without supplying its legal text.
+  // A failed source check keeps discovery open on the next pass. All acquired
+  // pages remain available to the existing writer/checker and reader records.
   const discovered = new Map<string, string[]>();
+  const failedSource = (blank: MeasureBlank, url: string): boolean => {
+    const evidence = captures.find(capture => capture.evidence.canonicalUrl === url)?.evidence;
+    return Boolean(evidence && failedSources.has(sourceKey(translationScope(blank.ocdId), blank.contestId,
+      (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, ""), evidence.contentHash.replace(/^sha256-/, ""))));
+  };
   const named = (blank: MeasureBlank): boolean => [...blank.cited, ...(blank.priorUrl ? [blank.priorUrl] : [])].some(url => {
     const text = pages.get(url);
-    return text !== undefined && (url === blank.priorUrl || url === blank.textUrl || pageNamesMeasure(text, blank.labels));
+    return text !== undefined && !failedSource(blank, url) && (url === blank.priorUrl || url === blank.textUrl || pageNamesMeasure(text, blank.labels));
   });
   // The same measure appears in several ballot styles; it is one blank.
   const distinct = new Map<string, MeasureBlank>();
@@ -169,7 +187,7 @@ export async function loadRoutineMeasureSources(input: {
       const text = await acquire(url);
       if (text === null || !pageNamesMeasure(text, blank.labels)) return false;
       discovered.set(blank.contestId, [...new Set([...(discovered.get(blank.contestId) ?? []), url])]);
-      return true;
+      return !failedSource(blank, url);
     };
     for (const blank of open) {
       const names = measureLinkNames(blank.labels, blank.title);
@@ -216,7 +234,7 @@ export async function loadRoutineMeasureSources(input: {
           if (!done) await input.finds?.save({ kind: "SEARCHED", contestId: blank.contestId, url: null, at: input.now() });
         }
       }
-      const url = discovered.get(blank.contestId)?.[0];
+      const url = discovered.get(blank.contestId)?.findLast(url => !failedSource(blank, url));
       if (url && !finds.some(row => row.kind === "FOUND" && row.contestId === blank.contestId && row.url === url)) {
         await input.finds?.save({ kind: "FOUND", contestId: blank.contestId, url, at: input.now() });
       }

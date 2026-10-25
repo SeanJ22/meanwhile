@@ -101,6 +101,55 @@ test("a measure whose cited page names it needs no discovery and opens nothing e
   assert.deepEqual(opened, [cited]);
 });
 
+const sourceHold = (text: string, detail = "A translated sentence lacks a confirmed source passage or independent support."): TranslationAttempt => ({
+  id: "previous-source-check", scope: `US:plain-english-translations:${stateOcd}`, subjectId: "co-amendment-84",
+  sourceHash: translationHash(text), sourceTextHash: translationHash(text), at: "2026-10-20T17:00:00.000Z",
+  status: "HELD", usage: [], versionId: null, detail,
+});
+
+test("a remembered hearing notice that failed checking does not stop the next pass from finding the measure text", async t => {
+  const root = await localVault(t), { repos, served } = await stateRepos(true), opened: string[] = [];
+  const fullTextUrl = "https://www.sos.state.co.us/pubs/elections/amendment-84-bill.html";
+  const notice = `<html><h1>Amendment 84</h1><p>A public hearing will discuss this measure.</p><a href="${fullTextUrl}">Amendment 84 bill language</a></html>`;
+  const finds = routineMeasureFinds(repos, "CO");
+  await finds.save({ kind: "FOUND", contestId: "co-amendment-84", url: pageUrl, at: sourceHold(notice).at });
+  const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], priorAttempts: [sourceHold(notice)], now: () => now,
+    open: opener(served({ [pageUrl]: notice, [fullTextUrl]: pageText }), opened), finds });
+  assert.ok(opened.includes(fullTextUrl), "the saved notice is not mistaken for a completed source hunt");
+  assert.deepEqual(result.discovered.get("co-amendment-84"), [pageUrl, fullTextUrl]);
+  assert.ok(result.captures.some(row => row.evidence.canonicalUrl === pageUrl && row.evidence.text === notice), "the notice remains available to the existing checks");
+  assert.ok(result.captures.some(row => row.evidence.canonicalUrl === fullTextUrl && row.evidence.text === pageText));
+  assert.ok((await finds.read()).some(row => row.kind === "FOUND" && row.url === fullTextUrl), "the recovered text is remembered");
+});
+
+test("a source check on a cited page keeps acquisition open without removing that page", async t => {
+  const root = await localVault(t), { repos, served } = await stateRepos(true), opened: string[] = [];
+  const notice = "<html><h1>Amendment 84</h1><p>Notice of a public hearing.</p></html>";
+  const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], priorAttempts: [sourceHold(notice)], now: () => now,
+    open: opener(served({ [cited]: notice }), opened), finds: routineMeasureFinds(repos, "CO") });
+  assert.ok(opened.includes(pageUrl));
+  assert.deepEqual(result.discovered.get("co-amendment-84"), [pageUrl]);
+  assert.ok(result.captures.some(row => row.evidence.canonicalUrl === cited && row.evidence.text === notice));
+});
+
+test("writer-format failures, a changed source, another jurisdiction and a later successful check do not reopen a completed hunt", async t => {
+  const failed = sourceHold(pageText);
+  const cases: readonly [string, readonly TranslationAttempt[]][] = [
+    ["writer format", [sourceHold(pageText, "Translation writer returned unsupported fields or source passages.")]],
+    ["changed source", [sourceHold("Earlier source text.")]],
+    ["other jurisdiction", [{ ...failed, scope: "US:plain-english-translations:ocd-division/country:us/state:oh" }]],
+    ["later published", [{ ...failed, id: "successful-check", at: now, status: "PUBLISHED", versionId: "published" }, failed]],
+    ["same-clock published", [{ ...failed, id: "successful-check", status: "PUBLISHED", versionId: "published" }, failed]],
+  ];
+  for (const [label, priorAttempts] of cases) await t.test(label, async t => {
+    const root = await localVault(t), { repos, served } = await stateRepos(true), opened: string[] = [];
+    const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], priorAttempts, now: () => now,
+      open: opener(served({ [cited]: pageText }), opened), finds: routineMeasureFinds(repos, "CO") });
+    assert.deepEqual(opened, [cited]);
+    assert.deepEqual([...result.discovered], []);
+  });
+});
+
 test("official search results are read; unofficial hosts are never opened; an empty search waits before the next one", async t => {
   const root = await localVault(t), { repos, served } = await stateRepos(false), opened: string[] = [], queries: string[] = [];
   const finds = routineMeasureFinds(repos, "CO");

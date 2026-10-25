@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T20:47:00Z
+heartbeat: 2026-10-25T21:02:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1086,4 +1086,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 4:48 PM EDT: reversal (relayed verbatim)
 "River, ship 9bf9801a5 as release 120. Don't rebuild from DB-03's 2cce7754c. That prompt was only to save build time, and your version is already built with my never-re-read rule. Leave 2cce7754c unfolded, so one portrait path ships. Tell me when /api/build shows 120 live, then the portraits and member offices GB per hour for the two full hours after."
 - DB-03 Admin's gate is stopped; 9bf9801a5 is gating alone on 456454204. Admin follows.
+
+### 5 PM EDT status
+- release 120 candidate, river-portraits 9bf9801a5: gating alone on ea117a0bb, in the test step.
+- RB-A4 catch-up (release 119) on the runner: cp_vital_signs shows the runner on f6f68db6b from the 3 PM row (written 4:53 PM). The last reload before that was DC at 4:35 PM, under the old rotation, and the catch-up cursor isn't written yet. Its first pass on the new code should reload Oregon and the rest; checking at 6 PM. HOST_COUNTY rows: 14,648.
+- DB-03 posted 9c2b0c58a ("release118 integration": 2cce7754c merged with river be0b41a4f). Not folded: Sean said to leave 2cce7754c unfolded, and DB-03 folds only through 11072d2ed.
+- DB-03 readback saving confirmed: readback read 0 MB in the 3 PM and 4 PM EDT hours, both full hours after release 118, against a 1,280 MB/h average before (5 AM to 1 PM). About 1.3 GB/h saved.
+- Neon, both databases, 4 PM EDT hour: 8,740 MB total. Portraits 1,666, member offices 1,402. That's before release 120; these are its before numbers.
 

@@ -1,5 +1,5 @@
 import type { LiveFact, LiveAuditResult } from "../control-plane/workers/live-audit.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { createHash } from "node:crypto";
 import { publishOwnerChoice, readOwnerChoicesFromEdge } from "./owner-choices-edge.ts";
@@ -146,7 +146,7 @@ export async function readerRecordsWithOwnerChoices<T extends { readonly id: str
 export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, input: {
   readonly id: number; readonly choice: FlagChoice; readonly values?: Readonly<Record<string, unknown>>; readonly sourceUrl?: string | null;
 }, now: string, purge?: ReaderCachePurger): Promise<{ readonly factId: number | null; readonly entityId: string | null; readonly readerId: string | null; readonly family: string | null; readonly detail: string }> {
-  const outcome = await db.transaction(async query => {
+  const { outcome, scope } = await db.transaction(async query => {
     const [flag] = await query(`SELECT o.*,f.entity_id,f.field,f.value,f.status FROM owner_flag o
       LEFT JOIN fact f ON f.id=o.fact_id WHERE o.id=$1 FOR UPDATE OF o`, [input.id]);
     if (!flag || flag.resolved) throw new Error("This flag has already been answered. Refresh the list.");
@@ -188,9 +188,11 @@ export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, i
         values:ownerValues ?? {},sourceUrl:input.sourceUrl ?? null});
     await query(`UPDATE owner_flag SET resolved=$2,resolved_at=$3,owner_values=$4::jsonb,owner_source_url=$5 WHERE id=$1`,
     [input.id,input.choice,now,ownerValues ? JSON.stringify(ownerValues) : null,input.sourceUrl ?? null]);
-    return { factId: flag.fact_id === null ? null : Number(flag.fact_id),entityId: flag.entity_id as string | null, readerId: flag.reader_id as string | null, family: flag.reader_family as string | null,
-      detail: String(flag.reason ?? "A published value needs investigation.") };
+    const scope = flag.entity_id ? await readerCacheScopeForEntity(query,String(flag.entity_id)) : {national:true};
+    if (flag.fact_id !== null && (input.choice === "REMOVE" || input.choice === "TYPED_VALUE")) await enqueueReaderPlaces(scope,query);
+    return { outcome: { factId: flag.fact_id === null ? null : Number(flag.fact_id),entityId: flag.entity_id as string | null, readerId: flag.reader_id as string | null, family: flag.reader_family as string | null,
+      detail: String(flag.reason ?? "A published value needs investigation.") }, scope };
   });
-  await invalidateReaderCache(outcome.entityId ? await readerCacheScopeForEntity(db.query,outcome.entityId) : {national:true},purge,db.query);
+  await invalidateReaderCache(scope,purge,null);
   return outcome;
 }

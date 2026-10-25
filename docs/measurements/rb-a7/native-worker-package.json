@@ -250,5 +250,11 @@
     "geographyRerun": false,
     "capacityRerun": false,
     "scope": "Only local native packaging and cold worker/bootstrap imports on the current codec graph. No handler invocation, network, production/copy data read, database/blob write or deployment."
+  },
+  "platformPlan": {
+    "teamPlan": "Pro",
+    "source": "Read-only Netlify team lookup",
+    "settingsChanged": false,
+    "deployedWorkerMemoryVerified": false
   }
 }

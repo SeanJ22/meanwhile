@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4) since 11:12 AM EDT, but its boards have not reached reader pages (see 'RB-A4 is live but readers don't see it'). GATING: DB-03 inventory readback, River fold 235c6f837, alone on river-next be0b41a4f (third run: 2nd run failed dead-code only; the replaced exports are deleted). NEXT: RB-A4 catch-up b2bbdc183 (stream/rb-a4), then DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, VS-05 when it posts, the rest as they arrive. HELD: RB-A10 7b5eacd03 (place map 0 rows). FOR SEAN: governing bodies need national place work in more states (decision below).
+build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4). SHIPPING: release 118 (DB-03 inventory readback, River fold 235c6f837, gates 9 of 9) PR #830, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 catch-up b2bbdc183 alone (river-next 456454204). BUILDING: GB-01 Census governing bodies (stream/gb-01). NEXT after GB-01: DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820, VS-05 when it posts. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T17:25:00Z
+heartbeat: 2026-10-25T17:40:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

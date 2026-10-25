@@ -4619,5 +4619,18 @@
     "gates": "pass (9 of 9, 9,937 tests)",
     "at": "2026-10-25T14:39:40Z",
     "live": "release 117 main 03e0526b6 at 2026-10-25T15:12:37Z"
+  },
+  {
+    "lane": "river-db03-readback",
+    "steps": [
+      "DB-03 inventory readback"
+    ],
+    "ready_sha": "235c6f837",
+    "source_ready": "f2d76ac1f (stream/db-03, cherry-picked)",
+    "merge_sha": "be0b41a4f",
+    "river_sha": "be0b41a4f",
+    "tested_sha": "be0b41a4f",
+    "gates": "pass (9 of 9, 9,910 tests)",
+    "at": "2026-10-25T17:38:40Z"
   }
 ]

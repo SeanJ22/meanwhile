@@ -1,4 +1,6 @@
 -- One fact-table hook records stock and publications through each door lane.
+CREATE INDEX count_hour_publication_start ON count_hour(state) WHERE step='publication start';
+--> statement-breakpoint
 CREATE OR REPLACE FUNCTION count_fact_write() RETURNS trigger LANGUAGE plpgsql AS $$
 DECLARE before_row record; after_row record; publication_lane text;
 BEGIN
@@ -21,9 +23,10 @@ BEGIN
   IF TG_OP <> 'INSERT' THEN PERFORM count_hour_add(before_row.state,before_row.family,before_row.stage,-1,0,1); END IF;
   IF TG_OP <> 'DELETE' THEN PERFORM count_hour_add(after_row.state,after_row.family,after_row.stage,1,1,0); END IF;
   IF TG_OP='INSERT' AND NEW.status='live' AND publication_lane IN ('official','checked') THEN
+    INSERT INTO count_hour(state,hour,step,n)
+      SELECT 'US',statement_timestamp(),'publication start',0
+      WHERE NOT EXISTS(SELECT 1 FROM count_hour WHERE state='US' AND step='publication start');
     PERFORM count_hour_add(after_row.state,after_row.family,'publication:'||publication_lane,1,1,0);
   END IF;
   RETURN coalesce(NEW,OLD);
 END $$;
---> statement-breakpoint
-INSERT INTO count_hour(state,hour,step,n) VALUES('US',statement_timestamp(),'publication start',0);

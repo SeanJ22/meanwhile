@@ -459,3 +459,17 @@ test("the shared counter records a hunter on an official page through the checke
       [['publication:checked',1],['publication:official',1]]);
   } finally {await db.pg.close();}
 });
+
+test("lane counting begins with an actual publication rather than the earlier schema rollout", async () => {
+  const db=await seeded(true);
+  try {
+    assert.deepEqual(await db.query("SELECT hour FROM count_hour WHERE step='publication start'"),[]);
+    const [before]=await db.query('SELECT statement_timestamp() AS at');
+    await door(db,input(),clocks,now,{purge});
+    const start=await db.query("SELECT hour FROM count_hour WHERE step='publication start'");
+    assert.equal(start.length,1);
+    assert(new Date(start[0]!.hour as string)>=new Date(before!.at as string));
+    await door(db,input({field:'office_fax'}),clocks,now,{purge});
+    assert.deepEqual(await db.query("SELECT hour FROM count_hour WHERE step='publication start'"),start);
+  } finally {await db.pg.close();}
+});

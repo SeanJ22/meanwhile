@@ -13,8 +13,10 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
   const [family,setFamily]=useState("");
   const [stage,setStage]=useState("fact:live");
   const hour=data.hours.find(h=>h.from===selectedHour)??data.hours[0];
+  const publication=stage.startsWith('publication:');
+  const measured=hour?.counts?.filter(c=>publication?c.stage.startsWith('publication:'):c.stage===stage);
   const families=[...new Set(data.hours.flatMap(h=>h.counts?.filter(c=>c.stage===stage).map(c=>c.family)??[]))].sort();
-  const stages=[...new Set(["fact:live",...data.hours.flatMap(h=>h.counts?.map(c=>c.stage)??[])])].sort();
+  const stages=[...new Set(["fact:live","publication:official","publication:checked",...data.hours.flatMap(h=>h.counts?.map(c=>c.stage)??[])])].sort();
   return <Card title="Hourly counts">
     <p className={s.meta}>{data.status}</p>
     <div className={s.row}>
@@ -31,7 +33,8 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
         {stages.map(step=><option key={step} value={step}>{words(step)}</option>)}
       </select></label>
     </div>
-    {hour?.counts?.some(c=>c.incoming===null)&&<p className={s.meta}>Hourly movement will show after the first full hour of counting.</p>}
+    {publication&&measured?.length===0&&<p className={s.meta}>Lane counts have not started yet.</p>}
+    {measured?.some(c=>c.incoming===null)&&<p className={s.meta}>Hourly movement will show after the first full hour of counting.</p>}
     {hour&&<p className={s.meta}>Waiting times checked {formatEastern(hour.measuredAt)}.</p>}
     <div className={s.tableWrap}><table className={s.table}>
       <thead><tr><th scope="col">State</th><th scope="col">Now</th><th scope="col">At end of hour</th><th scope="col">In</th><th scope="col">Moved on</th><th scope="col">Updated</th><th scope="col">Oldest work waiting</th></tr></thead>
@@ -39,7 +42,7 @@ export function HourlyCounts({data}:{readonly data:HourlyCountTableData}) {
         const rows=hour?.counts?.filter(c=>c.state===code&&c.stage===stage&&(!family||c.family===family));
         const waiting=hour?.waiting?.filter(w=>w.state===code&&w.count>0);
         const oldest=waiting?.filter(w=>w.oldestAt).sort((a,b)=>a.oldestAt!.localeCompare(b.oldestAt!))[0];
-        const value=(field:"total"|"closedTotal"|"incoming"|"outgoing"|"changed")=>rows===undefined||hour?.counts?.some(c=>c[field]===null)?"—":n(rows.reduce((sum,c)=>sum+c[field]!,0));
+        const value=(field:"total"|"closedTotal"|"incoming"|"outgoing"|"changed")=>rows===undefined||(publication&&!measured?.length)||measured?.some(c=>c[field]===null)?"—":n(rows.reduce((sum,c)=>sum+c[field]!,0));
         return <tr key={code}><th scope="row">{code}</th><td>{value("total")}</td><td>{value("closedTotal")}</td><td>{value("incoming")}</td><td>{value("outgoing")}</td><td>{value("changed")}</td>
           <td>{waiting===undefined?"—":oldest?`${formatEastern(oldest.oldestAt!)} · ${n(Math.max(0,Math.floor((Date.parse(data.at)-Date.parse(oldest.oldestAt!))/60_000)))} minutes`:waiting.length?"—":"None"}</td></tr>;
       })}</tbody>

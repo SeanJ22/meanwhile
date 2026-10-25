@@ -4,8 +4,9 @@ import { readMeetingBodies, readReaderEdgeMeetings, type ReaderMeetingsContext }
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { snapshotCounts } from "../lib/meetings/snapshot.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, placePageCacheIds } from "../lib/reader/place.ts";
-import { composePlaceRow } from "../lib/reader/place-decode.ts";
-import type { Query } from "../lib/facts/publish.ts";
+import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
+import { unpackReadyPlace } from "../lib/reader/place-ready.ts";
+import type { FactDb, Query } from "../lib/facts/publish.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
@@ -123,32 +124,81 @@ test("state selection reads individual body contexts and direct pages select sep
       assert.equal(zipReads, 1);
       assert.deepEqual(selected.meetings.map(row => row.id).sort(), (includeHistory ? [past.id, current.id] : [current.id]).sort());
     }
-    const [stored] = await query("SELECT body ? 'snapshot' AS direct_current,history_body ? 'snapshot' AS direct_history,context ? 'current' AS raw_current FROM place_page WHERE place_id=$1", [FIRST]);
-    assert.deepEqual(stored, { direct_current: true, direct_history: true, raw_current: true });
+    const [stored] = await query("SELECT body->>'encoding' AS direct_current,history_body->>'encoding' AS direct_history,context ? 'current' AS raw_current FROM place_page WHERE place_id=$1", [FIRST]);
+    assert.deepEqual(stored, { direct_current: "gzip-json-v1", direct_history: "gzip-json-v1", raw_current: true });
   } finally { await pg.close(); }
 });
 
-test("a worker that omits agendas reads the compact historical body page and keeps permanent past meetings", async () => {
+test("the real worker stores agenda-free ready body pages and preserves full current and permanent history agendas in context", async t => {
+  t.mock.method(globalThis, "fetch", async () => { throw new Error("The body-page fixture must stay local"); });
+  const { pg, publish } = await migratedReaderDb();
+  const query: Query = async (text, params = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
+  const db: FactDb = { transaction: run => pg.transaction(tx => run(async (text, params = []) =>
+    (await tx.query<Record<string, unknown>>(text, [...params])).rows)) };
   const old = meeting(FIRST, "old", "2020-01-01T12:00:00Z"), soon = meeting(FIRST, "soon", "2026-10-27T12:00:00Z");
-  const row = bodyRow(FIRST, [old, soon, meeting(FIRST, "far-future", "2028-01-01T12:00:00Z")]).row;
-  const page = await composePlaceRow({ state: "AZ", divisionIds: [], bodyIds: [FIRST], includeHistory: true }, row);
-  let pageReads = 0;
-  const query: Query = async (text, params = []) => {
-    if (text.startsWith("SELECT id FROM entity")) return [{ id: FIRST }];
-    assert.equal(text, READY_PLACE_SQL);
-    assert.deepEqual(params, [FIRST, true]);
-    pageReads++;
-    return [{ page, version: 1 }];
-  };
-  const iterator = readMeetingBodies({ states: ["AZ"], includeAgenda: false, window: "HELD", now: AT, settings: meetingSettingsFromValues(), query });
-  const body = await iterator.next();
-  if(body.done)throw new Error("The held body was not listed");
-  assert.equal(pageReads, 0);
-  const loaded = await body.value.load();
-  assert.equal(pageReads, 1);
-  assert.deepEqual(loaded?.snapshot.meetings.map(meeting => meeting.id), [old.id, soon.id]);
-  assert.deepEqual(loaded?.snapshot.agendaDocuments, []);
-  await iterator.return(undefined);
+  const future = meeting(FIRST, "far-future", "2028-01-01T12:00:00Z");
+  const currentDocument = { id: "document:current", meetingId: soon.id, text: "CURRENT SOURCE AGENDA: public hearing and budget consideration.\n".repeat(300) };
+  const pastDocument = { id: "document:past", meetingId: old.id, text: "PERMANENT SOURCE AGENDA: land use hearing and recorded decisions.\n".repeat(300) };
+  try {
+    await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'body','Council','AZ',$1)", [AZ, FIRST]);
+    for (const [id, meetings, agendaDocuments, history] of [
+      ["current", [soon, future], [currentDocument], false], ["past", [old], [pastDocument], true],
+    ] as const) {
+      await publish({ id, recordClass: "MEETING", scope: `source:fixture:body:${encodeURIComponent(FIRST)}${history ? ":history" : ""}`, sourceId: "fixture", at: AT,
+        value: { formatVersion: 1, generatedAt: AT, meetings, agendaDocuments, sources: [], counts: snapshotCounts(meetings, 0) } });
+    }
+    await query("INSERT INTO rebuild_queue(place_id) VALUES($1)", [FIRST]);
+    assert.deepEqual(await rebuildPlacePages({ db, limit: 1, concurrency: 1, purge: async () => ({ purged: true }) }),
+      { rebuilt: 1, failed: 0, remaining: 0 });
+    const [stored] = await query("SELECT body,history_body,context FROM place_page WHERE place_id=$1", [FIRST]);
+    for (const ready of [stored!.body, stored!.history_body]) assert.equal((ready as { encoding: string }).encoding, "gzip-json-v1");
+    const readyWire = JSON.stringify([unpackReadyPlace(stored!.body), unpackReadyPlace(stored!.history_body)]);
+    assert.equal(readyWire.includes("SOURCE AGENDA"), false, "neither ready encoding stores source agenda text");
+    const context = stored!.context as { current: { meeting_rows: { payload: { agendaDocuments: unknown[] } }[] }; history: { meeting_rows: { payload: { agendaDocuments: unknown[] } }[] } };
+    assert.deepEqual(context.current.meeting_rows.flatMap(row => row.payload.agendaDocuments), [currentDocument]);
+    assert.deepEqual(context.history.meeting_rows.flatMap(row => row.payload.agendaDocuments).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
+      [currentDocument, pastDocument].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))));
+    let pageReads = 0, compactWire = "", uncompressedBytes = 0;
+    const compactQuery: Query = async (text, params = []) => {
+      if (!text.startsWith("SELECT id FROM entity")) {
+        assert.equal(text, READY_PLACE_SQL);
+        assert.deepEqual(params, [FIRST, true]);
+        pageReads++;
+      }
+      const rows = await query(text, params);
+      if (text === READY_PLACE_SQL) {
+        compactWire = JSON.stringify(rows);
+        uncompressedBytes = Buffer.byteLength(JSON.stringify(rows.map(row => ({ ...row, page: unpackReadyPlace(row.page) }))));
+      }
+      return rows;
+    };
+    const iterator = readMeetingBodies({ states: ["AZ"], includeAgenda: false, window: "HELD", now: AT, settings: meetingSettingsFromValues(), query: compactQuery });
+    const body = await iterator.next();
+    if (body.done) throw new Error("The held body was not listed");
+    assert.equal(pageReads, 0);
+    const loaded = await body.value.load();
+    assert.equal(pageReads, 1);
+    assert.deepEqual(loaded?.snapshot.meetings.map(row => row.id), [old.id, soon.id]);
+    assert.deepEqual(loaded?.snapshot.agendaDocuments, []);
+    assert.equal(compactWire.includes("SOURCE AGENDA"), false, "the actual compact SELECT transfers no agenda text");
+    await iterator.return(undefined);
+    const selected = { state: "AZ", placeId: FIRST, divisionIds: [], bodyIds: [FIRST], includeHistory: true };
+    const defaultRead = await readPlacePackage(selected, compactQuery);
+    assert.deepEqual(defaultRead.snapshot.agendaDocuments, [], "omitting the agenda flag retains the existing compact default");
+    let agendaWire = "";
+    const opened = await readPlacePackage({ ...selected, includeAgenda: true }, async (text, params) => {
+      assert.equal(text, PLACE_PAGES_SQL);
+      const rows = await query(text, params);
+      agendaWire = JSON.stringify(rows);
+      return rows;
+    });
+    assert.deepEqual(opened.meetings.map(row => row.id), [old.id, soon.id, future.id]);
+    assert.deepEqual([...opened.snapshot.agendaDocuments].sort((a, b) => a.id.localeCompare(b.id)), [currentDocument, pastDocument]);
+    const compactBytes = Buffer.byteLength(compactWire), agendaBytes = Buffer.byteLength(agendaWire);
+    assert.ok(compactBytes < uncompressedBytes / 3, `gzip transferred ${compactBytes} bytes versus ${uncompressedBytes} as complete JSON`);
+    assert.ok(compactBytes < agendaBytes / 3, `the compact read was ${compactBytes} bytes versus ${agendaBytes} with source agendas`);
+    t.diagnostic(JSON.stringify({ compactBytes, uncompressedBytes, agendaBytes, sourceAgendaBytes: Buffer.byteLength(currentDocument.text + pastDocument.text) }));
+  } finally { await pg.close(); }
 });
 
 test("an explicit state resolves a short body alias for current and held agendas without opening a phantom national page", async () => {

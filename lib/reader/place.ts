@@ -7,6 +7,7 @@ import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { mergePlaceRows } from "./place-compose.ts";
+import { unpackReadyPlace } from "./place-ready.ts";
 import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
@@ -86,7 +87,7 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
     && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page)throw new Error("PLACE_PAGE_NOT_BUILT");
-    const place=saved.page as PlacePackage;
+    const place=unpackReadyPlace(saved.page);
     pageIds.set(place,[input.placeId]);
     return place;
   }

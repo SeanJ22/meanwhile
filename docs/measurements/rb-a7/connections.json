@@ -339,5 +339,44 @@
       }
     ],
     "primitiveArrayOrderPreserved": true
+  },
+  "workflowMeasuredBeforeReadyEncoding": true,
+  "additionalReadyTransportFormat": {
+    "observedAt": "2026-10-25T06:08:23.989Z",
+    "encoding": "gzip-json-v1",
+    "evidence": "ready-encoding.json",
+    "scope": "Existing local captured place packages only; exact serialized roundtrip, IDs and counts. Earlier connected writer/query timings and physical JSON sizes remain measurements before this encoding was added.",
+    "neonQueries": 0,
+    "databaseConnections": 0,
+    "databaseMutations": 0,
+    "writerWorkflowRerun": false,
+    "results": [
+      {
+        "zip": "85201",
+        "plainJsonBytes": 930537,
+        "encodedEnvelopeJsonBytes": 62173,
+        "serializedRoundTripExact": true,
+        "idSetsPreserved": true,
+        "placePackageCounts": {
+          "bodyIds": 36,
+          "heldMeetingIds": 97,
+          "factRosterMemberIds": 1,
+          "registryRosterMemberIds": 0
+        }
+      },
+      {
+        "zip": "85701",
+        "plainJsonBytes": 2192516,
+        "encodedEnvelopeJsonBytes": 205845,
+        "serializedRoundTripExact": true,
+        "idSetsPreserved": true,
+        "placePackageCounts": {
+          "bodyIds": 142,
+          "heldMeetingIds": 279,
+          "factRosterMemberIds": 47,
+          "registryRosterMemberIds": 39
+        }
+      }
+    ]
   }
 }

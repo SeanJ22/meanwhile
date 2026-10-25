@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-25T05:22:07.473Z",
+  "capturedAt": "2026-10-25T06:10:33.904Z",
   "tool": "@netlify/zip-it-and-ship-it",
   "toolVersion": "16.5.1",
   "function": "rebuild-place-pages",
@@ -12,12 +12,13 @@
   "schedule": "* * * * *",
   "configuredMemoryMiB": 2048,
   "configuredConcurrency": 4,
-  "zipBytes": 4927010,
+  "zipBytes": 4927103,
   "unpackedFiles": 315,
-  "unpackedBytes": 19228319,
+  "unpackedBytes": 19228575,
   "includedGeographyFiles": 103,
   "largeStateGeometryFiles": [],
   "sharedRuntimeSubjectSeederIncluded": true,
+  "readyEncodingCodecIncluded": true,
   "coldWorkerImport": {
     "imported": true,
     "config": {
@@ -25,30 +26,32 @@
       "background": true,
       "memory": 2048
     },
-    "elapsedMs": 554.867171,
-    "networkCalls": 0,
-    "memory": {
-      "rssBeforeBytes": 29360128,
-      "rssAfterBytes": 219844608,
-      "peakRssBytes": 274264064,
-      "heapUsedBytes": 31614016,
-      "scope": "Local cold module import only"
-    },
-    "handlerInvoked": false
-  },
-  "coldBootstrapImport": {
-    "imported": true,
-    "elapsedMs": 47.14462300000001,
+    "elapsedMs": 515.960092,
     "networkCalls": 0,
     "memory": {
       "rssBeforeBytes": 29229056,
-      "rssAfterBytes": 43909120,
-      "peakRssBytes": 43909120,
-      "heapUsedBytes": 9804456,
+      "rssAfterBytes": 220307456,
+      "peakRssBytes": 274759680,
+      "heapUsedBytes": 31771752,
+      "scope": "Local cold module import only"
+    },
+    "handlerInvoked": false,
+    "measuredAt": "2026-10-25T06:09:49.225Z"
+  },
+  "coldBootstrapImport": {
+    "imported": true,
+    "elapsedMs": 46.671369,
+    "networkCalls": 0,
+    "memory": {
+      "rssBeforeBytes": 29360128,
+      "rssAfterBytes": 43646976,
+      "peakRssBytes": 43646976,
+      "heapUsedBytes": 9785584,
       "scope": "Local cold module import only"
     },
     "awsRuntimeStub": "streamifyResponse only; handler not invoked",
-    "handlerInvoked": false
+    "handlerInvoked": false,
+    "measuredAt": "2026-10-25T06:09:48.765Z"
   },
   "packagedGeography": {
     "success": true,
@@ -85,11 +88,14 @@
       "scope": "Local packaged import and NY/AZ geography only; no database rebuild workload"
     },
     "handlerInvoked": false,
-    "inspection": "Packaged worker copy with a local test-only export of its existing placeBuildInput; packaged worker itself unmodified"
+    "inspection": "Packaged worker copy with a local test-only export of its existing placeBuildInput; packaged worker itself unmodified",
+    "measuredAt": "2026-10-25T05:20:49.148Z",
+    "retainedFromPriorPackage": true,
+    "scope": "Earlier packaged NY/AZ geography sample before the ready encoding change. Retained with its original time; no CDN or other network request was made for the current package refresh."
   },
   "fourBodyCapacity": {
     "observedAt": "2026-10-25T05:20:48.691Z",
-    "scope": "Four concurrent packaged buildPageBody body-only jobs, real production readonly HTTP; all completed results retained through measurement. No deployed handler, queue, page-store or production mutations.",
+    "scope": "Earlier four-body readonly source-build sample before the ready encoding change. It did not measure compression or storing encoded ready columns. Retained with its original observedAt; no source/database jobs were rerun for the current package refresh.",
     "role": "readonly",
     "productionWrites": 0,
     "configuredConcurrency": 4,
@@ -232,7 +238,17 @@
     "sampleSpareUnderConfiguredBudgetBytes": 1723764736,
     "sampleFitsRequestedMargin": true,
     "sampleWorkersAtConfiguredMargin": 4,
-    "configurationStatus": "This branch declares 2048 MiB in the function config and extracted native function metadata. This worker is not deployed. The local four-body sample fits the requested spare margin under that budget; no deployed or all-body capacity claim is made."
+    "configurationStatus": "This branch declares 2048 MiB in the function config and extracted native function metadata. This worker is not deployed. The local four-body sample fits the requested spare margin under that budget; no deployed or all-body capacity claim is made.",
+    "retainedFromPriorPackage": true,
+    "currentPackageCapacityRerun": false
   },
-  "scope": "Local native packaging, cold imports and packaged geography. Geometry reads only the public production CDN into a temporary local artifact store. Four selected large body builds use production SQL through role readonly and do not call the deployed handler, queue, page store or any mutation. No production database/blob writes or deployment."
+  "currentRefresh": {
+    "networkCalls": 0,
+    "neonQueries": 0,
+    "databaseConnections": 0,
+    "databaseMutations": 0,
+    "geographyRerun": false,
+    "capacityRerun": false,
+    "scope": "Only local native packaging and cold worker/bootstrap imports on the current codec graph. No handler invocation, network, production/copy data read, database/blob write or deployment."
+  }
 }

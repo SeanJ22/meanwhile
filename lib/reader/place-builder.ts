@@ -10,6 +10,7 @@ import { readerFactDb } from "../facts/db.ts";
 import { randomUUID } from "node:crypto";
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
+import { packReadyPlace } from "./place-ready.ts";
 import type { PlacePackage } from "./place-types.ts";
 import { lookupZcta } from "../geo/zcta.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
@@ -519,7 +520,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
             VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
             ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
               body=excluded.body,history_body=excluded.history_body,context=excluded.context RETURNING version`,
-          [id,JSON.stringify(readyCurrent),JSON.stringify(readyHistory ?? {}),JSON.stringify(context)]);
+          [id,JSON.stringify(packReadyPlace(readyCurrent)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
           const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
             !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
           const dependencies=new Set<string>([id,...rows.flatMap(row=>[

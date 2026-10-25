@@ -1,4 +1,5 @@
 import { buildPageBody } from "../../lib/reader/place-builder.ts";
+import { packReadyPlace } from "../../lib/reader/place-ready.ts";
 import type { Query } from "../../lib/facts/publish.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
@@ -23,7 +24,7 @@ export async function seedPlacePages(query: Query, input: PlaceInput): Promise<v
     const { readyCurrent, readyHistory, ...context } = await buildPageBody(id, kind, state, query);
     await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
       ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,body=excluded.body,
-        history_body=excluded.history_body,context=excluded.context`, [id, JSON.stringify(readyCurrent), JSON.stringify(readyHistory ?? {}),
+        history_body=excluded.history_body,context=excluded.context`, [id, JSON.stringify(packReadyPlace(readyCurrent)), JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),
       JSON.stringify(id.startsWith("zip:") ? { formatVersion: context.formatVersion } : context)]);
   }
 }

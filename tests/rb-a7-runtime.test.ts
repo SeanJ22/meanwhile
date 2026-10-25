@@ -5,6 +5,7 @@ import { preparePlacePages, prepareProductionPlacePages, seedZipPagePlaces, seed
 import { config } from "../netlify/functions/rebuild-place-pages.mts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { buildPageBody,PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
+import { unpackReadyPlace } from "../lib/reader/place-ready.ts";
 import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -185,7 +186,8 @@ test("a ZIP worker stores only its ready current page and retains the serving de
     const [page]=await db.query('SELECT body,history_body,context FROM place_page WHERE place_id=$1',[zip]);
     assert.deepEqual(page!.history_body,{});
     assert.deepEqual(page!.context,{formatVersion:1});
-    assert.equal((page!.body as {bodies:unknown[]}).bodies.length,1);
+    assert.equal((page!.body as {encoding:string}).encoding,'gzip-json-v1');
+    assert.equal(unpackReadyPlace(page!.body).bodies.length,1);
     const dependencies=await db.query('SELECT entity_id FROM place_page_dependency WHERE page_id=$1 ORDER BY entity_id',[zip]);
     assert.deepEqual(dependencies.map(row=>row.entity_id),[zip,city,body,fringe].sort());
   }finally{await db.pg.close();}

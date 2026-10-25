@@ -1,0 +1,81 @@
+{
+  "observedAt": "2026-10-25T06:08:23.989Z",
+  "scope": "Lossless gzip-ready JSON transport verified only against existing local place-package captures. Full serialized roundtrip and identity/count preservation. This does not repeat the earlier writer/database workflows, measure live API transfer, or prove nationwide page parity.",
+  "networkAttempts": 0,
+  "neonQueries": 0,
+  "databaseConnections": 0,
+  "databaseMutations": 0,
+  "newDataCopies": 0,
+  "writerWorkflowRerun": false,
+  "countsScope": "Held place-package bodies, meetings and roster members; excludes the independent state endpoint and public API display/window filtering.",
+  "results": [
+    {
+      "zip": "85201",
+      "captureObservedAt": "2026-10-25T03:15:50.599Z",
+      "source": "Existing local aggregate.expected capture; no new data or replay",
+      "shapeAdjustment": "Only snapshot.agendaDocuments, each bodySnapshot.agendaDocuments and agendaDocumentLinks are emptied to match the default no-agenda place response",
+      "removedAgendaDocumentEntries": 80,
+      "encoding": "gzip-json-v1",
+      "plainJsonBytes": 930537,
+      "encodedEnvelopeJsonBytes": 62173,
+      "encodedFractionOfPlain": 0.06681410841266924,
+      "referenceSourceRow": {
+        "jsonBytes": 653157,
+        "includeAgenda": true,
+        "scope": "Approximate comparison to the previously captured source-query row. That row includes agendas; this is not a new no-agenda source query or a live transfer measurement."
+      },
+      "packElapsedMs": 11.190598999999992,
+      "unpackElapsedMs": 4.068561000000017,
+      "serializedRoundTripExact": true,
+      "serializedSha256": "78a6ecb4abc766a62fdeeb24cd71733f9c65a5c94a3a08b992aec1508cfd5036",
+      "decodedSerializedSha256": "78a6ecb4abc766a62fdeeb24cd71733f9c65a5c94a3a08b992aec1508cfd5036",
+      "idSetsPreserved": true,
+      "placePackageCounts": {
+        "bodyIds": 36,
+        "heldMeetingIds": 97,
+        "factRosterMemberIds": 1,
+        "registryRosterMemberIds": 0
+      },
+      "idDigests": {
+        "bodyIds": "2daa4cf5ba2e47e236fcc181bba44a8fe5041ea13b628bf300b6f7d4d2655e95",
+        "heldMeetingIds": "c151e7e1fe19af3976187c374bcac26b08fd7f398d11454f522d01d6892c92fc",
+        "factRosterMemberIds": "a9cb6e5ac1e8884a8aca58b1b68f5ad022d6f5659ecd828bbac75008e47c4bb6",
+        "registryRosterMemberIds": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    },
+    {
+      "zip": "85701",
+      "captureObservedAt": "2026-10-25T03:15:59.567Z",
+      "source": "Existing local aggregate.expected capture; no new data or replay",
+      "shapeAdjustment": "Only snapshot.agendaDocuments, each bodySnapshot.agendaDocuments and agendaDocumentLinks are emptied to match the default no-agenda place response",
+      "removedAgendaDocumentEntries": 2268,
+      "encoding": "gzip-json-v1",
+      "plainJsonBytes": 2192516,
+      "encodedEnvelopeJsonBytes": 205845,
+      "encodedFractionOfPlain": 0.09388528977667666,
+      "referenceSourceRow": {
+        "jsonBytes": 3451235,
+        "includeAgenda": true,
+        "scope": "Approximate comparison to the previously captured source-query row. That row includes agendas; this is not a new no-agenda source query or a live transfer measurement."
+      },
+      "packElapsedMs": 28.855263999999977,
+      "unpackElapsedMs": 10.280738999999983,
+      "serializedRoundTripExact": true,
+      "serializedSha256": "082b9d31438ecaf1c259325da2e8ffbc887dd3bac8bf536dcc3b2a50c90047dd",
+      "decodedSerializedSha256": "082b9d31438ecaf1c259325da2e8ffbc887dd3bac8bf536dcc3b2a50c90047dd",
+      "idSetsPreserved": true,
+      "placePackageCounts": {
+        "bodyIds": 142,
+        "heldMeetingIds": 279,
+        "factRosterMemberIds": 47,
+        "registryRosterMemberIds": 39
+      },
+      "idDigests": {
+        "bodyIds": "cf435c88f03040834c67d76c46a6b569aaa15c6ee4d66ab0ab0e9490d53547bb",
+        "heldMeetingIds": "94fc8767d9e85fddb16c849d9f2b2aaa25e614e77e219a851cd3e8430953b1d7",
+        "factRosterMemberIds": "bd7f0e90ad3e048d0464f49387775b05def8f743e35ab66338088e28dcf62e8b",
+        "registryRosterMemberIds": "0a060ef50dc0822a149866c2d1bc7b48b4c6d02acfc8ee46133f561fa32d587d"
+      }
+    }
+  ]
+}

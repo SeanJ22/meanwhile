@@ -6,6 +6,7 @@ import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
 import { buildPageBody, buildPlacePackage } from "../lib/reader/place-builder.ts";
+import { packReadyPlace } from "../lib/reader/place-ready.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
@@ -165,7 +166,7 @@ test("a map's cache follows its canonical territory and fringe pages while an or
     const zipId = `zip:${zip}`, page = await buildPageBody(zipId,"place","AZ",db.query);
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ')",[zipId]);
     await db.query("INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,'{}','{}')",
-      [zipId,JSON.stringify(page.readyCurrent)]);
+      [zipId,JSON.stringify(packReadyPlace(page.readyCurrent))]);
     const reads:string[] = [];
     installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
       assert.ok(statement.text===PLACE_PAGES_SQL || statement.text===READY_PLACE_SQL,"cache identities require no additional query");

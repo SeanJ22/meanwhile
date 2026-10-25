@@ -1,5 +1,5 @@
-import { measureDraft } from "./helpers/measure-translation.ts";
 import { fixtureLinkingPage } from "./helpers/linking-copies.ts";
+import { measureDraft } from "./helpers/measure-translation.ts";
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";

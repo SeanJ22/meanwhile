@@ -13,6 +13,7 @@ import { reopenHeldDoors, reopenHeldDoorsMigrationDefinition } from "../lib/cont
 import { reopenKeyHeldDoors, reopenKeyHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS-FX.ts";
 
 import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition, installHourlyCounts } from "../lib/control-plane/repository/migrations/RB-A8.ts";
+import { buildResearchRevisionIndexes, researchRevisionIndexesMigrationDefinition } from "../lib/control-plane/repository/migrations/DB-03.ts";
 import { boxDueIndexesMigrationDefinition, buildBoxDueIndexes } from "../lib/control-plane/repository/migrations/RV-BOX.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
@@ -33,6 +34,8 @@ const MIGRATIONS = [
     definition: countHourMigrationDefinition, apply: async (sql: Sql) => { await installHourlyCounts(sql); return "hourly counts"; } },
   { id: "RV-BOX_expand", source: "lib/control-plane/repository/migrations/RV-BOX.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
     definition: boxDueIndexesMigrationDefinition, apply: buildBoxDueIndexes },
+  { id: "DB-03_expand", source: "lib/control-plane/repository/migrations/DB-03.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
+    definition: researchRevisionIndexesMigrationDefinition, apply: buildResearchRevisionIndexes },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {

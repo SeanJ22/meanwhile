@@ -40,6 +40,8 @@ export interface MeetingPinLocation extends MeetingPinAddress {
   matchedAddress?: string;
   /** The source text tried before this saved point, including an absent venue. */
   publishedLocation?: string | null;
+  /** Normalized board-address inputs tried before a government-office fallback. */
+  boardAddressQuery?: string | null;
 }
 
 /** Keep the current attendance text while reusing a checked point and any still-needed street address. */

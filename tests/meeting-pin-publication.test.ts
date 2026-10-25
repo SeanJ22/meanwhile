@@ -198,7 +198,12 @@ test("publication tries source text, board office, then government office and sa
     },
   });
   assert.deepEqual(next.meetings[0].mapPin, result.meetings[0].mapPin);
+  assert.deepEqual(next.held,[]);
   assert.equal(next.responses.length, 0);
+  const changed=await placePublishedMeetingPins({meetings:[meeting("Room 302")],previous:next.meetings,offices,
+    fetchImpl:async()=>{throw Error("Changed attendance repeated a failed office lookup");}});
+  assert.deepEqual(changed.held,[]);assert.equal(changed.meetings[0].mapPin?.publishedLocation,"Room 302");
+  assert.equal(changed.meetings[0].mapPin?.coordinateCheckedAt,result.meetings[0].mapPin?.coordinateCheckedAt);
 });
 
 test("a changed source address gets its own point before either office; online-only stays online", async () => {
@@ -772,8 +777,39 @@ test("a board's own published agenda address precedes its government's separate 
  assert.equal(offices.get(body)?.governmentOffice?.address,"1 Government Plaza, Raleigh, NC");
  const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-wake-office-census.json",import.meta.url),"utf8"));
  const source={...meeting("Wake County Justice Center"),id:"legistar:wake:6264",bodyId:body,ocdId:division,jurisdiction:"COUNTY OF WAKE"};
- const requests:string[]=[];const result=await placePublishedMeetingPins({meetings:[source],offices,fetchImpl:async input=>{
+ const prior:Meeting={...source,mapPin:{meetingId:source.id,bodyId:body,name:"County of Wake",address:"1 Government Plaza, Raleigh, NC",
+  basis:"GOVERNMENT_OFFICE",provenance:SOURCE,lat:35.78,lng:-78.64,publishedLocation:source.venueGap!.publishedText}};
+ const requests:string[]=[];const result=await placePublishedMeetingPins({meetings:[source],previous:[prior],offices,fetchImpl:async input=>{
   requests.push(new URL(String(input)).searchParams.get("address")!);return response(census);
  }});
  assert.deepEqual(requests,["301 South McDowell Street, Raleigh, NC"]);assert.equal(result.meetings[0].mapPin?.basis,"BODY_OFFICE");
+ const next=await placePublishedMeetingPins({meetings:[source],previous:result.meetings,offices,fetchImpl:async()=>{throw Error("Saved board point requested Census again");}});
+ assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,result.meetings[0].mapPin);
+});
+
+
+test("a temporary board-address service failure preserves the government point and retries the higher address",async()=>{
+ const govOnly=new Map([[BODY,{...offices.get(BODY)!,officeContact:undefined}]]);
+ const first=await placePublishedMeetingPins({meetings:[meeting("Room 301")],offices:govOnly,clock:()=>NOW,fetchImpl:async()=>response(GOVERNMENT_GEO)});
+ const failed=await placePublishedMeetingPins({meetings:[meeting("Room 301")],previous:first.meetings,offices,fetchImpl:async()=>new Response("Unavailable",{status:503})});
+ assert.equal(failed.meetings[0].mapPin?.basis,"GOVERNMENT_OFFICE");
+ assert.equal(failed.meetings[0].mapPin?.coordinateCheckedAt,first.meetings[0].mapPin?.coordinateCheckedAt);
+ assert.ok(failed.held.some(detail=>detail.includes("503")));
+ const next=await placePublishedMeetingPins({meetings:[meeting("Room 301")],previous:failed.meetings,offices,fetchImpl:async input=>{
+  assert.equal(new URL(String(input)).searchParams.get("address"),BOARD);return response(BOARD_GEO);
+ }});
+ assert.deepEqual(next.held,[]);assert.equal(next.meetings[0].mapPin?.basis,"BODY_OFFICE");
+});
+
+test("an office-read failure keeps the saved reference point through changed attendance text",async()=>{
+ const govOnly=new Map([[BODY,{...offices.get(BODY)!,officeContact:undefined}]]);
+ const first=await placePublishedMeetingPins({meetings:[meeting("Old venue")],offices:govOnly,clock:()=>NOW,fetchImpl:async()=>response(GOVERNMENT_GEO)});
+ const current={...meeting("New venue"),online:{label:"Online only",joinUrl:"https://example.gov/join"}};
+ const next=await placePublishedMeetingPins({meetings:[current],previous:first.meetings,query:async()=>{throw Error("Office read unavailable");},fetchImpl:async()=>{throw Error("A reference point requested Census again");}});
+ assert.equal(next.meetings[0].mapPin?.basis,"GOVERNMENT_OFFICE");
+ assert.equal(next.meetings[0].mapPin?.publishedLocation,"New venue");
+ assert.equal(next.meetings[0].mapPin?.coordinateCheckedAt,first.meetings[0].mapPin?.coordinateCheckedAt);
+ assert.deepEqual(next.meetings[0].online,current.online);
+ assert.ok(next.held.some(detail=>detail.includes("Office read unavailable")));
+ assert.ok(next.held.every(detail=>!detail.includes("requested Census")));
 });

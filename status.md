@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 110 (main f6d35d05b, RV-MEET2), live by 1:30 AM EDT; reader checks green (fixed + 20 random ZIPs in 20 states). Runner still on 109 (5a3f76a8b) at 1:33 AM EDT. GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone when READY (release 112). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes by 2:50 AM EDT), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf; RT-01, DB-03, AD-01 as READYs come. HELD: RB-A10 7b5eacd03 (place map has 0 rows)
+build_state: LIVE FOR READERS: release 110 (main f6d35d05b, RV-MEET2), live by 1:30 AM EDT; reader checks green (fixed + 20 random ZIPs in 20 states). Runner still on 109 (5a3f76a8b) at 1:33 AM EDT. GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone when READY (release 112). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes by 2:50 AM EDT), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f (supersedes 75325d6ce), RB-A3 follow-up be0bef2bf; RT-01, DB-03, AD-01 as READYs come. HELD: RB-A10 7b5eacd03 (place map has 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T05:35:01Z
+heartbeat: 2026-10-25T05:39:52Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

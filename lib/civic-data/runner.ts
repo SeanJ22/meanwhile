@@ -142,7 +142,6 @@ export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
 export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS, ROUTINE_PASS_BUDGET_MS };
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
-export const ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK = 2;
 
 export interface RoutineTaskAdmissionCandidate {
   readonly task: RoutineSourceTask;

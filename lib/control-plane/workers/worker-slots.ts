@@ -16,11 +16,6 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
-/** RN-02: New York's cold native repair peaked at 1,103,515,648 bytes on 2026-10-23,
- * with 64-part reads and two typed checks together. Summed process-tree /proc VmHWM sampled every
- * 100 ms on the execution host during an 11,451-contract replay using production SELECT-only roles
- * (Node 24.19). Retain that peak plus 5%, rounded up to MiB, even after small CURRENT-only batches. */
-export const READER_REPAIR_PEAK_MIB = 1106;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
@@ -39,7 +34,6 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-refresh.mts": 512,
-  "routine-civic-data-reader-repair.mts": READER_REPAIR_PEAK_MIB,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,
   "fetch-congress-legislators.mts": 384,
@@ -322,7 +316,6 @@ function routineMinimumPeakBytes(entry: string): number {
   // New ZIPs must retain room for the measured 0.87–1.21 GB native publication, including unseen growth.
   if (entry.startsWith("national-place:")) return Math.ceil(1.2 * 1024) * MIB;
   if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
-  if (entry.split(/[\\/]/).at(-1) === "routine-civic-data-reader-repair.mts") return READER_REPAIR_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
   return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);

@@ -177,7 +177,7 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
     countySubdivisionGeoid: door.scope.countySubdivisionGeoid ?? prior?.countySubdivisionGeoid,
     matchingUnit: door.matchingUnit ?? prior?.matchingUnit,
     sites, sourceOrg: prior?.sourceOrg ?? door.publisher, sourceUrl: prior?.sourceUrl ?? door.url,
-    sourceLinkingPage: prior?.sourceLinkingPage ?? door.officialLinkingPage,
+    sourceLinkingPage: prior?.sourceLinkingPage ?? read.sourceLinkingPage,
     collectedAt: sourceSucceeded ? now.slice(0, 10) : prior?.collectedAt ?? now.slice(0, 10),
     office: sourceSucceeded ? read.office ?? prior?.office : prior?.office,
     sources, rules, blanks, addressLookups: lookups, publication,

@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -32,7 +33,7 @@ test("decoded NULs never enter source notes or doors while original bytes remain
 test("decoded NULs are cleaned after extraction before projection hashes", async () => {
   const read = await readVotingSource(door, { now: () => now, fetch: (async () => new Response(bytes, { headers: { "content-type": "text/html" } })) as typeof fetch });
   const tainted = { ...read, sites: read.sites.map(site => ({ ...site, name: site.name + "\0" })), fileTitle: "Official\0 list" };
-  assert.equal(votingReadHasFacts({ ...door, url: "https://unlinked.example.org/voting", officialLinkingPage: undefined }, read), false, "a previously published sibling cannot establish an unlinked vendor source's authority");
+  assert.equal(await votingReadHasFacts({ ...door, url: "https://unlinked.example.org/voting", linkingPage: undefined }, read), false, "a previously published sibling cannot establish an unlinked vendor source's authority");
   const combined = combineVotingSourceReads([tainted]);
   assert.equal(combined.sites[0]!.name, read.sites[0]!.name);
   assert.ok(!JSON.stringify(mergeVotingSourceRead(undefined, door, tainted, now)).includes("\\u0000"));

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { isOfficialVotingSource, votingSourceAuthority } from "../facts/linking-copy.ts";
 import { mergeVotingSiteRows, type SiteKind, type VotingOfficeContact, type VotingSite, type VotingSource } from "./voting-sites.ts";
 import type { VotingChangeNotice, VotingDoorScope, VotingColumn, VotingExtraction, VotingPlatform, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "./voting-source-types.ts";
 import { isVotingSiteKind } from "./voting-source-types.ts";
@@ -368,9 +368,10 @@ export function applyVotingChangeNotices(sites: VotingSite[], notices: VotingCha
 }
 export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSourceRuntime): Promise<VotingSourceRead> {
   const session = votingFetchSession(runtime), now = runtime.now?.() ?? new Date().toISOString();
+  const authority = await votingSourceAuthority(door.url, door.linkingPage);
   const source: VotingSource = { publisher: door.publisher, url: door.url, title: door.title, lastUpdated: door.fileUpdatedAt, checkedAt: now,
-    official: isOfficialSource(door.url, door.officialLinkingPage) };
-  const result: VotingSourceRead = { doorId: door.id, sites: [], office: door.office, rules: [], sources: [], blanks: [], attempts: session.attempts, rawBodies: session.rawBodies, fileTitle: door.title, fileUpdatedAt: door.fileUpdatedAt, publicationMessage: door.publicationMessage };
+    official: authority.official };
+  const result: VotingSourceRead = { doorId: door.id, sourceLinkingPage: authority.linkingPage, sites: [], office: door.office, rules: [], sources: [], blanks: [], attempts: session.attempts, rawBodies: session.rawBodies, fileTitle: door.title, fileUpdatedAt: door.fileUpdatedAt, publicationMessage: door.publicationMessage };
   const blank = (reason: VotingSourceRead["blanks"][number]["reason"], owed: string, tried: string[], scope: VotingDoorScope = door.scope) => result.blanks.push({ id: `${door.id}:${reason}:${createHash("sha256").update(`${scope.ocdId}\n${owed}`).digest("hex").slice(0, 12)}`, doorId: door.id, scope, status: "open", reason, owed, tried, next: ["Follow the chief election office's current election files and map services", "Read the delegated county or town election office's public lists and files"] });
   const siteScope = (site: Pick<VotingSite, "countyName" | "town" | "matchingUnit">): VotingDoorScope => {
     // A site's physical city is not its election jurisdiction unless the publisher matches by town.
@@ -442,7 +443,7 @@ export async function readVotingSource(door: VotingSourceDoor, runtime: VotingSo
     const parsed = votingRowsToSites(rows, effectiveDoor, source);
     if (electionPage) {
       const linkingSource: VotingSource = { publisher: door.publisher, url: electionPage.url, checkedAt: now,
-        official: isOfficialSource(electionPage.url, door.officialLinkingPage), documentUrl: electionPage.url,
+        official: await isOfficialVotingSource(electionPage.url, door.linkingPage), documentUrl: electionPage.url,
         documentHash: createHash("sha256").update(electionPage.bytes).digest("hex") };
       result.sources.push(linkingSource);
       for (const site of parsed.sites) {

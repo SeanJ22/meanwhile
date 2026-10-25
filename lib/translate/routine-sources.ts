@@ -66,7 +66,7 @@ export async function loadRoutineMeasureSources(input: {
     const doors = await registeredVotingSourceDoors(input.repos.doors, input.state);
     for (const door of doors.filter(door => doorIds.has(door.id))) {
       const seen = new Set<string>();
-      for (let linking = door.officialLinkingPage; linking && !seen.has(linking.url); linking = linking.linkingPage ?? undefined) {
+      for (let linking = door.linkingPage; linking && !seen.has(linking.url); linking = linking.linkingPage ?? undefined) {
         seen.add(linking.url);
         if (linking.url.startsWith("https://")) urls.add(linking.url);
       }
@@ -179,7 +179,7 @@ export async function loadRoutineMeasureSources(input: {
       const scoped = doors.filter(door => door.scope.ocdId === blank.ocdId || door.scope.ocdId === `ocd-division/country:us/${input.state.toLowerCase() === "dc" ? "district" : "state"}:${input.state.toLowerCase()}`);
       for (const door of scoped.slice(0, DOOR_PAGES_PER_MEASURE)) {
         const chain = new Set<string>();
-        for (let linking = door.officialLinkingPage; linking && !chain.has(linking.url); linking = linking.linkingPage ?? undefined) chain.add(linking.url);
+        for (let linking = door.linkingPage; linking && !chain.has(linking.url); linking = linking.linkingPage ?? undefined) chain.add(linking.url);
         for (const url of [...chain, door.electionPageUrl, door.url]) if (url?.startsWith("https://")) await acquire(url);
       }
       const follow = async (): Promise<boolean> => {

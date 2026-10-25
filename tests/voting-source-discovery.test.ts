@@ -1,3 +1,5 @@
+import { openLinkingCopy } from "../lib/facts/linking-copy.ts";
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -40,8 +42,8 @@ test("the real county drop-box page's polling-PDF link does not inherit its box 
   assert.equal(child.discoveredFrom, parent.url);
   assert.equal(child.electionDate, "2026-11-03");
   assert.equal(child.electionAssociationVerified, false, "a parent's verified flag does not replace a date on this linking page");
-  assert.equal(child.officialLinkingPage?.url, parent.url);
-  assert.match(child.officialLinkingPage?.html ?? "", /Vew Election Day Polling Locations/);
+  assert.equal(child.linkingPage?.url, parent.url);
+  assert.match((await openLinkingCopy(child.linkingPage!)).html, /Vew Election Day Polling Locations/);
   for (const field of sourceOnlyFields) assert.equal(field in child, false, `${field} belongs to its own source`);
 });
 
@@ -58,8 +60,8 @@ test("the native chief-office page keeps its official link chain without stampin
   assert.ok(discovered.includes(child), "the independently attributed route reaches immediate publication");
   assert.equal(child.publisher, parent.publisher);
   assert.equal(child.electionDate, parent.electionDate);
-  assert.equal(child.officialLinkingPage?.url, parent.url);
-  assert.deepEqual(child.officialLinkingPage?.linkingPage, parent.officialLinkingPage);
+  assert.equal(child.linkingPage?.url, parent.url);
+  assert.deepEqual(child.linkingPage?.linkingPage, parent.linkingPage);
   for (const door of discovered.filter(door => door.id !== parent.id)) for (const field of sourceOnlyFields) {
     assert.equal(field in door, false, `${field} must not migrate from a chief-office page`);
   }

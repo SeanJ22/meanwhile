@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";

@@ -30,7 +30,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
-import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
+import { isOfficialVotingSource, openLinkingCopy } from "../lib/facts/linking-copy.ts";
 import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
@@ -179,11 +179,11 @@ export async function votingSourceEvidence(door: VotingSourceDoor, read: VotingS
   const bodyKey = (body: VotingSourceRead["rawBodies"][number]) => `${body.url}#${createHash("sha256").update(body.bytes).digest("hex")}`;
   const bodies = new Map(read.rawBodies.map(body => [bodyKey(body), body]));
   const links = new Set<string>();
-  for (let page = door.officialLinkingPage; page; page = page.linkingPage ?? undefined) {
+  for (let page = door.linkingPage; page; page = page.linkingPage ?? undefined) {
     links.add(page.url);
     // A linking page that redirected is already held under its final address.
     if (![...bodies.values()].some(body => body.url === page.url || body.requestedUrl === page.url)) {
-      const body = { url: page.url, contentType: "text/html", bytes: new TextEncoder().encode(page.html) };
+      const body = { url: page.url, contentType: "text/html", bytes: new TextEncoder().encode((await openLinkingCopy(page)).html) };
       bodies.set(bodyKey(body), body);
     }
   }
@@ -195,14 +195,14 @@ export async function votingSourceEvidence(door: VotingSourceDoor, read: VotingS
 }
 
 /** Register an address-only route from its fresh official link without querying it for a voter. */
-function votingLookupDiscoveryRead(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"], at: string): VotingSourceRead {
+async function votingLookupDiscoveryRead(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"], at: string): Promise<VotingSourceRead> {
   if (door.shape !== "address-lookup" || door.scopeUnresolved || door.access?.status === "identity-locked" ||
-      !door.officialLinkingPage || !isOfficialSource(door.url, door.officialLinkingPage)) return read;
-  const linking = captures.filter(capture => capture.url === door.officialLinkingPage!.url);
+      !door.linkingPage || !await isOfficialVotingSource(door.url, door.linkingPage)) return read;
+  const linking = captures.filter(capture => capture.url === door.linkingPage!.url);
   if (!linking.length) return read;
   return { ...read, rawBodies: [...read.rawBodies, ...linking],
-    sources: [{ publisher: door.publisher, url: door.officialLinkingPage.url, checkedAt: at }],
-    attempts: [...read.attempts, { url: door.officialLinkingPage.url, route: "direct",
+    sources: [{ publisher: door.publisher, url: door.linkingPage.url, checkedAt: at }],
+    attempts: [...read.attempts, { url: door.linkingPage.url, route: "direct",
       outcome: "Official page linked the address-only lookup; no voter address was submitted" }] };
 }
 
@@ -211,8 +211,8 @@ function isVotingSourceContent(body: { url: string }): boolean {
   return !sourceUrl.pathname.endsWith("/robots.txt");
 }
 
-export function votingReadHasFacts(door: VotingSourceDoor, read: VotingSourceRead): boolean {
-  if (!isOfficialSource(door.url, door.officialLinkingPage)) return false;
+export async function votingReadHasFacts(door: VotingSourceDoor, read: VotingSourceRead): Promise<boolean> {
+  if (!await isOfficialVotingSource(door.url, door.linkingPage)) return false;
   if (!read.rawBodies.some(isVotingSourceContent)) return false;
   if (read.sites.length || read.boundaries?.length || read.contacts?.length) return true;
   if (!read.sources.length || read.blanks.some(blank => blank.reason === "access" || blank.reason === "extraction")) return false;
@@ -343,8 +343,8 @@ export async function refreshVotingSources(input: {
         const group: VotingSourceRead[] = [];
         for (const mapping of mappings) {
           if (Date.now() >= deadlineMs) break;
-          let read = sourceTextWithoutNuls(votingLookupDiscoveryRead(mapping, await readVotingSource(mapping, runtime), captures, at));
-          if (!isOfficialSource(mapping.url, mapping.officialLinkingPage)) read = { ...read,
+          let read = sourceTextWithoutNuls(await votingLookupDiscoveryRead(mapping, await readVotingSource(mapping, runtime), captures, at));
+          if (!await isOfficialVotingSource(mapping.url, mapping.linkingPage)) read = { ...read,
             sites: [], contacts: [], boundaries: [], rules: [], sources: [], office: undefined,
             blanks: [...read.blanks, { id: `${mapping.id}:official-link`, doorId: mapping.id, scope: mapping.scope,
               reason: "access", status: "open", owed: "An official election-office page linking this source",
@@ -367,7 +367,7 @@ export async function refreshVotingSources(input: {
           sites: read.sites.length, precincts: read.boundaries?.length ?? 0,
           sourceBytes: read.rawBodies.reduce((sum, capture) => sum + capture.bytes.byteLength, 0),
           failures: read.blanks.filter(blank => blank.reason === "access" || blank.reason === "extraction").map(blank => ({ reason: blank.reason, detail: blank.tried })) }));
-        if (!votingReadHasFacts(door, read)) {
+        if (!await votingReadHasFacts(door, read)) {
           if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(doorRepo, door, read, at);
           return;
         }
@@ -384,7 +384,7 @@ export async function refreshVotingSources(input: {
           for (const existing of targets) {
             if (superseded.has(normalizeUrl(existing.url))) continue;
             const door = existing === found ? found : { ...found, ...existing,
-              officialLinkingPage: found.officialLinkingPage ?? existing.officialLinkingPage,
+              linkingPage: found.linkingPage ?? existing.linkingPage,
               electionPageUrl: found.electionAssociationVerified ? found.electionPageUrl : existing.electionPageUrl,
               electionAssociationVerified: found.electionAssociationVerified || existing.electionAssociationVerified };
             doors.set(door.id, door); await saveVotingSourceDoor(doorRepo, door, now());

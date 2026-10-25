@@ -5,7 +5,7 @@ import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { snapshotCounts } from "../lib/meetings/snapshot.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, placePageCacheIds } from "../lib/reader/place.ts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { unpackReadyPlace } from "../lib/reader/place-ready.ts";
+import { unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
@@ -84,7 +84,7 @@ test("state selection reads individual body contexts and direct pages select sep
       assert.equal(text, PLACE_PAGES_SQL);
       const rows = await query(text, params);
       assert.deepEqual(rows.map(row => row.page_id), [FIRST, SECOND]);
-      for (const row of rows) assert.deepEqual((row.row as { entities: { id: string }[] }).entities.map(body => body.id), [row.page_id]);
+      for (const row of rows) assert.deepEqual((unpackPlaceContextRow(row.row).entities as { id: string }[]).map(body => body.id), [row.page_id]);
       return rows;
     });
     assert.equal(reads, 1);
@@ -154,9 +154,10 @@ test("the real worker stores agenda-free ready body pages and preserves full cur
     for (const ready of [stored!.body, stored!.history_body]) assert.equal((ready as { encoding: string }).encoding, "gzip-json-v1");
     const readyWire = JSON.stringify([unpackReadyPlace(stored!.body), unpackReadyPlace(stored!.history_body)]);
     assert.equal(readyWire.includes("SOURCE AGENDA"), false, "neither ready encoding stores source agenda text");
-    const context = stored!.context as { current: { meeting_rows: { payload: { agendaDocuments: unknown[] } }[] }; history: { meeting_rows: { payload: { agendaDocuments: unknown[] } }[] } };
-    assert.deepEqual(context.current.meeting_rows.flatMap(row => row.payload.agendaDocuments), [currentDocument]);
-    assert.deepEqual(context.history.meeting_rows.flatMap(row => row.payload.agendaDocuments).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
+    const context = stored!.context as { current: {full:unknown}; history: {full:unknown} };
+    const documents = (row:unknown) => (unpackPlaceContextRow(row).meeting_rows as {payload:{agendaDocuments:unknown[]}}[]).flatMap(partition=>partition.payload.agendaDocuments);
+    assert.deepEqual(documents(context.current.full), [currentDocument]);
+    assert.deepEqual(documents(context.history.full).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
       [currentDocument, pastDocument].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))));
     let pageReads = 0, compactWire = "", uncompressedBytes = 0;
     const compactQuery: Query = async (text, params = []) => {
@@ -196,7 +197,7 @@ test("the real worker stores agenda-free ready body pages and preserves full cur
     assert.deepEqual([...opened.snapshot.agendaDocuments].sort((a, b) => a.id.localeCompare(b.id)), [currentDocument, pastDocument]);
     const compactBytes = Buffer.byteLength(compactWire), agendaBytes = Buffer.byteLength(agendaWire);
     assert.ok(compactBytes < uncompressedBytes / 3, `gzip transferred ${compactBytes} bytes versus ${uncompressedBytes} as complete JSON`);
-    assert.ok(compactBytes < agendaBytes / 3, `the compact read was ${compactBytes} bytes versus ${agendaBytes} with source agendas`);
+    assert.ok(compactBytes < agendaBytes, `the compact read was ${compactBytes} bytes versus ${agendaBytes} with compressed source agendas`);
     t.diagnostic(JSON.stringify({ compactBytes, uncompressedBytes, agendaBytes, sourceAgendaBytes: Buffer.byteLength(currentDocument.text + pastDocument.text) }));
   } finally { await pg.close(); }
 });

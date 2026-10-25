@@ -10,7 +10,7 @@ import { readerFactDb } from "../facts/db.ts";
 import { randomUUID } from "node:crypto";
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
-import { packReadyPlace } from "./place-ready.ts";
+import { packPlaceContext, packReadyPlace } from "./place-ready.ts";
 import type { PlacePackage } from "./place-types.ts";
 import { lookupZcta } from "../geo/zcta.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
@@ -469,7 +469,7 @@ export interface RebuildOptions {
   readonly limit?: number;
   readonly concurrency?: number;
   readonly timeBudgetMs?: number;
-  /** A page with no previous ready version has no ready-page cache to clear during deployment. */
+  /** Build data during deployment; later versions leave cache purges for the published worker. */
   readonly initialBackfill?: boolean;
 }
 
@@ -479,11 +479,14 @@ const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
   ) ORDER BY n LIMIT 1
 ), next AS (
   SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
-  WHERE q.lease_until IS NULL OR q.lease_until<clock_timestamp()
+  WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp() OR $2::boolean AND q.lease_token IS NULL)
+    AND (NOT $2::boolean OR q.built_generation IS DISTINCT FROM q.generation
+      OR NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id))
   ORDER BY q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
 ) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
   FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
-  RETURNING q.place_id,q.generation,e.kind,e.state`;
+  RETURNING q.place_id,q.generation,q.built_generation,e.kind,e.state,
+    EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id) AS has_page`;
 
 /** Leases separate slow building and CDN work from writers' short fact transactions. */
 export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{rebuilt:number;failed:number;remaining:number}> {
@@ -499,64 +502,79 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
         await query("SELECT pg_advisory_xact_lock(hashtextextended('place-page-rebuild-slots',0))");
         await query(`UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=NULL
           WHERE lease_slot IS NOT NULL AND lease_until<clock_timestamp()`);
-        return (await query(CLAIM_PAGE_SQL,[token]))[0];
+        return (await query(CLAIM_PAGE_SQL,[token,options.initialBackfill ?? false]))[0];
       });
       if(!claim)return;
       const id=String(claim.place_id),state=String(claim.state ?? "US");
+      let built=claim.has_page===true && claim.built_generation!=null && String(claim.built_generation)===String(claim.generation);
       try {
-        const body=await db.transaction<StoredPlacePage>(async query=>{
-          await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
-          return buildPageBody(id,String(claim.kind),state,query);
-        });
-        // Writers can queue a newer generation while the snapshot is being read.
-        // Lock its lease only after leaving that snapshot, in this short transaction.
-        const firstVersion=await db.transaction(async query=>{
-          // A worker whose lease expired cannot replace a newer worker's page.
-          const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
-          if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
-          const {readyCurrent,readyHistory,...rawContext}=body;
-          const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:rawContext;
-          const [stored]=await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
-            VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
-            ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-              body=excluded.body,history_body=excluded.history_body,context=excluded.context RETURNING version`,
-          [id,JSON.stringify(packReadyPlace(readyCurrent)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
-          const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
-            !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
-          const dependencies=new Set<string>([id,...rows.flatMap(row=>[
-            ...row.division_ids as string[] ?? [],
-            ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
-            ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
-              [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
-                .filter((value):value is string=>typeof value==='string')),
-            ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
-          ])]);
-          await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
-          await query(`INSERT INTO place_page_dependency(page_id,entity_id)
-            SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
-          await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
-          return Number(stored?.version)===1;
-        });
-        const result:Awaited<ReturnType<ReaderCachePurger>>=firstVersion && options.initialBackfill ? {purged:true} : await purge(readerCacheTags({places:[id]}));
-        if(!result.purged)throw new Error(result.detail ?? "Place page cache purge failed");
+        let firstVersion=false;
+        if(!built) {
+          const body=await db.transaction<StoredPlacePage>(async query=>{
+            await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
+            return buildPageBody(id,String(claim.kind),state,query);
+          });
+          // Writers can queue a newer generation while the snapshot is being read.
+          // Lock its lease only after leaving that snapshot, in this short transaction.
+          firstVersion=await db.transaction(async query=>{
+            // A worker whose lease expired cannot replace a newer worker's page.
+            const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
+            if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
+            const {readyCurrent,readyHistory,...rawContext}=body;
+            const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
+            const [stored]=await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
+              VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
+              ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
+                body=excluded.body,history_body=excluded.history_body,context=excluded.context RETURNING version`,
+            [id,JSON.stringify(packReadyPlace(readyCurrent)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
+            const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
+              !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
+            const dependencies=new Set<string>([id,...rows.flatMap(row=>[
+              ...row.division_ids as string[] ?? [],
+              ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
+              ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
+                [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
+                  .filter((value):value is string=>typeof value==='string')),
+              ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
+            ])]);
+            await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
+            await query(`INSERT INTO place_page_dependency(page_id,entity_id)
+              SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
+            await query("UPDATE rebuild_queue SET built_generation=$3::bigint WHERE place_id=$1 AND lease_token=$2",[id,token,claim.generation]);
+            await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
+            return Number(stored?.version)===1;
+          });
+          built=true;
+          rebuilt++;
+        }
+        if(!options.initialBackfill) {
+          const result=await purge(readerCacheTags({places:[id]}));
+          if(!result.purged)throw new Error(result.detail ?? "Place page cache purge failed");
+        }
         await db.transaction(async query=>{
-          await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
+          if(!options.initialBackfill || firstVersion)
+            await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
           // A later generation waits from its own first arrival, so a hot place
           // cannot repeatedly take the oldest slot ahead of untouched places.
           await query(`UPDATE rebuild_queue SET queued_at=coalesce(next_queued_at,queued_at),
             lease_token=NULL,lease_slot=NULL,lease_until=NULL,next_queued_at=NULL
             WHERE place_id=$1 AND lease_token=$2`,[id,token]);
         });
-        rebuilt++;
       } catch(error) {
         failed++;
         console.error("Place page rebuild failed",{place:id,detail:error instanceof Error?error.message:String(error)});
         // A failed build retains the ready page; a failed purge leaves its built replacement queued.
-        await db.transaction(query=>query("UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=clock_timestamp()+interval '1 minute' WHERE place_id=$1 AND lease_token=$2",[id,token]));
+        await db.transaction(query=>query(`UPDATE rebuild_queue SET
+          queued_at=CASE WHEN $3::boolean THEN coalesce(next_queued_at,queued_at) ELSE queued_at END,
+          next_queued_at=CASE WHEN $3::boolean THEN NULL ELSE next_queued_at END,
+          lease_token=NULL,lease_slot=NULL,lease_until=clock_timestamp()+interval '1 minute'
+          WHERE place_id=$1 AND lease_token=$2`,[id,token,built]));
       }
     }
   };
   await Promise.all(Array.from({length:concurrency},work));
-  const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
+  const [remaining]=await db.transaction(query=>query(`SELECT count(*)::int AS n FROM rebuild_queue q
+    WHERE NOT $1::boolean OR q.built_generation IS DISTINCT FROM q.generation
+      OR NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id)`,[options.initialBackfill ?? false]));
   return {rebuilt,failed,remaining:Number(remaining?.n ?? 0)};
 }

@@ -1,5 +1,6 @@
 ALTER TABLE rebuild_queue
   ADD COLUMN generation bigint NOT NULL DEFAULT 1,
+  ADD COLUMN built_generation bigint,
   ADD COLUMN next_queued_at timestamptz,
   ADD COLUMN lease_token text,
   ADD COLUMN lease_until timestamptz,

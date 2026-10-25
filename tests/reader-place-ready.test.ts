@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { packReadyPlace, unpackReadyPlace } from "../lib/reader/place-ready.ts";
+import { packPlaceContext, packReadyPlace, unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
 import { READY_PLACE_SQL, placePageCacheIds, readPlacePackage } from "../lib/reader/place.ts";
 import type { PlacePackage } from "../lib/reader/place-types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -55,4 +55,40 @@ test("a corrupt compressed ready page fails its single read without querying sou
     return [{ page: { encoding: "gzip-json-v1", data: "corrupt-gzip" }, version: 2 }];
   }));
   assert.equal(queries, 1);
+});
+
+test("context modes preserve exact source JSON and omit only the data their reader flags exclude", () => {
+  const row={division_ids:[meeting.ocdId],entities:[{id:BODY}],fields:[{entity_id:BODY,value:false}],rosters:[{body_id:BODY,person_id:"person:exact"}],
+    comments:[{entity_id:BODY,value:"Public comment — 予算"}],sittings:[{body_id:BODY,entity_id:`meeting:${meeting.id}`}],
+    registry:{future:{glyph:"é",blank:"",absent:null}},everyday_routing:{kept:true},registration_held:true,governments:[{id:"government:exact"}],divisions:[{ocdId:meeting.ocdId}],
+    meeting_rows:[{scope:"source:exact",payload:snapshot}],archived_meetings:[meeting],archived_documents:snapshot.agendaDocuments,
+    archived_document_links:[{meetingId:meeting.id,documentUrl:meeting.agendaUrl}],agenda_texts:["Exact — educación"],parts:{},futureRows:{enabled:false,absent:null}};
+  const packed=packPlaceContext({formatVersion:1,current:row,history:row,emptyCurrent:row,emptyHistory:row});
+  for(const key of ["current","history","emptyCurrent","emptyHistory"]) {
+    const modes=packed[key] as Record<string,unknown>;
+    assert.deepEqual(Object.keys(modes),["full","brief","facts"]);
+    assert.deepEqual(unpackPlaceContextRow(modes.full),JSON.parse(JSON.stringify(row)));
+    const brief=unpackPlaceContextRow(modes.brief),facts=unpackPlaceContextRow(modes.facts);
+    for(const selected of [brief,facts]) {
+      assert.deepEqual(selected.rosters,row.rosters);
+      assert.deepEqual(selected.fields,row.fields);
+      assert.deepEqual(selected.comments,row.comments);
+      assert.deepEqual(selected.sittings,row.sittings);
+      assert.deepEqual(selected.archived_meetings,row.archived_meetings);
+      assert.deepEqual(selected.futureRows,row.futureRows);
+      assert.deepEqual(selected.archived_documents,[]);
+      assert.deepEqual(selected.agenda_texts,[]);
+      assert.deepEqual((selected.meeting_rows as {payload:{meetings:unknown;agendaDocuments:unknown[]}}[])[0]!.payload.meetings,snapshot.meetings);
+      assert.deepEqual((selected.meeting_rows as {payload:{agendaDocuments:unknown[]}}[])[0]!.payload.agendaDocuments,[]);
+    }
+    assert.deepEqual(brief.registry,row.registry);
+    assert.deepEqual(brief.everyday_routing,row.everyday_routing);
+    assert.equal(brief.registration_held,true);
+    assert.equal(facts.registry,null);
+    assert.equal(facts.everyday_routing,null);
+    assert.equal(facts.registration_held,false);
+    assert.deepEqual(facts.governments,[]);
+    assert.deepEqual(facts.divisions,[]);
+  }
+  assert.equal(unpackPlaceContextRow(row),row,"legacy raw context stays readable without another query");
 });

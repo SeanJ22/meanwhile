@@ -7,7 +7,7 @@ import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { mergePlaceRows } from "./place-compose.ts";
-import { unpackReadyPlace } from "./place-ready.ts";
+import { unpackPlaceContextRow, unpackReadyPlace } from "./place-ready.ts";
 import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
@@ -32,12 +32,13 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
       OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
 ) SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,
-  p.context->CASE WHEN NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
-    OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies)
-    THEN CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
-    ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS row,
+  coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) AS row,
   ARRAY(SELECT id FROM requested_bodies) AS body_ids
   FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id
+  LEFT JOIN LATERAL (SELECT p.context->CASE WHEN NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
+    OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies)
+    THEN CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
+    ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS value) saved ON true
   WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id`;
 
 const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
@@ -92,11 +93,11 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
     return place;
   }
   const rows=await query(PLACE_PAGES_SQL,[input.state.toUpperCase(),input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],
-    input.neighbors??false,input.allBodies??false,input.includeHistory??false]);
+    input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false]);
   if(rows.some(row=>!row.row))throw new Error("PLACE_PAGE_NOT_BUILT");
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
   const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
-  const merged=mergePlaceRows(canonical,rows.map(row=>({...row.row as Record<string,unknown>,page_id:row.page_id,
+  const merged=mergePlaceRows(canonical,rows.map(row=>({...unpackPlaceContextRow(row.row),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
   const place=await composePlaceRow(canonical,merged);
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));

@@ -14,11 +14,29 @@ export interface ElectionDates {
   steps: DatedStep[];
 }
 
-export function electionDatesFor(state: string, projection: readonly ElectionDates[], electionDay = "2026-11-03"): ElectionDates | null {
-  return projection.find(calendar => calendar.state === state && calendar.electionDay === electionDay) ?? null;
+function dateTopic(label: string): string {
+  if (/registration/i.test(label)) return "registration";
+  if (/early voting/i.test(label)) return "early";
+  if (/(?:mail.*(?:request|application)|(?:request|application).*mail)/i.test(label)) return "mail-request";
+  return label.trim().toLowerCase();
 }
 
-/** The dates a state's readers see until that state's own navigation record is published. */
+const DATE_LABELS: Readonly<Record<string, string>> = {
+  registration: "Voter registration", early: "Early voting", "mail-request": "Mail-ballot request",
+};
+
+export function electionDatesFor(state: string, projection: readonly ElectionDates[], electionDay = "2026-11-03"): ElectionDates | null {
+  const published = projection.find(calendar => calendar.state === state && calendar.electionDay === electionDay) ?? null;
+  const held = builtInElectionDatesFor(state);
+  if (!held?.verifiedAt || held.electionDay !== electionDay) return published;
+  const supplied = new Set(published?.steps.map(step => dateTopic(step.label)) ?? []);
+  const retained = held.steps.filter(step => step.label !== "Election Day" && !supplied.has(dateTopic(step.label)))
+    .map(step => ({ ...step, label: DATE_LABELS[dateTopic(step.label)] ?? step.label,
+      sourceUrl: held.sourceUrl, sourceOrg: held.sourceOrg, collectedAt: held.collectedAt, verifiedAt: held.verifiedAt! }));
+  return { state, electionDay, steps: [...(published?.steps ?? []), ...retained] };
+}
+
+/** Existing sourced dates remain available until that field has a replacement. */
 interface BuiltInElectionDates {
   state: string;
   electionDay: string;

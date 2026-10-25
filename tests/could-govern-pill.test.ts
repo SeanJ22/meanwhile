@@ -30,7 +30,11 @@ const ROOT = join(HERE, "..");
 const districtEdge = buildCensusDistrictEdge(JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, "pill-qualified-fixture");
 const current = { purpose: "representation" as const, asOf: "2026-10-09" };
 const withDistricts = <T>(read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(districtEdge, districtEdge.versionId, zip) } }, read);
-const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({}, () => zipCertainty(zip));
+const sampledZipCertainty = (zip: string | null) => withReaderAuthorityEdge({
+  edgeOnly: true,
+  // These cases exercise the sampled geometry, independently of published Census relationships.
+  censusDistricts: { slice: async () => ({ kind: "NOT_PUBLISHED" }) },
+}, () => zipCertainty(zip));
 
 test("3.2: a county and school district every 2020 resident lives in govern the whole ZIP", async () => {
   const c = await sampledZipCertainty("07866");

@@ -71,6 +71,26 @@ test("a verified own portrait follows only its proven native person alias and ke
   assert.equal(mergePeopleSets([plural,official,roster(unrelated)])!.officeholders.find(row=>personIdentityKeys(row).has(betty.id))!.photo,null,"a portrait bound to another person is not inherited");
 });
 
+test("a portrait bound to a declared source alias survives a different source row ID without rewriting its original proof",()=>{
+  const portraits=captured.find(row=>row.key.endsWith(":people:portraits:v1"))!.roster;
+  const source:Officeholder={...structuredClone(portraits.officeholders.find(row=>row.id===betty.id)!),
+    id:"held-portrait:betty-villegas",personId:"held-portrait:betty-villegas",nativeIds:{reader:[betty.id]}};
+  const original=structuredClone(source);
+  const merged=mergePeopleSets([plural,official,roster(source)])!;
+  const person=merged.officeholders.find(row=>personIdentityKeys(row).has(betty.id))!;
+  assert.ok(person.photo);
+  assert.ok(portraitBindingMatches(person.personId??person.id,person.photo));
+  assert.equal(person.photo.url,original.photo!.url);
+  assert.equal(person.photo.sourceUrl,original.photo!.sourceUrl);
+  assert.deepEqual(source,original,"the publisher's source row and verification are unchanged");
+  const raw=heldPersonSources(person).find(row=>row.id===source.id)!;
+  assert.deepEqual(raw,original);
+  assert.equal(raw.photo!.verification!.personId,betty.id);
+  const missingAlias={...source,nativeIds:{reader:[]}};
+  const rejected=mergePeopleSets([plural,official,roster(missingAlias)])!.officeholders.find(row=>personIdentityKeys(row).has(betty.id))!;
+  assert.equal(rejected.photo,null,"the merged person's alias alone cannot validate an undeclared source portrait identity");
+});
+
 test("every original held contact, term, membership, social account and source survives behind the merged reader person",()=>{
   const sources=captured.map(row=>row.roster),original=JSON.stringify(sources);
   const merged=mergePeopleSets(sources)!;

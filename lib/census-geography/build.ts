@@ -1,5 +1,5 @@
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
-import type { FractionBasis, GeographyVersion } from "./contract.ts";
+import { isUnassignedZcta, type FractionBasis, type GeographyVersion } from "./contract.ts";
 import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
 
 /** A ZCTA whose area lies this fraction (or more) inside a geography is "whole". */
@@ -78,9 +78,8 @@ export class ScopeAccumulator {
     this.rows += 1;
     const zcta = (fields[this.cols.zctaGeoid] ?? "").trim();
     const geoid = (fields[this.cols.geoGeoid] ?? "").trim();
-    // A blank ZCTA side is the part of the geography in no ZCTA; a blank
-    // geography side is the part of a ZCTA in no geography of this layer.
-    if (zcta === "" || geoid === "") {
+    // Unassigned ZCTA codes and a blank geography side establish no overlap.
+    if (isUnassignedZcta(zcta) || geoid === "") {
       this.skippedBlank += 1;
       return;
     }

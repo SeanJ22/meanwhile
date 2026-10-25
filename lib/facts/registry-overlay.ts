@@ -34,7 +34,8 @@ export function bodyFieldsFromRows(rows: readonly Record<string, unknown>[]): Re
     const held = byBody[String(row.entity_id)] ??= {};
     const at = new Date(row.checked_at as string).toISOString();
     const source = { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at };
-    if (row.field === "name") Object.assign(held, { name: String(row.value), bodyOrigin: "SOURCED", provenance: source });
+    if (row.field === "name") Object.assign(held, { name: String(row.value), bodyOrigin: "SOURCED", provenance: source,
+      fieldSources: { ...held.fieldSources, name: source } });
     else if (row.field === "office_address" || row.field === "office_phone" || row.field === "homepage") {
       const key = row.field === "office_address" ? "officeAddress" : row.field === "office_phone" ? "officePhone" : "homepageUrl";
       Object.assign(held, { [key]: String(row.value), fieldSources: { ...held.fieldSources, [key]: source } });

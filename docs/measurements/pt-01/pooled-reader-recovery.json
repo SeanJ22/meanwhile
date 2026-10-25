@@ -1,0 +1,21 @@
+{
+  "measuredAt": "2026-10-24T16:59:41.510199+00:00",
+  "revision": "ec27d4291",
+  "mode": "Actual provided pooled production address using readonly role, plus built-branch HTTP verification; Chrome acceptance pending",
+  "readerCode": "Unmodified CL-01 88af51ae2, matching reader connection code and tests exactly",
+  "portraitLaneAddsConnectionSettings": false,
+  "connection": {
+    "pooled": true,
+    "role": "readonly",
+    "transaction_read_only": "on",
+    "jit": "on (default)"
+  },
+  "stateEndpoints": 10,
+  "ballotPages": 10,
+  "statuses": [
+    200
+  ],
+  "visiblePhotoPairs": 25,
+  "photoMismatches": 0,
+  "maxSeconds": 2.4324536799999996
+}

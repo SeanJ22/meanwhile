@@ -1,0 +1,137 @@
+[
+  {
+    "query": "777 NE Martin Luther King Jr. Blvd. Portland Oregon, 97232 |",
+    "response": {
+      "result": {
+        "input": {
+          "address": {
+            "address": "777 NE Martin Luther King Jr. Blvd. Portland Oregon, 97232 |"
+          },
+          "benchmark": {
+            "isDefault": true,
+            "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+            "id": "4",
+            "benchmarkName": "Public_AR_Current"
+          }
+        },
+        "addressMatches": [
+          {
+            "tigerLine": {
+              "side": "L",
+              "tigerLineId": "157505180"
+            },
+            "coordinates": {
+              "x": -122.661768846561,
+              "y": 45.528458665472
+            },
+            "addressComponents": {
+              "zip": "97232",
+              "streetName": "M L KING",
+              "preType": "",
+              "city": "PORTLAND",
+              "preDirection": "NE",
+              "suffixDirection": "",
+              "fromAddress": "701",
+              "state": "OR",
+              "suffixType": "BLVD",
+              "toAddress": "799",
+              "suffixQualifier": "",
+              "preQualifier": ""
+            },
+            "matchedAddress": "777 NE M L KING BLVD, PORTLAND, OR, 97232"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "205 Government Street, Mobile, Alabama, 36644",
+    "response": {
+      "result": {
+        "input": {
+          "address": {
+            "address": "205 Government Street, Mobile, Alabama, 36644"
+          },
+          "benchmark": {
+            "isDefault": true,
+            "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+            "id": "4",
+            "benchmarkName": "Public_AR_Current"
+          }
+        },
+        "addressMatches": [
+          {
+            "tigerLine": {
+              "side": "L",
+              "tigerLineId": "61868112"
+            },
+            "coordinates": {
+              "x": -88.042237432355,
+              "y": 30.689678230793
+            },
+            "addressComponents": {
+              "zip": "36602",
+              "streetName": "GOVERNMENT",
+              "preType": "",
+              "city": "MOBILE",
+              "preDirection": "",
+              "suffixDirection": "",
+              "fromAddress": "201",
+              "state": "AL",
+              "suffixType": "ST",
+              "toAddress": "249",
+              "suffixQualifier": "",
+              "preQualifier": ""
+            },
+            "matchedAddress": "205 GOVERNMENT ST, MOBILE, AL, 36602"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "18300 W Alameda Parkway, Morrison, CO 80465",
+    "response": {
+      "result": {
+        "input": {
+          "address": {
+            "address": "18300 W Alameda Parkway, Morrison, CO 80465"
+          },
+          "benchmark": {
+            "isDefault": true,
+            "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+            "id": "4",
+            "benchmarkName": "Public_AR_Current"
+          }
+        },
+        "addressMatches": [
+          {
+            "tigerLine": {
+              "side": "R",
+              "tigerLineId": "177772149"
+            },
+            "coordinates": {
+              "x": -105.207572178996,
+              "y": 39.66636654452
+            },
+            "addressComponents": {
+              "zip": "80465",
+              "streetName": "ALAMEDA",
+              "preType": "",
+              "city": "MORRISON",
+              "preDirection": "",
+              "suffixDirection": "",
+              "fromAddress": "18398",
+              "state": "CO",
+              "suffixType": "PKWY",
+              "toAddress": "18300",
+              "suffixQualifier": "",
+              "preQualifier": ""
+            },
+            "matchedAddress": "18300 ALAMEDA PKWY, MORRISON, CO, 80465"
+          }
+        ]
+      }
+    }
+  }
+]

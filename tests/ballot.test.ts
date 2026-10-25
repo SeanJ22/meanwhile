@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
-import { electionDatesFor } from "../lib/ballot/election-dates.ts";
+import { builtInElectionDatesFor, electionDatesFor, type ElectionDates } from "../lib/ballot/election-dates.ts";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import type { BallotSet, Contest } from "../lib/ballot/types.ts";
@@ -52,6 +52,44 @@ test("the NJ date strip is complete and cited", () => {
     assert.match(labels, new RegExp(needed, "i"), `date strip is missing ${needed}`);
   }
   for (const step of dates.steps) assert.match(step.sourceUrl, /^https:\/\/www\.nj\.gov\//);
+});
+
+const nativeDate = (label: string, date: string, detail: string | null = null): ElectionDates["steps"][number] => ({
+  label, date, detail, sourceUrl: "https://azsos.gov/elections", sourceOrg: "Arizona Secretary of State",
+  collectedAt: "2026-10-24", verifiedAt: "2026-10-24",
+});
+
+test("a partial state publication keeps the registration deadline and held primary that readers already had", () => {
+  const early = nativeDate("Early voting", "2026-10-07 – 2026-10-30");
+  const mail = nativeDate("Mail-ballot request", "2026-10-23");
+  const dates = electionDatesFor("AZ", [{ state: "AZ", electionDay: "2026-11-03", steps: [early, mail] }])!;
+  const registration = dates.steps.find(step => step.label === "Voter registration")!;
+  assert.equal(registration.date, "2026-10-05");
+  assert.equal(registration.sourceUrl, builtInElectionDatesFor("AZ")!.sourceUrl);
+  assert.equal(registration.verifiedAt, "2026-08-14");
+  assert.ok(dates.steps.some(step => step.label === "Primary election (held)" && step.date === "2026-07-21"));
+  assert.equal(dates.steps.filter(step => /early voting/i.test(step.label)).length, 1);
+  assert.ok(dates.steps.includes(early));
+  assert.ok(dates.steps.includes(mail));
+});
+
+test("a supplied date or explicit no-date rule replaces that field without restoring its earlier value", () => {
+  const registration = nativeDate("Voter registration", "2026-10-06");
+  const dates = electionDatesFor("AZ", [{ state: "AZ", electionDay: "2026-11-03", steps: [registration] }])!;
+  assert.deepEqual(dates.steps.filter(step => /registration/i.test(step.label)), [registration]);
+  assert.ok(!dates.steps.some(step => step.date === "2026-10-05"));
+  const noDate = nativeDate("Voter registration", "", "Voter registration is not required.");
+  const rule = electionDatesFor("AZ", [{ state: "AZ", electionDay: "2026-11-03", steps: [noDate] }])!;
+  assert.deepEqual(rule.steps.filter(step => /registration/i.test(step.label)), [noDate]);
+});
+
+test("held dates stay in their state and election cycle when a publication has no dates", () => {
+  const dates = electionDatesFor("AZ", [])!;
+  assert.ok(dates.steps.some(step => step.date === "2026-10-05"));
+  assert.equal(electionDatesFor("AZ", [], "2027-11-02"), null);
+  assert.equal(electionDatesFor("OH", []), null);
+  const foreign = { state: "NJ", electionDay: "2026-11-03", steps: [nativeDate("Foreign deadline", "2026-10-01")] };
+  assert.ok(!electionDatesFor("AZ", [foreign])!.steps.some(step => step.label === "Foreign deadline"));
 });
 
 test("polling lookup fields are validated from the held projection but never surface as a link", () => {

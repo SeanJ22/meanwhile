@@ -1,0 +1,42 @@
+{
+  "result": {
+    "input": {
+      "address": {
+        "address": "301 South McDowell Street, Raleigh, NC"
+      },
+      "benchmark": {
+        "isDefault": true,
+        "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+        "id": "4",
+        "benchmarkName": "Public_AR_Current"
+      }
+    },
+    "addressMatches": [
+      {
+        "tigerLine": {
+          "side": "L",
+          "tigerLineId": "638837339"
+        },
+        "coordinates": {
+          "x": -78.641825244275,
+          "y": 35.776946489733
+        },
+        "addressComponents": {
+          "zip": "27601",
+          "streetName": "MCDOWELL",
+          "preType": "",
+          "city": "RALEIGH",
+          "preDirection": "S",
+          "suffixDirection": "",
+          "fromAddress": "301",
+          "state": "NC",
+          "suffixType": "ST",
+          "toAddress": "399",
+          "suffixQualifier": "",
+          "preQualifier": ""
+        },
+        "matchedAddress": "301 S MCDOWELL ST, RALEIGH, NC, 27601"
+      }
+    ]
+  }
+}

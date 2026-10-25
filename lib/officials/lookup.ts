@@ -6,6 +6,7 @@ import { campaignSiteFor } from "./campaign-sites.ts";
 import { socialAccountsOf } from "./social-platforms.ts";
 import { personIdentityKeys } from "./people-identity.ts";
 import { executiveCardProfile } from "./national-executive.ts";
+import { photoForPerson } from "../photos/person.ts";
 import type {
   Officeholder,
   OfficeholderSet,
@@ -84,9 +85,21 @@ export function indexByOfficeholderId(sets: readonly OfficeholderSet[], photos?:
 export type PhotoIndex = Map<string, string>;
 
 export function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHolder {
-  const portraitSource = person.photo ? {
-    sourceUrl: person.photo.sourceUrl, sourceOrg: [person.provenance.sourceOrg, person.photo.attribution, person.photo.license].filter(Boolean).join(" · "),
-    collectedAt: person.photo.collectedAt, verifiedAt: person.photo.verification?.checkedAt ?? null,
+  const photo=photoForPerson(person.personId ?? person.id,person.state);
+  const photoSource=photo?.provenance ?? (photo && photo.url !== person.photo?.url ? {
+    sourceUrl:photo.verification?.attribution?.sourceUrl ?? photo.verification?.sources[0]?.url ?? photo.url,
+    sourceOrg:photo.source,collectedAt:photo.verification?.sources[0]?.retrievedAt ?? "",verifiedAt:photo.verification?.checkedAt ?? null,
+  } : person.photo ? person.fieldSources?.photo ?? {
+    sourceUrl:person.photo.sourceUrl,sourceOrg:[person.provenance.sourceOrg,person.photo.attribution,person.photo.license].filter(Boolean).join(" · "),
+    collectedAt:person.photo.collectedAt,verifiedAt:person.photo.verification?.checkedAt ?? null,
+  } : null);
+  const portraitSource=photoSource ? {...photoSource,
+    sourceUrl:photo?.verification?.imageUrl ?? (photo && photo.url !== person.photo?.url ? photoSource.sourceUrl : person.photo?.sourceUrl) ?? photoSource.sourceUrl,
+    collectedAt:photo?.verification?.imageRetrievedAt ?? photoSource.collectedAt} : null;
+  const sourcePortrait=person.photo && photo && photo.url !== person.photo.url ? {
+    ...(person.fieldSources?.photo ?? person.provenance),sourceUrl:person.photo.sourceUrl,
+    sourceOrg:[person.fieldSources?.photo?.sourceOrg ?? person.provenance.sourceOrg,person.photo.attribution,person.photo.license].filter(Boolean).join(" · "),
+    collectedAt:person.photo.collectedAt,verifiedAt:person.photo.verification?.checkedAt ?? null,
   } : null;
   return {
     ...(person.sourceHolders ? {sourceHolders:person.sourceHolders.map(source=>toSeatHolder(source,photos))} : {}),
@@ -96,8 +109,9 @@ export function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHol
     memberships: person.memberships,
     selectionMethod: person.selectionMethod,
     selectionMethodSourceUrl: person.selectionMethodSourceUrl,
-    fieldSources: portraitSource ? { ...person.fieldSources,
-      photoUrl: person.fieldSources?.photoUrl ?? portraitSource, portraitImage: portraitSource,
+    fieldSources: photoSource ? { ...person.fieldSources,
+      photoUrl:person.fieldSources?.photoUrl ?? photoSource,portraitImage:portraitSource ?? photoSource,
+      ...(sourcePortrait ? {sourcePortraitImage:sourcePortrait} : {}),
     } : person.fieldSources ? { ...person.fieldSources } : undefined,
     name: person.name,
     officeTitle: person.officeTitle,
@@ -112,7 +126,7 @@ export function toSeatHolder(person: Officeholder, photos?: PhotoIndex): SeatHol
     email: person.email,
     phone: person.phone,
     contactFormUrl: person.contactFormUrl,
-    photoUrl: person.photo?.url ?? photos?.get(person.personId ?? person.id) ?? photos?.get(person.id) ?? null,
+    photoUrl: photo?.url ?? person.photo?.url ?? photos?.get(person.personId ?? person.id) ?? photos?.get(person.id) ?? null,
     campaignUrl: person.campaignUrl ?? campaignSiteFor(person.id)?.url ?? null,
     social: person.social === undefined ? undefined : socialAccountsOf(person.social),
     executive: executiveCardProfile(person.executive),

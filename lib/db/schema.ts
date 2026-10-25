@@ -1,10 +1,12 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  char,
   bigint,
   date,
   primaryKey,
   check,
+  customType,
   doublePrecision,
   foreignKey,
   index,
@@ -701,6 +703,13 @@ export const civicDataPayloadParts = pgTable("civic_data_payload_parts", {
   payload: jsonb("payload").notNull(),
 });
 
+/** A scheduler cache changes only when this scope's candidates, events or pointer change. */
+export const civicDataClockVersions = pgTable("civic_data_clock_versions", {
+  recordClass: text("record_class").notNull(),
+  scope: text("scope").notNull(),
+  version: bigint("version", { mode: "bigint" }).notNull(),
+}, table => [primaryKey({ columns: [table.recordClass, table.scope] })]);
+
 export const civicDataCandidates = pgTable(
   "civic_data_candidates",
   {
@@ -916,6 +925,21 @@ export const savedBallotPicks = pgTable("saved_ballot_picks", {
   revision: integer("revision").notNull(),
   file: jsonb("file").notNull(),
 });
+const postgresBox = customType<{ data: string }>({ dataType: () => "box" });
+export const placeBoundaries = pgTable("place_boundary", {
+  placeId: text("place_id").notNull(), boundaryYear: integer("boundary_year").notNull(),
+  layer: text("layer").notNull(), version: text("version").notNull(), geometry: jsonb("geometry"), bounds: postgresBox("bounds"),
+  hostCountyId: text("host_county_id"), countyAttachment: boolean("county_attachment").notNull().default(false),
+  sourceUrls: jsonb("source_urls").notNull().default([]), checkedAt: timestamp("checked_at", { withTimezone: true }).notNull(),
+}, t => [primaryKey({ columns: [t.placeId, t.boundaryYear] }), index("place_boundary_point_idx").using("gist", t.bounds),
+  index("place_boundary_host_idx").on(t.hostCountyId).where(sql`${t.countyAttachment}`),
+  check("place_boundary_shape_bounds", sql`(${t.geometry} IS NULL) = (${t.bounds} IS NULL)`),
+  check("place_boundary_county_attachment", sql`NOT ${t.countyAttachment} OR (${t.hostCountyId} IS NOT NULL AND ${t.geometry} IS NULL)`)]);
+export const placeMapCountCache = pgTable("place_map_counts", {
+  state: char("state", { length: 2 }).primaryKey(), places: integer("places").notNull(),
+  zips: integer("zips").notNull(), zctas: integer("zctas").notNull(), countyAttachments: integer("county_attachments").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
 const readerEventDimensions = () => ({
   period: text("period").notNull(), periodStart: date("period_start").notNull(),
   zip: text("zip").notNull(), district: text("district").notNull(),
@@ -928,3 +952,15 @@ export const readerEventTotals = pgTable("reader_event_totals", {
   ...readerEventDimensions(), events: bigint("events", { mode: "number" }).notNull(), users: bigint("users", { mode: "number" }).notNull(),
 }, t => [primaryKey({ columns: [t.period, t.periodStart, t.zip, t.district, t.topic, t.eventType] }),
   index("reader_event_totals_period_idx").on(t.period, t.periodStart)]);
+
+/** Writer totals and hourly movement; no source payloads or reader identities. */
+export const countHour = pgTable("count_hour", {
+  state: char("state",{length:2}).notNull(),hour: timestamp("hour", {withTimezone:true}).notNull(),step: text("step").notNull(),
+  n: bigint("n",{mode:"number"}).notNull().default(0),
+}, table=>[primaryKey({columns:[table.state,table.hour,table.step]}),check("count_hour_n_check",sql`${table.n} >= 0`)]);
+export const lineKeeperRun = pgTable("line_keeper_run", {
+  hour: timestamp("hour",{withTimezone:true}).primaryKey(),
+  checkedAt: timestamp("checked_at",{withTimezone:true}).notNull(),
+  problems: integer("problems").notNull(), bytesRead: bigint("bytes_read",{mode:"number"}).notNull(),
+  oldest: jsonb("oldest").notNull().default(sql`'{}'::jsonb`),
+}, table=>[check("line_keeper_run_check",sql`${table.problems} >= 0 AND ${table.bytesRead} >= 0`)]);

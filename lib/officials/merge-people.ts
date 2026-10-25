@@ -154,12 +154,11 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
       if (!present(b)) continue;
       if (field === "selectionMethod" && b === "UNKNOWN") continue;
       if (field === "photo") {
-        const boundId = right.personId ?? right.id, photo = right.photo;
-        if (!photo || !portraitBindingMatches(boundId, photo) || !mergedKeys.has(boundId)) continue;
+        const photo = right.photo, verifiedFor = photo?.verification?.personId;
+        if (!photo || !verifiedFor || !personIdentityKeys(right).has(verifiedFor) || !mergedKeys.has(verifiedFor) || !portraitBindingMatches(verifiedFor, photo)) continue;
         // The merge already established this exact source alias as the same person; retain its image proof.
-        const rebound = boundId === personId ? photo : {...photo, verification: {...photo.verification!, personId}};
-        if (!portraitBindingMatches(personId, rebound)) continue;
-        b = rebound;
+        const rebound = verifiedFor === personId ? photo : {...photo, verification: {...photo.verification!, personId}};
+        b = portraitBindingMatches(personId, rebound) ? rebound : photo;
       }
       const rightWins = !present(a) || prefers(right, left, field);
       if (rightWins) Object.assign(merged, {[field]: b, fieldSources: {...merged.fieldSources, [field]: sourceFor(right, field)}});

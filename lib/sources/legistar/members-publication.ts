@@ -87,7 +87,7 @@ export async function publishLegistarMembers(input: {
       for (const owner of prepared.bound) {
         const row = reading.ids.includes(Number(owner.config.eventBodyId)) ? input.raw.bodies.find(body => body.BodyId === Number(owner.config.eventBodyId)) : undefined;
         if (!row) continue;
-        const [outcome] = await publishBodyFacts(input.facts, { bodyId: owner.bodyId, capture, producedBy: source, purge: input.purge,
+        const [outcome] = await publishBodyFacts(input.facts, { bodyId: owner.bodyId, capture, producedBy: source, purge: input.purge, acquisition: "loader",
           facts: [{ field: "name", value: row.BodyName.trim(), quote: jsonValues(row).join("\n") }] }, input.clocks, new Date(input.now));
         if (outcome && "blank" in outcome) { blanks++; blankReasons[`name:${outcome.blank}`] = (blankReasons[`name:${outcome.blank}`] ?? 0) + 1; }
         if (outcome && "decision" in outcome) { if (outcome.decision === "PUBLISH") records++; else if (outcome.decision !== "CONFIRM") held++; }
@@ -101,7 +101,7 @@ export async function publishLegistarMembers(input: {
         const members = roster.members;
         if (!members.length) continue;
         const owner = prepared.bound.find(row => row.bodyId === roster.bodyId)!;
-        const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture, complete: false, producedBy: source, purge: input.purge,
+        const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture, complete: false, producedBy: source, purge: input.purge, acquisition: "loader", nameFromPage: false,
           shownMemberIds: new Map(members.map(member => [nameKey(member.name), member.id])),
           members: members.map(member => {
             const office = offices.get(Number(member.id.split(":office:").at(-1)))!;

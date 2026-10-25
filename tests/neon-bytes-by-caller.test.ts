@@ -230,7 +230,8 @@ test("a real child's hour reaches the runner's sink, and its output and progress
     assert.equal(run!.status, 0, run!.stderr);
     assert.equal(run!.stdout, "child worked\n");
     assert.equal(shown, "child worked\n");
-    assert.equal(got.length, 1, "the exit report arrived");
+    assert.equal(got.filter(part => !part.readChunk).length, 1, "the exit totals arrived once");
+    assert.ok(got.some(part => part.readChunk && Object.values(part.reads ?? {}).some(counts => counts[2] === 1234)), "the table breakdown arrived too");
     assert.equal(got[0]!.bytes["control-plane"], 1234);
     assert.equal(got[0]!.pid !== process.pid, true);
   } finally { receiveChildVitalSigns(null); }

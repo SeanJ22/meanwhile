@@ -27,6 +27,9 @@ export interface WorkCost {
 }
 export interface ScoutOutcomeLine { readonly recordClass: string; readonly found: number; readonly route: number; readonly total: number }
 export interface NeonTransfer {
+  readonly runnerHours?: readonly { readonly hour: string; readonly readerBytes: number; readonly controlPlaneBytes: number }[];
+  readonly runnerReads?: readonly { readonly hour: string; readonly database: string; readonly job: string; readonly table: string;
+    readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
   readonly readerReads?: readonly { readonly day: string; readonly route: string; readonly read: string;
     readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
   readonly kind: "recorded" | "not-recorded";
@@ -127,7 +130,7 @@ export function neonTransferOf(read: DailyDatabaseTransferRead | null): NeonTran
       const [route, ...parts] = key.split("\t");
       return { day: row.day, route, read: parts.join("\t"), requests, requestBytes, responseBytes };
     })).sort((a, b) => b.day.localeCompare(a.day) || b.responseBytes - a.responseBytes);
-  return { kind: "recorded", detail: null, readerReads,
+  return { kind: "recorded", detail: null, readerReads, runnerReads: read.runner?.reads, runnerHours: read.runner?.hours,
     days: [...by.entries()].sort((a, b) => (a[0] < b[0] ? 1 : -1)).map(([day, d]) => ({ day, ...d })) };
 }
 

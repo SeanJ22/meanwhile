@@ -591,6 +591,14 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
+  civic_data_clock_versions: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("record_class", "scope"),
+      version: { space: "NON_IDENTIFYING", why: "A per-scope change counter the scheduler cache compares; never a reader identity." },
+    },
+  },
+
 
 };
 

@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {

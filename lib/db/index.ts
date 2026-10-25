@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "./client.ts";
 import { drizzle } from "drizzle-orm/neon-http";
 
 // Explicit extension so the file also loads under node --test strip-types.

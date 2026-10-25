@@ -1,4 +1,4 @@
-import { neonConfig, Pool, type PoolClient } from "@neondatabase/serverless";
+import { neonConfig, Pool, type PoolClient } from "../db/client.ts";
 import type { ReadOnlyQuery, Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";

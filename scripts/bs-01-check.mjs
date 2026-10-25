@@ -8,7 +8,7 @@
 import { launchGuarded, runIdFor } from './browser.mts';
 import { syntheticRunHeaders } from '../lib/db/run-marker.ts';
 import { PUBLIC_SITE_ORIGIN } from '../lib/ops/origins.ts';
-import { neon } from '@neondatabase/serverless';
+import { neon } from '../lib/db/client.ts';
 import { spawn, execFileSync } from 'node:child_process';
 import { once } from 'node:events';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';

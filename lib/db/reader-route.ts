@@ -1,6 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
-const route = new AsyncLocalStorage<string>();
+const routeSlot = Symbol.for("meanwhile.database.reader-route");
+const host = globalThis as typeof globalThis & { [routeSlot]?: AsyncLocalStorage<string> };
+const route = host[routeSlot] ??= new AsyncLocalStorage<string>();
 
 export function withReaderRoute<T>(path: string, read: () => T): T {
   return route.run(path, read);

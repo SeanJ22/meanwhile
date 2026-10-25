@@ -1,4 +1,4 @@
-import { neon, neonConfig, Pool } from "@neondatabase/serverless";
+import { neon, neonConfig, Pool } from "../db/client.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";

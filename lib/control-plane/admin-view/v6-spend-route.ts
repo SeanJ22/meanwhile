@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { readDailyDatabaseTransfer, readRunnerDatabaseTransfer, type DailyDatabaseTransferRead } from "../../db/transfer.ts";

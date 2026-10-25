@@ -9,7 +9,7 @@
  * Nothing here writes. A store that is not installed answers NOT_INSTALLED, never an empty list.
  */
 import { gunzipSync } from "node:zlib";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import type { CapturedEvent, CohortRow, EventType, Residency, TotalsRow } from "./types.ts";
 import { EVENT_TYPES } from "./types.ts";
 import { daysBefore, weekOf } from "./slice.ts";

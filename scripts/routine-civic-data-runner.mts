@@ -33,7 +33,7 @@ import { ballotPublicationDue, ballotPublicationHasNoInput, electionLaunchOrder,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { ballotNavigationTaskState } from "../lib/civic-data/ballot-navigation-scope.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";

@@ -1,5 +1,5 @@
 /** Each read fails alone to null, so its row says why it is not measured instead of showing a zero. */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import type { PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
 import { readPostingWindow } from "../line-keeper/posting.ts";
 import { fixItems } from "../fix-list.ts";

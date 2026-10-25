@@ -48,12 +48,12 @@ import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/wor
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
-import { keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { collectDatabaseTransferJournals, keepRunnerTransfer } from "../lib/db/transfer.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
   type HourCosts } from "../lib/control-plane/vital-signs.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -126,6 +126,7 @@ const STDERR_TAIL_LINES = 40;
 const ROOT = process.cwd();
 
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
+process.env.WTP_DATABASE_TRANSFER_DIR = VITAL_SIGNS_DIR;
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 
 process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
@@ -140,6 +141,7 @@ function keepHourPart(part: NeonBytesHour): void {
 receiveChildVitalSigns(keepHourPart);
 
 function keepOwnNeonBytes(nowMs: number): void {
+  collectDatabaseTransferJournals(VITAL_SIGNS_DIR);
   for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });

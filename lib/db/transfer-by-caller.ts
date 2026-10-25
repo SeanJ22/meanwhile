@@ -3,6 +3,8 @@ import { currentReaderRoute, transferRead } from "./reader-route.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { basename } from "node:path";
 import type { neonConfig } from "@neondatabase/serverless";
+import { journalProcessTransfer } from "./transfer-journal.ts";
+import { assertDatabaseReadTarget, databaseAddress } from "./read-target.ts";
 
 /** Set by the runner for its children: print this process's hour totals to stdout. */
 export const VITAL_SIGNS_REPORT_ENV = "WTP_VITAL_SIGNS_REPORT";
@@ -17,6 +19,7 @@ export type NeonDatabase = "reader" | "control-plane";
 export interface NeonBytesHour {
   /** The hour's start, ISO, e.g. 2026-10-06T07:00:00.000Z. */
   readonly hour: string;
+  readonly client?: "reader" | "runner";
   readonly requests: number;
   readonly bytes: Readonly<Record<NeonDatabase, number>>;
   /** Requests and request-body bytes by database: with `bytes`, the runner's rows in the daily transfer table (transfer.ts). */
@@ -62,6 +65,7 @@ interface CallerState {
   siteCache: Map<string, string>;
   reportInstalled: boolean;
   keptInProcess: boolean;
+  onCount?: (part: NeonBytesHour) => void;
 }
 interface SocketRead {
   caller: string | undefined;
@@ -71,7 +75,7 @@ interface SocketRead {
 // Server bundles share pools; their borrowers must share the same async scopes and counters.
 const callerSlot = Symbol.for("meanwhile.database.transfer.callers");
 const host = globalThis as typeof globalThis & { [callerSlot]?: CallerState };
-const callerState = host[callerSlot] ??= { scope: new AsyncLocalStorage<string>(), pinnedSite: new AsyncLocalStorage<string>(),
+const callerState: CallerState = host[callerSlot] ??= { scope: new AsyncLocalStorage<string>(), pinnedSite: new AsyncLocalStorage<string>(),
   queryRoute: new AsyncLocalStorage<string>(), socketScope: new AsyncLocalStorage<SocketRead>(), sockets: new WeakMap(),
   buckets: new Map(), siteCache: new Map(), reportInstalled: false, keptInProcess: false };
 const { scope, pinnedSite, buckets, siteCache } = callerState;
@@ -89,6 +93,12 @@ export function withQueryCaller<T>(operation: string, run: () => T): T {
 }
 
 export const countedFetchSlot = Symbol.for("meanwhile.database.transfer.fetch");
+export function preserveDatabaseFetchAccounting<T extends object>(wrapper: T, underlying: object): T {
+  for (const key of [countedFetchSlot, Symbol.for("meanwhile.database.admin-changes.fetch")]) {
+    if ((underlying as unknown as Record<symbol, unknown>)[key]) Object.defineProperty(wrapper, key, { value: true });
+  }
+  return wrapper;
+}
 const callerSocketSlot = Symbol.for("meanwhile.database.transfer.socket.context");
 
 /** Keep the requesting client with a pooled socket, without changing its query or transport. */
@@ -202,18 +212,24 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
     bucket.sent[database] = { requests: bucket.sent[database].requests + sent.requests, bytes: bucket.sent[database].bytes + sent.bytes };
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
-    const job = process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
+    const route = socket?.route ?? callerState.queryRoute.getStore() ?? currentReaderRoute();
+    const job = route.startsWith("admin:") ? route : process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
     const read = `${database}\t${job}\t${table ?? /(?:^|\s)query:([^ ←]+)/.exec(site)?.[1] ?? site.split(/[. ]/)[0]}`;
     const held = bucket.reads.get(read) ?? [0, 0, 0];
     bucket.reads.set(read, [held[0] + sent.requests, held[1] + sent.bytes, held[2] + bytes]);
-    const route = socket?.route ?? callerState.queryRoute.getStore();
     if (route && route !== "unattributed") {
       const name = `neon_bytes:${database}:${route}`;
       bucket.counters.set(name, (bucket.counters.get(name) ?? 0) + bytes);
     }
     bucket.dirty = true;
+    const part = { ...snapshot(hourStart(nowMs), bucket), pid: process.pid, startedMs: Math.floor(performance.timeOrigin),
+      peakRssBytes: process.resourceUsage().maxRSS * 1024 };
+    journalProcessTransfer(part);
+    callerState.onCount?.(part);
   } catch { /* accounting never breaks a read */ }
 }
+
+export function onNeonBytesCount(counted: (part: NeonBytesHour) => void): void { callerState.onCount = counted; }
 
 function bucketFor(nowMs: number): Bucket {
   const hour = hourStart(nowMs);
@@ -243,7 +259,7 @@ function processLabel(): string {
 }
 
 function snapshot(hour: string, bucket: Bucket): NeonBytesHour {
-  return { hour, requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
+  return { hour, client: runnerClient() || process.env[VITAL_SIGNS_REPORT_ENV] === "1" ? "runner" : "reader", requests: bucket.requests, bytes: { ...bucket.bytes }, sent: { ...bucket.sent },
     reads: Object.fromEntries(bucket.reads),
     byCaller: Object.fromEntries(bucket.byCaller), processes: [processLabel()],
     ...(bucket.counters.size > 0 ? { counters: Object.fromEntries(bucket.counters) } : {}) };
@@ -357,6 +373,8 @@ export function installNeonBytesReport(): void {
 }
 
 /** The runner parent sums the hour itself (takeNeonBytesHours); it never reports to its own output. */
+export function keepsNeonBytesInProcess(): boolean { return callerState.keptInProcess; }
+
 export function keepNeonBytesInProcess(): void {
   callerState.keptInProcess = true;
 }
@@ -393,27 +411,41 @@ export function runnerClient(): boolean {
 
 type FetchLike = typeof fetch;
 
-export function databaseTransferFetch(underlying: FetchLike, record: (value: DatabaseTransfer) => void | Promise<unknown>, internal: () => boolean = () => false): FetchLike {
+export function databaseTransferFetch(underlying: FetchLike, record: (value: DatabaseTransfer) => void | Promise<unknown>, internal: () => boolean = () => false, onComplete: () => void | Promise<unknown> = () => {}): FetchLike {
   if ((underlying as FetchLike & { [countedFetchSlot]?: boolean })[countedFetchSlot]) return underlying;
   const countedFetch: FetchLike = async (input, init) => {
     const headers = new Headers(input instanceof Request ? input.headers : undefined);
     new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
     const connection = headers.get("neon-connection-string");
+    if (connection !== null) assertDatabaseReadTarget(connection);
     if (connection === null || internal()) return underlying(input, init);
-    if (connection === process.env.FEEDBACK_DATABASE_URL && connection !== process.env.DATABASE_URL &&
-        connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return underlying(input, init);
-    const day = easternDay(new Date()), database = connection === process.env.DATABASE_URL ? "reader" : "control-plane";
+    const address = databaseAddress(connection), readerAddress = databaseAddress(process.env.DATABASE_URL);
+    if (address !== null && address === databaseAddress(process.env.FEEDBACK_DATABASE_URL) && address !== readerAddress &&
+        address !== databaseAddress(process.env.WTP_CONTROL_PLANE_DATABASE_URL)) return underlying(input, init);
+    const database = address !== null && address === readerAddress ? "reader" : "control-plane";
     const client = runnerClient() ? "runner" : "reader";
     const requestBytes = typeof init?.body === "string" ? Buffer.byteLength(init.body) : 0;
     const route = callerState.queryRoute.getStore() ?? currentReaderRoute();
     const read = `${route}\t${transferRead(typeof init?.body === "string" ? init.body : undefined)}`;
     const caller = scope.getStore() ?? `query:${read.split("\t")[1]} ← ${namedSite()}`;
-    const response = await underlying(input, init);
-    let received = 0, recorded: Promise<void> | null = null;
-    const finish = (): Promise<void> => recorded ??= Promise.resolve().then(() => callerState.queryRoute.run(route, () => scope.run(caller, () => record({
-      day, database, client, requests: 1, requestBytes, responseBytes: received,
-      reads: { [read]: [1, requestBytes, received] },
-    })))).then(() => undefined);
+    const recordPart = async (responseBytes: number, requests = 0, sentBytes = 0): Promise<void> => {
+      try {
+        await callerState.queryRoute.run(route, () => scope.run(caller, () => record({
+          day: easternDay(new Date()), database, client, requests, requestBytes: sentBytes, responseBytes,
+          reads: { [read]: [requests, sentBytes, responseBytes] },
+        })));
+      } catch { /* A meter failure never hides data. */ }
+    };
+    await recordPart(0, 1, requestBytes);
+    let completed = false;
+    const finish = async (): Promise<void> => {
+      if (completed) return;
+      completed = true;
+      try { await onComplete(); } catch { /* The saved counts can be retried. */ }
+    };
+    let response: Response;
+    try { response = await underlying(input, init); }
+    catch (error) { await finish(); throw error; }
     if (response.body === null) { await finish(); return response; }
     const reader = response.body.getReader();
     const body = new ReadableStream<Uint8Array>({
@@ -421,7 +453,7 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
         try {
           const chunk = await reader.read();
           if (chunk.done) { await finish(); controller.close(); }
-          else { received += chunk.value.byteLength; controller.enqueue(chunk.value); }
+          else { await recordPart(chunk.value.byteLength); controller.enqueue(chunk.value); }
         } catch (error) { await finish(); controller.error(error); }
       },
       async cancel(reason) {

@@ -13,7 +13,7 @@ import {tmpdir} from "node:os";
 import {join,resolve,extname} from "node:path";
 import {gzipSync} from "node:zlib";
 import {build as bundleFunction} from "esbuild";
-import {neon,neonConfig} from "@neondatabase/serverless";
+import {neon,neonConfig} from "../lib/db/client.ts";
 import type {Request as BrowserRequest} from "playwright";
 import {PUBLIC_SITE_ORIGIN} from "../lib/ops/origins.ts";
 import {launchGuarded} from "./browser.mts";

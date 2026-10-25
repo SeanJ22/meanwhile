@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { getStore } from "@netlify/blobs";
 import type { AppendOutcome, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";

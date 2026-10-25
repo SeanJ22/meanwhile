@@ -8,7 +8,7 @@ import { publishCandidatePortraits } from "../lib/ballot/portrait-refresh.ts";
 import { campaignSiteHostRefusal } from "../lib/candidates/campaign-site-verifier.ts";
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedCampaignSitesContractId, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope,

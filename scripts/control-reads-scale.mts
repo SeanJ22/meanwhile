@@ -34,7 +34,7 @@ if (mode === "worker") await worker();
 else await parent();
 
 async function worker() {
-  const { neonConfig } = await import("@neondatabase/serverless");
+  const { neonConfig } = await import("../lib/db/client.ts");
   const inflight = new Map<number, { resolve: (value: string) => void; reject: (error: Error) => void }>();
   let sequence = 0;
   process.on("message", (message: { id: number; body?: string; error?: string }) => {

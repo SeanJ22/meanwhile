@@ -1,5 +1,5 @@
 import { ADMIN_SECTION_TABLES } from "../lib/control-plane/repository/admin-config.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 

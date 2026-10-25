@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 
 export interface VotingLookupCount { day: string; zip: string; districts: string[] }

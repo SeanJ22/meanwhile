@@ -11,7 +11,7 @@
  * @freshness-reads-here — observedAt is the explicit start of this production
  * store observation and is persisted as runtime evidence, not data currency.
  */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { purgeExpiredLimiterState } from "../lib/db/intake-limiter.ts";

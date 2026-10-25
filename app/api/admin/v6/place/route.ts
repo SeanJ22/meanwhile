@@ -10,7 +10,7 @@ import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { readPlaceHistory } from "@/lib/control-plane/admin-view/place-history-read.ts";
 import type { PlaceHistoryPoint } from "@/lib/coverage/place-history.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../../../lib/db/client.ts";
 import { missionStartOf } from "@/lib/control-plane/admin-view/mission-start.ts";
 import { owedKindUpdates } from "@/lib/control-plane/admin-view/updates-read.ts";
 import { addUpdates } from "@/lib/control-plane/updates.ts";

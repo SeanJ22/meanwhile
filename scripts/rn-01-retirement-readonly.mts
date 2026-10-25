@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { Client, neonConfig } from "@neondatabase/serverless";
+import { Client, neonConfig } from "../lib/db/client.ts";
 import { RETIRED_STATE_POINTERS } from "../lib/civic-data/state-pointer-retirement.ts";
 import { prepareRetirementStateInputs, withRetirementSourceCursor } from "../lib/civic-data/state-retirement-inputs.ts";
 import { previewRetirementStateInput } from "../lib/civic-data/state-retirement-merge.ts";

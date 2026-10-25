@@ -5,6 +5,11 @@ import { createPgRepositories } from "../lib/control-plane/repository/pg-store.t
 import { databaseTransferFetch } from "../lib/db/transfer-by-caller.ts";
 import { flushDatabaseTransfer, pendingDatabaseTransfer, type DatabaseTransfer } from "../lib/db/transfer.ts";
 
+const totals = (rows: readonly DatabaseTransfer[]) => rows.reduce((sum, row) => ({
+  requests: sum.requests + row.requests, requestBytes: sum.requestBytes + row.requestBytes,
+  responseBytes: sum.responseBytes + row.responseBytes,
+}), { requests: 0, requestBytes: 0, responseBytes: 0 });
+
 test("database counter counts actual UTF-8 response bytes and leaves JSON unchanged", async () => {
   const rows: DatabaseTransfer[] = [];
   const body = JSON.stringify({ value: "Cochisé", records: [1, 2, 3] });
@@ -13,10 +18,7 @@ test("database counter counts actual UTF-8 response bytes and leaves JSON unchan
     headers: { "neon-connection-string": "postgresql://local.invalid/staging" }, body: "select 1",
   });
   assert.deepEqual(await response.json(), JSON.parse(body));
-  assert.equal(rows.length, 1);
-  assert.equal(rows[0]!.responseBytes, Buffer.byteLength(body));
-  assert.equal(rows[0]!.requestBytes, 8);
-  assert.equal(rows[0]!.requests, 1);
+  assert.deepEqual(totals(rows), { responseBytes: Buffer.byteLength(body), requestBytes: 8, requests: 1 });
 });
 
 test("government/API requests do not count as database transfer", async () => {
@@ -40,12 +42,11 @@ test("database accounting streams chunks before the remaining body is available"
   });
   const reader = response.body!.getReader();
   assert.equal(Buffer.from((await reader.read()).value!).toString(), "Cochis");
-  assert.equal(rows.length, 0);
+  assert.equal(totals(rows).responseBytes, Buffer.byteLength("Cochis"), "bytes count before the response finishes");
   release();
   assert.equal(Buffer.from((await reader.read()).value!).toString(), "é");
   assert.equal((await reader.read()).done, true);
-  assert.equal(rows.length, 1);
-  assert.equal(rows[0].responseBytes, Buffer.byteLength("Cochisé"));
+  assert.equal(totals(rows).responseBytes, Buffer.byteLength("Cochisé"));
 });
 
 test("database accounting records consumed bytes once on cancellation or body failure", async () => {
@@ -68,9 +69,7 @@ test("database accounting records consumed bytes once on cancellation or body fa
     if (failure) await assert.rejects(reader.read(), expected);
     else await reader.cancel("reader finished");
     assert.equal(cancelled, !failure);
-    assert.equal(rows.length, 1);
-    assert.equal(rows[0].responseBytes, 4);
-    assert.equal(rows[0].requestBytes, 8);
+    assert.deepEqual(totals(rows), { responseBytes: 4, requestBytes: 8, requests: 1 });
   }
 });
 
@@ -86,7 +85,7 @@ test("an admitted direct parent counts as runner and a dedicated feedback read i
     assert.equal(rows[0].database, "reader");
     assert.equal(rows[0].client, "runner");
     await counted("https://database.invalid/sql", { headers: { "neon-connection-string": process.env.FEEDBACK_DATABASE_URL! } });
-    assert.equal(rows.length, 1);
+    assert.equal(totals(rows).requests, 1);
   } finally {
     for (const key of Object.keys(process.env)) if (!(key in saved)) delete process.env[key];
     Object.assign(process.env, saved);

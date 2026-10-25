@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { isDoorRecord, type DoorRecord } from "../doors/registry.ts";
 import { installDoorRecords } from "../doors/meeting-doors.ts";

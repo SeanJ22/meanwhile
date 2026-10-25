@@ -1,5 +1,5 @@
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../../../lib/db/client.ts";
 import type { NextRequest } from "next/server";
 
 import { loadLearningTrends } from "@/app/(admin)/_mw/data/learning-trends.ts";

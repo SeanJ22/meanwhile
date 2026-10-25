@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";

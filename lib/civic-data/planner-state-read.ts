@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { installReaderDatabaseQuery } from "../reader/database.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";

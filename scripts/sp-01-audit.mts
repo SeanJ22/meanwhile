@@ -1,7 +1,7 @@
 /** Read-only production replay. See docs/sp-01/audit.md for commands and counting rules. */
 import assert from "node:assert/strict";
 import {mkdir, readFile, writeFile} from "node:fs/promises";
-import {neon} from "@neondatabase/serverless";
+import {neon} from "../lib/db/client.ts";
 import {drizzle} from "drizzle-orm/neon-http";
 import {readerCacheScopeForPublication,readerCacheTags,invalidateReaderCache,readerPublicationNeedsGeography} from "../lib/reader/cache.ts";
 import {REGISTRY_STATES,registryJurisdictions} from "../lib/civic-data/state-scopes.ts";

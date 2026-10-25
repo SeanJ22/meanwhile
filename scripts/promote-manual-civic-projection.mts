@@ -1,7 +1,7 @@
 import { parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve, join } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { runCandidateProfileFindingsJob } from "../lib/civic-data/candidate-profile-findings-job.ts";

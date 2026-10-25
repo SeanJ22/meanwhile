@@ -1,5 +1,5 @@
 /** Shared Queue population reader for the HTTP route and the plain-Node daily timer. */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { readStuckPopulation, type StuckPopulation } from "./v6-stuck-read.ts";
 const memo = new Map<string,{stamp:string;population:StuckPopulation}>();

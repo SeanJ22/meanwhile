@@ -1,5 +1,5 @@
 import { adminRead } from "@/lib/control-plane/admin-read.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../../../lib/db/client.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";

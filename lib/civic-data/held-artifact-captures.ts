@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 import { crosswalkEvidenceWorkItem, findHeldCapture, indexVault, READ_ONLY_VAULT_PROJECT, type HeldVaultArtifact } from "../control-plane/evidence/read-only-vault.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 

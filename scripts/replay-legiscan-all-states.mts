@@ -6,7 +6,7 @@ import { spawn } from "node:child_process";
 import { pathToFileURL,fileURLToPath } from "node:url";
 import { dirname,resolve,join,basename } from "node:path";
 import { createHash } from "node:crypto";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { acquireDatasetList,acquireDataset } from "../lib/sources/legiscan/acquisition.ts";
 import { LEGISCAN_BULK_PARSER,billScope,stateOfDataset,type BillSession,type BillPart,type BillPartPointer,type HeldPerson } from "../lib/sources/legiscan/bills.ts";
 import { publishBulkCandidate,confirmBulkSession } from "../lib/sources/legiscan/publication.ts";

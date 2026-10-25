@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import React from "react";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { renderToStaticMarkup } from "react-dom/server";
 import { OpenDataFacts, openDataSources } from "../components/map/open-data.tsx";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";

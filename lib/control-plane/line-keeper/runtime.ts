@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { withStoreBudget } from "../repository/request-bounds.ts";
 import { runLineKeeper } from "./keep.ts";

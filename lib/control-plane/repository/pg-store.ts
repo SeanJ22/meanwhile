@@ -24,7 +24,7 @@ import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts"
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
 
 import { createHash } from "node:crypto";
-import { neon, Pool, neonConfig } from "@neondatabase/serverless";
+import { neon, Pool, neonConfig } from "../../db/client.ts";
 import type {
   CacheObservationRecord,
   OwnerDecisionIntent,

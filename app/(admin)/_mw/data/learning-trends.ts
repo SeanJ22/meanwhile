@@ -1,7 +1,7 @@
 import "server-only";
 
 /** Aggregates over the Scout result log, never the log itself: database transfer is billed. A failure is returned as unread, never as an empty week. */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../../lib/db/client.ts";
 
 import type { WeekLearningRow } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { CONTROL_PLANE_URL_VAR } from "@/lib/control-plane/repository/pg-store.ts";

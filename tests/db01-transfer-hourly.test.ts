@@ -14,6 +14,7 @@ test("hourly job totals persist atomically, tolerate replay and recover a failed
     CREATE TABLE owner_flag(id integer,fact_id bigint,reader_family text,reader_id text,resolved text);
     CREATE TABLE database_transfer_daily(day date,database_name text,client text,requests bigint,request_bytes bigint,response_bytes bigint,reads jsonb,updated_at timestamptz DEFAULT now(),PRIMARY KEY(day,database_name,client));`);
   await pg.exec(readFileSync(new URL("../lib/db/migrations/DB-01_read_versions.sql", import.meta.url), "utf8"));
+  await pg.exec(readFileSync(new URL("../lib/db/migrations/DB-03_process_transfer.sql", import.meta.url), "utf8").replaceAll("--> statement-breakpoint", ""));
   let fail = true;
   process.env.DATABASE_URL = "postgresql://local:local@ep-hourly-test.us-east-2.aws.neon.tech/neondb";
   neonConfig.fetchFunction = async (_input: RequestInfo | URL, init?: RequestInit) => {
@@ -47,5 +48,5 @@ test("hourly job totals persist atomically, tolerate replay and recover a failed
     [{ requests: 2,response_bytes: 200,reads: { "fema\tcivic_data_payload_parts": [2,20,200] } }]);
   const view = await readRunnerDatabaseTransfer(hour);
   assert.deepEqual(view.hours, [{ hour,readerBytes: 200,controlPlaneBytes: 0 }]);
-  assert.deepEqual(view.reads, [{ hour,database: "reader",job: "fema",table: "civic_data_payload_parts",requests: 2,requestBytes: 20,responseBytes: 200 }]);
+  assert.deepEqual(view.reads.filter(row => row.job === "fema"), [{ hour,database: "reader",job: "fema",table: "civic_data_payload_parts",requests: 2,requestBytes: 20,responseBytes: 200 }]);
 });

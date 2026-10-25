@@ -1,6 +1,6 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { Client } from "@neondatabase/serverless";
+import { Client } from "../lib/db/client.ts";
 import { assignment } from "./cli-args.mts";
 import { installDatabaseTransferCounter } from "../lib/db/transfer.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";

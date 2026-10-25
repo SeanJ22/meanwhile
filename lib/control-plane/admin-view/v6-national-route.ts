@@ -12,7 +12,7 @@ import { expansionScopesOf } from "../expansion/scopes.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import type { OwnerSnapshot } from "../owner-surface.ts";
 import { readPopulationFacts, statePopulationId } from "../../reference/population-facts.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { readCountryScores } from "../line-keeper/country.ts";
 import { readDistrictStuckCounts } from "./stuck-summary.ts";

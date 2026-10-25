@@ -7,7 +7,7 @@
  * `--controlled` feeds a false claim through the same checks against
  * in-memory records, writes nothing, and exits 0 only if it is caught.
  */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { auditClaims, runClaimAuditWeek } from "../lib/control-plane/workers/claim-audit.ts";

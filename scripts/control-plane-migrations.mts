@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { Pool, neonConfig } from "@neondatabase/serverless";
+import { Pool, neonConfig } from "../lib/db/client.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";

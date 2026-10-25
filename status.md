@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T01:05:39Z
+heartbeat: 2026-10-25T01:07:52Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -28,7 +28,8 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - DB-01's expand migration applied at the production build: civic_data_clock_versions exists; journal 54.
 - Live for readers tonight: polling places refresh again (104), Cochise's 5 drop boxes, Arizona's statewide card fixed (103), about 170 more meeting calendars a pass (102), one card per person (101), the id lookup behind reactions (0051), and the reader pool that fails one read instead of the function (100).
 - Gating: RB-A8 fb1783a62 with RB-A3 d92e9a054 and RB-A5 f7ab065e3 (river-next 0916a5b87). River appended RB-A3_expand and RB-A8_count_hour after DB-01 in the reader journal (idx 54, 55); 101 migration, control-plane and identity tests pass.
-- Then PT-01 a109cf965, then RB-A4.
+- New READYs since 7 PM: MT-01 0c28ca5c7 (source-first meeting addresses), CL-01 f5ea2e910 (reconciled with river; same person across ballot and held records), RB-A6 50405245e (hunters get missing fields with held values), DB-02 2769c614e (registry prior reuse on DB-01's scope versions), BL-02 c3fff3702 (bills).
+- Queue after the RB-A8 batch, one batch gating at a time: PT-01 a109cf965 + MT-01 0c28ca5c7; RB-A6 50405245e + RB-A4 ef7987b1e (Sean's order RB-A6/A4/A10; RB-A4's meeting-facts.ts conflict reviewed at fold); CL-01 f5ea2e910; DB-02 2769c614e; BL-02 c3fff3702.
 
 ### Release 105 live, 8:23 PM EDT (RB-A2)
 - /api/build 7f13a561c (PR #816 merge commit). Sean's checks in Chromium at 8:24 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.

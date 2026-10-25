@@ -69,7 +69,8 @@ export async function heldStateDataset(query: Query, state: string): Promise<Bui
 export async function prepareStatePlaceMap(query: Query, root: string, state: string,
   options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset }> {
   if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
-  options = { ...options, releases: options.releases ?? new Map() };
+  const releases = options.releases ?? new Map();
+  options = { ...options, releases };
   const { reference: registration } = loadRegistrationReference(root, state);
   const fips = registration.divisions.find(d => d[1] === "state")?.[2];
   if (!fips) throw new Error(`No state FIPS for ${state}`);
@@ -86,6 +87,10 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   const previousDataset = await heldStateDataset(query, state);
   const acquired = await acquireDataset({ ...options, previousDataset, states: new Set([fips]), discoverPlans: false,
     only: ["county", "place", "cousub", "cd119", "sldu", "sldl", "cd120", "sldu2026", "sldl2026"] });
+  // The overlap scopes now hold their parsed rows. Only the state's block
+  // file is read again for tribal identities and current place memberships.
+  const blocks = `https://www2.census.gov/geo/docs/maps-data/data/grf/2026/public_grfc_cur26_${fips}.txt`;
+  for (const url of releases.keys()) if (url !== blocks) releases.delete(url);
   // A state can have no lower chamber or incorporated places. The shared
   // acquisition retains that evidence; this publication contains present maps.
   const dataset = { ...acquired, scopes: acquired.scopes.filter(scope => scope.instanceCount > 0) };

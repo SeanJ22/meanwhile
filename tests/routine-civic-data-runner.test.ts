@@ -2394,7 +2394,7 @@ test("national people children share one serial lane: one at a time, back to bac
   assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
   assert.equal(routineFailureDomainFrontier(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
     "admission still offers every due source and state each pass");
-  const others = ROUTINE_SOURCE_TASKS.filter(task => task.command[0] !== "scripts/national-people-refresh.mts");
+  const others = ROUTINE_SOURCE_TASKS.filter(task => !["scripts/national-people-refresh.mts", "scripts/place-map-refresh.mts", "scripts/census-geography-refresh.mts"].includes(task.command[0]!));
   assert.ok(others.every(task => routineSerialLane(task.command) === undefined));
 
   const [first, second] = [people.find(task => task.id.endsWith("-ca"))!, people.find(task => task.id.endsWith("-ny"))!];
@@ -2422,6 +2422,31 @@ test("national people children share one serial lane: one at a time, back to bac
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /serialLane: routineSerialLane\(pending\.command\)/);
+});
+
+test("every due Census state reaches one shared source lane while meeting children keep running", async () => {
+  const census = ROUTINE_SOURCE_TASKS.filter(task => task.sourceId === "census-geography-relationships");
+  const maps = census.filter(task => task.id.startsWith("place-map-"));
+  assert.equal(maps.length, 56);
+  assert.equal(new Set(census.map(task => task.acquisitionFailureDomain)).size, census.length);
+  const admitted = routineFailureDomainFrontier(census.map(task => ({ task, lastConsideredAt: null })));
+  assert.equal(admitted.length, census.length, "one provider turn must not discard the other 55 states");
+  assert.deepEqual([...new Set(census.map(task => routineSerialLane(task.command)))], ["serial:census-geography"]);
+  let active = 0, most = 0, completed = 0, meetingCompletedBeforeMaps = false;
+  const commands = admitted.map(({ task }) => ({ id: task.id, failureDomain: task.acquisitionFailureDomain,
+    serialLane: routineSerialLane(task.command), executable: "ignored", args: [] }));
+  commands.push({ id: "meetings-state:AZ", failureDomain: "meetings:AZ", serialLane: undefined, executable: "ignored", args: [] });
+  await runBoundedChildPass(commands, { cwd: process.cwd(), env: process.env, concurrency: commands.length, sameDomainGapMs: 0 }, async command => {
+    const meeting = command.id === "meetings-state:AZ";
+    if (!meeting) most = Math.max(most, ++active);
+    await new Promise(resolve => setTimeout(resolve, 2));
+    if (meeting) meetingCompletedBeforeMaps = completed < census.length;
+    else { active--; completed++; }
+    return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+  });
+  assert.equal(completed, census.length);
+  assert.equal(most, 1, "state admission cannot multiply Census's memory use");
+  assert.equal(meetingCompletedBeforeMaps, true);
 });
 
 test("scoped source passes repair only matching reader pointers, including narrow meeting domains", () => {
@@ -2493,7 +2518,11 @@ test("every routine task's real child command runs a scripts/ script right after
   assert.ok(tasks.length > 100);
   const offenders = tasks.filter(task => {
     const child = commandFor({ id: task.id, kind: "SOURCE", task, command: task.command });
-    return child.args[0] !== "--experimental-strip-types" || child.args[1] !== "--import" || child.args[2] !== "./scripts/register-test-loader.mjs" || !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[3]));
+    const script = child.args.findIndex((arg: string) => arg.startsWith("scripts/"));
+    const memory = task.command[0] === "scripts/place-map-refresh.mts" ? ["--max-old-space-size=1024"] : [];
+    return child.args[0] !== "--experimental-strip-types" || child.args[1] !== "--import" || child.args[2] !== "./scripts/register-test-loader.mjs" ||
+      !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[script])) ||
+      JSON.stringify(child.args.slice(3, script)) !== JSON.stringify(memory);
   }).map(task => `${task.id}: ${task.command.slice(0, 2).join(" ")}`);
   assert.deepEqual(offenders, [], "the runner already supplies node and --experimental-strip-types");
   const legistar = commandFor({ id: "legistar-members:pima", kind: "SOURCE", task: legistarMemberTasks(["pima"])[0], command: legistarMemberTasks(["pima"])[0].command });

@@ -27,10 +27,14 @@ export function routineDeferral(run: BoundedChildResult, childStarted: boolean):
   return unsent || cut ? run.errorMessage : null;
 }
 
-/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. */
-const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts"]);
+/** Large source families run one child at a time while the other source lanes continue. */
+const ROUTINE_SERIAL_SCRIPTS: ReadonlyMap<string, string> = new Map([
+  ["scripts/national-people-refresh.mts", "serial:scripts/national-people-refresh.mts"],
+  ["scripts/census-geography-refresh.mts", "serial:census-geography"],
+  ["scripts/place-map-refresh.mts", "serial:census-geography"],
+]);
 export function routineSerialLane(command: readonly string[]): string | undefined {
-  return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
+  return ROUTINE_SERIAL_SCRIPTS.get(command[0] ?? "");
 }
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";

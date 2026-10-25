@@ -1188,7 +1188,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     failureDomain: pending.task.acquisitionFailureDomain,
     serialLane: routineSerialLane(pending.command),
     executable: process.execPath,
-    args: [...TS_CHILD, ...pending.command],
+    args: [...TS_CHILD, ...(pending.command[0] === "scripts/place-map-refresh.mts" ? ["--max-old-space-size=1024"] : []), ...pending.command],
     // A child told when the pass ends settles and exits with its receipt before the pass's wall stops it.
     env: withPassDeadline({
 

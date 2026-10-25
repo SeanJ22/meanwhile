@@ -1,0 +1,44 @@
+{
+  "productionBaseline": [
+    {
+      "observed_at": "2026-10-25T04:40:29.655Z",
+      "role": "readonly",
+      "boundaries": 0,
+      "zip_rows": 0,
+      "zcta_rows": 0,
+      "counted_states": 0
+    }
+  ],
+  "memoryMeasurements": {
+    "databaseWrites": "local PostgreSQL only",
+    "texasBefore": {
+      "elapsedMs": 203972,
+      "peakRssBytes": 3390554112
+    },
+    "texasAfter": {
+      "heapMiB": 1024,
+      "elapsedMs": 225264,
+      "peakRssBytes": 1669304320,
+      "publication": "PROMOTED"
+    },
+    "californiaAfter": {
+      "heapMiB": 1024,
+      "elapsedMs": 174729,
+      "peakRssBytes": 1448923136,
+      "publication": "source acquisition and map import"
+    },
+    "failedTrial": {
+      "heapMiB": 768,
+      "state": "TX",
+      "result": "heap out of memory during district-shape acquisition"
+    },
+    "reservationMiB": 1672
+  },
+  "focusedTests": {
+    "registered": 105,
+    "passed": 105,
+    "failed": 0,
+    "skipped": 0
+  },
+  "status": "Implementation tested; production scheduled-load and meeting-throughput verification pending."
+}

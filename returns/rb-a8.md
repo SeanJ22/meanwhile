@@ -20,4 +20,4 @@ check: fold
 ready: RB-A8 39cc195df
 river: 0873f9e42 (river-next, batch E)
 at: 2026-10-24T23:15:00Z
-state: returned
+state: cleared: lane posted READY fb1783a62 (8:03 PM EDT)

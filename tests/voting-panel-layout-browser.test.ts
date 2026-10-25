@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { mkdirSync, readFileSync } from "node:fs";

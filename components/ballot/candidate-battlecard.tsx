@@ -1,5 +1,7 @@
 "use client";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { PersonCard } from "@/components/ui/person-card";
 import { CardGapContext, CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardSourceContext } from "@/components/ui/card-source-context";
@@ -72,6 +74,7 @@ export function CandidateBattlecard({
   sections?: Partial<Record<BattlecardSectionId, React.ReactNode>>;
 
 }) {
+  const hydrated = useHydrated();
   const [open, setOpen] = useState(false);
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
 
@@ -90,6 +93,8 @@ export function CandidateBattlecard({
       <button
         type="button"
         data-battlecard-pill
+        disabled={!hydrated}
+        aria-busy={!hydrated}
         onClick={() => {
           captureEvent({ type: "CARD_OPEN", cardId: `BATTLECARD:${subjectId}`, cardKind: "BATTLECARD" });
           setOpen(true);
@@ -97,7 +102,7 @@ export function CandidateBattlecard({
         aria-haspopup="dialog"
         aria-expanded={open}
 
-        className="battlecard-cta w-full"
+        className="battlecard-cta w-full disabled:cursor-wait disabled:opacity-60"
       >
         View Battlecard
       </button>

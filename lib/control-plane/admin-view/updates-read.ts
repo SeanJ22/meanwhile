@@ -18,7 +18,6 @@ export interface UpdateLine {
   readonly before: string | null;
   readonly after: string | null;
   readonly evidenceHref: string | null;
-  readonly decline: { readonly placeKey: string; readonly what: string; readonly rows: readonly { readonly rowId: string; readonly subjectLabel: string; readonly requirement: string }[] } | null;
 }
 
 export interface UpdatesView {
@@ -36,7 +35,6 @@ export function updatesView(records: readonly UpdateRecord[], observedAt: string
       id: u.id, what: u.what, when: formatEastern(u.at), label: u.setback === true ? `Proven, broke since ${easternDay(u.at)}` : UPDATE_LABEL_WORDS[u.label],
       isWin: u.label !== "EXPECTED" && u.setback !== true,
       before: u.before, after: u.after, evidenceHref: u.evidenceHref,
-      decline: u.decline ? { placeKey: u.decline.placeKey, what: `${u.decline.rows.length} ${u.decline.rows.length === 1 ? "item" : "items"} added to this place's list`, rows: u.decline.rows } : null,
     })),
   };
 }
@@ -53,9 +51,6 @@ export function updatesFromChanges(rows: readonly ChangeRow[], nowMs: number): r
       label: r.status === "live" ? "TESTING" as const : "EXPECTED" as const, evidenceHref: r.url }));
 }
 
-/** The most items one Decline names; the gateway takes the same number. */
-const DECLINE_ROWS_MOST = 100;
-
 const OWED_KIND_WORDS: Readonly<Record<string, string>> = {
   body: "government bodies", seat: "seats", contest: "elections", funding: "funding records", deadline: "filing deadlines", rollcall: "roll calls", calendar: "meeting calendars",
 };
@@ -69,20 +64,17 @@ export function owedKindUpdates(input: {
 }): readonly NewUpdate[] {
   if (input.missionStart === null) return [];
   const start = Date.parse(input.missionStart);
-  const byKind = new Map<string, { n: number; first: string; rows: { rowId: string; subjectLabel: string; requirement: string }[] }>();
+  const byKind = new Map<string, { n: number; first: string }>();
   for (const row of input.rows) {
     const since = row.owedSince ?? null;
     if (since === null || !(Date.parse(since) > start)) continue;
     const seen = byKind.get(row.subject.kind);
-    const rows = seen?.rows ?? [];
-    if (row.id !== undefined && rows.length < DECLINE_ROWS_MOST) rows.push({ rowId: row.id, subjectLabel: row.subject.label ?? "", requirement: row.requirement ?? "" });
-    byKind.set(row.subject.kind, { n: (seen?.n ?? 0) + 1, first: seen === undefined || Date.parse(since) < Date.parse(seen.first) ? since : seen.first, rows });
+    byKind.set(row.subject.kind, { n: (seen?.n ?? 0) + 1, first: seen === undefined || Date.parse(since) < Date.parse(seen.first) ? since : seen.first });
   }
-  return [...byKind].sort(([a], [b]) => a.localeCompare(b)).map(([kind, { n, first, rows }]) => ({
+  return [...byKind].sort(([a], [b]) => a.localeCompare(b)).map(([kind, { n, first }]) => ({
     id: `owed-kind:${input.placeKey}:${kind}`,
     what: `${input.placeLabel}: found new ${OWED_KIND_WORDS[kind] ?? kind}, so ${n} more ${n === 1 ? "item is" : "items are"} now owed.`,
     at: first,
     label: "EXPECTED" as const,
-    ...(rows.length > 0 ? { decline: { placeKey: input.placeKey, rows } } : {}),
   }));
 }

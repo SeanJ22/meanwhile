@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
@@ -46,9 +47,9 @@ test("source publication needs acquired facts and keeps only its own source evid
   const door = named("legacy:cochise:vote-center-pdf");
   const raw = { url: door.url, contentType: "application/pdf", bytes: readFileSync("tests/fixtures/cochise-2026-vote-centers.pdf") };
   const read = { doorId: door.id, sites: [], rules: [], sources: [], office: door.office, blanks: [], attempts: [], rawBodies: [] };
-  assert.equal(votingReadHasFacts(door, read), false, "configured contact text is not a successful source read");
+  assert.equal(await votingReadHasFacts(door, read), false, "configured contact text is not a successful source read");
   const captured = { ...read, sources: [{ publisher: door.publisher, url: door.url }], rawBodies: [raw] };
-  assert.equal(votingReadHasFacts(door, captured), true);
+  assert.equal(await votingReadHasFacts(door, captured), true);
   const other = named("cochise:ballot-box-table");
   const evidence = await votingSourceEvidence(door, captured, [{ url: other.url, contentType: "text/html",
     bytes: readFileSync("tests/fixtures/voting-sources/cochise-voter-information-official-extract.html") }]);

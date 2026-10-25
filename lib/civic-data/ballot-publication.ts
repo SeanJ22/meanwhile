@@ -37,13 +37,17 @@ const publicationLogKey = (state: BallotState, family: BallotPublicationFamily =
   family === "ballot-navigation" ? `ballot-navigation-publication:${requireBallotState(state)}` : `ballot-publication:${requireBallotState(state)}`;
 
 /**
- * Election work leads the pass, after the pass is ordered by how long its work is owed: a due state ballot file already
- * holds its source evidence, and a due state's voting sites tell readers where to vote before a fixed date. Memory goes
- * in launch order and the overdue meeting backlog holds it to the pass deadline, so work queued behind it never starts.
+ * After the pass is ordered by how long its work is owed, due state ballot files lead it: they already hold their source
+ * evidence. Voting sites, which tell readers where to vote before a fixed date, then take turns with the rest of the pass.
+ * Memory goes in launch order and each started child holds it to the pass deadline, so whichever kind led alone kept the
+ * other from starting: the meeting backlog held out voting sites, then voting sites held out every meeting calendar.
  */
 export function electionLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
-  const election = (job: T) => ["ballot-contests", "voting-sites"].includes(parseStateBallotContractId(job.task.id)?.family ?? "");
-  return [...jobs.filter(election), ...jobs.filter(job => !election(job))];
+  const family = (job: T) => parseStateBallotContractId(job.task.id)?.family;
+  const voting = jobs.filter(job => family(job) === "voting-sites");
+  const rest = jobs.filter(job => family(job) !== "ballot-contests" && family(job) !== "voting-sites");
+  return [...jobs.filter(job => family(job) === "ballot-contests"), ...Array.from({ length: Math.max(voting.length, rest.length) },
+    (_, index) => [voting[index], rest[index]]).flat().filter((job): job is T => job !== undefined)];
 }
 
 export function ballotPublicationHasNoInput(report: BallotPublicationResult): boolean {

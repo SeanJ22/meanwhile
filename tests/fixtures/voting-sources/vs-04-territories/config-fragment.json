@@ -13,9 +13,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.aselectionoffice.gov/",
     "title": "American Samoa chief election office discovery root",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://aselectionoffice.gov\">https://aselectionoffice.gov</a>"
+      "sourceCopyId": -1188433333914695
     },
     "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
     "access": {
@@ -38,9 +38,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://gec.guam.gov/",
     "title": "Guam chief election office discovery root",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"http://gec.guam.gov/\">http://gec.guam.gov/</a>"
+      "sourceCopyId": -4197914177887362
     },
     "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
     "access": {
@@ -63,9 +63,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/",
     "title": "Northern Mariana Islands chief election office discovery root",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
     "access": {
@@ -88,9 +88,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.vivote.gov/",
     "title": "United States Virgin Islands chief election office discovery root",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.vivote.gov/\">https://www.vivote.gov/</a>"
+      "sourceCopyId": -118408274185956
     },
     "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
     "access": {
@@ -112,9 +112,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
     "title": "2026 General Election",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.votecnmi.gov.mp/",
     "model": "ASSIGNED",
@@ -211,9 +211,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
     "title": "2026 General Election",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.votecnmi.gov.mp/",
     "model": "ASSIGNED",
@@ -310,9 +310,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
     "title": "2026 General Election",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.votecnmi.gov.mp/",
     "model": "ASSIGNED",
@@ -409,9 +409,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
     "title": "2026 General Election",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.votecnmi.gov.mp/",
     "model": "ASSIGNED",
@@ -486,9 +486,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
     "title": "2026 General Election",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.votecnmi.gov.mp/",
     "model": "ASSIGNED",
@@ -563,9 +563,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.votecnmi.gov.mp/polling-places.php",
     "title": "2026 General Election",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://www.votecnmi.gov.mp/\">https://www.votecnmi.gov.mp/</a>"
+      "sourceCopyId": -529372418586958
     },
     "discoveredFrom": "https://www.votecnmi.gov.mp/",
     "model": "ASSIGNED",
@@ -927,9 +927,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://www.aselectionoffice.gov/absentee-voting",
     "title": "American Samoa local absentee voting rules",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://aselectionoffice.gov\">https://aselectionoffice.gov</a>"
+      "sourceCopyId": -1188433333914695
     },
     "discoveredFrom": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
     "access": {
@@ -975,9 +975,9 @@
     "electionDate": "2026-11-03",
     "electionPageUrl": "https://ww2.ceepur.org/sites/ComisionEE/es-pr/Presidencia/DocumentosPresidencia/Ley-Num-58-2020-OGP.pdf",
     "title": "Puerto Rico general-election calendar",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/",
-      "html": "<a href=\"https://ceepur.org/\">https://ceepur.org/</a>"
+      "sourceCopyId": -1165958073193107
     },
     "discoveredFrom": "https://ww2.ceepur.org/",
     "publication": {

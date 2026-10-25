@@ -14,7 +14,7 @@ export type SeatStanding = "INCUMBENT" | "CHALLENGER" | null;
 
 export function identityChipsFor(
   holder: SeatHolder,
-  tier: Tier,
+  tier: Tier | null,
   standing: SeatStanding = null,
 ): string[] {
   const chips: string[] = [];
@@ -24,7 +24,7 @@ export function identityChipsFor(
 
   const chamber = holder.chamber ? CHAMBER_LABEL[holder.chamber] : null;
   if (chamber) chips.push(chamber);
-  else chips.push(TIER_LABEL[tier]);
+  else if (tier) chips.push(TIER_LABEL[tier]);
 
   // The standing chip is gated on electedness, asked once in `lib/officials/elected-role.ts`.
   if (standing && holder.selectionMethod !== "APPOINTED" && holder.selectionMethod !== "UNKNOWN" && (holder.selectionMethod === "ELECTED_STATEWIDE" || standingChipMayAttach(holder.officeTitle))) {

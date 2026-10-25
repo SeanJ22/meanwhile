@@ -1,3 +1,4 @@
+import { measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -44,14 +45,14 @@ function fixture() {
     saveAttempt: async (attempt: TranslationAttempt) => { saved.push(attempt); },
     guardedTransportFor: () => async (request: ModelRequest) => {
       calls.push(request);
-      const message = JSON.parse(request.messages[0].content as string);
+      const message = measureRequestContext(request);
       const measure = { contestId: message.subject.contestId, whatItDoes: summary, yesMeans: yes, noMeans: no, parts: [],
         sourceUrl, sourceHash: translationHash(text), writtenAt: now };
       const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field,
         text: measure[field as "whatItDoes"], quote: measure[field as "whatItDoes"] }));
       return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 100, output_tokens: 50 },
         content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: request.tools[0].name === "write_measure_translation"
-          ? { measure, sentences } : { checked: sentences.map(({ field, text }) => ({ field, text, supported: checkerPass })) } }],
+          ? measureDraft(measure, sentences) : { checked: sentences.map(({ field, text }) => ({ field, text, supported: checkerPass })) } }],
       };
     },
   };

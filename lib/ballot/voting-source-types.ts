@@ -67,7 +67,7 @@ export interface VotingSourceDoor {
   electionAssociationVerified?: boolean;
   scopeUnresolved?: boolean;
   /** The saved official linking page is authority for vendor-hosted routes. */
-  officialLinkingPage?: import("../civic-data/source-authority.ts").OfficialLinkingPage;
+  linkingPage?: import("../civic-data/source-authority.ts").OfficialLinkingPageRef;
   model?: VotingModel;
   matchingUnit?: "COUNTY" | "TOWN" | "WARD" | "PRECINCT";
   publication?: VotingPublication;
@@ -100,6 +100,8 @@ export interface VotingSourceBlank {
 export interface VotingSourceAttempt { url: string; route: "direct" | "browser-ua"; outcome: string; }
 interface VotingSourceContact { scope: VotingDoorScope; office: VotingOfficeContact; source: VotingSource }
 export interface VotingSourceRead {
+  /** Authority pages opened for this read's publication, never stored in the door. */
+  sourceLinkingPage?: import("../civic-data/source-authority.ts").OfficialLinkingPage;
   doorId: string;
   /** Configured sections acquired together from the same source. */
   doorIds?: string[];

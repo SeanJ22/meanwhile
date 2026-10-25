@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T22:06:00Z
+heartbeat: 2026-10-25T22:07:00Z
 
 
 <!-- READY-LIST -->
@@ -1145,4 +1145,14 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - "ship DB-03 reads right after release 120 … It cuts the research cycle (1.49 GB in the 4 PM hour, both databases) and Open States votes (1.72 GB in the 3 PM hour). After release 120 is live, fold 8b69f0cb next, ahead of DB-03 Admin … Fold exactly 8b69f0cb … Confirm 2cce7754c doesn't come with it. When it's live, tell me research-cycle and openstates-votes GB per hour for the two full hours after."
 - Checked: 8b69f0cbf's one parent is river 456454204; 2cce7754c, 9c2b0c58a and 11072d2ed are not ancestors. 23 files, no migration. The merge onto ea117a0bb is clean. Admin's gate was stopped; DB-03 reads is gating alone.
 - Order: release 120 live → DB-03 reads → DB-03 Admin → state doors through 11072d2ed (stopping below 2cce7754c) → GB-01 → rebuild.
+
+### 6:15 PM EDT: release 121 plan and its before numbers
+- Sean (6:05 PM EDT, direct): one list of every READY not on main (above). Only urgent fixes ship alone; improvements merge several to a release. DB-02 is an urgent Neon fix: River re-cuts it on current river and ships it with DB-03 reads as release 121.
+- DB-02 re-cut: READY e0f14fe59 on stream/db-02-recut, from river ea117a0bb. It applies 2769c614e's code (read-model.ts, store.ts readVersioned, runtime-data-plane.ts, the registry test) without docs/db-02-ready.txt, docs/measurements/db-02 or scripts/db-02-*. The one test change: a placeholder DATABASE_URL to construct the store. Focused 76/76; tsc, eslint and knip clean.
+- Release 121 = river ea117a0bb + DB-03 reads 8b69f0cbf + DB-02 e0f14fe59, gating together on 801d5db65. It releases after 120 is live.
+- Before numbers, MB per hour, both databases, database_transfer_hourly response bytes, 2 PM / 3 PM / 4 PM / 5 PM EDT:
+  - research cycle: 2,229 / 1,092 / 1,493 / 1,264
+  - Open States votes: 1,085 / 1,718 / 255 / 349
+  - registry read at runtime-data-plane.ts line 784 (worker-publication reading civic_data_candidate_events; 806 MB in the 3 PM hour matches Sean's 0.81 GB): 756 / 806 / 787 / 1,168
+  - portraits: 367 / 5,918 / 1,666 / 5,849; member offices: 1,525 / 0 / 1,402 / 716 (release 120's before numbers)
 

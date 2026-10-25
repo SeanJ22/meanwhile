@@ -8,6 +8,8 @@ The queue records which source generation is already saved. A failed cache purge
 
 Production connections used only `readonly` on reader project `tiny-hill-13996172`, branch `br-delicate-lab-ax02xuo5`, and `wtp_cp_release_readonly` on control-plane project `withered-sunset-39821877`, branch `br-tiny-frog-aeufpjeq`. Both checked roles allow SELECT and deny INSERT, UPDATE and DELETE. Every test mutation stayed in a local PGlite copy restored from real state-scoped production rows and promoted payloads. No production database row was changed.
 
+Those captures and connected replays preceded Sean's instruction stopping bulk reads. They have not been repeated. Later checks use synthetic local fixtures or existing result files, without reading a Neon database or replaying the captured database.
+
 Sean's current access constraint limits Neon work to counts and small samples. Before a larger Neon read or replay, state its precise scope and estimated transfer in GB and obtain Sean's approval. Do not create a database copy branch or run bulk Neon copy replays. Existing local files and fixtures can be used without a Neon connection.
 
 ## Two connected checks

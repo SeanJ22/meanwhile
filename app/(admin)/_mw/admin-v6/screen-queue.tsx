@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { useV6 } from "./context.tsx";
 import { ReceiptCard } from "./receipt-view.tsx";
@@ -12,8 +13,10 @@ import s from "./v6.module.css";
 import { AuditFlagsPanel } from "./audit-flags.tsx";
 
 export function QueueScreen() {
+  const v=useV6();
+  const search=useSearchParams();
   const { rows, unread } = useQueueRows();
-  const [filter, setFilter] = useState<QueueFilter>("needs-me");
+  const [filter, setFilter] = useState<QueueFilter>(search?.get("filter")==="waiting"?"waiting":"needs-me");
 
   const counts = queueCounts(rows);
   const shown = rows.filter((r) => r.filter === filter);
@@ -21,7 +24,7 @@ export function QueueScreen() {
   return (
     <>
       <header>
-        <p className={s.eyebrow}>Whole system</p>
+        <p className={s.eyebrow}>{v.scopeKey==="us"?"Whole system":v.place.name}</p>
         <h1 className={s.h1}>Queue</h1>
       </header>
       <div className={s.card}>

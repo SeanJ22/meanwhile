@@ -3,6 +3,7 @@ import { plainWords, hasTechnicalText } from "../../../../lib/control-plane/admi
 import type { ActionRef, ClosedFix, FixView, Hunt, Lane, LookView, OpenFix, SentInstruction, StuckItem, TestingFix, UiReceipt } from "./model.ts";
 import { orderStepsReached, ORDER_STEPS } from "./receipts.ts";
 import { mst, TASK_STAGES } from "./model.ts";
+import { stateName } from "../../../../lib/facts/entity-read.ts";
 
 export const QUEUE_FILTERS = ["needs-me", "in-progress", "scheduled", "waiting", "done"] as const;
 export type QueueFilter = (typeof QUEUE_FILTERS)[number];
@@ -18,6 +19,7 @@ export const QUEUE_FILTER_WORDS: Readonly<Record<QueueFilter, string>> = {
 export type QueueKind = "order" | "scheduled" | "send" | "hunt" | "stuck" | "door" | "fix" | "reader-report" | "testing" | "look";
 
 export interface QueueRow {
+  readonly stateCode?:string;
   readonly technical?: readonly string[];
   /** One per thing: `<kind>:<id>`. Never shown. */
   readonly key: string;
@@ -142,7 +144,8 @@ function doorRow(d: QueueDoor, n: number): QueueRow {
 function openFixRow(o: OpenFix): QueueRow {
   const filter: QueueFilter = o.tab === "fixing" ? "in-progress" : "waiting";
   return {
-    key: `fix:${o.id}`, kind: "fix", what: o.title, chip: ({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[o.tab], tone: o.tab === "attention" ? "warn" : "neutral",
+    ...(o.stateCode?{stateCode:o.stateCode}:{}),
+    key: `fix:${o.id}`, kind: "fix", what: o.stateCode?`${o.stateCode==="US"?"National":stateName(o.stateCode)??o.stateCode} · ${o.title}`:o.title, chip: ({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[o.tab], tone: o.tab === "attention" ? "warn" : "neutral",
     filter, owner: o.owner, due: null, next: o.problem,
     progress: o.taskStage === null ? null : { done: o.taskStage + 1, of: TASK_STAGES.length, words: TASK_STAGES[o.taskStage] },
     actions: [],

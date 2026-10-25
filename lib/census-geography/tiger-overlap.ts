@@ -86,7 +86,7 @@ function clip(operation: () => MultiPolygon): MultiPolygon {
 
 /** Shapefile rings are flattened. Even-odd fill restores holes and disjoint
  * polygon parts without relying on ring ordering or winding direction. */
-function geometry(feature: Feature): MultiPolygon {
+export function tigerGeometry(feature: Feature): MultiPolygon {
   const box = bounds(feature);
   if (!feature.rings.length) return invalid("polygon has no rings");
   for (const ring of feature.rings) {
@@ -130,7 +130,7 @@ export async function buildTigerOverlapGroups(
     const geoid = stateFips + code;
     if (property(feature, "GEOID") && property(feature, "GEOID") !== geoid) return invalid("district GEOID disagrees with its state and district code");
     const name = property(feature, "NAMELSAD") || property(feature, "NAME");
-    const shape = geometry(feature), box = bounds(feature), old = joined.get(geoid);
+    const shape = tigerGeometry(feature), box = bounds(feature), old = joined.get(geoid);
     if (old) {
       if (old.name && name && old.name !== name) return invalid(`district ${geoid} has conflicting official names`);
       if (!old.name) old.name = name;
@@ -146,7 +146,7 @@ export async function buildTigerOverlapGroups(
     if (!candidates.length) continue;
     const zcta5 = property(feature, "ZCTA5CE20");
     if (!/^\d{5}$/.test(zcta5) || property(feature, "GEOID20") && property(feature, "GEOID20") !== zcta5) return invalid("ZCTA lacks its exact 2020 five-digit identifier");
-    const shape = geometry(feature);
+    const shape = tigerGeometry(feature);
     for (const district of candidates) {
       signal?.throwIfAborted();
       if (geometryArea(clip(() => polygonClipping.intersection(shape, district.geometry))) <= 0) continue;

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b). NEXT: release 110 = RV-MEET2 (PR #821, river c02e4bf30, preview check passed 12:39 AM EDT, auto-merge on). GATING: RV-BOX 9350e15da alone on river-next d62ca66ce, release 111. HELD: DB-02 + BL-02 (re-gate after). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 7b5eacd03 (READY 12:55 AM EDT, before its deadline; new migration RB-A10_zip_locations), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
+build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b, live 12:08 AM EDT). NEXT: release 110 = RV-MEET2 (PR #821): admission, verify and both builds green; affected tests running since 12:41 AM EDT; auto-merge on. GATING: RV-BOX 9350e15da alone (river-next d62ca66ce: lint, tsc, dead-code green; tests running), release 111. HELD: DB-02 + BL-02. Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 7b5eacd03, MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T04:55:55Z
+heartbeat: 2026-10-25T05:18:07Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### 1 AM EDT: what is live for readers
+- Release 109 (since 12:08 AM EDT):
+  - One official photo per person across official cards, ballot entries and National cards (PT-01).
+  - Meeting places from the source's own street address first (MT-01).
+  - Reader checks green.
+- Not live yet:
+  - Meeting calendars still stopped (no new meeting facts since about 9:30 PM EDT); release 110 fixes it.
+  - Box facts still publish only on passes whose boxDue read finishes in time; RV-BOX (release 111) fixes it.
 
 ### RV-BOX: Box publishing timeouts (Sean, 12:15 AM EDT), READY 9350e15da on stream/river-box
 - Cause (production control plane, read-only, EXPLAIN ANALYZE BUFFERS): each boxDue call read about 610,000 pages (4.7 GB) to return 1,000 of the about 1,646 due rows.

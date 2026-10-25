@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:50:49Z
+heartbeat: 2026-10-25T03:54:08Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -47,7 +47,14 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 ### Release 108 build: RB-A8_count_hour lock hold (Sean item 4), 11:32 PM EDT
 - Applied on the release 108 production build: 19 statements, reader journal 56 of 56 (id 56 = RB-A8_count_hour, hash aaea8f93); control plane RB-A5_expand at 11:29:07 PM and RB-A8_expand at 11:29:48 PM EDT; outcome recorded in Admin's "Production migrations" digest at 11:29:48 PM EDT.
 - Locks on fact, civic_data_promotions and entity were taken together at 11:26:46.19 PM EDT (the 'counter start' row's statement_timestamp, which is the DO statement's start, when LOCK TABLE ran first). They were released when the transaction committed, before the control-plane step began. RB-A5_expand finished at 11:29:07.53 PM, so the hold was at most 2 min 21 s, including the backfill of all 1.06M facts.
-- Runner writes in that window: the last fact write before it was 11:26:16.55 PM EDT (6 rows), and no fact row has been written since (fact.checked_at). The only owner digest in the window is the 11:27:22 PM intake digest, which shows 0 write alarms. There was no deadlock, lock_timeout or statement-timeout text in any digest from 11:20 to 11:50 PM. The next supervisor pass digest decides "any runner write failed while waiting"; River adds it here.
+- Reader locks (fact, civic_data_promotions, entity), 11:26:46 to at most 11:29:07 PM EDT: no runner write failed.
+  - The last fact write before the window was 11:26:16.55 PM.
+  - Two passes spanned the window: routine 11:10 to 11:34 PM (57 tasks) and publish-now 11:25 to 11:33 PM. Neither shows deadlock, lock-timeout or statement-timeout text, and their failure codes match the passes before.
+- Control-plane locks: one runner write failed (Sean item 4, settled 11:58 PM EDT).
+  - RB-A8_expand locks cp_doors, cp_work_items, cp_work_items_archive, cp_box_findings, work_row and cp_owner_snapshots together (SHARE ROW EXCLUSIVE). It held them from RB-A5's finish at 11:29:07 PM to its own at 11:29:48 PM, at most 41 s.
+  - In that window the 11:25 PM publish-now pass's box-facts step could not record its result: two cp_box_findings compareAndSet writes ran past their 10 s bound (BOX_FAILURE_RECORD_UNWRITTEN, digest 11:33:32 PM). This is the only failure of that kind all evening. The digest does not give the exact write time, but its 10 s waits fall inside the lock window.
+  - The box work stays owed and later passes retry it. Nothing was lost.
+- Separate, and older than the release: box-facts has failed 13 times since 4:00 PM EDT, including 11:44 PM, on cp_box_findings.boxDue (PAGE) exceeding its 25 s read bound. Box facts are not publishing from those passes. FOR SEAN, or the box lane: that query needs an index or a smaller page. It is not lock-related.
 
 ### Meeting calendars stopped after release 106 (Sean, 11:10 PM EDT)
 - Sean's report: new meeting facts per hour 1,027 (9 PM hour) -> 0 (10 PM hour). meetings-public-bodies reads came in hourly bursts (51 at 8:10 PM, 90 at 9:00 PM); since the runner took release 106 (526fe7131, DB-01) about 9:27 PM, only 1 to 4 reads every 10 minutes and no 10 PM burst. The 10:44 PM digest has PUBLICATION_INPUT_CLOCK_UNREAD=1 and CHILD_EXIT_CONTRADICTED_SOURCE_RECEIPT=3; Bismarck CivicPlus got HTTP 429 at 10:55 PM.

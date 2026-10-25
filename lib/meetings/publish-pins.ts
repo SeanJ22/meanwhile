@@ -249,10 +249,10 @@ export async function placePublishedMeetingPins(input: {
     const publishedQuery = censusAddressQuery(address.geocodingAddress??address.address);
     const street = streetKeyOf(publishedQuery);
     const city = /^(?:city|town|village|borough|municipality)(?:\s+(?:and|&)\s+county)?\s+of\s+(.+)$/i.exec(meeting.jurisdiction)?.[1];
-    const state = meetingStateOf(meeting.bodyId??meeting.ocdId);
-    // A source's municipal name supplies locality for a street-only address; a county name does not name a city.
-    const query = city&&state&&street?.index===0&&street.length===publishedQuery.length
-      ? `${publishedQuery}, ${city}, ${state}` : publishedQuery;
+    const state = meetingStateOf(meeting.bodyId)||meetingStateOf(meeting.ocdId);
+    // A complete street-only address uses its government's known state and, when published, municipal city.
+    const query = state&&street?.index===0&&street.length===publishedQuery.length
+      ? `${publishedQuery}, ${city?`${city}, `:""}${state}` : publishedQuery;
     if (
       !isOfficeStreetAddress(query) ||
       query.length < 3 ||

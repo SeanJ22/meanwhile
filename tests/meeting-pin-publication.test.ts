@@ -690,10 +690,11 @@ test("a street-only municipal address uses its published city and state without 
  const next=await placePublishedMeetingPins({meetings:[source],previous:first.meetings,offices:new Map(),fetchImpl:async()=>{throw Error("A saved point must not request Census again");}});
  assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
  const county=await placePublishedMeetingPins({meetings:[{...source,jurisdiction:"COUNTY OF DENVER"}],offices:new Map(),fetchImpl:async input=>{
-   assert.equal(new URL(String(input)).searchParams.get("address"),"1437 Bannock Street");
+   assert.equal(new URL(String(input)).searchParams.get("address"),"1437 Bannock Street, CO");
    return response(geo("1437","BANNOCK","DENVER","CO","80202"));
  }});
- assert.equal(county.meetings[0].mapPin,undefined,"a county name cannot invent the meeting city");
+ assert.deepEqual(county.held,[]);
+ assert.equal(county.meetings[0].mapPin,undefined,"a county name cannot invent the meeting city without a confirmed unique point");
 });
 
 
@@ -742,4 +743,21 @@ test("a published street intersection uses its unique native Census point withou
    assert.equal(verifiedCensusVenuePoint(changed,conflict),null,changed);
  }
  const unbound=structuredClone(response);delete unbound.result.input;assert.equal(verifiedCensusVenuePoint(published,unbound),null);
+});
+
+
+test("a county's complete street-only address queries its known state and keeps the original source text",async()=>{
+ const source={...meeting("1230 W. Cherry St"),jurisdiction:"COUNTY OF MILWAUKEE",
+  bodyId:"ocd-division/country:us/state:wi/county:milwaukee#body:health",ocdId:"ocd-division/country:us/state:wi/county:milwaukee"};
+ const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-state-qualified-census.json",import.meta.url),"utf8"));
+ const first=await placePublishedMeetingPins({meetings:[source],offices:new Map(),fetchImpl:async input=>{
+  assert.equal(new URL(String(input)).searchParams.get("address"),"1230 W. Cherry St, WI");return response(census);
+ }});
+ assert.deepEqual(first.held,[]);assert.equal(first.meetings[0].mapPin?.basis,"MEETING");
+ assert.equal(first.meetings[0].mapPin?.address,"1230 W. Cherry St");
+ assert.equal(source.venueGap?.publishedText,"1230 W. Cherry St");
+ const next=await placePublishedMeetingPins({meetings:[source],previous:first.meetings,offices:new Map(),fetchImpl:async()=>{throw Error("Saved point requested Census again");}});
+ assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
+ const conflict=structuredClone(census);conflict.result.addressMatches[0].addressComponents.state="GA";
+ assert.equal(verifiedCensusVenuePoint("1230 W. Cherry St, WI",conflict),null);
 });

@@ -84,7 +84,8 @@ export function verifiedCensusVenuePoint(
     /\b(\d{5})(?:-\d{4})?\s*$/.exec(query)?.[1];
   const echoed=(response as {result?:{input?:{address?:{address?:string}}}})?.result?.input?.address?.address;
   const confirmed=typeof echoed==="string"&&usps(echoed)===foldedQuery;
-  if(!sameCity&&!(confirmed&&publishedZip&&publishedZip===components.zip))return null;
+  const completeStreetInState=Boolean(house&&foldedQuery===street+" "+usps(components.state));
+  if(!sameCity&&!(confirmed&&(publishedZip&&publishedZip===components.zip||completeStreetInState)))return null;
   const exactStreet=house?hasWords(folded,street):matchingIntersection(folded,address);
   if(!house&&(!confirmed||!exactStreet||!/(?:\band\b|\bat\b|&)/i.test(query)))return null;
   // A unique native response may canonicalize a delivery ZIP while repeating the complete physical street and city.

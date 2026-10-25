@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). GATING: river-portraits READY 9bf9801a5 alone on river 456454204 (river-next ea117a0bb), release 120. DB-03 2cce7754c stays unfolded. NEXT Neon fixes: DB-03 Admin 04681516c (merge dad53019c ready), then state doors e4305907d onward through 11072d2ed. HELD: GB-01 1636195c9 (after portraits), RB-A10 7b5eacd03 (place map 0 rows). Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). SHIPPING: release 120 (river-portraits 9bf9801a5: portraits and member offices, never re-read; gates 9 of 9) PR #832, auto-merge on. GATING: DB-03 Admin 04681516c alone on river ea117a0bb. HELD: GB-01 1636195c9 (after portraits), RB-A10 7b5eacd03 (place map 0 rows). NEXT Neon fixes: DB-03 state doors e4305907d onward, through 11072d2ed (2cce7754c and 9c2b0c58a stay unfolded). Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T21:02:00Z
+heartbeat: 2026-10-25T21:30:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1093,4 +1093,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - DB-03 posted 9c2b0c58a ("release118 integration": 2cce7754c merged with river be0b41a4f). Not folded: Sean said to leave 2cce7754c unfolded, and DB-03 folds only through 11072d2ed.
 - DB-03 readback saving confirmed: readback read 0 MB in the 3 PM and 4 PM EDT hours, both full hours after release 118, against a 1,280 MB/h average before (5 AM to 1 PM). About 1.3 GB/h saved.
 - Neon, both databases, 4 PM EDT hour: 8,740 MB total. Portraits 1,666, member offices 1,402. That's before release 120; these are its before numbers.
+
+### 5:30 PM EDT
+- river-portraits 9bf9801a5 passed alone: 9 of 9 gates on ea117a0bb, 9,919 tests, 0 failing. River moved to ea117a0bb, and release 120 is PR #832 with auto-merge on.
+- DB-03 Admin 04681516c is gating alone on top of it. Same owed-route conflict, resolved the same way.
 

@@ -4646,5 +4646,17 @@
     "gates": "pass (9 of 9, 9,913 tests)",
     "at": "2026-10-25T20:03:00Z",
     "live": "release 119 main f6f68db6b at 2026-10-25T20:25:49Z"
+  },
+  {
+    "lane": "river-portraits",
+    "steps": [
+      "DB-03 portraits and member offices, never re-read (River)"
+    ],
+    "ready_sha": "9bf9801a5",
+    "merge_sha": "ea117a0bb",
+    "river_sha": "ea117a0bb",
+    "tested_sha": "ea117a0bb",
+    "gates": "pass (9 of 9, 9,919 tests)",
+    "at": "2026-10-25T21:30:00Z"
   }
 ]

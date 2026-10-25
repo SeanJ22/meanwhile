@@ -1,0 +1,82 @@
+{
+  "recordedAt": "2026-10-25T07:47:14.534Z",
+  "scope": "Offline consolidation and consistency checks of existing synthetic local fixture results. No fixture/repro execution, captured-data replay or database/network activity was performed for this artifact.",
+  "inputs": {
+    "before": {
+      "path": ".scratch/rb-a7/generic-transfer-before.json",
+      "measurementFileModifiedAt": "2026-10-25T06:49:02.413Z",
+      "source": "Observed before context modes, using local PGlite migrations and the actual rebuildPlacePages worker; no Neon reads"
+    },
+    "after": {
+      "path": ".scratch/rb-a7/generic-transfer-after.json",
+      "measurementFileModifiedAt": "2026-10-25T06:49:02.654Z",
+      "source": "Local PGlite real migrations + actual rebuildPlacePages worker; no Neon or network reads"
+    }
+  },
+  "agendaTextBytes": 726890,
+  "encoding": "gzip-json-v1",
+  "contextModes": [
+    "full",
+    "brief",
+    "facts"
+  ],
+  "measurements": [
+    {
+      "mode": "default",
+      "selectedContext": "brief",
+      "sourceRowsBytes": 49184,
+      "readyRowsBytesBefore": 784329,
+      "readyRowsBytesAfter": 28287,
+      "byteReduction": 756042,
+      "reductionPercent": 96.39347773702107,
+      "visibleBytes": 50494,
+      "visibleAgendaDocuments": 0,
+      "visibleRegistry": true,
+      "canonicalOutputEqualBefore": true,
+      "canonicalOutputEqualAfter": true
+    },
+    {
+      "mode": "facts",
+      "selectedContext": "facts",
+      "sourceRowsBytes": 2060,
+      "readyRowsBytesBefore": 784329,
+      "readyRowsBytesAfter": 1215,
+      "byteReduction": 783114,
+      "reductionPercent": 99.84509051686219,
+      "visibleBytes": 3370,
+      "visibleAgendaDocuments": 0,
+      "visibleRegistry": false,
+      "canonicalOutputEqualBefore": true,
+      "canonicalOutputEqualAfter": true
+    },
+    {
+      "mode": "agenda",
+      "selectedContext": "full",
+      "sourceRowsBytes": 784185,
+      "readyRowsBytesBefore": 784329,
+      "readyRowsBytesAfter": 447103,
+      "byteReduction": 337226,
+      "reductionPercent": 42.99547766307251,
+      "visibleBytes": 1520496,
+      "visibleAgendaDocuments": 1,
+      "visibleRegistry": true,
+      "canonicalOutputEqualBefore": true,
+      "canonicalOutputEqualAfter": true
+    }
+  ],
+  "interpretation": "The ordinary generic read selects brief, facts-only selects facts, and explicit agenda reads select full. The prior fixture records unchanged decoded output for each mode. Literal marker absence in compressed JSON alone does not establish selected-field omission; decoded omission/content checks are in the existing tests/reader-place-context.test.ts fixture.",
+  "neonQueries": 0,
+  "databaseConnections": 0,
+  "databaseMutations": 0,
+  "networkCalls": 0,
+  "reproRerun": false,
+  "copyReplay": false,
+  "capacityProbe": false,
+  "currentChecks": [
+    "Both files have the same agenda byte count and the same three modes",
+    "Every mode reports canonical decoded equality before and after",
+    "Source-query bytes and visible bytes/document/registry counts are identical across the two records",
+    "Every compressed mode transfers fewer ready-row bytes than the previous full-context record"
+  ],
+  "testReference": "tests/reader-place-context.test.ts"
+}

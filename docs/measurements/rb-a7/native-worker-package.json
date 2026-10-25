@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-25T06:10:33.904Z",
+  "capturedAt": "2026-10-25T07:50:08.867Z",
   "tool": "@netlify/zip-it-and-ship-it",
   "toolVersion": "16.5.1",
   "function": "rebuild-place-pages",
@@ -12,9 +12,9 @@
   "schedule": "* * * * *",
   "configuredMemoryMiB": 2048,
   "configuredConcurrency": 4,
-  "zipBytes": 4927103,
+  "zipBytes": 4927635,
   "unpackedFiles": 315,
-  "unpackedBytes": 19228575,
+  "unpackedBytes": 19230637,
   "includedGeographyFiles": 103,
   "largeStateGeometryFiles": [],
   "sharedRuntimeSubjectSeederIncluded": true,
@@ -26,32 +26,32 @@
       "background": true,
       "memory": 2048
     },
-    "elapsedMs": 515.960092,
-    "networkCalls": 0,
-    "memory": {
-      "rssBeforeBytes": 29229056,
-      "rssAfterBytes": 220307456,
-      "peakRssBytes": 274759680,
-      "heapUsedBytes": 31771752,
-      "scope": "Local cold module import only"
-    },
-    "handlerInvoked": false,
-    "measuredAt": "2026-10-25T06:09:49.225Z"
-  },
-  "coldBootstrapImport": {
-    "imported": true,
-    "elapsedMs": 46.671369,
+    "elapsedMs": 566.653239,
     "networkCalls": 0,
     "memory": {
       "rssBeforeBytes": 29360128,
+      "rssAfterBytes": 219512832,
+      "peakRssBytes": 273928192,
+      "heapUsedBytes": 31429584,
+      "scope": "Local cold module import only"
+    },
+    "handlerInvoked": false,
+    "measuredAt": "2026-10-25T07:49:15.486Z"
+  },
+  "coldBootstrapImport": {
+    "imported": true,
+    "elapsedMs": 51.12545299999999,
+    "networkCalls": 0,
+    "memory": {
+      "rssBeforeBytes": 29097984,
       "rssAfterBytes": 43646976,
       "peakRssBytes": 43646976,
-      "heapUsedBytes": 9785584,
+      "heapUsedBytes": 9807952,
       "scope": "Local cold module import only"
     },
     "awsRuntimeStub": "streamifyResponse only; handler not invoked",
     "handlerInvoked": false,
-    "measuredAt": "2026-10-25T06:09:48.765Z"
+    "measuredAt": "2026-10-25T07:49:14.970Z"
   },
   "packagedGeography": {
     "success": true,
@@ -249,12 +249,28 @@
     "databaseMutations": 0,
     "geographyRerun": false,
     "capacityRerun": false,
-    "scope": "Only local native packaging and cold worker/bootstrap imports on the current codec graph. No handler invocation, network, production/copy data read, database/blob write or deployment."
+    "fixtureReproRerun": false,
+    "scope": "Only offline native packaging and cold worker/bootstrap imports for the final full/brief/facts gzip context graph and built_generation cache-retry progress. Existing generic-transfer fixture results were consolidated separately; no deployed handler, database, CDN, copy/replay, capacity or network activity was invoked.",
+    "checks": [
+      "Official native packager emits Node 24 v2 background function metadata with one-minute schedule and 2048 MiB memory",
+      "Archive includes place-ready.ts, full/brief/facts context packing, and built_generation progress logic",
+      "Cold worker exports the expected schedule/background/memory config without any network call",
+      "Native entry/bootstrap imports using only a streamifyResponse runtime stub; handler is not invoked",
+      "All previously packaged worker input files remained unchanged through verification"
+    ],
+    "deploymentStatus": "Not deployed. This artifact does not establish live scheduling, data freshness or production capacity."
   },
   "platformPlan": {
     "teamPlan": "Pro",
     "source": "Read-only Netlify team lookup",
     "settingsChanged": false,
     "deployedWorkerMemoryVerified": false
-  }
+  },
+  "packagedContextTransferModes": [
+    "full",
+    "brief",
+    "facts"
+  ],
+  "packagedQueueProgressField": "built_generation",
+  "contextEncodingEvidence": "context-encoding.json"
 }

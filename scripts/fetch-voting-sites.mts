@@ -1,3 +1,4 @@
+import { doorRepositoryForRun } from "../lib/doors/run.ts";
 import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 /* @freshness-reads-here */
 import { createHash } from "node:crypto";
@@ -250,8 +251,9 @@ export async function refreshVotingSources(input: {
     let version = priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null;
     priorRead = null;
     const registration = input.registration ?? await readRegistrationProjection(state, { store, bypassCache: true });
-    const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
-    const registered = await votingSourceReadOrder(context.repos.doors, state,
+    const doorRepo = await doorRepositoryForRun(context.repos, state);
+    const savedDoors = await registeredVotingSourceDoors(doorRepo, state);
+    const registered = await votingSourceReadOrder(doorRepo, state,
       currentVotingSourceDoors(seeds, savedDoors));
     const vault = input.vault ?? cycleVault(join(process.cwd(), ...VAULT_DIR));
     {
@@ -366,11 +368,11 @@ export async function refreshVotingSources(input: {
           sourceBytes: read.rawBodies.reduce((sum, capture) => sum + capture.bytes.byteLength, 0),
           failures: read.blanks.filter(blank => blank.reason === "access" || blank.reason === "extraction").map(blank => ({ reason: blank.reason, detail: blank.tried })) }));
         if (!votingReadHasFacts(door, read)) {
-          if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
+          if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(doorRepo, door, read, at);
           return;
         }
         const acquisition = await votingSourceEvidence(door, read, captures);
-        if (persistent) await recordVotingSourceRead(context.repos.doors, door, read, at);
+        if (persistent) await recordVotingSourceRead(doorRepo, door, read, at);
         if (await publishRead(publicationDoor, read, acquisition, at, mappings)) publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
       };
       runtime.onDiscoveredDoor = async (found, captures) => {
@@ -385,7 +387,7 @@ export async function refreshVotingSources(input: {
               officialLinkingPage: found.officialLinkingPage ?? existing.officialLinkingPage,
               electionPageUrl: found.electionAssociationVerified ? found.electionPageUrl : existing.electionPageUrl,
               electionAssociationVerified: found.electionAssociationVerified || existing.electionAssociationVerified };
-            doors.set(door.id, door); await saveVotingSourceDoor(context.repos.doors, door, now());
+            doors.set(door.id, door); await saveVotingSourceDoor(doorRepo, door, now());
             await acquire(door, captures);
           }
         } catch (error) { callbackFailure = error; throw error; }
@@ -433,7 +435,7 @@ export async function refreshVotingSources(input: {
         if (Date.now() >= deadlineMs) break;
         if (superseded.has(normalizeUrl(source.url))) continue;
         doors.set(source.id, source);
-        await saveVotingSourceDoor(context.repos.doors, source, now());
+        await saveVotingSourceDoor(doorRepo, source, now());
         await acquire(source);
       }
       for (const root of roots) await walk(root);

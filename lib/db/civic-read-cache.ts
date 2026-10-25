@@ -38,6 +38,8 @@ export class CivicReadCache {
     readonly versions: (keys: readonly string[]) => Promise<readonly V[]>;
     readonly values: (keys: readonly string[]) => Promise<readonly T[]>;
     readonly keyOf: (value: T) => string;
+    /** A row that carries its own version needs no second version read after fetching it. */
+    readonly etagOf?: (value: T) => string;
     /** Event-derived fields are fresh even while the owning row is unchanged. */
     readonly freshen?: (value: T, version: V) => T;
   }): Promise<readonly T[]> {
@@ -56,13 +58,14 @@ export class CivicReadCache {
       const values = await input.values(keys);
       // An UPDATE racing the whole read must never label old bytes with its
       // newer etag. Return the actual read, but keep only stable row copies.
-      const after = new Map((await input.versions(keys)).map(version => [version.key, version.etag]));
+      const after = input.etagOf ? new Map(values.map(value=>[input.keyOf(value),input.etagOf!(value)]))
+        : new Map((await input.versions(keys)).map(version => [version.key, version.etag]));
       const before = new Map(missing.map(version => [version.key, version.etag]));
       await Promise.all(values.map(async value => {
         const key = input.keyOf(value);
         result.set(key, value);
-        if (before.get(key) !== undefined && before.get(key) === after.get(key)) {
-          await this.save(input.namespace + ":" + key, { etag: before.get(key)!, value });
+        if (before.get(key) !== undefined && (input.etagOf || before.get(key) === after.get(key))) {
+          await this.save(input.namespace + ":" + key, { etag: after.get(key)!, value });
         }
       }));
     }

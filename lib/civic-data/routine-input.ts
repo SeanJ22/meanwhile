@@ -1,3 +1,4 @@
+import { doorRepositoryForRun } from "../doors/run.ts";
 import { resolve } from "node:path";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { ballotInputStamp } from "./ballot-input.ts";
@@ -31,7 +32,7 @@ export async function routineInputStamp(root: string, taskId: string, repos: Pic
       onRow: (_path, row) => { const door = row as VotingSourceDoor; if (door.scope.state === state) doors.push(door); } });
     inputs[file] = doors.sort((a, b) => a.id.localeCompare(b.id));
   }
-  inputs.cp_doors = (await registeredVotingSourceDoors(repos.doors, state)).sort((a, b) => a.id.localeCompare(b.id));
+  inputs.cp_doors = (await registeredVotingSourceDoors(await doorRepositoryForRun(repos, state), state)).sort((a, b) => a.id.localeCompare(b.id));
   return `content:${canonicalCivicDataHash(inputs)}`;
 }
 

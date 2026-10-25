@@ -1369,8 +1369,11 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
 }
 
 const connectionForReads = Symbol("control-plane-read-connection");
+const databaseForReads = Symbol("control-plane-read-database");
 export const placeReadConnection = (repos: ControlPlaneRepositories): Sql | undefined =>
   (repos as ControlPlaneRepositories & { [connectionForReads]?: () => Sql })[connectionForReads]?.();
+export const readDatabaseIdentity = (repos: object): string | undefined =>
+  (repos as { [databaseForReads]?: string })[databaseForReads];
 
 export function pgHuntOrderRepository(sql:Sql,bounds:ControlPlaneRequestBounds=CONTROL_PLANE_REQUEST_BOUNDS_MS):HuntOrderRepository {
   const run=boundedRunner(sql,"cp_hunt_orders",bounds);
@@ -1794,7 +1797,9 @@ export async function createPgRepositories(
       `${CONTROL_PLANE_URL_VAR})`,
     durable: true,
   };
-  Object.assign(repositories, { [connectionForReads]: () => sql });
+  const addressForReads=new URL(connectionString);
+  Object.assign(repositories, { [connectionForReads]: () => sql, [databaseForReads]:createHash('sha256')
+    .update(addressForReads.hostname.toLowerCase().replace('-pooler.','.')+addressForReads.pathname).digest('hex') });
   if (!options.skipBootstrap) {
 
     const setup = await ensureRolePlaybooks(repositories, nowIso).catch((error: unknown) => {

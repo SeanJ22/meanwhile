@@ -113,7 +113,7 @@
   "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
   "latestProductionObservation": {
-    "observedAt": "2026-10-25T18:58:59.506Z",
+    "observedAt": "2026-10-25T19:34:00.047Z",
     "hasBoundaries": false,
     "hasZipRows": false,
     "hasZctaRows": false,
@@ -127,8 +127,8 @@
     "main": "c7576d26e",
     "checkedLoaderInRiver": false,
     "checkedLoaderInMain": false,
-    "runnerObservedAt": "2026-10-25T18:51:28.856Z",
-    "runnerTestedSha": "c7576d26e",
+    "runnerObservedAt": "2026-10-25T19:30:22.345Z",
+    "runnerTestedSha": "c7576d26ee33b8ee7563d6c5d2428384b4246fb5",
     "mapWorkers": 0
   },
   "previousCombinationValidation": {
@@ -188,5 +188,28 @@
       "productionDatabaseBindings": false,
       "productionModelServiceBindings": false
     }
-  ]
+  ],
+  "productionConnectionBaseline": {
+    "observedAt": "2026-10-25T19:34:57.364Z",
+    "role": "readonly",
+    "readOnly": "on",
+    "method": "Two public entity metadata records only; the attachment-to-ZIP join remains unproved until production loads.",
+    "records": [
+      {
+        "id": "az:special:ajo-lukeville-health-services-district",
+        "kind": "government",
+        "name": "Ajo-Lukeville Health Services District",
+        "state": "AZ",
+        "resolvesTo": "az:special:ajo-lukeville-health-services-district"
+      },
+      {
+        "id": "ocd-division/country:us/state:az/county:pima",
+        "kind": "place",
+        "name": "Pima County",
+        "state": "AZ",
+        "resolvesTo": "ocd-division/country:us/state:az/county:pima"
+      }
+    ],
+    "mapConnectionProved": false
+  }
 }

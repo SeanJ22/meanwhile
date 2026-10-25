@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { feedbackHref } from "@/lib/feedback/shape";
 import type { NationalCard } from "@/lib/national/section";
+import { IdentityPortrait } from "@/components/officials/person-identity";
 
 /** Each verified national executive's card; with none, the section says it is coming soon. */
 export function NationalSection({ cards }: { readonly cards: readonly NationalCard[] }) {
@@ -15,7 +16,7 @@ export function NationalSection({ cards }: { readonly cards: readonly NationalCa
           {cards.map(card => (
             <li key={card.id}>
               <Card title={card.title} eyebrow={card.office} sources={[...card.sources]}>
-                {card.holder && <p className="t-body">{card.holder}</p>}
+                {card.holder && <div className="flex items-center gap-3"><IdentityPortrait name={card.holder} photoUrl={card.photoUrl} /><p className="t-body">{card.holder}</p></div>}
               </Card>
             </li>
           ))}

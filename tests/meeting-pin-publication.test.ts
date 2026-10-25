@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   placePublishedMeetingPins,
@@ -183,7 +184,7 @@ test("publication tries source text, board office, then government office and sa
       return response(address === GOVERNMENT ? GOVERNMENT_GEO : missing);
     },
   });
-  assert.deepEqual(requests, ["Room 301", BOARD, GOVERNMENT]);
+  assert.deepEqual(requests, [BOARD, GOVERNMENT]);
   assert.equal(result.meetings[0].mapPin?.basis, "GOVERNMENT_OFFICE");
   assert.equal(result.meetings[0].location, null);
   const next = await placePublishedMeetingPins({
@@ -594,4 +595,137 @@ test("a shortened published street repeats its prior point, but a conflicting st
   for(const changed of ["1 E. Broadway Boulevard, Phoenix, AZ 85701","1 E. Congress Street, Tucson, AZ 85701",
     "1 E. Broadway Boulevard, Tucson, AZ 85702"])
     assert.equal(repeatsPublishedVenue(changed,"PAG Office",prior),false,changed);
+});
+
+test("the following publication reuses the building point but shows the publisher's current room, including over older facts",async()=>{
+  const oldText=OWN.replace(", Bisbee",", Room 101, Bisbee"),newText=OWN.replace(", Bisbee",", Room 202, Bisbee");
+  const first=await placePublishedMeetingPins({meetings:[meeting(oldText)],offices:new Map(),clock:()=>NOW,fetchImpl:async()=>response(OWN_GEO)});
+  const newer={...meeting(newText),provenance:{...SOURCE,collectedAt:"2026-10-24T01:00:00Z"}};
+  for(const legacy of [false,true]) {
+    const previous=first.meetings.map(row=>legacy?{...row,mapPin:undefined}:row);
+    const after=await placePublishedMeetingPins({meetings:[newer],previous,offices:new Map(),
+      fetchImpl:async()=>{throw new Error("the verified building point must be reused");}});
+    const [read]=withSittingFacts(after.meetings,[
+      {meetingId:newer.id,field:"location",value:first.meetings[0].location,source:SOURCE},
+      {meetingId:newer.id,field:"online",value:{label:"Virtual",joinUrl:null},source:SOURCE},
+    ]);
+    assert.equal(read.location?.name,newText);assert.equal(read.location?.address,newText);
+    assert.equal(read.location?.lat,first.meetings[0].location?.lat);assert.equal(read.online,undefined);
+    assert.equal(after.responses.length,0);assert.deepEqual(after.held,[]);
+    assert.deepEqual(after.meetings[0].fieldSources?.location,first.meetings[0].fieldSources?.location ?? first.meetings[0].provenance);
+    assert.equal(after.meetings[0].fieldSources?.venueGap?.collectedAt,newer.provenance.collectedAt);
+    if(!legacy){assert.equal(read.mapPin?.publishedLocation,newText);assert.equal(read.mapPin?.coordinateCheckedAt,NOW);}
+  }
+  const [fromFact]=withSittingFacts([newer],[{meetingId:newer.id,field:"location",value:first.meetings[0].location,source:SOURCE}]);
+  assert.equal(fromFact.location?.name,newText);assert.equal(fromFact.location?.address,newText);
+  assert.equal(fromFact.location?.lat,first.meetings[0].location?.lat);
+  const [fromUnplacedFact]=withSittingFacts([newer],[{meetingId:newer.id,field:"location",value:{name:oldText,address:null},source:SOURCE}]);
+  assert.equal(fromUnplacedFact.venueGap?.publishedText,newText);
+});
+
+test("a newly published physical point replaces an older office-reference pin",async()=>{
+  const office=await placePublishedMeetingPins({meetings:[{...meeting(null),online:{label:"Virtual",joinUrl:null},venueGap:undefined}],offices,
+    clock:()=>NOW,fetchImpl:async()=>response(BOARD_GEO)});
+  const source={...SOURCE,collectedAt:"2026-10-24T01:00:00Z"},physical={name:OWN,address:OWN,lat:31.39,lng:-109.92};
+  const [read]=withSittingFacts([meeting(null)],[
+    {meetingId:meeting().id,field:"mapPin",value:office.meetings[0].mapPin,source:SOURCE},
+    {meetingId:meeting().id,field:"location",value:physical,source},
+  ]);
+  assert.deepEqual(read.location,physical);assert.equal(read.mapPin,undefined,"the meeting's own point takes precedence over an office reference");
+});
+
+test("Census rejects unusable published text with 400 and publication tries the board office; service errors remain visible",async()=>{
+  for(const status of [400,503]){
+    let requests=0;
+    const placed=await placePublishedMeetingPins({meetings:[meeting()],offices,clock:()=>NOW,fetchImpl:async()=>{
+      return ++requests===1?new Response("address rejected",{status}):response(BOARD_GEO);
+    }});
+    assert.equal(placed.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(requests,2);
+    assert.equal(placed.held.length,status===400?0:1);
+  }
+});
+
+test("a confirmed Census road spelling keeps the published house, street name, city, state, ZIP and any stated direction",()=>{
+  const rows=JSON.parse(readFileSync(new URL("./fixtures/mt01-galveston-census.json",import.meta.url),"utf8")) as {text:string}[];
+  const response=JSON.parse(rows.find(row=>JSON.parse(row.text).result.addressMatches?.[0]?.addressComponents.streetName==="CALDER")!.text);
+  const published="174 Calder Rd., League City, TX 77573";
+  assert.ok(verifiedCensusVenuePoint(published,response));
+  for(const changed of [published.replace("174","176"),published.replace("Calder","Other"),published.replace("League City","Galveston").replace("77573","77550"),
+    published.replace("TX","CA"),published.replace("77573","77550"),published.replace("Calder","S Calder")]){
+    const conflict=structuredClone(response);conflict.result.input.address.address=changed;
+    assert.equal(verifiedCensusVenuePoint(changed,conflict),null,changed);
+  }
+  const unbound=structuredClone(response);delete unbound.result.input;
+  assert.equal(verifiedCensusVenuePoint(published,unbound),null,"an unbound provider copy cannot declare a road spelling change");
+});
+
+
+test("a room number on the line before a published street is never its house number",()=>{
+  assert.equal(censusAddressQuery("City & County Building, Council Committee Room, Room 391\r\n1437 Bannock Street"),"1437 Bannock Street");
+  assert.equal(censusAddressQuery("Cathy Reynolds City Council Chamber\r\n1437 Bannock Street, Room 450"),"1437 Bannock Street");
+});
+
+
+test("a written house number uses the same published street in the Census query",()=>{
+ const published="Metro Headquarters, One Gateway Plaza, 3rd Floor Gateway Plaza Conference Room, Los Angeles, CA 90012";
+ const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-gateway-census.json",import.meta.url),"utf8"));
+ assert.equal(censusAddressQuery(published),"1 Gateway Plaza Gateway Plaza Conference Room, Los Angeles, CA 90012");
+ assert.ok(verifiedCensusVenuePoint(published,response));
+ assert.equal(verifiedCensusVenuePoint("One Gateway Plaza, Los Angeles, NY 90012, Metro Board Room",response),null);
+ assert.equal(verifiedCensusVenuePoint(published.replace("One","Two"),response),null);
+});
+
+test("a street-only municipal address uses its published city and state without changing the fact",async()=>{
+ const source={...meeting("1437 Bannock Street"),jurisdiction:"CITY AND COUNTY OF DENVER",
+   bodyId:"ocd-division/country:us/state:co/place:denver#governing",ocdId:"ocd-division/country:us/state:co/place:denver"};
+ const requests:string[]=[];
+ const first=await placePublishedMeetingPins({meetings:[source],offices:new Map(),fetchImpl:async input=>{
+   requests.push(new URL(String(input)).searchParams.get("address")!);
+   return response(geo("1437","BANNOCK","DENVER","CO","80202"));
+ }});
+ assert.deepEqual(requests,["1437 Bannock Street, DENVER, CO"]);
+ assert.equal(first.meetings[0].mapPin?.address,"1437 Bannock Street");
+ assert.equal(source.venueGap?.publishedText,"1437 Bannock Street");
+ assert.equal(first.meetings[0].mapPin?.basis,"MEETING");
+ const next=await placePublishedMeetingPins({meetings:[source],previous:first.meetings,offices:new Map(),fetchImpl:async()=>{throw Error("A saved point must not request Census again");}});
+ assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
+ const county=await placePublishedMeetingPins({meetings:[{...source,jurisdiction:"COUNTY OF DENVER"}],offices:new Map(),fetchImpl:async input=>{
+   assert.equal(new URL(String(input)).searchParams.get("address"),"1437 Bannock Street");
+   return response(geo("1437","BANNOCK","DENVER","CO","80202"));
+ }});
+ assert.equal(county.meetings[0].mapPin,undefined,"a county name cannot invent the meeting city");
+});
+
+
+test("a native Census copy keeps the physical street while canonicalizing a delivery ZIP or initialed street name",()=>{
+ const rows=JSON.parse(readFileSync(new URL("./fixtures/mt01-census-canonical-forms.json",import.meta.url),"utf8")) as {query:string;response:unknown}[];
+ for(const row of rows){
+  assert.ok(verifiedCensusVenuePoint(row.query,row.response),row.query);
+  const unbound=structuredClone(row.response) as {result:{input?:unknown}}; delete unbound.result.input;
+  assert.equal(verifiedCensusVenuePoint(row.query,unbound),null);
+  for(const changed of [row.query.replace(/^\d+/,"999"),row.query.replace("Mobile","Other City").replace("Portland","Other City").replace("Morrison","Other City"),row.query.replace("Government","Different").replace("King","Different").replace("Alameda","Different")])
+   assert.equal(verifiedCensusVenuePoint(changed,row.response),null,changed);
+ }
+});
+
+
+test("a published Wisconsin grid house number keeps its unique Census point and its stated state",()=>{
+ const published="American Legion Post, N120W15932 Freistadt Rd., Germantown, WI 5302";
+ const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-wisconsin-grid-census.json",import.meta.url),"utf8"));
+ assert.ok(verifiedCensusVenuePoint(published,response));
+ for(const changed of [published.replace("N120W15932","N120W15933"),published.replace("Freistadt","Different"),
+  published.replace("Germantown","Other City"),published.replace("WI","CA")])assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
+});
+
+
+test("native Census postal city and missing suffix forms retain the same published physical address",()=>{
+ const rows=JSON.parse(readFileSync(new URL("./fixtures/mt01-wisconsin-postal-census.json",import.meta.url),"utf8")) as {query:string;response:unknown}[];
+ for(const {query,response}of rows){
+  assert.ok(verifiedCensusVenuePoint(query,response),query);
+  const unbound=structuredClone(response) as {result:{input?:unknown}};delete unbound.result.input;
+  assert.equal(verifiedCensusVenuePoint(query,unbound),null);
+  for(const changed of [query.replace(/^\d+/,"999"),query.replace("Lake","Different").replace("Ogden","Different"),
+    query.replace("WI","CA"),query.replace("Milwaukee","Other City").replace("53110","99999")])
+    assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
+ }
 });

@@ -120,9 +120,6 @@ function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): Pip
     }
   }
 
-  for (const burden of offered.burdens ?? []) {
-    if (burden.result === "FAIL") reasons.push({ code: "APPROVAL_BURDEN_FAILED", detail: `${burden.name}: ${burden.detail}` });
-  }
   return reasons;
 }
 

@@ -1,4 +1,4 @@
-import { currentBodyRosters } from "../registry/body-rosters.ts";
+import { currentBodyRosters } from "../registry/runtime-read-model.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 

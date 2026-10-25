@@ -1,0 +1,42 @@
+{
+  "result": {
+    "input": {
+      "address": {
+        "address": "American Legion Post, N120W15932 Freistadt Rd., , Germantown, WI 5302"
+      },
+      "benchmark": {
+        "isDefault": true,
+        "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+        "id": "4",
+        "benchmarkName": "Public_AR_Current"
+      }
+    },
+    "addressMatches": [
+      {
+        "tigerLine": {
+          "side": "L",
+          "tigerLineId": "629005401"
+        },
+        "coordinates": {
+          "x": -88.107437520518,
+          "y": 43.235569921718
+        },
+        "addressComponents": {
+          "zip": "53022",
+          "streetName": "FREISTADT",
+          "preType": "",
+          "city": "GERMANTOWN",
+          "preDirection": "",
+          "suffixDirection": "",
+          "fromAddress": "N120W16298",
+          "state": "WI",
+          "suffixType": "RD",
+          "toAddress": "N120W15700",
+          "suffixQualifier": "",
+          "preQualifier": ""
+        },
+        "matchedAddress": "N120W15932 FREISTADT RD, GERMANTOWN, WI, 53022"
+      }
+    ]
+  }
+}

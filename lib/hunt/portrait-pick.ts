@@ -17,7 +17,8 @@ export interface PageImage {
  * Every `<img>` on the page, with its `src` and `alt`. A lazily loaded image
  * has a placeholder in `src` and the real file in `data-src`, so both are
  * emitted, `data-src` first; the picker decides on the name, not the order.
- * `srcset` is read too, at its first candidate.
+ * Every published `srcset` rendition is read too: an original can exceed the
+ * decoder's byte or pixel limit while a smaller rendition is a usable portrait.
  */
 export function imagesIn(html: string, base: string): PageImage[] {
   const out: PageImage[] = [];
@@ -28,8 +29,8 @@ export function imagesIn(html: string, base: string): PageImage[] {
       new RegExp(`\\b${name}\\s*=\\s*'([^']+)'`, "i").exec(tag)?.[1] ??
       null;
     const alt = attr("alt") ?? "";
-    const firstOfSrcset = attr("srcset")?.split(",")[0]?.trim().split(/\s+/)[0] ?? null;
-    for (const src of [attr("data-src"), attr("data-lazy-src"), attr("src"), firstOfSrcset]) {
+    const renditions = srcsetUrls(attr("srcset") ?? "");
+    for (const src of [attr("data-src"), attr("data-lazy-src"), attr("src"), ...renditions]) {
       if (!src) continue;
       try {
         const resolved = new URL(src, base).toString();
@@ -40,6 +41,24 @@ export function imagesIn(html: string, base: string): PageImage[] {
     }
   }
   return out;
+}
+
+/** A comma inside a URL (WordPress's `?resize=499,600`) is not a separator. */
+function srcsetUrls(srcset: string): string[] {
+  const urls: string[] = [];
+  let rest = srcset.trim();
+  while (rest) {
+    rest = rest.replace(/^[\s,]+/, "");
+    const url = /^\S+/.exec(rest)?.[0];
+    if (!url) break;
+    urls.push(url.replace(/,+$/, ""));
+    rest = rest.slice(url.length);
+    if (!url.endsWith(",")) {
+      const separator = rest.indexOf(",");
+      rest = separator < 0 ? "" : rest.slice(separator + 1);
+    }
+  }
+  return urls;
 }
 
 /** The picked portrait, and why it was picked. */

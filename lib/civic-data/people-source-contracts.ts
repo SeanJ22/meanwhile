@@ -47,11 +47,11 @@ export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "A failed source leaves this state's last verified people live. Complementary sources publish independently; missing pages leave standing gaps.",
     autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   }))),
-  ...PEOPLE_SOURCE_STATES.map((state): RoutineSourceContract => ({
+  ...["us",...PEOPLE_SOURCE_STATES].map((state): RoutineSourceContract => ({
     id: `people-portraits-${state}`,
     sourceId: "people-portraits",
     recordClass: peopleSourceRecordClass("people-portraits"),
-    scope: peopleSourceScope(`US-${state.toUpperCase()}`, "people-portraits"),
+    scope: peopleSourceScope(state === "us" ? "US" : `US-${state.toUpperCase()}`, "people-portraits"),
     acquisitionFailureDomain: `routine-source:people-portraits:${state}`,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/people-portraits-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: "people-portraits/1",

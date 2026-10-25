@@ -5,7 +5,7 @@ import { whiteHouseOffice } from "../../officials/white-house-offices.ts";
 import { mergePeopleSets } from "../../officials/merge-people.ts";
 import { acquireKnownRelease, knownReleaseSourceCheck, resolveKnownReleaseCache, type KnownReleaseOptions, type KnownRelease } from "../known-release.ts";
 import { pacedPortraitAcquire } from "../../photos/portrait-work.ts";
-import { statePeoplePortraits, type StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
+import type { StatePeopleAcquisition } from "../../civic-data/state-people-publication.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { parseExecutiveProfile, parseExecutiveElectionParty, parseExecutiveTerm, EXECUTIVE_TERM_SOURCES, executiveProfileLinks,
   executiveOfficeSources, executiveDirectoryLinks, executiveContactLinks, parseExecutiveOfficeChannels, parseCabinetTenure, CABINET_TENURE_SOURCE_URL,
@@ -20,7 +20,6 @@ export interface ExecutiveEnrichmentOptions extends Pick<KnownReleaseOptions, "s
   readonly credentials?: ExecutiveSourceCredentials;
   readonly heldPeople?: OfficeholderSet;
   readonly acquire?: typeof acquireKnownRelease;
-  readonly portraits?: typeof statePeoplePortraits;
   /** Source-verified profile facts reach readers before the larger activity crawl finishes. */
   readonly onProfiles?: (release: Acquired) => Promise<void>;
 }
@@ -216,11 +215,6 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
     }
     return next;
   }));
-  const portraits = await (options.portraits ?? statePeoplePortraits)({ roster: { ...base.roster, officeholders: people }, state: "US", signal: options.signal, now: options.now?.() }, {
-    now: options.now, acquire: async request => readRelease(request.url),
-  });
-  people = portraits.roster.officeholders;
-  for (const gap of portraits.excludedFacts) gaps.push({ sourceUrl: "https://www.whitehouse.gov/administration/", detail: `${gap.code}:${gap.detail}` });
   if (options.onProfiles) {
     const acquisitions = [...captures.values()];
     await options.onProfiles({ roster: { ...base.roster, officeholders: people.map(person => withExecutiveCompleteness(checkedExecutivePerson(person, acquisitions))) }, acquisitions, gaps: [...gaps],

@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=349099%2C+Dial%3A+253-215-8782&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"349099, Dial: 253-215-8782\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=Webinar+Link%3A+www.zoom.us%2Fj%2F84416690206&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"Webinar Link: www.zoom.us/j/84416690206\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=Webinar+Link%3A+www.zoom.us%2Fj%2F88227539908&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"Webinar Link: www.zoom.us/j/88227539908\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=747+Market+Street%2C+Tacoma%2C+WA+98402&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"747 Market Street, Tacoma, WA 98402\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"L\",\"tigerLineId\":\"184646914\"},\"coordinates\":{\"x\":-122.442316539787,\"y\":47.256897857788},\"addressComponents\":{\"zip\":\"98402\",\"streetName\":\"MARKET\",\"preType\":\"\",\"city\":\"TACOMA\",\"preDirection\":\"\",\"suffixDirection\":\"\",\"fromAddress\":\"701\",\"state\":\"WA\",\"suffixType\":\"ST\",\"toAddress\":\"899\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"747 MARKET ST, TACOMA, WA, 98402\"}]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=896569+%2C+Dial%3A+253-215-8782&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"896569 , Dial: 253-215-8782\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=Webinar+Link%3A+www.zoom.us%2Fj%2F85961604917&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"Webinar Link: www.zoom.us/j/85961604917\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=Webinar+Link%3A+www.zoom.us%2Fj%2F87829056704&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"Webinar Link: www.zoom.us/j/87829056704\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=Webinar+Link%3A+www.zoom.us%2Fj%2F91923690364&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"Webinar Link: www.zoom.us/j/91923690364\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=3873+South+66th+Street%2C+Tacoma%2C+WA+98409&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"3873 South 66th Street, Tacoma, WA 98409\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"184740143\"},\"coordinates\":{\"x\":-122.488886089143,\"y\":47.197463907397},\"addressComponents\":{\"zip\":\"98409\",\"streetName\":\"66TH\",\"preType\":\"\",\"city\":\"TACOMA\",\"preDirection\":\"S\",\"suffixDirection\":\"\",\"fromAddress\":\"3801\",\"state\":\"WA\",\"suffixType\":\"ST\",\"toAddress\":\"3873\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"3873 S 66TH ST, TACOMA, WA, 98409\"}]}}"
+  }
+]

@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T05:28:02Z
+heartbeat: 2026-10-25T05:31:54Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Random-ZIP release check (Sean: never one city), release 109 baseline, 2:05 AM EDT
+- Method: /var/tmp/live/random-zips.cjs <base> 20 [seed]. It picks one random standard ZIP in each of 20 random states from the repo's ZIP shards (no database read), then loads /ballot?zip=, /api/meetings?zip= and /api/location/zip?zip= live, and checks the ZIP resolves to its own county and city.
+- Seed 4242: 20/20 load (ballot 200, meetings 200, no "didn't load", 0 console errors) and 20/20 resolve to their county and city, across IN, AK, MS, WY, MO, NH, VT, AR, MD, NJ, TX, NM, GU, NY, UT, ME, MN, KY, ND and NV.
+  - Thin: Guam 96929 (Yigo) shows a 412-character ballot page.
+- Unseeded run: 20/20 load across WA, AR, MN, TX, FL, WI, NC, SC, IL, VT, OR, OK, GA, NY, NJ, ND, CO, MS, ID and AK.
+- Every release from 110 on is checked this way, plus the fixed checks, which include the one Ask. RB-A10's gate uses the same check once the place map has rows in every state.
 
 ### DB-03A baseline: cp_doors bytes per hour (control plane cp_vital_signs, 1:40 AM EDT)
 - cp_doors, last 12 h (EDT): 2 PM 768 MB, 3 PM 779, 4 PM 1,124, 5 PM 731, 6 PM 1,109, 7 PM 2,220, 8 PM 3,606, 9 PM 4,239, 10 PM 4,960, 11 PM 3,219, midnight 2,373, 1 AM (partial) 1,249.

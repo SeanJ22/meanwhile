@@ -56,6 +56,7 @@ export interface RegisteredGovernment {
   /** `<ocdId>#governing`, or `<ocdId>#board` for a school district. */
   readonly bodyId: string;
   readonly ocdId: string;
+  readonly alsoServesOcdIds?: readonly string[];
   /** The government's name as its registration prints it. */
   readonly publishingOrg: string;
   readonly countyFips?: string | null;
@@ -842,7 +843,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
       const row: MeetingBodyCrosswalkRow = { id: crosswalkRowId(bodyId, kind, route), jurisdictionId, bodyId,
         ...(registered.governmentId ? { governmentId: registered.governmentId } : {}),
         ...(registered.website ? { governmentWebsite: registered.website } : {}),
-        ocdId: registered.ocdId, bodyName: name, bodyRole: role, kind, route, officialHost: routeHost,
+        ocdId: registered.ocdId, ...(registered.alsoServesOcdIds?.length ? {alsoServesOcdIds:registered.alsoServesOcdIds} : {}), bodyName: name, bodyRole: role, kind, route, officialHost: routeHost,
         publishingOrg: registered.publishingOrg, timeZone: stateZone, filter,
         evidence: { bodyPage: { url: pageUrl, sha256: page.sha256, quote: name },
           calendar: { url: route, sha256: calendar.sha256, selected, total: selected }, readAt: [calendar.evidence.retrievedAt, page.evidence.retrievedAt].sort().at(-1)! },
@@ -1054,6 +1055,7 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
         ...(registered.governmentId ? { governmentId: registered.governmentId } : {}),
         ...(registered.website ? { governmentWebsite: registered.website } : {}),
         ocdId: registered.ocdId,
+        ...(registered.alsoServesOcdIds?.length ? {alsoServesOcdIds:registered.alsoServesOcdIds} : {}),
         bodyId,
         bodyRole: proposal.role,
         bodyName,

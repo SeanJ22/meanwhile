@@ -62,7 +62,7 @@ test("a drain cannot checkpoint past an unfinished earlier catalogue government"
     vault: async () => ({ stored: true, where: "fixture", why: "saved" }), budget: { spent: () => draining } };
   const input = { repos, concurrency: 3, states: [], ownerSubjects: async () => [], now: () => NOW, reviewer: "auto-crosswalk-reviewer@0123456789ab",
     query: async (_sql: string, params: readonly unknown[]) => {
-      const page = pages.find(page => page.government.name === params.at(-1)); return page ? [page as unknown as Record<string, unknown>] : [];
+      const page = pages.find(page => page.government.name === params[1]); return page ? [page as unknown as Record<string, unknown>] : [];
     }, catalog: { version: "directory-version", runtime, tenants: async function* (after: number) {
       for (const page of pages.slice(after)) yield { platform: "fixture", url: `https://example.gov/${page.government.id}`, name: page.government.name, state: page.government.state, source: "public directory" };
     } },

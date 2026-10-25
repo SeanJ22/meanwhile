@@ -71,7 +71,6 @@ async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl:
     if(sourceUrl)await learnDoorChannel(db.query, owner, sourceUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
-  if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
   return (await readCheckEntity(db.query, id))!;
 }
 

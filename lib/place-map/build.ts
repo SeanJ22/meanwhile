@@ -20,7 +20,7 @@ const key = (id: string, year: number) => `${id}|${year}`;
 
 /** Distinct school GEOIDs name distinct districts even when the held names
  * collided. Keep the old id for the first GEOID and retain every other id. */
-export function registeredPlaceIds(reg: RegistrationReference): Map<string, string> {
+export function registeredPlaceIds(reg: {readonly divisions:readonly (readonly [string,string,string,...unknown[]])[]}): Map<string, string> {
   const schoolCodes = new Map<string, string[]>();
   for (const [id, layer, geoid] of reg.divisions) if (["unsd", "elsd", "scsd"].includes(layer)) {
     const codes = schoolCodes.get(id) ?? []; codes.push(geoid); schoolCodes.set(id, codes);

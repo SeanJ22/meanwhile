@@ -3,7 +3,7 @@
 build_state: Code checked: 9/9 gates on runtime a41c494f1, through River e84d06c43 (CL-01 and RB-A4); 9,939 tests passed, zero failed, two skipped; both builds and 16 bundle tests pass. River deployment needed before final live-data READY; production map tables remain empty.
 worker: codex-rb-a2
 provider: Codex
-heartbeat: 2026-10-25T15:26:20.231Z
+heartbeat: 2026-10-25T16:26:07.788Z
 ready: none
 
 The production-fill follow-up is active. Current runtime a41c494f1 includes River e84d06c43 (CL-01 and RB-A4) and passes all nine gates (9,941 registered, 9,939 passed, zero failed, two skipped), including both builds and all 16 bundle tests. The run finished at 2026-10-25T15:22:15.402Z without production database or model-service credentials. The private launcher's earlier empty model-key environment failure and correction are preserved in the measurement file. The implementation and live-proof handoff are published in draft PR #822 into River. No reader is switched.

@@ -1,0 +1,50 @@
+{
+  "measuredAt": "2026-10-24T11:59:44.271717+00:00",
+  "mode": "Built PT-01 branch HTTP state response using actual read-only production holdings; not a Chrome check",
+  "revision": "20e30f02c",
+  "zip": "85701",
+  "httpStatus": 200,
+  "seconds": 2.460554,
+  "people": [
+    {
+      "id": "az-legislature:2381",
+      "name": "Sally Ann Gonzales",
+      "photoUrl": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+      "ballotPhotoUrl": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+      "samePhoto": true
+    },
+    {
+      "id": "az-legislature:2312",
+      "name": "Alma Hernandez",
+      "photoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+      "ballotPhotoUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+      "samePhoto": true
+    },
+    {
+      "id": "az-legislature:2346",
+      "name": "Betty J Villegas",
+      "photoUrl": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+      "ballotPhotoUrl": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+      "samePhoto": true
+    },
+    {
+      "id": "statewide:az/9c569bd1e5b6eb90ff6fb207",
+      "name": "Katie Hobbs",
+      "photoUrl": "/officials/statewide-az-governor.jpg",
+      "ballotPhotoUrl": "/officials/statewide-az-governor.jpg",
+      "samePhoto": true
+    },
+    {
+      "id": "statewide:az/governor",
+      "name": "Katie Hobbs",
+      "photoUrl": "/officials/statewide-az-governor.jpg",
+      "ballotPhotoUrl": "/officials/statewide-az-governor.jpg",
+      "samePhoto": true
+    }
+  ],
+  "ballot": {
+    "httpStatus": 200,
+    "seconds": 2.729353,
+    "measuredAt": "2026-10-24T12:01:48.195419+00:00"
+  }
+}

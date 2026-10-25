@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. NEXT: river-portraits (building in River session session_012UDbgz3sjA8QN2m7CY78QS), then RB-A4 catch-up b2bbdc183 (gates 9 of 9 on 456454204, 9,913 tests; waits behind river-portraits), GB-01 1636195c9, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. GATING: river-portraits READY 3a45d44ab alone (river-next = be0b41a4f + it; DB-03 portraits and member offices), then RB-A4 catch-up b2bbdc183 (gates 9 of 9 on 456454204, 9,913 tests; waits behind river-portraits), GB-01 1636195c9, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T19:06:00Z
+heartbeat: 2026-10-25T19:17:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1042,4 +1042,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - GB-01's pre-gate on catch-up caught a tsc error in River's own budget change: release 118 renamed PASS_REPAIR_DEADLINE_MS to PASS_MAINTENANCE_DEADLINE_MS. Fixed in READY 1636195c9 (merges river be0b41a4f); 8/8 focused tests, tsc and knip clean. Pre-gating again on 68ebfa0aa.
 - Lanes: no new READYs (DB-03 2cce7754c is superseded by river-portraits).
 - Neon, both databases, 2 PM EDT hour (release 118 live from 2:19): 9,242 MB total (1 PM: 13,368). Readback 21, portraits 367 (1 PM: 7,834), member offices 1,525, research cycle 2,229. Portraits fell without a release; the runner just ran less portrait work this hour. Readback savings get measured on the 3 PM and 4 PM hours.
+
+### 3:18 PM EDT
+- river-portraits posted READY 3a45d44ab (cut from river be0b41a4f).
+  - Portraits: skip a state with no changed input and no photo due; save every 50 people and at the end; resume after a deadline cut.
+  - Member offices: only states whose roster moved; resume after a cut; a finished run waits a day.
+  - Old paths deleted. No migration, no gate, receipt or score.
+- Gating alone now. GB-01's pre-gate was stopped to free the build worktree; it reruns after.
 

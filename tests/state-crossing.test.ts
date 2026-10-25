@@ -51,7 +51,7 @@ test("every displayed boundary is confined to the active state, including after 
   }
 });
 
-test("the ballot link carries the active map state and point even when the nearest ZIP is across the line", async () => {
+test("the ballot link carries the exact map point and omits a retained ZIP across the line", async () => {
   const { createElement } = await import("react");
   const { renderToStaticMarkup } = await import("react-dom/server");
   const { PillCluster } = await import("../components/shell/pill-cluster.tsx");
@@ -70,11 +70,11 @@ test("the ballot link carries the active map state and point even when the neare
     assert.equal(url.searchParams.get("state"), state);
     assert.equal(url.searchParams.get("lat"), String(point.lat));
     assert.equal(url.searchParams.get("lng"), String(point.lng));
-    assert.equal(url.searchParams.get("zip"), zip);
+    assert.equal(url.searchParams.get("zip"), null);
   }
 });
 
-test("the ballot place is the map point whenever the named state disagrees with the ZIP", async () => {
+test("the ballot place uses the exact point without a ZIP and when a named state disagrees with the ZIP", async () => {
   const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
   assert.deepEqual(await ballotPlaceFromParams({}), { zip: null, centroid: null, state: null });
   const zipOnly = await ballotPlaceFromParams({ zip: "85701" });
@@ -90,7 +90,13 @@ test("the ballot place is the map point whenever the named state disagrees with 
   assert.deepEqual(across.state, { code: "NM", name: "New Mexico", ocdId: "ocd-division/country:us/state:nm" });
   assert.equal((await ballotPlaceFromParams({ state: "dc", lat: "38.9", lng: "-77" })).state?.ocdId, "ocd-division/country:us/district:dc");
   assert.equal((await ballotPlaceFromParams({ state: "gu", lat: "13.44", lng: "144.79" })).state?.ocdId, "ocd-division/country:us/territory:gu");
-  for (const bad of [{ state: "ZZ", lat: "32", lng: "-108" }, { state: "NM", lat: "abc", lng: "-108" }, { state: "NM", lat: "95", lng: "-108" }, { state: "NM" }]) {
+  for (const hint of [undefined, "ZZ", "AZ"]) {
+    const inferred = await ballotPlaceFromParams({ state: hint, lat: "32", lng: "-108" });
+    assert.equal(inferred.zip, null);
+    assert.deepEqual(inferred.centroid, { lat: 32, lng: -108 });
+    assert.equal(inferred.state?.code, "NM");
+  }
+  for (const bad of [{ state: "NM", lat: "abc", lng: "-108" }, { state: "NM", lat: "95", lng: "-108" }, { state: "NM" }]) {
     assert.deepEqual(await ballotPlaceFromParams(bad), { zip: null, centroid: null, state: null }, JSON.stringify(bad));
   }
 });

@@ -39,14 +39,15 @@ const publicationLogKey = (state: BallotState, family: BallotPublicationFamily =
 /**
  * After the pass is ordered by how long its work is owed, due state ballot files lead it: they already hold their source
  * evidence. Voting sites, which tell readers where to vote before a fixed date, then take turns with the rest of the pass.
- * Memory goes in launch order and each started child holds it to the pass deadline, so whichever kind led alone kept the
- * other from starting: the meeting backlog held out voting sites, then voting sites held out every meeting calendar.
+ * Census maps share one serial worker. Give that worker its turn before the long reads fill memory; admitting all its
+ * states here lets it reuse that one reservation when a state finishes. Voting and calendar reads still take turns.
  */
 export function electionLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
   const family = (job: T) => parseStateBallotContractId(job.task.id)?.family;
+  const maps = jobs.filter(job => job.task.id.startsWith("place-map-"));
   const voting = jobs.filter(job => family(job) === "voting-sites");
-  const rest = jobs.filter(job => family(job) !== "ballot-contests" && family(job) !== "voting-sites");
-  return [...jobs.filter(job => family(job) === "ballot-contests"), ...Array.from({ length: Math.max(voting.length, rest.length) },
+  const rest = jobs.filter(job => family(job) !== "ballot-contests" && family(job) !== "voting-sites" && !job.task.id.startsWith("place-map-"));
+  return [...jobs.filter(job => family(job) === "ballot-contests"), ...maps, ...Array.from({ length: Math.max(voting.length, rest.length) },
     (_, index) => [voting[index], rest[index]]).flat().filter((job): job is T => job !== undefined)];
 }
 

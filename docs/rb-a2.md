@@ -1,14 +1,14 @@
 # Place map
 
-Owner: RB-A2. Branch: stream/rb-a2, merged through River 829f38c05.
+Owner: RB-A2. Branch: stream/rb-a2, merged through River c02e4bf30 (RV-MEET2).
 
 Production fill follow-up (October 24, Phoenix): release 105 shipped the schema and importer, but neither a schema nor the reader smoke checks proved that the scheduled importer ran. Production still had zero rows in place_boundary, zip_place and zcta_place at 2026-10-25T04:40:29.655Z. This follow-up stays open until the normal production runner fills the tables and meeting reads continue.
 
-The tested runner change gives each state's map its own acquisition failure domain, while a shared Census serial lane permits only one state or national Census child at a time. This removes the one-state-per-pass provider turn without multiplying Census memory use. Other providers' admission is unchanged. The map child has a 1 GiB heap; parsed relationship-file buffers are released before shape acquisition, and geometry writes use 32-row batches. Worker admission uses 1,672 MiB, the complete measured Texas refresh peak plus 5%.
+The tested runner change gives each state's map its own acquisition failure domain, while a shared Census serial lane permits only one state or national Census child at a time. This removes the one-state-per-pass provider turn without multiplying Census memory use. The lane receives one early memory turn before long reads fill the pool. A replay of River's 20,244 MiB production shape starts nine calendar programs both before and during the map load; voting programs go from twelve to nine, retaining RV-MEET2's minimum of eight. This is a controlled capacity test, not a live throughput result. Other providers' admission is unchanged. The map child has a 1 GiB heap; parsed relationship-file buffers are released before shape acquisition, and geometry writes use 32-row batches. Worker admission uses 1,672 MiB, the complete measured Texas refresh peak plus 5%.
 
 The full postal table has 42,883 ZIPs: 41,959 have a known state or territory and 924 have only a national mail context. The prior map omitted 1,052 ZIPs without Census aliases. They now retain their known state, or only the U.S. country context when no supported state is known. They gain no invented ZCTA or district.
 
-Deployment handoff: River needs to fold this tested implementation after RV-MEET2 so the existing scheduled place-map-<state> jobs can write. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory copy measurements below are supporting tests, not proof that production has filled.
+Deployment handoff: RV-MEET2 is merged into this branch. River needs to fold this tested implementation so the existing scheduled place-map-<state> jobs can write. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory copy measurements below are supporting tests, not proof that production has filled.
 
 Merged integrated River 59b7c5577 after its integration record listed RB-A1 5bde46615 and the River history contained that commit. The merge is e4cc78826.
 River's production reader-pool hotfix dfb076b40 is also merged, in 81b5eb867. River 720bc77b6 then folded RB-A1’s newer documentation READY 1d6df41d9; that revision is merged in 22b4b1e94. Verification is repeated on the latest integrated dependency.

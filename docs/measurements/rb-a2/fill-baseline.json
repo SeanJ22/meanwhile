@@ -35,10 +35,25 @@
     "reservationMiB": 1672
   },
   "focusedTests": {
-    "registered": 105,
-    "passed": 105,
+    "registered": 123,
+    "passed": 123,
     "failed": 0,
     "skipped": 0
   },
-  "status": "Implementation tested; production scheduled-load and meeting-throughput verification pending."
+  "status": "Implementation tested; production scheduled-load and meeting-throughput verification pending.",
+  "productionShapeReplay": {
+    "availableMiB": 20244,
+    "before": {
+      "calendarPrograms": 9,
+      "votingPrograms": 12,
+      "mapWorkers": 0
+    },
+    "after": {
+      "calendarPrograms": 9,
+      "votingPrograms": 9,
+      "mapWorkers": 1
+    },
+    "allStatesAdmitted": 56,
+    "liveThroughputVerified": false
+  }
 }

@@ -17,6 +17,7 @@ export interface MeetingPinBody {
     address: string;
     provenance: RegistryProvenance;
   };
+  governmentOfficeAlternatives?: NonNullable<MeetingPinBody["governmentOffice"]>[];
   meetingAddresses?: MeetingPinAddress[];
   postalAliases?: {address:string;provenance:RegistryProvenance}[];
 }
@@ -98,15 +99,17 @@ export function meetingPinAddresses(
       basis: "BODY_OFFICE",
       provenance: body.officeContact.provenance,
     });
-  if (body?.governmentOffice)
+  for (const office of [body?.governmentOffice, ...body?.governmentOfficeAlternatives ?? []]) {
+    if (!office) continue;
     addresses.push({
       meetingId: meeting.id,
       bodyId: meeting.bodyId,
-      name: readerGovernmentName(body.governmentOffice.name, null),
-      address: body.governmentOffice.address,
+      name: readerGovernmentName(office.name, null),
+      address: office.address,
       basis: "GOVERNMENT_OFFICE",
-      provenance: body.governmentOffice.provenance,
+      provenance: office.provenance,
     });
+  }
   return addresses;
 }
 

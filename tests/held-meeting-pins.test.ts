@@ -43,6 +43,31 @@ function geocode(house:string,street:string,suffix:string,direction:string,city:
       preDirection:direction,city,state:"AZ",zip}}]}};
 }
 
+test("the scheduled held pass places a municipal meeting with no stated venue at its own published City Hall",async()=>{
+  const {source,target}=JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-meetings.json",import.meta.url),"utf8")) as {source:Meeting;target:Meeting};
+  const missing:Meeting={...target,id:"iqm2:municipal:no-stated-venue",venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:target.jurisdiction}};
+  const db=await setup([missing,source]),vault=new MemoryEvidenceStore();
+  const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-census.json",import.meta.url),"utf8"));
+  try{
+    const division=target.ocdId!,body=target.bodyId!;
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Boise','ID',NULL),($2,'body','Council','ID',$1)",[division,body]);
+    await db.query("UPDATE civic_data_promotions SET key='MEETING:source:derived:family:US-ID',scope='source:derived:family:US-ID' WHERE key='MEETING:held'");
+    let requests=0;
+    const first=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000,
+      fetchImpl:async input=>{requests++;assert.equal(new URL(String(input)).searchParams.get('address'),'150 N. Capitol Blvd, Boise, ID 83702');return new Response(JSON.stringify(census));}});
+    assert.deepEqual(first,{considered:1,published:1,unplaced:0,failures:[]});assert.equal(requests,1);
+    const read=withSittingFacts([missing],(await readSittingFacts(db.query,[body])).get(body)!)[0];
+    assert.equal(read.id,missing.id);assert.equal(read.location,null);assert.equal(read.mapPin?.basis,'GOVERNMENT_OFFICE');
+    assert.equal(read.mapPin?.lat,43.615387122768);assert.equal(read.mapPin?.address,source.location!.address);
+    const nextAt=new Date(Date.parse(NOW)+3600000).toISOString();
+    const next=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:nextAt,clock:()=>Date.parse(nextAt),deadlineMs:Date.parse(nextAt)+60000,
+      fetchImpl:async()=>{throw Error('The following scheduled pass geocoded an existing point');}});
+    assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+    assert.deepEqual((await db.query("SELECT payload FROM civic_data_promotions WHERE key='MEETING:source:derived:family:US-ID'"))[0].payload,
+      JSON.parse(JSON.stringify({meetings:[missing,source]})),'Source meeting facts remain unchanged');
+  }finally{await db.pg.close();}
+});
+
 test("the automatic fact pass restores a carried online office pin, places a held address, and the following pass makes no Census request",async()=>{
   const physical:Meeting={...online,id:"legistar:held:1",online:undefined,carried:undefined,title:"Regular Meeting",
     venueGap:{kind:"STATED_NOT_PLACED",publisher:"District",publishedText:OWN}};

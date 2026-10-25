@@ -66,8 +66,12 @@ export async function publishHeldMeetingPins(input: {
     if(result.ok)for(const [id,office] of result.value.offices)offices.set(id,office);
     else {failures.push(result.error);for(const id of [...byState.values()][result.index]!)officeFailures.add(id);}
   }
-  const eligibleBodies = [...offices].filter(([,body])=>[body.officeContact?.address,body.governmentOffice?.address]
-    .some(address=>address && isOfficeStreetAddress(censusAddressQuery(address)))||body.meetingAddresses?.length).map(([id])=>id);
+  const eligibleBodies = bodyIds.filter(id=>{
+    const body=offices.get(id);
+    return /^ocd-division\/country:us\/state:[a-z]{2}\/place:[^/#]+#/.test(id) ||
+      [body?.officeContact?.address,body?.governmentOffice?.address]
+        .some(address=>address && isOfficeStreetAddress(censusAddressQuery(address))) || Boolean(body?.meetingAddresses?.length);
+  });
   const captures = new Map<string,WorkerPublicationCapture>(), knownFacts = new Map<string,readonly SittingFact[]>();
   const placed: Meeting[] = [];
   let cursor: [number,string,number] = [-1,"",0], considered=0, published=0, unplaced=0;
@@ -95,7 +99,7 @@ export async function publishHeldMeetingPins(input: {
             address:old.location.address,basis:"MEETING",provenance:old.fieldSources?.location??old.provenance});
       }
     } catch(error) { failures.push(`Earlier meeting addresses could not be read: ${error instanceof Error?error.message:String(error)}`); }
-    const census=await placePublishedMeetingPins({meetings:current,previous:placed,offices,retainedAddresses,
+    const census=await placePublishedMeetingPins({meetings:current,previous:placed,offices,retainedAddresses,query:facts.query,
       fetchImpl:input.fetchImpl,clock:()=>new Date(now()).toISOString()});
     failures.push(...census.held);
     for(const response of census.responses) {

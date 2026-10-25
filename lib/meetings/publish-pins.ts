@@ -19,6 +19,7 @@ import type { RegistryProvenance } from "../registry/types.ts";
 import { agendaLetterheadOffice, agendaMeetingAddress, streetKeyOf } from "./agenda-address.ts";
 import { meetingStateOf } from "./body-scope.ts";
 import { addressWords } from "../geo/address-words.ts";
+import { withMunicipalHallOffices } from "./municipal-office.ts";
 import {
   meetingPinAddresses,
   withPublishedPin,
@@ -204,6 +205,8 @@ export async function placePublishedMeetingPins(input: {
       offices = new Map();
     }
   }
+  offices = await withMunicipalHallOffices(input.query, input.meetings, offices,
+    detail => { officesUnavailable = true; held.push(detail); });
   const previous = new Map(
     (input.previous ?? []).map((meeting) => [meeting.id, meeting]),
   );
@@ -386,6 +389,13 @@ export async function placePublishedMeetingPins(input: {
           meetingId: meeting.id,
         });
       }
+      // A calendar omitting an earlier hall citation does not retract its saved office point.
+      // Try current addresses first; an explicit government office still supersedes it.
+      const governmentOffice=offices.get(meeting.bodyId??"")?.governmentOffice?.address;
+      if (repeated?.basis === "GOVERNMENT_OFFICE" && repeated.bodyId === meeting.bodyId &&
+        (!governmentOffice || !isOfficeStreetAddress(governmentOffice)) &&
+        !candidates.some(address => address.basis === repeated.basis && address.address === repeated.address))
+        candidates.push(repeated);
       for (const address of candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))])) {
         if(address.basis==="BODY_OFFICE"&&repeated?.basis==="GOVERNMENT_OFFICE"&&
           (repeated.boardAddressQuery??null)===bodyQuery){bodyTried=true;continue;}

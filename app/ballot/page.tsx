@@ -65,7 +65,8 @@ import { PERSON_CARD_READING_ORDER } from "@/lib/design/card-sections";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { heldCandidatePersonKeys, heldPersonIdForCandidate } from "@/lib/ballot/person-keys";
 import { personIdentityKeys } from "@/lib/officials/people-identity";
-import { ballotHolderSources, mergeBallotPersonHolders } from "@/lib/ballot/held-holder";
+import { mergeBallotPersonHolders } from "@/lib/ballot/held-holder";
+import { heldPersonSources } from "@/lib/officials/held-sources";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 
 import {
@@ -431,12 +432,13 @@ async function BallotBattlecard({
 }
 
 function CandidateSources({ holder }: { holder: SeatHolder }) {
-  const sources = [holder, ...ballotHolderSources(holder)].flatMap(person => {
+  const offices = [holder, ...heldPersonSources(holder)].flatMap(person => {
     const [office] = currentMemberOffices(person.id);
-    return personCardSources(person, office
+    return office
       ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: null } }]
-      : []);
+      : [];
   });
+  const sources = personCardSources(holder, offices);
   if (sources.length === 0) return null;
   return <CardSourcesContribution id={`candidate:${holder.id}`} sources={sources} />;
 }

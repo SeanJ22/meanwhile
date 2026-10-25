@@ -165,7 +165,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
-  "RB-A4_entity_places": {phase:"expand",why:"Adds the host-county filing marker after RB-A1 supplies boundary-year identity."},
+  "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed." },
+  "RB-A4_entity_places": { phase: "expand", why: "Adds the host-county filing marker after RB-A1 supplies boundary-year identity." },
   "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",
@@ -388,6 +389,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",
   },
   "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
+  "DB-01_read_versions": { phase: "expand", why: "Adds hourly runner transfer aggregates, per-scope clock versions and targeted open-flag indexes; existing readers and writers keep working." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

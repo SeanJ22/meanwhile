@@ -113,7 +113,7 @@ function runOneBoundedChild(
       [...command.args],
       {
         cwd: options.cwd,
-        env: command.env ?? options.env,
+        env: { ...(command.env ?? options.env), WTP_DATABASE_JOB: command.id },
         encoding: "utf8",
         maxBuffer,
         windowsHide: true,

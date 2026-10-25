@@ -2,6 +2,7 @@ import type { RegistryProvenance } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 import { isOnlineOnly } from "./online.ts";
 import { readerBodyName, readerGovernmentName } from "../text/reader-names.ts";
+import { censusAddressQuery } from "../geo/address-query.ts";
 
 export interface MeetingPinBody {
   bodyId: string;
@@ -16,6 +17,8 @@ export interface MeetingPinBody {
     address: string;
     provenance: RegistryProvenance;
   };
+  meetingAddresses?: MeetingPinAddress[];
+  postalAliases?: {address:string;provenance:RegistryProvenance}[];
 }
 
 export type PinBasis = "MEETING" | "BODY_OFFICE" | "GOVERNMENT_OFFICE";
@@ -26,6 +29,8 @@ export interface MeetingPinAddress {
   address: string;
   basis: PinBasis;
   provenance: RegistryProvenance;
+  geocodingAddress?:string;
+  addressAlias?:{sourceAddress:string;provenance:RegistryProvenance};
 }
 export interface MeetingPinLocation extends MeetingPinAddress {
   lat: number;
@@ -35,6 +40,21 @@ export interface MeetingPinLocation extends MeetingPinAddress {
   matchedAddress?: string;
   /** The source text tried before this saved point, including an absent venue. */
   publishedLocation?: string | null;
+}
+
+/** Keep the current attendance text while reusing a checked point and any still-needed street address. */
+export function publishedVenueDescription<T extends string|null>(text:string,previousAddress:T) {
+  return {name:text,address:/^\d+[a-z]?(?:-\d+)?\s/i.test(censusAddressQuery(text))?text:previousAddress};
+}
+
+export function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
+  if(pin.basis==="MEETING" && pin.publishedLocation && pin.publishedLocation!==pin.name && pin.publishedLocation!==pin.address) {
+    const text=pin.publishedLocation;
+    pin={...pin,...publishedVenueDescription(text,pin.address)};
+  }
+  return pin.basis === "MEETING" && !meeting.online
+    ? {...meeting,mapPin:pin,location:{name:pin.name,address:pin.address,lat:pin.lat,lng:pin.lng},venueGap:undefined}
+    : {...meeting,mapPin:pin};
 }
 
 /** Pins arrive with the published meeting. Reader visits perform no meeting-address lookups. */
@@ -65,6 +85,8 @@ export function meetingPinAddresses(
       basis: "MEETING",
       provenance: meeting.fieldSources?.location ?? meeting.provenance,
     });
+  if(!isOnlineOnly(meeting))
+    addresses.push(...body?.meetingAddresses?.filter(address=>address.meetingId===meeting.id)??[]);
   if (body?.officeContact?.address)
     addresses.push({
       meetingId: meeting.id,

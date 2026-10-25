@@ -211,3 +211,38 @@ test("doors the removed hold suspended, Cochise's among them, open again; other 
     assert.equal(await reopenHeldDoors(sql), 0, "a second pass changes nothing");
   } finally { await db.close(); }
 });
+
+test("production's key-held doors, recorded by failure reason and with rewritten notes, open again; other suspensions stay", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const { reopenKeyHeldDoors } = await import("../lib/control-plane/repository/migrations/RIVER-KEYS-FX.ts");
+  const { isDoorRecord } = await import("../lib/doors/registry.ts");
+  const db = new PGlite();
+  try {
+    await db.exec("CREATE TABLE cp_doors(id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz NOT NULL DEFAULT now())");
+    const repos = createMemoryRepositories();
+    await saveVotingSourceDoor(repos.doors, door("cochise:ballot-box-table"), now);
+    const base = (await repos.doors.list())[0]!.value;
+    // The two shapes production held on Oct 24, 12:28 UTC: notes rewritten by the door refresh.
+    const boxTable = { ...base, doorId: "cochise:ballot-box-table", status: "SUSPENDED", readNow: false, notes: "Cochise County Recorder: list-page; 2026-11-03" };
+    const pdf = { ...base, doorId: "legacy:cochise:vote-center-pdf", status: "SUSPENDED", readNow: false,
+      notes: "Cochise County Elections Department: file; 2026-11-03",
+      lastFailureReason: "https://www.cochise.az.gov/292/Elections; Source document requires encrypted restricted evidence storage; other official files remain active" };
+    const other = { ...base, doorId: "page:duplicate", status: "SUSPENDED", readNow: false, notes: "Publishing source is read through another door" };
+    for (const [id, value] of [[boxTable.doorId, boxTable], [pdf.doorId, pdf], [other.doorId, other]] as const) {
+      await db.query("INSERT INTO cp_doors(id,revision,updated_at,value) VALUES($1,4,$2,$3::jsonb)", [id, now, JSON.stringify(value)]);
+    }
+    const sql = { query: async (text: string, params: readonly unknown[] = []) => (await db.query<Record<string, unknown>>(text, [...params])).rows };
+    assert.equal(await reopenKeyHeldDoors(sql), 2);
+    const rows = new Map((await sql.query("SELECT id, revision, value FROM cp_doors")).map(row => [row.id as string, row]));
+    for (const id of ["cochise:ballot-box-table", "legacy:cochise:vote-center-pdf"]) {
+      const value = rows.get(id)!.value as typeof pdf;
+      assert.equal(value.status, "OPEN", id);
+      assert.equal(value.readNow, true, id);
+      assert.equal(value.lastFailureReason, undefined, id);
+      assert.equal(Number(rows.get(id)!.revision), 5, id);
+      assert.ok(isDoorRecord(value), id);
+    }
+    assert.equal((rows.get("page:duplicate")!.value as typeof pdf).status, "SUSPENDED");
+    assert.equal(await reopenKeyHeldDoors(sql), 0, "a second pass changes nothing");
+  } finally { await db.close(); }
+});

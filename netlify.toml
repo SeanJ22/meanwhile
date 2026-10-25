@@ -25,13 +25,9 @@
 
 [functions."line-keeper"]
   node_bundler = "esbuild"
-  external_node_modules = ["@sparticuz/chromium", "playwright"]
-  included_files = ["node_modules/@sparticuz/chromium/bin/**", "data/derived/zip-divisions/*.json"]
 
 [functions."line-keeper-initialize"]
   node_bundler = "esbuild"
-  external_node_modules = ["@sparticuz/chromium", "playwright"]
-  included_files = ["data/derived/zip-divisions/*.json"]
 
 [functions."grounded-ask"]
   node_bundler = "esbuild"

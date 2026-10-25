@@ -59,12 +59,33 @@ test('CP-10: one official portrait publishes without a licence sentence and stil
     verification:{...checked,imageHash:hash,sourceImageHash:hash} }),true);
 });
 
+test('Open States publishes the exact native person image from one intact feed capture',()=>{
+  const checked=verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[roster]},NOW);
+  assert.equal(checked.basis,'SOURCE_FEED');
+  assert.equal(checked.sources.length,1);
+  assert.throws(()=>verifyPortraitSources(ID,{subject:{...subject,nativeIds:{}},imageUrl:IMAGE,captures:[roster]},NOW),/SECOND_SOURCE/);
+});
+
+test('a known own campaign portrait does not wait for election-cycle text',()=>{
+  const own=capture('https://jane.example/','<h1>Jane Doe</h1><img alt="Jane Doe" src="'+IMAGE+'">');
+  const checked=verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,identity:campaignIdentity}},NOW);
+  assert.equal(checked.basis,'OWN_PAGE');
+});
+
 test('CP-10: a verified own-campaign portrait needs one source; a personal social account still needs two',()=>{
   const own = capture('https://jane.example/', `<title>Jane Doe for Mayor 2026</title><img alt="Jane Doe" src="${IMAGE}">`);
   const checked=verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,identity:campaignIdentity}},NOW);
   assert.equal(checked.basis,'OWN_PAGE');
   const personal=capture('https://social.example/jane',own.evidence.text);
   assert.throws(()=>verifyPortraitSources(ID,{subject,imageUrl:IMAGE,captures:[personal]},NOW),/SECOND_SOURCE/);
+  for(const url of ['https://www.facebook.com/jane','https://bsky.app/profile/jane','https://truthsocial.com/@jane']) {
+    const social=capture(url,own.evidence.text);
+    const socialSubject={...subject,profileUrls:[...subject.profileUrls,url]};
+    const input={subject:socialSubject,imageUrl:IMAGE,captures:[social],campaign:{url,identity:campaignIdentity}};
+    assert.throws(()=>verifyPortraitSources(ID,input,NOW),/SECOND_SOURCE/,'A filing website field does not turn a personal social account into a campaign site');
+    const corroborating=capture('https://press.example.org/jane','<h1>Jane Doe portrait</h1><img alt="Jane Doe" src="'+IMAGE+'">');
+    assert.equal(verifyPortraitSources(ID,{...input,captures:[social,corroborating]},NOW).basis,'TWO_SOURCES');
+  }
   assert.throws(()=>verifyPortraitSources('Other Person',{subject,imageUrl:IMAGE,captures:[own],campaign:{url:own.evidence.canonicalUrl,identity:campaignIdentity}},NOW),/PORTRAIT_/);
 });
 

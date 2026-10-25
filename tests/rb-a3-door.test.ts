@@ -6,6 +6,8 @@ import { publishClaim, type PublishInput } from "../lib/facts/publish.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { readFactStore } from "../lib/facts/admin-read.ts";
+import { readCounts } from "../lib/control-plane/line-keeper/read.ts";
+import { countWindow } from "../lib/counts/hour.ts";
 import { readBodyFacts } from "../lib/facts/registry-overlay.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import { districtCardSources } from "../lib/officials/card-sources.ts";
@@ -21,8 +23,8 @@ const input = (over: Partial<PublishInput> = {}): PublishInput => ({
   copy: { id: 1, finalUrl: "https://example.gov/council", text: "", fetchedAt: now, isArchive: false }, ...over,
 });
 
-async function seeded() {
-  const db = await factDb();
+async function seeded(withHourlyCounts = false) {
+  const db = await factDb({ withHourlyCounts });
   await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Example City Council','AZ')", [input().entity.id]);
   await db.query(`INSERT INTO entity(id,kind,name,state) VALUES('place-one','place','First district','AZ'),('place-two','place','Second district','AZ')`);
   await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,'place-one'),($1,'place-two')", [input().entity.id]);
@@ -83,7 +85,7 @@ test("an existing canonical id wins over another source's alias without merging 
 });
 
 test("an official field publishes without reading or searching the page text, and an exact repeat changes nothing", async () => {
-  const db = await seeded();
+  const db = await seeded(true);
   try {
     const claim = input({ copy: { ...input().copy, get text(): string { throw new Error("official lane searched the source"); } } });
     assert.deepEqual(await door(db, claim, clocks, now, { purge }), { decision: "PUBLISH", factId: 1 });
@@ -96,7 +98,9 @@ test("an official field publishes without reading or searching the page text, an
     assert.deepEqual(await snapshot(), before);
     assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
     assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id"), [{ place_id: "place-one" }, { place_id: "place-two" }]);
-    assert.deepEqual(await db.query("SELECT state,step,n::int FROM count_hour"), [{ state: "AZ", step: "door_official", n: 1 }]);
+    assert.deepEqual(await db.query(`SELECT state,sum(n)::int AS n FROM count_hour
+      WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
+        AND substring(step FROM 4)::jsonb->>2='in' GROUP BY state`), [{ state: "AZ", n: 1 }]);
   } finally { await db.pg.close(); }
 });
 
@@ -109,7 +113,7 @@ test("a portal linked by a registered government site uses the official lane", a
     const outcome = await door(db, { ...claim, linkingPage: { url: "https://government.example.org/meetings",
       html: '<a href="https://portal.example/meetings">Public meetings</a>' } }, clocks, now, { purge });
     assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
-    assert.deepEqual(await db.query("SELECT step,n::int FROM count_hour"), [{ step: "door_official", n: 1 }]);
+    assert.deepEqual(await db.query("SELECT provenance_kind FROM fact"), [{ provenance_kind: "OFFICIAL" }]);
     assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
   } finally { await db.pg.close(); }
 });
@@ -137,6 +141,32 @@ test("a registered government API and its portal keep the same CivicClerk tenant
     assert.equal("decision" in outcome && outcome.decision, "PUBLISH");
     assert.deepEqual(await door(db, input({ field: "office_email", copy: { ...input().copy, finalUrl: "https://other.portal.civicclerk.com/event/1" } }), clocks, now, { purge }),
       { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+  } finally { await db.pg.close(); }
+});
+
+test("a registered Legistar API keeps its tenant's portal and document delivery host official", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'webapi.legistar.com/v1/example')", [input().entity.id]);
+    for (const [index, url] of ["https://example.legistar.com/MeetingDetail.aspx?ID=1", "https://example.legistar1.com/example/meetings/2026/agenda.pdf", "https://legistar2.granicus.com/example/meetings/2026/agenda.pdf"].entries()) {
+      const result = await door(db, input({ field: `document_${index}`, copy: { ...input().copy, finalUrl: url,
+        get text(): string { throw Error("The held government's document searched a quote"); } } }), clocks, now, { purge });
+      assert.equal("decision" in result && result.decision, "PUBLISH");
+    }
+    assert.deepEqual(await door(db, input({ field: "wrong_tenant", copy: { ...input().copy, finalUrl: "https://other.legistar1.com/other/agenda.pdf" } }), clocks, now, { purge }),
+      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+    assert.deepEqual(await door(db, input({ field: "wrong_granicus_tenant", copy: { ...input().copy, finalUrl: "https://legistar2.granicus.com/other/meetings/2026/agenda.pdf" } }), clocks, now, { purge }),
+      { refused: "QUOTE_NOT_ON_SAVED_COPY" });
+  } finally { await db.pg.close(); }
+});
+
+test("a registered government site keeps its www spelling official", async () => {
+  const db = await seeded();
+  try {
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'www.example.org')", [input().entity.id]);
+    const result = await door(db, input({ copy: { ...input().copy, finalUrl: "https://www.example.org/council",
+      get text(): string { throw Error("The registered government site searched a quote"); } } }), clocks, now, { purge });
+    assert.equal("decision" in result && result.decision, "PUBLISH");
   } finally { await db.pg.close(); }
 });
 
@@ -208,6 +238,18 @@ test("a campaign or advocacy site cannot publish a fact about someone else, and 
   } finally { await db.pg.close(); }
 });
 
+test("a government directory link preserves a campaign site's scope and source rank", async () => {
+  const db = await seeded();
+  try {
+    const claim = { ...input({ provenance: "CAMPAIGN", sourceSubjectId: "another-person", quote: "Call 520-555-0100",
+      copy: { ...input().copy, id: 2, finalUrl: "https://campaign.example/", text: "Example City Council Arizona Call 520-555-0100" } }),
+      linkingPage: { url: "https://example.gov/candidates", html: '<a href="https://campaign.example/">Campaign website</a>' } };
+    assert.deepEqual(await door(db, claim, clocks, now, { purge }), { refused: "CAMPAIGN_OTHER_SUBJECT" });
+    assert.equal("decision" in await door(db, { ...claim, sourceSubjectId: claim.entity.id }, clocks, now, { purge }), true);
+    assert.deepEqual(await db.query("SELECT provenance_kind,quote_start FROM fact"), [{ provenance_kind: "CAMPAIGN", quote_start: 29 }]);
+  } finally { await db.pg.close(); }
+});
+
 test("nonofficial claims use clocks.ts; a failed quote leaves the old caller its blank", async () => {
   const db = await seeded();
   try {
@@ -242,7 +284,7 @@ test("an unchanged saved fact replays after its freshness window without refresh
 });
 
 test("a real later observation of the same source bytes advances its checked date once and adds no delivery", async () => {
-  const db = await seeded();
+  const db = await seeded(true);
   try {
     await door(db, input(), clocks, now, { purge });
     const next = new Date(now.getTime() + 3_600_000);
@@ -252,7 +294,9 @@ test("a real later observation of the same source bytes advances its checked dat
     assert.equal(new Date(before[0]!.checked_at as string).toISOString(), next.toISOString());
     await door(db, claim, clocks, new Date(next.getTime() + 3_600_000), { purge });
     assert.deepEqual(await db.query("SELECT * FROM fact"), before);
-    assert.deepEqual(await db.query("SELECT n::int FROM count_hour"), [{ n: 1 }]);
+    assert.deepEqual(await db.query(`SELECT sum(n)::int AS n FROM count_hour
+      WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
+        AND substring(step FROM 4)::jsonb->>2='in'`), [{ n: 1 }]);
   } finally { await db.pg.close(); }
 });
 
@@ -356,14 +400,14 @@ test("all source ranks are respected, newest wins within a rank, and every confl
   for (const rank of ranks) assert.equal(decide(side("OWNER", "typed"), side(rank, "system")), "FLAG_OWNER");
 });
 
-test("the next hour accepts a changed official field and Admin reads both lanes for every state and hour", async () => {
-  const db = await seeded();
+test("new and compatibility writers share one hourly count through a replacement and exact repeat", async () => {
+  const db = await seeded(true);
   try {
     await door(db, input(), clocks, now, { purge });
     const checked = input({ field: "meeting_cadence", fieldKind: "meeting", provenance: "NEWS", quote: "Every Tuesday",
       value: "Every Tuesday", valueText: "Every Tuesday", copy: { ...input().copy, id: 2, finalUrl: "https://news.example/council",
         text: "Example City Council Arizona meets Every Tuesday" } });
-    await door(db, checked, clocks, now, { purge });
+    await publishClaim(db, checked, clocks, now, { purge });
     const next = new Date(now.getTime() + 3_600_000);
     await db.query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key)
       VALUES(3,'https://example.gov/council','https://example.gov/council',$1,$2,'next-hour')`, [next.toISOString(), "b".repeat(64)]);
@@ -374,13 +418,17 @@ test("the next hour accepts a changed official field and Admin reads both lanes 
       const rows = [];
       for (const statement of statements) rows.push(await db.query(statement.text, statement.params));
       return rows;
-    }, next);
-    assert.deepEqual(reading.hours?.find(row => row.state === "AZ" && row.hour === now.toISOString()),
-      { state: "AZ", hour: now.toISOString(), official: 1, checked: 1 });
-    assert.deepEqual(reading.hours?.find(row => row.state === "AZ" && row.hour === next.toISOString()),
-      { state: "AZ", hour: next.toISOString(), official: 1, checked: 0 });
-    for (const state of ["AK", "CA", "LA", "MT", "ND", "NE", "VT", "WY"])
-      assert.ok(reading.hours?.some(row => row.state === state && row.hour === next.toISOString()), state);
-    assert.equal(reading.hours?.find(row => row.state === "AZ" && row.hour < now.toISOString())?.official, null);
+    });
+    assert.deepEqual(reading.blanks, []);
+    const window=countWindow(new Date(Date.now()+3_600_000).toISOString());
+    const counts=await readCounts({query:db.query},window.from,window.through);
+    const live=counts.find(row=>row.state==='AZ'&&row.stage==='fact:live')!;
+    assert.equal(live.total,2);
+    assert.equal(live.observedIn,3,'each new or replacement fact counts once, independent of its caller');
+    assert.equal(live.observedOut,1,'the superseded fact leaves live stock once');
+    assert.deepEqual(await db.query("SELECT step FROM count_hour WHERE left(step,3)<>'v1:' AND step<>'counter start'"),[]);
+    const before=await db.query('SELECT * FROM count_hour ORDER BY state,hour,step');
+    assert.equal((await door(db,claim,clocks,next,{purge}) as {decision:string}).decision,'CONFIRM');
+    assert.deepEqual(await db.query('SELECT * FROM count_hour ORDER BY state,hour,step'),before);
   } finally { await db.pg.close(); }
 });

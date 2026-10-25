@@ -44,7 +44,7 @@ test("a board keeps one identity and reaches every served city in ten states, in
 });
 
 test('an identical saved fact can file a newly served city and refresh its reader without counting another fact',async()=>{
-  const db=await factDb(),id='az:special:regional#governing',city='ocd-division/country:us/state:az/place:served',now=new Date('2026-10-24T00:00:00.000Z');
+  const db=await factDb({withHourlyCounts:true}),id='az:special:regional#governing',city='ocd-division/country:us/state:az/place:served',now=new Date('2026-10-24T00:00:00.000Z');
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Regional Board','AZ'),($2,'place','Served','AZ')",[id,city]);
     await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov/board','https://example.gov/board',$1,$2,'source')",[now.toISOString(),'a'.repeat(64)]);
@@ -58,7 +58,9 @@ test('an identical saved fact can file a newly served city and refresh its reade
     assert.ok(purges>before);
     assert.deepEqual(await db.query('SELECT place_id FROM rebuild_queue'),[{place_id:city}]);
     assert.equal((await db.query('SELECT count(*)::int AS n FROM fact'))[0]!.n,1);
-    assert.equal((await db.query('SELECT sum(n)::int AS n FROM count_hour'))[0]!.n,1);
+    assert.deepEqual(await db.query(`SELECT state,sum(n)::int AS n FROM count_hour
+      WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
+        AND substring(step FROM 4)::jsonb->>2='in' GROUP BY state`),[{state:'AZ',n:1}]);
     const after=purges;await db.query('DELETE FROM rebuild_queue');
     await door(db,served,factClocks(null),now,options);
     assert.equal(purges,after);assert.deepEqual(await db.query('SELECT * FROM rebuild_queue'),[]);

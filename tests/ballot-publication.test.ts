@@ -7,11 +7,12 @@ import test from "node:test";
 import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { ballotInputHash, ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
-import { ballotPublicationDue, ballotPublicationLaunchOrder, ballotPublicationSummary, parseBallotPublicationResult, readLatestBallotPublication,
+import { ballotPublicationDue, electionLaunchOrder, ballotPublicationSummary, parseBallotPublicationResult, readLatestBallotPublication,
   readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
 import { routineSerialLane, routineBaselineOwed, routinePassLaunchOrder } from "../lib/civic-data/runner.ts";
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
+import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { workerPublicationTasksFor } from "../lib/civic-data/worker-publication-tasks.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
@@ -122,7 +123,7 @@ test("state files publish within the pass even when a slow unfinished network so
     ...tasks.map(task => ({ task, baselineOwed: routineBaselineOwed(task, clock) })),
   ], Date.parse("2026-10-21T08:00:00.000Z"));
   assert.ok(ordinary.slice(1).every(job => job.baselineOwed === false));
-  for (const ordered of [ordinary, ballotPublicationLaunchOrder(ordinary)]) {
+  for (const ordered of [ordinary, electionLaunchOrder(ordinary)]) {
     let time = 0;
     const runs = await runBoundedChildPass(ordered.map(({ task }) => ({ id: task.id, executable: process.execPath, args: [] })), {
       cwd: process.cwd(), env: process.env, concurrency: 1,
@@ -213,10 +214,12 @@ test("the runner's ballot child publishes only its state under exact authority a
       { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
     const parentEnv = { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
       DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
-    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "process",
-      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, { ...process, env: parentEnv });
+    const passEnds = Date.parse(now) + 20 * 60_000;
+    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "withPassDeadline", "PASS_LAUNCH_DEADLINE_MS", "process",
+      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, withPassDeadline, passEnds, { ...process, env: parentEnv });
     assert.deepEqual(ballotTask.command, ["scripts/assemble-ballot-package.mts", "--state=TX"]);
     const command = commandFor({ id: ballotTask.id, kind: "SOURCE", task: ballotTask, command: ballotTask.command });
+    assert.equal(passDeadlineFromEnv(command.env), passEnds, "the child is told when the pass ends");
     const run = spawnSync(command.executable, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
       "tests/fixtures/ballot-national/publish-child.mts", directory], { env: command.env, encoding: "utf8", timeout: 60_000 });
     assert.equal(run.status, 0, run.stderr + run.stdout);

@@ -33,7 +33,7 @@ import { readDoorNumbers } from "@/lib/control-plane/admin-view/door-numbers-rea
 import { readLineReport } from "@/lib/control-plane/line-keeper/report.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
 import { keeperStatus } from "@/lib/control-plane/line-keeper/model.ts";
-import { keeperVital } from "@/lib/control-plane/line-keeper/admin.ts";
+import { readVitalSigns } from "@/lib/control-plane/admin-view/vital-signs-read.ts";
 import { readFactStore } from "@/lib/facts/admin-read.ts";
 import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
@@ -55,11 +55,13 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,pipeline,factStore]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,
-        attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query,now):null;})]);
+      const [keeper,pipeline,vital,factStore,heartbeat]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,url?attempt(()=>readVitalSigns(neon(url),observedAt)):null,
+        attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query):null;}),
+        attempt(async()=>{const opened=await openControlPlane();return opened.ok?(await opened.repos.runnerHeartbeat.read(RUNNER_ID))?.value??null:null;})]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
-        data:buildScoreboard({lineKeeper:keeper,observedAt,factStore,vital:keeperVital(keeper),places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
-          learning:{trends:[],readings:[],notMeasured:[]},doors:null,gates:keeper?.hours[0]?.gates??null,readiness:readinessCounts(keeper?.hours[0]?.readiness??{})}),
+        data:buildScoreboard({lineKeeper:keeper,observedAt,vital,factStore,places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
+          learning:{trends:[],readings:[],notMeasured:[]},doors:null,
+          gates:readGateHealth({nowIso:observedAt,heartbeat,databaseReachable:null,lastDispatch:null,spend:null}),readiness:readinessCounts({})}),
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
@@ -70,7 +72,7 @@ export async function GET(request: NextRequest) {
     let doorUnreadable=0;
     const doorList = opened ? await attempt(async () => await listDoors(opened.doors).then(r=>{doorUnreadable=r.unreadable;return r.doors;})) : null;
     const keeperRead=attempt(async()=>url?readLineReport(neon(url)):null);
-    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks] = await Promise.all([
+    const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks, vital] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ doors:doorList??[], unreadable:doorUnreadable, saves: [], observedAt }).counts : null)),
@@ -100,13 +102,14 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
       attempt(async () => (url ? readFlowWeek({control:neon(url),through:observedAt}) : null)),
       // Keep the existing blank reasons. Reader delivery comes from the hourly report.
-      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query,now) : null; }),
+      attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query) : null; }),
       // One compact, independently maintained checkpoint supplies all hourly numbers.
       keeperRead,
       // The link sweep's dead links per surface, kept beside door health.
       attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
       // The last deploys' look passes (a week's worth), for the look row.
       attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
+      attempt(async () => (url ? readVitalSigns(neon(url), observedAt) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
@@ -121,7 +124,7 @@ export async function GET(request: NextRequest) {
       doorNumbers,
       flow,
       factStore,
-      vital: keeperVital(keeper),
+      vital,
       lineKeeper: keeper,
       observedAt,
       audit,
@@ -131,11 +134,11 @@ export async function GET(request: NextRequest) {
       speedLimits: { share: readSetting(config, SLOW_SURFACE_SHARE_SETTING, SLOW_SURFACE_SHARE_DEFAULT), deadLinks: readSetting(config, DEAD_LINKS_SURFACE_SETTING, DEAD_LINKS_SURFACE_DEFAULT) },
       provenFixes,
       reportAccuracy: claims,
-      gates: keeper?.hours[0]?.gates ?? (opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null })),
+      gates: (opened === null ? null : readGateHealth({ nowIso: observedAt, heartbeat, databaseReachable: null, lastDispatch: null, spend: null })),
       readiness: readinessCounts({...recoveryWitnesses({
         bankEntriesInherited: learning?.doors.given ?? null, bankEntriesUsed: learning?.doors.used ?? null,
         failureDebts: null, failureDebtsWithReason: null, absences: null, absencesWithRecheck: null, manualWriteBacks: null,
-      }),...(keeper?.hours[0]?.readiness ?? {})}),
+      })}),
     };
     return {
       contract: "admin-v6/scoreboard@1",

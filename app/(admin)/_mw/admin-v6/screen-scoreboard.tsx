@@ -1,7 +1,7 @@
 "use client";
 
+import { HourlyCounts } from "./scoreboard-hourly-counts.tsx";
 import { WeeklyColumns } from "./charts.tsx";
-import { FactHours } from "./fact-hours.tsx";
 import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import type { ScoreboardGateRow } from "./model.ts";
 import { mst } from "./model.ts";
@@ -23,11 +23,10 @@ export function ScoreboardScreen() {
         <h1 className={s.h1}>Scoreboard</h1>
       </header>
       {!b && <Card title="Numbers"><span className={s.big}>—</span></Card>}
-      <FactHours hours={b?.factHours ?? null} />
       {b && (
         <>
           <section aria-label="Numbers" className={s.grid3}>
-            {b.rows.map((r) => (
+            {b.rows.filter(r=>!r.hourlyCounts).map((r) => (
               <Card key={r.id} title={r.name}>
                 <div><span className={s.big}>{r.value ?? "—"}</span></div>
                 {r.counts && <p className={s.meta}>{r.counts}</p>}
@@ -48,6 +47,7 @@ export function ScoreboardScreen() {
               </Card>
             ))}
           </section>
+          {b.rows.flatMap(r=>r.hourlyCounts?[<HourlyCounts key={r.id} data={r.hourlyCounts}/>]:[])}
           {b.byPlace.length > 0 && (
             <Card title="Completeness, by sent place">
               <div className={s.tableWrap}>

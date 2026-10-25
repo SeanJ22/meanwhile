@@ -75,11 +75,17 @@ export function hostOf(url: string): string {
 /** An entity's own site is a host, or a host and path for a channel its door reads on a shared platform. */
 function ownSite(url: string, site: string): boolean {
   const host = hostOf(url);
+  const { pathname } = new URL(url);
+  site = site.toLowerCase().replace(/^www\./, "");
   // A registered CivicClerk API and its public portal are the same tenant's publication.
   const civicClerk = /^([a-z0-9-]+)\.api\.civicclerk\.com(?:\/v1(?:\/.*)?)?$/i.exec(site);
   if (civicClerk && host === `${civicClerk[1]!.toLowerCase()}.portal.civicclerk.com`) return true;
+  const legistar = /^webapi\.legistar\.com\/v1\/([a-z0-9_-]+)(?:\/.*)?$/i.exec(site)
+    ?? /^([a-z0-9_-]+)\.legistar\.com(?:\/.*)?$/i.exec(site);
+  if (legistar && ["legistar.com", "legistar1.com"].some(domain => host === `${legistar[1]!.toLowerCase()}.${domain}`)) return true;
+  if (legistar && /^legistar\d*\.granicus\.com$/.test(host)
+    && pathname.toLowerCase().startsWith(`/${legistar[1]!.toLowerCase()}/meetings/`)) return true;
   if (!site.includes("/")) return host === site || host.endsWith(`.${site}`);
-  const { pathname } = new URL(url);
   const at = `${host}${pathname}`.toLowerCase(), own = site.toLowerCase();
   return at === own || at.startsWith(`${own}/`);
 }

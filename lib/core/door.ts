@@ -127,8 +127,9 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const copy = input.capture ? await saveCaptureCopy(query, input.capture) : input.copy;
     const official = officialSource(copy.finalUrl, entity.hosts, input.linkingPage);
     const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
-    const fast = official && acquisition === "loader";
-    const provenance = input.provenance === "OWNER" ? "OWNER" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
+    const campaign = input.provenance === "CAMPAIGN" && !isOfficialUrl(copy.finalUrl, []) && !isSourceApiUrl(copy.finalUrl);
+    const fast = official && acquisition === "loader" && !campaign;
+    const provenance = input.provenance === "OWNER" ? "OWNER" : campaign ? "CAMPAIGN" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
     const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;
     const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
     const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };
@@ -200,7 +201,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     [row!.id,`A source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      await filePublication(query, entity.id, fast ? "door_official" : "door_checked", now);
+      await queueEntityPlaces(query, entity.id, now);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
     }
     return { decision, factId };
@@ -211,22 +212,10 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   return outcome;
 }
 
-/** A changed fact queues every served place filed by the same transaction. */
-async function filePublication(query: Query, entityId: string, step: string, now: Date): Promise<void> {
-  const places=await queueEntityPlaces(query,entityId,now);
-  const [subject] = await query("SELECT state FROM entity WHERE id=$1", [entityId]);
-  const states = [...new Set([...places.map(place => place.state), subject?.state]
-    .flatMap(state => state && state !== "US" ? [String(state).toUpperCase()] : []))];
-  await query(`INSERT INTO count_hour(state,hour,step,n)
-    SELECT state,date_trunc('hour',$2::timestamptz),$3,1 FROM unnest($1::text[]) AS state
-    ON CONFLICT(state,hour,step) DO UPDATE SET n=count_hour.n+1`,
-  [states.length ? states : ["US"], now.toISOString(), step]);
-}
-
-async function queueEntityPlaces(query:Query,entityId:string,now:Date) {
-  const places = await query(`SELECT DISTINCT e.id,e.state FROM entity_place p JOIN entity e ON e.id=p.place_id WHERE p.entity_id=$1`,[entityId]);
+/** A changed fact or filing queues every served place filed for its subject. */
+async function queueEntityPlaces(query: Query, entityId: string, now: Date): Promise<void> {
+  const places = await query(`SELECT DISTINCT e.id FROM entity_place p JOIN entity e ON e.id=p.place_id WHERE p.entity_id=$1`,[entityId]);
   if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
     SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
   [places.map(place => place.id), now.toISOString()]);
-  return places;
 }

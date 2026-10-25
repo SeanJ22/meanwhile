@@ -549,6 +549,9 @@ export interface SpendView {
 
   readonly unpricedRows: number;
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
+    readonly runnerHours?: readonly { readonly hour: string; readonly readerBytes: number; readonly controlPlaneBytes: number }[];
+    readonly runnerReads?: readonly { readonly hour: string; readonly database: string; readonly job: string; readonly table: string;
+      readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
     readonly readerReads?: readonly { readonly day: string; readonly route: string; readonly read: string;
       readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
@@ -604,6 +607,14 @@ export interface LearningView {
   readonly notMeasured: readonly NotMeasured[];
 }
 
+export interface HourlyCountTableData {
+  readonly at: string;
+  readonly status: string;
+  readonly states: readonly string[];
+  readonly hours: readonly { readonly from:string; readonly through:string; readonly measuredAt:string;
+    readonly counts:readonly import("../../../../lib/counts/hour.ts").HourCount[]|null;
+    readonly waiting:readonly import("../../../../lib/counts/hour.ts").OldestWaiting[]|null }[];
+}
 export interface ScoreboardRow {
   readonly id: string;
   readonly name: string;
@@ -617,6 +628,7 @@ export interface ScoreboardRow {
 
   readonly trend?: readonly { readonly label: string; readonly value: number | null }[];
   readonly images?: readonly { readonly label: string; readonly src: string }[];
+  readonly hourlyCounts?: HourlyCountTableData;
 }
 
 export interface ScoreboardGateRow {
@@ -652,7 +664,7 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
-/** One full hour from the independent line keeper (Now). A number nobody recorded is null and shows "—". */
+/** One full hour from the runner's vital signs (Now). A number nobody recorded is null and shows "—". */
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;
@@ -669,7 +681,6 @@ export interface ScoreboardVitalHour {
 
 export interface ScoreboardView {
   readonly lineKeeper?: string;
-  readonly factHours?: readonly import("../../../../lib/facts/admin-read.ts").FactDoorHour[] | null;
   readonly rows: readonly ScoreboardRow[];
   readonly byPlace: readonly ScoreboardPlaceRow[];
   readonly byFamily: readonly ScoreboardFamilyRow[];

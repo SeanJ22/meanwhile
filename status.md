@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 106 (main 526fe7131). Release 107 merged, build FAILED (migration deadlock). NEXT: release 108 = RV-LOCK (PR #820, auto-merge on). HELD: release 109 = PT-01 + MT-01 (PR #819). READY to fold: RB-A6 d7b31ba67 (River-finished), CL-01 b98903e96, DB-02 + BL-02
+build_state: LIVE FOR READERS: release 106 (main 526fe7131). Release 108 = RV-LOCK merged 11:26 PM EDT, production build running (retries RB-A8_count_hour with fact, civic_data_promotions, entity locked first). HELD: release 109 = PT-01 + MT-01 (PR #819). Gating: DB-02 + BL-02 (held from shipping until the meeting cause is known). Queue: RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:13:14Z
+heartbeat: 2026-10-25T03:28:42Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -23,7 +23,7 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
 
-### River finished RB-A4 on its branch, 11:45 PM EDT (standing order; no READY by 10:40 PM EDT)
+### River finished RB-A4 on its branch, 11:10 PM EDT (standing order; no READY by 10:40 PM EDT)
 - READY 0bdb1353d on stream/rb-a4 (fast-forward from ef7987b1e; merges origin/river through RV-LOCK 829f38c05).
 - Resolutions:
   - lib/core/door.ts keeps RB-A8's single counter (RB-A3's filePublication increment removed); river's recursive queueRebuild is replaced by RB-A4's queueEntityPlaces, which queues the places the door just filed (fileEntityPlaces inherits ancestors' places).

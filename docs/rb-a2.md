@@ -8,7 +8,11 @@ The tested runner change gives each state's map its own acquisition failure doma
 
 The full postal table has 42,883 ZIPs: 41,959 have a known state or territory and 924 have only a national mail context. The prior map omitted 1,052 ZIPs without Census aliases. They now retain their known state, or only the U.S. country context when no supported state is known. They gain no invented ZCTA or district.
 
-Deployment handoff: RV-MEET2 is merged into this branch. River needs to fold this tested implementation so the existing scheduled place-map-<state> jobs can write. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory copy measurements below are supporting tests, not proof that production has filled.
+Full checks on runtime revision 96483b400: all nine pnpm gates pass; 9,892 tests registered, 9,890 pass, zero fail, two skipped. Focused combined checks pass 123/123.
+
+Production verification now uses database-side count aggregates and small metadata samples only. No new production copies or Neon copy branches are opened, and no bulk copy replay is run. Consumer checks use ZIP membership metadata without transferring geometry or state payloads.
+
+Deployment handoff: RV-MEET2 is merged into this branch. A draft PR into River publishes the tested implementation under CLAUDE.md’s Codex exception, so River can deploy it before the final live-data READY. River needs to fold it so the existing scheduled place-map-<state> jobs can write. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory copy measurements below are supporting tests, not proof that production has filled.
 
 Merged integrated River 59b7c5577 after its integration record listed RB-A1 5bde46615 and the River history contained that commit. The merge is e4cc78826.
 River's production reader-pool hotfix dfb076b40 is also merged, in 81b5eb867. River 720bc77b6 then folded RB-A1’s newer documentation READY 1d6df41d9; that revision is merged in 22b4b1e94. Verification is repeated on the latest integrated dependency.

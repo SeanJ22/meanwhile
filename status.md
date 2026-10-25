@@ -1,21 +1,21 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b). SHIPPING: release 120 (river-portraits 9bf9801a5) PR #832. GATING: release 121 = DB-03 reads 8b69f0cbf + DB-02 re-cut e0f14fe59 on river-next 801d5db65. See 'Every READY not on main' for every slot
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b). DEPLOYING: release 120 (river-portraits 9bf9801a5), merged 6:06 PM EDT. GATING: release 121 = DB-03 reads 8b69f0cbf + DB-02 re-cut e0f14fe59 on river-next 801d5db65. See 'Every READY not on main' for every slot
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T22:07:00Z
+heartbeat: 2026-10-25T22:08:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 6:06 PM EDT)
+## Every READY not on main (updated 6:08 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
-| 9bf9801a5 | river-portraits (portraits + member offices, never re-read) | release 120, PR #832, merging; urgent Neon |
+| 9bf9801a5 | river-portraits (portraits + member offices, never re-read) | release 120: merged 6:06 PM EDT, deploying; urgent Neon |
 | 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | release 121 with DB-02, gating now on 801d5db65; urgent Neon |
 | e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 with DB-03 reads; urgent Neon |
 
@@ -1155,4 +1155,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
   - Open States votes: 1,085 / 1,718 / 255 / 349
   - registry read at runtime-data-plane.ts line 784 (worker-publication reading civic_data_candidate_events; 806 MB in the 3 PM hour matches Sean's 0.81 GB): 756 / 806 / 787 / 1,168
   - portraits: 367 / 5,918 / 1,666 / 5,849; member offices: 1,525 / 0 / 1,402 / 716 (release 120's before numbers)
+
+### 6 PM EDT status
+- Release 120 (portraits and member offices) merged at 6:06 PM EDT and is deploying; reader checks run within 5 minutes of /api/build showing it.
+- Release 121 (DB-03 reads + DB-02 re-cut) is gating together on 801d5db65.
+- RB-A4 catch-up on the runner: its cursor routine-fact-entities-state is at AR. The new code runs, but by design it stops at the first state that's already current. AK through DC were reloaded today, so it walks one of them per pass, then reloads DE through VT (Oregon included) in one pass, about 6 passes from now (around 8:30 to 9 PM EDT). HOST_COUNTY rows: 14,663; Oregon: 24. I'm not shipping a release for this: it finishes on its own, and Neon comes first.
+- Neon, both databases, 5 PM EDT hour: 10,990 MB. Portraits 5,849, member offices 716, research cycle 1,264, Open States votes 349, registry read (worker-publication / civic_data_candidate_events) 1,168.
 

@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-25T14:58:05.757Z",
+  "project": "tiny-hill-13996172",
+  "branch": "br-delicate-lab-ax02xuo5",
+  "role": "readonly",
+  "scope": "az-four-root-bounded-size-counts.sql",
+  "queries": 2,
+  "rawPayloadsReturned": 0,
+  "row": {
+    "named_roots": "4",
+    "referenced_parts": "513",
+    "reference_limit_hit": true,
+    "invalid_references": "0",
+    "missing_parts": null,
+    "sized_parts": "0",
+    "encoded_graph_json_bytes": "0",
+    "largest_part_json_bytes": 0
+  },
+  "responseJsonBytes": 1266,
+  "authorization": {
+    "answer": "Run bounded counts",
+    "scope": "Four exact AZ roots, at most512referenced parts plus one stop sentinel",
+    "estimatedInternalProcessingGB": 0.14,
+    "rawRecordsAuthorized": false,
+    "productionCopyAuthorized": false
+  },
+  "resultInterpretation": {
+    "complete": false,
+    "stoppedAtSentinel": true,
+    "zeroSizedBytesMeansNotMeasured": true,
+    "missingPartsUnknown": true,
+    "additionalTraversalExecuted": false,
+    "readerProofExecuted": false
+  },
+  "responseJsonBytesExcludes": [
+    "separate role-check result",
+    "protocol overhead"
+  ]
+}

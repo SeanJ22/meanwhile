@@ -1,0 +1,70 @@
+{
+  "recordedAt": "2026-10-25T14:54:23.418383+00:00",
+  "release": 116,
+  "commit": "1d2ac473a8a1de50044039449ba564a0342fa37c",
+  "deployId": "6ade042810572eb924cd087a",
+  "publishedAt": "2026-10-25T13:31:36.119Z",
+  "ready": "69ca09c834a7d50c10047eb8a47eb85a789ccdef",
+  "repairSource": "9514172f43f6e11fc47139aa9bdfe6714386c3bf",
+  "ancestryVerified": [
+    "69ca09c834a7d50c10047eb8a47eb85a789ccdef",
+    "9514172f43f6e11fc47139aa9bdfe6714386c3bf",
+    "cdc5a195dbbbedca8de3b13db98db21f41885e2a"
+  ],
+  "riverGate": {
+    "gatesPassed": 9,
+    "gatesTotal": 9,
+    "testsTotal": 9932,
+    "testsPassed": 9926,
+    "testsSkipped": 6,
+    "testsFailed": 0,
+    "source": "https://github.com/SeanJ22/meanwhile/pull/828"
+  },
+  "riverLiveCheck": {
+    "boardCommit": "4eddc5c3e88a5bfd3cfa868e13435297c4a1d086",
+    "state": "release116 reader checks green",
+    "scope": "Fixed reader set plus20random ZIPs in20states, seed1116; this is the recorded generic check, not a new lane-specific candidate-card sweep",
+    "candidateCardAssertionsRecorded": false
+  },
+  "scheduled": {
+    "observed": true,
+    "workerSha": "1d2ac473a8a1de50044039449ba564a0342fa37c",
+    "decisionAtUtc": "2026-10-25T14:01:40.162Z",
+    "decisionAtEastern": "2026-10-25 10:01:40",
+    "task": "ballot-contests:AZ",
+    "action": "SKIP",
+    "reason": "State file unchanged",
+    "digestId": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T13:55:27.852Z:decisions:0:az:50",
+    "scopeLimit": "Automatic unchanged-input evaluation; no changed-source publication or fresh upstream website read is inferred",
+    "postRunCandidateChromeConfirmed": false
+  },
+  "knownInputMetadata": {
+    "expected": 332,
+    "matched": 222,
+    "changed": 110,
+    "missing": 0,
+    "oldCountsRevalidated": false,
+    "countTableAsOf": "2026-10-24T21:52:54-04:00",
+    "noPayloadRefresh": true,
+    "historical334GeneratorReconstructed": false
+  },
+  "directDatabaseReadsSinceThisCheckpoint": {
+    "queries": 6,
+    "responseJsonBytes": 8103,
+    "protocolOverheadIncluded": false,
+    "rawPayloadsReturned": 0,
+    "productionCopiesCreated": 0
+  },
+  "largerSizingQuery": {
+    "executed": false,
+    "status": "Automatic review rejected; explicit user answer pending",
+    "scope": "Four AZ roots, at most513 payload-part observations",
+    "estimatedInternalProcessingGB": 0.14,
+    "roleAndResultJsonBodyCapBytes": 32768
+  },
+  "remaining": [
+    "Targeted actual-site candidate-card proof after the normal run",
+    "A complete reader-run GB estimate before new broader reader requests; the blocked sizing query remains stopped",
+    "Keep all56state count rows at their verified timestamp; do not call the110changed input versions a fresh recount"
+  ]
+}

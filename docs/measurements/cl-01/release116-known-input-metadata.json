@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-25T14:09:49.602Z",
+  "project": "tiny-hill-13996172",
+  "branch": "br-delicate-lab-ax02xuo5",
+  "role": "readonly",
+  "scope": "known saved replay inventory:332 distinct keyed promotion identities/versions; no payload columns, model joins or recursive helpers",
+  "manifest": "/tmp/cl01-known-saved-replay-inventory-332.json",
+  "historical334GeneratorReconstructed": false,
+  "queries": 2,
+  "rawPayloadsReturned": 0,
+  "responseJsonBytes": 1644,
+  "allKnownInputsUnchanged": false,
+  "row": {
+    "db_role": "readonly",
+    "checked_at_utc": "2026-10-25 14:09:49.55963+00",
+    "comparison_scope": "known saved replay inventory",
+    "total_expected": "332",
+    "matched": "222",
+    "changed": "110",
+    "missing": "0",
+    "tiny_mismatch_identifiers": null,
+    "mismatch_identifiers_omitted": true
+  }
+}

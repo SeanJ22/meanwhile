@@ -1,0 +1,39 @@
+{
+  "at": "2026-10-25T14:09:50.143Z",
+  "project": "withered-sunset-39821877",
+  "branch": "br-tiny-frog-aeufpjeq",
+  "role": "wtp_cp_release_readonly",
+  "publishedCommit": "1d2ac473a8a1de50044039449ba564a0342fa37c",
+  "publishedAt": "2026-10-25T13:31:36.119Z",
+  "allowedIdenticalTreeCommits": [
+    "1d2ac473a8a1de50044039449ba564a0342fa37c",
+    "c0205d49f7a1fd2059d241f4170ea6e55b1db762"
+  ],
+  "identicalTree": "f0cfccfa28259322680134c4b9e919b38e29ab66",
+  "scope": "first Arizona ballot decision after release116 under either identical release tree;4AZ digests/200decision entries max, one scalar metadata row",
+  "queries": 2,
+  "rawPayloadsReturned": 0,
+  "responseJsonBytes": 3408,
+  "normalRunObserved": true,
+  "row": {
+    "db_role": "wtp_cp_release_readonly",
+    "inspected_digests": "4",
+    "digest_cap_reached": true,
+    "invalid_decision_batches": "0",
+    "last_inspected_position": "131588",
+    "digest_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T13:55:27.852Z:decisions:0:az:50",
+    "position": "131586",
+    "tested_sha": "1d2ac473a8a1de50044039449ba564a0342fa37c",
+    "recorded_at_utc": "2026-10-25 14:01:40.178+00",
+    "recorded_at_eastern": "2026-10-25 10:01:40",
+    "decision_at_utc": "2026-10-25T14:01:40.162Z",
+    "decision_at_eastern": "2026-10-25 10:01:40",
+    "task_id": "ballot-contests:AZ",
+    "source_id": "official-ballot-authorities",
+    "authority_scope": "US-AZ:state-election-ballots",
+    "action": "SKIP",
+    "reason": "State file unchanged",
+    "detail": "Next publication is due when the state ballot file changes.",
+    "detail_truncated": false
+  }
+}

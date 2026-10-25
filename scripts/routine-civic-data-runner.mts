@@ -488,6 +488,19 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
 
 const BOX_FINDINGS_PER_PASS = 1000;
 
+/**
+ * Meeting pins and Box facts publish what is already found, each within its own time bound. Oct 25 publish-now passes
+ * spent 200 s on pins and about 75 s on Box findings before the first source decision, so the first meeting launch came at
+ * about 490 s, past the launch window. They now run one after another beside admission and the source pass; the pass
+ * waits for them before it saves its outcome.
+ */
+let heldPublication: Promise<void> = Promise.resolve();
+function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
+  heldPublication = heldPublication.then(publish).catch((error: unknown) => {
+    failures.push({ taskId, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  });
+}
+
 async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
 
   if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
@@ -495,15 +508,13 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) try {
+  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
     const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault:new DurableEvidenceStore(join(ROOT,...VAULT_DIR)),
       clocks:factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null), now:new Date().toISOString(),
       deadlineMs:Math.min(PASS_LAUNCH_DEADLINE_MS,Date.now()+Math.floor(PUBLISH_NOW_PASS_BUDGET_MS/3)) });
     console.log(`RCD_FACTS meeting pins: ${report.published} published; ${report.unplaced} still without a point`);
     if(report.failures.length)failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(report.failures.slice(0,8).join(" | "))});
-  } catch(error) {
-    failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(sanitizedErrorDiagnostic(error))});
-  }
+  });
 
   // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
@@ -514,7 +525,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
 
     const startedAt = new Date(String((await query("SELECT now() AS at", []))[0]!.at)).toISOString();
     // Box delivery is independent of the worker outbox scan and paid planning history.
-    try {
+    publishHeldBesideSources(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => {
       const box = await publishBoxFindings({ repos, store, facts, vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS, audit: false,
@@ -522,9 +533,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       console.log(`RCD_BOX_FACTS=${JSON.stringify(box)}`);
       if (box.failuresByReason.BOX_PUBLICATION_EXCEPTION) failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED",
         detail: `${box.failuresByReason.BOX_PUBLICATION_EXCEPTION} finding(s) need retry: ${safeFailure(JSON.stringify(box.errorExamples))}` });
-    } catch (error) {
-      failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-    }
+    });
     recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "before-publication-inputs");
     const cursor = PUBLISH_NOW ? await readPassCursor(facts.query, PUBLISH_NOW_CURSOR) : null;
     const since = cursor === null ? null : new Date(Date.parse(cursor) - 60_000).toISOString();
@@ -856,6 +865,7 @@ if (controlPlaneUrlFromEnv()) try {
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
+  await heldPublication;
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
     console.log("publish-now: nothing owed this minute");
   } else {
@@ -1596,6 +1606,7 @@ if (pass.error !== undefined) {
   console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 await factMaintenance;
+await heldPublication;
 await flushLaunchDecisions();
 if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
   try { await reviewPublishedBoxFacts(readerFactDb().query); }

@@ -70,6 +70,9 @@ import {
   BOOTSTRAP_DDL,
   BOOTSTRAP_VERSION,
   ONLINE_INDEXES,
+  BOX_CLASS_SQL,
+  BOX_SLOT_SQL,
+  BOX_SLOTTED_SQL,
   SPEND_HOLDS_MOVE_DDL,
   recordVersionStatement,
   spendHoldDeadSql,
@@ -855,9 +858,22 @@ export function pgAppendOnlyRepository<T>(
 }
 
 // Alternate retries and new findings. Each branch is bounded before ranking, and a poison finding's own retry clock cannot pin a page.
-export const BOX_DUE_SQL = `WITH due AS (
-    (SELECT 0 AS rank, id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL
-      AND ((CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END) <> coalesce($1::jsonb ->> (CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END), $1::jsonb ->> 'other') OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
+/**
+ * Due Box findings, old and never-read in turns. A waiting finding is due when its retry time has come or its publisher's
+ * slot version moved on. Each branch reads from its own index (BOX_DUE_INDEXES): the stale slots are found by walking the
+ * few distinct class and slot pairs, so a pass reads the rows that are due, not all 350,000 waiting ones.
+ */
+export const BOX_DUE_SQL = `WITH RECURSIVE slotted AS (
+    (SELECT ${BOX_CLASS_SQL} AS class, ${BOX_SLOT_SQL} AS slot FROM cp_box_findings WHERE ${BOX_SLOTTED_SQL} ORDER BY 1, 2 LIMIT 1)
+    UNION ALL SELECT next.class, next.slot FROM slotted, LATERAL (SELECT ${BOX_CLASS_SQL} AS class, ${BOX_SLOT_SQL} AS slot
+      FROM cp_box_findings WHERE ${BOX_SLOTTED_SQL} AND (${BOX_CLASS_SQL}, ${BOX_SLOT_SQL}) > (slotted.class, slotted.slot) ORDER BY 1, 2 LIMIT 1) next
+  ), due AS (
+    (SELECT 0 AS rank, id, value FROM (
+      (SELECT id, value FROM cp_box_findings WHERE ${BOX_SLOTTED_SQL} AND (value #>> '{waitingFor,retryAt}') <= $2 ORDER BY id LIMIT $3)
+      UNION (SELECT stale.id, stale.value FROM slotted, LATERAL (SELECT id, value FROM cp_box_findings WHERE ${BOX_SLOTTED_SQL}
+          AND ${BOX_CLASS_SQL} = slotted.class AND ${BOX_SLOT_SQL} = slotted.slot ORDER BY id LIMIT $3) stale
+        WHERE slotted.slot <> coalesce($1::jsonb ->> nullif(slotted.class, ''), $1::jsonb ->> 'other'))
+    ) waiting ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'refused' AND (value #>> '{attempts,-1,builder}') = '${PUBLISHER}'
       AND (coalesce(CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END, '') <> coalesce($1::jsonb ->> (CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END), $1::jsonb ->> 'other') OR (value #>> '{waitingFor,retryAt}') <= $2) ORDER BY id LIMIT $3)
     UNION ALL (SELECT 0, id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 ORDER BY id LIMIT $3)

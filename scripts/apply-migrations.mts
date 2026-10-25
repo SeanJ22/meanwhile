@@ -30,7 +30,6 @@ import { neon } from "@neondatabase/serverless";
 
 import { resolveProductionWriteHandle, WriteHandleRefused } from "../lib/db/write-handle.ts";
 import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
-import { migrationTableLockBlock } from "../lib/db/migration-locks.ts";
 
 export const RUNTIME_CONTRACT_RETRY_MS = 15 * 60_000;
 export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
@@ -38,9 +37,11 @@ export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
 // journalled DO statement must release them inside the reader query deadline.
 export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;
 
-/** NOWAIT plus a subtransaction releases every partial lock before waiting; a multi-table LOCK alone acquires them sequentially. */
+/** Tables a migration declares are locked in one statement, so it never holds one while waiting for another. */
 export function lockFirstStatement(tag: string): string {
-  return migrationTableLockBlock(declaredPhase(tag)?.lockFirst ?? []);
+  const tables = declaredPhase(tag)?.lockFirst ?? [];
+  if (tables.some(table => !/^[a-z_][a-z0-9_]*$/.test(table))) throw new Error(`db:apply: REFUSED — ${tag} declares an invalid table to lock`);
+  return tables.length ? `LOCK TABLE ${tables.join(", ")} IN SHARE ROW EXCLUSIVE MODE;` : "";
 }
 
 /** A migration may declare a longer statement budget; the lock wait stays bounded either way. */

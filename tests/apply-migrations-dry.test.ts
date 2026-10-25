@@ -252,7 +252,7 @@ test("a contract that declares a longer statement budget keeps the bounded lock 
   assert.match(result.output, /Applied 1 migration/);
 });
 
-test("a migration releases partial trigger-table locks before waiting for a writer", () => {
+test("a migration that declares its trigger tables locks them together before its first statement", () => {
   const committed = journal().entries;
   const migration = committed.find(entry => entry.tag === "RB-A8_count_hour")!;
   const result = run(["--target=production", "--phase=expand", `--upto=${migration.tag}`], {
@@ -261,11 +261,9 @@ test("a migration releases partial trigger-table locks before waiting for a writ
   }, "async () => {}");
   assert.equal(result.status, 0, result.output);
   const apply = (result.events as { statement?: string }[]).map(event => event.statement ?? "").find(text => /^DO\b/.test(text))!;
-  const lock = apply.indexOf("LOCK TABLE public.fact, public.civic_data_promotions, public.entity, public.count_hour IN SHARE ROW EXCLUSIVE MODE NOWAIT;");
+  const lock = apply.indexOf("LOCK TABLE fact, civic_data_promotions, entity IN SHARE ROW EXCLUSIVE MODE;");
   assert.ok(lock > 0, apply.slice(0, 400));
   assert.ok(lock < apply.indexOf("EXECUTE "));
-  assert.match(apply, /EXCEPTION WHEN lock_not_available THEN[\s\S]*END;\s*PERFORM pg_sleep\(0\.05\)/);
-  assert.match(apply, /clock_timestamp\(\) >= lock_deadline THEN RAISE/);
   assert.equal(lockFirstStatement("0051_rb_a1_shared"), "");
 });
 

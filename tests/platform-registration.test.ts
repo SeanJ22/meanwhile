@@ -24,9 +24,13 @@ test("native registration paging and catalogue names distinguish a county from a
     const named = await platformGovernmentCandidates(query, tenant);
     assert.deepEqual(named.map(row => row.government.id), [county.id]);
     assert.deepEqual(await matchRegisteredPlatformTenant(query, { ...tenant, state: "OR" }), []);
-    const linked = await matchRegisteredPlatformTenant(query, tenant, ["https://www.alpha.gov/"]);
+    const linked = await matchRegisteredPlatformTenant(query, tenant, [{governmentWebsite:"https://www.alpha.gov/",portalUrl:tenant.url}]);
     assert.deepEqual(linked.map(row => row.government.id), [county.id]);
-    const shared = await matchRegisteredPlatformTenant(query, { ...tenant, name: null }, ["https://council.alpha.gov/"]);
+    assert.deepEqual(await matchRegisteredPlatformTenant(query,tenant,[{governmentWebsite:"https://www.alpha.gov/",portalUrl:"https://other.legistar.com/"}]),[],
+      "a government link to a different tenant cannot confirm the directory tenant");
+    assert.deepEqual(await matchRegisteredPlatformTenant(query,tenant,[{governmentWebsite:tenant.url,portalUrl:"https://www.alpha.gov/"}]),[],
+      "a portal's backlink to a government never establishes government authority");
+    const shared = await matchRegisteredPlatformTenant(query, { ...tenant, name: null }, [{governmentWebsite:"https://council.alpha.gov/",portalUrl:tenant.url}]);
     assert.equal(shared.length, 2, "a shared government website leaves identity ambiguous");
     const located = platformRegistrationBinding(shared.find(row => row.government.id === district.id)!);
     assert.ok("bodyId" in located);

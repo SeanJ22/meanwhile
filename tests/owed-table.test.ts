@@ -106,7 +106,6 @@ test("the hunter entry point uses RB-A2's selected ZIP places without adding ano
     await db.pg.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
       CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
     await db.pg.exec(placeBoundaryMigration());
-    await db.pg.exec("ALTER TABLE entity_place ADD COLUMN boundary_year int NOT NULL DEFAULT 0");
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('county','place','County','AZ'),('town','place','Town','AZ'),('elsewhere','place','Another town','AZ')");
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('ocd-division/country:us','place','United States',NULL),('national-board','body','National board','US')");
     await db.query("INSERT INTO entity_place VALUES ('national-board','ocd-division/country:us',2026)");

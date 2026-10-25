@@ -31,6 +31,21 @@ export class CivicReadCache {
     } catch { /* A failed disposable copy never changes the actual read. */ }
   }
 
+  /** One statement can return either the changed value or confirmation of the held revision. */
+  async row<T>(input: { readonly namespace: string; readonly key: string;
+    readonly current: (etag: string | null) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
+    const key = input.namespace + ":" + input.key;
+    const held = await this.read<T>(key);
+    const current = await input.current(held?.etag ?? null);
+    if (current === null) return null;
+    if ("unchanged" in current) {
+      if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
+      return held.value;
+    }
+    await this.save(key, current);
+    return current.value;
+  }
+
   /** Read only rows whose database etag differs from the held copy. */
   async rows<T, V extends CivicRowVersion>(input: {
     readonly namespace: string;

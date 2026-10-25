@@ -191,6 +191,9 @@ import {
 } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
+import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
+import { factReader } from "../lib/facts/db.ts";
+import { memberOfficesRunNeeded } from "../lib/officials/member-offices-publication.ts";
 
 readFromHeldCopies();
 
@@ -1117,6 +1120,24 @@ for (const read of clockReads) {
       fileOnly ? "Next publication is due when the state ballot file changes." :
         `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? `Source retry after ${failureRetryMs(task.retryMs, durableClock)}ms` : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
     continue;
+  }
+  // A state's portraits wait until its rosters name someone new without a portrait, or a retry falls due.
+  if (task.sourceId === "people-portraits" && !FORCE && dueRequest === null) {
+    const portraits = await portraitRunNeeded(store, task.id.slice("people-portraits-".length), new Date(admissionNowMs).toISOString(), factReader())
+      .catch(error => ({ needed: true, reason: `The portrait record could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); the state runs.` }));
+    if (!portraits.needed) {
+      recordLaunchDecision(task, "SKIP", "Portraits are current", portraits.reason);
+      continue;
+    }
+  }
+  // The daily member-office run waits until some state's lawmaker list is promoted again.
+  if (task.id === "member-offices" && !FORCE && dueRequest === null) {
+    const offices = await memberOfficesRunNeeded(store)
+      .catch(error => ({ needed: true, reason: `The member-office package could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); it runs.` }));
+    if (!offices.needed) {
+      recordLaunchDecision(task, "SKIP", "Member offices are current", offices.reason);
+      continue;
+    }
   }
   if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
   if (publicationDue) {

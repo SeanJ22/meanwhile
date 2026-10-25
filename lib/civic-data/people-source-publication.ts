@@ -37,6 +37,14 @@ interface PublishPeopleSourceInput {
   readonly derivedInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
   readonly resolveOfficePoint?: OfficePointResolver;
+  /** A caller extending the record it just published passes it here instead of reading it again. */
+  readonly held?: HeldPeopleSource;
+}
+/** The published record a new version is built on. */
+export interface HeldPeopleSource {
+  readonly versionId: string | null;
+  readonly roster: OfficeholderSet | null;
+  readonly normalizedPayload: unknown;
 }
 type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acquisitions"> & {
   readonly captures: readonly StatePeopleCapture[];
@@ -128,20 +136,28 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
     absence:{claimsAbsence:false,basis:"NONE",exactSubject:null,exactHorizon:null},sourceProjectionEvidence:sourceProjectionEvidence(input.sourceId,recordClass,scope),
     dependentChecks:[{consumer:"people readers",passed:new Set(people.map(row=>row.id)).size===people.length,detail:`${people.length} sourced people and ${vacancies.length} stated vacancies; partial acquisition never establishes absence.`}],excludedFacts,normalizedPayload:payload,readModel};
 }
+/** The source's published record for this jurisdiction: its version, roster and saved payload. */
+export async function readHeldPeopleSource(store:RoutineDataStore,jurisdiction:ReturnType<typeof peopleJurisdiction>,sourceId:string,now:string):Promise<HeldPeopleSource> {
+  const prior = await readPeopleSourceProjection(jurisdiction,sourceId,{store,now,bypassCache:true});
+  if (prior.kind === "STORE_UNREACHABLE") throw Error("PEOPLE_SOURCE_PRIOR_UNAVAILABLE");
+  const old = prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
+  return {versionId:prior.kind === "PROMOTED" ? prior.metadata.versionId ?? null : null,
+    roster:prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null,
+    normalizedPayload:old?.candidate.normalizedPayload};
+}
+
 /** Publish one source/state independently. A failed or partial route retains prior verified facts. */
 export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const jurisdiction = peopleJurisdiction(input.state);
-  const prior = await readPeopleSourceProjection(jurisdiction,input.sourceId,{store:input.store,now:input.now,bypassCache:true});
-  if (prior.kind === "STORE_UNREACHABLE") throw Error("PEOPLE_SOURCE_PRIOR_UNAVAILABLE");
-  const old = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
-  const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
+  const base = input.held ?? await readHeldPeopleSource(input.store,jurisdiction,input.sourceId,input.now);
+  const held = base.roster;
   const national = jurisdiction === "US" && input.sourceId === "statewide-executive-sources";
   const read = await holdPeopleCaptures(input.vault,input.sourceId,input.acquisitions);
   const reread = new Set(read.map(row=>row.finalUrl));
   // A failed reread of one national official must retain the earlier bytes
   // behind that official's still-current last verified facts.
-  const priorCaptures = national ? (old?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? []
-    : priorPeopleCaptures(old?.candidate.normalizedPayload);
+  const priorCaptures = national ? (base.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? []
+    : priorPeopleCaptures(base.normalizedPayload);
   const carried = priorCaptures.filter(row=>national || !reread.has(row.finalUrl));
   let captures = [...new Map([...carried,...read].map(row=>[national ? `${row.finalUrl}|${row.retrievedAt}` : row.finalUrl,row])).values()];
   const nationalExcluded: NonNullable<RoutineCandidate["excludedFacts"]>[number][] = [];
@@ -223,6 +239,6 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`
     : `people-${input.sourceId}-${state}`);
-  const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
+  const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,base.versionId,{confirmUnchanged:input.confirmUnchanged});
   return {candidate,outcome};
 }

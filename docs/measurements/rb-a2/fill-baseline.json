@@ -113,7 +113,7 @@
   "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
   "latestProductionObservation": {
-    "observedAt": "2026-10-25T18:18:58.759Z",
+    "observedAt": "2026-10-25T18:58:59.506Z",
     "hasBoundaries": false,
     "hasZipRows": false,
     "hasZctaRows": false,
@@ -127,8 +127,8 @@
     "main": "c7576d26e",
     "checkedLoaderInRiver": false,
     "checkedLoaderInMain": false,
-    "runnerObservedAt": "2026-10-25T18:10:42.607Z",
-    "runnerTestedSha": "03e0526b6",
+    "runnerObservedAt": "2026-10-25T18:51:28.856Z",
+    "runnerTestedSha": "c7576d26e",
     "mapWorkers": 0
   },
   "previousCombinationValidation": {

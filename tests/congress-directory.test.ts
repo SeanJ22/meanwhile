@@ -81,3 +81,8 @@ test("no standing means no standing chip — absence is not padded", () => {
   const none = identityChipsFor(holder({ state: "AZ", chamber: "house" }), "national");
   assert.deepEqual(none, ["AZ", "House"]);
 });
+
+test("an unknown office tier preserves known identity facts without a government-level claim", () => {
+  const unknown = holder({ officeTitle: "Unclassified public office", state: "AZ", selectionMethod: "UNKNOWN" });
+  assert.deepEqual(identityChipsFor(unknown, null, "INCUMBENT"), ["AZ"]);
+});

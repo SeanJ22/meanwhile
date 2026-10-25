@@ -101,7 +101,7 @@ test("a measure whose cited page names it needs no discovery and opens nothing e
   assert.deepEqual(opened, [cited]);
 });
 
-const sourceHold = (text: string, detail = "A translated sentence lacks a confirmed source passage or independent support."): TranslationAttempt => ({
+const sourceHold = (text: string, detail = 'A translated sentence lacks a confirmed source passage or independent support. [{"field":"whatItDoes","text":"Unsupported meaning.","supported":false}]'): TranslationAttempt => ({
   id: "previous-source-check", scope: `US:plain-english-translations:${stateOcd}`, subjectId: "co-amendment-84",
   sourceHash: translationHash(text), sourceTextHash: translationHash(text), at: "2026-10-20T17:00:00.000Z",
   status: "HELD", usage: [], versionId: null, detail,
@@ -132,10 +132,44 @@ test("a source check on a cited page keeps acquisition open without removing tha
   assert.ok(result.captures.some(row => row.evidence.canonicalUrl === cited && row.evidence.text === notice));
 });
 
+test("a held explanation with a missing full-text capture keeps sourcing open even when its checker supported the notice's sentences", async t => {
+  const root = await localVault(t), { repos, served } = await stateRepos(true), opened: string[] = [];
+  const textUrl = "https://www.sos.state.co.us/pubs/elections/unavailable-bill.pdf";
+  const notice = "<html><h1>Amendment 84</h1><p>Notice of a public hearing.</p></html>";
+  const held = { ...ballot, contests: ballot.contests.map(row => ({ ...row, measureTextUrl: textUrl })) };
+  const prior = sourceHold(notice, 'A translated sentence lacks a confirmed source passage or independent support. [{"field":"whatItDoes","text":"Notice of a public hearing.","supported":true}]');
+  const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [held], priorAttempts: [prior], now: () => now,
+    open: opener(served({ [cited]: notice }), opened), finds: routineMeasureFinds(repos, "CO") });
+  assert.ok(result.failures.some(row => row.url === textUrl));
+  assert.ok(opened.includes(pageUrl), "the missing legal text remains acquisition work");
+  assert.deepEqual(result.discovered.get("co-amendment-84"), [pageUrl]);
+  assert.ok(result.captures.some(row => row.evidence.canonicalUrl === cited));
+});
+
+test("a later writer error or a model budget hold cannot close acquisition of missing referenced text", async t => {
+  for (const [label, detail] of [
+    ["later writer error", "Translation writer returned unsupported fields or source passages."],
+    ["model budget hold", "Daily model-call budget unavailable."],
+  ]) await t.test(label, async t => {
+    const root = await localVault(t), { repos, served } = await stateRepos(true), opened: string[] = [];
+    const textUrl = "https://www.sos.state.co.us/pubs/elections/unavailable-bill.pdf";
+    const notice = "<html><h1>Amendment 84</h1><p>Notice of a public hearing.</p></html>";
+    const held = { ...ballot, contests: ballot.contests.map(row => ({ ...row, measureTextUrl: textUrl })) };
+    const earlier = sourceHold(notice), latest = { ...earlier, id: "later-hold", at: "2026-10-20T17:30:00.000Z", detail };
+    const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [held], priorAttempts: [latest, earlier], now: () => now,
+      open: opener(served({ [cited]: notice }), opened), finds: routineMeasureFinds(repos, "CO") });
+    assert.ok(result.failures.some(row => row.url === textUrl));
+    assert.ok(opened.includes(pageUrl), "the existing missing-text work stays open without a model call or paid search");
+    assert.deepEqual(result.discovered.get("co-amendment-84"), [pageUrl]);
+  });
+});
+
 test("writer-format failures, a changed source, another jurisdiction and a later successful check do not reopen a completed hunt", async t => {
   const failed = sourceHold(pageText);
   const cases: readonly [string, readonly TranslationAttempt[]][] = [
     ["writer format", [sourceHold(pageText, "Translation writer returned unsupported fields or source passages.")]],
+    ["sentence layout only", [sourceHold(pageText, "A translated sentence lacks a confirmed source passage or independent support.")]],
+    ["supported sentences without a missing text", [sourceHold(pageText, 'A translated sentence lacks a confirmed source passage or independent support. [{"field":"whatItDoes","text":"Supported meaning.","supported":true}]')]],
     ["changed source", [sourceHold("Earlier source text.")]],
     ["other jurisdiction", [{ ...failed, scope: "US:plain-english-translations:ocd-division/country:us/state:oh" }]],
     ["later published", [{ ...failed, id: "successful-check", at: now, status: "PUBLISHED", versionId: "published" }, failed]],

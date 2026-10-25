@@ -55,8 +55,7 @@ export async function loadRoutineMeasureSources(input: {
     const key = sourceKey(attempt.scope, attempt.subjectId, attempt.sourceHash, attempt.sourceTextHash), prior = latest.get(key);
     if (!prior || at > Date.parse(prior.at) || at === Date.parse(prior.at) && ["PUBLISHED", "REUSED"].includes(attempt.status)) latest.set(key, attempt);
   }
-  const failedSources = new Set([...latest].filter(([, attempt]) => attempt.status === "HELD" &&
-    attempt.detail?.startsWith("A translated sentence lacks a confirmed source passage or independent support.")).map(([key]) => key));
+  const heldSources = new Map([...latest].filter(([, attempt]) => attempt.status === "HELD"));
   for (const ballot of input.ballots) for (const contest of ballot.contests.filter(row => row.type === "MEASURE")) {
     const measure = ballot.measures?.find(row => row.contestId === contest.id);
     const analysis = ballot.measureAnalyses?.analyses.find(row => row.contestId === contest.id);
@@ -156,14 +155,20 @@ export async function loadRoutineMeasureSources(input: {
   // A failed source check keeps discovery open on the next pass. All acquired
   // pages remain available to the existing writer/checker and reader records.
   const discovered = new Map<string, string[]>();
-  const failedSource = (blank: MeasureBlank, url: string): boolean => {
+  const needsSourceWork = (blank: MeasureBlank, url: string): boolean => {
     const evidence = captures.find(capture => capture.evidence.canonicalUrl === url)?.evidence;
-    return Boolean(evidence && failedSources.has(sourceKey(translationScope(blank.ocdId), blank.contestId,
-      (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, ""), evidence.contentHash.replace(/^sha256-/, ""))));
+    if (!evidence) return false;
+    const held = heldSources.get(sourceKey(translationScope(blank.ocdId), blank.contestId,
+      (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, ""), evidence.contentHash.replace(/^sha256-/, "")));
+    // The shared diagnostic can also mean sentence formatting failed. That
+    // alone does not call for another search; a failed independent check or a
+    // missing explicit full-text capture leaves actual source work to do.
+    const rejected = held?.detail?.startsWith("A translated sentence lacks a confirmed source passage or independent support.") && /"supported"\s*:\s*false/.test(held.detail);
+    return Boolean(held && (rejected || blank.textUrl && !pages.has(blank.textUrl)));
   };
   const named = (blank: MeasureBlank): boolean => [...blank.cited, ...(blank.priorUrl ? [blank.priorUrl] : [])].some(url => {
     const text = pages.get(url);
-    return text !== undefined && !failedSource(blank, url) && (url === blank.priorUrl || url === blank.textUrl || pageNamesMeasure(text, blank.labels));
+    return text !== undefined && !needsSourceWork(blank, url) && (url === blank.priorUrl || url === blank.textUrl || pageNamesMeasure(text, blank.labels));
   });
   // The same measure appears in several ballot styles; it is one blank.
   const distinct = new Map<string, MeasureBlank>();
@@ -187,7 +192,7 @@ export async function loadRoutineMeasureSources(input: {
       const text = await acquire(url);
       if (text === null || !pageNamesMeasure(text, blank.labels)) return false;
       discovered.set(blank.contestId, [...new Set([...(discovered.get(blank.contestId) ?? []), url])]);
-      return !failedSource(blank, url);
+      return !needsSourceWork(blank, url);
     };
     for (const blank of open) {
       const names = measureLinkNames(blank.labels, blank.title);
@@ -234,7 +239,7 @@ export async function loadRoutineMeasureSources(input: {
           if (!done) await input.finds?.save({ kind: "SEARCHED", contestId: blank.contestId, url: null, at: input.now() });
         }
       }
-      const url = discovered.get(blank.contestId)?.findLast(url => !failedSource(blank, url));
+      const url = discovered.get(blank.contestId)?.findLast(url => !needsSourceWork(blank, url));
       if (url && !finds.some(row => row.kind === "FOUND" && row.contestId === blank.contestId && row.url === url)) {
         await input.finds?.save({ kind: "FOUND", contestId: blank.contestId, url, at: input.now() });
       }

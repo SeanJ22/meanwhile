@@ -1,9 +1,7 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { readNationalShelf } from "@/lib/reader/national";
 import { readerCacheHeaders } from "@/lib/reader/cache";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
-import { readMemberOffices } from "@/lib/officials/member-offices-read";
-import { federalOfficeRecordsForMember } from "@/lib/officials/member-offices";
+import { readCardMemberOffices, readCardFederalDirectory } from "@/lib/officials/card-authorities-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
 
@@ -35,7 +33,7 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
   if (!FEDERAL_ID.test(member)) {
     let offices;
     try {
-      offices = await readMemberOffices(member,params.get("state") ?? undefined);
+      offices = await readCardMemberOffices(member,params.get("state") ?? undefined);
     } catch {
       return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the office records just now." },
         { status: 503, headers: { "Cache-Control": "private, no-store" } });
@@ -50,12 +48,7 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
 
   let found;
   try {
-    const shelf = await readNationalShelf();
-    const state = shelf.congress.roster.officeholders.find(holder => holder.id === member)?.state;
-    const model = state ? shelf.federalByState.get(state.replace(/^US-/i,"").toUpperCase()) ?? shelf.congress : shelf.congress;
-    const entry = model.directory.byMember[member.slice(9)];
-    found = entry ? { source: model.directory.source, entry, state,
-      offices: federalOfficeRecordsForMember(model,member),committeeJurisdictions: model.directory.committees } : null;
+    found = await readCardFederalDirectory(member, params.get("state") ?? undefined);
   }
   catch {
     return Response.json({ holdingStatus: "HOLDING_UNAVAILABLE", error: "We couldn’t load the directory records just now." },

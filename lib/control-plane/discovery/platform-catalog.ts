@@ -1,7 +1,7 @@
 import { csvRows } from "../../reference/csv.ts";
-import { platformHostedUrl, matchPlatformGovernment, type PlatformTenant } from "./platform-enumeration.ts";
+import { matchPlatformGovernment, type PlatformTenant } from "./platform-enumeration.ts";
 import type { MeetingsDiscoveryNeed } from "../../hunt/meetings-discovery.ts";
-import { matchRegisteredPlatformTenant, platformGovernmentCandidates, type PlatformQuery } from "./platform-registration.ts";
+import { platformGovernmentCandidates, type PlatformQuery } from "./platform-registration.ts";
 import type { DiscoveryRuntime } from "./meetings-discovery-executor.ts";
 import { pageLinks } from "../../hunt/meetings-site-discovery.ts";
 import { DEFAULT_USER_AGENT } from "../scheduler/route-executor.ts";
@@ -66,37 +66,38 @@ export function platformPublisherIdentity(name: string) {
 
 /** A public directory is a lead. Read its publisher and native registry before choosing one government. */
 export async function registeredPlatformTenant(query: PlatformQuery, tenant: PlatformTenant, runtime: DiscoveryRuntime) {
-  let matches = await matchRegisteredPlatformTenant(query, tenant);
-  if (matches.length) return matches;
-  const candidates = await platformGovernmentCandidates(query, tenant);
-  if (candidates.length) return candidates;
-  let url = tenant.url;
-  const open = async () => {
-    if (runtime.budget.spent()) throw new Error("Platform directory reading interrupted");
-    assertPublicUrl(url);
-    await runtime.spaceOut(new URL(url).hostname);
-    return runtime.open({ url, headers: { "user-agent": DEFAULT_USER_AGENT }, timeoutMs: runtime.timeoutMs ?? 20_000 });
+  const read = async (first: string) => {
+    let url = first;
+    for (let hops = 0; hops <= 6; hops++) {
+      if (runtime.budget.spent()) throw new Error("Platform directory reading interrupted");
+      assertPublicUrl(url);
+      await runtime.spaceOut(new URL(url).hostname);
+      let page;
+      try { page = await runtime.open({ url, headers: { "user-agent": DEFAULT_USER_AGENT }, timeoutMs: runtime.timeoutMs ?? 20_000 }); }
+      catch (error) { if (runtime.budget.spent()) throw error; return null; }
+      if (page.status && page.status >= 300 && page.status < 400 && page.location) { url = new URL(page.location,url).href; continue; }
+      if (page.status !== 200 || page.transportError) return null;
+      const at = page.retrievedAt ?? runtime.now();
+      const acquired = recordAcquisition({ canonicalUrl: url, retrievedAt: at, httpStatus: 200, contentType: page.contentType,
+        sourceId: "platform-census", workItemId: `platform-tenant:${createHash("sha256").update(tenant.url).digest("hex").slice(0, 20)}`,
+        attemptId: `platform-tenant:${url}:${at}`, methodRouteId: "public-customer-directory", permission: "ALLOWED", transport: "REACHABLE" }, page.body);
+      const readable = acquired.artifact.tier === "RESTRICTED_RAW" ? deriveSanitized(acquired.artifact,page.body,at) : { artifact: acquired.artifact,text:page.body };
+      const stored = await runtime.vault(readable.artifact,readable.text);
+      if (!stored.stored) throw new Error(stored.why);
+      return {url,text:readable.text};
+    }
+    return null;
   };
-  let page = await open();
-  for (let hops = 0; hops < 6 && page.status && page.status >= 300 && page.status < 400 && page.location; hops++) {
-    url = new URL(page.location, url).href;
-    page = await open();
+  const portal = await read(tenant.url);
+  if (portal) {
+    // A source's own publisher links choose the government to check before a directory's printed location.
+    const linked = await platformGovernmentCandidates(query,{...tenant,name:null,state:null},pageLinks(portal.text,portal.url));
+    if (linked.length) return linked;
+    for (const name of platformPublisherNames(portal.text)) {
+      const printed = platformPublisherIdentity(name);
+      const candidates = await platformGovernmentCandidates(query,{...tenant,name:printed.name,state:printed.state ?? tenant.state});
+      if (candidates.length) return candidates;
+    }
   }
-  if (page.status !== 200 || page.transportError) return [];
-  const at = page.retrievedAt ?? runtime.now();
-  const acquired = recordAcquisition({ canonicalUrl: url, retrievedAt: at, httpStatus: 200, contentType: page.contentType,
-    sourceId: "platform-census", workItemId: `platform-tenant:${createHash("sha256").update(tenant.url).digest("hex").slice(0, 20)}`,
-    attemptId: `platform-tenant:${tenant.url}:${at}`, methodRouteId: "public-customer-directory", permission: "ALLOWED", transport: "REACHABLE" }, page.body);
-  const readable = acquired.artifact.tier === "RESTRICTED_RAW" ? deriveSanitized(acquired.artifact, page.body, at) : { artifact: acquired.artifact, text: page.body };
-  const stored = await runtime.vault(readable.artifact, readable.text);
-  if (!stored.stored) throw new Error(stored.why);
-  const links = [url, ...pageLinks(readable.text, url).filter(link => !platformHostedUrl(link))];
-  for (const name of platformPublisherNames(readable.text)) {
-    const printed = platformPublisherIdentity(name);
-    matches = await matchRegisteredPlatformTenant(query, { ...tenant, name: printed.name, state: tenant.state ?? printed.state }, links);
-    if (matches.length) return matches;
-    const candidates = await platformGovernmentCandidates(query, { ...tenant, name: printed.name, state: tenant.state ?? printed.state });
-    if (candidates.length) return candidates;
-  }
-  return matchRegisteredPlatformTenant(query, { ...tenant, name: null }, links);
+  return platformGovernmentCandidates(query,tenant);
 }

@@ -37,7 +37,7 @@ export interface BillPartPointer { scope:string; versionId:string; rawHash:strin
 export interface BillSession {
   kind:"SESSION";parserVersion:typeof LEGISCAN_BULK_PARSER;dataset:Dataset;state:string;capturedAt:string;parts:BillPartPointer[];counts:BillPart["counts"];
 }
-export interface BillIndex { kind:"INDEX";parserVersion:typeof LEGISCAN_BULK_PARSER; capturedAt:string; datasets:Dataset[]; }
+export interface BillIndex { kind:"INDEX";parserVersion?:typeof LEGISCAN_BULK_PARSER|"legiscan-bulk/2"; capturedAt:string; datasets:Dataset[]; }
 export const billScope = (sessionId:number) => `legiscan-bills:session:${sessionId}`;
 export const billPartScope = (dataset:Dataset,index:number,evidenceHash:string) => `${billScope(dataset.session_id)}:${dataset.dataset_hash}:part:${index}:${evidenceHash}`;
 export const stateOfDataset = (row:Dataset):string => {
@@ -61,18 +61,30 @@ const url = (value:unknown):string|null => {
   if(value===null||value===undefined||value==="") return null;
   const result=text(value), parsed=new URL(result); if(!["http:","https:"].includes(parsed.protocol)) throw Error("LEGISCAN_URL_INVALID"); return result;
 };
-export function parseDatasetList(value:unknown):Dataset[] {
-  const response=object(value);
-  if(response.status!=="OK"||!Array.isArray(response.datasetlist)||!response.datasetlist.length) throw Error("LEGISCAN_DATASET_LIST_INVALID");
-  const rows=response.datasetlist.map(value=>{
+function publicDatasets(values:readonly unknown[]):Dataset[] {
+  const rows=values.map(value=>{
     const row=object(value);
     const result={state_id:positive(row.state_id),session_id:positive(row.session_id),session_name:text(row.session_name),
-      dataset_hash:text(row.dataset_hash),dataset_date:date(row.dataset_date)!,access_key:text(row.access_key)};
+      dataset_hash:text(row.dataset_hash),dataset_date:date(row.dataset_date)!};
     if(!result.dataset_date) throw Error("LEGISCAN_DATASET_DATE_REQUIRED");
     stateOfDataset(result); return result;
   });
   if(new Set(rows.map(row=>row.session_id)).size!==rows.length) throw Error("LEGISCAN_DUPLICATE_SESSION");
   return rows;
+}
+export function parseDatasetList(value:unknown):Dataset[] {
+  const response=object(value);
+  if(response.status!=="OK"||!Array.isArray(response.datasetlist)||!response.datasetlist.length) throw Error("LEGISCAN_DATASET_LIST_INVALID");
+  const datasetlist=response.datasetlist;
+  return publicDatasets(datasetlist).map((row,index)=>({...row,access_key:text(object(datasetlist[index]).access_key)}));
+}
+/** The public catalogue schema is shared by published v2 and v4 indexes; bill parts are not. */
+export function publicDatasetIndex(value:unknown):BillIndex {
+  const index=object(value);
+  if(index.kind!=="INDEX"||![undefined,"legiscan-bulk/2",LEGISCAN_BULK_PARSER].includes(index.parserVersion as string|undefined)||
+    typeof index.capturedAt!=="string"||!Number.isFinite(Date.parse(index.capturedAt))||!Array.isArray(index.datasets)||!index.datasets.length)throw Error("LEGISCAN_DATASET_INDEX_INVALID");
+  const datasets=publicDatasets(index.datasets);
+  return {kind:"INDEX",...(index.parserVersion?{parserVersion:index.parserVersion as BillIndex["parserVersion"]}:{}),capturedAt:index.capturedAt,datasets};
 }
 type PersonJoinIndex=ReadonlyMap<string,ReadonlySet<string>>;
 function personJoinIndex(people:readonly HeldPerson[]):PersonJoinIndex {

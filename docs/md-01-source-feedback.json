@@ -106,15 +106,27 @@
     "findsBillTextAfterRememberedFailedNotice": true,
     "retainsAllCapturedPages": true,
     "remembersRecoveredSource": true,
-    "writerFormatFailureDoesNotReopenHunt": true,
     "laterPublicationClearsFailure": true,
     "scopeAndSourceHashesMustMatch": true,
     "neonConnections": 0,
-    "modelCalls": 0
+    "modelCalls": 0,
+    "missingFullTextKeepsAcquisitionOpenEvenWithSupportedSentences": true,
+    "formattingAloneDoesNotTriggerAnotherSearch": true,
+    "laterWriterFailureDoesNotCloseMissingFullTextWork": true,
+    "modelBudgetHoldDoesNotCloseFreeSourceAcquisition": true
   },
   "limitations": [
     "The direct URL has no saved artifact at that exact address; grouped acquisition failures do not identify which error belongs to that URL.",
     "The execution-environment HEAD status does not establish the production server's HTTP status.",
-    "The source-feedback change is not deployed and has not yet published a production explanation."
+    "The source-feedback change is not deployed and has not yet published a production explanation.",
+    "The retained Alaska diagnostic supports its recorded sentences and has no explicit false checker flag; its generic backend failure also covers formatting/citation mismatches. The missing full-text capture independently leaves source work open."
+  ],
+  "retainedDiagnosticFlags": [
+    {
+      "observed_at": "2026-10-25T14:48:57.766Z",
+      "diagnostic_characters": 829,
+      "has_explicit_failed_check": false,
+      "has_explicit_supported_sentence": true
+    }
   ]
 }

@@ -1,8 +1,8 @@
 # RB-A8 — Hourly counts
 
-Sean's current instruction is to leave migration locking to River. RV-LOCK `94e9053e8` is gating alone as release 108. RB-A8's competing locking implementation has been withdrawn; locking code on this branch matches RV-LOCK. No locking READY will be posted. The [note to River](measurements/rb-a8/river-lock-note.md) records the measured copy results and their limits.
+River's RV-LOCK shipped in release 108. RB-A8's competing locking implementation remains withdrawn; locking code on this branch matches RV-LOCK. The [note to River](measurements/rb-a8/river-lock-note.md) preserves the earlier copy measurements and their limits.
 
-The original RB-A8 READY `fb1783a62` is merged in release 107, whose production build failed at its migration and left release 106 serving. After release 108 publishes, this lane will verify the applied migration, consecutive automatic hourly checkpoints and saved state under 100,000 bytes using production read-only SQL, push a verification note, and stop. The superseded full check run was stopped, not passed.
+The requested post-release runtime check is complete. Read-only production SQL verifies the applied reader and control-plane migrations and two actual scheduled writes 3,599.824 seconds apart. Three checkpoints total 9,461 JSON bytes; retained legacy metadata adds 9,568 bytes, for **19,029 bytes** of observer state. The retired inventory row and legacy capture/input payloads are absent. The [verification note and evidence](measurements/rb-a8/release108-runtime.md) record the observations, including a later deploy initializer replacing an existing hour's row. This is a note, not READY. RB-A8 stops after pushing it, as Sean directed. The superseded full check run was stopped, not passed.
 
 Writer transactions update `count_hour` for every fact family, publication pointer, cache invalidation, door and work-list change. The keeper reads counters and grouped oldest ages; Admin shows state, family, step and Eastern hour, including the oldest wait. Counting starts after every hook and baseline is installed, so the first partial hour is unknown. Timestamp-only rechecks add no movement. Unique door totals and their family breakdown are separate. Growth is compared with both known hour-end totals, including fresh work after an earlier pile clears.
 
@@ -31,7 +31,7 @@ Production read-only SQL refreshed at 10:34 PM EDT resolves all 60 stored event 
 
 The Phoenix 85003 walk found that a partial state publication had hidden known dates before RB-A8 was deployed. After another 15 seconds, the page still omitted the October 5 registration deadline and July 21 held primary. The native calendar used only the new projection while the page suppressed its existing sourced calendar as soon as any state navigation was published.
 
-The shared date selector now retains previously sourced dates for the same state and election cycle when the current publication omits that topic. A supplied date or explicit no-date rule replaces the earlier value. Each retained date keeps its provenance; the election-day heading supplies the day without a duplicate list entry. The published Arizona projection was captured through `readonly` at 4:19 PM EDT and rendered through the actual ballot component in a local copy. Chrome showed the newer October 7–30 and October 23 dates plus the retained July 21 and October 5 dates, and removed the false missing-deadline message. The focused reader and migration checks pass. Production verification of the repair remains pending until deployment.
+The shared date selector now retains previously sourced dates for the same state and election cycle when the current publication omits that topic. A supplied date or explicit no-date rule replaces the earlier value. Each retained date keeps its provenance; the election-day heading supplies the day without a duplicate list entry. The published Arizona projection was captured through `readonly` at 4:19 PM EDT and rendered through the actual ballot component in a local copy. Chrome showed the newer October 7–30 and October 23 dates plus the retained July 21 and October 5 dates, and removed the false missing-deadline message. The focused reader and migration checks passed. At the original READY, production verification of the repair was still pending.
 
 
 ## Next-run proof
@@ -104,11 +104,11 @@ Direct production SQL refreshed at 10:31 PM EDT, October 24, before A8 is deploy
 | WV | 121 | 0 | 0 | 0 | 50 | 102 | 98 | 108 | 1428 | 0 |
 | WY | 491 | 9 | 3 | 0 | 30 | 69 | 68 | 1088 | 1304 | 0 |
 
-## Checks
+## Earlier checks
 
 - All nine checks pass on `997cf737a`: lint (67 s), TypeScript with a 4 GB heap (57 s), dead code (5 s), browser policy (1 s), full tests (1,620 s), schema (1 s), default build (81 s), bundle (1 s) and standalone build (16 s).
 - The full suite registers 9,856 tests: 9,854 pass, zero fail and two are skipped, across 42 suites. All 16 bundle tests pass.
 
 The requested focused set passes 141 tests with zero failures, including keeper/work/door integration, identity boundaries, dry migrations, scoreboard, cache, roster, Legistar and ballot behavior. The keeper tests cover both old leases and the merged done/retry states. All seven control-plane migration hashes match. The fresh copy proves all 57-state comparisons, bounded retention and a stored fix within three minutes. The real Chrome reader checks and refreshed production ID resolution pass as described above.
 
-The dependency checkout builds against the latest RB-A1 documentation commit (`3a8b176aa`) with the repaired code; its fresh 7:45 PM EDT build passes. The evidence is saved in [the measurements directory](measurements/rb-a8). The 20-minute fetch/build/return watch stays active. Production SQL parity, the actual automatic :05 run and River's Chrome Admin pass remain pending after deployment.
+Earlier dependency builds against RB-A1 documentation commit `3a8b176aa` passed, with evidence in [the measurements directory](measurements/rb-a8). Sean then narrowed the remaining assignment to post-release migration, hourly-write and saved-state verification. Those runtime checks passed as recorded in the [release 108 note](measurements/rb-a8/release108-runtime.md); this lane stops after pushing that note.

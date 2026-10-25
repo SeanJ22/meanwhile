@@ -1,0 +1,411 @@
+{
+  "deployment": {
+    "id": "6add76db32a73cdbdc05c6d2",
+    "state": "ready",
+    "commit": "c0500807ba773fbc19d21ad8913f724cbaafc112",
+    "branch": "main",
+    "context": "production",
+    "publishedAt": "2026-10-25T03:31:51.846Z",
+    "schedules": [
+      {
+        "name": "line-keeper",
+        "cron": "5 * * * *"
+      }
+    ]
+  },
+  "reader": {
+    "checked_at": "2026-10-25T03:32:40.117Z",
+    "current_user": "readonly",
+    "migration": [
+      {
+        "hash": "aaea8f9348e658bdc5dc5b32b5d1194445a9a94a5d4f8c74636a8dec286c9834",
+        "createdAt": 1792834200003
+      }
+    ],
+    "counter_table": "count_hour",
+    "hooks": [
+      {
+        "name": "count_hour_entity",
+        "table": "entity",
+        "enabled": "O"
+      },
+      {
+        "name": "count_hour_fact",
+        "table": "fact",
+        "enabled": "O"
+      },
+      {
+        "name": "count_hour_pointer",
+        "table": "civic_data_promotions",
+        "enabled": "O"
+      },
+      {
+        "name": "count_hour_subject",
+        "table": "entity",
+        "enabled": "O"
+      }
+    ],
+    "can_insert": false,
+    "can_update": false
+  },
+  "initialControl": {
+    "checked_at": "2026-10-25T03:32:43.732Z",
+    "current_user": "wtp_cp_release_readonly",
+    "migration": [
+      {
+        "id": "RB-A8_expand",
+        "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+        "completedAt": "2026-10-25T03:29:48.42901+00:00"
+      }
+    ],
+    "retired_inventory_rows": "0",
+    "saved_runs": "1",
+    "saved_json_bytes": "3154",
+    "last_completed_at": "2026-10-25T03:32:26.419Z",
+    "checkpoints": [
+      {
+        "hour": "2026-10-25T02:00:00+00:00",
+        "problems": 630,
+        "bytesRead": 718041,
+        "checkedAt": "2026-10-25T03:32:26.419+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      }
+    ],
+    "can_insert": false,
+    "can_update": false
+  },
+  "observations": [
+    {
+      "checked_at": "2026-10-25T03:32:43.732Z",
+      "current_user": "wtp_cp_release_readonly",
+      "migration": [
+        {
+          "id": "RB-A8_expand",
+          "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+          "completedAt": "2026-10-25T03:29:48.42901+00:00"
+        }
+      ],
+      "retired_inventory_rows": "0",
+      "saved_runs": "1",
+      "saved_json_bytes": "3154",
+      "last_completed_at": "2026-10-25T03:32:26.419Z",
+      "checkpoints": [
+        {
+          "hour": "2026-10-25T02:00:00+00:00",
+          "problems": 630,
+          "bytesRead": 718041,
+          "checkedAt": "2026-10-25T03:32:26.419+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3154
+        }
+      ],
+      "can_insert": false,
+      "can_update": false
+    },
+    {
+      "checked_at": "2026-10-25T04:05:59.062Z",
+      "current_user": "wtp_cp_release_readonly",
+      "migration": [
+        {
+          "id": "RB-A8_expand",
+          "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+          "completedAt": "2026-10-25T03:29:48.42901+00:00"
+        }
+      ],
+      "retired_inventory_rows": "0",
+      "saved_runs": "2",
+      "saved_json_bytes": "6308",
+      "last_completed_at": "2026-10-25T04:05:15.025Z",
+      "checkpoints": [
+        {
+          "hour": "2026-10-25T02:00:00+00:00",
+          "problems": 630,
+          "bytesRead": 718041,
+          "checkedAt": "2026-10-25T03:32:26.419+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3154
+        },
+        {
+          "hour": "2026-10-25T03:00:00+00:00",
+          "problems": 688,
+          "bytesRead": 728284,
+          "checkedAt": "2026-10-25T04:05:15.025+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3154
+        }
+      ],
+      "can_insert": false,
+      "can_update": false
+    },
+    {
+      "checked_at": "2026-10-25T04:12:06.841Z",
+      "current_user": "wtp_cp_release_readonly",
+      "migration": [
+        {
+          "id": "RB-A8_expand",
+          "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+          "completedAt": "2026-10-25T03:29:48.42901+00:00"
+        }
+      ],
+      "retired_inventory_rows": "0",
+      "saved_runs": "2",
+      "saved_json_bytes": "6307",
+      "last_completed_at": "2026-10-25T04:09:20.640Z",
+      "checkpoints": [
+        {
+          "hour": "2026-10-25T02:00:00+00:00",
+          "problems": 630,
+          "bytesRead": 718041,
+          "checkedAt": "2026-10-25T03:32:26.419+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3154
+        },
+        {
+          "hour": "2026-10-25T03:00:00+00:00",
+          "problems": 688,
+          "bytesRead": 729563,
+          "checkedAt": "2026-10-25T04:09:20.64+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3153
+        }
+      ],
+      "can_insert": false,
+      "can_update": false
+    },
+    {
+      "checked_at": "2026-10-25T05:07:22.173Z",
+      "current_user": "wtp_cp_release_readonly",
+      "migration": [
+        {
+          "id": "RB-A8_expand",
+          "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+          "completedAt": "2026-10-25T03:29:48.42901+00:00"
+        }
+      ],
+      "retired_inventory_rows": "0",
+      "saved_runs": "3",
+      "saved_json_bytes": "9461",
+      "last_completed_at": "2026-10-25T05:05:14.849Z",
+      "checkpoints": [
+        {
+          "hour": "2026-10-25T02:00:00+00:00",
+          "problems": 630,
+          "bytesRead": 718041,
+          "checkedAt": "2026-10-25T03:32:26.419+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3154
+        },
+        {
+          "hour": "2026-10-25T03:00:00+00:00",
+          "problems": 688,
+          "bytesRead": 729563,
+          "checkedAt": "2026-10-25T04:09:20.64+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3153
+        },
+        {
+          "hour": "2026-10-25T04:00:00+00:00",
+          "problems": 604,
+          "bytesRead": 722572,
+          "checkedAt": "2026-10-25T05:05:14.849+00:00",
+          "stateBuckets": 57,
+          "savedJsonBytes": 3154
+        }
+      ],
+      "can_insert": false,
+      "can_update": false
+    }
+  ],
+  "hourlyVerified": true,
+  "scheduledCandidates": [
+    {
+      "hour": "2026-10-25T03:00:00+00:00",
+      "problems": 688,
+      "bytesRead": 728284,
+      "checkedAt": "2026-10-25T04:05:15.025+00:00",
+      "stateBuckets": 57,
+      "savedJsonBytes": 3154
+    },
+    {
+      "hour": "2026-10-25T04:00:00+00:00",
+      "problems": 604,
+      "bytesRead": 722572,
+      "checkedAt": "2026-10-25T05:05:14.849+00:00",
+      "stateBuckets": 57,
+      "savedJsonBytes": 3154
+    }
+  ],
+  "latestControl": {
+    "checked_at": "2026-10-25T05:07:22.173Z",
+    "current_user": "wtp_cp_release_readonly",
+    "migration": [
+      {
+        "id": "RB-A8_expand",
+        "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+        "completedAt": "2026-10-25T03:29:48.42901+00:00"
+      }
+    ],
+    "retired_inventory_rows": "0",
+    "saved_runs": "3",
+    "saved_json_bytes": "9461",
+    "last_completed_at": "2026-10-25T05:05:14.849Z",
+    "checkpoints": [
+      {
+        "hour": "2026-10-25T02:00:00+00:00",
+        "problems": 630,
+        "bytesRead": 718041,
+        "checkedAt": "2026-10-25T03:32:26.419+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      },
+      {
+        "hour": "2026-10-25T03:00:00+00:00",
+        "problems": 688,
+        "bytesRead": 729563,
+        "checkedAt": "2026-10-25T04:09:20.64+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3153
+      },
+      {
+        "hour": "2026-10-25T04:00:00+00:00",
+        "problems": 604,
+        "bytesRead": 722572,
+        "checkedAt": "2026-10-25T05:05:14.849+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      }
+    ],
+    "can_insert": false,
+    "can_update": false
+  },
+  "hourlyPair": [
+    {
+      "hour": "2026-10-25T03:00:00+00:00",
+      "problems": 688,
+      "bytesRead": 728284,
+      "checkedAt": "2026-10-25T04:05:15.025+00:00",
+      "stateBuckets": 57,
+      "savedJsonBytes": 3154
+    },
+    {
+      "hour": "2026-10-25T04:00:00+00:00",
+      "problems": 604,
+      "bytesRead": 722572,
+      "checkedAt": "2026-10-25T05:05:14.849+00:00",
+      "stateBuckets": 57,
+      "savedJsonBytes": 3154
+    }
+  ],
+  "hourlyIntervalSeconds": 3599.824,
+  "firstScheduledObservation": {
+    "checked_at": "2026-10-25T04:06:21.055Z",
+    "current_user": "wtp_cp_release_readonly",
+    "migration": [
+      {
+        "id": "RB-A8_expand",
+        "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+        "completedAt": "2026-10-25T03:29:48.42901+00:00"
+      }
+    ],
+    "retired_inventory_rows": "0",
+    "saved_runs": "2",
+    "saved_json_bytes": "6308",
+    "last_completed_at": "2026-10-25T04:05:15.025Z",
+    "checkpoints": [
+      {
+        "hour": "2026-10-25T02:00:00+00:00",
+        "problems": 630,
+        "bytesRead": 718041,
+        "checkedAt": "2026-10-25T03:32:26.419+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      },
+      {
+        "hour": "2026-10-25T03:00:00+00:00",
+        "problems": 688,
+        "bytesRead": 728284,
+        "checkedAt": "2026-10-25T04:05:15.025+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      }
+    ],
+    "can_insert": false,
+    "can_update": false
+  },
+  "followOnDeployments": [
+    {
+      "id": "6add804839cfac1e1b107c43",
+      "state": "ready",
+      "commit": "5a3f76a8bd6a988f76420d73369439fe52884a5a",
+      "branch": "main",
+      "context": "production",
+      "publishedAt": "2026-10-25T04:08:46.232Z",
+      "schedules": [
+        {
+          "name": "line-keeper",
+          "cron": "5 * * * *"
+        }
+      ]
+    }
+  ],
+  "finalControl": {
+    "checked_at": "2026-10-25T05:07:04.765Z",
+    "current_user": "wtp_cp_release_readonly",
+    "migration": [
+      {
+        "id": "RB-A8_expand",
+        "hash": "2b5a0d015795b2d83c8fa58cece4c5d6974da0e8eec4f3dd6328bd1702283d66",
+        "completedAt": "2026-10-25T03:29:48.42901+00:00"
+      }
+    ],
+    "retired_inventory_rows": "0",
+    "saved_runs": "3",
+    "saved_json_bytes": "9461",
+    "last_completed_at": "2026-10-25T05:05:14.849Z",
+    "checkpoints": [
+      {
+        "hour": "2026-10-25T02:00:00+00:00",
+        "problems": 630,
+        "bytesRead": 718041,
+        "checkedAt": "2026-10-25T03:32:26.419+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      },
+      {
+        "hour": "2026-10-25T03:00:00+00:00",
+        "problems": 688,
+        "bytesRead": 729563,
+        "checkedAt": "2026-10-25T04:09:20.64+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3153
+      },
+      {
+        "hour": "2026-10-25T04:00:00+00:00",
+        "problems": 604,
+        "bytesRead": 722572,
+        "checkedAt": "2026-10-25T05:05:14.849+00:00",
+        "stateBuckets": 57,
+        "savedJsonBytes": 3154
+      }
+    ],
+    "can_insert": false,
+    "can_update": false
+  },
+  "legacyKeeperStorage": {
+    "checked_at": "2026-10-25T05:07:00.447Z",
+    "current_user": "wtp_cp_release_readonly",
+    "legacy_keeper_rows": "56",
+    "legacy_keeper_json_bytes": "9568",
+    "rows_with_retired_inputs": "0"
+  },
+  "storage": {
+    "checkpointJsonBytes": 9461,
+    "legacyMetadataJsonBytes": 9568,
+    "totalObserverStateJsonBytes": 19029,
+    "limitBytes": 100000
+  },
+  "verificationCompletedAt": "2026-10-25T05:07:04.765Z",
+  "productionWritesByThisLane": 0,
+  "manualJobInvocationsByThisLane": 0
+}

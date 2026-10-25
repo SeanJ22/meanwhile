@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:07:07Z
+heartbeat: 2026-10-25T03:12:24Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,12 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Meeting calendars stopped after release 106 (Sean, 11:10 PM EDT)
+- Sean's report: new meeting facts per hour 1,027 (9 PM hour) -> 0 (10 PM hour). meetings-public-bodies reads came in hourly bursts (51 at 8:10 PM, 90 at 9:00 PM); since the runner took release 106 (526fe7131, DB-01) about 9:27 PM, only 1 to 4 reads every 10 minutes and no 10 PM burst. The 10:44 PM digest has PUBLICATION_INPUT_CLOCK_UNREAD=1 and CHILD_EXIT_CONTRADICTED_SOURCE_RECEIPT=3; Bismarck CivicPlus got HTTP 429 at 10:55 PM.
+- A River helper is root-causing it, starting with DB-01's per-scope clock versions (civic_data_clock_versions and its triggers; the runner's shared read cache), against production records read-only, with a fix on stream/river-meet2 and a replay of how many meeting partitions launch on the next pass, by state.
+- Placement: the fix ships as its own small batch, ahead of everything except RV-LOCK (release 108, already in CI and needed so any build can deploy). If RV-LOCK merges first, the meeting fix is release 109 and PT-01 + MT-01 (PR #819) moves to 110.
+- Proof owed after deploy: meeting calendar reads at the 8 PM-hour rate on the next pass, and new meeting facts per hour above 1,000. Then River re-measures DB-01's read savings with meetings running.
 
 ### Sean's queue fixes, 11:10 PM EDT
 1. MD-01 READY a7014d303 (7:18 PM EDT; implementation 576965f, the cheaper explanation writer) added to the queue after CL-01.

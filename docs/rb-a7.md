@@ -6,6 +6,8 @@ The place query runs in `lib/reader/place-builder.ts`. The worker saves ready an
 
 Production connections used only `readonly` on reader project `tiny-hill-13996172`, branch `br-delicate-lab-ax02xuo5`, and `wtp_cp_release_readonly` on control-plane project `withered-sunset-39821877`, branch `br-tiny-frog-aeufpjeq`. Both checked roles allow SELECT and deny INSERT, UPDATE and DELETE. Every test mutation stayed in a local PGlite copy restored from real state-scoped production rows and promoted payloads. No production database row was changed.
 
+Sean's current access constraint limits Neon work to counts and small samples. Before a larger Neon read or replay, state its precise scope and estimated transfer in GB and obtain Sean's approval. Do not create a database copy branch or run bulk Neon copy replays. Existing local files and fixtures can be used without a Neon connection.
+
 ## Two connected checks
 
 The ordinary builder and reader preserve the full JSON response of the previous place query for copied ZIPs 85201 and 85701, after ignoring array order and properties JSON omits. Independently captured per-division rows also compose to those same complete place answers.
@@ -30,6 +32,8 @@ State-scoped comparisons checked 93,571 held ZIP division identities, including 
 All 60 stored reader-event references resolve: 56 reactions, three demand signals and one Ask reference, covering 36 distinct target IDs. Speak has no stored rows. This lane preserves their identities. The reader database's legacy `cp_work_items` table contains zero rows; the real control plane contains 182,431 work items and 364,544 Box findings. See [the production baseline](measurements/rb-a7/production-baseline.json).
 
 New Neon validation is limited to counts and small samples. Existing captured files and local fixtures support further integration checks; no new production copy or bulk copy replay is authorized. Any larger proof needs its scope and estimated GB presented before it runs.
+
+An exhaustive local pass of the current ZIP seeder plans all 41,945 supported routable ZIPs with a point, including all 114 without a division entry. Missing planned pages are zero in each of the 56 supported state/DC/territory buckets. The fake Query counted emitted ZIP subjects and dependency edges without any database connection, mutation or network attempt. This verifies input coverage, not built-page content parity. See [the local ZIP page plan](measurements/rb-a7/zip-page-plan.json) and the new planned-page column in the state counts.
 
 ## Work remaining before a live result
 

@@ -25,4 +25,3 @@ export async function seedRuntimeBodyPageSubjects(query:Query,states:readonly st
   }
   return inserted;
 }
-

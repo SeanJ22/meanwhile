@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 110 (main f6d35d05b, RV-MEET2). NEXT: release 111 = RV-BOX (PR #823, river d62ca66ce, auto-merge on; live check within 5 minutes of release instead of a production-database preview). THEN: DB-03A (RETURNED 2:45 AM EDT: its migration holds cp_doors locked while it walks 1,517 voting doors one per query, 393 MB; returns/db-03a.md; ships alone right after 111 once fixed). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes by 2:50 AM EDT), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf; RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306 (READY; folded in order after DB-03A). HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT; RV-BOX_expand applied 2:40:45 AM EDT (4 indexes valid); reader checks green (fixed + 20 random ZIPs in 20 states). NEXT: DB-03A (RETURNED 2:45 AM EDT, returns/db-03a.md; ships alone once fixed); meeting fix RV-MEET3 (helper). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes at 2:50 AM EDT), RB-A7 after RB-A4, RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T06:36:56Z
+heartbeat: 2026-10-25T06:45:03Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,16 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Release 111 live, 2:43 AM EDT (main 2e874974f: RV-BOX)
+- RV-BOX_expand applied at the production build, 2:40:45 AM EDT. All four indexes are valid: cp_box_findings_retry 40 kB, _slot 21 MB, _refused 296 kB, _unslotted 16 MB.
+- Reader checks pass:
+  - /ballot 85701 and 03255: 200, no console errors.
+  - Ask on 85701: grounded.
+  - /api/meetings: 85701 438 id fields, 60602 615.
+  - /national: 200.
+- Random ZIPs, seed 1111: 20/20 load and resolve to their county and city, across MD, AK, ND, OR, GA, GU, MN, AL, WV, MS, NC, HI, DC, LA, CO, CT, ME, NE, OK and ID.
+- Proof owed once the runner takes 111: 0 boxDue timeouts over the next 3 publish-now passes, and Box built per hour up by state against the baseline.
 
 ### Meeting proof on release 110, 2:30 AM EDT: not met yet
 - The routine pass on 110 (2:12 AM EDT) attempted 65 tasks, including 10 meetings and 25 voting sites; on 109 it was 1 to 5 meetings.

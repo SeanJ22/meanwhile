@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. NEXT: river-portraits (building in River session session_012UDbgz3sjA8QN2m7CY78QS), then RB-A4 catch-up b2bbdc183 (gating on river-next 456454204), GB-01 900dd1427, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. NEXT: river-portraits (building in River session session_012UDbgz3sjA8QN2m7CY78QS), then RB-A4 catch-up b2bbdc183 (gates 9 of 9 on 456454204, 9,913 tests; waits behind river-portraits), GB-01 900dd1427, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T18:24:00Z
+heartbeat: 2026-10-25T18:27:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1031,4 +1031,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
 - Random ZIPs, seed 1118: 20/20 load, 20/20 resolve to county and city, across AK, MN, HI, AL, NM, MT, NC, VA, WI, MO, NH, UT, PR, IL, MI, SD, TX, OH, IN and WY. (Puerto Rico 00751's page is thin, 445 chars, like Guam's.)
 - Readback MB per hour saved: measured on the 3 PM and 4 PM EDT hours, the first two full hours after release, against the 5 AM to 1 PM EDT readback of 55 to 2,931 MB/h.
+
+### 2:27 PM EDT
+- RB-A4 catch-up b2bbdc183 passed alone: 9 of 9 gates on 456454204, 9,913 tests, 0 failing. River stays at be0b41a4f so river-portraits lands first. After it, catch-up is re-merged on top and re-gated.
+- Pre-gating GB-01 900dd1427 on top of catch-up (77cdd6784) to find problems early. The real gate runs again on whatever river is then.
 

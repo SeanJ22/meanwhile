@@ -1,0 +1,1031 @@
+{
+  "observedAt": "2026-10-25T02:52:45.783Z",
+  "reader": {
+    "role": "readonly",
+    "database": "neondb"
+  },
+  "control": {
+    "role": "wtp_cp_release_readonly",
+    "database": "neondb",
+    "history_rows": "0"
+  },
+  "table": {
+    "base": 64,
+    "states": []
+  },
+  "countMs": 28219,
+  "counts": [
+    {
+      "state": "AL",
+      "name": "Alabama",
+      "owed": 20016,
+      "held": 1493,
+      "missing": 18523,
+      "stale": 0,
+      "stuck": 658
+    },
+    {
+      "state": "AK",
+      "name": "Alaska",
+      "owed": 12841,
+      "held": 1777,
+      "missing": 11064,
+      "stale": 0,
+      "stuck": 793
+    },
+    {
+      "state": "AZ",
+      "name": "Arizona",
+      "owed": 37032,
+      "held": 5829,
+      "missing": 31203,
+      "stale": 5,
+      "stuck": 2375
+    },
+    {
+      "state": "AR",
+      "name": "Arkansas",
+      "owed": 20048,
+      "held": 503,
+      "missing": 19545,
+      "stale": 0,
+      "stuck": 657
+    },
+    {
+      "state": "CA",
+      "name": "California",
+      "owed": 121600,
+      "held": 31782,
+      "missing": 89818,
+      "stale": 0,
+      "stuck": 5993
+    },
+    {
+      "state": "CO",
+      "name": "Colorado",
+      "owed": 50355,
+      "held": 8346,
+      "missing": 42009,
+      "stale": 0,
+      "stuck": 2154
+    },
+    {
+      "state": "CT",
+      "name": "Connecticut",
+      "owed": 119024,
+      "held": 94887,
+      "missing": 24137,
+      "stale": 0,
+      "stuck": 933
+    },
+    {
+      "state": "DE",
+      "name": "Delaware",
+      "owed": 5766,
+      "held": 188,
+      "missing": 5578,
+      "stale": 0,
+      "stuck": 208
+    },
+    {
+      "state": "DC",
+      "name": "District of Columbia",
+      "owed": 1403,
+      "held": 17,
+      "missing": 1386,
+      "stale": 0,
+      "stuck": 66
+    },
+    {
+      "state": "FL",
+      "name": "Florida",
+      "owed": 66217,
+      "held": 14446,
+      "missing": 51771,
+      "stale": 0,
+      "stuck": 4501
+    },
+    {
+      "state": "GA",
+      "name": "Georgia",
+      "owed": 26023,
+      "held": 1497,
+      "missing": 24526,
+      "stale": 0,
+      "stuck": 1008
+    },
+    {
+      "state": "HI",
+      "name": "Hawaii",
+      "owed": 43440,
+      "held": 37580,
+      "missing": 5860,
+      "stale": 0,
+      "stuck": 225
+    },
+    {
+      "state": "ID",
+      "name": "Idaho",
+      "owed": 21256,
+      "held": 828,
+      "missing": 20428,
+      "stale": 0,
+      "stuck": 1288
+    },
+    {
+      "state": "IL",
+      "name": "Illinois",
+      "owed": 66166,
+      "held": 8280,
+      "missing": 57886,
+      "stale": 0,
+      "stuck": 1713
+    },
+    {
+      "state": "IN",
+      "name": "Indiana",
+      "owed": 24002,
+      "held": 156,
+      "missing": 23846,
+      "stale": 0,
+      "stuck": 417
+    },
+    {
+      "state": "IA",
+      "name": "Iowa",
+      "owed": 22337,
+      "held": 435,
+      "missing": 21902,
+      "stale": 0,
+      "stuck": 454
+    },
+    {
+      "state": "KS",
+      "name": "Kansas",
+      "owed": 30190,
+      "held": 46,
+      "missing": 30144,
+      "stale": 0,
+      "stuck": 549
+    },
+    {
+      "state": "KY",
+      "name": "Kentucky",
+      "owed": 113594,
+      "held": 98770,
+      "missing": 14824,
+      "stale": 0,
+      "stuck": 243
+    },
+    {
+      "state": "LA",
+      "name": "Louisiana",
+      "owed": 9354,
+      "held": 0,
+      "missing": 9354,
+      "stale": 0,
+      "stuck": 199
+    },
+    {
+      "state": "ME",
+      "name": "Maine",
+      "owed": 19979,
+      "held": 770,
+      "missing": 19209,
+      "stale": 0,
+      "stuck": 1036
+    },
+    {
+      "state": "MD",
+      "name": "Maryland",
+      "owed": 20125,
+      "held": 881,
+      "missing": 19244,
+      "stale": 0,
+      "stuck": 871
+    },
+    {
+      "state": "MA",
+      "name": "Massachusetts",
+      "owed": 22773,
+      "held": 2149,
+      "missing": 20624,
+      "stale": 0,
+      "stuck": 836
+    },
+    {
+      "state": "MI",
+      "name": "Michigan",
+      "owed": 39753,
+      "held": 2835,
+      "missing": 36918,
+      "stale": 0,
+      "stuck": 1641
+    },
+    {
+      "state": "MN",
+      "name": "Minnesota",
+      "owed": 51234,
+      "held": 6656,
+      "missing": 44578,
+      "stale": 0,
+      "stuck": 1222
+    },
+    {
+      "state": "MS",
+      "name": "Mississippi",
+      "owed": 13289,
+      "held": 87,
+      "missing": 13202,
+      "stale": 0,
+      "stuck": 359
+    },
+    {
+      "state": "MO",
+      "name": "Missouri",
+      "owed": 57074,
+      "held": 9581,
+      "missing": 47493,
+      "stale": 0,
+      "stuck": 2094
+    },
+    {
+      "state": "MT",
+      "name": "Montana",
+      "owed": 14986,
+      "held": 9,
+      "missing": 14977,
+      "stale": 0,
+      "stuck": 368
+    },
+    {
+      "state": "NE",
+      "name": "Nebraska",
+      "owed": 18058,
+      "held": 0,
+      "missing": 18058,
+      "stale": 0,
+      "stuck": 152
+    },
+    {
+      "state": "NV",
+      "name": "Nevada",
+      "owed": 9502,
+      "held": 1654,
+      "missing": 7848,
+      "stale": 0,
+      "stuck": 491
+    },
+    {
+      "state": "NH",
+      "name": "New Hampshire",
+      "owed": 26285,
+      "held": 905,
+      "missing": 25380,
+      "stale": 5,
+      "stuck": 1205
+    },
+    {
+      "state": "NJ",
+      "name": "New Jersey",
+      "owed": 33671,
+      "held": 3440,
+      "missing": 30231,
+      "stale": 2,
+      "stuck": 1010
+    },
+    {
+      "state": "NM",
+      "name": "New Mexico",
+      "owed": 18954,
+      "held": 1948,
+      "missing": 17006,
+      "stale": 0,
+      "stuck": 934
+    },
+    {
+      "state": "NY",
+      "name": "New York",
+      "owed": 41966,
+      "held": 2944,
+      "missing": 39022,
+      "stale": 0,
+      "stuck": 1195
+    },
+    {
+      "state": "NC",
+      "name": "North Carolina",
+      "owed": 38196,
+      "held": 4014,
+      "missing": 34182,
+      "stale": 0,
+      "stuck": 1602
+    },
+    {
+      "state": "ND",
+      "name": "North Dakota",
+      "owed": 27300,
+      "held": 43,
+      "missing": 27257,
+      "stale": 0,
+      "stuck": 729
+    },
+    {
+      "state": "OH",
+      "name": "Ohio",
+      "owed": 45487,
+      "held": 5271,
+      "missing": 40216,
+      "stale": 0,
+      "stuck": 1334
+    },
+    {
+      "state": "OK",
+      "name": "Oklahoma",
+      "owed": 23104,
+      "held": 2320,
+      "missing": 20784,
+      "stale": 0,
+      "stuck": 1013
+    },
+    {
+      "state": "OR",
+      "name": "Oregon",
+      "owed": 17333,
+      "held": 1203,
+      "missing": 16130,
+      "stale": 0,
+      "stuck": 558
+    },
+    {
+      "state": "PA",
+      "name": "Pennsylvania",
+      "owed": 42352,
+      "held": 760,
+      "missing": 41592,
+      "stale": 0,
+      "stuck": 644
+    },
+    {
+      "state": "RI",
+      "name": "Rhode Island",
+      "owed": 6676,
+      "held": 126,
+      "missing": 6550,
+      "stale": 0,
+      "stuck": 317
+    },
+    {
+      "state": "SC",
+      "name": "South Carolina",
+      "owed": 132466,
+      "held": 117409,
+      "missing": 15057,
+      "stale": 0,
+      "stuck": 454
+    },
+    {
+      "state": "SD",
+      "name": "South Dakota",
+      "owed": 17034,
+      "held": 84,
+      "missing": 16950,
+      "stale": 0,
+      "stuck": 408
+    },
+    {
+      "state": "TN",
+      "name": "Tennessee",
+      "owed": 15047,
+      "held": 23,
+      "missing": 15024,
+      "stale": 0,
+      "stuck": 429
+    },
+    {
+      "state": "TX",
+      "name": "Texas",
+      "owed": 103602,
+      "held": 12893,
+      "missing": 90709,
+      "stale": 0,
+      "stuck": 5644
+    },
+    {
+      "state": "UT",
+      "name": "Utah",
+      "owed": 11644,
+      "held": 422,
+      "missing": 11222,
+      "stale": 0,
+      "stuck": 559
+    },
+    {
+      "state": "VT",
+      "name": "Vermont",
+      "owed": 13623,
+      "held": 16,
+      "missing": 13607,
+      "stale": 0,
+      "stuck": 562
+    },
+    {
+      "state": "VA",
+      "name": "Virginia",
+      "owed": 37573,
+      "held": 5092,
+      "missing": 32481,
+      "stale": 0,
+      "stuck": 2305
+    },
+    {
+      "state": "WA",
+      "name": "Washington",
+      "owed": 33710,
+      "held": 5672,
+      "missing": 28038,
+      "stale": 0,
+      "stuck": 1862
+    },
+    {
+      "state": "WV",
+      "name": "West Virginia",
+      "owed": 13698,
+      "held": 121,
+      "missing": 13577,
+      "stale": 0,
+      "stuck": 739
+    },
+    {
+      "state": "WI",
+      "name": "Wisconsin",
+      "owed": 98529,
+      "held": 23099,
+      "missing": 75430,
+      "stale": 0,
+      "stuck": 8396
+    },
+    {
+      "state": "WY",
+      "name": "Wyoming",
+      "owed": 10374,
+      "held": 491,
+      "missing": 9883,
+      "stale": 0,
+      "stuck": 261
+    },
+    {
+      "state": "AS",
+      "name": "American Samoa",
+      "owed": 1186,
+      "held": 0,
+      "missing": 1186,
+      "stale": 0,
+      "stuck": 44
+    },
+    {
+      "state": "GU",
+      "name": "Guam",
+      "owed": 162,
+      "held": 0,
+      "missing": 162,
+      "stale": 0,
+      "stuck": 0
+    },
+    {
+      "state": "MP",
+      "name": "Northern Mariana Islands",
+      "owed": 1276,
+      "held": 0,
+      "missing": 1276,
+      "stale": 0,
+      "stuck": 72
+    },
+    {
+      "state": "PR",
+      "name": "Puerto Rico",
+      "owed": 5090,
+      "held": 0,
+      "missing": 5090,
+      "stale": 0,
+      "stuck": 83
+    },
+    {
+      "state": "VI",
+      "name": "U.S. Virgin Islands",
+      "owed": 1001,
+      "held": 2,
+      "missing": 999,
+      "stale": 0,
+      "stuck": 70
+    },
+    {
+      "state": "US",
+      "name": "National government",
+      "owed": 310,
+      "held": 14,
+      "missing": 296,
+      "stale": 1,
+      "stuck": 34
+    }
+  ],
+  "places": [
+    {
+      "state": "AZ",
+      "placeId": "ocd-division/country:us/state:az/county:cochise",
+      "name": "Cochise County",
+      "owed": 1229,
+      "held": 450,
+      "missing": 779,
+      "stale": 0,
+      "stuck": 5,
+      "readMs": 626,
+      "heldExample": {
+        "entityId": "az:county:county-of-cochise#office-election",
+        "entityName": "Elections",
+        "kind": "body",
+        "field": "name",
+        "label": "Board or commission name",
+        "blank": null,
+        "facts": [
+          {
+            "id": 1711884,
+            "stale": false,
+            "value": "Elections Department",
+            "status": "live",
+            "checkedAt": "2026-10-22T09:05:39.072+00:00",
+            "sourceUrl": "https://www.cochise.az.gov/292/Elections"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "az:county:county-of-cochise",
+        "entityName": "County Of Cochise",
+        "kind": "government",
+        "field": "bodies",
+        "label": "Every board and commission",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 1229,
+        "held": 450,
+        "missing": 779,
+        "stale": 0,
+        "stuck": 5
+      }
+    },
+    {
+      "state": "CA",
+      "placeId": "ocd-division/country:us/state:ca/county:contra_costa",
+      "name": "Contra Costa County",
+      "owed": 10090,
+      "held": 3764,
+      "missing": 6326,
+      "stale": 0,
+      "stuck": 599,
+      "readMs": 5041,
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-ca-county-contra-costa-body-bay-point-municipal-advisory-council:1427242",
+        "entityName": "Bay Point Municipal Advisory Council",
+        "kind": "meeting",
+        "field": "minutes_url",
+        "label": "Minutes",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2372074,
+            "stale": false,
+            "value": "https://contra-costa.legistar.com/View.ashx?M=M&ID=1427242&GUID=88A21D34-8CB3-4626-BBDF-C0585E3CCC40",
+            "status": "live",
+            "checkedAt": "2026-10-24T00:22:34.849+00:00",
+            "sourceUrl": "https://contra-costa.legistar.com/Calendar.aspx"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "ca:county:county-of-contra-costa",
+        "entityName": "County Of Contra Costa",
+        "kind": "government",
+        "field": "bodies",
+        "label": "Every board and commission",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 10090,
+        "held": 3764,
+        "missing": 6326,
+        "stale": 0,
+        "stuck": 599
+      }
+    },
+    {
+      "state": "CO",
+      "placeId": "ocd-division/country:us/state:co/county:arapahoe",
+      "name": "Arapahoe County",
+      "owed": 1780,
+      "held": 647,
+      "missing": 1133,
+      "stale": 0,
+      "stuck": 115,
+      "readMs": 733,
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-co-county-arapahoe-body-arapahoe-county-board-of-health:1425727",
+        "entityName": "Arapahoe County Board of Health",
+        "kind": "meeting",
+        "field": "minutes_url",
+        "label": "Minutes",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2264718,
+            "stale": false,
+            "value": "https://arapahoe.legistar.com/View.ashx?M=M&ID=1425727&GUID=8D41B166-863B-4ADF-B932-88B455805FB8",
+            "status": "live",
+            "checkedAt": "2026-10-24T10:39:57.625+00:00",
+            "sourceUrl": "https://arapahoe.legistar.com/Calendar.aspx"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "co:county:county-of-arapahoe",
+        "entityName": "County Of Arapahoe",
+        "kind": "government",
+        "field": "bodies",
+        "label": "Every board and commission",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 1780,
+        "held": 647,
+        "missing": 1133,
+        "stale": 0,
+        "stuck": 115
+      }
+    },
+    {
+      "state": "FL",
+      "placeId": "ocd-division/country:us/state:fl/county:alachua",
+      "name": "Alachua County",
+      "owed": 44,
+      "held": 3,
+      "missing": 41,
+      "stale": 0,
+      "stuck": 0,
+      "readMs": 171,
+      "heldExample": {
+        "entityId": "fl:county:county-of-alachua#body:alachua-county-arts-council",
+        "entityName": "Alachua County Arts Council",
+        "kind": "body",
+        "field": "name",
+        "label": "Board or commission name",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2748895,
+            "stale": false,
+            "value": "Alachua County Arts Council",
+            "status": "live",
+            "checkedAt": "2026-10-24T17:40:31.876+00:00",
+            "sourceUrl": "https://www.alachuacounty.us/Arts-Council"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "fl:county:county-of-alachua",
+        "entityName": "County Of Alachua",
+        "kind": "government",
+        "field": "bodies",
+        "label": "Every board and commission",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 44,
+        "held": 3,
+        "missing": 41,
+        "stale": 0,
+        "stuck": 0
+      }
+    },
+    {
+      "state": "GA",
+      "placeId": "ocd-division/country:us/state:ga/county:bartow",
+      "name": "Bartow County",
+      "owed": 16,
+      "held": 4,
+      "missing": 12,
+      "stale": 0,
+      "stuck": 0,
+      "readMs": 172,
+      "heldExample": {
+        "entityId": "ga:county:county-of-bartow#governing",
+        "entityName": "Bartow County governing",
+        "kind": "body",
+        "field": "comment:detail",
+        "label": "comment",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2140950,
+            "stale": false,
+            "value": "If you would like to speak at the meeting as an opponent, fill out and bring to the meeting a Disclosure form .",
+            "status": "live",
+            "checkedAt": "2026-10-23T11:02:12.496+00:00",
+            "sourceUrl": "https://www.bartowcountyga.gov/departments/community_development/planning_and_zoning.php"
+          },
+          {
+            "id": 2164227,
+            "stale": false,
+            "value": "If you would like to be placed on the agenda to speak at a meeting,",
+            "status": "held",
+            "checkedAt": "2026-10-23T11:45:17.454+00:00",
+            "sourceUrl": "https://www.bartowcountyga.gov/departments/tax_assessor/index.php"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "ga:county:county-of-bartow",
+        "entityName": "County Of Bartow",
+        "kind": "government",
+        "field": "bodies",
+        "label": "Every board and commission",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 16,
+        "held": 4,
+        "missing": 12,
+        "stale": 0,
+        "stuck": 0
+      }
+    },
+    {
+      "state": "IL",
+      "placeId": "ocd-division/country:us/state:il/county:cook",
+      "name": "Cook County",
+      "owed": 4343,
+      "held": 1985,
+      "missing": 2358,
+      "stale": 0,
+      "stuck": 162,
+      "readMs": 1612,
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-il-county-cook-body-asset-management-committee:1425804",
+        "entityName": "Asset Management Committee",
+        "kind": "meeting",
+        "field": "starts_at",
+        "label": "Meeting date and time",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2402034,
+            "stale": false,
+            "value": {
+              "startsAt": "2026-07-15T13:15:00-05:00",
+              "timeZone": "America/Chicago",
+              "precision": "MINUTE"
+            },
+            "status": "live",
+            "checkedAt": "2026-10-24T07:32:51.739+00:00",
+            "sourceUrl": "https://cook-county.legistar.com/Calendar.aspx"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "il:county:county-of-cook",
+        "entityName": "County Of Cook",
+        "kind": "government",
+        "field": "bodies",
+        "label": "Every board and commission",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 4343,
+        "held": 1985,
+        "missing": 2358,
+        "stale": 0,
+        "stuck": 162
+      }
+    },
+    {
+      "state": "NH",
+      "placeId": "ocd-division/country:us/state:nh/county:merrimack",
+      "name": "Merrimack County",
+      "owed": 507,
+      "held": 41,
+      "missing": 466,
+      "stale": 0,
+      "stuck": 87,
+      "readMs": 273,
+      "heldExample": {
+        "entityId": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+        "entityName": "Peter Shephard",
+        "kind": "person",
+        "field": "campaign-cycle:campaign-committee:NH:8fda1e92ff394ed2eba0a74f2c318677028704d3aef033f8a4bf5359a45ac0c6:2026",
+        "label": "campaign-cycle",
+        "blank": null,
+        "facts": [
+          {
+            "id": 1777387,
+            "stale": false,
+            "value": {
+              "id": "campaign-committee:NH:8fda1e92ff394ed2eba0a74f2c318677028704d3aef033f8a4bf5359a45ac0c6:2026",
+              "cycle": 2026,
+              "person": {
+                "id": "ballot-nh-merrimack:county-sheriff:shephard-peter",
+                "name": "Peter Shephard",
+                "seat": "ballot-nh-merrimack:county-sheriff"
+              },
+              "totals": [
+                {
+                  "label": "Receipts",
+                  "amount": 0
+                },
+                {
+                  "label": "Expenditures",
+                  "amount": 16428.42
+                }
+              ],
+              "sources": [
+                {
+                  "url": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails",
+                  "rawHash": "c216b827bb6a3da1ff0d8c9d3e3ca2e160bc72ba2a5d244e8c6853c0bd0276f1",
+                  "vaultKey": "project/meanwhile/campaign-money/held/c216b827bb6a3da1ff0d8c9d3e3ca2e160bc72ba2a5d244e8c6853c0bd0276f1",
+                  "checkedAt": "2026-09-08",
+                  "filingUrl": "https://cfs.sos.nh.gov/",
+                  "publisher": "New Hampshire Secretary of State — Campaign Finance System",
+                  "byteLength": 1152,
+                  "retrievedAt": "2026-09-08",
+                  "publicationDate": null
+                }
+              ],
+              "committee": "Shephard, Peter H.",
+              "organizations": [],
+              "individualTotal": null,
+              "smallDonorShare": null
+            },
+            "status": "live",
+            "checkedAt": "2026-09-08T00:00:00+00:00",
+            "sourceUrl": "https://cfsapi.sos.nh.gov/api/PublicFilerDetails/GetFilingEntityDetails"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "ballot-nh-merrimack:county-attorney:endres-steven",
+        "entityName": "Steven Endres",
+        "kind": "person",
+        "field": "background",
+        "label": "Background",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 507,
+        "held": 41,
+        "missing": 466,
+        "stale": 0,
+        "stuck": 87
+      }
+    },
+    {
+      "state": "NJ",
+      "placeId": "ocd-division/country:us/state:nj/county:bergen",
+      "name": "Bergen County",
+      "owed": 474,
+      "held": 201,
+      "missing": 273,
+      "stale": 0,
+      "stuck": 24,
+      "readMs": 208,
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-nj-county-bergen-governing:1409378",
+        "entityName": "BOARD OF COUNTY COMMISSIONERS",
+        "kind": "meeting",
+        "field": "location",
+        "label": "Where to attend",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2753983,
+            "stale": false,
+            "value": {
+              "name": "Commissioner Public Meeting Room",
+              "address": null
+            },
+            "status": "live",
+            "checkedAt": "2026-10-24T20:07:37.522+00:00",
+            "sourceUrl": "https://cobergennj.legistar.com/View.ashx?M=IC&ID=1409378&GUID=CE20022C-1050-4D1D-81DF-35878DA77F98"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "meeting:legistar-insite:derived-state-nj-county-bergen-governing:1409378",
+        "entityName": "BOARD OF COUNTY COMMISSIONERS",
+        "kind": "meeting",
+        "field": "agenda_url",
+        "label": "Agenda",
+        "blank": {
+          "stage": "CHECK",
+          "reason": "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",
+          "nextTryAt": "2026-10-24T21:08:38.009Z"
+        }
+      },
+      "nextPass": {
+        "owed": 474,
+        "held": 201,
+        "missing": 273,
+        "stale": 0,
+        "stuck": 24
+      }
+    },
+    {
+      "state": "TX",
+      "placeId": "ocd-division/country:us/state:tx/county:brazoria",
+      "name": "Brazoria County",
+      "owed": 598,
+      "held": 167,
+      "missing": 431,
+      "stale": 0,
+      "stuck": 42,
+      "readMs": 281,
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-tx-county-brazoria-body-tax-resale-committee:1456036",
+        "entityName": "Tax Resale Committee",
+        "kind": "meeting",
+        "field": "location",
+        "label": "Where to attend",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2752002,
+            "stale": false,
+            "value": {
+              "name": "Commissioners Courtroom",
+              "address": null
+            },
+            "status": "live",
+            "checkedAt": "2026-10-24T18:24:51.265+00:00",
+            "sourceUrl": "https://brazoriacountytx.legistar.com/Calendar.aspx"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "meeting:legistar-insite:derived-state-tx-county-brazoria-body-tax-resale-committee:1456036",
+        "entityName": "Tax Resale Committee",
+        "kind": "meeting",
+        "field": "agenda_url",
+        "label": "Agenda",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 598,
+        "held": 167,
+        "missing": 431,
+        "stale": 0,
+        "stuck": 42
+      }
+    },
+    {
+      "state": "WI",
+      "placeId": "ocd-division/country:us/state:wi/county:dane",
+      "name": "Dane County",
+      "owed": 12192,
+      "held": 4634,
+      "missing": 7558,
+      "stale": 0,
+      "stuck": 699,
+      "readMs": 6638,
+      "heldExample": {
+        "entityId": "meeting:legistar-insite:derived-state-wi-county-dane-body-aging-and-disability-resource-center-governing-board:1427541",
+        "entityName": "Aging & Disability Resource Center Governing Board",
+        "kind": "meeting",
+        "field": "minutes_url",
+        "label": "Minutes",
+        "blank": null,
+        "facts": [
+          {
+            "id": 2372212,
+            "stale": false,
+            "value": "https://dane.legistar.com/View.ashx?M=MADA&ID=1427541&GUID=49AFD013-AF46-4858-B7CE-DE0946680CEA",
+            "status": "live",
+            "checkedAt": "2026-10-24T18:30:10.825+00:00",
+            "sourceUrl": "https://dane.legistar.com/Calendar.aspx"
+          }
+        ]
+      },
+      "missingExample": {
+        "entityId": "meeting:legistar-insite:derived-state-wi-county-dane-body-aging-and-disability-resource-center-governing-board:1427541",
+        "entityName": "Aging & Disability Resource Center Governing Board",
+        "kind": "meeting",
+        "field": "agenda_url",
+        "label": "Agenda",
+        "blank": null
+      },
+      "nextPass": {
+        "owed": 12192,
+        "held": 4634,
+        "missing": 7558,
+        "stale": 0,
+        "stuck": 699
+      }
+    }
+  ]
+}

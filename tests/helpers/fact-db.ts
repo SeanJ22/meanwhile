@@ -50,6 +50,7 @@ export async function factDb(options: { readonly withResolver?: boolean; readonl
   if (options.withHourlyCounts) {
     await pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
     await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE, "utf8").replaceAll("--> statement-breakpoint", ""));
+    await pg.exec(readFileSync(join(import.meta.dirname, "..", "..", "lib", "db", "migrations", "RB-A3_lanes.sql"), "utf8"));
   }
   // Standalone fact-store tests need the real resolver, without the unrelated event-reconciliation tables.
   if (options.withResolver !== false) {

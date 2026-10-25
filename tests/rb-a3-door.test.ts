@@ -426,9 +426,28 @@ test("new and compatibility writers share one hourly count through a replacement
     assert.equal(live.total,2);
     assert.equal(live.observedIn,3,'each new or replacement fact counts once, independent of its caller');
     assert.equal(live.observedOut,1,'the superseded fact leaves live stock once');
+    assert.deepEqual(counts.filter(row=>row.stage.startsWith('publication:')).map(row=>[row.stage,row.observedIn]).sort(),
+      [['publication:checked',1],['publication:official',2]]);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM pg_trigger WHERE tgrelid='fact'::regclass AND tgname='count_hour_fact'"))[0]!.n,1);
+    assert.equal((await db.query("SELECT current_setting('meanwhile.fact_lane',true) AS lane"))[0]!.lane??'','');
     assert.deepEqual(await db.query("SELECT step FROM count_hour WHERE left(step,3)<>'v1:' AND step<>'counter start'"),[]);
     const before=await db.query('SELECT * FROM count_hour ORDER BY state,hour,step');
     assert.equal((await door(db,claim,clocks,next,{purge}) as {decision:string}).decision,'CONFIRM');
     assert.deepEqual(await db.query('SELECT * FROM count_hour ORDER BY state,hour,step'),before);
   } finally { await db.pg.close(); }
+});
+
+test("the shared counter records a hunter on an official page through the checked lane", async () => {
+  const db=await seeded(true);
+  try {
+    await door(db,input(),clocks,now,{purge});
+    const hunter=input({field:'office_fax',acquisition:'hunter',quote:'520-555-0100',
+      copy:{...input().copy,text:'Example City Council Arizona Call 520-555-0100'}});
+    assert.equal((await door(db,hunter,clocks,now,{purge}) as {decision:string}).decision,'PUBLISH');
+    assert.deepEqual((await db.query("SELECT provenance_kind FROM fact ORDER BY id")).map(row=>row.provenance_kind),['OFFICIAL','OFFICIAL']);
+    const window=countWindow(new Date(Date.now()+3_600_000).toISOString());
+    const counts=await readCounts({query:db.query},window.from,window.through);
+    assert.deepEqual(counts.filter(row=>row.stage.startsWith('publication:')).map(row=>[row.stage,row.observedIn]).sort(),
+      [['publication:checked',1],['publication:official',1]]);
+  } finally {await db.pg.close();}
 });

@@ -180,6 +180,8 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       if (repeat) return { decision, factId: Number(repeat.id) };
     }
     if (live && row) await query("UPDATE fact SET status = 'superseded' WHERE id = $1", [row.id]);
+    // The shared fact trigger consumes this transaction-local lane on the insert.
+    if (live) await query("SELECT set_config('meanwhile.fact_lane',$1,true)", [fast ? "official" : "checked"]);
     const [inserted] = await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote,
         quote_start, second_copy_id, checked_at, live_at, held_reason, produced_by, cost_usd)
       VALUES ($1, $2, $3::jsonb, $4, $5, $6, $7, $8, $9, $10, $11, CASE WHEN $5 = 'live' THEN $11::timestamptz END, $12, $13, $14)

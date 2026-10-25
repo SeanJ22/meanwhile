@@ -4,6 +4,7 @@ const labels:Readonly<Record<string,string>>={
   FEC_FUNDING:"Federal campaign money",STATE_CAMPAIGN_FINANCE:"State campaign money",LOCAL_CAMPAIGN_FINANCE:"Local campaign money",
   CANDIDATE_PUBLICATION:"Candidate information",CANDIDATE_PROFILE:"Candidate profiles",BALLOT_CANDIDACY:"Candidates on the ballot",
   PRL_PROFILE:"Public statement profiles",DOTGOV_REFERENCE:"Government websites",OPERATIONAL_REFERENCE:"Source reference information",
+  "publication:official":"Official lane","publication:checked":"Checked lane",
 };
 export function countLabel(value:string):string {
   if(labels[value])return labels[value];

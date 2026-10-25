@@ -15,6 +15,8 @@ import { factClocks } from '../lib/facts/clocks.ts';
 import { readBodyFacts } from '../lib/facts/registry-overlay.ts';
 import { stateCoverage } from '../lib/reader/coverage.ts';
 import { districtCardSources } from '../lib/officials/card-sources.ts';
+import { readCounts } from '../lib/control-plane/line-keeper/read.ts';
+import { countWindow } from '../lib/counts/hour.ts';
 import type { RegistryRuntimeReadModel } from '../lib/registry/runtime-data-plane.ts';
 const dir=process.argv[2]??'.scratch/rb-a3';
 const wallClock=process.argv.includes('--wall-clock');
@@ -84,6 +86,11 @@ try {
  assert.deepEqual(projected.stateResponse,baseline.stateResponse);assert.deepEqual(projected.meetings,baseline.meetings);assert.deepEqual(projected.coverage.seats,baseline.coverage.seats);
  assert.deepEqual(projected.coverage.bodies.map((b:{bodyId:string})=>b.bodyId),baseline.coverage.bodies.map((b:{bodyId:string})=>b.bodyId));
  writeFileSync(`${dir}/mesa-copy-meetings.json`,JSON.stringify(projected));
+ const observedAt=new Date().toISOString(),window=countWindow(observedAt);
+ const counts=await readCounts({query:db.query},window.from,window.through,observedAt);
+ for(const lane of ['official','checked'])assert.equal(counts.find(row=>row.state==='AZ'&&row.stage===`publication:${lane}`)?.total,1);
+ writeFileSync(`${dir}/copy-admin-line.json`,JSON.stringify({version:2,checkedAt:observedAt,
+  hours:[{...window,measuredAt:observedAt,counts,waiting:null,problems:[],own:{bytesRead:0}}]}));
  const report={observedAt:new Date().toISOString(),clockStart:now.toISOString(),official,checked,nextRun:{intervalMs:PUBLISH_NOW_INTERVAL_MS,mode:wallClock?'wall-clock timer':'controlled clock',startedAt,passes,repeatUnchanged:true},sources:sources.map(s=>s.url),subject:id,
   reader:{name:generated.name,address:generated.officeContact?.address,bodiesRetained:baseline.coverage.bodies.length,meetingsRetained:baseline.meetings.length,seatsRetained:baseline.coverage.seats.length+baseline.stateResponse.value.coverage.seats.length},
   counts:await db.query('SELECT state,hour,step,n::int FROM count_hour ORDER BY state,hour,step'),queue:await db.query('SELECT place_id FROM rebuild_queue ORDER BY place_id')};

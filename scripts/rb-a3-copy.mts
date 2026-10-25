@@ -41,6 +41,7 @@ export async function openFactCopy(snapshot: FactSnapshot) {
       await db.query(`SELECT setval(pg_get_serial_sequence('${table}','id'),greatest(coalesce(max(id),0),1),count(*)>0) FROM ${table}`);
     await db.pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
     await db.pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8").replaceAll("--> statement-breakpoint",""));
+    await db.pg.exec(readFileSync(new URL("../lib/db/migrations/RB-A3_lanes.sql",import.meta.url),"utf8"));
     return db;
   } catch (error) {
     await db.pg.close();

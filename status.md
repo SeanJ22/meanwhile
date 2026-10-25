@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T06:33:28Z
+heartbeat: 2026-10-25T06:36:56Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Meeting proof on release 110, 2:30 AM EDT: not met yet
+- The routine pass on 110 (2:12 AM EDT) attempted 65 tasks, including 10 meetings and 25 voting sites; on 109 it was 1 to 5 meetings.
+- Every publish-now pass on 110 (1:57, 2:06, 2:14, 2:23 AM EDT) attempted 0 tasks and deferred 782 to 796 meeting boards, now with PASS_TIME_BUDGET: the state calendar programs reach their start after the 400 s launch window has closed.
+  - Timeline of the pass that started 2:15:07 AM EDT: first digest (ACTIVITY) at +203 s; launch decisions at +485 s. Before 106 that step came at about +245 s.
+- Meeting reads per ET hour: 1 AM 43, 2 AM so far 27.
+- A River helper is placing the 485 s on the pre-admission steps (counts only) and will put a fix on stream/river-meet3. It ships alone as soon as it gates.
 
 ### 2 AM EDT
 - Live for readers: release 110. The runner switched to it about 1:50 AM EDT; its first publish-now pass (1:57 AM) attempted 0 tasks, and the first routine pass on 110 is running.

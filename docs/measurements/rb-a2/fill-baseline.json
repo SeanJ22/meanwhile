@@ -211,5 +211,52 @@
       }
     ],
     "mapConnectionProved": false
+  },
+  "legacyProductionComparisonPlan": {
+    "source": "Current committed data/derived/zip-divisions shards; all ordinary and fringe links",
+    "manifestReportedEdges": 272526,
+    "currentZips": 33791,
+    "currentOrdinaryLinks": 217026,
+    "currentFringeLinks": 86742,
+    "currentUniqueLinks": 303768,
+    "publicReferenceParameterBytes": 8210626,
+    "largestPrefixParameterBytes": 233832,
+    "fullComparisonRun": false,
+    "method": "100 bounded ZIP-prefix queries return only counts and gains by state; no geometry or membership rows returned.",
+    "emptyMapDiagnostic": {
+      "observed_at": "2026-10-25T19:46:43.778Z",
+      "role": "readonly",
+      "read_only": "on",
+      "has_zip_rows": false,
+      "kind": "negative diagnostic on one ZIP prefix; not a completed map proof",
+      "comparison": {
+        "prefixes": 1,
+        "legacyZips": 313,
+        "localUniqueLinks": 3080,
+        "parameterBytes": 59768,
+        "resultBytes": 340,
+        "totals": {
+          "ALL": {
+            "legacy_links": 3080,
+            "missing_legacy_links": 3080,
+            "new_nontribal_links": 0,
+            "gaining_zips": 0
+          },
+          "AZ": {
+            "legacy_links": 3033,
+            "missing_legacy_links": 3033,
+            "new_nontribal_links": 0,
+            "gaining_zips": 0
+          },
+          "NATIONAL": {
+            "legacy_links": 47,
+            "missing_legacy_links": 47,
+            "new_nontribal_links": 0,
+            "gaining_zips": 0
+          }
+        },
+        "method": "All ordinary and fringe committed links checked in SQL; gains are distinct nontribal ZIP/place pairs across held years, with stateless links reported nationally. No geometry, source payloads or membership records returned."
+      }
+    }
   }
 }

@@ -205,6 +205,37 @@ test("an overlapping pin publisher keeps the winning live point and the followin
   }finally{await db.pg.close();}
 });
 
+test("pin deadlocks retry fresh transactions with one saved Census response, while persistent and unrelated errors remain failures",async()=>{
+  for(const scenario of [{code:"40P01",failures:2,attempts:3,published:1},{code:"40P01",failures:Infinity,attempts:3,published:0},
+    {code:"23503",failures:1,attempts:1,published:0}]){
+    const db=await setup([online]);let attempts=0,requests=0;
+    const failure=Object.assign(new Error(scenario.code==="40P01"?"deadlock detected":"foreign key violation"),{code:scenario.code});
+    const facts={...db,transaction:async<T>(work:Parameters<typeof db.transaction<T>>[0])=>db.transaction(query=>work(async(sql,params=[])=>{
+      if(!sql.startsWith("INSERT INTO fact "))return query(sql,params);
+      attempts++;
+      assert.equal((await query("SELECT id FROM fact WHERE field='map_pin'")).length,0,"the failed transaction rolled back");
+      const result=await query(sql,params);
+      if(attempts<=scenario.failures)throw failure;
+      return result;
+    }))};
+    try{
+      const args={facts,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000};
+      const first=await publishHeldMeetingPins({...args,fetchImpl:async()=>{requests++;return new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")));}});
+      assert.equal(attempts,scenario.attempts);assert.equal(requests,1);assert.equal(first.published,scenario.published);
+      assert.equal(first.failures.length,Number(!scenario.published));
+      if(!scenario.published)assert.equal(first.failures[0],`${online.id}: ${failure.message}`);
+      assert.equal((await db.query("SELECT id FROM fact WHERE field='map_pin' AND status='live'")).length,scenario.published);
+      assert.equal((await db.query("SELECT id FROM source_copy WHERE final_url LIKE 'https://geocoding.geo.census.gov/%'")).length,1);
+      if(scenario.published){
+        const [read]=withSittingFacts([online],(await readSittingFacts(db.query,[BODY])).get(BODY)!);
+        assert.equal(read.mapPin?.basis,"BODY_OFFICE");assert.equal(read.mapPin?.coordinateCheckedAt,NOW);
+        const next=await publishHeldMeetingPins({...args,fetchImpl:async()=>{throw Error("the committed point must not be geocoded again");}});
+        assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+      }
+    }finally{await db.pg.close();}
+  }
+});
+
 test("Raleigh's own saved agenda letterhead supplies a board-office pin without a venue list or any changed source fact",async()=>{
   const division="ocd-division/country:us/state:nc/county:wake",body=`${division}#governing`;
   const meeting:Meeting={...online,id:"legistar:wake:6264",bodyId:body,ocdId:division,bodyName:"Board of Commissioners",

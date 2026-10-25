@@ -796,7 +796,9 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
   // Free national work: every Census government's governing board, a state at a time, beside the steps below.
-  const governingBoards = makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), more: () => Date.now() < deadlineMs })
+  // It gets its own ten minutes: about 81,000 board facts would otherwise take two days of one-minute maintenance budgets.
+  const governingDeadlineMs = Math.min(PASS_REPAIR_DEADLINE_MS, Date.now() + 10 * 60_000);
+  const governingBoards = makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), more: () => Date.now() < governingDeadlineMs })
     .then(report => {
       if (report.states.length) console.log(`RCD_TASK census-governing-bodies: ${report.states.join(", ")}: ${report.live} board facts live, ` +
         `${report.confirmed} confirmed, ${report.held} held, ${report.unheld} governments not yet held on a place` +

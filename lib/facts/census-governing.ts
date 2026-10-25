@@ -16,8 +16,8 @@ import type { Clocks, FactDb, Query } from "./publish.ts";
 export const CENSUS_GOVERNING_CURSOR = "census-governing-bodies";
 const FIRST_STATE = "or";
 const BATCH = 200;
-/** One reader pool holds four connections; the other maintenance steps keep one. */
-const PARALLEL = 3;
+/** One reader pool holds four connections; two stay free for the pass's other reader work while this runs for minutes. */
+const PARALLEL = 2;
 
 /** The Census record's own fields each governing board carries: the government's mailing address and recorded website. */
 const FIELDS = [["office_address", "mailingAddress"], ["homepage", "website"]] as const;

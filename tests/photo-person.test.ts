@@ -21,7 +21,7 @@ test("same names do not join people and declared native aliases do",()=>{
 test("a canonical person and its declared source aliases use one portrait without a name join",()=>{
   const executive=STATEWIDE_EXECUTIVES.find(row=>row.holder.id === 'statewide:nh/governor')!;
   const person:Officeholder={...executive.holder,id:'plural:nh:source-person',personId:'plural:source-person',
-    nativeIds:{reader:[executive.holder.id]},name:executive.holder.name,level:'STATE',state:'NH',termStart:'',termEnd:'',photo:null,
+    nativeIds:{reader:[executive.holder.id]},sourceHolders:undefined,name:executive.holder.name,level:'STATE',state:'NH',termStart:'',termEnd:'',photo:null,
     provenance:{sourceUrl:executive.sourceUrl,sourceOrg:executive.sourceOrg,collectedAt:executive.collectedAt,verifiedAt:null}};
   const roster:OfficeholderSet={scope:'NH',generatedAt:executive.collectedAt,officeholders:[person],divisions:[],unmatched:[]};
   const runtime={formatVersion:1,registry:{generatedAt:executive.collectedAt,divisions:[],bodies:[]},statewideExecutives:[executive],

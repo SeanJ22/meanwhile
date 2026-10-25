@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-10-24T22:58:22.989417+00:00",
+  "codeSha": "20d05bce493af82044a812de919f7a0bbc19e74a",
+  "readOnly": true,
+  "databaseWrites": 0,
+  "readerDatabase": {
+    "projectId": "tiny-hill-13996172",
+    "branchId": "br-delicate-lab-ax02xuo5",
+    "role": "readonly"
+  },
+  "controlPlaneDatabase": {
+    "projectId": "withered-sunset-39821877",
+    "branchId": "br-tiny-frog-aeufpjeq",
+    "role": "wtp_cp_release_readonly"
+  },
+  "baselineDuplicateCandidatesBefore": 178,
+  "changedBallotPointers": 54,
+  "unchangedBallotStates": [
+    "GU",
+    "PR"
+  ],
+  "refreshedAuthorityPointers": 72,
+  "refreshedBodyRosterStates": [
+    "NH",
+    "NJ"
+  ],
+  "currentTotals": {
+    "linkedAfter": 4074,
+    "duplicateCandidatesAfter": 0,
+    "candidatesAfter": 19669,
+    "ticketsShownAsOne": 88,
+    "peopleShown": 19757,
+    "aliasesKept": 40030
+  },
+  "activity": {
+    "familyTargetGroups": 18,
+    "distinctKeys": 17,
+    "records": 30,
+    "unresolvedGroups": 0
+  },
+  "missingOriginalAliases": 0,
+  "changesFromPriorCurrentReaderReport": [],
+  "snapshotPointerDrift": [],
+  "metadataCapturedAt": "2026-10-24T22:57:25.780Z",
+  "automaticAz": {
+    "atEastern": "2026-10-24T18:38:34.443000-04:00",
+    "testedSha": "d3416a24f38edb1c331e9dab4d92bc3bfa4e399b",
+    "action": "SKIP",
+    "reason": "State file unchanged",
+    "digestId": "routine-civic-data-supervisor:meanwhile-runner:2026-10-24T22:28:09.136Z:decisions:0:az:50",
+    "automaticDecisionPassed": true,
+    "changedPublication": false
+  },
+  "auditNotes": [
+    "Original raw baseline preserves 178 duplicates before the fix and 89 raw tickets; current reader count excludes documented withdrawn Ohio ticket and is 88.",
+    "Initial temp count loop omitted two running-mate aliases on withdrawn ticket filing history. Corrected to use ballotCandidatePeople for filings, matching current target reader. Initial output preserved in counts-before-filing-alias-fix.json.",
+    "LA fetch retried successfully after connector catalog change. AZ full registry hydration caused connector transport closure; successful bounded fetch matches original officialCandidacies/statewideExecutives authority slice.",
+    "The tsx CLI IPC socket was restricted by the sandbox; node --import tsx executed the same local replay successfully."
+  ],
+  "evidence": {
+    "ballotPointers": "/tmp/cl01-current-holdings-20261024T224658-comparison.json",
+    "payloadComparison": "/tmp/cl01-current-holdings-20261024T224658-payload-comparison.json",
+    "aliasesAndActivity": "/tmp/cl01-current-holdings-20261024T224658-alias-replay.json",
+    "counts": "/tmp/cl01-current-holdings-20261024T224658-counts.json",
+    "authorityRefresh": "/tmp/cl01-current-holdings-20261024T224658-authority-refresh.json",
+    "finalPointers": "/tmp/cl01-current-holdings-20261024T224658-final-pointers.json",
+    "automaticAz": "/tmp/cl01-current-holdings-20261024T224658-az-scheduled-final.json"
+  }
+}

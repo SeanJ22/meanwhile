@@ -5,7 +5,7 @@ import { factCommentAccessFromRows } from "../facts/comment-read.ts";
 import { sittingFactsFromRows, withSittingFacts } from "../facts/meeting-read.ts";
 import type { Query } from "../facts/publish.ts";
 import { bodyFieldsFromRows, type BodyFacts } from "../facts/registry-overlay.ts";
-import { factRostersFromRows } from "../facts/roster-read.ts";
+import { factRostersFromRows, ROSTER_PERSON_FIELDS } from "../facts/roster-read.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import { collapseDuplicateSittings } from "../sources/composite/index.ts";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "../meetings/sitting-merge.ts";
@@ -31,6 +31,7 @@ import { readerDatabaseQuery } from "./database.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
+const rosterPersonFieldsSql = ROSTER_PERSON_FIELDS.map(field => `'${field}'`).join(",");
 const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
   `'source:${encodeURIComponent(route.meetingSource)}:body:${encodeURIComponent(route.bodyId)}'`).join(",") || "NULL";
 
@@ -154,7 +155,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   SELECT f.entity_id AS body_id,f.body_name,substr(f.field,8) AS person_id,f.value,f.quote,f.checked_at,f.provenance_kind,f.url,
     coalesce((SELECT x.value FROM entity_external_id x WHERE x.entity_id=substr(f.field,8) AND x.scheme='roster-member' LIMIT 1),'') AS shown_id,
     coalesce((SELECT jsonb_object_agg(p.field,jsonb_build_object('value',p.value,'quote',p.quote,'url',s.url,'checked',p.checked_at))
-      FROM fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'),'{}'::jsonb) AS person
+      FROM fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'
+        AND (p.field=ANY(ARRAY[${rosterPersonFieldsSql}]) OR p.field=ANY(ARRAY(SELECT field||':'||f.entity_id FROM unnest(ARRAY[${rosterPersonFieldsSql}]) field)))),'{}'::jsonb) AS person
   FROM body_facts f WHERE $8::text[] IS NULL AND f.field LIKE 'member:%'
 ), runtime_rosters AS MATERIALIZED (
   SELECT CASE WHEN $8::text[] IS NULL THEN header.value ELSE (header.value-'members') || jsonb_build_object('members','[]'::jsonb) END AS item,

@@ -1,0 +1,260 @@
+{
+  "recordedAt": "2026-10-24T18:02:58.134Z",
+  "scope": "Preserved failing replay: native profile bridge before proven-alias portrait rebinding, compared with original merge",
+  "before": 115,
+  "after": 112,
+  "photosBefore": 92,
+  "photosAfter": 89,
+  "lost": [
+    {
+      "id": "az-legislature:2326",
+      "photo": {
+        "url": "/api/portraits/officials/8ae772d4653a68bf6e1eb19d4349204b756708b1f0afa54210eaf9bbaadcd271.webp",
+        "license": null,
+        "sourceUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/NGUYEN.jpg",
+        "attribution": "Portrait: https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2326",
+        "collectedAt": "2026-10-24T06:45:47.392Z",
+        "verification": {
+          "name": "Quang H Nguyen",
+          "basis": "OWN_PAGE",
+          "width": 900,
+          "height": 1125,
+          "sources": [
+            {
+              "url": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2326",
+              "vaultKey": "project/freshness/source/official-person-profile/releases/323aee65df63cfab9af6b81ed6927c70978107b5ea4339e05510249c1deee18d/5f19c22953c5c59254d6d1398b263ab6da7c30f3d522d256c0719a914959dde8.bin",
+              "contentHash": "sha256-5f19c22953c5c59254d6d1398b263ab6da7c30f3d522d256c0719a914959dde8",
+              "retrievedAt": "2026-10-24T06:45:38.499Z"
+            }
+          ],
+          "imageUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/NGUYEN.jpg",
+          "personId": "az-legislature:2326",
+          "checkedAt": "2026-10-24T07:13:10.027Z",
+          "imageHash": "sha256-8ae772d4653a68bf6e1eb19d4349204b756708b1f0afa54210eaf9bbaadcd271",
+          "ownPageUrl": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2326",
+          "attribution": {
+            "name": "Quang H Nguyen",
+            "sourceUrl": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2326"
+          },
+          "decoderVersion": "sharp-0.35.3/static-webp/1",
+          "sourceImageHash": "sha256-d3b7a5763af95cb5dc8daf6ad27f5fc2ddf627aa9cb26b07523b5fcbea079779",
+          "imageRetrievedAt": "2026-10-24T06:45:47.392Z"
+        }
+      },
+      "after": [
+        {
+          "id": "plural:az:a4f969ab-e79a-4364-9a93-ad8c75ccf668",
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": "az-legislature:2346",
+      "photo": {
+        "url": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+        "license": null,
+        "sourceUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/VILLEGAS.jpg",
+        "attribution": "Portrait: https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2346",
+        "collectedAt": "2026-10-24T07:13:12.917Z",
+        "verification": {
+          "name": "Betty J Villegas",
+          "basis": "OWN_PAGE",
+          "width": 956,
+          "height": 1195,
+          "sources": [
+            {
+              "url": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2346",
+              "vaultKey": "project/freshness/source/official-person-profile/releases/ff0e53491555d30407d15e11045f78f8c69901d0229950e5eccbde9c354170b2/d58e9e2788df7d618db912d4a9db7bf1e96825df4168eb4fec2556e25b38bc04.bin",
+              "contentHash": "sha256-d58e9e2788df7d618db912d4a9db7bf1e96825df4168eb4fec2556e25b38bc04",
+              "retrievedAt": "2026-10-24T06:45:59.593Z"
+            }
+          ],
+          "imageUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/VILLEGAS.jpg",
+          "personId": "az-legislature:2346",
+          "checkedAt": "2026-10-24T07:13:10.919Z",
+          "imageHash": "sha256-ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15",
+          "ownPageUrl": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2346",
+          "attribution": {
+            "name": "Betty J Villegas",
+            "sourceUrl": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2346"
+          },
+          "decoderVersion": "sharp-0.35.3/static-webp/1",
+          "sourceImageHash": "sha256-6f9242b2dbc17369577679143d9816440952599d001f739c935ee1a1e3ea8ae4",
+          "imageRetrievedAt": "2026-10-24T07:13:12.917Z"
+        }
+      },
+      "after": [
+        {
+          "id": "plural:az:81d12f3a-b635-4111-be8d-a71d2f7565f2",
+          "photo": null
+        }
+      ]
+    },
+    {
+      "id": "az-legislature:2381",
+      "photo": {
+        "url": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+        "license": null,
+        "sourceUrl": "https://www.azleg.gov/alisImages/MemberPhotos/57leg/Senate/GONZALES.jpg",
+        "attribution": "Portrait: https://www.azleg.gov/senate-member/?legislature=57&legislator=2381",
+        "collectedAt": "2026-10-24T07:13:14.573Z",
+        "verification": {
+          "name": "Sally Ann Gonzales",
+          "basis": "OWN_PAGE",
+          "width": 1638,
+          "height": 2048,
+          "sources": [
+            {
+              "url": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2381",
+              "vaultKey": "project/freshness/source/official-person-profile/releases/83e61cd969736d281424c44219211cdc11a0b7d442f1676686ce7c9c3fd3f13f/8d8a1ddadabed207d55b36f652bb913368788b96305a75dab9f71fb69bdfc175.bin",
+              "contentHash": "sha256-8d8a1ddadabed207d55b36f652bb913368788b96305a75dab9f71fb69bdfc175",
+              "retrievedAt": "2026-10-24T06:46:19.831Z"
+            }
+          ],
+          "imageUrl": "https://www.azleg.gov/alisImages/MemberPhotos/57leg/Senate/GONZALES.jpg",
+          "personId": "az-legislature:2381",
+          "checkedAt": "2026-10-24T07:13:12.566Z",
+          "imageHash": "sha256-f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a",
+          "ownPageUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2381",
+          "attribution": {
+            "name": "Sally Ann Gonzales",
+            "sourceUrl": "https://www.azleg.gov/senate-member/?legislature=57&legislator=2381"
+          },
+          "decoderVersion": "sharp-0.35.3/static-webp/1",
+          "sourceImageHash": "sha256-3e682ceb7f6bf875f3b5d67217e24b0bea49c1c7b3f8e9893db73ac65e001df5",
+          "imageRetrievedAt": "2026-10-24T07:13:14.573Z"
+        }
+      },
+      "after": [
+        {
+          "id": "plural:az:3c965e03-1e51-4f10-a037-4fb2f35292c5",
+          "photo": null
+        }
+      ]
+    }
+  ],
+  "examples": [
+    {
+      "id": "plural:az:6dba6afa-b274-4273-b8c6-270d27214eee",
+      "name": "Alma Hernandez",
+      "photo": {
+        "url": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+        "license": null,
+        "sourceUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/HERNANDEZ_A.jpg",
+        "attribution": "Portrait: https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312",
+        "collectedAt": "2026-10-24T06:53:35.608Z",
+        "verification": {
+          "name": "Alma Hernandez",
+          "basis": "OWN_PAGE",
+          "width": 811,
+          "height": 1014,
+          "sources": [
+            {
+              "url": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312",
+              "vaultKey": "project/freshness/source/official-person-profile/releases/5446e949e94e1c2212cff2d2464d184192ef567d3ed0d10253e3b87bd19c4567/2ed613be7cffa734e8930dfff071b40f031f05e77480c82f7bae27cbdd225b81.bin",
+              "contentHash": "sha256-2ed613be7cffa734e8930dfff071b40f031f05e77480c82f7bae27cbdd225b81",
+              "retrievedAt": "2026-10-24T06:53:31.774Z"
+            }
+          ],
+          "imageUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/HERNANDEZ_A.jpg",
+          "personId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+          "checkedAt": "2026-10-24T07:14:07.803Z",
+          "imageHash": "sha256-0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c",
+          "ownPageUrl": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312",
+          "attribution": {
+            "name": "Alma Hernandez",
+            "sourceUrl": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312"
+          },
+          "decoderVersion": "sharp-0.35.3/static-webp/1",
+          "sourceImageHash": "sha256-ca9bc86bdadc902ec567ea2278697c652f936c85a047dc100ba31216f153b83f",
+          "imageRetrievedAt": "2026-10-24T06:53:35.608Z"
+        }
+      },
+      "nativeIds": {
+        "plural": [
+          "6dba6afa-b274-4273-b8c6-270d27214eee"
+        ],
+        "reader": [
+          "plural:az:6dba6afa-b274-4273-b8c6-270d27214eee",
+          "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+          "az-legislature:2312"
+        ],
+        "ocd-person": [
+          "ocd-person/6dba6afa-b274-4273-b8c6-270d27214eee"
+        ],
+        "az-legislature": [
+          "1893",
+          "2033",
+          "2168",
+          "2312"
+        ]
+      }
+    },
+    {
+      "id": "plural:az:81d12f3a-b635-4111-be8d-a71d2f7565f2",
+      "name": "Betty J Villegas",
+      "photo": null,
+      "nativeIds": {
+        "plural": [
+          "81d12f3a-b635-4111-be8d-a71d2f7565f2"
+        ],
+        "reader": [
+          "plural:az:81d12f3a-b635-4111-be8d-a71d2f7565f2",
+          "plural:81d12f3a-b635-4111-be8d-a71d2f7565f2",
+          "az-legislature:2346"
+        ],
+        "ocd-person": [
+          "ocd-person/81d12f3a-b635-4111-be8d-a71d2f7565f2"
+        ],
+        "az-legislature": [
+          "2274",
+          "2346"
+        ]
+      }
+    },
+    {
+      "id": "plural:az:3c965e03-1e51-4f10-a037-4fb2f35292c5",
+      "name": "Sally Ann Gonzales",
+      "photo": null,
+      "nativeIds": {
+        "plural": [
+          "3c965e03-1e51-4f10-a037-4fb2f35292c5"
+        ],
+        "reader": [
+          "plural:az:3c965e03-1e51-4f10-a037-4fb2f35292c5",
+          "plural:3c965e03-1e51-4f10-a037-4fb2f35292c5",
+          "az-legislature:2381"
+        ],
+        "ocd-person": [
+          "ocd-person/3c965e03-1e51-4f10-a037-4fb2f35292c5"
+        ],
+        "az-legislature": [
+          "1919",
+          "1957",
+          "2126",
+          "2381"
+        ],
+        "legacy_openstates": [
+          "AZL000148",
+          "AZL000257"
+        ]
+      }
+    }
+  ],
+  "variant": "Preserved failing native bridge before portrait alias rebinding",
+  "mergeSourceSha256": "e4bdd3509fb0a37d8d5458ab3416f9f68e0daaa238ba7788bd77f16c8f1b4cd4",
+  "snapshotSources": [
+    {
+      "key": "STATE_LEGISLATOR:US-AZ",
+      "version": "cv-54148f6ed780754aa7b0c2815e21a6a8"
+    },
+    {
+      "key": "STATE_LEGISLATOR:US-AZ:openstates-people:v1",
+      "version": "cv-5f243ee1892ab0c255e34c21a16afe84"
+    },
+    {
+      "key": "STATE_LEGISLATOR:US-AZ:people:portraits:v1",
+      "version": "cv-c6a2e1fca4c1a16dfa554dd285602e73"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { readPromotedCivicData,type PromotedCivicDataReadOptions,type PromotedEdgeEntry } from "../../civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
 import { bulkProjectionIssue } from "./publication.ts";
-import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson } from "./bills.ts";
+import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,publicDatasetIndex,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson } from "./bills.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
 import { readCanonicalShelf } from "../../reader/canonical.ts";
 import { readerCanonicalEntry } from "../../reader/canonical-context.ts";
@@ -38,11 +38,15 @@ export async function readBulkProjection(scope:string,options:BulkReadOptions={}
   options=await exactBulkOptions([scope],options);
   const result=await readPromotedCivicData<BillSession|BillPart|BillIndex>("STATE_BILL",scope,options);
   if(result.kind==="PROMOTED") {
-    if(result.metadata.sourceId!=="legiscan-bills"||result.value.parserVersion!==LEGISCAN_BULK_PARSER)throw Error("LEGISCAN_BULK_SOURCE_INVALID");
+    if(result.metadata.sourceId!=="legiscan-bills")throw Error("LEGISCAN_BULK_SOURCE_INVALID");
+    if(result.value.kind==="INDEX")publicDatasetIndex(result.value);
+    else if(result.value.parserVersion!==LEGISCAN_BULK_PARSER)throw Error("LEGISCAN_BULK_SOURCE_INVALID");
     if(options.verifySavedSource){
       const store=options.store??new PostgresRoutineDataStore();
       const candidate=await store.readCandidate(result.metadata.versionId!);
-      if(!candidate||candidate.candidate.normalization.parserVersion!==LEGISCAN_BULK_PARSER||bulkProjectionIssue(candidate.candidate,result.value)!==null)throw Error("LEGISCAN_BULK_PROJECTION_INVALID");
+      const parser=candidate?.candidate.normalization.parserVersion;
+      const supported=result.value.kind==="INDEX"?["legiscan-bulk/2",LEGISCAN_BULK_PARSER].includes(parser??""):parser===LEGISCAN_BULK_PARSER;
+      if(!candidate||!supported||bulkProjectionIssue(candidate.candidate,result.value)!==null)throw Error("LEGISCAN_BULK_PROJECTION_INVALID");
     }
   }
   return result;

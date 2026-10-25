@@ -1,10 +1,11 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
+import { personName } from "../officials/person-name.ts";
 import type { Provenance as FieldSource } from "../sources/types.ts";
 import { boundedIndexOf, normalizeText, type CheckEntity, type FieldKind, type SavedCopy } from "./check.ts";
 import { captureProvenance } from "./capture.ts";
 import { ensureEntity, resolvePerson } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome } from "./publish.ts";
+import { openBlank, publishClaim, type Clocks, type FactDb, type PublishInput, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
@@ -37,6 +38,7 @@ interface RosterFactsInput {
   /** Every member row on the page was read, so a member it no longer lists has left. */
   readonly complete: boolean;
   readonly producedBy: string;
+  readonly acquisition?: PublishInput["acquisition"];
   readonly purge?: ReaderCachePurger;
   /** False when the caller publishes the body's name itself from this page. */
   readonly nameFromPage?: boolean;
@@ -59,9 +61,6 @@ export interface RosterFactsReport {
 const text = (value: unknown): string | null => (typeof value === "string" && value.trim() ? value.trim() : null);
 export const nameKey = (name: string) => name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
-const NAVIGATION = new Set(["contact us", "contact information", "staff directory", "email us", "town hall", "member name"]);
-/** A single word ("Actions", "Menu") or a navigation label is page furniture, never an officeholder's name. */
-const personName = (name: string) => /\s/.test(name.trim()) && !NAVIGATION.has(name.trim().toLowerCase().replace(/\s+/g, " "));
 
 const CONTACTS = [["email", "email"], ["phone", "phone"], ["websiteUrl", "website"]] as const;
 const TERMS = [["termNote", "term_note"], ["termStart", "term_start"], ["termEnd", "term_end"]] as const;
@@ -75,13 +74,13 @@ function bodyNameAsGiven(pageText: string, name: string): { readonly name: strin
 
 /** A governing board with no verified name takes the one its own saved page writes for it; a page that does not name it leaves the name open. */
 export async function publishBodyNameFromPage(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
-  input: { readonly entity: CheckEntity; readonly copy: SavedCopy; readonly provenance: ReturnType<typeof captureProvenance>; readonly producedBy: string; readonly purge?: ReaderCachePurger },
+  input: { readonly entity: CheckEntity; readonly copy: SavedCopy; readonly provenance: ReturnType<typeof captureProvenance>; readonly producedBy: string; readonly acquisition?: PublishInput["acquisition"]; readonly purge?: ReaderCachePurger },
   clocks: Clocks, now: Date): Promise<PublishOutcome | null> {
   if ((await db.query("SELECT 1 FROM fact WHERE entity_id = $1 AND field = 'name' AND status = 'live' LIMIT 1", [input.entity.id])).length) return null;
   const found = governingBodyNameOn(input.copy.text, input.entity.id) ?? bodyNameAsGiven(input.copy.text, input.entity.fullName);
   if (!found) return null;
   return publishClaim(db, { entity: input.entity, field: "name", fieldKind: "officeholder", provenance: input.provenance, value: found.name, valueText: found.name,
-    quote: found.quote, copy: input.copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge });
+    quote: found.quote, copy: input.copy, producedBy: input.producedBy, acquisition: input.acquisition ?? "walker", costUsd: 0 }, clocks, now, { purge: input.purge });
 }
 
 /** One saved roster page becomes facts, each on its own: who sits on the body, their title, contacts and term. */
@@ -115,7 +114,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
   const seated = new Set<string>();
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);
-    if (!name || !written || !personName(name)) {
+    if (!name || !written || input.acquisition !== "loader" && !personName(name)) {
       const reason = name ? "NAME_NOT_A_PERSON" : "NAME_NOT_READ";
       await openBlank(db.query, { entityId: body.id, field: `member-row:${member.recordId}`, stage: "READ", reason,
         detail: capture.evidence.canonicalUrl, retryMinutes: clocks.retryMinutes("officeholder") });
@@ -131,7 +130,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     const person: CheckEntity = { id: personId, fullName: written, stateName: null, hosts: bodyEntity.hosts, externalIds: [] };
     const claim = async (entity: CheckEntity, field: string, fieldKind: FieldKind, value: unknown, valueText: string, sourceField: string) => {
       const quote = member.fieldSources?.[sourceField]?.quote ?? valueText;
-      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge: input.purge }),
+      count(await publishClaim(db, { entity, field, fieldKind, provenance, value, valueText, quote, copy, producedBy: input.producedBy, acquisition: input.acquisition ?? "walker", costUsd: 0 }, clocks, now, { purge: input.purge }),
         member.recordId, sourceField);
     };
     await claim(bodyEntity, `member:${personId}`, "officeholder", { name, office }, written, "name");
@@ -144,14 +143,14 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     for (const [from, field] of TERMS) {
       const value = text(member.fields[from]);
       const quote = member.fieldSources?.[from]?.quote;
-      if (!value || (from !== "termNote" && !quote)) continue;
-      if (from !== "termNote" && boundedIndexOf(normalizeText(quote!).toLowerCase(), normalizeText(written).toLowerCase()) === -1) {
+      if (!value || (input.acquisition !== "loader" && from !== "termNote" && !quote)) continue;
+      if (input.acquisition !== "loader" && from !== "termNote" && boundedIndexOf(normalizeText(quote!).toLowerCase(), normalizeText(written).toLowerCase()) === -1) {
         await openBlank(db.query, { entityId: personId, field: `${field}:${body.id}`, stage: "CHECK", reason: "TERM_QUOTE_NOT_ABOUT_MEMBER",
           detail: quote!, retryMinutes: clocks.retryMinutes("officeholder") });
         count({ blank: "TERM_QUOTE_NOT_ABOUT_MEMBER" }, member.recordId, from);
         continue;
       }
-      await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" ? value : quote!, from);
+      await claim(person, `${field}:${body.id}`, "officeholder", value, from === "termNote" || input.acquisition === "loader" ? value : quote!, from);
     }
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {
@@ -162,13 +161,14 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     tally.departed = gone.length;
     if (gone.length) await invalidateReaderCache(readerCacheScopeForPublication(body.state ?? body.id), input.purge);
   }
-  if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, purge: input.purge }, clocks, now);
+  if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge: input.purge }, clocks, now);
   return tally;
 }
 
 /** Facts about a body itself (its name, schedule, agenda link, office address and phone), each in the page's own words. */
 export async function publishBodyFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: { readonly bodyId: string; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+    readonly acquisition?: PublishInput["acquisition"];
     readonly purge?: ReaderCachePurger;
     readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url" | "office_address" | "office_phone"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
@@ -180,9 +180,9 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
     const out: PublishOutcome[] = [];
     for (const { field, value, quote } of input.facts) {
       out.push(await publishClaim(db, { entity, field, fieldKind: field === "name" ? "officeholder" : field.startsWith("office_") ? "contact" : "meeting", provenance, value, valueText: quote, quote, copy,
-        producedBy: input.producedBy, costUsd: 0 }, clocks, now, { purge }));
+        producedBy: input.producedBy, acquisition: input.acquisition ?? "walker", costUsd: 0 }, clocks, now, { purge }));
     }
-    if (!input.facts.some(row => row.field === "name")) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy, purge }, clocks, now);
+    if (!input.facts.some(row => row.field === "name")) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge }, clocks, now);
     return out;
   }, input.purge);
 }

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -28,6 +29,10 @@ import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts"
 import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
+import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-refresh-contracts.ts";
+import { routineTaskDue } from "../lib/civic-data/runner.ts";
+import { CENSUS_STATE_IDENTITIES_URL, refreshStateBinding } from "../lib/civic-data/state-binding-refresh.ts";
+import type { KnownRelease } from "../lib/sources/known-release.ts";
 
 function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
   const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
@@ -47,9 +52,9 @@ function registryFixtureForState(state: string, value: RegistryRuntimeReadModel 
       [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore(), value?: RegistryRuntimeReadModel): MemoryRoutineDataStore {
   const original = registryTransferImport();
-  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const payload = registryFixtureForState(state, value), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
   const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
   const candidate = { ...original.record.candidate, scope,
     retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
@@ -109,6 +114,71 @@ const profileUrl = "https://ohiohouse.gov/members/allison-russo";
 const governorUrl = "https://governor.ohio.gov/about/governor-mike-dewine";
 const governor = capture("<html><head><title>Governor Mike DeWine | Governor of Ohio</title></head><body><h1>Governor Mike DeWine</h1><p>The 70th Governor of the State of Ohio.</p></body></html>", governorUrl);
 const profile = capture(`<html><head><title>Representative Allison Russo | Ohio House</title></head><body><h1>Representative Allison Russo</h1><p>District 7</p></body></html>`, profileUrl);
+
+test("navigation text is rejected before a statewide record enters publication", async () => {
+  const s = await store(), facts = await seeded();
+  const result = await publishNationalPlaceSources({ state: "OH", store: s, facts, clocks, now: NOW, divisions, geographyCaptures: geography,
+    sources: { officials: [{ discoveryId: "menu-label", divisionId: OH, name: "Actions", officeTitle: "Governor", officialUrl: governorUrl,
+      document: { url: governorUrl, capture: capture("<h1>Ohio Governor</h1><nav>Actions</nav>", governorUrl) } }] } });
+  assert.ok(result.gaps.some(row => row.detail === "STATEWIDE_OFFICIAL_NOT_A_PERSON"));
+  assert.equal((await readRegistryRuntimePrior(s, NOW, "OH"))!.payload.statewideExecutives.some(row => row.holder.name === "Actions"), false);
+});
+
+test("an unrelated scheduled publication cleans malformed carried statewide rows and cannot restore them on the next run", async () => {
+  const fixture = registryFixtureForState("OH");
+  const holder = { id: "statewide:oh/menu", name: "Actions", officeTitle: "Governor", partyLabel: null, websiteUrl: governorUrl, sourceUrl: governorUrl,
+    email: null, phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null, termEnd: null, birthDate: null };
+  const bad = { stateOcdId: OH, holder, sourceUrl: governorUrl, sourceOrg: "Ohio Governor", collectedAt: "2026-09-28", verification: "PAGE_FETCHED" as const };
+  const s = stateRegistryRuntimeStore("OH", new MemoryRoutineDataStore(), { ...fixture, statewideExecutives: [...fixture.statewideExecutives, bad] });
+  const facts = await seeded();
+  const result = await publishNationalPlaceSources({ state: "OH", store: s, facts, clocks, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [] } });
+  assert.deepEqual(result.gaps, []);
+  assert.ok(result.promotedVersionId);
+  assert.equal((await readRegistryRuntimePrior(s, NOW, "OH"))!.payload.statewideExecutives.some(row => row.holder.id === holder.id), false);
+  const task = STATE_BINDING_REFRESH_TASKS.find(task => task.scope === stateRegistryRuntimeScope("OH"))!;
+  const next = new Date(Date.parse(NOW) + task.cadenceMs).toISOString();
+  const clock = await s.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
+  assert.equal(routineTaskDue(task, clock, Date.parse(next)), true, "the standing daily binding clock admits the next run");
+  const bytes = new Uint8Array(readFileSync(new URL("fixtures/reference/census-state-identities.txt", import.meta.url)));
+  const release: KnownRelease = { sourceId: "registry-reviewed-bindings", releaseId: "census-state-identities", bytes,
+    sha256: createHash("sha256").update(bytes).digest("hex"), requestedUrl: CENSUS_STATE_IDENTITIES_URL, finalUrl: CENSUS_STATE_IDENTITIES_URL,
+    httpStatus: 200, retrievedAt: next, sourceObservedAt: next, checkedAt: next, lastCheckStatus: 200,
+    etag: null, lastModified: null, contentType: "text/plain", reused: false };
+  const scheduled = await refreshStateBinding({ state: "OH", store: s }, { now: () => next, acquire: async () => release, printReceipt: () => {} });
+  assert.ok(scheduled.promoted || scheduled.confirmed, JSON.stringify(scheduled.candidate.receipt));
+  assert.equal((await readRegistryRuntimePrior(s, next, "OH"))!.payload.statewideExecutives.some(row => row.holder.id === holder.id), false);
+  const again = await publishNationalPlaceSources({ state: "OH", store: s, facts, clocks, now: NOW, divisions, geographyCaptures: geography,
+    sources: { officials: [{ discoveryId: "menu-label", divisionId: OH, name: "Actions", officeTitle: "Governor", officialUrl: governorUrl,
+      document: { url: governorUrl, capture: capture("<h1>Ohio Governor</h1><nav>Actions</nav>", governorUrl) } }] } });
+  assert.ok(again.gaps.some(row => row.detail === "STATEWIDE_OFFICIAL_NOT_A_PERSON"));
+  assert.equal((await readRegistryRuntimePrior(s, NOW, "OH"))!.payload.statewideExecutives.some(row => row.holder.id === holder.id), false);
+});
+
+test("normal publication removes duplicate carried offices and keeps contacts plus stable aliases on the selected person", async () => {
+  const fixture = registryFixtureForState("OH");
+  const holder = { id: "statewide:oh/one", name: "Mike DeWine", officeTitle: "Governor", partyLabel: null, websiteUrl: governorUrl, sourceUrl: governorUrl,
+    email: "governor@ohio.gov", phone: null, contactFormUrl: null, photoUrl: null, campaignUrl: null, termEnd: null, birthDate: null };
+  const first = { stateOcdId: OH, holder, sourceUrl: governorUrl, sourceOrg: "Ohio Governor", collectedAt: "2026-09-28", verification: "PAGE_FETCHED" as const };
+  const second = { ...first, holder: { ...holder, id: "statewide:oh/two", email: null } };
+  const checks = [first, second].map(row => ({ holder: { id: row.holder.id, name: row.holder.name, officeTitle: row.holder.officeTitle,
+    divisions: [OH], authority: "REGISTRY_STATEWIDE_EXECUTIVE" as const, sourceUrl: row.sourceUrl }, status: "NOT_CHECKED" as const, candidacy: null,
+    unresolvedCandidacyIds: [], reason: "Candidacy remains owed." }));
+  const s = stateRegistryRuntimeStore("OH", new MemoryRoutineDataStore(), { ...fixture, statewideExecutives: [...fixture.statewideExecutives, first, second],
+    officialCandidacies: { ...fixture.officialCandidacies, rows: [...fixture.officialCandidacies.rows, ...checks] },
+    officialPhotos: { photos: [...fixture.officialPhotos.photos, { officeholderId: second.holder.id, name: second.holder.name,
+      url: "https://governor.ohio.gov/portrait.jpg", sourceUrl: governorUrl, license: "CC0" }] },
+    rosterPhotos: { ...fixture.rosterPhotos, [second.holder.id]: "https://governor.ohio.gov/portrait.jpg" } });
+  const result = await publishNationalPlaceSources({ state: "OH", store: s, facts: await seeded(), clocks, now: NOW, divisions, geographyCaptures: geography, sources: { officials: [] } });
+  assert.deepEqual(result.gaps, []);
+  const payload = (await readRegistryRuntimePrior(s, NOW, "OH"))!.payload;
+  const after = payload.statewideExecutives;
+  assert.equal(after.length, 1);
+  assert.equal(after[0].holder.email, holder.email);
+  assert.ok(after[0].holder.nativeIds?.reader?.includes(second.holder.id));
+  assert.ok(payload.officialCandidacies.rows.some(row => row.holder.id === second.holder.id));
+  assert.ok(payload.officialPhotos.photos.some(row => row.officeholderId === second.holder.id));
+  assert.equal(payload.rosterPhotos[second.holder.id], "https://governor.ohio.gov/portrait.jpg");
+});
 
 test("national place publication keeps legislative people on their single state authority",async()=>{
   const s=await store(),facts=await seeded();

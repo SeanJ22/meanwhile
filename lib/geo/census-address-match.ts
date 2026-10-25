@@ -18,8 +18,8 @@ interface CensusMatch {
 }
 
 /**
- * A single Census match must repeat the published house, street and city.
- * A state or ZIP the source states must agree; an omitted state is not a mismatch.
+ * A single Census match must repeat the house and street, with a matching city or ZIP.
+ * Postal normalization requires the native query; a stated state must agree.
  */
 export function verifiedCensusVenuePoint(
   published: string,
@@ -31,7 +31,7 @@ export function verifiedCensusVenuePoint(
   const match = matches[0];
   const components = match.addressComponents;
   const address = match.matchedAddress ?? "";
-  const house = /^\s*(\d+)\b/.exec(address)?.[1];
+  const house = /^\s*(\d+[a-z]?(?:-\d+)?|[ns]\d+[ew]\d+|[ew]\d+[ns]\d+)\b/i.exec(address)?.[1];
   if (
     !house ||
     !components?.streetName ||
@@ -39,7 +39,8 @@ export function verifiedCensusVenuePoint(
     !components.state
   )
     return null;
-  const folded = usps(published);
+  const query = censusAddressQuery(published);
+  const folded = usps(query);
   const street = usps(
     [
       house,
@@ -50,15 +51,15 @@ export function verifiedCensusVenuePoint(
       .filter(Boolean)
       .join(" "),
   );
-  if (!hasWords(folded, street) || !hasWords(folded, usps(components.city)))
-    return null;
-  const query = censusAddressQuery(published);
+  const sameCity=hasWords(folded,usps(components.city));
   const foldedQuery = usps(query);
-  const stateTail = /\b([a-z]{2})(?:\s+\d{5}(?:\s+\d{4})?)?$/.exec(
+  const postalStates=[...foldedQuery.matchAll(/\b([a-z]{2})(?=\s+\d{4,5}\b)/g)]
+    .map(match=>match[1]).filter(code=>US_JURISDICTIONS.some(state=>state.slug===code));
+  const stateTail = postalStates.at(-1)??/\b([a-z]{2})(?:\s+\d{4,5}(?:\s+\d{4})?)?$/.exec(
     foldedQuery,
   )?.[1];
   if (
-    stateTail &&
+    postalStates.some(code=>code!==components.state!.toLowerCase())||stateTail &&
     US_JURISDICTIONS.some((state) => state.slug === stateTail) &&
     stateTail !== components.state.toLowerCase()
   )
@@ -70,7 +71,28 @@ export function verifiedCensusVenuePoint(
   const publishedZip =
     [...foldedQuery.matchAll(zipPattern)].at(-1)?.[1] ??
     /\b(\d{5})(?:-\d{4})?\s*$/.exec(query)?.[1];
-  if (publishedZip && components.zip !== publishedZip) return null;
+  const echoed=(response as {result?:{input?:{address?:{address?:string}}}})?.result?.input?.address?.address;
+  const confirmed=typeof echoed==="string"&&usps(echoed)===foldedQuery;
+  if(!sameCity&&!(confirmed&&publishedZip&&publishedZip===components.zip))return null;
+  const exactStreet=hasWords(folded,street);
+  // A unique native response may canonicalize a delivery ZIP while repeating the complete physical street and city.
+  if(publishedZip&&components.zip!==publishedZip&&!(confirmed&&exactStreet))return null;
+  const sourceDirection=new RegExp(`^${house} (n|s|e|w|ne|nw|se|sw) `).exec(folded)?.[1];
+  const namedStreet=hasWords(folded,usps([house,components.streetName].join(" ")))
+    ||hasWords(folded,usps([house,components.preDirection,components.streetName].filter(Boolean).join(" ")))
+    ||Boolean(!components.preDirection&&sourceDirection&&hasWords(folded,usps([house,sourceDirection,components.streetName].join(" "))));
+  const prefix=usps([house,components.preDirection].filter(Boolean).join(" "))+" ";
+  const suffix=" "+usps(components.suffixType??"")+" ";
+  const sourceName=folded.startsWith(prefix)&&folded.includes(suffix)
+    ? folded.slice(prefix.length).split(suffix,1)[0].split(" ").filter(word=>!['jr','sr'].includes(word)):[];
+  const canonicalName=usps(components.streetName).split(" ");
+  const initialedStreet=sourceName.length>1&&sourceName.length===canonicalName.length&&
+    sourceName.at(-1)===canonicalName.at(-1)&&sourceName.every((word,index)=>word===canonicalName[index]||
+      canonicalName[index].length===1&&word.startsWith(canonicalName[index]));
+  const omittedSuffix=stateTail===components.state.toLowerCase()&&hasWords(folded,
+    usps([house,components.preDirection,components.streetName,components.city].filter(Boolean).join(" ")));
+  // A stated road type can change only with a matching ZIP; an absent suffix keeps the published street, city and state.
+  if(!exactStreet&&!(confirmed&&(publishedZip&&components.zip===publishedZip&&(namedStreet||initialedStreet)||omittedSuffix)))return null;
   const lat = match.coordinates?.y;
   const lng = match.coordinates?.x;
   if (

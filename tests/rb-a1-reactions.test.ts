@@ -40,7 +40,7 @@ const targets: Readonly<Record<string, readonly string[]>> = {
 test("the reaction API retains all 17 existing candidate targets", async () => {
   const prior = process.env.DATABASE_URL;
   process.env.DATABASE_URL = "";
-  const db = await factDb();
+  const db = await factDb({ withResolver: false });
   try {
     await identitySourceTables(db.pg);
     await identityEventTables(db.pg);

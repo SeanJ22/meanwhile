@@ -7,6 +7,7 @@ export interface NationalCard {
   readonly office: string;
   readonly title: string;
   readonly holder: string | null;
+  readonly photoUrl: string | null;
   readonly sources: readonly CardSource[];
 }
 
@@ -20,6 +21,7 @@ export async function readNationalCards(): Promise<readonly NationalCard[]> {
     office: "National government",
     title: person.officeTitle,
     holder: person.name,
+    photoUrl: holders.get(person.id)?.photoUrl ?? null,
     sources: personCardSources({ ...holders.get(person.id)!, executive: person.executive }),
   }));
 }

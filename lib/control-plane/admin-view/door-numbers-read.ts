@@ -20,6 +20,6 @@ export async function readRecentPostingToLive(): Promise<readonly PostingToLiveR
 }
 
 export async function readDoorNumbers(input: { readonly now: string; readonly doors: readonly DoorRecord[] | null; readonly config: AdminConfig | null;readonly keeper?:LineState|null }): Promise<Omit<DoorNumberReadings, "shutDoors">> {
-  const posting=input.keeper?.posting??await attempt(() => readRecentPostingToLive());
+  const posting=await attempt(() => readRecentPostingToLive());
   return {now:input.now,overdue:null,scheduled:null,posting,fixes:input.config===null?null:fixItems(input.config)};
 }

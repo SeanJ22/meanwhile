@@ -1,15 +1,13 @@
-import { currentStatewideExecutives } from "../officials/statewide-executives.ts";
-import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
 import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
-import { getRegistryRuntimeReadModel, selectedRegistryStates } from "../registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, selectedRegistryStates, currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "../registry/runtime-read-model.ts";
 import { officialCandidacySeatMatches, reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
 import { currentBallotPeopleProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { directFundingTargetPlan } from "./target-authorities.ts";
 import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
-import { statePeopleScopeForDivision } from "../officials/people-identity.ts";
+import { personIdentityKeys, statePeopleScopeForDivision } from "../officials/people-identity.ts";
 import type { CampaignFinancePlaceRead } from "./state-reader.ts";
 
 export type OfficialFinanceIdentity = "NOT_OFFICIAL" | "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED";
@@ -58,6 +56,8 @@ function bridgeIndex() {
   let federal: ReturnType<typeof getFederalOfficeholderSet> | null = null;
   try { federal = getFederalOfficeholderSet(); } catch { /* Independent state ballots retain their held state links. */ }
   inputs.push(federal);
+  const executives = currentStatewideExecutives();
+  inputs.push(executives);
   if (indexedBridge?.source === source && inputs.length === indexedBridge.inputs.length &&
       inputs.every((value, index) => indexedBridge!.inputs[index] === value)) return indexedBridge;
   const holders: BridgeRow["holder"][] = [];
@@ -72,6 +72,13 @@ function bridgeIndex() {
   }
   const resolved = ballots.length ? reconcileOfficialCandidacies({ bridge: source, ballots, holders }) : source;
   const byHolder = new Map(resolved.rows.map(row => [row.holder.id, row]));
+  for (const executive of executives) {
+    const aliases = personIdentityKeys(executive.holder);
+    const rows = [...aliases].flatMap(id => { const row = byHolder.get(id); return row?.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" &&
+      officialFinanceIdentityMatches(row, currentHolder(row)) ? [row] : []; });
+    const selected = rows.find(row => row.status === "RESOLVED" && officialCandidacySeatMatches(row)) ?? rows.find(row => row.holder.id === executive.holder.id) ?? rows[0];
+    if (selected) for (const id of aliases) byHolder.set(id, selected);
+  }
   const byCandidacy = new Map<string, BridgeRow[]>();
   for (const row of resolved.rows) if (officialCandidacySeatMatches(row) && row.candidacy) {
     for (const id of new Set([row.candidacy.candidacyId, ...row.candidacy.aliases ?? []])) {
@@ -97,8 +104,8 @@ function currentHolder(row: BridgeRow) {
     return holder && set ? { ...holder, divisions: set.divisions.filter(division => division.officeholderId === holder.id).map(division => division.ocdId) } : null;
   }
   if (row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE") {
-    const e = currentStatewideExecutives().find(e => e.holder.id === row.holder.id);
-    return e ? { ...e.holder, divisions: [e.stateOcdId] } : null;
+    const e = currentStatewideExecutives().find(e => personIdentityKeys(e.holder).has(row.holder.id));
+    return e ? { ...e.holder, id: row.holder.id, divisions: [e.stateOcdId] } : null;
   }
   if (row.holder.authority === "REGISTRY_BODY_ROSTER") {
     for (const r of currentBodyRosters()) {

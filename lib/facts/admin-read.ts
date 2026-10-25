@@ -6,7 +6,9 @@ export interface FactStoreReading {
 }
 
 export async function readFactStore(query: ReadOnlyQuery): Promise<FactStoreReading> {
-  const [blanks] = await query([{text:`SELECT stage,reason,count(*)::int AS n FROM blank GROUP BY 1,2 ORDER BY 3 DESC LIMIT 50`,params:[]}]);
+  const [blanks] = await query([
+    {text:`SELECT stage,reason,count(*)::int AS n FROM blank GROUP BY 1,2 ORDER BY 3 DESC LIMIT 50`,params:[]},
+  ]);
   return { blanks: blanks!.map(r => ({stage:String(r.stage),reason:String(r.reason),n:Number(r.n)})) };
 }
 

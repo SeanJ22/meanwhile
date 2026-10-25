@@ -15,6 +15,7 @@ import { isTownOrCountyDivision, postalAreaNeedsAddress } from "../geo/postal-co
 import { readerMemory, serverReaderValue } from "./memory.ts";
 import { indexedZipDivisionEntry, shardEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
+import { withFederalPortraits } from "../officials/federal-directory-read-model.ts";
 export { readerMemory } from "./memory.ts";
 
 export interface NationalShelf {
@@ -130,15 +131,16 @@ const national = serverReaderValue("national-current", () => ({ value: null as N
 
 /** States read the national executives independently of Congress's national directory load. */
 const presidentSources = ["statewide-executive-sources", "wikidata-people"];
-export const nationalPresidentPointers = () => presidentSources.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
+export const nationalPresidentPointers = () => [...presidentSources,"people-portraits"].map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
 const presidentContext = serverReaderValue("national-president-context", () => new AsyncLocalStorage<() => Promise<CivicDataReadStore>>());
 const residentPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
   const supplied = presidentContext.getStore();
   const canonical = await (supplied ? supplied() : readCanonicalShelf(nationalPresidentPointers()));
-  const reads = await Promise.all(presidentSources.map(source => readPeopleSourceProjection("US", source, { store: canonical })));
+  const reads = await Promise.all([...presidentSources,"people-portraits"].map(source => readPeopleSourceProjection("US", source, { store: canonical })));
+  const portraits=reads.at(-1);
   const president = reads.flatMap(read => {
     if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") return [];
-    const roster = currentPresidentRoster(read.value.roster);
+    const roster = currentPresidentRoster(portraits?.kind === "PROMOTED" ? withFederalPortraits(read.value.roster,portraits.value.roster) : read.value.roster);
     return roster ? [roster] : [];
   })[0] ?? null;
   if (national.value) national.value = { ...national.value, president };

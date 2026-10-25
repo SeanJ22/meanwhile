@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-10-24T23:22:06.284Z",
+  "observedAt": "2026-10-25T02:53:37.157Z",
   "productionRoles": [
     "readonly",
     "wtp_cp_release_readonly"
@@ -214,16 +214,16 @@
       "state": "IL",
       "zip": "60602",
       "memberships": 5,
-      "productionEntities": 465,
-      "owed": 5061,
+      "productionEntities": 464,
+      "owed": 5057,
       "held": 2330,
-      "missing": 2731,
+      "missing": 2727,
       "stale": 0,
       "stuck": 205,
       "nextPass": {
-        "owed": 5061,
+        "owed": 5057,
         "held": 2330,
-        "missing": 2731,
+        "missing": 2727,
         "stale": 0,
         "stuck": 205
       },

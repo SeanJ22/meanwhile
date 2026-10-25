@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { Pool } from "pg";
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { mkdtemp, open, readdir, readFile, rm } from "node:fs/promises";
+import { mkdtemp, open, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -298,12 +298,9 @@ function costEntry(id: string, place: string) {
 }
 
 async function nationalPlaces(): Promise<string[]> {
-  const directory = join(sourceRoot, "data/derived/zip-divisions");
-  const places = new Set<string>();
-  for (const file of (await readdir(directory)).filter(name => /^\d\d\.json$/.test(name))) {
-    const shard = JSON.parse(await readFile(join(directory, file), "utf8"));
-    for (const place of shard.divisions) places.add(place);
-  }
+  const { placeMapQuery } = await importAt("lib/place-map/reader.ts");
+  const rows = await placeMapQuery()("SELECT DISTINCT place_id AS id FROM zip_place ORDER BY place_id");
+  const places = new Set<string>(rows.map((row: { id: string }) => row.id));
   const {readStateReference}=await import(pathToFileURL(join(sourceRoot,"lib/control-plane/expansion/state-references.ts")).href);
   const {HUNT_STATES}=await import(pathToFileURL(join(sourceRoot,"lib/control-plane/hunt-orders.ts")).href);
   for(const state of HUNT_STATES) {

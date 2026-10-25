@@ -4570,5 +4570,17 @@
     "tested_sha": "180160158",
     "gates": "pass (9 of 9, 9,888 tests; first run failed 2 reference-data tests, fixed on the lane)",
     "at": "2026-10-25T09:42:04Z"
+  },
+  {
+    "lane": "rb-a6",
+    "steps": [
+      "RB-A6"
+    ],
+    "ready_sha": "d7b31ba67",
+    "merge_sha": "b2d07e636",
+    "river_sha": "b2d07e636",
+    "tested_sha": "b2d07e636",
+    "gates": "pass (9 of 9, 9,890 tests)",
+    "at": "2026-10-25T10:30:58Z"
   }
 ]

@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T22:49:00Z
+heartbeat: 2026-10-25T23:02:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 6:49 PM EDT)
+## Every READY not on main (updated 7:02 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
@@ -21,6 +21,7 @@ Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
 | READY | Lane | Slot |
 |---|---|---|
+| a0cb7d1ef | DB-03 owner snapshot reads (stream/db-03-reads, child of 8b69f0cbf; owner snapshot read 0.81 GB in the 4 PM EDT hour) | urgent Neon; after 8b69f0cbf ships. Doesn't fix 8b69's failing tests |
 | 04681516c | DB-03 Admin | after 121. Merge onto ea117a0bb is built; owed-route conflict resolved |
 | e4305907d | DB-03 state doors | after Admin |
 | 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
@@ -1174,4 +1175,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 6:49 PM EDT: release 121 gate failed on DB-03 reads; DB-02 ships alone
 - 801d5db65 (DB-03 reads + DB-02): 8 of 9 gates, 8 of 9,933 tests failed. Seven are in aggregate-list-pagination and one in admin-narrow-reads. They fail the same way on stream/db-03-reads 8b69f0cbf by itself: its revision-first list reads send SQL the tests' fake databases don't recognize. Returned to the lane (returns/db-03.md).
 - DB-02 e0f14fe59 is gating alone on river ea117a0bb as release 121; both fixes are urgent and DB-02 passed its own checks. DB-03 reads ships next, alone, when it's fixed.
+
+### 7 PM EDT status
+- Release 120 has been live since 6:09 PM EDT; Oversight measures it.
+- Release 121, DB-02 re-cut e0f14fe59 alone, is gating on ea117a0bb, in the test step.
+- DB-03 reads 8b69f0cbf: no fix yet; River finishes it at 7:50 PM EDT if none lands. The lane's newer a0cb7d1ef (6:04 PM, before the return) is a separate owner-snapshot Neon fix built on 8b69 and doesn't touch the failing tests. Sean said to fold exactly 8b69f0cb, so a0cb7d1ef is listed as the next Neon fix after it.
+- RB-A4 catch-up: cursor at AZ, one current state per pass. CA, CO, CT and DC come next, then DE through VT in one pass. HOST_COUNTY rows: 14,664.
+- Neon, both databases, 6 PM EDT hour: 8,750 MB.
 

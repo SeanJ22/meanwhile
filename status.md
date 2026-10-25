@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b). NEXT: release 110 = RV-MEET2 (PR #821, CI affected tests running, auto-merge on). GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone as soon as it posts READY (release 112, ahead of everything below). Queue (each its own batch, Sean 1:20 AM EDT): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED 1:50 AM EDT (portal-publication pulls up to 99,690 live facts in 43 states outside door.ts; returns/rb-a4.md; River finishes by 2:50 AM EDT if no new READY), RB-A7 after RB-A4, DB-02 + BL-02 (BL-02 only from stream/bl-02-bills c3fff3702), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf; RT-01, DB-03 (one fix at a time), AD-01 as their READYs come. HELD: RB-A10 7b5eacd03 until place_boundary, zip_place and zcta_place have rows for every state in production and 20 random ZIPs in 20 states resolve to county and city
+build_state: LIVE FOR READERS: release 110 (main f6d35d05b, RV-MEET2), live by 1:30 AM EDT; reader checks green (fixed + 20 random ZIPs in 20 states). Runner still on 109 (5a3f76a8b) at 1:33 AM EDT. GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone when READY (release 112). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes by 2:50 AM EDT), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf; RT-01, DB-03, AD-01 as READYs come. HELD: RB-A10 7b5eacd03 (place map has 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T05:31:54Z
+heartbeat: 2026-10-25T05:35:01Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,19 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Release 110 live, by 1:30 AM EDT (main f6d35d05b: RV-MEET2)
+- Reader checks pass:
+  - /ballot 85701 and 03255: 200, no console errors.
+  - Ask on 85701: grounded.
+  - /api/meetings: 85701 438 id fields (was 435), 60602 611 (was 598).
+  - /national: 200.
+- Random ZIPs, seed 1110: 20/20 load and resolve to their county and city, across AL, AK, DE, VA, NH, CO, NV, OR, MS, AZ, UT, WY, SC, TN, LA, PR, CT, SD, OH and MN. Thin: Puerto Rico 00953 (Toa Alta), a 445-character ballot page.
+- Meeting proof, owed once the runner takes 110 (it was on 109 at 1:33 AM EDT):
+  - Reads (first attempts per ET hour, civic_data_candidate_events): 3 PM 61, 4 PM 190, 5 PM 335, 6 PM 156, 7 PM 177, 8 PM 57, 9 PM 94, 10 PM 3, 11 PM 22, midnight 14, 1 AM 20.
+  - New meeting facts per ET hour: 1,027 at 9 PM, 214 at 11 PM, 1,822 at midnight, 2,226 at 1 AM.
+  - The midnight and 1 AM facts are MT-01 (release 109) re-publishing existing meetings with source-first addresses, not new calendar reads; reads are still about 20 an hour. The proof is reads back to the 8 PM-hour rate or better with new facts above 1,000.
+  - Counts: /var/tmp/live/meeting-reads.mjs.
 
 ### Random-ZIP release check (Sean: never one city), release 109 baseline, 2:05 AM EDT
 - Method: /var/tmp/live/random-zips.cjs <base> 20 [seed]. It picks one random standard ZIP in each of 20 random states from the repo's ZIP shards (no database read), then loads /ballot?zip=, /api/meetings?zip= and /api/location/zip?zip= live, and checks the ZIP resolves to its own county and city.

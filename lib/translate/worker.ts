@@ -16,6 +16,7 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 type TranslationCostRepos = FieldManualRepos & Pick<ControlPlaneRepositories, "costs" | "spend">;
 export type MeasureTranslationRepos = TranslationCostRepos & Pick<ControlPlaneRepositories, "adminConfig">;
 import { translationHash, translationRecordIssue, translationSourceContains, translationSourceNames, type TranslationSentence, type MeasureTranslation, type TextTranslation, type PreservedCuratedText } from "./records.ts";
+import { translationPassages } from "./passages.ts";
 
 export interface TranslationPlaybook {
   readonly writerText: string;
@@ -31,7 +32,7 @@ export function translationPlaybook(entries: readonly RolePlaybookEntry[]): Tran
   if (writerBook.error || checkerBook.error) throw new Error(writerBook.error ?? checkerBook.error);
   const writerModel = MODELS.haiku.model, checkerModel = MODELS.sonnet.model;
   return { writerText: writerBook.text, checkerText: checkerBook.text, writerModel, checkerModel,
-    version: translationHash(JSON.stringify([writerBook.version, checkerBook.version, writerModel, checkerModel])) };
+    version: translationHash(JSON.stringify([writerBook.version, checkerBook.version, writerModel, checkerModel, "measure-passages/1"])) };
 }
 
 async function loadTranslationPlaybook(repos: FieldManualRepos) {
@@ -81,24 +82,29 @@ function toolResult(response: ModelResponse, name: string, model: string): unkno
   return tools[0].input;
 }
 
+const quotedSentences = { type: "array", items: { type: "object", required: ["field", "text", "quote"], properties: {
+  field: { type: "string" }, text: { type: "string" }, quote: { type: "string" },
+} } };
+
 const writerTool = {
-  name: "write_measure_translation", description: "Write the measure summary, vote meanings and only officially numbered parts, with one exact supporting source quote per written sentence.",
-  input_schema: { type: "object", required: ["measure", "sentences"], properties: {
-    measure: { type: "object", required: ["contestId", "whatItDoes", "yesMeans", "noMeans", "parts", "sourceUrl", "sourceHash", "writtenAt"],
+  name: "write_measure_translation", description: "Write the measure summary, vote meanings and only officially numbered parts, citing one contiguous source-passage span per sentence. The application copies the span's exact saved bytes.",
+  strict: true,
+  input_schema: { type: "object", additionalProperties: false, required: ["measure", "sentences"], properties: {
+    measure: { type: "object", additionalProperties: false, required: ["whatItDoes", "yesMeans", "noMeans", "parts"],
       description: "Preserve supplied existing part IDs when rewriting the same parts.",
       properties: {
-        contestId: { type: "string" }, whatItDoes: { type: "string" }, yesMeans: { type: "string" }, noMeans: { type: "string" },
-        sourceUrl: { type: "string" }, sourceHash: { type: "string" }, writtenAt: { type: "string" },
-        parts: { type: "array", description: "Optional. Use [] for a short explainer unless retaining supplied existing numbered parts. Never invent part numbering.", items: { type: "object", required: ["id", "number", "kind", "label", "what"], properties: {
+        whatItDoes: { type: "string" }, yesMeans: { type: "string" }, noMeans: { type: "string" },
+        parts: { type: "array", description: "Use [] for a short explainer unless retaining supplied existing numbered parts. Never invent part numbering.", items: { type: "object", additionalProperties: false, required: ["id", "number", "kind", "label", "what"], properties: {
           id: { type: "string", description: "Must start with the exact contestId followed by #. Preserve any supplied existing part ID." },
           number: { type: "string", description: "The part's own unique number in the official text." },
           kind: { type: "string", description: "One of the supplied partKinds keys." }, label: { type: "string" }, what: { type: "string" },
         } } },
       } },
-    sentences: { type: "array", items: { type: "object", required: ["field", "text", "quote"], properties: {
-      field: { type: "string", description: "Exact output field: whatItDoes, yesMeans, noMeans, parts.<exact part id>.label, or parts.<exact part id>.what. For a text translation use text." },
+    sentences: { type: "array", items: { type: "object", additionalProperties: false, required: ["field", "text", "passageFrom", "passageThrough"], properties: {
+      field: { type: "string", description: "Exact output field: whatItDoes, yesMeans, noMeans, parts.<exact part id>.label, or parts.<exact part id>.what." },
       text: { type: "string", description: "One sentence copied exactly from that output field; sentences joined with one space must reproduce the whole field." },
-      quote: { type: "string", description: "One contiguous exact supporting passage copied from the supplied source. Do not insert ellipses or combine separate passages." },
+      passageFrom: { type: "string", description: "The supplied p-number of the first supporting source passage. The application copies its exact saved bytes." },
+      passageThrough: { type: "string", description: "The last supporting p-number in the same contiguous source span; use the same ID for one passage. Cite enough text to retain material conditions and exceptions." },
     } } },
   } },
 };
@@ -152,7 +158,7 @@ export async function translateText(input: {
   const preservation = input.preservedText ? "The supplied curated text must remain byte-for-byte unchanged, including punctuation. Return that exact text and annotate each sentence with its original-source passage. Do not rewrite, correct or add facts; unsupported text must fail the independent check." : "";
   const writer = { name: "write_text_translation", description: "Translate the supplied source under the task instructions. Every sentence needs an exact supporting quote.",
     input_schema: { type: "object", required: ["text", "sentences"], properties: {
-      text: { type: "string" }, sentences: writerTool.input_schema.properties.sentences,
+      text: { type: "string" }, sentences: quotedSentences,
     } } };
   const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.subjectId, state: subject.state }), subject.subjectId);
   const request = (model: string, tool: typeof writer | typeof checkerTool, content: unknown): ModelRequest => ({
@@ -199,12 +205,18 @@ export async function translateMeasure(input: {
       !(subject.sourceQuote?.trim() ? translationSourceContains(evidence.text, subject.sourceQuote) : translationSourceNames(evidence.text, subject.title)) ||
       jurisdictionFromOcdId(subject.ocdId)?.usps !== subject.state || !Number.isFinite(Date.parse(now))) throw new Error("Translation source is incomplete or does not name this measure.");
   const playbook = await loadTranslationPlaybook(input.repos);
+  const source = translationPassages(evidence.text);
+  const modelSubject = { contestId: subject.contestId, title: subject.title, ocdId: subject.ocdId, state: subject.state,
+    sourceReference: source.reference(subject.sourceQuote), existingParts: subject.prior?.parts ?? [] };
   const send = meteredTranslationTransport(input.repos, input.transportFor({ subjectId: subject.contestId, state: subject.state }), subject.contestId);
   const request = (model: string, tool: typeof writerTool | typeof checkerTool, content: unknown): ModelRequest => ({
     batchContext: { job: "TRANSLATOR", priority: input.batchPriority },
     model, max_tokens: 8192, ...translationThinking(model),
     system: [{ type: "text", text: `${WORKER_SAFETY_FRAME}\n\n${tool === writerTool ? playbook.writerText : playbook.checkerText}`, cache_control: { type: "ephemeral", ttl: "1h" } }],
-    tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: JSON.stringify(content) }],
+    tools: [tool], tool_choice: { type: "auto" }, messages: [{ role: "user", content: [
+      { type: "text", text: source.prompt, cache_control: { type: "ephemeral", ttl: "5m" } },
+      { type: "text", text: JSON.stringify(content) },
+    ] }],
   });
   const sourceHash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
   const kinds = runtimeKinds((await input.repos.adminConfig.read("current"))?.value ?? null);
@@ -213,25 +225,38 @@ export async function translateMeasure(input: {
     const response = await send(request); responses.push(response); return response;
   };
   return translationLadder(async (writerModel, checkerModel, feedback) => {
-    const writer = await recordedSend(request(writerModel, writerTool, { source: evidence.text, subject, feedback,
-      sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now,
+    const writer = await recordedSend(request(writerModel, writerTool, { subject: modelSubject, feedback,
       partKinds: kinds.measurePart,
-      instruction: "Write a short, neutral explanation in plain high-school English of what the measure does, what a YES vote would enact, and what a NO vote would reject. All three fields are required. Use only the supplied official text. Preserve every material condition and exception. Never recommend, judge, endorse, favor or argue for either side. Do not invent consequences of rejecting the proposal. Cite one contiguous exact source passage for each individual sentence, with no inserted ellipses. Use sentence fields whatItDoes, yesMeans, noMeans, parts.<exact part id>.label or parts.<exact part id>.what; their sentences joined with one space must reproduce that field exactly. Return parts: [] for a short explainer unless retaining supplied existing numbered parts. Any part ID must start with the exact contestId followed by #, and its number must be the source's own unique number." }));
-    const proposal = toolResult(writer, writerTool.name, writerModel) as { measure: MeasureRecord; sentences: TranslationSentence[] };
-    if (!proposal || measureRecordIssue(proposal.measure) || proposal.measure.contestId !== subject.contestId ||
-        proposal.measure.sourceUrl !== evidence.canonicalUrl || proposal.measure.sourceHash !== sourceHash || proposal.measure.writtenAt !== now ||
-        !Array.isArray(proposal.sentences) || proposal.sentences.some(sentence => !sentence || !translationSourceContains(evidence.text, sentence.quote))) throw new TranslationCheckFailed("Translation writer returned unsupported fields or source passages.");
-    if (proposal.measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new TranslationCheckFailed("Translation part kind is absent from the current kinds setting.");
-    if (subject.prior?.parts.some(part => !proposal.measure.parts.some(proposed => proposed.id === part.id &&
+      instruction: "Write a short, neutral explanation in plain high-school English of what the measure does, what a YES vote would enact, and what a NO vote would reject. All three fields are required. Use only the supplied official text. Preserve every material condition and exception. Never recommend, judge, endorse, favor or argue for either side. Do not invent consequences of rejecting the proposal. Cite each individual sentence using passageFrom and passageThrough from the supplied p-numbered source passages, in source order. Use the same ID twice for one passage; the application copies the exact contiguous span. Do not transcribe quotes, source hashes, URLs, timestamps or the measure's identity. Use sentence fields whatItDoes, yesMeans, noMeans, parts.<exact part id>.label or parts.<exact part id>.what; their sentences joined with one space must reproduce that field exactly. Return parts: [] for a short explainer unless retaining supplied existing numbered parts. Any part ID must start with the exact contestId followed by #, and its number must be the source's own unique number." }));
+    const proposal = toolResult(writer, writerTool.name, writerModel) as {
+      measure: Pick<MeasureRecord, "whatItDoes" | "yesMeans" | "noMeans" | "parts">;
+      sentences: { field: string; text: string; passageFrom: string; passageThrough: string }[];
+    };
+    if (!proposal?.measure || !Array.isArray(proposal.sentences)) throw new TranslationCheckFailed("Translation writer must return the summary, vote meanings, parts and sentence references.");
+    const measure: MeasureRecord = { contestId: subject.contestId, whatItDoes: proposal.measure.whatItDoes,
+      yesMeans: proposal.measure.yesMeans, noMeans: proposal.measure.noMeans, parts: proposal.measure.parts,
+      sourceUrl: evidence.canonicalUrl, sourceHash, writtenAt: now };
+    const measureIssue = measureRecordIssue(measure);
+    if (measureIssue || !measure.yesMeans?.trim() || !measure.noMeans?.trim()) throw new TranslationCheckFailed(measureIssue ?? "Translation writer must supply both vote meanings.");
+    const sentences: TranslationSentence[] = proposal.sentences.map(sentence => {
+      if (!sentence || typeof sentence.field !== "string" || typeof sentence.text !== "string" || !sentence.text.trim()) throw new TranslationCheckFailed("Translation writer returned a sentence without its field or text.");
+      const quote = source.quote(sentence.passageFrom, sentence.passageThrough);
+      if (!quote?.trim()) throw new TranslationCheckFailed(`Translation sentence ${sentence.field} must cite an existing, nonempty contiguous source span using passageFrom and passageThrough.`);
+      return { field: sentence.field, text: sentence.text, quote };
+    });
+    if (measure.parts.some(part => !registeredKind(kinds, "measurePart", part.kind))) throw new TranslationCheckFailed("Translation part kind is absent from the current kinds setting.");
+    if (subject.prior?.parts.some(part => !measure.parts.some(proposed => proposed.id === part.id &&
         (part.number === null || proposed.number === part.number)))) throw new TranslationCheckFailed("Translation would lose or reassign an existing measure part's reaction identity.");
-    const checker = await recordedSend(request(checkerModel, checkerTool, { originalSource: evidence.text, subject,
-      proposal, instruction: "Check every written sentence and its qualifications against the original source. Verify what a YES vote would enact and what a NO vote would reject without assuming unstated consequences. Reject recommendations, judgments, persuasion or language favoring either side. Every official part number must appear there. Return a false check for any unsupported or non-neutral sentence." }));
+    const checker = await recordedSend(request(checkerModel, checkerTool, { subject: modelSubject,
+      proposal: { measure: { whatItDoes: measure.whatItDoes, yesMeans: measure.yesMeans, noMeans: measure.noMeans, parts: measure.parts },
+        sentences: proposal.sentences.map(({ field, text, passageFrom, passageThrough }) => ({ field, text, passageFrom, passageThrough })) },
+      instruction: "Check every written sentence against its cited source span and every material condition and exception in the full original source. Passage labels are references, not source text. Verify what a YES vote would enact and what a NO vote would reject without assuming unstated consequences. Reject recommendations, judgments, persuasion or language favoring either side. Every official part number must appear there. Return a false check for any unsupported or non-neutral sentence." }));
     const result = toolResult(checker, checkerTool.name, checkerModel) as { checked: MeasureTranslation["checked"] };
     const record: MeasureTranslation = { id: `translation:${subject.contestId}`, kind: "MEASURE", subjectId: subject.contestId,
       ocdId: subject.ocdId, sourceUrl: evidence.canonicalUrl, sourceHash, sourceText: evidence.text,
       sourceTextHash: translationHash(evidence.text), retrievedAt: evidence.retrievedAt, writtenAt: now,
       writerModel: canonicalModelId(writer.model), checkerModel: canonicalModelId(checker.model), playbookVersion: playbook.version,
-      measure: proposal.measure, sentences: proposal.sentences, checked: result?.checked };
+      measure, sentences, checked: result?.checked };
     const issue = translationRecordIssue(record);
     if (issue) throw new TranslationCheckFailed(`${issue} ${JSON.stringify(result?.checked)}`);
     return { record, usage: responses.map(response => ({ model: response.model,
@@ -240,6 +265,7 @@ export async function translateMeasure(input: {
 }
 
 function translationThinking(model: string) {
-  const fields = modelRequestFields(model, { thinking: "ADAPTIVE", effort: "medium" });
-  return { ...(fields.thinking?.type === "adaptive" ? { thinking: fields.thinking } : {}), output_config: { effort: "medium" as const } };
+  const effort = canonicalModelId(model) === MODELS.haiku.model ? "low" as const : "medium" as const;
+  const fields = modelRequestFields(model, { thinking: "ADAPTIVE", effort });
+  return { ...(fields.thinking?.type === "adaptive" ? { thinking: fields.thinking } : {}), output_config: { effort } };
 }

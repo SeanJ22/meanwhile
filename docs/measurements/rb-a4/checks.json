@@ -1,0 +1,26 @@
+{
+  "focusedTests": 154,
+  "finalFollowupTests": 28,
+  "typescript": "PASS",
+  "focusedEslint": "PASS",
+  "knip": "PASS",
+  "productionWrites": 0,
+  "fullGate": "not claimed",
+  "productionChrome": "River live check",
+  "vailMedianMs": {
+    "before": 126.178,
+    "after": 112.855
+  },
+  "portalScan": {
+    "RETRY": 375,
+    "KEEP": 166,
+    "WITHDRAW": 96
+  },
+  "productionCopy": {
+    "boards": 174,
+    "currentMembers": 2188,
+    "originalDistricts": 27571,
+    "preservedFacts": 2366,
+    "maintenanceCycle": 56
+  }
+}

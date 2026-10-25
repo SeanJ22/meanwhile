@@ -3,7 +3,7 @@ import { canonicalCivicDataJson } from "../../civic-data/changes.ts";
 import { sourceProjectionEvidence,type RoutineCandidate } from "../../civic-data/types.ts";
 import { processRegisteredFanOutCandidate,processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
-import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,LEGISCAN_BULK_SCOPE,billScope,billPartScope,stateOfDataset,normalizeSession,sessionSponsorEvidence,type Dataset,type BillIndex,type BillPart,type BillPartPointer,type BillSession,type HeldPerson } from "./bills.ts";
+import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,LEGISCAN_BULK_SCOPE,billScope,billPartScope,stateOfDataset,publicDatasetIndex,normalizeSession,sessionSponsorEvidence,type Dataset,type BillIndex,type BillPart,type BillPartPointer,type BillSession,type HeldPerson } from "./bills.ts";
 import type { BulkCapture } from "./acquisition.ts";
 const hash=(value:unknown)=>createHash("sha256").update(typeof value==="string"?value:canonicalCivicDataJson(value)).digest("hex");
 export const LEGISCAN_PART_ROWS=250;
@@ -16,7 +16,7 @@ export function bulkCandidate(input:BulkInput):RoutineCandidate {
   const {access_key:_access,...dataset}=input.dataset??{};
   const {bodies:_duplicateBodies,sessionSponsors:_duplicateSponsors,...evidence}=input;
   const payload=JSON.parse(JSON.stringify({...evidence,...(input.dataset?{dataset}:{}),...(input.datasets?{datasets}:{})})), sourceId="legiscan-bills", recordClass="STATE_BILL";
-  const readModel:BillPart|BillSession|BillIndex=!input.dataset?{kind:"INDEX",parserVersion:LEGISCAN_BULK_PARSER,capturedAt:capture.retrievedAt,datasets}:
+  const readModel:BillPart|BillSession|BillIndex=!input.dataset?publicDatasetIndex({kind:"INDEX",parserVersion:LEGISCAN_BULK_PARSER,capturedAt:capture.retrievedAt,datasets}):
     input.parts?{kind:"SESSION",parserVersion:LEGISCAN_BULK_PARSER,dataset:dataset as Dataset,state:stateOfDataset(input.dataset),capturedAt:capture.retrievedAt,parts:input.parts,counts:input.counts!}:
     {...normalizeSession(input.dataset,input.bodies??[],capture.retrievedAt,input.people,input.sessionSponsors),sourceRawHash:capture.rawHash};
   const fingerprint=hash(`${LEGISCAN_BULK_PARSER}|${hash(payload)}`);
@@ -138,6 +138,11 @@ export function bulkProjectionIssue(candidate:RoutineCandidate,value:unknown):st
     if(input.dataset&&input.parts&&(canonicalCivicDataJson(capture.parts)!==canonicalCivicDataJson(input.parts)||canonicalCivicDataJson(capture.counts)!==canonicalCivicDataJson(input.counts)))return "Archive part manifest differs";
     if(input.dataset&&!input.parts&&(!Array.isArray(capture.bodies)||capture.partIndex!==(input.partIndex??0)))return "Archive part evidence differs";
     if(!input.dataset && canonicalCivicDataJson(capture.datasetlist)!==canonicalCivicDataJson(input.datasets)) return "Dataset list evidence differs";
+    if(!input.dataset){
+      const {parserVersion:_heldParser,...held}=publicDatasetIndex(value);
+      const {parserVersion:_currentParser,...current}=publicDatasetIndex(bulkCandidate(input).readModel);
+      return canonicalCivicDataJson(held)===canonicalCivicDataJson(current)?null:"Dataset facts differ from saved source";
+    }
     return canonicalCivicDataJson(bulkCandidate({...input,...(input.dataset&&!input.parts?{bodies:capture.bodies,sessionSponsors:capture.sessionSponsors}:{})}).readModel)===canonicalCivicDataJson(value)?null:"Bill facts differ from saved source";
   } catch {return "Saved LegiScan source cannot be parsed";}
 }

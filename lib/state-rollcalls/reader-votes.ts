@@ -8,7 +8,8 @@ import { LEGISCAN_ATTRIBUTION, stateRollPublisher, type StateVotesSnapshot } fro
 import { officialStateRollCallTargetByState, type OfficialStateVoteScope } from "./authority.ts";
 import { stateVoteStateForMember } from "./reader-vote-visibility.ts";
 import { seatHolderById } from "../registry/server.ts";
-import type { SeatHolder } from "../officials/lookup.ts";
+import { readHeldPersonIdentity, type HeldPersonIdentity } from "../officials/person-read.ts";
+import { statePeopleScopeForId } from "../officials/people-identity.ts";
 
 export interface NativeReaderVote {
   id: string; title: string; titleSource: "BILL_TITLE"; question: string; result: string;
@@ -23,7 +24,7 @@ export interface NativeMemberVoteRead {
   attribution: typeof LEGISCAN_ATTRIBUTION | { text: string; url: string } | null;
 }
 export interface NativeMemberVoteReaders {
-  holder: (id: string) => Promise<SeatHolder | null>;
+  holder: (id: string) => Promise<HeldPersonIdentity | null>;
   nh: typeof readStateMemberVoteSnapshot;
   official: (scope: OfficialStateVoteScope) => Promise<{ snapshot: StateVotesSnapshot; versionId: string | null } | null>;
   plural: typeof readPluralVotesForPerson;
@@ -32,7 +33,7 @@ export interface NativeMemberVoteReaders {
 
 const PERSON_ID = /^ocd-person\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const defaultReaders: NativeMemberVoteReaders = {
-  holder: seatHolderById,
+  holder: id => statePeopleScopeForId(id) ? readHeldPersonIdentity(id) : seatHolderById(id),
   nh: readStateMemberVoteSnapshot,
   official: async scope => {
     if (!OFFICIAL_STATE_VOTE_SCOPES.includes(scope)) return null;
@@ -45,7 +46,7 @@ const defaultReaders: NativeMemberVoteReaders = {
   legiscan: readLegiscanVotesForPerson,
 };
 
-function exactPersonId(member: string, holder: SeatHolder | null): string | null {
+function exactPersonId(member: string, holder: HeldPersonIdentity | null): string | null {
   const uuid = /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/i.exec(member)?.[1];
   const direct = uuid ? `ocd-person/${uuid}` : member;
   if (PERSON_ID.test(direct)) return direct;
@@ -53,7 +54,7 @@ function exactPersonId(member: string, holder: SeatHolder | null): string | null
   return ids.length === 1 && PERSON_ID.test(ids[0]) ? ids[0] : null;
 }
 
-function nativeMemberId(member: string, holder: SeatHolder | null, source: string): string | null {
+function nativeMemberId(member: string, holder: HeldPersonIdentity | null, source: string): string | null {
   if (member.startsWith(`${source}:`) && member.length > source.length + 1) return member;
   const ids = [...new Set(holder?.nativeIds?.[source] ?? [])];
   return ids.length === 1 && ids[0] ? `${source}:${ids[0]}` : null;

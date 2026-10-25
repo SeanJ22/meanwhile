@@ -41,7 +41,7 @@ import { LegislatorBills } from "@/components/officials/legislator-bills";
 interface OfficialModalProps {
   holder: SeatHolder;
   seatLabel: string | null;
-  tier: Tier;
+  tier: Tier | null;
   reactionContext: ReactionViewContext | null;
   onClose: () => void;
   /** Rendered as the body of the reader's one large card, which owns the frame, Escape, Back and Close. */
@@ -100,7 +100,7 @@ export function OfficialModal({
         title={holder.name}
         identityKey={holder.id}
         subject={{ type: "CANDIDATE", id: holder.id }}
-        eyebrow={<span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span>}
+        eyebrow={tier ? <span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span> : undefined}
         onClose={embedded ? undefined : onClose}
         className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}
         independent={embedded}

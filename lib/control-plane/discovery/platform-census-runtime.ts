@@ -26,6 +26,8 @@ import { knownRecipes, RECIPE_KIND } from "../../hunt/meetings-recipes.ts";
 import { readDiscoveryRouteHints, routeHintEntriesBySubject } from "./route-hints.ts";
 import { platformFetch } from "../../doors/platform-http.ts";
 import { platformCensusWatchdog } from "./platform-census-watchdog.ts";
+import { readerFactDb } from "../../facts/db.ts";
+import { withdrawPlatformPublication,confirmPlatformPublication } from "../../facts/portal-publication.ts";
 
 /** Targeted reads of CP-01's per-entry store, shared with the schema integration check. */
 export const PLATFORM_CENSUS_NOTES_SQL = {
@@ -41,6 +43,9 @@ export const PLATFORM_CENSUS_NOTES_SQL = {
       AND value->>'url' IS NOT NULL ORDER BY id LIMIT 1`,
   government: `SELECT value FROM cp_field_manual_entries WHERE (value #>> '{payload,jurisdictionId}'=$1 OR value #>> '{payload,subjectId}'=$1)
     AND value->>'kind' IN ('SCOUT_DISCOVERY','ROUTE','GOVERNMENT_WEBSITE','NCES_WEBSITE','PLATFORM_CENSUS_DOMAIN')`,
+  portals: `SELECT DISTINCT value #>> '{config,governmentId}' AS subject FROM cp_doors
+    WHERE value->'config' ? 'crosswalkRowId' AND value #>> '{config,governmentId}'>$1
+    ORDER BY subject LIMIT 1`,
 } as const;
 
 /** The runner child admits one government or one directory page per worker and retains only their inventory cursors. */
@@ -99,10 +104,19 @@ export async function runNationalPlatformCensus() {
     });
     const states = REGISTRATION_TARGETS.map(target => target.state.toLowerCase());
     const report = await runPlatformCensusPass({ repos, query, states, now, stopped: ended, reviewer,
+      withdraw:(door,portal) => withdrawPlatformPublication(readerFactDb(readerConnection),door,portal),
+      confirm:door=>confirmPlatformPublication(readerFactDb(readerConnection),door),
       ownerSubjects: async () => { orders = await readPlatformOrders(controlQuery); if (orders.paused) stopped = true; return orders.subjects; },
       ownerGovernments: subjects => orderedPlatformGovernments(controlQuery, query, subjects),
       tenantFor: page => dotgov ? dotgovTenantForGovernment(dotgov.body, dotgov.sourceVersion, platformRegistrationNeed(page)!) : undefined,
       retryGovernments: async function* () {
+        let government = '';
+        for (;;) {
+          const [row] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.portals,[government]);
+          if (!row || ended()) break;
+          government = String(row.subject);
+          yield* ownerPlatformGovernments(query,[government]);
+        }
         let after = "";
         for (;;) {
           const [row] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.retry, [after, now()]);

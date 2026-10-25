@@ -1,0 +1,1068 @@
+{
+  "build": {
+    "status": 200,
+    "value": {
+      "commit": "d3416a24f38edb1c331e9dab4d92bc3bfa4e399b",
+      "commitShort": "d3416a2",
+      "branch": "main",
+      "context": "production",
+      "deployId": "6add2782e3c423f4f56891ab",
+      "buildEnv": {
+        "hasCommitRef": true,
+        "hasNetlify": true,
+        "hasContext": true
+      },
+      "runtime": {
+        "nodeEnv": "production",
+        "hasNetlify": false,
+        "hasContext": false,
+        "contextValue": null,
+        "hasDeployId": false,
+        "dbRole": "production"
+      }
+    }
+  },
+  "endBuild": {
+    "at": "2026-10-24T22:58:00.585Z",
+    "status": 200,
+    "browser": "Google Chrome for Testing156.0.8078.47",
+    "runId": "CL-01-release103-final-production-build-@2026-10-24T22:57:59.797Z",
+    "value": {
+      "commit": "d3416a24f38edb1c331e9dab4d92bc3bfa4e399b",
+      "commitShort": "d3416a2",
+      "branch": "main",
+      "context": "production",
+      "deployId": "6add2782e3c423f4f56891ab",
+      "buildEnv": {
+        "hasCommitRef": true,
+        "hasNetlify": true,
+        "hasContext": true
+      },
+      "runtime": {
+        "nodeEnv": "production",
+        "hasNetlify": false,
+        "hasContext": false,
+        "contextValue": null,
+        "hasDeployId": false,
+        "dbRole": "production"
+      }
+    },
+    "writesBlocked": {
+      "count": 0,
+      "paths": []
+    }
+  },
+  "runId": "CL-01-release103-actual-production-Chrom@2026-10-24T22:51:10.701Z",
+  "browser": "Google Chrome for Testing156.0.8078.47",
+  "ballots": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "legacyTargetsCompared": 35,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "legacyTargetsCompared": 75,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "legacyTargetsCompared": 16,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "MI",
+      "zip": "48933",
+      "legacyTargetsCompared": 80,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "PA",
+      "zip": "19147",
+      "legacyTargetsCompared": 10,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "CA",
+      "zip": "95814",
+      "legacyTargetsCompared": 20,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "NY",
+      "zip": "10007",
+      "legacyTargetsCompared": 30,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "TX",
+      "zip": "78701",
+      "legacyTargetsCompared": 87,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "FL",
+      "zip": "32301",
+      "legacyTargetsCompared": 23,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "GA",
+      "zip": "30303",
+      "legacyTargetsCompared": 46,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "legacyTargetsCompared": 41,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    },
+    {
+      "state": "CT",
+      "zip": "06103",
+      "legacyTargetsCompared": 36,
+      "missingContests": [],
+      "missingAliases": [],
+      "missingQuotedBios": [],
+      "missingLinks": [],
+      "portraitLosses": [],
+      "duplicateCanonicalPersonIds": []
+    }
+  ],
+  "ownCardsOpened": 17,
+  "requiredTenOtherStates": [
+    "CO",
+    "WI",
+    "MI",
+    "PA",
+    "CA",
+    "NY",
+    "TX",
+    "FL",
+    "GA",
+    "NH"
+  ],
+  "cardFailures": [],
+  "pageActionsOver3s": [
+    {
+      "state": "CO",
+      "zip": "80202",
+      "ms": 4052
+    },
+    {
+      "state": "TX",
+      "zip": "78701",
+      "ms": 3421
+    }
+  ],
+  "cardActionsOver3s": [
+    {
+      "name": "Sally Ann Gonzales",
+      "ms": 5774,
+      "reads": [
+        {
+          "id": "AZ-85701-3",
+          "url": "https://meanwhileusa.com/api/directory?member=az-legislature%3A2381&state=AZ",
+          "startedAt": "2026-10-24T22:51:21.924Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:51:23.388Z",
+          "finishedAt": "2026-10-24T22:51:23.388Z",
+          "elapsedMs": 1464
+        },
+        {
+          "id": "AZ-85701-4",
+          "url": "https://meanwhileusa.com/api/votes?member=az-legislature%3A2381&state=AZ",
+          "startedAt": "2026-10-24T22:51:21.925Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:51:22.630Z",
+          "finishedAt": "2026-10-24T22:51:22.632Z",
+          "elapsedMs": 707
+        },
+        {
+          "id": "AZ-85701-5",
+          "url": "https://meanwhileusa.com/api/bills?state=AZ&member=az-legislature%3A2381",
+          "startedAt": "2026-10-24T22:51:21.926Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:51:22.605Z",
+          "finishedAt": "2026-10-24T22:51:22.606Z",
+          "elapsedMs": 680
+        },
+        {
+          "id": "AZ-85701-6",
+          "url": "https://meanwhileusa.com/api/profile/az-legislature%3A2381",
+          "startedAt": "2026-10-24T22:51:21.935Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:51:26.986Z",
+          "finishedAt": "2026-10-24T22:51:27.023Z",
+          "elapsedMs": 5087
+        },
+        {
+          "id": "AZ-85701-7",
+          "url": "https://meanwhileusa.com/api/official-actions/az-legislature%3A2381?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fsldl%3A20&lat=32.21704&lng=-110.97134",
+          "startedAt": "2026-10-24T22:51:21.936Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:51:24.380Z",
+          "finishedAt": "2026-10-24T22:51:24.387Z",
+          "elapsedMs": 2452
+        }
+      ]
+    },
+    {
+      "name": "Dan Patrick",
+      "ms": 3029,
+      "reads": [
+        {
+          "id": "TX-78701-1",
+          "url": "https://meanwhileusa.com/api/directory?member=plural%3Atx%3A22c1bff3-e936-4398-8d7c-95233e85b5c5&state=TX",
+          "startedAt": "2026-10-24T22:52:21.546Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:22.616Z",
+          "finishedAt": "2026-10-24T22:52:22.616Z",
+          "elapsedMs": 1070
+        },
+        {
+          "id": "TX-78701-2",
+          "url": "https://meanwhileusa.com/api/profile/plural%3Atx%3A22c1bff3-e936-4398-8d7c-95233e85b5c5",
+          "startedAt": "2026-10-24T22:52:21.549Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:22.997Z",
+          "finishedAt": "2026-10-24T22:52:23.029Z",
+          "elapsedMs": 1480
+        },
+        {
+          "id": "TX-78701-3",
+          "url": "https://meanwhileusa.com/api/official-actions/plural%3Atx%3A22c1bff3-e936-4398-8d7c-95233e85b5c5?division=ocd-division%2Fcountry%3Aus%2Fstate%3Atx&lat=30.27057&lng=-97.74259",
+          "startedAt": "2026-10-24T22:52:21.550Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:24.355Z",
+          "finishedAt": "2026-10-24T22:52:24.355Z",
+          "elapsedMs": 2805
+        }
+      ]
+    },
+    {
+      "name": "Ashley Moody",
+      "ms": 3074,
+      "reads": [
+        {
+          "id": "FL-32301-1",
+          "url": "https://meanwhileusa.com/api/directory?member=congress%3AM001244&state=FL",
+          "startedAt": "2026-10-24T22:52:27.265Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:29.697Z",
+          "finishedAt": "2026-10-24T22:52:29.735Z",
+          "elapsedMs": 2471
+        },
+        {
+          "id": "FL-32301-2",
+          "url": "https://meanwhileusa.com/api/votes?member=congress%3AM001244&state=FL",
+          "startedAt": "2026-10-24T22:52:27.268Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:28.849Z",
+          "finishedAt": "2026-10-24T22:52:28.877Z",
+          "elapsedMs": 1609
+        },
+        {
+          "id": "FL-32301-3",
+          "url": "https://meanwhileusa.com/api/federal-civic?member=congress%3AM001244&offset=0",
+          "startedAt": "2026-10-24T22:52:27.268Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:27.528Z",
+          "finishedAt": "2026-10-24T22:52:27.528Z",
+          "elapsedMs": 260
+        },
+        {
+          "id": "FL-32301-4",
+          "url": "https://meanwhileusa.com/api/federal-civic?offset=0",
+          "startedAt": "2026-10-24T22:52:27.270Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:28.306Z",
+          "finishedAt": "2026-10-24T22:52:28.308Z",
+          "elapsedMs": 1038
+        },
+        {
+          "id": "FL-32301-5",
+          "url": "https://meanwhileusa.com/api/profile/congress%3AM001244",
+          "startedAt": "2026-10-24T22:52:27.270Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:29.711Z",
+          "finishedAt": "2026-10-24T22:52:29.743Z",
+          "elapsedMs": 2472
+        },
+        {
+          "id": "FL-32301-6",
+          "url": "https://meanwhileusa.com/api/official-actions/congress%3AM001244?division=ocd-division%2Fcountry%3Aus%2Fstate%3Afl&lat=30.42762&lng=-84.25775",
+          "startedAt": "2026-10-24T22:52:27.271Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:30.090Z",
+          "finishedAt": "2026-10-24T22:52:30.091Z",
+          "elapsedMs": 2820
+        },
+        {
+          "id": "FL-32301-7",
+          "url": "https://meanwhileusa.com/api/votes?member=congress%3AM001244&history=1&state=FL",
+          "startedAt": "2026-10-24T22:52:28.888Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:29.473Z",
+          "finishedAt": "2026-10-24T22:52:29.473Z",
+          "elapsedMs": 586
+        }
+      ]
+    },
+    {
+      "name": "Maggie Goodlander",
+      "ms": 4597,
+      "reads": [
+        {
+          "id": "NH-03301-1",
+          "url": "https://meanwhileusa.com/api/directory?member=congress%3AG000604&state=NH",
+          "startedAt": "2026-10-24T22:52:42.116Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:44.174Z",
+          "finishedAt": "2026-10-24T22:52:44.203Z",
+          "elapsedMs": 2087
+        },
+        {
+          "id": "NH-03301-2",
+          "url": "https://meanwhileusa.com/api/votes?member=congress%3AG000604&state=NH",
+          "startedAt": "2026-10-24T22:52:42.117Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:45.960Z",
+          "finishedAt": "2026-10-24T22:52:45.961Z",
+          "elapsedMs": 3844
+        },
+        {
+          "id": "NH-03301-3",
+          "url": "https://meanwhileusa.com/api/federal-civic?member=congress%3AG000604&offset=0",
+          "startedAt": "2026-10-24T22:52:42.117Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:43.361Z",
+          "finishedAt": "2026-10-24T22:52:43.372Z",
+          "elapsedMs": 1255
+        },
+        {
+          "id": "NH-03301-4",
+          "url": "https://meanwhileusa.com/api/federal-civic?offset=0",
+          "startedAt": "2026-10-24T22:52:42.117Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:43.921Z",
+          "finishedAt": "2026-10-24T22:52:43.922Z",
+          "elapsedMs": 1804
+        },
+        {
+          "id": "NH-03301-5",
+          "url": "https://meanwhileusa.com/api/profile/congress%3AG000604",
+          "startedAt": "2026-10-24T22:52:42.119Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:42.831Z",
+          "finishedAt": "2026-10-24T22:52:42.879Z",
+          "elapsedMs": 760
+        },
+        {
+          "id": "NH-03301-6",
+          "url": "https://meanwhileusa.com/api/official-actions/congress%3AG000604?division=ocd-division%2Fcountry%3Aus%2Fstate%3Anh%2Fcd%3A2&lat=43.2386&lng=-71.55626",
+          "startedAt": "2026-10-24T22:52:42.120Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:43.634Z",
+          "finishedAt": "2026-10-24T22:52:43.634Z",
+          "elapsedMs": 1514
+        },
+        {
+          "id": "NH-03301-7",
+          "url": "https://meanwhileusa.com/api/votes?member=congress%3AG000604&history=1&state=NH",
+          "startedAt": "2026-10-24T22:52:45.966Z",
+          "status": 200,
+          "responseAt": "2026-10-24T22:52:46.484Z",
+          "finishedAt": "2026-10-24T22:52:46.484Z",
+          "elapsedMs": 518
+        }
+      ]
+    }
+  ],
+  "azBills": [
+    {
+      "name": "Sally Ann Gonzales",
+      "status": 200,
+      "billCount": 0,
+      "complete": false,
+      "visibleSponsoredBills": false
+    },
+    {
+      "name": "Betty Villegas",
+      "status": 200,
+      "billCount": 0,
+      "complete": false,
+      "visibleSponsoredBills": false
+    },
+    {
+      "name": "Alma Hernandez",
+      "status": 200,
+      "billCount": 66,
+      "complete": false,
+      "visibleSponsoredBills": true
+    }
+  ],
+  "maps": [
+    {
+      "zip": "27601",
+      "name": "Deborah Ross",
+      "id": "congress:R000305",
+      "diagnostic": true,
+      "beforeClick": {
+        "expanded": "false",
+        "disabled": false,
+        "handlerPresent": true,
+        "officials": "16"
+      },
+      "navigationToPillMs": 1717,
+      "numberOfClicks": 1,
+      "numberOfEntries": 1,
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+          "alt": "Deborah K. Ross",
+          "complete": false,
+          "naturalWidth": 0,
+          "decoded": false
+        }
+      ],
+      "rowText": "Deborah K. Ross\nDemocratic",
+      "ownCardDiagnosticUsableMs": 3579,
+      "ownCardPortraits": [
+        {
+          "src": "/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+          "alt": "Portrait of Deborah K. Ross",
+          "complete": true,
+          "naturalWidth": 175,
+          "decoded": true
+        }
+      ],
+      "diagnosticCardHttpFailures": [],
+      "rawHarnessGoverningActionMs": 8239,
+      "governingActionUsableMs": null,
+      "timingLimitation": "Bounded diagnostic waited8seconds for an offscreen lazy image before scrolling. This is a harness timing error, not a valid production map-action latency. One row was visible232ms after click began; its image was requested after scroll and decoded on owncard.",
+      "navigationTimingLimitation": "Diagnostic navigation includes an early evidence screenshot; it is not an untouched firstpage measurement."
+    },
+    {
+      "zip": "33602",
+      "name": "Kathy Castor",
+      "id": "congress:C001066",
+      "diagnostic": true,
+      "beforeClick": {
+        "expanded": "false",
+        "disabled": false,
+        "handlerPresent": true,
+        "officials": "\u2026"
+      },
+      "navigationToPillMs": 1564,
+      "governingActionUsableMs": 744,
+      "numberOfClicks": 1,
+      "numberOfEntries": 1,
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/e0912e27362004462c6931096b7839c2474a70945c24e7bc02fe9326101d73f8.webp",
+          "alt": "Kathy Castor",
+          "complete": true,
+          "naturalWidth": 427,
+          "decoded": true
+        }
+      ],
+      "rowText": "Kathy Castor\nDemocratic",
+      "citations": [
+        {
+          "label": "original-Congress-image",
+          "url": "https://www.congress.gov/img/member/c001066_200.jpg",
+          "count": 1,
+          "sourceText": "Kathy Castor \u2014 Portrait; Kathy Castor \u2014 Portrait image\n\nPUBLISHED BY\nunitedstates/congress-legislators (community project) \u00b7 Portrait: https://api.congress.gov/v3/member/C001066?format=json\nREAD FROM\nwww.congress.gov\nLAST CHECKED\n2026-10-10\nVERIFIED\n2026-10-10"
+        },
+        {
+          "label": "new-office-image",
+          "url": "https://castor.house.gov/images/kathy_castor.jpg",
+          "count": 1,
+          "sourceText": "Kathy Castor \u2014 Portrait; Kathy Castor \u2014 Portrait image\n\nPUBLISHED BY\nCongress.gov / Library of Congress \u00b7 Portrait: https://castor.house.gov/\nREAD FROM\ncastor.house.gov\nLAST CHECKED\n2026-10-15\nVERIFIED\n2026-10-24"
+        }
+      ],
+      "ownCardDiagnosticUsableMs": 3573,
+      "ownCardPortraits": [
+        {
+          "src": "/api/portraits/officials/e0912e27362004462c6931096b7839c2474a70945c24e7bc02fe9326101d73f8.webp",
+          "alt": "Portrait of Kathy Castor",
+          "complete": true,
+          "naturalWidth": 427,
+          "decoded": true
+        }
+      ],
+      "diagnosticCardHttpFailures": [],
+      "navigationTimingLimitation": "Diagnostic navigation includes an early evidence screenshot; it is not an untouched firstpage measurement."
+    }
+  ],
+  "httpFailures": [],
+  "pageErrors": [],
+  "writesBlocked": {
+    "count": 24,
+    "paths": [
+      "/api/events",
+      "/api/log"
+    ]
+  },
+  "timingDefinitions": {
+    "page": "performance.now immediately before browser goto until first contest and person visible, then first viewport candidate portraits decoded; no section inspection or screenshots included",
+    "card": "performance.now immediately before the single native View Battlecard click until dialog visible, voting/public-statements loaders gone, relevant card reads complete through requestfinished (two100ms empty observations), and identity portrait decoded; section expansion and evidence screenshots follow the measurement",
+    "map": "navigation to usable ZIP-restored Who Governs button is measured separately from the one click until correct representative row and decoded portrait; own-card click measured separately"
+  },
+  "finishedAt": "2026-10-24T22:56:18.253Z",
+  "sameProductionCommitAtStartAndEnd": true,
+  "legacyTargetRowsCompared": 499,
+  "allBallotTimings": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "firstContestVisibleMs": 2165,
+      "pageUsableMs": 2206
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "firstContestVisibleMs": 4017,
+      "pageUsableMs": 4052
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "firstContestVisibleMs": 2952,
+      "pageUsableMs": 2968
+    },
+    {
+      "state": "MI",
+      "zip": "48933",
+      "firstContestVisibleMs": 1842,
+      "pageUsableMs": 1866
+    },
+    {
+      "state": "PA",
+      "zip": "19147",
+      "firstContestVisibleMs": 1712,
+      "pageUsableMs": 1726
+    },
+    {
+      "state": "CA",
+      "zip": "95814",
+      "firstContestVisibleMs": 2025,
+      "pageUsableMs": 2057
+    },
+    {
+      "state": "NY",
+      "zip": "10007",
+      "firstContestVisibleMs": 1696,
+      "pageUsableMs": 1711
+    },
+    {
+      "state": "TX",
+      "zip": "78701",
+      "firstContestVisibleMs": 3384,
+      "pageUsableMs": 3421
+    },
+    {
+      "state": "FL",
+      "zip": "32301",
+      "firstContestVisibleMs": 1655,
+      "pageUsableMs": 1690
+    },
+    {
+      "state": "GA",
+      "zip": "30303",
+      "firstContestVisibleMs": 1564,
+      "pageUsableMs": 1595
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "firstContestVisibleMs": 2221,
+      "pageUsableMs": 2262
+    },
+    {
+      "state": "CT",
+      "zip": "06103",
+      "firstContestVisibleMs": 1496,
+      "pageUsableMs": 1578
+    }
+  ],
+  "allFirstOwnCardTimings": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "name": "Katie Hobbs",
+      "personId": "statewide:az/governor",
+      "linked": true,
+      "usableMs": 1396,
+      "dialogName": "Katie Hobbs",
+      "portraits": [
+        {
+          "src": "/officials/statewide-az-governor.jpg",
+          "alt": "Portrait of Katie Hobbs",
+          "complete": true,
+          "naturalWidth": 284,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "name": "John Giles",
+      "personId": "az-pima-general-2026-running-mate-john-giles",
+      "linked": false,
+      "usableMs": 1988,
+      "dialogName": "John Giles",
+      "portraits": [],
+      "error": null
+    },
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "name": "Sally Ann Gonzales",
+      "personId": "az-legislature:2381",
+      "linked": true,
+      "usableMs": 5774,
+      "dialogName": "Sally Ann Gonzales",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+          "alt": "Portrait of Sally Ann Gonzales",
+          "complete": true,
+          "naturalWidth": 1638,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "name": "Betty Villegas",
+      "personId": "az-legislature:2346",
+      "linked": true,
+      "usableMs": 1902,
+      "dialogName": "Betty Villegas",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+          "alt": "Portrait of Betty Villegas",
+          "complete": true,
+          "naturalWidth": 956,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "name": "Alma Hernandez",
+      "personId": "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+      "linked": true,
+      "usableMs": 2036,
+      "dialogName": "Alma Hernandez",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+          "alt": "Portrait of Alma Hernandez",
+          "complete": true,
+          "naturalWidth": 811,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "name": "John Hickenlooper",
+      "personId": "congress:H000273",
+      "linked": true,
+      "usableMs": 2429,
+      "dialogName": "John Hickenlooper",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/dce1477c63366eb19dc71605cef2d7c01d683f98a723c21e4a8364151b186d57.webp",
+          "alt": "Portrait of John Hickenlooper",
+          "complete": true,
+          "naturalWidth": 200,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "name": "Mark Pocan",
+      "personId": "congress:P000607",
+      "linked": true,
+      "usableMs": 2125,
+      "dialogName": "Mark Pocan",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/b1024c9e68eeb8b36b63b98facec8929cd4c0882d5ff197aac08b3c6ca842578.webp",
+          "alt": "Portrait of Mark Pocan",
+          "complete": true,
+          "naturalWidth": 175,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "MI",
+      "zip": "48933",
+      "name": "Tom Barrett",
+      "personId": "congress:B001321",
+      "linked": true,
+      "usableMs": 1635,
+      "dialogName": "Tom Barrett",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/c8316d4ee1ce5bc7d63b9375ec5f3cd0ede1db8e4049f079901e55a3b56c168f.webp",
+          "alt": "Portrait of Tom Barrett",
+          "complete": true,
+          "naturalWidth": 200,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "PA",
+      "zip": "19147",
+      "name": "Brendan F Boyle",
+      "personId": "congress:B001296",
+      "linked": true,
+      "usableMs": 2532,
+      "dialogName": "Brendan F Boyle",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/4933d1d277165d30e1af8b594b7ff5801d2755b39e12cea61a5456d1e5fd5910.webp",
+          "alt": "Portrait of Brendan F Boyle",
+          "complete": true,
+          "naturalWidth": 200,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "CA",
+      "zip": "95814",
+      "name": "Rob Bonta",
+      "personId": "plural:1529b892-b3da-4958-bb3a-5bf04d7b5e0c",
+      "linked": true,
+      "usableMs": 2914,
+      "dialogName": "Rob Bonta",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/acec685e5ef1f6b4c85035f69f299aea79adeb5f2bff71d5c56636e3f64f4184.webp",
+          "alt": "Portrait of Rob Bonta",
+          "complete": true,
+          "naturalWidth": 1365,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "NY",
+      "zip": "10007",
+      "name": "Letitia A James",
+      "personId": "plural:a620faf8-81e3-490e-8d26-dbf84c707786",
+      "linked": true,
+      "usableMs": 2631,
+      "dialogName": "Letitia A. James",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/e8d7f6254cbc70faf7ec65ba0aa95a2a128a2cc692a598eff95bee985a3dfc41.webp",
+          "alt": "Portrait of Letitia A. James",
+          "complete": true,
+          "naturalWidth": 1280,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "TX",
+      "zip": "78701",
+      "name": "Dan Patrick",
+      "personId": "plural:22c1bff3-e936-4398-8d7c-95233e85b5c5",
+      "linked": true,
+      "usableMs": 3029,
+      "dialogName": "Dan Patrick",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/1922ef6ccd793b3720d0342a79fff7f780a36a86f331e55afd02f7bb4c3f359d.webp",
+          "alt": "Portrait of Dan Patrick",
+          "complete": true,
+          "naturalWidth": 740,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "FL",
+      "zip": "32301",
+      "name": "Ashley Moody",
+      "personId": "congress:M001244",
+      "linked": true,
+      "usableMs": 3074,
+      "dialogName": "Ashley Moody",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/39501ba56d246ad8cd7b3aa88aa97b0e616844b957626eaac0453622a5d07137.webp",
+          "alt": "Portrait of Ashley Moody",
+          "complete": true,
+          "naturalWidth": 180,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "GA",
+      "zip": "30303",
+      "name": "Jon Ossoff",
+      "personId": "congress:O000174",
+      "linked": true,
+      "usableMs": 2635,
+      "dialogName": "Jon Ossoff",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/c37e7ee7cf9b0293e412eab866486118658e56c14c5659b7530fe389d1bee2b3.webp",
+          "alt": "Portrait of Jon Ossoff",
+          "complete": true,
+          "naturalWidth": 180,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "name": "Maggie Goodlander",
+      "personId": "congress:G000604",
+      "linked": true,
+      "usableMs": 4597,
+      "dialogName": "Maggie Goodlander",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/a9ef6179c4d38327cf035d2aa14ceff29cbf7ad7f2fad3726ace150501c44ada.webp",
+          "alt": "Portrait of Maggie Goodlander",
+          "complete": true,
+          "naturalWidth": 744,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "CT",
+      "zip": "06103",
+      "name": "Ned Lamont",
+      "personId": "plural:4cd3e60f-3830-4121-965f-f29d9b5ec6e7",
+      "linked": true,
+      "usableMs": 2183,
+      "dialogName": "Ned Lamont",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/91f8dd19a47c943e2cce745b63941de9e8b08aef549f5ea2618307cf7d2e5ea7.webp",
+          "alt": "Portrait of Ned Lamont",
+          "complete": true,
+          "naturalWidth": 600,
+          "decoded": true
+        }
+      ],
+      "error": null
+    },
+    {
+      "state": "CT",
+      "zip": "06103",
+      "name": "Susan Bysiewicz",
+      "personId": "plural:e5e49f6f-a9d8-4f9c-b235-53f7f571c3e3",
+      "linked": true,
+      "usableMs": 1925,
+      "dialogName": "Susan Bysiewicz",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/119e0619c4acf017fe3ee82237fdcaa19dc68f03e1c82bc8fbc7283b3d9ab572.webp",
+          "alt": "Portrait of Susan Bysiewicz",
+          "complete": true,
+          "naturalWidth": 600,
+          "decoded": true
+        }
+      ],
+      "error": null
+    }
+  ],
+  "azHobbsGilesTicketCount": 1,
+  "azOfficialPortraits": [
+    {
+      "name": "Katie Hobbs",
+      "portraits": [
+        {
+          "src": "/officials/statewide-az-governor.jpg",
+          "alt": "Katie Hobbs",
+          "complete": true,
+          "naturalWidth": 284,
+          "decoded": true
+        }
+      ]
+    },
+    {
+      "name": "Sally Ann Gonzales",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+          "alt": "Sally Ann Gonzales",
+          "complete": true,
+          "naturalWidth": 1638,
+          "decoded": true
+        }
+      ]
+    },
+    {
+      "name": "Betty Villegas",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+          "alt": "Betty Villegas",
+          "complete": true,
+          "naturalWidth": 956,
+          "decoded": true
+        }
+      ]
+    },
+    {
+      "name": "Alma Hernandez",
+      "portraits": [
+        {
+          "src": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+          "alt": "Alma Hernandez",
+          "complete": true,
+          "naturalWidth": 811,
+          "decoded": true
+        }
+      ]
+    }
+  ],
+  "diagnosticOwnCardActionsOver3s": [
+    {
+      "zip": "27601",
+      "name": "Deborah Ross",
+      "ms": 3579
+    },
+    {
+      "zip": "33602",
+      "name": "Kathy Castor",
+      "ms": 3573
+    }
+  ],
+  "originalHarnessStall": {
+    "at": "2026-10-24T22:56:18.166775+00:00",
+    "observed": "Combined Chrome run completed and saved12ballots/17owncards, then produced no map evidence for more than180seconds. Last summary and original log retained. Map phase has unbounded image.decode() in harness, so root cause cannot be assigned from this run. No map timing or completion claimed.",
+    "action": "Terminate owned Node browser harness66516; next run separately labeled diagnostic with phase logging and bounded decode. A later success proves recovery only.",
+    "locationEstablished": "Original run was awaiting locator.evaluateAll image.decode() before scrolling to the Ross row. Diagnostic showed complete:false/naturalWidth0 until scroll, then portrait GET began at22:56:57.075Z and200response arrived22:56:58.363Z. SIGTERM closed original browser and caused its recorded targetclosed errors. Those termination errors are not production failures.",
+    "artifacts": [
+      "first-attempt-summary.json",
+      "original-stall.json",
+      "run.log",
+      "summary.json",
+      "map-diagnostic/summary.json"
+    ],
+    "originalMapSpeed": "Unknown. Diagnostic recovery does not resolve original timing uncertainty."
+  },
+  "existingPhotoCaveat": "Susan Bysiewicz uses a wide Capitol/group photograph, unchanged exact portrait URL119e0619...webp from release98. It decodes; visual suitability is still a data issue, not a new photo loss.",
+  "allWritesBlocked": {
+    "mainRun": {
+      "count": 24,
+      "paths": [
+        "/api/events",
+        "/api/log"
+      ]
+    },
+    "mapDiagnostic": {
+      "count": 10,
+      "paths": [
+        "/api/log",
+        "/api/events"
+      ]
+    },
+    "endBuild": {
+      "count": 0,
+      "paths": []
+    },
+    "count": 34
+  },
+  "scope": "Read-only current production Chrome QA. No code or database changes; unpublished CL-01 followup not claimed deployed. Ruling\u00a70: preserve people, their records, sources and usable first-use performance.",
+  "processCleanup": "Owned main and map-diagnostic Chrome harnesses and final build-check harness exited; old mainNode66516/Chrome66529 absent. No owned webservers started. Parent watcher untouched.",
+  "consolidatedAt": "2026-10-24T22:58:43.367324+00:00"
+}

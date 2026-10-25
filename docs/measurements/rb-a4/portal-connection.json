@@ -1,0 +1,47 @@
+{
+  "productionRole": "wtp_cp_release_readonly",
+  "productionWrites": 0,
+  "doorId": "meetings:legistar-insite:government%3AUS-OR%3Acog%3A155003%23body%3Aconstruction-committee:route:e319b7effab3084e",
+  "government": {
+    "id": "government:US-OR:cog:155003",
+    "kind": "GOVERNMENT",
+    "name": "METRO",
+    "state": "OR",
+    "status": "Y",
+    "aliases": [
+      "or:special:metro"
+    ],
+    "bodyIds": [],
+    "website": "http://www.oregonmetro.gov/",
+    "nativeIds": {
+      "census_pid6": "155003"
+    },
+    "countyFips": "41051",
+    "provenance": {
+      "sourceOrg": "U.S. Census Bureau",
+      "sourceUrl": "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP",
+      "verifiedAt": null,
+      "collectedAt": "2026-10-10T02:27:50.823Z"
+    },
+    "officePhone": null,
+    "associations": [],
+    "contactTitle": "METRO COUNCIL",
+    "officeAddress": null,
+    "sourceVintage": "cog-2022",
+    "jurisdictionId": "or:special:metro",
+    "mailingAddress": "600 NE GRAND AVE, PORTLAND, OR, 97232-2736",
+    "governmentClass": "SPECIAL DISTRICT"
+  },
+  "portal": "https://metro.legistar.com/Calendar.aspx",
+  "sources": [
+    {
+      "url": "https://www.oregonmetro.gov/",
+      "status": 200,
+      "sha256": "a41fbfb502a750e7ece0405d18a89439ca5441462eaaae5569d0a9e024586da7"
+    }
+  ],
+  "firstRun": "SUSPENDED in isolated control-plane copy; reader withdrawal invoked",
+  "nextRun": "still SUSPENDED; directory cannot reopen the wrong portal",
+  "preservedDoorId": true,
+  "withdrawalCalls": 2
+}

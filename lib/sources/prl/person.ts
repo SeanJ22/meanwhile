@@ -1,12 +1,12 @@
 import type { SeatHolder } from "../../officials/lookup.ts";
-import { seatHolderById } from "../../registry/server.ts";
+import { readHeldPersonIdentity, type HeldPersonIdentity } from "../../officials/person-read.ts";
 import { readerPersonKeys } from "../../identity/reader-person.ts";
 import type { EvidenceRecord } from "../../ask/evidence.ts";
 import { readPrlPerson, type PrlPersonKeys, type PrlPersonRead } from "./reader.ts";
 import { normalize, searchTerms } from "../../corpus/positions.ts";
 
 /** Exact publisher IDs reach PRL; a display name never chooses an archive partition. */
-export function prlPersonKeys(subjectId: string, holder?: SeatHolder | null): PrlPersonKeys {
+export function prlPersonKeys(subjectId: string, holder?: Pick<HeldPersonIdentity, "nativeIds"> | null): PrlPersonKeys {
   const ids = holder?.nativeIds ?? {};
   const unique = (values: readonly string[]) => new Set(values).size === 1 ? values[0] : undefined;
   const uuid = /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/.exec(subjectId)?.[1];
@@ -18,11 +18,11 @@ export function prlPersonKeys(subjectId: string, holder?: SeatHolder | null): Pr
 }
 
 export async function readPrlForSubject(subjectId: string, knownHolder?: SeatHolder | null): Promise<PrlPersonRead> {
-  let holder = knownHolder;
+  let holder: HeldPersonIdentity | null | undefined = knownHolder;
   if (!holder) {
     let keys = [subjectId];
     try { keys = readerPersonKeys(subjectId).keys; } catch { /* Source-native keys remain independently readable. */ }
-    const reads = await Promise.allSettled(keys.map(key => seatHolderById(key)));
+    const reads = await Promise.allSettled(keys.map(key => readHeldPersonIdentity(key)));
     const found = new Map(reads.flatMap(read => read.status === "fulfilled" && read.value ? [[read.value.id, read.value] as const] : []));
     if (found.size === 1) holder = [...found.values()][0];
   }

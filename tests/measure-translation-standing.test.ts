@@ -1,3 +1,4 @@
+import { measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
@@ -27,9 +28,8 @@ function fixture() {
     saveAttempt: async (attempt: TranslationAttempt) => { saved.push(attempt); },
     transportFor: () => async (request: ModelRequest) => {
       requests.push(request);
-      const value = request.tools[0].name === "write_measure_translation" ? {
-        measure: { ...measure, sourceHash: translationHash(input.captures[0].evidence.text), writtenAt: input.now }, sentences,
-      } : { checked: sentences.map(({ field, text }) => ({ field, text, supported: checkerPass })) };
+      const value = request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences)
+        : { checked: sentences.map(({ field, text }) => ({ field, text, supported: checkerPass })) };
       return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: value }],
         usage: { input_tokens: 100, output_tokens: 50 } };
     },
@@ -102,9 +102,9 @@ test("a measure without a hand-made record gets checked summary and vote meaning
   const result = await runHeldMeasureTranslations(f.input);
   assert.equal(result.outcomes[0].status, "PUBLISHED", JSON.stringify(result));
   assert.equal(f.requests.length, 2);
-  const subject = JSON.parse(f.requests[0].messages[0].content as string).subject;
-  assert.equal(subject.prior, null);
-  assert.equal(subject.sourceQuote, measure.whatItDoes);
+  const subject = measureRequestContext(f.requests[0]).subject;
+  assert.deepEqual(subject.existingParts, []);
+  assert.equal("sourceQuote" in subject, false);
 });
 
 test("legacy unnumbered parts do not block independently checked summary and vote meanings", async () => {
@@ -114,7 +114,7 @@ test("legacy unnumbered parts do not block independently checked summary and vot
   }] }] }];
   const result = await runHeldMeasureTranslations(f.input);
   assert.equal(result.outcomes[0].status, "PUBLISHED", JSON.stringify(result));
-  assert.deepEqual(JSON.parse(f.requests[0].messages[0].content as string).subject.prior.parts, []);
+  assert.deepEqual(measureRequestContext(f.requests[0]).subject.existingParts, []);
 });
 
 test("a source's published designation binds a measure despite a differently formatted display title", async () => {

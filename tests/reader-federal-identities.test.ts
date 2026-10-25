@@ -8,7 +8,7 @@ import type { FederalDirectoryReadModel } from "../lib/officials/federal-directo
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
 import { stateMemberDirectories, zipMemberDirectories } from "../lib/reader/member-directories.ts";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
-import { indexByDivision, type SeatHolder } from "../lib/officials/lookup.ts";
+import { indexByDivision, toSeatHolder, type SeatHolder } from "../lib/officials/lookup.ts";
 import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { civicDataReadNotInitialized } from "../lib/civic-data/read-model.ts";
 import { heldPersonSources } from "../lib/officials/held-sources.ts";
@@ -311,7 +311,7 @@ test("state office directories retain exact aliases, order, and provenance witho
 
 test("indexed multi-seat identities keep first-match order and never join another office", () => {
   const holder = (id: string, aliases: string[], officeTitle = "State Representative"): SeatHolder => ({
-    ...person(id, id, []), officeTitle, partyLabel: null, websiteUrl: null, sourceUrl: "https://www.myfloridahouse.gov/member", photoUrl: null,
+    ...toSeatHolder(person(id, id, [])), officeTitle, partyLabel: null, websiteUrl: null, sourceUrl: "https://www.myfloridahouse.gov/member", photoUrl: null,
     nativeIds: { reader: aliases }, social: [],
   });
   const first = holder("first", ["shared-first"]), second = holder("second", ["shared-second"]);

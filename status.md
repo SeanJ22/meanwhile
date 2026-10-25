@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). SHIPPING: release 120 (river-portraits 9bf9801a5: portraits and member offices, never re-read; gates 9 of 9) PR #832, auto-merge on. GATING: DB-03 Admin 04681516c alone on river ea117a0bb. HELD: GB-01 1636195c9 (after portraits), RB-A10 7b5eacd03 (place map 0 rows). NEXT Neon fixes: DB-03 state doors e4305907d onward, through 11072d2ed (2cce7754c and 9c2b0c58a stay unfolded). Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). SHIPPING: release 120 (river-portraits 9bf9801a5: portraits and member offices, never re-read; gates 9 of 9) PR #832, auto-merge on. GATING: DB-03 reads 8b69f0cbf alone on river ea117a0bb (river-next e4789df3a); releases after 120 is live. NEXT: DB-03 Admin 04681516c. HELD: GB-01 1636195c9 (after portraits), RB-A10 7b5eacd03 (place map 0 rows). NEXT Neon fixes: DB-03 state doors e4305907d onward, through 11072d2ed (2cce7754c and 9c2b0c58a stay unfolded). Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T21:30:00Z
+heartbeat: 2026-10-25T21:39:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1097,4 +1097,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 5:30 PM EDT
 - river-portraits 9bf9801a5 passed alone: 9 of 9 gates on ea117a0bb, 9,919 tests, 0 failing. River moved to ea117a0bb, and release 120 is PR #832 with auto-merge on.
 - DB-03 Admin 04681516c is gating alone on top of it. Same owed-route conflict, resolved the same way.
+
+### 5:40 PM EDT: DB-03 reads ahead of Admin (Sean, relayed verbatim in part)
+- "ship DB-03 reads right after release 120 … It cuts the research cycle (1.49 GB in the 4 PM hour, both databases) and Open States votes (1.72 GB in the 3 PM hour). After release 120 is live, fold 8b69f0cb next, ahead of DB-03 Admin … Fold exactly 8b69f0cb … Confirm 2cce7754c doesn't come with it. When it's live, tell me research-cycle and openstates-votes GB per hour for the two full hours after."
+- Checked: 8b69f0cbf's one parent is river 456454204; 2cce7754c, 9c2b0c58a and 11072d2ed are not ancestors. 23 files, no migration. The merge onto ea117a0bb is clean. Admin's gate was stopped; DB-03 reads is gating alone.
+- Order: release 120 live → DB-03 reads → DB-03 Admin → state doors through 11072d2ed (stopping below 2cce7754c) → GB-01 → rebuild.
 

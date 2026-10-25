@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T19:17:00Z
+heartbeat: 2026-10-25T19:19:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1049,4 +1049,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
   - Member offices: only states whose roster moved; resume after a cut; a finished run waits a day.
   - Old paths deleted. No migration, no gate, receipt or score.
 - Gating alone now. GB-01's pre-gate was stopped to free the build worktree; it reruns after.
+
+### 3:20 PM EDT: portraits tightened (relayed by the other River session)
+- Relayed from Sean, verbatim in part: "once we have a portrait for a person and it shows on the site, we never re-read it. Portrait work only happens for people who don't have one yet."
+  - Each run starts from the people with no portrait.
+  - It reads only those people's sources.
+  - The recheck of shown photos is removed.
+- The other session is building that as a follow-up READY on stream/river-portraits, on top of 3a45d44ab.
+- River's order: 3a45d44ab ships as release 119. If the follow-up is READY by the time 119 is live, it goes next as 120. If not, RB-A4 catch-up and then GB-01 ship while it builds, and the follow-up takes the next slot after whatever is gating when it lands. That way the build machine doesn't sit idle on unbuilt work, and Sean's GB-01 order keeps moving.
 

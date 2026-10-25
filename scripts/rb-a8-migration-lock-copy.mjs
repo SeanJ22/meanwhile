@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import pg from "pg";
 import { lockFirstStatement } from "./apply-migrations.mts";
+import { hourlyCountMigrationSql } from "./control-plane-migrations.mts";
+import { installHourlyCounts } from "../lib/control-plane/repository/migrations/RB-A8.ts";
 
 // A disposable local database only. Ambient production URLs are never read.
 const port = Number(process.argv[2] ?? 55438);
@@ -92,6 +94,56 @@ try {
     assert.equal((await observer.query("SELECT label FROM entity")).rows[0].label, "Writer");
     assert.deepEqual((await observer.query("SELECT value FROM fact")).rows[0].value, "Writer");
     proofs.push({ shape: `${first} then ${second}`, result: "writer and migration committed; readers responsive; partial locks=0; all stock dimensions equal direct SQL" });
+  }
+  const controlSetup = `DROP SCHEMA public CASCADE; CREATE SCHEMA public;
+    CREATE TABLE count_hour(state char(2),hour timestamptz,step text,n bigint NOT NULL DEFAULT 0 CHECK(n>=0),PRIMARY KEY(state,hour,step));
+    CREATE FUNCTION cp_control_state(v jsonb) RETURNS text LANGUAGE sql IMMUTABLE AS $$ SELECT coalesce(v->>'stateCode','system') $$;
+    ${["cp_doors", "cp_work_items", "cp_work_items_archive", "cp_box_findings", "cp_owner_snapshots"].map(table => `CREATE TABLE ${table}(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb);`).join("\n")}
+    CREATE TABLE work_row(id text PRIMARY KEY,state text,kind text,status text,not_before timestamptz);
+    INSERT INTO cp_doors VALUES('door',1,now(),'{"stateCode":"AZ","status":"OPEN","kind":"meetings"}');
+    INSERT INTO cp_work_items VALUES('work',1,now(),'{"stateCode":"AZ","state":"WAITING","kind":"meetings"}');
+    INSERT INTO cp_box_findings VALUES('finding',1,now(),'{"stateCode":"AZ","state":"waiting","kind":"meetings"}');
+    INSERT INTO cp_owner_snapshots VALUES('current:AZ',1,now(),'{"allRowsIndex":[]}');
+    INSERT INTO work_row VALUES('shared-work','AZ','meetings','ready',now()-interval '1 hour');`;
+  const controlActual = `SELECT d.state,d.family,d.stage FROM cp_doors w CROSS JOIN LATERAL count_control_dimensions(w.value,'door') d
+    UNION ALL SELECT d.state,d.family,d.stage FROM cp_work_items w CROSS JOIN LATERAL count_control_dimensions(w.value,'work') d
+    UNION ALL SELECT d.state,d.family,d.stage FROM cp_work_items_archive w CROSS JOIN LATERAL count_control_dimensions(w.value,'work') d
+    UNION ALL SELECT d.state,d.family,d.stage FROM cp_box_findings w CROSS JOIN LATERAL count_control_dimensions(w.value,'box') d
+    UNION ALL SELECT d.state,d.family,d.stage FROM cp_owner_snapshots w CROSS JOIN LATERAL count_work_segments(w.value,w.id,statement_timestamp()) d WHERE w.id LIKE 'current:%' AND d.from_at<=statement_timestamp()
+    UNION ALL SELECT d.state,d.family,d.stage FROM work_row w CROSS JOIN LATERAL count_work_segments(count_work_row_index(to_jsonb(w),statement_timestamp()),'current:'||w.state,statement_timestamp()) d WHERE d.from_at<=statement_timestamp()`;
+  for (const first of ["blocking control-plane LOCK", "cp_work_items", "cp_owner_snapshots", "count_hour"]) {
+    await observer.query(controlSetup);
+    const writer = await connect(`rb-a8-control-writer-${proofs.length}`);
+    const migration = await connect(`rb-a8-control-migration-${proofs.length}`);
+    await writer.query(`BEGIN; SET LOCAL deadlock_timeout='5s'; LOCK TABLE ${first === "blocking control-plane LOCK" ? "cp_work_items" : first} IN ROW EXCLUSIVE MODE`);
+    await migration.query("SET deadlock_timeout='100ms'");
+    const original = { query: async (text, params) => (await migration.query(text, params)).rows };
+    const pending = installHourlyCounts(first === "blocking control-plane LOCK" ? original : hourlyCountMigrationSql(original)).then(() => null, error => error);
+    await waitUntil(async () => {
+      const row = (await observer.query("SELECT wait_event_type,wait_event FROM pg_stat_activity WHERE pid=$1", [migration.processID])).rows[0];
+      return first === "blocking control-plane LOCK" ? row?.wait_event_type === "Lock" : row?.wait_event === "PgSleep";
+    }, `control-plane migration behind ${first}`);
+    if (first !== "blocking control-plane LOCK") {
+      assert.equal((await observer.query("SELECT count(*)::int n FROM pg_locks WHERE pid=$1 AND mode='ShareRowExclusiveLock' AND granted", [migration.processID])).rows[0].n, 0);
+      await observer.query("SET statement_timeout='500ms'; SELECT * FROM cp_doors; SELECT * FROM cp_work_items");
+    }
+    const write = writer.query("UPDATE cp_doors SET revision=2 WHERE id='door'");
+    if (first === "blocking control-plane LOCK") {
+      const failure = await pending; assert.equal(failure?.code, "40P01", failure?.message);
+      await write; await writer.query("COMMIT");
+      proofs.push({ shape: first, result: "40P01 reproduced; immutable migration rolled back; writer committed" });
+      continue;
+    }
+    await write; await writer.query("COMMIT");
+    const failure = await pending; assert.equal(failure, null, failure?.message);
+    const parity = await observer.query(`WITH expected AS (SELECT state,family,stage,count(*)::bigint n FROM (${controlActual}) x GROUP BY 1,2,3),
+      actual AS (SELECT state,substring(step from 4)::jsonb->>0 family,substring(step from 4)::jsonb->>1 stage,
+        sum(CASE substring(step from 4)::jsonb->>2 WHEN 'stock in' THEN n WHEN 'stock out' THEN -n ELSE 0 END)::bigint n
+        FROM count_hour WHERE step LIKE 'v1:%' AND hour<=statement_timestamp() GROUP BY 1,2,3)
+      SELECT * FROM actual FULL JOIN expected USING(state,family,stage) WHERE coalesce(actual.n,0)<>coalesce(expected.n,0)`);
+    assert.deepEqual(parity.rows, []);
+    assert.equal((await observer.query("SELECT revision::int FROM cp_doors WHERE id='door'")).rows[0].revision, 2);
+    proofs.push({ shape: `control plane: ${first} then cp_doors`, result: "writer and complete immutable migration committed; partial locks=0; readers responsive; all stock dimensions equal direct SQL" });
   }
   console.log(JSON.stringify({ checkedAt: new Date().toISOString(), postgres: (await admin.query("SHOW server_version")).rows[0].server_version, proofs }, null, 2));
 } finally {

@@ -6,9 +6,11 @@ On `stream/rb-a8`, with current River `90d0f445e` and RV-LOCK `94e9053e8` merged
 
 The failed migration held `fact` while waiting for `entity`; a runner transaction held `entity` while waiting for `fact`. RV-LOCK's single blocking multi-table `LOCK` still acquires the tables sequentially. Both cases reproduce PostgreSQL error `40P01` on native PostgreSQL 18.4, using separate writer, migration and observer connections.
 
-The migration runner now uses `NOWAIT` inside an exception subtransaction. Any conflicting table rolls back every partial lock before sleeping; acquisition retries for at most ten seconds before returning the actual error. The successful attempt retains all four existing source/counter table locks through the atomic baseline and trigger installation. Reader SELECTs remain compatible. The committed migration SQL and its journal hash remain unchanged.
+Both migration runners now use the same `NOWAIT` exception subtransaction. Any conflicting table rolls back every partial lock before sleeping; acquisition retries for at most ten seconds before returning the actual error. The successful attempt retains all existing source/counter table locks through the atomic baseline and trigger installation. Reader SELECTs remain compatible. The committed reader and control-plane migrations and their journal hashes remain unchanged. The control-plane runner substitutes the lock acquisition inside its existing migration transaction; the definition itself stays intact.
 
 The [native copy evidence](measurements/rb-a8/migration-lock-copy.json) passes writers taking entity then fact, fact then entity, and the existing counter table then entity. Every writer and migration commits, the observer sees zero partial locks while waiting, reader SELECTs finish within 500 ms, and every stored stock dimension equals direct SQL after the complete original 19-statement migration. The reproducible script creates and removes its own local database and never reads production connection settings: `node --import tsx scripts/rb-a8-migration-lock-copy.mjs 55438` against a local PostgreSQL server with role `rb_a8_copy`.
+
+The same native test reproduces `40P01` with the original control-plane lock statement. With the shared acquisition fix, writers taking work items, owner snapshots or the existing counter table before doors all commit. The complete original control-plane migration commits with zero partial locks during the wait, reader SELECTs within 500 ms, and every stock dimension equal to direct SQL. This related failure was found on the copy before that migration reached production.
 
 Writer transactions update `count_hour` for every fact family, publication pointer, cache invalidation, door and work-list change. The keeper reads counters and grouped oldest ages; Admin shows state, family, step and Eastern hour, including the oldest wait. Counting starts after every hook and baseline is installed, so the first partial hour is unknown. Timestamp-only rechecks add no movement. Unique door totals and their family breakdown are separate. Growth is compared with both known hour-end totals, including fresh work after an earlier pile clears.
 
@@ -33,7 +35,7 @@ The actual reader adapter also connects through the production pooler as `readon
 
 ## Reader preservation
 
-Production read-only SQL at 7:30 PM EDT resolves all 60 stored event references: 56 reactions, one Ask and three demand signals, with zero unresolved references. Speak has no stored posts. This lane rewrites no reader target IDs. The Chrome connection checks above use the real production pages with writes blocked.
+Production read-only SQL refreshed at 10:34 PM EDT resolves all 60 stored event references: 56 reactions, one Ask and three demand signals, with zero unresolved references. Speak has no stored posts. This lane rewrites no reader target IDs. The Chrome connection checks above use the real production pages with writes blocked.
 
 The Phoenix 85003 walk found that a partial state publication had hidden known dates before RB-A8 was deployed. After another 15 seconds, the page still omitted the October 5 registration deadline and July 21 held primary. The native calendar used only the new projection while the page suppressed its existing sourced calendar as soon as any state navigation was published.
 
@@ -48,67 +50,67 @@ The copy uses only the real counter input projections captured at 5:56 AM EDT: 8
 
 ## Counts for every state
 
-Direct production SQL at 7:29 PM EDT, October 24, before A8 is deployed. Live/held/superseded/pulled are stored fact statuses, published sets are pointers, doors are distinct source rows, waiting work is currently effective legacy work-list segments, and shared work is the observed shared-table row count. All 50 states, DC, five territories and national/system are present, including zeros.
+Direct production SQL refreshed at 10:31 PM EDT, October 24, before A8 is deployed. Both explicit read-only roles deny INSERT and UPDATE; the raw evidence is in migration-lock-production-counts.json. Live/held/superseded/pulled are stored fact statuses, published sets are pointers, doors are distinct source rows, waiting work is currently effective legacy work-list segments, and shared work is the observed shared-table row count. All 50 states, DC, five territories and national/system are present, including zeros.
 
 | State | Live | Held | Superseded | Pulled | Published sets | Doors | Open doors | Waiting findings | Waiting work | Shared work |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| AK | 1772 | 2003 | 298 | 0 | 69 | 96 | 90 | 21945 | 868 | 0 |
-| AL | 1492 | 876 | 320 | 0 | 47 | 174 | 113 | 31516 | 1582 | 0 |
-| AR | 495 | 920 | 77 | 0 | 17 | 43 | 38 | 22436 | 1993 | 0 |
-| AS | 0 | 0 | 0 | 0 | 10 | 13 | 10 | 1 | 140 | 0 |
-| AZ | 5776 | 199 | 180 | 124 | 142 | 279 | 256 | 28137 | 2512 | 0 |
-| CA | 31765 | 207 | 59 | 0 | 600 | 1804 | 1799 | 39075 | 10609 | 0 |
-| CO | 7944 | 70 | 19 | 0 | 150 | 350 | 264 | 22458 | 5260 | 0 |
-| CT | 94516 | 71 | 49673 | 0 | 97 | 286 | 281 | 29023 | 1803 | 0 |
-| DC | 17 | 9 | 2 | 0 | 16 | 20 | 13 | 4974 | 174 | 0 |
-| DE | 180 | 78 | 16 | 0 | 18 | 226 | 218 | 17169 | 633 | 0 |
-| FL | 14291 | 214 | 59 | 0 | 421 | 884 | 782 | 20939 | 4043 | 0 |
-| GA | 1473 | 177 | 36 | 0 | 43 | 88 | 80 | 26636 | 2967 | 0 |
-| GU | 0 | 0 | 0 | 0 | 10 | 13 | 10 | 167 | 5 | 0 |
-| HI | 37574 | 5 | 74407 | 0 | 29 | 90 | 85 | 5962 | 351 | 0 |
-| IA | 237 | 34 | 8 | 0 | 18 | 113 | 104 | 8034 | 3213 | 0 |
-| ID | 816 | 50 | 18 | 0 | 50 | 114 | 102 | 17341 | 3083 | 0 |
-| IL | 7963 | 2 | 3 | 0 | 191 | 313 | 305 | 4759 | 10975 | 0 |
-| IN | 150 | 13 | 5 | 0 | 15 | 43 | 38 | 8567 | 4321 | 0 |
-| KS | 44 | 21 | 3 | 0 | 16 | 123 | 118 | 2382 | 5270 | 0 |
-| KY | 98770 | 2 | 223248 | 0 | 17 | 142 | 138 | 1379 | 2268 | 0 |
-| LA | 0 | 0 | 0 | 0 | 16 | 48 | 45 | 0 | 994 | 0 |
-| MA | 1930 | 0 | 0 | 0 | 120 | 453 | 274 | 1763 | 2721 | 0 |
-| MD | 847 | 28 | 8 | 0 | 23 | 84 | 65 | 8135 | 1538 | 0 |
-| ME | 638 | 0 | 23 | 0 | 43 | 79 | 72 | 0 | 2472 | 0 |
-| MI | 2820 | 0 | 6 | 0 | 161 | 174 | 169 | 0 | 6537 | 0 |
-| MN | 6434 | 1 | 1 | 0 | 96 | 111 | 106 | 1406 | 6638 | 0 |
-| MO | 9042 | 0 | 0 | 0 | 224 | 330 | 294 | 0 | 6013 | 0 |
-| MP | 0 | 0 | 0 | 0 | 10 | 14 | 10 | 105 | 72 | 0 |
-| MS | 86 | 2 | 1 | 0 | 17 | 51 | 48 | 313 | 1702 | 0 |
-| MT | 9 | 0 | 0 | 0 | 16 | 21 | 13 | 1644 | 2325 | 0 |
-| NC | 3804 | 0 | 1 | 0 | 86 | 195 | 189 | 31 | 3955 | 0 |
-| ND | 41 | 1 | 0 | 0 | 17 | 72 | 68 | 1221 | 4167 | 0 |
-| NE | 0 | 0 | 0 | 0 | 16 | 40 | 26 | 0 | 3411 | 0 |
-| NH | 905 | 0 | 4 | 0 | 92 | 199 | 152 | 259 | 1817 | 0 |
-| NJ | 3039 | 1 | 24 | 0 | 46 | 132 | 84 | 647 | 2473 | 0 |
-| NM | 1945 | 3 | 0 | 0 | 56 | 328 | 325 | 1657 | 1942 | 0 |
-| NV | 1654 | 0 | 0 | 0 | 70 | 72 | 69 | 473 | 579 | 0 |
-| NY | 2944 | 1 | 0 | 0 | 102 | 183 | 179 | 1741 | 7441 | 0 |
-| OH | 4618 | 0 | 1 | 0 | 88 | 137 | 132 | 1368 | 7859 | 0 |
-| OK | 2194 | 1 | 0 | 0 | 57 | 103 | 100 | 1443 | 3451 | 0 |
-| OR | 858 | 4 | 0 | 0 | 47 | 60 | 57 | 3191 | 2848 | 0 |
-| PA | 724 | 0 | 0 | 0 | 49 | 107 | 103 | 722 | 8211 | 0 |
-| PR | 0 | 0 | 0 | 0 | 11 | 18 | 12 | 0 | 52 | 0 |
-| RI | 126 | 0 | 0 | 0 | 30 | 36 | 31 | 0 | 652 | 0 |
-| SC | 117409 | 7 | 185709 | 0 | 16 | 47 | 45 | 764 | 1805 | 0 |
-| SD | 60 | 0 | 0 | 0 | 24 | 66 | 62 | 0 | 2614 | 0 |
-| TN | 23 | 2 | 3 | 0 | 15 | 35 | 31 | 1436 | 1922 | 0 |
-| TX | 12303 | 0 | 0 | 0 | 421 | 722 | 720 | 334 | 13547 | 0 |
-| US | 14 | 0 | 0 | 21 | 16745 | 1122 | 1012 | 11 | 1600 | 0 |
-| UT | 422 | 0 | 0 | 0 | 28 | 289 | 54 | 3017 | 1425 | 0 |
-| VA | 4268 | 0 | 0 | 0 | 113 | 252 | 250 | 0 | 3536 | 0 |
-| VI | 2 | 0 | 0 | 0 | 10 | 14 | 10 | 1 | 72 | 0 |
-| VT | 5 | 0 | 0 | 0 | 14 | 42 | 36 | 2499 | 1436 | 0 |
-| WA | 5652 | 0 | 944 | 0 | 116 | 224 | 220 | 0 | 3693 | 0 |
-| WI | 22936 | 74 | 5 | 0 | 557 | 519 | 514 | 259 | 6077 | 0 |
-| WV | 121 | 0 | 0 | 0 | 50 | 73 | 69 | 108 | 1409 | 0 |
-| WY | 397 | 9 | 3 | 0 | 29 | 52 | 50 | 886 | 1281 | 0 |
+| AK | 1777 | 2004 | 299 | 0 | 69 | 97 | 91 | 21947 | 871 | 0 |
+| AL | 1493 | 917 | 325 | 0 | 47 | 175 | 114 | 31505 | 1650 | 0 |
+| AR | 503 | 920 | 79 | 0 | 17 | 45 | 39 | 22429 | 2200 | 0 |
+| AS | 0 | 0 | 0 | 0 | 10 | 15 | 12 | 1 | 139 | 0 |
+| AZ | 5826 | 200 | 190 | 124 | 145 | 295 | 272 | 28132 | 2500 | 0 |
+| CA | 31780 | 213 | 59 | 0 | 601 | 1805 | 1801 | 39078 | 10667 | 0 |
+| CO | 8346 | 71 | 20 | 0 | 151 | 351 | 266 | 22535 | 5285 | 0 |
+| CT | 94885 | 73 | 49704 | 0 | 99 | 288 | 280 | 29747 | 1756 | 0 |
+| DC | 17 | 10 | 3 | 0 | 16 | 21 | 14 | 4973 | 174 | 0 |
+| DE | 187 | 98 | 19 | 0 | 18 | 227 | 220 | 17163 | 635 | 0 |
+| FL | 14445 | 222 | 60 | 0 | 422 | 893 | 792 | 20980 | 4047 | 0 |
+| GA | 1497 | 180 | 37 | 0 | 44 | 89 | 81 | 26609 | 2923 | 0 |
+| GU | 0 | 0 | 0 | 0 | 10 | 14 | 11 | 167 | 5 | 0 |
+| HI | 37577 | 5 | 74407 | 0 | 29 | 116 | 94 | 5959 | 356 | 0 |
+| IA | 435 | 35 | 8 | 0 | 19 | 124 | 115 | 8691 | 3263 | 0 |
+| ID | 828 | 52 | 18 | 0 | 50 | 117 | 104 | 17331 | 3126 | 0 |
+| IL | 8280 | 3 | 3 | 0 | 194 | 314 | 307 | 4841 | 10991 | 0 |
+| IN | 156 | 16 | 6 | 0 | 15 | 44 | 40 | 8563 | 4413 | 0 |
+| KS | 46 | 21 | 3 | 0 | 16 | 124 | 120 | 2381 | 5385 | 0 |
+| KY | 98770 | 2 | 223248 | 0 | 17 | 143 | 139 | 1530 | 2381 | 0 |
+| LA | 0 | 0 | 0 | 0 | 16 | 49 | 46 | 0 | 994 | 0 |
+| MA | 2149 | 0 | 0 | 0 | 122 | 455 | 277 | 1838 | 2721 | 0 |
+| MD | 881 | 34 | 10 | 0 | 26 | 92 | 74 | 8128 | 1562 | 0 |
+| ME | 770 | 0 | 23 | 0 | 44 | 80 | 73 | 0 | 2472 | 0 |
+| MI | 2835 | 0 | 6 | 0 | 162 | 175 | 171 | 0 | 6620 | 0 |
+| MN | 6656 | 1 | 1 | 0 | 97 | 119 | 114 | 1437 | 6638 | 0 |
+| MO | 9581 | 0 | 0 | 0 | 227 | 332 | 295 | 0 | 6128 | 0 |
+| MP | 0 | 0 | 0 | 0 | 10 | 17 | 14 | 105 | 72 | 0 |
+| MS | 87 | 2 | 1 | 0 | 17 | 53 | 50 | 313 | 1784 | 0 |
+| MT | 9 | 0 | 0 | 0 | 16 | 22 | 14 | 1644 | 2325 | 0 |
+| NC | 4014 | 0 | 1 | 0 | 88 | 196 | 191 | 31 | 4055 | 0 |
+| ND | 43 | 1 | 0 | 0 | 17 | 74 | 70 | 1220 | 4220 | 0 |
+| NE | 0 | 0 | 0 | 0 | 16 | 59 | 45 | 0 | 3504 | 0 |
+| NH | 905 | 0 | 4 | 0 | 92 | 207 | 160 | 259 | 1817 | 0 |
+| NJ | 3440 | 1 | 24 | 0 | 47 | 150 | 102 | 647 | 3129 | 0 |
+| NM | 1948 | 3 | 0 | 0 | 56 | 332 | 330 | 1656 | 1975 | 0 |
+| NV | 1654 | 0 | 0 | 0 | 70 | 73 | 70 | 473 | 579 | 0 |
+| NY | 2944 | 1 | 0 | 0 | 102 | 184 | 181 | 1741 | 7441 | 0 |
+| OH | 5271 | 0 | 1 | 0 | 94 | 139 | 135 | 1368 | 7859 | 0 |
+| OK | 2320 | 1 | 0 | 0 | 61 | 144 | 141 | 1443 | 3528 | 0 |
+| OR | 1203 | 4 | 0 | 0 | 49 | 62 | 60 | 3191 | 2848 | 0 |
+| PA | 760 | 0 | 0 | 0 | 51 | 110 | 106 | 722 | 8278 | 0 |
+| PR | 0 | 0 | 0 | 0 | 11 | 20 | 15 | 0 | 52 | 0 |
+| RI | 126 | 0 | 0 | 0 | 30 | 39 | 34 | 0 | 652 | 0 |
+| SC | 117409 | 7 | 185709 | 0 | 16 | 48 | 46 | 764 | 1851 | 0 |
+| SD | 84 | 0 | 0 | 0 | 27 | 70 | 65 | 0 | 2680 | 0 |
+| TN | 23 | 2 | 3 | 0 | 15 | 69 | 66 | 1436 | 1922 | 0 |
+| TX | 12893 | 0 | 0 | 0 | 424 | 797 | 794 | 334 | 13801 | 0 |
+| US | 14 | 0 | 0 | 21 | 17226 | 1122 | 1002 | 11 | 1627 | 0 |
+| UT | 422 | 0 | 0 | 0 | 28 | 338 | 103 | 3017 | 1446 | 0 |
+| VA | 5092 | 0 | 0 | 0 | 118 | 271 | 269 | 0 | 3669 | 0 |
+| VI | 2 | 0 | 0 | 0 | 10 | 19 | 15 | 1 | 72 | 0 |
+| VT | 16 | 1 | 0 | 0 | 14 | 80 | 71 | 2496 | 1441 | 0 |
+| WA | 5672 | 0 | 956 | 0 | 118 | 258 | 255 | 0 | 3711 | 0 |
+| WI | 23099 | 74 | 5 | 0 | 559 | 521 | 516 | 259 | 6077 | 0 |
+| WV | 121 | 0 | 0 | 0 | 50 | 102 | 98 | 108 | 1428 | 0 |
+| WY | 491 | 9 | 3 | 0 | 30 | 69 | 68 | 1088 | 1304 | 0 |
 
 ## Checks
 

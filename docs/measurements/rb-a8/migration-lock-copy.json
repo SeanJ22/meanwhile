@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-25T02:30:25.605Z",
+  "checkedAt": "2026-10-25T02:38:21.275Z",
   "postgres": "18.4",
   "proofs": [
     {
@@ -21,6 +21,22 @@
     {
       "shape": "count_hour then entity",
       "result": "writer and migration committed; readers responsive; partial locks=0; all stock dimensions equal direct SQL"
+    },
+    {
+      "shape": "blocking control-plane LOCK",
+      "result": "40P01 reproduced; immutable migration rolled back; writer committed"
+    },
+    {
+      "shape": "control plane: cp_work_items then cp_doors",
+      "result": "writer and complete immutable migration committed; partial locks=0; readers responsive; all stock dimensions equal direct SQL"
+    },
+    {
+      "shape": "control plane: cp_owner_snapshots then cp_doors",
+      "result": "writer and complete immutable migration committed; partial locks=0; readers responsive; all stock dimensions equal direct SQL"
+    },
+    {
+      "shape": "control plane: count_hour then cp_doors",
+      "result": "writer and complete immutable migration committed; partial locks=0; readers responsive; all stock dimensions equal direct SQL"
     }
   ]
 }

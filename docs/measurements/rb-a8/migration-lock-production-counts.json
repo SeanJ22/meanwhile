@@ -1,0 +1,1675 @@
+{
+  "reader": {
+    "captured_at": "2026-10-25T02:31:52.765Z",
+    "current_user": "readonly",
+    "can_insert": false,
+    "can_update": false,
+    "counts": [
+      {
+        "held": 2004,
+        "live": 1777,
+        "state": "AK",
+        "pulled": 0,
+        "superseded": 299,
+        "published_sets": 69
+      },
+      {
+        "held": 917,
+        "live": 1493,
+        "state": "AL",
+        "pulled": 0,
+        "superseded": 325,
+        "published_sets": 47
+      },
+      {
+        "held": 920,
+        "live": 503,
+        "state": "AR",
+        "pulled": 0,
+        "superseded": 79,
+        "published_sets": 17
+      },
+      {
+        "held": 0,
+        "live": 0,
+        "state": "AS",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 10
+      },
+      {
+        "held": 200,
+        "live": 5826,
+        "state": "AZ",
+        "pulled": 124,
+        "superseded": 190,
+        "published_sets": 145
+      },
+      {
+        "held": 213,
+        "live": 31780,
+        "state": "CA",
+        "pulled": 0,
+        "superseded": 59,
+        "published_sets": 601
+      },
+      {
+        "held": 71,
+        "live": 8346,
+        "state": "CO",
+        "pulled": 0,
+        "superseded": 20,
+        "published_sets": 151
+      },
+      {
+        "held": 73,
+        "live": 94885,
+        "state": "CT",
+        "pulled": 0,
+        "superseded": 49704,
+        "published_sets": 99
+      },
+      {
+        "held": 10,
+        "live": 17,
+        "state": "DC",
+        "pulled": 0,
+        "superseded": 3,
+        "published_sets": 16
+      },
+      {
+        "held": 98,
+        "live": 187,
+        "state": "DE",
+        "pulled": 0,
+        "superseded": 19,
+        "published_sets": 18
+      },
+      {
+        "held": 222,
+        "live": 14445,
+        "state": "FL",
+        "pulled": 0,
+        "superseded": 60,
+        "published_sets": 422
+      },
+      {
+        "held": 180,
+        "live": 1497,
+        "state": "GA",
+        "pulled": 0,
+        "superseded": 37,
+        "published_sets": 44
+      },
+      {
+        "held": 0,
+        "live": 0,
+        "state": "GU",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 10
+      },
+      {
+        "held": 5,
+        "live": 37577,
+        "state": "HI",
+        "pulled": 0,
+        "superseded": 74407,
+        "published_sets": 29
+      },
+      {
+        "held": 35,
+        "live": 435,
+        "state": "IA",
+        "pulled": 0,
+        "superseded": 8,
+        "published_sets": 19
+      },
+      {
+        "held": 52,
+        "live": 828,
+        "state": "ID",
+        "pulled": 0,
+        "superseded": 18,
+        "published_sets": 50
+      },
+      {
+        "held": 3,
+        "live": 8280,
+        "state": "IL",
+        "pulled": 0,
+        "superseded": 3,
+        "published_sets": 194
+      },
+      {
+        "held": 16,
+        "live": 156,
+        "state": "IN",
+        "pulled": 0,
+        "superseded": 6,
+        "published_sets": 15
+      },
+      {
+        "held": 21,
+        "live": 46,
+        "state": "KS",
+        "pulled": 0,
+        "superseded": 3,
+        "published_sets": 16
+      },
+      {
+        "held": 2,
+        "live": 98770,
+        "state": "KY",
+        "pulled": 0,
+        "superseded": 223248,
+        "published_sets": 17
+      },
+      {
+        "held": 0,
+        "live": 0,
+        "state": "LA",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 16
+      },
+      {
+        "held": 0,
+        "live": 2149,
+        "state": "MA",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 122
+      },
+      {
+        "held": 34,
+        "live": 881,
+        "state": "MD",
+        "pulled": 0,
+        "superseded": 10,
+        "published_sets": 26
+      },
+      {
+        "held": 0,
+        "live": 770,
+        "state": "ME",
+        "pulled": 0,
+        "superseded": 23,
+        "published_sets": 44
+      },
+      {
+        "held": 0,
+        "live": 2835,
+        "state": "MI",
+        "pulled": 0,
+        "superseded": 6,
+        "published_sets": 162
+      },
+      {
+        "held": 1,
+        "live": 6656,
+        "state": "MN",
+        "pulled": 0,
+        "superseded": 1,
+        "published_sets": 97
+      },
+      {
+        "held": 0,
+        "live": 9581,
+        "state": "MO",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 227
+      },
+      {
+        "held": 0,
+        "live": 0,
+        "state": "MP",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 10
+      },
+      {
+        "held": 2,
+        "live": 87,
+        "state": "MS",
+        "pulled": 0,
+        "superseded": 1,
+        "published_sets": 17
+      },
+      {
+        "held": 0,
+        "live": 9,
+        "state": "MT",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 16
+      },
+      {
+        "held": 0,
+        "live": 4014,
+        "state": "NC",
+        "pulled": 0,
+        "superseded": 1,
+        "published_sets": 88
+      },
+      {
+        "held": 1,
+        "live": 43,
+        "state": "ND",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 17
+      },
+      {
+        "held": 0,
+        "live": 0,
+        "state": "NE",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 16
+      },
+      {
+        "held": 0,
+        "live": 905,
+        "state": "NH",
+        "pulled": 0,
+        "superseded": 4,
+        "published_sets": 92
+      },
+      {
+        "held": 1,
+        "live": 3440,
+        "state": "NJ",
+        "pulled": 0,
+        "superseded": 24,
+        "published_sets": 47
+      },
+      {
+        "held": 3,
+        "live": 1948,
+        "state": "NM",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 56
+      },
+      {
+        "held": 0,
+        "live": 1654,
+        "state": "NV",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 70
+      },
+      {
+        "held": 1,
+        "live": 2944,
+        "state": "NY",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 102
+      },
+      {
+        "held": 0,
+        "live": 5271,
+        "state": "OH",
+        "pulled": 0,
+        "superseded": 1,
+        "published_sets": 94
+      },
+      {
+        "held": 1,
+        "live": 2320,
+        "state": "OK",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 61
+      },
+      {
+        "held": 4,
+        "live": 1203,
+        "state": "OR",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 49
+      },
+      {
+        "held": 0,
+        "live": 760,
+        "state": "PA",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 51
+      },
+      {
+        "held": 0,
+        "live": 0,
+        "state": "PR",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 11
+      },
+      {
+        "held": 0,
+        "live": 126,
+        "state": "RI",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 30
+      },
+      {
+        "held": 7,
+        "live": 117409,
+        "state": "SC",
+        "pulled": 0,
+        "superseded": 185709,
+        "published_sets": 16
+      },
+      {
+        "held": 0,
+        "live": 84,
+        "state": "SD",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 27
+      },
+      {
+        "held": 2,
+        "live": 23,
+        "state": "TN",
+        "pulled": 0,
+        "superseded": 3,
+        "published_sets": 15
+      },
+      {
+        "held": 0,
+        "live": 12893,
+        "state": "TX",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 424
+      },
+      {
+        "held": 0,
+        "live": 14,
+        "state": "US",
+        "pulled": 21,
+        "superseded": 0,
+        "published_sets": 17226
+      },
+      {
+        "held": 0,
+        "live": 422,
+        "state": "UT",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 28
+      },
+      {
+        "held": 0,
+        "live": 5092,
+        "state": "VA",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 118
+      },
+      {
+        "held": 0,
+        "live": 2,
+        "state": "VI",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 10
+      },
+      {
+        "held": 1,
+        "live": 16,
+        "state": "VT",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 14
+      },
+      {
+        "held": 0,
+        "live": 5672,
+        "state": "WA",
+        "pulled": 0,
+        "superseded": 956,
+        "published_sets": 118
+      },
+      {
+        "held": 74,
+        "live": 23099,
+        "state": "WI",
+        "pulled": 0,
+        "superseded": 5,
+        "published_sets": 559
+      },
+      {
+        "held": 0,
+        "live": 121,
+        "state": "WV",
+        "pulled": 0,
+        "superseded": 0,
+        "published_sets": 50
+      },
+      {
+        "held": 9,
+        "live": 491,
+        "state": "WY",
+        "pulled": 0,
+        "superseded": 3,
+        "published_sets": 30
+      }
+    ]
+  },
+  "control": {
+    "captured_at": "2026-10-25T02:31:58.355Z",
+    "current_user": "wtp_cp_release_readonly",
+    "can_insert": false,
+    "can_update": false,
+    "a5_work_schema": false,
+    "counts": [
+      {
+        "doors": 97,
+        "state": "AK",
+        "open_doors": 91,
+        "shared_work": 0,
+        "waiting_work": 871,
+        "waiting_findings": 21947
+      },
+      {
+        "doors": 175,
+        "state": "AL",
+        "open_doors": 114,
+        "shared_work": 0,
+        "waiting_work": 1650,
+        "waiting_findings": 31505
+      },
+      {
+        "doors": 45,
+        "state": "AR",
+        "open_doors": 39,
+        "shared_work": 0,
+        "waiting_work": 2200,
+        "waiting_findings": 22429
+      },
+      {
+        "doors": 15,
+        "state": "AS",
+        "open_doors": 12,
+        "shared_work": 0,
+        "waiting_work": 139,
+        "waiting_findings": 1
+      },
+      {
+        "doors": 295,
+        "state": "AZ",
+        "open_doors": 272,
+        "shared_work": 0,
+        "waiting_work": 2500,
+        "waiting_findings": 28132
+      },
+      {
+        "doors": 1805,
+        "state": "CA",
+        "open_doors": 1801,
+        "shared_work": 0,
+        "waiting_work": 10667,
+        "waiting_findings": 39078
+      },
+      {
+        "doors": 351,
+        "state": "CO",
+        "open_doors": 266,
+        "shared_work": 0,
+        "waiting_work": 5285,
+        "waiting_findings": 22535
+      },
+      {
+        "doors": 288,
+        "state": "CT",
+        "open_doors": 280,
+        "shared_work": 0,
+        "waiting_work": 1756,
+        "waiting_findings": 29747
+      },
+      {
+        "doors": 21,
+        "state": "DC",
+        "open_doors": 14,
+        "shared_work": 0,
+        "waiting_work": 174,
+        "waiting_findings": 4973
+      },
+      {
+        "doors": 227,
+        "state": "DE",
+        "open_doors": 220,
+        "shared_work": 0,
+        "waiting_work": 635,
+        "waiting_findings": 17163
+      },
+      {
+        "doors": 893,
+        "state": "FL",
+        "open_doors": 792,
+        "shared_work": 0,
+        "waiting_work": 4047,
+        "waiting_findings": 20980
+      },
+      {
+        "doors": 89,
+        "state": "GA",
+        "open_doors": 81,
+        "shared_work": 0,
+        "waiting_work": 2923,
+        "waiting_findings": 26609
+      },
+      {
+        "doors": 14,
+        "state": "GU",
+        "open_doors": 11,
+        "shared_work": 0,
+        "waiting_work": 5,
+        "waiting_findings": 167
+      },
+      {
+        "doors": 116,
+        "state": "HI",
+        "open_doors": 94,
+        "shared_work": 0,
+        "waiting_work": 356,
+        "waiting_findings": 5959
+      },
+      {
+        "doors": 124,
+        "state": "IA",
+        "open_doors": 115,
+        "shared_work": 0,
+        "waiting_work": 3263,
+        "waiting_findings": 8691
+      },
+      {
+        "doors": 117,
+        "state": "ID",
+        "open_doors": 104,
+        "shared_work": 0,
+        "waiting_work": 3126,
+        "waiting_findings": 17331
+      },
+      {
+        "doors": 314,
+        "state": "IL",
+        "open_doors": 307,
+        "shared_work": 0,
+        "waiting_work": 10991,
+        "waiting_findings": 4841
+      },
+      {
+        "doors": 44,
+        "state": "IN",
+        "open_doors": 40,
+        "shared_work": 0,
+        "waiting_work": 4413,
+        "waiting_findings": 8563
+      },
+      {
+        "doors": 124,
+        "state": "KS",
+        "open_doors": 120,
+        "shared_work": 0,
+        "waiting_work": 5385,
+        "waiting_findings": 2381
+      },
+      {
+        "doors": 143,
+        "state": "KY",
+        "open_doors": 139,
+        "shared_work": 0,
+        "waiting_work": 2381,
+        "waiting_findings": 1530
+      },
+      {
+        "doors": 49,
+        "state": "LA",
+        "open_doors": 46,
+        "shared_work": 0,
+        "waiting_work": 994,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 455,
+        "state": "MA",
+        "open_doors": 277,
+        "shared_work": 0,
+        "waiting_work": 2721,
+        "waiting_findings": 1838
+      },
+      {
+        "doors": 92,
+        "state": "MD",
+        "open_doors": 74,
+        "shared_work": 0,
+        "waiting_work": 1562,
+        "waiting_findings": 8128
+      },
+      {
+        "doors": 80,
+        "state": "ME",
+        "open_doors": 73,
+        "shared_work": 0,
+        "waiting_work": 2472,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 175,
+        "state": "MI",
+        "open_doors": 171,
+        "shared_work": 0,
+        "waiting_work": 6620,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 119,
+        "state": "MN",
+        "open_doors": 114,
+        "shared_work": 0,
+        "waiting_work": 6638,
+        "waiting_findings": 1437
+      },
+      {
+        "doors": 332,
+        "state": "MO",
+        "open_doors": 295,
+        "shared_work": 0,
+        "waiting_work": 6128,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 17,
+        "state": "MP",
+        "open_doors": 14,
+        "shared_work": 0,
+        "waiting_work": 72,
+        "waiting_findings": 105
+      },
+      {
+        "doors": 53,
+        "state": "MS",
+        "open_doors": 50,
+        "shared_work": 0,
+        "waiting_work": 1784,
+        "waiting_findings": 313
+      },
+      {
+        "doors": 22,
+        "state": "MT",
+        "open_doors": 14,
+        "shared_work": 0,
+        "waiting_work": 2325,
+        "waiting_findings": 1644
+      },
+      {
+        "doors": 196,
+        "state": "NC",
+        "open_doors": 191,
+        "shared_work": 0,
+        "waiting_work": 4055,
+        "waiting_findings": 31
+      },
+      {
+        "doors": 74,
+        "state": "ND",
+        "open_doors": 70,
+        "shared_work": 0,
+        "waiting_work": 4220,
+        "waiting_findings": 1220
+      },
+      {
+        "doors": 59,
+        "state": "NE",
+        "open_doors": 45,
+        "shared_work": 0,
+        "waiting_work": 3504,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 207,
+        "state": "NH",
+        "open_doors": 160,
+        "shared_work": 0,
+        "waiting_work": 1817,
+        "waiting_findings": 259
+      },
+      {
+        "doors": 150,
+        "state": "NJ",
+        "open_doors": 102,
+        "shared_work": 0,
+        "waiting_work": 3129,
+        "waiting_findings": 647
+      },
+      {
+        "doors": 332,
+        "state": "NM",
+        "open_doors": 330,
+        "shared_work": 0,
+        "waiting_work": 1975,
+        "waiting_findings": 1656
+      },
+      {
+        "doors": 73,
+        "state": "NV",
+        "open_doors": 70,
+        "shared_work": 0,
+        "waiting_work": 579,
+        "waiting_findings": 473
+      },
+      {
+        "doors": 184,
+        "state": "NY",
+        "open_doors": 181,
+        "shared_work": 0,
+        "waiting_work": 7441,
+        "waiting_findings": 1741
+      },
+      {
+        "doors": 139,
+        "state": "OH",
+        "open_doors": 135,
+        "shared_work": 0,
+        "waiting_work": 7859,
+        "waiting_findings": 1368
+      },
+      {
+        "doors": 144,
+        "state": "OK",
+        "open_doors": 141,
+        "shared_work": 0,
+        "waiting_work": 3528,
+        "waiting_findings": 1443
+      },
+      {
+        "doors": 62,
+        "state": "OR",
+        "open_doors": 60,
+        "shared_work": 0,
+        "waiting_work": 2848,
+        "waiting_findings": 3191
+      },
+      {
+        "doors": 110,
+        "state": "PA",
+        "open_doors": 106,
+        "shared_work": 0,
+        "waiting_work": 8278,
+        "waiting_findings": 722
+      },
+      {
+        "doors": 20,
+        "state": "PR",
+        "open_doors": 15,
+        "shared_work": 0,
+        "waiting_work": 52,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 39,
+        "state": "RI",
+        "open_doors": 34,
+        "shared_work": 0,
+        "waiting_work": 652,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 48,
+        "state": "SC",
+        "open_doors": 46,
+        "shared_work": 0,
+        "waiting_work": 1851,
+        "waiting_findings": 764
+      },
+      {
+        "doors": 70,
+        "state": "SD",
+        "open_doors": 65,
+        "shared_work": 0,
+        "waiting_work": 2680,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 69,
+        "state": "TN",
+        "open_doors": 66,
+        "shared_work": 0,
+        "waiting_work": 1922,
+        "waiting_findings": 1436
+      },
+      {
+        "doors": 797,
+        "state": "TX",
+        "open_doors": 794,
+        "shared_work": 0,
+        "waiting_work": 13801,
+        "waiting_findings": 334
+      },
+      {
+        "doors": 1122,
+        "state": "US",
+        "open_doors": 1002,
+        "shared_work": 0,
+        "waiting_work": 1627,
+        "waiting_findings": 11
+      },
+      {
+        "doors": 338,
+        "state": "UT",
+        "open_doors": 103,
+        "shared_work": 0,
+        "waiting_work": 1446,
+        "waiting_findings": 3017
+      },
+      {
+        "doors": 271,
+        "state": "VA",
+        "open_doors": 269,
+        "shared_work": 0,
+        "waiting_work": 3669,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 19,
+        "state": "VI",
+        "open_doors": 15,
+        "shared_work": 0,
+        "waiting_work": 72,
+        "waiting_findings": 1
+      },
+      {
+        "doors": 80,
+        "state": "VT",
+        "open_doors": 71,
+        "shared_work": 0,
+        "waiting_work": 1441,
+        "waiting_findings": 2496
+      },
+      {
+        "doors": 258,
+        "state": "WA",
+        "open_doors": 255,
+        "shared_work": 0,
+        "waiting_work": 3711,
+        "waiting_findings": 0
+      },
+      {
+        "doors": 521,
+        "state": "WI",
+        "open_doors": 516,
+        "shared_work": 0,
+        "waiting_work": 6077,
+        "waiting_findings": 259
+      },
+      {
+        "doors": 102,
+        "state": "WV",
+        "open_doors": 98,
+        "shared_work": 0,
+        "waiting_work": 1428,
+        "waiting_findings": 108
+      },
+      {
+        "doors": 69,
+        "state": "WY",
+        "open_doors": 68,
+        "shared_work": 0,
+        "waiting_work": 1304,
+        "waiting_findings": 1088
+      }
+    ]
+  },
+  "counts": [
+    {
+      "held": 2004,
+      "live": 1777,
+      "state": "AK",
+      "pulled": 0,
+      "superseded": 299,
+      "published_sets": 69,
+      "doors": 97,
+      "open_doors": 91,
+      "shared_work": 0,
+      "waiting_work": 871,
+      "waiting_findings": 21947
+    },
+    {
+      "held": 917,
+      "live": 1493,
+      "state": "AL",
+      "pulled": 0,
+      "superseded": 325,
+      "published_sets": 47,
+      "doors": 175,
+      "open_doors": 114,
+      "shared_work": 0,
+      "waiting_work": 1650,
+      "waiting_findings": 31505
+    },
+    {
+      "held": 920,
+      "live": 503,
+      "state": "AR",
+      "pulled": 0,
+      "superseded": 79,
+      "published_sets": 17,
+      "doors": 45,
+      "open_doors": 39,
+      "shared_work": 0,
+      "waiting_work": 2200,
+      "waiting_findings": 22429
+    },
+    {
+      "held": 0,
+      "live": 0,
+      "state": "AS",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 10,
+      "doors": 15,
+      "open_doors": 12,
+      "shared_work": 0,
+      "waiting_work": 139,
+      "waiting_findings": 1
+    },
+    {
+      "held": 200,
+      "live": 5826,
+      "state": "AZ",
+      "pulled": 124,
+      "superseded": 190,
+      "published_sets": 145,
+      "doors": 295,
+      "open_doors": 272,
+      "shared_work": 0,
+      "waiting_work": 2500,
+      "waiting_findings": 28132
+    },
+    {
+      "held": 213,
+      "live": 31780,
+      "state": "CA",
+      "pulled": 0,
+      "superseded": 59,
+      "published_sets": 601,
+      "doors": 1805,
+      "open_doors": 1801,
+      "shared_work": 0,
+      "waiting_work": 10667,
+      "waiting_findings": 39078
+    },
+    {
+      "held": 71,
+      "live": 8346,
+      "state": "CO",
+      "pulled": 0,
+      "superseded": 20,
+      "published_sets": 151,
+      "doors": 351,
+      "open_doors": 266,
+      "shared_work": 0,
+      "waiting_work": 5285,
+      "waiting_findings": 22535
+    },
+    {
+      "held": 73,
+      "live": 94885,
+      "state": "CT",
+      "pulled": 0,
+      "superseded": 49704,
+      "published_sets": 99,
+      "doors": 288,
+      "open_doors": 280,
+      "shared_work": 0,
+      "waiting_work": 1756,
+      "waiting_findings": 29747
+    },
+    {
+      "held": 10,
+      "live": 17,
+      "state": "DC",
+      "pulled": 0,
+      "superseded": 3,
+      "published_sets": 16,
+      "doors": 21,
+      "open_doors": 14,
+      "shared_work": 0,
+      "waiting_work": 174,
+      "waiting_findings": 4973
+    },
+    {
+      "held": 98,
+      "live": 187,
+      "state": "DE",
+      "pulled": 0,
+      "superseded": 19,
+      "published_sets": 18,
+      "doors": 227,
+      "open_doors": 220,
+      "shared_work": 0,
+      "waiting_work": 635,
+      "waiting_findings": 17163
+    },
+    {
+      "held": 222,
+      "live": 14445,
+      "state": "FL",
+      "pulled": 0,
+      "superseded": 60,
+      "published_sets": 422,
+      "doors": 893,
+      "open_doors": 792,
+      "shared_work": 0,
+      "waiting_work": 4047,
+      "waiting_findings": 20980
+    },
+    {
+      "held": 180,
+      "live": 1497,
+      "state": "GA",
+      "pulled": 0,
+      "superseded": 37,
+      "published_sets": 44,
+      "doors": 89,
+      "open_doors": 81,
+      "shared_work": 0,
+      "waiting_work": 2923,
+      "waiting_findings": 26609
+    },
+    {
+      "held": 0,
+      "live": 0,
+      "state": "GU",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 10,
+      "doors": 14,
+      "open_doors": 11,
+      "shared_work": 0,
+      "waiting_work": 5,
+      "waiting_findings": 167
+    },
+    {
+      "held": 5,
+      "live": 37577,
+      "state": "HI",
+      "pulled": 0,
+      "superseded": 74407,
+      "published_sets": 29,
+      "doors": 116,
+      "open_doors": 94,
+      "shared_work": 0,
+      "waiting_work": 356,
+      "waiting_findings": 5959
+    },
+    {
+      "held": 35,
+      "live": 435,
+      "state": "IA",
+      "pulled": 0,
+      "superseded": 8,
+      "published_sets": 19,
+      "doors": 124,
+      "open_doors": 115,
+      "shared_work": 0,
+      "waiting_work": 3263,
+      "waiting_findings": 8691
+    },
+    {
+      "held": 52,
+      "live": 828,
+      "state": "ID",
+      "pulled": 0,
+      "superseded": 18,
+      "published_sets": 50,
+      "doors": 117,
+      "open_doors": 104,
+      "shared_work": 0,
+      "waiting_work": 3126,
+      "waiting_findings": 17331
+    },
+    {
+      "held": 3,
+      "live": 8280,
+      "state": "IL",
+      "pulled": 0,
+      "superseded": 3,
+      "published_sets": 194,
+      "doors": 314,
+      "open_doors": 307,
+      "shared_work": 0,
+      "waiting_work": 10991,
+      "waiting_findings": 4841
+    },
+    {
+      "held": 16,
+      "live": 156,
+      "state": "IN",
+      "pulled": 0,
+      "superseded": 6,
+      "published_sets": 15,
+      "doors": 44,
+      "open_doors": 40,
+      "shared_work": 0,
+      "waiting_work": 4413,
+      "waiting_findings": 8563
+    },
+    {
+      "held": 21,
+      "live": 46,
+      "state": "KS",
+      "pulled": 0,
+      "superseded": 3,
+      "published_sets": 16,
+      "doors": 124,
+      "open_doors": 120,
+      "shared_work": 0,
+      "waiting_work": 5385,
+      "waiting_findings": 2381
+    },
+    {
+      "held": 2,
+      "live": 98770,
+      "state": "KY",
+      "pulled": 0,
+      "superseded": 223248,
+      "published_sets": 17,
+      "doors": 143,
+      "open_doors": 139,
+      "shared_work": 0,
+      "waiting_work": 2381,
+      "waiting_findings": 1530
+    },
+    {
+      "held": 0,
+      "live": 0,
+      "state": "LA",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 16,
+      "doors": 49,
+      "open_doors": 46,
+      "shared_work": 0,
+      "waiting_work": 994,
+      "waiting_findings": 0
+    },
+    {
+      "held": 0,
+      "live": 2149,
+      "state": "MA",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 122,
+      "doors": 455,
+      "open_doors": 277,
+      "shared_work": 0,
+      "waiting_work": 2721,
+      "waiting_findings": 1838
+    },
+    {
+      "held": 34,
+      "live": 881,
+      "state": "MD",
+      "pulled": 0,
+      "superseded": 10,
+      "published_sets": 26,
+      "doors": 92,
+      "open_doors": 74,
+      "shared_work": 0,
+      "waiting_work": 1562,
+      "waiting_findings": 8128
+    },
+    {
+      "held": 0,
+      "live": 770,
+      "state": "ME",
+      "pulled": 0,
+      "superseded": 23,
+      "published_sets": 44,
+      "doors": 80,
+      "open_doors": 73,
+      "shared_work": 0,
+      "waiting_work": 2472,
+      "waiting_findings": 0
+    },
+    {
+      "held": 0,
+      "live": 2835,
+      "state": "MI",
+      "pulled": 0,
+      "superseded": 6,
+      "published_sets": 162,
+      "doors": 175,
+      "open_doors": 171,
+      "shared_work": 0,
+      "waiting_work": 6620,
+      "waiting_findings": 0
+    },
+    {
+      "held": 1,
+      "live": 6656,
+      "state": "MN",
+      "pulled": 0,
+      "superseded": 1,
+      "published_sets": 97,
+      "doors": 119,
+      "open_doors": 114,
+      "shared_work": 0,
+      "waiting_work": 6638,
+      "waiting_findings": 1437
+    },
+    {
+      "held": 0,
+      "live": 9581,
+      "state": "MO",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 227,
+      "doors": 332,
+      "open_doors": 295,
+      "shared_work": 0,
+      "waiting_work": 6128,
+      "waiting_findings": 0
+    },
+    {
+      "held": 0,
+      "live": 0,
+      "state": "MP",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 10,
+      "doors": 17,
+      "open_doors": 14,
+      "shared_work": 0,
+      "waiting_work": 72,
+      "waiting_findings": 105
+    },
+    {
+      "held": 2,
+      "live": 87,
+      "state": "MS",
+      "pulled": 0,
+      "superseded": 1,
+      "published_sets": 17,
+      "doors": 53,
+      "open_doors": 50,
+      "shared_work": 0,
+      "waiting_work": 1784,
+      "waiting_findings": 313
+    },
+    {
+      "held": 0,
+      "live": 9,
+      "state": "MT",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 16,
+      "doors": 22,
+      "open_doors": 14,
+      "shared_work": 0,
+      "waiting_work": 2325,
+      "waiting_findings": 1644
+    },
+    {
+      "held": 0,
+      "live": 4014,
+      "state": "NC",
+      "pulled": 0,
+      "superseded": 1,
+      "published_sets": 88,
+      "doors": 196,
+      "open_doors": 191,
+      "shared_work": 0,
+      "waiting_work": 4055,
+      "waiting_findings": 31
+    },
+    {
+      "held": 1,
+      "live": 43,
+      "state": "ND",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 17,
+      "doors": 74,
+      "open_doors": 70,
+      "shared_work": 0,
+      "waiting_work": 4220,
+      "waiting_findings": 1220
+    },
+    {
+      "held": 0,
+      "live": 0,
+      "state": "NE",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 16,
+      "doors": 59,
+      "open_doors": 45,
+      "shared_work": 0,
+      "waiting_work": 3504,
+      "waiting_findings": 0
+    },
+    {
+      "held": 0,
+      "live": 905,
+      "state": "NH",
+      "pulled": 0,
+      "superseded": 4,
+      "published_sets": 92,
+      "doors": 207,
+      "open_doors": 160,
+      "shared_work": 0,
+      "waiting_work": 1817,
+      "waiting_findings": 259
+    },
+    {
+      "held": 1,
+      "live": 3440,
+      "state": "NJ",
+      "pulled": 0,
+      "superseded": 24,
+      "published_sets": 47,
+      "doors": 150,
+      "open_doors": 102,
+      "shared_work": 0,
+      "waiting_work": 3129,
+      "waiting_findings": 647
+    },
+    {
+      "held": 3,
+      "live": 1948,
+      "state": "NM",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 56,
+      "doors": 332,
+      "open_doors": 330,
+      "shared_work": 0,
+      "waiting_work": 1975,
+      "waiting_findings": 1656
+    },
+    {
+      "held": 0,
+      "live": 1654,
+      "state": "NV",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 70,
+      "doors": 73,
+      "open_doors": 70,
+      "shared_work": 0,
+      "waiting_work": 579,
+      "waiting_findings": 473
+    },
+    {
+      "held": 1,
+      "live": 2944,
+      "state": "NY",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 102,
+      "doors": 184,
+      "open_doors": 181,
+      "shared_work": 0,
+      "waiting_work": 7441,
+      "waiting_findings": 1741
+    },
+    {
+      "held": 0,
+      "live": 5271,
+      "state": "OH",
+      "pulled": 0,
+      "superseded": 1,
+      "published_sets": 94,
+      "doors": 139,
+      "open_doors": 135,
+      "shared_work": 0,
+      "waiting_work": 7859,
+      "waiting_findings": 1368
+    },
+    {
+      "held": 1,
+      "live": 2320,
+      "state": "OK",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 61,
+      "doors": 144,
+      "open_doors": 141,
+      "shared_work": 0,
+      "waiting_work": 3528,
+      "waiting_findings": 1443
+    },
+    {
+      "held": 4,
+      "live": 1203,
+      "state": "OR",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 49,
+      "doors": 62,
+      "open_doors": 60,
+      "shared_work": 0,
+      "waiting_work": 2848,
+      "waiting_findings": 3191
+    },
+    {
+      "held": 0,
+      "live": 760,
+      "state": "PA",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 51,
+      "doors": 110,
+      "open_doors": 106,
+      "shared_work": 0,
+      "waiting_work": 8278,
+      "waiting_findings": 722
+    },
+    {
+      "held": 0,
+      "live": 0,
+      "state": "PR",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 11,
+      "doors": 20,
+      "open_doors": 15,
+      "shared_work": 0,
+      "waiting_work": 52,
+      "waiting_findings": 0
+    },
+    {
+      "held": 0,
+      "live": 126,
+      "state": "RI",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 30,
+      "doors": 39,
+      "open_doors": 34,
+      "shared_work": 0,
+      "waiting_work": 652,
+      "waiting_findings": 0
+    },
+    {
+      "held": 7,
+      "live": 117409,
+      "state": "SC",
+      "pulled": 0,
+      "superseded": 185709,
+      "published_sets": 16,
+      "doors": 48,
+      "open_doors": 46,
+      "shared_work": 0,
+      "waiting_work": 1851,
+      "waiting_findings": 764
+    },
+    {
+      "held": 0,
+      "live": 84,
+      "state": "SD",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 27,
+      "doors": 70,
+      "open_doors": 65,
+      "shared_work": 0,
+      "waiting_work": 2680,
+      "waiting_findings": 0
+    },
+    {
+      "held": 2,
+      "live": 23,
+      "state": "TN",
+      "pulled": 0,
+      "superseded": 3,
+      "published_sets": 15,
+      "doors": 69,
+      "open_doors": 66,
+      "shared_work": 0,
+      "waiting_work": 1922,
+      "waiting_findings": 1436
+    },
+    {
+      "held": 0,
+      "live": 12893,
+      "state": "TX",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 424,
+      "doors": 797,
+      "open_doors": 794,
+      "shared_work": 0,
+      "waiting_work": 13801,
+      "waiting_findings": 334
+    },
+    {
+      "held": 0,
+      "live": 14,
+      "state": "US",
+      "pulled": 21,
+      "superseded": 0,
+      "published_sets": 17226,
+      "doors": 1122,
+      "open_doors": 1002,
+      "shared_work": 0,
+      "waiting_work": 1627,
+      "waiting_findings": 11
+    },
+    {
+      "held": 0,
+      "live": 422,
+      "state": "UT",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 28,
+      "doors": 338,
+      "open_doors": 103,
+      "shared_work": 0,
+      "waiting_work": 1446,
+      "waiting_findings": 3017
+    },
+    {
+      "held": 0,
+      "live": 5092,
+      "state": "VA",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 118,
+      "doors": 271,
+      "open_doors": 269,
+      "shared_work": 0,
+      "waiting_work": 3669,
+      "waiting_findings": 0
+    },
+    {
+      "held": 0,
+      "live": 2,
+      "state": "VI",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 10,
+      "doors": 19,
+      "open_doors": 15,
+      "shared_work": 0,
+      "waiting_work": 72,
+      "waiting_findings": 1
+    },
+    {
+      "held": 1,
+      "live": 16,
+      "state": "VT",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 14,
+      "doors": 80,
+      "open_doors": 71,
+      "shared_work": 0,
+      "waiting_work": 1441,
+      "waiting_findings": 2496
+    },
+    {
+      "held": 0,
+      "live": 5672,
+      "state": "WA",
+      "pulled": 0,
+      "superseded": 956,
+      "published_sets": 118,
+      "doors": 258,
+      "open_doors": 255,
+      "shared_work": 0,
+      "waiting_work": 3711,
+      "waiting_findings": 0
+    },
+    {
+      "held": 74,
+      "live": 23099,
+      "state": "WI",
+      "pulled": 0,
+      "superseded": 5,
+      "published_sets": 559,
+      "doors": 521,
+      "open_doors": 516,
+      "shared_work": 0,
+      "waiting_work": 6077,
+      "waiting_findings": 259
+    },
+    {
+      "held": 0,
+      "live": 121,
+      "state": "WV",
+      "pulled": 0,
+      "superseded": 0,
+      "published_sets": 50,
+      "doors": 102,
+      "open_doors": 98,
+      "shared_work": 0,
+      "waiting_work": 1428,
+      "waiting_findings": 108
+    },
+    {
+      "held": 9,
+      "live": 491,
+      "state": "WY",
+      "pulled": 0,
+      "superseded": 3,
+      "published_sets": 30,
+      "doors": 69,
+      "open_doors": 68,
+      "shared_work": 0,
+      "waiting_work": 1304,
+      "waiting_findings": 1088
+    }
+  ],
+  "limit": "Before A8 deployment. These are direct source SQL counts, not an assertion of deployed counter parity."
+}

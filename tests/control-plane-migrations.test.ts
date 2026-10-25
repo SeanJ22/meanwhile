@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { applyControlPlaneMigrations, controlPlaneMigrationHash, productionControlPlaneTarget } from "../scripts/control-plane-migrations.mts";
+import { applyControlPlaneMigrations, controlPlaneMigrationHash, productionControlPlaneTarget, hourlyCountMigrationSql } from "../scripts/control-plane-migrations.mts";
 import { BOOTSTRAP_DDL, CONTROL_READS_EXPAND_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { pgControlReadsBackfill } from "../lib/control-plane/repository/control-reads-backfill.ts";
 import { runStateControlBackfill,PLANNING_STATES } from "../lib/control-plane/scheduler/state-planning.ts";
@@ -23,6 +23,18 @@ const now = "2026-10-15T12:00:00.000Z";
 const entry = (id: string): CostEntry => ({ attemptId: id, routeTaskId: `task-${id}`, workItemId: "work", routeId: null,
   source: "api.anthropic.com", jurisdiction: "place", project: "freshness", role: "SCOUT", model: "claude-haiku-4-5-20251001",
   recordedAt: now, cost: { ...ZERO_COST, usd: 1, requestCount: 1 } });
+
+test("the immutable hourly migration releases partial control-plane locks before waiting", async () => {
+  const queries: string[] = [];
+  const sql = hourlyCountMigrationSql({ query: async statement => { queries.push(statement); return []; } });
+  await sql.query("BEGIN");
+  await sql.query("LOCK TABLE cp_doors,cp_work_items,cp_owner_snapshots IN SHARE ROW EXCLUSIVE MODE");
+  await sql.query("COMMIT");
+  assert.equal(queries[0], "BEGIN");
+  assert.match(queries[1], /LOCK TABLE public.cp_doors, public.cp_work_items, public.cp_owner_snapshots, public.count_hour IN SHARE ROW EXCLUSIVE MODE NOWAIT/);
+  assert.match(queries[1], /EXCEPTION WHEN lock_not_available THEN[\s\S]*END;\s*PERFORM pg_sleep/);
+  assert.equal(queries[2], "COMMIT");
+});
 
 test("control-plane migrations use only the declared production context and its separate connection", () => {
   assert.equal(productionControlPlaneTarget(expandArgs, buildEnv), connection);

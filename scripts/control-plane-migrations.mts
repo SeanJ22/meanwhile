@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { Pool, neonConfig } from "@neondatabase/serverless";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
+import { migrationTableLockBlock } from "../lib/db/migration-locks.ts";
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
 import { debtStateMigrationDefinition, stampDebtStates } from "../lib/control-plane/repository/migrations/DT-01.ts";
 import { WORK_MIGRATION_SOURCE, workMigrationDefinition, expandWorkList } from "../lib/control-plane/repository/migrations/RB-A5.ts";
@@ -37,6 +38,16 @@ interface Dependencies {
   readonly env?: NodeJS.ProcessEnv;
   readonly committed?: (path: string) => Buffer;
   readonly withDatabase?: <T>(connection: string, operation: (sql: Sql) => Promise<T>) => Promise<T>;
+}
+
+/** Keep the journalled migration bytes intact; replace its blocking lock acquisition inside its existing transaction. */
+export function hourlyCountMigrationSql(sql: Sql): Sql {
+  return { query: (statement, params) => {
+    const lock = /^LOCK TABLE ([a-z_][a-z0-9_,]*) IN SHARE ROW EXCLUSIVE MODE$/i.exec(statement);
+    return sql.query(lock
+      ? `DO $wtp_lock$ ${migrationTableLockBlock([...lock[1].split(","), "count_hour"])} $wtp_lock$;`
+      : statement, params);
+  } };
 }
 
 export function controlPlaneMigrationHash(root = process.cwd(), id: string = MIGRATIONS[0].id): string {
@@ -112,7 +123,8 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
     try {
       await sql.query(CP_MIGRATIONS_DDL);
       for (const entry of pendingOf(await readApplied())) {
-        const done = await MIGRATIONS.find(migration => migration.id === entry.id)!.apply(sql);
+        const done = await MIGRATIONS.find(migration => migration.id === entry.id)!
+          .apply(entry.id === "RB-A8_expand" ? hourlyCountMigrationSql(sql) : sql);
         await sql.query("INSERT INTO cp_migrations(id,hash,completed_at) VALUES ($1,$2,now())", [entry.id, entry.hash]);
         console.log(`control-plane: ${entry.id} applied to ${new URL(connection).hostname} (${done})`);
       }

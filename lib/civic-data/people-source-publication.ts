@@ -133,15 +133,15 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const jurisdiction = peopleJurisdiction(input.state);
   const prior = await readPeopleSourceProjection(jurisdiction,input.sourceId,{store:input.store,now:input.now,bypassCache:true});
   if (prior.kind === "STORE_UNREACHABLE") throw Error("PEOPLE_SOURCE_PRIOR_UNAVAILABLE");
-  const old = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
+  const heldCaptures = prior.kind === "PROMOTED" ? await input.store.readCandidatePath<readonly StatePeopleCapture[]>(
+    prior.metadata.versionId!, ["normalizedPayload", "captures"]) ?? [] : [];
   const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
   const national = jurisdiction === "US" && input.sourceId === "statewide-executive-sources";
   const read = await holdPeopleCaptures(input.vault,input.sourceId,input.acquisitions);
   const reread = new Set(read.map(row=>row.finalUrl));
   // A failed reread of one national official must retain the earlier bytes
   // behind that official's still-current last verified facts.
-  const priorCaptures = national ? (old?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? []
-    : priorPeopleCaptures(old?.candidate.normalizedPayload);
+  const priorCaptures = national ? heldCaptures : priorPeopleCaptures({ captures: heldCaptures });
   const carried = priorCaptures.filter(row=>national || !reread.has(row.finalUrl));
   let captures = [...new Map([...carried,...read].map(row=>[national ? `${row.finalUrl}|${row.retrievedAt}` : row.finalUrl,row])).values()];
   const nationalExcluded: NonNullable<RoutineCandidate["excludedFacts"]>[number][] = [];

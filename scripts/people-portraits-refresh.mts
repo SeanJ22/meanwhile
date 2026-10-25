@@ -26,6 +26,7 @@ import { readStateRegistryRuntimeProjection } from "../lib/civic-data/read-model
 import { factReader } from "../lib/facts/db.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
+import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
   const state=args.find(arg=>arg.startsWith("--state="))?.slice(8).toLowerCase();
@@ -52,8 +53,7 @@ async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:
     const promotion=await store.readPromotion(contract.recordClass,contract.scope);
     if (!promotion) return null;
     if(linking){
-      const saved=await store.readCandidate(promotion.versionId);
-      const captures=(saved?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
+      const captures=await store.readCandidatePath<readonly StatePeopleCapture[]>(promotion.versionId,["normalizedPayload","captures"]) ?? [];
       for(const row of captures){
         const text=await capturedText(linking.vault,row);
         linking.captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
@@ -87,8 +87,8 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const contractId=`people-portraits-${state.toLowerCase()}`;
   const prior=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
   if(prior.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-  const previous=prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
-  const priorFacts=previous?.candidate.excludedFacts ?? [];
+  const priorFacts=prior.kind === "PROMOTED" ? await store.readCandidatePath<RoutineCandidate["excludedFacts"]>(
+    prior.metadata.versionId!,["excludedFacts"]) ?? [] : [];
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
   const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
   let baseRoster:OfficeholderSet|null=null,last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
@@ -101,8 +101,8 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
     for(;;){
       const held=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
       if(held.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-      const current=held.kind === "PROMOTED" ? await store.readCandidate(held.metadata.versionId!) : null;
-      const kept=(current?.candidate.excludedFacts ?? priorFacts).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
+      const current=held.kind === "PROMOTED" ? await store.readCandidatePath<RoutineCandidate["excludedFacts"]>(held.metadata.versionId!,["excludedFacts"]) : null;
+      const kept=(current ?? priorFacts).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
         !(continuation && fact.code.endsWith("_WORK_REMAINS")));
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),

@@ -3,6 +3,7 @@ import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../design/copy-settings.ts";
 import "../../facts/clocks.ts";
+import "../../coverage/owed-table.ts";
 import "../scheduler/provider-limits.ts";
 /** The machine key travels as the control's target and is never rendered. */
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";

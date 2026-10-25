@@ -5,17 +5,17 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T23:34:00Z
+heartbeat: 2026-10-25T23:53:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 7:34 PM EDT)
+## Every READY not on main (updated 7:53 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
-| 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | RETURNED: fails 8 tests on its own branch (returns/db-03.md); new READY ships next, alone (urgent Neon). River finishes it if no READY in 60 min |
+| 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | River finishing it (standing order: no fix within 60 min of the 6:50 PM return): tests updated on stream/river-db03-reads, cut from river a37ce95a7. Ships next, alone; urgent Neon |
 | e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 (PR #833, auto-merge on): gates 9 of 9 on a37ce95a7; urgent Neon |
 
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
@@ -1186,4 +1186,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 7:34 PM EDT: release 121 = DB-02 alone
 - DB-02 re-cut e0f14fe59 passed alone: 9 of 9 gates on a37ce95a7, 9,922 tests, 0 failing. River moved to a37ce95a7; release 121 is PR #833 with auto-merge on.
 - DB-03 Admin is gating next on a37ce95a7, while DB-03 reads waits out its 60 minutes.
+
+### 7:53 PM EDT: River finishes DB-03 reads
+- No new READY on stream/db-03-reads within 60 minutes of the return (it still holds 8b69f0cbf and its child a0cb7d1ef). River is finishing it on stream/river-db03-reads (river a37ce95a7 + 8b69f0cbf).
+- The change: rewrite aggregate-list-pagination and admin-narrow-reads for the revision-first protocol (a bounded revision page, then values fetched by id). Each test keeps its promise, and a new check proves an unchanged table sends revisions only. No production code changes.
 

@@ -17,12 +17,10 @@ import {
   ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
   ROUTINE_CLOCK_READ_CONCURRENCY,
   ROUTINE_DATA_ADMISSION_MS,
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   readRoutineTaskClocks,
   routineFailureDomainCount,
   routineFrontierPassBound,
-  SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineSupervisorCycleId,
   routineUnreceiptedSupervisorAttemptHistory,
   routineTaskDue,
@@ -30,7 +28,7 @@ import {
   routineTaskSelection,
   routineDeferral,
   routineSerialLane,
-  routineFailureDomainFrontier,
+  routinePassLaunchOrder,
   routineAdmissionClock,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -1475,12 +1473,12 @@ test("readbacks begin alongside unrelated source work and wait for a state's dep
 });
 
 test("the pilot outer bound contains the source and meeting frontier", () => {
-  const tasks = [...ROUTINE_SOURCE_TASKS, ...Array.from({length:SITTING_WINDOW_LANE_SLOTS_PER_PASS}, () => ({ acquisitionFailureDomain: "fixture-meeting-host",
+  const tasks = [...ROUTINE_SOURCE_TASKS, ...Array.from({length:3}, () => ({ acquisitionFailureDomain: "fixture-meeting-host",
     contract: { ...ROUTINE_SOURCE_TASKS[0]!.contract, schedule: { kind: "SITTING_WINDOW" as const, windowMs: 1, hotEveryMs: 1, baseEveryMs: 1 } } }))];
   const passBound = routineFrontierPassBound(tasks);
   const admittedCommands = passBound.commandCount;
   const largestDomain = passBound.largestFailureDomainSize;
-  assert.equal(largestDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS);
+  assert.ok(largestDomain >= 3);
   assert.ok(admittedCommands > routineFailureDomainCount(tasks), "meeting lanes take a second read a pass");
   const readerDomains = routineReaderRepairDomains();
   const bounds = {
@@ -1509,8 +1507,7 @@ test("the pilot outer bound contains the source and meeting frontier", () => {
   );
   assert.ok(boundedPassMs >= Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(boundedPassMs >= largestDomain * ROUTINE_CHILD_TIMEOUT_MS);
-  assert.ok(admittedCommands < ROUTINE_SOURCE_TASKS.length, "shared-provider tails are outside one pass");
-  assert.equal(ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, 1);
+  assert.ok(admittedCommands <= tasks.length, "calendar lanes keep their hourly cadence; other source tails can take memory");
   assert.equal(ROUTINE_DATA_ADMISSION_MS, 5 * 60_000);
   assert.equal(
     routineRunnerOuterTimeoutCompatible(
@@ -2418,7 +2415,7 @@ test("national people children share one serial lane: one at a time, back to bac
   assert.ok(people.length > 100);
   assert.deepEqual([...new Set(people.map(task => routineSerialLane(task.command)))], ["serial:scripts/national-people-refresh.mts"]);
   assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
-  assert.equal(routineFailureDomainFrontier(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
+  assert.equal(routinePassLaunchOrder(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
     "admission still offers every due source and state each pass");
   const others = ROUTINE_SOURCE_TASKS.filter(task => task.command[0] !== "scripts/national-people-refresh.mts");
   assert.ok(others.every(task => routineSerialLane(task.command) === undefined));

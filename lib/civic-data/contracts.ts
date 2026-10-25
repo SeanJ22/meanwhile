@@ -501,6 +501,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   ...REGISTRATION_TARGETS.map((target): RoutineSourceContract => ({
     id: `place-map-${target.state.toLowerCase()}`,
     sourceId: "census-geography-relationships",
+    acquisitionFailureDomain: `routine-source:census-geography-relationships:${target.state}`,
     recordClass: "CENSUS_GEOGRAPHY",
     scope: `US-${target.state}:place-map`,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/place-map-refresh.mts", `--state=${target.state}`] },

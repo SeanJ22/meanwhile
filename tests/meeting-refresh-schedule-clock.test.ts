@@ -7,7 +7,6 @@ import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
@@ -435,7 +434,7 @@ async function simulateRegistry(options: {
         task: body.task,
         lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
         deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), signals.get(body.task.id)),
-      })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
+      })), pass);
       for (const lane of new Set(admitted.map(({ task }) => task.acquisitionFailureDomain))) {
         assert.ok(admitted.filter(({ task }) => task.acquisitionFailureDomain === lane).length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
       }

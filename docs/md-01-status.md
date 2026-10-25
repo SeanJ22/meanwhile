@@ -6,6 +6,8 @@ The prepared code is on `stream/md-01`. River's READY selector picks `a7014d303`
 
 The October 24, 4:32 PM Phoenix read-only production comparison retains all 276 existing measure summaries across all 56 jurisdictions: 265 independently checked translations and 23 held ballot summaries, with 12 overlaps. There are still 223 missing summaries among 499 measures. No summary ID, checked translation ID or checked part ID disappeared. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). These are production counts before the prepared changes ship, not evidence of improved publication.
 
+The October 24, 6:53 PM Phoenix identity baseline resolves all 60 stored references from 56 reactions, one Ask subject and three demand signals. All 36 distinct input IDs resolve to their current 35 canonical IDs. There are no stored Speak your mind posts. This is a pre-release lookup through `reader_resolve_id`, saved for an exact post-release comparison; it does not replace the Chrome walk.
+
 Actual Google Chrome 156 on meanwhileusa.com, release 105, October 24 at 5:25 PM Phoenix:
 
 | ZIP | Summaries | Missing |
@@ -18,7 +20,7 @@ No page errors occurred. These counts match the saved earlier Chrome baseline; n
 
 ## Cost cause and prepared repair
 
-At 10 AM Eastern, translation calls cost $2.98737458 and published 29 explanations: $0.103013 per publication. At 11 AM, calls cost $8.81603812 and published 28: $0.314859 per publication. [Hourly baseline](md-01-explainer-hour-baseline.csv) includes calls and publications in each measured hour.
+The original comparison used call charges by Eastern hour and publications by attempt-start hour: $2.98737458 / 29 at 10 AM ($0.103013) and $8.81603812 / 28 at 11 AM ($0.314859). Four attempts started in the 10 AM hour and completed in the 11 AM hour. Using the durable `PUBLISHED` update time instead gives 25 and 32 completed explanations, or $0.119495 and $0.275501 per completed explanation. The [hourly baseline](md-01-explainer-hour-baseline.csv) shows both clocks, including hours with spend and no publication. Neither hourly ratio assigns every cross-hour charge to its originating attempt; the live note will state the clock and also report the full scheduled-run total.
 
 Average uncached writer input rose from 22,269 to 59,832 tokens; average writer output changed only from 1,124 to 1,240. Three large Sonnet writer calls alone cost $4.645508. They carried repeated copies of text in long official voter guides. Haiku checker prompts over 100,000 input tokens also used its higher input rate. No Opus calls were recorded in this cohort.
 

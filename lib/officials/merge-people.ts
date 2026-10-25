@@ -144,8 +144,9 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const keys = new Set([...Object.keys(left.nativeIds ?? {}), ...Object.keys(right.nativeIds ?? {})]);
     const nativeIds = Object.fromEntries([...keys].map(key => [key, [...new Set([...(left.nativeIds?.[key] ?? []), ...(right.nativeIds?.[key] ?? [])])]]));
     nativeIds.reader = [...new Set([...(nativeIds.reader ?? []), left.id, personId, right.id, right.personId ?? right.id])];
+    // Optional undefined fields disappear on publication; replay keys must use that same durable form.
     const sourceHolders = [...new Map([left,right].flatMap(person=>originalSources.get(person) ?? heldPersonSources(person))
-      .map(person=>[canonicalCivicDataJson(person),person])).values()];
+      .map(person=>[canonicalCivicDataJson(JSON.parse(JSON.stringify(person))),person])).values()];
     const merged: Officeholder = {...left, personId, nativeIds, sourceHolders, fieldSources: {...left.fieldSources}};
     personDivisions.set(merged,new Set([...(personDivisions.get(left)??[]),...(personDivisions.get(right)??[])]));
     const mergedKeys = personIdentityKeys(merged);

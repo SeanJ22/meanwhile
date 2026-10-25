@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 104 (main 2082dc9b1). NEXT: release 105 = RB-A2 alone (PR #816, CI). GATING: DB-01 on RB-A2 (river-next b7246b8a1). THEN: RB-A8 fb1783a62 (carries RB-A3 d92e9a054 + RB-A5 f7ab065e3), PT-01 a109cf965, RB-A4
+build_state: LIVE FOR READERS: release 105 (main 7f13a561c, live 8:23 PM EDT; RB-A2). GATING: DB-01 on RB-A2 (river-next b7246b8a1). THEN: RB-A8 fb1783a62 (+RB-A3, RB-A5), PT-01 a109cf965, RB-A4
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T00:16:56Z
+heartbeat: 2026-10-25T00:25:24Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,11 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 105 live, 8:23 PM EDT (RB-A2)
+- /api/build 7f13a561c (PR #816 merge commit). Sean's checks in Chromium at 8:24 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.
+- RB-A2's contract migration (place_boundary, place_map_counts) is not applied yet at 8:25 PM EDT (journal 52); the runner applies contracts after the release is serving. River is watching for it, or for a failure digest.
+- RB-A6 and RB-A10 can now build on river 667d8dad2 (RB-A2).
 
 ### Live for readers, 8:20 PM EDT
 - Live: release 104 (2082dc9b1). Polling places refresh; Cochise's drop boxes are live (8:05 PM entry). Wheeling waits on the runner-host check (FOR SEAN).

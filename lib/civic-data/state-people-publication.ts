@@ -141,7 +141,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   return {candidate,outcome};
 }
 
-/** Every due profile is standing work, independent of its roster refresh. */
+/** Portrait work for people without a portrait readers are shown; a shown portrait is never read again. */
 export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:string;now?:string;signal?:AbortSignal},
   options:import("../photos/portrait-work.ts").StandingPortraitOptions = {}) {
   const clock = options.now ?? (()=>new Date().toISOString());
@@ -153,7 +153,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   const { runBoundedWorkPool } = await import("../ops/bounded-work-pool.ts");
   const { sanitizedErrorDiagnostic } = await import("../ops/error-diagnostic.ts");
   const { linkingPageFrom } = await import("../control-plane/promotion/section3.ts");
-  const { pacedPortraitAcquire, storeStandingPortrait } = await import("../photos/portrait-work.ts");
+  const { pacedPortraitAcquire, storeStandingPortrait, latestPortraitAttempts, portraitDueAt, portraitProfileLinks, PORTRAIT_DUE_WINDOW_MS } = await import("../photos/portrait-work.ts");
   const { executiveOfficeSources, executiveProfileLinks, executiveDirectoryLinks } = await import("../sources/white-house/profile.ts");
   const { whiteHouseOffice } = await import("../officials/white-house-offices.ts");
   const acquire = options.acquire ?? pacedPortraitAcquire;
@@ -162,14 +162,14 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   const linkingCaptures=options.linkingCaptures ?? [];
   const official=(url:string)=>isOfficialSource(url,linkingPageFrom(url,linkingCaptures.map(row=>row.evidence)));
   const roster = {...input.roster,officeholders:input.roster.officeholders.map(row=>({...row}))};
-  const lastAttempt = new Map<string,string>();
-  for (const fact of options.previousExcludedFacts ?? []) {
-    const record = fact.record as {personId?:string;attemptedAt?:string}|undefined;
-    if (fact.code.startsWith("STATE_PORTRAIT_") && record?.personId && record.attemptedAt) lastAttempt.set(record.personId,record.attemptedAt);
-  }
-  const due = roster.officeholders.filter(row=>!portraitBindingMatches(row.personId ?? row.id,row.photo ?? {url:""}) ||
-    Date.parse(now)-Date.parse(row.photo!.verification!.checkedAt)>=7*86400000)
-    .sort((a,b)=>(lastAttempt.get(a.personId ?? a.id) ?? "").localeCompare(lastAttempt.get(b.personId ?? b.id) ?? "") || a.id.localeCompare(b.id));
+  const lastAttempt = latestPortraitAttempts(options.previousExcludedFacts ?? [],"STATE_PORTRAIT_");
+  const attemptedAt = (person:OfficeholderSet["officeholders"][number]) =>
+    (lastAttempt.get(person.personId ?? person.id)?.record as {attemptedAt?:string}|undefined)?.attemptedAt ?? "";
+  const verified = (person:OfficeholderSet["officeholders"][number]) => portraitBindingMatches(person.personId ?? person.id,person.photo ?? {url:""});
+  // Never-tried people first, then the oldest attempts: a run cut off by its deadline continues where it stopped.
+  const dueBy = Date.parse(now)+PORTRAIT_DUE_WINDOW_MS;
+  const due = roster.officeholders.filter(row=>portraitDueAt(row,lastAttempt.get(row.personId ?? row.id),verified)<=dueBy)
+    .sort((a,b)=>attemptedAt(a).localeCompare(attemptedAt(b)) || a.id.localeCompare(b.id));
   const dueIds = new Set(due.map(person=>person.personId ?? person.id));
   const excludedFacts = (options.previousExcludedFacts ?? []).filter(fact=>fact.code.startsWith("STATE_PORTRAIT_") &&
     dueIds.has((fact.record as {personId?:string}|undefined)?.personId ?? ""));
@@ -181,9 +181,11 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   };
   const gap = (person:OfficeholderSet["officeholders"][number],code:string,detail:string,page?:import("../sources/known-release.ts").KnownRelease,
     profileAttempts?:readonly {sourceUrl:string;code:string;detail:string}[]) => {
+    // A person the deadline interrupted is unfinished, not failed: they stay due, behind people not yet tried.
+    if (sourceSignal.aborted) { code="STATE_PORTRAIT_INTERRUPTED"; detail="The pass deadline interrupted this attempt; it continues on the next pass."; }
     excludedFacts.push({key:`${person.personId ?? person.id}:portrait`,code,detail,
-      record:{personId:person.personId ?? person.id,sourceUrl:page?.finalUrl ?? person.websiteUrl,attemptedAt:clock(),
-        ...(profileAttempts ? {profileAttempts} : {}),
+      record:{personId:person.personId ?? person.id,sourceUrl:page?.finalUrl ?? person.websiteUrl,attemptedAt:clock(),profiles:portraitProfileLinks(person),
+        ...(profileAttempts ? {profileAttempts} : {}),...(sourceSignal.aborted ? {interrupted:true} : {}),
         ...(page ? {sourceRetrievedAt:page.retrievedAt,sourceCheckedAt:page.checkedAt,rawHash:page.sha256,vaultKey:page.vaultKey} : {}),
         retainedVerifiedPortrait:Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo))}});
   };
@@ -263,7 +265,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
     gap(person,code,"The directly held profile/image leads did not verify within this attempt; prior person facts and verified portrait remain.",page,profileAttempts);
     await recordPerson(person);
   });
-  if (attempted<due.length) excludedFacts.push({key:`US-${input.state.toUpperCase()}:portrait-continuation`,code:"STATE_PORTRAIT_WORK_REMAINS",
+  if (attempted<due.length || sourceSignal.aborted) excludedFacts.push({key:`US-${input.state.toUpperCase()}:portrait-continuation`,code:"STATE_PORTRAIT_WORK_REMAINS",
     detail:`${due.length-attempted} known native profiles remain after this continuation; saved attempt dates prioritize unattempted people next.`});
   for (const result of results) if (!result.ok) {
     const person=due[result.index]!;

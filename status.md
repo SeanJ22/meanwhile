@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T08:07:42Z
+heartbeat: 2026-10-25T08:50:53Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,34 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Meeting calendars are back, 4:50 AM EDT (Sean's 11:10 PM order; counts only)
+- Meeting reads (first attempts) per ET hour: 8 PM 57, 9 PM 94, 10 PM 3, 11 PM 22, midnight 14, 1 AM 43, 2 AM 145, 3 AM 123, 4 AM 239 by 4:48.
+  - At or above the 8 PM-hour rate since 2 AM; 4 AM is in the daytime range (108 to 374).
+- New meeting facts per ET hour: 2 AM 5,052, 3 AM 1,616, 4 AM 6,337. Above 1,000.
+- Publish-now passes launch meetings again:
+  - 4:00 AM and 4:09 AM EDT (still release 111) attempted 60 and 74 meeting boards; every pass before attempted 0.
+  - 4:37 AM EDT on release 112 attempted 157.
+  - Some passes still defer boards ("State calendar read remains due"), so there is more to gain. The next wait before launch is the 41 to 139 s segment of clocks and decisions.
+- Routine passes now carry 5 to 8 meetings beside 20 to 24 voting-site programs. Voting sites still refresh every pass.
+- DB-01's read savings cannot be measured honestly. The reader's per-database counter (database_transfer_hourly) starts at 9 PM EDT Oct 24, just as release 106 reached the runner, so it holds no before-106 reader number. cp_vital_signs holds control-plane bytes only.
+- What the runner moves now (database_transfer_hourly, ET):
+  - control plane 5.0 to 6.5 GB an hour (2:30 to 4 AM: 5.2, 5.3, 5.2 GB);
+  - reader 2.6 to 7.3 GB an hour;
+  - together about 8 to 12 GB an hour.
+  - For comparison, Oct 24 2 to 6 PM: control plane 1.2 to 1.7 GB an hour.
+- Control-plane growth since then:
+  - cp_doors 0.7 to 1.1 GB an hour became 2.6 to 3.6 (voting-source-publication; DB-03A takes the pages out);
+  - scheduler reads about 0.6 GB an hour became 2.4: cp_work_items_history.readMany from coordinator.ts:442 and freshness-shadow.mts:1215, about 670 MB an hour together; owner snapshots about 440 MB; dispatch readOpen about 340 MB.
+- Reader, last 3 h:
+  - member-offices / civic_data_candidates 1.58 GB in 675 calls (about 2.3 MB a call);
+  - routine-civic-data / civic_data_candidates 270 MB;
+  - member-offices / STATE_LEGISLATOR events 256 MB;
+  - publish-now / civic_data_promotions 230 MB;
+  - google-civic-voterinfo 224 MB plus 217 MB;
+  - reader-readback inventory / payload parts 195 MB (DB-03's inventory-readback removal deletes this phase);
+  - people-portraits (ME, TX, PA) about 190 MB each.
+- FOR SEAN: at 8 to 12 GB an hour the runner alone moves 190 to 290 GB a day. DB-03A (cp_doors pages) and DB-03 (inventory readback) are next in River's queue. member-offices and the scheduler's history reads have no lane yet.
 
 ### RV-BOX proof, 4:08 AM EDT (Sean's 12:15 AM order; counts only)
 - boxDue timeouts: 0 in all 7 publish-now passes on release 111 (3:14, 3:23, 3:30, 3:36, 3:45, 3:52 AM and 4:00 AM EDT) and in both routine passes. The proof asked for 0 over 3. Met.

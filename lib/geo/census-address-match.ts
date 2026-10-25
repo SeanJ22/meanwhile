@@ -4,6 +4,17 @@ import { censusAddressQuery } from "./address-query.ts";
 
 const hasWords = (whole: string, part: string): boolean =>
   ` ${whole} `.includes(` ${part} `);
+
+function matchingIntersection(published:string,address:string):boolean {
+  const streets=address.split(",",1)[0].split("&");
+  return streets.length===2&&streets.every(street=>{
+    const words=usps(street),direction=/^(n|s|e|w|ne|nw|se|sw) /.exec(words)?.[1];
+    const name=direction?words.slice(direction.length+1):words;
+    const stated=new RegExp(`\\b(n|s|e|w|ne|nw|se|sw) ${name}\\b`).exec(published)?.[1];
+    return / (?:st|ave|rd|dr|ln|blvd|ct|cir|pl|pkwy|hwy|ter|trl|sq|way|expy)$/.test(name)&&
+      hasWords(published,name)&&(!direction||!stated||direction===stated);
+  });
+}
 interface CensusMatch {
   readonly matchedAddress?: string;
   readonly coordinates?: { readonly x?: number; readonly y?: number };
@@ -33,15 +44,15 @@ export function verifiedCensusVenuePoint(
   const address = match.matchedAddress ?? "";
   const house = /^\s*(\d+[a-z]?(?:-\d+)?|[ns]\d+[ew]\d+|[ew]\d+[ns]\d+)\b/i.exec(address)?.[1];
   if (
-    !house ||
-    !components?.streetName ||
-    !components.city ||
-    !components.state
+    !components?.city ||
+    !components.state ||
+    Boolean(house&&!components.streetName) ||
+    Boolean(!house&&(components.streetName||!address.includes("&")))
   )
     return null;
   const query = censusAddressQuery(published);
   const folded = usps(query);
-  const street = usps(
+  const street = house?usps(
     [
       house,
       components.preDirection,
@@ -50,7 +61,7 @@ export function verifiedCensusVenuePoint(
     ]
       .filter(Boolean)
       .join(" "),
-  );
+  ):"";
   const sameCity=hasWords(folded,usps(components.city));
   const foldedQuery = usps(query);
   const postalStates=[...foldedQuery.matchAll(/\b([a-z]{2})(?=\s+\d{4,5}\b)/g)]
@@ -74,25 +85,28 @@ export function verifiedCensusVenuePoint(
   const echoed=(response as {result?:{input?:{address?:{address?:string}}}})?.result?.input?.address?.address;
   const confirmed=typeof echoed==="string"&&usps(echoed)===foldedQuery;
   if(!sameCity&&!(confirmed&&publishedZip&&publishedZip===components.zip))return null;
-  const exactStreet=hasWords(folded,street);
+  const exactStreet=house?hasWords(folded,street):matchingIntersection(folded,address);
+  if(!house&&(!confirmed||!exactStreet||!/(?:\band\b|\bat\b|&)/i.test(query)))return null;
   // A unique native response may canonicalize a delivery ZIP while repeating the complete physical street and city.
   if(publishedZip&&components.zip!==publishedZip&&!(confirmed&&exactStreet))return null;
-  const sourceDirection=new RegExp(`^${house} (n|s|e|w|ne|nw|se|sw) `).exec(folded)?.[1];
-  const namedStreet=hasWords(folded,usps([house,components.streetName].join(" ")))
-    ||hasWords(folded,usps([house,components.preDirection,components.streetName].filter(Boolean).join(" ")))
-    ||Boolean(!components.preDirection&&sourceDirection&&hasWords(folded,usps([house,sourceDirection,components.streetName].join(" "))));
-  const prefix=usps([house,components.preDirection].filter(Boolean).join(" "))+" ";
-  const suffix=" "+usps(components.suffixType??"")+" ";
-  const sourceName=folded.startsWith(prefix)&&folded.includes(suffix)
-    ? folded.slice(prefix.length).split(suffix,1)[0].split(" ").filter(word=>!['jr','sr'].includes(word)):[];
-  const canonicalName=usps(components.streetName).split(" ");
-  const initialedStreet=sourceName.length>1&&sourceName.length===canonicalName.length&&
-    sourceName.at(-1)===canonicalName.at(-1)&&sourceName.every((word,index)=>word===canonicalName[index]||
-      canonicalName[index].length===1&&word.startsWith(canonicalName[index]));
-  const omittedSuffix=stateTail===components.state.toLowerCase()&&hasWords(folded,
-    usps([house,components.preDirection,components.streetName,components.city].filter(Boolean).join(" ")));
-  // A stated road type can change only with a matching ZIP; an absent suffix keeps the published street, city and state.
-  if(!exactStreet&&!(confirmed&&(publishedZip&&components.zip===publishedZip&&(namedStreet||initialedStreet)||omittedSuffix)))return null;
+  if(house){
+    const sourceDirection=new RegExp(`^${house} (n|s|e|w|ne|nw|se|sw) `).exec(folded)?.[1];
+    const namedStreet=hasWords(folded,usps([house,components.streetName].join(" ")))
+      ||hasWords(folded,usps([house,components.preDirection,components.streetName].filter(Boolean).join(" ")))
+      ||Boolean(!components.preDirection&&sourceDirection&&hasWords(folded,usps([house,sourceDirection,components.streetName].join(" "))));
+    const prefix=usps([house,components.preDirection].filter(Boolean).join(" "))+" ";
+    const suffix=" "+usps(components.suffixType??"")+" ";
+    const sourceName=folded.startsWith(prefix)&&folded.includes(suffix)
+      ? folded.slice(prefix.length).split(suffix,1)[0].split(" ").filter(word=>!['jr','sr'].includes(word)):[];
+    const canonicalName=usps(components.streetName!).split(" ");
+    const initialedStreet=sourceName.length>1&&sourceName.length===canonicalName.length&&
+      sourceName.at(-1)===canonicalName.at(-1)&&sourceName.every((word,index)=>word===canonicalName[index]||
+        canonicalName[index].length===1&&word.startsWith(canonicalName[index]));
+    const omittedSuffix=stateTail===components.state.toLowerCase()&&hasWords(folded,
+      usps([house,components.preDirection,components.streetName,components.city].filter(Boolean).join(" ")));
+    // A stated road type can change only with a matching ZIP; an absent suffix keeps the published street, city and state.
+    if(!exactStreet&&!(confirmed&&(publishedZip&&components.zip===publishedZip&&(namedStreet||initialedStreet)||omittedSuffix)))return null;
+  }
   const lat = match.coordinates?.y;
   const lng = match.coordinates?.x;
   if (

@@ -729,3 +729,17 @@ test("native Census postal city and missing suffix forms retain the same publish
     assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
  }
 });
+
+
+test("a published street intersection uses its unique native Census point without inventing a house number",()=>{
+ const published="Jackson Park – Pickle Ball Courts, S. 43rd St. and Kinnickinnic River Parkway, Milwaukee, WI 53215";
+ const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-intersection-census.json",import.meta.url),"utf8"));
+ assert.ok(verifiedCensusVenuePoint(published,response));
+ for(const changed of [published.replace("43rd","44th"),published.replace("Kinnickinnic","Different"),
+  published.replace("S. 43rd","N. 43rd"),published.replace("and Kinnickinnic","and E Kinnickinnic"),
+  published.replace("WI","CA"),published.replace("Milwaukee","Other City")]){
+   const conflict=structuredClone(response);conflict.result.input.address.address=censusAddressQuery(changed);
+   assert.equal(verifiedCensusVenuePoint(changed,conflict),null,changed);
+ }
+ const unbound=structuredClone(response);delete unbound.result.input;assert.equal(verifiedCensusVenuePoint(published,unbound),null);
+});

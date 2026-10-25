@@ -607,6 +607,14 @@ export interface LearningView {
   readonly notMeasured: readonly NotMeasured[];
 }
 
+export interface HourlyCountTableData {
+  readonly at: string;
+  readonly status: string;
+  readonly states: readonly string[];
+  readonly hours: readonly { readonly from:string; readonly through:string; readonly measuredAt:string;
+    readonly counts:readonly import("../../../../lib/counts/hour.ts").HourCount[]|null;
+    readonly waiting:readonly import("../../../../lib/counts/hour.ts").OldestWaiting[]|null }[];
+}
 export interface ScoreboardRow {
   readonly id: string;
   readonly name: string;
@@ -620,6 +628,7 @@ export interface ScoreboardRow {
 
   readonly trend?: readonly { readonly label: string; readonly value: number | null }[];
   readonly images?: readonly { readonly label: string; readonly src: string }[];
+  readonly hourlyCounts?: HourlyCountTableData;
 }
 
 export interface ScoreboardGateRow {
@@ -655,7 +664,7 @@ export interface ScoreboardMissionRow {
   readonly withinHour: boolean | null;
 }
 
-/** One full hour from the independent line keeper (Now). A number nobody recorded is null and shows "—". */
+/** One full hour from the runner's vital signs (Now). A number nobody recorded is null and shows "—". */
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;

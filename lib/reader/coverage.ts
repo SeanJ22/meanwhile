@@ -14,7 +14,7 @@ import { stateOfficesForStates } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
-import type { BodyTerritoryFile } from "../registry/body-territory.ts";
+import type { BodyTerritory } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { primeStatePeopleProjection } from "../state-rollcalls/legislators.ts";
@@ -70,7 +70,7 @@ export function stateCoverage(
   meetings: readonly Meeting[] = [],
   bodyFacts: readonly BodyFacts[] = [],
   extraDivisions: readonly Division[] = [],
-  territory: BodyTerritoryFile | null = null,
+  territory: BodyTerritory | null = null,
   meetingCount: number = meetings.length,
 ): CoverageSummary {
   const known = new Set(state.registry.registry.bodies.map(body => body.id));

@@ -7,7 +7,8 @@ import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { mergePlaceRows } from "./place-compose.ts";
-import { unpackPlaceContextRow, unpackReadyPlace } from "./place-ready.ts";
+import { unpackPlaceContextRow, unpackReadyPlace, unpackReadyTerritory } from "./place-ready.ts";
+import type { BodyTerritorySelection } from "../registry/body-territory.ts";
 import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
@@ -44,10 +45,15 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
 const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());
+const pageTerritories = serverReaderValue("place-page-territories", () => new WeakMap<PlacePackage, BodyTerritorySelection|null>());
 
 /** Cache the exact pages selected, including canonical bodies reached through an alias. */
 export function placePageCacheIds(place: PlacePackage): readonly string[] {
   return pageIds.get(place) ?? [];
+}
+
+export function placePageTerritory(place:PlacePackage):BodyTerritorySelection|null|undefined {
+  return pageTerritories.get(place);
 }
 
 export function readPlacePackage(input:PlaceInput,query?:Query|null):Promise<PlacePackage> {
@@ -89,6 +95,8 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page)throw new Error("PLACE_PAGE_NOT_BUILT");
     const place=unpackReadyPlace(saved.page);
+    const territory=unpackReadyTerritory(saved.page);
+    if(territory!==undefined)pageTerritories.set(place,territory);
     pageIds.set(place,[input.placeId]);
     return place;
   }

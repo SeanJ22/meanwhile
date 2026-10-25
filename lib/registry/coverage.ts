@@ -16,7 +16,7 @@ import { schoolDependency, type SchoolDependency } from "../officials/school-dep
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import { slotsFor } from "./derive.ts";
-import type { BodyTerritoryFile } from "./body-territory.ts";
+import type { BodyTerritory } from "./body-territory.ts";
 import type { RosterReaderGap } from "./body-rosters.ts";
 import { heldDivisionRepresentatives } from "./representation-server.ts";
 import type {
@@ -314,8 +314,8 @@ export function summarizeCoverage(
    * resolved here.
    */
   resolvedDivisions?: Division[],
-  /** Committed body-territory polygons for governments with no division. */
-  territory?: BodyTerritoryFile | null,
+  /** Territory polygons or their exact saved selection for this point. */
+  territory?: BodyTerritory | null,
   /** Exact per-scope state-roster read dispositions settled by the caller. */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
   heldMeetings: readonly Meeting[] = [],

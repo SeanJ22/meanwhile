@@ -4,7 +4,7 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
-import { placePageCacheIds, readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
+import { placePageCacheIds, placePageTerritory, readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
 import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
@@ -53,17 +53,18 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     // A map movement has one state read and one place read in this handler.
     // ZIP entry already starts its independent state endpoint before this read.
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
-    const territoryRead = readerTerritory(location.state);
     const fringe = zipRead.value ? location.fringe : [];
     const zipPoint = zipRead.value ? lookupZcta(zipRead.value) : null;
     const readyZip = zipPoint?.lat === lat && zipPoint?.lng === lng ? zipRead.value : null;
+    const territoryRead = readyZip ? null : readerTerritory(location.state);
     const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
-      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe,
-      ...(readyZip ? {placeId:`zip:${readyZip}`} : {}) }));
-    const [state, place, territory, settings] = await Promise.all([
-      stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
+      ...(readyZip ? {placeId:`zip:${readyZip}`} : {bodyIds:territoryBodies(lat,lng,await territoryRead!)}),namedDivisionIds:fringe }));
+    const [state, place, settings] = await Promise.all([
+      stateRead, placeRead, readReaderMeetingSettings(),
     ]);
     if (!place.registry) throw new Error("The place's government records could not be loaded");
+    const selectedTerritory = readyZip ? placePageTerritory(place) : undefined;
+    const territory = selectedTerritory!==undefined ? selectedTerritory : await (territoryRead ?? readerTerritory(location.state));
     const point = zipRead.value ? null : await (await import("@/lib/registry/server")).divisionsAt(lat, lng);
     const ids = point?.map(division => division.ocdId) ?? location.divisionIds;
     const divisionIds = new Set(ids);

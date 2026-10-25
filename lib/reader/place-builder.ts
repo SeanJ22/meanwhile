@@ -14,6 +14,7 @@ import { packPlaceContext, packReadyPlace } from "./place-ready.ts";
 import type { PlacePackage } from "./place-types.ts";
 import { lookupZcta } from "../geo/zcta.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
+import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/body-territory.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
@@ -429,22 +430,28 @@ export interface StoredPlacePage {
   readonly emptyHistory?: Record<string,unknown>;
   readonly readyCurrent: PlacePackage;
   readonly readyHistory?: PlacePackage;
+  readonly territory?: BodyTerritorySelection|null;
 }
 
 /** ZIP geometry is already held; it is the same selection used by the public endpoint. */
 export async function placeBuildInput(id:string,kind:string,state:string):Promise<PlaceInput> {
+  return (await placeBuildSelection(id,kind,state)).input;
+}
+
+async function placeBuildSelection(id:string,kind:string,state:string):Promise<{input:PlaceInput;territory?:BodyTerritorySelection|null}> {
   if (/^zip:\d{5}$/.test(id)) {
     const zip=id.slice(4),point=lookupZcta(zip);
     if(!point)throw new Error(`Place geometry is missing for ZIP ${zip}`);
     const location=await readerLocation(point.lat,point.lng,zip);
-    return {state,placeId:id,divisionIds:location.divisionIds,namedDivisionIds:location.fringe,
-      bodyIds:territoryBodies(point.lat,point.lng,await readerTerritory(state))};
+    const territory=selectBodyTerritory([point.lng,point.lat],await readerTerritory(state));
+    return {input:{state,placeId:id,divisionIds:location.divisionIds,namedDivisionIds:location.fringe,
+      bodyIds:territoryBodies(point.lat,point.lng,territory)},territory};
   }
-  return {state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]};
+  return {input:{state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]}};
 }
 
 export async function buildPageBody(id:string,kind:string,state:string,query:Query):Promise<StoredPlacePage> {
-  const selected=await placeBuildInput(id,kind,state),zip=/^zip:\d{5}$/.test(id);
+  const {input:selected,territory}=await placeBuildSelection(id,kind,state),zip=/^zip:\d{5}$/.test(id);
   const input:PlaceInput=zip?{...selected,includeAgenda:false}:selected;
   const history=zip?undefined:await buildPlaceRow({...input,includeHistory:true},query);
   const current=history?currentPlaceRow(history):await buildPlaceRow(input,query);
@@ -452,6 +459,7 @@ export async function buildPageBody(id:string,kind:string,state:string,query:Que
   const emptyHistory=stateRoot?await buildPlaceRow({...input,divisionIds:[],includeHistory:true},query):undefined;
   const readyCurrent=await composePlaceRow(input,structuredClone(current));
   return {formatVersion:1,current,readyCurrent,
+    ...(zip?{territory}:{}),
     ...(history?{history,readyHistory:await composePlaceRow({...input,includeHistory:true},structuredClone(history))}:{}),
     ...(emptyHistory?{emptyCurrent:currentPlaceRow(emptyHistory),emptyHistory}:{})};
 }
@@ -520,13 +528,13 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
             // A worker whose lease expired cannot replace a newer worker's page.
             const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
             if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
-            const {readyCurrent,readyHistory,...rawContext}=body;
+            const {readyCurrent,readyHistory,territory,...rawContext}=body;
             const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
             const [stored]=await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
               VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
               ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
                 body=excluded.body,history_body=excluded.history_body,context=excluded.context RETURNING version`,
-            [id,JSON.stringify(packReadyPlace(readyCurrent)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
+            [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
             const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
               !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
             const dependencies=new Set<string>([id,...rows.flatMap(row=>[

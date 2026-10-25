@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { packPlaceContext, packReadyPlace, unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
-import { READY_PLACE_SQL, placePageCacheIds, readPlacePackage } from "../lib/reader/place.ts";
+import { packPlaceContext, packReadyPlace, unpackPlaceContextRow, unpackReadyPlace, unpackReadyTerritory } from "../lib/reader/place-ready.ts";
+import { READY_PLACE_SQL, placePageCacheIds, placePageTerritory, readPlacePackage } from "../lib/reader/place.ts";
 import type { PlacePackage } from "../lib/reader/place-types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
@@ -55,6 +55,21 @@ test("a corrupt compressed ready page fails its single read without querying sou
     return [{ page: { encoding: "gzip-json-v1", data: "corrupt-gzip" }, version: 2 }];
   }));
   assert.equal(queries, 1);
+});
+
+test("private ZIP territory metadata preserves the public page and distinguishes no geometry from a legacy page",async()=>{
+  const selected={type:"BodyTerritorySelection" as const,inside:[BODY],known:[BODY,"canonical:outside#governing"]};
+  for(const territory of [selected,null,undefined]) {
+    const packed=packReadyPlace(page,territory);
+    assert.deepEqual(unpackReadyTerritory(packed),territory);
+    assert.deepEqual(unpackReadyPlace(packed),page);
+    let reads=0;
+    const answer=await readPlacePackage({state:"AZ",placeId:"zip:85701",divisionIds:[]},async sql=>{
+      reads++;assert.equal(sql,READY_PLACE_SQL);return [{page:packed,version:1}];
+    });
+    assert.equal(reads,1);assert.deepEqual(answer,page);assert.deepEqual(placePageTerritory(answer),territory);
+    assert.equal(JSON.stringify(answer).includes("BodyTerritorySelection"),false);
+  }
 });
 
 test("context modes preserve exact source JSON and omit only the data their reader flags exclude", () => {

@@ -25,3 +25,5 @@ BEGIN
   END IF;
   RETURN coalesce(NEW,OLD);
 END $$;
+--> statement-breakpoint
+INSERT INTO count_hour(state,hour,step,n) VALUES('US',statement_timestamp(),'publication start',0);

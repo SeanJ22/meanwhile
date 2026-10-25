@@ -29,23 +29,25 @@ export interface CountProblem {
   readonly next: string;
 }
 export const COUNT_HOUR_SQL = `WITH coverage AS (
-  SELECT min(hour) AS start FROM count_hour WHERE step='counter start'
+  SELECT min(hour) FILTER (WHERE step='counter start') AS start,
+    min(hour) FILTER (WHERE step='publication start') AS publication_start
+  FROM count_hour WHERE step IN ('counter start','publication start')
 ), parsed AS (
   SELECT state,hour,n,CASE WHEN step LIKE 'v1:%' THEN substring(step FROM 4)::jsonb
-    ELSE jsonb_build_array('Other facts',step,'events') END AS dimension FROM count_hour WHERE step<>'counter start'
+    ELSE jsonb_build_array('Other facts',step,'events') END AS dimension FROM count_hour WHERE step NOT IN ('counter start','publication start')
 ), counters AS (
   SELECT state,hour,dimension->>0 AS family,dimension->>1 AS stage,dimension->>2 AS metric,n FROM parsed
 )
 SELECT $1::timestamptz AS hour,state,family,stage,
   coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
     FILTER (WHERE hour <= $3::timestamptz),0)::bigint AS total,
-  CASE WHEN (SELECT start FROM coverage) <= $2::timestamptz THEN coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
+  CASE WHEN (SELECT CASE WHEN counters.stage LIKE 'publication:%' THEN publication_start ELSE start END FROM coverage) <= $2::timestamptz THEN coalesce(sum(CASE metric WHEN 'stock in' THEN n WHEN 'stock out' THEN -n WHEN 'events' THEN n ELSE 0 END)
     FILTER (WHERE hour < $2::timestamptz),0)::bigint ELSE NULL END AS closed_total,
-  CASE WHEN (SELECT start FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS incoming,
+  CASE WHEN (SELECT CASE WHEN counters.stage LIKE 'publication:%' THEN publication_start ELSE start END FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS incoming,
   coalesce(sum(n) FILTER (WHERE metric IN ('in','events') AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS observed_in,
-  CASE WHEN (SELECT start FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS outgoing,
+  CASE WHEN (SELECT CASE WHEN counters.stage LIKE 'publication:%' THEN publication_start ELSE start END FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS outgoing,
   coalesce(sum(n) FILTER (WHERE metric='out' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint AS observed_out,
-  CASE WHEN (SELECT start FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric='changed' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS changed
+  CASE WHEN (SELECT CASE WHEN counters.stage LIKE 'publication:%' THEN publication_start ELSE start END FROM coverage) <= $1::timestamptz THEN coalesce(sum(n) FILTER (WHERE metric='changed' AND hour >= $1::timestamptz AND hour < $2::timestamptz),0)::bigint ELSE NULL END AS changed
 FROM counters GROUP BY state,family,stage ORDER BY state,family,stage`;
 
 

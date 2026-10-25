@@ -430,7 +430,15 @@ test("new and compatibility writers share one hourly count through a replacement
       [['publication:checked',1],['publication:official',2]]);
     assert.equal((await db.query("SELECT count(*)::int AS n FROM pg_trigger WHERE tgrelid='fact'::regclass AND tgname='count_hour_fact'"))[0]!.n,1);
     assert.equal((await db.query("SELECT current_setting('meanwhile.fact_lane',true) AS lane"))[0]!.lane??'','');
-    assert.deepEqual(await db.query("SELECT step FROM count_hour WHERE left(step,3)<>'v1:' AND step<>'counter start'"),[]);
+    assert.deepEqual(await db.query("SELECT step FROM count_hour WHERE left(step,3)<>'v1:' AND step NOT IN ('counter start','publication start')"),[]);
+    const [start]=await db.query("SELECT min(hour) AS at FROM count_hour WHERE step='publication start'");
+    const beforeLanes=countWindow(new Date(start!.at as string).toISOString());
+    await db.query("UPDATE count_hour SET hour=hour-interval '3 hours' WHERE step='counter start'");
+    const previous=await readCounts({query:db.query},beforeLanes.from,beforeLanes.through);
+    for(const lane of previous.filter(row=>row.stage.startsWith('publication:'))){
+      assert.equal(lane.incoming,null,'an hour before lane counting started is unknown');
+      assert.equal(lane.closedTotal,null);
+    }
     const before=await db.query('SELECT * FROM count_hour ORDER BY state,hour,step');
     assert.equal((await door(db,claim,clocks,next,{purge}) as {decision:string}).decision,'CONFIRM');
     assert.deepEqual(await db.query('SELECT * FROM count_hour ORDER BY state,hour,step'),before);

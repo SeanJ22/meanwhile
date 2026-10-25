@@ -126,6 +126,11 @@ for (const state of states) {
       if (equivalent) equivalentGovernmentSourceValues++;
       preserved++; byFamily[value.recordClass] = (byFamily[value.recordClass] ?? 0) + 1;
     }
+    const publicationCounts = Object.fromEntries((await db.query(`SELECT substring(step FROM 4)::jsonb->>1 AS lane,sum(n)::int AS n
+      FROM count_hour WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1 LIKE 'publication:%'
+        AND substring(step FROM 4)::jsonb->>2='in' GROUP BY 1`)).map(row=>[String(row.lane).replace('publication:',''),Number(row.n)]));
+    assert.equal(publicationCounts.official??0,officialValues);
+    assert.equal(publicationCounts.checked??0,checkedValues);
     const stateOfCopy = () => db.query(`SELECT jsonb_build_object('facts',(SELECT jsonb_agg(f ORDER BY id) FROM fact f),
       'sources',(SELECT jsonb_agg(s ORDER BY id) FROM source_copy s),'counts',(SELECT jsonb_agg(c ORDER BY state,hour,step) FROM count_hour c),
       'queue',(SELECT jsonb_agg(q ORDER BY place_id) FROM rebuild_queue q)) AS value`);
@@ -142,7 +147,7 @@ for (const state of states) {
       legacyValuesPreserved: preserved, repeatUnchanged: repeated, distinctLegacyRecords: new Set(sample.values.map(v => v.subjectId)).size,
       byTable: { fact: existing.replayed, ...Object.fromEntries([...new Set(sample.values.map(value => value.table))]
         .map(table => [table, sample.values.filter(value => value.table === table).length])) },
-      byFamily, officialValues, checkedValues, equivalentGovernmentSourceValues, failures, zero: existing.replayed + sample.values.length === 0 });
+      byFamily, officialValues, checkedValues, publicationCounts, equivalentGovernmentSourceValues, failures, zero: existing.replayed + sample.values.length === 0 });
     console.log(JSON.stringify(report.at(-1)));
   } finally { await db.pg.close(); }
 }

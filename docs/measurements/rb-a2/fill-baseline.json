@@ -41,7 +41,27 @@
       "state": "TX",
       "result": "heap out of memory during district-shape acquisition"
     },
-    "reservationMiB": 1672
+    "reservationMiB": 1672,
+    "alaskaPublicBuild": {
+      "method": "Public Census inputs and actual loader SQL encoding with a stub database; no SQL execution or production/copy reads",
+      "runtimeRevision": "a41c494f1",
+      "state": "AK",
+      "startedAt": "2026-10-25T17:04:10.889Z",
+      "finishedAt": "2026-10-25T17:04:29.605Z",
+      "elapsedMs": 18716,
+      "heapMiB": 1024,
+      "peakRssBytes": 504762368,
+      "publicRequests": 34,
+      "databaseOperationsExecuted": 0,
+      "neonBytesRead": 0,
+      "places": 776,
+      "boundaries": 1936,
+      "zipEdges": 6654,
+      "zctaEdges": 6038,
+      "encodedStatements": 98,
+      "maxBoundaryBatchBytes": 2950744,
+      "setup": "The first private invocation stopped with KNOWN_SOURCE_CONTROL_PLANE_UNAVAILABLE before any HTTP request or SQL execution. The successful check used an explicit local disk cache, in-memory locks and a stub database."
+    }
   },
   "focusedTests": {
     "runtimeRevision": "96483b400",

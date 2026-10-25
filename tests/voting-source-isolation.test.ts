@@ -1,3 +1,4 @@
+import { fixtureLinkingPage } from "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -78,9 +79,9 @@ test("voting documents that print a key are saved cleaned; official linking page
   assert.equal(documentCopy.includes(credential), false);
   assert.deepEqual(document!.derivation?.redactionsByClass, { google_api_key: 1 });
   const read = await readVotingSource(door, { fetch: (async () => new Response(clean, { headers: { "content-type": "text/html" } })) as typeof fetch, now: () => at });
-  const linking = { ...door, officialLinkingPage: { url: "https://elections.example.gov/link", html: new TextDecoder().decode(keyed) } };
+  const linking = { ...door, linkingPage: fixtureLinkingPage({ url: "https://elections.example.gov/link", html: new TextDecoder().decode(keyed) }) };
   const evidence = await votingSourceEvidence(linking, read);
-  const page = evidence.find(capture => capture.url === linking.officialLinkingPage.url)!;
+  const page = evidence.find(capture => capture.url === linking.linkingPage.url)!;
   assert.ok(page.derivation);
   assert.notEqual(page.derivation.rawHash, page.derivation.derivedHash);
   const saved = gunzipSync(Buffer.from(page.savedDocument!.body, "base64")).toString("utf8");

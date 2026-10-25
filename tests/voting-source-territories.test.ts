@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -7,7 +8,7 @@ import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import { combineVotingSourceReads, mergeVotingSourceRead, replaceVotingJurisdiction } from "../lib/ballot/voting-source-publication.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
-import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
+import { isOfficialVotingSource as isOfficialSource, openLinkingCopy } from "../lib/facts/linking-copy.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 
 const root = "tests/fixtures/voting-sources/vs-04-territories/";
@@ -22,14 +23,14 @@ const replay: typeof fetch = async input => {
 const get = (id: string) => doors.find(door => door.id === id)!;
 const runtime = { fetch: replay, now: () => "2026-10-21T04:31:00.000Z" };
 
-test("fresh FEC authority covers every territory chief office, including the CNMI public list", () => {
+test("fresh FEC authority covers every territory chief office, including the CNMI public list", async () => {
   for (const state of ["AS", "GU", "MP", "VI"]) {
     const door = get(`fec-${state.toLowerCase()}-chief`);
     assert.equal(door.scope.state, state);
-    assert.equal(isOfficialSource(door.url, door.officialLinkingPage), true);
-    assert.ok(readFileSync(root + "fec-offices.html", "utf8").includes(door.officialLinkingPage!.html));
+    assert.equal(await isOfficialSource(door.url, door.linkingPage), true);
+    assert.ok(readFileSync(root + "fec-offices.html", "utf8").includes((await openLinkingCopy(door.linkingPage!)).html));
   }
-  assert.equal(isOfficialSource(get("mp-election-day-saipan-2026").url, get("mp-election-day-saipan-2026").officialLinkingPage), true);
+  assert.equal(await isOfficialSource(get("mp-election-day-saipan-2026").url, get("mp-election-day-saipan-2026").linkingPage), true);
 });
 
 test("CNMI public script records preserve individual precincts, village locations, dates, hours and publisher points", async () => {

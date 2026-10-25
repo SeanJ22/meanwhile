@@ -1,0 +1,7 @@
+period_start,period_end_exclusive,observed_at,hour_et,all_translation_calls,measure_calls,measure_unpriced_calls,measure_known_usd,other_or_unattributed_calls,other_or_unattributed_unpriced_calls,other_or_unattributed_known_usd,published_completed,distinct_published_subjects,published_by_attempt_start,usd_per_published_completed,haiku_writer_calls,sonnet_writer_calls,opus_writer_calls,haiku_checker_calls,sonnet_checker_calls,opus_checker_calls,mean_writer_uncached_tokens,mean_writer_output_tokens
+2026-10-25T12:38:35Z,2026-10-25T16:10:02.599Z,2026-10-25T16:10:02.599Z,2026-10-25 08:00,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,0,,
+2026-10-25T12:38:35Z,2026-10-25T16:10:02.599Z,2026-10-25T16:10:02.599Z,2026-10-25 09:00,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,0,,
+2026-10-25T12:38:35Z,2026-10-25T16:10:02.599Z,2026-10-25T16:10:02.599Z,2026-10-25 10:00,22,22,0,0.4430812299999999936,0,0,0,5,5,8,0.08861624599999999872,9,4,0,0,7,2,654,2436
+2026-10-25T12:38:35Z,2026-10-25T16:10:02.599Z,2026-10-25T16:10:02.599Z,2026-10-25 11:00,279,279,0,15.3951226149999995024,0,0,0,78,78,75,0.19737336685897435259,107,35,0,0,103,34,704,2072
+2026-10-25T12:38:35Z,2026-10-25T16:10:02.599Z,2026-10-25T16:10:02.599Z,2026-10-25 12:00,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,0,,
+2026-10-25T12:38:35Z,2026-10-25T16:10:02.599Z,2026-10-25T16:10:02.599Z,WINDOW,301,301,0,15.8382038449999994960,0,0,0,83,83,83,0.19082173307228915055,116,39,0,0,110,36,700,2102

@@ -57,3 +57,22 @@ test("a small sourced ballot keeps its full race and measure names in the compos
   assert.equal(result.composed.records.length, 2);
   assert.equal(fetch.mock.callCount(), 0);
 });
+
+test("naming the held office's state keeps the same candidate answer and records on the path without a model call", context => {
+  const fetch = context.mock.method(globalThis, "fetch", () => { throw new Error("A held candidate field must not call a model or source"); });
+  const selected = ballotForDivisions(raw, ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima"]);
+  const before = structuredClone(selected);
+  for (const office of ["governor", "attorney general", "secretary of state"]) {
+    const bare = composeBallotOnlyAnswer(holdings(selected), `Who is running for ${office}?`, "2026-10-24");
+    assert.ok(bare, office);
+    for (const question of [`Who is running for ${office} of Arizona?`, `Who is running for Arizona ${office}?`]) {
+      const named = composeBallotOnlyAnswer(holdings(selected), question, "2026-10-24");
+      assert.ok(named, question);
+      assert.deepEqual(named.composed, bare.composed, question);
+      assert.deepEqual(named.pack.records, bare.pack.records, question);
+      assert.equal(named.verdict.kind, "PASSED");
+    }
+  }
+  assert.equal(fetch.mock.callCount(), 0);
+  assert.deepEqual(selected, before);
+});

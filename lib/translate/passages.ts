@@ -3,24 +3,40 @@ import { pageWords } from "../control-plane/promotion/section3.ts";
 /** Labels let a writer cite saved bytes without transcribing legal text. */
 export function translationPassages(source: string) {
   const passages: { id: string; start: number; end: number; text: string }[] = [];
-  let start = 0;
-  while (start < source.length) {
-    let end = Math.min(source.length, start + 2000);
+  let start = 0, hash = 0, oldestFactor = 1;
+  for (let index = 0; index < 32; index++) oldestFactor = Math.imul(oldestFactor, 31);
+  for (let index = 0; index < source.length; index++) {
+    // The last 32 characters choose boundaries, so a changed ballot-style
+    // header does not shift every following copy of the same legal passage.
+    hash = Math.imul(hash, 31) + source.charCodeAt(index);
+    if (index >= 32) hash -= Math.imul(source.charCodeAt(index - 32), oldestFactor);
+    hash >>>= 0;
+    let end = index + 1;
+    const length = end - start;
+    const boundary = /\s/.test(source[index]) && (/[.!?]/.test(source[index - 1] ?? "") || (hash & 63) === 0);
+    if (end < source.length && length < 2000 && !(length >= 256 && boundary)) continue;
     if (end < source.length) {
-      const paragraph = source.lastIndexOf("\n\n", end);
-      const line = source.lastIndexOf("\n", end);
-      const space = source.lastIndexOf(" ", end);
-      if (paragraph > start + 1000) end = paragraph + 2;
-      else if (line > start + 1000) end = line + 1;
-      else if (space > start + 1000) end = space + 1;
+      if (length >= 2000) {
+        const space = source.lastIndexOf(" ", end - 1);
+        if (space > start + 1000) end = space + 1;
+      }
       const before = source.charCodeAt(end - 1), after = source.charCodeAt(end);
       if (before >= 0xd800 && before <= 0xdbff && after >= 0xdc00 && after <= 0xdfff) end--;
     }
     passages.push({ id: `p${passages.length}`, start, end, text: source.slice(start, end) });
     start = end;
   }
+  const first = new Map<string, string>();
+  const encoded = passages.map(({ id, text }) => {
+    const sameAs = first.get(text);
+    if (sameAs) return { id, sameAs };
+    first.set(text, id);
+    return { id, text };
+  });
   return {
-    prompt: JSON.stringify({ sourcePassages: passages.map(({ id, text }) => ({ id, text })) }),
+    prompt: JSON.stringify({ ...(encoded.some(row => row.sameAs) ? {
+      passageCopies: "sameAs repeats the exact text of that earlier passage. All passages remain in original order, including every variation; each p-number still cites its original position.",
+    } : {}), sourcePassages: encoded }),
     reference(quote: string | undefined) {
       if (!quote?.trim()) return null;
       const at = source.indexOf(quote);

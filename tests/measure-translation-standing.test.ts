@@ -1,4 +1,4 @@
-import { measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
+import { decodedMeasurePassages, measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
@@ -74,6 +74,31 @@ test("failed checks retain both calls' usage and wait for the existing retry bef
   const next = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
   assert.equal(next.outcomes[0].status, "PUBLISHED");
   assert.deepEqual(f.requests.slice(4).map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
+});
+
+test("the reader-linked measure text precedes a later guide, with the existing capture and freshness fallbacks", async () => {
+  const guideText = `${text} This guide also contains the other measures and candidate statements.`;
+  const guide = { ...capture, evidence: { ...capture.evidence, canonicalUrl: "https://elections.example.gov/voter-guide",
+    text: guideText, contentHash: `sha256-${translationHash(guideText)}` } };
+  for (const scenario of ["current", "partial", "stale", "unlinked"] as const) {
+    const f = fixture();
+    const direct = { ...capture, partial: scenario === "partial", evidence: { ...capture.evidence, retrievedAt: "2026-10-05T17:59:57Z",
+      canonicalUrl: scenario === "unlinked" ? "https://campaign.example.org/proposition12" : capture.evidence.canonicalUrl } };
+    f.input.ballots = [{ ...ballot,
+      contests: [{ ...ballot.contests[0], measureTextUrl: direct.evidence.canonicalUrl, provenance: { sourceUrl: guide.evidence.canonicalUrl } }],
+      measureRecords: scenario === "stale" ? [{ ...measure, sourceHash: "f".repeat(64), writtenAt: "2026-10-05T17:59:58Z" }] : [],
+    } as unknown as BallotSet];
+    f.input.captures = [guide, direct];
+    const result = await runHeldMeasureTranslations(f.input);
+    const selected = scenario === "current" ? direct : guide;
+    assert.equal(result.outcomes[0]?.status, "PUBLISHED", `${scenario}: ${JSON.stringify(result)}`);
+    assert.equal(result.outcomes[0].sourceHash, selected.evidence.contentHash.replace("sha256-", ""), scenario);
+    assert.equal(f.requests.length, 2, scenario);
+    for (const request of f.requests) {
+      const blocks = request.messages[0].content as { text: string }[];
+      assert.equal(decodedMeasurePassages(blocks[0].text).map(row => row.text).join(""), selected.evidence.text, scenario);
+    }
+  }
 });
 
 test("admission never pays for another district, a partial capture or conflicting held evidence", async () => {

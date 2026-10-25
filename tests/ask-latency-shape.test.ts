@@ -375,8 +375,9 @@ const AZ = "ocd-division/country:us/state:az";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 
-interface Call { kind: "INTERPRET" | "SYNTHESIZE"; model: string; thinking: boolean; effort: boolean; at: number }
+interface Call { kind: "INTERPRET" | "SYNTHESIZE" | "GENERAL"; model: string; thinking: boolean; effort: boolean; at: number }
 const calls: Call[] = [];
+let generalAnswerText: string | null = null;
 /** What each writer answers, by model; "default" for any model not named. */
 let writerAnswers: Record<string, { answer: string; citedSources: unknown[] } | "HTTP_529"> = {
   default: { answer: "The board's next sitting is in the records below.", citedSources: [1] },
@@ -392,7 +393,12 @@ process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
   if (!url.startsWith("https://api.anthropic.com/")) throw new Error(`latency test refused an outbound request: ${url}`);
-  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; output_config?: { effort?: unknown; format?: { schema?: { properties?: Record<string, unknown> } } } };
+  const body = JSON.parse(String(init?.body)) as { system: unknown; model: string; thinking?: unknown; tools?: { name: string }[]; output_config?: { effort?: unknown; format?: { schema?: { properties?: Record<string, unknown> } } } };
+  if (generalAnswerText && body.tools?.some(tool => tool.name === "answer_reader")) {
+    calls.push({ kind: "GENERAL", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
+    return Response.json({ content: [{ type: "tool_use", name: "answer_reader", input: { known: true, answer: generalAnswerText } }],
+      usage: { input_tokens: 10, output_tokens: 10 } });
+  }
   /* The writer's schema has an answer; the reading's does not (both marks their system prompt now). */
   const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   calls.push({ kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, thinking: body.thinking !== undefined, effort: body.output_config?.effort !== undefined, at: Date.now() });
@@ -414,6 +420,7 @@ const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
 interface Payload {
   mode: string;
   answer: string | null;
+  aiAnswer?: string;
   records: EvidenceRecord[];
   denominators: Record<string, number>;
   trace: {
@@ -423,6 +430,7 @@ interface Payload {
     validation: { ran: boolean; passed?: boolean; failed?: string[] };
     composition?: { shape: string; composed: boolean; passed?: boolean };
     sourcesLoaded?: string;
+    preloads?: Record<string, number>;
   };
 }
 
@@ -479,6 +487,28 @@ test("ROUTE: what is on my ballot is read from the words and composed from the c
   assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
   assert.match(payload.answer ?? "", /^Your ballot for the .+ on .+ has \d+ races? and \d+ ballot measures?\./);
   assert.ok(payload.records.some((record) => record.kind === "CONTEST"), "each contest is a record the reader is shown");
+});
+
+test("ROUTE: an office-duty gap calls only the separate Haiku answer and retains the held contest, candidates and sources", { concurrency: false }, async () => {
+  generalAnswerText = "The governor leads the state executive branch.";
+  try {
+    const { payload, calls: made } = await ask("What does the governor of Arizona do?", [AZ, PIMA, VAIL]);
+    assert.deepEqual(made.map(call => [call.kind, call.model]), [["GENERAL", MODELS.haiku.model]]);
+    assert.equal(payload.trace.interpretation.ran, false);
+    assert.equal(payload.trace.synthesis.ran, false);
+    assert.equal(payload.trace.synthesis.why, "office-definition-not-held");
+    assert.equal(payload.answer, "We don't have that answer yet.");
+    assert.equal(payload.aiAnswer, generalAnswerText);
+    assert.ok(payload.records.some(record => record.kind === "CONTEST" && record.id === "ballot-az-pima:governor"));
+    assert.ok(payload.records.some(record => record.kind === "CANDIDACY"));
+    assert.ok(payload.records.every(record => record.sourceUrl));
+    for (const family of ["funding", "governmentListings", "outcomes", "officeholders", "namedOfficeholders"]) {
+      assert.equal(payload.trace.preloads?.[family], undefined, `${family} cannot describe the held contest's duties`);
+    }
+    assert.ok(payload.trace.preloads?.candidateProfiles !== undefined);
+    assert.ok(payload.trace.preloads?.candidateCorpus !== undefined);
+    assert.equal(payload.trace.validation.passed, true);
+  } finally { generalAnswerText = null; }
 });
 
 test("ROUTE: who represents me in Congress names the two U.S. Senators the state holds beside the district's Representative", { concurrency: false }, async () => {

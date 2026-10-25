@@ -3,6 +3,14 @@ import type { BallotForDivisions } from "./server-sources.ts";
 import type { EvidencePack } from "./evidence.ts";
 import { validateAnswer } from "./validate.ts";
 
+/** A candidate field cannot establish the office's duties. Keep every record
+ * and let the separate general answer handle the missing definition. */
+export function composeMissingContestCivics(pack: EvidencePack) {
+  return pack.intent === "CIVICS" && pack.subject?.kind === "CONTEST" && pack.records.some(row => row.kind === "CONTEST" && row.id === pack.subject!.id) &&
+    pack.records.every(row => ["CONTEST", "CANDIDACY", "BALLOT_ABSENCE"].includes(row.kind))
+    ? { answer: "We don't have that answer yet.", citedUrls: [], missingAnswer: true } : null;
+}
+
 export function composeSelectedBallots(ballot: BallotForDivisions, shape: BallotAsk): BallotComposition | null {
   const parts = ballot.sets.flatMap(set => {
     const part = shape.kind === "SUMMARY"

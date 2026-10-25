@@ -5,6 +5,8 @@ import { Pool } from "@neondatabase/serverless";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { readerOfficeholders } from "../lib/ask/server-sources.ts";
+import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
 
 test("cold readers share one load and refresh keeps already verified information usable", async () => {
   let loads = 0, complete: ((value: string) => void) | undefined;
@@ -82,8 +84,10 @@ test("a cold President read shares its national source load without waiting for 
   const at = "2026-10-18T00:00:00.000Z", scope = "US:people:statewide-executive-sources:v1";
   const holder = { id: "white-house:current-president", name: "An Official President", officeTitle: "President of the United States",
     level: "FEDERAL", provenance: { sourceUrl: "https://www.whitehouse.gov/administration/current-president/", sourceOrg: "The White House", collectedAt: at, verifiedAt: at } };
+  const vice = { ...holder, id: "white-house:current-vice-president", name: "An Official Vice President", officeTitle: "Vice President of the United States" };
   const payload = { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", generatedAt: at,
-    roster: { scope: "us", generatedAt: at, officeholders: [holder], divisions: [{ officeholderId: holder.id, ocdId: "ocd-division/country:us", bodyId: null }], unmatched: [] } };
+    roster: { scope: "us", generatedAt: at, officeholders: [holder, vice],
+      divisions: [holder, vice].map(person => ({ officeholderId: person.id, ocdId: "ocd-division/country:us", bodyId: null })), unmatched: [] } };
   const calls: string[][] = [];
   let releaseCongress: (() => void) | undefined, congressComplete = false;
   const blocked = new Promise<void>(resolve => { releaseCongress = resolve; });
@@ -102,9 +106,18 @@ test("a cold President read shares its national source load without waiting for 
   let national: Promise<unknown> | undefined;
   try {
     national = readNationalShelf().catch(error => error);
-    const [first, second] = await Promise.all([readNationalPresident(), readNationalPresident()]);
+    const [first, second, officials] = await Promise.all([readNationalPresident(), readNationalPresident(),
+      readerOfficeholders(["ocd-division/country:us/state:az"], [], ["us_president", "us_vice_president"])]);
     assert.equal(first, second);
     assert.equal(first?.officeholders[0].name, holder.name);
+    assert.equal(officials.loaderFailures, 0);
+    for (const [office, person] of [["president", holder], ["vice president", vice]] as const) {
+      const ask = readerOfficialsQuestion(`Who is the ${office} of the United States?`)!;
+      const answer = composeReaderOfficials({ ask, held: officials.held, holdingFailed: false });
+      assert.ok(answer?.answer.includes(person.name));
+      assert.notEqual(answer?.missingAnswer, true);
+      assert.deepEqual(answer?.named.map(row => row.seat.id), [person.id]);
+    }
     assert.equal(congressComplete, false, "the President is usable while the national Congress read is still blocked");
     assert.equal(calls.filter(keys => keys.every(key => !key.startsWith("FEDERAL_DIRECTORY:"))).length, 1);
     assert.ok(calls.find(keys => keys.some(key => key.startsWith("FEDERAL_DIRECTORY:")))?.every(key => key.startsWith("FEDERAL_DIRECTORY:")), "the Congress query carries no President source dependency");

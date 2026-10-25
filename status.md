@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:06:17Z
+heartbeat: 2026-10-25T03:07:07Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Sean's queue fixes, 11:10 PM EDT
+1. MD-01 READY a7014d303 (7:18 PM EDT; implementation 576965f, the cheaper explanation writer) added to the queue after CL-01.
+2. RB-A8's own migration-lock commits (ebb4ff8e9, a5d7067eb) are not folded; locking stays with River (RV-LOCK). Release 107 already shipped RB-A8 at fb1783a62; nothing newer from RB-A8 folds unless it posts a new READY that drops those changes.
+3. RB-A10 (no push since WIP 17bb75130 at 5:58 PM EDT): Sean is restarting its session. If no READY by 1 AM EDT, River finishes it under the standing order (check scheduled).
+4. When release 108 builds, River records how long RB-A8_count_hour held the locks on fact, entity and civic_data_promotions, and whether any runner writes failed while waiting.
+- Queue now: 108 RV-LOCK (PR #820) -> 109 PT-01 + MT-01 (PR #819, held) -> DB-02 + BL-02 (gating on river-next e9317ec72) -> RB-A6 d7b31ba67 -> CL-01 b98903e96 -> MD-01 a7014d303 -> RB-A4 (River helper finishing) -> RB-A10.
 
 ### Release 108 (RV-LOCK) open; RB-A6 finished; disk, 11:20 PM EDT
 - Release 108 = RV-LOCK alone, PR #820 (branch release/108-lock, since release/108 is #819's), auto-merge on.

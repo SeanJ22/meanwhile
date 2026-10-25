@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 112 (main 0d36af457, RV-MEET3), live 3:59 AM EDT. GATING: DB-03A 9878c12ae alone (River-finished: the walk runs outside the cp_doors lock; the first gate run failed 2 reference-data tests for the new linking-seed file's missing provenance note, now added; river-next 180160158), next release, ahead of everything else. RB-A6 d7b31ba67 gate stopped to give DB-03A the machine; re-gates after. Queue (each its own batch, by arrival): RB-A6, CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 79758c831, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 112 (main 0d36af457, RV-MEET3). NEXT: release 113 = DB-03A (PR #825, river 180160158, auto-merge on; live check within 5 minutes; then cp_doors bytes per hour against the baseline). THEN: RB-A6 d7b31ba67 (re-gate). Queue (each its own batch, by arrival): CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 79758c831, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T08:54:59Z
+heartbeat: 2026-10-25T09:42:04Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

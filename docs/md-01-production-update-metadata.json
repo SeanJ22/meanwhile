@@ -1,0 +1,185 @@
+{
+  "window": {
+    "start": "2026-10-25T12:38:35Z",
+    "end": "2026-10-25T19:30:12.887Z"
+  },
+  "supervisors": [
+    {
+      "observed_at": "2026-10-25T19:31:54.957Z",
+      "recorded_at": "2026-10-25T19:14:46.053Z",
+      "tested_sha": "c7576d26ee33b8ee7563d6c5d2428384b4246fb5",
+      "cycle_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T18:52:33.419Z",
+      "started_at": "2026-10-25T18:52:33.419Z",
+      "finished_at": "2026-10-25T19:14:46.053Z",
+      "translation_results": null,
+      "translation_failures": null,
+      "outcome_state": "FAILED",
+      "attempted_tasks": 121,
+      "source_successes": 41,
+      "source_failures": 62,
+      "task_evidence": "EXACT",
+      "task_samples_omitted": 0,
+      "failure_samples_omitted": 3
+    },
+    {
+      "observed_at": "2026-10-25T19:31:54.957Z",
+      "recorded_at": "2026-10-25T18:51:45.854Z",
+      "tested_sha": "c7576d26ee33b8ee7563d6c5d2428384b4246fb5",
+      "cycle_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T18:29:33.367Z",
+      "started_at": "2026-10-25T18:29:33.367Z",
+      "finished_at": "2026-10-25T18:51:45.854Z",
+      "translation_results": null,
+      "translation_failures": null,
+      "outcome_state": "FAILED",
+      "attempted_tasks": 181,
+      "source_successes": 98,
+      "source_failures": 71,
+      "task_evidence": "UNAVAILABLE_OUTER_SUPERVISOR",
+      "task_samples_omitted": 169,
+      "failure_samples_omitted": 1
+    },
+    {
+      "observed_at": "2026-10-25T19:31:54.957Z",
+      "recorded_at": "2026-10-25T18:28:18.739Z",
+      "tested_sha": "03e0526b6ade932c00fac5483d2b5722081f2ba9",
+      "cycle_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T18:04:55.102Z",
+      "started_at": "2026-10-25T18:04:55.102Z",
+      "finished_at": "2026-10-25T18:28:18.739Z",
+      "translation_results": null,
+      "translation_failures": null,
+      "outcome_state": "FAILED",
+      "attempted_tasks": 143,
+      "source_successes": 57,
+      "source_failures": 58,
+      "task_evidence": "UNAVAILABLE_OUTER_SUPERVISOR",
+      "task_samples_omitted": 115,
+      "failure_samples_omitted": 23
+    },
+    {
+      "observed_at": "2026-10-25T19:31:54.957Z",
+      "recorded_at": "2026-10-25T18:04:03.643Z",
+      "tested_sha": "03e0526b6ade932c00fac5483d2b5722081f2ba9",
+      "cycle_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T17:38:54.824Z",
+      "started_at": "2026-10-25T17:38:54.824Z",
+      "finished_at": "2026-10-25T18:04:03.643Z",
+      "translation_results": null,
+      "translation_failures": null,
+      "outcome_state": "FAILED",
+      "attempted_tasks": 59,
+      "source_successes": 37,
+      "source_failures": 20,
+      "task_evidence": "EXACT",
+      "task_samples_omitted": 0,
+      "failure_samples_omitted": 0
+    },
+    {
+      "observed_at": "2026-10-25T19:31:54.957Z",
+      "recorded_at": "2026-10-25T17:38:28.487Z",
+      "tested_sha": "03e0526b6ade932c00fac5483d2b5722081f2ba9",
+      "cycle_id": "routine-civic-data-supervisor:meanwhile-runner:2026-10-25T17:14:54.665Z",
+      "started_at": "2026-10-25T17:14:54.665Z",
+      "finished_at": "2026-10-25T17:38:28.487Z",
+      "translation_results": null,
+      "translation_failures": null,
+      "outcome_state": "FAILED",
+      "attempted_tasks": 41,
+      "source_successes": 19,
+      "source_failures": 21,
+      "task_evidence": "EXACT",
+      "task_samples_omitted": 0,
+      "failure_samples_omitted": 0
+    }
+  ],
+  "changedSummaryMetadata": [
+    {
+      "observed_at": "2026-10-25T19:33:07.631Z",
+      "state": "AZ",
+      "ocd_id": "ocd-division/country:us/state:az",
+      "subject_id": "ballot-az-pima:prop-318",
+      "before_hash": "632fe60a5de41094046d0e7fe688f44d27c8fa9ffe857a24074c7cb94d45ade9",
+      "current_hash": "897603beec1e2637f485ba487009d1aa68687fa5755ca987a6e954740735149e",
+      "before_yes_hash": null,
+      "current_yes_hash": "8e40372480c00c332a2e5f48a223fe2367f56c37a585696f90fbfeba2d25f3ec",
+      "before_no_hash": null,
+      "current_no_hash": "c27b3dfb21e3239d677a234c8fb293fa213cf7a536c953b5e9032b891bacf71d"
+    },
+    {
+      "observed_at": "2026-10-25T19:33:07.631Z",
+      "state": "UT",
+      "ocd_id": "ocd-division/country:us/state:ut/county:salt_lake",
+      "subject_id": "ut-salt_lake-general-2026-special-bond-election",
+      "before_hash": "b3b3e0cc58c2ef4701e6ab2c8ea96f9291fba616b34fba6ae57a76286303e2a6",
+      "current_hash": "cbdd0e2948a0595590bda15c0d4ef0974138fb08109f7168e364be5cb2ca20ab",
+      "before_yes_hash": null,
+      "current_yes_hash": "6cd1b6b0bc9d0ae819c60b2b1e8ad37a2a76653f6684460d2e736d3d99470c47",
+      "before_no_hash": null,
+      "current_no_hash": "55c78e9da65dc194787bde98ea36213416ab8a48d815b063f4d3676e4c19ab16"
+    }
+  ],
+  "saltLakeSummarySample": [
+    {
+      "observed_at": "2026-10-25T19:33:46.174Z",
+      "state": "UT",
+      "ocd_id": "ocd-division/country:us/state:ut/county:salt_lake",
+      "subject_id": "ut-salt_lake-general-2026-special-bond-election",
+      "summary_characters": 1434,
+      "summary_sample": "This measure asks whether Salt Lake County may issue general obligation bonds of up to $128,000,000, maturing in no more than eleven (11) years from the date or dates of issuance. The money would be for repairing, completing, acquiring, constructing or renovating open space, natural habitat, parks, community trails and recreational facilities and other related facilities under the charge of the County, and, to the extent necessary, for refunding certain general obligation bonds of the County. A general obligation bond is a debt owed by the County, and the County uses tax revenue to pay for the debt. If the bonds are issued as planned, the estimated annual property tax for 10 years is $16.39 on a primary residence with the County average value of $658,000 and $29.80 on a business or secondary residence of the same value, without regard to taxes now levied for outstanding bonds. Taking into account repayment of the outstanding bonds, the County expects a net property tax increase of $0 per year on both a primary residence and a business or secondary residence of that value. The ballot says this is only an estimate and not a limit on the taxes the governing body may be required to levy to pay debt service on the bonds. The ballot also says the average annual net operational and maintenance costs for these facilities during their first ten years are projected to require additional annual expenditures of $4,710,200.",
+      "yes_sample": "A YES vote is a vote FOR THE ISSUANCE OF BONDS. It would authorize the County to issue general obligation bonds of up to $128,000,000, maturing in no more than eleven (11) years, for the stated purposes.",
+      "no_sample": "A NO vote is a vote AGAINST THE ISSUANCE OF BONDS. It would not authorize the County to issue these bonds.",
+      "source_url": "https://www.saltlakecounty.gov/globalassets/1-site-files/clerk/elections/2026-elections/ballots/bt1---e.pdf"
+    }
+  ],
+  "chrome": {
+    "runId": "md-01-explainers-release118-initial-code@2026-10-25T19:32:02.259Z",
+    "expectedCommit": "c7576d26ee33b8ee7563d6c5d2428384b4246fb5",
+    "results": [
+      {
+        "zip": "85701",
+        "at": "2026-10-25T19:32:15.044Z",
+        "summaries": 12,
+        "measures": 12,
+        "expectedRevisionServed": true,
+        "missing": [],
+        "lostSummaries": [],
+        "errors": []
+      },
+      {
+        "zip": "94102",
+        "at": "2026-10-25T19:32:20.702Z",
+        "summaries": 24,
+        "measures": 25,
+        "expectedRevisionServed": true,
+        "missing": [
+          "ca-sos-2026-general-proposition-37"
+        ],
+        "lostSummaries": [],
+        "errors": []
+      },
+      {
+        "zip": "98101",
+        "at": "2026-10-25T19:32:28.971Z",
+        "summaries": 3,
+        "measures": 4,
+        "expectedRevisionServed": true,
+        "missing": [
+          "wa-sos-2026-general-initiative-il26-638"
+        ],
+        "lostSummaries": [],
+        "errors": []
+      }
+    ]
+  },
+  "queryBounds": {
+    "mainAggregateRows": 135,
+    "compactJsonBytes": 69909,
+    "supervisorRows": 5,
+    "changedSummaryHashRows": 2,
+    "extraSummarySamples": 1,
+    "extraSummaryCharacters": 1434,
+    "newCopies": 0,
+    "bulkReplays": 0,
+    "dbWrites": 0,
+    "manualProductionJobs": 0
+  },
+  "historyComparison": "All existing Atomic pointer promotion versions since the original baseline are evaluated inside Neon. Only56countrows leave; no new version/subject inventory or source text export. Original499measurekeys come from already-local baseline. Synthetic fixture detects later-summary and known-contest deletion and skips source-text parts."
+}

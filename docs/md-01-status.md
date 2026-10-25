@@ -1,6 +1,10 @@
 # MD-01 current result
 
-At October 25, 12:11 PM EDT, production has **361 summaries, 85 more than the baseline, with 138 still missing and zero lost summary IDs**. The later shipped-code window records 83 CP publication completions for $15.838203845 (19.0822 cents per recorded completion), with every retained writer attempt starting on Haiku and zero writer-field/passages holds. Chrome shows 85701 at 12/12, 94102 at 23/25 and 98101 at 1/4. Proposition 318 changed with its original points and sections retained. [Full later observation, every-state counts and limits](md-01-later-production-note.md). The three production goals remain incomplete. The follow-up is queued, not deployed in this observation. Its latest READY also fixes the locally reproduced measure-number abbreviation rejection: a period in “No. IL26-001” remains inside its sentence; a real second sentence still requires its own annotation.
+At October 25, **3:31 PM EDT**, readers have **376 summaries (+100), 367 checked records and 123 blanks**, with no state losing a summary. The count comparison also protects all 176 measure IDs published since the original baseline; zero are lost. Chrome on release 118 shows **85701 12/12, 94102 24/25 and 98101 3/4**. Proposition 37 and IL26-638 remain blank. [Latest every-state and hourly observation](md-01-production-update.md).
+
+The shipped initial-code window records 99 CP publication completions for $20.0605275 (20.2632 cents per recorded completion), every retained paid attempt starts Haiku, and writer-field/passages holds are zero. **The 2 PM hour still costs 33.1195 cents per completion**, with seventeen Sonnet rewrites and sixteen Opus checks. The missing-summary and cost goals remain unfinished. Two existing summaries expanded with old points/source/section targets retained; all sixty stored references still resolve. The three-record Maryland completion discrepancy is kept explicit.
+
+Follow-up READY `f67ae6709` remains queued, not deployed. It carries smaller sources, direct-text selection, fair worker turns, source feedback and the locally tested measure-number sentence repair. It passed 215 checks plus static/build validation. The [12:11 PM note](md-01-later-production-note.md) and the earlier first-run result below remain time-specific observations.
 
 ## Earlier first scheduled-run observation
 

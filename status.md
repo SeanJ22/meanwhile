@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT. NEXT: release 112 = RV-MEET3 (PR #824, river 6f57717fc, auto-merge on; live check within 5 minutes). THEN: DB-03A (RETURNED 2:45 AM EDT; no new READY yet). Queue (each its own batch, by arrival): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f: deletes the whole-inventory readback phase), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT. NEXT: release 112 = RV-MEET3 (PR #824, river 6f57717fc, auto-merge on; live check within 5 minutes). THEN: DB-03A (RETURNED 2:45 AM EDT; no new READY yet). Queue (each its own batch, by arrival): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f: deletes the whole-inventory readback phase), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 79758c831 (supersedes 459121f2f), RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T07:37:42Z
+heartbeat: 2026-10-25T07:38:56Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

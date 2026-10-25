@@ -931,4 +931,5 @@ Per fold: claim the lock, fold the exact READY, merge main in, number migrations
   - 6 AM hour (live mid-hour): 1,573 MB.
   - After: 7 AM 599 MB, 8 AM 382 MB. voting-source-publication.ts:41 is 195 and 215 MB/h. Callers at registry.ts:385, :406, outcome.ts:38 and voting-source-publication.ts:194/:202 fell to 0 or near it.
   - Control-plane total: 4.8 to 8.4 GB/h overnight, now 3.2 GB (7 AM) and 1.6 GB (8 AM).
+  - The runner was on release 114 (0e3cdce42, which contains 113's 0c8f1ee0e) for the 6, 7 and 8 AM hours, and on 113 for 5 AM.
   - What's left on cp_doors: voting-source-publication.ts:41 (~200 MB/h) and platform-census.ts:85 (126 to 183 MB/h, same as before DB-03A).

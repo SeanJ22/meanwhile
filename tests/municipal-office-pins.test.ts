@@ -11,6 +11,7 @@ const DIVISION = "ocd-division/country:us/state:id/place:boise_city", BODY = `${
 const NOW = "2026-10-25T09:00:00.000Z";
 const { source, target } = JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-meetings.json", import.meta.url), "utf8")) as { source: Meeting; target: Meeting };
 const HALL = source.location!.address!;
+const HALL_ADDRESS = "150 N. Capitol Blvd, Boise, ID 83702";
 const census = JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-census.json", import.meta.url), "utf8"));
 const reply = (value: unknown) => new Response(JSON.stringify(value));
 
@@ -22,9 +23,13 @@ test("the same municipality's published hall address supplies a saved government
     for (const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8").split("--> statement-breakpoint"))
       if (/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement)) await db.pg.exec(statement);
     const scope = `source:iqm2:body:${encodeURIComponent(source.bodyId!)}`;
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)", [`MEETING:${scope}`, scope, JSON.stringify({ meetings: [source] })]);
+    const repeated = Array.from({length:100},(_,index)=>({...source,id:`fixture:repeated-hall:${index}`,
+      startsAt:new Date(Date.parse(source.startsAt)+index*60000).toISOString()}));
+    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)", [`MEETING:${scope}`, scope, JSON.stringify({ meetings: [source,...repeated] })]);
     const requests: string[] = [];
-    const placed = await placePublishedMeetingPins({ meetings: [target], query: db.query, offices: new Map(), clock: () => NOW,
+    const hallRows:number[]=[];
+    const query:typeof db.query=async(sql,params)=>{const rows=await db.query(sql,params);if(sql.includes('halls AS ('))hallRows.push(rows.length);return rows;};
+    const placed = await placePublishedMeetingPins({ meetings: [target], query, offices: new Map(), clock: () => NOW,
       fetchImpl: async input => {
         const address = new URL(String(input)).searchParams.get("address")!;
         requests.push(address);
@@ -36,13 +41,17 @@ test("the same municipality's published hall address supplies a saved government
     assert.deepEqual(requests, ["150 Capitol Blvd, Boise, ID 83702", "150 N. Capitol Blvd, Boise, ID 83702"]);
     const pin = placed.meetings[0].mapPin!;
     assert.equal(pin.basis, "GOVERNMENT_OFFICE");
-    assert.equal(pin.address, HALL);
+    assert.equal(pin.address, HALL_ADDRESS);
+    assert.deepEqual(hallRows,[1],"Repeated meetings at one published hall return one candidate from Postgres");
     assert.equal(pin.provenance.sourceUrl, source.provenance.sourceUrl);
     assert.equal(pin.lat, 43.615387122768);
     assert.equal(pin.lng, -116.201864471479);
     assert.equal(placed.meetings[0].location, null);
     assert.equal(placed.meetings[0].venueGap?.publishedText, target.venueGap!.publishedText);
     assert.equal(placed.meetings[0].id, target.id);
+    assert.equal(source.location!.address,HALL,"The source location remains exactly as published");
+    const changedRoom={...source,location:{...source.location!,name:HALL.replace('Tablerock','Greenbelt'),address:HALL.replace('Tablerock','Greenbelt')}};
+    await db.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2",[JSON.stringify({meetings:[changedRoom]}),`MEETING:${scope}`]);
     const following = await placePublishedMeetingPins({ meetings: [target], previous: placed.meetings,
       query: db.query, offices: new Map(), clock: () => "2026-10-25T10:00:00.000Z",
       fetchImpl: async () => { throw Error("Saved office requested Census again"); } });
@@ -87,7 +96,22 @@ test("a valid hall after a bounded page is still available to publication", asyn
       : [{ ...invalid, location: source.location }];
   }, [{ ...target, venueGap: undefined }], new Map(), () => assert.fail());
   assert.deepEqual(offsets, [0, 64]);
-  assert.equal(result.get(BODY)?.governmentOfficeAlternatives?.[0].address, HALL);
+  assert.equal(result.get(BODY)?.governmentOfficeAlternatives?.[0].address, HALL_ADDRESS);
+});
+
+test("unchanged verified board and explicit government references do not reread hall candidates",async()=>{
+  for(const basis of ["BODY_OFFICE","GOVERNMENT_OFFICE"] as const){
+    const offices=new Map<string,MeetingPinBody>([[BODY,{bodyId:BODY,name:'Council',
+      ...(basis==='BODY_OFFICE'?{officeContact:{address:HALL_ADDRESS,phone:null,provenance:source.provenance}}
+        :{governmentOffice:{name:'City of Boise',address:HALL_ADDRESS,provenance:source.provenance}})}]]);
+    const missing:Meeting={...target,venueGap:{kind:'NOT_STATED_BY_PUBLISHER',publishedText:null,publisher:target.jurisdiction}};
+    const first=await placePublishedMeetingPins({meetings:[missing,source],offices,fetchImpl:async()=>reply(census)});
+    assert.deepEqual(first.held,[]);assert.equal(first.meetings[0].mapPin?.basis,basis);
+    const next=await placePublishedMeetingPins({meetings:[missing],previous:first.meetings,offices,
+      query:async()=>{throw Error('A verified higher reference reread the hall calendars');},
+      fetchImpl:async()=>{throw Error('A verified higher reference requested Census again');}});
+    assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
+  }
 });
 
 test("a board's own address and an explicit government office retain priority over a hall venue", async () => {

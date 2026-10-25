@@ -205,8 +205,6 @@ export async function placePublishedMeetingPins(input: {
       offices = new Map();
     }
   }
-  offices = await withMunicipalHallOffices(input.query, input.meetings, offices,
-    detail => { officesUnavailable = true; held.push(detail); });
   const previous = new Map(
     (input.previous ?? []).map((meeting) => [meeting.id, meeting]),
   );
@@ -236,6 +234,8 @@ export async function placePublishedMeetingPins(input: {
         `${meeting.mapPin.basis}:${meeting.bodyId}:${meeting.mapPin.address}`,
         meeting.mapPin,
       );
+  offices = await withMunicipalHallOffices(input.query, input.meetings, offices,
+    detail => { officesUnavailable = true; held.push(detail); }, previous);
   const lookups = new Map<
     string,
     Promise<{

@@ -58,7 +58,7 @@ test("the scheduled held pass places a municipal meeting with no stated venue at
     assert.deepEqual(first,{considered:1,published:1,unplaced:0,failures:[]});assert.equal(requests,1);
     const read=withSittingFacts([missing],(await readSittingFacts(db.query,[body])).get(body)!)[0];
     assert.equal(read.id,missing.id);assert.equal(read.location,null);assert.equal(read.mapPin?.basis,'GOVERNMENT_OFFICE');
-    assert.equal(read.mapPin?.lat,43.615387122768);assert.equal(read.mapPin?.address,source.location!.address);
+    assert.equal(read.mapPin?.lat,43.615387122768);assert.equal(read.mapPin?.address,'150 N. Capitol Blvd, Boise, ID 83702');
     const nextAt=new Date(Date.parse(NOW)+3600000).toISOString();
     const next=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:nextAt,clock:()=>Date.parse(nextAt),deadlineMs:Date.parse(nextAt)+60000,
       fetchImpl:async()=>{throw Error('The following scheduled pass geocoded an existing point');}});

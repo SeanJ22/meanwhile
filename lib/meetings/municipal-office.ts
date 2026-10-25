@@ -26,9 +26,15 @@ const HALL_ADDRESSES_SQL = `WITH partitions AS MATERIALIZED (
   FROM partitions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) s
   WHERE split_part(s.value->>'bodyId','#',1)=$1
-)
-SELECT DISTINCT body_id,ocd_id,jurisdiction,starts_at,location,venue_gap,provenance FROM venues
+), halls AS (
+SELECT DISTINCT ON (coalesce(location->>'address',location->>'name',venue_gap->>'publishedText'),ocd_id,jurisdiction)
+  body_id,ocd_id,jurisdiction,starts_at,location,venue_gap,provenance FROM venues
 WHERE coalesce(location->>'name',venue_gap->>'publishedText','') ~* '^(city|town|village|borough) hall\\M'
+  AND provenance->>'sourceUrl' IS NOT NULL
+ORDER BY coalesce(location->>'address',location->>'name',venue_gap->>'publishedText'),ocd_id,jurisdiction,
+  starts_at DESC,body_id,provenance
+)
+SELECT body_id,ocd_id,jurisdiction,starts_at,location,venue_gap,provenance FROM halls
 ORDER BY starts_at DESC,body_id,location,venue_gap,provenance,ocd_id,jurisdiction
 LIMIT 64 OFFSET $4`;
 
@@ -38,10 +44,17 @@ export async function withMunicipalHallOffices(
   meetings: readonly Meeting[],
   offices: ReadonlyMap<string, MeetingPinBody>,
   onFailure: (detail: string) => void,
+  previous: ReadonlyMap<string, Meeting> = new Map(),
 ): Promise<ReadonlyMap<string, MeetingPinBody>> {
   const groups = new Map<string, { name: string; state: string; bodies: Set<string> }>();
   for (const meeting of meetings) {
     if (meeting.location || !meeting.bodyId) continue;
+    const pin = previous.get(meeting.id)?.mapPin ?? meeting.mapPin;
+    const body = offices.get(meeting.bodyId);
+    if (pin?.bodyId === meeting.bodyId && (
+      pin.basis === "BODY_OFFICE" && pin.address === body?.officeContact?.address ||
+      pin.basis === "GOVERNMENT_OFFICE" && pin.address === body?.governmentOffice?.address
+    )) continue;
     const division = meeting.bodyId.split("#")[0];
     const scope = /^ocd-division\/country:us\/state:([a-z]{2})\/place:([^/#]+)$/.exec(division);
     const city = municipality(meeting.jurisdiction);
@@ -70,7 +83,7 @@ export async function withMunicipalHallOffices(
       const key = words(parsed);
       if (seen.has(key)) return;
       seen.add(key);
-      halls.push({ name: source.jurisdiction, address, provenance });
+      halls.push({ name: source.jurisdiction, address: parsed, provenance });
     };
     for (const meeting of meetings) consider(meeting);
     if (query) try {

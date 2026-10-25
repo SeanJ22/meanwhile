@@ -67,6 +67,12 @@ import { freezeDurableJson } from "./durable-json.ts";
 import { projectionKey } from "./projection-key.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
+import { PORTRAIT_PEOPLE_SQL, PORTRAIT_CAPTURES_SQL, portraitInputKeys, localPortraitPerson, selectPortraitPeople, type PortraitPersonRow } from "./portrait-inputs.ts";
+import type { StatePeopleCapture } from "./state-people-publication.ts";
+import type { Officeholder } from "../officials/types.ts";
+import type { DerivedInputRef } from "./derived-authority.ts";
+import { derivedReadModelHash, type DerivedInputIdentity } from "./derived-door.ts";
+import { portraitReadCache } from "../db/portrait-read-cache.ts";
 export { projectionKey } from "./projection-key.ts";
 
 export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate" | "receipt"> & {
@@ -104,6 +110,12 @@ export interface CandidateTransitionOptions {
 }
 
 export interface RoutineDataStore {
+  readonly readDerivedInputIdentity?: (candidateId:string) => Promise<DerivedInputIdentity|null>;
+  readonly readPortraitPeople?: (jurisdiction:string,at:string) => Promise<readonly PortraitPersonRow[]>;
+  readonly hasPortraitWork?: (jurisdiction:string,at:string) => Promise<boolean>;
+  readonly readPortraitSources?: (jurisdiction:string) => Promise<readonly Extract<DerivedInputRef,{kind:"PROMOTED_VERSION"}>[]>;
+  readonly readPortraitVersion?: (jurisdiction:string) => Promise<string|null>;
+  readonly readPortraitCaptures?: (candidateIds:readonly string[],urls:readonly string[],includeOfficial?:boolean) => Promise<readonly StatePeopleCapture[]>;
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
@@ -745,6 +757,51 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
+
+  async readDerivedInputIdentity(candidateId:string):Promise<DerivedInputIdentity|null> {
+    const record=await this.readCandidate(candidateId);
+    return record ? {recordClass:record.candidate.recordClass,scope:record.candidate.scope,state:record.state,
+      readModelSha256:derivedReadModelHash(record.candidate.readModel)} : null;
+  }
+
+  async readPortraitPeople(jurisdiction:string,at:string):Promise<readonly PortraitPersonRow[]> {
+    const rows:PortraitPersonRow[]=[],held:Officeholder[]=[];
+    const keys=new Set(portraitInputKeys(jurisdiction));
+    for(const promotion of this.promotions.values()) {
+      if(!keys.has(projectionKey(promotion.recordClass,promotion.scope)))continue;
+      if(promotion.scope!==jurisdiction && !promotion.scope.startsWith(jurisdiction+":"))continue;
+      const value=promotion.payload as {roster?:{officeholders:Officeholder[]};bodyRosters?:{sourceUrl:string;sourceOrg:string;collectedAt:string;members:Officeholder[]}[]};
+      if(promotion.sourceId==="people-portraits")held.push(...value.roster?.officeholders ?? []);
+      else if(["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(promotion.recordClass))
+        rows.push(...(value.roster?.officeholders ?? []).map(person=>({scope:promotion.scope,person})));
+      else if(promotion.recordClass==="REGISTRY_RUNTIME_BINDING")for(const roster of value.bodyRosters ?? [])
+        rows.push(...roster.members.map(member=>({scope:promotion.scope,person:localPortraitPerson(member,roster,jurisdiction.slice(3))})));
+    }
+    const current=new Set(rows.map(row=>row.person.personId ?? row.person.id));
+    rows.push(...held.filter(person=>!current.has(person.personId ?? person.id)).map(person=>({scope:jurisdiction+":people:portraits:v1",person})));
+    return selectPortraitPeople(rows,held,at);
+  }
+
+  async hasPortraitWork(jurisdiction:string,at:string):Promise<boolean> {
+    return (await this.readPortraitPeople(jurisdiction,at)).length>0;
+  }
+
+  async readPortraitSources(jurisdiction:string):Promise<readonly Extract<DerivedInputRef,{kind:"PROMOTED_VERSION"}>[]> {
+    const keys=new Set(portraitInputKeys(jurisdiction));
+    return [...this.promotions.values()].filter(row=>keys.has(projectionKey(row.recordClass,row.scope)) && row.sourceId!=="people-portraits" &&
+      ["STATE_LEGISLATOR","FEDERAL_DIRECTORY","REGISTRY_RUNTIME_BINDING"].includes(row.recordClass) &&
+      (row.scope===jurisdiction||row.scope.startsWith(jurisdiction+":"))).map(row=>({kind:"PROMOTED_VERSION",recordClass:row.recordClass,
+        scope:row.scope,versionId:row.versionId,promotedAt:row.promotedAt,readModelSha256:canonicalCivicDataHash(row.payload)}));
+  }
+
+  async readPortraitVersion(jurisdiction:string):Promise<string|null> {
+    return this.promotions.get(projectionKey("STATE_LEGISLATOR",jurisdiction+":people:portraits:v1"))?.versionId ?? null;
+  }
+
+  async readPortraitCaptures(candidateIds:readonly string[],urls:readonly string[],includeOfficial=false):Promise<readonly StatePeopleCapture[]> {
+    return candidateIds.flatMap(id=>(this.candidates.get(id)?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [])
+      .filter(row=>urls.includes(row.finalUrl)||includeOfficial && /^https?:\/\/([^/]+\.)?[^/.]+\.gov\//.test(row.finalUrl));
+  }
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
     const pointer = this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)));
     return pointer?.receipt.decision === "GOOD" ? registryDivisionMatches(pointer.payload, state, labels) : [];
@@ -1621,7 +1678,75 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly cacheOptions: { readonly purge?: ReaderCachePurger };
   constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
+  private readonly derivedIdentities=new Map<string,{etag:string;identity:DerivedInputIdentity}>();
+
+  /** Rehash a changed row's read model; unchanged checks read its row version, not captures or receipts. */
+  async readDerivedInputIdentity(candidateId:string):Promise<DerivedInputIdentity|null> {
+    const metadata=async()=>{
+      const [row]=await this.db.$client.query(`WITH RECURSIVE header(value,steps) AS (
+        SELECT candidate,0 FROM civic_data_candidates WHERE id=$1
+        UNION ALL SELECT CASE WHEN h.value ? '$civicPayloadPart' THEN part.payload ELSE h.value->'value' END,h.steps+1
+        FROM header h LEFT JOIN civic_data_payload_parts part ON part.hash=h.value->>'$civicPayloadPart'
+        WHERE h.steps<64 AND (h.value ? '$civicPayloadPart' OR h.value->>'kind'='object')
+      ) SELECT h.value->>'recordClass' AS record_class,h.value->>'scope' AS scope,c.state,concat(c.xmin::text,'/',c.ctid::text) AS etag
+        FROM civic_data_candidates c CROSS JOIN LATERAL (SELECT value FROM header ORDER BY steps DESC LIMIT 1) h WHERE c.id=$1`,[candidateId]);return row;
+    };
+    const before=await metadata();if(!before)return null;
+    const etag=String(before.etag),local=this.derivedIdentities.get(candidateId);
+    if(local?.etag===etag)return local.identity;
+    const load=async()=>{
+      const value=await this.readCandidatePath(candidateId,["readModel"]);
+      const after=await metadata();
+      if(!after||after.etag!==etag)throw Error("DERIVED_INPUT_CHANGED_DURING_READ");
+      return {recordClass:String(before.record_class),scope:String(before.scope),state:String(before.state),
+        readModelSha256:derivedReadModelHash(value)};
+    };
+    const identity=await this.portraitCache.row<DerivedInputIdentity>({namespace:"derived-input-identity",key:candidateId,
+      current:async held=>held===etag ? {etag,unchanged:true} : {etag,value:await load()}});
+    if(identity)this.derivedIdentities.set(candidateId,{etag,identity});
+    return identity;
+  }
+
+  async readPortraitPeople(jurisdiction:string,at:string):Promise<readonly PortraitPersonRow[]> {
+    const rows=await this.db.$client.query(PORTRAIT_PEOPLE_SQL,[jurisdiction,at,portraitInputKeys(jurisdiction)]);
+    return Promise.all(rows.map(async row=>({scope:String(row.scope),person:await this.payloadParts.load(row.node) as Officeholder})));
+  }
+
+  async hasPortraitWork(jurisdiction:string,at:string):Promise<boolean> {
+    const [row]=await this.db.$client.query(`SELECT EXISTS(${PORTRAIT_PEOPLE_SQL}) AS owed`,[jurisdiction,at,portraitInputKeys(jurisdiction)]);
+    return row?.owed===true;
+  }
+
+  async readPortraitSources(jurisdiction:string):Promise<readonly Extract<DerivedInputRef,{kind:"PROMOTED_VERSION"}>[]> {
+    const rows=await this.db.$client.query(`SELECT p.record_class,p.scope,p.current_version_id AS version_id,p.promoted_at,c.normalized_hash
+      FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
+      WHERE p.source_id<>'people-portraits' AND p.record_class IN ('STATE_LEGISLATOR','FEDERAL_DIRECTORY','REGISTRY_RUNTIME_BINDING')
+        AND (p.scope=$1 OR p.scope LIKE $1||':%') AND p.key=ANY($2::text[]) ORDER BY p.record_class,p.scope`,[jurisdiction,portraitInputKeys(jurisdiction)]);
+    return rows.map(row=>{if(!/^[a-f0-9]{64}$/.test(String(row.normalized_hash)))throw Error("PEOPLE_PORTRAIT_SOURCE_HASH_UNAVAILABLE");
+      return {kind:"PROMOTED_VERSION",recordClass:String(row.record_class),scope:String(row.scope),versionId:String(row.version_id),
+        promotedAt:new Date(String(row.promoted_at)).toISOString(),readModelSha256:String(row.normalized_hash)};});
+  }
+
+  async readPortraitVersion(jurisdiction:string):Promise<string|null> {
+    const [row]=await this.db.$client.query(`SELECT current_version_id FROM civic_data_promotions
+      WHERE record_class='STATE_LEGISLATOR' AND scope=$1`,[jurisdiction+":people:portraits:v1"]);
+    return row ? String(row.current_version_id) : null;
+  }
+
+  async readPortraitCaptures(candidateIds:readonly string[],urls:readonly string[],includeOfficial=false):Promise<readonly StatePeopleCapture[]> {
+    if(!candidateIds.length)return [];
+    const versions=await this.db.$client.query(PORTRAIT_CAPTURES_SQL,[[...candidateIds],[...urls],true,null,includeOfficial]);
+    const keys=versions.map(row=>String(row.hash));
+    const values=async(selected:readonly string[])=>{
+      const rows=await this.db.$client.query(PORTRAIT_CAPTURES_SQL,[[...candidateIds],[...urls],false,[...selected],includeOfficial]);
+      return Promise.all(rows.map(async row=>({hash:String(row.hash),capture:await this.payloadParts.load(row.node) as StatePeopleCapture})));
+    };
+    const rows=await this.portraitCache.rows({namespace:"portrait-capture",keys,
+      versions:async()=>keys.map(key=>({key,etag:key})),values,keyOf:row=>row.hash,etagOf:row=>row.hash});
+    return rows.map(row=>row.capture);
+  }
   private readonly readCache = runtimeCivicReadCache();
+  private readonly portraitCache = this.readCache ?? portraitReadCache();
   private stateReadMetadata: PublishedCandidateMetadata | null = null;
   private async readPayloadParts(hashes: readonly string[]) {
     return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));

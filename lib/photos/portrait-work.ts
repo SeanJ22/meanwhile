@@ -68,6 +68,8 @@ export interface StandingPortraitOptions {
   readonly acquire?: typeof acquireKnownRelease;
   readonly storePortrait?: typeof storeStandingPortrait;
   readonly previousExcludedFacts?: readonly PortraitAttempt[];
+  /** People selected because their source inputs changed, even if their held image is still current. */
+  readonly refreshPersonIds?: ReadonlySet<string>;
   /** Saved official pages that endorse a government publisher on another domain. */
   readonly linkingCaptures?: readonly import("./evidence.ts").PortraitCapture[];
   /** Called after each accepted photo or recorded reason, before another pass. */

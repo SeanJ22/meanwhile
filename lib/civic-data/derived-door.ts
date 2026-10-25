@@ -107,10 +107,18 @@ export function derivedAuthorityFor(candidate: RoutineCandidate): DerivedAuthori
 
 export interface DerivedDoorStore {
   readCandidate(candidateId: string): Promise<CandidateVersionRecord | null>;
+  readDerivedInputIdentity?(candidateId:string):Promise<DerivedInputIdentity|null>;
 }
 
+export interface DerivedInputIdentity {
+  readonly recordClass:string;readonly scope:string;readonly state:string;readonly readModelSha256:string;
+}
+
+export const derivedReadModelHash = (readModel:unknown):string =>
+  createHash("sha256").update(canonicalCivicDataJson(readModel)).digest("hex");
+
 const readModelSha256 = (record: CandidateVersionRecord): string =>
-  createHash("sha256").update(canonicalCivicDataJson(record.candidate.readModel)).digest("hex");
+  derivedReadModelHash(record.candidate.readModel);
 
 interface WiringRowForDoor {
   readonly key: string;
@@ -138,19 +146,27 @@ const bare = (host: string): string => host.toLowerCase().replace(/^www\./, "");
  */
 export async function derivedInputAuthorityIssue(store: DerivedDoorStore, candidate: RoutineCandidate): Promise<string | null> {
   const inputs = candidate.retrieval.derived?.inputs ?? [];
+  const members = inputs.filter((input): input is Extract<DerivedInputRef, { kind: "MEMBER_ACQUISITION" }> => input.kind === "MEMBER_ACQUISITION");
   const promoted = new Map<string, CandidateVersionRecord>();
   for (const input of inputs) {
     if (input.kind !== "PROMOTED_VERSION") continue;
-    const record = await store.readCandidate(input.versionId);
-    if (record === null) return `DERIVED_INPUT_NOT_DURABLE: ${input.versionId} is not a stored version`;
-    if (record.candidate.recordClass !== input.recordClass || record.candidate.scope !== input.scope) {
-      return `DERIVED_INPUT_IDENTITY_MISMATCH: ${input.versionId} is ${record.candidate.recordClass}:${record.candidate.scope}`;
+    const full=store.readDerivedInputIdentity ? null : await store.readCandidate(input.versionId);
+    const identity=store.readDerivedInputIdentity ? await store.readDerivedInputIdentity(input.versionId) : full ? {
+      recordClass:full.candidate.recordClass,scope:full.candidate.scope,state:full.state,readModelSha256:readModelSha256(full),
+    } : null;
+    if (identity === null) return `DERIVED_INPUT_NOT_DURABLE: ${input.versionId} is not a stored version`;
+    if (identity.recordClass !== input.recordClass || identity.scope !== input.scope) {
+      return `DERIVED_INPUT_IDENTITY_MISMATCH: ${input.versionId} is ${identity.recordClass}:${identity.scope}`;
     }
-    if (record.state !== "PROMOTED") return `DERIVED_INPUT_NOT_PROMOTED: ${input.versionId} is ${record.state}`;
-    if (readModelSha256(record) !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
-    promoted.set(input.versionId, record);
+    if (identity.state !== "PROMOTED") return `DERIVED_INPUT_NOT_PROMOTED: ${input.versionId} is ${identity.state}`;
+    if (identity.readModelSha256 !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
+    if(members.length && identity.recordClass===DERIVED_WIRING_RECORD_CLASS && identity.scope===DERIVED_WIRING_SCOPE) {
+      const record=full ?? await store.readCandidate(input.versionId);
+      if(!record)return `DERIVED_INPUT_NOT_DURABLE: ${input.versionId} is not a stored version`;
+      if(readModelSha256(record)!==input.readModelSha256)return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
+      promoted.set(input.versionId,record);
+    }
   }
-  const members = inputs.filter((input): input is Extract<DerivedInputRef, { kind: "MEMBER_ACQUISITION" }> => input.kind === "MEMBER_ACQUISITION");
   if (members.length === 0) return null;
   const wiring = [...promoted.values()].filter((record) =>
     record.candidate.recordClass === DERIVED_WIRING_RECORD_CLASS && record.candidate.scope === DERIVED_WIRING_SCOPE);

@@ -1103,6 +1103,21 @@ for (const read of clockReads) {
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
+  if(task.sourceId==="people-portraits" && !FORCE && dueRequest===null && cadenceDue) {
+    try {
+      const state=task.id.slice("people-portraits-".length).toUpperCase();
+      const jurisdiction=state==="US" ? "US" : `US-${state}`;
+      if(!await store.hasPortraitWork(jurisdiction,new Date(admissionNowMs).toISOString())) {
+        recordLaunchDecision(task,"SKIP","Portraits are current","No changed person, missing portrait or due portrait in this state.");
+        continue;
+      }
+    } catch(error) {
+      const detail=safeFailure(sanitizedErrorDiagnostic(error));
+      supervisorFailures.push({taskId:task.id,code:"PORTRAIT_INPUT_READ_FAILED",detail});
+      console.error(`RCD_TASK ${task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+      continue;
+    }
+  }
   const taskDue = publication
     // Navigation re-reads its official pages on its own cadence; a ballot file republishes only when it changes or was held.
     ? ballotsDue || (publication.family === "ballot-navigation" || !ballotStamps.has(publication.key) || priorBallotPublications.get(publication.key)?.status === "HELD") && cadenceDue
@@ -1439,6 +1454,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     return;
   }
   const parsedReceipt = parseRoutineRunnerReceipt(output);
+  if(pending.task.sourceId==="people-portraits" && run.status===0 && !parsedReceipt.ok) {
+    const state=pending.task.id.slice("people-portraits-".length).toUpperCase();
+    if(!await store.hasPortraitWork(state==="US" ? "US" : `US-${state}`,new Date().toISOString())) {
+      recordLaunchDecision(pending.task,"SKIP","Portraits are current","The scoped read found no remaining changed, missing or due person; the existing portraits remain live.");
+      return;
+    }
+  }
   const receiptOutcome = parsedReceipt.ok && successfulRoutineRunnerReceiptIssue(parsedReceipt.receipt) === null
     ? "SUCCESS"
     : "HELD";

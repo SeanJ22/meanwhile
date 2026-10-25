@@ -13,12 +13,14 @@ import type { Officeholder, OfficeholderPhoto } from "./types.ts";
 import type { FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
 
 type PortraitGap = NonNullable<RoutineCandidate["excludedFacts"]>[number];
-export interface CongressPortraitResult {
-  readonly projection: FederalDirectoryReadModel;
+export interface CongressPortraitResult<T = FederalDirectoryReadModel> {
+  readonly projection: T;
   readonly excludedFacts: readonly PortraitGap[];
   readonly attempted: number;
 }
 interface CongressPortraitOptions {
+  readonly recheckEveryMs?:number;
+  readonly refreshPersonIds?:ReadonlySet<string>;
   readonly now?: () => string;
   readonly apiKeyConfigured?: boolean;
   readonly acquire?: typeof acquireKnownRelease;
@@ -57,8 +59,8 @@ export function congressDirectoryPortraitLeads(bioguide:string):readonly string[
 }
 
 /** Drain every due native member; caller cancellation leaves durable reasons. */
-export async function congressPortraits(value: FederalDirectoryReadModel, asOf: string, signal?: AbortSignal,
-  options: CongressPortraitOptions = {}): Promise<CongressPortraitResult> {
+export async function congressPortraits<T extends Pick<FederalDirectoryReadModel,"roster">>(value: T, asOf: string, signal?: AbortSignal,
+  options: CongressPortraitOptions = {}): Promise<CongressPortraitResult<T>> {
   const now = options.now ?? (() => new Date().toISOString());
   const acquire = options.acquire ?? pacedPortraitAcquire;
   const readApi = options.readApi ?? readSourceApi;
@@ -73,8 +75,8 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
       typeof record.attemptedAt === "string" && Number.isFinite(Date.parse(record.attemptedAt)) &&
       record.attemptedAt > (lastAttempt.get(record.personId) ?? "")) lastAttempt.set(record.personId, record.attemptedAt);
   }
-  const due = holders.filter(row => !portraitBindingMatches(row.personId ?? row.id, row.photo ?? { url: "" }) ||
-    Date.parse(asOf) - Date.parse(row.photo!.verification!.checkedAt) >= 30 * 86_400_000)
+  const due = holders.filter(row => options.refreshPersonIds?.has(row.personId ?? row.id) || !portraitBindingMatches(row.personId ?? row.id, row.photo ?? { url: "" }) ||
+    Date.parse(asOf) - Date.parse(row.photo!.verification!.checkedAt) >= (options.recheckEveryMs ?? 30 * 86_400_000))
     .sort((a, b) => (lastAttempt.get(a.personId ?? a.id) ?? "").localeCompare(lastAttempt.get(b.personId ?? b.id) ?? "") ||
       (a.photo?.verification?.checkedAt ?? "").localeCompare(b.photo?.verification?.checkedAt ?? "") || a.id.localeCompare(b.id));
   const dueKeys = new Set(due.map(person => `${person.personId ?? person.id}:portrait`));

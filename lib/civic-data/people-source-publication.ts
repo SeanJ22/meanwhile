@@ -37,6 +37,8 @@ interface PublishPeopleSourceInput {
   readonly derivedInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
   readonly resolveOfficePoint?: OfficePointResolver;
+  /** The portrait run owns this validated snapshot. The existing promotion CAS still checks its version. */
+  readonly portraitBase?: {readonly versionId:string|null;readonly roster:OfficeholderSet|null;readonly captures:readonly StatePeopleCapture[]};
 }
 type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acquisitions"> & {
   readonly captures: readonly StatePeopleCapture[];
@@ -131,11 +133,13 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
 /** Publish one source/state independently. A failed or partial route retains prior verified facts. */
 export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const jurisdiction = peopleJurisdiction(input.state);
-  const prior = await readPeopleSourceProjection(jurisdiction,input.sourceId,{store:input.store,now:input.now,bypassCache:true});
-  if (prior.kind === "STORE_UNREACHABLE") throw Error("PEOPLE_SOURCE_PRIOR_UNAVAILABLE");
-  const heldCaptures = prior.kind === "PROMOTED" ? await input.store.readCandidatePath<readonly StatePeopleCapture[]>(
+  if(input.portraitBase && input.sourceId!=="people-portraits")throw Error("PEOPLE_PORTRAIT_BASE_WRONG_SOURCE");
+  const prior = input.portraitBase ? null : await readPeopleSourceProjection(jurisdiction,input.sourceId,{store:input.store,now:input.now,bypassCache:true});
+  if (prior?.kind === "STORE_UNREACHABLE") throw Error("PEOPLE_SOURCE_PRIOR_UNAVAILABLE");
+  const priorVersion=input.portraitBase ? input.portraitBase.versionId : prior?.kind==="PROMOTED" ? prior.metadata.versionId : null;
+  const heldCaptures = input.portraitBase ? input.portraitBase.captures : prior?.kind === "PROMOTED" ? await input.store.readCandidatePath<readonly StatePeopleCapture[]>(
     prior.metadata.versionId!, ["normalizedPayload", "captures"]) ?? [] : [];
-  const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
+  const held = input.portraitBase ? input.portraitBase.roster : prior?.kind === "PROMOTED" || prior?.kind === "BOOTSTRAP" ? prior.value.roster : null;
   const national = jurisdiction === "US" && input.sourceId === "statewide-executive-sources";
   const read = await holdPeopleCaptures(input.vault,input.sourceId,input.acquisitions);
   const reread = new Set(read.map(row=>row.finalUrl));
@@ -223,6 +227,6 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`
     : `people-${input.sourceId}-${state}`);
-  const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
+  const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,priorVersion,{confirmUnchanged:input.confirmUnchanged});
   return {candidate,outcome};
 }

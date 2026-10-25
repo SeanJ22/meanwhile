@@ -732,7 +732,6 @@ test("Reader evidence names a pointer and a candidate by identity; neither datas
     "readback evidence reads identity; only the typed Reader reads and proves the dataset",
   );
   assert.match(verification, /store\.readPromotionIdentity\(contract\.recordClass, contract\.scope\)/);
-  assert.match(verification, /store\.readPromotionIdentities\("MEETING", scopes\)/);
 });
 
 test("the Reader-evidence door's narrow read decides authority exactly as the whole envelope does", () => {

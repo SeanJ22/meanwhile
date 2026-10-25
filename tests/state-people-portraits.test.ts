@@ -15,6 +15,8 @@ import type { StandingPortraitOptions } from "../lib/photos/portrait-work.ts";
 import heldProfiles from "./fixtures/plural/held-native-profile-leads.json" with {type:"json"};
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import { publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
+import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -86,6 +88,49 @@ test("a state portrait failure advances durable attempt metadata without withhol
     assert.equal(read.value.roster.officeholders.length,1);assert.equal(read.value.roster.officeholders[0].photo,null);
     assert.equal(read.value.roster.officeholders[0].provenance.collectedAt,SOURCE_DATE);
   }
+});
+
+test("the next due portrait pass retains a verified image and its citation when the profile is temporarily unavailable",async()=>{
+  const {store}=await seed(),images=await imageStore();
+  await refreshStatePortraits({state:"az",store,now:VERIFIED},{now:()=>VERIFIED,storePortrait:images.store,acquire:async options=>profile(options)});
+  const before=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED,bypassCache:true});
+  assert.equal(before.kind,"PROMOTED");if(before.kind!=="PROMOTED")return;
+  const person=before.value.roster.officeholders[0];assert.ok(person.photo);
+  const dueAt=new Date(Date.parse(VERIFIED)+7*86400000).toISOString();let attempted=0;
+  const result=await refreshStatePortraits({state:"az",store,now:dueAt},{now:()=>dueAt,acquire:async()=>{attempted++;throw Error("Temporary profile failure");}});
+  assert.ok(result?.outcome.promoted);assert.equal(attempted,1);
+  const after=await readStatePeopleProjection("US-AZ",{store,now:dueAt,bypassCache:true});
+  assert.equal(after.kind,"PROMOTED");if(after.kind!=="PROMOTED")return;
+  assert.deepEqual(after.value.roster.officeholders[0].photo,person.photo);
+  assert.deepEqual(after.value.roster.officeholders[0].fieldSources?.photo,person.fieldSources?.photo);
+});
+
+test("the per-run publication snapshot reloads after a concurrent portrait writer and retains its image",async()=>{
+  const {store,roster}=await seed(25),images=await imageStore();
+  const independent=await statePeoplePortraits({state:"az",roster:{...roster,officeholders:[roster.officeholders[24]]},now:VERIFIED},
+    {now:()=>VERIFIED,storePortrait:images.store,acquire:async options=>profile(options)});
+  assert.ok(independent.roster.officeholders[0].photo);
+  const source=await store.readPromotion("STATE_LEGISLATOR","US-AZ:openstates-people:v1");assert.ok(source);
+  const reference=promotedInputRef(source.recordClass,source.scope,source.versionId,source.payload,source.promotedAt)!;
+  const promote=store.promote.bind(store);let publications=0,injected=false,conflicts=0;
+  store.promote=async(...args)=>{
+    const row=await store.readCandidate(args[0]);
+    if(row?.candidate.sourceId==="people-portraits" && ++publications===2 && !injected){
+      injected=true;
+      const other=await publishPeopleSource({store,vault,state:"az",sourceId:"people-portraits",
+        roster:{scope:"az",generatedAt:VERIFIED,officeholders:independent.roster.officeholders,divisions:[],unmatched:[]},
+        acquisitions:[],derivedInputs:[reference],releaseId:"concurrent-portrait",now:VERIFIED});
+      assert.ok(other.outcome.promoted);
+    }
+    try{return await promote(...args);}catch(error){if(String(error).includes("PROMOTION_BASE_CHANGED"))conflicts++;throw error;}
+  };
+  const result=await refreshStatePortraits({state:"az",store,now:VERIFIED},{now:()=>VERIFIED,storePortrait:images.store,acquire:async options=>profile(options)});
+  assert.ok(result?.outcome.promoted);assert.equal(injected,true);assert.ok(conflicts>0);
+  const reader=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED,bypassCache:true});
+  assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
+  assert.equal(reader.value.roster.officeholders.length,25);
+  assert.ok(reader.value.roster.officeholders.every(person=>person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo)));
+  assert.equal(reader.value.roster.officeholders.find(person=>person.id===roster.officeholders[24].id)?.photo?.url,independent.roster.officeholders[0].photo.url);
 });
 test("a state's portrait run publishes finished photos promptly and reads its sources once",async()=>{
   const {store}=await seed(25),images=await imageStore();

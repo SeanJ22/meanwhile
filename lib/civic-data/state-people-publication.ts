@@ -170,7 +170,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
     const record = fact.record as {personId?:string;attemptedAt?:string}|undefined;
     if (fact.code.startsWith("STATE_PORTRAIT_") && record?.personId && record.attemptedAt) lastAttempt.set(record.personId,record.attemptedAt);
   }
-  const due = roster.officeholders.filter(row=>!portraitBindingMatches(row.personId ?? row.id,row.photo ?? {url:""}) ||
+  const due = roster.officeholders.filter(row=>options.refreshPersonIds?.has(row.personId ?? row.id) || !portraitBindingMatches(row.personId ?? row.id,row.photo ?? {url:""}) ||
     Date.parse(now)-Date.parse(row.photo!.verification!.checkedAt)>=7*86400000)
     .sort((a,b)=>(lastAttempt.get(a.personId ?? a.id) ?? "").localeCompare(lastAttempt.get(b.personId ?? b.id) ?? "") || a.id.localeCompare(b.id));
   const dueIds = new Set(due.map(person=>person.personId ?? person.id));

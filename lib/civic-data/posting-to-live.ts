@@ -1,8 +1,6 @@
 /** The clock runs from `postedAt`, or from `firstSeenAt` when the publisher states no posting time; `basis` says which. */
 import { parseReaderProjectionReadback } from "./reader-readback.ts";
-import { latestUnchangedConfirmation } from "./unchanged-confirmation.ts";
 import type { CandidateEvent, RoutineChangeSet, RoutineRecordClass } from "./types.ts";
-import type { RoutineDataStore } from "./store.ts";
 
 export type PostedChangeKind = "MEETING_NEW" | "MEETING_CHANGED" | "AGENDA_LINK" | "STATUS" | "OUTCOME";
 
@@ -91,24 +89,5 @@ export function readbackPassAt(events: readonly Pick<CandidateEvent, "detail">[]
     .map((receipt) => receipt!.observedAt)
     .sort();
   return times[0] ?? null;
-}
-
-export async function readPostingToLive(
-  store: Pick<RoutineDataStore, "readCandidate" | "events">,
-  versionId: string,
-): Promise<readonly PostingToLiveRow[] | null> {
-  const record = await store.readCandidate(versionId);
-  if (record === null || record.state !== "PROMOTED") return null;
-  const changeSet = record.candidate.changeSet;
-  if (changeSet === undefined) return [];
-  const events = await store.events(versionId);
-  return postingToLiveFromVersion({
-    recordClass: record.candidate.recordClass,
-    versionId,
-    firstSeenAt: record.candidate.retrieval.retrievedAt,
-    changeSet,
-    liveAt: readbackPassAt(events, versionId),
-    lastUnchangedAt: latestUnchangedConfirmation(events, versionId)?.observedAt ?? null,
-  });
 }
 

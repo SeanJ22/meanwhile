@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import sharp from "sharp";
-import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/campaign-site-portraits.ts";
+import { publishCandidatePortraits } from "../lib/ballot/portrait-refresh.ts";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -1385,7 +1385,17 @@ test("national authority website URLs reach the verifier and publish candidate p
     const approvals = inputs.approvals.filter(row => row.campaignSite.identity.stateCode === state);
     assert.equal(approvals.length, 1);
     const plan = (await capturePlan({ ...inputs, approvals, profiles: null }));
-    const portraits = await publishCampaignSitePortraits({ plan, ...inputs, approvals, now: PUBLISH,
+    const portraits = await publishCandidatePortraits({ plan, now: PUBLISH,
+      subjects:approvals.map(row=>({...row.campaignSite.identity,readerKeys:row.campaignSite.readerKeys,filingDomains:[]})),
+      sites:new Map(approvals.map(row=>[row.campaignSite.candidacyId,[row.campaignSite.url]])),
+      capture:async url=>{
+        const approval=approvals.find(row=>row.campaignSite.url===url)!;
+        const held=inputs.held(approval)!;
+        const bytes=new TextEncoder().encode(held.body),sha=sha256(held.body);
+        return {sourceId:"candidate-portrait-page",releaseId:url,requestedUrl:url,finalUrl:url,bytes,sha256:sha,
+          httpStatus:200,retrievedAt:T1,sourceObservedAt:T1,checkedAt:PUBLISH,lastCheckStatus:200,etag:null,lastModified:null,
+          contentType:"text/html",reused:true,vaultKey:`project/freshness/source/candidate-portrait-page/${sha}.bin`};
+      },
       portraitRuntime: { read: async () => sharp({ create: { width: 200, height: 240, channels: 3, background: "#335577" } }).png().toBuffer(),
         put: async key => { stored.push(key); } } });
     assert.equal(portraits.portraits?.length, 1);

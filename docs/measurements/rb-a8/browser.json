@@ -1,0 +1,43 @@
+{
+  "mode": "actual production reader in Chrome; writes blocked",
+  "records": [
+    {
+      "initialOptions": [
+        "All bodies"
+      ]
+    },
+    {
+      "readerTargets": [
+        {
+          "label": "2018 Parks + Connections Bond Oversight Commission \u2014 Tucson, AZ",
+          "value": "ocd-division/country:us/state:az/place:tucson|2018 Parks + Connections Bond Oversight Commission",
+          "usableMs": 211
+        },
+        {
+          "label": "Audit Committee \u2014 Tucson Unified School District, AZ",
+          "value": "ocd-division/country:us/state:az/school_district:tucson_unified_district|Audit Committee",
+          "usableMs": 212
+        }
+      ],
+      "checkedAt": "2026-10-24T23:32:40.414Z"
+    },
+    {
+      "checkedAt": "2026-10-24T23:32:40.414Z",
+      "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/151.0.7922.34 Safari/537.36",
+      "results": [
+        {
+          "label": "2018 Parks + Connections Bond Oversight Commission \u2014 Tucson, AZ",
+          "value": "ocd-division/country:us/state:az/place:tucson|2018 Parks + Connections Bond Oversight Commission",
+          "usableMs": 211
+        },
+        {
+          "label": "Audit Committee \u2014 Tucson Unified School District, AZ",
+          "value": "ocd-division/country:us/state:az/school_district:tucson_unified_district|Audit Committee",
+          "usableMs": 212
+        }
+      ],
+      "errors": [],
+      "blockedWrites": 1
+    }
+  ]
+}

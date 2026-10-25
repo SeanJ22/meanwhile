@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-24T15:43:07.535Z",
+  "scope": "isolated local schema with synthetic claims",
+  "parent": {
+    "ok": true,
+    "value": true
+  },
+  "detective": {
+    "ok": true,
+    "value": true
+  },
+  "detectiveRows": 1,
+  "newestValue": "222",
+  "detectiveStatus": "ready",
+  "counts": {
+    "incoming": 2,
+    "done": 0,
+    "refused": 3
+  },
+  "countsEqual": true
+}

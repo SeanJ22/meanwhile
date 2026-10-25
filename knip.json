@@ -5,8 +5,7 @@
     "tests/**/*.{ts,mts,mjs,tsx}",
     "netlify/functions/*.mts",
     "lib/sources/platform-adapters/*.{ts,mjs}",
-    "lib/control-plane/workers/{national,route}-worker.ts",
-    "lib/control-plane/line-keeper/preview.mts"
+    "lib/control-plane/workers/{national,route}-worker.ts"
   ],
   "project": [
     "**/*.{js,mjs,ts,mts,tsx}",

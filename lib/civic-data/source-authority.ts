@@ -1,4 +1,5 @@
 import { PLURAL_STATES, PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
+import { REGISTRY_RUNTIME_PARSER_VERSION } from "../registry/runtime-version.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
@@ -76,8 +77,24 @@ export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage 
   if (/(^|\.)gov$/.test(host)) return true;
   if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return true;
   if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
+  return pageLinksSource(url, linkingPage);
+}
+
+/** A source's host is linked in this saved page; authority belongs to the caller's page check. */
+export function pageLinksSource(url: string, linkingPage: OfficialLinkingPage): boolean {
+  const host = hostOf(url);
+  if (host === null) return false;
   for (const match of linkingPage.html.matchAll(/\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/gi)) {
     if (hostOf((match[1] ?? match[2] ?? match[3]).replace(/&amp;/g, "&"), linkingPage.url) === host) return true;
+  }
+  // CivicClerk's official embed names its tenant instead of spelling out the portal URL.
+  if (/\bsrc\s*=\s*["']https:\/\/civicclerkcdn\.azureedge\.net\/publicportal-live\/embed\.js["']/i.test(linkingPage.html)) {
+    const config = /\bwindow\.clerkEmbedProps\s*=\s*(\{[^;]*?\})\s*;/.exec(linkingPage.html)?.[1];
+    if (config) try {
+      const tenant = (JSON.parse(config) as { tenant?: unknown }).tenant;
+      if (typeof tenant === "string" && /^[a-z0-9-]+$/i.test(tenant)
+        && ["portal", "api"].some(service => host === `${tenant.toLowerCase()}.${service}.civicclerk.com`)) return true;
+    } catch { /* A malformed embed names no source. */ }
   }
   return false;
 }
@@ -161,18 +178,18 @@ const AUTHORITIES = {
   },
   "legiscan-api": peopleSourceAuthority({ id: "legiscan-api", publisher: "LegiScan current-session people API", official: false, routePrefixes: ["https://api.legiscan.com/", "https://legiscan.com/"] }),
   "official-state-people": peopleSourceAuthority({ id: "official-state-people", publisher: "Each state legislature's captured official roster and member pages", official: true, routePrefixes: ["https://"] }),
-  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/2" }),
+  "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/3" }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
-    id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
+    id: "people-portraits", publisher: "Open States, Congress, official pages, campaign sites and Wikimedia Commons",
     trust: "T2_AUTHORITATIVE_DOCUMENT", sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: [],
     jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
-    recordClasses: ["STATE_LEGISLATOR", "FEDERAL_DIRECTORY"], competentFacts: ["own-page verified official portrait", "portrait recheck", "recorded portrait gap"],
+    recordClasses: ["STATE_LEGISLATOR", "FEDERAL_DIRECTORY"], competentFacts: ["verified person portrait", "portrait recheck", "recorded portrait gap"],
     expectedIdentifierKeys: ["person_id", "bioguide_id"], expectedTemporalFields: ["checked_at", "source_through"],
-    horizonSemantics: "Standing work checks every missing or due photo independently of roster acquisition. A photo publishes only when it appears on the person's own official page; failed reads preserve published photos and record a reason.",
+    horizonSemantics: "Standing work checks every missing or due photo independently of roster acquisition. Sources follow the portrait rule in §3; failed reads preserve published photos and record a reason.",
     parserVersion: "people-portraits/1", freshnessExpectation: "Hourly standing admission; each photo follows its own recheck date.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
-    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "SL-03: Sean's October 12, 2026 instruction for standing own-page portrait verification" },
+    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "PT-01: Sean's October 24, 2026 instruction for one portrait per person under §3" },
   },
   "socrata-discovery": {
     id: "socrata-discovery", publisher: "Government publishers through the Socrata Discovery API", trust: "T1_AUTHORITATIVE_STRUCTURED",
@@ -273,7 +290,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["body_id", "division_ocd_id", "officeholder_id", "candidacy_id"],
     expectedTemporalFields: ["source_through", "collected_at"],
     horizonSemantics: "An explicit owner-reviewed package speaks only for its enumerated runtime bindings and exact source bytes. Static division/schema derivations remain separately versioned software inputs.",
-    parserVersion: "registry-runtime-bindings/3",
+    parserVersion: REGISTRY_RUNTIME_PARSER_VERSION,
     freshnessExpectation: "Explicit owner invocation after a reviewed source package changes; no standing clock.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: false,

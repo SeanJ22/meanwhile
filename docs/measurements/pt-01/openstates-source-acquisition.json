@@ -1,0 +1,135 @@
+{
+  "measuredAt": "2026-10-24T13:29:50.685Z",
+  "mode": "Real read-only production people through native feed capture and storeVerifiedPortrait. Files stored locally only.",
+  "proofs": [
+    {
+      "state": "OH",
+      "personId": "plural:0c6a7bcf-e990-41a0-b59c-923f05771880",
+      "name": "Adam Bird",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/oh/legislature/Adam-C-Bird-0c6a7bcf-e990-41a0-b59c-923f05771880.yml",
+      "imageLead": "https://www.legislature.ohio.gov/assets/people/adam-c-bird/headshots/thumbnails/medium/adam-c-bird-january-2023-headshot_medium.jpg",
+      "photo": null,
+      "gaps": [
+        {
+          "key": "plural:0c6a7bcf-e990-41a0-b59c-923f05771880:portrait",
+          "code": "STATE_PORTRAIT_FEED_FAILED",
+          "detail": "Image HTTP 503",
+          "record": {
+            "personId": "plural:0c6a7bcf-e990-41a0-b59c-923f05771880",
+            "sourceUrl": "https://ohiohouse.gov/adam-c-bird",
+            "attemptedAt": "2026-10-24T13:29:47.534Z",
+            "retainedVerifiedPortrait": false
+          }
+        },
+        {
+          "key": "plural:0c6a7bcf-e990-41a0-b59c-923f05771880:portrait",
+          "code": "STATE_PORTRAIT_PROCESSING_FAILED",
+          "detail": "The directly held profile/image leads did not verify within this attempt; prior person facts and verified portrait remain.",
+          "record": {
+            "personId": "plural:0c6a7bcf-e990-41a0-b59c-923f05771880",
+            "sourceUrl": "https://ohiohouse.gov/adam-c-bird",
+            "attemptedAt": "2026-10-24T13:29:47.535Z",
+            "profileAttempts": [
+              {
+                "sourceUrl": "https://ohiohouse.gov/adam-c-bird",
+                "code": "STATE_PORTRAIT_PROCESSING_FAILED",
+                "detail": "This check exercises the held native feed lead only"
+              },
+              {
+                "sourceUrl": "https://ohiohouse.gov/members/adam-c-bird",
+                "code": "STATE_PORTRAIT_PROCESSING_FAILED",
+                "detail": "This check exercises the held native feed lead only"
+              },
+              {
+                "sourceUrl": "https://www.legislature.ohio.gov/legislators/house-directory",
+                "code": "STATE_PORTRAIT_PROCESSING_FAILED",
+                "detail": "This check exercises the held native feed lead only"
+              }
+            ],
+            "retainedVerifiedPortrait": false
+          }
+        }
+      ]
+    },
+    {
+      "state": "TX",
+      "personId": "plural:dd3e49ca-2b2b-4a83-ae63-0ade6ccef73f",
+      "name": "A.J. Louderback",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/tx/legislature/AJ-Louderback-dd3e49ca-2b2b-4a83-ae63-0ade6ccef73f.yml",
+      "imageLead": "https://house.texas.gov/images/members/4620.jpg?v=1",
+      "photo": {
+        "url": "/api/portraits/officials/6a44e33ae31670e6fc3478780d7a764787d6766f7de73debb048b6e54f138700.webp",
+        "sourceUrl": "https://house.texas.gov/images/members/4620.jpg?v=1",
+        "license": null,
+        "attribution": "Portrait: https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/tx/legislature/AJ-Louderback-dd3e49ca-2b2b-4a83-ae63-0ade6ccef73f.yml",
+        "collectedAt": "2026-10-24T13:29:48.800Z",
+        "verification": {
+          "personId": "plural:dd3e49ca-2b2b-4a83-ae63-0ade6ccef73f",
+          "name": "A.J. Louderback",
+          "imageUrl": "https://house.texas.gov/images/members/4620.jpg?v=1",
+          "checkedAt": "2026-10-24T13:29:48.566Z",
+          "attribution": {
+            "sourceUrl": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/tx/legislature/AJ-Louderback-dd3e49ca-2b2b-4a83-ae63-0ade6ccef73f.yml",
+            "name": "A.J. Louderback"
+          },
+          "basis": "SOURCE_FEED",
+          "sources": [
+            {
+              "url": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/tx/legislature/AJ-Louderback-dd3e49ca-2b2b-4a83-ae63-0ade6ccef73f.yml",
+              "vaultKey": "project/freshness/source/pt-01-state-feed/270666c9dca13ca347308be6aa133ae609e64e718706b74163560b0a98c9e38c.bin",
+              "contentHash": "sha256-270666c9dca13ca347308be6aa133ae609e64e718706b74163560b0a98c9e38c",
+              "retrievedAt": "2026-10-24T13:29:48.565Z"
+            }
+          ],
+          "imageHash": "sha256-6a44e33ae31670e6fc3478780d7a764787d6766f7de73debb048b6e54f138700",
+          "sourceImageHash": "sha256-2b692a19312e52d0145f3ab82176c458b20638c6a982e889d3212af4a34984c2",
+          "decoderVersion": "sharp-0.35.3/static-webp/1",
+          "width": 125,
+          "height": 175,
+          "imageRetrievedAt": "2026-10-24T13:29:48.800Z"
+        }
+      },
+      "gaps": []
+    },
+    {
+      "state": "WV",
+      "personId": "plural:feedb0b5-72da-4529-ab31-630805452e1a",
+      "name": "Aaron Holley",
+      "sourceUrl": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/wv/legislature/Aaron-Holley-feedb0b5-72da-4529-ab31-630805452e1a.yml",
+      "imageLead": "https://www.wvlegislature.gov/images/members/2025/house/holley_aaron.jpg",
+      "photo": {
+        "url": "/api/portraits/officials/5a6d913f533a250f907308a07a62df3d973fce68f27558c4b26c62196e875626.webp",
+        "sourceUrl": "https://www.wvlegislature.gov/images/members/2025/house/holley_aaron.jpg",
+        "license": null,
+        "attribution": "Portrait: https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/wv/legislature/Aaron-Holley-feedb0b5-72da-4529-ab31-630805452e1a.yml",
+        "collectedAt": "2026-10-24T13:29:50.665Z",
+        "verification": {
+          "personId": "plural:feedb0b5-72da-4529-ab31-630805452e1a",
+          "name": "Aaron Holley",
+          "imageUrl": "https://www.wvlegislature.gov/images/members/2025/house/holley_aaron.jpg",
+          "checkedAt": "2026-10-24T13:29:49.894Z",
+          "attribution": {
+            "sourceUrl": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/wv/legislature/Aaron-Holley-feedb0b5-72da-4529-ab31-630805452e1a.yml",
+            "name": "Aaron Holley"
+          },
+          "basis": "SOURCE_FEED",
+          "sources": [
+            {
+              "url": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/wv/legislature/Aaron-Holley-feedb0b5-72da-4529-ab31-630805452e1a.yml",
+              "vaultKey": "project/freshness/source/pt-01-state-feed/b3d77a41bc66d93c2b53173cf7e050b1287db3a6d6d69c5d731879520f992c3b.bin",
+              "contentHash": "sha256-b3d77a41bc66d93c2b53173cf7e050b1287db3a6d6d69c5d731879520f992c3b",
+              "retrievedAt": "2026-10-24T13:29:49.892Z"
+            }
+          ],
+          "imageHash": "sha256-5a6d913f533a250f907308a07a62df3d973fce68f27558c4b26c62196e875626",
+          "sourceImageHash": "sha256-588a6aa1d1a9a1a163ba456af68bae6b6da2673e9f3cbafc7a6fb34b102b6de6",
+          "decoderVersion": "sharp-0.35.3/static-webp/1",
+          "width": 216,
+          "height": 324,
+          "imageRetrievedAt": "2026-10-24T13:29:50.665Z"
+        }
+      },
+      "gaps": []
+    }
+  ]
+}

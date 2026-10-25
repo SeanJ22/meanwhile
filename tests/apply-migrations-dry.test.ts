@@ -7,6 +7,7 @@ import test, { after } from "node:test";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { declaredPhase } from "../lib/db/migration-phases.ts";
 import { runDbApply } from "../scripts/db-apply.mts";
+import { lockFirstStatement } from "../scripts/apply-migrations.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTER = join(ROOT, "tests", "fixtures", "apply-migrations-neon-register.mjs");
@@ -249,6 +250,21 @@ test("a contract that declares a longer statement budget keeps the bounded lock 
   assert.ok(queries.indexOf("SET LOCAL statement_timeout = '10000ms'") < apply);
   assert.ok(queries.indexOf("SET LOCAL statement_timeout = '10000ms'") > 0);
   assert.match(result.output, /Applied 1 migration/);
+});
+
+test("a migration that declares its trigger tables locks them together before its first statement", () => {
+  const committed = journal().entries;
+  const migration = committed.find(entry => entry.tag === "RB-A8_count_hour")!;
+  const result = run(["--target=production", "--phase=expand", `--upto=${migration.tag}`], {
+    WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:fixture@ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech/neondb",
+    APPLY_MIGRATIONS_FAKE_APPLIED_WHEN: committed.filter(entry => entry.when < migration.when).map(entry => entry.when).join(","),
+  }, "async () => {}");
+  assert.equal(result.status, 0, result.output);
+  const apply = (result.events as { statement?: string }[]).map(event => event.statement ?? "").find(text => /^DO\b/.test(text))!;
+  const lock = apply.indexOf("LOCK TABLE fact, civic_data_promotions, entity IN SHARE ROW EXCLUSIVE MODE;");
+  assert.ok(lock > 0, apply.slice(0, 400));
+  assert.ok(lock < apply.indexOf("EXECUTE "));
+  assert.equal(lockFirstStatement("0051_rb_a1_shared"), "");
 });
 
 test("the runtime refuses a contract before the exact commit is loaded, records the refusal and redacts failure output", async () => {

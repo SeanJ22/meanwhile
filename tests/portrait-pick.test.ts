@@ -21,6 +21,16 @@ describe("HTML image extraction", () => {
     );
     assert.equal(decodeEntities("https://x/a?b=1&amp;c=2"), "https://x/a?b=1&c=2");
   });
+
+  it("keeps every named rendition, including commas inside publisher resize URLs", () => {
+    const images = imagesIn('<img alt="Todd Blanche" src="/Todd-Blanche.jpg" srcset="/Todd-Blanche.jpg 4985w, /Todd-Blanche.jpg?resize=499,600 499w, /Todd-Blanche.jpg?resize=997,1200 997w">', "https://www.whitehouse.gov/");
+    assert.deepEqual(images.map(image => image.src), [
+      "https://www.whitehouse.gov/Todd-Blanche.jpg",
+      "https://www.whitehouse.gov/Todd-Blanche.jpg?resize=499,600",
+      "https://www.whitehouse.gov/Todd-Blanche.jpg?resize=997,1200",
+    ]);
+    assert.ok(images.every(image => pickPortrait("Todd Blanche", [image])));
+  });
 });
 
 describe("the picker matches on the name and nothing else", () => {

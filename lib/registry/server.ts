@@ -17,8 +17,9 @@ import {
 import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readStateGeometryText } from "../geo/state-geometry.ts";
-import { currentStatewideExecutives, statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { currentBodyRosters, currentRosterMemberReaderDisposition, rosterHoldersForBody } from "./body-rosters.ts";
+import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
+import { rosterHoldersForBody } from "./body-rosters.ts";
+import { currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "./runtime-read-model.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
 export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
@@ -148,7 +149,7 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
 
   const officialsById = indexByOfficeholderId(sets, photos);
   for (const holder of statewideExecutivesFor(currentStatewideExecutives().map((executive) => executive.stateOcdId))) {
-    officialsById.set(holder.id, holder);
+    for (const id of personIdentityKeys(holder)) officialsById.set(id, holder);
   }
   for (const roster of currentBodyRosters()) for (const holder of rosterHoldersForBody(roster.bodyId)) {
     if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
@@ -476,7 +477,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
   const canonicalId = rosterIdentity?.canonicalId ?? id;
   if (canonicalId.startsWith("congress:")) return seatHolderById(canonicalId);
   const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
-    .find((holder) => holder.id === canonicalId);
+    .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
   for (const roster of currentBodyRosters()) {
     const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);

@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { withoutInvalidStatewidePeople } from "./person-name.ts";
 import type { Provenance } from "../sources/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
@@ -12,7 +13,8 @@ const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu,
 const present = (value: unknown) => value !== null && value !== undefined && value !== "" && !(Array.isArray(value) && value.length === 0);
 const sourceFor = (person: Officeholder, field: string): Provenance => person.fieldSources?.[field] ?? person.provenance;
 /** Shared identifiers first; a unique full name, office and state is the second binding. */
-export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderSet | null {
+export function mergePeopleSets(input: readonly OfficeholderSet[]): OfficeholderSet | null {
+  const sets = input.map(withoutInvalidStatewidePeople);
   if (!sets.length) return null;
   const people: Officeholder[] = [], aliases = new Map<string, string>();
   const offices = new Map<string, string>(), officialUrls = new Map<string, boolean>();
@@ -88,8 +90,10 @@ export function mergePeopleSets(sets: readonly OfficeholderSet[]): OfficeholderS
       const a = left[field], b = right[field];
       if (!present(b)) continue;
       if (field === "selectionMethod" && b === "UNKNOWN") continue;
-      // A portrait verified for another canonical alias must be re-bound before serving.
-      if (field === "photo" && !portraitBindingMatches(personId, right.photo ?? {url: ""})) continue;
+      if (field === "photo") {
+        const verifiedFor=right.photo?.verification?.personId;
+        if(!verifiedFor || !personIdentityKeys(right).has(verifiedFor) || !portraitBindingMatches(verifiedFor,right.photo!))continue;
+      }
       const rightWins = !present(a) || prefers(right, left, field);
       if (rightWins) Object.assign(merged, {[field]: b, fieldSources: {...merged.fieldSources, [field]: sourceFor(right, field)}});
       else merged.fieldSources = {...merged.fieldSources, [field]: sourceFor(left, field)};

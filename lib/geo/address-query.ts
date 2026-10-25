@@ -1,6 +1,6 @@
-import { addressWords } from "./address-words.ts";
+import { addressWords, HOUSE_NUMBER_WORDS } from "./address-words.ts";
 
-const STREET_ADDRESS = /\b\d+[a-z]?(?:-\d+)?\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?/i;
+const STREET_ADDRESS = new RegExp(String.raw`\b(?:\d+[a-z]?(?:-\d+)?|${Object.keys(HOUSE_NUMBER_WORDS).join("|")})\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?`, "i");
 
 /** Extract the published street address from a venue heading and attendance instructions. */
 export function censusAddressQuery(published: string): string {
@@ -9,24 +9,22 @@ export function censusAddressQuery(published: string): string {
     .replace(/<[^>]*>/g, " ")
     .replace(/&nbsp;|&#160;/gi, " ")
     .replace(/&amp;/gi, "&")
-    .replace(/Hawai[‘’']i/gi, "Hawaii");
+    .replace(/Hawai[‘’']i/gi, "Hawaii")
+    .replace(/,?\s*\b(?:(?:conference\s+)?(?:room|rm\.?|suite|ste\.?)\s*#?\s*[\w-]+|(?:first|second|third|fourth|\d+(?:st|nd|rd|th))\s+(?:floor|flr\.?))\b/gi, " ");
   const street = STREET_ADDRESS.exec(text);
   const bare = /(?:^|[\r\n,;:]|\bat\s+)\s*(\d+\s+[a-z][\s\S]*)/i.exec(
     text,
   )?.[1];
   let address = street ? text.slice(street.index) : (bare ?? text);
+  address = address.replace(/^[a-z]+\b/i, word => HOUSE_NUMBER_WORDS[word.toLowerCase()] ?? word);
   address = address.split(
     /https?:\/\/|\b(?:join\s+(?:zoom|the)|meeting\s+id|pass\s*code|virtual\s*\(?online|or\s+(?:by\s+zoom|virtually)|this\s+meeting\s+is)/i,
     1,
   )[0];
-  // A room or floor is useful attendance text but is not part of a Census street address.
   address = address
-    .replace(
-      /,?\s+(?:(?:conference\s+)?(?:room|rm\.?|suite|ste\.?)\s*#?\s*[\w-]+|(?:first|second|third|fourth|\d+(?:st|nd|rd|th))\s+(?:floor|flr\.?))\b/gi,
-      "",
-    )
     .replace(/\s*\([^)]*\)\s*$/, "")
     .replace(/[\r\n]+/g, ", ")
+    .replace(/\s*,\s*/g, ", ")
     .replace(/\s+/g, " ")
     .replace(/[\s,;.]+$/, "");
   return address.trim();

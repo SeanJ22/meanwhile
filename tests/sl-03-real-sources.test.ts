@@ -126,8 +126,9 @@ test("real official secretary pages preserve unresolved selection rather than in
     assert.ok(verified.person.memberships?.[0].officeId.endsWith(`:office:${officeIdentity(verified.person.officeTitle)}`));
     assert.ok(verified.person.portraitCandidate);
     const roster = statewideRoster(state, [verified.person], page.retrievedAt);
-    assert.equal(roster.divisions.length, 0);
-    assert.equal(roster.unmatched[0]?.reason, "STATEWIDE_SELECTION_METHOD_UNRESOLVED");
+    // A verified own-page holder is placed without waiting for the page to explain how the office is filled.
+    assert.deepEqual(roster.divisions.map(row => row.ocdId), [`ocd-division/country:us/state:${state}`]);
+    assert.deepEqual(roster.unmatched, []);
     const publication = await publishPeopleSource({ vault, store: new MemoryRoutineDataStore(), state, sourceId: "statewide-executive-sources",
       roster, acquisitions: [page], releaseId: page.sha256, now: NOW });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));

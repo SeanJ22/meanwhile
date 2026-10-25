@@ -1,0 +1,47 @@
+{
+  "mode": "controlled-clock local Postgres copy; production hourly run still pending",
+  "records": [
+    {
+      "readerCapture": "2026-10-24T09:56:24.992113+00:00",
+      "controlCapture": "2026-10-24T09:56:29.122393+00:00",
+      "roles": [
+        "readonly",
+        "wtp_cp_release_readonly"
+      ],
+      "readerFacts": 8,
+      "readerEntities": 4,
+      "publishedSets": 4,
+      "doors": 4,
+      "boxFindings": 12,
+      "workListRows": 20,
+      "firstAt": "2026-10-25T00:05:00.000Z",
+      "pileEligibleAt": "2026-10-25T00:02:00.000Z",
+      "firstTickMinutes": 3,
+      "ownedFixStored": true,
+      "briefProblemStored": true,
+      "nextAt": "2026-10-25T01:05:00.000Z",
+      "firstProblems": 4,
+      "checkpointBytes": 332,
+      "readerRowsUnchanged": true,
+      "retiredStoreDeleted": true,
+      "spendingUnchanged": true
+    },
+    {
+      "allStateRetention": {
+        "n": 3,
+        "states": 57,
+        "bytes": 8901
+      }
+    },
+    {
+      "source": "reader",
+      "states": 57,
+      "everyDimensionMatches": true
+    },
+    {
+      "source": "control",
+      "states": 57,
+      "everyDimensionMatches": true
+    }
+  ]
+}

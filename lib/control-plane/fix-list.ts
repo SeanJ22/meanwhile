@@ -68,8 +68,6 @@ export interface FixCompletion {
 
 export function withFixCompleted(config: AdminConfig, id: string, done: FixCompletion, at: string): AdminConfig {
   const items = fixItems(config);
-  const held=items.find(i=>i.id===id);
-  if(held?.addedBy==='The line keeper'&&done.changedBy!=='The line keeper')return config;
   if (!items.some((i) => i.id === id)) return config;
   return put(config, items.map((i) => (i.id === id
     ? { ...i, state: "FIXED" as const, fixedAt: at, whatChanged: done.whatChanged, changedBy: done.changedBy, before: done.before, after: done.after, undo: done.undo ?? null }

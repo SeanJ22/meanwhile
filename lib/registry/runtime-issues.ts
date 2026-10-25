@@ -2,6 +2,7 @@ import type {RegistryRuntimeCarton} from "./runtime-data-plane.ts";
 import {CENSUS_PLACEHOLDER_BODY_ISSUE,isCensusPlaceholderDivision} from "./census-placeholders.ts";
 import {officialStateVoteScopeForOfficeholderId} from "../state-rollcalls/authority.ts";
 import {portraitBindingMatches} from "../photos/binding.ts";
+import { personIdentityKeys } from "../officials/people-identity.ts";
 import {sameSourcedExecutivePerson} from "./candidacy-holder-identity.ts";
 
 function duplicate(values: readonly string[]): boolean {
@@ -53,7 +54,11 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeCarton): s
     issues.push(`OFFICIAL_STATE_LEGISLATOR_SUBJECT_AUTHORITY_OVERLAP:${[...new Set(reservedOfficialStateRosterIds)].sort().join(",")}`);
   }
   const bridgeHolderIds = new Set(bridgeRows.map((row) => row.holder.id));
-  const statewideHolderById = new Map(statewideExecutives.map((row) => [row.holder.id, row] as const));
+  const statewideHolderById = new Map(statewideExecutives.flatMap(row => [...personIdentityKeys(row.holder)].map(id => [id, row] as const)));
+  for (const row of bridgeRows) {
+    const current = statewideHolderById.get(row.holder.id);
+    if (current) bridgeHolderIds.add(current.holder.id);
+  }
   if (officialCandidacies?.formatVersion !== 1 || officialCandidacies?.rule !== "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE") issues.push("OFFICIAL_CANDIDACY_BRIDGE_FORMAT_INVALID");
   if (duplicate(bridgeRows.map((row) => row.holder.id))) issues.push("OFFICIAL_CANDIDACY_HOLDER_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => !row.holder.name || !row.holder.officeTitle || !row.holder.sourceUrl || !row.reason)) issues.push("OFFICIAL_CANDIDACY_REQUIRED_FACT_MISSING");
@@ -75,7 +80,7 @@ export function registryRuntimeProjectionIssues(value: RegistryRuntimeCarton): s
       prior.candidacy.contestId !== candidacy.contestId);
   })) issues.push("OFFICIAL_CANDIDACY_ID_INVALID_OR_DUPLICATED");
   if (bridgeRows.some((row) => row.status === "IDENTITY_UNRESOLVED" ? !row.unresolvedCandidacyIds.length : row.unresolvedCandidacyIds.length > 0)) issues.push("OFFICIAL_CANDIDACY_UNRESOLVED_SET_INVALID");
-  const executiveIdSet = new Set(executiveIds);
+  const executiveIdSet = new Set(statewideHolderById.keys());
   if (bridgeRows.some((row) => row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE" && !executiveIdSet.has(row.holder.id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_UNRESOLVED");
   if (executiveIds.some((id) => !bridgeHolderIds.has(id))) issues.push("OFFICIAL_CANDIDACY_STATEWIDE_HOLDER_MISSING");
   if (bridgeRows.some((row) => {

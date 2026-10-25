@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4) since 11:12 AM EDT, but its boards have not reached reader pages (see 'RB-A4 is live but readers don't see it'). GATING: DB-03 inventory readback, River fold 50bdec3ae, alone on river-next f1b766d47 (first try failed 2 river tests that check for removed code; fixed). NEXT: RB-A4 catch-up b2bbdc183 (stream/rb-a4), then DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, VS-05 when it posts, the rest as they arrive. HELD: RB-A10 7b5eacd03 (place map 0 rows). FOR SEAN: governing bodies need national place work in more states (decision below).
+build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4) since 11:12 AM EDT, but its boards have not reached reader pages (see 'RB-A4 is live but readers don't see it'). GATING: DB-03 inventory readback, River fold 235c6f837, alone on river-next be0b41a4f (third run: 2nd run failed dead-code only; the replaced exports are deleted). NEXT: RB-A4 catch-up b2bbdc183 (stream/rb-a4), then DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, VS-05 when it posts, the rest as they arrive. HELD: RB-A10 7b5eacd03 (place map 0 rows). FOR SEAN: governing bodies need national place work in more states (decision below).
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T16:08:00Z
+heartbeat: 2026-10-25T17:03:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -980,4 +980,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - DB-03 inventory readback (River fold 50bdec3ae) is gating alone on river-next f1b766d47; lint passed, tsc running. It ships alone on 9 of 9.
 - Lanes: RB-A7 posted READY 7996ae820 and folds after the queue above (RB-A4 is in river). VS-05's only READY, fd1daab0a, is already in river, so nothing new from VS-05. DB-03, RT-01 and AD-01 have no new READYs.
 - Neon, reader DB response bytes, 11 AM EDT hour: 11,372 MB total (10 AM: 13,925). Portraits 2,638, readback 1,810, research cycle 1,893. No DB-03 code is live yet, so this is still baseline.
+
+### 1 PM EDT status
+- DB-03 inventory readback: third gate run on river-next be0b41a4f. Lint, tsc and dead-code pass; tests are running. The second run had 9,907 pass and 0 fail, but dead-code failed on 4 exports and 2 constants the removal leaves. They are deleted (READY 235c6f837), and the lane's copy of the fixes is in returns/db-03.md.
+- Lanes: no new READYs since noon (DB-03 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820; VS-05's fd1daab0a is already in river).
+- Sean hasn't decided governing bodies yet: (a) Admin sends or (b) a code change to national place work.
+- Neon, reader DB response bytes, 12 PM EDT hour: 11,648 MB total. Portraits 3,419, readback 1,545, research cycle 1,029. Still baseline: no DB-03 code is live.
 

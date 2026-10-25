@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b, PT-01 + MT-01), live 12:08 AM EDT, reader checks green. GATING: RV-MEET2 c02e4bf30 alone (meeting calendars fix), ships as release 110. HELD: DB-02 + BL-02 (re-gate after RV-MEET2). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
+build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b, PT-01 + MT-01), live 12:08 AM EDT, reader checks green. GATING: RV-MEET2 c02e4bf30 alone (tests 9,882 pass, 0 fail; builds running), ships as release 110. NEXT: RV-BOX 9350e15da alone (Box publishing timeouts, Sean 12:15 AM), release 111. HELD: DB-02 + BL-02 (re-gate after). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T04:10:46Z
+heartbeat: 2026-10-25T04:32:51Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,25 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### RV-BOX: Box publishing timeouts (Sean, 12:15 AM EDT), READY 9350e15da on stream/river-box
+- Cause (production control plane, read-only, EXPLAIN ANALYZE BUFFERS): each boxDue call read about 610,000 pages (4.7 GB) to return 1,000 of the about 1,646 due rows.
+  - The waiting branch reads every waiting row (386,000 pages) to test each one's slot and retry clock.
+  - The refused branch scans the whole 587 MB table.
+  - The unslotted branch reads all 162,000 rows to keep 1,000.
+  - Warm, that took 3.1 s. In a busy pass, with about 346,000 of the pages read from storage, it ran past the 25 s bound on 13 passes from 4 PM EDT.
+  - Every due row is due by its retry time; none by a moved slot version.
+- Fix: no new work system. Four partial indexes, one per branch: retry time, class and slot, refused ids, unslotted waiting ids.
+  - The control-plane migration RV-BOX_expand builds them concurrently at the production build (the runner's writes are never blocked), then runs ANALYZE.
+  - The one SQL change: the waiting branch's OR becomes its retry arm plus a stale-slot arm. The stale-slot arm walks the few distinct class and slot pairs, so a moved slot version still requeues its whole class.
+- Checks:
+  - Local Postgres 16 copy shaped like production (365,000 rows, 535 MB): 440,068 to 2,255 pages, 1.8 s to 29 ms, identical rows.
+  - Also identical after slot bumps for site walk, rosters, other and governments (30 to 50 ms against 1.3 to 1.5 s).
+  - A new test pins stale slots per class, including a missing class and one not in the map, and that no branch uses a sequential scan.
+  - Box, migration and schema tests pass, apart from the one harness-database test that fails on river too. tsc and eslint are clean.
+- Baseline (control plane, 12:20 AM EDT): Box built per hour 27, 56, 133, 364, 151, 95, 56, 73, 102 (4 PM to midnight EDT); 349,713 waiting.
+  - Built in the last 8 h by state: CT 145, VT 124, AK 69, TN 68, CO 66, WY 62, FL 59, GA 55, AZ 47, AL 45, AR 36, IA 33, CA 32, KS 31, UT 28, NV 27, ID 20, SC 19, DE 15, IN 12, MD 9, IL 9, PA 7, HI 7, MA 5, MS 5, KY 4, DC 3, WV 3, ND 2, NC 2, MN 2, OR 2, VI 1, NM 1, TX 1, OK 1.
+- Proof owed after release: 0 boxDue timeouts over the next 3 publish-now passes, and Box built per hour up, by state (/var/tmp/live/box-built.mjs).
 
 ### Release 109 live, 12:08 AM EDT (main 5a3f76a8b: PT-01 + MT-01)
 - Chrome reader checks on meanwhileusa.com all pass:

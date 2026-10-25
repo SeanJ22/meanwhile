@@ -41,7 +41,7 @@ test("the production progress SQL reads partitioned proof metadata and survives 
 test("a pass with too little time skips the actual cleanup block and still saves its results", async () => {
   const source = await readFile("scripts/routine-civic-data-runner.mts", "utf8");
   const operation = source.indexOf("    const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(");
-  const start = source.lastIndexOf("if (!PUBLISH_NOW", operation), end = source.indexOf("for (const run of readerRuns)", operation);
+  const start = source.lastIndexOf("if (!PUBLISH_NOW", operation), end = source.indexOf('step = "persisting the supervisor outcome";', operation);
   let saved = false;
   const code = transpileModule(`(async () => { ${source.slice(start, end)} await saveResults(); })()`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },

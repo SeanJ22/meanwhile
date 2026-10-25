@@ -12,9 +12,7 @@ import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runne
 
 import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
-import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
-import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
+
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -23,7 +21,6 @@ import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.
 import { promoteMeetingPartition, promoteMeetingPartitions, reconcileSuccessfulMeetingPartition, selectedMeetingPartitions } from "../scripts/ingest.ts";
 
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
-import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -115,43 +112,6 @@ function agendaDocument(row: Meeting, retrievedAt: string): AgendaDocument {
     collectedAt: retrievedAt,
     verifiedAt: null,
   };
-}
-
-class CountingMeetingStore extends MemoryRoutineDataStore {
-  readPromotionCalls = 0;
-  readPromotionsCalls = 0;
-  readPromotionIdentitiesCalls = 0;
-  latestReaderReadbacksCalls = 0;
-
-  reset(): void {
-    this.readPromotionCalls = 0;
-    this.readPromotionsCalls = 0;
-    this.readPromotionIdentitiesCalls = 0;
-    this.latestReaderReadbacksCalls = 0;
-  }
-
-  override async latestReaderReadbacks(candidateIds: readonly string[]) {
-    this.latestReaderReadbacksCalls++;
-    return super.latestReaderReadbacks(candidateIds);
-  }
-
-  override async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string) {
-    this.readPromotionCalls += 1;
-    return super.readPromotion<T>(recordClass, scope);
-  }
-
-  override async readPromotions<T = unknown>(
-    recordClass: RoutineRecordClass,
-    scopes: readonly string[],
-  ) {
-    this.readPromotionsCalls += 1;
-    return super.readPromotions<T>(recordClass, scopes);
-  }
-
-  override async readPromotionIdentities(recordClass: RoutineRecordClass, scopes: readonly string[]) {
-    this.readPromotionIdentitiesCalls += 1;
-    return super.readPromotionIdentities(recordClass, scopes);
-  }
 }
 
 test("an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence", async () => {
@@ -367,145 +327,6 @@ test("one meeting source/body failure retains only its LKG while another partiti
   // Hourly is owed 60 minutes after the success and admitted 25 minutes before.
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000 - 1, true), false);
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000, true), true);
-});
-
-test("meeting Reader repair reads each partition once and correlates exact partition receipts", async () => {
-  const store = new CountingMeetingStore();
-  const promoted = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, "aggregate-pima"), meeting(insite, FIRST, "aggregate-mesa")],
-    agendaDocuments: [],
-    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
-    generatedAt: FIRST,
-  });
-  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  // Publication stamps its own partition without waiting for the later fleet repair.
-  assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
-  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback?.status === "PASS"), true,JSON.stringify(promoted.map(p=>p.outcome.readerReadback)));
-  const before = await Promise.all(promoted.map(async ({ candidate }) => ({
-    contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
-    pointer: await store.readPromotion("MEETING", candidate.scope),
-    candidate: await store.readCandidate(candidate.id),
-    events: await store.events(candidate.id),
-  })));
-  store.reset();
-
-  const repairs = await repairMeetingReaderProjectionReadbacks(
-    store,
-    [legistar, insite],
-    SECOND,
-    "f".repeat(40),
-  );
-  assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  assert.equal(store.latestReaderReadbacksCalls, 1, "the bounded domain reads every latest receipt in one indexed request");
-  assert.equal(store.readPromotionCalls, 2, "each partition's payload crosses once, as its own Reader reads it");
-  assert.equal(store.readPromotionsCalls, 0, "no national batch of payloads is read");
-  assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
-    { contractId: legistar.id, ok: true },
-    { contractId: insite.id, ok: true },
-  ]);
-  for (const repair of repairs) {
-    assert.equal(repair.ok, true);
-    if (!repair.ok) continue;
-    assert.equal(repair.value.kind, "RECORDED");
-    if (repair.value.kind !== "RECORDED") continue;
-    const expected = promoted.find(({ candidate }) => candidate.scope ===
-      (repair.contractId === legistar.id ? legistar.scope : insite.scope));
-    assert.equal(repair.value.receipt.contractId, repair.contractId);
-    assert.equal(repair.value.receipt.versionId, expected?.candidate.id);
-    assert.equal(repair.value.receipt.status, "PASS");
-  }
-
-  for (const snapshot of before) {
-    const contract = snapshot.contractId === legistar.id ? legistar : insite;
-    const candidateId = snapshot.candidate!.candidate.id;
-    assert.deepEqual(await store.readPromotion("MEETING", contract.scope), snapshot.pointer);
-    assert.deepEqual(await store.readCandidate(candidateId), snapshot.candidate);
-    const afterEvents = await store.events(candidateId);
-    assert.deepEqual(afterEvents.slice(0, snapshot.events.length), snapshot.events);
-    assert.equal(afterEvents.length, snapshot.events.length + 1);
-    assert.equal(afterEvents.at(-1)?.state, "PROMOTED");
-    assert.match(afterEvents.at(-1)?.detail ?? "", new RegExp(`^${READER_PROJECTION_READBACK_PREFIX}`));
-  }
-
-  // The ordinary pass: every receipt is already current, so no partition's
-  // payload crosses the wire at all; the identity batch alone decides it.
-  store.reset();
-  const current = await repairMeetingReaderProjectionReadbacks(
-    store,
-    [legistar, insite],
-    new Date(Date.parse(SECOND) + 1).toISOString(),
-    "f".repeat(40),
-  );
-  assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
-  assert.equal(store.readPromotionIdentitiesCalls, 1);
-  assert.equal(store.latestReaderReadbacksCalls, 1);
-  assert.equal(store.readPromotionCalls + store.readPromotionsCalls, 0, "a current pass reads no partition payload");
-});
-
-test("a parent-selected meeting partition is checked from its handed snapshot after the registry changes", async () => {
-  const store = new CountingMeetingStore();
-  const snapshot = structuredClone(legistar);
-  const promoted = await promoteMeetingPartitions({
-    store, partitions: [snapshot], meetings: [meeting(snapshot, FIRST, "handed-snapshot")], agendaDocuments: [],
-    reports: [report(snapshot.meetingSource, FIRST)], generatedAt: FIRST,
-  });
-  assert.ok(promoted[0]!.outcome.promoted);
-  try {
-    installFixtureDoors(FIXTURE_DOOR_ROWS.filter(row => row.bodyId !== snapshot.bodyId));
-    assert.equal(MEETING_PARTITION_CONTRACTS.some(partition => partition.id === snapshot.id), false);
-    installMeetingPartitionSelection([snapshot]);
-    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(partition => partition.id), [snapshot.id]);
-    store.reset();
-    const [repair] = await repairMeetingReaderProjectionReadbacks(store, [snapshot], SECOND, "f".repeat(40));
-    assert.ok(repair?.ok, JSON.stringify(repair));
-    assert.equal(repair.value.kind, "RECORDED");
-    assert.equal(repair.value.receipt?.status, "PASS", "the child's newer door registry cannot replace the parent's exact partition");
-    assert.equal(store.readPromotionCalls, 1, "the handed partition's typed reader actually reads its saved version");
-  } finally { installFixtureDoors(); }
-});
-
-test("R31: meeting receipts carry across a commit that changed no Reader code without reading the partitions", async () => {
-  const store = new CountingMeetingStore();
-  const promoted = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, "attest-pima"), meeting(insite, FIRST, "attest-mesa")],
-    agendaDocuments: [],
-    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
-    generatedAt: FIRST,
-  });
-  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  const first = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], SECOND, "f".repeat(40));
-  assert.deepEqual(first.map((repair) => repair.ok ? repair.value.kind : repair.error), ["RECORDED", "RECORDED"]);
-
-  const later = (ms: number) => new Date(Date.parse(SECOND) + ms).toISOString();
-
-  // An unchanged closure: every partition's PASS carries to the new commit; nothing is read.
-  store.reset();
-  const attested = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(1), "e".repeat(40), {
-    attestor: () => ({ identical: true, detail: "closure byte-identical" }),
-  });
-  for (const repair of attested) {
-    assert.equal(repair.ok, true);
-    if (!repair.ok || repair.value.kind !== "RECORDED") throw new Error(`not recorded: ${repair.contractId}`);
-    assert.equal(repair.value.receipt.status, "PASS");
-    assert.equal(repair.value.receipt.verifierCodeSha, "e".repeat(40));
-    assert.match(repair.value.receipt.detail, /^ATTESTED, not re-read/);
-  }
-  assert.equal(store.readPromotionCalls + store.readPromotionsCalls, 0, "no partition payload crosses the wire");
-
-  // A changed closure: each partition is read again.
-  store.reset();
-  const reread = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(2), "d".repeat(40), {
-    attestor: () => ({ identical: false, detail: "closure changed" }),
-  });
-  assert.deepEqual(reread.map((repair) => repair.ok && repair.value.kind === "RECORDED" ? repair.value.receipt.status : "not recorded"), ["PASS", "PASS"]);
-  assert.equal(store.readPromotionCalls, 2, "a changed closure reads each partition once");
-  for (const repair of reread) {
-    if (repair.ok && repair.value.kind === "RECORDED") assert.doesNotMatch(repair.value.receipt.detail, /ATTESTED/);
-  }
 });
 
 test("a semantic refusal holds only the exact source/body partition", async () => {

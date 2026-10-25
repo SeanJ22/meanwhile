@@ -91,12 +91,20 @@
     "productionDatabaseRole": "readonly",
     "productionWrites": false
   },
-  "note": "All nine checks pass on the frozen final source. The three build-dependent skips are covered afterward by the bundle and 17 postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing. The replayed publisher and value writes remain unchanged through this revision.",
+  "note": "Historical results on 83347c05afdb5fc5a71d81ccb2d07530d02c7a5c: all nine checks passed. The three build-dependent skips were covered afterward by the bundle and 17 postbuild checks. Two optional acquisition repair tests remained skipped and are not claimed as passing. These results do not validate the pending River merge.",
   "pendingA4Integration": {
-    "riverCommit": "e84d06c431c271f6e7b28ca1cd41f69ccff45703",
+    "riverCommit": "4564542044b7627122ac425805d4615068eba355",
     "checkedSource": "83347c05a",
     "status": "NOT RUN",
     "reason": "Execution environment unavailable. Prior results are retained as historical evidence, not claimed for this merge.",
-    "databaseLimit": "Counts and small samples only; no new production copy or bulk replay."
+    "databaseLimit": "Counts and small samples only; no new production copy or bulk replay.",
+    "previousUnverifiedIntegration": "32cfc872f0ab100f2b89fbb3a877f6e24bfb257a",
+    "includes": [
+      "RB-A4 state-load catch-up b2bbdc183",
+      "DB-03 inventory-readback removal"
+    ],
+    "preparedAt": "2026-10-25 20:21:10 UTC",
+    "lastScheduledA1BuildPassedAt": "2026-10-25T09:38:00Z",
+    "scheduledBuildsFrom0958": "NOT RUN: execution environment unavailable"
   }
 }

@@ -12,16 +12,11 @@ import {
   HOT_READ_CATCH_UP_CONCURRENCY,
   HOT_READ_CATCH_UP_READ_BUDGET_MS,
   hotReadCatchUpAdmission,
-  repairDomainRacesHotReads,
-  routinePassSourceCatchUpDeadlineMs,
-  routinePassWorkDeadlineMs,
-  runRoutinePassWithHotReadCatchUp,
+  runHotReadCatchUp,
 } from "../../lib/civic-data/hot-read-catch-up.ts";
-import { ROUTINE_READER_CHILD_CONCURRENCY, routineReaderRepairDomains } from "../../lib/civic-data/reader-repair-protocol.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_PASS_BUDGET_MS,
-  ROUTINE_SOURCE_TASKS,
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../../lib/civic-data/runner.ts";
@@ -118,26 +113,6 @@ export class ControlledClock {
   }
 }
 
-const READER_DOMAINS = routineReaderRepairDomains();
-const SITTING_WINDOW_IDS = new Set(ROUTINE_SOURCE_TASKS
-  .filter((task) => task.contract.schedule?.kind === "SITTING_WINDOW")
-  .map(({ id }) => id));
-const RACING = READER_DOMAINS.filter((domain) => repairDomainRacesHotReads(domain, SITTING_WINDOW_IDS));
-/**
- * The runner launches the repairs a catch-up read could race first, four at a time. Each state's batches
- * occupy a lane until their timeout. A contract becomes available for catch-up when its own domain settles,
- * bounded by the repair phase's deadline or the replay's recorded repair end.
- */
-assert.ok(RACING.length > 0);
-const racingLanes = Array<number>(ROUTINE_READER_CHILD_CONCURRENCY).fill(0);
-const racingEnds = new Map<string, number>();
-for (const { id, timeoutMs } of RACING) {
-  const next = racingLanes.indexOf(Math.min(...racingLanes));
-  racingLanes[next]! += timeoutMs;
-  racingEnds.set(id, racingLanes[next]!);
-}
-export const RACING_REPAIRS_WORST_MS = Math.max(...racingLanes);
-
 /** A read's result as the pool reports it; the replay decides the read's outcome itself in `settled`. */
 function exited(command: BoundedChildCommand): BoundedChildResult {
   return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
@@ -150,10 +125,9 @@ export interface ReplayPassInput {
   /**
    * The rest of the pass: the other families' source reads and the Reader
    * repair, from a recorded pass, or `undefined` for a pass with nothing but
-   * these reads and a repair of `cleanRepairMs`.
+   * these source reads.
    */
   readonly recorded: RecordedPass | undefined;
-  readonly cleanRepairMs: number;
   /** The reads the pass admitted, in launch order. */
   readonly launched: readonly RoutineSourceTask[];
   /** Every sitting-window task, with its clock as this pass read it at admission. */
@@ -185,14 +159,11 @@ export async function replayPass(input: ReplayPassInput): Promise<ReplayPassResu
   const launchedIds = new Set(input.launched.map(({ id }) => id));
   const unsettledSource = new Set(input.launched.map(({ id }) => id));
   const laneLastEndedMs = new Map<string, number>();
-  const repairingContractIds = new Set<string>();
   // What the recorded pass spent beyond these reads: its source phase ran the
-  // other families' reads beside them, one child of the four, and its repair
-  // followed. The nine passes with no dated repair count as all repair, the
-  // phase in which catch-up waits for the gate.
+  // other families' reads beside them, one child of the four. The removed
+  // inventory readback contributes no time to the new pass.
   const sourceMs = recorded?.sourceMs ?? REPLAY_READS_START_MS;
   const otherFamiliesMs = Math.max(0, sourceMs - REPLAY_READS_START_MS);
-  const repairMs = recorded === undefined ? input.cleanRepairMs : recorded.durationMs - sourceMs;
   const command = (task: RoutineSourceTask): BoundedChildCommand => ({
     id: task.id, failureDomain: task.acquisitionFailureDomain, executable: "replay", args: [],
   });
@@ -210,7 +181,6 @@ export async function replayPass(input: ReplayPassInput): Promise<ReplayPassResu
   };
   const options = { cwd: "", env: process.env, sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS };
   const sourceDeadlineMs = admittedAtMs + ROUTINE_PASS_BUDGET_MS - Math.floor(ROUTINE_PASS_BUDGET_MS / 3);
-  const repairDeadlineMs = admittedAtMs + ROUTINE_PASS_BUDGET_MS - Math.floor(ROUTINE_PASS_BUDGET_MS / 6);
 
   await clock.sleepUntil(admittedAtMs + REPLAY_READS_START_MS);
   const sourceTasks: (RoutineSourceTask | undefined)[] = [...(otherFamiliesMs > 0 ? [undefined] : []), ...input.launched];
@@ -228,49 +198,33 @@ export async function replayPass(input: ReplayPassInput): Promise<ReplayPassResu
   }, launch);
 
   const clockReads = input.windowed.map((task) => ({ task, ok: true as const, clock: input.passClocks.get(task.id) }));
-  const limits = {
-    SOURCE: Math.min(sourceDeadlineMs, routinePassSourceCatchUpDeadlineMs(admittedAtMs, READER_DOMAINS)),
-    REPAIR: Math.min(repairDeadlineMs, routinePassWorkDeadlineMs(admittedAtMs, READER_DOMAINS)),
-  };
-  let sourceEndedAtMs = Number.NaN;
-  const pass = await runRoutinePassWithHotReadCatchUp({
-    source,
-    startRepair: () => {
-      sourceEndedAtMs = clock.now();
-      const repairEndsMs = sourceEndedAtMs + repairMs;
-      const releases = RACING.filter(domain => domain.contracts.some(contract => byId.has(contract.id))).map(domain => {
-        for (const contract of domain.contracts) repairingContractIds.add(contract.id);
-        return clock.sleepUntil(Math.min(repairEndsMs, repairDeadlineMs, sourceEndedAtMs + racingEnds.get(domain.id)!))
-          .then(() => { for (const contract of domain.contracts) repairingContractIds.delete(contract.id); });
-      });
-      return {
-        repair: Promise.all([clock.sleepUntil(repairEndsMs), ...releases]),
-        unblocked: Promise.resolve(),
-      };
-    },
+  const limitMs = sourceDeadlineMs;
+  const pass = await runHotReadCatchUp({
+    work: source,
+    unblocked: Promise.resolve(),
     now: clock.now,
     sleepUntil: clock.sleepUntil,
     concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
-    admit: (phase, nowMs, slots, runningLanes) => hotReadCatchUpAdmission({
+    admit: (nowMs, slots, runningLanes) => hotReadCatchUpAdmission({
       nowMs,
       candidates: input.windowed
-        .filter(({ id }) => !launchedIds.has(id) && !repairingContractIds.has(id))
+        .filter(({ id }) => !launchedIds.has(id))
         .map((task) => ({ task, clock: input.passClocks.get(task.id), lastConsideredAt: input.passClocks.get(task.id)?.lastAttemptedAt ?? null })),
       clockReads,
       statedEnds: new Map(),
       laneLastEndedMs,
       busyLanes: new Set([...runningLanes, ...[...unsettledSource].map((id) => byId.get(id)!.acquisitionFailureDomain)]),
       slots,
-      limitMs: limits[phase],
+      limitMs,
     }),
     read: async (task, atMs) => {
       launchedIds.add(task.id);
-      const readDeadlineMs = Math.min(limits.REPAIR, atMs + HOT_READ_CATCH_UP_READ_BUDGET_MS);
+      const readDeadlineMs = Math.min(limitMs, atMs + HOT_READ_CATCH_UP_READ_BUDGET_MS);
       await runBoundedChildPass([command(task)], { ...options, deadlineMs: readDeadlineMs, concurrency: 1, onSettled: () => settle(task) }, launch);
     },
   });
-  assert.deepEqual(pass.errors, []);
-  return { endedAtMs: clock.now(), sourceEndedAtMs, catchUpReads: pass.reads.length };
+  assert.equal(pass.error, undefined);
+  return { endedAtMs: clock.now(), sourceEndedAtMs: clock.now(), catchUpReads: pass.reads.length };
 }
 
 /** The pilot admits the lane on the first one-minute tick at least five minutes after the last pass started and after it ended. */

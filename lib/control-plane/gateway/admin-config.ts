@@ -18,7 +18,6 @@ export interface AdminConfig {
   readonly methodStandings?: readonly import("../../method/fix-status.ts").MethodStanding[];
   readonly scheduledOrders?: readonly import("./scheduled-orders.ts").ScheduledOrder[];
   readonly settingHistory?: readonly import("../settings.ts").SettingChange[];
-  readonly owedOverlay?: import("../../coverage/owed-overlay.ts").OwedOverlayRecord;
   readonly routineRefreshRequests?: readonly import("../../civic-data/owner-refresh.ts").RoutineRefreshRequest[];
   /** Scoped, expiring requests that bring one meeting partition's next read forward. */
   readonly routineDueRequests?: readonly import("../../civic-data/routine-due-request.ts").RoutineDueRequest[];

@@ -761,3 +761,19 @@ test("a county's complete street-only address queries its known state and keeps 
  const conflict=structuredClone(census);conflict.result.addressMatches[0].addressComponents.state="GA";
  assert.equal(verifiedCensusVenuePoint("1230 W. Cherry St, WI",conflict),null);
 });
+
+test("a board's own published agenda address precedes its government's separate office",async()=>{
+ const division="ocd-division/country:us/state:nc/county:wake",body=`${division}#governing`;
+ const header=readFileSync(new URL("./fixtures/mt01-wake-agenda-header.txt",import.meta.url),"utf8");let reads=0;
+ const offices=await publishedPinOffices(async()=>++reads===1?[{id:body,name:"Board of Commissioners",government_name:"County of Wake",
+  government_address:"1 Government Plaza, Raleigh, NC",government_source:SOURCE}]:[{body_id:body,meeting_id:"legistar:wake:6264",
+  jurisdiction:"COUNTY OF WAKE",url:"https://wake.legistar1.com/wake/meeting-agenda.pdf",source_org:"Wake County",collected_at:NOW,header}],[body]);
+ assert.equal(offices.get(body)?.officeContact?.address,"301 South McDowell Street, Raleigh, NC");
+ assert.equal(offices.get(body)?.governmentOffice?.address,"1 Government Plaza, Raleigh, NC");
+ const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-wake-office-census.json",import.meta.url),"utf8"));
+ const source={...meeting("Wake County Justice Center"),id:"legistar:wake:6264",bodyId:body,ocdId:division,jurisdiction:"COUNTY OF WAKE"};
+ const requests:string[]=[];const result=await placePublishedMeetingPins({meetings:[source],offices,fetchImpl:async input=>{
+  requests.push(new URL(String(input)).searchParams.get("address")!);return response(census);
+ }});
+ assert.deepEqual(requests,["301 South McDowell Street, Raleigh, NC"]);assert.equal(result.meetings[0].mapPin?.basis,"BODY_OFFICE");
+});

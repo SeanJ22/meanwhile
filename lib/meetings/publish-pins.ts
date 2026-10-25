@@ -130,7 +130,7 @@ export async function publishedPinOffices(
       const venue=agendaMeetingAddress(row.header,state);
       if(venue&&typeof row.meeting_id==="string"&&!body.meetingAddresses?.some(address=>address.meetingId===row.meeting_id))
         (body.meetingAddresses??=[]).push({meetingId:row.meeting_id,bodyId:id,name:venue,address:venue,basis:"MEETING",provenance});
-      if(!body.officeContact?.address&&!body.governmentOffice?.address){
+      if(!body.officeContact?.address){
         const address=agendaLetterheadOffice(row.header,String(row.jurisdiction),state);
         if(address)body.officeContact={address,phone:null,provenance};
       }

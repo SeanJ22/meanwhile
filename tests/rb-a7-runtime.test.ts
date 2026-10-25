@@ -9,7 +9,7 @@ import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 test("the rebuild worker runs every minute without a public HTTP route", () => {
-  assert.deepEqual(config, { schedule: "* * * * *", background: true });
+  assert.deepEqual(config, { schedule: "* * * * *", background: true, memory: 2048 });
 });
 
 test("initial page publication resumes missing places and bodies before the reader is deployed", async () => {
@@ -86,10 +86,12 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
     bodies:async()=>['az:city:phoenix#governing'],
     place:async zip=>zip==='85002'?null:{ids:['ocd-division/country:us/state:ca',root],partial:[],samples:1},
   });
-  assert.equal(n,1);
-  assert.deepEqual(saved,[{id:'zip:85001',name:'ZIP 85001',state:'AZ',parent_id:root}]);
+  assert.equal(n,2);
+  assert.deepEqual(saved,[{id:'zip:85001',name:'ZIP 85001',state:'AZ',parent_id:root},
+    {id:'zip:85002',name:'ZIP 85002',state:'AZ',parent_id:null}]);
   assert.deepEqual(dependencies,[{page_id:'zip:85001',entity_id:'ocd-division/country:us/state:ca'},
-    {page_id:'zip:85001',entity_id:root},{page_id:'zip:85001',entity_id:'az:city:phoenix#governing'}]);
+    {page_id:'zip:85001',entity_id:root},{page_id:'zip:85001',entity_id:'az:city:phoenix#governing'},
+    {page_id:'zip:85002',entity_id:'az:city:phoenix#governing'}]);
 });
 
 test("runtime-only bodies get their existing canonical IDs without overwriting held subjects",async()=>{

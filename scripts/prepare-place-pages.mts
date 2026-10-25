@@ -6,6 +6,8 @@ import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { productionBuildCanApply } from "./db-apply.mts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
+export { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
 import { postalArea,postalTable } from "../lib/geo/postal.ts";
 import { lookupZcta } from "../lib/geo/zcta.ts";
 import { readZipPlace } from "../lib/reader/national.ts";
@@ -25,31 +27,6 @@ interface ZipSeedOptions {
   readonly place?: typeof readZipPlace;
   readonly point?: typeof lookupZcta;
   readonly bodies?: (state:string,point:{lat:number;lng:number})=>Promise<readonly string[]>;
-}
-
-/** Registry-only boards already serve readers; give their existing identities their own body pages. */
-export async function seedRuntimeBodyPageSubjects(query:Query,states:readonly string[]=REGISTRY_STATES):Promise<number> {
-  let inserted=0;
-  for(const state of states) {
-    const [result]=await query(`WITH runtime AS (
-      SELECT reader_payload_node(reader_payload_node(payload)->'registry') AS registry
-      FROM civic_data_promotions WHERE record_class='REGISTRY_RUNTIME_BINDING'
-        AND key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
-    ), bodies AS (
-      SELECT reader_payload_node(b.item) AS value FROM runtime r,LATERAL reader_payload_members(r.registry->'bodies') b
-    ), seeded AS (
-      INSERT INTO entity(id,kind,name,state,parent_id)
-        SELECT coalesce(alias.entity_id,b.value->>'id'),'body',coalesce(b.value->>'name',b.value->>'id'),$1,parent.id
-        FROM bodies b
-        LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=b.value->>'id'
-        LEFT JOIN entity canonical ON canonical.id=alias.entity_id
-        LEFT JOIN entity parent ON parent.id=b.value->>'ocdId' AND parent.kind='place'
-        WHERE nullif(b.value->>'id','') IS NOT NULL AND (alias.entity_id IS NULL OR canonical.state=$1::char(2))
-        ORDER BY b.value->>'id' ON CONFLICT(id) DO NOTHING RETURNING id
-    ) SELECT count(*)::int AS n FROM seeded`,[state]);
-    inserted+=Number(result?.n ?? 0);
-  }
-  return inserted;
 }
 
 /** ZIPs are reader selections, so each routed ZIP gets one ready answer of its own. */
@@ -82,10 +59,9 @@ export async function seedZipPagePlaces(query: Query, options: ZipSeedOptions = 
       const position=point(zip);
       if(!position)continue;
       const entry=await place(zip);
-      if(!entry)continue;
-      const parent=entry.ids.map(stateOcdIdFrom).find(id=>id?.endsWith(`:${state.toLowerCase()}`)) ?? null;
+      const parent=entry?.ids.map(stateOcdIdFrom).find(id=>id?.endsWith(`:${state.toLowerCase()}`)) ?? null;
       batch.push({id:`zip:${zip}`,name:`ZIP ${zip}`,state,parent_id:parent});
-      dependencies.push(...[...entry.ids,...entry.fringe ?? [],...await bodies(state,position)]
+      dependencies.push(...[...entry?.ids ?? [],...entry?.fringe ?? [],...await bodies(state,position)]
         .map(entity_id=>({page_id:`zip:${zip}`,entity_id})));
       if(batch.length===500)await flush();
     }

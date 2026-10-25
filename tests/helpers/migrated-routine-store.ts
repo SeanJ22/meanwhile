@@ -17,6 +17,9 @@ export async function withMigratedRoutineStore(
   for (const file of ["0025_typical_fixer.sql", "0026_lame_sunset_bain.sql", "0027_pdc_candidate_history_shape.sql", "0028_wise_ikaris.sql", "0029_unchanged_confirmation_receipts.sql", "0031_civic_payload_parts.sql"]) {
     await pg.exec(readFileSync(new URL(`../../lib/db/migrations/${file}`, import.meta.url), "utf8"));
   }
+  const readerFunctions = readFileSync(new URL("../../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")
+    .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
+  for (const sql of readerFunctions) await pg.exec(sql);
   await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8"));
   const priorFetch = neonConfig.fetchFunction;
   const names = ["DATABASE_URL", "WTP_DB_ROLE", "WTP_VITAL_SIGNS_REPORT", "WTP_RUNTIME_MODE", "WTP_CONTROL_PLANE_DATABASE_URL"];

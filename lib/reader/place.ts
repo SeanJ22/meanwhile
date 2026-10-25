@@ -41,6 +41,12 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
 
 const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
+const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());
+
+/** Cache the exact pages selected, including canonical bodies reached through an alias. */
+export function placePageCacheIds(place: PlacePackage): readonly string[] {
+  return pageIds.get(place) ?? [];
+}
 
 export function readPlacePackage(input:PlaceInput,query?:Query|null):Promise<PlacePackage> {
   if(query!==undefined || currentReaderAuthorityEdge())return loadPlacePackage(input,query===undefined?factReader():query);
@@ -80,7 +86,9 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
     && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page)throw new Error("PLACE_PAGE_NOT_BUILT");
-    return saved.page as PlacePackage;
+    const place=saved.page as PlacePackage;
+    pageIds.set(place,[input.placeId]);
+    return place;
   }
   const rows=await query(PLACE_PAGES_SQL,[input.state.toUpperCase(),input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],
     input.neighbors??false,input.allBodies??false,input.includeHistory??false]);
@@ -89,5 +97,7 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
   const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
   const merged=mergePlaceRows(canonical,rows.map(row=>({...row.row as Record<string,unknown>,page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
-  return composePlaceRow(canonical,merged);
+  const place=await composePlaceRow(canonical,merged);
+  pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
+  return place;
 }

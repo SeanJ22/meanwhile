@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-10-25T03:50:17.758Z",
+  "capturedAt": "2026-10-25T05:22:07.473Z",
   "tool": "@netlify/zip-it-and-ship-it",
   "toolVersion": "16.5.1",
   "function": "rebuild-place-pages",
@@ -10,28 +10,49 @@
   "runtimeAPIVersion": 2,
   "background": true,
   "schedule": "* * * * *",
-  "zipBytes": 4927073,
+  "configuredMemoryMiB": 2048,
+  "configuredConcurrency": 4,
+  "zipBytes": 4927010,
   "unpackedFiles": 315,
-  "unpackedBytes": 19227861,
+  "unpackedBytes": 19228319,
   "includedGeographyFiles": 103,
+  "largeStateGeometryFiles": [],
+  "sharedRuntimeSubjectSeederIncluded": true,
   "coldWorkerImport": {
     "imported": true,
     "config": {
       "schedule": "* * * * *",
-      "background": true
+      "background": true,
+      "memory": 2048
     },
-    "elapsedMs": 503.89737599999995,
-    "networkCalls": 0
+    "elapsedMs": 554.867171,
+    "networkCalls": 0,
+    "memory": {
+      "rssBeforeBytes": 29360128,
+      "rssAfterBytes": 219844608,
+      "peakRssBytes": 274264064,
+      "heapUsedBytes": 31614016,
+      "scope": "Local cold module import only"
+    },
+    "handlerInvoked": false
   },
   "coldBootstrapImport": {
     "imported": true,
-    "elapsedMs": 49.49660900000001,
+    "elapsedMs": 47.14462300000001,
     "networkCalls": 0,
-    "awsRuntimeStub": "streamifyResponse only; handler not invoked"
+    "memory": {
+      "rssBeforeBytes": 29229056,
+      "rssAfterBytes": 43909120,
+      "peakRssBytes": 43909120,
+      "heapUsedBytes": 9804456,
+      "scope": "Local cold module import only"
+    },
+    "awsRuntimeStub": "streamifyResponse only; handler not invoked",
+    "handlerInvoked": false
   },
   "packagedGeography": {
     "success": true,
-    "elapsedMs": 2604.528584,
+    "elapsedMs": 3465.0943780000002,
     "selections": [
       {
         "zip": "10001",
@@ -39,7 +60,7 @@
         "divisionIds": 4,
         "bodyIds": 0,
         "namedDivisions": 0,
-        "elapsedMs": 31.334547999999927
+        "elapsedMs": 7.229675999999927
       },
       {
         "zip": "85201",
@@ -47,7 +68,7 @@
         "divisionIds": 9,
         "bodyIds": 0,
         "namedDivisions": 0,
-        "elapsedMs": 2090.396618
+        "elapsedMs": 2903.3793330000003
       }
     ],
     "requests": [
@@ -55,7 +76,163 @@
         "url": "https://meanwhileusa.com/states/az/geo/body-territories.geojson",
         "status": 200
       }
-    ]
+    ],
+    "memory": {
+      "rssBeforeBytes": 38395904,
+      "rssAfterBytes": 219508736,
+      "peakRssBytes": 247238656,
+      "heapUsedBytes": 41583448,
+      "scope": "Local packaged import and NY/AZ geography only; no database rebuild workload"
+    },
+    "handlerInvoked": false,
+    "inspection": "Packaged worker copy with a local test-only export of its existing placeBuildInput; packaged worker itself unmodified"
   },
-  "scope": "Local packaging and imports. Geometry reads the production public CDN into a temporary local artifact store. No deployed handler invocation, production database writes, production blob writes or deployment."
+  "fourBodyCapacity": {
+    "observedAt": "2026-10-25T05:20:48.691Z",
+    "scope": "Four concurrent packaged buildPageBody body-only jobs, real production readonly HTTP; all completed results retained through measurement. No deployed handler, queue, page-store or production mutations.",
+    "role": "readonly",
+    "productionWrites": 0,
+    "configuredConcurrency": 4,
+    "concurrentJobs": 4,
+    "queryCount": 4,
+    "coldImportMs": 516.4638299999999,
+    "elapsedMs": 3372.557141,
+    "rssBeforeBytes": 44359680,
+    "rssAfterBytes": 355053568,
+    "peakRssBytes": 423718912,
+    "retainedResultsBytes": 25294828,
+    "spareMarginBytes": 805306368,
+    "observedMinimumMemoryIncludingMarginBytes": 1229025280,
+    "productionMemoryLimitBytes": null,
+    "productionWorkersAtMargin": null,
+    "productionMarginVerified": false,
+    "selection": "One large current body calendar per requested state, ranked by agenda document count then meeting count; metadata only.",
+    "jobs": [
+      {
+        "input": {
+          "state": "CA",
+          "scope": "source:legistar:body:ocd-division%2Fcountry%3Aus%2Fstate%3Aca%2Fcounty%3Acontra_costa%23body%3Aadvisory-council-on-aging:route:77bdecc42e7c3cc2",
+          "bodyId": "ocd-division/country:us/state:ca/county:contra_costa#body:advisory-council-on-aging",
+          "metadata": {
+            "meetings": 34,
+            "documents": 34
+          }
+        },
+        "elapsedMs": 1729.021316,
+        "sizes": {
+          "currentBytes": 519322,
+          "historyBytes": 519322,
+          "readyCurrentBytes": 812242,
+          "readyHistoryBytes": 812242
+        },
+        "counts": {
+          "currentBodies": 1,
+          "currentMeetings": 34,
+          "historyMeetings": 34
+        }
+      },
+      {
+        "input": {
+          "state": "FL",
+          "scope": "source:granicus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Afl%2Fschool_district%3Abroward_county_school_district%23board:route:cf6451f44114a4c6",
+          "bodyId": "ocd-division/country:us/state:fl/school_district:broward_county_school_district#board",
+          "metadata": {
+            "meetings": 361,
+            "documents": 25
+          }
+        },
+        "elapsedMs": 2574.5896359999997,
+        "sizes": {
+          "currentBytes": 2613519,
+          "historyBytes": 2613519,
+          "readyCurrentBytes": 7057990,
+          "readyHistoryBytes": 7057990
+        },
+        "counts": {
+          "currentBodies": 1,
+          "currentMeetings": 361,
+          "historyMeetings": 361
+        }
+      },
+      {
+        "input": {
+          "state": "TX",
+          "scope": "source:granicus:body:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fplace%3Abrookshire%23governing:route:d2b37b8cd463153a",
+          "bodyId": "ocd-division/country:us/state:tx/place:brookshire#governing",
+          "metadata": {
+            "meetings": 167,
+            "documents": 27
+          }
+        },
+        "elapsedMs": 1502.6098240000001,
+        "sizes": {
+          "currentBytes": 334835,
+          "historyBytes": 334835,
+          "readyCurrentBytes": 939924,
+          "readyHistoryBytes": 939924
+        },
+        "counts": {
+          "currentBodies": 1,
+          "currentMeetings": 167,
+          "historyMeetings": 167
+        }
+      },
+      {
+        "input": {
+          "state": "WI",
+          "scope": "source:legistar-insite:body:ocd-division%2Fcountry%3Aus%2Fstate%3Awi%2Fcounty%3Amilwaukee%23body%3Acommittee-on-finance-budget:route:8b6465cf061bff05",
+          "bodyId": "ocd-division/country:us/state:wi/county:milwaukee#body:committee-on-finance-budget",
+          "metadata": {
+            "meetings": 9,
+            "documents": 9
+          }
+        },
+        "elapsedMs": 1748.625708,
+        "sizes": {
+          "currentBytes": 248263,
+          "historyBytes": 248263,
+          "readyCurrentBytes": 121173,
+          "readyHistoryBytes": 121173
+        },
+        "counts": {
+          "currentBodies": 1,
+          "currentMeetings": 9,
+          "historyMeetings": 9
+        }
+      }
+    ],
+    "queries": [
+      {
+        "state": "TX",
+        "bodyId": "ocd-division/country:us/state:tx/place:brookshire#governing",
+        "elapsedMs": 1405.16251,
+        "responseBytes": 351448
+      },
+      {
+        "state": "CA",
+        "bodyId": "ocd-division/country:us/state:ca/county:contra_costa#body:advisory-council-on-aging",
+        "elapsedMs": 1698.348693,
+        "responseBytes": 534423
+      },
+      {
+        "state": "WI",
+        "bodyId": "ocd-division/country:us/state:wi/county:milwaukee#body:committee-on-finance-budget",
+        "elapsedMs": 1727.103955,
+        "responseBytes": 254773
+      },
+      {
+        "state": "FL",
+        "bodyId": "ocd-division/country:us/state:fl/school_district:broward_county_school_district#board",
+        "elapsedMs": 2377.280238,
+        "responseBytes": 2687958
+      }
+    ],
+    "configuredMemoryBytes": 2147483648,
+    "configuredMemoryMiB": 2048,
+    "sampleSpareUnderConfiguredBudgetBytes": 1723764736,
+    "sampleFitsRequestedMargin": true,
+    "sampleWorkersAtConfiguredMargin": 4,
+    "configurationStatus": "This branch declares 2048 MiB in the function config and extracted native function metadata. This worker is not deployed. The local four-body sample fits the requested spare margin under that budget; no deployed or all-body capacity claim is made."
+  },
+  "scope": "Local native packaging, cold imports and packaged geography. Geometry reads only the public production CDN into a temporary local artifact store. Four selected large body builds use production SQL through role readonly and do not call the deployed handler, queue, page store or any mutation. No production database/blob writes or deployment."
 }

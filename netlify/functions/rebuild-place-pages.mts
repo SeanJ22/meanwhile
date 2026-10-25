@@ -3,7 +3,8 @@ import { resolveProductionWriteHandle } from "../../lib/db/write-handle.ts";
 import { rebuildPlacePages } from "../../lib/reader/place-builder.ts";
 
 /** Netlify invokes this on the published production deploy, including when the runner is offline. */
-export const config = { schedule: "* * * * *", background: true };
+// Four real body builds peaked at 403 MiB; 2 GiB leaves the required 0.75 GiB spare.
+export const config = { schedule: "* * * * *", background: true, memory: 2048 };
 
 export default async function rebuildPages(): Promise<void> {
   const handle = resolveProductionWriteHandle();

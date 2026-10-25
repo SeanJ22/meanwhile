@@ -66,6 +66,7 @@ import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda
 import { freezeDurableJson } from "./durable-json.ts";
 import { projectionKey } from "./projection-key.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
+import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
@@ -2421,9 +2422,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
     const previousModel = needsGeography && prior?.payload ? await this.loadPayload(prior.payload, candidate.scope) : null;
-    await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope, {
+    const publicationScope = readerCacheScopeForPublication(candidate.scope, {
       recordClass: candidate.recordClass, readModels: [candidate.readModel, previousModel],
-    }), this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)
+    });
+    if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") await seedRuntimeBodyPageSubjects(
+      (text, params) => this.readerRows(text, params), publicationScope.states ?? []);
+    await invalidateReaderCache(publicationScope, this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)
       ? (text, params) => this.readerRows(text, params) : null);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),

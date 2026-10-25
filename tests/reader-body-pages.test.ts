@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readMeetingBodies } from "../lib/meetings/edge-serving.ts";
+import { readMeetingBodies, readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { snapshotCounts } from "../lib/meetings/snapshot.ts";
-import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage } from "../lib/reader/place.ts";
+import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, placePageCacheIds } from "../lib/reader/place.ts";
 import { composePlaceRow } from "../lib/reader/place-decode.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -87,6 +87,7 @@ test("state selection reads individual body contexts and direct pages select sep
       return rows;
     });
     assert.equal(reads, 1);
+    assert.deepEqual(placePageCacheIds(state),[FIRST,SECOND]);
     assert.deepEqual(state.meetings.map(row => row.id).sort(), [current.id, other.id].sort());
     await seedPlacePages(query, { state: "WA", divisionIds: [] });
     const empty = await readPlacePackage({ state: "WA", divisionIds: [], allBodies: true }, async (text, params) => {
@@ -99,12 +100,14 @@ test("state selection reads individual body contexts and direct pages select sep
     const alias = await readPlacePackage({ state: "AZ", divisionIds: [], bodyIds: ["former-council-id"] }, query);
     assert.deepEqual(alias.bodies.map(body => body.id), [FIRST]);
     assert.deepEqual(alias.meetings.map(row => row.id), [current.id]);
+    assert.deepEqual(placePageCacheIds(alias),[FIRST],"cache tags use the selected canonical page instead of its requested alias");
     for (const includeHistory of [false, true]) {
       const ready = await readPlacePackage({ state: "AZ", placeId: FIRST, divisionIds: [], includeHistory }, async (text, params) => {
         assert.equal(text, READY_PLACE_SQL);
         return query(text, params);
       });
       assert.deepEqual(ready.meetings.map(row => row.id).sort(), (includeHistory ? [past.id, current.id] : [current.id]).sort());
+      assert.deepEqual(placePageCacheIds(ready),[FIRST]);
     }
     const zip = "zip:85701";
     await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Fixture ZIP','AZ')", [zip]);
@@ -146,4 +149,68 @@ test("a worker that omits agendas reads the compact historical body page and kee
   assert.deepEqual(loaded?.snapshot.meetings.map(meeting => meeting.id), [old.id, soon.id]);
   assert.deepEqual(loaded?.snapshot.agendaDocuments, []);
   await iterator.return(undefined);
+});
+
+test("an explicit state resolves a short body alias for current and held agendas without opening a phantom national page", async () => {
+  const {pg,publish} = await migratedReaderDb();
+  const query:Query = async(text,params=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  const root="ocd-division/country:us/state:or", division=`${root}/county:multnomah`, body="or:special:metro#governing", alias="old-metro-id";
+  const country="ocd-division/country:us", national=`${country}#national-board`;
+  const current=meeting(body,"oregon-current",AT), past=meeting(body,"oregon-past","2020-01-01T12:00:00Z");
+  const arizona=meeting(FIRST,"arizona-current",AT), federal=meeting(national,"national-current",AT);
+  try {
+    await query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ($1,'place','Oregon','OR',NULL),($2,'place','Multnomah','OR',$1),($3,'body','Metro','OR',$2),
+      ($4,'body','Arizona Council','AZ',NULL),($5,'place','United States',NULL,NULL),($6,'body','National Board','US',$5)`,
+    [root,division,body,FIRST,country,national]);
+    await query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)",[body,division]);
+    await query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2),($3,'body-alias','national-board-alias')",[body,alias,national]);
+    for(const [state,bodyId,ocdId] of [["OR",body,division],["AZ",FIRST,FIRST.split("#")[0]!]]) {
+      await publish({id:`runtime-${state}`,recordClass:"REGISTRY_RUNTIME_BINDING",scope:`US-${state}:reader-registry-runtime`,sourceId:"fixture",at:AT,
+        value:{formatVersion:1,registry:{generatedAt:AT,bodies:[{id:bodyId,ocdId,name:"Public Board"}],divisions:[]},
+          bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}}});
+    }
+    for(const [id,row,history] of [["current",current,false],["past",past,true],["arizona",arizona,false],["national",federal,false]] as const) {
+      await publish({id,recordClass:"MEETING",scope:`source:fixture:body:${encodeURIComponent(row.bodyId!)}${history?":history":""}`,sourceId:"fixture",at:AT,
+        value:{formatVersion:1,generatedAt:AT,meetings:[row],sources:[],counts:snapshotCounts([row],0),
+          agendaDocuments:[{id:`document:${id}`,meetingId:row.id,documentUrl:`https://example.gov/${id}`,text:`Exact ${id} agenda`}]}});
+    }
+    await seedPlacePages(query,{state:"OR",divisionIds:[],bodyIds:[alias],neighbors:true});
+    await seedPlacePages(query,{state:"AZ",divisionIds:[],bodyIds:[FIRST]});
+    await seedPlacePages(query,{state:"US",divisionIds:[country],bodyIds:[national]});
+    const states:string[] = [];
+    const saved:Query = async(text,params=[]) => {
+      assert.equal(text,PLACE_PAGES_SQL,"alias state selection adds no identity query");
+      states.push(String(params[0]));
+      return query(text,params);
+    };
+    for(const window of ["SHOWN","HELD"] as const) {
+      states.length=0;
+      let context:ReaderMeetingsContext|undefined;
+      const read=await readReaderEdgeMeetings({states:["or"],bodyIds:[alias],neighbors:true,window,includeAgenda:true,
+        meetingIds:[window==="HELD"?past.id:current.id],now:AT,settings:meetingSettingsFromValues(),query:saved,onContext:value=>{context=value;}});
+      assert.equal(read.kind,"PROMOTED",JSON.stringify(read));
+      assert.deepEqual(states,["OR"],"the explicit state supplies the short alias's only page selection");
+      if(read.kind!=="PROMOTED")throw Error("The alias's saved calendar was not read");
+      assert.deepEqual(read.value.meetings.map(row=>row.id).sort(),(window==="HELD"?[past.id,current.id]:[current.id]).sort());
+      assert.deepEqual(read.value.agendaDocuments.map(row=>row.text).sort(),(window==="HELD"?["Exact past agenda","Exact current agenda"]:["Exact current agenda"]).sort());
+      assert.deepEqual(context?.states,["OR"]);
+      assert.deepEqual(context?.registry?.registry.bodies.map(row=>row.id),[body],"the alias keeps its canonical registry context");
+    }
+    states.length=0;
+    const combined=await readReaderEdgeMeetings({states:["OR"],bodyIds:[alias,FIRST],now:AT,query:saved,settings:meetingSettingsFromValues()});
+    assert.equal(combined.kind,"PROMOTED",JSON.stringify(combined));
+    assert.deepEqual(states,["OR","AZ"],"an independently qualified body still selects its own state");
+    if(combined.kind==="PROMOTED")assert.deepEqual(combined.value.meetings.map(row=>row.id).sort(),[current.id,arizona.id].sort());
+    states.length=0;
+    const nationalRead=await readReaderEdgeMeetings({states:["US"],bodyIds:["national-board-alias"],now:AT,query:saved,settings:meetingSettingsFromValues()});
+    assert.equal(nationalRead.kind,"PROMOTED",JSON.stringify(nationalRead));
+    assert.deepEqual(states,["US"]);
+    if(nationalRead.kind==="PROMOTED")assert.deepEqual(nationalRead.value.meetings.map(row=>row.id),[federal.id]);
+    states.length=0;
+    const divisionRead=await readReaderEdgeMeetings({states:["OR"],ocdIds:[country],bodyIds:[national],now:AT,query:saved,settings:meetingSettingsFromValues()});
+    assert.equal(divisionRead.kind,"PROMOTED",JSON.stringify(divisionRead));
+    assert.deepEqual(states,["OR","US"],"a named national division retains its national selection");
+    if(divisionRead.kind==="PROMOTED")assert.deepEqual(divisionRead.value.meetings.map(row=>row.id),[federal.id]);
+  } finally {await pg.close();}
 });

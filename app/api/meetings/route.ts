@@ -4,7 +4,7 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
-import { readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
+import { placePageCacheIds, readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
 import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
@@ -69,7 +69,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const divisionIds = new Set(ids);
     const registry = place.registry;
     const bodies = registry.registry.bodies;
-    const selectedBodyIds = new Set([...meetingBodyIds(bodies, divisionIds), ...territoryBodies(lat, lng, territory)]);
+    const territoryBodyIds = territoryBodies(lat, lng, territory);
+    const selectedBodyIds = new Set([...meetingBodyIds(bodies, divisionIds), ...territoryBodyIds]);
     const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionIds, snapshotSourceFor(place.snapshot), settings,
       selectedBodyIds, new Set(bodies.map(body => body.id)));
     const localIds = state ? ids : ids.filter(id => !/\/(?:cd|sldu|sldl):/.test(id));
@@ -83,6 +84,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const partial = new Set(location.partial);
     if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
     const listingIdentity = withRegistryRuntimeProjection(registry, [location.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+    const pageIds = placePageCacheIds(place);
+    const cachePlaces = readyZip ? [`zip:${readyZip}`] : pageIds.length ? pageIds : [...ids, ...fringe, ...territoryBodyIds];
     const stateAnswer = await stateAnswerRead;
     return Response.json({
       ...result, coverage, listingIdentity, ...(stateAnswer ? {stateResponse:stateAnswer} : {}),
@@ -94,8 +97,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
     }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"}
-      : stateAnswer ? readerCacheHeaders({states:[location.state],places:readyZip ? [`zip:${readyZip}`] : ids})
-      : readerPlaceCacheHeaders(readyZip ? [`zip:${readyZip}`] : ids)),
+      : stateAnswer ? readerCacheHeaders({states:[location.state],places:cachePlaces})
+      : readerPlaceCacheHeaders(cachePlaces)),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });
   } catch (error) {
     console.error("READER_PLACE_LOAD_FAILED", error);

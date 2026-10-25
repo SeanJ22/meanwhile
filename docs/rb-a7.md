@@ -19,6 +19,8 @@ The final storage-format rerun puts only the ready current answer in each ZIP's 
 
 The member inventory counts fact-roster rows, while the roster inventory counts only `PlacePackage.registry.bodyRosters` members. The separate state endpoint supplies additional officials. These are preservation checks for the place package, not complete visible official totals. See [the connected results](measurements/rb-a7/connections.json).
 
+Native Netlify packaging also passes on this tree: Node 24, the v2 background runtime, a one-minute schedule, and the declared 2 GiB memory setting are present in the native function metadata. Cold worker and bootstrap imports succeed; packaged New York and Arizona geography resolves using only a read of the public CDN. Four concurrent body-only builds on real read-only data from California, Florida, Texas and Wisconsin peak at 404 MiB locally. Under the configured 2 GiB budget, that sample leaves 1.60 GiB spare, exceeding the requested 0.75 GiB margin. This verifies the local four-job sample; deployed and nationwide capacity remain unverified. See [the native package and capacity results](measurements/rb-a7/native-worker-package.json).
+
 ## Every state
 
 The read-only baseline holds 104,048 place identities and no ready pages. All 50 states, DC, five territories and the national bucket are listed in [the state counts](measurements/rb-a7/counts.md), including zero counts. Stored body/person/meeting identities are labeled separately from page-content counts.
@@ -27,8 +29,10 @@ State-scoped comparisons checked 93,571 held ZIP division identities, including 
 
 All 60 stored reader-event references resolve: 56 reactions, three demand signals and one Ask reference, covering 36 distinct target IDs. Speak has no stored rows. This lane preserves their identities. The reader database's legacy `cp_work_items` table contains zero rows; the real control plane contains 182,431 work items and 364,544 Box findings. See [the production baseline](measurements/rb-a7/production-baseline.json).
 
+New Neon validation is limited to counts and small samples. Existing captured files and local fixtures support further integration checks; no new production copy or bulk copy replay is authorized. Any larger proof needs its scope and estimated GB presented before it runs.
+
 ## Work remaining before a live result
 
-RB-A7 must finish nationwide page construction and compare every ZIP's bodies, members, meetings and officials against the current answer before the reader switches. The initial build must also retain changes published while that build is running. River owns integration with RB-A4 when it lands and the production release.
+RB-A7 must finish nationwide page construction and compare every ZIP's bodies, members, meetings and officials against the current answer before the reader switches. The initial build must also retain changes published while that build is running. This lane integrates RB-A4 after it lands on river; River owns the production release.
 
 After deployment, the live checks remain: a change through every audited writer reaches the page within five minutes; 20 ZIPs in 20 states finish the first visit under three seconds and later visits under 300 ms; the command center shows rebuilds by state and hour; and reader-database reads in `database_transfer_daily` decrease. The saved transfer baseline is available for that comparison. No post-deploy result is claimed here.

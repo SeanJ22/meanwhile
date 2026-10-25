@@ -1,0 +1,18 @@
+{
+  "source": "Local postal-zips, ZCTA centroids and ZIP-division assets; no database or network reads",
+  "selection": "Supported postal state and lookupZcta(zip) present; readZipPlace(postalArea(zip)?.zcta ?? zip) absent",
+  "count": 114,
+  "byState": {
+    "NY": 10, "PA": 5, "NC": 3, "FL": 27, "MS": 1, "OH": 8,
+    "MI": 1, "WI": 4, "MT": 1, "IL": 2, "LA": 1, "TX": 17,
+    "WY": 2, "ID": 1, "UT": 1, "AZ": 1, "NV": 2, "CA": 6,
+    "AK": 3, "HI": 5, "GU": 1, "WA": 1, "VI": 1, "PR": 1,
+    "MA": 6, "ME": 2, "NJ": 1
+  },
+  "examples": [
+    { "zip": "14010", "state": "NY" },
+    { "zip": "16514", "state": "PA" },
+    { "zip": "28406", "state": "NC" },
+    { "zip": "33439", "state": "FL" }
+  ]
+}

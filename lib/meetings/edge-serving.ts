@@ -141,8 +141,13 @@ async function readPlaceMeetings(options: ReaderMeetingsOptions): Promise<{read:
   const divisions = [...new Set((options.ocdIds ?? []).map(divisionOf))];
   const bodyIds = [...new Set(options.bodyIds ?? [])];
   if (!divisions.length && !bodyIds.length) return {read:NOT_A_PLACE};
-  const states = [...new Set([...(options.states ?? []).map(state => state.toUpperCase()),
-    ...divisions.map(meetingStateOf), ...bodyIds.map(meetingStateOf)])];
+  const explicitStates = (options.states ?? []).map(state => state.toUpperCase());
+  const bodyStates = bodyIds.flatMap(id => {
+    const state = meetingStateOf(id);
+    // A short saved alias supplies no state; use the caller's selected states.
+    return state === "US" && explicitStates.length && divisionOf(id) !== "ocd-division/country:us" ? [] : [state];
+  });
+  const states = [...new Set([...explicitStates, ...divisions.map(meetingStateOf), ...bodyStates])];
   try {
     const packages = await Promise.all(states.map(state => readPlacePackage({ state, divisionIds: divisions, bodyIds,
       neighbors: options.neighbors, meetingIds: options.meetingIds,

@@ -5,10 +5,11 @@ import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
-import { buildPlacePackage } from "../lib/reader/place-builder.ts";
+import { buildPageBody, buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
+import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { ReaderStatePackage } from "../lib/reader/state.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -24,6 +25,7 @@ import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meeti
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { activeWiring, installMeetingDoors } from "../lib/registry/source-wiring.ts";
 import { readerCacheTags } from "../lib/reader/cache.ts";
+import { readerLocation, readerTerritory, territoryBodies } from "../lib/reader/location.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -142,6 +144,47 @@ test("an agenda opened through a former body ID keeps its documents and the cano
     assert.notEqual(canonicalTag,aliasTag,"the former body URL has a different cache tag");
     assert.ok(tags.has(aliasTag!),"the existing request tag is retained");
     assert.ok(tags.has(canonicalTag!),"purging the rebuilt canonical body also clears the former body's cached agenda");
+  } finally {installReaderDatabaseQuery(undefined);await db.pg.close();}
+});
+
+test("a map's cache follows its canonical territory and fringe pages while an ordinary ZIP keeps only its ZIP tag", async t => {
+  const {db} = await agendaFixture(t);
+  const zip = "85641", lat = 32.10986530852745, lng = -110.71768784670735;
+  const alias = "curated:az/pima-rocking-k-south-cfd#governing", canonical = "government:US-AZ:cog:fixture-rocking-k#governing";
+  try {
+    const location = await readerLocation(lat,lng,zip);
+    assert.ok(location.fringe.length,"this ZIP also reads names from fringe divisions");
+    assert.deepEqual(territoryBodies(lat,lng,await readerTerritory("AZ")),[alias],"the map point lies inside the held district boundary");
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'body','District Board','AZ',$1)",[STATE,canonical]);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)",[canonical,alias]);
+    await db.query(`UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{registry,bodies}',
+      (payload#>'{registry,bodies}') || $1::jsonb) WHERE record_class='REGISTRY_RUNTIME_BINDING'`,
+    [JSON.stringify([{id:alias,ocdId:STATE,name:"District Board"}])]);
+    const input = {state:"AZ",divisionIds:location.divisionIds,namedDivisionIds:location.fringe,bodyIds:[alias]};
+    await seedPlacePages(db.query,input);
+    const zipId = `zip:${zip}`, page = await buildPageBody(zipId,"place","AZ",db.query);
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ')",[zipId]);
+    await db.query("INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,'{}','{}')",
+      [zipId,JSON.stringify(page.readyCurrent)]);
+    const reads:string[] = [];
+    installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
+      assert.ok(statement.text===PLACE_PAGES_SQL || statement.text===READY_PLACE_SQL,"cache identities require no additional query");
+      reads.push(statement.text);
+      return db.query(statement.text,statement.params);
+    })));
+    const response = await meetingsGET(new Request(`https://wtp.test/api/meetings?zip=${zip}&lat=${lat}&lng=${lng}`));
+    assert.equal(response.status,200,JSON.stringify(await response.clone().json()));
+    assert.deepEqual(reads,[PLACE_PAGES_SQL]);
+    const tags = new Set(response.headers.get("Netlify-Cache-Tag")?.split(",")??[]);
+    const expected = readerCacheTags({places:[...location.divisionIds,...location.fringe,canonical]});
+    assert.deepEqual([...tags].sort(),[...expected,"reader-settings"].sort(),"every selected ready page shares the response's cache scope");
+    const [bodyPurgeTag] = readerCacheTags({places:[canonical]});
+    assert.ok(tags.has(bodyPurgeTag!),"rebuilding the canonical body clears the map requested through its former territory ID");
+    const zipResponse = await meetingsGET(new Request(`https://wtp.test/api/meetings?zip=${zip}`));
+    assert.equal(zipResponse.status,200,JSON.stringify(await zipResponse.clone().json()));
+    assert.deepEqual(reads,[PLACE_PAGES_SQL,READY_PLACE_SQL]);
+    assert.deepEqual(zipResponse.headers.get("Netlify-Cache-Tag")?.split(",").sort(),
+      [...readerCacheTags({places:[zipId]}),"reader-settings"].sort(),"the compiled ZIP is cleared only when its replacement is ready");
   } finally {installReaderDatabaseQuery(undefined);await db.pg.close();}
 });
 

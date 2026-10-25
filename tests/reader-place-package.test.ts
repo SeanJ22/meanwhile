@@ -23,6 +23,7 @@ import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { readReaderEdgeMeetings, type ReaderMeetingsContext } from "../lib/meetings/edge-serving.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import { activeWiring, installMeetingDoors } from "../lib/registry/source-wiring.ts";
+import { readerCacheTags } from "../lib/reader/cache.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${STATE}/place:tucson`;
 const BODY = `${CITY}#governing`, COUNTY_BODY = `${COUNTY}#supervisors`, SPECIAL = "curated:az/pima/special";
@@ -108,6 +109,41 @@ async function agendaFixture(t: TestContext) {
     provenance:{sourceUrl:SOURCE,sourceOrg:"tucsonaz.gov",collectedAt:AT,verifiedAt:AT}};
   return {db,publish,fact,meeting};
 }
+
+test("an agenda opened through a former body ID keeps its documents and the canonical body's cache tag", async t => {
+  const {db,publish,meeting} = await agendaFixture(t);
+  const alias = `${STATE}/place:former-tucson#former-board`;
+  try {
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)", [BODY,alias]);
+    const document = {id:"canonical-body-agenda",meetingId:meeting.id,ocdId:CITY,documentUrl:meeting.agendaUrl,
+      contentHash:"a".repeat(64),retrievedAt:AT,contentType:"text/html",text:"Public hearing. 1. Approve the budget.",
+      extraction:"html",extractionNote:null,sourceUrl:SOURCE,sourceOrg:"Tucson",collectedAt:AT,verifiedAt:AT};
+    await publish([meeting],[document]);
+    await seedPlacePages(db.query,{state:"AZ",divisionIds:[],bodyIds:[alias],neighbors:true});
+    let pageReads = 0;
+    installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
+      if(statement.text===PLACE_PAGES_SQL){
+        pageReads++;
+        assert.deepEqual(statement.params[2],[alias],"the saved alias in the request remains intact");
+        return db.query(statement.text,statement.params);
+      }
+      assert.match(statement.text,/WITH selected AS MATERIALIZED/);
+      return [];
+    })));
+    const response=await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(meeting.id)}&bodyId=${encodeURIComponent(alias)}`));
+    const payload=await response.json() as {meetingId:string;documents:{id:string;text:string}[];documentCount:number};
+    assert.equal(response.status,200,JSON.stringify(payload));
+    assert.equal(pageReads,1);
+    assert.equal(payload.meetingId,meeting.id);
+    assert.equal(payload.documentCount,1);
+    assert.deepEqual(payload.documents.map(({id,text})=>({id,text})),[{id:document.id,text:document.text}]);
+    const tags=new Set(response.headers.get("Netlify-Cache-Tag")?.split(",")??[]);
+    const [canonicalTag]=readerCacheTags({places:[BODY]}),[aliasTag]=readerCacheTags({places:[alias]});
+    assert.notEqual(canonicalTag,aliasTag,"the former body URL has a different cache tag");
+    assert.ok(tags.has(aliasTag!),"the existing request tag is retained");
+    assert.ok(tags.has(canonicalTag!),"purging the rebuilt canonical body also clears the former body's cached agenda");
+  } finally {installReaderDatabaseQuery(undefined);await db.pg.close();}
+});
 
 test("ready agendas keep effective-date collisions, complete merge contributors and newly published facts", async t => {
   const {db,publish,fact,meeting} = await agendaFixture(t);

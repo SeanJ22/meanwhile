@@ -1,20 +1,23 @@
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { PGlite } from "@electric-sql/pglite";
+import type { PGlite } from "@electric-sql/pglite";
 import { neonConfig } from "@neondatabase/serverless";
 import { PostgresRoutineDataStore } from "../../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../../lib/control-plane/evidence/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../../lib/civic-data/runtime-authority.ts";
+import { factDb } from "./fact-db.ts";
+import { COUNT_SCHEMA_SOURCE } from "../../lib/control-plane/repository/migrations/RB-A8.ts";
 
-/** The production adapter and actual integrity migrations, with only the HTTP transport kept local. */
+/** The production adapter and actual fact, page and integrity migrations, with only the HTTP transport kept local. */
 export async function withMigratedRoutineStore(
   contract: string,
   run: (store: PostgresRoutineDataStore, vault: MemoryEvidenceStore, pg: PGlite) => Promise<void>,
 ): Promise<void> {
-  const pg = new PGlite();
+  const { pg } = await factDb();
   for (const file of ["0025_typical_fixer.sql", "0026_lame_sunset_bain.sql", "0027_pdc_candidate_history_shape.sql", "0028_wise_ikaris.sql", "0029_unchanged_confirmation_receipts.sql", "0031_civic_payload_parts.sql"]) {
     await pg.exec(readFileSync(new URL(`../../lib/db/migrations/${file}`, import.meta.url), "utf8"));
   }
+  await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8"));
   const priorFetch = neonConfig.fetchFunction;
   const names = ["DATABASE_URL", "WTP_DB_ROLE", "WTP_VITAL_SIGNS_REPORT", "WTP_RUNTIME_MODE", "WTP_CONTROL_PLANE_DATABASE_URL"];
   const priorEnvironment = new Map(names.map(name => [name, process.env[name]]));

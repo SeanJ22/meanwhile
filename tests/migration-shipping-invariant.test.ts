@@ -512,7 +512,7 @@ test("the production migration applier commits each migration and its journal ro
 
 test("production expand applies in the deploy; pull-request checks do not apply migrations", () => {
   const deploy = readFileSync(join(ROOT, "netlify.toml"), "utf8");
-  assert.match(deploy, /pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build/);
+  assert.match(deploy, /pnpm db:apply --target=production --phase=expand --production-build && node --experimental-strip-types scripts\/prepare-place-pages\.mts && corepack pnpm run build/);
   const offenders: string[] = [];
   const files = readdirSync(WORKFLOWS).filter((f) => f.endsWith(".yml"));
   assert.equal(files.length, 2, `expected the CI and release observer workflows, found ${files.length}`);

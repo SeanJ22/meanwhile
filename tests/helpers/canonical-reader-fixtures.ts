@@ -263,7 +263,7 @@ export function activateCanonicalFixture(key: string): void {
     if(sql===READY_PLACE_SQL){
       const id=String(params[0]),state=id.startsWith("zip:")?stateForZip(id.slice(4)):meetingStateOf(id);
       if(!state)throw new Error("The fixture page must name a held state");
-      const input=await placeBuildInput(id,"place",state);
+      const input=await placeBuildInput(id,id.startsWith("zip:") || id.startsWith("ocd-division/") && !id.includes("#")?"place":"body",state);
       return savedRows({...input,includeHistory:params[1]===true},true);
     }
     if(sql===PLACE_PAGES_SQL)return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
@@ -272,7 +272,13 @@ export function activateCanonicalFixture(key: string): void {
     const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
     const registries=values.filter(p=>p.recordClass==="REGISTRY_RUNTIME_BINDING").map(p=>p.payload as RegistryRuntimeReadModel);
     const rosters=registries.flatMap(r=>r.bodyRosters??[]);
-    if(sql.startsWith("SELECT id FROM entity"))return registries.flatMap(r=>r.registry.bodies).filter(b=>(params[0] as string[]).includes(meetingStateOf(b.id))).map(b=>({id:b.id}));
+    if(sql.startsWith("SELECT id FROM entity")){
+      const sourceStore=held.meetings??held.store;
+      const scopes=await sourceStore.listPromotionScopes?.(["MEETING"])??[];
+      const pointers=await sourceStore.readPromotions<MeetingsSnapshot>("MEETING",scopes.map(p=>p.scope));
+      const ids=new Set([...registries.flatMap(r=>r.registry.bodies.map(b=>b.id)),...pointers.flatMap(p=>p.payload.meetings.flatMap(m=>m.bodyId??[]))]);
+      return [...ids].filter(id=>(params[0] as string[]).includes(meetingStateOf(id))).sort().map(id=>({id}));
+    }
     if(sql.includes("SELECT place_id FROM entity_place"))return(params[0] as string[]).map(id=>({place_id:id.split("#")[0]}));
     return rosterFactReader(rosters)(sql,params);
   };

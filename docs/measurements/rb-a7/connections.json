@@ -1,10 +1,26 @@
 {
-  "observedAt": "2026-10-25T03:26:24.218Z",
+  "observedAt": "2026-10-25T05:06:58.056Z",
   "productionWrites": 0,
   "source": "tiny-hill-13996172/br-delicate-lab-ax02xuo5/readonly",
   "copy": "local PGlite with real reader migrations and state-scoped production source rows",
   "clock": "controlled scheduling; not a deployed scheduling claim",
-  "initialBuildMs": 4660.676981,
+  "storageFormat": "ZIP body ready current; history_body {}; context {formatVersion:1}; history and agendas use saved division/body contexts",
+  "storage": [
+    {
+      "place_id": "zip:85201",
+      "ready_bytes": 967489,
+      "history_bytes": 2,
+      "context_bytes": 20
+    },
+    {
+      "place_id": "zip:85701",
+      "ready_bytes": 2285554,
+      "history_bytes": 2,
+      "context_bytes": 20
+    }
+  ],
+  "readyQuery": "SELECT CASE WHEN $2::boolean THEN history_body ELSE body END AS page,version\n  FROM place_page WHERE place_id=$1",
+  "initialBuildMs": 2845.7038680000005,
   "initial": {
     "rebuilt": 2,
     "failed": 0,
@@ -30,7 +46,7 @@
       ],
       "beforeCheckedAt": "2026-10-23T23:57:54.729Z",
       "afterCheckedAt": "2026-10-25T03:24:07.049Z",
-      "publicationToReadyMs": 13908.628227000001,
+      "publicationToReadyMs": 4977.857141000002,
       "inventory": {
         "bodies": {
           "count": 36,
@@ -64,7 +80,7 @@
       "productionFactId": 1711505,
       "removedValue": "(520) 225-6070",
       "sourceUrl": "https://govboard.tusd1.org/",
-      "publicationToReadyMs": 14941.176396999996,
+      "publicationToReadyMs": 5365.855116999999,
       "inventory": {
         "bodies": {
           "count": 142,
@@ -94,171 +110,171 @@
     {
       "zip": "85201",
       "reads": 1,
-      "ms": 16.568062000000282
+      "ms": 13.376524999999674
     },
     {
       "zip": "85701",
       "reads": 1,
-      "ms": 46.428727000000436
+      "ms": 30.64383099999941
     },
     {
       "zip": "85201",
       "reads": 1,
-      "ms": 17.09107899999981
+      "ms": 13.102752999999211
     },
     {
       "zip": "85201",
       "reads": 1,
-      "ms": 16.210635000003094
+      "ms": 24.36039200000232
     },
     {
       "zip": "85701",
       "reads": 1,
-      "ms": 46.17794900000081
+      "ms": 29.76378499999919
     },
     {
       "zip": "85701",
       "reads": 1,
-      "ms": 43.60297800000262
+      "ms": 31.968840000001364
     }
   ],
   "pages": [
     {
       "place_id": "ocd-division/country:us",
       "version": 2,
-      "built_at": "2026-10-25T03:26:09.450Z"
+      "built_at": "2026-10-25T05:06:52.745Z"
     },
     {
       "place_id": "ocd-division/country:us/state:az",
       "version": 2,
-      "built_at": "2026-10-25T03:26:16.764Z"
+      "built_at": "2026-10-25T05:06:54.466Z"
     },
     {
       "place_id": "ocd-division/country:us/state:az/place:mesa",
       "version": 1,
-      "built_at": "2026-10-25T03:26:05.796Z"
+      "built_at": "2026-10-25T05:06:50.641Z"
     },
     {
       "place_id": "ocd-division/country:us/state:az/place:mesa#body:audit-and-finance-committee",
       "version": 1,
-      "built_at": "2026-10-25T03:26:07.337Z"
+      "built_at": "2026-10-25T05:06:51.492Z"
     },
     {
       "place_id": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
       "version": 1,
-      "built_at": "2026-10-25T03:26:19.649Z"
+      "built_at": "2026-10-25T05:06:55.553Z"
     },
     {
       "place_id": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
       "version": 1,
-      "built_at": "2026-10-25T03:26:21.487Z"
+      "built_at": "2026-10-25T05:06:56.684Z"
     },
     {
       "place_id": "zip:85201",
       "version": 2,
-      "built_at": "2026-10-25T03:26:09.141Z"
+      "built_at": "2026-10-25T05:06:52.578Z"
     },
     {
       "place_id": "zip:85701",
       "version": 2,
-      "built_at": "2026-10-25T03:26:24.001Z"
+      "built_at": "2026-10-25T05:06:57.944Z"
     }
   ],
   "counts": [
     {
       "state": "AZ",
-      "hour": "2026-10-25T03:00:00.000Z",
+      "hour": "2026-10-25T05:00:00.000Z",
       "step": "v1:[\"Place pages\", \"rebuilt\", \"in\"]",
       "n": 10
     },
     {
       "state": "AZ",
-      "hour": "2026-10-25T03:00:00.000Z",
+      "hour": "2026-10-25T05:00:00.000Z",
       "step": "v1:[\"Place pages\", \"rebuilt\", \"out\"]",
       "n": 10
     },
     {
       "state": "US",
-      "hour": "2026-10-25T03:00:00.000Z",
+      "hour": "2026-10-25T05:00:00.000Z",
       "step": "v1:[\"Place pages\", \"rebuilt\", \"in\"]",
       "n": 2
     },
     {
       "state": "US",
-      "hour": "2026-10-25T03:00:00.000Z",
+      "hour": "2026-10-25T05:00:00.000Z",
       "step": "v1:[\"Place pages\", \"rebuilt\", \"out\"]",
       "n": 2
     }
   ],
   "workerCachePurges": [
     {
-      "at": "2026-10-25T03:25:52.244Z",
+      "at": "2026-10-25T05:06:45.478Z",
       "tags": [
         "reader-place:7f1c86963666b0cfb08804dffb65e07013ea5d394a38ef22b66ef1672f3adb93"
       ]
     },
     {
-      "at": "2026-10-25T03:25:54.967Z",
+      "at": "2026-10-25T05:06:47.163Z",
       "tags": [
         "reader-place:600f019feab14faffc6a1752db8422edd9e72e47dc069d32eb2d9ca0f10c5f53"
       ]
     },
     {
-      "at": "2026-10-25T03:26:03.858Z",
-      "tags": [
-        "reader-place:da02341c231c172f4c552ec708fff49577273dbc5b9b3dbc4c11253e6bc29e7d"
-      ]
-    },
-    {
-      "at": "2026-10-25T03:26:04.032Z",
+      "at": "2026-10-25T05:06:47.776Z",
       "tags": [
         "reader-place:adc2adbd0c1a3163f65a11aa899eb7a5252518cb969542517ecfcf169de528a0"
       ]
     },
     {
-      "at": "2026-10-25T03:26:05.824Z",
+      "at": "2026-10-25T05:06:49.658Z",
+      "tags": [
+        "reader-place:da02341c231c172f4c552ec708fff49577273dbc5b9b3dbc4c11253e6bc29e7d"
+      ]
+    },
+    {
+      "at": "2026-10-25T05:06:50.665Z",
       "tags": [
         "reader-place:edac796682c7e0af98eaaa3efea08b5697bfb569129ce3fed1074eddbb0e48ab"
       ]
     },
     {
-      "at": "2026-10-25T03:26:07.342Z",
+      "at": "2026-10-25T05:06:51.497Z",
       "tags": [
         "reader-place:edac796682c7e0af98eaaa3efea08b5697bfb569129ce3fed1074eddbb0e48ab"
       ]
     },
     {
-      "at": "2026-10-25T03:26:09.188Z",
+      "at": "2026-10-25T05:06:52.594Z",
       "tags": [
         "reader-place:7f1c86963666b0cfb08804dffb65e07013ea5d394a38ef22b66ef1672f3adb93"
       ]
     },
     {
-      "at": "2026-10-25T03:26:09.457Z",
+      "at": "2026-10-25T05:06:52.750Z",
       "tags": [
         "reader-place:adc2adbd0c1a3163f65a11aa899eb7a5252518cb969542517ecfcf169de528a0"
       ]
     },
     {
-      "at": "2026-10-25T03:26:17.833Z",
+      "at": "2026-10-25T05:06:54.473Z",
       "tags": [
         "reader-place:da02341c231c172f4c552ec708fff49577273dbc5b9b3dbc4c11253e6bc29e7d"
       ]
     },
     {
-      "at": "2026-10-25T03:26:19.711Z",
+      "at": "2026-10-25T05:06:55.594Z",
       "tags": [
         "reader-place:28e42ef1a82ec804b8c1b693a59f9a18fc6a400ea6c18b3089e977f961e4e339"
       ]
     },
     {
-      "at": "2026-10-25T03:26:21.527Z",
+      "at": "2026-10-25T05:06:56.749Z",
       "tags": [
         "reader-place:28e42ef1a82ec804b8c1b693a59f9a18fc6a400ea6c18b3089e977f961e4e339"
       ]
     },
     {
-      "at": "2026-10-25T03:26:24.166Z",
+      "at": "2026-10-25T05:06:57.986Z",
       "tags": [
         "reader-place:600f019feab14faffc6a1752db8422edd9e72e47dc069d32eb2d9ca0f10c5f53"
       ]
@@ -266,29 +282,32 @@
   ],
   "writerCachePurges": [
     {
-      "at": "2026-10-25T03:25:55.327Z",
+      "at": "2026-10-25T05:06:47.673Z",
       "tags": [
         "reader-state:AZ"
       ]
     },
     {
-      "at": "2026-10-25T03:26:09.288Z",
+      "at": "2026-10-25T05:06:52.672Z",
       "tags": [
         "reader-state:AZ"
       ]
     }
   ],
-  "historyDerivationParity": {
-    "observedAt": "2026-10-25T03:30:45.252Z",
+  "historyContextParity": {
+    "observedAt": "2026-10-25T05:07:05.640Z",
     "productionWrites": 0,
-    "comparison": "The history query derives current and the ZIP builder also compares its default current query; both complete decoded JSON answers compared with the independent legacy SQL snapshots under JSON wire semantics and order normalization.",
+    "comparison": "The thin ZIP builder reads only the default current answer without agendas; buildPlacePackage decodes the historical source context separately. Both complete decoded JSON answers match independent read-only repeatable-read legacy SQL snapshots. Primitive-array order is retained; object-array ordering is normalized.",
     "results": [
       {
         "zip": "85201",
         "capturedAt": "2026-10-25T03:29:40.652Z",
         "readOnlySnapshot": true,
         "isolation": "RepeatableRead",
-        "optimizedBuilderQueries": 2,
+        "zipBuilderQueries": 1,
+        "zipIncludesAgenda": false,
+        "zipStoresHistory": false,
+        "historyPath": "buildPlacePackage context decoder",
         "currentPartitions": 6,
         "historyPartitions": 7,
         "archivedMeetings": 2,
@@ -304,7 +323,10 @@
         "capturedAt": "2026-10-25T03:29:48.840Z",
         "readOnlySnapshot": true,
         "isolation": "RepeatableRead",
-        "optimizedBuilderQueries": 2,
+        "zipBuilderQueries": 1,
+        "zipIncludesAgenda": false,
+        "zipStoresHistory": false,
+        "historyPath": "buildPlacePackage context decoder",
         "currentPartitions": 34,
         "historyPartitions": 38,
         "archivedMeetings": 23,
@@ -315,6 +337,7 @@
         "currentWireParity": true,
         "historyWireParity": true
       }
-    ]
+    ],
+    "primitiveArrayOrderPreserved": true
   }
 }

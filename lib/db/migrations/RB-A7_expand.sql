@@ -1,5 +1,6 @@
 ALTER TABLE rebuild_queue
   ADD COLUMN generation bigint NOT NULL DEFAULT 1,
+  ADD COLUMN next_queued_at timestamptz,
   ADD COLUMN lease_token text,
   ADD COLUMN lease_until timestamptz,
   ADD COLUMN lease_slot smallint CHECK (lease_slot BETWEEN 1 AND 4);
@@ -14,6 +15,10 @@ CREATE TABLE IF NOT EXISTS place_page (
   built_at timestamptz NOT NULL DEFAULT now(),
   body jsonb NOT NULL
 );
+--> statement-breakpoint
+ALTER TABLE place_page
+  ADD COLUMN history_body jsonb NOT NULL DEFAULT '{}'::jsonb,
+  ADD COLUMN context jsonb NOT NULL DEFAULT '{}'::jsonb;
 --> statement-breakpoint
 CREATE TABLE place_page_dependency (
   page_id text NOT NULL REFERENCES entity(id) ON DELETE CASCADE,

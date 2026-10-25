@@ -110,13 +110,18 @@ function snapshotForBody(snapshot: MeetingsSnapshot, bodyId: string): MeetingsSn
     agendaDocuments: snapshot.agendaDocuments.filter(document => ids.has(document.meetingId)) };
 }
 
-/** State jobs read rebuilt calendars one state at a time. */
-export async function* readMeetingBodies(options: Pick<ReaderMeetingsOptions, "states" | "includeAgenda" | "window" | "settings" | "now">): AsyncGenerator<StateMeetingBody> {
+/** List one state's body IDs; load only the body a worker is about to use. */
+export async function* readMeetingBodies(options: Pick<ReaderMeetingsOptions, "states" | "includeAgenda" | "window" | "settings" | "now" | "query">): AsyncGenerator<StateMeetingBody> {
   const settings = options.settings ?? await readReaderMeetingSettings();
-  for (const state of options.states ?? [...REGISTRY_STATES, "US"]) {
-    const held = await readPlacePackage({ state, divisionIds: [], allBodies: true, includeHistory: options.window === "HELD", includeAgenda: options.includeAgenda !== false });
-    for (const body of held.bodies) yield { state, bodyId: body.id, load: async () => {
-      const own = held.bodySnapshots[body.id] ?? snapshotForBody(held.snapshot, body.id);
+  // Explicit body reads keep request memoization from retaining every loaded calendar.
+  const query = options.query ?? factReader();
+  if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
+  for (const state of [...new Set((options.states ?? [...REGISTRY_STATES, "US"]).map(state => state.toUpperCase()))]) {
+    const ids = await readHeldBodyIds({ states: [state], query });
+    for (const bodyId of ids) yield { state, bodyId, load: async () => {
+      const held = await readPlacePackage({ state, placeId: bodyId, divisionIds: [], bodyIds: [bodyId],
+        includeHistory: options.window === "HELD", includeAgenda: options.includeAgenda !== false }, query);
+      const own = held.bodySnapshots[bodyId] ?? snapshotForBody(held.snapshot, bodyId);
       const value = options.includeAgenda === false ? { ...own, agendaDocuments: [] } : own;
       const read = applyServedWindow({ kind: "PROMOTED", value, metadata: NOT_A_PLACE.metadata, detail: "" },
         options.window ?? "SHOWN", options.now, settings);
@@ -125,10 +130,10 @@ export async function* readMeetingBodies(options: Pick<ReaderMeetingsOptions, "s
   }
 }
 
-export async function readHeldBodyIds(options: { readonly states: readonly string[] }): Promise<ReadonlySet<string>> {
-  const query = factReader();
+export async function readHeldBodyIds(options: { readonly states: readonly string[]; readonly query?: Query }): Promise<ReadonlySet<string>> {
+  const query = options.query ?? factReader();
   if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
-  const rows = await query("SELECT id FROM entity WHERE kind='body' AND state=ANY($1::text[])", [options.states.map(state => state.toUpperCase())]);
+  const rows = await query("SELECT id FROM entity WHERE kind='body' AND state=ANY($1::char(2)[]) ORDER BY id", [options.states.map(state => state.toUpperCase())]);
   return new Set(rows.map(row => String(row.id)));
 }
 

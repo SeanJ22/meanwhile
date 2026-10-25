@@ -27,6 +27,31 @@ interface ZipSeedOptions {
   readonly bodies?: (state:string,point:{lat:number;lng:number})=>Promise<readonly string[]>;
 }
 
+/** Registry-only boards already serve readers; give their existing identities their own body pages. */
+export async function seedRuntimeBodyPageSubjects(query:Query,states:readonly string[]=REGISTRY_STATES):Promise<number> {
+  let inserted=0;
+  for(const state of states) {
+    const [result]=await query(`WITH runtime AS (
+      SELECT reader_payload_node(reader_payload_node(payload)->'registry') AS registry
+      FROM civic_data_promotions WHERE record_class='REGISTRY_RUNTIME_BINDING'
+        AND key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
+    ), bodies AS (
+      SELECT reader_payload_node(b.item) AS value FROM runtime r,LATERAL reader_payload_members(r.registry->'bodies') b
+    ), seeded AS (
+      INSERT INTO entity(id,kind,name,state,parent_id)
+        SELECT coalesce(alias.entity_id,b.value->>'id'),'body',coalesce(b.value->>'name',b.value->>'id'),$1,parent.id
+        FROM bodies b
+        LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=b.value->>'id'
+        LEFT JOIN entity canonical ON canonical.id=alias.entity_id
+        LEFT JOIN entity parent ON parent.id=b.value->>'ocdId' AND parent.kind='place'
+        WHERE nullif(b.value->>'id','') IS NOT NULL AND (alias.entity_id IS NULL OR canonical.state=$1::char(2))
+        ORDER BY b.value->>'id' ON CONFLICT(id) DO NOTHING RETURNING id
+    ) SELECT count(*)::int AS n FROM seeded`,[state]);
+    inserted+=Number(result?.n ?? 0);
+  }
+  return inserted;
+}
+
 /** ZIPs are reader selections, so each routed ZIP gets one ready answer of its own. */
 export async function seedZipPagePlaces(query: Query, options: ZipSeedOptions = {}): Promise<number> {
   const postal=(options.postal ?? postalTable)(),point=options.point ?? lookupZcta;
@@ -109,9 +134,10 @@ export async function prepareProductionPlacePages(env: Record<string,string|unde
   if (handle.host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !handle.host.endsWith(".neon.tech"))
     throw new Error("Initial place pages require the production reader database");
   const db=readerFactDb(handle.connection);
+  const runtimeBodies=await seedRuntimeBodyPageSubjects(db.query);
   const zips=await seedZipPagePlaces(db.query);
   const result = await preparePlacePages({ db });
-  console.log(JSON.stringify({ placePages: "ready for deployment", zips, ...result }));
+  console.log(JSON.stringify({ placePages: "ready for deployment", zips, runtimeBodies, ...result }));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { preparePlacePages, prepareProductionPlacePages, seedZipPagePlaces } from "../scripts/prepare-place-pages.mts";
+import { readFileSync } from "node:fs";
+import { preparePlacePages, prepareProductionPlacePages, seedZipPagePlaces, seedRuntimeBodyPageSubjects } from "../scripts/prepare-place-pages.mts";
 import { config } from "../netlify/functions/rebuild-place-pages.mts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { buildPageBody,PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { readerCacheTags } from "../lib/reader/cache.ts";
+import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 test("the rebuild worker runs every minute without a public HTTP route", () => {
@@ -91,22 +92,101 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
     {page_id:'zip:85001',entity_id:root},{page_id:'zip:85001',entity_id:'az:city:phoenix#governing'}]);
 });
 
+test("runtime-only bodies get their existing canonical IDs without overwriting held subjects",async()=>{
+  const db=await factDb();
+  const state='ocd-division/country:us/state:az',city=`${state}/place:tucson`;
+  try {
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb);
+      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+    const functions=readFileSync(new URL('../lib/db/migrations/0036_ne01.sql',import.meta.url),'utf8')
+      .split('--> statement-breakpoint').filter(sql=>/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
+    for(const sql of functions)await db.pg.exec(sql);
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'place','Tucson','AZ',$1)",[state,city]);
+    await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ('held-body','body','Held verified name','AZ',$1),('canonical-body','body','Held canonical name','AZ',$1),
+      ('foreign-body','body','California board','CA',NULL)`,[city]);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES('canonical-body','body-alias','prior-body'),('foreign-body','body-alias','foreign-alias')");
+    const registry={bodies:[
+      {id:'new-body',name:'New published board',ocdId:city},
+      {id:'held-body',name:'A newer projection spelling',ocdId:city},
+      {id:'prior-body',name:'A prior spelling',ocdId:city},
+      {id:'unplaced-body',name:'Published board without a held division',ocdId:`${state}/place:unknown`},
+      {id:'foreign-alias',name:'A California board',ocdId:city},
+    ]};
+    const hash='a'.repeat(64);
+    await db.query('INSERT INTO civic_data_payload_parts VALUES($1,$2::jsonb)',[hash,JSON.stringify(registry)]);
+    await db.query("INSERT INTO civic_data_promotions VALUES('REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime','REGISTRY_RUNTIME_BINDING',$1::jsonb)",
+      [JSON.stringify({registry:{$civicPayloadPart:hash}})]);
+    assert.equal(await seedRuntimeBodyPageSubjects(db.query,['AZ']),2);
+    assert.deepEqual((await db.query("SELECT id,name,state,parent_id FROM entity WHERE id IN ('new-body','unplaced-body','held-body','canonical-body') ORDER BY id")),[
+      {id:'canonical-body',name:'Held canonical name',state:'AZ',parent_id:city},
+      {id:'held-body',name:'Held verified name',state:'AZ',parent_id:city},
+      {id:'new-body',name:'New published board',state:'AZ',parent_id:city},
+      {id:'unplaced-body',name:'Published board without a held division',state:'AZ',parent_id:null},
+    ]);
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM entity WHERE id IN ('prior-body','foreign-alias')"))[0]!.n,0);
+    assert.equal(await seedRuntimeBodyPageSubjects(db.query,['AZ']),0,'an unchanged publication never replaces an existing identity');
+  }finally{await db.pg.close();}
+});
+
 const rawPage=(id:string)=>({division_ids:[id],entities:[],fields:[],rosters:[],comments:[],sittings:[],
   meeting_rows:[],archived_meetings:[],archived_documents:[],parts:{},registry:null,governments:[],divisions:[]});
 
-test("initial ZIP construction rejects changed current content; routine rebuilds need only the history query",async()=>{
+test("a state-root rebuild never loads the statewide meeting corpus",async()=>{
+  const state='ocd-division/country:us/state:az';
+  const selections:unknown[][]=[];
+  const query:Query=async(text,args=[])=>{
+    assert.equal(text,PLACE_PACKAGE_SQL);
+    assert.equal(args[4],false,'all-body jobs read bounded body pages instead of one statewide source corpus');
+    selections.push([...args]);
+    return[{...rawPage(state),division_ids:args[1]}];
+  };
+  const result=await buildPageBody(state,'place','AZ',query);
+  assert.equal(selections.length,2,'the root and empty selection are the only source reads');
+  assert.ok(result.emptyCurrent&&result.emptyHistory);
+  assert.ok(!Object.hasOwn(result,'allCurrent')&&!Object.hasOwn(result,'allHistory'));
+});
+
+test("ZIP construction reads one current projection without agenda or history data",async()=>{
   const id='ocd-division/country:us/state:ca/place:los_angeles';
   let reads=0;
   const query:Query=async(_sql,args)=>{
     reads++;
-    return[{...rawPage(id),entities:args?.[5]?[{id:`${id}#board`,division:id,kind:'body',state:'CA'}]:[]}];
+    assert.equal(args?.[5],false);
+    assert.equal(args?.[6],false);
+    return[{...rawPage(id),entities:[{id:`${id}#board`,division:id,kind:'body',state:'CA'}]}];
   };
-  await assert.rejects(buildPageBody('zip:90001','place','CA',query,true),/changed ZIP 90001's current answer/);
-  assert.equal(reads,2);
-  reads=0;
   const page=await buildPageBody('zip:90001','place','CA',query);
   assert.equal(page.readyCurrent.bodies.length,1);
+  assert.equal(page.history,undefined);
+  assert.equal(page.readyHistory,undefined);
   assert.equal(reads,1);
+});
+
+test("a ZIP worker stores only its ready current page and retains the serving dependencies",async()=>{
+  const db=await factDb({withHourlyCounts:true});
+  const zip='zip:90001',city='ocd-division/country:us/state:ca/place:los_angeles',body=`${city}#board`,fringe=`${city}/council_district:2`;
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','ZIP 90001','CA',NULL),($2,'place','Los Angeles','CA',NULL),($3,'body','Council','CA',$2),($4,'place','Neighbor district','CA',NULL)",
+      [zip,city,body,fringe]);
+    await db.query('INSERT INTO rebuild_queue(place_id) VALUES($1)',[zip]);
+    let sourceReads=0;
+    const wrapped:FactDb={transaction:run=>db.transaction(query=>run(async(text,args)=>{
+      if(text!==PLACE_PACKAGE_SQL)return query(text,args);
+      sourceReads++;
+      assert.equal(args?.[5],false);
+      assert.equal(args?.[6],false);
+      return[{...rawPage(city),entities:[{id:body,kind:'body',state:'CA',division:city,parent_id:city}],divisions:[{ocdId:fringe}]}];
+    }))};
+    assert.deepEqual(await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})}),{rebuilt:1,failed:0,remaining:0});
+    assert.equal(sourceReads,1);
+    const [page]=await db.query('SELECT body,history_body,context FROM place_page WHERE place_id=$1',[zip]);
+    assert.deepEqual(page!.history_body,{});
+    assert.deepEqual(page!.context,{formatVersion:1});
+    assert.equal((page!.body as {bodies:unknown[]}).bodies.length,1);
+    const dependencies=await db.query('SELECT entity_id FROM place_page_dependency WHERE page_id=$1 ORDER BY entity_id',[zip]);
+    assert.deepEqual(dependencies.map(row=>row.entity_id),[zip,city,body,fringe].sort());
+  }finally{await db.pg.close();}
 });
 
 test("a publication arriving during the data snapshot keeps its generation queued without aborting the built page", async () => {
@@ -144,6 +224,43 @@ test("a publication arriving during the data snapshot keeps its generation queue
     assert.equal(queued!.lease_token,null);
     assert.equal(queued!.lease_slot,null);
     assert.equal(queued!.lease_until,null);
+  }finally{await db.pg.close();}
+});
+
+test("a constantly changing place cannot reclaim its old queue position ahead of untouched places",async()=>{
+  const db=await factDb({withHourlyCounts:true});
+  const hot='ocd-division/country:us/state:az/county:pima',untouched='ocd-division/country:us/state:az/county:maricopa';
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Pima','AZ'),($2,'place','Maricopa','AZ')",[hot,untouched]);
+    await db.query(`INSERT INTO rebuild_queue(place_id,queued_at) VALUES
+      ($1,clock_timestamp()-interval '10 minutes'),($2,clock_timestamp()-interval '9 minutes')`,[hot,untouched]);
+    const visits:string[]=[];
+    let firstPending:string|undefined;
+    const wrapped:FactDb={transaction:async run=>{
+      let built:string|undefined;
+      const result=await db.transaction(query=>run(async(text,args)=>{
+        if(text!==PLACE_PACKAGE_SQL)return query(text,args);
+        built=String((args?.[1] as string[])[0]);
+        visits.push(built);
+        return[rawPage(built)];
+      }));
+      if(built===hot) {
+        await enqueueReaderPlaces({places:[hot]},db.query);
+        const [arrival]=await db.query('SELECT next_queued_at::text AS pending FROM rebuild_queue WHERE place_id=$1',[hot]);
+        assert.ok(arrival!.pending,'the first unbuilt arrival has its own waiting time');
+        firstPending=String(arrival!.pending);
+      }
+      return result;
+    }};
+    assert.deepEqual(await rebuildPlacePages({db:wrapped,limit:2,concurrency:1,purge:async()=>({purged:true})}),
+      {rebuilt:2,failed:0,remaining:1});
+    assert.deepEqual(visits,[hot,untouched]);
+    const [waiting]=await db.query('SELECT place_id,generation,queued_at::text AS since,next_queued_at,lease_token FROM rebuild_queue');
+    assert.equal(waiting!.place_id,hot);
+    assert.equal(Number(waiting!.generation),2);
+    assert.equal(waiting!.since,firstPending);
+    assert.equal(waiting!.next_queued_at,null);
+    assert.equal(waiting!.lease_token,null);
   }finally{await db.pg.close();}
 });
 

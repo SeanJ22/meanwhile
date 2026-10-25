@@ -15,7 +15,7 @@ import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { bindGovernmentBodies } from "@/lib/registration/listings";
-import { readerPlaceCacheHeaders } from "@/lib/reader/cache";
+import { readerCacheHeaders,readerPlaceCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
 import {readerStateResponse} from "@/lib/reader/state-response";
 import { lookupZcta } from "@/lib/geo/zcta";
@@ -93,7 +93,9 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",
       snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
-    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerPlaceCacheHeaders(readyZip ? [`zip:${readyZip}`] : ids)),
+    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"}
+      : stateAnswer ? readerCacheHeaders({states:[location.state],places:readyZip ? [`zip:${readyZip}`] : ids})
+      : readerPlaceCacheHeaders(readyZip ? [`zip:${readyZip}`] : ids)),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });
   } catch (error) {
     console.error("READER_PLACE_LOAD_FAILED", error);

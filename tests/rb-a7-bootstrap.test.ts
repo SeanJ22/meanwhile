@@ -63,12 +63,14 @@ test('the preceding door bumps active rebuild generations and queues only locall
     await db.query('INSERT INTO rebuild_queue(place_id) VALUES($1) ON CONFLICT DO NOTHING',[CITY]);
     assert.equal((await queue(db)).get(CITY),2);
     assert.equal((await queue(db)).get('zip:85701'),2);
-    const [held]=await db.query('SELECT queued_at,lease_token,lease_slot FROM rebuild_queue WHERE place_id=$1',[CITY]);
+    const [held]=await db.query('SELECT queued_at,lease_token,lease_slot,next_queued_at::text AS pending FROM rebuild_queue WHERE place_id=$1',[CITY]);
     assert.equal(new Date(held!.queued_at as string).toISOString(),'2026-10-25T01:00:00.000Z');
     assert.equal(held!.lease_token,'building');
     assert.equal(held!.lease_slot,1);
+    assert.ok(held!.pending,'the preceding door retains the first arrival after the active snapshot');
     await db.query('INSERT INTO rebuild_queue(place_id) VALUES($1) ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1',[CITY]);
     assert.equal((await queue(db)).get(CITY),3,'the new upsert is not counted twice by the compatibility hook');
+    assert.equal((await db.query('SELECT next_queued_at::text AS pending FROM rebuild_queue WHERE place_id=$1',[CITY]))[0]!.pending,held!.pending);
     await clear(db);
     await db.query('INSERT INTO rebuild_queue(place_id) VALUES($1),($2)',[AZ,US]);
     assert.deepEqual([...await queue(db)],[[US,1],[AZ,1]],'local door ancestor inserts do not fan out through state or national ZIP dependencies');

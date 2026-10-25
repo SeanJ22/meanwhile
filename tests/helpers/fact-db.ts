@@ -44,9 +44,11 @@ function leasedEngine(): PGlite {
 }
 
 /** A real Postgres with the fact store migration applied. */
-export async function factDb(options: { readonly withResolver?: boolean; readonly withHourlyCounts?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
+export async function factDb(options: { readonly withResolver?: boolean; readonly withHourlyCounts?: boolean; readonly withPlacePages?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
   const pg = process.env.NODE_TEST_CONTEXT ? leasedEngine() : new PGlite();
-  for (const migration of MIGRATIONS) for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
+  // Identity-migration tests start before RB-A1 creates place_page, then apply its full SQL themselves.
+  for (const migration of MIGRATIONS.filter(path=>options.withPlacePages!==false || !path.endsWith("RB-A7_expand.sql")))
+    for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
   if (options.withHourlyCounts) {
     await pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
     await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE, "utf8").replaceAll("--> statement-breakpoint", ""));

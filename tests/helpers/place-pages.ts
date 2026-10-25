@@ -11,6 +11,7 @@ export async function seedPlacePages(query: Query, input: PlaceInput): Promise<v
     const [alias] = await query("SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=$1", [requested]);
     bodies.add(String(alias?.entity_id ?? requested));
   }
+  if (input.allBodies) for (const row of await query("SELECT id FROM entity WHERE kind='body' AND state=$1::char(2)", [state])) bodies.add(String(row.id));
   if (input.neighbors) for (const id of bodies) {
     if (id.startsWith("ocd-division/")) roots.add(id.split("#")[0]!);
     for (const row of await query("SELECT place_id FROM entity_place WHERE entity_id=$1", [id])) roots.add(String(row.place_id));
@@ -19,8 +20,10 @@ export async function seedPlacePages(query: Query, input: PlaceInput): Promise<v
   for (const id of roots) await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,$2) ON CONFLICT DO NOTHING", [id, state]);
   for (const id of bodies) await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body',$1,$2) ON CONFLICT DO NOTHING", [id, state]);
   for (const [id, kind] of [...[...roots].map(id => [id, "place"]), ...[...bodies].map(id => [id, "body"])] as const) {
-    const body = await buildPageBody(id, kind, state, query);
-    await query(`INSERT INTO place_page(place_id,version,built_at,body) VALUES($1,1,clock_timestamp(),$2::jsonb)
-      ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,body=excluded.body`, [id, JSON.stringify(body)]);
+    const { readyCurrent, readyHistory, ...context } = await buildPageBody(id, kind, state, query);
+    await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
+      ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,body=excluded.body,
+        history_body=excluded.history_body,context=excluded.context`, [id, JSON.stringify(readyCurrent), JSON.stringify(readyHistory ?? {}),
+      JSON.stringify(id.startsWith("zip:") ? { formatVersion: context.formatVersion } : context)]);
   }
 }

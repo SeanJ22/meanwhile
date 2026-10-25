@@ -7,7 +7,9 @@ BEGIN
   -- The preceding publisher inserts several unordered ancestor places. A single
   -- temporary mutex also covers two first inserts before either row exists.
   PERFORM pg_advisory_xact_lock(hashtextextended('rb-a7-bootstrap-queue',0));
-  UPDATE rebuild_queue SET generation=generation+1 WHERE place_id=NEW.place_id;
+  UPDATE rebuild_queue SET generation=generation+1,
+    next_queued_at=CASE WHEN lease_token IS NOT NULL THEN coalesce(next_queued_at,clock_timestamp()) ELSE next_queued_at END
+    WHERE place_id=NEW.place_id;
   IF FOUND THEN RETURN NULL; END IF;
   RETURN NEW;
 END $$;

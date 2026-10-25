@@ -11,25 +11,30 @@ import type { PlaceInput, PlacePackage } from "./place-types.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
 /** The normal first ZIP visit reads one already composed page. */
-export const READY_PLACE_SQL = `SELECT body->CASE WHEN $2::boolean THEN 'readyHistory' ELSE 'readyCurrent' END AS page,version
+export const READY_PLACE_SQL = `SELECT CASE WHEN $2::boolean THEN history_body ELSE body END AS page,version
   FROM place_page WHERE place_id=$1`;
 
 /** Map and body selections use only ready pages and their existing identity aliases. */
 export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
   SELECT coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=id),id) AS id
     FROM unnest($3::text[]) AS requested(id)
+), state_bodies AS (
+  SELECT id FROM entity WHERE $6::boolean AND kind='body' AND state=$1::char(2)
 ), selected AS (
-  SELECT unnest($2::text[]) AS id UNION SELECT unnest($4::text[])
-  UNION SELECT id FROM requested_bodies
-  UNION SELECT split_part(id,'#',1) FROM requested_bodies WHERE $5::boolean AND id LIKE 'ocd-division/%'
-  UNION SELECT place_id FROM entity_place WHERE $5::boolean AND entity_id IN (SELECT id FROM requested_bodies)
-  UNION SELECT id FROM entity WHERE kind='place' AND state=$1::char(2)
+  SELECT unnest($2::text[]) AS id WHERE NOT $6::boolean UNION SELECT unnest($4::text[]) WHERE NOT $6::boolean
+  UNION SELECT id FROM requested_bodies WHERE NOT $6::boolean
+  UNION SELECT split_part(id,'#',1) FROM requested_bodies WHERE NOT $6::boolean AND $5::boolean AND id LIKE 'ocd-division/%'
+  UNION SELECT place_id FROM entity_place WHERE NOT $6::boolean AND $5::boolean AND entity_id IN (SELECT id FROM requested_bodies)
+  UNION SELECT id FROM state_bodies
+  UNION SELECT id FROM entity WHERE kind='place' AND (state=$1::char(2) OR $1='US' AND id='ocd-division/country:us')
     AND id ~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$'
-    AND ($6::boolean OR cardinality($2::text[])=0 AND cardinality($3::text[])=0)
-) SELECT s.id AS page_id,e.kind AS page_kind,p.built_at,
-  CASE WHEN $6::boolean THEN p.body->CASE WHEN $7::boolean THEN 'allHistory' ELSE 'allCurrent' END
-    WHEN cardinality($2::text[])=0 AND cardinality($3::text[])=0 THEN p.body->CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
-    ELSE p.body->CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS row,
+    AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
+      OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
+) SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,
+  p.context->CASE WHEN NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
+    OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies)
+    THEN CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
+    ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS row,
   ARRAY(SELECT id FROM requested_bodies) AS body_ids
   FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id
   WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id`;
@@ -71,7 +76,8 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
 
 async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<PlacePackage> {
   if(!query)throw new Error("FACT_STORE_DATABASE_URL_MISSING");
-  if(input.placeId && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
+  if(input.placeId && !(input.placeId.startsWith("zip:") && input.includeHistory)
+    && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page)throw new Error("PLACE_PAGE_NOT_BUILT");
     return saved.page as PlacePackage;

@@ -9,7 +9,7 @@ export default async function rebuildPages(): Promise<void> {
   const handle = resolveProductionWriteHandle();
   const result = await rebuildPlacePages({
     db: readerFactDb(handle.connection),
-    limit: 512,
+    limit: Number.MAX_SAFE_INTEGER,
     concurrency: 4,
     timeBudgetMs: 240_000,
   });

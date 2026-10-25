@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4). SHIPPING: release 118 (DB-03 inventory readback, River fold 235c6f837, gates 9 of 9) PR #830, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 catch-up b2bbdc183 alone (river-next 456454204); releases after river-portraits. NEXT: GB-01 READY 900dd1427 (Census governing bodies + LA Metro move), alone after RB-A4 catch-up. NEXT after GB-01: DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820, VS-05 when it posts. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. NEXT: river-portraits (building in River session session_012UDbgz3sjA8QN2m7CY78QS), then RB-A4 catch-up b2bbdc183 (gating on river-next 456454204), GB-01 900dd1427, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T18:19:00Z
+heartbeat: 2026-10-25T18:24:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1026,4 +1026,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
   - Ship right after DB-03 readback, ahead of RB-A4 catch-up. Stop when both are under 0.3 GB/h on the live runner.
 - That session is building stream/river-portraits from river be0b41a4f. It supersedes DB-03's 2cce7754c, which River will not fold separately.
 - New order: release 118 (readback, live now) → river-portraits → RB-A4 catch-up → GB-01 → DB-03 in lane order.
+
+### Release 118 live, 2:19 PM EDT (main c7576d26e: DB-03 inventory readback)
+- Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
+- Random ZIPs, seed 1118: 20/20 load, 20/20 resolve to county and city, across AK, MN, HI, AL, NM, MT, NC, VA, WI, MO, NH, UT, PR, IL, MI, SD, TX, OH, IN and WY. (Puerto Rico 00751's page is thin, 445 chars, like Guam's.)
+- Readback MB per hour saved: measured on the 3 PM and 4 PM EDT hours, the first two full hours after release, against the 5 AM to 1 PM EDT readback of 55 to 2,931 MB/h.
 

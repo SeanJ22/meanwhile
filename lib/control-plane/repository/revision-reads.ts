@@ -47,12 +47,19 @@ export class RevisionReads {
     return `cp-rows:${this.database}:${logical}:${shape}`;
   }
 
-  async one(query: Query, table: string, id: string, selected = "value"): Promise<Row | null> {
+  async remember(table: string, row: Row): Promise<void> {
+    await this.cache.row({namespace:this.namespace(table,"value"),key:row.id,current:async()=>({etag:String(row.revision),value:row})});
+  }
+
+  async one(query: Query, table: string, id: string, selected = "value", project?: (value:unknown)=>unknown): Promise<Row | null> {
     return this.cache.row<Row>({ namespace: this.namespace(table, selected), key: id, current: async etag => {
+      const full=etag===null&&project?await this.cache.readCheckpoint<Row>(this.namespace(table,"value"),id):null;
+      const expected=etag??(full?String(full.revision):null);
       const [row] = await query(`SELECT id,revision,updated_at,revision::text=$2::text AS __unchanged,
-        CASE WHEN revision::text=$2::text THEN NULL ELSE ${selected} END AS value FROM ${table} WHERE id=$1`, [id, etag]) as (Row & { __unchanged: boolean })[];
+        CASE WHEN revision::text=$2::text THEN NULL ELSE ${selected} END AS value FROM ${table} WHERE id=$1`, [id, expected]) as (Row & { __unchanged: boolean })[];
       if (!row) return null;
-      if (row.__unchanged === true) return { etag: String(row.revision), unchanged: true };
+      if (row.__unchanged === true) return full&&project?{etag:String(row.revision),value:{...full,value:project(full.value)}}
+        :{ etag: String(row.revision), unchanged: true };
       const value: Row = { id: row.id, revision: row.revision, updated_at: row.updated_at, value: row.value };
       return { etag: String(row.revision), value };
     } });

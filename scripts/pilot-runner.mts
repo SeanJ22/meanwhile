@@ -61,7 +61,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
@@ -602,7 +602,10 @@ const publishChangedConsole = consolePublisher({
   publish: publishConsoleChildren,
 });
 
-async function publishConsole(): Promise<void> {
+const consoleClock=consolePublishClock(INTERVAL_MIN*60_000);
+async function publishConsole(onlyWhenDue=false): Promise<void> {
+  if(onlyWhenDue&&!consoleClock.due())return;
+  consoleClock.attempted();
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
     return;
@@ -1838,6 +1841,7 @@ while (cycle < CYCLES) {
     const repos = await ownerRepositories();
     if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
       await honorStoppedHunts(repos,new Date().toISOString());
+      await publishConsole(true);
       // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
       await sleep(CONTROL_WAKE_POLL_MS);
       continue;

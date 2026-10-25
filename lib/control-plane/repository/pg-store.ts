@@ -1,4 +1,5 @@
 import { revisionReadsFor, shareRevisionReads } from "./revision-reads.ts";
+import { retainedLogReadsFor, shareRetainedLogReads } from "./retained-log-reads.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
@@ -375,7 +376,8 @@ export function pgAggregateRepository<T>(
 
     async readNarrowed(id, projection) {
       const selected = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
-      const row = await revisions.one((text, params) => run("readNarrowed", "POINT", text, params), table, id, selected);
+      const row = await revisions.one((text, params) => run("readNarrowed", "POINT", text, params), table, id, selected,
+        value=>projectRecord(value,projection));
       return row ? persistedRow<unknown>(row) : null;
     },
 
@@ -397,6 +399,7 @@ export function pgAggregateRepository<T>(
         [id, now, JSON.stringify(value)],
       )) as unknown[];
 
+      if(inserted.length)await revisions.remember(table,{id,revision:1,updated_at:now,value:JSON.parse(JSON.stringify(value))});
       const persisted = await read(id);
       if (persisted === null) {
         throw new CorruptPersistedState(
@@ -443,6 +446,7 @@ export function pgAggregateRepository<T>(
         );
       }
       const row = updated[0];
+      await revisions.remember(table,{id:String(row.id),revision:Number(row.revision),updated_at:row.updated_at,value:JSON.parse(submitted)});
       return {
         id: String(row.id),
         revision: Number(row.revision),
@@ -658,24 +662,8 @@ export function pgAppendOnlyRepository<T>(
     },
 
     async read(key) {
-
-      const out: T[] = [];
-      let afterPosition = -1;
-      for (;;) {
-        const rows = (await run(
-          "read",
-          "PAGE",
-          `SELECT position, record FROM ${table}
-           WHERE log_key = $1 AND position > $2
-           ORDER BY position ASC
-           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-          [key, afterPosition],
-        )) as Record<string, unknown>[];
-        for (const r of rows) out.push(parseValue<T>(r.record, `${table} ${key}`));
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        afterPosition = Number(rows[rows.length - 1].position);
-      }
-      return out;
+      const rows=await retainedLogReadsFor(sql).keys((text,params)=>run("read","PAGE",text,params),table,[key]);
+      return [...(rows.get(key)??[])] as T[];
     },
 
     async readWhere(key, path, value) {
@@ -804,35 +792,9 @@ export function pgAppendOnlyRepository<T>(
     },
 
     async readKeys(keys: readonly string[], projection?: RecordProjection) {
-      /* Keyset-paged on `(log_key, position)` (the log's unique order index), so a response stays under the 64 MiB cap
-         however many records the keys hold, and the keys cost a few statements, not one each. */
-      const unique = [...new Set(keys)];
-      const out = new Map<string, T[]>();
-      if (unique.length === 0) return out;
-      let afterKey = "";
-      let afterPosition = -1;
-      for (;;) {
-        const rows = (await run(
-          "readKeys",
-          "PAGE",
-          `SELECT log_key, position, ${projection ? recordProjectionSql(table, projection) : "record"} AS record FROM ${table}
-           WHERE log_key = ANY($1::text[]) AND (log_key, position) > ($2, $3)
-           ORDER BY log_key ASC, position ASC
-           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-          [unique, afterKey, afterPosition],
-        )) as Record<string, unknown>[];
-        for (const r of rows) {
-          const key = String(r.log_key);
-          const held = out.get(key);
-          const record = parseValue<T>(r.record, `${table} ${key}`);
-          if (held) held.push(record);
-          else out.set(key, [record]);
-        }
-        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-        afterKey = String(rows[rows.length - 1].log_key);
-        afterPosition = Number(rows[rows.length - 1].position);
-      }
-      return out;
+      const rows=await retainedLogReadsFor(sql).keys((text,params)=>run("readKeys","PAGE",text,params),table,[...new Set(keys)],
+        projection?recordProjectionSql(table,projection):"record");
+      return new Map([...rows].map(([key,records])=>[key,[...records] as T[]]));
     },
 
     async keys() {
@@ -1623,6 +1585,7 @@ export async function createPgRepositories(
     },
   });
   shareRevisionReads(sql, connectionString);
+  shareRetainedLogReads(sql, connectionString);
   const bounded: PgRepositoryBounds = { bounds, copies: heldCopiesFor?.(connectionString, BOOTSTRAP_VERSION) ?? null };
   if (!options.skipBootstrap) {
 

@@ -4534,5 +4534,17 @@
     "tested_sha": "c02e4bf30",
     "gates": "pass (9 of 9, 9,882 tests)",
     "at": "2026-10-25T04:35:52Z"
+  },
+  {
+    "lane": "river-box",
+    "steps": [
+      "RV-BOX"
+    ],
+    "ready_sha": "9350e15da",
+    "merge_sha": "d62ca66ce",
+    "river_sha": "d62ca66ce",
+    "tested_sha": "d62ca66ce",
+    "gates": "pass (9 of 9 across reruns; 9,883 tests)",
+    "at": "2026-10-25T06:16:59Z"
   }
 ]

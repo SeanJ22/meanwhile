@@ -8,7 +8,7 @@ import { summarizePlanningRound, mergeStatePlanningPass, STATE_PLANNING_WALK_MS,
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { backfillBox } from "../lib/control-plane/box.ts";
-import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
+import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder, deactivateUnfundedHunts, researchPlanningStates } from "../lib/control-plane/repository/pg-store.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
 import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
@@ -415,6 +415,11 @@ if(STATE===null) {
   const parentRepos=await createPgRepositories(url,NOW,{skipBootstrap:true});
   crashRepos=parentRepos;
   const roundIntents=await readPlanningIntents(parentRepos);
+  const liveStates = await researchPlanningStates(parentRepos, roundIntents);
+  if (!liveStates.length) {
+    console.log("All hunts are stopped; no research state or history is read.");
+    process.exit(0);
+  }
   if(parentRepos.controlReadsBackfill && !await parentRepos.controlReadsBackfill.finished()) {
     if(dry || filteredCycle)throw new Error("Complete the scoped control backfill in a full runner round before filtered planning");
     for(const state of PLANNING_STATES) {
@@ -448,10 +453,11 @@ if(STATE===null) {
       void cleanup.then(()=>resolve(completed),reject);
     });
   });
-  const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES);
+  const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))].filter(state=>liveStates.includes(state)):liveStates);
   let result=await runStatePlanningRound(runState,states);
   if(!releaseDrainRequested && !filteredCycle && parentRepos.planningControls)for(;;) {
-    const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>!result.failed.includes(state));
+    const active=await researchPlanningStates(parentRepos,await readPlanningIntents(parentRepos));
+    const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>active.includes(state)&&!result.failed.includes(state));
     if(!pending.length)break;
     const extra=await runStatePlanningRound(runState,await readPlanningStateOrder(parentRepos,pending));
     result={...result,failed:[...result.failed,...extra.failed]};

@@ -127,3 +127,18 @@ test("Open States streaming waits for publication and propagates its error", asy
   }), error => error === failure);
   assert.equal(attempts, 1);
 });
+
+test("the next bounded bulk pass resumes after the last accepted source position",async()=>{
+  const bytes=changedArchive((suffix,data)=>{
+    if(suffix==="votes"){const next=[...data[1]];next[data[0].indexOf("id")]=neighborId;data.push(next);}
+    if(suffix==="people"){const next=[...data[1]];next[data[0].indexOf("vote_event_id")]=neighborId;data.push(next);}
+  });
+  const dir=await mkdtemp(join(tmpdir(),"db03-bulk-resume-")),path=join(dir,"session.zip");
+  try {
+    await writeFile(path,bytes);let saved=0;
+    await assert.rejects(parsePluralBulkSessionFile(sample.state,sample.session,path,evidence(bytes),{onVote:async(_vote,position)=>{saved=position;throw Error("pass deadline");}}),/pass deadline/);
+    const ids:string[]=[];
+    await parsePluralBulkSessionFile(sample.state,sample.session,path,evidence(bytes),{afterPosition:saved,onVote:async vote=>{ids.push(vote.id);}});
+    assert.deepEqual(ids,[neighborId]);
+  } finally {await rm(dir,{recursive:true,force:true});}
+});

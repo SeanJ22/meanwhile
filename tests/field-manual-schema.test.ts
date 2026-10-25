@@ -64,7 +64,11 @@ test("a runner slice reads scoped SQL and never opens or rewrites a national hel
   const copies = openHeldCopies(dir, { log: line => assert.fail(line) });
   const held = pgFieldManualRepository(sql,{copies},()=>createFixMapRepository(async()=>[]));
   assert.deepEqual((await held.select({ role: "SCOUT", state: "az",limit:12 })).store.entries, [entry]);
-  assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL]);
+  assert.equal(seen[0], FIELD_MANUAL_SLICE_SQL);
+  assert.match(seen[1], /^SELECT id,revision,updated_at,value FROM cp_field_manual_entries/);
+  seen.length = 0;
+  assert.deepEqual((await held.select({ role: "SCOUT", state: "az", limit:12 })).store.entries, [entry]);
+  assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL], "unchanged notes need only their IDs and revisions");
   assert.deepEqual(await readdir(dir), []);
 });
 

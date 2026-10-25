@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4). SHIPPING: release 118 (DB-03 inventory readback, River fold 235c6f837, gates 9 of 9) PR #830, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 catch-up b2bbdc183 alone (river-next 456454204). BUILDING: GB-01 Census governing bodies (stream/gb-01). NEXT after GB-01: DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820, VS-05 when it posts. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4). SHIPPING: release 118 (DB-03 inventory readback, River fold 235c6f837, gates 9 of 9) PR #830, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 catch-up b2bbdc183 alone (river-next 456454204). NEXT: GB-01 READY 900dd1427 (Census governing bodies + LA Metro move), alone after RB-A4 catch-up. NEXT after GB-01: DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820, VS-05 when it posts. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T17:40:00Z
+heartbeat: 2026-10-25T18:20:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -996,4 +996,19 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Done when Portland 97204 shows its city council, county board and school board, and 20 random ZIPs in 20 states show governing bodies, with counts by state.
 - Runner Neon before, database_transfer_hourly response bytes, reader DB + control plane, GB per hour, 5 AM to 12 PM EDT: 7.16 / 8.52 / 12.51 / 9.98 / 9.03 / 13.93 / 11.37 / 11.65, average 10.52.
 - Correction: the per-job MB in the 11:15 AM baseline and the noon and 1 PM statuses counted both databases, not the reader DB alone. Totals and per-job numbers are unchanged; only the label was wrong.
+
+### GB-01 READY 900dd1427 (stream/gb-01, built on RB-A4 catch-up)
+- How a board is made:
+  - Every Census government whose division lib/registry/derive.ts `slotsFor` gives a governing body (counties, cities, townships, school districts, dependent school systems) gets `<government>#governing`, or `#board` for school districts.
+  - The board comes from lib/core/door.ts `door()` publishing the Census record's mailing address (`office_address`) and website (`homepage`, when present), loader lane, OFFICIAL. The door's `ensureGoverningBody` makes "<government> governing board" (or "school board"), files it under the government and places it where the government is.
+  - Source copy: the attested Census of Governments 2022 file (sha256 3ef3d93c…).
+  - No registry, runtime registry or promotion write; paid hunting is untouched.
+- Runner: one state at a time, Oregon first, resuming inside a state from cursor `census-governing-bodies`. River gave it its own 10 minutes a pass, at 2 door calls at a time; the builder's version had fact maintenance's 1 minute, about two days for all states. Once every state is done, a pass costs one cursor read.
+- Reader: coverage now shows a board that has a sourced fact but no source-given name, under its held name. Before, any board without a `name` fact was dropped.
+- LA Metro: migration GB-01_la_metro_boards moves the 66 boards (host webapi.legistar.com/v1/metro) from Oregon to ca:special:los-angeles-county-metro-transit-authority (Census 142274, filed on LA County). Ids and facts stay, aliases stop second copies, and the 6 Oregon Metro boards stay. LA Metro's 7 Oregon doors are SUSPENDED (RB-A4), so nothing re-files them under Oregon.
+- Expected new boards (repo files minus boards held): about 50,700. OR 481, CA 1,524, TX 2,553, IL 3,697, PA 3,133, MN 3,032, OH 2,986 … Territories 0: the Census of Governments lists none.
+- Checks: gb-01-census-governing 5/5 and rb-a4-catch-up 3/3 with the CI loader; tsc, eslint and knip clean.
+- FOR SEAN:
+  - About 40,000 special districts get no board, by the `slotsFor` rule. Their Census records carry the same address and website, so turning them on is one line if you want it.
+  - Follow-ups not in this lane: the moved boards' ids still start `.../state:or#body:`, so a later fact on one clears Oregon's reader cache, not California's. And 21 stateless bodies, ids `government:US-OR:cog:155003#body:...`, host metro, are left over from the old Oregon doors.
 

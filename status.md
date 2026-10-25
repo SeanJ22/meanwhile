@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 106 (main 526fe7131, live 9:04 PM EDT; DB-01). GATING: RB-A8 fb1783a62 + RB-A3 + RB-A5 (river-next 0916a5b87). THEN: PT-01 a109cf965, RB-A4
+build_state: LIVE FOR READERS: release 106 (main 526fe7131). NEXT: release 107 = RB-A8 + RB-A3 + RB-A5 (PR #818, CI). GATING: PT-01 + MT-01 (river-next 78a1f9e0d). THEN: DB-02 + BL-02 (pre-folded b42272b1b). Returned: RB-A6, RB-A4 (10:40 PM EDT), CL-01 (10:45 PM EDT)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T01:07:52Z
+heartbeat: 2026-10-25T01:35:29Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Batches and returns, 9:45 PM EDT
+- Release 107 (PR #818): RB-A8 fb1783a62 with RB-A3 d92e9a054 and RB-A5 f7ab065e3. Gates 9 of 9, 9,850 tests. The preview against production shows Arizona's October 5 registration deadline on the 85701 ballot (RB-A8's retained-date repair); live today shows "Still gathering: … voter registration deadlines". Every other 85701 date matches.
+- Gating: PT-01 a109cf965 + MT-01 0c28ca5c7 (river-next 78a1f9e0d). River re-merged PT-01's two-line card-source label map.
+- Pre-folded next: DB-02 2769c614e (clean) + BL-02 c3fff3702 (b42272b1b). River merged the worker memory list in lib/control-plane/workers/worker-slots.ts to keep both legiscan-bulk.mts and place-map-refresh.mts; both have peak figures.
+- Returned, with exact merges in returns/<lane>.md (River takes each over at its deadline):
+  - RB-A6 50405245e: conflicts with RB-A8 in lib/control-plane/line-keeper/country.ts (RB-A8 removed the held-capture inventory RB-A6 builds on) and 3 tests. 10:40 PM EDT.
+  - RB-A4 ef7987b1e (8 hours old): conflicts in lib/core/door.ts, lib/facts/meeting-facts.ts (RB-A8's single fact counter, MT-01's meeting points), the reader journal and phases, and tests/helpers/fact-db.ts. 10:40 PM EDT.
+  - CL-01 56e7dce36: conflicts with PT-01's portrait selection in lib/officials/lookup.ts toSeatHolder, and in merge-people.ts. 10:45 PM EDT.
 
 ### Release 106 live, 9:04 PM EDT (DB-01); hourly status
 - /api/build 526fe7131 (PR #817 merge commit). Sean's checks in Chromium at 9:05 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.

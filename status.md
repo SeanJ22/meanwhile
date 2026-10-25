@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 108 (main c0500807b, RV-LOCK), live 11:32 PM EDT; reader checks green. NEXT: release 109 = PT-01 + MT-01 (PR #819, main merged in, tree = river 829f38c05), preview check building. Gating: DB-02 + BL-02 (held until the meeting cause is known). Queue: meeting fix (own batch, first), RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline)
+build_state: LIVE FOR READERS: release 108 (main c0500807b), live 11:32 PM EDT, reader checks green. NEXT: release 109 = PT-01 + MT-01 (PR #819, preview check passed 11:40 PM EDT, auto-merge on, CI tests running). GATING: RV-MEET2 c02e4bf30 alone (meeting calendars fix), ships as release 110 right after 109. HELD: DB-02 + BL-02 (gates stopped to give RV-MEET2 the machine; re-gate after). Queue: RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:33:44Z
+heartbeat: 2026-10-25T03:50:49Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -54,6 +54,22 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - A River helper is root-causing it, starting with DB-01's per-scope clock versions (civic_data_clock_versions and its triggers; the runner's shared read cache), against production records read-only, with a fix on stream/river-meet2 and a replay of how many meeting partitions launch on the next pass, by state.
 - Placement: the fix ships as its own small batch, ahead of everything except RV-LOCK (release 108, already in CI and needed so any build can deploy). If RV-LOCK merges first, the meeting fix is release 109 and PT-01 + MT-01 (PR #819) moves to 110.
 - Proof owed after deploy: meeting calendar reads at the 8 PM-hour rate on the next pass, and new meeting facts per hour above 1,000. Then River re-measures DB-01's read savings with meetings running.
+- Cause found (11:55 PM EDT). DB-01's clock code is not it:
+  - Replaying the clock read on 1,000 real meeting scopes with the 105 and 106 store code gives identical clocks.
+  - 0 of 3,525 meeting clock versions changed in 7.6 minutes of live passes.
+  - About 800 due boards are still queued every publish-now pass, before and after 106.
+- The two real steps:
+  1. Release 104 (RV-VOTE, River's change, 7:17 PM EDT) put every voting-sites program at the front of the routine pass. Each holds its memory to the pass deadline, so 25 to 35 of them per pass left the meeting calendars waiting on memory. Routine passes went from 163-278 attempted tasks to 33-57; the 03:10Z pass deferred 826 meeting boards in 39 states on worker memory. After that, meetings ran only when a 10-minute publish-now pass launched them early.
+  2. A state calendar program may start a board only until 280 s into a publish-now pass (two-thirds of 10 minutes, less the 120 s read timeout). Before 106, the first launch came at a median 253 s, and the passes that launched by about 245 s read 38 to 289 boards (Sean's 51 and 90 bursts). After 106 the median is 309 s, earliest 306 s, so every board defers.
+     - Most of the pre-launch time is about 800 QUEUED and then 800 COLLECTING hunt progress lines written one at a time (about 50 s a set).
+     - Part of the 60 s shift may be DB-01 re-reading clocks its shared cache evicted: about 780 clock reads per pass in the 10 PM hour, about 15 s. Not proven.
+  - The 10:44 PM digest failures are voting-sites ones: NH's input is over Neon's 64 MB response limit, and MN, WA and UT have contradicted receipts. Bismarck-type 429s ran 17 to 81 an hour all evening, so they are not new.
+- Fix, RV-MEET2 (READY c02e4bf30 on stream/river-meet2, River's own lane):
+  - Ballot files still lead the pass. Voting sites now take turns with the rest of it, so each gets about half the memory: at 20 GB with 30 voting states and 15 calendar programs, at least 8 of each start (a test pins this; on the old order, calendars got 2 or 3).
+  - Hunt progress lines are written 16 at a time.
+  - Focused tests pass (the 5 that need the harness database fail on river too); tsc and eslint are clean.
+  - Gating alone now; it ships as its own release right after 109.
+- Proof owed after it is live: meeting reads per hour back to the 8 PM-hour rate or better, new meeting facts above 1,000 an hour, then DB-01's read savings re-measured with meetings running.
 
 ### Sean's queue fixes, 11:10 PM EDT
 1. MD-01 READY a7014d303 (7:18 PM EDT; implementation 576965f, the cheaper explanation writer) added to the queue after CL-01.

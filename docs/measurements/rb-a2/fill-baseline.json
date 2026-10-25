@@ -67,15 +67,16 @@
     "liveThroughputVerified": false
   },
   "fullChecks": {
-    "runtimeRevision": "29553f920",
+    "runtimeRevision": "a41c494f1",
     "gatesPassed": 9,
     "gatesTotal": 9,
-    "testsRegistered": 9904,
-    "testsPassed": 9902,
+    "testsRegistered": 9941,
+    "testsPassed": 9939,
     "testsFailed": 0,
     "testsSkipped": 2,
-    "finishedAt": "2026-10-25T13:20:18.653Z",
-    "productionDatabaseBindings": false
+    "finishedAt": "2026-10-25T15:22:15.402Z",
+    "productionDatabaseBindings": false,
+    "productionModelServiceBindings": false
   },
   "currentCombinationValidation": {
     "runtimeRevision": "a41c494f1",
@@ -85,12 +86,13 @@
       "RB-A4"
     ],
     "startedAt": "2026-10-25T14:47:10.192Z",
-    "status": "Full checks running; production database and model-service credentials removed."
+    "status": "All nine checks passed, including both builds and all 16 bundle tests; see fullChecks.",
+    "finishedAt": "2026-10-25T15:22:15.402Z"
   },
   "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
   "latestProductionObservation": {
-    "observedAt": "2026-10-25T14:18:54.512Z",
+    "observedAt": "2026-10-25T15:23:55.600Z",
     "hasBoundaries": false,
     "hasZipRows": false,
     "hasZctaRows": false,
@@ -100,11 +102,11 @@
     "method": "Server-side existence flags and count-cache metadata; no geometry, source payloads or table copies."
   },
   "deploymentObservation": {
-    "river": "c0205d49f",
-    "main": "1d2ac473a",
+    "river": "e84d06c43",
+    "main": "03e0526b6",
     "checkedLoaderInRiver": false,
     "checkedLoaderInMain": false,
-    "runnerObservedAt": "2026-10-25T14:15:32.374Z",
+    "runnerObservedAt": "2026-10-25T15:18:13.798Z",
     "runnerTestedSha": "1d2ac473a",
     "mapWorkers": 0
   },
@@ -134,5 +136,15 @@
       "network": "Provider responses are mocked; no production credentials or real model calls."
     },
     "status": "Corrected full rerun passed all nine gates: 9,904 registered, 9,902 passed, zero failed, two skipped; both builds and all 16 bundle tests passed. Model-service keys were removed entirely and production database bindings were absent. See fullChecks."
+  },
+  "branchMetadataCheck": {
+    "observedAt": "2026-10-25T15:12:29Z",
+    "searches": [
+      "rb-a2",
+      "822"
+    ],
+    "readerMatches": 0,
+    "controlPlaneMatches": 0,
+    "method": "Branch names and IDs only; no database contents read."
   }
 }

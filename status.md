@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T11:34:38Z
+heartbeat: 2026-10-25T12:01:31Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,18 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### 8 AM EDT
+- Live for readers: release 114 (RB-A6, since 7:03 AM EDT). Reader checks green.
+- Gating: MD-01 a7014d303 alone (release 115).
+- CL-01 returned at 7:45 AM EDT and reposted READY 69ca09c83 at 7:34 AM EDT; it folds after MD-01.
+- Since midnight EDT these reached readers:
+  - meeting calendars launch again (110, 112);
+  - the Box publishes without timeouts (111);
+  - voting doors no longer carry their linking pages (113);
+  - hunters get each place's missing fields with what is held (114).
+- Owed: cp_doors bytes per hour after DB-03A (about 9 AM EDT).
+- FOR SEAN: lanes for member-offices and scheduler history reads (Neon), and for place-scoped voting doors shown county-wide (03301 Concord shows New London).
 
 ### 7 AM EDT: release 114 live, 7:03 AM EDT (main 0e3cdce42: RB-A6)
 - Reader checks pass:

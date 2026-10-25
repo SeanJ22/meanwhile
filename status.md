@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 106 (main 526fe7131). Release 108 = RV-LOCK merged 11:26 PM EDT, production build running (retries RB-A8_count_hour with fact, civic_data_promotions, entity locked first). HELD: release 109 = PT-01 + MT-01 (PR #819). Gating: DB-02 + BL-02 (held from shipping until the meeting cause is known). Queue: RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline)
+build_state: LIVE FOR READERS: release 108 (main c0500807b, RV-LOCK), live 11:32 PM EDT; reader checks green. NEXT: release 109 = PT-01 + MT-01 (PR #819, main merged in, tree = river 829f38c05), preview check building. Gating: DB-02 + BL-02 (held until the meeting cause is known). Queue: meeting fix (own batch, first), RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:28:42Z
+heartbeat: 2026-10-25T03:33:44Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,15 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Release 108 live, 11:32 PM EDT (main c0500807b, RV-LOCK)
+- /api/build shows c0500807b. Chrome reader checks on meanwhileusa.com all pass:
+  - /ballot 85701: 200, AZ voting card intact (Election Day Nov 3; early voting Oct 7 to Oct 30; mail-ballot request Oct 23; voter registration Oct 5, 11:59 p.m.). No console errors.
+  - Ask on 85701: grounded, names Kelly, Gallego and Grijalva (District 7).
+  - /ballot 03255: 200.
+  - /api/meetings: 200 for 85701 (435 id fields) and 60602 (598).
+  - /national: 200.
+- What readers gain: nothing visible. It unblocks every later release, which could not deploy while release 107's migration deadlocked.
 
 ### Release 108 build: RB-A8_count_hour lock hold (Sean item 4), 11:32 PM EDT
 - Applied on the release 108 production build: 19 statements, reader journal 56 of 56 (id 56 = RB-A8_count_hour, hash aaea8f93); control plane RB-A5_expand at 11:29:07 PM and RB-A8_expand at 11:29:48 PM EDT; outcome recorded in Admin's "Production migrations" digest at 11:29:48 PM EDT.

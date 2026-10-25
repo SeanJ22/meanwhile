@@ -324,6 +324,24 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
   return done;
 }
 
+/**
+ * Loads states in rotation after `previous` until one is already current, marking each state it checks so the
+ * next pass resumes after it. A changed importer or registration file reaches every state in one pass; when
+ * nothing changed, this reads one state, as the one-state rotation did.
+ */
+export async function loadChangedStates(states: readonly string[], previous: string | null,
+  load: (state: string) => Promise<readonly string[]>, checked: (state: string) => Promise<void>, more: () => boolean): Promise<readonly string[]> {
+  const at = (states.indexOf(previous ?? "") + 1) % states.length, loaded: string[] = [];
+  for (const state of [...states.slice(at), ...states.slice(0, at)]) {
+    if (!more()) break;
+    const done = await load(state);
+    await checked(state);
+    if (!done.length) break;
+    loaded.push(...done);
+  }
+  return loaded;
+}
+
 export function registeredStates(root: string): readonly string[] {
   return readdirSync(join(root, "data", "derived", "registration")).filter(name => /^[a-z]{2}\.json$/.test(name)).map(name => name.slice(0, 2)).sort();
 }

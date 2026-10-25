@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T16:35:00Z
+heartbeat: 2026-10-25T16:08:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -954,7 +954,7 @@ Per fold: claim the lock, fold the exact READY, merge main in, number migrations
   - research-cycle: 1,074 / 1,970 / 2,055 / 876 / 1,873 / 2,488
 - FOR SEAN: people-portraits is the biggest reader (6.0 GB in the 10 AM hour), and none of the five DB-03 fixes in the order targets it.
 
-### RB-A4 is live but readers don't see it (Sean, 11:45 AM EDT). Answer, 12:35 PM EDT
+### RB-A4 is live but readers don't see it (Sean, 11:45 AM EDT). Answer, 12:05 PM EDT
 **Did the placements get written? Mostly not yet.** RB-A4 files boards and special districts when the runner reloads a state's registration entities, and the runner reloads one state per pass (fact_store_load shows about one state an hour). RB-A4 changed the load hash, so all 56 states are due. Since release 117, only Washington has reloaded (11:40 AM EDT). It gained 1,394 host-county placements; HOST_COUNTY rows nationwide are 1,400, and Oregon, Texas and Vermont have 0. Oregon was about 45 passes away. RB-A4's proof ran the import for all 56 states at once in a copy, so it never showed the rotation.
 
 **Would Portland change once Oregon reloads? Not its governing bodies.** Pages read what they're given. The gap is that the bodies don't exist:
@@ -975,3 +975,9 @@ OR 97204 Portland 13/0/3 (all Metro) · AK 99654 7/1/4 · OR 97413 0/0/1 · RI 0
 Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon reads, so I'd do it per state rather than per ZIP. My recommendation is (b), one state at a time, starting with OR.
 
 **Done check after both:** Portland 97204 shows its governing bodies, and on 20 random ZIPs in 20 states each board appears on every place it is filed to (entity_place against the page), with counts by state.
+
+### Noon EDT status
+- DB-03 inventory readback (River fold 50bdec3ae) is gating alone on river-next f1b766d47; lint passed, tsc running. It ships alone on 9 of 9.
+- Lanes: RB-A7 posted READY 7996ae820 and folds after the queue above (RB-A4 is in river). VS-05's only READY, fd1daab0a, is already in river, so nothing new from VS-05. DB-03, RT-01 and AD-01 have no new READYs.
+- Neon, reader DB response bytes, 11 AM EDT hour: 11,372 MB total (10 AM: 13,925). Portraits 2,638, readback 1,810, research cycle 1,893. No DB-03 code is live yet, so this is still baseline.
+

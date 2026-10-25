@@ -412,3 +412,4 @@ One line per batch folded into river.
 - 2026-10-25T09:42:04Z · db-03a · DB-03A · ready 9878c12ae (River-finished: walk outside the cp_doors lock; provenance note) · river 180160158 · pnpm gates pass on 180160158 (9 of 9, 9,888 tests) · release 113 PR #825
 - 2026-10-25T10:30:58Z · rb-a6 · RB-A6 · ready d7b31ba67 (River-finished) · river b2d07e636 · pnpm gates pass on b2d07e636 (9 of 9, 9,890 tests) · release 114 PR #826
 - 2026-10-25T12:07:53Z · md-01 · MD-01 · ready a7014d303 · river 6d92e488c (one test import conflict resolved) · pnpm gates pass on 6d92e488c (9 of 9, 9,894 tests) · release 115 PR #827
+- 2026-10-25T12:57:30Z · cl-01 · CL-01 · ready 69ca09c83 (after return 086fbb5b6) · river c0205d49f · pnpm gates pass on c0205d49f (9 of 9, 9,932 tests) · release 116 PR #828

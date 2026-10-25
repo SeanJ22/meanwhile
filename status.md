@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 115 (main 61d7ecc06, MD-01), live 8:40 AM EDT; reader checks green. CL-01 RETURNED 7:45 AM EDT (2 tests: an identical replay re-versions instead of confirming; returns/cl-01.md). GATING: CL-01 69ca09c83 alone (river-next c0205d49f; the 2 tests that failed now pass, 14/14). Queue (each its own batch, by arrival): RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f, linking-page integration ef74ed82e, read-path connection 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up ed1b600aa, RB-A3 follow-up be0bef2bf, RN-03 follow-up 1307d4e03. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 115 (main 61d7ecc06, MD-01), live 8:40 AM EDT. SHIPPING: release 116 (CL-01 69ca09c83, gates 9 of 9) PR #828, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 624ac2d3d alone (river-next 3aef51fa3). DB-03A proof: cp_doors 382 MB in the 8 AM hour, down from 2.2-5.0 GB/h overnight. Queue (each its own batch): RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (04681516c, e4305907d, f2d76ac1f, ef74ed82e, 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 f26ebab8d, RB-A3 be0bef2bf, RN-03 1307d4e03. HELD: RB-A10 7b5eacd03 (place map)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T12:42:17Z
+heartbeat: 2026-10-25T13:06:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -922,3 +922,13 @@ Live checks owed once the release is live (each also on real places in 10+ state
 ## How River works
 
 Per fold: claim the lock, fold the exact READY, merge main in, number migrations, run pnpm gates once, promote, release PR with run-full-ci, merge by hand when green, check /api/build, run the observer. Live before/after record with tools smoke.py (street addresses for voting checks; Google has no places for Houston, Columbus, New York, Orlando, Philadelphia, Seattle). Native auto-merge stays off. No automatic revert outside Sean's release process. Production database access is read-only.
+
+### 9 AM EDT status
+- CL-01 69ca09c83 passed alone: 9 of 9 gates, 9,932 tests, 0 failing. Both replay tests it was returned for now pass. River moved to c0205d49f. Release 116 is PR #828 (tree identical to river, auto-merge on). Reader checks run within 5 minutes of /api/build showing it.
+- RB-A4 624ac2d3d gating alone on river-next 3aef51fa3. Sean's count is done: readers lose 0 facts to a portal withdrawal (the raw UPDATE that would have pulled up to 99,690 in 43 states is deleted). RB-A7 folds after it.
+- DB-03A proof (Sean, 1:20 AM: "give cp_doors bytes per hour before and after"). From cp_vital_signs.neon_bytes_by_caller on the control plane, one small read. DB-03A went live with release 113, migration at 6:11 AM EDT.
+  - Before (7 PM to 5 AM EDT): cp_doors 2,220 / 3,606 / 4,239 / 4,960 / 3,219 / 2,373 / 3,568 / 3,596 / 2,869 / 3,135 / 3,297 MB per hour. voting-source-publication.ts:41 alone was 950 to 1,775 MB/h.
+  - 6 AM hour (live mid-hour): 1,573 MB.
+  - After: 7 AM 599 MB, 8 AM 382 MB. voting-source-publication.ts:41 is 195 and 215 MB/h. Callers at registry.ts:385, :406, outcome.ts:38 and voting-source-publication.ts:194/:202 fell to 0 or near it.
+  - Control-plane total: 4.8 to 8.4 GB/h overnight, now 3.2 GB (7 AM) and 1.6 GB (8 AM).
+  - What's left on cp_doors: voting-source-publication.ts:41 (~200 MB/h) and platform-census.ts:85 (126 to 183 MB/h, same as before DB-03A).

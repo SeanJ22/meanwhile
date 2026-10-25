@@ -78,6 +78,37 @@
     "productionDatabaseBindings": false
   },
   "currentCombinationValidation": {
+    "runtimeRevision": "a41c494f1",
+    "river": "e84d06c43",
+    "includes": [
+      "CL-01",
+      "RB-A4"
+    ],
+    "startedAt": "2026-10-25T14:47:10.192Z",
+    "status": "Full checks running; production database and model-service credentials removed."
+  },
+  "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
+  "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
+  "latestProductionObservation": {
+    "observedAt": "2026-10-25T14:18:54.512Z",
+    "hasBoundaries": false,
+    "hasZipRows": false,
+    "hasZctaRows": false,
+    "populatedStates": 0,
+    "countCacheRows": 0,
+    "promotedStates": 0,
+    "method": "Server-side existence flags and count-cache metadata; no geometry, source payloads or table copies."
+  },
+  "deploymentObservation": {
+    "river": "c0205d49f",
+    "main": "1d2ac473a",
+    "checkedLoaderInRiver": false,
+    "checkedLoaderInMain": false,
+    "runnerObservedAt": "2026-10-25T14:15:32.374Z",
+    "runnerTestedSha": "1d2ac473a",
+    "mapWorkers": 0
+  },
+  "previousCombinationValidation": {
     "runtimeRevision": "29553f920",
     "failedAttempt": {
       "finishedAt": "2026-10-25T12:44:47.429Z",
@@ -103,26 +134,5 @@
       "network": "Provider responses are mocked; no production credentials or real model calls."
     },
     "status": "Corrected full rerun passed all nine gates: 9,904 registered, 9,902 passed, zero failed, two skipped; both builds and all 16 bundle tests passed. Model-service keys were removed entirely and production database bindings were absent. See fullChecks."
-  },
-  "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
-  "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
-  "latestProductionObservation": {
-    "observedAt": "2026-10-25T14:18:54.512Z",
-    "hasBoundaries": false,
-    "hasZipRows": false,
-    "hasZctaRows": false,
-    "populatedStates": 0,
-    "countCacheRows": 0,
-    "promotedStates": 0,
-    "method": "Server-side existence flags and count-cache metadata; no geometry, source payloads or table copies."
-  },
-  "deploymentObservation": {
-    "river": "c0205d49f",
-    "main": "1d2ac473a",
-    "checkedLoaderInRiver": false,
-    "checkedLoaderInMain": false,
-    "runnerObservedAt": "2026-10-25T14:15:32.374Z",
-    "runnerTestedSha": "1d2ac473a",
-    "mapWorkers": 0
   }
 }

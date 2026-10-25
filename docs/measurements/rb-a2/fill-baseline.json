@@ -35,6 +35,7 @@
     "reservationMiB": 1672
   },
   "focusedTests": {
+    "runtimeRevision": "96483b400",
     "registered": 123,
     "passed": 123,
     "failed": 0,
@@ -57,14 +58,14 @@
     "liveThroughputVerified": false
   },
   "fullChecks": {
-    "runtimeRevision": "008d674f4",
+    "runtimeRevision": "6e9f3eb4d",
     "gatesPassed": 9,
     "gatesTotal": 9,
-    "testsRegistered": 9893,
-    "testsPassed": 9891,
+    "testsRegistered": 9894,
+    "testsPassed": 9892,
     "testsFailed": 0,
     "testsSkipped": 2,
-    "finishedAt": "2026-10-25T06:53:14.059Z"
+    "finishedAt": "2026-10-25T08:13:30.470Z"
   },
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays."
 }

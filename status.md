@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T07:16:40Z
+heartbeat: 2026-10-25T07:27:41Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### RV-BOX proof, first look, 3:28 AM EDT (counts only)
+- The runner took release 111 at about 3:05 AM EDT. Publish-now passes on 111: 3:14 and 3:23 AM, both with no box-facts failure. The proof needs 3.
+- Box failures had also stopped in every pass from 2:32 AM EDT (still on 110, and before the indexes existed at 2:40), so a quiet hour alone does not prove the fix. River keeps counting across the next hours.
+- Box built per ET hour: 11 PM 7, midnight 120, 1 AM 175, 2 AM 232, 3 AM 46 by 3:27. Waiting: 352,711.
+- Built by state, last 4 h: VT 129, DE 109, TN 69, IA 43, ID 29, FL 27, DC 26, KY 24, SC 20, GA 18, CO 12, AL 11, CA 11, AR 8, PA 7, AK 6, HI 6, CT 6, AZ 4, IN 3, WI 3, UT 2, MD 2, MS 1, OK 1, OR 1, WY 1, ND 1.
+- No clear rise in built per hour yet. Box publication is capped at 1,000 findings and about 200 s a pass, so boxDue speed alone may not raise the rate. RV-MEET3 also moves Box beside the source pass.
 
 ### 3 AM EDT
 - Live for readers: release 111 (RV-BOX).

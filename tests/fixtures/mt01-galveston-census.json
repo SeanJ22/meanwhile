@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=722+Moody%2C+Galveston%2C+TX+77550&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"722 Moody, Galveston, TX 77550\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=174+Calder+Rd.%2C+League+City%2C+TX+77573&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"174 Calder Rd., League City, TX 77573\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"R\",\"tigerLineId\":\"96723024\"},\"coordinates\":{\"x\":-95.105823633837,\"y\":29.505998163161},\"addressComponents\":{\"zip\":\"77573\",\"streetName\":\"CALDER\",\"preType\":\"\",\"city\":\"LEAGUE CITY\",\"preDirection\":\"N\",\"suffixDirection\":\"\",\"fromAddress\":\"100\",\"state\":\"TX\",\"suffixType\":\"DR\",\"toAddress\":\"198\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"174 N CALDER DR, LEAGUE CITY, TX, 77573\"}]}}"
+  },
+  {
+    "url": "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=722+21ST+ST%2C+Galveston%2C+TX+77550&benchmark=Public_AR_Current&format=json",
+    "status": 200,
+    "text": "{\"result\":{\"input\":{\"address\":{\"address\":\"722 21ST ST, Galveston, TX 77550\"},\"benchmark\":{\"isDefault\":true,\"benchmarkDescription\":\"Public Address Ranges - Current Benchmark\",\"id\":\"4\",\"benchmarkName\":\"Public_AR_Current\"}},\"addressMatches\":[{\"tigerLine\":{\"side\":\"L\",\"tigerLineId\":\"96680105\"},\"coordinates\":{\"x\":-94.79047911769,\"y\":29.303183746794},\"addressComponents\":{\"zip\":\"77550\",\"streetName\":\"21ST\",\"preType\":\"\",\"city\":\"GALVESTON\",\"preDirection\":\"\",\"suffixDirection\":\"\",\"fromAddress\":\"700\",\"state\":\"TX\",\"suffixType\":\"ST\",\"toAddress\":\"798\",\"suffixQualifier\":\"\",\"preQualifier\":\"\"},\"matchedAddress\":\"722 21ST ST, GALVESTON, TX, 77550\"}]}}"
+  }
+]

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT; RV-BOX_expand applied 2:40:45 AM EDT (4 indexes valid); reader checks green (fixed + 20 random ZIPs in 20 states). GATING: RV-MEET3 6f57717fc alone (meeting pins and Box facts publish beside admission, not before it), release 112. THEN: DB-03A (RETURNED 2:45 AM EDT, returns/db-03a.md; ships alone once fixed). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes at 2:50 AM EDT), RB-A7 after RB-A4, RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT; RV-BOX_expand applied 2:40:45 AM EDT (4 indexes valid); reader checks green (fixed + 20 random ZIPs in 20 states). GATING: RV-MEET3 6f57717fc alone (meeting pins and Box facts publish beside admission, not before it), release 112. THEN: DB-03A (RETURNED 2:45 AM EDT, returns/db-03a.md; ships alone once fixed). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 (River finished 2:54 AM EDT: a portal withdrawal changes no fact; READY on stream/rb-a4), RB-A7 after RB-A4, RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T06:53:00Z
+heartbeat: 2026-10-25T06:53:54Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

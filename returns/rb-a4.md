@@ -22,3 +22,15 @@ READY with a test that a census withdrawal leaves no live fact changed outside d
 
 Standing order: River owns this lane (its workspace died); River finishes it if no new READY lands by 2:50 AM EDT.
 RB-A7 folds after RB-A4 (both change lib/reader/place.ts and lib/core/door.ts).
+
+## River finished it, 2:54 AM EDT (standing order: no new READY by 2:50 AM EDT)
+- READY on stream/rb-a4 (after 0bdb1353d). lib/facts/portal-publication.ts `withdrawPlatformPublication` no longer touches facts:
+  the raw `UPDATE fact SET status='pulled'` and the query that fed it are deleted.
+- It still opens the CHECK blank (PORTAL_AUTHORITY_UNCONFIRMED), which keeps that portal's calendar off reader pages
+  (lib/reader/place.ts), removes the portal host from entity_host, and the census still suspends the door. The calendar comes
+  back when the government's own site links the portal.
+- Readers lose 0 facts to a withdrawal (was up to 99,690 in 43 states). tests/rb-a4-portals.test.ts now checks that agenda_url
+  and office_phone stay live through two withdrawals and a confirmation.
+- Checks: rb-a4-portals 2/2; eslint, tsc and knip clean. Folds in its queue place (after RB-A6, CL-01, MD-01), then RB-A7.
+- For Sean: hiding an unconfirmed portal's calendar while keeping its facts is RB-A4's own design. Whether calendars should hide
+  at all is his call.

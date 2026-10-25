@@ -142,3 +142,38 @@ test("voting sites and the overdue backlog take turns for memory, so neither hol
   assert.equal(votingAcquisitionDeadline(now, passDeadlineFromEnv({})), wall);
   assert.ok(votingAcquisitionDeadline(now, passDeadlineFromEnv(withPassDeadline({ NODE_ENV: "test" }, wall))) <= wall - 6 * 60_000);
 });
+
+test("the production memory shape starts a Census map without reducing meeting capacity", async () => {
+  const now = Date.parse("2026-10-25T03:10:00.000Z");
+  const states = "AL AR AZ CA CO CT DE FL GA IA ID IN KS KY LA MA MD ME MI MN MO MS MT NC ND NE NH NJ NM NV".split(" ");
+  const base = [
+    ...Array.from({ length: 15 }, (_, index) => ({ task: { ...meeting, id: `meetings:calendar-${index}` }, deadlineMs: now - 3_600_000, lastConsideredAt: null })),
+    ...states.map(state => ({ task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === `voting-sites:${state}`)!, owedAtMs: now, lastConsideredAt: null })),
+  ];
+  const maps = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("place-map-")).map(task => ({ task, baselineOwed: true, lastConsideredAt: null }));
+  assert.equal(maps.length, 56);
+  const starts = async (includeMaps: boolean) => {
+    const order = electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(includeMaps ? [...base, ...maps] : base), now));
+    const first = order.find(job => job.task.id.startsWith("place-map-"));
+    // The real bounded dispatcher offers only the active child of a serial lane to memory admission.
+    const wave = order.filter(job => !job.task.id.startsWith("place-map-") || job === first);
+    const slots = routineProcessSlots({ host: workerMemoryHost({ processes: () => [] }), availableBytes: () => 20_244 * mib });
+    const deadline = Date.now() + 200;
+    const outcomes = await Promise.allSettled(wave.map(({ task }, priority) => slots.acquire(
+      `${task.id}/${task.id.startsWith("meetings:") ? "ingest.ts" : task.id.startsWith("place-map-") ? "place-map-refresh.mts" : "fetch-voting-sites.mts"}`,
+      deadline, { priority, hold: task.id.startsWith("place-map-") })));
+    const started = wave.filter((_, index) => outcomes[index]!.status === "fulfilled").map(job => job.task.id);
+    for (const result of outcomes) if (result.status === "fulfilled") result.value();
+    return { meetings: started.filter(id => id.startsWith("meetings:")).length,
+      voting: started.filter(id => id.startsWith("voting-sites:")).length, maps: started.filter(id => id.startsWith("place-map-")).length };
+  };
+  const before = await starts(false), after = await starts(true);
+  assert.equal(before.meetings, 9);
+  assert.equal(after.meetings, before.meetings, "the loader must not take away a calendar program's memory");
+  assert.equal(after.maps, 1);
+  assert.ok(after.voting >= 8, "RV-MEET2's voting capacity is retained");
+  const ballot = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:AZ")!;
+  const order = electionLaunchOrder([{ task: ballot }, ...base, ...maps]);
+  assert.equal(order[0]!.task.id, ballot.id, "already-held ballot files still publish first");
+  assert.deepEqual(order.slice(1, 57).map(job => job.task.id), maps.map(job => job.task.id), "the next state retains the lane's one early turn");
+});

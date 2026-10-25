@@ -16,10 +16,6 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
-/** RN-02: New York's cold native repair peaked at 1,103,515,648 bytes on 2026-10-23,
- * with 64-part reads and two typed checks together. Summed process-tree /proc VmHWM sampled every
- * 100 ms on the execution host during an 11,451-contract replay using production SELECT-only roles
- * (Node 24.19). Retain that peak plus 5%, rounded up to MiB, even after small CURRENT-only batches. */
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
@@ -30,10 +26,10 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  // RB-A2: complete Texas source acquisition, native map import and
-  // Census publication on a production-data copy peaked at 3,703,468,032
-  // bytes (2026-10-24, Node 24.19), plus 5%, rounded up to MiB.
-  "place-map-refresh.mts": 3709,
+  // RB-A2: complete Texas acquisition, map import and Census publication
+  // with the 1 GiB heap and bounded geometry batches peaked at 1,669,304,320
+  // bytes (2026-10-25, Node 24.19), plus 5%, rounded up to MiB.
+  "place-map-refresh.mts": 1672,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,

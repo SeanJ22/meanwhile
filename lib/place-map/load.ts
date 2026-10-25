@@ -26,8 +26,8 @@ export interface StatePlaceMap {
   readonly entityPlaces?: readonly EntityPlace[];
 }
 
-async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Promise<void>): Promise<void> {
-  for (let at = 0; at < rows.length; at += 500) await run(rows.slice(at, at + 500));
+async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Promise<void>, size = 500): Promise<void> {
+  for (let at = 0; at < rows.length; at += size) await run(rows.slice(at, at + size));
 }
 
 /** One state's map rows commit atomically. Older plans and every existing id
@@ -59,7 +59,7 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
           bounds=coalesce(EXCLUDED.bounds,place_boundary.bounds), source_urls=EXCLUDED.source_urls, checked_at=EXCLUDED.checked_at,
           county_attachment=CASE WHEN coalesce(EXCLUDED.geometry,place_boundary.geometry) IS NOT NULL THEN false ELSE EXCLUDED.county_attachment END,
           host_county_id=coalesce(EXCLUDED.host_county_id,place_boundary.host_county_id)`, [JSON.stringify(rows)]);
-    });
+    }, 32);
     await loadEdges(query, "zip", map.zipEdges);
     await loadEdges(query, "zcta", map.zctaEdges);
     await batches(map.entityPlaces ?? [], async rows => {

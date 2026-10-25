@@ -184,6 +184,15 @@ export function buildStatePlaceMap(input: {
   const addressRequiredZips = new Set((input.postalLinks ?? []).filter(link => link.addressRequired).map(link => link.zip));
   for (const [id, edge] of zipEdges) if (addressRequiredZips.has(edge.code) && !isTownOrCountyDivision(edge.placeId)) zipEdges.delete(id);
   for (const link of input.postalLinks ?? []) {
+    if (!link.zcta) {
+      const division = reg.divisions.find(row => row[1] === "state");
+      const id = link.countryOnly ? "ocd-division/country:us" : division?.[0];
+      if (!id) throw new Error(`Postal ZIP has no known state: ${link.zip}`);
+      if (!places.has(id)) put(id, "United States", "country", "", 2023, "country:2023", [REGISTRATION_SOURCE_URL]);
+      addEdge(zipEdges, { code: link.zip, placeId: id, boundaryYear: latestBoundaryYear.get(id) ?? 2023,
+        share: null, shareBasis: "postal", partial: true, fringe: false });
+      continue;
+    }
     for (const edge of byZcta.get(link.zcta) ?? []) if (!link.addressRequired || isTownOrCountyDivision(edge.placeId)) {
       addEdge(zipEdges, { ...edge, code: link.zip });
     }

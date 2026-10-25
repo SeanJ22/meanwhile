@@ -19,6 +19,7 @@ import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateBoundaries } from "../lib/place-map/acquire.ts";
+import { statePostalLinks } from "../lib/place-map/postal-links.ts";
 import { heldStateDataset, knownPostalZips, readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
@@ -170,6 +171,24 @@ test("Idaho district type keys cannot become shared entity aliases", () => {
     assert.ok(!aliases.has(key) || aliases.get(key) === place.id, key);
     aliases.set(key, place.id);
   }
+});
+
+test("a known postal ZIP without a ZCTA keeps only its known state or country", () => {
+  const registration = JSON.parse(readFileSync("data/derived/registration/az.json", "utf8")) as RegistrationReference;
+  const map = buildStatePlaceMap({ registration, scopes: [], legacyZips: new Map(), legacyZctas: new Set(), boundaries: [], checkedAt: date,
+    postalLinks: [{ zip: "85796", zcta: "", addressRequired: true }, { zip: "09001", zcta: "", addressRequired: true, countryOnly: true }] });
+  assert.deepEqual(map.zipEdges.filter(edge => edge.code === "85796").map(edge => edge.placeId), [state]);
+  assert.deepEqual(map.zipEdges.filter(edge => edge.code === "09001").map(edge => edge.placeId), ["ocd-division/country:us"]);
+  assert.equal(map.zctaEdges.length, 0);
+  assert.ok(map.zipEdges.every(edge => edge.share === null && edge.shareBasis === "postal"));
+  assert.equal(map.places.find(place => place.id === "ocd-division/country:us")?.state, null);
+});
+
+test("the postal stream retains ZIPs without a Census alias without filing overseas mail at a state", async () => {
+  const [ny, dc, az] = await Promise.all([statePostalLinks(process.cwd(), "NY"), statePostalLinks(process.cwd(), "DC"), statePostalLinks(process.cwd(), "AZ")]);
+  assert.ok(ny.some(link => link.zip === "14231" && link.zcta === "" && !link.countryOnly));
+  assert.ok(dc.some(link => link.zip === "09001" && link.countryOnly && link.zcta === ""));
+  assert.ok(!az.some(link => link.zip === "09001" || link.countryOnly));
 });
 
 test("a border ZIP keeps its sourced districts even when the older state sample missed it", async () => {

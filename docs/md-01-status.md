@@ -2,11 +2,11 @@
 
 Integration READY published October 24, 2026: `a7014d303`, with the exact code tree and sole parent `576965f`. The requested production result and live-proof note remain pending.
 
-The prepared code is on `stream/md-01`. River's READY selector picks `a7014d303` and leaves later work as WIP. The later source compaction, worker ordering, source selection, section-provenance and Ask refinements described below are not included in that exact integration tree. Production is release 104, commit `2082dc9b1d79e901330984b607b94be1ba5c2597`; the READY implementation and later changes have not shipped. All database inspection used the supplied read-only roles. No direct database write, spending-limit change, pause change or reader-target change was made.
+The prepared code is on `stream/md-01`. River's READY selector picks `a7014d303` and leaves later work as WIP. The later source compaction, worker ordering, source selection, section-provenance and Ask refinements described below are not included in that exact integration tree. Production is release 105, commit `7f13a561c88fcdee922069a77175c7af4430766a`; ancestry checks confirm it contains neither the READY marker nor implementation `576965f`. All database inspection used the supplied read-only roles. No direct database write, spending-limit change, pause change or reader-target change was made.
 
-The 7:32 PM Eastern read-only production comparison retains all 276 existing measure summaries across all 56 jurisdictions: 265 independently checked translations and 23 held ballot summaries, with 12 overlaps. There are still 223 missing summaries among 499 measures. No summary ID, checked translation ID or checked part ID disappeared. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). These are production counts before the prepared changes ship, not evidence of improved publication.
+The October 24, 4:32 PM Phoenix read-only production comparison retains all 276 existing measure summaries across all 56 jurisdictions: 265 independently checked translations and 23 held ballot summaries, with 12 overlaps. There are still 223 missing summaries among 499 measures. No summary ID, checked translation ID or checked part ID disappeared. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). These are production counts before the prepared changes ship, not evidence of improved publication.
 
-Actual Google Chrome on meanwhileusa.com, release 103, October 24 at 5:55 PM Eastern:
+Actual Google Chrome 156 on meanwhileusa.com, release 105, October 24 at 5:25 PM Phoenix:
 
 | ZIP | Summaries | Missing |
 | --- | ---: | --- |
@@ -45,7 +45,9 @@ A controlled replay with the actual production Arizona ballot and ten published 
 
 ## Next scheduled run and remaining work
 
-The release-103 supervisor again deferred Arizona, California and Washington translations at 6:48:10 PM Eastern with `WORKER_MEMORY_DEADLINE`. At 7:07:42 PM Eastern, the latest metered translation call was still 11:08:57 AM Eastern. Release 104's voting-worker change is now live. No later call has exercised the prepared passage protocol. Post-change spend per publication and checker pass rates therefore remain unmeasured.
+The release-104 supervisor again deferred Arizona, California and Washington translations at 4:37:57 PM Phoenix with `WORKER_MEMORY_DEADLINE`. At 5:24 PM Phoenix, the latest metered translation call was still 8:08:57 AM Phoenix. No later call has exercised the prepared passage protocol. Post-change spend per publication and checker pass rates therefore remain unmeasured.
+
+The 5:27 PM Phoenix River check has no new MD-01 return or live-check pass. Release 105 is live; DB-01 is gating on the preceding RB-A2 work. MD-01's exact integration READY remains pending. The next board check is 5:47 PM Phoenix. The Chrome observations above refresh the pre-MD baseline; they are not the requested post-release live-proof note.
 
 River's RV-VOTE change addresses voting workers waiting until the shared launch deadline; its reported first-pass trade-off gives voting work most of the initial pool. MD-01 extends that existing order so due measure explainers follow ballots and voting sites, ahead of the meeting backlog. Every admitted job remains in the same pool, and the existing paid-work controls still decide every model call. In a controlled three-GiB worker-memory allocation, the prior voting-first order admits one of the three deferred state translators; the prepared order admits all three, with voting still first. This is a worker-admission test, not a production run. The affected scheduler, voting and translation suites pass 125 tests with the canonical two-file concurrency.
 

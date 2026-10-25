@@ -60,6 +60,8 @@ const runtime={now:()=>new Date().toISOString(),spaceOut:async()=>{},budget:{spe
   open:async(input:{url:string})=>{const page=await read(input.url);return {status:page.status,body:page.body,bytes:Buffer.byteLength(page.body),contentType:page.contentType ?? '',location:null,transportError:page.status?null:'Source read failed'};},
   vault:async()=>({stored:true,where:'local source copy',why:'saved'})};
 const own=new Map<string,Promise<{links:string[];sources:{url:string;status:number;sha256:string}[]}>>();
+// A web link's HTTPS path, used only to rank links; never a filesystem path.
+const webPath=(link:string)=>{const u=new URL(link);return u.pathname;};
 async function ownLinks(website:string) {
   if(own.has(website)) return own.get(website)!;
   const work=(async()=>{
@@ -69,7 +71,7 @@ async function ownLinks(website:string) {
     const local=links.filter(link=>{try{const u=new URL(link);return u.origin===new URL(home.url).origin
       && !/\.(?:js|css|svg|png|jpe?g|gif|woff2?|ico|pdf|zip)$/i.test(u.pathname)
       && /agenda|meeting|board|council|commission|calendar|about/i.test(u.pathname);}catch{return false;}})
-      .sort((a,b)=>Number(!/board|agenda|meeting|council/i.test(new URL(a).pathname))-Number(!/board|agenda|meeting|council/i.test(new URL(b).pathname)));
+      .sort((a,b)=>Number(!/board|agenda|meeting|council/i.test(webPath(a)))-Number(!/board|agenda|meeting|council/i.test(webPath(b))));
     for(const link of [...new Set(local)].slice(0,3)) {
       const page=await read(link);sources.push({url:page.url,status:page.status,sha256:page.hash});
       if(page.status===200) links.push(...pageLinks(page.body,page.url));

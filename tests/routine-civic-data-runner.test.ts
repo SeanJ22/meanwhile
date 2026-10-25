@@ -129,6 +129,69 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   }
 });
 
+test("hunt progress lines for a pass's admitted reads are written together, so the first launch is not held behind them", async () => {
+  // Oct 24 publish-now passes wrote about 800 QUEUED and 800 COLLECTING lines one at a time, about 50 s a set, and the first
+  // meeting launch landed after the calendar program's last start time.
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(source, /await recordHuntSourceProgressEach\(pendingRuns\.map\(pending => pending\.task\), "QUEUED"/);
+  assert.match(source, /await recordHuntSourceProgressEach\(unitMembers\(units\[index\]!\)\.map\(member => member\.task\), "COLLECTING_AND_VERIFYING"/);
+  assert.doesNotMatch(source, /for \(const (?:pending|member) of [^)]*\) await recordHuntSourceProgress\(/);
+  let open = 0, widest = 0;
+  const written: string[] = [];
+  const context = { HUNT_PROGRESS_WRITES_AT_ONCE: 16, runBoundedWorkPool, Error,
+    recordHuntSourceProgress: async (task: { id: string }) => {
+      widest = Math.max(widest, ++open);
+      await new Promise(resolve => setTimeout(resolve, 5));
+      open--;
+      if (task.id === "task-7") throw new Error("HUNT_PROGRESS_STORE_UNAVAILABLE");
+      written.push(task.id);
+    } };
+  const each = runInNewContext(transpileModule(functionSource(source, "recordHuntSourceProgressEach"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nrecordHuntSourceProgressEach", context);
+  const tasks = Array.from({ length: 40 }, (_, index) => ({ id: `task-${index}` }));
+  await assert.rejects(() => each(tasks, "QUEUED", "Admitted"), /HUNT_PROGRESS_STORE_UNAVAILABLE/, "a store failure still stops the pass");
+  assert.equal(widest, 16);
+  assert.equal(written.length, 39, "one failed line does not drop the others");
+});
+
+test("meeting pins and Box facts publish beside admission, so the first source launch is not held behind their time bounds", async () => {
+  // Oct 25 publish-now passes spent 200 s on meeting pins and about 75 s on Box findings before the first source decision;
+  // the first launch came at about 490 s, past the launch window, and every due meeting board was deferred.
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const read = functionSource(source, "readHuntSourceTasks");
+  assert.doesNotMatch(read, /try \{\s*const (?:report|box) = await publish(?:HeldMeetingPins|BoxFindings)\(/, "admission no longer waits on either");
+  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async \(\) => \{\s*const report = await publishHeldMeetingPins\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
+  const launch = source.indexOf("for (const { task } of electionLaunchOrder(");
+  const awaited = [...source.matchAll(/await heldPublication;/g)].map(match => match.index!);
+  assert.equal(awaited.length, 2, "the quiet publish-now exit and the full pass each wait for held publication");
+  assert.ok(awaited[0]! < source.indexOf("if (publishNowHasNothingOwed(") && awaited[0]! > source.indexOf("if (PUBLISH_NOW && selectedTasks.length === 0) {"));
+  assert.ok(awaited[1]! > launch && awaited[1]! > source.indexOf("await factMaintenance;"), "the full pass waits only after its sources launched");
+  assert.ok(awaited[1]! < source.indexOf("await persistSupervisorOutcome({\n    ...(ballotPublications"), "the outcome carries their failures");
+
+  const order: string[] = [];
+  const failures: { taskId: string; code: string; detail: string }[] = [];
+  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), safeFailure: (value: string) => value,
+    sanitizedErrorDiagnostic: (error: unknown) => error instanceof Error ? error.message : String(error) };
+  const start = runInNewContext(transpileModule(functionSource(source, "publishHeldBesideSources"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\npublishHeldBesideSources", context);
+  let releasePins!: () => void;
+  start(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
+    order.push("pins started"); await new Promise<void>(resolve => { releasePins = resolve; }); order.push("pins done");
+  });
+  start(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => { order.push("box started"); throw new Error("Box store unreachable"); });
+  order.push("admission continued");
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(order, ["admission continued", "pins started"], "admission does not wait, and Box waits its turn behind pins");
+  releasePins();
+  await context.heldPublication;
+  assert.deepEqual(order, ["admission continued", "pins started", "pins done", "box started"]);
+  assert.deepEqual(JSON.parse(JSON.stringify(failures)), [{ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED", detail: "Box store unreachable" }],
+    "a thrown publication is recorded as the pass's failure and never rejects the pass");
+});
+
 test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const id = "meeting-partition:deferred-calendar";

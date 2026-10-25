@@ -136,6 +136,19 @@ function onlineIndex(name: string, on: string): OnlineIndex {
   return { name, ddl: `CREATE INDEX CONCURRENTLY IF NOT EXISTS ${name} ON ${on};`, inProgressCode: "CONTROL_PLANE_INDEX_BUILD_IN_PROGRESS" };
 }
 
+/** The publisher class a Box finding waits on; a refused seat waits on rosters. */
+export const BOX_CLASS_SQL = "coalesce(CASE WHEN value->>'refusal' = 'SEAT_NOT_IN_QUOTE' THEN 'rosters' ELSE value #>> '{waitingFor,class}' END, '')";
+/** The slot version a Box finding waits on; a retired source hash counts as version 1. */
+export const BOX_SLOT_SQL = "CASE WHEN value #>> '{waitingFor,slots}' ~ '^[0-9a-f]{16}$' THEN '1' ELSE value #>> '{waitingFor,slots}' END";
+export const BOX_SLOTTED_SQL = "value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NOT NULL";
+
+export const BOX_DUE_INDEXES: readonly OnlineIndex[] = [
+  onlineIndex("cp_box_findings_retry", "cp_box_findings ((value #>> '{waitingFor,retryAt}')) WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,retryAt}') IS NOT NULL"),
+  onlineIndex("cp_box_findings_slot", `cp_box_findings ((${BOX_CLASS_SQL}), (${BOX_SLOT_SQL}), id) WHERE ${BOX_SLOTTED_SQL}`),
+  onlineIndex("cp_box_findings_refused", "cp_box_findings (id) WHERE value->>'state' = 'refused'"),
+  onlineIndex("cp_box_findings_unslotted", "cp_box_findings (id) WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL"),
+];
+
 export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_attempts_work_item", "cp_attempts ((value #>> '{workItemId}'))"),
   onlineIndex("cp_route_tasks_work_item", "cp_route_tasks ((value #>> '{workItemId}'))"),
@@ -162,6 +175,8 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_box_findings_due", "cp_box_findings ((value #>> '{waitingFor,slots}'), (value->>'lastRecordedAt')) WHERE value->>'state' = 'waiting'"),
   onlineIndex("cp_box_findings_lease", "cp_box_findings ((value #>> '{claim,expiresAt}')) WHERE value->>'state' = 'taken'"),
   onlineIndex("cp_box_findings_reason", "cp_box_findings ((value #>> '{waitingFor,reason}'), id) WHERE value->>'state' = 'waiting'"),
+  // boxDue reads each of its branches from one of these, so a pass never walks the whole Box to find the few rows due.
+  ...BOX_DUE_INDEXES,
   onlineIndex("cp_doors_legistar_tenant", `cp_doors ((${LEGISTAR_TENANT_SQL}))`),
 ];
 

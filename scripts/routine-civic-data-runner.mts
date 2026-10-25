@@ -131,6 +131,7 @@ import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SCAN_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationAdmission, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
+import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { groupCalendarReadsByState, stateCalendarEnvironment, stateCalendarMemberResults, type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
@@ -210,6 +211,7 @@ const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-
 
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
+const HUNT_PROGRESS_WRITES_AT_ONCE = 16;
 /* The pass ends by its deadline: sources launch and run in the first two thirds of its budget, repairs until the last sixth,
    which settles and publishes what ran. Whatever did not finish stays owed to the next pass. */
 const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
@@ -495,6 +497,19 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
 
 const BOX_FINDINGS_PER_PASS = 1000;
 
+/**
+ * Meeting pins and Box facts publish what is already found, each within its own time bound. Oct 25 publish-now passes
+ * spent 200 s on pins and about 75 s on Box findings before the first source decision, so the first meeting launch came at
+ * about 490 s, past the launch window. They now run one after another beside admission and the source pass; the pass
+ * waits for them before it saves its outcome.
+ */
+let heldPublication: Promise<void> = Promise.resolve();
+function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
+  heldPublication = heldPublication.then(publish).catch((error: unknown) => {
+    failures.push({ taskId, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  });
+}
+
 async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
 
   if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
@@ -502,15 +517,13 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) try {
+  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
     const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault:new DurableEvidenceStore(join(ROOT,...VAULT_DIR)),
       clocks:factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null), now:new Date().toISOString(),
       deadlineMs:Math.min(PASS_LAUNCH_DEADLINE_MS,Date.now()+Math.floor(PUBLISH_NOW_PASS_BUDGET_MS/3)) });
     console.log(`RCD_FACTS meeting pins: ${report.published} published; ${report.unplaced} still without a point`);
     if(report.failures.length)failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(report.failures.slice(0,8).join(" | "))});
-  } catch(error) {
-    failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(sanitizedErrorDiagnostic(error))});
-  }
+  });
 
   // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
@@ -521,7 +534,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
 
     const startedAt = new Date(String((await query("SELECT now() AS at", []))[0]!.at)).toISOString();
     // Box delivery is independent of the worker outbox scan and paid planning history.
-    try {
+    publishHeldBesideSources(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => {
       const box = await publishBoxFindings({ repos, store, facts, vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS, audit: false,
@@ -529,9 +542,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       console.log(`RCD_BOX_FACTS=${JSON.stringify(box)}`);
       if (box.failuresByReason.BOX_PUBLICATION_EXCEPTION) failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED",
         detail: `${box.failuresByReason.BOX_PUBLICATION_EXCEPTION} finding(s) need retry: ${safeFailure(JSON.stringify(box.errorExamples))}` });
-    } catch (error) {
-      failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-    }
+    });
     recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "before-publication-inputs");
     const cursor = PUBLISH_NOW ? await readPassCursor(facts.query, PUBLISH_NOW_CURSOR) : null;
     const since = cursor === null ? null : new Date(Date.parse(cursor) - 60_000).toISOString();
@@ -754,6 +765,13 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
+/** Each line is its own row. Written one at a time, about 800 of them held a publish-now pass's first meeting launch past
+ * the time a state calendar program may still start a board. */
+async function recordHuntSourceProgressEach(tasks: readonly RoutineSourceTask[], stage: HuntSourceProgress["stage"], detail: string): Promise<void> {
+  const failed = (await runBoundedWorkPool(tasks, HUNT_PROGRESS_WRITES_AT_ONCE, task => recordHuntSourceProgress(task, stage, detail))).find(result => !result.ok);
+  if (failed) throw new Error(failed.error!);
+}
+
 
 
 
@@ -872,6 +890,7 @@ if (controlPlaneUrlFromEnv()) try {
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
+  await heldPublication;
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
     console.log("publish-now: nothing owed this minute");
   } else {
@@ -1175,7 +1194,7 @@ for (const candidate of dueCandidates) {
 await flushLaunchDecisions();
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
 for (const { task } of electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
-for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
+await recordHuntSourceProgressEach(pendingRuns.map(pending => pending.task), "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
@@ -1282,9 +1301,8 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
       // Memory goes in launch order; the next read of a serial lane is not overtaken by work queued behind it.
       await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, hold: command.serialLane !== undefined });
-      for (const member of unitMembers(units[index]!)) {
-        await recordHuntSourceProgress(member.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
-      }
+      await recordHuntSourceProgressEach(unitMembers(units[index]!).map(member => member.task), "COLLECTING_AND_VERIFYING",
+        "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
     onSettled: async (run, index) => {
       const unit = units[index]!;
@@ -1768,6 +1786,7 @@ for (const error of pass.errors) {
   console.error(`RCD_TASK routine-civic-data-hot-read-catch-up: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 await factMaintenance;
+await heldPublication;
 const readerRuns = pass.repair;
 await flushLaunchDecisions();
 if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {

@@ -56,7 +56,8 @@ class RecordStream {
 }
 /** Consumers finish this iterator before publishing overlaps. The whitelist
  * limits returned ZCTAs to those touching the worker's held state scope. */
-export async function* tigerFeatures(path: string, wantedZctas?: ReadonlySet<string>, signal?: AbortSignal): AsyncIterable<Feature> {
+export async function* tigerFeatures(path: string, wantedZctas?: ReadonlySet<string>, signal?: AbortSignal,
+  wantedFeature?: (properties: Readonly<Record<string, string>>) => boolean): AsyncIterable<Feature> {
   signal?.throwIfAborted();
   const entries = await openZipFile(path, TIGER_ARCHIVE_LIMITS);
   const shapes = entries.filter(entry => entry.name.toLowerCase().endsWith(".shp"));
@@ -84,10 +85,13 @@ export async function* tigerFeatures(path: string, wantedZctas?: ReadonlySet<str
       if (number !== ordinal + 1 || length < 4 || bytesRead + 8 + length > shp.size) throw new Error("shp: invalid record framing");
       if (length > MAX_RECORD_BYTES) throw new Error("shp: geometry record byte bound exceeded");
       if (ordinal >= rows.length) throw new Error("shapefile pairing is broken: more geometries than attribute rows");
-      const geometry = parseShapeRecord(await stream.read(length), number), properties = rows[ordinal++];
+      const bytes = await stream.read(length), properties = rows[ordinal++];
       bytesRead += 8 + length;
-      if (!properties || !geometry.rings.length) continue;
+      if (!properties) continue;
       if (wantedZctas && !wantedZctas.has(properties.ZCTA5CE20 ?? properties.ZCTA5CE10 ?? properties.GEOID20 ?? properties.GEOID10 ?? "")) continue;
+      if (wantedFeature && !wantedFeature(properties)) continue;
+      const geometry = parseShapeRecord(bytes, number);
+      if (!geometry.rings.length) continue;
       yield { properties, rings: geometry.rings, bbox: geometry.bbox };
     }
     if (ordinal !== rows.length) throw new Error("shapefile pairing is broken: fewer geometries than attribute rows");

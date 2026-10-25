@@ -1,0 +1,42 @@
+{
+  "result": {
+    "input": {
+      "address": {
+        "address": "One Gateway Plaza, Los Angeles, CA 90012"
+      },
+      "benchmark": {
+        "isDefault": true,
+        "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+        "id": "4",
+        "benchmarkName": "Public_AR_Current"
+      }
+    },
+    "addressMatches": [
+      {
+        "tigerLine": {
+          "side": "L",
+          "tigerLineId": "142449543"
+        },
+        "coordinates": {
+          "x": -118.232281964236,
+          "y": 34.055179404969
+        },
+        "addressComponents": {
+          "zip": "90012",
+          "streetName": "GATEWAY",
+          "preType": "",
+          "city": "LOS ANGELES",
+          "preDirection": "",
+          "suffixDirection": "",
+          "fromAddress": "1",
+          "state": "CA",
+          "suffixType": "PLZ",
+          "toAddress": "99",
+          "suffixQualifier": "",
+          "preQualifier": ""
+        },
+        "matchedAddress": "1 GATEWAY PLZ, LOS ANGELES, CA, 90012"
+      }
+    ]
+  }
+}

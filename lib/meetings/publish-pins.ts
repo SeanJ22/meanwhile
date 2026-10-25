@@ -16,9 +16,13 @@ import { OUTBOUND_USER_AGENT } from "../geo/outbound-agent.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
+import { agendaLetterheadOffice, agendaMeetingAddress, streetKeyOf } from "./agenda-address.ts";
+import { meetingStateOf } from "./body-scope.ts";
+import { addressWords } from "../geo/address-words.ts";
 import {
   meetingPinAddresses,
   withPublishedPin,
+  publishedVenueDescription,
   type MeetingPinAddress,
   type MeetingPinLocation,
   type MeetingPinBody,
@@ -33,10 +37,12 @@ export const PIN_OFFICES_SQL = `WITH selected AS MATERIALIZED (
 ), owners AS MATERIALIZED (
   SELECT b.id,b.parent_id,g FROM selected b LEFT JOIN LATERAL (
     SELECT g FROM inventory WHERE g->>'state'=b.state AND (g->>'jurisdictionId'=b.parent_id OR g->>'id'=b.parent_id
-      OR g->'aliases' ? b.id OR g->'bodyIds' ? b.id) ORDER BY (g->>'jurisdictionId'=b.parent_id) DESC,g->>'id' LIMIT 1
+      OR g->'aliases' ? b.id OR g->'bodyIds' ? b.id OR g->'aliases' ? (b.parent_id||'#governing')
+      OR g->'aliases' ? (b.parent_id||'#board')) ORDER BY (g->>'jurisdictionId'=b.parent_id) DESC,g->>'id' LIMIT 1
   ) owned ON true
 )
 SELECT b.id,b.name,office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
+  o.g->>'mailingAddress' AS postal_alias,o.g->'provenance' AS postal_alias_source,
   coalesce(government.name,o.g->>'name') AS government_name,
   coalesce(government.value#>>'{}',o.g->>'officeAddress') AS government_address,
   coalesce(CASE WHEN government.value IS NOT NULL THEN jsonb_build_object('sourceUrl',government.url,
@@ -51,13 +57,32 @@ LEFT JOIN LATERAL (
       AND e.id IN (b.parent_id,o.g->>'jurisdictionId',o.g->>'id') ORDER BY f.checked_at DESC,e.id LIMIT 1
 ) government ON true`;
 
+const AGENDA_PIN_OFFICES_SQL = `WITH owned AS MATERIALIZED (
+  SELECT p.key,s.value->>'id' AS meeting_id,s.value->>'bodyId' AS body_id,
+    s.value->>'ocdId' AS ocd_id,s.value->>'jurisdiction' AS jurisdiction,s.value->>'startsAt' AS starts_at
+  FROM civic_data_promotions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
+    LATERAL (SELECT reader_payload_node(m.item) AS value) s
+  WHERE p.record_class='MEETING' AND s.value->>'bodyId'=ANY($1::text[])
+)
+SELECT o.body_id,o.meeting_id,o.jurisdiction,reader_payload_value(d.value->'documentUrl')#>>'{}' AS url,
+  reader_payload_value(d.value->'sourceOrg')#>>'{}' AS source_org,
+  reader_payload_value(d.value->'collectedAt')#>>'{}' AS collected_at,
+  left(reader_payload_value(d.value->'text')#>>'{}',700) AS header
+FROM owned o JOIN civic_data_promotions p ON p.key=o.key,
+  LATERAL reader_payload_members(reader_payload_node(p.payload)->'agendaDocuments') a,
+  LATERAL (SELECT reader_payload_node(a.item) AS value) d
+WHERE d.value->>'meetingId'=o.meeting_id AND d.value->>'ocdId' IS NOT DISTINCT FROM o.ocd_id
+  AND d.value->>'extraction' IN ('pdf','html')
+ORDER BY o.body_id,o.starts_at DESC,reader_payload_value(d.value->'collectedAt')#>>'{}' DESC`;
+
 export async function publishedPinOffices(
   query: Query | undefined,
   bodyIds: readonly string[],
+  onFailure?: (detail:string)=>void,
 ): Promise<ReadonlyMap<string, MeetingPinBody>> {
   if (!query || !bodyIds.length) return new Map();
   const rows = await query(PIN_OFFICES_SQL, [[...new Set(bodyIds)]]);
-  return new Map(
+  const bodies = new Map(
     rows.map((row) => {
       const boardSource: RegistryProvenance | null =
         typeof row.board_source === "string"
@@ -73,6 +98,7 @@ export async function publishedPinOffices(
         {
           bodyId: String(row.id),
           name: String(row.name),
+          ...(typeof row.postal_alias==="string"&&row.postal_alias_source?{postalAliases:[{address:row.postal_alias,provenance:row.postal_alias_source as RegistryProvenance}]}:{}),
           ...(boardSource && row.board_address
             ? {
                 officeContact: {
@@ -95,6 +121,22 @@ export async function publishedPinOffices(
       ];
     }),
   );
+  if(bodies.size)try{
+    for(const row of await query(AGENDA_PIN_OFFICES_SQL,[[...bodies.keys()]])){
+      const id=String(row.body_id),body=bodies.get(id);
+      if(!body||typeof row.header!=="string"||typeof row.url!=="string")continue;
+      const state=meetingStateOf(id),provenance={sourceUrl:row.url,sourceOrg:String(row.source_org),
+        collectedAt:new Date(row.collected_at as string).toISOString(),verifiedAt:null};
+      const venue=agendaMeetingAddress(row.header,state);
+      if(venue&&typeof row.meeting_id==="string"&&!body.meetingAddresses?.some(address=>address.meetingId===row.meeting_id))
+        (body.meetingAddresses??=[]).push({meetingId:row.meeting_id,bodyId:id,name:venue,address:venue,basis:"MEETING",provenance});
+      if(!body.officeContact?.address&&!body.governmentOffice?.address){
+        const address=agendaLetterheadOffice(row.header,String(row.jurisdiction),state);
+        if(address)body.officeContact={address,phone:null,provenance};
+      }
+    }
+  }catch(error){onFailure?.(`Published agenda office addresses could not be read: ${error instanceof Error?error.message:String(error)}`);}
+  return bodies;
 }
 
 export interface PublishedPinResult {
@@ -102,6 +144,24 @@ export interface PublishedPinResult {
   readonly placedCount: number;
   readonly held: readonly string[];
   readonly responses: readonly RetainedSourceResponse[];
+}
+
+/** A published physical address can use a postal alias explicitly printed beside its own street in the same government's directory. */
+function postalAddressAliases(address:MeetingPinAddress,body:MeetingPinBody|undefined):MeetingPinAddress[]{
+  const comma=address.address.indexOf(",");
+  if(comma<0)return[];
+  const street=addressWords(address.address.slice(0,comma)),locality=addressWords(address.address.slice(comma+1));
+  const house=/^\d+\b/.exec(street)?.[0];
+  if(!house)return[];
+  return(body?.postalAliases??[]).flatMap(source=>{
+    const first=streetKeyOf(source.address);
+    if(!first||first.index!==0||!(first.key===street||first.key.startsWith(street+" "))||!addressWords(source.address).endsWith(" "+locality))return[];
+    const rest=source.address.slice(first.length).split(",",1)[0].trim().replace(/^\(|\)$/g,"");
+    const alias=`${house} ${rest}`,parsed=streetKeyOf(alias);
+    if(!parsed||parsed.index!==0||parsed.length!==alias.length)return[];
+    return[{...address,geocodingAddress:`${alias}, ${address.address.slice(comma+1).trim()}`,
+      addressAlias:{sourceAddress:source.address,provenance:source.provenance}}];
+  });
 }
 
 /** Geocode at publication, then keep the point with the meeting. A fresh visit only reads saved points. */
@@ -127,6 +187,7 @@ export async function placePublishedMeetingPins(input: {
         input.meetings
           .filter((m) => !m.location)
           .flatMap((m) => m.bodyId ?? []),
+        detail=>{officesUnavailable=true;held.push(detail);},
       );
     } catch (error) {
       officesUnavailable = true;
@@ -177,6 +238,7 @@ export async function placePublishedMeetingPins(input: {
   >();
   const locate = (
     address: MeetingPinAddress,
+    meeting: Meeting,
   ): Promise<{
     lat: number;
     lng: number;
@@ -184,7 +246,13 @@ export async function placePublishedMeetingPins(input: {
     url: string;
     at: string;
   } | null> => {
-    const query = censusAddressQuery(address.address);
+    const publishedQuery = censusAddressQuery(address.geocodingAddress??address.address);
+    const street = streetKeyOf(publishedQuery);
+    const city = /^(?:city|town|village|borough|municipality)(?:\s+(?:and|&)\s+county)?\s+of\s+(.+)$/i.exec(meeting.jurisdiction)?.[1];
+    const state = meetingStateOf(meeting.bodyId??meeting.ocdId);
+    // A source's municipal name supplies locality for a street-only address; a county name does not name a city.
+    const query = city&&state&&street?.index===0&&street.length===publishedQuery.length
+      ? `${publishedQuery}, ${city}, ${state}` : publishedQuery;
     if (
       !isOfficeStreetAddress(query) ||
       query.length < 3 ||
@@ -206,14 +274,14 @@ export async function placePublishedMeetingPins(input: {
         });
         const bytes = new Uint8Array(await response.arrayBuffer());
         if (!response.ok) {
-          held.push(`${address.address}: Census HTTP ${response.status}`);
+          if(response.status!==400)held.push(`${address.address}: Census HTTP ${response.status}`);
           return null;
         }
         const finalUrl = response.url || url.href;
         if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov")
           return null;
         const point = verifiedCensusVenuePoint(
-          address.address,
+          query,
           JSON.parse(new TextDecoder().decode(bytes)),
         );
         if (!point) return null;
@@ -255,24 +323,37 @@ export async function placePublishedMeetingPins(input: {
     input.meetings,
     8,
     async (meeting, index) => {
+      const agenda=offices.get(meeting.bodyId??"")?.meetingAddresses?.find(address=>address.meetingId===meeting.id);
+      const existing=meeting.location??retainedMeetings[index].location;
+      const sourceAt=meeting.fieldSources?.location?.collectedAt??previous.get(meeting.id)?.fieldSources?.location?.collectedAt??meeting.provenance.collectedAt;
+      const agendaMoved=Boolean(agenda&&existing&&!streetKeyOf(censusAddressQuery(meeting.venueGap?.publishedText??""))&&
+        Date.parse(agenda.provenance.collectedAt)>Date.parse(sourceAt)&&!repeatsPublishedVenue(agenda.address,existing.name,existing.address));
+      if(agendaMoved)meeting={...meeting,location:null,mapPin:undefined,
+        venueGap:{kind:"STATED_NOT_PLACED",publishedText:meeting.venueGap?.publishedText??meeting.mapPin?.publishedLocation??existing!.name,publisher:agenda!.provenance.sourceOrg},
+        fieldSources:{...meeting.fieldSources,location:agenda!.provenance,venueGap:agenda!.provenance}};
       if (meeting.location) return meeting;
       const retained = retainedMeetings[index];
-      if (retained.location) return retained;
+      if (retained.location&&!agendaMoved) return retained;
       const candidates = meetingPinAddresses(
         meeting,
         offices.get(meeting.bodyId ?? ""),
       );
       const retainedAddress = input.retainedAddresses?.get(meeting.id);
       if (retainedAddress?.basis === "MEETING" && retainedAddress.bodyId === meeting.bodyId && !meeting.online &&
+        (!agenda||Date.parse(agenda.provenance.collectedAt)<=Date.parse(retainedAddress.provenance.collectedAt)||repeatsPublishedVenue(agenda.address,retainedAddress.name,retainedAddress.address))&&
         repeatsPublishedVenue(meeting.venueGap?.publishedText ?? "",retainedAddress.name,retainedAddress.address))
-        candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,retainedAddress);
+        candidates.splice(candidates.findIndex(address=>address.basis!=="MEETING")<0?candidates.length:candidates.findIndex(address=>address.basis!=="MEETING"),0,retainedAddress);
       const prior = previous.get(meeting.id);
       const publishedLocation = meeting.venueGap?.publishedText ?? null;
       const repeated = prior?.mapPin ?? meeting.mapPin;
+      const agendaReplacesPoint=Boolean(agenda&&repeated&&
+        (repeated.basis!=="MEETING"||Date.parse(agenda.provenance.collectedAt)>Date.parse(repeated.provenance.collectedAt)&&
+        !repeatsPublishedVenue(agenda.address,repeated.name,repeated.address)));
       if (repeated?.basis === "MEETING" && repeated.bodyId === meeting.bodyId &&
-        repeated.publishedLocation === publishedLocation && !meeting.online &&
+        repeated.publishedLocation === publishedLocation && !meeting.online && !agendaReplacesPoint&&
         repeatsPublishedVenue(publishedLocation ?? "",repeated.name,repeated.address))
         candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,repeated);
+      const expanded=candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))]);
       // An unavailable office read cannot erase a point already published for this unchanged sitting.
       if (
         officesUnavailable &&
@@ -284,7 +365,7 @@ export async function placePublishedMeetingPins(input: {
       )
         candidates.push(repeated);
       if (
-        repeated &&
+        repeated && !agendaReplacesPoint&&
         repeated.publishedLocation === publishedLocation &&
         Boolean(meeting.online) === Boolean(prior?.online ?? meeting.online) &&
         candidates.some(
@@ -299,24 +380,25 @@ export async function placePublishedMeetingPins(input: {
           meetingId: meeting.id,
         });
       }
-      for (const address of candidates) {
+      for (const address of expanded) {
+        const {geocodingAddress:_query,...publishedAddress}=address;
         const cached = saved.get(
           `${address.basis}:${meeting.bodyId}:${address.address}`,
         );
         if (cached) {
           const pin = {
             ...cached,
-            ...address,
+            ...publishedAddress,
             meetingId: meeting.id,
             publishedLocation,
           };
           placedCount++;
           return withPublishedPin(meeting, pin);
         }
-        const point = await locate(address);
+        const point = await locate(address,meeting);
         if (!point) continue;
         const pin: MeetingPinLocation = {
-          ...address,
+          ...publishedAddress,
           meetingId: meeting.id,
           lat: point.lat,
           lng: point.lng,
@@ -398,16 +480,26 @@ export function retainPreviouslyVerifiedVenuePoints(
     )
       return meeting;
     const { venueGap: _gap, ...rest } = meeting;
-    return {
+    const text=meeting.venueGap.publishedText!;
+    // Keep the complete saved venue unless the source explicitly changes its room or suite.
+    const previousText=`${prior.location.name} ${prior.location.address ?? ""}`;
+    const changedUnit=[/\b(?:room|rm\.?)\s*#?\s*([a-z\d-]+)\b/i,/\b(?:suite|ste\.?)\s*#?\s*([a-z\d-]+)\b/i].some(pattern=>{
+      const current=pattern.exec(text)?.[1],previous=pattern.exec(previousText)?.[1];
+      return current && previous && current.toLowerCase()!==previous.toLowerCase();
+    });
+    const retained:Meeting = {
       ...rest,
-      location: prior.location,
+      location: changedUnit?{...prior.location,...publishedVenueDescription(text,prior.location.address)}:prior.location,
       ...(prior.mapPin
-        ? { mapPin: { ...prior.mapPin, meetingId: meeting.id } }
+        ? { mapPin: { ...prior.mapPin, meetingId: meeting.id,publishedLocation:text } }
         : {}),
       fieldSources: {
         ...meeting.fieldSources,
         location: prior.fieldSources?.location ?? prior.provenance,
+        // Attendance was read again; the point itself was not checked again.
+        venueGap: meeting.fieldSources?.venueGap ?? meeting.fieldSources?.location ?? meeting.provenance,
       },
     };
+    return retained.mapPin?withPublishedPin(retained,retained.mapPin):retained;
   });
 }

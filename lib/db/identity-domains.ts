@@ -59,6 +59,29 @@ const nonIdentifying = (...names: string[]): Record<string, ColumnDomain> =>
 
 /** Every table, every column. */
 export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
+  count_hour: {
+    storeClass: "OPERATIONAL",
+    columns: nonIdentifying("state", "hour", "step", "n"),
+  },
+  line_keeper_run: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("hour", "checked_at", "problems", "bytes_read"),
+      oldest: { space: "NON_IDENTIFYING", why: "One waiting count and oldest timestamp per state; no row identifiers or reader data." },
+    },
+  },
+  place_map_counts: {
+    storeClass: "OPERATIONAL",
+    columns: nonIdentifying("state", "places", "zips", "zctas", "county_attachments", "updated_at"),
+  },
+  place_boundary: {
+    storeClass: "CIVIC_CONTENT",
+    columns: {
+      place_id: { space: "CIVIC_IDENTIFIER", why: "The existing public place entity." },
+      host_county_id: { space: "CIVIC_IDENTIFIER", why: "The Census host county for a district without a polygon." },
+      ...nonIdentifying("boundary_year", "layer", "version", "geometry", "bounds", "county_attachment", "source_urls", "checked_at"),
+    },
+  },
   saved_ballot_picks: {
     storeClass: "READER_COLLECTION",
     columns: {
@@ -576,6 +599,14 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       current_version_id: { space: "OPAQUE_HANDLE" },
       last_known_good_version_id: { space: "OPAQUE_HANDLE" },
       payload: { space: "CIVIC_IDENTIFIER", why: "The promoted public civic read model, including official Census GEOIDs, population estimates, margins, publication dates and source attribution; it contains no reader data." },
+    },
+  },
+
+  civic_data_clock_versions: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("record_class", "scope"),
+      version: { space: "NON_IDENTIFYING", why: "A per-scope change counter the scheduler cache compares; never a reader identity." },
     },
   },
 

@@ -1,0 +1,92 @@
+[
+  {
+    "query": "6100 S. Lake Drive, Milwaukee, WI 53110",
+    "response": {
+      "result": {
+        "input": {
+          "address": {
+            "address": "6100 S. Lake Drive, Milwaukee, WI 53110"
+          },
+          "benchmark": {
+            "isDefault": true,
+            "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+            "id": "4",
+            "benchmarkName": "Public_AR_Current"
+          }
+        },
+        "addressMatches": [
+          {
+            "tigerLine": {
+              "side": "L",
+              "tigerLineId": "77756546"
+            },
+            "coordinates": {
+              "x": -87.849872067976,
+              "y": 42.934192498138
+            },
+            "addressComponents": {
+              "zip": "53110",
+              "streetName": "LAKE",
+              "preType": "",
+              "city": "CUDAHY",
+              "preDirection": "S",
+              "suffixDirection": "",
+              "fromAddress": "6100",
+              "state": "WI",
+              "suffixType": "DR",
+              "toAddress": "6198",
+              "suffixQualifier": "",
+              "preQualifier": ""
+            },
+            "matchedAddress": "6100 S LAKE DR, CUDAHY, WI, 53110"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "query": "455 East Ogden, Milwaukee, WI",
+    "response": {
+      "result": {
+        "input": {
+          "address": {
+            "address": "455 East Ogden, Milwaukee, WI"
+          },
+          "benchmark": {
+            "isDefault": true,
+            "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+            "id": "4",
+            "benchmarkName": "Public_AR_Current"
+          }
+        },
+        "addressMatches": [
+          {
+            "tigerLine": {
+              "side": "R",
+              "tigerLineId": "77744438"
+            },
+            "coordinates": {
+              "x": -87.906585316959,
+              "y": 43.048107440236
+            },
+            "addressComponents": {
+              "zip": "53202",
+              "streetName": "OGDEN",
+              "preType": "",
+              "city": "MILWAUKEE",
+              "preDirection": "E",
+              "suffixDirection": "",
+              "fromAddress": "401",
+              "state": "WI",
+              "suffixType": "AVE",
+              "toAddress": "499",
+              "suffixQualifier": "",
+              "preQualifier": ""
+            },
+            "matchedAddress": "455 E OGDEN AVE, MILWAUKEE, WI, 53202"
+          }
+        ]
+      }
+    }
+  }
+]

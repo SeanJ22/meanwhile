@@ -129,6 +129,32 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   }
 });
 
+test("hunt progress lines for a pass's admitted reads are written together, so the first launch is not held behind them", async () => {
+  // Oct 24 publish-now passes wrote about 800 QUEUED and 800 COLLECTING lines one at a time, about 50 s a set, and the first
+  // meeting launch landed after the calendar program's last start time.
+  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(source, /await recordHuntSourceProgressEach\(pendingRuns\.map\(pending => pending\.task\), "QUEUED"/);
+  assert.match(source, /await recordHuntSourceProgressEach\(unitMembers\(units\[index\]!\)\.map\(member => member\.task\), "COLLECTING_AND_VERIFYING"/);
+  assert.doesNotMatch(source, /for \(const (?:pending|member) of [^)]*\) await recordHuntSourceProgress\(/);
+  let open = 0, widest = 0;
+  const written: string[] = [];
+  const context = { HUNT_PROGRESS_WRITES_AT_ONCE: 16, runBoundedWorkPool, Error,
+    recordHuntSourceProgress: async (task: { id: string }) => {
+      widest = Math.max(widest, ++open);
+      await new Promise(resolve => setTimeout(resolve, 5));
+      open--;
+      if (task.id === "task-7") throw new Error("HUNT_PROGRESS_STORE_UNAVAILABLE");
+      written.push(task.id);
+    } };
+  const each = runInNewContext(transpileModule(functionSource(source, "recordHuntSourceProgressEach"), {
+    compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
+  }).outputText + "\nrecordHuntSourceProgressEach", context);
+  const tasks = Array.from({ length: 40 }, (_, index) => ({ id: `task-${index}` }));
+  await assert.rejects(() => each(tasks, "QUEUED", "Admitted"), /HUNT_PROGRESS_STORE_UNAVAILABLE/, "a store failure still stops the pass");
+  assert.equal(widest, 16);
+  assert.equal(written.length, 39, "one failed line does not drop the others");
+});
+
 test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const id = "meeting-partition:deferred-calendar";
@@ -587,6 +613,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "dotgov",
 
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
+    ...REGISTRATION_TARGETS.map(({ state }) => `place-map-${state.toLowerCase()}`),
     "meeting-body-crosswalk-derived",
     "meeting-doors",
     "meeting-source-wiring",

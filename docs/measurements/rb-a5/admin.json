@@ -1,0 +1,13 @@
+{
+  "at": "2026-10-24T16:28:18.523Z",
+  "dataAt": "2026-10-24T16:28:13.158Z",
+  "regions": 57,
+  "hours": 24,
+  "totals": {
+    "incoming": 243683,
+    "done": 222,
+    "refused": 1
+  },
+  "californiaHourlyOutcomes": "passed",
+  "nationalAndZeroStateFilters": "passed"
+}

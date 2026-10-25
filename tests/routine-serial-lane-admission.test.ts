@@ -85,7 +85,7 @@ test("a pass whose meeting programs fill memory still runs every read of the peo
   assert.equal(results.filter(r => r.termination === "EXITED").length, ran.length);
 });
 
-test("a due state's voting sites take memory at the start of the pass, ahead of the overdue backlog that holds it to the deadline", async () => {
+test("voting sites and the overdue backlog take turns for memory, so neither holds the other out until the deadline", async () => {
   // Production, Oct 24 20:20:05Z pass: all 56 voting-sites tasks deferred WORKER_MEMORY_DEADLINE. IL had read at 12:29 and was
   // due only by its changed doors (owed "now"), TX had never read (a baseline first read), AK's 12:28 read failed (retry owed
   // 13:28). Fifteen 1,447 MiB state calendar programs held 20,244 MiB of available memory until the pass deadline.
@@ -114,7 +114,7 @@ test("a due state's voting sites take memory at the start of the pass, ahead of 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /for \(const \{ task \} of electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\)/);
   const order = electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), now));
-  assert.deepEqual(order.slice(0, 3).map(job => job.task.id).sort(), ["voting-sites:AK", "voting-sites:IL", "voting-sites:TX"]);
+  assert.deepEqual(order.slice(0, 6).map(job => job.task.id.split(":")[0]), ["voting-sites", "meetings", "voting-sites", "meetings", "voting-sites", "meetings"]);
 
   const slots = routineProcessSlots({ host: workerMemoryHost({ processes: () => [] }), availableBytes: () => 20_244 * MIB });
   const script = (id: string) => id.startsWith("meetings:") ? "ingest.ts" : id.startsWith("voting-sites:") ? "fetch-voting-sites.mts" : "derive-candidate-campaign-sites.mts";
@@ -125,6 +125,17 @@ test("a due state's voting sites take memory at the start of the pass, ahead of 
   for (const state of ["IL", "TX", "AK"]) assert.ok(started.includes(`voting-sites:${state}`), `voting-sites:${state} starts this pass`);
   assert.equal(started.filter(id => id.startsWith("meetings:")).length, 12, "the calendar backlog keeps the rest of the memory");
 
+  // Production, Oct 25 03:10Z pass: 29 voting-sites programs led it and 826 meeting boards in 39 states waited on memory.
+  const states = ["AL", "AR", "AZ", "CA", "CO", "CT", "DE", "FL", "GA", "IA", "ID", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN",
+    "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV"];
+  const crowded = electionLaunchOrder([...admitted.slice(0, 15), ...states.map(state => ({ task: site(state) }))]);
+  const crowdedSlots = routineProcessSlots({ host: workerMemoryHost({ processes: () => [] }), availableBytes: () => 20_244 * MIB });
+  const crowdedDeadline = Date.now() + 200;
+  const admittedNow = await Promise.allSettled(crowded.map(({ task }, index) => crowdedSlots.acquire(`${task.id}/${script(task.id)}`, crowdedDeadline, { priority: index })));
+  const crowdedStarted = crowded.filter((_, index) => admittedNow[index]!.status === "fulfilled").map(job => job.task.id);
+  assert.ok(crowdedStarted.filter(id => id.startsWith("meetings:")).length >= 8, `calendars start beside voting sites: ${crowdedStarted.join(" ")}`);
+  assert.ok(crowdedStarted.filter(id => id.startsWith("voting-sites:")).length >= 8, `voting sites keep half the memory: ${crowdedStarted.join(" ")}`);
+
   // A voting child told when the pass ends stops reading with time to publish; untold, it reads into the pass's wall.
   assert.match(runner, /function sourceChildCommand[\s\S]*?env: withPassDeadline\(\{[\s\S]*?\.\.\.pending\.env,\s*\}, PASS_LAUNCH_DEADLINE_MS\),/);
   const wall = now + 20 * 60_000;
@@ -132,7 +143,7 @@ test("a due state's voting sites take memory at the start of the pass, ahead of 
   assert.ok(votingAcquisitionDeadline(now, passDeadlineFromEnv(withPassDeadline({ NODE_ENV: "test" }, wall))) <= wall - 6 * 60_000);
 });
 
-test("due explainers follow voting and can obtain memory before meeting programs hold the rest to the pass deadline", async () => {
+test("due explainers, voting sites and meetings each obtain memory before another family holds the pass to its deadline", async () => {
   // AZ, CA and WA were deferred at 2026-10-24T21:53:43Z before a single translation model call.
   const translations = ["AZ", "CA", "WA"].map(state => ({ task: ROUTINE_SOURCE_TASKS.find(task => task.id === `measure-translations:${state}`)! }));
   assert.ok(translations.every(job => job.task));
@@ -142,10 +153,10 @@ test("due explainers follow voting and can obtain memory before meeting programs
   const after = electionLaunchOrder([...calendars, ...translations, voting]);
   assert.equal(after[0].task.id, voting.task.id, "voting keeps its first turn");
   assert.deepEqual(after.map(job => job.task.id).sort(), before.map(job => job.task.id).sort(), "every admitted job remains in the pool");
-  const admitted = async (jobs: typeof before) => {
+  const admitted = async (jobs: typeof before, availableMiB = 3072) => {
     let open = true;
     const slots = routineProcessSlots({ admissionsOpen: () => open, host: workerMemoryHost({ processes: () => [] }),
-      availableBytes: () => 3072 * mib,
+      availableBytes: () => availableMiB * mib,
       peakBytes: entry => (entry.startsWith("voting-sites:") ? 512 : entry.startsWith("measure-translations:") ? 342 : 1447) * mib });
     const started: string[] = [], releases: (() => void)[] = [];
     const pending = jobs.map(({ task }, priority) => slots.acquire(task.id, Date.now() + 10_000, { priority }).then(release => {
@@ -160,6 +171,22 @@ test("due explainers follow voting and can obtain memory before meeting programs
   };
   const oldStarted = await admitted(before), newStarted = await admitted(after);
   assert.equal(oldStarted.filter(id => id.startsWith("measure-translations:")).length, 1);
-  assert.deepEqual(newStarted.filter(id => id.startsWith("measure-translations:")), translations.map(job => job.task.id));
-  assert.equal(newStarted[0], voting.task.id);
+  assert.deepEqual(newStarted.map(id => id.split(":")[0]), ["voting-sites", "measure-translations", "meetings"],
+    "three GiB admits all three families while preserving the existing 768 MiB margin");
+
+  // The observed production headroom was 20,244 MiB. A long calendar backlog previously left every translator waiting.
+  const crowdedVoting = AUTOMATIC_REFRESH_TASKS.filter(task => /^voting-sites:[A-Z]{2}$/.test(task.id)).slice(0, 30).map(task => ({ task }));
+  const crowdedTranslations = ROUTINE_SOURCE_TASKS.filter(task => /^measure-translations:[A-Z]{2}$/.test(task.id)).slice(0, 30).map(task => ({ task }));
+  const crowdedCalendars = Array.from({ length: 30 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
+  assert.equal(crowdedVoting.length, 30);
+  assert.equal(crowdedTranslations.length, 30);
+  const crowdedBefore = crowdedVoting.flatMap((job, index) => [job, crowdedCalendars[index]]).concat(crowdedTranslations);
+  const crowdedAfter = electionLaunchOrder(crowdedBefore);
+  assert.deepEqual(crowdedAfter.map(job => job.task.id).sort(), crowdedBefore.map(job => job.task.id).sort());
+  const oldCrowdedStarted = await admitted(crowdedBefore, 20_244), balancedStarted = await admitted(crowdedAfter, 20_244);
+  assert.equal(oldCrowdedStarted.filter(id => id.startsWith("measure-translations:")).length, 0);
+  const count = (prefix: string) => balancedStarted.filter(id => id.startsWith(prefix)).length;
+  assert.deepEqual([count("voting-sites:"), count("measure-translations:"), count("meetings:")], [9, 9, 8]);
+  assert.equal(balancedStarted.length, 26);
+  assert.ok(20_244 - (count("voting-sites:") * 512 + count("measure-translations:") * 342 + count("meetings:") * 1447) >= 768);
 });

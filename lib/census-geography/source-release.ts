@@ -3,17 +3,38 @@ import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, source
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
 
-export const CENSUS_ACQUISITION_PARSER = "census-geography/BL-01";
+export const CENSUS_ACQUISITION_PARSER = "census-geography/RB-A2/2";
+
+/** Decode source rows without a second complete string or a national row array. */
+export function* censusTextLines(bytes: Uint8Array): Generator<string> {
+  const decoder = new TextDecoder();
+  let remainder = "";
+  for (let offset = 0; offset < bytes.byteLength; offset += 64 * 1024) {
+    const chunk = remainder + decoder.decode(bytes.subarray(offset, offset + 64 * 1024), { stream: true });
+    let start = 0, end: number;
+    while ((end = chunk.indexOf("\n", start)) >= 0) {
+      yield chunk.slice(start, end).replace(/\r$/, "");
+      start = end + 1;
+    }
+    remainder = chunk.slice(start);
+  }
+  remainder += decoder.decode();
+  if (remainder) yield remainder.replace(/\r$/, "");
+}
 
 export interface CensusSourceOptions {
   readonly fetchImpl?: typeof fetch;
   readonly signal?: AbortSignal;
   /** The same evidence vault and release lock used by other routine sources. */
   readonly cache?: Pick<KnownReleaseOptions, "store" | "locks">;
+  /** Shared only within one acquisition pass; distinct parsers reuse the exact checked bytes. */
+  readonly releases?: Map<string, Promise<KnownRelease>>;
 }
 
 export function censusSourceRelease(url: string, options: CensusSourceOptions, validate?: KnownReleaseOptions["validate"]): Promise<KnownRelease> {
-  return acquireKnownRelease({
+  const held = options.releases?.get(url);
+  if (held) return held.then(async release => { await validate?.(release.bytes, release); return release; });
+  const pending = acquireKnownRelease({
     ...options.cache,
     sourceId: "census-geography-relationships",
     releaseId: url,
@@ -33,6 +54,8 @@ export function censusSourceRelease(url: string, options: CensusSourceOptions, v
       }
     } : undefined,
   });
+  options.releases?.set(url, pending);
+  return pending;
 }
 
 export function sourceValidator(release: KnownRelease): NonNullable<Provenance["sourceValidators"]>[number] {

@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T17:03:00Z
+heartbeat: 2026-10-25T17:25:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -986,4 +986,14 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Lanes: no new READYs since noon (DB-03 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820; VS-05's fd1daab0a is already in river).
 - Sean hasn't decided governing bodies yet: (a) Admin sends or (b) a code change to national place work.
 - Neon, reader DB response bytes, 12 PM EDT hour: 11,648 MB total. Portraits 3,419, readback 1,545, research cycle 1,029. Still baseline: no DB-03 code is live.
+
+### Sean, 1:15 PM EDT: fix 2 option (b), Census-only governing bodies for every state
+- Lane GB-01 (builder, stream/gb-01, built on RB-A4 catch-up):
+  - A runner step makes each Census government's governing body (`<government>#governing`, or `#board` for school districts) through lib/core/door.ts `door()` → `ensureGoverningBody`, one state at a time, Oregon first, with no Admin send.
+  - Nothing goes to lib/registry or a runtime registry. Paid hunting stays gated on sends.
+  - It also moves the 66 LA Metro boards filed under Oregon to California.
+  - Ships after DB-03 readback and RB-A4 catch-up.
+- Done when Portland 97204 shows its city council, county board and school board, and 20 random ZIPs in 20 states show governing bodies, with counts by state.
+- Runner Neon before, database_transfer_hourly response bytes, reader DB + control plane, GB per hour, 5 AM to 12 PM EDT: 7.16 / 8.52 / 12.51 / 9.98 / 9.03 / 13.93 / 11.37 / 11.65, average 10.52.
+- Correction: the per-job MB in the 11:15 AM baseline and the noon and 1 PM statuses counted both databases, not the reader DB alone. Totals and per-job numbers are unchanged; only the label was wrong.
 

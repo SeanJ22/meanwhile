@@ -115,6 +115,11 @@ function candidateReadOnlyStore(
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
+    readCandidatePath: async <T>(candidateId: string, path: readonly [string, ...string[]]) => {
+      let value: unknown = candidateId === candidate.id ? candidate : predecessor?.candidate.id === candidateId ? predecessor.candidate : undefined;
+      for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
+      return value === undefined ? null : structuredClone(value) as T;
+    },
     readRegistryDivisions: async () => [],
     readPublishedCandidateMetadata: async (candidateId) => candidateId === candidate.id
       ? publishedCandidateMetadata(record)

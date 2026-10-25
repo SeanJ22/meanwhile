@@ -91,9 +91,8 @@ export async function publishMemberOffices(input: {
       });
       if (!rows.length) continue;
       // Derivation reuses the exact saved acquisition, rather than downloading it again or inventing a new source read.
-      const sourceRead = await input.store.readPromotion("STATE_LEGISLATOR",`${jurisdiction}:openstates-people:v1`);
-      const candidate = sourceRead ? await input.store.readCandidate(sourceRead.versionId) : null;
-      const acquisitions = (candidate?.candidate.normalizedPayload as {captures?:readonly StatePeopleCapture[]})?.captures ?? [];
+      const acquisitions = reference.metadata.versionId ? await input.store.readCandidatePath<readonly StatePeopleCapture[]>(
+        reference.metadata.versionId, ["normalizedPayload", "captures"]) ?? [] : [];
       if (!acquisitions.length) {gaps.push({key:jurisdiction,detail:"SOURCE_CAPTURE_UNAVAILABLE: prior offices retained"});continue;}
       records.push(...rows);
       sources.push(...acquisitions.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,publisher:OPEN_STATES_ORG,sourceClass:"REFERENCE_PUBLISHER" as const,retrievedAt:row.retrievedAt,httpStatus:row.httpStatus,rawHash:row.rawHash ?? row.capture.rawHash,

@@ -94,7 +94,21 @@ test("two states use one validated archive and keep complete native identity, co
   if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
   assert.equal((await readMemberOffices("plural:az:one", undefined, {store:canonical,now:at,bypassCache:true})).length, 2,
     "native office contacts reach the scoped reader immediately with the core people projection");
+  const wholeCandidate = canonical.readCandidate.bind(canonical), capturePath = canonical.readCandidatePath.bind(canonical);
+  const capturedVersions: string[] = [];
+  canonical.readCandidate = async id => {
+    assert.notEqual(id, published.outcome.promoted!.versionId, "office derivation does not reread the source candidate");
+    return wholeCandidate(id);
+  };
+  canonical.readCandidatePath = async (id, path) => {
+    assert.deepEqual(path, ["normalizedPayload", "captures"]);
+    capturedVersions.push(id);
+    return capturePath(id, path);
+  };
   const offices = await publishMemberOffices({ store: canonical, now: at, jurisdictions: ["US-AZ"] });
+  assert.deepEqual(capturedVersions, [published.outcome.promoted!.versionId], "captures belong to the exact roster version used");
+  canonical.readCandidate = wholeCandidate;
+  canonical.readCandidatePath = capturePath;
   assert.ok(offices.outcome?.promoted, JSON.stringify(offices));
   await refreshMemberOfficesFromPromoted({ store: canonical, now: at, bypassCache: true });
   const shown = currentMemberOffices("plural:az:one");

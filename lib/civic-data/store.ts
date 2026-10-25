@@ -117,6 +117,8 @@ export interface RoutineDataStore {
   ) => Promise<CandidateVersionRecord>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
+  /** A field of the exact held version, loading only the parts along that path. */
+  readonly readCandidatePath: <T>(candidateId: string, path: readonly [string, ...string[]]) => Promise<T | null>;
   readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
   readonly readStateRetirementBaseline?: (recordClass: RoutineRecordClass, scope: string) => Promise<RoutineCandidate["normalization"]["stateRecordHashes"] | null>;
   readonly hasStateRetirementProof?: (contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]) => Promise<boolean>;
@@ -810,6 +812,12 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
     return row ? heldRecord(row) : null;
+  }
+
+  async readCandidatePath<T>(candidateId: string, path: readonly [string, ...string[]]): Promise<T | null> {
+    let value: unknown = this.candidates.get(candidateId)?.candidate;
+    for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
+    return value === undefined ? null : structuredClone(value) as T;
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
@@ -1933,6 +1941,25 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
     return row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+  }
+
+  async readCandidatePath<T>(candidateId: string, path: readonly [string, ...string[]]): Promise<T | null> {
+    // Walk inline fields inside Postgres; stop at the first immutable part reference.
+    // Returning the parent field would still ship a whole inline roster for its captures.
+    const keys = sql`ARRAY[${sql.join(path.map(key => sql`${key}`), sql`, `)}]::text[]`;
+    const [selected] = await this.candidateRows([candidateId], `candidate-path:${JSON.stringify(path)}`, async () => {
+      const result = await this.db.execute(sql`WITH RECURSIVE candidate_path(value,depth) AS (
+        SELECT ${civicDataCandidates.candidate},0 FROM ${civicDataCandidates} WHERE ${civicDataCandidates.id}=${candidateId}
+        UNION ALL
+        SELECT value -> (${keys})[depth+1],depth+1 FROM candidate_path
+        WHERE depth < ${path.length} AND NOT coalesce(value ? '$civicPayloadPart',false)
+      ) SELECT value,depth FROM candidate_path ORDER BY depth DESC LIMIT 1`);
+      const row = result.rows[0] as { value: unknown; depth: number } | undefined;
+      if (!row) return [];
+      const value = await this.payloadParts.load(await this.payloadParts.path(row.value, path.slice(Number(row.depth))));
+      return [{ id: candidateId, value: value === undefined ? null : value as T }];
+    });
+    return selected?.value ?? null;
   }
 
   async readNavigationPublicationBase(scope: string): Promise<NavigationPublicationBase | null> {

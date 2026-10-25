@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T08:06:47Z
+heartbeat: 2026-10-25T08:07:42Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### RV-BOX proof, 4:08 AM EDT (Sean's 12:15 AM order; counts only)
+- boxDue timeouts: 0 in all 7 publish-now passes on release 111 (3:14, 3:23, 3:30, 3:36, 3:45, 3:52 AM and 4:00 AM EDT) and in both routine passes. The proof asked for 0 over 3. Met.
+- Box built per ET hour, against the baseline (27 to 364 an hour from 4 PM to midnight, about 115 average): midnight 120, 1 AM 166, 2 AM 232, 3 AM 293 (the first full hour on 111), 4 AM 51 by 4:07. Up 2.5 times on the baseline average.
+- The rise began before 111 (failures also stopped at 2:32 AM on 110), so not all of it is RV-BOX. The rest is held by each pass's own cap of 1,000 findings and about 200 s; release 112 now runs Box beside the source pass. River watches the next hours.
+- Built by state, last 3 h: AK 150, VT 130, DE 112, WY 40, IA 40, MA 38, AR 38, ID 31, DC 27, FL 26, KY 24, GA 20, AL 13, CT 10, CA 8, CO 7, MD 6, HI 5, AZ 4, WI 3, IN 3, ND 1, SC 1, TN 1, IL 1, KS 1, AS 1, MS 1.
+- Waiting: 352,849, down by 0 net; new findings arrive about as fast as they are built.
 
 ### 4 AM EDT: release 112 live, 3:59 AM EDT (main 0d36af457: RV-MEET3)
 - Reader checks pass:

@@ -69,3 +69,73 @@ These are inventory and identity checks, not full ZIP-page content parity. The p
 All 56 state, DC and territory buckets plus US are listed, including zero counts. The ZIP identity comparison covers 93,571 state/division identities and 33,925 state/ZIP touches with zero missing identities. The national inventory holds 104,048 place identities.
 
 Local postal and centroid files identify 114 routable ZIPs without a division shard in 27 states and territories. Initial preparation includes their existing empty-selection answers and any held territory bodies. This enumeration uses no database or network reads; see [the local ZIP counts](zip-empty-selection-counts.json).
+
+## Member and roster inventories
+
+Counts-only production snapshot at 2026-10-25 08:50:36 UTC, separate from the earlier identity inventory above. The single backend request used role `readonly`, a read-only repeatable-read transaction and a 60-second statement timeout. It returned 57 count rows and no member, person, fact-value or payload records. [The result and byte measurements](member-inventory-counts.json) preserve the exact scope and the earlier local guard failure, which sent no request.
+
+Each column is a separate stored inventory. Distinct member IDs are the nonempty IDs after `member:` in live fact fields, grouped by their owning entity's state; aliases are not merged. Runtime roster counts are membership entries, executives are array entries, and candidacy holders are bridge entries with a holder. These are not deduplicated people, visible official totals or nationwide ZIP-page parity, and the columns should not be added together. Other people sources and the retired country-wide runtime aggregate are excluded.
+
+All 56 supported state/DC/territory runtime pointers contain the three counted fields, including empty arrays. US has no canonical pointer in this scope and is marked absent. For example, NH has no live member facts but does have 87 runtime roster entries; the table retains both storage families.
+
+| State | Live member facts | Distinct raw member IDs | Runtime roster members | Statewide executive entries | Candidacy holder entries | Runtime projection |
+|---|---:|---:|---:|---:|---:|---|
+| AK | 177 | 142 | 0 | 0 | 3 | Present |
+| AL | 208 | 178 | 0 | 0 | 155 | Present |
+| AR | 69 | 69 | 0 | 0 | 127 | Present |
+| AS | 0 | 0 | 0 | 0 | 1 | Present |
+| AZ | 421 | 346 | 62 | 10 | 84 | Present |
+| CA | 5286 | 2970 | 0 | 0 | 156 | Present |
+| CO | 377 | 164 | 0 | 0 | 99 | Present |
+| CT | 264 | 222 | 0 | 0 | 195 | Present |
+| DC | 0 | 0 | 0 | 0 | 1 | Present |
+| DE | 29 | 29 | 0 | 0 | 56 | Present |
+| FL | 1526 | 1131 | 0 | 0 | 167 | Present |
+| GA | 228 | 180 | 0 | 0 | 255 | Present |
+| GU | 0 | 0 | 0 | 0 | 1 | Present |
+| HI | 27 | 27 | 0 | 0 | 4 | Present |
+| IA | 65 | 65 | 0 | 0 | 131 | Present |
+| ID | 57 | 57 | 0 | 0 | 43 | Present |
+| IL | 1265 | 509 | 0 | 0 | 66 | Present |
+| IN | 44 | 44 | 0 | 0 | 137 | Present |
+| KS | 10 | 10 | 0 | 0 | 8 | Present |
+| KY | 94 | 24 | 0 | 0 | 127 | Present |
+| LA | 0 | 0 | 0 | 0 | 8 | Present |
+| MA | 71 | 11 | 0 | 0 | 14 | Present |
+| MD | 123 | 40 | 0 | 0 | 187 | Present |
+| ME | 60 | 52 | 0 | 0 | 191 | Present |
+| MI | 364 | 261 | 0 | 0 | 55 | Present |
+| MN | 261 | 45 | 0 | 0 | 194 | Present |
+| MO | 941 | 602 | 0 | 0 | 181 | Present |
+| MP | 0 | 0 | 0 | 0 | 1 | Present |
+| MS | 4 | 4 | 0 | 0 | 6 | Present |
+| MT | 1 | 1 | 0 | 0 | 129 | Present |
+| NC | 126 | 63 | 0 | 0 | 16 | Present |
+| ND | 10 | 10 | 0 | 0 | 77 | Present |
+| NE | 0 | 0 | 0 | 0 | 7 | Present |
+| NH | 0 | 0 | 87 | 1 | 92 | Present |
+| NJ | 88 | 88 | 153 | 2 | 169 | Present |
+| NM | 321 | 246 | 0 | 0 | 75 | Present |
+| NV | 225 | 161 | 0 | 0 | 63 | Present |
+| NY | 339 | 209 | 0 | 0 | 241 | Present |
+| OH | 175 | 99 | 0 | 0 | 134 | Present |
+| OK | 244 | 107 | 0 | 0 | 78 | Present |
+| OR | 21 | 12 | 0 | 0 | 84 | Present |
+| PA | 35 | 21 | 0 | 0 | 165 | Present |
+| PR | 0 | 0 | 0 | 0 | 1 | Present |
+| RI | 0 | 0 | 0 | 0 | 8 | Present |
+| SC | 8 | 8 | 0 | 0 | 135 | Present |
+| SD | 0 | 0 | 0 | 0 | 110 | Present |
+| TN | 3 | 3 | 0 | 0 | 12 | Present |
+| TX | 870 | 612 | 0 | 0 | 205 | Present |
+| US | 0 | 0 | 0 | 0 | 0 | Absent |
+| UT | 27 | 27 | 0 | 0 | 6 | Present |
+| VA | 149 | 111 | 0 | 0 | 13 | Present |
+| VI | 0 | 0 | 0 | 0 | 1 | Present |
+| VT | 2 | 2 | 0 | 0 | 7 | Present |
+| WA | 290 | 154 | 0 | 0 | 12 | Present |
+| WI | 3361 | 2259 | 0 | 0 | 30 | Present |
+| WV | 0 | 0 | 0 | 0 | 4 | Present |
+| WY | 15 | 15 | 0 | 0 | 84 | Present |
+
+The parsed count rows serialize to 18,609 bytes. The observed request body was 4,423 bytes and the decoded HTTP response body was 4,390 bytes, totalling 8,813 bytes before headers; these are body/JSON measurements, not exact provider billing. No database row was changed.

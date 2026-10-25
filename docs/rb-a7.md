@@ -8,7 +8,7 @@ The queue records which source generation is already saved. A failed cache purge
 
 Production connections used only `readonly` on reader project `tiny-hill-13996172`, branch `br-delicate-lab-ax02xuo5`, and `wtp_cp_release_readonly` on control-plane project `withered-sunset-39821877`, branch `br-tiny-frog-aeufpjeq`. Both checked roles allow SELECT and deny INSERT, UPDATE and DELETE. Every test mutation stayed in a local PGlite copy restored from real state-scoped production rows and promoted payloads. No production database row was changed.
 
-Those captures and connected replays preceded Sean's instruction stopping bulk reads. They have not been repeated. Later checks use synthetic local fixtures or existing result files, without reading a Neon database or replaying the captured database.
+Those captures and connected replays preceded Sean's instruction stopping bulk reads. They have not been repeated. Later workflow, encoding and packaging checks use synthetic local fixtures or existing result files, without reading a Neon database or replaying the captured database. One later production request obtains only the state member/roster inventory counts described below.
 
 Sean's current access constraint limits Neon work to counts and small samples. Before a larger Neon read or replay, state its precise scope and estimated transfer in GB and obtain Sean's approval. Do not create a database copy branch or run bulk Neon copy replays. Existing local files and fixtures can be used without a Neon connection.
 
@@ -36,6 +36,8 @@ The latest focused checks pass for context selection (79), queue/build preparati
 ## Every state
 
 The read-only baseline holds 104,048 place identities and no ready pages. All 50 states, DC, five territories and the national bucket are listed in [the state counts](measurements/rb-a7/counts.md), including zero counts. Stored body/person/meeting identities are labeled separately from page-content counts.
+
+The later member inventory query returns only 57 rows of aggregate counts and presence flags, using the existing `readonly` role in a read-only repeatable-read transaction. It ran once in 1.79 seconds, with 4,423 request-body bytes and 4,390 decoded HTTP response-body bytes; these are measured body sizes, not provider billing. No fact, person or calendar payload was exported. Live member facts, distinct raw member subjects, runtime roster entries, statewide executive entries and candidacy-holder entries are separate inventories; their sum is not a distinct or visible official count. All 56 state/DC/territory pointers have the expected fields. US has no canonical per-state runtime pointer; the retired US aggregate and other national people sources are outside this query's scope. This count does not establish nationwide ZIP content parity.
 
 State-scoped comparisons checked 93,571 held ZIP division identities, including fringe divisions, across 33,925 state/ZIP touches. Every selected identity exists in production. A cross-state ZIP is counted in every state it touches. This proves that the saved page keys are available; it does not prove content parity for every ZIP. See [the ZIP identity results](measurements/rb-a7/zip-identities.json).
 

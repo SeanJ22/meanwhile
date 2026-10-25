@@ -9,6 +9,15 @@
       "counted_states": 0
     }
   ],
+  "latestDirectProductionCounts": {
+    "observedAt": "2026-10-25T08:32:48.464Z",
+    "role": "readonly",
+    "boundaryRows": 0,
+    "zipRows": 0,
+    "zctaRows": 0,
+    "countedStates": 0,
+    "method": "One server-side aggregate row; no records, geometry or source payload returned."
+  },
   "memoryMeasurements": {
     "databaseWrites": "local PostgreSQL only",
     "texasBefore": {

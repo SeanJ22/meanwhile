@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -12,7 +13,7 @@ export const runtime = "nodejs";
 
 const privateHeaders = { "cache-control": "private, no-store, max-age=0" };
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
     nowSeconds: Math.floor(Date.now() / 1000) });
@@ -34,3 +35,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "The exact receipt could not be checked." }, { status: 503, headers: privateHeaders });
   }
 }
+
+export const GET = adminRead(get);

@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
@@ -10,7 +11,7 @@ export const revalidate = 0;
 export const runtime = "nodejs";
 
 /** What was added to, or declined from, what places are owed, with the log and what can be undone. Read only; the same for every place. */
-export async function GET(request: NextRequest) {
+async function get(request: NextRequest) {
   return adminGet(request, async (observedAt) => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error(opened.detail);
@@ -26,3 +27,5 @@ export async function GET(request: NextRequest) {
     };
   });
 }
+
+export const GET = adminRead(get);

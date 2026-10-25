@@ -225,6 +225,7 @@ export function CommandCenter(props: CommandCenterProps) {
     if (!last) return;
     setStack(stack.slice(0, -1));
     setView(last.view);
+    props.onViewChange?.(last.view);
     setDetail(last.detail);
   };
 

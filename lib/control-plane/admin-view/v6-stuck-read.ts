@@ -1,6 +1,6 @@
 import { plainWords } from "./plain-words.ts";
 import type { Sql } from "../repository/pg-store.ts";
-import { boundedQuery } from "../repository/request-bounds.ts";
+import { readStuckSummary, type StuckSummary } from "./stuck-summary.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { ageOf, causeOf, NEED_WORDS, placeKeyOfRow, sendWordsFor, stateOfRow, type BlockerLane, type Cause, type StuckRowLike } from "./blocker-causes.ts";
 import { parseV6PlaceKey, type V6PlaceScope } from "./v6-hunts-read.ts";
@@ -24,11 +24,15 @@ export interface StuckPopulation {
   readonly state: "READ";
   readonly rows: readonly StuckRowLike[];
   readonly publishedAt: string | null;
+  readonly summary?: StuckSummary;
 }
 
-export async function readStuckPopulation(sql: Sql): Promise<StuckPopulation> {
-  const raw = await boundedQuery(sql, { operation: "cp_owner_snapshots.stuck_index", callClass: "PAGE" }, STUCK_INDEX_SQL, []) as readonly Record<string, unknown>[];
-  let publishedAt: string | null = null;
+export async function readStuckPopulation(sql: Sql, scope = "us"): Promise<StuckPopulation> {
+  const state=/^(?:st:|geo:)([a-z]{2})(?:[.:]|$)/.exec(scope)?.[1];
+  const index=state?STUCK_INDEX_SQL.replace("s.id LIKE 'current:%'",`s.id = 'current:${state}'`):STUCK_INDEX_SQL;
+  const summary = await readStuckSummary(sql,index,STUCK_ITEM_LIMIT,scope);
+  const raw = summary.rows as readonly Record<string,unknown>[];
+  let publishedAt: string | null = summary.published_at instanceof Date ? summary.published_at.toISOString() : typeof summary.published_at==='string' ? summary.published_at : null;
   const rows = raw.map((r): StuckRowLike => {
     publishedAt = typeof r.published_at === "string" ? r.published_at : r.published_at instanceof Date ? r.published_at.toISOString() : publishedAt;
     const text = (v: unknown) => (typeof v === "string" ? v : null);
@@ -38,7 +42,8 @@ export async function readStuckPopulation(sql: Sql): Promise<StuckPopulation> {
       lastActivityAt: text(r.last_activity_at), nextAction: text(r.next_action),
       assignmentKeys: Array.isArray(r.assignment_keys) ? r.assignment_keys.filter((k): k is string => typeof k === "string") : [] };
   });
-  return { state: "READ", rows, publishedAt };
+  return { state: "READ", rows, publishedAt, summary:{total:Number(summary.total),groups:summary.groups as StuckSummary['groups'],
+    counts:{states:summary.states as Record<string,number>,places:summary.places as Record<string,number>}} };
 }
 
 export interface StuckActionRef { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }
@@ -70,7 +75,7 @@ function sendAction(target: string, label: string, words: string): StuckActionRe
   return { kind: "send-agents", target, label, payload: { words } };
 }
 
-export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowIso: string, shutDoors: readonly AdminV6StuckItem[] = []): {
+export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowIso: string, shutDoors: readonly AdminV6StuckItem[] = [], summary?: StuckSummary): {
   readonly items: readonly AdminV6StuckItem[]; readonly sameCause: readonly AdminV6SameCause[]; readonly total: number;
 } {
   const scope = parseV6PlaceKey(scopeKey);
@@ -94,25 +99,30 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
       owner: cause.owner, readersAffected: row.band === 1 ? true : undefined, group: cause.key,
       actions: words === null ? [] : [sendAction(at, "Send agents", words)] };
   })];
-  const groups = new Map<string, { cause: Cause; rows: StuckRowLike[]; states: Set<string> }>();
+  const groups = new Map<string, { cause: Cause; rows: StuckRowLike[]; states: Set<string>; count:number }>();
   for (const { row, cause } of scored) {
-    const g = groups.get(cause.key) ?? { cause, rows: [], states: new Set<string>() };
+    const g = groups.get(cause.key) ?? { cause, rows: [], states: new Set<string>(), count:0 };
     g.rows.push(row);
+    g.count += 1;
     const st = stateOfRow(row);
     if (st) g.states.add(st);
     groups.set(cause.key, g);
   }
+  if(summary) for(const group of summary.groups) {
+    const cause=causeOf(group.sample);
+    groups.set(cause.key,{cause,rows:groups.get(cause.key)?.rows??[],states:new Set(group.states),count:group.count});
+  }
   const shownIds = new Set(items.map((i) => i.id));
-  const sameCause = [...groups.entries()].sort((a, b) => b[1].rows.length - a[1].rows.length || a[0].localeCompare(b[0]))
+  const sameCause = [...groups.entries()].sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]))
     .map(([key, g]): AdminV6SameCause => {
       // A group is sent to the state(s) it sits in; the words name those states so the runner's target reading finds them.
       const states = [...g.states].sort();
       const target = states.length === 1 ? `st:${states[0]}` : "us";
       const names = states.map((s) => stateNameOf(s)).filter((n): n is string => n !== null);
       const words = sendWordsFor({ stateNames: names, zip: null, subject: null, label: null });
-      return { key, cause: g.cause.words, lane: g.cause.lane, count: String(g.rows.length),
+      return { key, cause: g.cause.words, lane: g.cause.lane, count: String(g.count),
         itemIds: g.rows.filter((r) => shownIds.has(r.id)).map((r) => r.id),
-        ...(words === null ? {} : { action: sendAction(target, `Send agents to all ${g.rows.length}`, words) }) } as AdminV6SameCause;
+        ...(words === null ? {} : { action: sendAction(target, `Send agents to all ${g.count}`, words) }) } as AdminV6SameCause;
     });
-  return { items, sameCause, total: scored.length + shutDoors.length };
+  return { items, sameCause, total: (summary?.total ?? scored.length) + shutDoors.length };
 }

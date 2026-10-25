@@ -18,6 +18,7 @@ import { LiveSync, type SectionState } from "./live-sync.ts";
 import { scopeOfPlaceKey } from "./places.ts";
 import type { Place, StateRow } from "./model.ts";
 import { workerStatusFromPulse } from "./pulse-view.ts";
+import { VIEW_SECTIONS } from "./view-sections.ts";
 
 export interface LiveCommandCenterProps {
   readonly reference: LiveReference;
@@ -41,7 +42,8 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const pathname = usePathname();
   const search = useSearchParams();
   const [scopeKey, setScopeKey] = useState(props.initialScopeKey);
-  const [sync] = useState(() => new LiveSync({ scope: props.initialScopeKey, fetch: fetchNoStore, schedule: scheduleTimeout }));
+  const [sync] = useState(() => new LiveSync({ scope: props.initialScopeKey, fetch: fetchNoStore, schedule: scheduleTimeout,
+    screen: props.initialView ?? "now", sections: VIEW_SECTIONS[props.initialView ?? "now"] }));
   useEffect(() => () => sync.dispose(), [sync]);
 
   const snapshot = useSyncExternalStore((fn) => sync.subscribe(fn), () => sync.snapshot(), () => sync.snapshot());
@@ -71,6 +73,7 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
 
   /** The view is in the address (`?view=reports`), so a link or a refresh lands where you were. */
   const onViewChange = (view: View) => {
+    sync.setScreen(view, VIEW_SECTIONS[view]);
     const params = new URLSearchParams(search?.toString() ?? "");
     if (view === "now") params.delete("view");
     else params.set("view", view);

@@ -67,14 +67,14 @@
     "liveThroughputVerified": false
   },
   "fullChecks": {
-    "runtimeRevision": "18ee64d9a",
+    "runtimeRevision": "29553f920",
     "gatesPassed": 9,
     "gatesTotal": 9,
-    "testsRegistered": 9900,
-    "testsPassed": 9898,
+    "testsRegistered": 9904,
+    "testsPassed": 9902,
     "testsFailed": 0,
     "testsSkipped": 2,
-    "finishedAt": "2026-10-25T11:10:20.441Z",
+    "finishedAt": "2026-10-25T13:20:18.653Z",
     "productionDatabaseBindings": false
   },
   "currentCombinationValidation": {
@@ -94,7 +94,8 @@
       "unsetKey": { "registered": 8, "passed": 8, "failed": 0 },
       "network": "Provider responses are mocked; no production credentials or real model calls."
     },
-    "status": "Full rerun in progress with model-service keys removed, not set to empty strings; production database bindings remain absent."
+    "status": "Corrected full rerun passed all nine gates: 9,904 registered, 9,902 passed, zero failed, two skipped; both builds and all 16 bundle tests passed. Model-service keys were removed entirely and production database bindings were absent. See fullChecks."
   },
+  "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays."
 }

@@ -1,4 +1,5 @@
 import { measureDraft } from "./helpers/measure-translation.ts";
+import { fixtureLinkingPage } from "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -49,7 +50,7 @@ async function stateRepos(withLink: boolean) {
   const repos = createMemoryRepositories();
   const door: VotingSourceDoor = { id: "co-election-office", publisher: "Colorado Secretary of State", url: "https://www.sos.state.co.us/pubs/elections/",
     shape: "list-page", covers: ["BALLOT_MEASURES"], scope: { state: "CO", ocdId: stateOcd, name: "Colorado" },
-    electionDate: "2026-11-03", electionPageUrl: indexUrl, officialLinkingPage: { url: fec, html: "This stored excerpt is not current response evidence." } };
+    electionDate: "2026-11-03", electionPageUrl: indexUrl, linkingPage: fixtureLinkingPage({ url: fec, html: "This stored excerpt is not current response evidence." }) };
   await saveVotingSourceDoor(repos.doors, door, now);
   const index = withLink ? `<html><a href="/pubs/elections/amendment-84.html">Amendment 84</a><a href="/pubs/elections/amendment-85.html">Amendment 85</a></html>` : "<html>No measure links yet.</html>";
   const served = (extra: Record<string, string> = {}): Record<string, string> => ({ [cited]: "<html>Ballot contacts for every initiative.</html>", [indexUrl]: index,

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4), live 11:12 AM EDT; reader checks green; placement_basis column present in production. GATING: DB-03 inventory readback f2d76ac1f alone (cherry-picked onto river e84d06c43; one conflict resolved). Sean's order (11:15 AM EDT), each its own release: DB-03 inventory readback f2d76ac1f, DB-03 Admin 04681516c, DB-03 state doors e4305907d, DB-03 linking-page integration ef74ed82e, DB-03 read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, VS-05 when it posts, then the rest as they arrive. HELD: RB-A10 7b5eacd03 (place map 0 rows in all three tables at 10:25 AM EDT)
+build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4) since 11:12 AM EDT, but its boards have not reached reader pages (see 'RB-A4 is live but readers don't see it'). GATING: DB-03 inventory readback, River fold 50bdec3ae, alone on river-next f1b766d47 (first try failed 2 river tests that check for removed code; fixed). NEXT: RB-A4 catch-up b2bbdc183 (stream/rb-a4), then DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, VS-05 when it posts, the rest as they arrive. HELD: RB-A10 7b5eacd03 (place map 0 rows). FOR SEAN: governing bodies need national place work in more states (decision below).
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T15:40:00Z
+heartbeat: 2026-10-25T16:35:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -953,3 +953,25 @@ Per fold: claim the lock, fold the exact READY, merge main in, number migrations
   - people-portraits: 396 / 804 / 3,528 / 4,414 / 3,139 / 6,001
   - research-cycle: 1,074 / 1,970 / 2,055 / 876 / 1,873 / 2,488
 - FOR SEAN: people-portraits is the biggest reader (6.0 GB in the 10 AM hour), and none of the five DB-03 fixes in the order targets it.
+
+### RB-A4 is live but readers don't see it (Sean, 11:45 AM EDT). Answer, 12:35 PM EDT
+**Did the placements get written? Mostly not yet.** RB-A4 files boards and special districts when the runner reloads a state's registration entities, and the runner reloads one state per pass (fact_store_load shows about one state an hour). RB-A4 changed the load hash, so all 56 states are due. Since release 117, only Washington has reloaded (11:40 AM EDT). It gained 1,394 host-county placements; HOST_COUNTY rows nationwide are 1,400, and Oregon, Texas and Vermont have 0. Oregon was about 45 passes away. RB-A4's proof ran the import for all 56 states at once in a copy, so it never showed the rotation.
+
+**Would Portland change once Oregon reloads? Not its governing bodies.** Pages read what they're given. The gap is that the bodies don't exist:
+- City of Portland, Multnomah County and Portland Public Schools are held as governments (the page lists all 3), but none has a body record. Their council, county board and school board are not held, and Oregon's runtime registry has 0 bodies.
+- Derived governing bodies (one per Census government, from lib/registry/derive.ts) reach a state's registry only through national place work. That runs only for ZIPs in the place scopes you send from Admin: today 79 ZIPs, all in Arizona (Pima, Cochise, Pinal, Graham, Greenlee). Runtime registries hold bodies only for AZ (734), NH (650) and NJ (693). The other 53 states hold 0.
+- "Oregon's boards": all 72 bodies filed at Oregon's state level are Metro boards. 66 are LA Metro's (webapi.legistar.com/v1/metro: Crenshaw, 2028 Olympics), wrongly filed under Oregon, and 6 are Oregon Metro's. No Oregon state board is held. RB-A4 withdrew LA Metro's calendar from Oregon, but the 66 board records are still filed under Oregon.
+
+**Today, 20 random ZIPs in 20 states plus 97204** (/api/meetings, seed 2117; bodies / governing / governments listed):
+OR 97204 Portland 13/0/3 (all Metro) · AK 99654 7/1/4 · OR 97413 0/0/1 · RI 02920 0/0/2 · DE 19808 0/0/2 · NE 68973 0/0/3 · HI 96732 59/0/2 · DC 20005 2/1/4 · UT 84020 6/1/5 · ID 83873 0/0/3 · IA 50644 3/2/4 · TN 38134 0/0/5 · NV 89437 0/0/2 · OH 44224 0/0/6 · KS 66085 0/0/5 · OK 73738 0/0/3 · VI 00802 1/1/1 · MN 56761 0/0/8 · MT 59214 0/0/6 · WI 54425 0/0/10 · WV 25915 0/0/2.
+14 of the 20 random ZIPs show 0 bodies, while every one lists 1 to 10 governments.
+
+**Fix 1, ready (RB-A4's own gap): READY b2bbdc183 on stream/rb-a4, queued right after the DB-03 readback release.** The runner keeps loading states in rotation, from its own cursor, until one is already current or the pass deadline arrives. RB-A4's placements then reach every state in about one pass, and an unchanged pass still reads one state. Tests: rb-a4-catch-up 3/3; tsc and eslint clean.
+
+**Fix 2, needs Sean: governing bodies everywhere.** Smallest path that keeps the §3 standard: national place work publishes each Census government's derived governing body with its saved Census source. It is gated on Admin sends. Two ways:
+- (a) You send every state (or Oregon first) in Admin. That's a setting, so no release, but it is your control.
+- (b) River changes national place admission so Census-only derivation runs for every state without a send. That's a code release; paid hunting stays gated on sends.
+
+Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon reads, so I'd do it per state rather than per ZIP. My recommendation is (b), one state at a time, starting with OR.
+
+**Done check after both:** Portland 97204 shows its governing bodies, and on 20 random ZIPs in 20 states each board appears on every place it is filed to (entity_place against the page), with counts by state.

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 113 (main 0c8f1ee0e, DB-03A), live 6:13 AM EDT; reader checks green (fixed + 20 random ZIPs in 20 states; polling places intact). GATING: RB-A6 d7b31ba67 alone (river-next b2d07e636), next release. Queue (each its own batch, by arrival): CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 79758c831, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 113 (main 0c8f1ee0e, DB-03A), live 6:13 AM EDT; reader checks green (fixed + 20 random ZIPs in 20 states; polling places intact). GATING: RB-A6 d7b31ba67 alone (river-next b2d07e636), next release. Queue (each its own batch, by arrival): CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f, linking-page integration ef74ed82e), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up ed1b600aa (supersedes 79758c831), RB-A3 follow-up be0bef2bf, RN-03 follow-up 1307d4e03. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T10:18:14Z
+heartbeat: 2026-10-25T10:18:59Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,17 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### 6 AM EDT
+- Live for readers: release 113 (DB-03A, since 6:13 AM EDT).
+  - Reader checks green; polling places intact.
+  - Voting doors no longer carry their linking pages (393 MB to 27.5 MB).
+- Since midnight EDT these reached readers:
+  - meeting calendars launch again (releases 110 and 112; 239 reads and 6,337 new meeting facts in the 4 AM hour);
+  - the Box publishes without timeouts (release 111; 293 built in the 3 AM hour);
+  - DB-03A.
+- Next: RB-A6 (gating), then the queue by arrival. New READYs: DB-03 linking-page integration, RN-03 follow-up, MT-01 ed1b600aa.
+- Owed: cp_doors bytes per hour after DB-03A (about 9 AM EDT). FOR SEAN: lanes for member-offices and scheduler history reads (Neon), and for place-scoped voting doors shown county-wide (03301 Concord shows New London).
 
 ### Release 113 live, 6:13 AM EDT (main 0c8f1ee0e: DB-03A)
 - DB-03A_expand applied at the production build, 6:11:50 AM EDT: 493 saved linking pages; 1,521 voting doors; 0 doors read again under the lock; no authority changes.

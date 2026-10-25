@@ -1,8 +1,4 @@
 import {
-  ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-  ROUTINE_CLOCK_READ_CONCURRENCY,
-  ROUTINE_SOURCE_TASKS,
-  routineFrontierPassBound,
   routineTaskDeadlineMs,
   routineTaskDue,
   sittingWindowSignals,
@@ -11,21 +7,10 @@ import {
 } from "./runner.ts";
 import {
   ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS,
-  ROUTINE_RUNNER_OUTER_GRACE_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-  routineRunnerBoundedWorkMs,
-  routineRunnerOuterTimeoutMs,
-  type RoutineRunnerOuterBounds,
 } from "./bounded-child-pass.ts";
 import { sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS } from "./runner-receipt.ts";
-import {
-  ROUTINE_READER_CHILD_CONCURRENCY,
-  ROUTINE_READER_MEETING_TIMEOUT_MS,
-  ROUTINE_READER_SINGLE_TIMEOUT_MS,
-  type RoutineReaderRepairDomain,
-} from "./reader-repair-protocol.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../ops/neon-request-deadline.ts";
 
 /**
@@ -40,8 +25,8 @@ export interface HotReadCandidate {
 }
 
 /**
- * Catch-up reads share the host with the pass's four children (source reads,
- * then Reader repair), so at most two run at once: six children at the peak.
+ * Catch-up reads share the host with the pass's four source children,
+ * so at most two run at once: six children at the peak.
  */
 export const HOT_READ_CATCH_UP_CONCURRENCY = Math.max(1, Math.floor(ROUTINE_CHILD_CONCURRENCY / 2));
 
@@ -213,115 +198,4 @@ export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promi
   await Promise.all(running.keys());
   const work = await workSettled;
   return error === undefined ? { work, reads } : { work, reads, error };
-}
-
-/**
- * One routine pass: its source reads, then its Reader repair, with catch-up
- * reads for as long as either holds the pass open. `startRepair` is called
- * once the source reads and every catch-up read begun beside them have
- * settled; it launches the repair and returns the gate that opens when no
- * running repair can race a meeting promotion. A catch-up defect in the source
- * phase stops catch-up for the rest of the pass.
- */
-export async function runRoutinePassWithHotReadCatchUp<S, R>(input: {
-  readonly source: Promise<S>;
-  readonly startRepair: (source: S) => { readonly repair: Promise<R>; readonly unblocked: Promise<void> };
-  readonly now: () => number;
-  readonly sleepUntil: (atMs: number) => Promise<void>;
-  readonly concurrency: number;
-  readonly admit: (phase: "SOURCE" | "REPAIR", nowMs: number, slots: number, runningLanes: ReadonlySet<string>) =>
-    Pick<HotReadCatchUpAdmission, "start" | "recheckAtMs">;
-  readonly read: (task: RoutineSourceTask, atMs: number) => Promise<void>;
-}): Promise<{
-  readonly source: S;
-  readonly repair: R;
-  readonly reads: readonly HotReadCatchUpRead[];
-  readonly errors: readonly string[];
-}> {
-  const common = { now: input.now, sleepUntil: input.sleepUntil, concurrency: input.concurrency, read: input.read };
-  const during = await runHotReadCatchUp({
-    ...common,
-    work: input.source,
-    unblocked: Promise.resolve(),
-    admit: (nowMs, slots, running) => input.admit("SOURCE", nowMs, slots, running),
-  });
-  const { repair, unblocked } = input.startRepair(during.work);
-  const after = during.error === undefined
-    ? await runHotReadCatchUp({
-        ...common,
-        work: repair,
-        unblocked,
-        admit: (nowMs, slots, running) => input.admit("REPAIR", nowMs, slots, running),
-      })
-    : { work: await repair, reads: [] as const };
-  return {
-    source: during.work,
-    repair: after.work,
-    reads: [...during.reads, ...after.reads],
-    errors: [during.error, "error" in after ? after.error : undefined].filter((row): row is string => row !== undefined),
-  };
-}
-
-function routinePassOuterBounds(
-  readerDomains: readonly Pick<RoutineReaderRepairDomain, "mode">[],
-  tasks: readonly RoutineSourceTask[],
-): RoutineRunnerOuterBounds {
-  return {
-    neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
-    settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,
-    clockTaskCount: tasks.length,
-    clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
-    clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    coordinationRequests: 4,
-    readerSingleDomains: readerDomains.filter(({ mode }) => mode === "SINGLE").length,
-    readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
-    readerMeetingDomains: readerDomains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,
-    readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
-    readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-  };
-}
-
-/**
- * The outer time limit the standing pilot puts on a routine pass, from the same
- * inputs it uses (scripts/pilot-runner.mts, `ROUTINE_DATA_TIMEOUT_MS`), less
- * the coordination and grace the pass keeps for persisting its outcome: no
- * catch-up read may run past this.
- */
-export function routinePassWorkDeadlineMs(
-  startedAtMs: number,
-  readerDomains: readonly Pick<RoutineReaderRepairDomain, "mode">[],
-  tasks: readonly RoutineSourceTask[] = ROUTINE_SOURCE_TASKS,
-): number {
-  const bound = routineFrontierPassBound(tasks);
-  const outer = routineRunnerOuterTimeoutMs(bound.commandCount, bound.largestFailureDomainSize, routinePassOuterBounds(readerDomains, tasks));
-  return startedAtMs + outer - ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS - ROUTINE_RUNNER_OUTER_GRACE_MS;
-}
-
-/**
- * The same limit for a catch-up read begun beside the source reads: the Reader
- * repair starts after it settles, so the repair's own worst case stays free.
- */
-export function routinePassSourceCatchUpDeadlineMs(
-  startedAtMs: number,
-  readerDomains: readonly Pick<RoutineReaderRepairDomain, "mode">[],
-  tasks: readonly RoutineSourceTask[] = ROUTINE_SOURCE_TASKS,
-): number {
-  const bound = routineFrontierPassBound(tasks);
-  const bounds = routinePassOuterBounds(readerDomains, tasks);
-  const readerWorstMs =
-    routineRunnerBoundedWorkMs(bound.commandCount, bound.largestFailureDomainSize, bounds) -
-    routineRunnerBoundedWorkMs(bound.commandCount, bound.largestFailureDomainSize, { ...bounds, readerSingleDomains: 0, readerMeetingDomains: 0 });
-  return routinePassWorkDeadlineMs(startedAtMs, readerDomains, tasks) - readerWorstMs;
-}
-
-/**
- * The repair domains a catch-up read could race: the meeting aggregate (it
- * composes every partition) and the single repair of any task catch-up may read.
- * The runner launches these first and resumes catch-up once they settle.
- */
-export function repairDomainRacesHotReads(
-  domain: Pick<RoutineReaderRepairDomain, "mode" | "contracts">,
-  hotTaskIds: ReadonlySet<string>,
-): boolean {
-  return domain.mode === "MEETING_AGGREGATE" || domain.contracts.some(({ id }) => hotTaskIds.has(id));
 }

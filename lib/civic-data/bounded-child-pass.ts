@@ -15,8 +15,6 @@ export const ROUTINE_CHILD_MAX_BUFFER_BYTES = 16 * 1024 * 1024;
 export const ROUTINE_CHILD_CONCURRENCY = 4;
 /** Two reads in one failure domain start at least a minute apart, so a host's published Crawl-delay holds. */
 export const ROUTINE_SAME_DOMAIN_CHILD_GAP_MS = 60_000;
-export const ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS = 10 * 60_000;
-export const ROUTINE_RUNNER_OUTER_GRACE_MS = 60_000;
 
 export interface RoutineRunnerOuterBounds {
   readonly neonRequestDeadlineMs: number;
@@ -325,17 +323,6 @@ export function routineChildPassWorstCaseMs(
   return waves * childTimeoutMs;
 }
 
-export function routineRunnerOuterTimeoutMs(
-  commandCount: number,
-  largestFailureDomainSize: number = commandCount === 0 ? 0 : 1,
-  bounds?: RoutineRunnerOuterBounds,
-): number {
-  const work = routineRunnerBoundedWorkMs(commandCount, largestFailureDomainSize, bounds);
-  return work +
-    ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS +
-    ROUTINE_RUNNER_OUTER_GRACE_MS;
-}
-
 function nonNegativeSafeInteger(value: number, code: string): void {
   if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${code}:${value}`);
 }
@@ -389,17 +376,4 @@ export function routineRunnerBoundedWorkMs(
       bounds.readerSingleTimeoutMs +
     bounds.readerMeetingDomains * bounds.readerMeetingTimeoutMs;
   return acquisitionMs + clockMs + coordinationMs + readerMs;
-}
-
-export function routineRunnerOuterTimeoutCompatible(
-  outerTimeoutMs: number,
-  commandCount: number,
-  largestFailureDomainSize: number = commandCount === 0 ? 0 : 1,
-  bounds?: RoutineRunnerOuterBounds,
-): boolean {
-  return outerTimeoutMs > routineRunnerBoundedWorkMs(
-    commandCount,
-    largestFailureDomainSize,
-    bounds,
-  ) + ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS;
 }

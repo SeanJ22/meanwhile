@@ -83,7 +83,7 @@ import { activeWiring, installMeetingDoors, isUnreadableRetiredMeetingHost, wiri
 import { ensureMeetingDoors, installDoorRecords, installMeetingWiring } from "../lib/doors/meeting-doors.ts";
 import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
 import { hostsOfConfig } from "../lib/doors/seed-meetings.ts";
-import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
+import { installMeetingPartitionSelection } from "../lib/civic-data/meeting-partition-selection.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";

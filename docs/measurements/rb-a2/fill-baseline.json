@@ -87,14 +87,14 @@
     "liveThroughputVerified": false
   },
   "fullChecks": {
-    "runtimeRevision": "a41c494f1",
+    "runtimeRevision": "944c3846b",
     "gatesPassed": 9,
     "gatesTotal": 9,
-    "testsRegistered": 9941,
-    "testsPassed": 9939,
+    "testsRegistered": 9914,
+    "testsPassed": 9912,
     "testsFailed": 0,
     "testsSkipped": 2,
-    "finishedAt": "2026-10-25T15:22:15.402Z",
+    "finishedAt": "2026-10-25T18:19:47.925Z",
     "productionDatabaseBindings": false,
     "productionModelServiceBindings": false
   },
@@ -107,12 +107,13 @@
       "RB-A4"
     ],
     "startedAt": "2026-10-25T17:44:36.026Z",
-    "status": "Full checks running; production database and model-service credentials removed."
+    "status": "All nine checks passed, including both builds and all 16 bundle tests; see fullChecks.",
+    "finishedAt": "2026-10-25T18:19:47.925Z"
   },
   "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
   "latestProductionObservation": {
-    "observedAt": "2026-10-25T16:23:57.019Z",
+    "observedAt": "2026-10-25T18:18:58.759Z",
     "hasBoundaries": false,
     "hasZipRows": false,
     "hasZctaRows": false,
@@ -122,11 +123,11 @@
     "method": "Server-side existence flags and count-cache metadata; no geometry, source payloads or table copies."
   },
   "deploymentObservation": {
-    "river": "e84d06c43",
-    "main": "03e0526b6",
+    "river": "be0b41a4f",
+    "main": "c7576d26e",
     "checkedLoaderInRiver": false,
     "checkedLoaderInMain": false,
-    "runnerObservedAt": "2026-10-25T16:20:21.885Z",
+    "runnerObservedAt": "2026-10-25T18:10:42.607Z",
     "runnerTestedSha": "03e0526b6",
     "mapWorkers": 0
   },

@@ -57,7 +57,6 @@ export function congressDirectoryPortraitLeads(bioguide:string):readonly string[
 }
 
 /** A member of Congress's verified photo is rechecked every 30 days. */
-export const CONGRESS_PORTRAIT_RECHECK_MS = 30 * 86_400_000;
 
 /** Drain every due native member; caller cancellation leaves durable reasons. */
 export async function congressPortraits(value: FederalDirectoryReadModel, asOf: string, signal?: AbortSignal,
@@ -74,7 +73,7 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
     (lastAttempt.get(person.personId ?? person.id)?.record as { attemptedAt?: string } | undefined)?.attemptedAt ?? "";
   const verified = (person: Officeholder) => portraitBindingMatches(person.personId ?? person.id, person.photo ?? { url: "" });
   const dueBy = Date.parse(asOf) + PORTRAIT_DUE_WINDOW_MS;
-  const due = holders.filter(row => portraitDueAt(row, lastAttempt.get(row.personId ?? row.id), CONGRESS_PORTRAIT_RECHECK_MS, verified) <= dueBy)
+  const due = holders.filter(row => portraitDueAt(row, lastAttempt.get(row.personId ?? row.id), verified) <= dueBy)
     .sort((a, b) => attemptedAt(a).localeCompare(attemptedAt(b)) ||
       (a.photo?.verification?.checkedAt ?? "").localeCompare(b.photo?.verification?.checkedAt ?? "") || a.id.localeCompare(b.id));
   const dueKeys = new Set(due.map(person => `${person.personId ?? person.id}:portrait`));

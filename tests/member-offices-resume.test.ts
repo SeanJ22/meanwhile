@@ -46,8 +46,8 @@ test("a member-office run cut off by its deadline saves the states it finished a
   await publishState(store, "ca");
   await publishState(store, "tx");
   const read: string[] = [];
-  const readCandidateField = store.readCandidateField.bind(store);
-  store.readCandidateField = async (id, path) => { read.push(id); return readCandidateField(id, path); };
+  const readCandidateCaptures = store.readCandidateCaptures.bind(store);
+  store.readCandidateCaptures = async (id, urls, members) => { read.push(id); return readCandidateCaptures(id, urls, members); };
   // The pass deadline arrives after the first state.
   let ticks = 0;
   const cut = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
@@ -89,13 +89,15 @@ test("on the production store the member-office progress, capture list and conti
     const captures = await store.readCandidateField(roster!.versionId, ["normalizedPayload", "captures"]);
     assert.ok(Array.isArray(captures) && captures.length === 1, JSON.stringify(captures));
     assert.equal(await store.readCandidateField(roster!.versionId, ["normalizedPayload", "absent"]), undefined);
-    assert.equal(await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterVersions"]), null);
+    assert.equal(await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests"]), null);
+    const [digest] = await store.readRosterIdDigests("STATE_LEGISLATOR", ["US-CA:openstates-people:v1"]);
+    assert.match(digest!.digest, /^1:[a-f0-9]{32}$/);
     as("member-offices", "MANUAL_CONTRACT");
     let ticks = 0;
     const cut = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
     assert.ok(cut.outcome?.promoted, JSON.stringify(cut));
-    const held = await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterVersions", "pending", "absent"]);
-    assert.deepEqual(held, { rosterVersions: { "US-CA": roster!.versionId }, pending: ["US-TX"] });
+    const held = await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests", "pending", "absent"]);
+    assert.deepEqual(held, { rosterDigests: { "US-CA": digest!.digest }, pending: ["US-TX"] });
     assert.equal((await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope)).continuationPending, true);
     const rest = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"] });
     assert.ok(rest.outcome?.promoted, JSON.stringify(rest));

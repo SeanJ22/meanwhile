@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { repeatedFailureStreak } from "./failure-backoff.ts";
 import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
 import type { Division } from "../registry/types.ts";
@@ -27,7 +28,7 @@ import {
   type RoutineRecordClass,
   type ValidationReceipt,
 } from "./types.ts";
-import type { DerivedInputRef } from "./derived-authority.ts";
+import type { OfficeholderSet } from "../officials/types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
@@ -140,6 +141,12 @@ export interface RoutineDataStore {
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** The current portrait record's input versions and next due time, without the record itself. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
+  /** Promoted rosters' people, slimmed to what a portrait list needs. */
+  readonly readSlimRosters: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly SlimRoster[]>;
+  /** Each promoted roster's people as a short digest of their ids, which moves only when someone joins or leaves. */
+  readonly readRosterIdDigests: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly scope: string; readonly digest: string }[]>;
+  /** A stored candidate's saved captures whose address, or extracted archive member, is one of these. */
+  readonly readCandidateCaptures: (candidateId: string, urls: readonly string[], members: readonly string[]) => Promise<readonly unknown[]>;
   /** Named top-level fields of a pointer's payload, without the rest of it. */
   readonly readPromotionPayloadFields: (recordClass: RoutineRecordClass, scope: string, keys: readonly string[]) => Promise<Readonly<Record<string, unknown>> | null>;
   /** One part of a stored candidate, by path, without the rest of it; undefined when the candidate or the path is absent. */
@@ -159,18 +166,43 @@ export interface RoutineDataStore {
   ) => Promise<RoutineStoreClock>;
 }
 
-/** The fact a portrait record carries to say when its next photo is due. */
+/** The fact a portrait record carries to say when its next photo is due and which inputs its last list was built from. */
 export const PORTRAIT_SCHEDULE_CODE = "PEOPLE_PORTRAIT_SCHEDULE";
-/** What the last portrait run was built from, and when it is next due. */
-export interface PortraitRunState {
-  readonly inputs: readonly { readonly recordClass: string; readonly scope: string; readonly versionId: string }[];
-  readonly nextDueAt: string | null;
+/** The input versions and local roster fingerprint a state's people-without-portraits list was built from. */
+export interface PortraitStamp {
+  readonly versions: Readonly<Record<string, string>>;
+  readonly local: string | null;
 }
+type PortraitAttemptFact = NonNullable<RoutineCandidate["excludedFacts"]>[number];
+/** What the last portrait run saw, when a person without a portrait is next due, and each person's attempts. */
+export interface PortraitRunState {
+  readonly nextDueAt: string | null;
+  readonly seen: PortraitStamp | null;
+  readonly attempts: readonly PortraitAttemptFact[];
+}
+const portraitAttemptCode = (code: string) => code.startsWith("STATE_PORTRAIT_") || code.startsWith("CONGRESS_PORTRAIT_");
 function portraitRunState(candidate: RoutineCandidate): PortraitRunState {
-  const inputs = (candidate.retrieval as { derived?: { inputs?: readonly DerivedInputRef[] } }).derived?.inputs ?? [];
-  const schedule = (candidate.excludedFacts ?? []).find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string } | undefined;
-  return { inputs: inputs.flatMap(ref => ref.kind === "PROMOTED_VERSION" ? [{ recordClass: ref.recordClass, scope: ref.scope, versionId: ref.versionId }] : []),
-    nextDueAt: schedule?.nextDueAt ?? null };
+  const facts = candidate.excludedFacts ?? [];
+  const schedule = facts.find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string | null; seen?: PortraitStamp } | undefined;
+  return { nextDueAt: schedule?.nextDueAt ?? null, seen: schedule?.seen ?? null,
+    attempts: facts.filter(fact => portraitAttemptCode(fact.code)).map(fact => structuredClone(fact)) };
+}
+/** A person's fields a portrait list and its work need; offices, memberships' sources and most field receipts stay behind. */
+const ROSTER_PERSON_HEAVY_FIELDS = ["offices", "fieldSources"] as const;
+function slimRosterPerson(person: Record<string, unknown>): Record<string, unknown> {
+  const fieldSources = person.fieldSources as Record<string, unknown> | undefined;
+  const kept = Object.fromEntries(["name", "officeTitle", "photo"].flatMap(field => fieldSources?.[field] ? [[field, fieldSources[field]]] : []));
+  const slim = Object.fromEntries(Object.entries(person).filter(([key]) => !(ROSTER_PERSON_HEAVY_FIELDS as readonly string[]).includes(key)));
+  return { ...slim, fieldSources: kept };
+}
+/** One promoted roster's people without their offices and field receipts, and the identity its read model hash names. */
+export interface SlimRoster {
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly versionId: string;
+  readonly promotedAt: string;
+  readonly readModelSha256: string | null;
+  readonly roster: OfficeholderSet;
 }
 
 export interface RoutineStoreClock {
@@ -768,6 +800,36 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const pointer = this.promotions.get(projectionKey("STATE_LEGISLATOR", scope));
     const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
     return record ? portraitRunState(record.candidate) : null;
+  }
+
+  async readSlimRosters(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly SlimRoster[]> {
+    return scopes.flatMap(scope => {
+      const pointer = this.promotions.get(projectionKey(recordClass, scope));
+      const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
+      const roster = (pointer?.payload as { roster?: OfficeholderSet } | undefined)?.roster;
+      if (!pointer || !record || !roster || !Array.isArray(roster.officeholders)) return [];
+      return [{ recordClass, scope, versionId: pointer.versionId, promotedAt: pointer.promotedAt,
+        readModelSha256: record.candidate.normalization.normalizedHash ?? null,
+        roster: structuredClone({ ...roster, officeholders: roster.officeholders.map(row => slimRosterPerson(row as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet }];
+    });
+  }
+
+  async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {
+    return scopes.flatMap(scope => {
+      const officeholders = (this.promotions.get(projectionKey(recordClass, scope))?.payload as { roster?: OfficeholderSet } | undefined)?.roster?.officeholders;
+      if (!Array.isArray(officeholders)) return [];
+      const ids = officeholders.map(row => row.id).sort();
+      return [{ scope, digest: `${ids.length}:${createHash("md5").update(ids.join(",")).digest("hex")}` }];
+    });
+  }
+
+  async readCandidateCaptures(candidateId: string, urls: readonly string[], members: readonly string[]): Promise<readonly unknown[]> {
+    const captures = (this.candidates.get(candidateId)?.candidate.normalizedPayload as { captures?: unknown } | undefined)?.captures;
+    const wanted = new Set(urls), paths = new Set(members);
+    return Array.isArray(captures) ? structuredClone(captures.filter(row => {
+      const capture = row as { finalUrl?: string; requestedUrl?: string; extractedFrom?: { member?: string } };
+      return wanted.has(capture.finalUrl ?? "") || wanted.has(capture.requestedUrl ?? "") || paths.has(capture.extractedFrom?.member ?? "");
+    })) : [];
   }
 
   async readPromotionPayloadFields(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<Readonly<Record<string, unknown>> | null> {
@@ -2148,16 +2210,49 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
-    // The record itself is about 1 MB; only its input versions and its schedule fact leave the database.
+    // The record itself is about 1 MB; only its schedule fact and its people's attempt facts leave the database.
     const [row] = (await this.db.execute(sql`select
-        (select coalesce(jsonb_agg(jsonb_build_object('recordClass', i->>'recordClass', 'scope', i->>'scope', 'versionId', i->>'versionId')), '[]'::jsonb)
-          from jsonb_array_elements(case when jsonb_typeof(c.candidate #> '{retrieval,derived,inputs}') = 'array'
-            then c.candidate #> '{retrieval,derived,inputs}' else '[]'::jsonb end) i where i->>'kind' = 'PROMOTED_VERSION') as inputs,
-        (select f #>> '{record,nextDueAt}' from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
-            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as next_due_at
+        (select f->'record' from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
+            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as schedule,
+        (select coalesce(jsonb_agg(f), '[]'::jsonb) from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
+            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' like 'STATE\_PORTRAIT\_%' or f->>'code' like 'CONGRESS\_PORTRAIT\_%') as attempts
       from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
-      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { inputs: PortraitRunState["inputs"]; next_due_at: string | null }[];
-    return row ? { inputs: row.inputs, nextDueAt: row.next_due_at } : null;
+      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { schedule: { nextDueAt?: string | null; seen?: PortraitStamp } | null; attempts: PortraitAttemptFact[] }[];
+    return row ? { nextDueAt: row.schedule?.nextDueAt ?? null, seen: row.schedule?.seen ?? null, attempts: row.attempts } : null;
+  }
+
+  async readSlimRosters(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly SlimRoster[]> {
+    if (!scopes.length) return [];
+    // Offices and field receipts are most of a roster's bytes; they stay in the database.
+    const rows = (await this.db.execute(sql`select p.scope, p.current_version_id as version_id, p.promoted_at, c.normalized_hash,
+        (p.payload->'roster') - 'officeholders' - 'endedMemberships' || jsonb_build_object('officeholders',
+          (select coalesce(jsonb_agg(o - 'offices' - 'fieldSources' || jsonb_build_object('fieldSources', coalesce(jsonb_strip_nulls(jsonb_build_object(
+              'name', o#>'{fieldSources,name}', 'officeTitle', o#>'{fieldSources,officeTitle}', 'photo', o#>'{fieldSources,photo}')), '{}'::jsonb))), '[]'::jsonb)
+            from jsonb_array_elements(p.payload#>'{roster,officeholders}') o)) as roster
+      from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
+      where p.record_class = ${recordClass} and p.scope in (${sql.join(scopes.map(scope => sql`${scope}`), sql`, `)})
+        and jsonb_typeof(p.payload#>'{roster,officeholders}') = 'array'`)).rows as { scope: string; version_id: string; promoted_at: string | Date; normalized_hash: string | null; roster: OfficeholderSet }[];
+    return rows.map(row => ({ recordClass, scope: row.scope, versionId: row.version_id,
+      promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster }));
+  }
+
+  async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {
+    if (!scopes.length) return [];
+    const rows = (await this.db.execute(sql`select p.scope, count(o)::text || ':' || md5(coalesce(string_agg(o->>'id', ',' order by o->>'id' collate "C"), '')) as digest
+      from civic_data_promotions p cross join lateral jsonb_array_elements(p.payload#>'{roster,officeholders}') o
+      where p.record_class = ${recordClass} and p.scope in (${sql.join(scopes.map(scope => sql`${scope}`), sql`, `)})
+        and jsonb_typeof(p.payload#>'{roster,officeholders}') = 'array' group by p.scope`)).rows as { scope: string; digest: string }[];
+    return rows.map(row => ({ scope: row.scope, digest: row.digest }));
+  }
+
+  async readCandidateCaptures(candidateId: string, urls: readonly string[], members: readonly string[]): Promise<readonly unknown[]> {
+    const list = (values: readonly string[]) => `{${values.map(value => `"${value.replace(/["\\]/g, "\\$&")}"`).join(",")}}`;
+    const [row] = (await this.db.execute(sql`select coalesce((select jsonb_agg(x) from jsonb_array_elements(case when jsonb_typeof(c.candidate#>'{normalizedPayload,captures}') = 'array'
+        then c.candidate#>'{normalizedPayload,captures}' else '[]'::jsonb end) x
+        where x->>'finalUrl' = any(${list(urls)}::text[]) or x->>'requestedUrl' = any(${list(urls)}::text[])
+          or x#>>'{extractedFrom,member}' = any(${list(members)}::text[])), '[]'::jsonb) as captures
+      from civic_data_candidates c where c.id = ${candidateId}`)).rows as { captures: unknown[] }[];
+    return row?.captures ?? [];
   }
 
   async readPromotionPayloadFields(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<Readonly<Record<string, unknown>> | null> {

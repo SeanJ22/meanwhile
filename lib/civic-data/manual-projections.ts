@@ -99,8 +99,8 @@ export interface CuratedReaderProjection {
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   readonly formatVersion?: number;
   readonly denominator?: Readonly<Record<string, number>>;
-  /** Member offices: the roster versions each state's offices were built from, and the changed states still owed this round. */
-  readonly rosterVersions?: Readonly<Record<string, string>>;
+  /** Member offices: the lawmaker list each state's offices were built from, and the changed states still owed this round. */
+  readonly rosterDigests?: Readonly<Record<string, string>>;
   readonly pending?: readonly string[];
 }
 
@@ -513,7 +513,7 @@ function rebuildSourceScopedPayload(
   }
   // Member offices keep which roster each state was built from and which states a cut-off run still owes.
   const progress = contractId === "member-offices" ? {
-    ...(object(current.rosterVersions) ? { rosterVersions: current.rosterVersions } : {}),
+    ...(object(current.rosterDigests) ? { rosterDigests: current.rosterDigests } : {}),
     ...(Array.isArray(current.pending) && current.pending.length ? { pending: current.pending } : {}),
   } : {};
   return {

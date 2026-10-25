@@ -65,9 +65,9 @@ export type PortraitAttempt = NonNullable<import("../civic-data/types.ts").Routi
 type PortraitPerson = import("../officials/types.ts").Officeholder;
 
 const DAY_MS = 86_400_000;
-/** A portrait that could not be found is tried again after a week, as a verified photo is rechecked. */
+/** A person whose portrait could not be found is tried again after a week. */
 export const PORTRAIT_RETRY_MS = 7 * DAY_MS;
-/** A run takes everyone falling due within a day, so an unchanged state runs about once a day. */
+/** A run takes everyone falling due within a day, so a state's retries come together. */
 export const PORTRAIT_DUE_WINDOW_MS = DAY_MS;
 
 /** The links an attempt read for this person; a change makes the person due again at once. */
@@ -76,16 +76,16 @@ export function portraitProfileLinks(person: PortraitPerson): readonly string[] 
     .filter((url): url is string => Boolean(url)))].sort();
 }
 
-/** When this person's portrait is next due: a verified photo's recheck, a failed attempt's retry, or now. */
-export function portraitDueAt(person: PortraitPerson, lastAttempt: PortraitAttempt | undefined, recheckMs: number,
+/** When this person's portrait work is next due. A portrait readers are shown is never read again;
+ * a person without one is due now, or a week after an attempt that found none, or at once when their links change. */
+export function portraitDueAt(person: PortraitPerson, lastAttempt: PortraitAttempt | undefined,
   verified: (person: PortraitPerson) => boolean): number {
-  const checkedAt = verified(person) ? Date.parse(person.photo?.verification?.checkedAt ?? "") : Number.NaN;
+  if (verified(person)) return Number.POSITIVE_INFINITY;
   const record = lastAttempt?.record as { attemptedAt?: string; profiles?: readonly string[]; interrupted?: boolean } | undefined;
-  if (record?.interrupted) return 0;
   const attemptedAt = Date.parse(record?.attemptedAt ?? "");
-  if (!Number.isFinite(checkedAt) && !Number.isFinite(attemptedAt)) return 0;
+  if (record?.interrupted || !Number.isFinite(attemptedAt)) return 0;
   if (record?.profiles && record.profiles.join("\n") !== portraitProfileLinks(person).join("\n")) return 0;
-  return Math.max(Number.isFinite(checkedAt) ? checkedAt + recheckMs : 0, Number.isFinite(attemptedAt) ? attemptedAt + PORTRAIT_RETRY_MS : 0);
+  return attemptedAt + PORTRAIT_RETRY_MS;
 }
 
 /** Each person's latest attempt with this code prefix. */

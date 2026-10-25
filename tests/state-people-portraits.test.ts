@@ -73,19 +73,22 @@ test("a fresh state profile verifies after capture and its stored portrait reach
   assert.equal(photo.verification!.checkedAt,VERIFIED);assert.equal(photo.collectedAt,SOURCE_DATE);
   assert.equal(photo.verification!.sources[0].retrievedAt,SOURCE_DATE);assert.equal(person.provenance.collectedAt,SOURCE_DATE);
   assert.equal(images.writes.length,1);
-  // The record carries only its schedule: the next photo is due when this one's weekly recheck comes round.
-  assert.deepEqual(result!.candidate.excludedFacts,[{key:"US-AZ:portrait-schedule",code:"PEOPLE_PORTRAIT_SCHEDULE",
-    detail:"The next portrait in this state is due 2026-10-16T21:00:06.000Z; until then the runner skips it unless its people inputs change.",
-    record:{nextDueAt:"2026-10-16T21:00:06.000Z"}}]);
+  // The record carries only its schedule: everyone has a portrait, so nothing is due again until the rosters name someone new.
+  const [schedule]=result!.candidate.excludedFacts ?? [];
+  assert.equal(result!.candidate.excludedFacts?.length,1);
+  assert.equal(schedule?.code,"PEOPLE_PORTRAIT_SCHEDULE");
+  assert.equal((schedule?.record as {nextDueAt:string|null}).nextDueAt,null);
+  assert.ok((schedule?.record as {seen?:{versions:object}}).seen?.versions,"the list's roster digests are saved for the runner's check");
 });
 test("a state portrait failure advances durable attempt metadata without withholding the accepted person",async()=>{
   const {store}=await seed();let previousId="";
-  // A failed profile is tried again a week later, not on every pass: the run one second on reads nothing.
+  // A failed profile is tried again a week later, not on every pass: the run one second on reads nothing and saves nothing.
   for(const [now,attemptedAt,reads] of [[VERIFIED,VERIFIED,1],["2026-10-09T21:00:07.000Z",VERIFIED,0],["2026-10-16T21:00:06.000Z","2026-10-16T21:00:06.000Z",1]] as const){
     let profileReads=0;
     const result=await refreshStatePortraits({state:"az",store,now},{now:()=>now,acquire:async()=>{profileReads++;throw Error("Known profile temporarily unavailable");}});
     assert.equal(profileReads,reads);
-    assert.ok(result?.outcome.promoted);assert.notEqual(result!.candidate.id,previousId);previousId=result!.candidate.id;
+    if(reads){assert.ok(result?.outcome.promoted && !result.outcome.confirmed);assert.notEqual(result!.candidate.id,previousId);previousId=result!.candidate.id;}
+    else assert.equal(result?.outcome.confirmed?.versionId,previousId,"a run with nothing due confirms the record as it was");
     const saved=await store.readCandidate(previousId),gap=saved?.candidate.excludedFacts?.find(row=>row.code==="STATE_PORTRAIT_PROCESSING_FAILED");
     assert.equal((gap?.record as {attemptedAt:string}).attemptedAt,attemptedAt);
     const read=await readStatePeopleProjection("US-AZ",{store,now,bypassCache:true});

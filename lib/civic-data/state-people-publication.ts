@@ -141,10 +141,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   return {candidate,outcome};
 }
 
-/** A state person's verified photo is rechecked weekly. */
-export const STATE_PORTRAIT_RECHECK_MS = 7*86400000;
-
-/** Every due profile is standing work, independent of its roster refresh. */
+/** Portrait work for people without a portrait readers are shown; a shown portrait is never read again. */
 export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:string;now?:string;signal?:AbortSignal},
   options:import("../photos/portrait-work.ts").StandingPortraitOptions = {}) {
   const clock = options.now ?? (()=>new Date().toISOString());
@@ -171,7 +168,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   const verified = (person:OfficeholderSet["officeholders"][number]) => portraitBindingMatches(person.personId ?? person.id,person.photo ?? {url:""});
   // Never-tried people first, then the oldest attempts: a run cut off by its deadline continues where it stopped.
   const dueBy = Date.parse(now)+PORTRAIT_DUE_WINDOW_MS;
-  const due = roster.officeholders.filter(row=>portraitDueAt(row,lastAttempt.get(row.personId ?? row.id),STATE_PORTRAIT_RECHECK_MS,verified)<=dueBy)
+  const due = roster.officeholders.filter(row=>portraitDueAt(row,lastAttempt.get(row.personId ?? row.id),verified)<=dueBy)
     .sort((a,b)=>attemptedAt(a).localeCompare(attemptedAt(b)) || a.id.localeCompare(b.id));
   const dueIds = new Set(due.map(person=>person.personId ?? person.id));
   const excludedFacts = (options.previousExcludedFacts ?? []).filter(fact=>fact.code.startsWith("STATE_PORTRAIT_") &&

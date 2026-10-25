@@ -192,6 +192,7 @@ import {
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
+import { factReader } from "../lib/facts/db.ts";
 import { memberOfficesRunNeeded } from "../lib/officials/member-offices-publication.ts";
 
 readFromHeldCopies();
@@ -1120,9 +1121,9 @@ for (const read of clockReads) {
         `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? `Source retry after ${failureRetryMs(task.retryMs, durableClock)}ms` : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
     continue;
   }
-  // A state's portraits wait until one of their people inputs is promoted again or a photo falls due.
+  // A state's portraits wait until its rosters name someone new without a portrait, or a retry falls due.
   if (task.sourceId === "people-portraits" && !FORCE && dueRequest === null) {
-    const portraits = await portraitRunNeeded(store, task.id.slice("people-portraits-".length), new Date(admissionNowMs).toISOString())
+    const portraits = await portraitRunNeeded(store, task.id.slice("people-portraits-".length), new Date(admissionNowMs).toISOString(), factReader())
       .catch(error => ({ needed: true, reason: `The portrait record could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); the state runs.` }));
     if (!portraits.needed) {
       recordLaunchDecision(task, "SKIP", "Portraits are current", portraits.reason);

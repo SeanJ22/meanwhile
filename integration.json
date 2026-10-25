@@ -4633,5 +4633,17 @@
     "gates": "pass (9 of 9, 9,910 tests)",
     "at": "2026-10-25T17:38:40Z",
     "live": "release 118 main c7576d26e at 2026-10-25T18:19:14Z"
+  },
+  {
+    "lane": "rb-a4",
+    "steps": [
+      "RB-A4 catch-up"
+    ],
+    "ready_sha": "b2bbdc183",
+    "merge_sha": "456454204",
+    "river_sha": "456454204",
+    "tested_sha": "456454204",
+    "gates": "pass (9 of 9, 9,913 tests)",
+    "at": "2026-10-25T20:03:00Z"
   }
 ]

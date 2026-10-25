@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 inventory readback), live 2:19 PM EDT; reader checks green. GATING: river-portraits READY 3a45d44ab alone (river-next = be0b41a4f + it; DB-03 portraits and member offices), then RB-A4 catch-up b2bbdc183 (gates 9 of 9 on 456454204, 9,913 tests; waits behind river-portraits), GB-01 1636195c9, DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 readback). SHIPPING: release 119 (RB-A4 catch-up b2bbdc183, gates 9 of 9 on 456454204) PR #831, auto-merge on; reader checks within 5 min of live. GATING: GB-01 1636195c9 alone on river-next 68ebfa0aa. RETURNED: river-portraits 3a45d44ab (1 test: new URL().pathname in tests/portrait-run.test.ts); new READY → release 120. NEXT: DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T19:19:00Z
+heartbeat: 2026-10-25T20:03:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1057,4 +1057,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
   - The recheck of shown photos is removed.
 - The other session is building that as a follow-up READY on stream/river-portraits, on top of 3a45d44ab.
 - River's order: 3a45d44ab ships as release 119. If the follow-up is READY by the time 119 is live, it goes next as 120. If not, RB-A4 catch-up and then GB-01 ship while it builds, and the follow-up takes the next slot after whatever is gating when it lands. That way the build machine doesn't sit idle on unbuilt work, and Sean's GB-01 order keeps moving.
+
+### 4 PM EDT status
+- river-portraits 3a45d44ab failed alone: 8 of 9 gates, 1 of 9,915 tests. tests/path-separator.test.ts flags `new URL(options.url).pathname` in the new tests/portrait-run.test.ts. Returned to the other River session with the exact fix; it posts a new READY, which becomes release 120.
+- RB-A4 catch-up had already passed 9 of 9 alone on this same river (be0b41a4f), so it ships now as release 119 (PR #831): river moved to 456454204. GB-01 1636195c9 is gating alone on top of it (68ebfa0aa).
+- DB-03 readback saving, first full hour after release 118: readback read 0 MB in the 3 PM EDT hour. Before, 5 AM to 1 PM EDT: 55 / 625 / 2,759 / 1,147 / 593 / 2,931 / 1,810 / 1,545 / 56 MB, average 1,280 MB/h. Saved: about 1.3 GB/h on average (0.06 to 2.9 GB/h by hour). The 4 PM hour will confirm.
+- Neon, both databases, 3 PM EDT hour: 11,915 MB. Portraits 5,918 (still the biggest; release 120 targets it), research cycle 1,092, member offices 0 this hour.
 

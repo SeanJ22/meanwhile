@@ -415,3 +415,4 @@ One line per batch folded into river.
 - 2026-10-25T12:57:30Z · cl-01 · CL-01 · ready 69ca09c83 (after return 086fbb5b6) · river c0205d49f · pnpm gates pass on c0205d49f (9 of 9, 9,932 tests) · release 116 PR #828
 - 2026-10-25T14:39:40Z · rb-a4 · RB-A4 · ready 2bdbde3ba (River-finished; 624ac2d3d failed 2 tests in batch) · river e84d06c43 · pnpm gates pass on e84d06c43 (9 of 9, 9,937 tests) · release 117 PR #829
 - 2026-10-25T17:38:40Z · river-db03-readback · DB-03 inventory readback · ready 235c6f837 (River fold of stream/db-03 f2d76ac1f; 2 river tests and dead code fixed) · river be0b41a4f · pnpm gates pass on be0b41a4f (9 of 9, 9,910 tests) · release 118 PR #830
+- 2026-10-25T20:03:00Z · rb-a4 · RB-A4 catch-up · ready b2bbdc183 · river 456454204 · pnpm gates pass on 456454204 (9 of 9, 9,913 tests) · release 119 PR #831

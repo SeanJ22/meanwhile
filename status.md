@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 110 (main f6d35d05b, RV-MEET2). NEXT: release 111 = RV-BOX (PR #823, river d62ca66ce, auto-merge on; live check within 5 minutes of release instead of a production-database preview). THEN: DB-03A alone when READY (no branch yet). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes by 2:50 AM EDT), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf; RT-01, DB-03, AD-01 as READYs come. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 110 (main f6d35d05b, RV-MEET2). NEXT: release 111 = RV-BOX (PR #823, river d62ca66ce, auto-merge on; live check within 5 minutes of release instead of a production-database preview). THEN: DB-03A (RETURNED 2:45 AM EDT: its migration holds cp_doors locked while it walks 1,517 voting doors one per query, 393 MB; returns/db-03a.md; ships alone right after 111 once fixed). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes by 2:50 AM EDT), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf; RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306 (READY; folded in order after DB-03A). HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T06:16:59Z
+heartbeat: 2026-10-25T06:33:28Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

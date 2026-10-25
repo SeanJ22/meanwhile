@@ -34,3 +34,10 @@ RB-A7 folds after RB-A4 (both change lib/reader/place.ts and lib/core/door.ts).
 - Checks: rb-a4-portals 2/2; eslint, tsc and knip clean. Folds in its queue place (after RB-A6, CL-01, MD-01), then RB-A7.
 - For Sean: hiding an unconfirmed portal's calendar while keeping its facts is RB-A4's own design. Whether calendars should hide
   at all is his call.
+
+## Batch failure and River fix, 10:20 AM EDT
+- 624ac2d3d gated alone on river c0205d49f (river-next 3aef51fa3): 8 of 9 gates, 2 of 9,937 tests failed.
+  - tests/owed-table.test.ts (RB-A6's test): `column "boundary_year" of relation "entity_place" already exists`. RB-A4's factDb now applies the reader identity ALTERs, so the test's own ADD COLUMN ran twice.
+  - tests/path-separator.test.ts: scripts/rb-a4-portals.mts used `new URL(x).pathname` inline, which that test bans.
+- River owns this lane, so the fix went on stream/rb-a4, not into the batch. READY 2bdbde3ba merges origin/river c0205d49f, removes the test's duplicate ALTER, and ranks links through a small webPath helper (same behavior).
+- Focused checks: path-separator 7/7, owed-table 6/6, rb-a4-portals 2/2; tsc and eslint clean. Re-gating alone on river-next e84d06c43.

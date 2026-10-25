@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 116 (main 1d2ac473a, CL-01), live 9:31 AM EDT; reader checks green. GATING: RB-A4 624ac2d3d alone (river-next 3aef51fa3). Queue (each its own batch): RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (04681516c, e4305907d, f2d76ac1f, ef74ed82e, 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 f26ebab8d, RB-A3 be0bef2bf, RN-03 1307d4e03. HELD: RB-A10 7b5eacd03 (place map)
+build_state: LIVE FOR READERS: release 116 (main 1d2ac473a, CL-01), live 9:31 AM EDT; reader checks green. GATING: RB-A4 2bdbde3ba alone (river-next e84d06c43; 624ac2d3d failed 2 tests in the batch, River fixed them on the lane, returns/rb-a4.md). Queue (each its own batch): RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (04681516c, e4305907d, f2d76ac1f, ef74ed82e, 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 f26ebab8d, RB-A3 be0bef2bf, RN-03 1307d4e03. HELD: RB-A10 7b5eacd03 (place map)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T13:35:00Z
+heartbeat: 2026-10-25T14:22:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

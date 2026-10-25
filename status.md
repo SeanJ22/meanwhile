@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 104 (main 2082dc9b1); polling places refreshing again; Cochise's 5 drop boxes live. NEXT: release 105 = RB-A2 alone (PR #816, CI). THEN: DB-01, RB-A3, PT-01 + RB-A5, RB-A4. Returned: RB-A8 (8:15 PM EDT)
+build_state: LIVE FOR READERS: release 104 (main 2082dc9b1). NEXT: release 105 = RB-A2 alone (PR #816, CI). GATING: DB-01 on RB-A2 (river-next b7246b8a1). THEN: RB-A8 fb1783a62 (carries RB-A3 d92e9a054 + RB-A5 f7ab065e3), PT-01 a109cf965, RB-A4
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-24T23:59:48Z
+heartbeat: 2026-10-25T00:16:56Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Live for readers, 8:20 PM EDT
+- Live: release 104 (2082dc9b1). Polling places refresh; Cochise's drop boxes are live (8:05 PM entry). Wheeling waits on the runner-host check (FOR SEAN).
+- Release 105 (RB-A2 alone, Sean's order) in CI on PR #816, auto-merge on.
+- DB-01 gating on top of RB-A2 (river-next b7246b8a1). River appended DB-01_read_versions after RB-A2_place_boundaries in the reader journal (idx 53, date after RB-A2's), so RB-A2's established entry keeps its number. 87 migration tests pass.
+- RB-A8 posted READY fb1783a62 at 8:03 PM EDT, inside its return window; return cleared. It merges batch E and RB-A5, and keeps one fact counter: RB-A8's fact-table hooks; RB-A3's extra door increments and hour table are deleted. It folds next after DB-01 and brings RB-A3 and RB-A5 with it (both READY).
+- Then PT-01 a109cf965, then RB-A4 ef7987b1e (conflicts in lib/facts/meeting-facts.ts; River reviews at fold).
 
 ### Verified: polling places refresh again, and Cochise's drop boxes are live, 8:05 PM EDT
 - Release 104 (RV-VOTE) works in production: voting-sites tasks launched from 7:25 PM EDT (DC and DE checked at 7:35 PM; MT, AK and ME failed and retry hourly).

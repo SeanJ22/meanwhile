@@ -36,7 +36,7 @@ export async function openFactCopy(snapshot: FactSnapshot) {
     await db.query("INSERT INTO source_copy SELECT * FROM jsonb_populate_recordset(NULL::source_copy,$1::jsonb)", [JSON.stringify(snapshot.sourceCopies ?? [])]);
     for (const [table, rows] of [["entity_host", snapshot.hosts], ["entity_external_id", snapshot.externalIds], ["entity_place", snapshot.places]] as const)
       await db.query(`INSERT INTO ${table} SELECT * FROM jsonb_populate_recordset(NULL::${table},$1::jsonb)`,
-        [JSON.stringify(table === "entity_place" ? (rows ?? []).map(row => ({ ...row, boundary_year: row.boundary_year ?? 0 })) : rows ?? [])]);
+        [JSON.stringify(table === "entity_place" ? (rows ?? []).map(row => ({ ...row, boundary_year: row.boundary_year ?? 0, placement_basis: row.placement_basis ?? "SERVICE_AREA" })) : rows ?? [])]);
     await db.query("INSERT INTO fact SELECT * FROM jsonb_populate_recordset(NULL::fact,$1::jsonb)", [JSON.stringify(snapshot.facts ?? [])]);
     for (const table of ["source_copy", "fact"])
       await db.query(`SELECT setval(pg_get_serial_sequence('${table}','id'),greatest(coalesce(max(id),0),1),count(*)>0) FROM ${table}`);

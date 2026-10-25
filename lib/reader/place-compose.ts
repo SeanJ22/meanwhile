@@ -53,13 +53,10 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     if (typeof body.state === "string" && body.state.toUpperCase() !== input.state.toUpperCase()) continue;
     const id = String(body.id), prior = entities.get(id);
     bodyOwner.set(id, page);
-    // The SQL filing can attach a formerly state-root board through more than one
-    // selected local government. Its chosen division is the first filed division.
     const placed = body.placed === true || prior?.placed === true;
-    const candidates = [body, ...(prior ? [prior] : [])];
-    const linked = candidates.filter(row => row.linked === true);
-    const divisions = (linked.length ? linked : candidates.filter(row => row.placed === true)).map(row => String(row.division)).sort();
-    entities.set(id, { ...body, ...(linked.length ? { linked: true } : {}), ...(placed ? { placed: true, ...(divisions.length ? { division: divisions[0] } : {}) } : {}) });
+    const linked = body.linked === true || prior?.linked === true;
+    const divisions = [...new Set([...strings(prior?.divisions),...strings(body.divisions)])].sort();
+    entities.set(id, { ...body, divisions, ...(linked ? { linked: true } : {}), ...(placed ? { placed: true } : {}) });
   }
   const owns = (page: Page, id: unknown) => bodyOwner.get(String(id)) === page;
   const ownRows = (key: string, bodyKey: string) => ordered.flatMap(page => records(page.row[key]).filter(row => owns(page, row[bodyKey])));

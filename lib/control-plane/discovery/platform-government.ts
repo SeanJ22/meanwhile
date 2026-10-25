@@ -14,7 +14,9 @@ import { observePlatformCensus } from "./platform-census.ts";
 import { withPlatformPublisher } from "../../doors/platform-publisher.ts";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import { recordAcquisition, deriveSanitized } from "../evidence/artifact.ts";
+import { matchRegisteredPlatformTenant, type PlatformQuery } from "./platform-registration.ts";
 import { meetingEndpointCandidates, type MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
+import { isDoorRecord, type DoorRecord } from "../../doors/registry.ts";
 
 type Repos = Pick<ControlPlaneRepositories, "doors" | "fieldManual" | "discoveryAttempts">;
 
@@ -52,6 +54,9 @@ export async function readPlatformGovernment(input: {
   readonly?: boolean;
   tenant?: PlatformTenant;
   checkedCalendars?: Readonly<Record<string, string>>;
+  query?: PlatformQuery;
+  withdraw?: (door: DoorRecord, portal: string) => Promise<void>;
+  confirm?: (door:DoorRecord) => Promise<void>;
 }) {
   const held = new Map<string, HeldBytes>();
   const checkedCalendars = Object.fromEntries(Object.entries(input.checkedCalendars ?? {}).filter(([, at]) => Date.parse(at) > Date.parse(input.runtime.now()) - 12 * 3_600_000));
@@ -112,7 +117,11 @@ export async function readPlatformGovernment(input: {
       const readable = await readablePublisher(source);
       authority = { ...source, artifactId: readable.artifact.id };
       if (input.tenant && platformHostedUrl(input.tenant.url)) {
-        const linked = pageLinks(readable.text, source.url).some(link => samePlatformTenant(link, input.tenant!.url));
+        const outbound = pageLinks(readable.text,source.url).filter(link => samePlatformTenant(link,input.tenant!.url));
+        const confirmed = input.query ? await matchRegisteredPlatformTenant(input.query,
+          {...input.tenant,name:null,state:need.stateCode},outbound.map(portalUrl => ({governmentWebsite:primaryWebsite!,portalUrl})),need.jurisdictionId) : null;
+        const linked = outbound.length > 0 && (confirmed === null || confirmed.some(page =>
+          (page.government.jurisdictionId ?? page.government.id) === need.jurisdictionId));
         if (samePlatformTenant(source.url, input.tenant.url) || linked) {
           const portal = samePlatformTenant(source.url, input.tenant.url) ? source : await readPage(input.tenant.url);
           if (portal) { choosePublisher(portal, portal === source ? readable : await readablePublisher(portal)); tenantLinked = true; }
@@ -162,10 +171,47 @@ export async function readPlatformGovernment(input: {
     };
   }
   const { attempt: platformAttempt, review, doors } = reviewPlatformAttempt({ attempt, registered: input.registered, held, reviewer: input.reviewer, now: runtime.now() });
+  const withdrawn: {doorId:string;portal:string}[] = [];
   if (!input.readonly) {
     await input.repos.discoveryAttempts.append(input.need.jurisdictionId, attempt.attemptId, platformAttempt, attempt.finishedAt);
     // A deadline between writes must never mark the government checked before its verified doors exist.
     await openPlatformMeetingDoors(input.repos.doors, review.accepted.map(({ row }) => row), attempt.finishedAt);
+    const existing = await input.repos.doors.listWhereNarrowed(['config','governmentId'],input.need.jurisdictionId,
+      {doorId:true,config:['crosswalkRowId','platformPublisherUrl','route'],status:true});
+    const ownLinks = [...pages].filter(([url,page]) => page.status === 200 && siteOrigins(primaryWebsite).some(origin => new URL(url).origin === origin))
+      .flatMap(([url,page]) => pageLinks(page.body,url));
+    // Include the government's deeper discovery pages, not just its homepage.
+    for (const step of platformAttempt.steps) if (step.artifactId && siteOrigins(primaryWebsite).some(origin => new URL(step.url).origin === origin)) {
+      const page = held.get(step.artifactId); if (page) ownLinks.push(...pageLinks(page.text,step.url));
+    }
+    for (const row of existing) {
+      if (!authority && [...pages.values()].some(page=>page.transportError || page.status===null || page.status===403 || page.status===429 || page.status>=500)) break;
+      const config = (row.value as {config?:Record<string,unknown>}).config;
+      if (!config?.crosswalkRowId) continue;
+      const portal = config.platformPublisherUrl ?? config.route;
+      if (typeof portal !== 'string' || !platformHostedUrl(portal)) continue;
+      const linked = ownLinks.some(link => samePlatformTenant(link,portal)) || siteOrigins(primaryWebsite).some(origin => samePlatformTenant(origin,portal));
+      const confirmed = linked && (!input.query || (await matchRegisteredPlatformTenant(input.query,
+        {platform:'platform',url:portal,name:null,state:input.need.stateCode,source:'government-site'},
+        [{governmentWebsite:primaryWebsite!,portalUrl:portal}],input.need.jurisdictionId)).some(page => (page.government.jurisdictionId ?? page.government.id) === input.need.jurisdictionId));
+      if (confirmed) {
+        const current=await input.repos.doors.mustRead(row.id);
+        if(isDoorRecord(current.value)) {
+          await input.confirm?.(current.value);
+          if(current.value.status==='SUSPENDED' && current.value.editedAt===null && current.value.notes?.startsWith("The government's own site has not confirmed "))
+            await input.repos.doors.compareAndSet(row.id,current.revision,{...current.value,status:'OPEN',readNow:true,updatedAt:attempt.finishedAt},attempt.finishedAt);
+        }
+        continue;
+      }
+      if (runtime.budget.spent()) break;
+      const current = await input.repos.doors.mustRead(row.id);
+      if (!isDoorRecord(current.value)) continue;
+      // Re-run withdrawal after an interrupted cross-database write, including suspended doors.
+      await input.withdraw?.(current.value,portal);
+      if (current.value.status !== 'SUSPENDED') await input.repos.doors.compareAndSet(row.id,current.revision,
+        {...current.value,status:'SUSPENDED',readNow:false,notes:`The government's own site has not confirmed ${portal}. Discovery remains open.`,updatedAt:attempt.finishedAt},attempt.finishedAt);
+      withdrawn.push({doorId:row.id,portal});
+    }
     const entries = [...discoveryFieldManualEntries(platformAttempt), newFieldManualEntry("platform-government", input.need.jurisdictionId, {
       role: "SHARED", kind: "PLATFORM_CENSUS_CHECK", title: input.need.name, states: [input.need.stateCode.toLowerCase()],
       platforms: [...new Set(platformAttempt.platformCensus?.matches.map(match => match.platform) ?? [])], recordClasses: ["meetings"],
@@ -176,10 +222,10 @@ export async function readPlatformGovernment(input: {
           ? new Date(Date.parse(attempt.finishedAt) + 3_600_000).toISOString() : attempt.recheckAfter,
         reviewer: input.reviewer,
         registrationVersion: input.need.addressSource?.source === "REGISTRATION" ? input.need.addressSource.versionId : "input" in input.registered && input.registered.input.kind === "PROMOTED_VERSION" ? input.registered.input.versionId : null,
-        requests: attempt.requestCount, checkedCalendars, accepted: review.accepted.map(({ row }) => ({ bodyId: row.bodyId, route: row.route })), held: review.held },
+        requests: attempt.requestCount, checkedCalendars, accepted: review.accepted.map(({ row }) => ({ bodyId: row.bodyId, route: row.route })), held: review.held,withdrawn },
     })];
     const saved = await writeFieldManual(input.repos, entries, attempt.finishedAt);
     if (saved.error) throw new Error(saved.error);
   }
-  return { attempt: platformAttempt, review, doors, held };
+  return { attempt: platformAttempt, review, doors, held,withdrawn };
 }

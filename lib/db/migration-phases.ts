@@ -170,6 +170,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed.",
     // Its trigger on fact, then a 1M-row backfill, then triggers on civic_data_promotions and entity deadlocked with the runner at the 9:47 PM EDT Oct 24 build.
     lockFirst: ["fact", "civic_data_promotions", "entity"] },
+  "RB-A4_entity_places": { phase: "expand", why: "Adds the host-county filing marker after RB-A1 supplies boundary-year identity." },
   "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "RB-A7_bootstrap_expand": { phase: "expand", why: "Retains changes from the preceding deployment while the first ready pages are built.", lockFirst: ["fact", "civic_data_promotions", "entity", "entity_place", "entity_host", "entity_external_id", "civic_data_candidate_events", "rebuild_queue"] },
   "RB-A7_bootstrap_contract": { phase: "contract", why: "Removes temporary compatibility hooks after writers queue pages directly.", lockFirst: ["fact", "civic_data_promotions", "entity", "entity_place", "entity_host", "entity_external_id", "civic_data_candidate_events", "rebuild_queue"] },
@@ -178,7 +179,6 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
     lockFirst: ["entity", "rebuild_queue"] },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",
-    // Rebuilding the entity_place key and indexing 593k external ids takes about 1.7s at production size.
     contractStatementTimeoutMs: 10_000 },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },

@@ -9,6 +9,37 @@ import {seedPlacePages} from "./helpers/place-pages.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
 import {stateCoverage,withPlaceRegistry} from "../lib/reader/coverage.ts";
 
+test("a ballot roster keeps each person's current office, contacts, terms and sources without reading other-body facts",async()=>{
+  const {pg}=await migratedReaderDb();
+  const division="ocd-division/country:us/state:co/place:fixture",body=`${division}#council`,person="person:fixture",at="2026-10-24T12:00:00.000Z";
+  const values={name:"Casey Resident",office:"Council Member",email:"casey@example.gov",phone:"303-555-0100",website:"https://example.gov/casey",
+    term_note:"Elected term",term_start:"2025-01-06",term_end:"2029-01-08"};
+  try{
+    await pg.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Fixture council','CO'),($2,'person','Casey Resident','CO')",[body,person]);
+    await pg.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,$1,$1,$2,$3,'source')",["https://example.gov/council",at,"c".repeat(64)]);
+    const fact=async(id:string,field:string,value:unknown,quote:string)=>pg.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,$2,$3,'saved','live','OFFICIAL',1,$4,$5,'fixture')`,[id,field,JSON.stringify(value),quote,at]);
+    await fact(body,`member:${person}`,{name:"Casey Resident",office:"Member"},"Official council roster");
+    for(const [field,value] of Object.entries(values))await fact(person,field==="name"||field==="phone" ? field : `${field}:${body}`,value,`Verified ${field}`);
+    await fact(person,"office:another-body","Different office","Unrelated board evidence".repeat(12000));
+    await fact(person,"biography","Held elsewhere","Unrelated biography evidence".repeat(12000));
+    let bytes=0;
+    const place=await buildPlacePackage({state:"CO",divisionIds:[division],bodyIds:[body],bodyFactsOnly:true},async(text,params=[])=>{
+      const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;bytes=Buffer.byteLength(JSON.stringify(rows));return rows;
+    });
+    const member=place.bodies.find(row=>row.id===body)?.roster?.members[0];assert.ok(member);
+    assert.equal(member.name,values.name);assert.equal(member.officeTitle,values.office);
+    assert.equal(member.email,values.email);assert.equal(member.phone,values.phone);assert.equal(member.websiteUrl,values.website);
+    assert.equal(member.termNote,values.term_note);assert.equal(member.termStart,values.term_start);assert.equal(member.termEnd,values.term_end);
+    for(const [field,source] of Object.entries(member.fieldSources ?? {})){
+      const original=({websiteUrl:"website",termNote:"term_note",termStart:"term_start",termEnd:"term_end"} as Record<string,string>)[field]??field;
+      assert.equal(source.quote,`Verified ${original}`);assert.equal(source.sourceUrl,"https://example.gov/council");
+    }
+    assert.equal(Object.keys(member.fieldSources ?? {}).length,8);
+    assert.ok(bytes<20000,`Only roster-consumed person facts should cross the connection; got ${bytes} bytes`);
+  }finally{await pg.close();}
+});
+
 test("place reads preserve the migrated state type, use the existing one-shot client and share request work",async()=>{
   const {pg}=await migratedReaderDb();
   const input={state:"AZ",divisionIds:["ocd-division/country:us/state:az/place:fixture"]};

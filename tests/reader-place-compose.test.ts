@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mergePlaceRows } from "../lib/reader/place-compose.ts";
+import { composePlaceRow } from "../lib/reader/place-decode.ts";
 
 const STATE = "ocd-division/country:us/state:az", COUNTY = `${STATE}/county:pima`, CITY = `${COUNTY}/place:tucson`, FRINGE = `${COUNTY}/place:oro_valley`;
 const BOARD = `${CITY}#governing`, COUNTY_BOARD = `${COUNTY}#supervisors`, OTHER_BOARD = `${FRINGE}#governing`;
@@ -100,15 +101,22 @@ test("an explicit body page adds only that body's ready facts to the requested p
   assert.deepEqual(result.division_ids, [CITY]);
 });
 
-test("a government-host filing wins over the body's unrelated first service-map division", () => {
-  const county = page(COUNTY, [{ ...entity(BOARD, COUNTY), linked: false }]);
-  const city = page(CITY, [{ ...entity(BOARD, CITY), linked: true }]);
-  // COUNTY sorts before CITY; the combined builder still explicitly prefers the
-  // selected government host's city filing to a generic entity_place attachment.
-  assert(COUNTY < CITY);
+test("a shared board unions all service associations and displays the selected place with its current placement basis", async () => {
+  const county = page(COUNTY, [{ ...entity(BOARD, STATE), divisions: [COUNTY], linked: true, placement_basis: "SERVICE_AREA" }]);
+  const city = page(CITY, [{ ...entity(BOARD, STATE), divisions: [CITY], linked: true, placement_basis: "HOST_COUNTY" }], {
+    built_at: "2026-10-25T02:01:00Z",
+  });
   const result = mergePlaceRows({ state: "AZ", divisionIds: [CITY, COUNTY] }, [city, county]);
-  assert.equal(entries(result.entities)[0]!.division, CITY);
+  assert.equal(entries(result.entities).length,1);
+  assert.equal(entries(result.entities)[0]!.division, STATE,"the current parent remains a fallback, not one selected service association");
+  assert.deepEqual(entries(result.entities)[0]!.divisions,[COUNTY,CITY]);
   assert.equal(entries(result.entities)[0]!.linked, true);
+  for (const division of [CITY,COUNTY]) {
+    const decoded = await composePlaceRow({state:"AZ",divisionIds:[division]},{...result,division_ids:[division]});
+    assert.equal(decoded.bodies[0]!.fields.ocdId,division);
+    assert.deepEqual(decoded.bodies[0]!.fields.alsoServesOcdIds,[division===CITY?COUNTY:CITY]);
+    assert.equal(decoded.bodies[0]!.fields.placementBasis,"HOST_COUNTY");
+  }
 });
 
 test("ready agendas preserve each revision, alias and text dictionary without joining equal text as one document", () => {

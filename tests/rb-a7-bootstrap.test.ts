@@ -202,3 +202,17 @@ test('the post-deploy contract retires every compatibility hook without changing
     assert.deepEqual([...await queue(db)],[[CITY,2]],'the new publisher controls its own queue after the transition');
   }finally{await db.pg.close();}
 });
+
+
+test('calendar CHECK retries leave verified reader pages intact during the initial build',async()=>{
+  const db=await fixture();
+  const field='calendar:source:fixture:body:'+encodeURIComponent(BODY);
+  try {
+    await db.query("INSERT INTO blank(entity_id,field,stage,reason,detail,next_try_at) VALUES($1,$2,'CHECK','PORTAL_AUTHORITY_UNCONFIRMED','portal',now())",[BODY,field]);
+    assert.equal((await queue(db)).size,0,'a standing check does not change the held reader answer');
+    await db.query('UPDATE blank SET attempts=attempts+1,next_try_at=now() WHERE entity_id=$1 AND field=$2',[BODY,field]);
+    assert.equal((await queue(db)).size,0,'retry metadata does not change the held page');
+    await db.query('DELETE FROM blank WHERE entity_id=$1 AND field=$2',[BODY,field]);
+    assert.equal((await queue(db)).size,0,'closing a check leaves the unchanged held answer in place');
+  }finally{await db.pg.close();}
+});

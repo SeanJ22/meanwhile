@@ -33,7 +33,13 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
-    return { id, division: String(e.division), fields: fields[id] || (e.placed === true && e.division !== stateRoot) ? {...fields[id],ocdId:String(e.division).startsWith("ocd-division/") ? String(e.division) : null} : {}, roster: own, comment: comments.get(id) ?? null,
+    const divisions = [...new Set([...(e.divisions as string[] | undefined ?? []),String(e.division)].filter(id => id.startsWith("ocd-division/")))];
+    const local = divisions.filter(id => id !== stateRoot);
+    const served = local.length ? local : divisions;
+    const division = served.find(id => divisionIds.includes(id)) ?? served[0] ?? String(e.division);
+    return { id, division, fields: fields[id] || e.placed === true ? {...fields[id],ocdId:division.startsWith("ocd-division/") ? division : null,
+      ...(served.some(id => id !== division) ? {alsoServesOcdIds:served.filter(id => id !== division)} : {}),
+      ...(e.placement_basis === "HOST_COUNTY" ? {placementBasis:"HOST_COUNTY" as const} : {})} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });

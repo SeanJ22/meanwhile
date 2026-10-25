@@ -52,6 +52,18 @@ test("shared cross-source IDs join transitively and every source's IDs survives"
   const keys=personIdentityKeys(merged.officeholders[0]);
   for(const key of ["ocd-person:a","legiscan:9","wikidata:Q91","votesmart:27","congress:R000001"])assert.ok(keys.has(key),key);
 });
+test("replayed sources retain the same durable records when optional fields were undefined",()=>{
+  const reference=person("reference:a",{nativeIds:undefined,
+    provenance:{sourceUrl:"https://reference.example/a",sourceOrg:"Reference fixture",collectedAt:at,verifiedAt:at,evidenceExcerpt:undefined}});
+  const official=person("official:a",{provenance:{sourceUrl:"https://state.example.gov/jordan",sourceOrg:"Official state page",collectedAt:at,verifiedAt:at}});
+  const originals=structuredClone([reference,official]);
+  const first=mergePeopleSets([set(reference),set(official)])!;
+  const replay=mergePeopleSets([JSON.parse(JSON.stringify(first)),set(reference),set(official)])!;
+  assert.equal(first.officeholders[0].sourceHolders?.length,2);
+  assert.deepEqual(replay,first,"an identical source replay keeps the same person and original source snapshots");
+  assert.deepEqual(first.officeholders[0].sourceHolders,JSON.parse(JSON.stringify(originals)));
+  assert.deepEqual([reference,official],originals,"the publisher's original optional fields are not rewritten");
+});
 test("unique full name, office and state binds an association lead without merging namesakes in another state",()=>{
   const merged=mergePeopleSets([set(person("openstates:a")),set(person("association:a")),set(person("association:b",{state:"NM"}))])!;
   assert.equal(merged.officeholders.length,2);

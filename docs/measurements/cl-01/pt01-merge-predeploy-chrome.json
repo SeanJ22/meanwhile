@@ -1,0 +1,797 @@
+{
+  "scope": "PREDEPLOY combined CL-01/PT-01 branch, local direct Next production server with readonly reader. Not a deployed pass or production cold-function equivalence.",
+  "source": {
+    "head": "cdc5a195dbbbedca8de3b13db98db21f41885e2a",
+    "buildId": "h2AYSATrSaI60Wi_XyoQb"
+  },
+  "buildLog": "/tmp/cl01-pt01-full-build.log",
+  "environment": {
+    "nodeEnv": "production",
+    "dbRole": "readonly",
+    "runtimeMode": "production",
+    "readerEnv": "/tmp/cl01-reader.env",
+    "databaseUsername": "readonly",
+    "readerProject": "tiny-hill-13996172",
+    "readerBranch": "br-delicate-lab-ax02xuo5",
+    "removedDatabaseVariables": [
+      "WTP_CONTROL_PLANE_DATABASE_URL"
+    ]
+  },
+  "requiredStructuralChecks": {
+    "almaBallotSinglePerson": true,
+    "almaBallotBattlecardIdenticalPortraitUrl": true,
+    "almaBothPortraitsDecoded": true,
+    "almaSelectedImageProvenanceVerified": true,
+    "almaSelectedImageCitationRetained": true,
+    "alma66HeldBillsAccessible": true,
+    "hobbsGilesOneChoice": true,
+    "hobbsOwnNamedCard": true,
+    "gilesOwnNamedCard": true,
+    "raleighBallotSingleRoss": true,
+    "raleighWhoGovernsFirstEnabledOneClick": true,
+    "raleighWhoGovernsSingleRoss": true,
+    "rossMapRowAndCardSamePortrait": true,
+    "rossMapRowAndCardDecoded": true,
+    "rossPriorPortraitCitationRetained": true,
+    "noCanonicalPersonDuplicatesInRaces": true
+  },
+  "requestedStructuralChecksPass": true,
+  "fullReaderUsabilityPass": false,
+  "deployedProductionPass": false,
+  "allMeasuredActionTimings": [
+    {
+      "action": "AZ ballot firstpage milestone",
+      "ms": 9627,
+      "over3s": true
+    },
+    {
+      "action": "NC ballot firstpage milestone",
+      "ms": 1794,
+      "over3s": false
+    },
+    {
+      "action": "AZ-Alma-Hernandez-battlecard",
+      "ms": 5137,
+      "over3s": true
+    },
+    {
+      "action": "AZ-Katie-Hobbs-battlecard",
+      "ms": 1195,
+      "over3s": false
+    },
+    {
+      "action": "AZ-John-Giles-battlecard",
+      "ms": 1208,
+      "over3s": false
+    },
+    {
+      "action": "NC-Deborah-Ross-battlecard",
+      "ms": 2050,
+      "over3s": false
+    },
+    {
+      "action": "NC-Deborah-Ross-map-card",
+      "ms": 2595,
+      "over3s": false
+    },
+    {
+      "action": "Raleigh first-enabled WhoGoverns to single Ross decoded portrait",
+      "ms": 984,
+      "over3s": false
+    },
+    {
+      "action": "Alma Showall66bills",
+      "ms": 96,
+      "over3s": false
+    }
+  ],
+  "preservedSpeedFailures": [
+    {
+      "action": "AZ ballot firstpage milestone",
+      "ms": 9627,
+      "over3s": true
+    },
+    {
+      "action": "AZ-Alma-Hernandez-battlecard",
+      "ms": 5137,
+      "over3s": true
+    }
+  ],
+  "timingDefinition": "Each action starts immediately before its one native click and ends after requested dialog/list visible, critical card GET reads (profile/directory/votes/funding/federal-civic/official-actions/bills/campaign-finance) finished, identity image decoded, and2paint frames. Global settings/link-health are observed separately and never awaited. Image bridge timings are local predeploy diagnostics.",
+  "timingLimits": [
+    "Local Next start production runtime against readonly reader; remote database and filesystem caches not reset. Not production cold-function equivalence.",
+    "Portrait requests were fulfilled from identical public production bytes through declared image-only bridge. App data/metadata/geographic requests were not bridged.",
+    "Global503 settings/link-health reads excluded from critical network settlement; no global response-body barrier. Their failure prevents a complete local-service availability claim.",
+    "Initial first-page milestone includes first visible contest, first viewport candidate image decode checks and paint; these pages had no candidate portraits in the initial viewport.",
+    "Optional incumbent-name modal timed out on an incorrect harness selector, after it had actually opened; no valid timing or exactDOMurl was captured for that optional modal. No retry."
+  ],
+  "almaPortraitProof": {
+    "ballotImage": [
+      {
+        "src": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+        "alt": "Alma Hernandez",
+        "complete": true,
+        "naturalWidth": 811,
+        "decoded": true,
+        "error": null
+      }
+    ],
+    "ownCardImage": [
+      {
+        "src": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+        "alt": "Portrait of Alma Hernandez",
+        "complete": true,
+        "naturalWidth": 811,
+        "decoded": true,
+        "error": null
+      }
+    ],
+    "exactSelectedUrl": "/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+    "renderedHolder": {
+      "id": "az-legislature:2312",
+      "personId": "az-legislature:2312"
+    },
+    "selectedImageProvenance": {
+      "sourceOrg": "www.azleg.gov",
+      "sourceUrl": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/HERNANDEZ_A.jpg",
+      "verifiedAt": "2026-10-24T07:14:08.466Z",
+      "collectedAt": "2026-10-24T06:53:35.608Z"
+    },
+    "matchingSourcesCitation": {
+      "count": 1,
+      "text": "Alma Hernandez \u2014 Portrait image; Alma Hern\u00e1ndez \u2014 Portrait image\n\nPUBLISHED BY\nwww.azleg.gov\nREAD FROM\nazleg.gov\nLAST CHECKED\n2026-10-24\nVERIFIED\n2026-10-24"
+    },
+    "allPortraitSourceEntries": [
+      {
+        "text": "Candidate portrait; Alma Hernandez \u2014 Portrait; Alma Hern\u00e1ndez \u2014 Portrait; Alma Hernandez \u2014 Photo\n\nPUBLISHED BY\nPortrait: https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312; www.azleg.gov\nREAD FROM\nwww.azleg.gov\nLAST CHECKED\n2026-10-24\nVERIFIED\n2026-10-24",
+        "links": [
+          {
+            "text": "www.azleg.gov",
+            "href": "https://www.azleg.gov/house-member/?legislature=57&session=130&legislator=2312"
+          }
+        ]
+      },
+      {
+        "text": "Alma Hernandez \u2014 Portrait image; Alma Hern\u00e1ndez \u2014 Portrait image\n\nPUBLISHED BY\nwww.azleg.gov\nREAD FROM\nazleg.gov\nLAST CHECKED\n2026-10-24\nVERIFIED\n2026-10-24",
+        "links": [
+          {
+            "text": "azleg.gov",
+            "href": "https://azleg.gov/alisImages/MemberPhotos/57leg/House/HERNANDEZ_A.jpg"
+          }
+        ]
+      },
+      {
+        "text": "Who they are, their office and how to reach them; Alma Hern\u00e1ndez \u2014 Name; Alma Hern\u00e1ndez \u2014 Office email; Alma Hern\u00e1ndez \u2014 Level; Alma Hern\u00e1ndez \u2014 Office phone; Alma Hern\u00e1ndez \u2014 State; Alma Hern\u00e1ndez \u2014 Chamber; Alma Hern\u00e1ndez \u2014 Term start date; Alma Hern\u00e1ndez \u2014 Party; Alma Hern\u00e1ndez \u2014 Official page; Alma Hern\u00e1ndez \u2014 Office; Alma Hern\u00e1ndez \u2014 Portrait Candidate\n\nPUBLISHED BY\nPlural Open States (CC-0)\nREAD FROM\nraw.githubusercontent.com\nLAST CHECKED\n2026-10-24",
+        "links": [
+          {
+            "text": "raw.githubusercontent.com",
+            "href": "https://raw.githubusercontent.com/openstates/people/0360b5d278b84420ba88a238917bb5aaf7f6d6bb/data/az/legislature/Alma-Hernandez-6dba6afa-b274-4273-b8c6-270d27214eee.yml"
+          }
+        ]
+      }
+    ]
+  },
+  "hobbsGilesProof": {
+    "choiceCount": 1,
+    "ownCards": [
+      {
+        "name": "Katie Hobbs",
+        "portrait": [
+          {
+            "src": "/officials/statewide-az-governor.jpg",
+            "alt": "Portrait of Katie Hobbs",
+            "complete": true,
+            "naturalWidth": 284,
+            "decoded": true,
+            "error": null
+          }
+        ],
+        "sourceLinks": 66
+      },
+      {
+        "name": "John Giles",
+        "portrait": [],
+        "sourceLinks": 1
+      }
+    ]
+  },
+  "raleighProof": {
+    "ballotCount": 1,
+    "mapCount": 1,
+    "firstEnabledClickCount": 1,
+    "beforeClick": {
+      "officialCount": "\u2026",
+      "expanded": "false"
+    },
+    "navigationToEnabledPillMs": 730,
+    "firstActionToDecodedPortraitMs": 984,
+    "ballotImage": [
+      {
+        "src": "/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "alt": "Deborah K. Ross",
+        "complete": true,
+        "naturalWidth": 175,
+        "decoded": true,
+        "error": null
+      }
+    ],
+    "mapImage": [
+      {
+        "src": "/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "alt": "Deborah K. Ross",
+        "complete": true,
+        "naturalWidth": 175,
+        "decoded": true,
+        "error": null
+      }
+    ],
+    "ownCardImage": [
+      {
+        "src": "/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "alt": "Portrait of Deborah K. Ross",
+        "complete": true,
+        "naturalWidth": 175,
+        "decoded": true,
+        "error": null
+      }
+    ],
+    "requiredPriorPortraitCitationUrls": [
+      "https://www.congress.gov/img/member/r000305_200.jpg"
+    ],
+    "missingPriorPortraitCitationUrls": [],
+    "ownCardPortraitSources": [
+      {
+        "text": "Who they are, their office and how to reach them; Deborah K. Ross \u2014 Portrait; Deborah K. Ross \u2014 Name; Deborah K. Ross \u2014 Party; Deborah K. Ross \u2014 Official page; Deborah K. Ross \u2014 Office phone; Deborah K. Ross \u2014 Id; Deborah K. Ross \u2014 Level; Deborah K. Ross \u2014 State; Deborah K. Ross \u2014 Chamber; Deborah K. Ross \u2014 Person Id; Deborah K. Ross \u2014 Native Ids; Deborah K. Ross \u2014 Term start date; Deborah K. Ross \u2014 Offices held; Deborah K. Ross \u2014 Office; Deborah K. Ross \u2014 Portrait Candidate\n\nPUBLISHED BY\nCongress.gov / Library of Congress; unitedstates/congress-legislators (community project)\nREAD FROM\napi.congress.gov\nLAST CHECKED\n2026-10-14\nVERIFIED\n2026-10-14",
+        "links": [
+          {
+            "text": "api.congress.gov",
+            "href": "https://api.congress.gov/v3/member/R000305?format=json"
+          }
+        ]
+      },
+      {
+        "text": "Deborah K. Ross \u2014 Portrait image\n\nPUBLISHED BY\nunitedstates/congress-legislators (community project)\nREAD FROM\nwww.congress.gov\nLAST CHECKED\n2026-10-11\nVERIFIED\n2026-10-11",
+        "links": [
+          {
+            "text": "www.congress.gov",
+            "href": "https://www.congress.gov/img/member/r000305_200.jpg"
+          }
+        ]
+      }
+    ]
+  },
+  "criticalDataRequests": [
+    {
+      "id": "AZ-ballot-7",
+      "url": "http://127.0.0.1:3184/api/directory?member=az-legislature%3A2312&state=AZ",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:24.060Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:27.111Z",
+      "responseMs": 3051,
+      "finishedAt": "2026-10-25T01:57:27.112Z",
+      "elapsedMs": 3051,
+      "personRecords": []
+    },
+    {
+      "id": "AZ-ballot-9",
+      "url": "http://127.0.0.1:3184/api/campaign-finance?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fsldu%3A20&person=ballot-az-pima%3Astate-senate-20%3Ahernandez-alma",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:24.061Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:27.680Z",
+      "responseMs": 3619,
+      "finishedAt": "2026-10-25T01:57:27.688Z",
+      "elapsedMs": 3627
+    },
+    {
+      "id": "AZ-ballot-10",
+      "url": "http://127.0.0.1:3184/api/votes?member=az-legislature%3A2312&state=AZ",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:24.061Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:28.392Z",
+      "responseMs": 4331,
+      "finishedAt": "2026-10-25T01:57:28.393Z",
+      "elapsedMs": 4332
+    },
+    {
+      "id": "AZ-ballot-11",
+      "url": "http://127.0.0.1:3184/api/bills?state=AZ&member=az-legislature%3A2312",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:24.061Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:28.855Z",
+      "responseMs": 4794,
+      "finishedAt": "2026-10-25T01:57:28.858Z",
+      "elapsedMs": 4797,
+      "body": {
+        "billCount": 66,
+        "complete": false
+      }
+    },
+    {
+      "id": "AZ-ballot-12",
+      "url": "http://127.0.0.1:3184/api/profile/az-legislature%3A2312",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:24.062Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:27.103Z",
+      "responseMs": 3041,
+      "finishedAt": "2026-10-25T01:57:27.104Z",
+      "elapsedMs": 3042
+    },
+    {
+      "id": "AZ-ballot-13",
+      "url": "http://127.0.0.1:3184/api/official-actions/az-legislature%3A2312?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fsldu%3A20&lat=32.21704&lng=-110.97134",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:24.063Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:27.910Z",
+      "responseMs": 3847,
+      "finishedAt": "2026-10-25T01:57:27.910Z",
+      "elapsedMs": 3847
+    },
+    {
+      "id": "AZ-ballot-14",
+      "url": "http://127.0.0.1:3184/api/funding/az-legislature%3A2312?zip=85701&lat=32.21704&lng=-110.97134",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:31.041Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:33.653Z",
+      "responseMs": 2612,
+      "finishedAt": "2026-10-25T01:57:33.653Z",
+      "elapsedMs": 2612
+    },
+    {
+      "id": "AZ-ballot-15",
+      "url": "http://127.0.0.1:3184/api/votes?member=az-legislature%3A2312&state=AZ",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:31.043Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:33.630Z",
+      "responseMs": 2586,
+      "finishedAt": "2026-10-25T01:57:33.630Z",
+      "elapsedMs": 2586
+    },
+    {
+      "id": "AZ-ballot-16",
+      "url": "http://127.0.0.1:3184/api/bills?state=AZ&member=az-legislature%3A2312",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:31.044Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:32.560Z",
+      "responseMs": 1517,
+      "finishedAt": "2026-10-25T01:57:32.564Z",
+      "elapsedMs": 1520,
+      "body": {
+        "billCount": 66,
+        "complete": false
+      }
+    },
+    {
+      "id": "AZ-ballot-17",
+      "url": "http://127.0.0.1:3184/api/profile/az-legislature%3A2312",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:31.051Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:31.559Z",
+      "responseMs": 508,
+      "finishedAt": "2026-10-25T01:57:31.559Z",
+      "elapsedMs": 508
+    },
+    {
+      "id": "AZ-ballot-18",
+      "url": "http://127.0.0.1:3184/api/official-actions/az-legislature%3A2312?zip=85701&lat=32.21704&lng=-110.97134",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:31.051Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:31.901Z",
+      "responseMs": 850,
+      "finishedAt": "2026-10-25T01:57:31.901Z",
+      "elapsedMs": 850
+    },
+    {
+      "id": "AZ-ballot-19",
+      "url": "http://127.0.0.1:3184/api/campaign-finance?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz&person=ballot-az-pima%3Agovernor%3Ahobbs-katie",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:46.554Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:47.517Z",
+      "responseMs": 962,
+      "finishedAt": "2026-10-25T01:57:47.517Z",
+      "elapsedMs": 963
+    },
+    {
+      "id": "AZ-ballot-20",
+      "url": "http://127.0.0.1:3184/api/official-actions/statewide%3Aaz%2Fgovernor?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz&lat=32.21704&lng=-110.97134",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:46.556Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:47.425Z",
+      "responseMs": 870,
+      "finishedAt": "2026-10-25T01:57:47.426Z",
+      "elapsedMs": 870
+    },
+    {
+      "id": "AZ-ballot-21",
+      "url": "http://127.0.0.1:3184/api/campaign-finance?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz&person=az-pima-general-2026-running-mate-john-giles",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:49.878Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:50.875Z",
+      "responseMs": 997,
+      "finishedAt": "2026-10-25T01:57:50.875Z",
+      "elapsedMs": 997
+    },
+    {
+      "id": "AZ-ballot-22",
+      "url": "http://127.0.0.1:3184/api/official-actions/az-pima-general-2026-running-mate-john-giles?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz&lat=32.21704&lng=-110.97134",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:49.880Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:50.265Z",
+      "responseMs": 384,
+      "finishedAt": "2026-10-25T01:57:50.271Z",
+      "elapsedMs": 390
+    },
+    {
+      "id": "NC-ballot-4",
+      "url": "http://127.0.0.1:3184/api/directory?member=congress%3AR000305&state=NC",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.168Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:55.399Z",
+      "responseMs": 231,
+      "finishedAt": "2026-10-25T01:57:55.400Z",
+      "elapsedMs": 232,
+      "personRecords": []
+    },
+    {
+      "id": "NC-ballot-6",
+      "url": "http://127.0.0.1:3184/api/votes?member=congress%3AR000305&state=NC",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.168Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:56.719Z",
+      "responseMs": 1550,
+      "finishedAt": "2026-10-25T01:57:56.719Z",
+      "elapsedMs": 1551
+    },
+    {
+      "id": "NC-ballot-7",
+      "url": "http://127.0.0.1:3184/api/votes?member=congress%3AR000305&history=1&state=NC",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.169Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:56.028Z",
+      "responseMs": 859,
+      "finishedAt": "2026-10-25T01:57:56.037Z",
+      "elapsedMs": 869
+    },
+    {
+      "id": "NC-ballot-8",
+      "url": "http://127.0.0.1:3184/api/federal-civic?member=congress%3AR000305&offset=0",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.169Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:55.637Z",
+      "responseMs": 468,
+      "finishedAt": "2026-10-25T01:57:55.637Z",
+      "elapsedMs": 468
+    },
+    {
+      "id": "NC-ballot-9",
+      "url": "http://127.0.0.1:3184/api/federal-civic?offset=0",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.169Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:56.593Z",
+      "responseMs": 1424,
+      "finishedAt": "2026-10-25T01:57:56.594Z",
+      "elapsedMs": 1425
+    },
+    {
+      "id": "NC-ballot-10",
+      "url": "http://127.0.0.1:3184/api/profile/congress%3AR000305",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.169Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:55.474Z",
+      "responseMs": 304,
+      "finishedAt": "2026-10-25T01:57:55.474Z",
+      "elapsedMs": 304
+    },
+    {
+      "id": "NC-ballot-11",
+      "url": "http://127.0.0.1:3184/api/official-actions/congress%3AR000305?division=ocd-division%2Fcountry%3Aus%2Fstate%3Anc%2Fcd%3A2&lat=35.77366&lng=-78.63456",
+      "critical": true,
+      "startedAt": "2026-10-25T01:57:55.169Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:57:55.662Z",
+      "responseMs": 493,
+      "finishedAt": "2026-10-25T01:57:55.662Z",
+      "elapsedMs": 493
+    },
+    {
+      "id": "NC-map-14",
+      "url": "http://127.0.0.1:3184/api/funding/congress%3AR000305?zip=27601&lat=35.77366&lng=-78.63456",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.207Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:02.280Z",
+      "responseMs": 2074,
+      "finishedAt": "2026-10-25T01:58:02.280Z",
+      "elapsedMs": 2074
+    },
+    {
+      "id": "NC-map-15",
+      "url": "http://127.0.0.1:3184/api/votes?member=congress%3AR000305&state=NC",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.207Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:01.149Z",
+      "responseMs": 942,
+      "finishedAt": "2026-10-25T01:58:01.153Z",
+      "elapsedMs": 946
+    },
+    {
+      "id": "NC-map-16",
+      "url": "http://127.0.0.1:3184/api/votes?member=congress%3AR000305&history=1&state=NC",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.207Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:00.428Z",
+      "responseMs": 221,
+      "finishedAt": "2026-10-25T01:58:00.429Z",
+      "elapsedMs": 222
+    },
+    {
+      "id": "NC-map-17",
+      "url": "http://127.0.0.1:3184/api/federal-civic?member=congress%3AR000305&offset=0",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.209Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:00.344Z",
+      "responseMs": 135,
+      "finishedAt": "2026-10-25T01:58:00.344Z",
+      "elapsedMs": 135
+    },
+    {
+      "id": "NC-map-18",
+      "url": "http://127.0.0.1:3184/api/federal-civic?offset=0",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.209Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:00.279Z",
+      "responseMs": 69,
+      "finishedAt": "2026-10-25T01:58:00.279Z",
+      "elapsedMs": 69
+    },
+    {
+      "id": "NC-map-19",
+      "url": "http://127.0.0.1:3184/api/profile/congress%3AR000305",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.210Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:00.416Z",
+      "responseMs": 207,
+      "finishedAt": "2026-10-25T01:58:00.417Z",
+      "elapsedMs": 207
+    },
+    {
+      "id": "NC-map-20",
+      "url": "http://127.0.0.1:3184/api/official-actions/congress%3AR000305?zip=27601&lat=35.77366&lng=-78.63456",
+      "critical": true,
+      "startedAt": "2026-10-25T01:58:00.210Z",
+      "status": 200,
+      "responseAt": "2026-10-25T01:58:00.897Z",
+      "responseMs": 687,
+      "finishedAt": "2026-10-25T01:58:00.897Z",
+      "elapsedMs": 688
+    }
+  ],
+  "criticalDataFailures": [],
+  "globalMetadata503s": [
+    {
+      "url": "http://127.0.0.1:3184/api/reader/link-health",
+      "status": 503,
+      "responseMs": 109
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 157
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 275
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/link-health",
+      "status": 503,
+      "responseMs": 40
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 12
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 26
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 106
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/link-health",
+      "status": 503,
+      "responseMs": 26
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/link-health",
+      "status": 503,
+      "responseMs": 10
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 20
+    },
+    {
+      "url": "http://127.0.0.1:3184/api/reader/settings",
+      "status": 503,
+      "responseMs": 20
+    }
+  ],
+  "requestSizeAndServerTimingLimit": "Critical response byte sizes and Server-Timing headers were not captured. Existing response/finish timestamps and elapsed timings are retained. No extra HTTP/body reads were made to fill this gap.",
+  "imageBridge": {
+    "declared": true,
+    "scope": "GET image resources under local /api/portraits/* only. Exact same path on public https://meanwhileusa.com, no credentials, redirects/retries/fallback or TLS bypass. App data, metadata and geographic assets remain local and unchanged. Earlier no-bridge failure evidence remains in local-fresh-production-processes.",
+    "requests": [
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/a18282cbcc1a49ca1c2947ad7c93f422514884be5d9a5ebf37fd7a685c025176.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/a18282cbcc1a49ca1c2947ad7c93f422514884be5d9a5ebf37fd7a685c025176.webp",
+        "requestedAt": "2026-10-25T01:57:22.565Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 11772,
+        "sha256": "a18282cbcc1a49ca1c2947ad7c93f422514884be5d9a5ebf37fd7a685c025176",
+        "finishedAt": "2026-10-25T01:57:23.524Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c.webp",
+        "requestedAt": "2026-10-25T01:57:22.570Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 131458,
+        "sha256": "0db1d6e6b249facd2c8b19eae6041c9a4b65b98accf36c4613fffa4aa70b9d0c",
+        "finishedAt": "2026-10-25T01:57:23.528Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a.webp",
+        "requestedAt": "2026-10-25T01:57:22.583Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 617520,
+        "sha256": "f1d0edf8ad365a8ed3d2ca77c5164e218ca29c22fc29950814544d4ba07ec27a",
+        "finishedAt": "2026-10-25T01:57:23.538Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15.webp",
+        "requestedAt": "2026-10-25T01:57:22.585Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 98184,
+        "sha256": "ce50b004cf0695bb2cce9aee0f5a7bd45be2962d0ae0ceaa7644e7982f858f15",
+        "finishedAt": "2026-10-25T01:57:23.615Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "requestedAt": "2026-10-25T01:57:54.555Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 10624,
+        "sha256": "a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81",
+        "finishedAt": "2026-10-25T01:57:55.003Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/03200274101e8d1ff5fd7104eef96d19dad5b40cd51e67d92322249d530f2a84.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/03200274101e8d1ff5fd7104eef96d19dad5b40cd51e67d92322249d530f2a84.webp",
+        "requestedAt": "2026-10-25T01:57:59.260Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 39648,
+        "sha256": "03200274101e8d1ff5fd7104eef96d19dad5b40cd51e67d92322249d530f2a84",
+        "finishedAt": "2026-10-25T01:57:59.808Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/df667f83e1cb6236ae3f582828e55431897e3916b6dcc9e8d163903afa98e050.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/df667f83e1cb6236ae3f582828e55431897e3916b6dcc9e8d163903afa98e050.webp",
+        "requestedAt": "2026-10-25T01:57:59.264Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 33736,
+        "sha256": "df667f83e1cb6236ae3f582828e55431897e3916b6dcc9e8d163903afa98e050",
+        "finishedAt": "2026-10-25T01:57:59.763Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81.webp",
+        "requestedAt": "2026-10-25T01:57:59.304Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 10624,
+        "sha256": "a27aceb4708ac5b2102f2fdd9a6e0a321e061bdfd5dd5bb5896d874c6770ff81",
+        "finishedAt": "2026-10-25T01:57:59.716Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/e3df9c8a294adee768ed4d469a32bb0b1f7a0fc1fd56b7815637df3430cbd981.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/e3df9c8a294adee768ed4d469a32bb0b1f7a0fc1fd56b7815637df3430cbd981.webp",
+        "requestedAt": "2026-10-25T01:57:59.307Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 10478,
+        "sha256": "e3df9c8a294adee768ed4d469a32bb0b1f7a0fc1fd56b7815637df3430cbd981",
+        "finishedAt": "2026-10-25T01:57:59.959Z"
+      },
+      {
+        "localUrl": "http://127.0.0.1:3184/api/portraits/officials/33f0719b0ec907d5742dd082a1d1ad3db82d807df4118da88f807c96373daf3f.webp",
+        "publicUrl": "https://meanwhileusa.com/api/portraits/officials/33f0719b0ec907d5742dd082a1d1ad3db82d807df4118da88f807c96373daf3f.webp",
+        "requestedAt": "2026-10-25T01:57:59.309Z",
+        "status": 200,
+        "contentType": "image/webp",
+        "bytes": 6482,
+        "sha256": "33f0719b0ec907d5742dd082a1d1ad3db82d807df4118da88f807c96373daf3f",
+        "finishedAt": "2026-10-25T01:57:59.847Z"
+      }
+    ]
+  },
+  "imageBridgeAllRequests200": true,
+  "optionalModalFirstSelectorTimeout": {
+    "label": "AZ-Alma-Hernandez-official-card",
+    "clickStartedAt": "2026-10-25T01:57:31.001Z",
+    "beforeClick": {
+      "disabled": false,
+      "handlerPresent": true
+    },
+    "error": "TimeoutError: locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.mw-card').filter({ has: locator('[data-person-identity]') }) to be visible\u001b[22m\n",
+    "screenshot": "AZ-Alma-Hernandez-official-card-first-failure.png",
+    "diagnosis": "Saved screenshot proves Alma incumbent-name modal did open on the first click with correct visible portrait. The harness waited for .mw-card, which this embedded modal does not use. Original timeout preserved; not a product open failure or measured portrait mismatch. No retry."
+  },
+  "separateExistingIssue": {
+    "description": "Alma incumbent-name modal shows Federal tier for State Representative. IncumbentNameLink hardcodes tier=national.",
+    "source": "components/ballot/incumbent-record-link.tsx",
+    "evidence": "AZ-Alma-Hernandez-official-card-first-failure.png",
+    "owner": "root",
+    "scope": "Existing separate issue recorded; no app edit or expansion of merge repair."
+  },
+  "pageErrors": [],
+  "writesBlocked": {
+    "count": 12,
+    "paths": [
+      "/api/events",
+      "/api/log"
+    ]
+  },
+  "server": {
+    "pid": 75400,
+    "startedAt": "2026-10-25T01:57:11.140Z",
+    "firstHttpRequest": "Chrome AZ ballot navigation; no warmup",
+    "stoppedAt": "2026-10-25T01:58:03.334Z",
+    "exitCode": 143,
+    "signalCode": null
+  },
+  "cleanup": "Owned Chrome browser and Next server PID75400 closed. Parent production browser/watchers untouched. No source edits/commits/pushes/DB writes/jobs/settings/schedule changes.",
+  "finishedAt": "2026-10-25T01:58:03.334Z",
+  "consolidatedAt": "2026-10-25T02:00:37.582035+00:00"
+}

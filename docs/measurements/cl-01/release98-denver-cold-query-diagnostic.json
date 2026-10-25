@@ -1,0 +1,800 @@
+{
+  "kind": "one-cold-local-debug-render",
+  "productionSpeedProof": false,
+  "sourceRevision": "96b6ea5e758f1ef0b21251135e17e0f168919c8e plus exact release98 jit startup correction",
+  "runtime": "Next16.3 webpack development; original NodeWebSocket failed before correction; fresh process used proxy helper",
+  "readerRole": "readonly",
+  "controlPlaneRole": "wtp_cp_release_readonly",
+  "requests": 1,
+  "queryCount": 7,
+  "queryErrors": [],
+  "totalJsonBytes": 7225610,
+  "queryWallUnionMs": 1500.977772999995,
+  "queryMetricOverheadMs": 28.02654800000164,
+  "queries": [
+    {
+      "start": {
+        "id": 1,
+        "start": 18512.926327,
+        "at": "2026-10-24T17:47:30.556Z",
+        "sources": [
+          "CURATED_READER_RECORD:US:verified-officeholder-campaign-sites",
+          "CURATED_READER_RECORD:US:state-legislator-member-offices",
+          "STATE_LEGISLATOR:US:people:statewide-executive-sources:v1",
+          "STATE_LEGISLATOR:US:people:wikidata-people:v1",
+          "US:zcta-geography-overlaps",
+          "ocd-division/country:us/state:co/county:denver",
+          "ocd-division/country:us/state:co/county:denver/place:denver_ccd",
+          "ocd-division/country:us/state:co/place:denver",
+          "ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+          "ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+          "ocd-division/country:us/state:co/special_district:central_platte_valley_metropolitan_district",
+          "ocd-division/country:us/state:co"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/reader/canonical.ts:26:16",
+          "lib/reader/canonical.ts:29:7",
+          "lib/reader/state.ts:148:94",
+          "lib/reader/state.ts:153:57"
+        ],
+        "tables": [
+          "civic_data_promotions",
+          "LATERAL",
+          "scopes",
+          "jsonb_array_elements",
+          "geography",
+          "regexp_replace",
+          "civic_data_candidate_events",
+          "civic_data_candidates",
+          "additional",
+          "shelf",
+          "hashes",
+          "civic_data_payload_parts"
+        ],
+        "fingerprint": "61c844ba0258",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 0,
+          "idle": 0,
+          "waiting": 0
+        },
+        "startMs": 420.7172520000022
+      },
+      "end": {
+        "id": 1,
+        "at": "2026-10-24T17:47:31.432Z",
+        "startMs": 420.7172520000022,
+        "endMs": 1295.8793900000019,
+        "totalMs": 875.1621379999997,
+        "acquireMs": 437.0937559999984,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 2,
+          "waiting": 0
+        },
+        "metricOverheadMs": 1.808603999998013,
+        "rows": 5,
+        "jsonBytes": 266976,
+        "kinds": {
+          "promotion": 4,
+          "additional": 1
+        },
+        "fields": {
+          "row_kind": 12,
+          "part_payload": 130048
+        },
+        "promotions": [
+          {
+            "key": "CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:everyday-service-routing:v1",
+            "jsonBytes": 27311
+          },
+          {
+            "key": "CURATED_READER_RECORD:US:state-legislator-member-offices",
+            "jsonBytes": 53979
+          },
+          {
+            "key": "CURATED_READER_RECORD:US:verified-officeholder-campaign-sites",
+            "jsonBytes": 5832
+          },
+          {
+            "key": "STATE_LEGISLATOR:US:people:statewide-executive-sources:v1",
+            "jsonBytes": 49487
+          }
+        ],
+        "parts": []
+      }
+    },
+    {
+      "start": {
+        "id": 2,
+        "start": 18524.703085,
+        "at": "2026-10-24T17:47:30.567Z",
+        "sources": [
+          "ocd-division/country:us/state:co/county:denver",
+          "ocd-division/country:us/state:co/county:denver/place:denver_ccd",
+          "ocd-division/country:us/state:co/place:denver",
+          "ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+          "ocd-division/country:us/state:co/special_district:central_platte_valley_metropolitan_district",
+          "ocd-division/country:us/state:co/special_district:dus_metropolitan_district_2",
+          "ocd-division/country:us/state:co/special_district:dus_metropolitan_district_3",
+          "ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+          "ocd-division/country:us/state:co/special_district:market_station_metropolitan_district_no_1",
+          "ocd-division/country:us/state:co/special_district:market_station_metropolitan_district_no_2",
+          "ocd-division/country:us/state:co"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/facts/db.ts:87:65",
+          "lib/reader/place.ts:505:25",
+          "lib/reader/place.ts:492:18",
+          "lib/reader/place.ts:447:12",
+          "lib/ballot/reader-data.ts:93:89",
+          "lib/ballot/reader-data.ts:90:29"
+        ],
+        "tables": [
+          "unnest",
+          "entity_place",
+          "entity_external_id",
+          "civic_data_promotions",
+          "registration",
+          "government_inventory",
+          "government_identities",
+          "jsonb_array_elements",
+          "selected_places",
+          "dotgov",
+          "runtime_root",
+          "runtime_registry",
+          "LATERAL",
+          "entity",
+          "owned",
+          "ancestors",
+          "entity_host",
+          "local_governments",
+          "held_body_hosts",
+          "domains",
+          "local_government_hosts",
+          "linked_bodies",
+          "covered",
+          "runtime_bodies",
+          "bodies",
+          "fact",
+          "source_copy",
+          "body_facts",
+          "runtime_rosters",
+          "runtime_members",
+          "members",
+          "runtime_division_ids",
+          "runtime_divisions",
+          "runtime_people",
+          "reader_payload_members",
+          "runtime_candidacies",
+          "agenda_calendar_fallback",
+          "agenda_fact_ids",
+          "regexp_split_to_table",
+          "civic_data_candidate_events",
+          "encoded_bodies",
+          "meeting_partitions",
+          "family_meetings",
+          "agenda_relevant_ids",
+          "agenda_texts",
+          "agenda_full_ids",
+          "agenda_full_urls",
+          "agenda_current_headers",
+          "reader_payload_value",
+          "civic_data_candidates",
+          "archived_versions",
+          "archived_records",
+          "archived_calendar",
+          "archived_document_records",
+          "agenda_raw_headers",
+          "agenda_meeting_headers",
+          "pg_timezone_names",
+          "agenda_header_ids",
+          "agenda_start_facts",
+          "agenda_targets",
+          "m",
+          "agenda_full_documents",
+          "agenda_possible_times",
+          "agenda_context_seeds",
+          "agenda_text_candidates",
+          "meeting_rows",
+          "archived_meetings",
+          "archived_documents",
+          "hashes",
+          "civic_data_payload_parts",
+          "cp_work_items",
+          "runtime_photos",
+          "jsonb_each",
+          "named_places",
+          "sittings",
+          "archived_document_links"
+        ],
+        "fingerprint": "6fa75cd9c06f",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 1,
+          "idle": 0,
+          "waiting": 0
+        },
+        "startMs": 432.49401000000216
+      },
+      "end": {
+        "id": 2,
+        "at": "2026-10-24T17:47:31.828Z",
+        "startMs": 432.49401000000216,
+        "endMs": 1671.9721979999995,
+        "totalMs": 1239.4781879999973,
+        "acquireMs": 380.12712499999907,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 1,
+          "waiting": 0
+        },
+        "metricOverheadMs": 21.041355000001204,
+        "rows": 1,
+        "jsonBytes": 6090480,
+        "kinds": {
+          "selected": 1
+        },
+        "fields": {
+          "registration_held": 5,
+          "division_ids": 779,
+          "agenda_texts": 2,
+          "publication_attempts": 2,
+          "governments": 2,
+          "divisions": 2,
+          "entities": 20717,
+          "fields": 54158,
+          "rosters": 5184630,
+          "comments": 4512,
+          "sittings": 453158,
+          "meeting_rows": 372207,
+          "archived_meetings": 2,
+          "archived_documents": 2,
+          "archived_document_links": 2,
+          "parts": 2
+        },
+        "promotions": [],
+        "parts": []
+      }
+    },
+    {
+      "start": {
+        "id": 3,
+        "start": 18529.221924,
+        "at": "2026-10-24T17:47:30.572Z",
+        "sources": [
+          "BALLOT_CANDIDACY:US-CO:state-election-ballots",
+          "CURATED_READER_RECORD:US-CO:official-ballot-navigation",
+          "CURATED_READER_RECORD:US:official-ballot-navigation",
+          "CURATED_READER_RECORD:US:independently-verified-official-filings",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/county:denver",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/county:denver/place:denver_ccd",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/place:denver",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/special_district:central_platte_valley_metropolitan_district",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/special_district:market_station_metropolitan_district_no_2",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/special_district:market_station_metropolitan_district_no_1",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/special_district:dus_metropolitan_district_2",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/special_district:dus_metropolitan_district_3",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/reader/canonical.ts:26:16",
+          "lib/reader/canonical.ts:29:7",
+          "lib/ballot/reader-data.ts:144:193"
+        ],
+        "tables": [
+          "jsonb_array_elements",
+          "civic_data_candidate_events",
+          "civic_data_promotions",
+          "civic_data_candidates",
+          "shelf",
+          "hashes",
+          "LATERAL",
+          "civic_data_payload_parts"
+        ],
+        "fingerprint": "3cede0f69962",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 2,
+          "idle": 0,
+          "waiting": 0
+        },
+        "startMs": 437.01284900000246
+      },
+      "end": {
+        "id": 3,
+        "at": "2026-10-24T17:47:31.321Z",
+        "startMs": 437.01284900000246,
+        "endMs": 1184.1163330000018,
+        "totalMs": 747.1034839999993,
+        "acquireMs": 416.69039800000246,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 1,
+          "waiting": 0
+        },
+        "metricOverheadMs": 1.7079369999992196,
+        "rows": 12,
+        "jsonBytes": 413820,
+        "kinds": {
+          "promotion": 3,
+          "part": 9
+        },
+        "fields": {},
+        "promotions": [
+          {
+            "key": "BALLOT_CANDIDACY:US-CO:state-election-ballots",
+            "jsonBytes": 2610
+          },
+          {
+            "key": "CURATED_READER_RECORD:US-CO:official-ballot-navigation",
+            "jsonBytes": 9852
+          },
+          {
+            "key": "CURATED_READER_RECORD:US:official-ballot-navigation",
+            "jsonBytes": 20603
+          }
+        ],
+        "parts": [
+          {
+            "hash": "08d2629255714a3054e8ab1f7e9681227b628f5b125b652cfdd80811bb828edb",
+            "jsonBytes": 526
+          },
+          {
+            "hash": "bff1f7076d17ab90ba7de8dda16e7cd3ffec575a6725df9d31ee4f3772c536e4",
+            "jsonBytes": 512
+          },
+          {
+            "hash": "50306a0579d87ddde905950fe0b130833353364cc1f21518c7933bd333a11195",
+            "jsonBytes": 17032
+          },
+          {
+            "hash": "21fadcee2f4cef777cd76d1b1a995433b1769d8abc06bb4307023738b4acd729",
+            "jsonBytes": 833
+          },
+          {
+            "hash": "ae1098ca754e203364f4bd253677e2da2e9fabd8e9a37264dcec7d84454f0a37",
+            "jsonBytes": 543
+          },
+          {
+            "hash": "a5eed0f8e1cdcb86e53d680c6669c84753dddcd97f13e42a1059a4b9c0d94cce",
+            "jsonBytes": 1145
+          },
+          {
+            "hash": "f7a96bff91f6d52c2278222729678f9d061f8eb4edd82fca9875726c40818e26",
+            "jsonBytes": 134445
+          },
+          {
+            "hash": "23cbba148a50a6ccceb7a78dbf82df8ae5110620b24d54d0a96c0d412a4fb649",
+            "jsonBytes": 33844
+          },
+          {
+            "hash": "d01825c60130b87d409c38d22e8adf9c58bfd96c2c9c5c2e5b746f594ca93c22",
+            "jsonBytes": 191875
+          }
+        ]
+      }
+    },
+    {
+      "start": {
+        "id": 4,
+        "start": 19404.696554,
+        "at": "2026-10-24T17:47:31.447Z",
+        "sources": [
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/cd:1",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldl:5",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldl:6",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldl:8",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldu:31",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldu:34",
+          "STATE_LEGISLATOR:US-CO",
+          "ocd-division/country:us/state:co/county:denver",
+          "ocd-division/country:us/state:co/county:denver/place:denver_ccd",
+          "ocd-division/country:us/state:co/place:denver",
+          "ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+          "ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+          "ocd-division/country:us/state:co/special_district:central_platte_valley_metropolitan_district",
+          "ocd-division/country:us",
+          "ocd-division/country:us/state:co",
+          "STATE_LEGISLATOR:US-CO:openstates-people:v1",
+          "FEDERAL_DIRECTORY:US-CO:current-congress-directory",
+          "STATE_LEGISLATOR:US-CO:people:legiscan-api:v1",
+          "STATE_LEGISLATOR:US-CO:people:official-state-people:v1",
+          "STATE_LEGISLATOR:US-CO:people:statewide-executive-sources:v1",
+          "STATE_LEGISLATOR:US-CO:people:wikidata-people:v1",
+          "FEDERAL_DIRECTORY:US-CO:people:congress-api:v1",
+          "FEDERAL_DIRECTORY:US-CO:people:govinfo:v1",
+          "STATE_LEGISLATOR:US-CO:people:portraits:v1",
+          "REGISTRY_RUNTIME_BINDING:US-CO:reader-registry-runtime"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/reader/state.ts:159:30"
+        ],
+        "tables": [
+          "state_geography",
+          "civic_data_candidate_events",
+          "civic_data_promotions",
+          "civic_data_candidates",
+          "pointer",
+          "root",
+          "roster",
+          "jsonb_each",
+          "all_people",
+          "links",
+          "selected_divisions",
+          "selected",
+          "all_members",
+          "members",
+          "identities",
+          "people",
+          "reader_payload_members",
+          "zip_official",
+          "official_root",
+          "official_roster",
+          "official_people",
+          "seed_ids",
+          "seed_names",
+          "chosen",
+          "roots",
+          "rosters",
+          "zip_people",
+          "seed_rosters",
+          "seeds",
+          "registry",
+          "divisions",
+          "bodies",
+          "own_divisions",
+          "own_bodies",
+          "zip_sources",
+          "candidacies",
+          "jsonb_each_text",
+          "photos",
+          "needed_divisions",
+          "zip_registry"
+        ],
+        "fingerprint": "078a21ff66c2",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 3,
+          "idle": 2,
+          "waiting": 0
+        },
+        "startMs": 1312.4874789999994
+      },
+      "end": {
+        "id": 4,
+        "at": "2026-10-24T17:47:31.884Z",
+        "startMs": 1312.4874789999994,
+        "endMs": 1745.9184710000009,
+        "totalMs": 433.4309920000014,
+        "acquireMs": 9.807848999997077,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 2,
+          "waiting": 0
+        },
+        "metricOverheadMs": 3.1833990000013728,
+        "rows": 1,
+        "jsonBytes": 438961,
+        "kinds": {
+          "selected": 1
+        },
+        "fields": {
+          "version_id": 37,
+          "geography": 125590,
+          "local_divisions": 3789,
+          "canonical_keys": 565,
+          "zip_people": 217900,
+          "zip_registry": 12929,
+          "zip_sources": 78021
+        },
+        "promotions": [],
+        "parts": []
+      }
+    },
+    {
+      "start": {
+        "id": 5,
+        "start": 19408.981542,
+        "at": "2026-10-24T17:47:31.452Z",
+        "sources": [
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/cd:1",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldu:31",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldu:34",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldl:5",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldl:6",
+          "CURATED_READER_RECORD:US:plain-english-translations:ocd-division/country:us/state:co/sldl:8"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/reader/canonical.ts:149:28",
+          "lib/ballot/reader-data.ts:178:199"
+        ],
+        "tables": [
+          "jsonb_array_elements",
+          "civic_data_candidate_events",
+          "civic_data_promotions",
+          "civic_data_candidates",
+          "shelf",
+          "hashes",
+          "LATERAL",
+          "civic_data_payload_parts"
+        ],
+        "fingerprint": "3cede0f69962",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 3,
+          "idle": 2,
+          "waiting": 1
+        },
+        "startMs": 1316.7724670000025
+      },
+      "end": {
+        "id": 5,
+        "at": "2026-10-24T17:47:31.548Z",
+        "startMs": 1316.7724670000025,
+        "endMs": 1413.6790940000028,
+        "totalMs": 96.9066270000003,
+        "acquireMs": 6.3253810000023805,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 1,
+          "waiting": 0
+        },
+        "metricOverheadMs": 0.005059999999502907,
+        "rows": 0,
+        "jsonBytes": 0,
+        "kinds": {},
+        "fields": {},
+        "promotions": [],
+        "parts": []
+      }
+    },
+    {
+      "start": {
+        "id": 6,
+        "start": 19543.084809,
+        "at": "2026-10-24T17:47:31.586Z",
+        "sources": [
+          "CANDIDATE_PROFILE:US-CO:candidate-profiles",
+          "CANDIDATE_PUBLICATION:US-CO:candidate-publications",
+          "CURATED_READER_RECORD:US-CO:candidate-campaign-sites-derived"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/ballot/reader-data.ts:259:26"
+        ],
+        "tables": [
+          "civic_data_candidate_events",
+          "civic_data_promotions",
+          "civic_data_candidates",
+          "pointer",
+          "reader_payload_members",
+          "roots"
+        ],
+        "fingerprint": "adc25c1dabcd",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 3,
+          "idle": 1,
+          "waiting": 0
+        },
+        "startMs": 1450.875734000001
+      },
+      "end": {
+        "id": 6,
+        "at": "2026-10-24T17:47:31.905Z",
+        "startMs": 1450.875734000001,
+        "endMs": 1769.5851650000004,
+        "totalMs": 318.7094309999993,
+        "acquireMs": 12.97646800000075,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 3,
+          "waiting": 0
+        },
+        "metricOverheadMs": 0.1568440000010014,
+        "rows": 3,
+        "jsonBytes": 9589,
+        "kinds": {
+          "selected": 3
+        },
+        "fields": {
+          "key": 158,
+          "source_id": 95,
+          "current_version_id": 111,
+          "last_known_good_version_id": 111,
+          "promoted_at": 78,
+          "validation_receipt": 6110,
+          "retrieved_at": 78,
+          "published": 12,
+          "payload": 2326
+        },
+        "promotions": [
+          {
+            "key": "CANDIDATE_PROFILE:US-CO:candidate-profiles",
+            "jsonBytes": 4631
+          },
+          {
+            "key": "CANDIDATE_PUBLICATION:US-CO:candidate-publications",
+            "jsonBytes": 2446
+          },
+          {
+            "key": "CURATED_READER_RECORD:US-CO:candidate-campaign-sites-derived",
+            "jsonBytes": 2512
+          }
+        ],
+        "parts": []
+      }
+    },
+    {
+      "start": {
+        "id": 7,
+        "start": 20136.497415,
+        "at": "2026-10-24T17:47:32.179Z",
+        "sources": [
+          "ocd-division/country:us/state:co/county:denver",
+          "ocd-division/country:us/state:co/county:denver/place:denver_ccd",
+          "ocd-division/country:us/state:co/place:denver",
+          "ocd-division/country:us/state:co/school_district:denver_county_school_district_1",
+          "ocd-division/country:us/state:co/special_district:front_range_passenger_rail_district",
+          "ocd-division/country:us/state:co/special_district:central_platte_valley_metropolitan_district",
+          "ocd-division/country:us/state:co",
+          "ocd-division/country:us"
+        ],
+        "callers": [
+          "lib/db/transfer-by-caller.ts:126:23",
+          "lib/civic-data/read-model.ts:1285:26",
+          "lib/civic-data/read-model.ts:1242:18",
+          "lib/ballot/reader-data.ts:295:106"
+        ],
+        "tables": [
+          "root",
+          "reader_payload_members",
+          "chosen",
+          "committees",
+          "civic_data_promotions",
+          "civic_data_candidates"
+        ],
+        "fingerprint": "7081bb837f2d",
+        "acquireMs": 0,
+        "acquireCalls": 0,
+        "queued": false,
+        "poolStart": {
+          "total": 3,
+          "idle": 3,
+          "waiting": 0
+        },
+        "startMs": 2044.2883400000028
+      },
+      "end": {
+        "id": 7,
+        "at": "2026-10-24T17:47:32.331Z",
+        "startMs": 2044.2883400000028,
+        "endMs": 2196.3981999999996,
+        "totalMs": 152.10985999999684,
+        "acquireMs": 0.519414999998844,
+        "acquireCalls": 1,
+        "queued": false,
+        "poolEnd": {
+          "total": 3,
+          "idle": 3,
+          "waiting": 0
+        },
+        "metricOverheadMs": 0.1233490000013262,
+        "rows": 1,
+        "jsonBytes": 5784,
+        "kinds": {
+          "selected": 1
+        },
+        "fields": {
+          "key": 31,
+          "source_id": 14,
+          "record_class": 13,
+          "scope": 19,
+          "current_version_id": 37,
+          "last_known_good_version_id": 37,
+          "promoted_at": 26,
+          "validation_receipt": 1686,
+          "payload": 3624,
+          "retrieved_at": 26,
+          "temporal": 97
+        },
+        "promotions": [
+          {
+            "key": "FEC_FUNDING:federal-supported",
+            "jsonBytes": 5784
+          }
+        ],
+        "parts": []
+      }
+    }
+  ],
+  "requestTiming": {
+    "status": 200,
+    "totalSeconds": 7.865101,
+    "firstByteSeconds": 3.912171,
+    "downloadBytes": 1236539
+  },
+  "nextTiming": [
+    " GET /ballot?zip=80202 200 in 7.5s (next.js: 2.8s, proxy.ts: 173ms, application-code: 4.5s)"
+  ],
+  "renderedCounts": {
+    "contests": 55,
+    "choices": 75,
+    "people": 82
+  },
+  "limitations": [
+    "JSON byte counts are decoded row JSON estimates, not PostgreSQL wire bytes.",
+    "Pool acquisition includes socket setup and pool wait; no pool saturation observed.",
+    "SQL driver duration includes transport, server execution and driver parsing.",
+    "No CPU profile was recorded; non-query application time is not claimed as CPU alone.",
+    "Development compilation is separated by Next timing; this diagnostic does not replace original production failures."
+  ],
+  "serverStopped": true,
+  "instrumentationRestored": true,
+  "dependencies": [
+    {
+      "fromQuery": 1,
+      "toQuery": 4,
+      "relation": "ZIP person/source selection starts after geography/canonical container read settles; state.ts selectedRead then-chain."
+    },
+    {
+      "fromQuery": 1,
+      "toQuery": 5,
+      "relation": "Extra district translation pointer read starts after geography becomes available; independent of ZIP people query."
+    },
+    {
+      "fromQueries": [
+        1,
+        2,
+        4
+      ],
+      "toQuery": 7,
+      "relation": "FEC exact-key slice waits shared federal/registry roster native identities; retain this dependency."
+    }
+  ],
+  "independentInitialQueries": [
+    1,
+    2,
+    3
+  ],
+  "largestQuery": 2,
+  "largestQueryFieldBytes": {
+    "rosters": 5184630,
+    "sittings": 453158,
+    "meeting_rows": 372207
+  },
+  "duplicateFullStateSelectionObserved": false,
+  "appTimingCaveat": "Next reports application-code4.5s. The union of query waits was1501ms plus28ms diagnostics. Remaining wall time includes module/application work, composition, rendering and any non-query asynchronous work; no CPU profile captured."
+}

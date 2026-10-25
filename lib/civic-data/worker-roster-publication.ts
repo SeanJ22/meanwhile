@@ -142,7 +142,7 @@ type PublicationReport = readonly { workItemId: string; outcome: NonNullable<Wor
 
 /** One body's roster reading as facts: only a page about this body counts, and an unnamed body takes the name its own page gives it. */
 export async function publishBodyRoster(facts: FactDb & { readonly query: Query }, input: {
-  readonly body: { readonly id: string; readonly name: string | null; readonly ocdId: string | null };
+  readonly body: { readonly id: string; readonly name: string | null; readonly ocdId: string | null; readonly alsoServesOcdIds?: readonly string[] };
   readonly division: { readonly label: string } | null; readonly state: string | null;
   readonly reading: RosterReading; readonly schedule?: HeldBodySchedule | null; readonly clocks: Clocks; readonly now: Date;
 }): Promise<RosterFactsReport> {
@@ -156,9 +156,10 @@ export async function publishBodyRoster(facts: FactDb & { readonly query: Query 
   await learnOfficialHost(facts.query, body.id, reading.capture.evidence.canonicalUrl);
   const named = body.name === null && division ? bodyNameFromPage(text, division.label) : null;
   const own = named && division ? named.split(new RegExp(division.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i")).join(" ").replace(/\s+/g, " ").trim() : "";
-  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId },
-    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id, acquisition: "walker", nameFromPage: !(named && own) }, input.clocks, input.now);
-  if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id, acquisition: "walker",
+  const tally = await publishRosterFacts(facts, { body: { id: body.id, name: body.name, state: input.state, parentId: body.ocdId,
+    places:[body.ocdId,...body.alsoServesOcdIds ?? []].flatMap(placeId => placeId ? [{placeId,boundaryYear:0,basis:"SERVICE_AREA" as const}] : []) },
+    capture: reading.capture, members: reading.members, complete: reading.complete, producedBy: reading.id, acquisition:"walker", nameFromPage: !(named && own) }, input.clocks, input.now);
+  if (named && own) await publishBodyFacts(facts, { bodyId: body.id, capture: reading.capture, producedBy: reading.id, acquisition:"walker",
     facts: [{ field: "name", value: named, quote: own }] }, input.clocks, input.now);
   const schedule = input.schedule;
   if (schedule) await publishBodyFacts(facts, { bodyId: body.id, capture: schedule.capture, producedBy: `held-schedule:${schedule.capture.evidence.artifactId}`, acquisition: "walker",

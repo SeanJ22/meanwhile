@@ -3,7 +3,7 @@
 build_state: All nine gates pass on the RV-MEET3 6f57717fc combination. Deployment needed before final live-data READY. Direct production counts at 2026-10-25T08:32:48Z: place_boundary 0, zip_place 0, zcta_place 0.
 worker: codex-rb-a2
 provider: Codex
-heartbeat: 2026-10-25T08:34:06Z
+heartbeat: 2026-10-25T08:55:15Z
 ready: none
 
 The production-fill follow-up is active. Runtime 6e9f3eb4d includes RV-MEET3 6f57717fc and passes all nine gates (9,894 registered, 9,892 passed, zero failed, two skipped), including both builds and all 16 bundle tests. The checked implementation and live-proof handoff are published in draft PR #822 into River. No reader is switched.

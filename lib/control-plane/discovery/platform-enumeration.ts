@@ -111,6 +111,11 @@ export function platformHostedUrl(raw: string): boolean {
 export function samePlatformTenant(left: string, right: string): boolean {
   try {
     const a = new URL(left), b = new URL(right);
+    const legistarClient = (url: URL) => url.hostname.toLowerCase() === "webapi.legistar.com"
+      ? /^\/v1\/([a-z0-9_-]+)(?:\/|$)/i.exec(url.pathname)?.[1]?.toLowerCase()
+      : /^([a-z0-9_-]+)\.legistar\.com$/i.exec(url.hostname)?.[1]?.toLowerCase();
+    const aClient = legistarClient(a), bClient = legistarClient(b);
+    if (aClient || bClient) return Boolean(aClient && aClient === bClient);
     if (a.hostname.toLowerCase().replace(/^www\./, "") !== b.hostname.toLowerCase().replace(/^www\./, "")) return false;
     const tenant = (url: URL): string => {
       if (/(^|\.)boarddocs\.com$/i.test(url.hostname)) return /^(\/[^/]+\/[^/]+\/Board\.nsf)(?:\/|$)/i.exec(url.pathname)?.[1]?.toLowerCase() ?? url.pathname;

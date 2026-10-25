@@ -8,6 +8,7 @@ import { isSourceApiUrl } from "../control-plane/scheduler/scout-api.ts";
 import { isOfficialSource, pageLinksSource, type OfficialLinkingPage } from "../civic-data/source-authority.ts";
 import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
+import {fileEntityPlaces, type EntityPlace} from "../facts/entity-places.ts";
 import { resolveId } from "./resolve.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
@@ -24,6 +25,7 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
   readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
   /** A board named by the government's own source, when it has no entity yet. */
   readonly board?: { readonly governmentId: string; readonly name: string };
+  readonly places?: readonly EntityPlace[];
 };
 export type DoorOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly refused: string };
 interface DoorOptions {
@@ -147,16 +149,22 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const row = head?.status === "live" ? head : undefined;
     // Replaying an already checked source is a no-op, including after its freshness window.
     // It does not refresh the checked date, publish a value, or count another delivery.
-    if (campaignSelf && row && Number(row.source_copy_id) === c.copy.id && (row.provenance_kind === c.provenance || row.provenance_kind === input.provenance)
+    const repeated = campaignSelf && row && Number(row.source_copy_id) === c.copy.id && (row.provenance_kind === c.provenance || row.provenance_kind === input.provenance)
       && c.copy.fetchedAt.getTime() <= Math.max(new Date(row.fetched_at as string).getTime(), new Date(row.checked_at as string).getTime())
       && row.quote === c.quote && row.value_text === c.valueText && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
-      && canonicalJson(row.value) === canonicalJson(c.value)) return { decision: "CONFIRM", factId: Number(row.id) };
-    const verdict = !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
+      && canonicalJson(row.value) === canonicalJson(c.value);
+    const verdict = repeated ? {ok:true as const,quoteStart:null} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
       refusedClaim = c;
       return { refused: verdict.reason };
     }
+    const [placement] = await query("SELECT parent_id FROM entity WHERE id=$1",[entity.id]);
+    if(await fileEntityPlaces(query,entity.id,input.places ?? [],placement?.parent_id as string | null)) {
+      await queueEntityPlaces(query,entity.id,now);
+      changed=await readerCacheScopeForEntity(query,entity.id);
+    }
+    if (repeated) return {decision:"CONFIRM",factId:Number(row!.id)};
     // Sean removed this value; the same words from a source do not put it back, a different value does.
     if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
     const currentProvenance = row?.provenance_kind === "OWNER" || row?.provenance_kind === "FILING" ? row.provenance_kind
@@ -195,7 +203,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     [row!.id,`A source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      await queueRebuild(query, entity.id, now);
+      await queueEntityPlaces(query, entity.id, now);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
     }
     return { decision, factId };
@@ -206,16 +214,9 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   return outcome;
 }
 
-/** Existing subject-to-place links keep serving readers until RB-A4 supplies the full service map. */
-async function queueRebuild(query: Query, entityId: string, now: Date): Promise<void> {
-  const places = await query(`WITH RECURSIVE subjects AS (
-      SELECT id,kind,state,parent_id,ARRAY[id] AS path FROM entity WHERE id=$1
-      UNION ALL SELECT e.id,e.kind,e.state,e.parent_id,s.path || e.id FROM entity e JOIN subjects s ON e.id=s.parent_id
-        WHERE NOT e.id=ANY(s.path)
-    ), places AS (
-      SELECT ep.place_id AS id FROM entity_place ep JOIN subjects s ON ep.entity_id=s.id
-      UNION SELECT id FROM subjects WHERE kind='place'
-    ) SELECT e.id,e.state FROM places p JOIN entity e ON e.id=p.id`, [entityId]);
+/** A changed fact or filing queues every served place filed for its subject. */
+async function queueEntityPlaces(query: Query, entityId: string, now: Date): Promise<void> {
+  const places = await query(`SELECT DISTINCT e.id FROM entity_place p JOIN entity e ON e.id=p.place_id WHERE p.entity_id=$1`,[entityId]);
   if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
     SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
   [places.map(place => place.id), now.toISOString()]);

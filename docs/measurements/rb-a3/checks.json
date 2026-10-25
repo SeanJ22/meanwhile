@@ -91,5 +91,12 @@
     "productionDatabaseRole": "readonly",
     "productionWrites": false
   },
-  "note": "All nine checks pass on the frozen final source. The three build-dependent skips are covered afterward by the bundle and 17 postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing. The replayed publisher and value writes remain unchanged through this revision."
+  "note": "All nine checks pass on the frozen final source. The three build-dependent skips are covered afterward by the bundle and 17 postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing. The replayed publisher and value writes remain unchanged through this revision.",
+  "pendingA4Integration": {
+    "riverCommit": "e84d06c431c271f6e7b28ca1cd41f69ccff45703",
+    "checkedSource": "83347c05a",
+    "status": "NOT RUN",
+    "reason": "Execution environment unavailable. Prior results are retained as historical evidence, not claimed for this merge.",
+    "databaseLimit": "Counts and small samples only; no new production copy or bulk replay."
+  }
 }

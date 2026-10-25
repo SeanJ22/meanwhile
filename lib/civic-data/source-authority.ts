@@ -20,6 +20,14 @@ export interface OfficialLinkingPage {
   readonly linkingPage?: OfficialLinkingPage | null;
 }
 
+/** A saved page's identity; authority chains contain references, never page bodies. */
+export interface OfficialLinkingPageRef {
+  readonly url: string;
+  readonly sourceCopyId: number;
+  readonly linkingPage?: OfficialLinkingPageRef | null;
+}
+export type OpenOfficialLinkingPage = (page: OfficialLinkingPageRef) => Promise<{ readonly url: string; readonly html: string }>;
+
 export interface GovernmentWebsiteDelegation {
   readonly governmentUrl: string;
   readonly html: string;
@@ -71,13 +79,23 @@ function delegatedGovernmentWebsite(url: string, proof: GovernmentWebsiteDelegat
   } catch { return false; }
 }
 
-export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null, websiteDelegation?: GovernmentWebsiteDelegation | null): boolean {
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null, websiteDelegation?: GovernmentWebsiteDelegation | null): boolean;
+export function isOfficialSource(url: string, linkingPage: OfficialLinkingPageRef | null | undefined, websiteDelegation: GovernmentWebsiteDelegation | null | undefined, open: OpenOfficialLinkingPage): Promise<boolean>;
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | OfficialLinkingPageRef | null, websiteDelegation?: GovernmentWebsiteDelegation | null, open?: OpenOfficialLinkingPage): boolean | Promise<boolean> {
   const host = hostOf(url);
-  if (host === null) return false;
-  if (/(^|\.)gov$/.test(host)) return true;
-  if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return true;
-  if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
-  return pageLinksSource(url, linkingPage);
+  const result = (value: boolean) => open ? Promise.resolve(value) : value;
+  if (host === null) return result(false);
+  if (/(^|\.)gov$/.test(host)) return result(true);
+  if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return result(true);
+  if (open) {
+    const page = linkingPage as OfficialLinkingPageRef | null | undefined;
+    if (!page) return Promise.resolve(false);
+    return isOfficialSource(page.url, page.linkingPage, undefined, open).then(async official =>
+      official && pageLinksSource(url, await open(page)));
+  }
+  const page = linkingPage as OfficialLinkingPage | null | undefined;
+  if (!page || !isOfficialSource(page.url, page.linkingPage)) return false;
+  return pageLinksSource(url, page);
 }
 
 /** A source's host is linked in this saved page; authority belongs to the caller's page check. */
@@ -181,15 +199,15 @@ const AUTHORITIES = {
   "statewide-executive-sources": peopleSourceAuthority({ id: "statewide-executive-sources", publisher: "Each officer's captured official state page; national executive associations and Wikidata supply attributed leads", official: true, routePrefixes: ["https://"], parserVersion: "people-sources/3" }),
   "wikidata-people": peopleSourceAuthority({ id: "wikidata-people", publisher: "Wikidata; image licenses attributed to Wikimedia Commons", official: false, routePrefixes: ["https://query.wikidata.org/", "https://www.wikidata.org/", "https://www.wikimedia.org/", "https://commons.wikimedia.org/"] }),
   "people-portraits": {
-    id: "people-portraits", publisher: "Each person's own official page, verified against saved portrait evidence",
+    id: "people-portraits", publisher: "Open States, Congress, official pages, campaign sites and Wikimedia Commons",
     trust: "T2_AUTHORITATIVE_DOCUMENT", sourceClass: "MULTI_PUBLISHER_PRIMARY", routePrefixes: [],
     jurisdictions: ["US", ...Object.values(FIPS_TO_STATE).map(state => `US-${state.postal}`)],
-    recordClasses: ["STATE_LEGISLATOR", "FEDERAL_DIRECTORY"], competentFacts: ["own-page verified official portrait", "portrait recheck", "recorded portrait gap"],
+    recordClasses: ["STATE_LEGISLATOR", "FEDERAL_DIRECTORY"], competentFacts: ["verified person portrait", "portrait recheck", "recorded portrait gap"],
     expectedIdentifierKeys: ["person_id", "bioguide_id"], expectedTemporalFields: ["checked_at", "source_through"],
-    horizonSemantics: "Standing work checks every missing or due photo independently of roster acquisition. A photo publishes only when it appears on the person's own official page; failed reads preserve published photos and record a reason.",
+    horizonSemantics: "Standing work checks every missing or due photo independently of roster acquisition. Sources follow the portrait rule in §3; failed reads preserve published photos and record a reason.",
     parserVersion: "people-portraits/1", freshnessExpectation: "Hourly standing admission; each photo follows its own recheck date.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" }, routineAutoPromotion: true,
-    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "SL-03: Sean's October 12, 2026 instruction for standing own-page portrait verification" },
+    derivedPromotion: { inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE"], authorization: "PT-01: Sean's October 24, 2026 instruction for one portrait per person under §3" },
   },
   "socrata-discovery": {
     id: "socrata-discovery", publisher: "Government publishers through the Socrata Discovery API", trust: "T1_AUTHORITATIVE_STRUCTURED",

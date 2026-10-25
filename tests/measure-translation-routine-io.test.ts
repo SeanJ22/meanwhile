@@ -1,3 +1,4 @@
+import { fixtureLinkingPage } from "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
@@ -179,7 +180,7 @@ test("registered official linking pages are re-read and vaulted before admitting
     url: "https://www.sos.state.co.us/pubs/elections/main.html", shape: "list-page", covers: ["BALLOT_MEASURES"],
     scope: { state: "CO", ocdId: "ocd-division/country:us/state:co", name: "Colorado" },
     electionDate: "2026-11-03", electionPageUrl: measureUrl,
-    officialLinkingPage: { url: officialUrl, html: "This stored excerpt is not current response evidence." },
+    linkingPage: fixtureLinkingPage({ url: officialUrl, html: "This stored excerpt is not current response evidence." }),
   };
   await saveVotingSourceDoor(repos.doors, door, now);
   const provenance = { ...ballot.contests[0].provenance, sourceUrl: measureUrl, doorId: door.id };
@@ -215,7 +216,7 @@ test("a registry linking excerpt cannot authorize a source when the freshly read
     url: "https://www.dcboe.org/", shape: "list-page", covers: ["BALLOT_MEASURES"],
     scope: { state: "DC", ocdId: "ocd-division/country:us/district:dc", name: "District of Columbia" },
     electionDate: "2026-11-03", electionPageUrl: measureUrl,
-    officialLinkingPage: { url: officialUrl, html: `<a href="${measureUrl}">Stored old authority</a>` },
+    linkingPage: fixtureLinkingPage({ url: officialUrl, html: `<a href="${measureUrl}">Stored old authority</a>` }),
   };
   await saveVotingSourceDoor(repos.doors, door, now);
   const provenance = { ...ballot.contests[0].provenance, sourceUrl: measureUrl, doorId: door.id };

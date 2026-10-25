@@ -158,8 +158,9 @@ function RecentVotesInner({
   }, [holder.id, holder.state]);
 
   const recentLoaded = votes !== null;
+  // The history response supplies its own current-window anchor for pagination.
   useEffect(() => {
-    if (!/^congress:[A-Z]\d{6}$/.test(holder.id) || !recentLoaded) return;
+    if (!/^congress:[A-Z]\d{6}$/.test(holder.id)) return;
     const controller = new AbortController();
     void (async () => {
       try {
@@ -178,7 +179,7 @@ function RecentVotesInner({
       }
     })();
     return () => controller.abort();
-  }, [holder.id, holder.state, recentLoaded]);
+  }, [holder.id, holder.state]);
 
   const loadMoreHistory = async () => {
     if (!historyCursor || !historyAnchor || historyLoadingMore) return;
@@ -206,18 +207,18 @@ function RecentVotesInner({
   const hasRecent = Boolean(votes?.length);
   const hasKeyVotes = Boolean(chamber && keyVotes.length > 0) || pickedKeyVotes.some(pick => pick.roll || pick.why);
   const hasHistory = historicalVotes.length > 0;
-  const canLoadHistory = /^congress:[A-Z]\d{6}$/.test(holder.id) && recentLoaded;
+  const canLoadHistory = /^congress:[A-Z]\d{6}$/.test(holder.id);
   const recordGap = <CardGapContribution id={`votes:${holder.id}`} label="voting record" subject={{ type: "CANDIDATE", id: holder.id }} />;
 
   if (!hasRecent && !hasKeyVotes && !hasHistory) {
-    if (!hasVoteRecord(holder.id, holder.state) || failed) return recordGap;
-    if (!recentLoaded || (canLoadHistory && historyStatus === "LOADING")) {
+    if (!hasVoteRecord(holder.id, holder.state)) return recordGap;
+    if ((!recentLoaded && !failed) || (canLoadHistory && historyStatus === "LOADING")) {
       return <p className="mw-loading-inline" role="status">Loading voting records…</p>;
     }
     return recordGap;
   }
   const gaps = <>
-    {!hasRecent && <CardGapContribution id={`recent-votes:${holder.id}`} label="recent votes" />}
+    {(recentLoaded || failed) && !hasRecent && <CardGapContribution id={`recent-votes:${holder.id}`} label="recent votes" />}
     {canLoadHistory && historyStatus === "UNAVAILABLE" && <CardGapContribution id={`earlier-votes:${holder.id}`} label="earlier voting records" />}
   </>;
 

@@ -8,10 +8,14 @@ import type { FederalDirectoryReadModel } from "../lib/officials/federal-directo
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
 import { stateMemberDirectories, zipMemberDirectories } from "../lib/reader/member-directories.ts";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
-import { indexByDivision, type SeatHolder } from "../lib/officials/lookup.ts";
+import { indexByDivision, toSeatHolder, type SeatHolder } from "../lib/officials/lookup.ts";
 import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
+import { civicDataReadNotInitialized } from "../lib/civic-data/read-model.ts";
 import { heldPersonSources } from "../lib/officials/held-sources.ts";
 import { personCardSources } from "../lib/officials/card-sources.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { primeStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 
 const ROOT = "ocd-division/country:us/state:fl", AT = "2026-10-12T00:00:00.000Z";
 function person(id: string, name: string, bioguides: string[], source = "https://www.senate.gov/member", collectedAt = AT): Officeholder {
@@ -32,6 +36,22 @@ function packageFor(federal: Officeholder[], additional: Officeholder[]): Reader
     stateLegislatorAuthority: { scope: "US-FL", kind: "NOT_RECORDED", metadata: {}, code: null, detail: "fixture" },
   } as ReaderStatePackage;
 }
+
+test("cached state coverage carries a person's held candidate photo into its own composition context", () => {
+  const canonical=person("congress:Z000001","Photo Reader",["Z000001"]);
+  const base=packageFor([canonical],[]);
+  const state={...base,candidateProfilesRead:{kind:"BOOTSTRAP" as const,detail:"Held candidate profiles",
+    metadata:civicDataReadNotInitialized("CANDIDATE_PROFILE","US-FL:profiles","fixture").metadata,
+    value:{cards:{curatedAt:AT,note:"",hunts:[],cards:{[canonical.id]:{personId:canonical.id,
+      photoUrl:"/candidates/photo-reader.jpg",photoSource:"Reader campaign",bio:null,bioSourceUrl:null,bioSourceLabel:null,
+      email:null,phone:null,phoneLabel:null,filedAddress:null,filedAddressSource:null}}},
+      links:{curatedAt:AT,note:"",hunts:[],links:{}}}}};
+  for(let read=0;read<2;read++){
+    const shown=stateCoverage(state,[ROOT],25,-80).senators[0];
+    assert.equal(shown.id,canonical.id);
+    assert.equal(shown.photoUrl,"/candidates/photo-reader.jpg");
+  }
+});
 
 test("Congress directory identity stays canonical when source-native people sort before or after it", () => {
   for (const [canonicalName, apiName] of [["Zed Reader", "Aaron Reader"], ["Aaron Reader", "Zed Reader"]]) {
@@ -241,6 +261,16 @@ test("both held portraits and their exact image sources stay accessible through 
     }
   }
   assert.deepEqual(originals, snapshots, "retaining the source records never changes their held fields");
+  const state=packageFor([], [prior,current]);
+  withReaderAuthorityEdge({},()=>withRegistryRuntimeProjection(state.registry,["FL"],()=>{
+    primeStatePeopleProjection({formatVersion:1,sourceId:"held people",jurisdiction:"US-FL",term:"2026",generatedAt:AT,roster:state.people!});
+    const shared=indexByDivision([state.people!]).get(ROOT)!;
+    assert.ok(shared.every(holder=>holder.photoUrl === current.photo!.url),"every card uses the person's selected photo");
+    const merged=scopedHolders([shared[0]],[shared[1]])[0];
+    const sources=personCardSources(merged).flatMap(source=>source.details ?? [source]);
+    for(const image of [oldImage,newImage])assert.ok(sources.some(source=>source.provenance.sourceUrl === image && source.what.includes("Portrait image")),image);
+    assert.ok(sources.some(source=>source.provenance.sourceUrl === oldImage && source.provenance.sourceOrg.includes(prior.photo!.attribution!)));
+  }));
 });
 
 test("a source-native record naming two held Congress identities never selects either directory arbitrarily", () => {
@@ -281,7 +311,7 @@ test("state office directories retain exact aliases, order, and provenance witho
 
 test("indexed multi-seat identities keep first-match order and never join another office", () => {
   const holder = (id: string, aliases: string[], officeTitle = "State Representative"): SeatHolder => ({
-    ...person(id, id, []), officeTitle, partyLabel: null, websiteUrl: null, sourceUrl: "https://www.myfloridahouse.gov/member", photoUrl: null,
+    ...toSeatHolder(person(id, id, [])), officeTitle, partyLabel: null, websiteUrl: null, sourceUrl: "https://www.myfloridahouse.gov/member", photoUrl: null,
     nativeIds: { reader: aliases }, social: [],
   });
   const first = holder("first", ["shared-first"]), second = holder("second", ["shared-second"]);

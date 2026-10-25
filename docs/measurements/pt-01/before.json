@@ -1,0 +1,4339 @@
+{
+  "measuredAt": "2026-10-24T09:16:50.687Z",
+  "counts": [
+    {
+      "state": "AK",
+      "role": "Congress",
+      "withPhoto": 3,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AK",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "AK",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 60
+    },
+    {
+      "state": "AK",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 26
+    },
+    {
+      "state": "AK",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 62
+    },
+    {
+      "state": "AK",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 9
+    },
+    {
+      "state": "AK",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 153
+    },
+    {
+      "state": "AL",
+      "role": "Congress",
+      "withPhoto": 9,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AL",
+      "role": "Statewide",
+      "withPhoto": 4,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "AL",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 140
+    },
+    {
+      "state": "AL",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 24
+    },
+    {
+      "state": "AL",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 79
+    },
+    {
+      "state": "AL",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 35
+    },
+    {
+      "state": "AL",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 264
+    },
+    {
+      "state": "AR",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AR",
+      "role": "Statewide",
+      "withPhoto": 4,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "AR",
+      "role": "Legislator",
+      "withPhoto": 21,
+      "withoutPhoto": 111
+    },
+    {
+      "state": "AR",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AR",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 6
+    },
+    {
+      "state": "AR",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 48
+    },
+    {
+      "state": "AR",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 261
+    },
+    {
+      "state": "AS",
+      "role": "Congress",
+      "withPhoto": 1,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AS",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AS",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AS",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AS",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AS",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AS",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 44
+    },
+    {
+      "state": "AZ",
+      "role": "Congress",
+      "withPhoto": 11,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "AZ",
+      "role": "Statewide",
+      "withPhoto": 11,
+      "withoutPhoto": 16
+    },
+    {
+      "state": "AZ",
+      "role": "Legislator",
+      "withPhoto": 97,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "AZ",
+      "role": "County",
+      "withPhoto": 5,
+      "withoutPhoto": 33
+    },
+    {
+      "state": "AZ",
+      "role": "City",
+      "withPhoto": 6,
+      "withoutPhoto": 145
+    },
+    {
+      "state": "AZ",
+      "role": "School",
+      "withPhoto": 11,
+      "withoutPhoto": 108
+    },
+    {
+      "state": "AZ",
+      "role": "Candidate",
+      "withPhoto": 39,
+      "withoutPhoto": 280
+    },
+    {
+      "state": "CA",
+      "role": "Congress",
+      "withPhoto": 54,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "CA",
+      "role": "Statewide",
+      "withPhoto": 7,
+      "withoutPhoto": 35
+    },
+    {
+      "state": "CA",
+      "role": "Legislator",
+      "withPhoto": 17,
+      "withoutPhoto": 101
+    },
+    {
+      "state": "CA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 1323
+    },
+    {
+      "state": "CA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 997
+    },
+    {
+      "state": "CA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 13
+    },
+    {
+      "state": "CA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 461
+    },
+    {
+      "state": "CO",
+      "role": "Congress",
+      "withPhoto": 10,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "CO",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "CO",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 99
+    },
+    {
+      "state": "CO",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 60
+    },
+    {
+      "state": "CO",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 68
+    },
+    {
+      "state": "CO",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "CO",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 321
+    },
+    {
+      "state": "CT",
+      "role": "Congress",
+      "withPhoto": 7,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "CT",
+      "role": "Statewide",
+      "withPhoto": 4,
+      "withoutPhoto": 2
+    },
+    {
+      "state": "CT",
+      "role": "Legislator",
+      "withPhoto": 22,
+      "withoutPhoto": 165
+    },
+    {
+      "state": "CT",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "CT",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 138
+    },
+    {
+      "state": "CT",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "CT",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 544
+    },
+    {
+      "state": "DC",
+      "role": "Congress",
+      "withPhoto": 1,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DC",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 1
+    },
+    {
+      "state": "DC",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 13
+    },
+    {
+      "state": "DC",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DC",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DC",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DC",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 51
+    },
+    {
+      "state": "DE",
+      "role": "Congress",
+      "withPhoto": 3,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DE",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "DE",
+      "role": "Legislator",
+      "withPhoto": 30,
+      "withoutPhoto": 32
+    },
+    {
+      "state": "DE",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DE",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 15
+    },
+    {
+      "state": "DE",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "DE",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 130
+    },
+    {
+      "state": "FL",
+      "role": "Congress",
+      "withPhoto": 29,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "FL",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 12
+    },
+    {
+      "state": "FL",
+      "role": "Legislator",
+      "withPhoto": 7,
+      "withoutPhoto": 142
+    },
+    {
+      "state": "FL",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 246
+    },
+    {
+      "state": "FL",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 829
+    },
+    {
+      "state": "FL",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "FL",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 514
+    },
+    {
+      "state": "GA",
+      "role": "Congress",
+      "withPhoto": 16,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GA",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "GA",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 235
+    },
+    {
+      "state": "GA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 46
+    },
+    {
+      "state": "GA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 103
+    },
+    {
+      "state": "GA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 479
+    },
+    {
+      "state": "GU",
+      "role": "Congress",
+      "withPhoto": 1,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GU",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GU",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GU",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GU",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GU",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "GU",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "HI",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "HI",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "HI",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 76
+    },
+    {
+      "state": "HI",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 10
+    },
+    {
+      "state": "HI",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "HI",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "HI",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 138
+    },
+    {
+      "state": "IA",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IA",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 6
+    },
+    {
+      "state": "IA",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 148
+    },
+    {
+      "state": "IA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 35
+    },
+    {
+      "state": "IA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 246
+    },
+    {
+      "state": "ID",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ID",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "ID",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 49
+    },
+    {
+      "state": "ID",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "ID",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 25
+    },
+    {
+      "state": "ID",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 6
+    },
+    {
+      "state": "ID",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 574
+    },
+    {
+      "state": "IL",
+      "role": "Congress",
+      "withPhoto": 19,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IL",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 16
+    },
+    {
+      "state": "IL",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 177
+    },
+    {
+      "state": "IL",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 77
+    },
+    {
+      "state": "IL",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 386
+    },
+    {
+      "state": "IL",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "IL",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 256
+    },
+    {
+      "state": "IN",
+      "role": "Congress",
+      "withPhoto": 11,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IN",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 6
+    },
+    {
+      "state": "IN",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 150
+    },
+    {
+      "state": "IN",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IN",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "IN",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 17
+    },
+    {
+      "state": "IN",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 274
+    },
+    {
+      "state": "KS",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "KS",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "KS",
+      "role": "Legislator",
+      "withPhoto": 134,
+      "withoutPhoto": 31
+    },
+    {
+      "state": "KS",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "KS",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "KS",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "KS",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 362
+    },
+    {
+      "state": "KY",
+      "role": "Congress",
+      "withPhoto": 8,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "KY",
+      "role": "Statewide",
+      "withPhoto": 3,
+      "withoutPhoto": 2
+    },
+    {
+      "state": "KY",
+      "role": "Legislator",
+      "withPhoto": 114,
+      "withoutPhoto": 24
+    },
+    {
+      "state": "KY",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "KY",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 16
+    },
+    {
+      "state": "KY",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "KY",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 206
+    },
+    {
+      "state": "LA",
+      "role": "Congress",
+      "withPhoto": 8,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "LA",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "LA",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 141
+    },
+    {
+      "state": "LA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "LA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "LA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "LA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 44
+    },
+    {
+      "state": "MA",
+      "role": "Congress",
+      "withPhoto": 11,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MA",
+      "role": "Statewide",
+      "withPhoto": 4,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "MA",
+      "role": "Legislator",
+      "withPhoto": 37,
+      "withoutPhoto": 160
+    },
+    {
+      "state": "MA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 11
+    },
+    {
+      "state": "MA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 304
+    },
+    {
+      "state": "MD",
+      "role": "Congress",
+      "withPhoto": 10,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MD",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "MD",
+      "role": "Legislator",
+      "withPhoto": 11,
+      "withoutPhoto": 177
+    },
+    {
+      "state": "MD",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "MD",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 29
+    },
+    {
+      "state": "MD",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MD",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 671
+    },
+    {
+      "state": "ME",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ME",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "ME",
+      "role": "Legislator",
+      "withPhoto": 108,
+      "withoutPhoto": 80
+    },
+    {
+      "state": "ME",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 52
+    },
+    {
+      "state": "ME",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ME",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ME",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 470
+    },
+    {
+      "state": "MI",
+      "role": "Congress",
+      "withPhoto": 15,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MI",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 11
+    },
+    {
+      "state": "MI",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 148
+    },
+    {
+      "state": "MI",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MI",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 104
+    },
+    {
+      "state": "MI",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MI",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 707
+    },
+    {
+      "state": "MN",
+      "role": "Congress",
+      "withPhoto": 10,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MN",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 10
+    },
+    {
+      "state": "MN",
+      "role": "Legislator",
+      "withPhoto": 124,
+      "withoutPhoto": 76
+    },
+    {
+      "state": "MN",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "MN",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 16
+    },
+    {
+      "state": "MN",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MN",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 683
+    },
+    {
+      "state": "MO",
+      "role": "Congress",
+      "withPhoto": 10,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MO",
+      "role": "Statewide",
+      "withPhoto": 4,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "MO",
+      "role": "Legislator",
+      "withPhoto": 1,
+      "withoutPhoto": 187
+    },
+    {
+      "state": "MO",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 11
+    },
+    {
+      "state": "MO",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 591
+    },
+    {
+      "state": "MO",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MO",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 367
+    },
+    {
+      "state": "MP",
+      "role": "Congress",
+      "withPhoto": 1,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MP",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MP",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MP",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MP",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MP",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MP",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 72
+    },
+    {
+      "state": "MS",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MS",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "MS",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 171
+    },
+    {
+      "state": "MS",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MS",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MS",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MS",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 148
+    },
+    {
+      "state": "MT",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MT",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "MT",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 150
+    },
+    {
+      "state": "MT",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MT",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MT",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "MT",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 269
+    },
+    {
+      "state": "NC",
+      "role": "Congress",
+      "withPhoto": 16,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NC",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 10
+    },
+    {
+      "state": "NC",
+      "role": "Legislator",
+      "withPhoto": 114,
+      "withoutPhoto": 56
+    },
+    {
+      "state": "NC",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 53
+    },
+    {
+      "state": "NC",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 10
+    },
+    {
+      "state": "NC",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NC",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 999
+    },
+    {
+      "state": "ND",
+      "role": "Congress",
+      "withPhoto": 3,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ND",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "ND",
+      "role": "Legislator",
+      "withPhoto": 110,
+      "withoutPhoto": 31
+    },
+    {
+      "state": "ND",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ND",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ND",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "ND",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 612
+    },
+    {
+      "state": "NE",
+      "role": "Congress",
+      "withPhoto": 5,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NE",
+      "role": "Statewide",
+      "withPhoto": 3,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "NE",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 49
+    },
+    {
+      "state": "NE",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NE",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NE",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NE",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 94
+    },
+    {
+      "state": "NH",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NH",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 1
+    },
+    {
+      "state": "NH",
+      "role": "Legislator",
+      "withPhoto": 230,
+      "withoutPhoto": 447
+    },
+    {
+      "state": "NH",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 9
+    },
+    {
+      "state": "NH",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 66
+    },
+    {
+      "state": "NH",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 12
+    },
+    {
+      "state": "NH",
+      "role": "Candidate",
+      "withPhoto": 25,
+      "withoutPhoto": 165
+    },
+    {
+      "state": "NJ",
+      "role": "Congress",
+      "withPhoto": 14,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NJ",
+      "role": "Statewide",
+      "withPhoto": 3,
+      "withoutPhoto": 12
+    },
+    {
+      "state": "NJ",
+      "role": "Legislator",
+      "withPhoto": 118,
+      "withoutPhoto": 2
+    },
+    {
+      "state": "NJ",
+      "role": "County",
+      "withPhoto": 7,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "NJ",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 139
+    },
+    {
+      "state": "NJ",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "NJ",
+      "role": "Candidate",
+      "withPhoto": 12,
+      "withoutPhoto": 293
+    },
+    {
+      "state": "NM",
+      "role": "Congress",
+      "withPhoto": 5,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NM",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "NM",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 110
+    },
+    {
+      "state": "NM",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 234
+    },
+    {
+      "state": "NM",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 9
+    },
+    {
+      "state": "NM",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NM",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 333
+    },
+    {
+      "state": "NV",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NV",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "NV",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 63
+    },
+    {
+      "state": "NV",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 161
+    },
+    {
+      "state": "NV",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NV",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NV",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 152
+    },
+    {
+      "state": "NY",
+      "role": "Congress",
+      "withPhoto": 28,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NY",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 11
+    },
+    {
+      "state": "NY",
+      "role": "Legislator",
+      "withPhoto": 82,
+      "withoutPhoto": 130
+    },
+    {
+      "state": "NY",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 209
+    },
+    {
+      "state": "NY",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NY",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "NY",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 523
+    },
+    {
+      "state": "OH",
+      "role": "Congress",
+      "withPhoto": 17,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OH",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 15
+    },
+    {
+      "state": "OH",
+      "role": "Legislator",
+      "withPhoto": 13,
+      "withoutPhoto": 118
+    },
+    {
+      "state": "OH",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OH",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 98
+    },
+    {
+      "state": "OH",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OH",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 433
+    },
+    {
+      "state": "OK",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 1
+    },
+    {
+      "state": "OK",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 4
+    },
+    {
+      "state": "OK",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 146
+    },
+    {
+      "state": "OK",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 100
+    },
+    {
+      "state": "OK",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OK",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OK",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 191
+    },
+    {
+      "state": "OR",
+      "role": "Congress",
+      "withPhoto": 8,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OR",
+      "role": "Statewide",
+      "withPhoto": 3,
+      "withoutPhoto": 15
+    },
+    {
+      "state": "OR",
+      "role": "Legislator",
+      "withPhoto": 6,
+      "withoutPhoto": 84
+    },
+    {
+      "state": "OR",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OR",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OR",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "OR",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 262
+    },
+    {
+      "state": "PA",
+      "role": "Congress",
+      "withPhoto": 19,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PA",
+      "role": "Statewide",
+      "withPhoto": 2,
+      "withoutPhoto": 21
+    },
+    {
+      "state": "PA",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 253
+    },
+    {
+      "state": "PA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 1
+    },
+    {
+      "state": "PA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 317
+    },
+    {
+      "state": "PR",
+      "role": "Congress",
+      "withPhoto": 1,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PR",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 2
+    },
+    {
+      "state": "PR",
+      "role": "Legislator",
+      "withPhoto": 14,
+      "withoutPhoto": 67
+    },
+    {
+      "state": "PR",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PR",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PR",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "PR",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "RI",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "RI",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "RI",
+      "role": "Legislator",
+      "withPhoto": 37,
+      "withoutPhoto": 75
+    },
+    {
+      "state": "RI",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "RI",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "RI",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "RI",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 161
+    },
+    {
+      "state": "SC",
+      "role": "Congress",
+      "withPhoto": 9,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SC",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 12
+    },
+    {
+      "state": "SC",
+      "role": "Legislator",
+      "withPhoto": 62,
+      "withoutPhoto": 108
+    },
+    {
+      "state": "SC",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SC",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SC",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SC",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 501
+    },
+    {
+      "state": "SD",
+      "role": "Congress",
+      "withPhoto": 3,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SD",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 5
+    },
+    {
+      "state": "SD",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 105
+    },
+    {
+      "state": "SD",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SD",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SD",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "SD",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 187
+    },
+    {
+      "state": "TN",
+      "role": "Congress",
+      "withPhoto": 11,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "TN",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 6
+    },
+    {
+      "state": "TN",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 131
+    },
+    {
+      "state": "TN",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "TN",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "TN",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "TN",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 266
+    },
+    {
+      "state": "TX",
+      "role": "Congress",
+      "withPhoto": 39,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "TX",
+      "role": "Statewide",
+      "withPhoto": 5,
+      "withoutPhoto": 19
+    },
+    {
+      "state": "TX",
+      "role": "Legislator",
+      "withPhoto": 27,
+      "withoutPhoto": 151
+    },
+    {
+      "state": "TX",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 22
+    },
+    {
+      "state": "TX",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 581
+    },
+    {
+      "state": "TX",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 9
+    },
+    {
+      "state": "TX",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 2166
+    },
+    {
+      "state": "UT",
+      "role": "Congress",
+      "withPhoto": 6,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "UT",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 10
+    },
+    {
+      "state": "UT",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 103
+    },
+    {
+      "state": "UT",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "UT",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 27
+    },
+    {
+      "state": "UT",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "UT",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 267
+    },
+    {
+      "state": "VA",
+      "role": "Congress",
+      "withPhoto": 13,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VA",
+      "role": "Statewide",
+      "withPhoto": 3,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "VA",
+      "role": "Legislator",
+      "withPhoto": 31,
+      "withoutPhoto": 108
+    },
+    {
+      "state": "VA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 6
+    },
+    {
+      "state": "VA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 105
+    },
+    {
+      "state": "VA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 1068
+    },
+    {
+      "state": "VI",
+      "role": "Congress",
+      "withPhoto": 1,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VI",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VI",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VI",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VI",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VI",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VI",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 70
+    },
+    {
+      "state": "VT",
+      "role": "Congress",
+      "withPhoto": 3,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VT",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "VT",
+      "role": "Legislator",
+      "withPhoto": 126,
+      "withoutPhoto": 54
+    },
+    {
+      "state": "VT",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VT",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VT",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "VT",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 369
+    },
+    {
+      "state": "WA",
+      "role": "Congress",
+      "withPhoto": 12,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WA",
+      "role": "Statewide",
+      "withPhoto": 8,
+      "withoutPhoto": 19
+    },
+    {
+      "state": "WA",
+      "role": "Legislator",
+      "withPhoto": 140,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "WA",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 7
+    },
+    {
+      "state": "WA",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 147
+    },
+    {
+      "state": "WA",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WA",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 275
+    },
+    {
+      "state": "WI",
+      "role": "Congress",
+      "withPhoto": 10,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WI",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 8
+    },
+    {
+      "state": "WI",
+      "role": "Legislator",
+      "withPhoto": 98,
+      "withoutPhoto": 34
+    },
+    {
+      "state": "WI",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 708
+    },
+    {
+      "state": "WI",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 654
+    },
+    {
+      "state": "WI",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WI",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 322
+    },
+    {
+      "state": "WV",
+      "role": "Congress",
+      "withPhoto": 4,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WV",
+      "role": "Statewide",
+      "withPhoto": 0,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "WV",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 134
+    },
+    {
+      "state": "WV",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WV",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WV",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WV",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 360
+    },
+    {
+      "state": "WY",
+      "role": "Congress",
+      "withPhoto": 3,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WY",
+      "role": "Statewide",
+      "withPhoto": 1,
+      "withoutPhoto": 3
+    },
+    {
+      "state": "WY",
+      "role": "Legislator",
+      "withPhoto": 0,
+      "withoutPhoto": 93
+    },
+    {
+      "state": "WY",
+      "role": "County",
+      "withPhoto": 0,
+      "withoutPhoto": 10
+    },
+    {
+      "state": "WY",
+      "role": "City",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WY",
+      "role": "School",
+      "withPhoto": 0,
+      "withoutPhoto": 0
+    },
+    {
+      "state": "WY",
+      "role": "Candidate",
+      "withPhoto": 0,
+      "withoutPhoto": 146
+    }
+  ],
+  "versions": [
+    {
+      "state": "AK",
+      "scope": "US-AK:state-election-ballots",
+      "version": "cv-bb28178310f6d8cdd8a24ea5bce97f2e"
+    },
+    {
+      "state": "AK",
+      "scope": "US-AK:candidate-profiles",
+      "version": "cv-127572cfbec08302282df47b565407f3"
+    },
+    {
+      "state": "AK",
+      "scope": "US-AK:candidate-campaign-sites-derived",
+      "version": "cv-5a854e1b38d7c8df3bc71f6a6e786c3b"
+    },
+    {
+      "state": "AK",
+      "scope": "US-AK:current-congress-directory",
+      "version": "cv-6e1918207ea464a0163eabe590d0e6eb"
+    },
+    {
+      "state": "AK",
+      "scope": "US-AK:reader-registry-runtime",
+      "version": "cv-6b9356b0940444c1c1e9e45dae679435"
+    },
+    {
+      "state": "AK",
+      "scope": "US-AK:openstates-people:v1",
+      "version": "cv-df5e6b59db9f4a6c7b6e294679955595"
+    },
+    {
+      "state": "AK",
+      "scope": "US-AK:people:portraits:v1",
+      "version": "cv-cae38209362d9da8c6f0af8c7cb608a5"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:state-election-ballots",
+      "version": "cv-70ab11ac5e541fdcb1976003bdf76fae"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:candidate-profiles",
+      "version": "cv-cf527b34c792bc9906c3bac83219a0a4"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:candidate-campaign-sites-derived",
+      "version": "cv-45ae4bee7117f7bdd7e828a78e3736ea"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:current-congress-directory",
+      "version": "cv-660df222e63feb35bcd27152ddb3c3ef"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:reader-registry-runtime",
+      "version": "cv-6e689a0d817bb21725faaf9dd491b00d"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:openstates-people:v1",
+      "version": "cv-109fcf0f7e5055c545141b6c1db7926d"
+    },
+    {
+      "state": "AL",
+      "scope": "US-AL:people:portraits:v1",
+      "version": "cv-6307d370aaf295ba1d80d83273059e80"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:state-election-ballots",
+      "version": "cv-fd0f1a013bd623ae3239c9e9001a6e48"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:candidate-profiles",
+      "version": "cv-4f934db3121b6d8d1dedb3b616460d95"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:candidate-campaign-sites-derived",
+      "version": "cv-b713ea2423a9126ad522f6765603a0f5"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:current-congress-directory",
+      "version": "cv-432ff2e07c6191c7a6b666a8e09f2c81"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:reader-registry-runtime",
+      "version": "cv-d97c9b203cc733f0aebbd45a4d2ef2ba"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:openstates-people:v1",
+      "version": "cv-d005f13bfa788694dfbd1448cf5aee67"
+    },
+    {
+      "state": "AR",
+      "scope": "US-AR:people:portraits:v1",
+      "version": "cv-75a92304f4224a72dd3e4146a19915d8"
+    },
+    {
+      "state": "AS",
+      "scope": "US-AS:state-election-ballots",
+      "version": "cv-714771e926d1580d97bf6769ea38fbee"
+    },
+    {
+      "state": "AS",
+      "scope": "US-AS:candidate-profiles",
+      "version": "cv-2c974a4cee12cbcdd432c7058acc08f5"
+    },
+    {
+      "state": "AS",
+      "scope": "US-AS:candidate-campaign-sites-derived",
+      "version": "cv-ddf2fed540633bd50f2179af67d3bfe6"
+    },
+    {
+      "state": "AS",
+      "scope": "US-AS:current-congress-directory",
+      "version": "cv-cf66a09dd95fd7c82983bba0bf7f8bb1"
+    },
+    {
+      "state": "AS",
+      "scope": "US-AS:reader-registry-runtime",
+      "version": "cv-f948727d4d0193de6469503d356ed53f"
+    },
+    {
+      "state": "AS",
+      "scope": "US-AS:people:portraits:v1",
+      "version": "cv-813105671dd73d9512bc5fb4d3a2a4ac"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:state-election-ballots",
+      "version": "cv-9015276228f16597cc83a46351ffa385"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:candidate-profiles",
+      "version": "cv-26e47527f29ab75335fac71d8ed864f0"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:candidate-campaign-sites-derived",
+      "version": "cv-ed4024181fc8e2ef1bf5c8002f0e3a6c"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:current-congress-directory",
+      "version": "cv-172d8ec074c1b421b2f418c2175e2eb0"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:reader-registry-runtime",
+      "version": "cv-06d1655dd1d0a7e67fbbcc65e29f0410"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:openstates-people:v1",
+      "version": "cv-5f243ee1892ab0c255e34c21a16afe84"
+    },
+    {
+      "state": "AZ",
+      "scope": "US-AZ:people:portraits:v1",
+      "version": "cv-c6a2e1fca4c1a16dfa554dd285602e73"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:state-election-ballots",
+      "version": "cv-57924294b899ae5a8a11d17c17bd6cb8"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:candidate-profiles",
+      "version": "cv-1c74d479030691b3bfcf95833f1de299"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:candidate-campaign-sites-derived",
+      "version": "cv-2837051714fc76bebdde6b09061c2b2b"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:current-congress-directory",
+      "version": "cv-42c6210ddbf2793f95595671b6fcfc51"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:reader-registry-runtime",
+      "version": "cv-e6c0a0b32b85b41d1395673c583b7e85"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:openstates-people:v1",
+      "version": "cv-da5895410f2a005178f84e8aaf232a6b"
+    },
+    {
+      "state": "CA",
+      "scope": "US-CA:people:portraits:v1",
+      "version": "cv-cdf822145025d72ae76e1f9b8f2c7ad1"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:state-election-ballots",
+      "version": "cv-2659c15c7ae592644b7ac51188951469"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:candidate-profiles",
+      "version": "cv-0ac0fe7150713f0f66bb82d12e3eb0b3"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:candidate-campaign-sites-derived",
+      "version": "cv-3e4f51d26507e10d1470f579668df711"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:current-congress-directory",
+      "version": "cv-09109336ea41b96fc18ad565f43c1d07"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:reader-registry-runtime",
+      "version": "cv-efe124abbf98fa93e8962d4142401695"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:openstates-people:v1",
+      "version": "cv-fbaf6de7f88159cd00272d1ba4ae1d1f"
+    },
+    {
+      "state": "CO",
+      "scope": "US-CO:people:portraits:v1",
+      "version": "cv-87d6f78de719ef04b4b2508e253124f6"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:state-election-ballots",
+      "version": "cv-70bd5737cc3c89cf04c3489c6e29882d"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:candidate-profiles",
+      "version": "cv-ca56c40c5666c8b2b72592c5249a3fde"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:candidate-campaign-sites-derived",
+      "version": "cv-6864cfd455641b1d5059dd558df71a0c"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:current-congress-directory",
+      "version": "cv-503bb7dabd65d109ce8d848c990865f4"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:reader-registry-runtime",
+      "version": "cv-04369f35605a4467069569f2742614a7"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:openstates-people:v1",
+      "version": "cv-edb02d74b67fc92980d1eb1fb40d86b1"
+    },
+    {
+      "state": "CT",
+      "scope": "US-CT:people:portraits:v1",
+      "version": "cv-f71b8c20977758a0ed6bbb0b5391c261"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:state-election-ballots",
+      "version": "cv-e79ab3a2fd48a419a28c5ca86c9b1cfa"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:candidate-profiles",
+      "version": "cv-a79d0b776bff73bbc4d3ff83aec8b741"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:candidate-campaign-sites-derived",
+      "version": "cv-0ffc7058db9bdeacec3aa0a8d0e33115"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:current-congress-directory",
+      "version": "cv-e7d523f1f3b556d1f5c7a2211190f66c"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:reader-registry-runtime",
+      "version": "cv-2d7d937231f4771aeece0a57db3aa36c"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:openstates-people:v1",
+      "version": "cv-01774ca30ab890b28ab435fedc88a426"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:people:official-state-people:v1",
+      "version": "cv-483d835c24998e6ea94934b8936f4545"
+    },
+    {
+      "state": "DC",
+      "scope": "US-DC:people:portraits:v1",
+      "version": "cv-859372bc41e9306473c8ba61f5fae0c0"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:state-election-ballots",
+      "version": "cv-d2601def7d4ba0aedf1c45a11dd23154"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:candidate-profiles",
+      "version": "cv-6e187e8623eb8d5b0f5a3759a9b3f077"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:candidate-campaign-sites-derived",
+      "version": "cv-dcdf57678aaf3e195c38027af136f31c"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:current-congress-directory",
+      "version": "cv-8ded2bc5418a7728205059070b01bea8"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:reader-registry-runtime",
+      "version": "cv-0d5c09d71769004e93ddc452060c957d"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:openstates-people:v1",
+      "version": "cv-28d2798a3b7763f3d878105a14954f94"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:people:official-state-people:v1",
+      "version": "cv-ee0244268e8db34a8842ea56e145d811"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:people:portraits:v1",
+      "version": "cv-e97632f2137958871392a95ed2dc6ea5"
+    },
+    {
+      "state": "DE",
+      "scope": "US-DE:people:statewide-executive-sources:v1",
+      "version": "cv-dd7d8dc7f2793b47abc2193c35184564"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:state-election-ballots",
+      "version": "cv-da0aa22f7449661a18822fb550927aa1"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:candidate-profiles",
+      "version": "cv-9dc1c99b799f1ae706336f51eacc5ad0"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:candidate-campaign-sites-derived",
+      "version": "cv-4fa098db0d4460f7d6290d58d36a7522"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:current-congress-directory",
+      "version": "cv-5c87e86260fec1e205b021fa06b9fcbe"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:reader-registry-runtime",
+      "version": "cv-a261cdb200ba6aab150d542d3b27719c"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:openstates-people:v1",
+      "version": "cv-1175c6c0e3edcc389e88238d038a2629"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:people:official-state-people:v1",
+      "version": "cv-4a43b6ae46a47ae188cab2f0512a8609"
+    },
+    {
+      "state": "FL",
+      "scope": "US-FL:people:portraits:v1",
+      "version": "cv-8223cfd0940e199e2b93181c3603f3cd"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:state-election-ballots",
+      "version": "cv-7c4a672addc30551ec0ba484c4de9967"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:candidate-profiles",
+      "version": "cv-a23f1ef9b1a2170a0ebcc06b2f61e568"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:candidate-campaign-sites-derived",
+      "version": "cv-7b2b9f7a28d3bd826cd78d330daf0a54"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:current-congress-directory",
+      "version": "cv-c57021818342cb773f63241a62267a04"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:reader-registry-runtime",
+      "version": "cv-1472332f6f164da5709ac90226997ed8"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:openstates-people:v1",
+      "version": "cv-1cf4b82d3e782c49312d53cce244151f"
+    },
+    {
+      "state": "GA",
+      "scope": "US-GA:people:portraits:v1",
+      "version": "cv-5b966e241d7693ed6076b96bf7e6d633"
+    },
+    {
+      "state": "GU",
+      "scope": "US-GU:state-election-ballots",
+      "version": "cv-0a6680dda3d9f5ad7b93af55d499ee23"
+    },
+    {
+      "state": "GU",
+      "scope": "US-GU:candidate-profiles",
+      "version": "cv-69690738512f85dad06eed431b58ed08"
+    },
+    {
+      "state": "GU",
+      "scope": "US-GU:candidate-campaign-sites-derived",
+      "version": "cv-15e573e6858ce9119eb507b07d9ed163"
+    },
+    {
+      "state": "GU",
+      "scope": "US-GU:current-congress-directory",
+      "version": "cv-3d716cdce193b3e22b6cfbb849e2932b"
+    },
+    {
+      "state": "GU",
+      "scope": "US-GU:reader-registry-runtime",
+      "version": "cv-6ce50a6327be081da146ab59b12f669e"
+    },
+    {
+      "state": "GU",
+      "scope": "US-GU:people:portraits:v1",
+      "version": "cv-d5268941fe49327cb5b95daddc49d447"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:state-election-ballots",
+      "version": "cv-b193601d102b999ea2bbc35102b808ad"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:candidate-profiles",
+      "version": "cv-e9b68f7ca739b30088bc0812b4f80205"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:candidate-campaign-sites-derived",
+      "version": "cv-a3fe9a053b567d6b488911d76cf0d821"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:current-congress-directory",
+      "version": "cv-dc3ba1c4af2287ddbf53abdc743b38a8"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:reader-registry-runtime",
+      "version": "cv-186d84e1af362eb0d531816d759012c2"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:openstates-people:v1",
+      "version": "cv-5bc25eb3fdebc8d66dca265c49869fd1"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:people:portraits:v1",
+      "version": "cv-49d7b05243b84b5530046d4cdc148782"
+    },
+    {
+      "state": "HI",
+      "scope": "US-HI:people:statewide-executive-sources:v1",
+      "version": "cv-4ef703e0bb6a3d4d29ab771f4a6c6b9f"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:state-election-ballots",
+      "version": "cv-2ad238a208d6d2f3ec9d77b173d8d03c"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:candidate-profiles",
+      "version": "cv-a7d23e0223a4728fe49c5183c860904b"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:candidate-campaign-sites-derived",
+      "version": "cv-4d393c088228aaf92860efbdb6c8092c"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:current-congress-directory",
+      "version": "cv-e904282122196f9a197439545af9f99e"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:reader-registry-runtime",
+      "version": "cv-68a0bec6b1f7a68f88481e70691865bf"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:openstates-people:v1",
+      "version": "cv-baa3de5dedd4c534567b4f2b4c926e97"
+    },
+    {
+      "state": "IA",
+      "scope": "US-IA:people:portraits:v1",
+      "version": "cv-cf6e27eb33c53703dcdd27590950f298"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:state-election-ballots",
+      "version": "cv-73d36d3745d3cda8392c9a6a1069d7e3"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:candidate-profiles",
+      "version": "cv-a6c1c4a356022512f8d3261968a62b1f"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:candidate-campaign-sites-derived",
+      "version": "cv-3d52b3de23c1d5c80ec74aa2c04dc317"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:current-congress-directory",
+      "version": "cv-e9e69bdb2db873d540d4ca27e1bab231"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:reader-registry-runtime",
+      "version": "cv-b5a9a0892161ae96bde1ad64d125aaa5"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:openstates-people:v1",
+      "version": "cv-671f6f0c4cfc4a4f10885bcdb8034ed7"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:people:official-state-people:v1",
+      "version": "cv-13b4bfb4bb9fad5b2edc716fb28f56c7"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:people:portraits:v1",
+      "version": "cv-5cf232e50f1d5bf0ef90690c14b627ea"
+    },
+    {
+      "state": "ID",
+      "scope": "US-ID:people:statewide-executive-sources:v1",
+      "version": "cv-35cf24d3359f86b52811a554d53d5b98"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:state-election-ballots",
+      "version": "cv-501d8234d24479412af71f6e423fa60d"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:candidate-profiles",
+      "version": "cv-62a6f8a32e89df6aa3d26a02492c2b9f"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:candidate-campaign-sites-derived",
+      "version": "cv-3296c95ff78412c6f17bdc2237a68e55"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:current-congress-directory",
+      "version": "cv-992723b7028d6d926c1d849ae755e37f"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:reader-registry-runtime",
+      "version": "cv-d47f0211ed6a36131b5792836849bac4"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:openstates-people:v1",
+      "version": "cv-18ab4153c070d1e9b66b730f68ac681b"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:people:portraits:v1",
+      "version": "cv-ab71090953c01167db238e483196402e"
+    },
+    {
+      "state": "IL",
+      "scope": "US-IL:people:statewide-executive-sources:v1",
+      "version": "cv-711fa085b4a6104c0569bbd885c17be2"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:state-election-ballots",
+      "version": "cv-26f21c5415efb31c566bc05453cb8500"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:candidate-profiles",
+      "version": "cv-6908a3ed9b4bbc51927e61c99919aae5"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:candidate-campaign-sites-derived",
+      "version": "cv-60bb2d341dea32d968df97f63edb0f71"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:current-congress-directory",
+      "version": "cv-53e0b2368a3a3c1bb54e9e0aa04c93d6"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:reader-registry-runtime",
+      "version": "cv-5cad74d958eb387b934e6f50aafb33d3"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:openstates-people:v1",
+      "version": "cv-e2e1e9d6cab6291f025e2884dc682653"
+    },
+    {
+      "state": "IN",
+      "scope": "US-IN:people:portraits:v1",
+      "version": "cv-f65aa714bbc9bf2742fbc02ecf3fc408"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:state-election-ballots",
+      "version": "cv-9fd760f3ac9147474e0c5533ab4a4901"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:candidate-profiles",
+      "version": "cv-6e9b490faeb9effc846e409b25cd13a9"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:candidate-campaign-sites-derived",
+      "version": "cv-7924249100512f5fe5f9b7c57c866ef2"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:current-congress-directory",
+      "version": "cv-fd299dd1b7a5c1c10551bcbc1523cc60"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:reader-registry-runtime",
+      "version": "cv-7d5ef6fb0fe742873c14868336957aa8"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:openstates-people:v1",
+      "version": "cv-1eb9c7e9de5e7d0d3d0231cb53c39076"
+    },
+    {
+      "state": "KS",
+      "scope": "US-KS:people:portraits:v1",
+      "version": "cv-adb6f58108ee7a661f51dcdade0068fc"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:state-election-ballots",
+      "version": "cv-c3657fff14705730c8fbc619b2a53da6"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:candidate-profiles",
+      "version": "cv-a1eab451e2de1fede7b0f7e15381689f"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:candidate-campaign-sites-derived",
+      "version": "cv-15fe8da4ac2b3d9605c7f024a097361b"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:current-congress-directory",
+      "version": "cv-56236d90743b645a0552c113b3a4eb95"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:reader-registry-runtime",
+      "version": "cv-984023b35931e0ac6354849e4251a068"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:openstates-people:v1",
+      "version": "cv-be714736adaeee9d88ef42cda39058d0"
+    },
+    {
+      "state": "KY",
+      "scope": "US-KY:people:portraits:v1",
+      "version": "cv-4e9120201212d526bcff88bac4d16278"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:state-election-ballots",
+      "version": "cv-f6892620cf087bf7122ae8b92ab2b632"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:candidate-profiles",
+      "version": "cv-bfb51f69c6215316556b8fd9c1bc1428"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:candidate-campaign-sites-derived",
+      "version": "cv-923811cfcc0b4faf634b585ef6562141"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:current-congress-directory",
+      "version": "cv-100dedcde5069afea77d5b60023c7a76"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:reader-registry-runtime",
+      "version": "cv-539dbc005cff066623952ac86171fc33"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:openstates-people:v1",
+      "version": "cv-7a751fb3cfcff7328842d07a0a9f34f4"
+    },
+    {
+      "state": "LA",
+      "scope": "US-LA:people:portraits:v1",
+      "version": "cv-0f6fe62ffd8470b165933a49cc991e20"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:state-election-ballots",
+      "version": "cv-009ced3cb0710331b461d1fbab609777"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:candidate-profiles",
+      "version": "cv-b61c4d27fab27c8c064498616bf97c25"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:candidate-campaign-sites-derived",
+      "version": "cv-f00af13f3fd7b5bde12808479aeb2128"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:current-congress-directory",
+      "version": "cv-0e3c1c4ceea5c087f8d84c86808a8ef0"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:reader-registry-runtime",
+      "version": "cv-c2fc948694c5241a6e4886e5e55c0360"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:openstates-people:v1",
+      "version": "cv-de8a9d716f1c5df6a515232d52227aff"
+    },
+    {
+      "state": "MA",
+      "scope": "US-MA:people:portraits:v1",
+      "version": "cv-91ea6296b336fc3e215747e34ad179e9"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:state-election-ballots",
+      "version": "cv-db2a3ed0e7020bdb35448ee3cf349507"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:candidate-profiles",
+      "version": "cv-3aeb5abba34e8f36dbe61a7f9c4bcd93"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:candidate-campaign-sites-derived",
+      "version": "cv-0b1fe5e24c348ac227484da2aa6429f4"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:current-congress-directory",
+      "version": "cv-3c7d42fdbe26672de72ac1027593af5e"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:reader-registry-runtime",
+      "version": "cv-341919d6735609e6ec8baf9eb5ee2805"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:openstates-people:v1",
+      "version": "cv-b840fe23486f408ad61af3087cd216ba"
+    },
+    {
+      "state": "MD",
+      "scope": "US-MD:people:portraits:v1",
+      "version": "cv-0622a909197302eab2afce91ef4a9d44"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:state-election-ballots",
+      "version": "cv-191bb4afcefa03c0ec224ce9d29d23a0"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:candidate-profiles",
+      "version": "cv-ddb7b0b92859bc535e8cf4ace851fa77"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:candidate-campaign-sites-derived",
+      "version": "cv-4ba2dc1af567464edb1cbca408e5e9bf"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:current-congress-directory",
+      "version": "cv-beba3e1c3e1cf1bea9fa8d0f0fea4dab"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:reader-registry-runtime",
+      "version": "cv-9350399ae488f27365cb3c1b520f581d"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:openstates-people:v1",
+      "version": "cv-05b19c9f50c23c56ddf032967be711a8"
+    },
+    {
+      "state": "ME",
+      "scope": "US-ME:people:portraits:v1",
+      "version": "cv-3f89e357f983c4f60355d72a2a5e285f"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:state-election-ballots",
+      "version": "cv-9544d160b4412b2f66b0cb6313714781"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:candidate-profiles",
+      "version": "cv-bda0cf97d6f67dd67b93097a03dac40f"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:candidate-campaign-sites-derived",
+      "version": "cv-ebdc41b1a0d3f33e69b285ba908aaa08"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:current-congress-directory",
+      "version": "cv-96b33ffe1abf6e7369d7c6b807a43014"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:reader-registry-runtime",
+      "version": "cv-fa73a1579468fb53cc53c1b016a2dbd9"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:openstates-people:v1",
+      "version": "cv-0bb18c5c47d7cdf01f36a0ac7f4747f4"
+    },
+    {
+      "state": "MI",
+      "scope": "US-MI:people:portraits:v1",
+      "version": "cv-fdcc57df4df84334e911f2c50b89edd7"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:state-election-ballots",
+      "version": "cv-6f871e780775bfd394b7ec4283767e29"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:candidate-profiles",
+      "version": "cv-1025775e4a2378959bbe9ef64d8fb561"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:candidate-campaign-sites-derived",
+      "version": "cv-387d905a5903974ab5e2613963c262d0"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:current-congress-directory",
+      "version": "cv-a3f412e24c77cd0ad1dd994bc29b3e4e"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:reader-registry-runtime",
+      "version": "cv-e17e3a30f1d3b6811e5e4200912f451a"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:openstates-people:v1",
+      "version": "cv-5ad6cfd73c22a18edfb6998a39454095"
+    },
+    {
+      "state": "MN",
+      "scope": "US-MN:people:portraits:v1",
+      "version": "cv-68c705d7de091259858d318b43ef6aaa"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:state-election-ballots",
+      "version": "cv-bd3547f73e3d96adafe9ad4eaf038987"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:candidate-profiles",
+      "version": "cv-0c2548cf38465cb526debc13708f661e"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:candidate-campaign-sites-derived",
+      "version": "cv-71b4adfd8680fe0894115fa0d740ca60"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:current-congress-directory",
+      "version": "cv-0d278e8fdf89823bdbe8fb90a1238078"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:reader-registry-runtime",
+      "version": "cv-9f38070ce87ef816aec82bf15d778fa4"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:openstates-people:v1",
+      "version": "cv-5741be8e91d0e953cb2f3d84d27b1479"
+    },
+    {
+      "state": "MO",
+      "scope": "US-MO:people:portraits:v1",
+      "version": "cv-894ada26caf38c7ae34b6b5509871ec8"
+    },
+    {
+      "state": "MP",
+      "scope": "US-MP:state-election-ballots",
+      "version": "cv-1be6ba33931b1d75fc47f9c5428fa214"
+    },
+    {
+      "state": "MP",
+      "scope": "US-MP:candidate-profiles",
+      "version": "cv-2ec2b177979ed9ec428e8f1739add556"
+    },
+    {
+      "state": "MP",
+      "scope": "US-MP:candidate-campaign-sites-derived",
+      "version": "cv-37921a49fb1128749d4de00fdadc7e0c"
+    },
+    {
+      "state": "MP",
+      "scope": "US-MP:current-congress-directory",
+      "version": "cv-77a28dc9f816fe0193ba9de88ccf4948"
+    },
+    {
+      "state": "MP",
+      "scope": "US-MP:reader-registry-runtime",
+      "version": "cv-a2f4deb8a1b78acd32a7a318c3b8900d"
+    },
+    {
+      "state": "MP",
+      "scope": "US-MP:people:portraits:v1",
+      "version": "cv-d0b687583255510c227b83893c893d52"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:state-election-ballots",
+      "version": "cv-8af61719bcaa03d4f969720558aef16d"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:candidate-profiles",
+      "version": "cv-453894dadf8e16701332e3382693e50c"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:candidate-campaign-sites-derived",
+      "version": "cv-19d4a7bb8438d89d59d31973bf60ff7f"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:current-congress-directory",
+      "version": "cv-81805a3ff8f732c4dcd43fa7c6f2b008"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:reader-registry-runtime",
+      "version": "cv-67724fcd97165563c1058513ea43ac02"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:openstates-people:v1",
+      "version": "cv-0f910176fe1643e84d9b573d41c071cd"
+    },
+    {
+      "state": "MS",
+      "scope": "US-MS:people:portraits:v1",
+      "version": "cv-b2fc1720fe3b3c18f31620ff40d4ddbe"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:state-election-ballots",
+      "version": "cv-4286ff604f0a2e850ab808b8b1febed3"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:candidate-profiles",
+      "version": "cv-25e0630949823eeb59b277266b810ff0"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:candidate-campaign-sites-derived",
+      "version": "cv-ec625f99dbba9365da67104f716c9ff3"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:current-congress-directory",
+      "version": "cv-96762b61aa1aa86aa5f6f3564193c2a1"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:reader-registry-runtime",
+      "version": "cv-cce47138b07d59f6486e1b72928db13f"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:openstates-people:v1",
+      "version": "cv-414333c79051b28c20bfb21d8d0908a8"
+    },
+    {
+      "state": "MT",
+      "scope": "US-MT:people:portraits:v1",
+      "version": "cv-6e2dc0a9db267a307e05961bcab27ff7"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:state-election-ballots",
+      "version": "cv-5167eb7f1790b247f630afd325e7d8b8"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:candidate-profiles",
+      "version": "cv-3906e0ab9caa591c46103c056eea5e15"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:candidate-campaign-sites-derived",
+      "version": "cv-a3659fdf19a82d307f9f8982c7db9a07"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:current-congress-directory",
+      "version": "cv-716a1f881574ae9e2eb62245bc7ed4fb"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:reader-registry-runtime",
+      "version": "cv-f5c1c412bcd8531243ee5aa835ed4359"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:openstates-people:v1",
+      "version": "cv-5d651396437b20eaa32ce34ece4285cf"
+    },
+    {
+      "state": "NC",
+      "scope": "US-NC:people:portraits:v1",
+      "version": "cv-1448cf9ee3175075e55cc7ce3c05d79f"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:state-election-ballots",
+      "version": "cv-654cb38df5884c390fc1a9dabce2cbf3"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:candidate-profiles",
+      "version": "cv-8c2fe7e43734365aed57c942ccbec06d"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:candidate-campaign-sites-derived",
+      "version": "cv-bacd53e67548f5fb6c59e0d252931c58"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:current-congress-directory",
+      "version": "cv-0841091bc96ccd66504817e05d6ae41a"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:reader-registry-runtime",
+      "version": "cv-cf13cfd99cebee77bd7ad42bd54e2db3"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:openstates-people:v1",
+      "version": "cv-6001adcf09434c297a743a778e20662c"
+    },
+    {
+      "state": "ND",
+      "scope": "US-ND:people:portraits:v1",
+      "version": "cv-0d5c3f4605e4690f240501b09c61f139"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:state-election-ballots",
+      "version": "cv-2571727a165046fae20c06d2ef3daa76"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:candidate-profiles",
+      "version": "cv-d9afe38ffc0eee0a8f7694e23323a88a"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:candidate-campaign-sites-derived",
+      "version": "cv-06cb2695ddac21dadbcc45a116b906e1"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:current-congress-directory",
+      "version": "cv-b5e7fac41199d6a37b85b75cf552b4e0"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:reader-registry-runtime",
+      "version": "cv-7069080820724722587759b7b791710c"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:openstates-people:v1",
+      "version": "cv-f1519eae7f496112ef6bce57f1ae5880"
+    },
+    {
+      "state": "NE",
+      "scope": "US-NE:people:portraits:v1",
+      "version": "cv-cffff7aab41a40ba1ea481ccabe89164"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:state-election-ballots",
+      "version": "cv-25463a96bbc2fef2238150d45c051f4a"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:candidate-profiles",
+      "version": "cv-22bb035db7b5311f3789625d878629fb"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:candidate-campaign-sites-derived",
+      "version": "cv-7d0b9b1125f50df821a5458d24703292"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:current-congress-directory",
+      "version": "cv-e6b245badb451d61c77b3456c998adc8"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:reader-registry-runtime",
+      "version": "cv-70b9345f56496297922a883474dba5fe"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:openstates-people:v1",
+      "version": "cv-ee2b16a4ddec43a3ca3290b2304187a1"
+    },
+    {
+      "state": "NH",
+      "scope": "US-NH:people:portraits:v1",
+      "version": "cv-2ebd83bb1262979c5062d15f87ce1817"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:state-election-ballots",
+      "version": "cv-02903e28b288f78e9c6ac5dc612c7228"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:candidate-profiles",
+      "version": "cv-efd60ac21c34d214144842e7133848de"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:candidate-campaign-sites-derived",
+      "version": "cv-694e0396df0c8ec6161f78128d54d445"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:current-congress-directory",
+      "version": "cv-259dd729ba3788db965ae5637e60ded1"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:reader-registry-runtime",
+      "version": "cv-1300080f257f9cb44707e1bb9ff95d25"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:openstates-people:v1",
+      "version": "cv-c20915fcd0422cd45750d9e56c9dd427"
+    },
+    {
+      "state": "NJ",
+      "scope": "US-NJ:people:portraits:v1",
+      "version": "cv-413bd6ff02683461ae17e17b45abbf14"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:state-election-ballots",
+      "version": "cv-fa82e52fd7771e6415bbbb5da7ad874c"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:candidate-profiles",
+      "version": "cv-d4215e3e68c370295135cce56b1d737a"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:candidate-campaign-sites-derived",
+      "version": "cv-b280bcf8cb3525876f63c304d473f789"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:current-congress-directory",
+      "version": "cv-09e8efb4dbf2b2b2da2714a057c35ace"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:reader-registry-runtime",
+      "version": "cv-fe82d2a2b8fd13a32de95aa26204fabf"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:openstates-people:v1",
+      "version": "cv-e3fa405538fff23733ba5ada30168c66"
+    },
+    {
+      "state": "NM",
+      "scope": "US-NM:people:portraits:v1",
+      "version": "cv-f63dfee95b3d97157cf2fdbb0be2f66a"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:state-election-ballots",
+      "version": "cv-3d279d71ca9c8d05c823f0928a1ad09a"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:candidate-profiles",
+      "version": "cv-5435e539216e36c35f576771056a0381"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:candidate-campaign-sites-derived",
+      "version": "cv-5cbf5a86478ec72617814c8814b15e13"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:current-congress-directory",
+      "version": "cv-2c12cb9496fbaa4ce94ba32a3faa5f52"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:reader-registry-runtime",
+      "version": "cv-e7b14babf96d2934e4a1612c2d03bdf5"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:openstates-people:v1",
+      "version": "cv-03bef88b6e89384ed4db8c17f25e19c9"
+    },
+    {
+      "state": "NV",
+      "scope": "US-NV:people:portraits:v1",
+      "version": "cv-0512465008e0725fb91d576d1a249c85"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:state-election-ballots",
+      "version": "cv-15d29f8e0d152c1adefdd6489b4e01d2"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:candidate-profiles",
+      "version": "cv-8e77caeaa74d0e02ed73f30770475da6"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:candidate-campaign-sites-derived",
+      "version": "cv-99a19ba5d4289aa0921c56ebe7b0dc01"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:current-congress-directory",
+      "version": "cv-e7d43f3e7c3d0716954e2c5dc83a8c31"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:reader-registry-runtime",
+      "version": "cv-e201a678329b1a28a953d5a4fa2dc670"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:openstates-people:v1",
+      "version": "cv-a8c0e6728dbd844232dd00712f2a2bd8"
+    },
+    {
+      "state": "NY",
+      "scope": "US-NY:people:portraits:v1",
+      "version": "cv-0488610ae8d86a1e5eb613d0bbdf1362"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:state-election-ballots",
+      "version": "cv-75df3e2123c0172073a8fbd1180f3b85"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:candidate-profiles",
+      "version": "cv-f5065782afd2c586d439a15dc8a07963"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:candidate-campaign-sites-derived",
+      "version": "cv-1e8403d99959ca8c9298f94b65adf7d3"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:current-congress-directory",
+      "version": "cv-83d08099c676f2ab45044ea9f6fa3789"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:reader-registry-runtime",
+      "version": "cv-647fea63f7d789848454f25f7da1e4e3"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:openstates-people:v1",
+      "version": "cv-a6f6a31164968d7bda01ffe51c532e7a"
+    },
+    {
+      "state": "OH",
+      "scope": "US-OH:people:portraits:v1",
+      "version": "cv-52df9e50435e0f3aef8b61c45b3791c1"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:state-election-ballots",
+      "version": "cv-b6646e60fd2290cc1693c9a849c70b05"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:candidate-profiles",
+      "version": "cv-a80a105ce05e77f096c475be3cd91311"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:candidate-campaign-sites-derived",
+      "version": "cv-459f7410dee90508d91f82625f9a700c"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:current-congress-directory",
+      "version": "cv-844d3ff9abb99037a16444e5d02999bd"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:reader-registry-runtime",
+      "version": "cv-3e6f24037a2291567a8f9dd43f4f5c32"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:openstates-people:v1",
+      "version": "cv-d280a2892e80e3db878942f20b0037ce"
+    },
+    {
+      "state": "OK",
+      "scope": "US-OK:people:portraits:v1",
+      "version": "cv-a0a6c0d4bc1b354ecb8ea8aeb7eedd3c"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:state-election-ballots",
+      "version": "cv-45e45ceb85f71d3c368972d03d679d42"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:candidate-profiles",
+      "version": "cv-29c8e61e20a364a76a421bf9c5029729"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:candidate-campaign-sites-derived",
+      "version": "cv-0451c098aa5de8e8db93ca46fcd37e79"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:current-congress-directory",
+      "version": "cv-630b9f2060397e92f8dfc9f4fd0e20dc"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:reader-registry-runtime",
+      "version": "cv-4feed6f28c3e8c94bb79324b39e8b170"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:openstates-people:v1",
+      "version": "cv-bc28c470a340280fb5bae44e464bcce1"
+    },
+    {
+      "state": "OR",
+      "scope": "US-OR:people:portraits:v1",
+      "version": "cv-0a28c9fa00d0aa92fbd0b08298a508e5"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:state-election-ballots",
+      "version": "cv-e37780feb57229d732a8364e06cecb18"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:candidate-profiles",
+      "version": "cv-13b3090022f54b218f890adade505850"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:candidate-campaign-sites-derived",
+      "version": "cv-4a65df060cef33c15b2b9b1ba8f9c44c"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:current-congress-directory",
+      "version": "cv-5b1163943cdeacf804c773d5c2bf51fb"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:reader-registry-runtime",
+      "version": "cv-ab395a93691f072852c8b22525d7d440"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:openstates-people:v1",
+      "version": "cv-d5603c1f503fb1f58aec1cb8940df1ad"
+    },
+    {
+      "state": "PA",
+      "scope": "US-PA:people:portraits:v1",
+      "version": "cv-0a86c710dbdd8f5fdd01153a2d1c1b25"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:state-election-ballots",
+      "version": "cv-55eaba325f175d59a6102d467f461186"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:candidate-profiles",
+      "version": "cv-1692390326a23193f9a23bc41f76f95c"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:candidate-campaign-sites-derived",
+      "version": "cv-9debea2ffd8845250e2f2a49cb21a244"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:current-congress-directory",
+      "version": "cv-63f65190dd30106332c25154af972e2f"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:reader-registry-runtime",
+      "version": "cv-54876411506b88e650654d176284ecfc"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:openstates-people:v1",
+      "version": "cv-d62c87d1b85436cad53cb8991de90927"
+    },
+    {
+      "state": "PR",
+      "scope": "US-PR:people:portraits:v1",
+      "version": "cv-a042b01ca39b689075d9c938ae8bf1fc"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:state-election-ballots",
+      "version": "cv-ddb15956a6bfe6bc96514f57e10d8745"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:candidate-profiles",
+      "version": "cv-1491b3618d969fd8d4aea9977bb956b5"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:candidate-campaign-sites-derived",
+      "version": "cv-0f8e0f8af3b104e4e071a22cfb59f641"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:current-congress-directory",
+      "version": "cv-79e6e37cce8cb7d43e797206a3a26ae0"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:reader-registry-runtime",
+      "version": "cv-c612f70c6dc42ea6644da072d07652fa"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:openstates-people:v1",
+      "version": "cv-e1df0829b396265c1702353ed5659000"
+    },
+    {
+      "state": "RI",
+      "scope": "US-RI:people:portraits:v1",
+      "version": "cv-7d432c2013b85792927be47e56c9c171"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:state-election-ballots",
+      "version": "cv-b83dd93eb985b4312c08e7fc7b81e738"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:candidate-profiles",
+      "version": "cv-899f537aa22b88186be6eee257addb44"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:candidate-campaign-sites-derived",
+      "version": "cv-4daf49e9b0e3124b47494525ea2a407d"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:current-congress-directory",
+      "version": "cv-24d5bc5f35e4b5ab44959de19d752a25"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:reader-registry-runtime",
+      "version": "cv-7735d42a5c3faf70a6f401a6dc1426e3"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:openstates-people:v1",
+      "version": "cv-3c43acbaaec7c94e39b26aa44f6554d5"
+    },
+    {
+      "state": "SC",
+      "scope": "US-SC:people:portraits:v1",
+      "version": "cv-d4726049c6b186dd5a09ab09181eb45c"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:state-election-ballots",
+      "version": "cv-34f1a3788af3f7c3b388ff3ad2284f51"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:candidate-profiles",
+      "version": "cv-052b3f4e9fa6f081ab3a957121835a44"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:candidate-campaign-sites-derived",
+      "version": "cv-ca4572cd674d1eaac7c62be9f271bb84"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:current-congress-directory",
+      "version": "cv-2da2d8913b69a367c256cc47c741dde1"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:reader-registry-runtime",
+      "version": "cv-d64a8b11704a75427ca10d7bd9c4d688"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:openstates-people:v1",
+      "version": "cv-8c8c0b54d6d379971fc7d2edff85f01a"
+    },
+    {
+      "state": "SD",
+      "scope": "US-SD:people:portraits:v1",
+      "version": "cv-0795d87ef7f7125cb2fd473682274a25"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:state-election-ballots",
+      "version": "cv-edc7de3439155757d88c602db3e019cc"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:candidate-profiles",
+      "version": "cv-8d1237556fea6741112ea2133e55fd1b"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:candidate-campaign-sites-derived",
+      "version": "cv-dd8223a484be0ee536b5550c00e3330e"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:current-congress-directory",
+      "version": "cv-0773d93403baf232d9686d1fd080748f"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:reader-registry-runtime",
+      "version": "cv-5260c6dc69f385919606f26ad03575f9"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:openstates-people:v1",
+      "version": "cv-e77867c0f555ceeb8a3c2f08cf3faec5"
+    },
+    {
+      "state": "TN",
+      "scope": "US-TN:people:portraits:v1",
+      "version": "cv-488b8d621e050aba70dd3bfa1b1ead12"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:state-election-ballots",
+      "version": "cv-4a69f7f93d2ce76a575136ce44ead99a"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:candidate-profiles",
+      "version": "cv-35a0ae40f3e4a52f0b7d416c4c7edc35"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:candidate-campaign-sites-derived",
+      "version": "cv-6c7929168e38be5ab8b6d472e125a507"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:current-congress-directory",
+      "version": "cv-a656d6171014adf60f150bd0fd0acf93"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:reader-registry-runtime",
+      "version": "cv-d4418fdbaf1cc0d32dc5eac5c7f3274a"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:openstates-people:v1",
+      "version": "cv-2f10d9ae6499a42b402313a137b501e9"
+    },
+    {
+      "state": "TX",
+      "scope": "US-TX:people:portraits:v1",
+      "version": "cv-3cf16bb2e032ffd5e7760d67b8557646"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:state-election-ballots",
+      "version": "cv-b3a0ea4c24bad5837c50932f3832b4b2"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:candidate-profiles",
+      "version": "cv-a08e01461f95e302b725ba123663d872"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:candidate-campaign-sites-derived",
+      "version": "cv-de73f5621b5a3ec424e2a5f554710406"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:current-congress-directory",
+      "version": "cv-d04bc2857c2ec0556f172983c4faf977"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:reader-registry-runtime",
+      "version": "cv-19c330cba46d83bc4d2436812475c40e"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:openstates-people:v1",
+      "version": "cv-dd6bd2c5425a803845477e74c848ea50"
+    },
+    {
+      "state": "UT",
+      "scope": "US-UT:people:portraits:v1",
+      "version": "cv-955de7a9588f75091432697599f17ae4"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:state-election-ballots",
+      "version": "cv-7b9cce7ddeb801804b4b566ee27e6997"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:candidate-profiles",
+      "version": "cv-9bc4f1c402880346dddcdb20e381af6f"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:candidate-campaign-sites-derived",
+      "version": "cv-140d5d9e0c316818f4c8e34e61be1809"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:current-congress-directory",
+      "version": "cv-5cad08c035166c4844dbea18fdca9d7e"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:reader-registry-runtime",
+      "version": "cv-d38c9d1dcd19cb71b14f027f4864f459"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:openstates-people:v1",
+      "version": "cv-dc122b927bb7f508a3e695be97e08f3c"
+    },
+    {
+      "state": "VA",
+      "scope": "US-VA:people:portraits:v1",
+      "version": "cv-2ad7081559e2b338f12e9974739c23bf"
+    },
+    {
+      "state": "VI",
+      "scope": "US-VI:state-election-ballots",
+      "version": "cv-b7fdd2ae75682e6a613f85a8bcfd4505"
+    },
+    {
+      "state": "VI",
+      "scope": "US-VI:candidate-profiles",
+      "version": "cv-70e67e754c8ee2b56b0f8b03cc2b79cb"
+    },
+    {
+      "state": "VI",
+      "scope": "US-VI:candidate-campaign-sites-derived",
+      "version": "cv-0e7594df4724ae744130ac91e1d7010c"
+    },
+    {
+      "state": "VI",
+      "scope": "US-VI:current-congress-directory",
+      "version": "cv-ca271938b9dd923960e8899553581cf5"
+    },
+    {
+      "state": "VI",
+      "scope": "US-VI:reader-registry-runtime",
+      "version": "cv-1835935d08dec1beeee909a30070864e"
+    },
+    {
+      "state": "VI",
+      "scope": "US-VI:people:portraits:v1",
+      "version": "cv-3d2a6bbac0efd41deeae1dbcea4b2652"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:state-election-ballots",
+      "version": "cv-ee0344c65ec16019a5cbb9a7406829b9"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:candidate-profiles",
+      "version": "cv-7ed8280781124594f3565d8489f19350"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:candidate-campaign-sites-derived",
+      "version": "cv-380ce652ee07a09f60face115e0da19b"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:current-congress-directory",
+      "version": "cv-1dbb2e99fb866af1fa43437e4c3b3145"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:reader-registry-runtime",
+      "version": "cv-ad9103c9ffbdf7f25bdcd61dccea328a"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:openstates-people:v1",
+      "version": "cv-184a7d258c5d17eac8ed91dbdb1fb0a2"
+    },
+    {
+      "state": "VT",
+      "scope": "US-VT:people:portraits:v1",
+      "version": "cv-8aa9286f786211074f23e25306483485"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:state-election-ballots",
+      "version": "cv-1a5216b4e9396130228214be9634d7ab"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:candidate-profiles",
+      "version": "cv-0478f176bce5a0ffd34d592a1e0b566c"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:candidate-campaign-sites-derived",
+      "version": "cv-d81b6d198493d4ac7348ddcfc72d140e"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:current-congress-directory",
+      "version": "cv-8bd7c354d6f3f73eb20fe8c7c108d269"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:reader-registry-runtime",
+      "version": "cv-bacfbfde6e3c99caeb04868b3ee769b0"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:openstates-people:v1",
+      "version": "cv-6df4f396c83b1bc691b8cf8ab97287b3"
+    },
+    {
+      "state": "WA",
+      "scope": "US-WA:people:portraits:v1",
+      "version": "cv-0d9016da6dc18c6d9bc485253b6fa067"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:state-election-ballots",
+      "version": "cv-467d935ab8c6e139771f88fb4263d758"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:candidate-profiles",
+      "version": "cv-1dcb4bc70bb9002316cfeb86179742da"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:candidate-campaign-sites-derived",
+      "version": "cv-903c73b7d65c8c5d6f44519b4cafbaed"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:current-congress-directory",
+      "version": "cv-27cab826a8b78e2ddd18ca9287c1763a"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:reader-registry-runtime",
+      "version": "cv-2d44e7d3098e7359fed2ecd87e1d35e6"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:openstates-people:v1",
+      "version": "cv-ee886f6b1576c961bb957e4d4ba3fcb8"
+    },
+    {
+      "state": "WI",
+      "scope": "US-WI:people:portraits:v1",
+      "version": "cv-3a62878ff2478b3e3848555eeb92277a"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:state-election-ballots",
+      "version": "cv-107155a40436225542c78ea1ab454a11"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:candidate-profiles",
+      "version": "cv-d895b67022547a1e64e9dc9da1c32581"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:candidate-campaign-sites-derived",
+      "version": "cv-cf3dadc256baefb28f1763cc68e7d0fd"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:current-congress-directory",
+      "version": "cv-1fa40654198386abeacd2b87c5e050ef"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:reader-registry-runtime",
+      "version": "cv-631b5f964041906288fc5ef73d59e92f"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:openstates-people:v1",
+      "version": "cv-79b74430a1178d3ad308045c7dc9a7b6"
+    },
+    {
+      "state": "WV",
+      "scope": "US-WV:people:portraits:v1",
+      "version": "cv-0240c5876a6afb986f93bc65f94baab8"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:state-election-ballots",
+      "version": "cv-932597153aad967377ae987f4b2f5d8a"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:candidate-profiles",
+      "version": "cv-3c27146f8e3874dd6305cfdf981e5530"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:candidate-campaign-sites-derived",
+      "version": "cv-96c9c8ae7b3a02c6e43909f1b29af822"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:current-congress-directory",
+      "version": "cv-9ef2db1e2e1c2a50944d08a8cd0674d8"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:reader-registry-runtime",
+      "version": "cv-ab3cabf0e95677cdd86f0457e2f152bc"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:openstates-people:v1",
+      "version": "cv-75171d23aa7b8e03a7867b5e4c529ec3"
+    },
+    {
+      "state": "WY",
+      "scope": "US-WY:people:portraits:v1",
+      "version": "cv-25ea8e28c86ba28a666a2e1406ccd7b4"
+    }
+  ]
+}

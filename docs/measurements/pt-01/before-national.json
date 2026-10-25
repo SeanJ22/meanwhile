@@ -1,0 +1,30 @@
+{
+  "measuredAt": "2026-10-24T09:17:55.566Z",
+  "counts": [
+    {
+      "state": "US",
+      "role": "President",
+      "withPhoto": 0,
+      "withoutPhoto": 1
+    },
+    {
+      "state": "US",
+      "role": "Vice President",
+      "withPhoto": 0,
+      "withoutPhoto": 1
+    },
+    {
+      "state": "US",
+      "role": "Cabinet",
+      "withPhoto": 0,
+      "withoutPhoto": 21
+    }
+  ],
+  "versions": [
+    {
+      "state": "US",
+      "scope": "US:people:statewide-executive-sources:v1",
+      "version": "cv-4f1d106e03a3b311e8ae2bf05d8b571c"
+    }
+  ]
+}

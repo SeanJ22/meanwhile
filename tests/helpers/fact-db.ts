@@ -47,6 +47,8 @@ function leasedEngine(): PGlite {
 export async function factDb(options: { readonly withResolver?: boolean; readonly withHourlyCounts?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
   const pg = process.env.NODE_TEST_CONTEXT ? leasedEngine() : new PGlite();
   for (const migration of MIGRATIONS) for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
+  if (options.withResolver !== false) for (const sql of readerIdentityMigration().split("--> statement-breakpoint").filter(sql => /^\s*ALTER TABLE entity_place/.test(sql))) await pg.exec(sql);
+  await pg.exec(migration("_entity_places.sql"));
   if (options.withHourlyCounts) {
     await pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");
     await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE, "utf8").replaceAll("--> statement-breakpoint", ""));

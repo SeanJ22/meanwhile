@@ -45,7 +45,6 @@ test("standing enrichment replays all held profiles, keeps membership dates, and
 
   let profilesPublished = false;
   const enriched = await enrichNationalExecutives(base, { ...options,
-    portraits: (async input => ({ roster: input.roster, excludedFacts: [], attempted: 0 })) as ExecutiveEnrichmentOptions["portraits"],
     onProfiles: async release => {
       profilesPublished = true;
       assert.equal(release.roster.officeholders.filter(person => person.executive?.biography && person.portraitCandidate).length, 23);

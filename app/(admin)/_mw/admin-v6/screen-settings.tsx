@@ -102,7 +102,7 @@ export function SettingsScreen() {
       {data && (
         <div className={s.stack}>
           {!data.rows.length && <Empty>No settings</Empty>}
-          {data.rows.map((row) => <SettingCard key={row.key} row={row} />)}
+          {data.rows.filter(row => row.key !== "coverage.owedTable").map((row) => <SettingCard key={row.key} row={row} />)}
           <p className={cx(s.p, s.meta)}>Read {mst(data.observedAt)}</p>
         </div>
       )}

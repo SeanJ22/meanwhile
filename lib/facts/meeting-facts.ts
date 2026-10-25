@@ -61,7 +61,7 @@ export interface MeetingFactsReport { readonly live: number; readonly confirmed:
 
 type MeetingFactDb = FactDb & { readonly query: Query };
 
-async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl = meeting.provenance.sourceUrl): Promise<CheckEntity> {
+async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl: string): Promise<CheckEntity> {
   const id = meetingEntityId(meeting.id);
   let state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
   let owner = meeting.bodyId ?? meeting.ocdId;
@@ -71,7 +71,6 @@ async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl 
     if(sourceUrl)await learnDoorChannel(db.query, owner, sourceUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
-  if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
   return (await readCheckEntity(db.query, id))!;
 }
 
@@ -80,15 +79,22 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   const pin = input.meeting.mapPin!;
   const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
-  return publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
-    valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
+  for(;;)try{
+    return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
+      valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
+  }catch(error){
+    const conflict=error as {code?:string;constraint?:string}|null;
+    // A competing first publication won. Decide again against its committed point without geocoding again.
+    if(conflict?.code!=="23505"||conflict.constraint!=="fact_one_live")throw error;
+  }
 }
 
 /** An already-published sitting can gain its checked point independently of another calendar read. */
 export async function publishMeetingPinFact(db: MeetingFactDb, input: {
   readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
-  const entity = await meetingFactEntity(db, input.meeting);
+  // The pin claim cites its saved Census copy; it does not register the old calendar as a new source door.
+  const entity = await meetingFactEntity(db, input.meeting, "");
   if (input.meeting.mapPin?.matchedAddress && input.capture) return publishPinClaim(db, entity, {...input, capture:input.capture}, clocks, now);
   await openBlank(db.query, {entityId:entity.id, field:"map_pin", stage:"ACQUIRE", reason:"MEETING_ADDRESS_NOT_PLACED",
     detail:input.meeting.venueGap?.publishedText ?? input.meeting.online?.label ?? null, retryMinutes:clocks.retryMinutes("meeting")});

@@ -4,9 +4,10 @@ import type { Provenance } from "../sources/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { officeIdentity } from "./office-identity.ts";
-import { personIdentityKeys } from "./people-identity.ts";
+import { nativePersonIdFromUrl, personIdentityKeys } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 import { mergeExecutiveFacts } from "./national-executive.ts";
+import { heldPersonSources } from "./held-sources.ts";
 import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./types.ts";
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -17,6 +18,64 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
   const sets = input.map(withoutInvalidStatewidePeople);
   if (!sets.length) return null;
   const people: Officeholder[] = [], aliases = new Map<string, string>();
+  const originalSources = new WeakMap<Officeholder, readonly Officeholder[]>();
+  // A reference profile can carry the current publisher ID before its stored native-ID list does.
+  // Bind it only against the held official page, with the person's current seat corroborating it.
+  const profileKeys = new WeakMap<Officeholder, Set<string>>();
+  const personDivisions = new WeakMap<Officeholder, Set<string>>();
+  const knownDistrictsAgree = (left:Officeholder,right:Officeholder) => {
+    const districts = (person:Officeholder) => [...(personDivisions.get(person) ?? [])].filter(id=>/\/(?:sldu|sldl|cd|ward|council_district):/.test(id)).sort();
+    const a=districts(left),b=districts(right);
+    return !(a.length||b.length)||canonicalCivicDataJson(a)===canonicalCivicDataJson(b);
+  };
+  const officialProfiles = new Map<string, Officeholder[]>();
+  for (const set of sets) for (const person of set.officeholders) {
+    const current = person.memberships?.filter(row => row.current === true).flatMap(row => row.divisionId ? [row.divisionId] : []) ?? [];
+    personDivisions.set(person, new Set(current.length ? current : set.divisions.filter(row => row.officeholderId === person.id).map(row => row.ocdId)));
+    const binding = nativePersonIdFromUrl(person.provenance.sourceUrl ?? "");
+    if (!binding || !personIdentityKeys(person).has(`${binding.source}:${binding.id}`)) continue;
+    const key = `${binding.source}:${binding.id}`, held = officialProfiles.get(key) ?? [];
+    held.push(person); officialProfiles.set(key, held);
+  }
+  const compatibleProfile = (source: Officeholder, target: Officeholder, namespace: string) => {
+    if (!source.state || !target.state || source.state.toUpperCase() !== target.state.toUpperCase() || source.level !== target.level ||
+      (source.chamber && target.chamber && source.chamber !== target.chamber) ||
+      (officeIdentity(source.officeTitle) ?? normalized(source.officeTitle)) !== (officeIdentity(target.officeTitle) ?? normalized(target.officeTitle))) return false;
+    const left = normalized(source.name).split(" "), right = normalized(target.name).split(" ");
+    if (left.length < 2 || right.length < 2 || left[0] !== right[0] || left.at(-1) !== right.at(-1) ||
+      !(left.every(token => right.includes(token)) || right.every(token => left.includes(token)))) return false;
+    const sourceDivisions = personDivisions.get(source)!, targetDivisions = personDivisions.get(target)!;
+    if (!sourceDivisions.size || !targetDivisions.size || ![...sourceDivisions].some(id => targetDivisions.has(id))) return false;
+    if (!knownDistrictsAgree(source,target)) return false;
+    if (source.birthDate && target.birthDate && source.birthDate !== target.birthDate) return false;
+    for (const [key, ids] of Object.entries(source.nativeIds ?? {})) {
+      const other = target.nativeIds?.[key];
+      if (key !== "reader" && key !== namespace && ids.length && other?.length && !ids.some(id => other.includes(id))) return false;
+    }
+    return true;
+  };
+  for (const set of sets) for (const person of set.officeholders) {
+    const bindings = new Map<string, Officeholder>();
+    for (const url of [person.websiteUrl, ...person.profileUrls ?? []]) {
+      const binding = url ? nativePersonIdFromUrl(url) : null;
+      if (!binding) continue;
+      const key = `${binding.source}:${binding.id}`;
+      // A publisher's own current ID cannot be changed by a different profile link.
+      if ([person.id, person.personId].some(id => id?.startsWith(`${binding.source}:`) && id !== key)) continue;
+      const matches = (officialProfiles.get(key) ?? []).filter(target => {
+        if (target === person || !compatibleProfile(person, target, binding.source)) return false;
+        if (binding.source === "az-legislature") {
+          const linkedTerm = new URL(url!).searchParams.get("legislature");
+          const heldTerm = new URL(target.provenance.sourceUrl!).searchParams.get("legislature");
+          if (linkedTerm && heldTerm && linkedTerm !== heldTerm) return false;
+        }
+        return true;
+      });
+      if (matches.length !== 1) continue;
+      bindings.set(key, matches[0]);
+    }
+    if (new Set(bindings.values()).size === 1) profileKeys.set(person, new Set(bindings.keys()));
+  }
   const offices = new Map<string, string>(), officialUrls = new Map<string, boolean>();
   const info = new WeakMap<Officeholder, { office: string; name: string; state: string; fallback: string; nameKey: string; keys: ReadonlySet<string>; ownUrls: Set<string> }>();
   const infoOf = (person: Officeholder) => {
@@ -27,7 +86,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
       if (person.level === "STATE" && ["upper", "lower"].includes(person.chamber ?? "")) office = person.chamber === "upper" ? "state_senator" : "state_lower_house";
       const name = normalized(person.name), state = normalized(person.state ?? "");
       held = { office, name, state, fallback: `${person.state?.toUpperCase()}|${person.level}|${office}|${name}`,
-        nameKey: `${state}|${person.level}|${office}|${name}`, keys: personIdentityKeys(person),
+        nameKey: `${state}|${person.level}|${office}|${name}`, keys: new Set([...personIdentityKeys(person), ...(profileKeys.get(person) ?? [])]),
         ownUrls: new Set([person.websiteUrl, ...person.profileUrls ?? []].filter((url): url is string => Boolean(url))) };
       info.set(person, held);
     }
@@ -85,13 +144,23 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const keys = new Set([...Object.keys(left.nativeIds ?? {}), ...Object.keys(right.nativeIds ?? {})]);
     const nativeIds = Object.fromEntries([...keys].map(key => [key, [...new Set([...(left.nativeIds?.[key] ?? []), ...(right.nativeIds?.[key] ?? [])])]]));
     nativeIds.reader = [...new Set([...(nativeIds.reader ?? []), left.id, personId, right.id, right.personId ?? right.id])];
-    const merged: Officeholder = {...left, personId, nativeIds, fieldSources: {...left.fieldSources}};
+    // Optional undefined fields disappear on publication; replay keys must use that same durable form.
+    const sourceHolders = [...new Map([left,right].flatMap(person=>originalSources.get(person) ?? heldPersonSources(person))
+      .map(person=>[canonicalCivicDataJson(JSON.parse(JSON.stringify(person))),person])).values()];
+    const merged: Officeholder = {...left, personId, nativeIds, sourceHolders, fieldSources: {...left.fieldSources}};
+    personDivisions.set(merged,new Set([...(personDivisions.get(left)??[]),...(personDivisions.get(right)??[])]));
+    const mergedKeys = personIdentityKeys(merged);
     for (const field of fields) {
-      const a = left[field], b = right[field];
+      const a = left[field]; let b = right[field];
       if (!present(b)) continue;
       if (field === "selectionMethod" && b === "UNKNOWN") continue;
-      // A portrait verified for another canonical alias must be re-bound before serving.
-      if (field === "photo" && !portraitBindingMatches(personId, right.photo ?? {url: ""})) continue;
+      if (field === "photo") {
+        const photo = right.photo, verifiedFor = photo?.verification?.personId;
+        if (!photo || !verifiedFor || !personIdentityKeys(right).has(verifiedFor) || !mergedKeys.has(verifiedFor) || !portraitBindingMatches(verifiedFor, photo)) continue;
+        // The merge already established this exact source alias as the same person; retain its image proof.
+        const rebound = verifiedFor === personId ? photo : {...photo, verification: {...photo.verification!, personId}};
+        b = portraitBindingMatches(personId, rebound) ? rebound : photo;
+      }
       const rightWins = !present(a) || prefers(right, left, field);
       if (rightWins) Object.assign(merged, {[field]: b, fieldSources: {...merged.fieldSources, [field]: sourceFor(right, field)}});
       else merged.fieldSources = {...merged.fieldSources, [field]: sourceFor(left, field)};
@@ -145,12 +214,19 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     if (!matches.length && !ambiguousNames.has(fallbackKey(incoming))) {
       const nameMatches = incoming.state ? [...byName.get(infoOf(incoming).nameKey) ?? []].flatMap(holder => {
         const position = positions.get(holder);
-        return holder.state && position !== undefined ? [position] : [];
+        const publisher = /^([a-z]{2}-(?:legislature|general-court)):/.exec(incoming.id)?.[1];
+        const conflictingPublisher = publisher && holder.id.startsWith(`${publisher}:`) && holder.id !== incoming.id;
+        const conflictingNative = Object.entries(incoming.nativeIds??{}).some(([key,ids])=>key!=="reader"&&!/^[a-z]{2}-(?:legislature|general-court)$/.test(key)&&
+          ids.length&&holder.nativeIds?.[key]?.length&&!ids.some(id=>holder.nativeIds![key].includes(id)));
+        return holder.state && position !== undefined && !conflictingPublisher && !conflictingNative && knownDistrictsAgree(incoming,holder) ? [position] : [];
       }) : [];
       if (nameMatches.length === 1) matches.push(nameMatches[0]);
     }
     if (!matches.length) {
       const person = {...incoming, fieldSources: {...Object.fromEntries(fields.filter(field=>present(incoming[field])).map(field=>[field, sourceFor(incoming,field)])), ...incoming.fieldSources}};
+      originalSources.set(person,heldPersonSources(incoming));
+      personDivisions.set(person,personDivisions.get(incoming)!);
+      if (profileKeys.has(incoming)) profileKeys.set(person, profileKeys.get(incoming)!);
       people.push(person); register(person, people.length - 1); continue;
     }
     const first = matches[0];

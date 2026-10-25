@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). GATING: river-portraits READY 9bf9801a5 alone on river 456454204 (river-next ea117a0bb), release 120. NEXT: GB-01 1636195c9 (its gate was stopped mid-test for portraits), then Neon fixes ahead of rebuild work: DB-03 in lane order up to 11072d2ed, the step below its old portraits fix 2cce7754c (Admin 04681516c first). Then RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). GATING: DB-03 Admin 04681516c alone on river 456454204 (river-next dad53019c; owed route conflict resolved). WITHDRAWN: river-portraits 9bf9801a5; the other River session is rebuilding portraits from DB-03 2cce7754c's code (Sean's order) and its new READY takes the next slot. HELD: GB-01 1636195c9 (adds Neon reads; after portraits), RB-A10 7b5eacd03 (place map 0 rows). NEXT Neon fixes: DB-03 state doors e4305907d onward, through 11072d2ed. Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T20:40:00Z
+heartbeat: 2026-10-25T20:46:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1073,4 +1073,13 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 "River, Neon goes first from now on until it's issues are resolved, ahead of every other READY, rebuild included. Put river-portraits READY 9bf9801a5 next. If GB-01 hasn't passed all its gates yet, stop it and test portraits first. GB-01 adds about 50,700 boards through the runner, so it adds Neon reads, and it can wait one release. Portraits pulled 5.9 GB of the 3 PM hour's 11.9 GB. After portraits, ship any Neon fix that posts READY before rebuild work. When you fold DB-03's line, fold only up to the step below 2cce7754c (its old portraits fix), so one portrait path ships. Measure portraits and member offices GB per hour on the two full hours after release and tell me the numbers."
 - Done: GB-01's gate was stopped in its test step (lint, tsc and dead-code had passed). 9bf9801a5 is gating alone on 456454204. It ships as release 120 if 9 of 9.
 - Standing rule from now on: Neon fixes ship ahead of every other READY until Neon's problems are resolved. DB-03 folds only through 11072d2ed (read-path connection), the step below 2cce7754c.
+
+### 4:47 PM EDT
+- Sean (relayed by the other River session): build river-portraits from DB-03 2cce7754c's tested portrait code, not from scratch.
+  - Remove the 7-day and Congress 30-day rechecks.
+  - Resume after a deadline cut.
+  - Ship one portrait path and delete the old one.
+- So 9bf9801a5 is withdrawn and its gate stopped. The other session is rebuilding on river 456454204.
+- Meanwhile, under Neon-first: DB-03 Admin 04681516c is gating alone. It cuts Admin screen reads; the lane's replay put each screen's first 60 s at 0.57 to 8.3 MB, against 9.6 to 16 MB sampled before. One conflict: app/api/admin/v6/owed/route.ts keeps river's RB-A6 body with DB-03's adminRead wrapper. tsc clean.
+- If the portraits READY lands mid-gate, the Admin gate stops and portraits goes first.
 

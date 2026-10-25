@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T18:20:00Z
+heartbeat: 2026-10-25T18:04:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -997,7 +997,7 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Runner Neon before, database_transfer_hourly response bytes, reader DB + control plane, GB per hour, 5 AM to 12 PM EDT: 7.16 / 8.52 / 12.51 / 9.98 / 9.03 / 13.93 / 11.37 / 11.65, average 10.52.
 - Correction: the per-job MB in the 11:15 AM baseline and the noon and 1 PM statuses counted both databases, not the reader DB alone. Totals and per-job numbers are unchanged; only the label was wrong.
 
-### GB-01 READY 900dd1427 (stream/gb-01, built on RB-A4 catch-up)
+### GB-01 READY 900dd1427 (stream/gb-01, built on RB-A4 catch-up), 2 PM EDT
 - How a board is made:
   - Every Census government whose division lib/registry/derive.ts `slotsFor` gives a governing body (counties, cities, townships, school districts, dependent school systems) gets `<government>#governing`, or `#board` for school districts.
   - The board comes from lib/core/door.ts `door()` publishing the Census record's mailing address (`office_address`) and website (`homepage`, when present), loader lane, OFFICIAL. The door's `ensureGoverningBody` makes "<government> governing board" (or "school board"), files it under the government and places it where the government is.
@@ -1011,4 +1011,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - FOR SEAN:
   - About 40,000 special districts get no board, by the `slotsFor` rule. Their Census records carry the same address and website, so turning them on is one line if you want it.
   - Follow-ups not in this lane: the moved boards' ids still start `.../state:or#body:`, so a later fact on one clears Oregon's reader cache, not California's. And 21 stateless bodies, ids `government:US-OR:cog:155003#body:...`, host metro, are left over from the old Oregon doors.
+
+### 2 PM EDT status
+- Release 118 (DB-03 readback, PR #830): build, standalone build, verify and admission pass; the test (affected) job is still running. Production is still release 117 (03e0526b6).
+- RB-A4 catch-up b2bbdc183: gating alone on river-next 456454204, in the test gate. GB-01 900dd1427 follows it alone.
+- Lanes: DB-03 posted READY 2cce7754c, "DB-03 portraits". It cuts the portrait job's reads: a replay on OK, WI and KY read 98.7 MB before and 7.6 MB after. It also carries River's readback test and dead-code fixes. It sits on top of the lane's line, so folding it brings every DB-03 step below it. River folds the DB-03 steps in lane order after GB-01: Admin, state doors, then the rest through portraits. No other new READYs.
+- Neon, both databases, 1 PM EDT hour: 13,368 MB. Portraits 7,834 (59%), research cycle 1,043. Readback was 56: with no readback release live yet, that low figure comes from the runner, not from us.
+- Time correction: the GB-01 entry's heartbeat said 18:20Z but was written at about 18:00Z. Times on this board now come from the clock.
 

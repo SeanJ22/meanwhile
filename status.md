@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up), live 4:25 PM EDT; reader checks green. GATING: GB-01 1636195c9 alone on river-next 68ebfa0aa. NEXT: river-portraits READY 9bf9801a5 (portraits and member offices, never re-read), then DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). GATING: river-portraits READY 9bf9801a5 alone on river 456454204 (river-next ea117a0bb), release 120. NEXT: GB-01 1636195c9 (its gate was stopped mid-test for portraits), then Neon fixes ahead of rebuild work: DB-03 in lane order up to 11072d2ed, the step below its old portraits fix 2cce7754c (Admin 04681516c first). Then RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T20:28:00Z
+heartbeat: 2026-10-25T20:40:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1068,4 +1068,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
 - Random ZIPs, seed 1119: 20/20 load, 20/20 resolve to county and city, across SD, AK, CO, IN, KY, TN, ME, WV, NM, DE, GA, MI, VI, CA, MA, AL, GU, AZ, NY and TX.
 - Placements so far: the old one-state rotation kept going while catch-up waited. 12 states reloaded since 11:40 AM (WA, WI, WV, WY, AK, AL, AR, AS, AZ, CA, CO, CT), and HOST_COUNTY rows rose from 1,400 to 14,641. Catch-up starts on the runner's first pass on release 119; its cursor routine-fact-entities-state isn't written yet. Oregon and the other 44 states should reload in that pass.
+
+### 4:41 PM EDT: Sean's Neon-first order (relayed verbatim by River session session_012UDbgz3sjA8QN2m7CY78QS)
+"River, Neon goes first from now on until it's issues are resolved, ahead of every other READY, rebuild included. Put river-portraits READY 9bf9801a5 next. If GB-01 hasn't passed all its gates yet, stop it and test portraits first. GB-01 adds about 50,700 boards through the runner, so it adds Neon reads, and it can wait one release. Portraits pulled 5.9 GB of the 3 PM hour's 11.9 GB. After portraits, ship any Neon fix that posts READY before rebuild work. When you fold DB-03's line, fold only up to the step below 2cce7754c (its old portraits fix), so one portrait path ships. Measure portraits and member offices GB per hour on the two full hours after release and tell me the numbers."
+- Done: GB-01's gate was stopped in its test step (lint, tsc and dead-code had passed). 9bf9801a5 is gating alone on 456454204. It ships as release 120 if 9 of 9.
+- Standing rule from now on: Neon fixes ship ahead of every other READY until Neon's problems are resolved. DB-03 folds only through 11072d2ed (read-path connection), the step below 2cce7754c.
 

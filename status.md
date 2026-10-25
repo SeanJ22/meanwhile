@@ -1,22 +1,22 @@
 # River status
 
-build_state: LIVE FOR READERS: release 120 (main 4687f6a00, portraits and member offices), live 6:09 PM EDT; reader checks green. GATING: release 121 = DB-03 reads 8b69f0cbf + DB-02 re-cut e0f14fe59 on river-next 801d5db65. See 'Every READY not on main' for every slot
+build_state: LIVE FOR READERS: release 120 (main 4687f6a00). GATING: release 121 = DB-02 re-cut e0f14fe59 alone on river ea117a0bb. RETURNED: DB-03 reads 8b69f0cbf (8 tests). See 'Every READY not on main' for every slot
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T22:20:00Z
+heartbeat: 2026-10-25T22:49:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 6:11 PM EDT)
+## Every READY not on main (updated 6:49 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
-| 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | release 121 with DB-02, gating now on 801d5db65; urgent Neon |
-| e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 with DB-03 reads; urgent Neon |
+| 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | RETURNED: fails 8 tests on its own branch (returns/db-03.md); new READY ships next, alone (urgent Neon). River finishes it if no READY in 60 min |
+| e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 alone, gating now on ea117a0bb; urgent Neon |
 
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
 | READY | Lane | Slot |
@@ -1170,4 +1170,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Sean closed the second River session (session_012UDbgz3sjA8QN2m7CY78QS). River no longer messages it or hands it work.
 - Oversight measures release 120: portraits and member offices GB/h for the two full hours after the runner takes it, and portraits on 12 random ZIPs in Chrome.
 - River keeps the folds, gates, releases, the READY list and release 121.
+
+### 6:49 PM EDT: release 121 gate failed on DB-03 reads; DB-02 ships alone
+- 801d5db65 (DB-03 reads + DB-02): 8 of 9 gates, 8 of 9,933 tests failed. Seven are in aggregate-list-pagination and one in admin-narrow-reads. They fail the same way on stream/db-03-reads 8b69f0cbf by itself: its revision-first list reads send SQL the tests' fake databases don't recognize. Returned to the lane (returns/db-03.md).
+- DB-02 e0f14fe59 is gating alone on river ea117a0bb as release 121; both fixes are urgent and DB-02 passed its own checks. DB-03 reads ships next, alone, when it's fixed.
 

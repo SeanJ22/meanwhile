@@ -11,6 +11,7 @@ import { publishedOnlineAccess } from "../lib/meetings/published-online.ts";
 import { censusAddressQuery, repeatsPublishedVenue } from "../lib/geo/address-query.ts";
 import { verifiedCensusVenuePoint } from "../lib/geo/census-address-match.ts";
 import { publishedMeetingPins } from "../lib/meetings/pin-location.ts";
+import { groupByVenue } from "../lib/meetings/venues.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
 import type { LegistarClient } from "../lib/sources/legistar/client-registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -549,6 +550,30 @@ test("online-only source text retains a published join link while hybrid street 
     ),
     null,
   );
+  for(const label of ["Remote","REMOTE","Online","Online-only meeting"])
+    assert.deepEqual(publishedOnlineAccess(label),{label,joinUrl:null});
+  const generic="Online only: https://example.gov/join";
+  assert.deepEqual(publishedOnlineAccess(generic),{label:generic,joinUrl:"https://example.gov/join"});
+  for(const physical of ["Remote Access Center","Online Library","Remote meeting at 1415 W Melody Ln, Bisbee, AZ 85603"])
+    assert.equal(publishedOnlineAccess(physical),null);
+});
+
+test("a retained Remote source label becomes online only while its saved office point is reused without Census",async()=>{
+  const original=meeting("Remote");
+  const first=await placePublishedMeetingPins({meetings:[original],offices,clock:()=>NOW,fetchImpl:async()=>response(BOARD_GEO)});
+  const access=publishedOnlineAccess("Remote");assert.ok(access);
+  const later=new Date(Date.parse(NOW)+3600000).toISOString();
+  const current={...meeting(null),online:access,venueGap:undefined,provenance:{...SOURCE,collectedAt:later}};
+  const next=await placePublishedMeetingPins({meetings:[current],previous:first.meetings,offices,clock:()=>later,
+    fetchImpl:async()=>{throw Error("A saved Remote office point requested Census again");}});
+  assert.deepEqual(next.held,[]);assert.equal(next.responses.length,0);
+  assert.equal(next.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(next.meetings[0].mapPin?.publishedLocation,null);
+  assert.equal(next.meetings[0].mapPin?.coordinateCheckedAt,first.meetings[0].mapPin?.coordinateCheckedAt);
+  assert.equal(original.venueGap?.publishedText,"Remote");
+  const [read]=withSittingFacts(next.meetings,[{meetingId:current.id,field:"mapPin",value:first.meetings[0].mapPin,source:SOURCE},
+    {meetingId:current.id,field:"location",value:{name:"Remote",address:null},source:SOURCE}]);
+  assert.deepEqual(read.online,{label:"Remote",joinUrl:null});assert.equal(read.venueGap,undefined);
+  const [venue]=groupByVenue([read]);assert.equal(venue.kind,"ONLINE_ONLY");assert.equal(venue.pinBasis,"BODY_OFFICE");
 });
 
 test("a room number before a street address is excluded from the Census query", () => {

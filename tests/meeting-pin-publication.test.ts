@@ -650,7 +650,7 @@ test("a confirmed Census road spelling keeps the published house, street name, c
   const response=JSON.parse(rows.find(row=>JSON.parse(row.text).result.addressMatches?.[0]?.addressComponents.streetName==="CALDER")!.text);
   const published="174 Calder Rd., League City, TX 77573";
   assert.ok(verifiedCensusVenuePoint(published,response));
-  for(const changed of [published.replace("174","176"),published.replace("Calder","Other"),published.replace("League City","Galveston"),
+  for(const changed of [published.replace("174","176"),published.replace("Calder","Other"),published.replace("League City","Galveston").replace("77573","77550"),
     published.replace("TX","CA"),published.replace("77573","77550"),published.replace("Calder","S Calder")]){
     const conflict=structuredClone(response);conflict.result.input.address.address=changed;
     assert.equal(verifiedCensusVenuePoint(changed,conflict),null,changed);
@@ -671,6 +671,7 @@ test("a written house number uses the same published street in the Census query"
  const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-gateway-census.json",import.meta.url),"utf8"));
  assert.equal(censusAddressQuery(published),"1 Gateway Plaza Gateway Plaza Conference Room, Los Angeles, CA 90012");
  assert.ok(verifiedCensusVenuePoint(published,response));
+ assert.equal(verifiedCensusVenuePoint("One Gateway Plaza, Los Angeles, NY 90012, Metro Board Room",response),null);
  assert.equal(verifiedCensusVenuePoint(published.replace("One","Two"),response),null);
 });
 
@@ -714,4 +715,17 @@ test("a published Wisconsin grid house number keeps its unique Census point and 
  assert.ok(verifiedCensusVenuePoint(published,response));
  for(const changed of [published.replace("N120W15932","N120W15933"),published.replace("Freistadt","Different"),
   published.replace("Germantown","Other City"),published.replace("WI","CA")])assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
+});
+
+
+test("native Census postal city and missing suffix forms retain the same published physical address",()=>{
+ const rows=JSON.parse(readFileSync(new URL("./fixtures/mt01-wisconsin-postal-census.json",import.meta.url),"utf8")) as {query:string;response:unknown}[];
+ for(const {query,response}of rows){
+  assert.ok(verifiedCensusVenuePoint(query,response),query);
+  const unbound=structuredClone(response) as {result:{input?:unknown}};delete unbound.result.input;
+  assert.equal(verifiedCensusVenuePoint(query,unbound),null);
+  for(const changed of [query.replace(/^\d+/,"999"),query.replace("Lake","Different").replace("Ogden","Different"),
+    query.replace("WI","CA"),query.replace("Milwaukee","Other City").replace("53110","99999")])
+    assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
+ }
 });

@@ -42,7 +42,8 @@ test('withdrawing an unconfirmed portal removes its calendar and facts, preserve
       const page=await readPlacePackage({state:'OR',divisionIds:[division]},query);
       assert.equal(page.meetings.length,0);
       assert.equal(page.bodies.find(b=>b.id===body)?.fields.officePhone,'503-555-0100');
-      assert.equal((await query("SELECT status FROM fact WHERE entity_id=$1 AND field='agenda_url'",[body]))[0]!.status,'pulled');
+      // Sean, Oct 25: a fact leaves readers only through lib/core/door.ts; the withdrawal changes no fact.
+      assert.deepEqual((await query("SELECT field,status FROM fact WHERE entity_id=$1 ORDER BY field",[body])).map(row=>`${row.field}:${row.status}`),['agenda_url:live','office_phone:live']);
       for(const id of [body,'old-metro-id','meeting:permanent']) assert.ok(await resolveId(id,query));
     }
     await confirmPlatformPublication(db,door,async()=>({purged:true}));

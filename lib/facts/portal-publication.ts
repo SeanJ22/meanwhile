@@ -1,11 +1,14 @@
 import type { DoorRecord } from "../doors/registry.ts";
 import { meetingPartitionOfId } from "../civic-data/meeting-partitions.ts";
-import { samePlatformTenant } from "../control-plane/discovery/platform-enumeration.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger } from "../reader/cache.ts";
 import {openBlank,type FactDb} from "./publish.ts";
 import {resolveId} from "../core/resolve.ts";
 
-/** Withdraw this unconfirmed source, retaining identities, saved copies and other publishers' facts. */
+/**
+ * Hold this unconfirmed source's calendar back from readers, retaining identities, saved copies and every fact. A fact changes
+ * only through the front door (lib/core/door.ts): the open blank and the suspended door keep the calendar off reader pages
+ * until the government's own site links the portal again, and the next read through the door replaces or confirms its facts.
+ */
 export async function withdrawPlatformPublication(db: FactDb, door: DoorRecord, portal: string, purge?: ReaderCachePurger): Promise<void> {
   const changed = await db.transaction(async query => {
     const scopes=new Set<string>();
@@ -18,13 +21,6 @@ export async function withdrawPlatformPublication(db: FactDb, door: DoorRecord, 
         scopes.add(body);
       }
     }
-    const facts = await query(`WITH RECURSIVE subjects AS (
-      SELECT id FROM entity WHERE id=ANY($1::text[])
-      UNION SELECT e.id FROM entity e JOIN subjects s ON e.parent_id=s.id WHERE e.kind='meeting'
-    ) SELECT f.id,f.entity_id,s.url,s.final_url FROM subjects e JOIN fact f ON f.entity_id=e.id
-      JOIN source_copy s ON s.id=f.source_copy_id WHERE f.status='live' AND f.provenance_kind<>'OWNER'`,[[...scopes]]);
-    const ids = facts.filter(f => [f.url,f.final_url].some(url => typeof url === 'string' && samePlatformTenant(url,portal))).map(f => f.id);
-    if (ids.length) await query("UPDATE fact SET status='pulled',held_reason='PORTAL_AUTHORITY_UNCONFIRMED' WHERE id=ANY($1::bigint[]) AND status='live'",[ids]);
     const partition = meetingPartitionOfId(door.doorId);
     if (partition) for (const body of scopes) for (const scope of [partition.scope,`${partition.scope}:history`])
       await openBlank(query,{entityId:body,field:`calendar:${scope}`,stage:'CHECK',reason:'PORTAL_AUTHORITY_UNCONFIRMED',detail:portal,retryMinutes:10});

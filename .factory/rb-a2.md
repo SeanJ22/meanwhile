@@ -1,9 +1,9 @@
 # RB-A2 — fill the production place map
 
-build_state: RB-A6 b2d07e636 merged; combined full checks running without production database bindings. Deployment needed before final live-data READY. Direct production probes at 2026-10-25T10:33:50Z: place_boundary empty, zip_place empty, zcta_place empty.
+build_state: RB-A6 b2d07e636 merged; combined full checks running without production database bindings. Deployment needed before final live-data READY. Direct production probes at 2026-10-25T10:53:51Z: place_boundary empty, zip_place empty, zcta_place empty.
 worker: codex-rb-a2
 provider: Codex
-heartbeat: 2026-10-25T10:36:22Z
+heartbeat: 2026-10-25T10:56:04Z
 ready: none
 
 The production-fill follow-up is active. Current runtime 18ee64d9a includes RB-A6 b2d07e636; combined full checks are running. The prior runtime db8c81345 passes all nine gates (9,898 registered, 9,896 passed, zero failed, two skipped), including both builds and all 16 bundle tests. The implementation and live-proof handoff are published in draft PR #822 into River. No reader is switched.

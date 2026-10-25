@@ -1,0 +1,61 @@
+{
+  "capturedAt": "2026-10-25T03:50:17.758Z",
+  "tool": "@netlify/zip-it-and-ship-it",
+  "toolVersion": "16.5.1",
+  "function": "rebuild-place-pages",
+  "bundler": "nft",
+  "bundlerReason": "v2-nft",
+  "format": "esm",
+  "runtime": "nodejs24.x",
+  "runtimeAPIVersion": 2,
+  "background": true,
+  "schedule": "* * * * *",
+  "zipBytes": 4927073,
+  "unpackedFiles": 315,
+  "unpackedBytes": 19227861,
+  "includedGeographyFiles": 103,
+  "coldWorkerImport": {
+    "imported": true,
+    "config": {
+      "schedule": "* * * * *",
+      "background": true
+    },
+    "elapsedMs": 503.89737599999995,
+    "networkCalls": 0
+  },
+  "coldBootstrapImport": {
+    "imported": true,
+    "elapsedMs": 49.49660900000001,
+    "networkCalls": 0,
+    "awsRuntimeStub": "streamifyResponse only; handler not invoked"
+  },
+  "packagedGeography": {
+    "success": true,
+    "elapsedMs": 2604.528584,
+    "selections": [
+      {
+        "zip": "10001",
+        "state": "NY",
+        "divisionIds": 4,
+        "bodyIds": 0,
+        "namedDivisions": 0,
+        "elapsedMs": 31.334547999999927
+      },
+      {
+        "zip": "85201",
+        "state": "AZ",
+        "divisionIds": 9,
+        "bodyIds": 0,
+        "namedDivisions": 0,
+        "elapsedMs": 2090.396618
+      }
+    ],
+    "requests": [
+      {
+        "url": "https://meanwhileusa.com/states/az/geo/body-territories.geojson",
+        "status": 200
+      }
+    ]
+  },
+  "scope": "Local packaging and imports. Geometry reads the production public CDN into a temporary local artifact store. No deployed handler invocation, production database writes, production blob writes or deployment."
+}

@@ -110,7 +110,7 @@ function snapshotForBody(snapshot: MeetingsSnapshot, bodyId: string): MeetingsSn
     agendaDocuments: snapshot.agendaDocuments.filter(document => ids.has(document.meetingId)) };
 }
 
-/** State jobs read current facts and source partitions directly, one state at a time. */
+/** State jobs read rebuilt calendars one state at a time. */
 export async function* readMeetingBodies(options: Pick<ReaderMeetingsOptions, "states" | "includeAgenda" | "window" | "settings" | "now">): AsyncGenerator<StateMeetingBody> {
   const settings = options.settings ?? await readReaderMeetingSettings();
   for (const state of options.states ?? [...REGISTRY_STATES, "US"]) {

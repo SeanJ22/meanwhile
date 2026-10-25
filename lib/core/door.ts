@@ -1,6 +1,6 @@
 import { checkFact, isOfficialUrl, type CheckEntity, type Claim, type Provenance } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
 import { bodyNamed, canonicalSubject, ensureEntity, governmentAt, placeBody, splitSubject, type BodyRef } from "../facts/entities.ts";
 import { readCheckEntity } from "../facts/entity-read.ts";
 import type { FactDb, Query, PublishInput, Clocks } from "../facts/publish.ts";
@@ -78,6 +78,7 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
   if (held) {
     if (String(held.name).endsWith(" governing")) {
       await query("UPDATE entity SET name=$2 WHERE id=$1 AND name=$3", [held.id, name, held.name]);
+      await enqueueReaderPlaces({ entities: [String(held.id)] }, query);
       held.name = name;
     }
     await placeBody(query, String(held.id), government.placeId);
@@ -169,6 +170,8 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
         await query(`UPDATE fact SET checked_at=$2,source_copy_id=$3,quote=$4,quote_start=$5,second_copy_id=$6,provenance_kind=$7,value_text=$8 WHERE id=$1`,
         [row!.id,now.toISOString(),c.copy.id,c.quote,verdict.quoteStart,c.second?.copy.id ?? null,c.provenance,c.valueText]);
         await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
+        await enqueueReaderPlaces({ entities: [entity.id] }, query);
+        changed = await readerCacheScopeForEntity(query, entity.id);
       }
       return { decision, factId: Number(row!.id) };
     }
@@ -193,28 +196,13 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     [row!.id,`A source states a different value: ${c.valueText}`,c.copy.finalUrl]);
     if (live) {
       await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      await queueRebuild(query, entity.id, now);
+      await enqueueReaderPlaces({ entities: [entity.id] }, query);
       changed = await readerCacheScopeForEntity(query, c.entity.id);
     }
     return { decision, factId };
   });
   // The work list can be on another database. Release the fact transaction before handing off a refusal.
   if ("refused" in outcome && refusedClaim) await options.refusal?.(refusedClaim, outcome.refused);
-  if (changed) await invalidateReaderCache(changed, options.purge);
+  if (changed) await invalidateReaderCache(changed, options.purge, null);
   return outcome;
-}
-
-/** Existing subject-to-place links keep serving readers until RB-A4 supplies the full service map. */
-async function queueRebuild(query: Query, entityId: string, now: Date): Promise<void> {
-  const places = await query(`WITH RECURSIVE subjects AS (
-      SELECT id,kind,state,parent_id,ARRAY[id] AS path FROM entity WHERE id=$1
-      UNION ALL SELECT e.id,e.kind,e.state,e.parent_id,s.path || e.id FROM entity e JOIN subjects s ON e.id=s.parent_id
-        WHERE NOT e.id=ANY(s.path)
-    ), places AS (
-      SELECT ep.place_id AS id FROM entity_place ep JOIN subjects s ON ep.entity_id=s.id
-      UNION SELECT id FROM subjects WHERE kind='place'
-    ) SELECT e.id,e.state FROM places p JOIN entity e ON e.id=p.id`, [entityId]);
-  if (places.length) await query(`INSERT INTO rebuild_queue(place_id,queued_at)
-    SELECT place_id,$2::timestamptz FROM unnest($1::text[]) AS place_id ON CONFLICT(place_id) DO NOTHING`,
-  [places.map(place => place.id), now.toISOString()]);
 }

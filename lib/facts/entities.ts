@@ -11,6 +11,7 @@ import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
 import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import type { Entity } from "../core/shapes.ts";
+import { enqueueReaderPlaces } from "../reader/cache.ts";
 
 interface EntityRow extends Entity {
   /** The registered government a reviewed door names as a board's owner. */
@@ -185,10 +186,11 @@ export async function resolvePerson(db: FactDb, person: PersonIds): Promise<stri
       ON x.scheme = w.scheme AND x.value = w.value ORDER BY entity_id`, [schemes, values]);
     const openStates = person.externalIds.find(([scheme]) => scheme === "openstates")?.[1];
     const id = held.length ? String(held[0]!.entity_id) : openStates ?? `ocd-person/${randomUUID()}`;
-    if (!held.length) await query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'person', $2, $3) ON CONFLICT (id) DO NOTHING", [id, person.name, person.state]);
-    await query(`INSERT INTO entity_external_id (entity_id, scheme, value) SELECT $1, * FROM unnest($2::text[], $3::text[])
-      ON CONFLICT (scheme, value) DO NOTHING`, [id, schemes, values]);
-    if (person.placeId) await query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM entity WHERE id = $2) ON CONFLICT DO NOTHING", [id, person.placeId]);
+    const added = !held.length ? await query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'person', $2, $3) ON CONFLICT (id) DO NOTHING RETURNING id", [id, person.name, person.state]) : [];
+    const aliases = await query(`INSERT INTO entity_external_id (entity_id, scheme, value) SELECT $1, * FROM unnest($2::text[], $3::text[])
+      ON CONFLICT (scheme, value) DO NOTHING RETURNING entity_id`, [id, schemes, values]);
+    const places = person.placeId ? await query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM entity WHERE id = $2) ON CONFLICT DO NOTHING RETURNING place_id", [id, person.placeId]) : [];
+    if (added.length || aliases.length || places.length) await enqueueReaderPlaces({ entities: [id] }, query);
     return id;
   });
 }
@@ -204,7 +206,8 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
   const [idAt, nameAt, stateAt] = [column("ocd_person_id"), column("name"), column("jurisdiction")];
   const loaded = new Map((await db.query("SELECT source, sha256 FROM fact_store_load")).map(r => [String(r.source), String(r.sha256)]));
   const registrationHeld = (await db.query("SELECT to_regclass('civic_data_promotions') IS NOT NULL AS held"))[0]?.held === true;
-  await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING`, [COUNTRY]);
+  const country = await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING RETURNING id`, [COUNTRY]);
+  if (country.length) await enqueueReaderPlaces({ places: [COUNTRY] }, db.query);
   const done: string[] = [];
   for (const st of states) {
     const file = readFileSync(join(root, "data", "derived", "registration", `${st}.json`));
@@ -238,6 +241,7 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       await insertEntities(query, await canonicalBodies(query, batch));
       await query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
         ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`registration:${st}`, hash]);
+      await enqueueReaderPlaces({ states: [st] }, query);
     });
     done.push(st);
   }
@@ -270,13 +274,17 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
   const id = row.kind === "body" ? await canonicalBodyId(query, row.id) : row.id;
   if (id !== row.id) return id;
   const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
-  await query(`INSERT INTO entity (id, kind, name, state, parent_id)
+  const changed = await query(`WITH held AS MATERIALIZED (SELECT parent_id FROM entity WHERE id=$1), changed AS (
+    INSERT INTO entity (id, kind, name, state, parent_id)
     SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = coalesce(
       (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $5), $5))
     ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
       WHERE entity.kind = 'body' AND EXCLUDED.kind = 'body' AND entity.state IS NOT DISTINCT FROM EXCLUDED.state
-        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'`,
+        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'
+    RETURNING id
+  ) SELECT id,(SELECT parent_id FROM held) AS old_parent FROM changed`,
   [id, row.kind, row.name, row.state, parentId]);
+  if (changed.length) await enqueueReaderPlaces({ entities: [id, ...changed.flatMap(row => typeof row.old_parent === "string" ? [row.old_parent] : [])] }, query);
   return id;
 }
 
@@ -295,9 +303,11 @@ export async function governmentAt(query: Query, ids: readonly (string | null)[]
     const [place] = candidates.length ? await query("SELECT id, name, state FROM entity WHERE id = ANY($1::text[]) AND kind = 'place' ORDER BY array_position($1::text[], id) LIMIT 1", [candidates]) : [];
     if (place) {
       await ensureEntity(query, { id, kind: "government", name: String(place.name), state: place.state as string | null, parentId: String(place.id) });
-      await query("UPDATE entity SET parent_id = $2 WHERE id = $1 AND parent_id IS DISTINCT FROM $2", [id, place.id]);
-      await query("DELETE FROM entity_place WHERE entity_id = $1 AND place_id <> $2", [id, place.id]);
-      await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place.id]);
+      const moved = await query("UPDATE entity SET parent_id = $2 WHERE id = $1 AND parent_id IS DISTINCT FROM $2 RETURNING id", [id, place.id]);
+      const removed = await query("DELETE FROM entity_place WHERE entity_id = $1 AND place_id <> $2 RETURNING place_id", [id, place.id]);
+      const added = await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING place_id", [id, place.id]);
+      if (moved.length || removed.length || added.length) await enqueueReaderPlaces({ entities: [id],
+        places: [...removed.map(row => String(row.place_id)), ...(government ? [String(government.parent_id)] : [])] }, query);
       return { id, state: place.state as string | null, placeId: String(place.id), name: government ? String(government.name) : String(place.name) };
     }
     if (government) return { id, state: government.state as string | null, placeId: String(government.parent_id), name: String(government.name) };
@@ -363,9 +373,10 @@ async function governmentContext(query: Query, id: string): Promise<GoverningCon
 }
 
 export async function placeBody(query: Query, id: string, place: string): Promise<void> {
-  await query(`DELETE FROM entity_place WHERE entity_id = $1
-    AND place_id ~ '${BARE_ROOT}'`, [id]);
-  if (localPlace(place)) await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place]);
+  const removed = await query(`DELETE FROM entity_place WHERE entity_id = $1
+    AND place_id ~ '${BARE_ROOT}' RETURNING place_id`, [id]);
+  const added = localPlace(place) ? await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING place_id", [id, place]) : [];
+  if (removed.length || added.length) await enqueueReaderPlaces({ entities: [id], places: removed.map(row => String(row.place_id)) }, query);
 }
 
 /** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. */
@@ -414,6 +425,8 @@ export async function learnDoorChannel(query: Query, entityId: string, url: stri
   await learnSite(query, entityId, `${hostOf(url)}${pathname.slice(0, pathname.lastIndexOf("/")) || ""}`);
 }
 
-const learnSite = (query: Query, entityId: string, site: string) =>
-  query(`INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = coalesce(
-    (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1), $1) ON CONFLICT DO NOTHING`, [entityId, site]);
+async function learnSite(query: Query, entityId: string, site: string): Promise<void> {
+  const changed = await query(`INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = coalesce(
+    (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1), $1) ON CONFLICT DO NOTHING RETURNING entity_id`, [entityId, site]);
+  if (changed.length) await enqueueReaderPlaces({ entities: changed.map(row => String(row.entity_id)) }, query);
+}

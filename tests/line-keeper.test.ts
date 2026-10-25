@@ -11,7 +11,7 @@ import { workMigrationDefinition } from "../lib/control-plane/repository/migrati
 import { workList } from "../lib/core/work.ts";
 import { REJECT_REWRITE_FUNCTION_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
-import { readCounts, readOldest } from "../lib/control-plane/line-keeper/read.ts";
+import { readCounts, readOldest, readRebuildWaiting } from "../lib/control-plane/line-keeper/read.ts";
 import { runLineKeeper, withKeeperFixes } from "../lib/control-plane/line-keeper/keep.ts";
 import { keeperRows } from "../lib/control-plane/line-keeper/admin.ts";
 import { readLineReport } from "../lib/control-plane/line-keeper/report.ts";
@@ -25,6 +25,7 @@ const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])
 async function readerDatabase() {
   const db=new PGlite();
   await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,state text);
+    CREATE TABLE rebuild_queue(place_id text PRIMARY KEY,queued_at timestamptz NOT NULL);
     CREATE TABLE fact(id serial PRIMARY KEY,entity_id text REFERENCES entity(id),field text,status text,value jsonb);
     CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text);
     INSERT INTO entity VALUES('az:body','body','AZ'),('ny:person','person','NY');
@@ -75,6 +76,30 @@ test('the merged work list counts completed work as done and delayed retries as 
     assert.equal(rows.find(r=>r.family==='check'&&r.stage==='work list:WAITING')!.total,1);
     const direct=(await db.query<{n:number}>("SELECT count(*)::int n FROM work_row WHERE status='done'")).rows[0]!.n;
     assert.equal(rows.filter(r=>r.stage==='work list:DONE').reduce((n,r)=>n+r.total,0),direct);
+  }finally{await db.close();}
+});
+
+test('page rebuild waiting ages are grouped by state and enter the existing repair list after five minutes',async()=>{
+  const db=await readerDatabase();
+  try {
+    await db.exec(`INSERT INTO entity VALUES('az:place','place','AZ'),('ny:place','place','NY');
+      INSERT INTO rebuild_queue VALUES('az:place','2026-10-25T01:00:00Z'),('ny:place','2026-10-25T01:04:00Z');`);
+    const waiting=await readRebuildWaiting(query(db));
+    assert.deepEqual(waiting.map(r=>[r.state,r.count,r.oldestAt]),[
+      ['AZ',1,'2026-10-25T01:00:00.000Z'],['NY',1,'2026-10-25T01:04:00.000Z'],
+    ]);
+    assert.equal(countProblems([],[],waiting,'2026-10-25T01:04:59Z').length,0);
+    const problems=countProblems([],[],waiting,'2026-10-25T01:05:00Z');
+    assert.equal(problems.length,1);
+    assert.equal(problems[0].owner,'the page builder');
+    assert.match(problems[0].says,/1 place page is waiting.*at least five minutes/);
+    const at='2026-10-25T01:05:00Z';
+    const config=defaultAdminConfig(at);
+    const hour={from:'2026-10-25T01:00:00Z',through:'2026-10-25T02:00:00Z',measuredAt:at,counts:[],waiting,problems,own:{bytesRead:0}};
+    const saved=withKeeperFixes(config,hour);
+    assert.equal(saved.fixList!.length,1);
+    assert.equal(saved.latestBrief!.problems.length,1);
+    assert.deepEqual(saved.settings,config.settings);
   }finally{await db.close();}
 });
 

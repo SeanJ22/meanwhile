@@ -17,7 +17,7 @@ import { type SourceCheckEvidence } from "../civic-data/types.ts";
 import { readerFactDb } from "../facts/db.ts";
 import { type FactDb, type Query } from "../facts/publish.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { invalidateReaderCache,type ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces,invalidateReaderCache,type ReaderCachePurger } from "../reader/cache.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { acquireCampaignFinanceResource } from "./state-acquisition.ts";
 import { bindCampaignMoney,campaignMoneyIdentityMatches,campaignMoneyPeopleIndex,campaignMoneyWork,campaignPersonKey,campaignRecordYear, readCampaignMoneyPeople, campaignName, campaignOffice, CAMPAIGN_MONEY_MISSING_REASONS, type CampaignMoneyPerson } from "./state-people.ts";
@@ -108,6 +108,7 @@ async function publishCampaignFinanceResource(state:string,resource:CampaignFina
       if(removed.length){
         if(records===0)throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The source no longer returns this person's previously filed rows; the last verified money is preserved for investigation");
         await options.facts.query("UPDATE fact SET status='superseded' WHERE id=ANY($1::bigint[])",[removed.map(row=>Number(row.id))]);
+        await invalidateReaderCache({states:[state]},options.purge,options.facts.query);
         for(const row of removed)touched.run(String(row.parent_id));
       }
       after=Number(previous.at(-1)!.id);
@@ -129,7 +130,7 @@ const DAY = 24 * 60 * 60_000;
 
 const hash=(value:string)=>createHash("sha256").update(value).digest("hex");
 async function importHeldCampaignMoney(options:StateRefreshOptions,people:readonly CampaignMoneyPerson[],at:string):Promise<number>{
-  let imported=0;
+  let imported=0,changed=false;
   if(!people.length || !(await options.query("SELECT 1 FROM civic_data_promotions WHERE record_class='STATE_CAMPAIGN_FINANCE' AND scope LIKE $1||':%' OR record_class='CURATED_READER_RECORD' AND scope=$1 LIMIT 1",[`US-${options.state}:campaign-finance`])).length)return 0;
   for(let start=0;start<people.length;start+=500){
     const batch=people.slice(start,start+500),byId=new Map(batch.map(person=>[person.id,person]));
@@ -171,14 +172,17 @@ async function importHeldCampaignMoney(options:StateRefreshOptions,people:readon
           organizations:filedOrganizations(record.funding),individualTotal:record.funding?.scope==="ELECTION_CYCLE"?record.funding.individualTotal:null,smallDonorShare:null};
         await query("CREATE TEMP TABLE money_cycles(entity_id text,field text,source_copy_id bigint,value jsonb,checked_at timestamptz) ON COMMIT DROP");
         await query("INSERT INTO money_cycles VALUES($1,$2,$3,$4,$5)",[person.id,`campaign-cycle:${committee}:${cycle}`,copy.id,JSON.stringify(value),record.provenance.verifiedAt]);
-        await replaceCycles(query,at);
+        if(await replaceCycles(query,at)){
+          await enqueueReaderPlaces({entities:[person.id]},query);
+          changed=true;
+        }
       });
       imported++;
       }
       if(records.length<500)break;
     }
   }
-  if(imported)await invalidateReaderCache({states:[options.state]},options.purge);
+  if(changed)await invalidateReaderCache({states:[options.state]},options.purge,null);
   return imported;
 }
 
@@ -215,14 +219,20 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
   for(let start=0;start<due.length;start+=500){
     const batch=due.slice(start,start+500);
     const root=campaignStateOcd(state),places=[...new Set([root,...batch.map(person=>person.division)])];
-    await facts.query(`INSERT INTO entity(id,kind,name,state) SELECT id,'place',id,$2 FROM unnest($1::text[]) id ON CONFLICT DO NOTHING`,[places,state]);
+    const changed=await facts.transaction(async query=>{
+    const added=await query(`INSERT INTO entity(id,kind,name,state) SELECT id,'place',id,$2 FROM unnest($1::text[]) id ON CONFLICT DO NOTHING RETURNING id`,[places,state]);
     const persons=[...new Map(batch.map(person=>[person.id,person])).values()];
-    await facts.query(`INSERT INTO entity(id,kind,name,state) SELECT id,'person',name,$3 FROM unnest($1::text[],$2::text[]) p(id,name)
-      ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name WHERE entity.state=EXCLUDED.state AND entity.kind='person' AND entity.name IS DISTINCT FROM EXCLUDED.name`,[persons.map(person=>person.id),persons.map(person=>person.name),state]);
-    await facts.query(`INSERT INTO entity_place(entity_id,place_id) SELECT * FROM unnest($1::text[],$2::text[]) ON CONFLICT DO NOTHING`,[batch.flatMap(person=>person.division===root?[person.id]:[person.id,person.id]),batch.flatMap(person=>person.division===root?[root]:[person.division,root])]);
+    const renamed=await query(`INSERT INTO entity(id,kind,name,state) SELECT id,'person',name,$3 FROM unnest($1::text[],$2::text[]) p(id,name)
+      ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name WHERE entity.state=EXCLUDED.state AND entity.kind='person' AND entity.name IS DISTINCT FROM EXCLUDED.name RETURNING id`,[persons.map(person=>person.id),persons.map(person=>person.name),state]);
+    const placed=await query(`INSERT INTO entity_place(entity_id,place_id) SELECT * FROM unnest($1::text[],$2::text[]) ON CONFLICT DO NOTHING RETURNING entity_id`,[batch.flatMap(person=>person.division===root?[person.id]:[person.id,person.id]),batch.flatMap(person=>person.division===root?[root]:[person.division,root])]);
     const aliases=[...new Map(batch.flatMap(person=>(person.aliases??[]).filter(alias=>aliasOwners.get(alias)===person.id).map(alias=>[alias,{id:person.id,alias}] as const))).values()];
-    if(aliases.length)await facts.query(`INSERT INTO entity_external_id(entity_id,scheme,value) SELECT id,$3,alias FROM unnest($1::text[],$2::text[]) a(id,alias)
-      ON CONFLICT(scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id WHERE entity_external_id.entity_id<>EXCLUDED.entity_id`,[aliases.map(row=>row.id),aliases.map(row=>row.alias),`campaign-person:${state}`]);
+    const aliased=aliases.length?await query(`INSERT INTO entity_external_id(entity_id,scheme,value) SELECT id,$3,alias FROM unnest($1::text[],$2::text[]) a(id,alias)
+      ON CONFLICT(scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id WHERE entity_external_id.entity_id<>EXCLUDED.entity_id RETURNING entity_id`,[aliases.map(row=>row.id),aliases.map(row=>row.alias),`campaign-person:${state}`]):[];
+    const changed=added.length>0||renamed.length>0||placed.length>0||aliased.length>0;
+    if(changed)await enqueueReaderPlaces({states:[state]},query);
+    return changed;
+    });
+    if(changed)await invalidateReaderCache({states:[state]},options.purge,null);
   }
   let loaded=await importHeldCampaignMoney(options,due,at),unmatched=0;
   const reasons:Record<string,number>={};

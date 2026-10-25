@@ -191,7 +191,7 @@ async function retitleMembers(query: Query, purge?: ReaderCachePurger): Promise<
         SELECT $2, $3, to_jsonb($4::text), $4, 'live', provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, 0 FROM fact WHERE id = $1 AND quote ILIKE '%' || $4 || '%'
         AND NOT EXISTS (SELECT 1 FROM fact d WHERE d.entity_id = $2 AND d.field = $3 AND d.status = 'live')`, [row.id, person, `office:${row.entity_id}`, title]);
     }
-    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
+    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge, query);
     renamed++;
   }
   await writePassCursor(query, "box-names", String(newest));
@@ -234,7 +234,7 @@ async function reviewBoxFacts(query: Query, purge?: ReaderCachePurger): Promise<
     } else {
       tally.flagged += await flagLooksWrong(query, Number(row.id), remedy.pull);
     }
-    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge);
+    await invalidateReaderCache(await readerCacheScopeForEntity(query, String(row.entity_id)), purge, query);
   }
   await writePassCursor(query, "box-labels", String(newest));
   return tally;

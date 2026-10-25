@@ -1,0 +1,320 @@
+{
+  "observedAt": "2026-10-25T03:26:24.218Z",
+  "productionWrites": 0,
+  "source": "tiny-hill-13996172/br-delicate-lab-ax02xuo5/readonly",
+  "copy": "local PGlite with real reader migrations and state-scoped production source rows",
+  "clock": "controlled scheduling; not a deployed scheduling claim",
+  "initialBuildMs": 4660.676981,
+  "initial": {
+    "rebuilt": 2,
+    "failed": 0,
+    "remaining": 0
+  },
+  "connections": [
+    {
+      "connection": "fresh official API -> roster-facts writer -> queue -> scheduled builder -> ready reader",
+      "zip": "85201",
+      "subject": "ocd-division/country:us/state:az/place:mesa#body:audit-and-finance-committee",
+      "productionFactId": 2366666,
+      "sourceUrl": "https://webapi.legistar.com/v1/mesa/bodies?$filter=BodyId%20gt%200&$orderby=BodyId&$top=1000&$select=BodyId%2CBodyName%2CBodyRowVersion",
+      "sourceRecord": {
+        "BodyRowVersion": "AAAAAAAmn3A=",
+        "BodyName": "Audit and Finance Committee",
+        "BodyId": 169
+      },
+      "writer": [
+        {
+          "decision": "CONFIRM",
+          "factId": 2366666
+        }
+      ],
+      "beforeCheckedAt": "2026-10-23T23:57:54.729Z",
+      "afterCheckedAt": "2026-10-25T03:24:07.049Z",
+      "publicationToReadyMs": 13908.628227000001,
+      "inventory": {
+        "bodies": {
+          "count": 36,
+          "sha256": "2daa4cf5ba2e47e236fcc181bba44a8fe5041ea13b628bf300b6f7d4d2655e95"
+        },
+        "meetings": {
+          "count": 97,
+          "sha256": "9051cb479a624c59e38a4faaad05cd614e1e6cac01f79f607fc9eaf3c6e9d7d0"
+        },
+        "members": {
+          "count": 1,
+          "sha256": "a9cb6e5ac1e8884a8aca58b1b68f5ad022d6f5659ecd828bbac75008e47c4bb6"
+        },
+        "officials": {
+          "count": 0,
+          "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        }
+      },
+      "nextRuns": [
+        {
+          "rebuilt": 5,
+          "failed": 0,
+          "remaining": 0
+        }
+      ]
+    },
+    {
+      "connection": "owner-flags writer -> queue -> next scheduled builder -> ready reader",
+      "zip": "85701",
+      "subject": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "productionFactId": 1711505,
+      "removedValue": "(520) 225-6070",
+      "sourceUrl": "https://govboard.tusd1.org/",
+      "publicationToReadyMs": 14941.176396999996,
+      "inventory": {
+        "bodies": {
+          "count": 142,
+          "sha256": "cf435c88f03040834c67d76c46a6b569aaa15c6ee4d66ab0ab0e9490d53547bb"
+        },
+        "meetings": {
+          "count": 279,
+          "sha256": "78896f3eebb09b20740a87564d3df7d54a0c2f9400545adad66b4839f8de9ac2"
+        },
+        "members": {
+          "count": 47,
+          "sha256": "42b4d76a12b67b85b3f8a234f0b5ad2508e9ce47eb365ee27a10d3423c2fa2b0"
+        },
+        "officials": {
+          "count": 39,
+          "sha256": "0f4d93735500ee9ace4e8236cba6c4d73e2301d21a1684bc59fa562479de4784"
+        }
+      },
+      "nextRun": {
+        "rebuilt": 5,
+        "failed": 0,
+        "remaining": 0
+      }
+    }
+  ],
+  "readyReads": [
+    {
+      "zip": "85201",
+      "reads": 1,
+      "ms": 16.568062000000282
+    },
+    {
+      "zip": "85701",
+      "reads": 1,
+      "ms": 46.428727000000436
+    },
+    {
+      "zip": "85201",
+      "reads": 1,
+      "ms": 17.09107899999981
+    },
+    {
+      "zip": "85201",
+      "reads": 1,
+      "ms": 16.210635000003094
+    },
+    {
+      "zip": "85701",
+      "reads": 1,
+      "ms": 46.17794900000081
+    },
+    {
+      "zip": "85701",
+      "reads": 1,
+      "ms": 43.60297800000262
+    }
+  ],
+  "pages": [
+    {
+      "place_id": "ocd-division/country:us",
+      "version": 2,
+      "built_at": "2026-10-25T03:26:09.450Z"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az",
+      "version": 2,
+      "built_at": "2026-10-25T03:26:16.764Z"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az/place:mesa",
+      "version": 1,
+      "built_at": "2026-10-25T03:26:05.796Z"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az/place:mesa#body:audit-and-finance-committee",
+      "version": 1,
+      "built_at": "2026-10-25T03:26:07.337Z"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az/school_district:tucson_unified_district",
+      "version": 1,
+      "built_at": "2026-10-25T03:26:19.649Z"
+    },
+    {
+      "place_id": "ocd-division/country:us/state:az/school_district:tucson_unified_district#board",
+      "version": 1,
+      "built_at": "2026-10-25T03:26:21.487Z"
+    },
+    {
+      "place_id": "zip:85201",
+      "version": 2,
+      "built_at": "2026-10-25T03:26:09.141Z"
+    },
+    {
+      "place_id": "zip:85701",
+      "version": 2,
+      "built_at": "2026-10-25T03:26:24.001Z"
+    }
+  ],
+  "counts": [
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T03:00:00.000Z",
+      "step": "v1:[\"Place pages\", \"rebuilt\", \"in\"]",
+      "n": 10
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T03:00:00.000Z",
+      "step": "v1:[\"Place pages\", \"rebuilt\", \"out\"]",
+      "n": 10
+    },
+    {
+      "state": "US",
+      "hour": "2026-10-25T03:00:00.000Z",
+      "step": "v1:[\"Place pages\", \"rebuilt\", \"in\"]",
+      "n": 2
+    },
+    {
+      "state": "US",
+      "hour": "2026-10-25T03:00:00.000Z",
+      "step": "v1:[\"Place pages\", \"rebuilt\", \"out\"]",
+      "n": 2
+    }
+  ],
+  "workerCachePurges": [
+    {
+      "at": "2026-10-25T03:25:52.244Z",
+      "tags": [
+        "reader-place:7f1c86963666b0cfb08804dffb65e07013ea5d394a38ef22b66ef1672f3adb93"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:25:54.967Z",
+      "tags": [
+        "reader-place:600f019feab14faffc6a1752db8422edd9e72e47dc069d32eb2d9ca0f10c5f53"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:03.858Z",
+      "tags": [
+        "reader-place:da02341c231c172f4c552ec708fff49577273dbc5b9b3dbc4c11253e6bc29e7d"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:04.032Z",
+      "tags": [
+        "reader-place:adc2adbd0c1a3163f65a11aa899eb7a5252518cb969542517ecfcf169de528a0"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:05.824Z",
+      "tags": [
+        "reader-place:edac796682c7e0af98eaaa3efea08b5697bfb569129ce3fed1074eddbb0e48ab"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:07.342Z",
+      "tags": [
+        "reader-place:edac796682c7e0af98eaaa3efea08b5697bfb569129ce3fed1074eddbb0e48ab"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:09.188Z",
+      "tags": [
+        "reader-place:7f1c86963666b0cfb08804dffb65e07013ea5d394a38ef22b66ef1672f3adb93"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:09.457Z",
+      "tags": [
+        "reader-place:adc2adbd0c1a3163f65a11aa899eb7a5252518cb969542517ecfcf169de528a0"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:17.833Z",
+      "tags": [
+        "reader-place:da02341c231c172f4c552ec708fff49577273dbc5b9b3dbc4c11253e6bc29e7d"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:19.711Z",
+      "tags": [
+        "reader-place:28e42ef1a82ec804b8c1b693a59f9a18fc6a400ea6c18b3089e977f961e4e339"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:21.527Z",
+      "tags": [
+        "reader-place:28e42ef1a82ec804b8c1b693a59f9a18fc6a400ea6c18b3089e977f961e4e339"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:24.166Z",
+      "tags": [
+        "reader-place:600f019feab14faffc6a1752db8422edd9e72e47dc069d32eb2d9ca0f10c5f53"
+      ]
+    }
+  ],
+  "writerCachePurges": [
+    {
+      "at": "2026-10-25T03:25:55.327Z",
+      "tags": [
+        "reader-state:AZ"
+      ]
+    },
+    {
+      "at": "2026-10-25T03:26:09.288Z",
+      "tags": [
+        "reader-state:AZ"
+      ]
+    }
+  ],
+  "historyDerivationParity": {
+    "observedAt": "2026-10-25T03:30:45.252Z",
+    "productionWrites": 0,
+    "comparison": "The history query derives current and the ZIP builder also compares its default current query; both complete decoded JSON answers compared with the independent legacy SQL snapshots under JSON wire semantics and order normalization.",
+    "results": [
+      {
+        "zip": "85201",
+        "capturedAt": "2026-10-25T03:29:40.652Z",
+        "readOnlySnapshot": true,
+        "isolation": "RepeatableRead",
+        "optimizedBuilderQueries": 2,
+        "currentPartitions": 6,
+        "historyPartitions": 7,
+        "archivedMeetings": 2,
+        "currentMeetings": 97,
+        "historyMeetings": 99,
+        "currentBodies": 36,
+        "historyBodies": 36,
+        "currentWireParity": true,
+        "historyWireParity": true
+      },
+      {
+        "zip": "85701",
+        "capturedAt": "2026-10-25T03:29:48.840Z",
+        "readOnlySnapshot": true,
+        "isolation": "RepeatableRead",
+        "optimizedBuilderQueries": 2,
+        "currentPartitions": 34,
+        "historyPartitions": 38,
+        "archivedMeetings": 23,
+        "currentMeetings": 279,
+        "historyMeetings": 294,
+        "currentBodies": 142,
+        "historyBodies": 142,
+        "currentWireParity": true,
+        "historyWireParity": true
+      }
+    ]
+  }
+}

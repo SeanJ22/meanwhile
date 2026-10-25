@@ -69,6 +69,14 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
     const now = current.find(c => JSON.stringify([c.state,c.family,c.stage]) === key);
     const before = old.get(key);
     const age = row.oldestAt === null ? null : Date.parse(at) - Date.parse(row.oldestAt);
+    if(row.family==='Place pages'&&row.stage==='rebuilt') {
+      if(row.count>0&&(age===null||age>=5*60_000))problems.push({
+        key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · reader updates`,
+        says:age===null?"Waiting place pages have no recorded starting time.":`${row.count.toLocaleString("en-US")} place ${row.count===1?'page is':'pages are'} waiting; the oldest update has waited at least five minutes.`,
+        owner:row.owner,next:"Repair the page builder and check the updated places on the live site.",
+      });
+      continue;
+    }
     if(row.count>0&&row.oldestAt===null) {
       problems.push({key:`count-age:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
         says:"Waiting work has no recorded starting time.",owner:row.owner,next:"Restore the waiting time on this work list."});

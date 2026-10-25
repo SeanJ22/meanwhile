@@ -1,7 +1,7 @@
 # Deploy settings are pinned here rather than autodetected.
 
 [build]
-  command = "corepack enable && corepack pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build"
+  command = "corepack enable && corepack pnpm db:apply --target=production --phase=expand --production-build && node --experimental-strip-types scripts/prepare-place-pages.mts && corepack pnpm run build"
   publish = ".next"
   # Exit 0 CANCELS the build; non-zero builds. Every failure path builds.
   ignore = "node scripts/netlify-ignore.mjs"
@@ -28,6 +28,10 @@
 
 [functions."line-keeper-initialize"]
   node_bundler = "esbuild"
+
+[functions."rebuild-place-pages"]
+  node_bundler = "esbuild"
+  included_files = ["data/derived/zip-divisions/*.json", "lib/geo/zcta-centroids.json", "lib/geo/postal-zips.json", "data/derived/state-geometry.json", "!data/states/*/geo/**"]
 
 [functions."grounded-ask"]
   node_bundler = "esbuild"

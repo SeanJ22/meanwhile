@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { drizzle } from "drizzle-orm/neon-http";
+import { PgDialect } from "drizzle-orm/pg-core";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { buildUnchangedConfirmation, serializeUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { saveWorkerPublicationOutcome } from "../lib/civic-data/publication-flow.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -16,7 +18,7 @@ import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { invalidateReaderCache, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
-import { campaignDb as factDb } from "./helpers/campaign-money-db.ts";
+import { campaignDb as factDb, publishMoneyFixture } from "./helpers/campaign-money-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:tucson";
 const BODY = `${PLACE}#example-council`;
@@ -157,6 +159,34 @@ test("both Postgres nothing-changed paths purge nothing today and on tomorrow's 
     assert.deepEqual(await store.confirmUnchanged(check, at), { kind: "CONFIRMED", versionId: input.pointerVersionId, at: alreadyConfirmed ? newerAt : at });
     assert.equal(calls, alreadyConfirmed ? 2 : 1);
   }
+});
+
+test("a shared shelf's new source check queues its states through partitioned payloads without loading the shelf", async () => {
+  const db = await factDb();
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES('az-place','place','Arizona','AZ'),('nj-place','place','New Jersey','NJ'),('ca-place','place','California','CA')");
+    const scope = "US:shared-reader-shelf", id = "shelf-version";
+    const payload = partitionCivicPayload({ records: [{ bodyId: BODY }, { stateFips: "34" }] }, undefined, ["records"]);
+    for (const part of payload.parts) await db.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2::jsonb)", [part.hash, JSON.stringify(part.payload)]);
+    await publishMoneyFixture(db, { sourceId: "shelf", recordClass: "CURATED_READER_RECORD", scope, id, payload: payload.value });
+    const store = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
+    const dialect = new PgDialect();
+    const returned: unknown[] = [];
+    Object.assign(store, { assertCandidateMutationAuthority: () => {}, cacheOptions: { purge: async () => { assert.fail("unchanged checks do not purge"); } },
+      db: Object.assign(drizzle.mock(), { batch: async () => [[], [{ sequence: 1 }]], execute: async (statement: Parameters<PgDialect["sqlToQuery"]>[0]) => {
+        const query = dialect.sqlToQuery(statement), rows = await db.query(query.sql, query.params);
+        returned.push(...rows.filter(row => "state" in row));
+        return { rows };
+      } }),
+    });
+    const outcome = await store.confirmUnchanged({ sourceId: "shelf", recordClass: "CURATED_READER_RECORD", scope, parserVersion: "shelf/1",
+      pointerVersionId: id, readModelHash: "a".repeat(64), basis: "READ_MODEL_RECOMPUTED",
+      retrieval: { requestedUrl: "https://example.gov/", finalUrl: "https://example.gov/", httpStatus: 200,
+        rawHash: "b".repeat(64), retrievedAt: NOW.toISOString() } }, new Date(NOW.getTime() + 1_000).toISOString());
+    assert.equal(outcome.kind, "CONFIRMED");
+    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), ["az-place", "nj-place"]);
+    assert.deepEqual(returned, [{ state: "AZ" }, { state: "NJ" }], "only the distinct state footprint leaves Postgres");
+  } finally { await db.pg.close(); }
 });
 
 test("purge refusal and transport failure stay visible without reversing publication", async t => {

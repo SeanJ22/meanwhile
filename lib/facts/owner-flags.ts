@@ -191,6 +191,6 @@ export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, i
     return { factId: flag.fact_id === null ? null : Number(flag.fact_id),entityId: flag.entity_id as string | null, readerId: flag.reader_id as string | null, family: flag.reader_family as string | null,
       detail: String(flag.reason ?? "A published value needs investigation.") };
   });
-  await invalidateReaderCache(outcome.entityId ? await readerCacheScopeForEntity(db.query,outcome.entityId) : {national:true},purge);
+  await invalidateReaderCache(outcome.entityId ? await readerCacheScopeForEntity(db.query,outcome.entityId) : {national:true},purge,db.query);
   return outcome;
 }

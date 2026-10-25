@@ -22,6 +22,11 @@ import { isCensusPlaceholderDivision } from "../../lib/registry/census-placehold
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../../lib/routing/everyday-data-plane.ts";
+import { PLACE_PAGES_SQL, READY_PLACE_SQL } from "../../lib/reader/place.ts";
+import { composePlaceRow } from "../../lib/reader/place-decode.ts";
+import { placeBuildInput } from "../../lib/reader/place-builder.ts";
+import { stateForZip } from "../../lib/reader/national.ts";
+import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
 export interface ReaderValues {
@@ -215,15 +220,10 @@ export function activateCanonicalFixture(key: string): void {
   } as unknown as ReaderAuthorityEdgeBundle;
   if (held.values) { clearPromotedReadModelCache(); enterReaderAuthorityEdge(bundle); }
   if(input.authority?.["meeting-outcomes"]) primeOutcomeProjection(input.authority["meeting-outcomes"].value as OutcomeSnapshot,input.authority["meeting-outcomes"].versionId);
-  const readFacts: Query = async (sql,params=[]) => {
+  const fixturePlaceRow = async(params: readonly unknown[]) => {
     const values = [...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
     const registries = values.filter(p => p.recordClass === "REGISTRY_RUNTIME_BINDING").map(p => p.payload as RegistryRuntimeReadModel);
     const rosters = registries.flatMap(r => r.bodyRosters ?? []);
-    if (!sql.includes("AS registration_held") && !sql.includes("WITH RECURSIVE ancestors AS")) {
-      if (sql.startsWith("SELECT id FROM entity")) return registries.flatMap(r => r.registry.bodies).filter(b => (params[0] as string[]).includes(meetingStateOf(b.id))).map(b => ({id:b.id}));
-      if (sql.includes("SELECT place_id FROM entity_place")) return (params[0] as string[]).map(id => ({place_id:id.split("#")[0]}));
-      return rosterFactReader(rosters)(sql,params);
-    }
     const state = String(params[0]), named = params[2] as string[], all = params[4] === true;
     const divisions = [...new Set([...(params[1] as string[]), ...(params[8] ? named.filter(id => id.startsWith("ocd-division/")).map(id => id.split("#")[0]) : [])])];
     const registration = values.find(p => p.recordClass === "REGISTRATION" && p.scope === `US-${state}:registration:v1`)?.payload as RegistrationReadModel | undefined;
@@ -241,8 +241,42 @@ export function activateCanonicalFixture(key: string): void {
       .map(p => ({scope:p.scope,payload:structuredClone(p.payload),current_version_id:p.versionId,confirmation:p.latestConfirmation ? serializeUnchangedConfirmation(p.latestConfirmation) : null}));
     const registry = registries.find(value => value.registry.bodies.some(body => meetingStateOf(body.id) === state)) ?? null;
     const everydayRouting = values.find(p => p.recordClass === EVERYDAY_ROUTING_POINTER.recordClass && p.scope === EVERYDAY_ROUTING_POINTER.scope)?.payload ?? null;
-    return [{registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
+    return [{division_ids:divisions,registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
   };
+  const pages = new Map<string,Promise<Record<string,unknown>[]>>();
+  const savedRows = (input: PlaceInput,ready: boolean): Promise<Record<string,unknown>[]> => {
+    const key=JSON.stringify([input,ready]);
+    let saved=pages.get(key);
+    if(!saved){
+      saved=(async()=>{
+        const [row]=await fixturePlaceRow([input.state,input.divisionIds,input.bodyIds??[],`ocd-division/country:us/state:${input.state.toLowerCase()}`,
+          input.allBodies??false,input.includeHistory??false,true,null,input.neighbors??false,input.namedDivisionIds??[]]);
+        if(ready)return [{page:await composePlaceRow(input,row),version:1}];
+        return [{page_id:input.divisionIds[0]??input.bodyIds?.[0]??`ocd-division/country:us/state:${input.state.toLowerCase()}`,
+          page_kind:input.bodyIds?.length?"body":input.divisionIds.length?"place":"empty",built_at:new Date().toISOString(),body_ids:input.bodyIds??[],row}];
+      })();
+      pages.set(key,saved);
+    }
+    return saved.then(rows=>structuredClone(rows));
+  };
+  const readFacts: Query = async (sql,params=[]) => {
+    if(sql===READY_PLACE_SQL){
+      const id=String(params[0]),state=id.startsWith("zip:")?stateForZip(id.slice(4)):meetingStateOf(id);
+      if(!state)throw new Error("The fixture page must name a held state");
+      const input=await placeBuildInput(id,"place",state);
+      return savedRows({...input,includeHistory:params[1]===true},true);
+    }
+    if(sql===PLACE_PAGES_SQL)return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
+      namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true},false);
+    if(sql.includes("AS registration_held") || sql.includes("WITH RECURSIVE ancestors AS"))return fixturePlaceRow(params);
+    const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
+    const registries=values.filter(p=>p.recordClass==="REGISTRY_RUNTIME_BINDING").map(p=>p.payload as RegistryRuntimeReadModel);
+    const rosters=registries.flatMap(r=>r.bodyRosters??[]);
+    if(sql.startsWith("SELECT id FROM entity"))return registries.flatMap(r=>r.registry.bodies).filter(b=>(params[0] as string[]).includes(meetingStateOf(b.id))).map(b=>({id:b.id}));
+    if(sql.includes("SELECT place_id FROM entity_place"))return(params[0] as string[]).map(id=>({place_id:id.split("#")[0]}));
+    return rosterFactReader(rosters)(sql,params);
+  };
+
   installFactReader(readFacts);
   installReaderDatabaseQuery(async statements => Promise.all(statements.map(statement =>
     canonicalRows(statement.text, statement.params) ?? readFacts(statement.text, statement.params))));

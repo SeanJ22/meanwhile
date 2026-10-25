@@ -7,6 +7,7 @@ import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
+import { enqueueReaderPlaces } from "../reader/cache.ts";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -71,7 +72,8 @@ async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl:
     if(sourceUrl)await learnDoorChannel(db.query, owner, sourceUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
-  if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
+  const placed = owner ? await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING RETURNING place_id", [id, owner]) : [];
+  if (placed.length) await enqueueReaderPlaces({ entities: [id] }, db.query);
   return (await readCheckEntity(db.query, id))!;
 }
 

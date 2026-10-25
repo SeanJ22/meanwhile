@@ -15,7 +15,7 @@ import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { withRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
 import { bindGovernmentBodies } from "@/lib/registration/listings";
-import { readerCacheHeaders } from "@/lib/reader/cache";
+import { readerPlaceCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
 import {readerStateResponse} from "@/lib/reader/state-response";
 import { lookupZcta } from "@/lib/geo/zcta";
@@ -55,8 +55,11 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const territoryRead = readerTerritory(location.state);
     const fringe = zipRead.value ? location.fringe : [];
+    const zipPoint = zipRead.value ? lookupZcta(zipRead.value) : null;
+    const readyZip = zipPoint?.lat === lat && zipPoint?.lng === lng ? zipRead.value : null;
     const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
-      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe }));
+      bodyIds: territoryBodies(lat, lng, await territoryRead), namedDivisionIds: fringe,
+      ...(readyZip ? {placeId:`zip:${readyZip}`} : {}) }));
     const [state, place, territory, settings] = await Promise.all([
       stateRead, placeRead, territoryRead, readReaderMeetingSettings(),
     ]);
@@ -90,7 +93,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       everydayRoutingDataState: place.everydayRouting ? "PROMOTED" : "NOT_RECORDED",
       snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
-    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerCacheHeaders({ states: [location.state], places: ids })),
+    }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"} : readerPlaceCacheHeaders(readyZip ? [`zip:${readyZip}`] : ids)),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });
   } catch (error) {
     console.error("READER_PLACE_LOAD_FAILED", error);

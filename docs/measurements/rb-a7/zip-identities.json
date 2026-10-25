@@ -1,0 +1,404 @@
+{
+  "capturedAt": "2026-10-25T03:19:19.873772Z",
+  "productionWrites": 0,
+  "source": "Held ZIP shards checked against production entity(kind=place) using readonly",
+  "stateCount": 56,
+  "stateZipTouches": 33925,
+  "stateDivisionIds": 93571,
+  "missing": 0,
+  "scope": "IDs include governing and fringe divisions. Cross-state ZIPs count in each touched state. This establishes page-key availability, not page-content parity.",
+  "states": [
+    {
+      "state": "AL",
+      "zips": 658,
+      "ids": 1272,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "AK",
+      "zips": 245,
+      "ids": 467,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "AZ",
+      "zips": 420,
+      "ids": 941,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "AR",
+      "zips": 619,
+      "ids": 2093,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "CA",
+      "zips": 1808,
+      "ids": 3531,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "CO",
+      "zips": 530,
+      "ids": 2416,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "CT",
+      "zips": 288,
+      "ids": 595,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "DE",
+      "zips": 68,
+      "ids": 126,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "DC",
+      "zips": 57,
+      "ids": 50,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "FL",
+      "zips": 1013,
+      "ids": 1624,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "GA",
+      "zips": 752,
+      "ids": 1621,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "HI",
+      "zips": 97,
+      "ids": 212,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "ID",
+      "zips": 287,
+      "ids": 1062,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "IL",
+      "zips": 1397,
+      "ids": 4553,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "IN",
+      "zips": 807,
+      "ids": 2615,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "IA",
+      "zips": 972,
+      "ids": 3119,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "KS",
+      "zips": 710,
+      "ids": 2676,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "KY",
+      "zips": 782,
+      "ids": 1512,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "LA",
+      "zips": 540,
+      "ids": 1197,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "ME",
+      "zips": 427,
+      "ids": 1034,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MD",
+      "zips": 478,
+      "ids": 875,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MA",
+      "zips": 540,
+      "ids": 989,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MI",
+      "zips": 993,
+      "ids": 2920,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MN",
+      "zips": 887,
+      "ids": 4096,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MS",
+      "zips": 428,
+      "ids": 1071,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MO",
+      "zips": 1040,
+      "ids": 3145,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MT",
+      "zips": 373,
+      "ids": 1432,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NE",
+      "zips": 592,
+      "ids": 2538,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NV",
+      "zips": 182,
+      "ids": 286,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NH",
+      "zips": 247,
+      "ids": 554,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NJ",
+      "zips": 598,
+      "ids": 1846,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NM",
+      "zips": 379,
+      "ids": 811,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NY",
+      "zips": 1826,
+      "ids": 3261,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "NC",
+      "zips": 853,
+      "ids": 2049,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "ND",
+      "zips": 400,
+      "ids": 2691,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "OH",
+      "zips": 1234,
+      "ids": 3583,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "OK",
+      "zips": 666,
+      "ids": 1770,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "OR",
+      "zips": 430,
+      "ids": 1014,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "PA",
+      "zips": 1833,
+      "ids": 5247,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "RI",
+      "zips": 81,
+      "ids": 144,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "SC",
+      "zips": 424,
+      "ids": 905,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "SD",
+      "zips": 401,
+      "ids": 2097,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "TN",
+      "zips": 639,
+      "ids": 1685,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "TX",
+      "zips": 1992,
+      "ids": 5280,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "UT",
+      "zips": 303,
+      "ids": 560,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "VT",
+      "zips": 265,
+      "ids": 583,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "VA",
+      "zips": 905,
+      "ids": 1513,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "WA",
+      "zips": 606,
+      "ids": 1672,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "WV",
+      "zips": 741,
+      "ids": 780,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "WI",
+      "zips": 783,
+      "ids": 3219,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "WY",
+      "zips": 180,
+      "ids": 625,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "PR",
+      "zips": 132,
+      "ids": 1270,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "VI",
+      "zips": 6,
+      "ids": 34,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "AS",
+      "zips": 1,
+      "ids": 97,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "GU",
+      "zips": 7,
+      "ids": 78,
+      "missing": 0,
+      "missing_ids": []
+    },
+    {
+      "state": "MP",
+      "zips": 3,
+      "ids": 135,
+      "missing": 0,
+      "missing_ids": []
+    }
+  ]
+}

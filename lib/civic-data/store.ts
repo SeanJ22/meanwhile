@@ -1,7 +1,8 @@
 import { repeatedFailureStreak } from "./failure-backoff.ts";
 import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
 import type { Division } from "../registry/types.ts";
-import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { REGISTRY_STATES, requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
@@ -65,7 +66,7 @@ import {
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { projectionKey } from "./projection-key.ts";
-import { invalidateReaderCache, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
@@ -1614,6 +1615,36 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
+  private async readerRows(text: string, params: readonly unknown[] = []): Promise<readonly Record<string, unknown>[]> {
+    const statement = sql.join(text.split(/(\$\d+)/).map(part => /^\$\d+$/.test(part)
+      ? sql`${sql.param(params[Number(part.slice(1)) - 1])}` : sql.raw(part)), sql``);
+    return (await this.db.execute(statement)).rows as Record<string, unknown>[];
+  }
+  /** Only state names cross the connection; shared shelves and their parts stay in Postgres. */
+  private async publicationFootprint(key: string): Promise<readonly Record<string, unknown>[]> {
+    return this.readerRows(`WITH RECURSIVE nodes(value,field) AS (
+      SELECT reader_payload_node(payload),''::text FROM civic_data_promotions WHERE key=$1
+      UNION ALL SELECT reader_payload_node(child.value),child.field FROM nodes n CROSS JOIN LATERAL (
+        SELECT e.value,e.key AS field FROM jsonb_each(CASE WHEN jsonb_typeof(n.value)='object'
+          AND coalesce(n.value->>'kind','') NOT IN ('array','string') THEN n.value ELSE '{}'::jsonb END) e
+        UNION ALL SELECT a.item,n.field FROM reader_payload_members(CASE WHEN jsonb_typeof(n.value)='array'
+          OR n.value->>'kind'='array' THEN n.value ELSE '[]'::jsonb END) a
+      ) child
+    ), geography_values AS (
+      SELECT field,piece FROM nodes n CROSS JOIN LATERAL unnest(string_to_array(n.value#>>'{}','+')) piece
+      WHERE jsonb_typeof(n.value)='string' AND field IN ('state','states','stateFips','state_fips','statefp',
+        'jurisdiction','ocdId','bodyId','divisionId','ocdDivisionId','placeId','scope','officeholderId','personId')
+    ), states AS (
+      SELECT CASE WHEN field IN ('state','stateFips','state_fips','statefp') AND piece ~ '^[0-9]{2}$' THEN $2::jsonb->>piece
+        WHEN field IN ('officeholderId','personId') THEN upper(coalesce(
+          (regexp_match(piece,'^plural:([a-z]{2}):','i'))[1],
+          (regexp_match(piece,'^([a-z]{2})-(?:legislature|general-court):','i'))[1]))
+        ELSE upper((regexp_match(piece,'(?:/(?:state|district|territory):|^(?:government:)?US-|^(?:ballot-|curated:|roster:)?)([a-z]{2})(?=[-:/]|$)','i'))[1]) END state
+      FROM geography_values
+      UNION SELECT state FROM unnest($3::text[]) state WHERE EXISTS(SELECT 1 FROM geography_values WHERE piece='ocd-division/country:us')
+    ) SELECT DISTINCT state FROM states WHERE state=ANY($3::text[]) ORDER BY state`, [key,
+      JSON.stringify(Object.fromEntries(Object.entries(FIPS_TO_STATE).map(([fips, state]) => [fips, state.postal]))), REGISTRY_STATES]);
+  }
   private stateReadMetadata: PublishedCandidateMetadata | null = null;
   private async readPayloadParts(hashes: readonly string[]) {
     return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));
@@ -2015,10 +2046,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async hasStateRetirementProof(contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]): Promise<boolean> {
     const target = retirementProofTarget(contractId, origin);
-    const progress = await readRetirementProgress(async (text, params) => {
-      const [before, after] = text.split("$1");
-      return (await this.db.execute(sql`${sql.raw(before)}${params[0]}${sql.raw(after)}`)).rows as Record<string, unknown>[];
-    }, [target]);
+    const progress = await readRetirementProgress((text, params) => this.readerRows(text, params), [target]);
     return progress.get(origin.versionId)?.has(target.state) === true;
   }
 
@@ -2272,6 +2300,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw error;
     }
     if (eventRows[0]) {
+      const readModels = readerPublicationNeedsGeography(input.scope, input.recordClass) ? await this.publicationFootprint(key) : [];
+      await enqueueReaderPlaces(readerCacheScopeForPublication(input.scope, { recordClass: input.recordClass, readModels }),
+        (text, params) => this.readerRows(text, params));
       return { kind: "CONFIRMED", versionId: id, at };
     }
     const [pointerRows, candidateRows] = await this.db.batch([
@@ -2419,7 +2450,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const previousModel = needsGeography && prior?.payload ? await this.loadPayload(prior.payload, candidate.scope) : null;
     await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope, {
       recordClass: candidate.recordClass, readModels: [candidate.readModel, previousModel],
-    }), this.cacheOptions.purge);
+    }), this.cacheOptions.purge, (text, params) => this.readerRows(text, params));
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,

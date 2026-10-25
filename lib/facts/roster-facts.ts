@@ -8,7 +8,7 @@ import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishInput, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
-import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
 
 const rosterCopies = new WeakMap<FactDb, WeakMap<WorkerPublicationCapture, Promise<SavedCopy>>>();
 
@@ -159,7 +159,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
         AND f.field LIKE 'member:%' AND NOT (substr(f.field, 8) = ANY($3::text[])) RETURNING f.id`,
     [body.id, capture.evidence.canonicalUrl, [...seated]]));
     tally.departed = gone.length;
-    if (gone.length) await invalidateReaderCache(readerCacheScopeForPublication(body.state ?? body.id), input.purge);
+    if (gone.length) await invalidateReaderCache(await readerCacheScopeForEntity(db.query, body.id), input.purge, db.query);
   }
   if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge: input.purge }, clocks, now);
   return tally;

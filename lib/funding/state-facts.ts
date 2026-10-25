@@ -4,7 +4,7 @@ import { US_JURISDICTIONS } from "../coverage/states.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { campaignFinanceStateScope } from "./state-sources.ts";
 import { campaignSourceRecordHash, type CampaignSourceRecord } from "./state-source-records.ts";
-import { invalidateReaderCache, type ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, type ReaderCachePurger } from "../reader/cache.ts";
 
 const FIELD = "campaign-money:";
 const SCHEME = "campaign-money-record";
@@ -35,20 +35,21 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
   const outcome = await db.transaction(async query => {
     const stateDivision = campaignStateDivision(state);
     const places = [...new Set([stateDivision, ...records.flatMap(row => row.governmentOcdId ?? [])])];
-    await query(`INSERT INTO entity (id,kind,name,state,parent_id)
-      SELECT id,'place',id,$2,CASE WHEN id<>$3 THEN $3 END FROM unnest($1::text[]) id ON CONFLICT DO NOTHING`, [places, state, stateDivision]);
+    const addedPlaces = await query(`INSERT INTO entity (id,kind,name,state,parent_id)
+      SELECT id,'place',id,$2,CASE WHEN id<>$3 THEN $3 END FROM unnest($1::text[]) id ON CONFLICT DO NOTHING RETURNING id`, [places, state, stateDivision]);
     const persons = [...new Map(records.map(row => [row.person!.id, row.person!])).values()];
-    await query(`INSERT INTO entity (id,kind,name,state) SELECT id,'person',name,$3 FROM unnest($1::text[],$2::text[]) p(id,name)
-      ON CONFLICT DO NOTHING`, [persons.map(person => person.id), persons.map(person => person.name), state]);
+    const addedPeople = await query(`INSERT INTO entity (id,kind,name,state) SELECT id,'person',name,$3 FROM unnest($1::text[],$2::text[]) p(id,name)
+      ON CONFLICT DO NOTHING RETURNING id`, [persons.map(person => person.id), persons.map(person => person.name), state]);
     const committees = [...new Map(records.map(row => [committeeId(row), row])).entries()];
-    await query(`INSERT INTO entity (id,kind,name,state,parent_id)
+    const changedCommittees = await query(`INSERT INTO entity (id,kind,name,state,parent_id)
       SELECT id,'committee',name,$4,parent FROM unnest($1::text[],$2::text[],$3::text[]) c(id,name,parent)
       ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name,parent_id=EXCLUDED.parent_id WHERE entity.state=EXCLUDED.state AND entity.kind='committee'
-        AND (entity.name IS DISTINCT FROM EXCLUDED.name OR entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id)`,
+        AND (entity.name IS DISTINCT FROM EXCLUDED.name OR entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id) RETURNING id`,
     [committees.map(([id]) => id), committees.map(([, row]) => row.filerName!), committees.map(([, row]) => row.person!.id), state]);
     const links = [...new Map(records.flatMap(row => [committeeId(row),row.person!.id].flatMap(entity=>[...new Set([stateDivision, ...(row.governmentOcdId ? [row.governmentOcdId] : [])])]
       .map(place => [`${entity}:${place}`, [entity, place]] as const)))).values()];
-    await query(`INSERT INTO entity_place (entity_id,place_id) SELECT * FROM unnest($1::text[],$2::text[]) ON CONFLICT DO NOTHING`, [links.map(link => link[0]), links.map(link => link[1])]);
+    const placed = await query(`INSERT INTO entity_place (entity_id,place_id) SELECT * FROM unnest($1::text[],$2::text[]) ON CONFLICT DO NOTHING RETURNING entity_id`, [links.map(link => link[0]), links.map(link => link[1])]);
+    const identityChanged = addedPlaces.length > 0 || addedPeople.length > 0 || changedCommittees.length > 0 || placed.length > 0;
     const previous = await query(`SELECT f.id,f.entity_id,f.field,f.value->>'fingerprint' AS fingerprint,f.value#>>'{provenance,retrievedAt}' AS retrieved_at,f.provenance_kind FROM entity_external_id x JOIN entity e ON e.id=x.entity_id
       JOIN fact f ON f.entity_id=e.id AND f.field=$3||x.value AND f.status='live'
       WHERE x.scheme=$1 AND x.value=ANY($2::text[]) AND e.state=$4 FOR UPDATE OF f`, [SCHEME, records.map(row => row.id), FIELD, state]) as unknown as readonly HeldFact[];
@@ -61,8 +62,11 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       changed.push(row);
       if (old) replaced.push(old.id);
     }
-    if (confirmed.length) await query("UPDATE fact SET checked_at=$2 WHERE id=ANY($1::bigint[])", [confirmed, at]);
-    if (!changed.length) return { written: 0, confirmed: confirmed.length, movedPeople:[] as string[] };
+    const restamped = confirmed.length ? await query("UPDATE fact SET checked_at=$2 WHERE id=ANY($1::bigint[]) AND checked_at<$2::timestamptz RETURNING id", [confirmed, at]) : [];
+    if (!changed.length) {
+      if (restamped.length || identityChanged) await enqueueReaderPlaces({ states: [state] }, query);
+      return { written: 0, confirmed: confirmed.length, movedPeople:[] as string[], queued: restamped.length > 0 || identityChanged };
+    }
     const moved=[...new Set(changed.flatMap(row=>{const old=byId.get(row.id);return old && old.entity_id!==committeeId(row)?[old.entity_id]:[];}))];
     const movedPeople=moved.length?(await query("SELECT DISTINCT parent_id FROM entity WHERE id=ANY($1::text[]) AND state=$2 AND parent_id IS NOT NULL",[moved,state])).map(row=>String(row.parent_id)):[];
     const captures = [...new Map(changed.map(row => [row.provenance.vaultKey, row.provenance])).values()];
@@ -79,9 +83,10 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       changed.map(row => sourceIds.get(row.provenance.vaultKey)), changed.map(row => `campaign-person-money:${state}:${row.resource}`), at]);
     await query(`INSERT INTO entity_external_id (entity_id,scheme,value) SELECT entity,$3,value FROM unnest($1::text[],$2::text[]) r(entity,value)
       ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
-    return { written: changed.length, confirmed: confirmed.length, movedPeople };
+    await enqueueReaderPlaces({ states: [state] }, query);
+    return { written: changed.length, confirmed: confirmed.length, movedPeople, queued: true };
   });
-  if (outcome.written) await invalidateReaderCache({ states: [state] }, options.purge);
+  if (outcome.queued) await invalidateReaderCache({ states: [state] }, options.purge, null);
   if(outcome.movedPeople.length)options.onMoved?.(outcome.movedPeople);
   return {written:outcome.written,confirmed:outcome.confirmed};
 }

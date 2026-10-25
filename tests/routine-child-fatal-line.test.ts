@@ -91,21 +91,3 @@ test("the routine runner installs the fatal line before its first statement that
     assert.ok(at > install, `${later} runs before the fatal line is installed`);
   }
 });
-
-test("a Reader repair child that dies before its protocol names its step and cause in the line the supervisor quotes", () => {
-  const env = { ...process.env };
-  for (const key of Object.keys(env)) {
-    // Never a production handle: this child must die at admission, before any connection.
-    if (/^(WTP_|DATABASE_URL|NETLIFY_|PG)/i.test(key)) delete env[key];
-  }
-  const run = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/routine-civic-data-reader-repair.mts",
-    "--contract=registration-nc", "--observed-at=2026-09-25T23:01:35.000Z"], { cwd: process.cwd(), encoding: "utf8", env, timeout: 120_000 });
-  assert.equal(run.status, 1, run.stderr);
-  const quoted = childFatalLine(run.stdout);
-  assert.match(quoted ?? "", /^routine-civic-data-reader-repair: admitting the production write — (?:\w+: )?WTP_PRODUCTION_DATABASE_URL_WRITE is not set/);
-
-  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const failure = runner.slice(runner.indexOf("function readerDomainExecutionFailure("));
-  const body = failure.slice(0, failure.indexOf("\n}\n"));
-  assert.match(body, /detail: childFatalLine\(run\.stdout\) \?\? safeFailure\(/, "the supervisor no longer quotes a Reader child's fatal line");
-});

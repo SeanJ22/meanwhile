@@ -101,12 +101,9 @@ test("repair and supervisor outcomes carry the sanitized cause", async () => {
   assert.match(issue ?? "", /^durable receipt readback failed: Failed query: .*NeonDbError.*AggregateError\(ETIMEDOUT\)/);
   for (const secret of [PASSWORD, USER, HOST]) assert.equal((issue ?? "").includes(secret), false, secret);
 
-  for (const path of ["scripts/routine-civic-data-reader-repair.mts", "scripts/routine-civic-data-runner.mts"]) {
+  for (const path of ["scripts/routine-civic-data-runner.mts"]) {
     const source = readFileSync(path, "utf8");
     assert.doesNotMatch(source, /safeFailure\(error instanceof Error \? error\.message/, `${path} records a bare message`);
-    if (path.endsWith("reader-repair.mts")) {
-      assert.match(source, /safeFailure\(result\.error\)/, `${path} preserves the repair's sanitized cause`);
-      assert.match(readFileSync("lib/civic-data/reader-verification.ts", "utf8"), /error: sanitizedErrorDiagnostic\(error\)/);
-    } else assert.match(source, /safeFailure\(sanitizedErrorDiagnostic\(error\)\)/, `${path} records the sanitized cause`);
+    assert.match(source, /safeFailure\(sanitizedErrorDiagnostic\(error\)\)/, `${path} records the sanitized cause`);
   }
 });

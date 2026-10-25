@@ -72,3 +72,31 @@ test("a mismatched saved sha256 aborts before any door loses its inline page", a
     await assert.rejects(openLinkingCopy({url:root.url,sourceCopyId:123},copies.query),/unavailable/);
   } finally {await control.close();await reader.close();}
 });
+
+test("cp_doors is locked only after the walk and saves, and a door written meanwhile is read again under the lock", async () => {
+  // Oct 25: 1,517 voting doors carried 393 MB of pages; walking them under the lock would hold every runner door write for minutes.
+  const {control,reader,cp,copies}=await setup();
+  try {
+    const statements: string[] = [];
+    let wrote = false;
+    const watched = { query: async (sql: string, params: readonly unknown[] = []) => {
+      statements.push(sql.trim().split(/\s+/).slice(0, 3).join(" "));
+      if (sql === "BEGIN" && !wrote) {
+        wrote = true;
+        const moved = { ...source("two-renamed"), url: "https://vendor.example.com/polls" };
+        await control.query("UPDATE cp_doors SET value=jsonb_set(value,'{config,votingSource}',to_jsonb($1::text)) WHERE id='two'", [JSON.stringify(moved)]);
+      }
+      return cp.query(sql, params);
+    } };
+    await migrateLinkingPages(watched, copies);
+    const lock = statements.findIndex(s => s.startsWith("LOCK TABLE cp_doors"));
+    const lastWalk = statements.map((s, i) => [s, i] as const).filter(([s]) => s.startsWith("SELECT id,value#>>'{config,votingSource}'")).at(-1)![1];
+    assert.ok(lock > lastWalk, `the lock follows the walk: ${statements.join(" | ")}`);
+    assert.ok(statements.slice(0, lock).includes("SET LOCAL lock_timeout"));
+    const two = (await control.query<{value:{config:{votingSource:string}}}>("SELECT value FROM cp_doors WHERE id='two'")).rows[0].value;
+    const primary = JSON.parse(two.config.votingSource);
+    assert.equal(primary.id, "two-renamed", "the door written after the walk keeps its newer value");
+    assert.equal(JSON.stringify(two).includes("officialLinkingPage"), false);
+    assert.ok(primary.linkingPage.sourceCopyId);
+  } finally {await control.close();await reader.close();}
+});

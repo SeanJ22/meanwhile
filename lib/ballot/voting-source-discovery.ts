@@ -6,7 +6,7 @@ import { decodeVotingBytes, xlsxVotingTables } from "./voting-source-tables.ts";
 import type { SiteKind } from "./voting-sites.ts";
 import { fingerprintVotingPlatform } from "./voting-source-readers.ts";
 import { votingFetchSession } from "./voting-source-fetch.ts";
-import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { isOfficialVotingSource, saveLinkingCopy } from "../facts/linking-copy.ts";
 import type { VotingSourceDoor, VotingSourceRuntime, VotingDoorShape } from "./voting-source-types.ts";
 
 const DIRECTORY = /(?:county|town|local|municipal).{0,35}(?:director|office|clerk|contact|official)|(?:director|contact).{0,35}(?:county|town|local|election)/i;
@@ -97,7 +97,7 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
     const classificationText = article ? `<h1>${article.title}</h1>${article.html}` : text;
     let disposition = classifySourceContent({ url: source.url, text: classificationText, contentType: capture.contentType,
       names: [source.scope.name, source.publisher], owed: SOURCE_FAMILIES });
-    if (source.boundaryLayer && isOfficialSource(source.url, source.officialLinkingPage)) disposition = {
+    if (source.boundaryLayer && await isOfficialVotingSource(source.url, source.linkingPage)) disposition = {
       kind: "DOOR", family: "voting", recordClass: "VOTING_SITE", belongs: true,
       quote: source.title ?? "Precinct boundaries", reason: "The official election page links this precinct-boundary source" };
     const observation = { source, disposition, capture, linkingCaptures };
@@ -112,7 +112,8 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
     if (!/html/i.test(capture.contentType) && !/^\s*<(?:!doctype|html)/i.test(text)) continue;
     if (!disposition.belongs && pageAddress(source.url)?.url !== pageAddress(root.url)?.url) continue;
     const parentText = sourceBody(text).text;
-    const linkingPage = { url: capture.url, html: text, linkingPage: source.officialLinkingPage };
+    const linkingPage = { ...await saveLinkingCopy({ url: capture.url, html: text }, runtime.now?.() ?? new Date().toISOString()),
+      ...(source.linkingPage ? { linkingPage: source.linkingPage } : {}) };
     const currentElection = pageNamesElection(parentText, root.electionDate);
     for (const link of sourceLinks(text, capture.url)) {
       const resolved = runtime.resolveScope?.(link.label, link.url, source.scope);
@@ -123,7 +124,7 @@ export async function discoverVotingDoors(root: VotingSourceDoor, runtime: Votin
         shape: votingDoorShape(link.url, link.label), title: link.label || undefined,
         scope, covers: votingDoorCoverage(link.label), platform: fingerprintVotingPlatform(link.url),
         ...(/precinct.{0,40}(?:boundar|geojson|featureserver|mapserver)|(?:boundar|geojson).{0,40}precinct/i.test(clue) ? { boundaryLayer: true } : {}),
-        officialLinkingPage: linkingPage, discoveredFrom: capture.url,
+        linkingPage: linkingPage, discoveredFrom: capture.url,
         electionDate: root.electionDate, electionPageUrl: currentElection ? capture.url : source.electionPageUrl,
         electionAssociationVerified: currentElection }, [capture]);
     }

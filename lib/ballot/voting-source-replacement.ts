@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
-import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { isOfficialVotingSource } from "../facts/linking-copy.ts";
 import { stateBallotScope } from "../civic-data/state-scopes.ts";
 import type { RoutineCandidate } from "../civic-data/types.ts";
 import { sourceTextWithoutNuls } from "../doors/source-text.ts";
@@ -16,8 +16,8 @@ export async function verifyVotingSourceReplacement(candidate: RoutineCandidate,
   const proof = votingSourceReplacement(candidate.normalizedPayload);
   if (!proof) return "Voting-source replacement has no exact source-group proof.";
   if (candidate.recordClass !== "VOTING_SITE" || candidate.sourceId !== "voting-sites" || !predecessor ||
-      proof.doors.some(door => stateBallotScope("voting-sites", door.scope.state) !== candidate.scope ||
-        !isOfficialSource(door.url, door.officialLinkingPage))) return "Voting-source replacement has no matching held partition and official source authority.";
+      (await Promise.all(proof.doors.map(async door => stateBallotScope("voting-sites", door.scope.state) !== candidate.scope ||
+        !await isOfficialVotingSource(door.url, door.linkingPage)))).some(Boolean)) return "Voting-source replacement has no matching held partition and official source authority.";
   const prior = predecessor.readModel as VotingSitesFile;
   const next = candidate.readModel as VotingSitesFile;
   const previous = prior.jurisdictions?.find(row => row.ocdId === proof.jurisdictionId);

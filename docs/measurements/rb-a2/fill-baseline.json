@@ -77,5 +77,24 @@
     "finishedAt": "2026-10-25T11:10:20.441Z",
     "productionDatabaseBindings": false
   },
+  "currentCombinationValidation": {
+    "runtimeRevision": "29553f920",
+    "failedAttempt": {
+      "finishedAt": "2026-10-25T12:44:47.429Z",
+      "gatesPassed": 8,
+      "gatesTotal": 9,
+      "testsRegistered": 9904,
+      "testsPassed": 9900,
+      "testsFailed": 2,
+      "testsSkipped": 2,
+      "cause": "The private test launcher set ANTHROPIC_API_KEY to an empty string. Two Ask tests install a fake key with ??=, so the empty value prevented their fixture setup. No application-code change was needed."
+    },
+    "fixtureDiagnosis": {
+      "emptyKey": { "registered": 8, "passed": 6, "failed": 2 },
+      "unsetKey": { "registered": 8, "passed": 8, "failed": 0 },
+      "network": "Provider responses are mocked; no production credentials or real model calls."
+    },
+    "status": "Full rerun in progress with model-service keys removed, not set to empty strings; production database bindings remain absent."
+  },
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays."
 }

@@ -1,0 +1,1725 @@
+{
+  "copyHost": "ep-silent-bonus-axd9uk3i-pooler.c-4.us-east-2.aws.neon.tech",
+  "branchId": "br-calm-grass-axzhcte9",
+  "baselineSha": "4040fb2273b7a3135b86717d4cf7c9ba9dbd45e1",
+  "node": "24.19.0",
+  "recordedAt": "2026-10-25T01:04:57.018Z",
+  "productionWrites": 0,
+  "method": "Normal source refresh and canonical reader on a full Neon branch of production; baseline uses the river checkout. Resumed verified source publications from interrupted copy attempts; historical sessions remain held. The final refresh duration is not a first-fill timing.",
+  "refresh": {
+    "copyHost": "ep-silent-bonus-axd9uk3i-pooler.c-4.us-east-2.aws.neon.tech",
+    "branchId": "br-calm-grass-axzhcte9",
+    "elapsedMs": 2753813,
+    "counts": {
+      "AR": {
+        "rows": 281,
+        "joined": 108,
+        "unjoined": 173,
+        "sponsorsJoined": 546,
+        "sponsorsUnjoined": 196,
+        "datasets": 2,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "FL": {
+        "rows": 1930,
+        "joined": 1785,
+        "unjoined": 145,
+        "sponsorsJoined": 4221,
+        "sponsorsUnjoined": 1157,
+        "datasets": 4,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "GA": {
+        "rows": 5656,
+        "joined": 5619,
+        "unjoined": 37,
+        "sponsorsJoined": 32315,
+        "sponsorsUnjoined": 1281,
+        "datasets": 2,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MN": {
+        "rows": 10590,
+        "joined": 10527,
+        "unjoined": 63,
+        "sponsorsJoined": 34438,
+        "sponsorsUnjoined": 387,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MS": {
+        "rows": 4014,
+        "joined": 3955,
+        "unjoined": 59,
+        "sponsorsJoined": 7460,
+        "sponsorsUnjoined": 134,
+        "datasets": 2,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NV": {
+        "rows": 1237,
+        "joined": 728,
+        "unjoined": 509,
+        "sponsorsJoined": 2775,
+        "sponsorsUnjoined": 610,
+        "datasets": 2,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NY": {
+        "rows": 25440,
+        "joined": 25028,
+        "unjoined": 412,
+        "sponsorsJoined": 127560,
+        "sponsorsUnjoined": 3144,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NC": {
+        "rows": 2343,
+        "joined": 2320,
+        "unjoined": 23,
+        "sponsorsJoined": 25664,
+        "sponsorsUnjoined": 540,
+        "datasets": 2,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "ND": {
+        "rows": 1106,
+        "joined": 878,
+        "unjoined": 228,
+        "sponsorsJoined": 5385,
+        "sponsorsUnjoined": 581,
+        "datasets": 3,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "SC": {
+        "rows": 4035,
+        "joined": 3958,
+        "unjoined": 77,
+        "sponsorsJoined": 135139,
+        "sponsorsUnjoined": 1534,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "TN": {
+        "rows": 9159,
+        "joined": 9121,
+        "unjoined": 38,
+        "sponsorsJoined": 31777,
+        "sponsorsUnjoined": 454,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "TX": {
+        "rows": 11503,
+        "joined": 11382,
+        "unjoined": 121,
+        "sponsorsJoined": 36962,
+        "sponsorsUnjoined": 506,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "UT": {
+        "rows": 1016,
+        "joined": 1001,
+        "unjoined": 15,
+        "sponsorsJoined": 2275,
+        "sponsorsUnjoined": 118,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "VT": {
+        "rows": 1717,
+        "joined": 1644,
+        "unjoined": 73,
+        "sponsorsJoined": 16226,
+        "sponsorsUnjoined": 233,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "VA": {
+        "rows": 3733,
+        "joined": 3620,
+        "unjoined": 113,
+        "sponsorsJoined": 15599,
+        "sponsorsUnjoined": 773,
+        "datasets": 2,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "WA": {
+        "rows": 3413,
+        "joined": 3407,
+        "unjoined": 6,
+        "sponsorsJoined": 27361,
+        "sponsorsUnjoined": 160,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "WV": {
+        "rows": 2975,
+        "joined": 2912,
+        "unjoined": 63,
+        "sponsorsJoined": 10620,
+        "sponsorsUnjoined": 497,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "WI": {
+        "rows": 2751,
+        "joined": 2654,
+        "unjoined": 97,
+        "sponsorsJoined": 54922,
+        "sponsorsUnjoined": 98,
+        "datasets": 2,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "WY": {
+        "rows": 335,
+        "joined": 221,
+        "unjoined": 114,
+        "sponsorsJoined": 1778,
+        "sponsorsUnjoined": 114,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "DC": {
+        "rows": 1907,
+        "joined": 1868,
+        "unjoined": 39,
+        "sponsorsJoined": 3565,
+        "sponsorsUnjoined": 149,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "US": {
+        "rows": 19690,
+        "joined": 0,
+        "unjoined": 19690,
+        "sponsorsJoined": 0,
+        "sponsorsUnjoined": 202670,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "AL": {
+        "rows": 1540,
+        "joined": 1516,
+        "unjoined": 24,
+        "sponsorsJoined": 1516,
+        "sponsorsUnjoined": 0,
+        "datasets": 2,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "AK": {
+        "rows": 848,
+        "joined": 561,
+        "unjoined": 287,
+        "sponsorsJoined": 2393,
+        "sponsorsUnjoined": 312,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "AZ": {
+        "rows": 2190,
+        "joined": 2178,
+        "unjoined": 12,
+        "sponsorsJoined": 7982,
+        "sponsorsUnjoined": 93,
+        "datasets": 1,
+        "unchanged": 0,
+        "emptySessions": [],
+        "failures": []
+      },
+      "CO": {
+        "rows": 714,
+        "joined": 714,
+        "unjoined": 0,
+        "sponsorsJoined": 16649,
+        "sponsorsUnjoined": 302,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "CT": {
+        "rows": 1283,
+        "joined": 1041,
+        "unjoined": 242,
+        "sponsorsJoined": 6799,
+        "sponsorsUnjoined": 925,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "DE": {
+        "rows": 1296,
+        "joined": 1296,
+        "unjoined": 0,
+        "sponsorsJoined": 14901,
+        "sponsorsUnjoined": 9,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "ID": {
+        "rows": 817,
+        "joined": 85,
+        "unjoined": 732,
+        "sponsorsJoined": 376,
+        "sponsorsUnjoined": 1277,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "IN": {
+        "rows": 935,
+        "joined": 910,
+        "unjoined": 25,
+        "sponsorsJoined": 4885,
+        "sponsorsUnjoined": 25,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "CA": {
+        "rows": 5060,
+        "joined": 4716,
+        "unjoined": 344,
+        "sponsorsJoined": 36399,
+        "sponsorsUnjoined": 812,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "HI": {
+        "rows": 6132,
+        "joined": 6102,
+        "unjoined": 30,
+        "sponsorsJoined": 31006,
+        "sponsorsUnjoined": 948,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "IA": {
+        "rows": 4231,
+        "joined": 1806,
+        "unjoined": 2425,
+        "sponsorsJoined": 6235,
+        "sponsorsUnjoined": 2537,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "KS": {
+        "rows": 1483,
+        "joined": 358,
+        "unjoined": 1125,
+        "sponsorsJoined": 3359,
+        "sponsorsUnjoined": 1180,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "KY": {
+        "rows": 1737,
+        "joined": 1737,
+        "unjoined": 0,
+        "sponsorsJoined": 5938,
+        "sponsorsUnjoined": 0,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "LA": {
+        "rows": 2616,
+        "joined": 2516,
+        "unjoined": 100,
+        "sponsorsJoined": 10284,
+        "sponsorsUnjoined": 499,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "ME": {
+        "rows": 2454,
+        "joined": 2390,
+        "unjoined": 64,
+        "sponsorsJoined": 11597,
+        "sponsorsUnjoined": 158,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MD": {
+        "rows": 2675,
+        "joined": 2330,
+        "unjoined": 345,
+        "sponsorsJoined": 12360,
+        "sponsorsUnjoined": 274,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "IL": {
+        "rows": 12113,
+        "joined": 12047,
+        "unjoined": 66,
+        "sponsorsJoined": 43351,
+        "sponsorsUnjoined": 543,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MO": {
+        "rows": 3146,
+        "joined": 3083,
+        "unjoined": 63,
+        "sponsorsJoined": 4841,
+        "sponsorsUnjoined": 81,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MA": {
+        "rows": 8960,
+        "joined": 7483,
+        "unjoined": 1477,
+        "sponsorsJoined": 8512,
+        "sponsorsUnjoined": 1313,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MI": {
+        "rows": 4230,
+        "joined": 4227,
+        "unjoined": 3,
+        "sponsorsJoined": 42072,
+        "sponsorsUnjoined": 518,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "MT": {
+        "rows": 1761,
+        "joined": 1691,
+        "unjoined": 70,
+        "sponsorsJoined": 1691,
+        "sponsorsUnjoined": 70,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NE": {
+        "rows": 1847,
+        "joined": 1760,
+        "unjoined": 87,
+        "sponsorsJoined": 1760,
+        "sponsorsUnjoined": 87,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NM": {
+        "rows": 812,
+        "joined": 809,
+        "unjoined": 3,
+        "sponsorsJoined": 2634,
+        "sponsorsUnjoined": 33,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NH": {
+        "rows": 1394,
+        "joined": 1386,
+        "unjoined": 8,
+        "sponsorsJoined": 8260,
+        "sponsorsUnjoined": 233,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "OH": {
+        "rows": 2586,
+        "joined": 2542,
+        "unjoined": 44,
+        "sponsorsJoined": 23165,
+        "sponsorsUnjoined": 90,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "OR": {
+        "rows": 304,
+        "joined": 172,
+        "unjoined": 132,
+        "sponsorsJoined": 2652,
+        "sponsorsUnjoined": 35,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "OK": {
+        "rows": 6008,
+        "joined": 5929,
+        "unjoined": 79,
+        "sponsorsJoined": 14239,
+        "sponsorsUnjoined": 363,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "NJ": {
+        "rows": 11256,
+        "joined": 11255,
+        "unjoined": 1,
+        "sponsorsJoined": 31011,
+        "sponsorsUnjoined": 0,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "RI": {
+        "rows": 3013,
+        "joined": 3010,
+        "unjoined": 3,
+        "sponsorsJoined": 19008,
+        "sponsorsUnjoined": 359,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "SD": {
+        "rows": 666,
+        "joined": 562,
+        "unjoined": 104,
+        "sponsorsJoined": 4542,
+        "sponsorsUnjoined": 151,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      },
+      "PA": {
+        "rows": 5202,
+        "joined": 5195,
+        "unjoined": 7,
+        "sponsorsJoined": 70062,
+        "sponsorsUnjoined": 405,
+        "datasets": 1,
+        "unchanged": 1,
+        "emptySessions": [],
+        "failures": []
+      }
+    }
+  },
+  "memory": {
+    "pids": [
+      3738,
+      4813,
+      5706
+    ],
+    "peakRssBytes": 2127003648,
+    "reservationMiB": 2130,
+    "measurement": "Maximum Linux /proc VmHWM across resumed four-state, two-part publisher processes, sampled each second; excludes database compute"
+  },
+  "api": {
+    "copyHost": "ep-silent-bonus-axd9uk3i-pooler.c-4.us-east-2.aws.neon.tech",
+    "recordedAt": "2026-10-25T00:50:19.369Z",
+    "transport": "Real route and SQL on the production copy through a read-only Neon HTTP transaction; not a live browser timing",
+    "results": [
+      {
+        "path": "/api/bills?state=AZ&member=az-legislature:2381",
+        "status": 200,
+        "bills": 119,
+        "complete": false,
+        "elapsedMs": 5114
+      },
+      {
+        "path": "/api/bills?state=AZ&member=az-legislature:2312",
+        "status": 200,
+        "bills": 66,
+        "complete": false,
+        "elapsedMs": 1380
+      }
+    ]
+  },
+  "scheduler": {
+    "incomplete": {
+      "recordedAt": "2026-10-25T00:46:03.111Z",
+      "clock": {
+        "lastAttemptedAt": "2026-10-25T00:18:09.563Z",
+        "lastSucceededAt": "2026-10-25T00:18:08.386Z",
+        "lastSucceededObservedAt": "2026-10-25T00:18:09.563Z",
+        "lastSucceededParserVersion": "legiscan-bulk/4",
+        "continuationPending": true
+      },
+      "nextCycleDue": true
+    },
+    "complete": {
+      "recordedAt": "2026-10-25T01:04:44.196Z",
+      "clock": {
+        "lastAttemptedAt": "2026-10-25T00:18:09.563Z",
+        "lastSucceededAt": "2026-10-25T00:18:08.386Z",
+        "lastSucceededObservedAt": "2026-10-25T00:18:09.563Z",
+        "lastSucceededParserVersion": "legiscan-bulk/4",
+        "continuationPending": false
+      },
+      "nextCycleDue": false,
+      "currentSessions": 65,
+      "pending": []
+    }
+  },
+  "gonzales": {
+    "id": "az-legislature:2381",
+    "name": "Sally Ann Gonzales",
+    "chamber": "upper",
+    "districts": [
+      "20"
+    ],
+    "state": "AZ",
+    "nativeIds": {
+      "reader": [
+        "az-legislature:2381"
+      ],
+      "az-legislature": [
+        "2381"
+      ]
+    },
+    "before": 0,
+    "after": 119
+  },
+  "alma": {
+    "id": "plural:az:6dba6afa-b274-4273-b8c6-270d27214eee",
+    "name": "Alma Hernandez",
+    "chamber": "lower",
+    "districts": [
+      "20",
+      "20"
+    ],
+    "state": "AZ",
+    "nativeIds": {
+      "plural": [
+        "6dba6afa-b274-4273-b8c6-270d27214eee"
+      ],
+      "reader": [
+        "plural:az:6dba6afa-b274-4273-b8c6-270d27214eee",
+        "plural:6dba6afa-b274-4273-b8c6-270d27214eee",
+        "az-legislature:2312"
+      ],
+      "ocd-person": [
+        "ocd-person/6dba6afa-b274-4273-b8c6-270d27214eee"
+      ],
+      "az-legislature": [
+        "1893",
+        "2033",
+        "2168",
+        "2312"
+      ]
+    },
+    "before": 66,
+    "after": 66
+  },
+  "states": [
+    {
+      "state": "AL",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 9,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": "Error: LEGISCAN_READER_SESSION_UNAVAILABLE:LEGISCAN_BULK_SOURCE_INVALID"
+      },
+      "after": {
+        "bills": 0,
+        "canonicalBills": 1540,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": "Error: LEGISCAN_READER_SESSION_UNAVAILABLE:LEGISCAN_BULK_SOURCE_INVALID"
+      },
+      "priorCanonicalBillsPreserved": 9,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "state": "AK",
+      "before": {
+        "bills": 848,
+        "canonicalBills": 848,
+        "legislatorsWithBills": 59,
+        "sponsoredBillLinks": 2377,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 848,
+        "canonicalBills": 848,
+        "legislatorsWithBills": 60,
+        "sponsoredBillLinks": 2393,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 848,
+      "priorVisibleBillsPreserved": 848,
+      "afterBillIdHash": "10bffcadeafbda22871a5c6b1e43cc6292214f0f6f207b466643ca3ccd8566b8"
+    },
+    {
+      "state": "AZ",
+      "before": {
+        "bills": 2190,
+        "canonicalBills": 2190,
+        "legislatorsWithBills": 90,
+        "sponsoredBillLinks": 7982,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2190,
+        "canonicalBills": 2190,
+        "legislatorsWithBills": 98,
+        "sponsoredBillLinks": 8724,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 2190,
+      "priorVisibleBillsPreserved": 2190,
+      "afterBillIdHash": "8d0e217615aa41747d94bb8f711662ed4db4a01126536ba47569942a38fc42ae"
+    },
+    {
+      "state": "AR",
+      "before": {
+        "bills": 2,
+        "canonicalBills": 2,
+        "legislatorsWithBills": 100,
+        "sponsoredBillLinks": 101,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 281,
+        "canonicalBills": 281,
+        "legislatorsWithBills": 129,
+        "sponsoredBillLinks": 546,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 2,
+      "priorVisibleBillsPreserved": 2,
+      "afterBillIdHash": "2e9fea697d28abfec3d4daed6f7bfda3ca1f018644fed8898dcd5fbc01d16ab5"
+    },
+    {
+      "state": "CA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 5060,
+        "canonicalBills": 5060,
+        "legislatorsWithBills": 118,
+        "sponsoredBillLinks": 36399,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "bf3651c6338f0f20bac0008b99dc2489df83a38cad8f37fd13d067d0520cffec"
+    },
+    {
+      "state": "CO",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 714,
+        "canonicalBills": 714,
+        "legislatorsWithBills": 99,
+        "sponsoredBillLinks": 16649,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "d741806ffc99e956d5fe2fbda8dbebf254100ee618cc6678fed6367605a122ea"
+    },
+    {
+      "state": "CT",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1283,
+        "canonicalBills": 1283,
+        "legislatorsWithBills": 183,
+        "sponsoredBillLinks": 6799,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "24132ed9088a40267922b284907900974e056da7bf8da3178f3f94625c9d05ea"
+    },
+    {
+      "state": "DE",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1296,
+        "canonicalBills": 1296,
+        "legislatorsWithBills": 62,
+        "sponsoredBillLinks": 14901,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "f2b0218a3de0a561d9d7708732638444c187d8b1d0b2a147860f781c0f964232"
+    },
+    {
+      "state": "FL",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1930,
+        "canonicalBills": 1930,
+        "legislatorsWithBills": 144,
+        "sponsoredBillLinks": 4219,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "a25f5c4fe16038438c6496bcb2f396b5fe6fbfdb90044e7103734433345dc5ff"
+    },
+    {
+      "state": "GA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 5656,
+        "canonicalBills": 5656,
+        "legislatorsWithBills": 233,
+        "sponsoredBillLinks": 32315,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "13d30fbc98379ebcc2fa6a4c419c6911fa2eec84c8bc18bc62860bafa829e951"
+    },
+    {
+      "state": "HI",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 6132,
+        "canonicalBills": 6132,
+        "legislatorsWithBills": 74,
+        "sponsoredBillLinks": 31006,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "c5733754113e04c8f85cd01bdaa99c4a446b7368e9f7da08a2a4ff4aca63d581"
+    },
+    {
+      "state": "ID",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 817,
+        "canonicalBills": 817,
+        "legislatorsWithBills": 45,
+        "sponsoredBillLinks": 376,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "b01a6d56ad381fc275744011d757e5a710c7364d4bd75e6c85a9516b4ec9e017"
+    },
+    {
+      "state": "IL",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 12113,
+        "canonicalBills": 12113,
+        "legislatorsWithBills": 176,
+        "sponsoredBillLinks": 43351,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "c72ce01381c9c4a5c3ea0f08895e5e2f387a1b4d498462e8cd41bcf166e01809"
+    },
+    {
+      "state": "IN",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 935,
+        "canonicalBills": 935,
+        "legislatorsWithBills": 150,
+        "sponsoredBillLinks": 4885,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "0d1012ff97fcfe4034733381312b70387327bdfb863b985876ac52e2f5b1d594"
+    },
+    {
+      "state": "IA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 4231,
+        "canonicalBills": 4231,
+        "legislatorsWithBills": 148,
+        "sponsoredBillLinks": 6235,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "d0933ba33ec4afa2e48e67e80c14437f72a4f00e3c716379218ad1bc9e108305"
+    },
+    {
+      "state": "KS",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1483,
+        "canonicalBills": 1483,
+        "legislatorsWithBills": 165,
+        "sponsoredBillLinks": 3359,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "79e66cd57d5c7d5da5fbb75ac066c8b73270c945bf8f37e721438af241958898"
+    },
+    {
+      "state": "KY",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1737,
+        "canonicalBills": 1737,
+        "legislatorsWithBills": 138,
+        "sponsoredBillLinks": 5938,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "001a6f4466f9a59e8ec32f144a8c3e97cdcdce333d143b6e54c6e0a19c926fa3"
+    },
+    {
+      "state": "LA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2616,
+        "canonicalBills": 2616,
+        "legislatorsWithBills": 136,
+        "sponsoredBillLinks": 10284,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "ea42f07c0b8ba06e01285eb290aed2371bc5112311469f75f9236907e730b00d"
+    },
+    {
+      "state": "ME",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2454,
+        "canonicalBills": 2454,
+        "legislatorsWithBills": 186,
+        "sponsoredBillLinks": 11597,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "6e798c77a58ad7f332def8b657b591fd8f6083b030414a111d541db45e40bafe"
+    },
+    {
+      "state": "MD",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2675,
+        "canonicalBills": 2675,
+        "legislatorsWithBills": 187,
+        "sponsoredBillLinks": 12360,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "e7c7e478d2b265e7ea1cf14e935379e5fcdd490ad8ab07be21bbde3d045a19c4"
+    },
+    {
+      "state": "MA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 8960,
+        "canonicalBills": 8960,
+        "legislatorsWithBills": 195,
+        "sponsoredBillLinks": 8512,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "4600c27777f9ad7d0e592ff180f9c250bfd8de9e2a34816882fb8d944aa14b83"
+    },
+    {
+      "state": "MI",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 4230,
+        "canonicalBills": 4230,
+        "legislatorsWithBills": 147,
+        "sponsoredBillLinks": 42072,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "fdf2e7886cd29c85e341864a2142d521632d2b7e85f0dbc4e8125a6a2d9eb0ba"
+    },
+    {
+      "state": "MN",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 10638,
+        "canonicalBills": 10638,
+        "legislatorsWithBills": 200,
+        "sponsoredBillLinks": 34535,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "9996df5dff244f3c09342957e78f82647cc8b3c8fa66b7f52ae04fceb31ecab2"
+    },
+    {
+      "state": "MS",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 4014,
+        "canonicalBills": 4014,
+        "legislatorsWithBills": 170,
+        "sponsoredBillLinks": 7460,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "b9957db5fdeb9e56afe6ef9a53c2b319ada82e3c7cf30a34b228a48726ba8958"
+    },
+    {
+      "state": "MO",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 3146,
+        "canonicalBills": 3146,
+        "legislatorsWithBills": 187,
+        "sponsoredBillLinks": 4841,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "6c8a3d90d8c0e6619dbec25335dfb3d385dbd64bb51a64b3729157a831d58fc6"
+    },
+    {
+      "state": "MT",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1761,
+        "canonicalBills": 1761,
+        "legislatorsWithBills": 142,
+        "sponsoredBillLinks": 1691,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "7284436c546f4f005e6cc937b33377725053355a18879d4b643c547b9a3e6c1f"
+    },
+    {
+      "state": "NE",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1847,
+        "canonicalBills": 1847,
+        "legislatorsWithBills": 49,
+        "sponsoredBillLinks": 1760,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "d67c1881f93e1d5586cc70ef6492a2428e86a9b73557ae54b456ee67d5c85cfb"
+    },
+    {
+      "state": "NV",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1237,
+        "canonicalBills": 1237,
+        "legislatorsWithBills": 62,
+        "sponsoredBillLinks": 2775,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "563a2c36427bd379d9848dda00c589b8bc767989b5432a99a09c36837abd1db5"
+    },
+    {
+      "state": "NH",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1394,
+        "canonicalBills": 1394,
+        "legislatorsWithBills": 357,
+        "sponsoredBillLinks": 8260,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "f9677ab46de1578fd222d92985873d38dd9801b2f65ec9faa35688906eee7b61"
+    },
+    {
+      "state": "NJ",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 11256,
+        "canonicalBills": 11256,
+        "legislatorsWithBills": 120,
+        "sponsoredBillLinks": 31011,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "a504d60fdd92730ece6601154b6428696a33d452d1262763082b23ed5bf8417d"
+    },
+    {
+      "state": "NM",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 812,
+        "canonicalBills": 812,
+        "legislatorsWithBills": 109,
+        "sponsoredBillLinks": 2634,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "bf6ae3b9840fd67f3af1cfa2bc920ab336e36a42fd2ae46046f26f39c2e2cb5b"
+    },
+    {
+      "state": "NY",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 25440,
+        "canonicalBills": 25440,
+        "legislatorsWithBills": 212,
+        "sponsoredBillLinks": 127560,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "3c0cb47f72125080e802113c2aebddac825afe0637bdc1fe6f0c4a402eea36ac"
+    },
+    {
+      "state": "NC",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2343,
+        "canonicalBills": 2343,
+        "legislatorsWithBills": 169,
+        "sponsoredBillLinks": 25664,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "f05fe65ee6742ac2bbc7c4a056d3d3f04ca02429a9548cbeebe0c2aab24c562d"
+    },
+    {
+      "state": "ND",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1106,
+        "canonicalBills": 1106,
+        "legislatorsWithBills": 134,
+        "sponsoredBillLinks": 5385,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "daf95f15adf45c3c5cc63831c5bc37b3dd2cc02ff9f938bb554d0014836ebb4b"
+    },
+    {
+      "state": "OH",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2586,
+        "canonicalBills": 2586,
+        "legislatorsWithBills": 130,
+        "sponsoredBillLinks": 23165,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "00fcfb1f93c812a416055f73baf47bf60ade513ea7affdedc7821cd8d2854c9b"
+    },
+    {
+      "state": "OK",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 6008,
+        "canonicalBills": 6008,
+        "legislatorsWithBills": 145,
+        "sponsoredBillLinks": 14239,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "2963cf64bccc63ac1b3f669b4da1888f1b3c0e56a236cdeb06f77c31c883813e"
+    },
+    {
+      "state": "OR",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 304,
+        "canonicalBills": 304,
+        "legislatorsWithBills": 90,
+        "sponsoredBillLinks": 2652,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "2e9a9b56c5bf62544588b43680b4f20057560faaea24b1fd00bf0ce0ecc14e69"
+    },
+    {
+      "state": "PA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 5202,
+        "canonicalBills": 5202,
+        "legislatorsWithBills": 253,
+        "sponsoredBillLinks": 70062,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "f344ac9f9ad5ea4f392c39a97cb7963d78f18908069ac7f18df6671f5f0f3947"
+    },
+    {
+      "state": "RI",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 3013,
+        "canonicalBills": 3013,
+        "legislatorsWithBills": 111,
+        "sponsoredBillLinks": 19008,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "569d6f14bdbc980c0eda9e46dcc788f591946c496c06b960abe82572ca7502b4"
+    },
+    {
+      "state": "SC",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 4035,
+        "canonicalBills": 4035,
+        "legislatorsWithBills": 170,
+        "sponsoredBillLinks": 135139,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "5e55bfdebdf7c77bb9f1c1df950c98832e4396dd6517e324ca45526b5eb4002c"
+    },
+    {
+      "state": "SD",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 666,
+        "canonicalBills": 666,
+        "legislatorsWithBills": 103,
+        "sponsoredBillLinks": 4542,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "c1a43ebd610955d08d00f6be6f1b56cfd595a50e43b55c55b31201a88a5c458e"
+    },
+    {
+      "state": "TN",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 9159,
+        "canonicalBills": 9159,
+        "legislatorsWithBills": 130,
+        "sponsoredBillLinks": 31777,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "fec6be8511d7ae3d0f39cf39ccf3c746217faad27c4822163c287ba64577051e"
+    },
+    {
+      "state": "TX",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 11503,
+        "canonicalBills": 11503,
+        "legislatorsWithBills": 177,
+        "sponsoredBillLinks": 36962,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "6a79ae08ac6a273689745fb8eb89e7e2ce16b087371316403fd4c6821725f8dc"
+    },
+    {
+      "state": "UT",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1016,
+        "canonicalBills": 1016,
+        "legislatorsWithBills": 100,
+        "sponsoredBillLinks": 2275,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "0edf499f08bc1d216385ba30168f6c54448805dcd367feb930bf4e5f9fe27355"
+    },
+    {
+      "state": "VT",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1717,
+        "canonicalBills": 1717,
+        "legislatorsWithBills": 180,
+        "sponsoredBillLinks": 16226,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "397a9953514fab0cb4807a75838aef9e466cf74b1f26f751d2b3ed919e671af5"
+    },
+    {
+      "state": "VA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 3733,
+        "canonicalBills": 3733,
+        "legislatorsWithBills": 135,
+        "sponsoredBillLinks": 15599,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "0438e3ade629c7f528c6788fd5006afd44acd50dba07c12e0f68449e7ee2b183"
+    },
+    {
+      "state": "WA",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 3413,
+        "canonicalBills": 3413,
+        "legislatorsWithBills": 146,
+        "sponsoredBillLinks": 27361,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "471aa67a67be86c6926b3bf424c94de0bfc7cf6393e84a93099dbbabf542d46d"
+    },
+    {
+      "state": "WV",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2975,
+        "canonicalBills": 2975,
+        "legislatorsWithBills": 130,
+        "sponsoredBillLinks": 10620,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "9bd786c57b3071914d08547f1cb8abd9247cb8027e7303ba53892df42b25cb0d"
+    },
+    {
+      "state": "WI",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 2751,
+        "canonicalBills": 2751,
+        "legislatorsWithBills": 132,
+        "sponsoredBillLinks": 54922,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "7229293f159339c3736d359d9098ab232927e25097921355a8a858c3470af29f"
+    },
+    {
+      "state": "WY",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 335,
+        "canonicalBills": 335,
+        "legislatorsWithBills": 92,
+        "sponsoredBillLinks": 1778,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "96b4cee2b181221b343e6bc43f0162f9152a430956656c3be212c64b93cef7e1"
+    },
+    {
+      "state": "DC",
+      "before": {
+        "bills": 0,
+        "canonicalBills": 0,
+        "legislatorsWithBills": 0,
+        "sponsoredBillLinks": 0,
+        "readerFailure": null
+      },
+      "after": {
+        "bills": 1907,
+        "canonicalBills": 1907,
+        "legislatorsWithBills": 13,
+        "sponsoredBillLinks": 3565,
+        "readerFailure": null
+      },
+      "priorCanonicalBillsPreserved": 0,
+      "priorVisibleBillsPreserved": 0,
+      "afterBillIdHash": "244345fcfbec38f17f7c316ee4b617e14202848606f2e92d6d2caad810e366cd"
+    }
+  ],
+  "legislatorRows": 7555,
+  "legislatorsCsv": "bills-per-legislator.csv",
+  "preservation": {
+    "priorVisibleBills": 3040,
+    "priorCanonicalBills": 3049,
+    "removedBillIds": 0,
+    "legislatorCountsReduced": 0
+  }
+}

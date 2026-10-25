@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T10:17:39Z
+heartbeat: 2026-10-25T10:18:14Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -45,7 +45,8 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
   - /national: 200.
 - Random ZIPs, seed 1113: 20/20 load and resolve to their county and city, across NC, AK, UT, OR, DE, WA, NJ, GU, OH, TN, NE, NV, FL, SC, NY, NH, MS, CT, MD and LA.
 - Polling places after the move (POST /api/voting-sites): 85603 Cochise County 23 sites (the 5 drop boxes and 18 vote centers); 79901 El Paso County 123; 03301 1 site under "New London".
-  - 03301 is Concord, so a New London jurisdiction there looks wrong. River is checking whether it is new.
+  - 03301 is Concord, yet it shows New London's polling place. Not from DB-03A: door vs04-nh-new-london came with VS-04 on Oct 21 and DB-03A left it unchanged. The door is scoped to place:new_london_town in Merrimack County (countyFips 33013), and the ZIP lookup matches at county level, so every Merrimack County ZIP is shown another town's polling place.
+  - FOR SEAN: this needs a lane, so a place-scoped voting door shows only for that place's ZIPs. NH runs elections by town, so the same pattern is likely for every NH and New England town door.
 - cp_doors bytes per hour after DB-03A: measured once the runner has run 113 for 2 full hours (about 9 AM EDT), against the baseline of 731 MB to 4,960 MB an hour, 2.6 to 3.6 GB an hour overnight.
 
 ### Meeting calendars are back, 4:50 AM EDT (Sean's 11:10 PM order; counts only)

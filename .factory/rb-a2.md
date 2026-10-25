@@ -1,9 +1,9 @@
 # RB-A2 — fill the production place map
 
-build_state: RV-BOX d62ca66ce merged; combined full checks running. Deployment needed before final live-data READY. Production map: 0 of 56 jurisdictions as of 2026-10-25T06:18:47Z.
+build_state: RV-BOX d62ca66ce merged; combined full checks running. Deployment needed before final live-data READY. Production map: 0 of 56 jurisdictions as of 2026-10-25T06:38:48Z.
 worker: codex-rb-a2
 provider: Codex
-heartbeat: 2026-10-25T06:18:55Z
+heartbeat: 2026-10-25T06:38:57Z
 ready: none
 
 The production-fill follow-up is active. Runtime 96483b400 includes RV-MEET2 c02e4bf30; all nine gates pass (9,890 passed, zero failed, two skipped). The checked implementation and live-proof handoff are published in draft PR #822 into River. No reader is switched.

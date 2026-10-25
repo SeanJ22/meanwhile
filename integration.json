@@ -4546,5 +4546,17 @@
     "tested_sha": "d62ca66ce",
     "gates": "pass (9 of 9 across reruns; 9,883 tests)",
     "at": "2026-10-25T06:16:59Z"
+  },
+  {
+    "lane": "river-meet3",
+    "steps": [
+      "RV-MEET3"
+    ],
+    "ready_sha": "6f57717fc",
+    "merge_sha": "6f57717fc",
+    "river_sha": "6f57717fc",
+    "tested_sha": "6f57717fc",
+    "gates": "pass (9 of 9, 9,884 tests)",
+    "at": "2026-10-25T07:37:42Z"
   }
 ]

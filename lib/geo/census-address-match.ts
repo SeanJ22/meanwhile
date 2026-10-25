@@ -31,7 +31,7 @@ export function verifiedCensusVenuePoint(
   const match = matches[0];
   const components = match.addressComponents;
   const address = match.matchedAddress ?? "";
-  const house = /^\s*(\d+)\b/.exec(address)?.[1];
+  const house = /^\s*(\d+[a-z]?(?:-\d+)?|[ns]\d+[ew]\d+|[ew]\d+[ns]\d+)\b/i.exec(address)?.[1];
   if (
     !house ||
     !components?.streetName ||
@@ -54,7 +54,7 @@ export function verifiedCensusVenuePoint(
   if (!hasWords(folded, usps(components.city)))
     return null;
   const foldedQuery = usps(query);
-  const stateTail = /\b([a-z]{2})(?:\s+\d{5}(?:\s+\d{4})?)?$/.exec(
+  const stateTail = /\b([a-z]{2})(?:\s+\d{4,5}(?:\s+\d{4})?)?$/.exec(
     foldedQuery,
   )?.[1];
   if (

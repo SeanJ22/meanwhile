@@ -706,3 +706,12 @@ test("a native Census copy keeps the physical street while canonicalizing a deli
    assert.equal(verifiedCensusVenuePoint(changed,row.response),null,changed);
  }
 });
+
+
+test("a published Wisconsin grid house number keeps its unique Census point and its stated state",()=>{
+ const published="American Legion Post, N120W15932 Freistadt Rd., Germantown, WI 5302";
+ const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-wisconsin-grid-census.json",import.meta.url),"utf8"));
+ assert.ok(verifiedCensusVenuePoint(published,response));
+ for(const changed of [published.replace("N120W15932","N120W15933"),published.replace("Freistadt","Different"),
+  published.replace("Germantown","Other City"),published.replace("WI","CA")])assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
+});

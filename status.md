@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b, live 12:08 AM EDT). NEXT: release 110 = RV-MEET2 (PR #821): admission, verify and both builds green; affected tests running since 12:41 AM EDT; auto-merge on. GATING: RV-BOX 9350e15da alone (river-next d62ca66ce: lint, tsc, dead-code green; tests running), release 111. HELD: DB-02 + BL-02. Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 7b5eacd03, MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
+build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b). NEXT: release 110 = RV-MEET2 (PR #821, CI affected tests running, auto-merge on). GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone as soon as it posts READY (release 112, ahead of everything below). Queue (each its own batch, Sean 1:20 AM EDT): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d (portal-publication pull count first), RB-A7 after RB-A4, DB-02 + BL-02 (BL-02 only from stream/bl-02-bills c3fff3702), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf; RT-01, DB-03 (one fix at a time), AD-01 as their READYs come. HELD: RB-A10 7b5eacd03 until place_boundary, zip_place and zcta_place have rows for every state in production and 20 random ZIPs in 20 states resolve to county and city
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T05:18:07Z
+heartbeat: 2026-10-25T05:24:56Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,16 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Sean's orders, 1:20 AM EDT
+- Neon: ask production for counts and small samples only. Never pull whole tables or whole copies, never open a new copy of production, stop any replay that reads a copy in bulk. A proof that needs more goes to Sean first with what it reads and how many GB.
+- DB-03A: gate it alone when it posts READY and ship it right after RV-MEET2 and RV-BOX, ahead of everything else. Proof: cp_doors bytes per hour before and after.
+- RB-A10: hold until place_boundary, zip_place and zcta_place have rows for every state in production (0 rows now; RT-01 is filling them) and 20 random ZIPs in 20 states resolve to their county and city. RB-A10 deletes the old ZIP lookups.
+- RB-A4: before it ships, count read-only how many live facts lib/facts/portal-publication.ts's own "pulled" UPDATE would pull in production, by state. If readers would lose any, send it back to go through lib/core/door.ts.
+- Fold RB-A4 before RB-A7 (both change lib/reader/place.ts and lib/core/door.ts).
+- BL-02 folds only from stream/bl-02-bills c3fff3702; stream/bl-02 is stale.
+- New lanes DB-03A, RT-01, DB-03 (one fix at a time) and AD-01: fold their READYs as they come.
+- Prove every release on random ZIPs across the country, never on one city.
 
 ### 1 AM EDT: what is live for readers
 - Release 109 (since 12:08 AM EDT):

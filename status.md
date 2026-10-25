@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 118 (main c7576d26e, DB-03 readback). SHIPPING: release 119 (RB-A4 catch-up b2bbdc183, gates 9 of 9 on 456454204) PR #831, auto-merge on; reader checks within 5 min of live. GATING: GB-01 1636195c9 alone on river-next 68ebfa0aa. RETURNED: river-portraits 3a45d44ab (1 test: new URL().pathname in tests/portrait-run.test.ts); new READY → release 120. NEXT: DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up), live 4:25 PM EDT; reader checks green. GATING: GB-01 1636195c9 alone on river-next 68ebfa0aa. NEXT: river-portraits READY 9bf9801a5 (portraits and member offices, never re-read), then DB-03 in lane order (Admin 04681516c first), RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T20:03:00Z
+heartbeat: 2026-10-25T20:28:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1063,4 +1063,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - RB-A4 catch-up had already passed 9 of 9 alone on this same river (be0b41a4f), so it ships now as release 119 (PR #831): river moved to 456454204. GB-01 1636195c9 is gating alone on top of it (68ebfa0aa).
 - DB-03 readback saving, first full hour after release 118: readback read 0 MB in the 3 PM EDT hour. Before, 5 AM to 1 PM EDT: 55 / 625 / 2,759 / 1,147 / 593 / 2,931 / 1,810 / 1,545 / 56 MB, average 1,280 MB/h. Saved: about 1.3 GB/h on average (0.06 to 2.9 GB/h by hour). The 4 PM hour will confirm.
 - Neon, both databases, 3 PM EDT hour: 11,915 MB. Portraits 5,918 (still the biggest; release 120 targets it), research cycle 1,092, member offices 0 this hour.
+
+### Release 119 live, 4:25 PM EDT (main f6f68db6b: RB-A4 catch-up)
+- Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
+- Random ZIPs, seed 1119: 20/20 load, 20/20 resolve to county and city, across SD, AK, CO, IN, KY, TN, ME, WV, NM, DE, GA, MI, VI, CA, MA, AL, GU, AZ, NY and TX.
+- Placements so far: the old one-state rotation kept going while catch-up waited. 12 states reloaded since 11:40 AM (WA, WI, WV, WY, AK, AL, AR, AS, AZ, CA, CO, CT), and HOST_COUNTY rows rose from 1,400 to 14,641. Catch-up starts on the runner's first pass on release 119; its cursor routine-fact-entities-state isn't written yet. Oregon and the other 44 states should reload in that pass.
 

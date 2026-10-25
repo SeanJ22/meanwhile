@@ -1,21 +1,24 @@
-# Returned: rb-a4
+# RB-A4 returned (River, 1:50 AM EDT Oct 25, Sean's order of 1:20 AM)
 
-## rb-a4 — fold conflict with RB-A3/RB-A8/MT-01 (River, Oct 24 9:40 PM EDT)
+READY 0bdb1353d does not fold. lib/facts/portal-publication.ts `withdrawPlatformPublication` pulls live facts with its own
+`UPDATE fact SET status='pulled', held_reason='PORTAL_AUTHORITY_UNCONFIRMED'`, outside the front door (lib/core/door.ts).
 
-RB-A4 READY ef7987b1e (8 hours old; it merged an earlier RB-A3) folded on river-next 78a1f9e0d (release 107 = RB-A8 with RB-A3 + RB-A5; PT-01 + MT-01 gating) conflicts in 5 files:
-- lib/core/door.ts and lib/facts/meeting-facts.ts: RB-A8 replaced RB-A3's door fact increments with fact-table hooks (one counter), and MT-01 changed saved meeting points in meeting-facts.ts.
-- lib/db/migration-phases.ts and lib/db/migrations/meta/_journal.json: river's reader journal is now ... 0051_rb_a1_shared (51), RB-A2_place_boundaries (52), DB-01_read_versions (53), RB-A3_expand (54), RB-A8_count_hour (55). Append RB-A4_entity_places after them; keep every phase declaration.
-- tests/helpers/fact-db.ts.
+What readers would lose (production, read-only counts, 1:45 AM EDT):
+- The census calls it for every door with config.crosswalkRowId and a platform-hosted portal whose government's own site does
+  not link that portal (lib/control-plane/discovery/platform-government.ts:210). 6,781 such doors (6,775 OPEN, 3 SHUT,
+  3 SUSPENDED); none is flagged "not confirmed" yet, so nothing is pulled today.
+- Live, non-owner facts on those doors' bodies and their meetings whose source copy is on the door's portal tenant (host,
+  or Legistar client; an upper bound for BoardDocs/Granicus/Municode/BoardBook tenants): 99,690 in 43 states.
+  CA 11,216, TX 9,614, WI 8,963, FL 8,103, CO 6,722, MN 5,636, MO 5,454, CT 5,040, VA 4,588, OH 4,499, IL 3,504,
+  WA 3,454, NC 3,384, AZ 2,848, NJ 2,747, MA 1,892, OK 1,683, NY 1,674, MI 1,253, AK 1,048, NV 791, PA 657, NM 633,
+  OR 570, ME 538, ID 477, GA 465, WY 421, AL 421, UT 308, HI 258, IA 153, RI 126, WV 121, SD 84, MD 77, AR 66, MS 66,
+  NH 48, DE 25, KY 24, SC 9, TN 8, no state 22.
+- Every government whose site does not link its portal loses those facts on its next census check.
 
-Exact fix: in stream/rb-a4, `git fetch origin && git merge origin/river` once release 107 is promoted (river af9ee8f78). Keep RB-A8's single fact counter (don't restore RB-A3's door increments) and MT-01's saved meeting points; keep RB-A4's entity places, board filing and placement_basis. Rerun RB-A4's focused tests, the migration tests (apply-migrations-dry, migration-*), tests that use tests/helpers/fact-db.ts, tsc (4 GB heap) and lint, and post a new `READY: RB-A4`. River folds it in the next small batch.
+What to change: a fact leaves readers only through lib/core/door.ts. Either give the door the withdrawal decision (so its
+provenance and owner rules apply, and it purges the reader cache as it does for every other change), or do not pull: keep the
+open CHECK blank and the suspended door, and let the next read through the door replace or confirm the facts. Then repost
+READY with a test that a census withdrawal leaves no live fact changed outside door.ts, and the same production count.
 
-If no new READY by 10:40 PM EDT, River does this merge on stream/rb-a4 with a helper (standing order).
-
-lane: rb-a4
-owner: rb-a4
-writer: the rb-a4 lane
-check: fold
-ready: RB-A4 ef7987b1e
-river: af9ee8f78
-at: 2026-10-25T01:40:00Z
-state: cleared: River finished READY 0bdb1353d (11:45 PM EDT)
+Standing order: River owns this lane (its workspace died); River finishes it if no new READY lands by 2:50 AM EDT.
+RB-A7 folds after RB-A4 (both change lib/reader/place.ts and lib/core/door.ts).

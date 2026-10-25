@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b). NEXT: release 110 = RV-MEET2 (PR #821, CI affected tests running, auto-merge on). GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone as soon as it posts READY (release 112, ahead of everything below). Queue (each its own batch, Sean 1:20 AM EDT): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d (portal-publication pull count first), RB-A7 after RB-A4, DB-02 + BL-02 (BL-02 only from stream/bl-02-bills c3fff3702), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf; RT-01, DB-03 (one fix at a time), AD-01 as their READYs come. HELD: RB-A10 7b5eacd03 until place_boundary, zip_place and zcta_place have rows for every state in production and 20 random ZIPs in 20 states resolve to county and city
+build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b). NEXT: release 110 = RV-MEET2 (PR #821, CI affected tests running, auto-merge on). GATING: RV-BOX 9350e15da alone, release 111. THEN: DB-03A alone as soon as it posts READY (release 112, ahead of everything below). Queue (each its own batch, Sean 1:20 AM EDT): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED 1:50 AM EDT (portal-publication pulls up to 99,690 live facts in 43 states outside door.ts; returns/rb-a4.md; River finishes by 2:50 AM EDT if no new READY), RB-A7 after RB-A4, DB-02 + BL-02 (BL-02 only from stream/bl-02-bills c3fff3702), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf; RT-01, DB-03 (one fix at a time), AD-01 as their READYs come. HELD: RB-A10 7b5eacd03 until place_boundary, zip_place and zcta_place have rows for every state in production and 20 random ZIPs in 20 states resolve to county and city
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T05:24:56Z
+heartbeat: 2026-10-25T05:28:02Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,13 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### DB-03A baseline: cp_doors bytes per hour (control plane cp_vital_signs, 1:40 AM EDT)
+- cp_doors, last 12 h (EDT): 2 PM 768 MB, 3 PM 779, 4 PM 1,124, 5 PM 731, 6 PM 1,109, 7 PM 2,220, 8 PM 3,606, 9 PM 4,239, 10 PM 4,960, 11 PM 3,219, midnight 2,373, 1 AM (partial) 1,249.
+- Usually 50 to 80% of all runner Neon bytes (the hour totals run 1.2 to 8.4 GB).
+- Largest caller: cp_doors.listWhere at lib/ballot/voting-source-publication.ts:41, 690 MB to 1.8 GB an hour; it grew when release 104 brought voting sites back.
+- Next: voting-source-publication.ts:19 and :52, then registry.ts:406 read and :385 listChangedSince.
+- RV-MEET2 gives voting sites about half of each pass, so part of the drop may land before DB-03A. Both get reported.
 
 ### Sean's orders, 1:20 AM EDT
 - Neon: ask production for counts and small samples only. Never pull whole tables or whole copies, never open a new copy of production, stop any replay that reads a copy in bulk. A proof that needs more goes to Sean first with what it reads and how many GB.

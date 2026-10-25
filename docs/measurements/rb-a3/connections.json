@@ -1,6 +1,6 @@
 {
-  "observedAt": "2026-10-24T20:45:46.611Z",
-  "clockStart": "2026-10-24T20:43:46.113Z",
+  "observedAt": "2026-10-25T00:58:37.859Z",
+  "clockStart": "2026-10-25T00:56:37.389Z",
   "official": {
     "decision": "PUBLISH",
     "factId": 2017
@@ -14,9 +14,9 @@
     "intervalMs": 60000,
     "mode": "wall-clock timer",
     "startedAt": [
-      "2026-10-24T20:43:46.152Z",
-      "2026-10-24T20:44:46.246Z",
-      "2026-10-24T20:45:46.310Z"
+      "2026-10-25T00:56:37.462Z",
+      "2026-10-25T00:57:37.523Z",
+      "2026-10-25T00:58:37.750Z"
     ],
     "passes": [
       {
@@ -101,22 +101,124 @@
   "reader": {
     "name": "City Council",
     "address": "20 E. Main Street\nMesa, AZ 85201",
-    "bodiesRetained": 33,
-    "meetingsRetained": 36,
+    "bodiesRetained": 36,
+    "meetingsRetained": 40,
     "seatsRetained": 9
   },
   "counts": [
     {
       "state": "AZ",
-      "hour": "2026-10-24T20:00:00.000Z",
-      "step": "door_checked",
+      "hour": "2026-10-25T00:00:00.000Z",
+      "step": "v1:[\"Government bodies\", \"fact:live\", \"in\"]",
+      "n": 2
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:00:00.000Z",
+      "step": "v1:[\"Government bodies\", \"fact:live\", \"stock in\"]",
+      "n": 2
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:00:00.000Z",
+      "step": "v1:[\"Government bodies\", \"publication:checked\", \"in\"]",
       "n": 1
     },
     {
       "state": "AZ",
-      "hour": "2026-10-24T20:00:00.000Z",
-      "step": "door_official",
+      "hour": "2026-10-25T00:00:00.000Z",
+      "step": "v1:[\"Government bodies\", \"publication:checked\", \"stock in\"]",
       "n": 1
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:00:00.000Z",
+      "step": "v1:[\"Government bodies\", \"publication:official\", \"in\"]",
+      "n": 1
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:00:00.000Z",
+      "step": "v1:[\"Government bodies\", \"publication:official\", \"stock in\"]",
+      "n": 1
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"Agendas\", \"fact:live\", \"stock in\"]",
+      "n": 55
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"Government bodies\", \"fact:live\", \"stock in\"]",
+      "n": 33
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"Meetings\", \"fact:live\", \"stock in\"]",
+      "n": 499
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"Officials and members\", \"fact:live\", \"stock in\"]",
+      "n": 406
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"Taking part\", \"fact:live\", \"stock in\"]",
+      "n": 7
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"body\", \"subjects\", \"stock in\"]",
+      "n": 58
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"government\", \"subjects\", \"stock in\"]",
+      "n": 33
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"meeting\", \"subjects\", \"stock in\"]",
+      "n": 326
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"person\", \"subjects\", \"stock in\"]",
+      "n": 241
+    },
+    {
+      "state": "AZ",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"place\", \"subjects\", \"stock in\"]",
+      "n": 61
+    },
+    {
+      "state": "US",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "counter start",
+      "n": 0
+    },
+    {
+      "state": "US",
+      "hour": "2026-10-25T00:56:37.075Z",
+      "step": "v1:[\"place\", \"subjects\", \"stock in\"]",
+      "n": 1
+    },
+    {
+      "state": "US",
+      "hour": "2026-10-25T00:56:37.256Z",
+      "step": "publication start",
+      "n": 0
     }
   ],
   "queue": [
@@ -129,5 +231,7 @@
     {
       "place_id": "ocd-division/country:us/state:az/place:mesa"
     }
-  ]
+  ],
+  "implementationCommit": "6fa509323",
+  "riverCommit": "4653894cc"
 }

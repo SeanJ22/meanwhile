@@ -1,7 +1,7 @@
 {
-  "observedAt": "2026-10-24T22:24:14.043680+00:00",
-  "testedCommit": "41999aa8c5ea42440d9407747571467a55463b1d",
-  "riverCommit": "f6c4cba25",
+  "observedAt": "2026-10-25T01:45:37.729023+00:00",
+  "testedCommit": "6fa509323",
+  "riverCommit": "4653894cc",
   "a1FoldedReady": "1d6df41d9",
   "latestA1Documentation": "3a8b176aa",
   "latestA1Delta": "Six lines in docs/rb-a1.md; no application or test change. Merged and build passed.",
@@ -10,17 +10,17 @@
     {
       "id": "lint",
       "status": "PASS",
-      "seconds": 72
+      "seconds": 87
     },
     {
       "id": "tsc",
       "status": "PASS",
-      "seconds": 64
+      "seconds": 60
     },
     {
       "id": "dead-code",
       "status": "PASS",
-      "seconds": 5
+      "seconds": 6
     },
     {
       "id": "assert:browser",
@@ -30,7 +30,7 @@
     {
       "id": "test",
       "status": "PASS",
-      "seconds": 1585
+      "seconds": 1731
     },
     {
       "id": "db:gate",
@@ -40,7 +40,7 @@
     {
       "id": "build",
       "status": "PASS",
-      "seconds": 81
+      "seconds": 85
     },
     {
       "id": "test:bundle",
@@ -54,8 +54,8 @@
     }
   ],
   "tests": {
-    "registered": 9846,
-    "passed": 9841,
+    "registered": 9857,
+    "passed": 9852,
     "failed": 0,
     "suites": 42,
     "skipped": 5,
@@ -63,13 +63,7 @@
     "cancelled": 0
   },
   "postbuildChecks": {
-    "files": [
-      "tests/deploy-paths.test.ts",
-      "tests/reader-last-mile-trace.test.ts"
-    ],
-    "passed": 17,
-    "failed": 0,
-    "skipped": 0
+    "status": "PENDING_FINAL_BUILD"
   },
   "bundleTests": {
     "passed": 16,
@@ -110,5 +104,15 @@
       "files": 107,
       "failures": 0
     }
+  },
+  "focusedFollowup": {
+    "commit": "4f97e0bc2",
+    "passed": 79,
+    "failed": 0,
+    "skipped": 0
+  },
+  "finalVerification": {
+    "commit": "7f7ea23ba",
+    "status": "PENDING"
   }
 }

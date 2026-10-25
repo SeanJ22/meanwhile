@@ -1,6 +1,14 @@
 {
   "browser": "Google Chrome for Testing 151.0.7922.34",
-  "implementationCommit": "1bdca4f7e",
+  "implementationCommit": "6fa509323",
+  "productionBaseline": {
+    "observedAt": "2026-10-25T00:46:18.918Z",
+    "page": "https://meanwhileusa.com/?zip=85201",
+    "status": 200,
+    "bodies": 36,
+    "meetings": 40,
+    "writesBlocked": 0
+  },
   "productionFrontendWithCopiedFacts": [
     {
       "reader": {
@@ -10,10 +18,10 @@
         "governmentSourceLinked": true,
         "bothSourcesLinked": false,
         "visibleCounts": {
-          "Meetings": 36,
-          "Bodies here": 33,
+          "Meetings": 40,
+          "Bodies here": 36,
           "Districts in view": 76,
-          "Officials": 27
+          "Officials": 26
         },
         "pageErrors": []
       }
@@ -28,10 +36,10 @@
         "governmentSourceLinked": true,
         "bothSourcesLinked": true,
         "visibleCounts": {
-          "Meetings": 36,
-          "Bodies here": 33,
+          "Meetings": 40,
+          "Bodies here": 36,
           "Districts in view": 76,
-          "Officials": 27
+          "Officials": 26
         },
         "pageErrors": []
       }
@@ -39,13 +47,51 @@
     {
       "admin": {
         "url": "http://localhost:3107/admin?view=scoreboard",
-        "arizona": "Arizona\t1\t1",
-        "stateRows": 57
+        "lanes": {
+          "official": "AZ\t1\t1\t\u2014\t\u2014\t\u2014\t\u2014",
+          "checked": "AZ\t1\t1\t\u2014\t\u2014\t\u2014\t\u2014"
+        },
+        "stateRows": 57,
+        "pageErrors": []
       }
     }
   ],
+  "adminClosedHour": {
+    "from": "2026-10-25T00:00:00.000Z",
+    "through": "2026-10-25T01:00:00.000Z",
+    "measuredAt": "2026-10-25T01:01:14.692Z"
+  },
+  "adminLaneCounts": [
+    {
+      "hour": "2026-10-25T00:00:00.000Z",
+      "state": "AZ",
+      "family": "Government bodies",
+      "stage": "publication:checked",
+      "total": 1,
+      "closedTotal": 1,
+      "incoming": null,
+      "outgoing": null,
+      "changed": null,
+      "observedIn": 1,
+      "observedOut": 0
+    },
+    {
+      "hour": "2026-10-25T00:00:00.000Z",
+      "state": "AZ",
+      "family": "Government bodies",
+      "stage": "publication:official",
+      "total": 1,
+      "closedTotal": 1,
+      "incoming": null,
+      "outgoing": null,
+      "changed": null,
+      "observedIn": 1,
+      "observedOut": 0
+    }
+  ],
+  "adminCountSource": "Actual shared count_hour rows from both door publications, read after the real hour closed. The first partial-hour incoming movement remains unmeasured.",
   "boundaryContext": "The local copy reads the same public production boundary byte ranges. No Netlify credentials are copied.",
   "mutationsBlocked": true,
-  "productionObservedAt": "2026-10-24T20:47:34.031772+00:00",
-  "branchObservedAt": "2026-10-24T20:47:23.744233+00:00"
+  "productionObservedAt": "2026-10-25T01:02:15.002757+00:00",
+  "branchObservedAt": "2026-10-25T01:01:31.804959+00:00"
 }

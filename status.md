@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4). SHIPPING: release 118 (DB-03 inventory readback, River fold 235c6f837, gates 9 of 9) PR #830, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 catch-up b2bbdc183 alone (river-next 456454204). NEXT: GB-01 READY 900dd1427 (Census governing bodies + LA Metro move), alone after RB-A4 catch-up. NEXT after GB-01: DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820, VS-05 when it posts. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4). SHIPPING: release 118 (DB-03 inventory readback, River fold 235c6f837, gates 9 of 9) PR #830, auto-merge on; reader checks within 5 min of live. GATING: RB-A4 catch-up b2bbdc183 alone (river-next 456454204); releases after river-portraits. NEXT: GB-01 READY 900dd1427 (Census governing bodies + LA Metro move), alone after RB-A4 catch-up. NEXT after GB-01: DB-03 Admin 04681516c, state doors e4305907d, linking-page integration ef74ed82e, read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820, VS-05 when it posts. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T18:04:00Z
+heartbeat: 2026-10-25T18:21:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1018,4 +1018,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Lanes: DB-03 posted READY 2cce7754c, "DB-03 portraits". It cuts the portrait job's reads: a replay on OK, WI and KY read 98.7 MB before and 7.6 MB after. It also carries River's readback test and dead-code fixes. It sits on top of the lane's line, so folding it brings every DB-03 step below it. River folds the DB-03 steps in lane order after GB-01: Admin, state doors, then the rest through portraits. No other new READYs.
 - Neon, both databases, 1 PM EDT hour: 13,368 MB. Portraits 7,834 (59%), research cycle 1,043. Readback was 56: with no readback release live yet, that low figure comes from the runner, not from us.
 - Time correction: the GB-01 entry's heartbeat said 18:20Z but was written at about 18:00Z. Times on this board now come from the clock.
+
+### 2:20 PM EDT: Sean's portraits and member-offices order (relayed by River session session_012UDbgz3sjA8QN2m7CY78QS)
+- Sean, 2:15 PM EDT, to the other River session: finish DB-03 portraits under the standing order and take member offices with it.
+  - Portraits: skip a state when its inputs' promotion versions are unchanged and no photo is due; save once per 50+ people; resume after a deadline cut.
+  - Member offices: only states whose lawmaker list changed; resume after a cut; once a day.
+  - Ship right after DB-03 readback, ahead of RB-A4 catch-up. Stop when both are under 0.3 GB/h on the live runner.
+- That session is building stream/river-portraits from river be0b41a4f. It supersedes DB-03's 2cce7754c, which River will not fold separately.
+- New order: release 118 (readback, live now) → river-portraits → RB-A4 catch-up → GB-01 → DB-03 in lane order.
 

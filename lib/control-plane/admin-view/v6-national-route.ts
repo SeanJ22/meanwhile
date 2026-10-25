@@ -4,7 +4,6 @@ import { zipCountsByState } from "../bulk-hunts/zip-state.ts";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { openControlPlane } from "../admin-data.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
-import { refreshOwedOverlay } from "./owed-overlay-read.ts";
 import { readStateDistricts, zipDivisionIds } from "./v6-national-geography.ts";
 import { nationalScopeOf, v6NationalSection, type NationalDeps } from "./v6-national-read.ts";
 import { population } from "./v6-stuck-route.ts";
@@ -26,8 +25,7 @@ export const defaultNationalDeps: NationalDeps = {
   districts: (state) => readStateDistricts(state),
   zipCounts: zipCountsByState,
   zipDivisions: (zips) => zipDivisionIds(zips),
-    // The owner's owed overlay counts in every place score below, so it is read first.
-  readHeld: async (ids, now) => { await refreshOwedOverlay(); return readHeldPlaceCapture(ids, { now }); },
+  readHeld: (ids, now) => readHeldPlaceCapture(ids, { now }),
   scoreBudgetMs: SCORE_BUDGET_MS,
 };
 

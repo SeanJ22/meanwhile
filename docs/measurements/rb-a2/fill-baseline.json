@@ -57,14 +57,14 @@
     "liveThroughputVerified": false
   },
   "fullChecks": {
-    "runtimeRevision": "96483b400",
+    "runtimeRevision": "008d674f4",
     "gatesPassed": 9,
     "gatesTotal": 9,
-    "testsRegistered": 9892,
-    "testsPassed": 9890,
+    "testsRegistered": 9893,
+    "testsPassed": 9891,
     "testsFailed": 0,
     "testsSkipped": 2,
-    "finishedAt": "2026-10-25T05:38:49.469Z"
+    "finishedAt": "2026-10-25T06:53:14.059Z"
   },
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays."
 }

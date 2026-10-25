@@ -8,7 +8,7 @@ The tested runner change gives each state's map its own acquisition failure doma
 
 The full postal table has 42,883 ZIPs: 41,959 have a known state or territory and 924 have only a national mail context. The prior map omitted 1,052 ZIPs without Census aliases. They now retain their known state, or only the U.S. country context when no supported state is known. They gain no invented ZCTA or district.
 
-Full checks on runtime revision 96483b400: all nine pnpm gates pass; 9,892 tests registered, 9,890 pass, zero fail, two skipped. Focused combined checks pass 123/123. River d62ca66ce is subsequently merged in 008d674f4; full checks on that combination are running.
+Full checks on merged runtime revision 008d674f4, including River d62ca66ce: all nine pnpm gates pass; 9,893 tests registered, 9,891 pass, zero fail, two skipped. Focused source/map/runner checks pass 123/123 and are also included in that full suite. Both builds and all 16 bundle tests pass.
 
 Production verification now uses database-side count aggregates and small metadata samples only. No new production copies or Neon copy branches are opened, and no bulk copy replay is run. Consumer checks use ZIP membership metadata without transferring geometry or state payloads. The seven superseded copy/replay entry points and their local-copy helper are deleted; earlier measurements remain recorded as results.
 

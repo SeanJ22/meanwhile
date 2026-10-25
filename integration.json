@@ -4450,5 +4450,41 @@
     "tested_sha": "b7246b8a1",
     "gates": "pass",
     "at": "2026-10-25T00:39:14Z"
+  },
+  {
+    "lane": "rb-a8",
+    "steps": [
+      "RB-A8"
+    ],
+    "ready_sha": "fb1783a62",
+    "merge_sha": "0916a5b87",
+    "river_sha": "af9ee8f78",
+    "tested_sha": "0916a5b87",
+    "gates": "pass",
+    "at": "2026-10-25T01:21:38Z"
+  },
+  {
+    "lane": "rb-a3",
+    "steps": [
+      "RB-A3"
+    ],
+    "ready_sha": "d92e9a054",
+    "merge_sha": "0916a5b87",
+    "river_sha": "af9ee8f78",
+    "tested_sha": "0916a5b87",
+    "gates": "pass",
+    "at": "2026-10-25T01:21:38Z"
+  },
+  {
+    "lane": "rb-a5",
+    "steps": [
+      "RB-A5"
+    ],
+    "ready_sha": "f7ab065e3",
+    "merge_sha": "0916a5b87",
+    "river_sha": "af9ee8f78",
+    "tested_sha": "0916a5b87",
+    "gates": "pass",
+    "at": "2026-10-25T01:21:38Z"
   }
 ]

@@ -131,6 +131,7 @@ import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_CURSOR, PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SCAN_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readPublicationAdmission, readPublishNowRetryIds, publishNowRetryItemIds, savePublishNowProgress, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
+import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { groupCalendarReadsByState, stateCalendarEnvironment, stateCalendarMemberResults, type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
@@ -210,6 +211,7 @@ const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-
 
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
+const HUNT_PROGRESS_WRITES_AT_ONCE = 16;
 /* The pass ends by its deadline: sources launch and run in the first two thirds of its budget, repairs until the last sixth,
    which settles and publishes what ran. Whatever did not finish stays owed to the next pass. */
 const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
@@ -754,6 +756,13 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
+/** Each line is its own row. Written one at a time, about 800 of them held a publish-now pass's first meeting launch past
+ * the time a state calendar program may still start a board. */
+async function recordHuntSourceProgressEach(tasks: readonly RoutineSourceTask[], stage: HuntSourceProgress["stage"], detail: string): Promise<void> {
+  const failed = (await runBoundedWorkPool(tasks, HUNT_PROGRESS_WRITES_AT_ONCE, task => recordHuntSourceProgress(task, stage, detail))).find(result => !result.ok);
+  if (failed) throw new Error(failed.error!);
+}
+
 
 
 
@@ -1175,7 +1184,7 @@ for (const candidate of dueCandidates) {
 await flushLaunchDecisions();
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
 for (const { task } of electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
-for (const pending of pendingRuns) await recordHuntSourceProgress(pending.task, "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
+await recordHuntSourceProgressEach(pendingRuns.map(pending => pending.task), "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
@@ -1282,9 +1291,8 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
       // Memory goes in launch order; the next read of a serial lane is not overtaken by work queued behind it.
       await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, hold: command.serialLane !== undefined });
-      for (const member of unitMembers(units[index]!)) {
-        await recordHuntSourceProgress(member.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
-      }
+      await recordHuntSourceProgressEach(unitMembers(units[index]!).map(member => member.task), "COLLECTING_AND_VERIFYING",
+        "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
     onSettled: async (run, index) => {
       const unit = units[index]!;

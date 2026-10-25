@@ -1,22 +1,20 @@
 # RB-A2 — fill the production place map
 
-build_state: Checking the combination with River 456454204 (RB-A4 catch-up); all nine gates are being rerun. Previous runtime 944c3846b passed 9/9. Production deployment and live-data READY remain pending; map tables are empty.
+build_state: Code checked: 9/9 gates on runtime 972d406d9 through River 456454204 (RB-A4 catch-up); 9,915 tests passed, zero failed, two skipped; both builds and 16 bundle tests pass. River deployment needed before final live-data READY; production map tables remain empty.
 worker: codex-rb-a2
 provider: Codex
-heartbeat: 2026-10-25T20:05:43.326Z
+heartbeat: 2026-10-25T20:45:54.035Z
 ready: none
 
-The production-fill follow-up is active. Current runtime 944c3846b includes River be0b41a4f (DB-03 inventory-readback removal) and passes all nine gates (9,914 registered, 9,912 passed, zero failed, two skipped), including both builds and all 16 bundle tests. Finished at 2026-10-25T18:19:47.925Z without production database or model-service credentials. The Census scheduling regression is retained; the adjacent retired repair test and obsolete repair-memory note are deleted. Earlier validation results remain in the measurement file. The implementation and live-proof handoff are published in draft PR #822 into River. No reader is switched.
+The production-fill follow-up is active. Current runtime 972d406d9 merges River 456454204 cleanly and passes all nine gates (9,917 registered, 9,915 passed, zero failed, two skipped), including both builds and all 16 bundle tests. Finished at 2026-10-25T20:41:46.940Z without production database or model-service credentials. The bounded loader and shared Census worker remain intact. Earlier validation results remain in the measurement file. Draft PR #822 publishes the checked implementation into River under CLAUDE.md's Codex exception. No reader is switched.
 
-- River: merge the current stream/rb-a2 candidate from draft PR #822 into river-next, check the combination and deploy it in its normal batch. Current runtime 944c3846b combines inventory-readback removal, CL-01 and RB-A4 with the loader. This deployment must precede the final data READY, whose production proof depends on the scheduled jobs running this code. The normal runner owns all production writes.
-- RB-A2: observe those scheduled passes, then publish actual row counts for every state, completeness of all 42,883 postal ZIPs, elapsed load time, two production connections and meeting-read throughput. Final READY follows that production evidence.
+- River: merge the current stream/rb-a2 candidate from draft PR #822 into river-next, check the combination and deploy it in its normal batch. The automatic fold ignores WIP; the final data READY requires scheduled production jobs to run this code first. The normal runner owns all production writes.
+- RB-A2: observe those scheduled passes, then publish actual row counts for every state, completeness of all 42,883 postal ZIPs, elapsed load time, two production connections and meeting-read throughput. Push final READY after that production evidence, then stop as requested.
 
-The observer reads count aggregates and small metadata samples only. No Neon copy branches, new production copies or bulk copy replays. The seven RB-A2 copy/replay scripts and their local-copy helper remain deleted; the idle local PostgreSQL copy server is stopped. Full details and measured memory bounds: docs/rb-a2.md and docs/measurements/rb-a2/fill-baseline.json.
+At 4:44 PM EDT, all three production map tables were still empty. The 4:30 PM runner heartbeat still identified release 118 (c7576d26e) with zero map workers, while the reader site had moved to release 119. Load timing will use the actual runner code and exclude older passes.
 
-At 2:59 PM EDT, all three production map tables were still empty. The 2:51 PM runner observation confirms release 118 (`c7576d26e`) and zero map workers. RT-01's queued `a13baecf8` also changes the provider frontier, but retains the old loader memory reservation; it does not replace this lane's bounded loader and shared Census worker. The prepared meeting comparison returns two aggregate rows for equal windows before and during the actual load.
+The observer returns count aggregates and small metadata samples only. No Neon copy branches, new production copies or bulk copy replays. The seven superseded RB-A2 copy/replay scripts and their helper remain deleted; the idle local PostgreSQL copy server is stopped.
 
-A read-only two-record production sample at 3:34 PM EDT confirms Ajo-Lukeville Health Services District and Pima County exist and both ids resolve. The final proof targets that exact district id; its map attachment and ZIP 85321 join remain pending production population. No geometry, source payload or reader text was returned.
+A two-record production sample confirms Ajo-Lukeville Health Services District and Pima County exist and their ids resolve; its map attachment and ZIP 85321 join remain pending. The count-only no-loss comparison covers all 303,768 current ordinary and fringe links. Its one-prefix negative diagnostic found all 3,080 links missing while the map was empty, returning 340 bytes of counts; this validates the SQL, not production population. Full comparison and gains by state remain pending.
 
-The no-loss comparison is prepared as bounded production count queries over all 303,768 current ordinary and fringe reference links. A one-prefix negative diagnostic correctly found 3,080 missing links while the map is empty, returning 340 bytes of counts. This validates the SQL, not production population. Full comparison and gains by state remain pending the load.
-
-Merged tested River 456454204 (RB-A4 catch-up b2bbdc183) cleanly. It rotates the existing fact-entity catch-up through changed states. The bounded loader and Census scheduling changes remain intact. Full validation is running again on this combination; the earlier 944c3846b result is not a pass for this new combination.
+Details: docs/rb-a2.md and docs/measurements/rb-a2/fill-baseline.json.

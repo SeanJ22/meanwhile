@@ -87,33 +87,34 @@
     "liveThroughputVerified": false
   },
   "fullChecks": {
-    "runtimeRevision": "944c3846b",
+    "runtimeRevision": "972d406d9",
     "gatesPassed": 9,
     "gatesTotal": 9,
-    "testsRegistered": 9914,
-    "testsPassed": 9912,
+    "testsRegistered": 9917,
+    "testsPassed": 9915,
     "testsFailed": 0,
     "testsSkipped": 2,
-    "finishedAt": "2026-10-25T18:19:47.925Z",
+    "finishedAt": "2026-10-25T20:41:46.940Z",
     "productionDatabaseBindings": false,
     "productionModelServiceBindings": false
   },
   "currentCombinationValidation": {
-    "runtimeRevision": "944c3846b",
-    "river": "be0b41a4f",
+    "runtimeRevision": "972d406d9",
+    "river": "456454204",
     "includes": [
+      "RB-A4 catch-up",
       "DB-03 inventory-readback removal",
       "CL-01",
       "RB-A4"
     ],
-    "startedAt": "2026-10-25T17:44:36.026Z",
+    "startedAt": "2026-10-25T20:05:46.707Z",
     "status": "All nine checks passed, including both builds and all 16 bundle tests; see fullChecks.",
-    "finishedAt": "2026-10-25T18:19:47.925Z"
+    "finishedAt": "2026-10-25T20:41:46.940Z"
   },
   "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
   "latestProductionObservation": {
-    "observedAt": "2026-10-25T19:34:00.047Z",
+    "observedAt": "2026-10-25T20:44:01.078Z",
     "hasBoundaries": false,
     "hasZipRows": false,
     "hasZctaRows": false,
@@ -123,11 +124,11 @@
     "method": "Server-side existence flags and count-cache metadata; no geometry, source payloads or table copies."
   },
   "deploymentObservation": {
-    "river": "be0b41a4f",
-    "main": "c7576d26e",
+    "river": "456454204",
+    "main": "f6f68db6b",
     "checkedLoaderInRiver": false,
     "checkedLoaderInMain": false,
-    "runnerObservedAt": "2026-10-25T19:30:22.345Z",
+    "runnerObservedAt": "2026-10-25T20:30:44.947Z",
     "runnerTestedSha": "c7576d26ee33b8ee7563d6c5d2428384b4246fb5",
     "mapWorkers": 0
   },
@@ -183,6 +184,26 @@
       "gatesTotal": 9,
       "testsRegistered": 9941,
       "testsPassed": 9939,
+      "testsFailed": 0,
+      "testsSkipped": 2,
+      "productionDatabaseBindings": false,
+      "productionModelServiceBindings": false
+    },
+    {
+      "runtimeRevision": "944c3846b",
+      "river": "be0b41a4f",
+      "includes": [
+        "DB-03 inventory-readback removal",
+        "CL-01",
+        "RB-A4"
+      ],
+      "startedAt": "2026-10-25T17:44:36.026Z",
+      "status": "All nine checks passed, including both builds and all 16 bundle tests; see fullChecks.",
+      "finishedAt": "2026-10-25T18:19:47.925Z",
+      "gatesPassed": 9,
+      "gatesTotal": 9,
+      "testsRegistered": 9914,
+      "testsPassed": 9912,
       "testsFailed": 0,
       "testsSkipped": 2,
       "productionDatabaseBindings": false,

@@ -4606,5 +4606,17 @@
     "tested_sha": "c0205d49f",
     "gates": "pass (9 of 9, 9,932 tests)",
     "at": "2026-10-25T12:57:30Z"
+  },
+  {
+    "lane": "rb-a4",
+    "steps": [
+      "RB-A4"
+    ],
+    "ready_sha": "2bdbde3ba",
+    "merge_sha": "e84d06c43",
+    "river_sha": "e84d06c43",
+    "tested_sha": "e84d06c43",
+    "gates": "pass (9 of 9, 9,937 tests)",
+    "at": "2026-10-25T14:39:40Z"
   }
 ]

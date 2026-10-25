@@ -1,82 +1,123 @@
 # MD-01 current result
 
-The exact initial READY `a7014d303`, with implementation `576965f`, passed River's checks and is integrated as `6d92e488c` for release 115 (PR #827). This follow-up is ready to integrate after it. The requested production result and live-proof note remain pending.
+The first scheduled source run on the shipped MD-01 revision published zero explanations and made zero translation model calls. Arizona, California and Washington were deferred for worker memory before their translation tasks started. All 276 existing summaries remain; 223 measures still need one. The three requested production goals are not complete.
 
-The follow-up on `stream/md-01` is merged with the tested release-115 River revision `6d92e488c`. It carries source compaction, fair worker turns, direct measure-source selection, section provenance and held-record Ask answers. These changes follow the exact initial release; the first release-115 deployment remains pinned to the requested implementation. At the October 25, 8:27 AM EDT board check, production web still serves release 114, commit `0e3cdce42`. All database inspection used the supplied read-only roles. No direct database write, spending-limit change, pause change or reader-target change was made.
+The exact initial implementation `576965f47345f3fea385c88bf85b10831fca1941`, marked by READY `a7014d303`, shipped in release 115 (`61d7ecc06ac79e106c7e37ce1ad04c3d3dbd7be4`). The follow-up is READY [`fb66ac393`](https://github.com/SeanJ22/meanwhile/commit/fb66ac39319d616e52926ba25dd47feca10e18d7), pushed only to `stream/md-01`. It adds smaller model inputs, direct measure-text selection, fair worker turns, section provenance and held-record Ask answers. At the 9:28 AM EDT River check, no new MD-01 return exists and this follow-up is not integrated. Release 116 later went live with the initial MD-01 code; it does not contain this follow-up.
 
-The October 25, 7:51 AM EDT database-side aggregate comparison retains all 276 existing measure summaries across all 56 jurisdictions, with 265 independently checked translations still present. There are still 223 missing summaries among 499 measures. No existing summary text, summary ID or checked translation ID changed or disappeared. All 52 tracked Arizona section IDs, official numbers and texts remain unchanged. Every jurisdiction, including zero-count territories, is in [the state comparison](md-01-state-observation.csv). This is a pre-MD baseline, not evidence of improved publication. The baseline summary inventory was recorded at October 24, 23:32 UTC; the 52-section baseline was recorded at 22:49 UTC.
+## First production scheduled run
 
-The fresh October 25, 7:51 AM EDT [reference comparison](md-01-reference-observation.csv) resolves all 60 stored references from 56 reactions, one Ask subject and three demand signals. All 36 distinct input IDs resolve. No baseline ID lost resolution or changed its canonical destination relative to the October 24, 9:53 PM EDT baseline. There are no stored Speak your mind posts. This proves database resolution; the required post-release Chrome walk remains pending.
+The ordinary source cycle `routine-civic-data-supervisor:meanwhile-runner:2026-10-25T13:05:45.261Z` ran October 25, **9:05:45–9:30:36 AM EDT**, on exact deployed release-115 SHA `61d7ecc06`. Its final outcome was recorded at 9:30:36 AM. The outer supervisor reports FAILED, 136 attempted source tasks, 56 source successes and 59 source failures. These are source-task counts, not published explanations. Exact task evidence is unavailable in the outer outcome; it explicitly omits 115 task samples and seven failure samples.
 
-Actual Google Chrome 156 on meanwhileusa.com, release 105, October 24 at 5:25 PM Phoenix:
+Separate bounded launch records identify the requested translation tasks precisely: `measure-translations:AZ`, `measure-translations:CA` and `measure-translations:WA` all recorded DEFER at 9:25:47 AM EDT with `WORKER_MEMORY_DEADLINE`. No model response was purchased. The main research cycle's heartbeat is not used as the source-run proof. Runtime handoff outcomes and publish-now runs are excluded from the scheduled-run selection.
 
-| ZIP | Summaries | Missing |
+The first-run [attempt counts](md-01-first-scheduled-run.csv) include every state and territory plus UNKNOWN. All have zero translation attempts and zero checker responses during this run, so **checker pass rates are N/A in every jurisdiction**. No before/after quality-rate improvement is claimed. The [earlier baseline](md-01-retry-baseline.csv) has 99 publications in 26 states, 77 paid holds (63 sentence-support, twelve writer-field/passages and two other), 333 unpaid holds and nine unresolved running records. Those are attempt outcomes; old records do not retain every independent checker decision.
+
+## Spend per completed explanation
+
+| Observation | Translation spend | Completed explanations | Spend per completed explanation |
+| --- | ---: | ---: | ---: |
+| Oct 24, 10 AM EDT hour | $2.98737458 | 25 | $0.119495 |
+| Oct 24, 11 AM EDT hour | $8.81603812 | 32 | $0.275501 |
+| Oct 25, 9 AM EDT, first run's 9:05–9:30 window | $0 | 0 | N/A |
+| Whole first scheduled run | $0 | 0 | N/A |
+
+The [first-run hourly counts](md-01-first-scheduled-run-hours.csv) retain the empty hour explicitly. N/A means no publication denominator, not a zero-cost explanation. There were zero Haiku, Sonnet and Opus translation calls in this window. Unknown prices remain unknown, and other translation charges have separate columns.
+
+The original roughly ten-cent/thirty-one-cent comparison used publication attempt-start hours: 29 and 28 publications. Four crossed the hour, producing the durable completion counts above. Both clocks remain in the [hourly baseline](md-01-explainer-hour-baseline.csv).
+
+The earlier cost increase came mainly from uncached writer input rising from 22,269 to 59,832 tokens; output rose only from 1,124 to 1,240. Three long-guide writer requests alone cost $4.645508. Exact repeated guide passages and a later-fetched guide replacing an already-held full initiative increased input. The twelve recorded writer-field/passages holds also spent money without publishing. Their raw failed drafts were not retained, so the precise malformed fields cannot be reconstructed.
+
+A later, pre-115 Alaska measure-3 attempt at October 25, 7:31–7:32 AM EDT used Haiku writer, Sonnet rewrite and Opus check, cost $0.4782441 and remained held: the chosen source was a hearing notice without the measure text. This is not a release-115 model result or evidence that the prepared input changes are deployed.
+
+## Reader preservation and live Chrome
+
+The October 25, approximately 9:32 AM EDT database-side comparison retains **276 summaries, 265 checked translations and all 52 tracked Arizona section targets**. Zero existing summary IDs/texts, vote meanings, checked IDs or tracked section IDs/numbers/texts were lost or changed. The original summary comparison baseline is October 24 at 23:32:10 UTC. All 56 jurisdictions, including zero-count territories, are below and in the [state comparison](md-01-state-observation.csv).
+
+The fresh [reference comparison](md-01-reference-observation.csv) retains all sixty references: 56 reactions, one Ask subject and three demand signals. All 36 distinct input IDs still resolve; zero baseline IDs lost resolution or changed canonical destination. There are no Speak your mind posts in this baseline.
+
+Actual **Google Chrome 156** visited meanwhileusa.com after the recorded run, at approximately 9:36–9:37 AM EDT. Each requested card was scrolled into view and its Sources section opened; screenshots were inspected. The three old Arizona section targets also opened and remained visible.
+
+| ZIP | Summaries after the run | Still missing |
 | --- | ---: | --- |
 | 85701 | 12 / 12 | None |
-| 94102 | 23 / 25 | California propositions 37 and 42 |
-| 98101 | 0 / 4 | Washington IL26-001, IL26-638, IP26-645; Seattle Transit Measure |
+| 94102 | 23 / 25 | Propositions 37 and 42 |
+| 98101 | 0 / 4 | IL26-001, IL26-638, IP26-645; Seattle Transit Measure |
 
-No page errors occurred. These counts match the saved earlier Chrome baseline; none of those summaries was removed or changed. Screenshots and the live card text were inspected.
+No existing summary text changed, no target disappeared and no page error occurred. Release 116 appeared after the first source run; a complete second walk verified its exact SHA `1d2ac473a8a1de50044039449ba564a0342fa37c` before and after every page. Git ancestry confirms it contains `576965f` and `a7014d303`, contains no `fb66ac393`, and changes no translation or worker-order file from release 115. These are actual release-116 page observations after the release-115 scheduled run.
 
-## Cost cause and prepared repair
+| State | Measures | Summaries before | Summaries after | Published Oct 24 | Published first 115 run | Missing | Lost |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| AK | 2 | 1 | 1 | 0 | 0 | 1 | 0 |
+| AL | 4 | 4 | 4 | 0 | 0 | 0 | 0 |
+| AR | 13 | 4 | 4 | 0 | 0 | 9 | 0 |
+| AS | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| AZ | 18 | 15 | 15 | 2 | 0 | 3 | 0 |
+| CA | 79 | 71 | 71 | 14 | 0 | 8 | 0 |
+| CO | 20 | 6 | 6 | 0 | 0 | 14 | 0 |
+| CT | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| DC | 1 | 0 | 0 | 0 | 0 | 1 | 0 |
+| DE | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| FL | 62 | 55 | 55 | 7 | 0 | 7 | 0 |
+| GA | 6 | 3 | 3 | 0 | 0 | 3 | 0 |
+| GU | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| HI | 32 | 31 | 31 | 4 | 0 | 1 | 0 |
+| IA | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
+| ID | 4 | 4 | 4 | 0 | 0 | 0 | 0 |
+| IL | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| IN | 2 | 0 | 0 | 0 | 0 | 2 | 0 |
+| KS | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| KY | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| LA | 10 | 7 | 7 | 0 | 0 | 3 | 0 |
+| MA | 9 | 5 | 5 | 5 | 0 | 4 | 0 |
+| MD | 51 | 9 | 9 | 9 | 0 | 42 | 0 |
+| ME | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| MI | 2 | 1 | 1 | 1 | 0 | 1 | 0 |
+| MN | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
+| MO | 5 | 2 | 2 | 2 | 0 | 3 | 0 |
+| MP | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| MS | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| MT | 3 | 2 | 2 | 2 | 0 | 1 | 0 |
+| NC | 6 | 3 | 3 | 3 | 0 | 3 | 0 |
+| ND | 3 | 3 | 3 | 3 | 0 | 0 | 0 |
+| NE | 4 | 4 | 4 | 4 | 0 | 0 | 0 |
+| NH | 28 | 7 | 7 | 7 | 0 | 21 | 0 |
+| NJ | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| NM | 7 | 6 | 6 | 6 | 0 | 1 | 0 |
+| NV | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
+| NY | 5 | 0 | 0 | 0 | 0 | 5 | 0 |
+| OH | 8 | 3 | 3 | 3 | 0 | 5 | 0 |
+| OK | 2 | 2 | 2 | 2 | 0 | 0 | 0 |
+| OR | 3 | 0 | 0 | 0 | 0 | 3 | 0 |
+| PA | 4 | 1 | 1 | 1 | 0 | 3 | 0 |
+| PR | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| RI | 5 | 5 | 5 | 5 | 0 | 0 | 0 |
+| SC | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| SD | 4 | 3 | 3 | 3 | 0 | 1 | 0 |
+| TN | 3 | 0 | 0 | 0 | 0 | 3 | 0 |
+| TX | 8 | 7 | 7 | 7 | 0 | 1 | 0 |
+| UT | 3 | 1 | 1 | 0 | 0 | 2 | 0 |
+| VA | 64 | 2 | 2 | 2 | 0 | 62 | 0 |
+| VI | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| VT | 2 | 0 | 0 | 0 | 0 | 2 | 0 |
+| WA | 4 | 0 | 0 | 0 | 0 | 4 | 0 |
+| WI | 3 | 0 | 0 | 0 | 0 | 3 | 0 |
+| WV | 3 | 2 | 2 | 2 | 0 | 1 | 0 |
+| WY | 1 | 1 | 1 | 1 | 0 | 0 | 0 |
 
-The original comparison used call charges by Eastern hour and publications by attempt-start hour: $2.98737458 / 29 at 10 AM ($0.103013) and $8.81603812 / 28 at 11 AM ($0.314859). Four attempts started in the 10 AM hour and completed in the 11 AM hour. Using the durable `PUBLISHED` update time instead gives 25 and 32 completed explanations, or $0.119495 and $0.275501 per completed explanation. The [hourly baseline](md-01-explainer-hour-baseline.csv) shows both clocks, including hours with spend and no publication. Neither hourly ratio assigns every cross-hour charge to its originating attempt; the live note will state the clock and also report the full scheduled-run total.
+The prior-day publication column totals 99 in 26 states; it is separate from all summaries accumulated before this run. The first new run's publication column totals zero. No jurisdiction lost an existing summary.
 
-Average uncached writer input rose from 22,269 to 59,832 tokens; average writer output changed only from 1,124 to 1,240. Three large Sonnet writer calls alone cost $4.645508. They carried repeated copies of text in long official voter guides. Haiku checker prompts over 100,000 input tokens also used its higher input rate. No Opus calls were recorded in this cohort.
+## Prepared fix and remaining ownership
 
-The prepared worker starts with a Haiku writer and Sonnet checker. A failed answer check permits a Sonnet rewrite and Opus check; budget or transport refusals do not buy rewrites. Code supplies identity, hashes and exact citation bytes, so the writer returns content and source-passage references. The existing draft checks run before purchasing the independent checker. All returned model responses retain their actual role, served model, tokens and dollar charge, including failed attempts.
+READY `fb66ac393` sends a full source once, encodes exact repeated passages with lossless references, caches the source prefix separately and prefers a current admitted direct measure-text URL over a later guide. The application supplies identity, source hashes and exact citation bytes. Haiku writes and Sonnet checks; only a failed answer check buys a Sonnet rewrite and Opus check. Budget/transport refusals do not climb. Existing draft checks run before purchasing the checker. Actual response roles and jurisdictions feed Admin's existing model/day/job cost view. No spending control or pause changes.
 
-The source is sent once before dynamic measure context and receives its own five-minute cache breakpoint. Exact repeated passages refer to their first occurrence. Every source position remains available and every citation expands to the original contiguous bytes; source text is not shortened or discarded.
+Two saved production sources retain every source hash and citation span while source JSON shrinks 1,941,342 to 480,663 bytes (Maryland) and 2,094,897 to 439,679 (West Virginia). IL26-001's direct source is 18,276 text bytes versus the 173,127-byte guide. These are input byte measurements, not observed dollar savings. [Compaction evidence](md-01-source-compaction.json), [source selection](md-01-source-choice.json). The saved Arizona composition retains all 52 original section IDs, texts and source URLs, and restores 47 original dates.
 
-Two production source connections were exercised through that encoder:
+After held ballot publications, voting, translators and other work take turns in the same memory-limited pool. On the recorded 20,244 MiB production headroom and existing 768 MiB margin, the allocator admits 26 initial workers: nine voting, nine translation and eight calendar. The old crowded order admits zero translators under those conditions. At three GiB, one of each family starts. Every admitted job and overdue order within a family remains. Replaced code is deleted; there is no new gate or pool.
 
-| Held production subject | Original source JSON bytes | Encoded bytes | Reduction | Exact source hash and citation spans |
-| --- | ---: | ---: | ---: | --- |
-| Maryland, Anne Arundel County question B ([official ballot](https://www.elections.maryland.gov/elections/2026/general_ballots/AnneArundel.pdf)) | 1,941,342 | 480,663 | 75.24% | Preserved |
-| West Virginia, Kanawha school levy renewal ([official ballot](https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf)) | 2,094,897 | 439,679 | 79.01% | Preserved |
+The follow-up passes 165 focused tests, nineteen preflight tests and sixteen bundle tests (200 total), TypeScript, targeted ESLint, knip, production build and both postbuild checks. No test or credential shape enters the deployment trace. All test/build database URLs and asset-store settings were empty. It also merges cleanly with promoted CL-01 River `c0205d49f`, with zero overlapping changed files.
 
-[Compaction measurements](md-01-source-compaction.json) are byte measurements from saved production sources. They are not measured token savings, dollar savings or publication gains.
+Neon verification used only the supplied production read-only roles, returning counts and bounded samples. This post-run comparison returned 128 aggregate rows, 48,137 bytes as compact aggregate JSON. No record/source payload export, new production-copy branch or bulk-copy replay was run. No production job was manually triggered or database written. The source-cycle and target-decision samples are small and separately bounded.
 
-The Washington IL26-001 failed attempt at 11:01:37 AM Eastern selected a 173,127-byte voter pamphlet over its 18,276-byte full initiative text solely because the pamphlet had been captured three seconds later. Both were already held. Source selection now prefers the ballot's explicit measure-text URL after the same capture, identity and freshness checks; unavailable, partial, stale or unsupported direct captures retain the existing guide fallback. A replay downloaded both public PDFs, matched the production original and extracted-text hashes, reproduced the old selection and selected the full initiative with the new code. This removes 89.44% of that source-text input before lossless passage encoding. The replay stops before paying a model; it is not a publication or dollar-saving result. [Exact URLs and hashes](md-01-source-choice.json). The 48 affected standing/provider/writer/paid-work tests, TypeScript and targeted lint pass.
-
-The 165 unpublished reader candidate rows are not 165 paid writer failures. Their recorded reasons include publication races, missing captures, unavailable state outcomes and budget refusals. In the paid-attempt cohort, 63 attempts were held on sentence support, 12 on writer fields/passages and two on missing structured output. Failed raw drafts were not retained, so their exact malformed fields cannot be reconstructed.
-
-The existing scheduled caller already excludes older unnumbered reader sections from a checked rewrite, because draft validation requires an official section number. The prepared code moves that existing rule into the writer and deletes the caller's duplicate filtering. Existing unnumbered sections remain in reader composition with their exact text, reaction IDs, original source and original date. Arizona proposition 318 has five such sections and still lacks a checked summary; its failure cannot be attributed to unnumbered sections, which the scheduled caller already excluded. Its saved failed attempt does not contain the raw draft.
-
-A controlled replay with the actual production Arizona ballot and ten published checked translations retains all 52 original section IDs, texts and citation URLs across 15 native measure records, with zero network or model calls. It also corrects 47 retained sections whose original writing date was being replaced by their new summary's date. Repeated composition retains the original provenance. The six affected translation/reader suites pass 54 tests, TypeScript and targeted lint pass, and the dead-code check passes. The production build with postbuild, both preflight checks and all 16 bundle checks also pass. This is reader composition against saved production records, not a deployed Chrome or scheduled-run proof.
-
-## Next scheduled run and remaining work
-
-The release-106 scheduled supervisor again deferred Arizona, California and Washington translations at October 24, 6:47:20 PM Phoenix with `WORKER_MEMORY_DEADLINE`; the runner recorded their work as still owed. At 6:47 PM Phoenix, the latest metered translation call was still 8:08:57 AM Phoenix, with no new calls since the previous observation. No later call has exercised the prepared passage protocol. Post-change spend per publication and checker pass rates therefore remain unmeasured.
-
-The read-only attempt baseline at 6:48 PM Phoenix records 99 publications in 26 states since midnight Eastern on October 24, 63 paid holds for sentence support, 12 paid holds for writer fields/passages and two other paid holds. The [56-jurisdiction retry baseline](md-01-retry-baseline.csv) retains the actual counts, including states with no attempts. Paid and unpaid holds are separate; these are existing attempt outcomes, not counts of every checker reply or a new checker pass rate. The nine still-running records remain unresolved in this baseline.
-
-The October 25, 8:27 AM EDT River check has exact MD-01 READY `a7014d303` integrated for release 115, PR #827, with automatic merge enabled. CL-01's repair is testing next. There is no new MD-01 return or live-check pass. The latest model-call aggregate, at 6:28 AM EDT, recorded no new translation calls since the prior observation; the last known call was October 24, 11:08:57 AM EDT. The exact initial implementation is not yet in the observed live release. Board checks continue every twenty minutes. The Chrome observations above remain the pre-MD baseline, not the requested post-release live-proof note.
-
-Sean's latest instruction limits Neon verification to counts and small samples, prohibits new production-copy branches and stops bulk-copy replays. Comparisons run inside Postgres against baseline IDs and text hashes already stored locally. The fresh state and reference checks returned 56 and thirteen count rows, totaling 31,721 result bytes; no record or source payload was downloaded. The queries were first verified in tiny in-memory fixtures with zero Neon connections. Any exception follow-up returns at most ten short IDs. A proof requiring more data will be described with its estimated GB before it runs. No bulk Neon reader or copy replay is running on MD-01.
-
-The new counts-only reference query was verified locally with 60 fixture references and 36 distinct IDs: thirteen result rows, 3.4 KB, with lost IDs and changed canonical destinations detected. The run-outcome query returns all 56 jurisdictions and an explicit unknown row. Its fixture preserves unknown legacy checker roles. The hourly-cost fixture distinguishes attempt-start and completed-publication hours, excludes other or unattributed translation charges from the measure unit cost while reporting them separately, and leaves unit cost unknown for unpriced calls or zero publications. These fixtures make no Neon or model calls. They do not establish individual checker pass rates that older attempts never retained.
-
-A fresh isolated merge of the selected READY into release 107's promoted River tree (`af9ee8f78`) is conflict-free. All 74 translation tests and TypeScript pass on that combination. The temporary merge checkout was removed after verification. This checks compatibility without changing the selected READY or treating it as a live production result.
-
-The exact selected READY also merges cleanly into release 111's promoted River revision `d62ca66ce`, producing tree `fbb039c88`; no translation or model code changed between those integration checks. The later WIP had one real conflict with River's newer launch-order fix, resolved on the stream branch while retaining the same selected READY.
-
-The selected READY and later follow-up also merge cleanly into release 112's promoted River revision `6f57717fc`, producing trees `5a6519c77` and `31415473d`. That release changes the routine runner script and its tests. No translation or model code changed; unchanged translation tests were not repeated.
-
-Release 113's promoted River revision `180160158` changes the source-door linking-copy interface used by translation acquisition. Its one conflict with the exact selected READY is at the start of `tests/measure-translation-found-sources.test.ts`: keep both the incoming `fixtureLinkingPage` import and MD-01's `measureDraft` import. Retain the automatically merged `linkingPage: fixtureLinkingPage(...)` fixture and passage-based writer response. With only those import markers resolved, the exact selected implementation passes all 74 translation tests and TypeScript on combined tree `a3ce39f0b`; no production data or job was used. River retained both imports when it integrated the exact READY.
-
-The current follow-up is merged with that integrated version. All 165 focused tests pass, including model calls/dollars reconciling across daily and per-job views; all nineteen CI preflight tests and sixteen bundle tests pass. TypeScript, targeted lint and dead-code checks pass. The production build and postbuild trace checks pass, with zero test files and zero credential shapes in the deployed bundles. Build and test database URLs and asset-store settings were empty. These checks establish code readiness; actual first-use latency, scheduled publications, quality outcomes and dollar changes still require the deployed run.
-
-Due state ballots still lead the existing pool. Voting sites, due explainers and remaining work now take turns, preserving each family's existing overdue order. This retains River's repair for meeting workers crowded out by voting work and gives explainers a turn too. At the recorded 20,244 MiB production headroom, a controlled allocation starts 26 workers: nine voting workers, nine translators and eight calendar workers, retaining at least the existing 768 MiB safety margin. At three GiB it starts one of each family. Every admitted job remains in the pool, and existing paid-work controls still decide every model call. The 17 affected publication and scheduling tests, TypeScript and targeted lint pass on the merged follow-up. These are controlled capacity results, not observed production concurrency or a scheduled translation run.
-
-The actual 6:28 AM EDT heartbeat projection returned one row, 594 bytes. It confirms release 113 with one worker reservation, 22 runner-tree processes and the existing 768 MiB headroom. No new translator or checker call was recorded by that observation. That memory snapshot precedes the later source-job deferrals below. The follow-up ordering has not shipped. Post-MD publication and dollar gains remain unmeasured.
-
-Three short release-113 launch decisions returned at 6:52 AM EDT, totaling 1,615 bytes. Arizona, California and Washington were all deferred for worker memory at 6:46:34 AM EDT. Their source cycle began at 6:26 AM EDT and its first ordinary supervisor outcome was recorded at 6:51 AM EDT, after the earlier lookup. The deployed-commit query found it in one 1,045-byte result. It reports an outer-supervisor failure, 161 attempted source tasks, 91 source successes and 59 source holds, with exact task evidence unavailable and 150 samples omitted. The failure counts record source-receipt accounting errors. These are source-run totals, not explanation publications; the three translation jobs did not start. This validates the first-run lookup on actual production data and reinforces the need for the prepared worker-order change. The first actual MD production run remains unobserved.
-
-MD-01 owns the remaining checks: after integration and deployment, observe the actual scheduled translation run; compare publications, retained summary/part IDs and checker results in every state; calculate hourly spend per publication; revisit all three ZIPs in Chrome; and verify every remaining summary gap is filled. The initial full-day Haiku > Sonnet > Opus observation also remains owed.
-
-Ask's original 20-question Chrome acceptance is still open. The same 20 questions were entered in actual Google Chrome 156 on release 106, October 24 at 6:11–6:12 PM Phoenix. All 20 returned HTTP 200 and rendered an answer; only four were below three seconds, and the slowest took 8.659 seconds. Deployment SHA stayed unchanged for the whole walk. The four held-officeholder compositions took 314–654 milliseconds. The other 16 took 3.905–8.659 seconds; their traces include model interpretation and roughly 1.8-second funding/government-listing preloads. [Every question and timing](md-01-ask-release106.csv). This is an actual failure of the requested timing check, not a pass inferred from response mode. The prior missing secretary-of-state AI answer was present on this run.
-
-Prepared Ask changes use the held candidate fields, national executive roster, election date and published state election fields without model calls. A missing published deadline still requests the separate AI answer and acquisition work. Closed duty questions about held state executive offices bind the contest in code, retain its candidate records and sources, and purchase only the separate Haiku answer when the pack has no duties evidence. Local councils and school/county boards retain the existing body reader and its records. Controlled replay retains 16, 10, eight and eight records for governor, secretary of state, attorney general and treasurer. This is not a live timing result. After merging release 103, 103 Ask/reader tests and 46 translation tests passed; production build, dead-code, preflight and 16 bundle checks passed. Lint reported zero errors and 56 existing warnings, none in the changed Ask files. The subsequent local-body preservation suite passes 92 tests.
-
-Sean explicitly authorized an integration READY for `576965f` now and the live proof as a separate note after the first scheduled run on its release. The empty `READY: MD-01` marker `a7014d303` has exactly that implementation tree, carries two source connections and all 56 jurisdiction counts, and is pushed on `stream/md-01`. Its publication does not alter later WIP. [Draft PR #815](https://github.com/SeanJ22/meanwhile/pull/815) remains available for the later follow-up work; River must fold the selected READY marker, not the draft's current head. MD-01 continues checking the return and status every 20 minutes and owns the scheduled-run/state-cost/Chrome note. River has not marked MD-01 passed its live check.
+- **River:** integrate and ship READY `fb66ac393`; the exact initial release is already shipped.
+- **MD-01:** observe the first ordinary scheduled run containing that follow-up, complete the remaining summaries, compare all-state publications/checks and hourly/run spend, and repeat the three ZIP walks. Keep checking River every twenty minutes and repair any new MD-01 return.
+- **MD-01:** run the original twenty-question Chrome test after the held-answer changes deploy, and retain the full-day Haiku > Sonnet > Opus acceptance check. The old release-106 Ask result was 4/20 under three seconds and remains a failure.

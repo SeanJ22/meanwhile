@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 108 (main c0500807b), live 11:32 PM EDT, reader checks green. NEXT: release 109 = PT-01 + MT-01 (PR #819, preview check passed 11:40 PM EDT, auto-merge on, CI tests running). GATING: RV-MEET2 c02e4bf30 alone (meeting calendars fix), ships as release 110 right after 109. HELD: DB-02 + BL-02 (gates stopped to give RV-MEET2 the machine; re-gate after). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce (published header address, intersections, street-only state), RB-A3 follow-up be0bef2bf (lane counts start on publication)
+build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b, PT-01 + MT-01), live 12:08 AM EDT, reader checks green. GATING: RV-MEET2 c02e4bf30 alone (meeting calendars fix), ships as release 110. HELD: DB-02 + BL-02 (re-gate after RV-MEET2). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:54:08Z
+heartbeat: 2026-10-25T04:10:46Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,20 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### Release 109 live, 12:08 AM EDT (main 5a3f76a8b: PT-01 + MT-01)
+- Chrome reader checks on meanwhileusa.com all pass:
+  - /ballot 85701 and 03255: 200, no console errors.
+  - Ask on 85701: grounded.
+  - /api/meetings: 200 for 85701 (435 id fields) and 60602 (598).
+  - /national: 200.
+- PT-01's card/ballot portrait pair: one photo per person, live.
+  - Alma Hernandez: card (/api/reader/state AZ 85701) and 85701 ballot both show /api/portraits/officials/0db1d6e6b249facd….webp.
+  - Sally Ann Gonzales: both show f1d0edf8ad365a8e….webp.
+  - Both hashes are the ones PT-01's proof recorded.
+- What readers gain:
+  - The same person carries the same official photo on their official card, ballot entry and National card.
+  - Meeting places publish from the source's own street address, before falling back to the board's or the government's office.
 
 ### Release 108 live, 11:32 PM EDT (main c0500807b, RV-LOCK)
 - /api/build shows c0500807b. Chrome reader checks on meanwhileusa.com all pass:

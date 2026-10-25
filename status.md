@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). GATING: DB-03 Admin 04681516c alone on river 456454204 (river-next dad53019c; owed route conflict resolved). WITHDRAWN: river-portraits 9bf9801a5; the other River session is rebuilding portraits from DB-03 2cce7754c's code (Sean's order) and its new READY takes the next slot. HELD: GB-01 1636195c9 (adds Neon reads; after portraits), RB-A10 7b5eacd03 (place map 0 rows). NEXT Neon fixes: DB-03 state doors e4305907d onward, through 11072d2ed. Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). GATING: river-portraits READY 9bf9801a5 alone on river 456454204 (river-next ea117a0bb), release 120. DB-03 2cce7754c stays unfolded. NEXT Neon fixes: DB-03 Admin 04681516c (merge dad53019c ready), then state doors e4305907d onward through 11072d2ed. HELD: GB-01 1636195c9 (after portraits), RB-A10 7b5eacd03 (place map 0 rows). Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T20:46:00Z
+heartbeat: 2026-10-25T20:47:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -1082,4 +1082,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - So 9bf9801a5 is withdrawn and its gate stopped. The other session is rebuilding on river 456454204.
 - Meanwhile, under Neon-first: DB-03 Admin 04681516c is gating alone. It cuts Admin screen reads; the lane's replay put each screen's first 60 s at 0.57 to 8.3 MB, against 9.6 to 16 MB sampled before. One conflict: app/api/admin/v6/owed/route.ts keeps river's RB-A6 body with DB-03's adminRead wrapper. tsc clean.
 - If the portraits READY lands mid-gate, the Admin gate stops and portraits goes first.
+
+### 4:48 PM EDT: reversal (relayed verbatim)
+"River, ship 9bf9801a5 as release 120. Don't rebuild from DB-03's 2cce7754c. That prompt was only to save build time, and your version is already built with my never-re-read rule. Leave 2cce7754c unfolded, so one portrait path ships. Tell me when /api/build shows 120 live, then the portraits and member offices GB per hour for the two full hours after."
+- DB-03 Admin's gate is stopped; 9bf9801a5 is gating alone on 456454204. Admin follows.
 

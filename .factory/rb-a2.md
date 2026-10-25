@@ -1,6 +1,6 @@
 # RB-A2 — fill the production place map
 
-build_state: Implementation checked; deployment needed before final live-data READY. Production map: 0 of 56 jurisdictions as of 2026-10-25T06:18:47Z.
+build_state: RV-BOX d62ca66ce merged; combined full checks running. Deployment needed before final live-data READY. Production map: 0 of 56 jurisdictions as of 2026-10-25T06:18:47Z.
 worker: codex-rb-a2
 provider: Codex
 heartbeat: 2026-10-25T06:18:55Z

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT; RV-BOX_expand applied 2:40:45 AM EDT (4 indexes valid); reader checks green (fixed + 20 random ZIPs in 20 states). NEXT: DB-03A (RETURNED 2:45 AM EDT, returns/db-03a.md; ships alone once fixed); meeting fix RV-MEET3 (helper). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes at 2:50 AM EDT), RB-A7 after RB-A4, RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT; RV-BOX_expand applied 2:40:45 AM EDT (4 indexes valid); reader checks green (fixed + 20 random ZIPs in 20 states). GATING: RV-MEET3 6f57717fc alone (meeting pins and Box facts publish beside admission, not before it), release 112. THEN: DB-03A (RETURNED 2:45 AM EDT, returns/db-03a.md; ships alone once fixed). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 RETURNED (River finishes at 2:50 AM EDT), RB-A7 after RB-A4, RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T06:45:03Z
+heartbeat: 2026-10-25T06:53:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,26 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### RV-MEET3: why publish-now passes still launch no meetings (River helper, 2:55 AM EDT)
+- Timeline of the publish-now pass that started 2:15:07 AM EDT (seconds in; from the rows the pass writes; counts and small aggregates only):
+  - 0 to 16: start-up.
+  - 16 to 216: held meeting pins, capped at 200 s.
+  - 216 to about 290: Box publication.
+  - about 290 to 322: publication inputs and hot meeting partitions.
+  - 322 to 353: hourly probes.
+  - 353 to 485: task clocks, due requests and the decision loop.
+  - 485 to 494: decisions and QUEUED lines written.
+  - 494: first launch, already past the about 400 s launch window, so every board defers with PASS_TIME_BUDGET.
+- First decision before release 110: 242 to 285 s into the pass. Since about 12:30 AM EDT: 402 to 565 s. Since then the pin step has work every pass (MT-01's source-first addresses made more held sittings placeable), so it spends its full 200 s every time.
+- Fix, RV-MEET3 (READY 6f57717fc on stream/river-meet3, River's own lane):
+  - Meeting pins, then Box publication, now run in the background beside admission and the source pass, with the same deadlines and failure codes.
+  - The pass waits for them before it saves its outcome, and the quiet publish-now exit waits too. A test pins the order and that a failure is recorded without rejecting.
+- Expected first launch about 210 to 225 s, against about 494 s. The real cutoff for starting a board is about 280 s (launch deadline less 120 s), which leaves about 55 to 150 s for boards.
+- Still open, not in this change:
+  - The 41 to 139 s segment of clocks and decisions.
+  - The hunt-source-progress log (1.9M rows, growing about 220,000 a day).
+  - Pins also run in the routine pass at the same time.
 
 ### Release 111 live, 2:43 AM EDT (main 2e874974f: RV-BOX)
 - RV-BOX_expand applied at the production build, 2:40:45 AM EDT. All four indexes are valid: cp_box_findings_retry 40 kB, _slot 21 MB, _refused 296 kB, _unslotted 16 MB.

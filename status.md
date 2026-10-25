@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT; RV-BOX_expand applied 2:40:45 AM EDT (4 indexes valid); reader checks green (fixed + 20 random ZIPs in 20 states). GATING: RV-MEET3 6f57717fc alone (meeting pins and Box facts publish beside admission, not before it), release 112. THEN: DB-03A (RETURNED 2:45 AM EDT, returns/db-03a.md; ships alone once fixed). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 (River finished 2:54 AM EDT: a portal withdrawal changes no fact; READY on stream/rb-a4), RB-A7 after RB-A4, RT-01 a13baecf8, DB-03 Admin 04681516c, AD-01 69806d306, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 111 (main 2e874974f, RV-BOX), live 2:43 AM EDT. GATING: RV-MEET3 6f57717fc alone (lint, tsc, dead-code green; tests running), release 112. THEN: DB-03A (RETURNED 2:45 AM EDT; no new READY yet). Queue (each its own batch, by arrival): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f: deletes the whole-inventory readback phase), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up 459121f2f, RB-A3 follow-up be0bef2bf. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T06:53:54Z
+heartbeat: 2026-10-25T07:16:40Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -34,6 +34,14 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
 - Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
 - Folds in its own small batch, in queue order.
+
+### 3 AM EDT
+- Live for readers: release 111 (RV-BOX).
+  - Every fixed check and 20 random ZIPs in 20 states pass.
+  - The four Box indexes are built. The boxDue proof is due about 3:26 AM EDT.
+- Meetings: still stopped in publish-now passes (pre-admission about 485 s). RV-MEET3, which moves pins and Box beside the source pass, is gating alone.
+- RB-A4 finished by River (no fact pulls outside door.ts). DB-03A returned for its cp_doors lock.
+- DB-03 posted two more READYs (state doors; inventory readback, which deletes a readback phase rather than adding one). They fold one at a time, as Sean ordered.
 
 ### RV-MEET3: why publish-now passes still launch no meetings (River helper, 2:55 AM EDT)
 - Timeline of the publish-now pass that started 2:15:07 AM EDT (seconds in; from the rows the pass writes; counts and small aggregates only):

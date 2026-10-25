@@ -18,4 +18,4 @@ check: fold
 ready: RB-A4 ef7987b1e
 river: af9ee8f78
 at: 2026-10-25T01:40:00Z
-state: returned
+state: cleared: River finished READY 0bdb1353d (11:45 PM EDT)

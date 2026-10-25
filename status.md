@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T03:12:24Z
+heartbeat: 2026-10-25T03:13:14Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,18 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### River finished RB-A4 on its branch, 11:45 PM EDT (standing order; no READY by 10:40 PM EDT)
+- READY 0bdb1353d on stream/rb-a4 (fast-forward from ef7987b1e; merges origin/river through RV-LOCK 829f38c05).
+- Resolutions:
+  - lib/core/door.ts keeps RB-A8's single counter (RB-A3's filePublication increment removed); river's recursive queueRebuild is replaced by RB-A4's queueEntityPlaces, which queues the places the door just filed (fileEntityPlaces inherits ancestors' places).
+  - lib/facts/meeting-facts.ts keeps MT-01's version; drops only the line copying owner places onto meetings (the door files inherited places now).
+  - The reader journal appends RB-A4_entity_places (idx 56) after RB-A8_count_hour; phases keep RB-A8's lockFirst.
+  - tests/helpers/fact-db.ts keeps both sides.
+- Migration: one ADD COLUMN with a constant default (expand). Production is PostgreSQL 18.6 with 184,628 entity_place rows; metadata-only, no rewrite.
+- Checks: 176/176 focused tests, 261/261 tests using fact-db, 131/131 after the RV-LOCK merge; tsc, eslint, knip clean.
+- Proof (read-only exports at 11:04 PM EDT, replayed locally): all 174 original board IDs resolve and are placed (2,191 member facts); all 27,571 state-root districts placed; 2,369 live facts preserved; next import reloads 0 states. Northwest Inupiat Housing Authority's and BART's boards reach readPlacePackage. All 60 stored event references resolve (36 distinct ids).
+- Folds in its own small batch, in queue order.
 
 ### Meeting calendars stopped after release 106 (Sean, 11:10 PM EDT)
 - Sean's report: new meeting facts per hour 1,027 (9 PM hour) -> 0 (10 PM hour). meetings-public-bodies reads came in hourly bursts (51 at 8:10 PM, 90 at 9:00 PM); since the runner took release 106 (526fe7131, DB-01) about 9:27 PM, only 1 to 4 reads every 10 minutes and no 10 PM burst. The 10:44 PM digest has PUBLICATION_INPUT_CLOCK_UNREAD=1 and CHILD_EXIT_CONTRADICTED_SOURCE_RECEIPT=3; Bismarck CivicPlus got HTTP 429 at 10:55 PM.

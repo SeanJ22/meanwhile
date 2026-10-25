@@ -4,7 +4,7 @@ import { type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
 import { PEOPLE_SOURCE_IDS } from "../officials/people-sources.ts";
 import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
-import type { SeatHolder } from "../officials/lookup.ts";
+import { toSeatHolder, type SeatHolder } from "../officials/lookup.ts";
 import { currentReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import {
   CivicDataStoreUnavailableError,
@@ -179,31 +179,7 @@ export function heldOfficialStateLegislatorsFromRead(
   scope: StatePeopleJurisdiction,
   result: AvailableOfficialStateLegislatorsRead,
 ): HeldOfficialStateLegislators {
-  const seats: SeatHolder[] = result.value.roster.officeholders.map((person) => ({
-    id: person.id,
-    personId: person.personId ?? person.id,
-    nativeIds: person.nativeIds,
-    memberships: person.memberships,
-    selectionMethod: person.selectionMethod,
-    selectionMethodSourceUrl: person.selectionMethodSourceUrl,
-    fieldSources: person.fieldSources ? {...person.fieldSources} : undefined,
-    name: person.name,
-    officeTitle: person.officeTitle,
-    partyLabel: person.partyLabel,
-    termEnd: person.termEnd || null,
-    termStart: person.termStart || null,
-    birthDate: person.birthDate,
-    websiteUrl: person.websiteUrl,
-    sourceUrl: person.provenance.sourceUrl,
-    provenance: person.provenance,
-    email: person.email,
-    phone: person.phone,
-    contactFormUrl: person.contactFormUrl,
-    photoUrl: person.photo?.url ?? null,
-    campaignUrl: person.campaignUrl,
-    state: person.state,
-    chamber: person.chamber,
-  }));
+  const seats: SeatHolder[] = result.value.roster.officeholders.map(person=>toSeatHolder(person));
   return {
     scope,
     versionId: result.metadata.versionId ?? result.kind,

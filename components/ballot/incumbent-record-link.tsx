@@ -1,8 +1,11 @@
 "use client";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { useState } from "react";
 
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { tierForOffice } from "@/lib/ocd/tiers";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { OfficialModal } from "@/components/map/popup/official-modal";
 import { CardSourceContext } from "@/components/ui/card-source-context";
@@ -22,14 +25,17 @@ export function IncumbentNameLink({
   name: string;
   context: ReactionViewContext | null;
 }) {
+  const hydrated = useHydrated();
   const [open, setOpen] = useState(false);
   return (
     <>
       <button
         type="button"
         data-candidate-card
+        disabled={!hydrated}
+        aria-busy={!hydrated}
         onClick={() => setOpen(true)}
-        className="cursor-pointer text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
+        className="cursor-pointer disabled:cursor-wait disabled:opacity-60 text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
       >
         {name}
       </button>
@@ -37,7 +43,7 @@ export function IncumbentNameLink({
         <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><OfficialModal
           holder={holder}
           seatLabel={null}
-          tier="national"
+          tier={tierForOffice(holder.officeTitle, holder.officeJurisdictionOcdId ?? "")}
           reactionContext={context}
           onClose={() => setOpen(false)}
         /></CardGapContext.Provider></CardSourceContext.Provider>

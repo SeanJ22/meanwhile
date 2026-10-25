@@ -406,3 +406,4 @@ One line per batch folded into river.
 - 2026-10-25T02:08:34Z · pt-01 · PT-01 · ready a109cf965 · river 90d0f445e · pnpm gates pass on 78a1f9e0d (9 of 9, 9,880 tests) · release 108 PR #819
 - 2026-10-25T02:08:34Z · mt-01 · MT-01 · ready 0c28ca5c7 · river 90d0f445e · pnpm gates pass on 78a1f9e0d (9 of 9, 9,880 tests) · release 108 PR #819
 - 2026-10-25T03:06:17Z · river-lock · RV-LOCK · ready 94e9053e8 · river 829f38c05 · pnpm gates on 94e9053e8: 9,851 tests pass; build steps failed on a full disk, pass after cleanup · release 108 PR #820
+- 2026-10-25T04:35:52Z · river-meet2 · RV-MEET2 · ready c02e4bf30 · river c02e4bf30 (fast-forward) · pnpm gates pass on c02e4bf30 (9 of 9, 9,882 tests) · release 110 PR #821

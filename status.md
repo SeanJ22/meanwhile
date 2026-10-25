@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b, PT-01 + MT-01), live 12:08 AM EDT, reader checks green. GATING: RV-MEET2 c02e4bf30 alone (tests 9,882 pass, 0 fail; builds running), ships as release 110. NEXT: RV-BOX 9350e15da alone (Box publishing timeouts, Sean 12:15 AM), release 111. HELD: DB-02 + BL-02 (re-gate after). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
+build_state: LIVE FOR READERS: release 109 (main 5a3f76a8b). NEXT: release 110 = RV-MEET2 (PR #821, river c02e4bf30, preview check passed 12:39 AM EDT, auto-merge on). GATING: RV-BOX 9350e15da alone on river-next d62ca66ce, release 111. HELD: DB-02 + BL-02 (re-gate after). Queue (each its own batch): RB-A6 d7b31ba67, CL-01 b98903e96, MD-01 a7014d303, RB-A4 0bdb1353d, RB-A10 (1 AM EDT deadline), MT-01 follow-up 75325d6ce, RB-A3 follow-up be0bef2bf
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T04:32:51Z
+heartbeat: 2026-10-25T04:35:52Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

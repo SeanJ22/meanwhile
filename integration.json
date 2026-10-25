@@ -4522,5 +4522,17 @@
     "tested_sha": "94e9053e8",
     "gates": "pass (build steps rerun after freeing disk)",
     "at": "2026-10-25T03:06:17Z"
+  },
+  {
+    "lane": "river-meet2",
+    "steps": [
+      "RV-MEET2"
+    ],
+    "ready_sha": "c02e4bf30",
+    "merge_sha": "c02e4bf30",
+    "river_sha": "c02e4bf30",
+    "tested_sha": "c02e4bf30",
+    "gates": "pass (9 of 9, 9,882 tests)",
+    "at": "2026-10-25T04:35:52Z"
   }
 ]

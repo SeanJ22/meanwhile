@@ -22,3 +22,14 @@ Change (small):
 Repost READY with a test that the lock is taken only after the walk (as tests/apply-migrations-dry.test.ts does for RB-A8's
 lockFirst), and the production count of doors and pages it will move. River gates it alone and ships it right after release 111,
 ahead of everything else, as Sean ordered.
+
+## River finished it, 4:20 AM EDT (standing order: no new READY within 60 minutes of the return)
+- READY 421ce7abe on stream/db-03a (fix 9765cdd3f). migrateLinkingPages now walks keyset pages of 100 voting doors, saves and checks
+  every page, and records each door's prepared values with a hash of the text it read, all before cp_doors is locked. Under the
+  lock (SET LOCAL lock_timeout 5s, retried up to 5 times) it reads again only doors written since the walk, and replaces only doors
+  whose current text still matches what was read.
+- Every existing check stays: authority unchanged per source, sha256 of every saved page, a mismatch aborts before any door changes.
+- New test: the lock follows the walk, lock_timeout is set first, and a door written between walk and lock keeps its newer value.
+  It fails on the old code. db-03a 4/4 and control-plane-migrations pass; eslint and tsc clean. Journal hash updated
+  (DB-03A_expand is not applied in production yet).
+- Gating alone on river-next 99ce96f52 (control-plane journal: RB-A8, RV-BOX, DB-03A), ahead of everything else as Sean ordered.

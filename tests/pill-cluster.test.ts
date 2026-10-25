@@ -18,7 +18,7 @@ test("the ballot door follows a map point while the previous ZIP's answer is ret
     const html = renderToStaticMarkup(createElement(PillCluster, { ...props, point }));
     const href = /href="([^"]*\/ballot[^\"]*)"/.exec(html)?.[1];
     assert.ok(href, "The rendered ballot door has a destination");
-    return new URL(href.replaceAll("&amp;", "&"), "https://meanwhileusa.com").searchParams;
+    return new URL(href.replaceAll("&amp;", "&"), "https://example.test").searchParams;
   };
   const moved = link({ lat: 33.4484, lng: -112.074 });
   assert.equal(moved.get("zip"), null);

@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import { rememberStatePublicationPrior, takeStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";

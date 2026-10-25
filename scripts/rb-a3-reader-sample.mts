@@ -1,3 +1,4 @@
+import { openLinkingCopy } from "../lib/facts/linking-copy.ts";
 import { neon } from "@neondatabase/serverless";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -6,7 +7,7 @@ import { selectedPointerSql } from "../lib/reader/selected-entry.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { isOfficialUrl } from "../lib/facts/check.ts";
 import { isSourceApiUrl } from "../lib/control-plane/scheduler/scout-api.ts";
-import { pageLinksSource, isOfficialSource, SOURCE_AUTHORITIES, type OfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
+import { pageLinksSource, isOfficialSource, SOURCE_AUTHORITIES, type OfficialLinkingPageRef, type OpenOfficialLinkingPage } from "../lib/civic-data/source-authority.ts";
 import { decide } from "../lib/core/door.ts";
 import { extractPdfText } from "../lib/meetings/agenda-documents.ts";
 
@@ -80,9 +81,9 @@ export async function loadReaderContext(values: ReaderSampleValue[], query: (tex
   return context;
 }
 
-export function bindReaderSources(sample: Pick<ReaderSample, "values">, sourceDoors: readonly HeldApiDoor[], meetingSources: readonly MeetingSourceHosts[] = [], legistarTenants: readonly string[] = []): void {
+export async function bindReaderSources(sample: Pick<ReaderSample, "values">, sourceDoors: readonly HeldApiDoor[], meetingSources: readonly MeetingSourceHosts[] = [], legistarTenants: readonly string[] = [], openCopy: OpenOfficialLinkingPage = openLinkingCopy): Promise<void> {
   const offices = JSON.parse(readFileSync(new URL("../data/reference/voting-source-doors.json", import.meta.url), "utf8")) as {
-    id: string; url: string; officialLinkingPage?: OfficialLinkingPage; candidateListUrls?: string[];
+    id: string; url: string; linkingPage?: OfficialLinkingPageRef; candidateListUrls?: string[];
   }[];
   for (const value of sample.values) {
     const body = /:body:([^:]+)/.exec(value.pointer)?.[1];
@@ -100,9 +101,10 @@ export function bindReaderSources(sample: Pick<ReaderSample, "values">, sourceDo
       value.hosts = [...new Set([...value.hosts ?? [], value.registeredSourceHost])];
     }
     if (value.recordClass === "BALLOT_CANDIDACY") {
-      const office = offices.find(o => (o.candidateListUrls?.includes(value.sourceUrl)
-        || isOfficialUrl(value.sourceUrl, [new URL(o.url).hostname.replace(/^www\./, "")]))
-        && isOfficialSource(o.url, o.officialLinkingPage));
+      const matchingOffices = offices.filter(o => o.candidateListUrls?.includes(value.sourceUrl)
+        || isOfficialUrl(value.sourceUrl, [new URL(o.url).hostname.replace(/^www\./, "")]));
+      let office;
+      for (const candidate of matchingOffices) if (await isOfficialSource(candidate.url, candidate.linkingPage, undefined, openCopy)) { office = candidate; break; }
       if (office) {
         // The held government directory names this exact official candidate-list URL, including its delivery aliases.
         value.registeredSourceHost = new URL(value.sourceUrl).hostname.replace(/^www\./, "");
@@ -220,7 +222,7 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
         bounded: rows.length === familyLimit });
     }
     const candidates = buckets.flat();
-    bindReaderSources({ values: candidates }, sourceDoors, meetingSources, legistarTenants);
+    await bindReaderSources({ values: candidates }, sourceDoors, meetingSources, legistarTenants, ref => openLinkingCopy(ref, (text, params = []) => query(text, [...params])));
     const canonicalRows = await query(`SELECT requested,coalesce((SELECT e.id FROM entity e WHERE e.id=requested),
       reader_resolve_id(requested),requested) AS canonical FROM unnest($1::text[]) ids(requested)`,
     [[...new Set(candidates.map(value => value.subjectId))]]);
@@ -240,7 +242,7 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
     for (let position = 0; values.length < limit && selected.some(bucket => bucket.length > position); position++)
       for (const bucket of selected) if (bucket[position] && values.length < limit) values.push(bucket[position]);
     const context = await loadReaderContext(values, query);
-    bindReaderSources({ values }, sourceDoors, meetingSources, legistarTenants);
+    await bindReaderSources({ values }, sourceDoors, meetingSources, legistarTenants, ref => openLinkingCopy(ref, (text, params = []) => query(text, [...params])));
     const copies: ReaderSample["copies"] = {}, copyFailures: Row[] = [];
     writeFileSync(resolve(directory, `${state}.json`), JSON.stringify({ state, capturedAt: new Date().toISOString(), values, families: inventory, copies, context }), { mode: 0o600 });
     mkdirSync(resolve(directory, "pages"), { recursive: true, mode: 0o700 });

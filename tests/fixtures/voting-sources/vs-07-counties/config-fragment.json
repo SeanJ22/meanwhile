@@ -137,8 +137,8 @@
         }
       },
       "constants": {
-        "hours": "7:00am \u2013 7:00pm",
-        "days": "Tuesday, October 13 \u2013 Friday, October 30"
+        "hours": "7:00am – 7:00pm",
+        "days": "Tuesday, October 13 – Friday, October 30"
       },
       "kind": "EARLY_VOTING"
     },
@@ -148,9 +148,9 @@
       "phone": "678.226.7210",
       "url": "https://www.gwinnettcounty.com/government/departments/elections/voting/advance"
     },
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://peachtreecornersga.gov/246/Who-Do-I-Call",
-      "html": "<a aria-label=\"Gwinnett County Police Opens in new window\" href=\"https://www.gwinnettcounty.com/government/departments/police/alarm-registration/registration\">Gwinnett County Police - Alarm Registration</a>"
+      "sourceCopyId": -3051385939461098
     }
   },
   {
@@ -192,8 +192,8 @@
         }
       },
       "constants": {
-        "hours": "7:00am \u2013 7:00pm",
-        "days": "Tuesday, October 13 \u2013 Friday, October 30"
+        "hours": "7:00am – 7:00pm",
+        "days": "Tuesday, October 13 – Friday, October 30"
       },
       "kind": "DROP_BOX",
       "filters": {
@@ -206,9 +206,9 @@
       "phone": "678.226.7210",
       "url": "https://www.gwinnettcounty.com/government/departments/elections/voting/advance"
     },
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://peachtreecornersga.gov/246/Who-Do-I-Call",
-      "html": "<a aria-label=\"Gwinnett County Police Opens in new window\" href=\"https://www.gwinnettcounty.com/government/departments/police/alarm-registration/registration\">Gwinnett County Police - Alarm Registration</a>"
+      "sourceCopyId": -3051385939461098
     }
   },
   {
@@ -384,9 +384,9 @@
       "checkedAt": "2026-10-23T08:49:49.612Z",
       "detail": "Current official source captured with exact request URL, timestamp, source hash and saved-byte hash."
     },
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://rowletttx.gov/482/Elections",
-      "html": "<a href=\"https://www.dallascounty.org/elections/VoteCenters/Election%20Day%20Vote%20Centers.pdf\" target=\"_blank\" rel=\"noopener\" aria-describedby=\"audioeye_new_window_message\">Click Here<span class=\"ae-compliance-indent\" style=\"display:none;\">&nbsp;Version OptionsElectionsHeadline</span></a>"
+      "sourceCopyId": -1561947392698990
     },
     "model": "VOTE_CENTER",
     "matchingUnit": "COUNTY",
@@ -462,9 +462,9 @@
       "checkedAt": "2026-10-23T08:49:49.612Z",
       "detail": "Current official source captured with exact request URL, timestamp, source hash and saved-byte hash."
     },
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://rowletttx.gov/482/Elections",
-      "html": "<a href=\"https://www.dallascounty.org/elections/VoteCenters/Election%20Day%20Vote%20Centers.pdf\" target=\"_blank\" rel=\"noopener\" aria-describedby=\"audioeye_new_window_message\">Click Here<span class=\"ae-compliance-indent\" style=\"display:none;\">&nbsp;Version OptionsElectionsHeadline</span></a>"
+      "sourceCopyId": -1561947392698990
     },
     "model": "VOTE_CENTER",
     "matchingUnit": "COUNTY",
@@ -1367,8 +1367,8 @@
         "name": "Barrington Hills Village Hall",
         "address": "112 Algonquin Road, Barrington Hills",
         "town": "Barrington Hills",
-        "days": "OCTOBER 19 \u2013 NOVEMBER 2, 2026",
-        "hours": "Mondays \u2013 Saturdays: 9:00 AM to 5:00 PM\nSundays: 10:00 AM to 4:00 PM"
+        "days": "OCTOBER 19 – NOVEMBER 2, 2026",
+        "hours": "Mondays – Saturdays: 9:00 AM to 5:00 PM\nSundays: 10:00 AM to 4:00 PM"
       },
       "kind": "EARLY_VOTING"
     }
@@ -1397,12 +1397,12 @@
     },
     "model": "VOTE_CENTER",
     "matchingUnit": "COUNTY",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://www.harrisvotes.com/Voter/Election-Information",
-      "html": "<a href=\"https://appfiles.harrisvotes.com/harrisvotes/prd/docs/Uploads/EVPA_unofficial.pdf\" target=\"_blank\" class=\"\">Early Voting</a>",
+      "sourceCopyId": -2182788040780817,
       "linkingPage": {
         "url": "https://www.harriscountytx.gov/",
-        "html": "<a class=\"main-nav-link\" href=\"https://www.harrisvotes.com/Voter/Registration\" target=\"_blank\">Voter Registration</a>"
+        "sourceCopyId": -343880234549481
       }
     },
     "extraction": {
@@ -1470,9 +1470,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -1558,9 +1558,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -1646,9 +1646,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -1734,9 +1734,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -1822,9 +1822,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -1910,9 +1910,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -1998,9 +1998,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",
@@ -2086,9 +2086,9 @@
     },
     "model": "ASSIGNED",
     "matchingUnit": "PRECINCT",
-    "officialLinkingPage": {
+    "linkingPage": {
       "url": "https://a856-gbol.nyc.gov/GBOLWebsite/GreenBook/Details?orgId=2852",
-      "html": "<a href=\"https://vote.nyc/\" class=\"_has-fa-before _url\" title=\"Click to launch\" target=\"_blank\">https://vote.nyc/</a>"
+      "sourceCopyId": -4160617527238237
     },
     "extraction": {
       "format": "pdf",

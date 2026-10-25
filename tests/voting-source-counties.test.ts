@@ -1,8 +1,9 @@
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
+import { isOfficialVotingSource as isOfficialSource, openLinkingCopy } from "../lib/facts/linking-copy.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { combineVotingSourceReads, mergeVotingSourceRead } from "../lib/ballot/voting-source-publication.ts";
 import type { VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
@@ -27,7 +28,7 @@ const fetcher: typeof fetch = async input => {
 };
 
 // Saved publisher bytes or trimmed excerpts of them; every excerpt names the full document's hash in the evidence store.
-test("county doors retain native evidence, official authority chains, and exact county scopes", () => {
+test("county doors retain native evidence, official authority chains, and exact county scopes", async () => {
   assert.equal(new Set(doors.map(door => door.id)).size, doors.length);
   for (const capture of captures) {
     assert.equal(createHash("sha256").update(bytes(capture)).digest("hex"), capture.savedHash, capture.url);
@@ -36,12 +37,12 @@ test("county doors retain native evidence, official authority chains, and exact 
     assert.ok(capture.capturedAt.startsWith("2026-10-23"), capture.url);
   }
   for (const door of doors) {
-    assert.equal(isOfficialSource(door.url, door.officialLinkingPage), true, door.id);
+    assert.equal(await isOfficialSource(door.url, door.linkingPage), true, door.id);
     assert.equal(door.electionDate, "2026-11-03");
-    for (let page = door.officialLinkingPage; page; page = page.linkingPage ?? undefined) {
+    for (let page = door.linkingPage; page; page = page.linkingPage ?? undefined) {
       const capture = captures.find(capture => capture.url === page!.url || capture.finalUrl === page!.url);
       assert.ok(capture, page.url);
-      assert.ok(bytes(capture).toString("utf8").includes(page.html), page.url);
+      assert.ok(bytes(capture).toString("utf8").includes((await openLinkingCopy(page)).html), page.url);
     }
     assert.match(door.scope.countyFips!, /^\d{5}$/);
     assert.ok(captures.some(capture => capture.url === door.url), door.id);

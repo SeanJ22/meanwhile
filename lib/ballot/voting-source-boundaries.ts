@@ -2,13 +2,13 @@ import { createHash } from "node:crypto";
 import type { VotingBoundary, VotingJurisdiction, VotingSource } from "./voting-sites.ts";
 import type { VotingDoorScope, VotingSourceBlank, VotingSourceDoor } from "./voting-source-types.ts";
 import type { VotingFetchSession } from "./voting-source-fetch.ts";
-import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { isOfficialVotingSource } from "../facts/linking-copy.ts";
 
 const normalized = (value: string) => value.toLowerCase().replace(/[^a-z0-9]/g, "");
 
 /** Public precinct polygons are acquired ahead of requests, in WGS84. */
 export async function readVotingBoundaries(door: VotingSourceDoor, session: VotingFetchSession, source: VotingSource): Promise<VotingBoundary[]> {
-  if (!isOfficialSource(door.url, door.officialLinkingPage)) throw new Error("Precinct boundaries lack an official publishing page");
+  if (!await isOfficialVotingSource(door.url, door.linkingPage)) throw new Error("Precinct boundaries lack an official publishing page");
   const base = door.url.replace(/\/query\/?(?:\?.*)?$/, "").replace(/\/$/, "");
   const arcgis = /(?:FeatureServer|MapServer)\/\d+$/i.test(base);
   const captures: { feature: unknown; source: VotingSource }[] = [];

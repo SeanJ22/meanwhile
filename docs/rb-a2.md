@@ -10,7 +10,7 @@ The full postal table has 42,883 ZIPs: 41,959 have a known state or territory an
 
 Full checks on runtime revision 96483b400: all nine pnpm gates pass; 9,892 tests registered, 9,890 pass, zero fail, two skipped. Focused combined checks pass 123/123.
 
-Production verification now uses database-side count aggregates and small metadata samples only. No new production copies or Neon copy branches are opened, and no bulk copy replay is run. Consumer checks use ZIP membership metadata without transferring geometry or state payloads.
+Production verification now uses database-side count aggregates and small metadata samples only. No new production copies or Neon copy branches are opened, and no bulk copy replay is run. Consumer checks use ZIP membership metadata without transferring geometry or state payloads. The seven superseded copy/replay entry points and their local-copy helper are deleted; earlier measurements remain recorded as results.
 
 Deployment handoff: RV-MEET2 is merged into this branch. A draft PR into River publishes the tested implementation under CLAUDE.md’s Codex exception, so River can deploy it before the final live-data READY. River needs to fold it so the existing scheduled place-map-<state> jobs can write. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory copy measurements below are supporting tests, not proof that production has filled.
 

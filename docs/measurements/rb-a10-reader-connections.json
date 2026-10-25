@@ -1,126 +1,2000 @@
 {
-  "readerConnections": {
-    "implementationCommit": "bb3aa5cf0",
-    "method": "Actual meetings and ballot-scope readers plus voting-site projection, official map rows in disposable PostgreSQL, civic facts from production readonly in read-only transactions",
-    "raceComparison": "Baseline current-page race IDs are checked against the scope endpoint. Its raw after total also includes held elections and is not a current-page race count.",
-    "results": [
-      {
-        "state": "AZ",
-        "zip": "85701",
-        "production": {
-          "role": "readonly",
-          "read_only": "on"
-        },
-        "boardsBefore": 139,
-        "boardsAfter": 139,
-        "racesBefore": 24,
-        "racesAfter": 37,
-        "sitesBefore": 345,
-        "sitesAfter": 345,
-        "missingBoards": [],
-        "missingRaces": [],
-        "missingSites": [],
-        "method": "Imported official map in local PostgreSQL, downstream civic facts from production readonly; not a Chrome live check"
-      },
-      {
-        "state": "NH",
-        "zip": "03301",
-        "production": {
-          "role": "readonly",
-          "read_only": "on"
-        },
-        "boardsBefore": 7,
-        "boardsAfter": 12,
-        "racesBefore": 33,
-        "racesAfter": 33,
-        "sitesBefore": 0,
-        "sitesAfter": 1,
-        "missingBoards": [],
-        "missingRaces": [],
-        "missingSites": [],
-        "method": "Imported official map in local PostgreSQL, downstream civic facts from production readonly; not a Chrome live check"
-      }
-    ]
-  },
-  "nextScheduledRun": {
-    "implementationCommit": "b1e6ac88f",
-    "method": "Actual standing importer and Census publication path executed twice with production reads, local PostgreSQL writes and a controlled next-due clock; not a claim that a future production run occurred",
-    "refresh": {
-      "state": "AZ",
-      "elapsedMs": 116498,
-      "peakRssBytes": 1062813696,
-      "firstRunPeakRssBytes": 1062813696,
-      "nextPublication": "PROMOTED",
-      "nextImportPreserved": true,
-      "places": 1194,
-      "zipEdges": 32164,
-      "zctaEdges": 27569,
-      "publication": "PROMOTED",
-      "nextDueAt": "2026-11-23T16:42:04.079Z",
-      "nextRunDue": true,
-      "databaseWrites": "local PostgreSQL copy only"
-    },
-    "postRefreshReaders": [
-      {
-        "state": "AZ",
-        "zip": "85701",
-        "production": {
-          "role": "readonly",
-          "read_only": "on"
-        },
-        "boardsBefore": 139,
-        "boardsAfter": 139,
-        "racesBefore": 24,
-        "racesAfter": 37,
-        "sitesBefore": 345,
-        "sitesAfter": 345,
-        "missingBoards": [],
-        "missingRaces": [],
-        "missingSites": [],
-        "method": "After the complete standing refresh and its controlled-clock next due run, imported map in disposable PostgreSQL and civic facts from production readonly; not a Chrome live check"
-      }
-    ],
-    "postRefreshReaderImplementationCommit": "bb3aa5cf0"
-  },
-  "existingReaderReferences": {
-    "method": "Production entities and aliases copied read-only into shared identity schema in disposable PostgreSQL; compare every captured target before and after AZ/NH map refreshes",
-    "result": {
-      "eventReferences": 60,
-      "distinctIds": 36,
-      "existingEntities": 31,
-      "existingAliases": 72,
-      "sources": {
-        "reactions": 56,
-        "speak": 0,
-        "ask": 1,
-        "demand": 3
-      },
-      "allIdsResolve": true,
-      "mappingsUnchangedAfterRefresh": true,
-      "databaseWrites": "local PostgreSQL copy only"
-    }
-  },
-  "configuredReaderPool": {
-    "implementationCommit": "bb3aa5cf0",
-    "result": {
-      "status": "PASS",
-      "role": "readonly",
-      "read_only": "on",
-      "method": "Configured readerDatabaseQuery pool through session network proxy; accounting kept in memory"
-    }
-  },
-  "epaReplayMapConnection": {
-    "status": "PASS",
+  "identity": {
     "role": "readonly",
     "read_only": "on",
-    "method": "Production SELECT through replay map connection while local vault transport is installed"
+    "snapshot_at": "2026-10-25T03:44:41.765Z",
+    "snapshot": "3156643:3156643:"
   },
-  "liveAcceptance": "Production Chrome comparison for 20 ZIPs and ten boundary map moves remains open for the post-release live check.",
-  "deployedReferenceResolution": {
+  "productionMap": {
+    "zip_edges": 0,
+    "boundaries": 0
+  },
+  "countsBefore": [
+    {
+      "state": "AK",
+      "boards": 118,
+      "races": 76,
+      "sites": 0
+    },
+    {
+      "state": "AL",
+      "boards": 272,
+      "races": 187,
+      "sites": 78
+    },
+    {
+      "state": "AR",
+      "boards": 119,
+      "races": 179,
+      "sites": 3
+    },
+    {
+      "state": "AS",
+      "boards": 0,
+      "races": 18,
+      "sites": 0
+    },
+    {
+      "state": "AZ",
+      "boards": 1015,
+      "races": 169,
+      "sites": 368
+    },
+    {
+      "state": "CA",
+      "boards": 1863,
+      "races": 346,
+      "sites": 1828
+    },
+    {
+      "state": "CO",
+      "boards": 233,
+      "races": 165,
+      "sites": 56
+    },
+    {
+      "state": "CT",
+      "boards": 166,
+      "races": 197,
+      "sites": 174
+    },
+    {
+      "state": "DC",
+      "boards": 5,
+      "races": 16,
+      "sites": 129
+    },
+    {
+      "state": "DE",
+      "boards": 50,
+      "races": 77,
+      "sites": 297
+    },
+    {
+      "state": "FL",
+      "boards": 682,
+      "races": 307,
+      "sites": 824
+    },
+    {
+      "state": "GA",
+      "boards": 244,
+      "races": 279,
+      "sites": 178
+    },
+    {
+      "state": "GU",
+      "boards": 0,
+      "races": 0,
+      "sites": 0
+    },
+    {
+      "state": "HI",
+      "boards": 71,
+      "races": 92,
+      "sites": 60
+    },
+    {
+      "state": "IA",
+      "boards": 66,
+      "races": 140,
+      "sites": 64
+    },
+    {
+      "state": "ID",
+      "boards": 113,
+      "races": 423,
+      "sites": 2
+    },
+    {
+      "state": "IL",
+      "boards": 432,
+      "races": 166,
+      "sites": 25
+    },
+    {
+      "state": "IN",
+      "boards": 28,
+      "races": 142,
+      "sites": 182
+    },
+    {
+      "state": "KS",
+      "boards": 11,
+      "races": 248,
+      "sites": 23
+    },
+    {
+      "state": "KY",
+      "boards": 16,
+      "races": 127,
+      "sites": 1690
+    },
+    {
+      "state": "LA",
+      "boards": 0,
+      "races": 18,
+      "sites": 112
+    },
+    {
+      "state": "MA",
+      "boards": 54,
+      "races": 232,
+      "sites": 164
+    },
+    {
+      "state": "MD",
+      "boards": 306,
+      "races": 336,
+      "sites": 102
+    },
+    {
+      "state": "ME",
+      "boards": 10,
+      "races": 278,
+      "sites": 0
+    },
+    {
+      "state": "MI",
+      "boards": 142,
+      "races": 340,
+      "sites": 51
+    },
+    {
+      "state": "MN",
+      "boards": 52,
+      "races": 392,
+      "sites": 25
+    },
+    {
+      "state": "MO",
+      "boards": 453,
+      "races": 195,
+      "sites": 57
+    },
+    {
+      "state": "MP",
+      "boards": 0,
+      "races": 21,
+      "sites": 15
+    },
+    {
+      "state": "MS",
+      "boards": 5,
+      "races": 102,
+      "sites": 0
+    },
+    {
+      "state": "MT",
+      "boards": 4,
+      "races": 146,
+      "sites": 0
+    },
+    {
+      "state": "NC",
+      "boards": 159,
+      "races": 561,
+      "sites": 2806
+    },
+    {
+      "state": "ND",
+      "boards": 13,
+      "races": 409,
+      "sites": 209
+    },
+    {
+      "state": "NE",
+      "boards": 0,
+      "races": 48,
+      "sites": 13
+    },
+    {
+      "state": "NH",
+      "boards": 650,
+      "races": 98,
+      "sites": 2
+    },
+    {
+      "state": "NJ",
+      "boards": 694,
+      "races": 109,
+      "sites": 614
+    },
+    {
+      "state": "NM",
+      "boards": 76,
+      "races": 255,
+      "sites": 37
+    },
+    {
+      "state": "NV",
+      "boards": 56,
+      "races": 78,
+      "sites": 48
+    },
+    {
+      "state": "NY",
+      "boards": 130,
+      "races": 268,
+      "sites": 1292
+    },
+    {
+      "state": "OH",
+      "boards": 113,
+      "races": 223,
+      "sites": 269
+    },
+    {
+      "state": "OK",
+      "boards": 46,
+      "races": 95,
+      "sites": 93
+    },
+    {
+      "state": "OR",
+      "boards": 88,
+      "races": 116,
+      "sites": 340
+    },
+    {
+      "state": "PA",
+      "boards": 16,
+      "races": 188,
+      "sites": 683
+    },
+    {
+      "state": "PR",
+      "boards": 0,
+      "races": 0,
+      "sites": 0
+    },
+    {
+      "state": "RI",
+      "boards": 0,
+      "races": 126,
+      "sites": 0
+    },
+    {
+      "state": "SC",
+      "boards": 7,
+      "races": 298,
+      "sites": 1956
+    },
+    {
+      "state": "SD",
+      "boards": 0,
+      "races": 89,
+      "sites": 456
+    },
+    {
+      "state": "TN",
+      "boards": 3,
+      "races": 129,
+      "sites": 15
+    },
+    {
+      "state": "TX",
+      "boards": 475,
+      "races": 1736,
+      "sites": 1375
+    },
+    {
+      "state": "UT",
+      "boards": 10,
+      "races": 142,
+      "sites": 38
+    },
+    {
+      "state": "VA",
+      "boards": 28,
+      "races": 427,
+      "sites": 2651
+    },
+    {
+      "state": "VI",
+      "boards": 1,
+      "races": 10,
+      "sites": 14
+    },
+    {
+      "state": "VT",
+      "boards": 8,
+      "races": 140,
+      "sites": 0
+    },
+    {
+      "state": "WA",
+      "boards": 68,
+      "races": 156,
+      "sites": 627
+    },
+    {
+      "state": "WI",
+      "boards": 1000,
+      "races": 195,
+      "sites": 0
+    },
+    {
+      "state": "WV",
+      "boards": 0,
+      "races": 196,
+      "sites": 98
+    },
+    {
+      "state": "WY",
+      "boards": 9,
+      "races": 98,
+      "sites": 22
+    }
+  ],
+  "countsAfter": [
+    {
+      "state": "AK",
+      "boards": 118,
+      "races": 76,
+      "sites": 0
+    },
+    {
+      "state": "AL",
+      "boards": 272,
+      "races": 187,
+      "sites": 78
+    },
+    {
+      "state": "AR",
+      "boards": 119,
+      "races": 179,
+      "sites": 3
+    },
+    {
+      "state": "AS",
+      "boards": 0,
+      "races": 18,
+      "sites": 0
+    },
+    {
+      "state": "AZ",
+      "boards": 1015,
+      "races": 169,
+      "sites": 368
+    },
+    {
+      "state": "CA",
+      "boards": 1863,
+      "races": 346,
+      "sites": 1828
+    },
+    {
+      "state": "CO",
+      "boards": 233,
+      "races": 165,
+      "sites": 56
+    },
+    {
+      "state": "CT",
+      "boards": 166,
+      "races": 197,
+      "sites": 174
+    },
+    {
+      "state": "DC",
+      "boards": 5,
+      "races": 16,
+      "sites": 129
+    },
+    {
+      "state": "DE",
+      "boards": 50,
+      "races": 77,
+      "sites": 297
+    },
+    {
+      "state": "FL",
+      "boards": 682,
+      "races": 307,
+      "sites": 824
+    },
+    {
+      "state": "GA",
+      "boards": 244,
+      "races": 279,
+      "sites": 178
+    },
+    {
+      "state": "GU",
+      "boards": 0,
+      "races": 0,
+      "sites": 0
+    },
+    {
+      "state": "HI",
+      "boards": 71,
+      "races": 92,
+      "sites": 60
+    },
+    {
+      "state": "IA",
+      "boards": 66,
+      "races": 140,
+      "sites": 64
+    },
+    {
+      "state": "ID",
+      "boards": 113,
+      "races": 423,
+      "sites": 2
+    },
+    {
+      "state": "IL",
+      "boards": 432,
+      "races": 166,
+      "sites": 25
+    },
+    {
+      "state": "IN",
+      "boards": 28,
+      "races": 142,
+      "sites": 182
+    },
+    {
+      "state": "KS",
+      "boards": 11,
+      "races": 248,
+      "sites": 23
+    },
+    {
+      "state": "KY",
+      "boards": 16,
+      "races": 127,
+      "sites": 1690
+    },
+    {
+      "state": "LA",
+      "boards": 0,
+      "races": 18,
+      "sites": 112
+    },
+    {
+      "state": "MA",
+      "boards": 54,
+      "races": 232,
+      "sites": 164
+    },
+    {
+      "state": "MD",
+      "boards": 306,
+      "races": 336,
+      "sites": 102
+    },
+    {
+      "state": "ME",
+      "boards": 10,
+      "races": 278,
+      "sites": 0
+    },
+    {
+      "state": "MI",
+      "boards": 142,
+      "races": 340,
+      "sites": 51
+    },
+    {
+      "state": "MN",
+      "boards": 52,
+      "races": 392,
+      "sites": 25
+    },
+    {
+      "state": "MO",
+      "boards": 453,
+      "races": 195,
+      "sites": 57
+    },
+    {
+      "state": "MP",
+      "boards": 0,
+      "races": 21,
+      "sites": 15
+    },
+    {
+      "state": "MS",
+      "boards": 5,
+      "races": 102,
+      "sites": 0
+    },
+    {
+      "state": "MT",
+      "boards": 4,
+      "races": 146,
+      "sites": 0
+    },
+    {
+      "state": "NC",
+      "boards": 159,
+      "races": 561,
+      "sites": 2806
+    },
+    {
+      "state": "ND",
+      "boards": 13,
+      "races": 409,
+      "sites": 209
+    },
+    {
+      "state": "NE",
+      "boards": 0,
+      "races": 48,
+      "sites": 13
+    },
+    {
+      "state": "NH",
+      "boards": 650,
+      "races": 98,
+      "sites": 2
+    },
+    {
+      "state": "NJ",
+      "boards": 694,
+      "races": 109,
+      "sites": 614
+    },
+    {
+      "state": "NM",
+      "boards": 76,
+      "races": 255,
+      "sites": 37
+    },
+    {
+      "state": "NV",
+      "boards": 56,
+      "races": 78,
+      "sites": 48
+    },
+    {
+      "state": "NY",
+      "boards": 130,
+      "races": 268,
+      "sites": 1292
+    },
+    {
+      "state": "OH",
+      "boards": 113,
+      "races": 223,
+      "sites": 269
+    },
+    {
+      "state": "OK",
+      "boards": 46,
+      "races": 95,
+      "sites": 93
+    },
+    {
+      "state": "OR",
+      "boards": 88,
+      "races": 116,
+      "sites": 340
+    },
+    {
+      "state": "PA",
+      "boards": 16,
+      "races": 188,
+      "sites": 683
+    },
+    {
+      "state": "PR",
+      "boards": 0,
+      "races": 0,
+      "sites": 0
+    },
+    {
+      "state": "RI",
+      "boards": 0,
+      "races": 126,
+      "sites": 0
+    },
+    {
+      "state": "SC",
+      "boards": 7,
+      "races": 298,
+      "sites": 1956
+    },
+    {
+      "state": "SD",
+      "boards": 0,
+      "races": 89,
+      "sites": 456
+    },
+    {
+      "state": "TN",
+      "boards": 3,
+      "races": 129,
+      "sites": 15
+    },
+    {
+      "state": "TX",
+      "boards": 475,
+      "races": 1736,
+      "sites": 1375
+    },
+    {
+      "state": "UT",
+      "boards": 10,
+      "races": 142,
+      "sites": 38
+    },
+    {
+      "state": "VA",
+      "boards": 28,
+      "races": 427,
+      "sites": 2651
+    },
+    {
+      "state": "VI",
+      "boards": 1,
+      "races": 10,
+      "sites": 14
+    },
+    {
+      "state": "VT",
+      "boards": 8,
+      "races": 140,
+      "sites": 0
+    },
+    {
+      "state": "WA",
+      "boards": 68,
+      "races": 156,
+      "sites": 627
+    },
+    {
+      "state": "WI",
+      "boards": 1000,
+      "races": 195,
+      "sites": 0
+    },
+    {
+      "state": "WV",
+      "boards": 0,
+      "races": 196,
+      "sites": 98
+    },
+    {
+      "state": "WY",
+      "boards": 9,
+      "races": 98,
+      "sites": 22
+    }
+  ],
+  "livePreservation": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "boards": {
+        "before": 139,
+        "after": 139,
+        "missing": []
+      },
+      "races": {
+        "before": 37,
+        "after": 37,
+        "missing": []
+      }
+    },
+    {
+      "state": "CA",
+      "zip": "94102",
+      "boards": {
+        "before": 151,
+        "after": 151,
+        "missing": []
+      },
+      "races": {
+        "before": 53,
+        "after": 53,
+        "missing": []
+      }
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "boards": {
+        "before": 68,
+        "after": 68,
+        "missing": []
+      },
+      "races": {
+        "before": 55,
+        "after": 55,
+        "missing": []
+      }
+    },
+    {
+      "state": "FL",
+      "zip": "33130",
+      "boards": {
+        "before": 5,
+        "after": 5,
+        "missing": []
+      },
+      "races": {
+        "before": 30,
+        "after": 30,
+        "missing": []
+      }
+    },
+    {
+      "state": "GA",
+      "zip": "30303",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 22,
+        "after": 22,
+        "missing": []
+      }
+    },
+    {
+      "state": "IL",
+      "zip": "60602",
+      "boards": {
+        "before": 116,
+        "after": 116,
+        "missing": []
+      },
+      "races": {
+        "before": 10,
+        "after": 10,
+        "missing": []
+      }
+    },
+    {
+      "state": "MN",
+      "zip": "55401",
+      "boards": {
+        "before": 15,
+        "after": 15,
+        "missing": []
+      },
+      "races": {
+        "before": 42,
+        "after": 42,
+        "missing": []
+      }
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "boards": {
+        "before": 7,
+        "after": 12,
+        "missing": []
+      },
+      "races": {
+        "before": 33,
+        "after": 33,
+        "missing": []
+      }
+    },
+    {
+      "state": "NJ",
+      "zip": "07102",
+      "boards": {
+        "before": 3,
+        "after": 3,
+        "missing": []
+      },
+      "races": {
+        "before": 3,
+        "after": 3,
+        "missing": []
+      }
+    },
+    {
+      "state": "NY",
+      "zip": "10007",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 16,
+        "after": 16,
+        "missing": []
+      }
+    },
+    {
+      "state": "OR",
+      "zip": "97204",
+      "boards": {
+        "before": 13,
+        "after": 13,
+        "missing": []
+      },
+      "races": {
+        "before": 13,
+        "after": 13,
+        "missing": []
+      }
+    },
+    {
+      "state": "TX",
+      "zip": "78701",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 55,
+        "after": 55,
+        "missing": []
+      }
+    },
+    {
+      "state": "WA",
+      "zip": "98101",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 26,
+        "after": 26,
+        "missing": []
+      }
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "boards": {
+        "before": 420,
+        "after": 420,
+        "missing": []
+      },
+      "races": {
+        "before": 12,
+        "after": 12,
+        "missing": []
+      }
+    },
+    {
+      "state": "NC",
+      "zip": "28203",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 32,
+        "after": 32,
+        "missing": []
+      }
+    },
+    {
+      "state": "OH",
+      "zip": "43215",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 30,
+        "after": 30,
+        "missing": []
+      }
+    },
+    {
+      "state": "MI",
+      "zip": "48226",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 24,
+        "after": 24,
+        "missing": []
+      }
+    },
+    {
+      "state": "PA",
+      "zip": "19147",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 8,
+        "after": 8,
+        "missing": []
+      }
+    },
+    {
+      "state": "MA",
+      "zip": "02108",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 16,
+        "after": 16,
+        "missing": []
+      }
+    },
+    {
+      "state": "NM",
+      "zip": "87501",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 30,
+        "after": 30,
+        "missing": []
+      }
+    }
+  ],
+  "baselineCommit": "829f38c05",
+  "afterCommit": "765e56473a9527e7362fc8997f86842a6cda95a7",
+  "method": "Real meetings route, streamed ballot-page element tree, ballot scope and voting-site projection readers; A2 importer builds the map in local PostgreSQL from held production Census datasets, captured ZIP source evidence and official Census polygons; A10 coordinate migration applied only locally; both cohorts use one production repeatable-read read-only snapshot for civic facts. Native function timings, not Chrome or page load times.",
+  "results": [
+    {
+      "state": "AZ",
+      "zip": "85701",
+      "boards": {
+        "before": 139,
+        "after": 139,
+        "missing": []
+      },
+      "races": {
+        "before": 37,
+        "after": 37,
+        "missing": []
+      },
+      "sites": {
+        "before": 345,
+        "after": 345,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 2023,
+        "ballotScope": 1427,
+        "votingProjection": 443,
+        "ballotPage": 2380
+      },
+      "readerMsAfter": {
+        "meetings": 1964,
+        "ballotScope": 738,
+        "votingProjection": 264,
+        "ballotPage": 2088
+      }
+    },
+    {
+      "state": "CA",
+      "zip": "94102",
+      "boards": {
+        "before": 151,
+        "after": 151,
+        "missing": []
+      },
+      "races": {
+        "before": 53,
+        "after": 53,
+        "missing": []
+      },
+      "sites": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1287,
+        "ballotScope": 1607,
+        "votingProjection": 593,
+        "ballotPage": 1701
+      },
+      "readerMsAfter": {
+        "meetings": 1352,
+        "ballotScope": 900,
+        "votingProjection": 711,
+        "ballotPage": 1648
+      }
+    },
+    {
+      "state": "CO",
+      "zip": "80202",
+      "boards": {
+        "before": 68,
+        "after": 68,
+        "missing": []
+      },
+      "races": {
+        "before": 55,
+        "after": 55,
+        "missing": []
+      },
+      "sites": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1507,
+        "ballotScope": 1576,
+        "votingProjection": 229,
+        "ballotPage": 1605
+      },
+      "readerMsAfter": {
+        "meetings": 1319,
+        "ballotScope": 1536,
+        "votingProjection": 233,
+        "ballotPage": 1521
+      }
+    },
+    {
+      "state": "FL",
+      "zip": "33130",
+      "boards": {
+        "before": 5,
+        "after": 5,
+        "missing": []
+      },
+      "races": {
+        "before": 30,
+        "after": 30,
+        "missing": []
+      },
+      "sites": {
+        "before": 56,
+        "after": 56,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1282,
+        "ballotScope": 1605,
+        "votingProjection": 489,
+        "ballotPage": 1986
+      },
+      "readerMsAfter": {
+        "meetings": 1398,
+        "ballotScope": 841,
+        "votingProjection": 445,
+        "ballotPage": 1836
+      }
+    },
+    {
+      "state": "GA",
+      "zip": "30303",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 22,
+        "after": 22,
+        "missing": []
+      },
+      "sites": {
+        "before": 33,
+        "after": 33,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1491,
+        "ballotScope": 1314,
+        "votingProjection": 243,
+        "ballotPage": 1936
+      },
+      "readerMsAfter": {
+        "meetings": 1256,
+        "ballotScope": 766,
+        "votingProjection": 293,
+        "ballotPage": 1658
+      }
+    },
+    {
+      "state": "IL",
+      "zip": "60602",
+      "boards": {
+        "before": 116,
+        "after": 116,
+        "missing": []
+      },
+      "races": {
+        "before": 10,
+        "after": 10,
+        "missing": []
+      },
+      "sites": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 2365,
+        "ballotScope": 1284,
+        "votingProjection": 492,
+        "ballotPage": 2316
+      },
+      "readerMsAfter": {
+        "meetings": 1841,
+        "ballotScope": 776,
+        "votingProjection": 184,
+        "ballotPage": 1991
+      }
+    },
+    {
+      "state": "MN",
+      "zip": "55401",
+      "boards": {
+        "before": 15,
+        "after": 15,
+        "missing": []
+      },
+      "races": {
+        "before": 42,
+        "after": 42,
+        "missing": []
+      },
+      "sites": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1311,
+        "ballotScope": 1302,
+        "votingProjection": 206,
+        "ballotPage": 1814
+      },
+      "readerMsAfter": {
+        "meetings": 1264,
+        "ballotScope": 778,
+        "votingProjection": 185,
+        "ballotPage": 1700
+      }
+    },
+    {
+      "state": "NH",
+      "zip": "03301",
+      "boards": {
+        "before": 7,
+        "after": 12,
+        "missing": []
+      },
+      "races": {
+        "before": 33,
+        "after": 33,
+        "missing": []
+      },
+      "sites": {
+        "before": 1,
+        "after": 1,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 2201,
+        "ballotScope": 1932,
+        "votingProjection": 245,
+        "ballotPage": 3667
+      },
+      "readerMsAfter": {
+        "meetings": 1845,
+        "ballotScope": 1590,
+        "votingProjection": 134,
+        "ballotPage": 3276
+      }
+    },
+    {
+      "state": "NJ",
+      "zip": "07102",
+      "boards": {
+        "before": 3,
+        "after": 3,
+        "missing": []
+      },
+      "races": {
+        "before": 3,
+        "after": 3,
+        "missing": []
+      },
+      "sites": {
+        "before": 28,
+        "after": 28,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1170,
+        "ballotScope": 1220,
+        "votingProjection": 348,
+        "ballotPage": 2154
+      },
+      "readerMsAfter": {
+        "meetings": 1092,
+        "ballotScope": 681,
+        "votingProjection": 388,
+        "ballotPage": 1412
+      }
+    },
+    {
+      "state": "NY",
+      "zip": "10007",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 16,
+        "after": 16,
+        "missing": []
+      },
+      "sites": {
+        "before": 263,
+        "after": 263,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1286,
+        "ballotScope": 1436,
+        "votingProjection": 600,
+        "ballotPage": 1871
+      },
+      "readerMsAfter": {
+        "meetings": 1180,
+        "ballotScope": 755,
+        "votingProjection": 396,
+        "ballotPage": 1707
+      }
+    },
+    {
+      "state": "OR",
+      "zip": "97204",
+      "boards": {
+        "before": 13,
+        "after": 13,
+        "missing": []
+      },
+      "races": {
+        "before": 13,
+        "after": 13,
+        "missing": []
+      },
+      "sites": {
+        "before": 32,
+        "after": 32,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 851,
+        "ballotScope": 1179,
+        "votingProjection": 214,
+        "ballotPage": 1465
+      },
+      "readerMsAfter": {
+        "meetings": 793,
+        "ballotScope": 681,
+        "votingProjection": 409,
+        "ballotPage": 1278
+      }
+    },
+    {
+      "state": "TX",
+      "zip": "78701",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 55,
+        "after": 55,
+        "missing": []
+      },
+      "sites": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1817,
+        "ballotScope": 1359,
+        "votingProjection": 666,
+        "ballotPage": 2771
+      },
+      "readerMsAfter": {
+        "meetings": 2111,
+        "ballotScope": 799,
+        "votingProjection": 622,
+        "ballotPage": 2733
+      }
+    },
+    {
+      "state": "WA",
+      "zip": "98101",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 26,
+        "after": 26,
+        "missing": []
+      },
+      "sites": {
+        "before": 105,
+        "after": 105,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 933,
+        "ballotScope": 1215,
+        "votingProjection": 358,
+        "ballotPage": 1490
+      },
+      "readerMsAfter": {
+        "meetings": 942,
+        "ballotScope": 769,
+        "votingProjection": 305,
+        "ballotPage": 1281
+      }
+    },
+    {
+      "state": "WI",
+      "zip": "53703",
+      "boards": {
+        "before": 420,
+        "after": 420,
+        "missing": []
+      },
+      "races": {
+        "before": 12,
+        "after": 12,
+        "missing": []
+      },
+      "sites": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 3061,
+        "ballotScope": 1590,
+        "votingProjection": 117,
+        "ballotPage": 2259
+      },
+      "readerMsAfter": {
+        "meetings": 1845,
+        "ballotScope": 682,
+        "votingProjection": 104,
+        "ballotPage": 1740
+      }
+    },
+    {
+      "state": "NC",
+      "zip": "28203",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 32,
+        "after": 32,
+        "missing": []
+      },
+      "sites": {
+        "before": 212,
+        "after": 212,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1062,
+        "ballotScope": 1456,
+        "votingProjection": 1655,
+        "ballotPage": 1749
+      },
+      "readerMsAfter": {
+        "meetings": 1039,
+        "ballotScope": 854,
+        "votingProjection": 1316,
+        "ballotPage": 1548
+      }
+    },
+    {
+      "state": "OH",
+      "zip": "43215",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 30,
+        "after": 30,
+        "missing": []
+      },
+      "sites": {
+        "before": 1,
+        "after": 1,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1027,
+        "ballotScope": 1574,
+        "votingProjection": 363,
+        "ballotPage": 1646
+      },
+      "readerMsAfter": {
+        "meetings": 1068,
+        "ballotScope": 1460,
+        "votingProjection": 393,
+        "ballotPage": 1341
+      }
+    },
+    {
+      "state": "MI",
+      "zip": "48226",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 24,
+        "after": 24,
+        "missing": []
+      },
+      "sites": {
+        "before": 6,
+        "after": 6,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 979,
+        "ballotScope": 1275,
+        "votingProjection": 224,
+        "ballotPage": 1635
+      },
+      "readerMsAfter": {
+        "meetings": 986,
+        "ballotScope": 763,
+        "votingProjection": 267,
+        "ballotPage": 1529
+      }
+    },
+    {
+      "state": "PA",
+      "zip": "19147",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 8,
+        "after": 8,
+        "missing": []
+      },
+      "sites": {
+        "before": 683,
+        "after": 683,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 1551,
+        "ballotScope": 1399,
+        "votingProjection": 1537,
+        "ballotPage": 2025
+      },
+      "readerMsAfter": {
+        "meetings": 1418,
+        "ballotScope": 834,
+        "votingProjection": 1659,
+        "ballotPage": 2014
+      }
+    },
+    {
+      "state": "MA",
+      "zip": "02108",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 16,
+        "after": 16,
+        "missing": []
+      },
+      "sites": {
+        "before": 164,
+        "after": 164,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 955,
+        "ballotScope": 1276,
+        "votingProjection": 269,
+        "ballotPage": 1395
+      },
+      "readerMsAfter": {
+        "meetings": 947,
+        "ballotScope": 730,
+        "votingProjection": 181,
+        "ballotPage": 1280
+      }
+    },
+    {
+      "state": "NM",
+      "zip": "87501",
+      "boards": {
+        "before": 0,
+        "after": 0,
+        "missing": []
+      },
+      "races": {
+        "before": 30,
+        "after": 30,
+        "missing": []
+      },
+      "sites": {
+        "before": 37,
+        "after": 37,
+        "missing": []
+      },
+      "readerMsBefore": {
+        "meetings": 810,
+        "ballotScope": 1337,
+        "votingProjection": 204,
+        "ballotPage": 1359
+      },
+      "readerMsAfter": {
+        "meetings": 782,
+        "ballotScope": 1088,
+        "votingProjection": 165,
+        "ballotPage": 1255
+      }
+    }
+  ],
+  "moves": [
+    {
+      "lng": -109.06,
+      "lat": 34,
+      "state": "AZ",
+      "queries": 1,
+      "actual": "AZ",
+      "pointQueries": 1,
+      "divisions": 10,
+      "readerMs": 1593
+    },
+    {
+      "lng": -109.03,
+      "lat": 34,
+      "state": "NM",
+      "queries": 1,
+      "actual": "NM",
+      "pointQueries": 1,
+      "divisions": 25,
+      "readerMs": 772
+    },
+    {
+      "lng": -109.06,
+      "lat": 39,
+      "state": "UT",
+      "queries": 1,
+      "actual": "UT",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 729
+    },
+    {
+      "lng": -109.03,
+      "lat": 39,
+      "state": "CO",
+      "queries": 1,
+      "actual": "CO",
+      "pointQueries": 1,
+      "divisions": 17,
+      "readerMs": 745
+    },
+    {
+      "lng": -102.07,
+      "lat": 39,
+      "state": "CO",
+      "queries": 1,
+      "actual": "CO",
+      "pointQueries": 1,
+      "divisions": 15,
+      "readerMs": 663
+    },
+    {
+      "lng": -102.03,
+      "lat": 39,
+      "state": "KS",
+      "queries": 1,
+      "actual": "KS",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 799
+    },
+    {
+      "lng": -104.07,
+      "lat": 44,
+      "state": "WY",
+      "queries": 1,
+      "actual": "WY",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 627
+    },
+    {
+      "lng": -104.03,
+      "lat": 44,
+      "state": "SD",
+      "queries": 1,
+      "actual": "SD",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 704
+    },
+    {
+      "lng": -106,
+      "lat": 41.01,
+      "state": "WY",
+      "queries": 1,
+      "actual": "WY",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 598
+    },
+    {
+      "lng": -106,
+      "lat": 40.99,
+      "state": "CO",
+      "queries": 1,
+      "actual": "CO",
+      "pointQueries": 1,
+      "divisions": 51,
+      "readerMs": 771
+    },
+    {
+      "lng": -106,
+      "lat": 37.01,
+      "state": "CO",
+      "queries": 1,
+      "actual": "CO",
+      "pointQueries": 1,
+      "divisions": 23,
+      "readerMs": 696
+    },
+    {
+      "lng": -106,
+      "lat": 36.99,
+      "state": "NM",
+      "queries": 1,
+      "actual": "NM",
+      "pointQueries": 1,
+      "divisions": 100,
+      "readerMs": 762
+    },
+    {
+      "lng": -108,
+      "lat": 45.01,
+      "state": "MT",
+      "queries": 1,
+      "actual": "MT",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 762
+    },
+    {
+      "lng": -108,
+      "lat": 44.99,
+      "state": "WY",
+      "queries": 1,
+      "actual": "WY",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 563
+    },
+    {
+      "lng": -114.06,
+      "lat": 39,
+      "state": "NV",
+      "queries": 1,
+      "actual": "NV",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 639
+    },
+    {
+      "lng": -114.02,
+      "lat": 39,
+      "state": "UT",
+      "queries": 1,
+      "actual": "UT",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 582
+    },
+    {
+      "lng": -99,
+      "lat": 40.01,
+      "state": "NE",
+      "queries": 1,
+      "actual": "NE",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 596
+    },
+    {
+      "lng": -99,
+      "lat": 39.99,
+      "state": "KS",
+      "queries": 1,
+      "actual": "KS",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 673
+    },
+    {
+      "lng": -100,
+      "lat": 45.95,
+      "state": "ND",
+      "queries": 1,
+      "actual": "ND",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 771
+    },
+    {
+      "lng": -100,
+      "lat": 45.93,
+      "state": "SD",
+      "queries": 1,
+      "actual": "SD",
+      "pointQueries": 1,
+      "divisions": 1,
+      "readerMs": 590
+    }
+  ],
+  "pointBallots": [
+    {
+      "name": "Phoenix within Arizona, without a ZIP or named state",
+      "lat": 33.4484,
+      "lng": -112.074,
+      "races": 81,
+      "pointQueries": 1,
+      "readerMs": 1983,
+      "contestIds": [
+        "az-2026-general-state-house-11",
+        "az-2026-general-state-senate-11",
+        "az-2026-general-us-house-3",
+        "az-maricopa-2026-clerk-of-the-superior-court",
+        "az-maricopa-2026-judge-of-the-superior-court-division-13-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-14-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-15-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-16-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-17-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-2-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-25-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-26-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-27-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-28-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-29-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-3-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-30-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-31-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-32-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-33-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-34-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-35-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-36-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-37-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-5-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-50-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-51-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-52-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-53-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-54-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-55-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-56-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-57-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-58-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-59-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-6-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-60-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-61-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-7-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-74-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-75-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-76-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-77-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-78-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-79-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-80-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-81-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-82-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-83-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-84-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-85-retention",
+        "az-maricopa-2026-judge-of-the-superior-court-division-86-retention",
+        "az-maricopa-2026-proposition-413",
+        "az-maricopa-general-2026-appeals-catlett-michael",
+        "az-maricopa-general-2026-appeals-hill-foster-anni",
+        "az-maricopa-general-2026-appeals-howe-randall",
+        "az-maricopa-general-2026-appeals-jacobs-andrew",
+        "az-maricopa-general-2026-appeals-kiley-daniel",
+        "az-maricopa-general-2026-appeals-morse-jr-james",
+        "az-maricopa-general-2026-appeals-perkins-jennifer",
+        "az-maricopa-general-2026-appeals-weinzweig-david",
+        "az-maricopa-general-2026-college-at-large",
+        "ballot-az-2026-general-supreme-court-john-lopez-iv",
+        "ballot-az-pima:attorney-general",
+        "ballot-az-pima:corporation-commissioner",
+        "ballot-az-pima:governor",
+        "ballot-az-pima:mine-inspector",
+        "ballot-az-pima:prop-141",
+        "ballot-az-pima:prop-142",
+        "ballot-az-pima:prop-143",
+        "ballot-az-pima:prop-144",
+        "ballot-az-pima:prop-145",
+        "ballot-az-pima:prop-212",
+        "ballot-az-pima:prop-316",
+        "ballot-az-pima:prop-317",
+        "ballot-az-pima:prop-318",
+        "ballot-az-pima:prop-319",
+        "ballot-az-pima:prop-320",
+        "ballot-az-pima:secretary-of-state",
+        "ballot-az-pima:state-treasurer",
+        "ballot-az-pima:superintendent"
+      ]
+    },
+    {
+      "name": "Arizona side of the New Mexico line",
+      "lat": 34,
+      "lng": -109.06,
+      "races": 22,
+      "pointQueries": 1,
+      "readerMs": 1794,
+      "contestIds": [
+        "az-2026-general-state-house-6",
+        "az-2026-general-state-senate-6",
+        "az-2026-general-us-house-2",
+        "ballot-az-2026-general-supreme-court-john-lopez-iv",
+        "ballot-az-pima:attorney-general",
+        "ballot-az-pima:corporation-commissioner",
+        "ballot-az-pima:governor",
+        "ballot-az-pima:mine-inspector",
+        "ballot-az-pima:prop-141",
+        "ballot-az-pima:prop-142",
+        "ballot-az-pima:prop-143",
+        "ballot-az-pima:prop-144",
+        "ballot-az-pima:prop-145",
+        "ballot-az-pima:prop-212",
+        "ballot-az-pima:prop-316",
+        "ballot-az-pima:prop-317",
+        "ballot-az-pima:prop-318",
+        "ballot-az-pima:prop-319",
+        "ballot-az-pima:prop-320",
+        "ballot-az-pima:secretary-of-state",
+        "ballot-az-pima:state-treasurer",
+        "ballot-az-pima:superintendent"
+      ]
+    }
+  ],
+  "latestProductionStatus": {
+    "role": "readonly",
+    "read_only": "on",
+    "checked_at": "2026-10-25T04:48:13.268Z",
+    "zip_location": null,
+    "zip_memberships": 0,
+    "boundaries": 0
+  },
+  "nextScheduledRefresh": {
+    "state": "AZ",
+    "elapsedMs": 79968,
+    "peakRssBytes": 1118027776,
+    "firstRunPeakRssBytes": 1072107520,
+    "nextPublication": "PROMOTED",
+    "nextImportPreserved": true,
+    "places": 1194,
+    "zipEdges": 32164,
+    "zctaEdges": 27569,
+    "publication": "PROMOTED",
+    "nextDueAt": "2026-11-24T03:38:33.732Z",
+    "nextRunDue": true,
+    "databaseWrites": "local PostgreSQL copy only"
+  },
+  "nextReader": {
     "identity": {
       "role": "readonly",
       "read_only": "on",
-      "checked_at": "2026-10-24T18:15:25.203Z"
+      "snapshot_at": "2026-10-25T03:44:41.765Z",
+      "snapshot": "3156643:3156643:"
+    },
+    "method": "Readers on the next-due import; same repeatable-read production civic snapshot as the 20-ZIP comparison",
+    "zip": "85701",
+    "preservation": {
+      "boards": {
+        "before": 139,
+        "after": 139,
+        "missing": []
+      },
+      "races": {
+        "before": 37,
+        "after": 37,
+        "missing": []
+      },
+      "sites": {
+        "before": 345,
+        "after": 345,
+        "missing": []
+      }
+    },
+    "readerMs": {
+      "meetings": 1450,
+      "ballotScope": 722,
+      "votingProjection": 189,
+      "ballotPage": 1789
+    }
+  },
+  "eventIdentityPreservation": {
+    "eventReferences": 60,
+    "distinctIds": 36,
+    "existingEntities": 44,
+    "existingAliases": 78,
+    "sources": {
+      "reactions": 56,
+      "speak": 0,
+      "ask": 1,
+      "demand": 3
+    },
+    "allIdsResolve": true,
+    "mappingsUnchangedAfterRefresh": true,
+    "databaseWrites": "local PostgreSQL copy only"
+  },
+  "deployedIdentityResolver": {
+    "identity": {
+      "role": "readonly",
+      "read_only": "on",
+      "checked_at": "2026-10-25T04:48:14.256Z"
     },
     "method": "Actual deployed reader_resolve_id function over every current reaction, Speak your mind, Ask and demand target; SELECT only",
     "references": 60,
@@ -417,5 +2291,159 @@
         ]
       }
     ]
+  },
+  "configuredReaderPool": {
+    "status": "PASS",
+    "role": "readonly",
+    "read_only": "on",
+    "method": "Configured readerDatabaseQuery pool through session network proxy; accounting kept in memory"
+  },
+  "stateImports": [
+    {
+      "state": "AZ",
+      "places": 1194,
+      "zipEdges": 32164,
+      "boundaries": 2624,
+      "elapsedMs": 8820
+    },
+    {
+      "state": "NH",
+      "places": 861,
+      "zipEdges": 9276,
+      "boundaries": 1969,
+      "elapsedMs": 3073
+    },
+    {
+      "state": "CA",
+      "places": 6214,
+      "zipEdges": 204341,
+      "boundaries": 11609,
+      "elapsedMs": 233077
+    },
+    {
+      "state": "CO",
+      "places": 4213,
+      "zipEdges": 41088,
+      "boundaries": 6011,
+      "elapsedMs": 160487
+    },
+    {
+      "state": "FL",
+      "places": 3141,
+      "zipEdges": 80134,
+      "boundaries": 6078,
+      "elapsedMs": 73564
+    },
+    {
+      "state": "GA",
+      "places": 2230,
+      "zipEdges": 34973,
+      "boundaries": 5507,
+      "elapsedMs": 94493
+    },
+    {
+      "state": "IL",
+      "places": 7433,
+      "zipEdges": 130966,
+      "boundaries": 14998,
+      "elapsedMs": 98419
+    },
+    {
+      "state": "MN",
+      "places": 4816,
+      "zipEdges": 55047,
+      "boundaries": 12879,
+      "elapsedMs": 87957
+    },
+    {
+      "state": "NJ",
+      "places": 2157,
+      "zipEdges": 27386,
+      "boundaries": 5376,
+      "elapsedMs": 78287
+    },
+    {
+      "state": "NY",
+      "places": 4500,
+      "zipEdges": 103149,
+      "boundaries": 10170,
+      "elapsedMs": 101592
+    },
+    {
+      "state": "OR",
+      "places": 1935,
+      "zipEdges": 28272,
+      "boundaries": 3589,
+      "elapsedMs": 95153
+    },
+    {
+      "state": "TX",
+      "places": 7176,
+      "zipEdges": 116541,
+      "boundaries": 14365,
+      "elapsedMs": 258968
+    },
+    {
+      "state": "WA",
+      "places": 2608,
+      "zipEdges": 39838,
+      "boundaries": 4880,
+      "elapsedMs": 81311
+    },
+    {
+      "state": "WI",
+      "places": 4048,
+      "zipEdges": 49845,
+      "boundaries": 10205,
+      "elapsedMs": 73673
+    },
+    {
+      "state": "NC",
+      "places": 2518,
+      "zipEdges": 39218,
+      "boundaries": 6661,
+      "elapsedMs": 86023
+    },
+    {
+      "state": "OH",
+      "places": 4402,
+      "zipEdges": 68632,
+      "boundaries": 11071,
+      "elapsedMs": 63488
+    },
+    {
+      "state": "MI",
+      "places": 3477,
+      "zipEdges": 47750,
+      "boundaries": 8955,
+      "elapsedMs": 50771
+    },
+    {
+      "state": "PA",
+      "places": 6931,
+      "zipEdges": 133390,
+      "boundaries": 16863,
+      "elapsedMs": 79727
+    },
+    {
+      "state": "MA",
+      "places": 1555,
+      "zipEdges": 32859,
+      "boundaries": 3291,
+      "elapsedMs": 52365
+    },
+    {
+      "state": "NM",
+      "places": 1691,
+      "zipEdges": 28810,
+      "boundaries": 3298,
+      "elapsedMs": 55333
+    }
+  ],
+  "limits": {
+    "browser": "Native reader-copy checks and live HTTP baselines; Chrome first-visit timing remains unverified because no browser-control tool is available in the session.",
+    "voting": "Actual held voting-site projection and answer matching. The unchanged request-only Google fallback was not exercised.",
+    "schedule": "Controlled next-due clock and local publication; future production scheduler execution is unobserved.",
+    "deployment": "Production map tables had zero rows at the snapshot, and zip_location is an unapplied expand migration. River must populate the existing A2 map before serving the switched readers."
   }
 }

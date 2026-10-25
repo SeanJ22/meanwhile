@@ -1,0 +1,453 @@
+{
+  "implementationCommit": "765e56473a9527e7362fc8997f86842a6cda95a7",
+  "fixtureRevision": "9a480e58c97f3c4cb5d8d6f36f5ffe1a5f743501",
+  "unchangedFirstShardInputs": "Only tests/pill-cluster.test.ts and tests/state-crossing.test.ts changed after the first shard; both belong to the rerun second shard. Runtime and every first-shard selected file are identical.",
+  "fixtureCorrection": "The parsing fixture uses a synthetic origin. Crossing tests now require point-only links and infer the state from valid coordinates even with an unrecognized hint; invalid-coordinate assertions remain.",
+  "integration": {
+    "river": "829f38c05",
+    "ancestors": {
+      "RB-A2": "78a2a9f14",
+      "RB-A3": "d92e9a054",
+      "RB-A5": "f7ab065e3",
+      "RB-A8": "fb1783a62"
+    },
+    "boardIntegration": [
+      "- 2026-10-24T23:58:08Z \u00b7 rb-a2 \u00b7 RB-A2 \u00b7 ready 78a2a9f14 \u00b7 river 667d8dad2 \u00b7 pnpm gates pass on d72cf90d0 (9 of 9, 9,821 tests) \u00b7 release 105 PR #816",
+      "- 2026-10-25T01:21:38Z \u00b7 rb-a8 \u00b7 RB-A8 \u00b7 ready fb1783a62 \u00b7 river af9ee8f78 \u00b7 pnpm gates pass on 0916a5b87 (9 of 9, 9,850 tests) \u00b7 release 107 PR #818",
+      "- 2026-10-25T01:21:38Z \u00b7 rb-a3 \u00b7 RB-A3 \u00b7 ready d92e9a054 \u00b7 river af9ee8f78 \u00b7 pnpm gates pass on 0916a5b87 (9 of 9, 9,850 tests) \u00b7 release 107 PR #818",
+      "- 2026-10-25T01:21:38Z \u00b7 rb-a5 \u00b7 RB-A5 \u00b7 ready f7ab065e3 \u00b7 river af9ee8f78 \u00b7 pnpm gates pass on 0916a5b87 (9 of 9, 9,850 tests) \u00b7 release 107 PR #818"
+    ]
+  },
+  "preflight": {
+    "passed": 2,
+    "failed": 0
+  },
+  "gates": [
+    {
+      "id": "lint",
+      "status": "PASS",
+      "command": "pnpm lint (0 errors; 57 existing warnings)"
+    },
+    {
+      "id": "tsc",
+      "status": "PASS",
+      "command": "pnpm exec tsc --noEmit"
+    },
+    {
+      "id": "dead-code",
+      "status": "PASS",
+      "command": "pnpm exec knip --no-progress --no-config-hints"
+    },
+    {
+      "id": "assert:browser",
+      "status": "PASS",
+      "command": "pnpm run assert:browser (pinned Chromium 1234)"
+    },
+    {
+      "id": "test",
+      "status": "PASS",
+      "command": "pnpm test with canonical CI_TEST_SHARD=1/2 and 2/2, sequentially"
+    },
+    {
+      "id": "db:gate",
+      "status": "PASS",
+      "command": "pnpm exec tsx scripts/db-shipping-gate.mts --moment=pre-deploy --base=origin/river (readonly; 56/57 applied, A10 expand pending)"
+    },
+    {
+      "id": "build",
+      "status": "PASS",
+      "command": "pnpm build"
+    },
+    {
+      "id": "test:bundle",
+      "status": "PASS",
+      "command": "pnpm test:bundle (16/16)"
+    },
+    {
+      "id": "build:standalone",
+      "status": "PASS",
+      "command": "NEXT_PRIVATE_STANDALONE=1 pnpm build"
+    }
+  ],
+  "testSummary": {
+    "tests": 9885,
+    "passed": 9883,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 2
+  },
+  "canonicalFiles": 1377,
+  "shards": [
+    {
+      "commit": "765e56473a9527e7362fc8997f86842a6cda95a7",
+      "tree": "66254ef4e289646772a8788497b1015e3f7f60e0",
+      "workingTreeStatus": "",
+      "configHash": "4c752c78290a93e3468a5a3de5a702ab20cb08827b8393c2422159df081247a1",
+      "suiteHash": "625a6a33c846766830e0b864f1d40a3f32082eff3736d0a9bc73ef7032a2b4fc",
+      "node": "v24.19.0",
+      "shard": {
+        "index": 1,
+        "count": 2
+      },
+      "concurrency": {
+        "available": 4,
+        "effective": 2
+      },
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedMs": 994703,
+      "files": 689,
+      "counts": {
+        "tests": 4855,
+        "failed": 0,
+        "passed": 4854,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0,
+        "topLevel": 4767,
+        "suites": 29
+      }
+    },
+    {
+      "commit": "9a480e58c97f3c4cb5d8d6f36f5ffe1a5f743501",
+      "tree": "de5fe4ccbd0c73b117a4dfa6e35aae21eb287679",
+      "workingTreeStatus": "",
+      "configHash": "4c752c78290a93e3468a5a3de5a702ab20cb08827b8393c2422159df081247a1",
+      "suiteHash": "25e8e890c8f7516907b8a662a202f842b882dbaf696a27557a4e2149d5603a86",
+      "node": "v24.19.0",
+      "shard": {
+        "index": 2,
+        "count": 2
+      },
+      "concurrency": {
+        "available": 4,
+        "effective": 2
+      },
+      "status": "passed",
+      "exitCode": 0,
+      "elapsedMs": 860021,
+      "files": 688,
+      "counts": {
+        "tests": 5030,
+        "failed": 0,
+        "passed": 5029,
+        "cancelled": 0,
+        "skipped": 1,
+        "todo": 0,
+        "topLevel": 4973,
+        "suites": 13
+      }
+    }
+  ],
+  "skipped": [
+    {
+      "file": "tests/acquisition-repair-roster.test.ts",
+      "skipped": 1
+    },
+    {
+      "file": "tests/acquisition-repair-profile.test.ts",
+      "skipped": 1
+    }
+  ],
+  "retirement": {
+    "implementationCommit": "765e56473a9527e7362fc8997f86842a6cda95a7",
+    "retiredImports": 0,
+    "deletedModules": [
+      "lib/geo/zip-division-index.ts",
+      "lib/geo/zip-census-districts.ts",
+      "lib/geo/zcta-table.ts",
+      "lib/geo/zcta.ts",
+      "lib/geo/postal.ts",
+      "lib/geo/reader-zip-start.ts",
+      "scripts/project-reader-zip-start.mts"
+    ],
+    "selectionRulesUnchangedFromRiver": true
+  },
+  "pointIndex": {
+    "point": {
+      "lat": 33.4484,
+      "lng": -112.074
+    },
+    "state": "AZ",
+    "readerQueries": 1,
+    "index": "place_boundary_point_idx",
+    "plan": [
+      {
+        "QUERY PLAN": [
+          {
+            "Plan": {
+              "Node Type": "Append",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 1264.75,
+              "Total Cost": 1320.15,
+              "Plan Rows": 8,
+              "Plan Width": 210,
+              "Subplans Removed": 0,
+              "Plans": [
+                {
+                  "Node Type": "Bitmap Heap Scan",
+                  "Parent Relationship": "InitPlan",
+                  "Subplan Name": "CTE candidates",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "place_boundary",
+                  "Alias": "b_2",
+                  "Startup Cost": 9.46,
+                  "Total Cost": 1264.33,
+                  "Plan Rows": 7,
+                  "Plan Width": 561,
+                  "Recheck Cond": "(bounds @> '(-112.074,33.4484),(-112.074,33.4484)'::box)",
+                  "Filter": "((layer = ANY ('{cd,sldu,sldl}'::text[])) OR (boundary_year = (SubPlan 2)))",
+                  "Plans": [
+                    {
+                      "Node Type": "Bitmap Index Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Index Name": "place_boundary_point_idx",
+                      "Startup Cost": 0,
+                      "Total Cost": 9.46,
+                      "Plan Rows": 157,
+                      "Plan Width": 0,
+                      "Index Cond": "(bounds @> '(-112.074,33.4484),(-112.074,33.4484)'::box)"
+                    },
+                    {
+                      "Node Type": "Result",
+                      "Parent Relationship": "SubPlan",
+                      "Subplan Name": "SubPlan 2",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Startup Cost": 4.44,
+                      "Total Cost": 4.45,
+                      "Plan Rows": 1,
+                      "Plan Width": 4,
+                      "Plans": [
+                        {
+                          "Node Type": "Limit",
+                          "Parent Relationship": "InitPlan",
+                          "Subplan Name": "InitPlan 1",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Startup Cost": 0.42,
+                          "Total Cost": 4.44,
+                          "Plan Rows": 1,
+                          "Plan Width": 4,
+                          "Plans": [
+                            {
+                              "Node Type": "Index Only Scan",
+                              "Parent Relationship": "Outer",
+                              "Parallel Aware": false,
+                              "Async Capable": false,
+                              "Scan Direction": "Backward",
+                              "Index Name": "place_boundary_pkey",
+                              "Relation Name": "place_boundary",
+                              "Alias": "current",
+                              "Startup Cost": 0.42,
+                              "Total Cost": 8.46,
+                              "Plan Rows": 2,
+                              "Plan Width": 4,
+                              "Index Cond": "(place_id = b_2.place_id)"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Node Type": "Nested Loop",
+                  "Parent Relationship": "Member",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 0.43,
+                  "Total Cost": 30.44,
+                  "Plan Rows": 7,
+                  "Plan Width": 214,
+                  "Inner Unique": true,
+                  "Plans": [
+                    {
+                      "Node Type": "CTE Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "CTE Name": "candidates",
+                      "Alias": "b",
+                      "Startup Cost": 0,
+                      "Total Cost": 0.14,
+                      "Plan Rows": 7,
+                      "Plan Width": 165
+                    },
+                    {
+                      "Node Type": "Memoize",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Startup Cost": 0.43,
+                      "Total Cost": 8.45,
+                      "Plan Rows": 1,
+                      "Plan Width": 80,
+                      "Cache Key": "b.place_id",
+                      "Cache Mode": "logical",
+                      "Plans": [
+                        {
+                          "Node Type": "Index Scan",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Scan Direction": "Forward",
+                          "Index Name": "entity_pkey",
+                          "Relation Name": "entity",
+                          "Alias": "e",
+                          "Startup Cost": 0.42,
+                          "Total Cost": 8.44,
+                          "Plan Rows": 1,
+                          "Plan Width": 80,
+                          "Index Cond": "(id = b.place_id)"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Node Type": "Nested Loop",
+                  "Parent Relationship": "Member",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Join Type": "Inner",
+                  "Startup Cost": 0.86,
+                  "Total Cost": 25.35,
+                  "Plan Rows": 1,
+                  "Plan Width": 183,
+                  "Inner Unique": true,
+                  "Plans": [
+                    {
+                      "Node Type": "Nested Loop",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Join Type": "Inner",
+                      "Startup Cost": 0.45,
+                      "Total Cost": 18.25,
+                      "Plan Rows": 1,
+                      "Plan Width": 131,
+                      "Inner Unique": false,
+                      "Plans": [
+                        {
+                          "Node Type": "Aggregate",
+                          "Strategy": "Hashed",
+                          "Partial Mode": "Simple",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Startup Cost": 0.16,
+                          "Total Cost": 0.17,
+                          "Plan Rows": 1,
+                          "Plan Width": 32,
+                          "Group Key": [
+                            "candidates.place_id"
+                          ],
+                          "Planned Partitions": 0,
+                          "Plans": [
+                            {
+                              "Node Type": "CTE Scan",
+                              "Parent Relationship": "Outer",
+                              "Parallel Aware": false,
+                              "Async Capable": false,
+                              "CTE Name": "candidates",
+                              "Alias": "candidates",
+                              "Startup Cost": 0,
+                              "Total Cost": 0.16,
+                              "Plan Rows": 1,
+                              "Plan Width": 32,
+                              "Filter": "(layer = 'county'::text)"
+                            }
+                          ]
+                        },
+                        {
+                          "Node Type": "Index Scan",
+                          "Parent Relationship": "Inner",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Scan Direction": "Forward",
+                          "Index Name": "place_boundary_host_idx",
+                          "Relation Name": "place_boundary",
+                          "Alias": "b_1",
+                          "Startup Cost": 0.29,
+                          "Total Cost": 18.07,
+                          "Plan Rows": 1,
+                          "Plan Width": 131,
+                          "Index Cond": "(host_county_id = candidates.place_id)",
+                          "Filter": "((layer = ANY ('{cd,sldu,sldl}'::text[])) OR (boundary_year = (SubPlan 5)))",
+                          "Plans": [
+                            {
+                              "Node Type": "Result",
+                              "Parent Relationship": "SubPlan",
+                              "Subplan Name": "SubPlan 5",
+                              "Parallel Aware": false,
+                              "Async Capable": false,
+                              "Startup Cost": 4.44,
+                              "Total Cost": 4.45,
+                              "Plan Rows": 1,
+                              "Plan Width": 4,
+                              "Plans": [
+                                {
+                                  "Node Type": "Limit",
+                                  "Parent Relationship": "InitPlan",
+                                  "Subplan Name": "InitPlan 4",
+                                  "Parallel Aware": false,
+                                  "Async Capable": false,
+                                  "Startup Cost": 0.42,
+                                  "Total Cost": 4.44,
+                                  "Plan Rows": 1,
+                                  "Plan Width": 4,
+                                  "Plans": [
+                                    {
+                                      "Node Type": "Index Only Scan",
+                                      "Parent Relationship": "Outer",
+                                      "Parallel Aware": false,
+                                      "Async Capable": false,
+                                      "Scan Direction": "Backward",
+                                      "Index Name": "place_boundary_pkey",
+                                      "Relation Name": "place_boundary",
+                                      "Alias": "current_1",
+                                      "Startup Cost": 0.42,
+                                      "Total Cost": 8.46,
+                                      "Plan Rows": 2,
+                                      "Plan Width": 4,
+                                      "Index Cond": "(place_id = b_1.place_id)"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "Node Type": "Index Scan",
+                      "Parent Relationship": "Inner",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Scan Direction": "Forward",
+                      "Index Name": "entity_pkey",
+                      "Relation Name": "entity",
+                      "Alias": "e_1",
+                      "Startup Cost": 0.42,
+                      "Total Cost": 7.1,
+                      "Plan Rows": 1,
+                      "Plan Width": 80,
+                      "Index Cond": "(id = b_1.place_id)"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

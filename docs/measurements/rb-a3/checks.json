@@ -1,26 +1,26 @@
 {
-  "observedAt": "2026-10-25T01:45:37.729023+00:00",
-  "testedCommit": "6fa509323",
-  "riverCommit": "4653894cc",
+  "observedAt": "2026-10-25T02:21:54.081932+00:00",
+  "testedCommit": "83347c05afdb5fc5a71d81ccb2d07530d02c7a5c",
+  "riverCommit": "af9ee8f78",
   "a1FoldedReady": "1d6df41d9",
   "latestA1Documentation": "3a8b176aa",
-  "latestA1Delta": "Six lines in docs/rb-a1.md; no application or test change. Merged and build passed.",
   "preflight": "PASS",
+  "preflightSeconds": 33.55,
   "gates": [
     {
       "id": "lint",
       "status": "PASS",
-      "seconds": 87
+      "seconds": 65
     },
     {
       "id": "tsc",
       "status": "PASS",
-      "seconds": 60
+      "seconds": 90
     },
     {
       "id": "dead-code",
       "status": "PASS",
-      "seconds": 6
+      "seconds": 5
     },
     {
       "id": "assert:browser",
@@ -30,7 +30,7 @@
     {
       "id": "test",
       "status": "PASS",
-      "seconds": 1731
+      "seconds": 1571
     },
     {
       "id": "db:gate",
@@ -40,7 +40,7 @@
     {
       "id": "build",
       "status": "PASS",
-      "seconds": 85
+      "seconds": 82
     },
     {
       "id": "test:bundle",
@@ -50,12 +50,12 @@
     {
       "id": "build:standalone",
       "status": "PASS",
-      "seconds": 18
+      "seconds": 28
     }
   ],
   "tests": {
-    "registered": 9857,
-    "passed": 9852,
+    "registered": 9859,
+    "passed": 9854,
     "failed": 0,
     "suites": 42,
     "skipped": 5,
@@ -63,10 +63,21 @@
     "cancelled": 0
   },
   "postbuildChecks": {
-    "status": "PENDING_FINAL_BUILD"
+    "files": [
+      "tests/deploy-paths.test.ts",
+      "tests/reader-last-mile-trace.test.ts"
+    ],
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0
   },
   "bundleTests": {
     "passed": 16,
+    "failed": 0,
+    "skipped": 0
+  },
+  "focusedChecks": {
+    "passed": 79,
     "failed": 0,
     "skipped": 0
   },
@@ -80,39 +91,5 @@
     "productionDatabaseRole": "readonly",
     "productionWrites": false
   },
-  "note": "The full test run started with no .next output. Its three build-dependent skips are covered by test:bundle and the 17 passing postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing.",
-  "subsequentIntegration": {
-    "commit": "a0be6dde1",
-    "riverCommit": "f6c4cba25",
-    "focusedTests": {
-      "passed": 78,
-      "failed": 0,
-      "skipped": 0,
-      "runner": "Canonical node scripts/ci-tests.mjs with an explicit file list"
-    },
-    "build": "PASS",
-    "fullGateSet": "9 of 9 PASS on 41999aa8c",
-    "note": "This complete run checks the current integration, including RN-03 and SO-01."
-  },
-  "preflightSeconds": 28.04,
-  "latestPeriodicA1Build": {
-    "a1Commit": "3a8b176aa",
-    "streamCommit": "41999aa8c",
-    "startedAt": "2026-10-24T22:13:59Z",
-    "result": "PASS",
-    "runtimeHoldingTrace": {
-      "files": 107,
-      "failures": 0
-    }
-  },
-  "focusedFollowup": {
-    "commit": "4f97e0bc2",
-    "passed": 79,
-    "failed": 0,
-    "skipped": 0
-  },
-  "finalVerification": {
-    "commit": "7f7ea23ba",
-    "status": "PENDING"
-  }
+  "note": "All nine checks pass on the frozen final source. The three build-dependent skips are covered afterward by the bundle and 17 postbuild checks. Two optional acquisition repair tests remain skipped and are not claimed as passing. The replayed publisher and value writes remain unchanged through this revision."
 }

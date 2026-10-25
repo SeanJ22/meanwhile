@@ -1801,6 +1801,6 @@
   },
   "smallerStates": [],
   "publisherSha256": "8960d46d94b4007a120fceb9e542dfa2b6a86b161d79de6de42244348b355895",
-  "publisherUnchangedThrough": "7f7ea23ba",
+  "publisherUnchangedThrough": "83347c05a",
   "note": "Subsequent changes affect the Admin view and the lane measurement start; the replayed door publisher and its value writes are unchanged."
 }

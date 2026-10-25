@@ -1,6 +1,6 @@
 {
   "browser": "Google Chrome for Testing 151.0.7922.34",
-  "implementationCommit": "6fa509323",
+  "implementationCommit": "83347c05a",
   "productionBaseline": {
     "observedAt": "2026-10-25T00:46:18.918Z",
     "page": "https://meanwhileusa.com/?zip=85201",
@@ -16,14 +16,15 @@
         "status": 200,
         "addressVisible": true,
         "governmentSourceLinked": true,
-        "bothSourcesLinked": false,
+        "bothSourcesLinked": null,
         "visibleCounts": {
           "Meetings": 40,
           "Bodies here": 36,
           "Districts in view": 76,
           "Officials": 26
         },
-        "pageErrors": []
+        "pageErrors": [],
+        "apiSourceChecked": false
       }
     }
   ],
@@ -57,13 +58,13 @@
     }
   ],
   "adminClosedHour": {
-    "from": "2026-10-25T00:00:00.000Z",
-    "through": "2026-10-25T01:00:00.000Z",
-    "measuredAt": "2026-10-25T01:01:14.692Z"
+    "from": "2026-10-25T01:00:00.000Z",
+    "through": "2026-10-25T02:00:00.000Z",
+    "measuredAt": "2026-10-25T02:00:58.567Z"
   },
   "adminLaneCounts": [
     {
-      "hour": "2026-10-25T00:00:00.000Z",
+      "hour": "2026-10-25T01:00:00.000Z",
       "state": "AZ",
       "family": "Government bodies",
       "stage": "publication:checked",
@@ -76,7 +77,7 @@
       "observedOut": 0
     },
     {
-      "hour": "2026-10-25T00:00:00.000Z",
+      "hour": "2026-10-25T01:00:00.000Z",
       "state": "AZ",
       "family": "Government bodies",
       "stage": "publication:official",
@@ -92,6 +93,6 @@
   "adminCountSource": "Actual shared count_hour rows from both door publications, read after the real hour closed. The first partial-hour incoming movement remains unmeasured.",
   "boundaryContext": "The local copy reads the same public production boundary byte ranges. No Netlify credentials are copied.",
   "mutationsBlocked": true,
-  "productionObservedAt": "2026-10-25T01:02:15.002757+00:00",
-  "branchObservedAt": "2026-10-25T01:01:31.804959+00:00"
+  "productionObservedAt": "2026-10-25T02:01:19.637783+00:00",
+  "branchObservedAt": "2026-10-25T02:01:16.781905+00:00"
 }

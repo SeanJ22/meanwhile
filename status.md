@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 114 (main 0e3cdce42, RB-A6), live 7:03 AM EDT; reader checks green. CL-01 RETURNED 7:45 AM EDT (2 tests: an identical replay re-versions instead of confirming; returns/cl-01.md). NEXT: release 115 = MD-01 (PR #827, river 6d92e488c, auto-merge on; live check within 5 minutes). GATING next: CL-01 69ca09c83 alone. Queue (each its own batch, by arrival): RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f, linking-page integration ef74ed82e, read-path connection 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up ed1b600aa, RB-A3 follow-up be0bef2bf, RN-03 follow-up 1307d4e03. HELD: RB-A10 7b5eacd03 (place map 0 rows)
+build_state: LIVE FOR READERS: release 114 (main 0e3cdce42, RB-A6), live 7:03 AM EDT; reader checks green. CL-01 RETURNED 7:45 AM EDT (2 tests: an identical replay re-versions instead of confirming; returns/cl-01.md). NEXT: release 115 = MD-01 (PR #827, river 6d92e488c, auto-merge on; live check within 5 minutes). GATING: CL-01 69ca09c83 alone (river-next c0205d49f; the 2 tests that failed now pass, 14/14). Queue (each its own batch, by arrival): RB-A4 624ac2d3d (River-finished), RT-01 a13baecf8, AD-01 69806d306, DB-03 one fix at a time (Admin 04681516c, state doors e4305907d, inventory readback f2d76ac1f, linking-page integration ef74ed82e, read-path connection 11072d2ed), RB-A7 after RB-A4, DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 follow-up ed1b600aa, RB-A3 follow-up be0bef2bf, RN-03 follow-up 1307d4e03. HELD: RB-A10 7b5eacd03 (place map 0 rows)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T12:07:53Z
+heartbeat: 2026-10-25T12:08:25Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

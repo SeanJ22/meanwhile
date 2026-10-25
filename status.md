@@ -1,11 +1,54 @@
 # River status
 
-build_state: LIVE FOR READERS: release 119 (main f6f68db6b, RB-A4 catch-up). SHIPPING: release 120 (river-portraits 9bf9801a5: portraits and member offices, never re-read; gates 9 of 9) PR #832, auto-merge on. GATING: DB-03 reads 8b69f0cbf alone on river ea117a0bb (river-next e4789df3a); releases after 120 is live. NEXT: DB-03 Admin 04681516c. HELD: GB-01 1636195c9 (after portraits), RB-A10 7b5eacd03 (place map 0 rows). NEXT Neon fixes: DB-03 state doors e4305907d onward, through 11072d2ed (2cce7754c and 9c2b0c58a stay unfolded). Rebuild after: RT-01 a13baecf8, AD-01 69806d306, RB-A7 7996ae820
+build_state: LIVE FOR READERS: release 119 (main f6f68db6b). SHIPPING: release 120 (river-portraits 9bf9801a5) PR #832. GATING: release 121 = DB-03 reads 8b69f0cbf + DB-02 re-cut e0f14fe59 on river-next 801d5db65. See 'Every READY not on main' for every slot
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T21:39:00Z
+heartbeat: 2026-10-25T22:06:00Z
+
+
+<!-- READY-LIST -->
+## Every READY not on main (updated 6:06 PM EDT)
+Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
+
+**Shipping / gating**
+| READY | Lane | Slot |
+|---|---|---|
+| 9bf9801a5 | river-portraits (portraits + member offices, never re-read) | release 120, PR #832, merging; urgent Neon |
+| 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | release 121 with DB-02, gating now on 801d5db65; urgent Neon |
+| e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 with DB-03 reads; urgent Neon |
+
+**Next: urgent Neon fixes, each as soon as ready (in lane order)**
+| READY | Lane | Slot |
+|---|---|---|
+| 04681516c | DB-03 Admin | after 121. Merge onto ea117a0bb is built; owed-route conflict resolved |
+| e4305907d | DB-03 state doors | after Admin |
+| 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
+
+**Improvement batch: one release, all together (drop any lane that breaks the combined gate, ship the rest)**
+| READY | Lane | Note |
+|---|---|---|
+| a13baecf8 | RT-01 (place-map jobs fill every state) | RB-A10 and RB-A9 wait on its map |
+| 69806d306 | AD-01 | |
+| 7996ae820 | RB-A7 | after RB-A4 (on main) |
+| 1636195c9 | GB-01 (Census governing bodies, LA Metro move) | adds Neon reads; waited one release at Sean's order |
+| f26ebab8d | MT-01 follow-up (carries the 3:22 and 5:49 AM READYs) | new work after release 108 |
+| f67ae6709 | MD-01 follow-up (cheapest ballot writers, measure-number sentence repair) | new work after release 115 |
+| c3fff3702 | BL-02 (stream/bl-02-bills) | the only BL-02 to fold (Sean); 14dd8beb0 on stream/bl-02 is stale |
+
+**Waiting, with the reason**
+| READY | Lane | Why it waits |
+|---|---|---|
+| 7b5eacd03 | RB-A10 | Held: place_boundary, zip_place and zcta_place have 0 rows in production (RT-01 fills them). Ships when every state has rows and 20 random ZIPs in 20 states resolve |
+| be0bef2bf | RB-A3 follow-up | Not needed after RB-A8. RB-A3's publisher is on main; this adds only an official/checked split of RB-A8's shared publication counter in Admin (migration RB-A3_lanes, one extra count write per live fact). Readers see nothing, and it adds database writes while Neon comes first. River won't fold it unless Sean wants that split |
+| 39238a8be | CS-01 (reader-text capitals) | Improvement, 645 commits behind; no fold yet. The lane must merge river and repost; River joins it to the next improvement batch |
+| 1307d4e03 | RN-03 handoff | No code: an acceptance note for RN-03 (release 103, live). River records the reader check in Chrome; nothing to fold |
+| 2cce7754c, 9c2b0c58a | DB-03 portraits / release-118 integration | Not folded at Sean's order (one portrait path: release 120's) |
+
+**Superseded (a later READY of the same step is on main; not folding)**
+2769c614e DB-02 (re-cut as e0f14fe59) · 14dd8beb0 BL-02 (stream/bl-02; c3fff3702 replaces it) · 8ad77b9d5 VS-07 (vs-07-fx f48331d9d folded Oct 23) · 04dfa4caf DG-01-FX (DG-01 folded with DG-02 e6745c664, Oct 23) · 027144fa1 BS-01 (folded with RS-02 adee07352, Oct 19) · 61f6d1449 SL-02 and f42bc19c6 NE-01 (folded with DS-01 512e65e03, Oct 22) · 6da1efc6b STEP-7 (Oct 15, 1,345 behind) · 91f23e059 DB-29 (Oct 6) · CH-23/CA salvage copies 544e20323, 3cbb51190e, 0fc6ef6d2, 48ef946cd and the Oct 5–6 salvage-river-next branches (those steps folded Oct 6–13).
+<!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 

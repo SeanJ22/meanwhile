@@ -2,6 +2,7 @@ import { statePublicationPriorOf } from "./state-publication.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { civicRecordsFor } from "./changes.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { manualSourceUrls } from "./manual-source-urls.ts";
 import { publicationBaseHash } from "./navigation-publication-base.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
@@ -84,8 +85,9 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
     }
     retained.add(member.key);
   }
+  // A held archive's source review covers the exact members it extracted, as the source-isolated reader counts them.
   const sourceUrls = new Set(candidate.retrieval.manualSourceReceipt.sources
-    .filter((source) => source.reviewOutcome !== "BLOCKED").flatMap((source) => [source.requestedUrl, source.finalUrl]));
+    .filter((source) => source.reviewOutcome !== "BLOCKED").flatMap((source) => manualSourceUrls(source)));
   for (const [key, record] of after) {
     if (retained.has(key)) continue;
     for (const url of assertedSources(candidate.recordClass, key, record)) {

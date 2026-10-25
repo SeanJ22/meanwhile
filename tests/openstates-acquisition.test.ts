@@ -14,7 +14,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { capturedText, publishStatePeople, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { keyRefFor } from "../lib/doors/seed-feeds.ts";
-import { publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
+import { memberOfficesRunNeeded, publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
 import { refreshMemberOfficesFromPromoted, currentMemberOffices, readMemberOffices } from "../lib/officials/member-offices-read.ts";
 import { indexByDivision, indexByOfficeholderId, seatHolderForMembership } from "../lib/officials/lookup.ts";
 import { heldOfficialStateLegislatorsFromRead } from "../lib/state-rollcalls/legislators.ts";
@@ -177,8 +177,34 @@ test("Open States offices publish outside the official pilot rosters with their 
   assert.ok(offices.every(row => row.official === false && row.sourceOrg === "Open States (Plural, CC-0)"));
   assert.ok(offices.every(row=>row.office.geocodedPoint?.lat===38.58));
   assert.ok(publication.outcome?.candidate.candidate.retrieval.manualSourceReceipt?.sources.some(source=>source.publisher==="U.S. Census Bureau"));
-  const next=await publishMemberOffices({store,now:"2026-10-02T00:00:00.000Z",jurisdictions:["US-CA"],resolveOfficePoint:async()=>{assert.fail("The next daily office publication reuses the saved point and its Census evidence");}});
-  assert.ok(next.outcome?.confirmed,JSON.stringify(next));
+  // An unchanged roster is not read again: the runner skips the day, and a forced run reads nothing.
+  assert.equal((await memberOfficesRunNeeded(store,["US-CA"])).needed,false);
+  const unchanged=await publishMemberOffices({store,now:"2026-10-02T00:00:00.000Z",jurisdictions:["US-CA"],resolveOfficePoint:async()=>{assert.fail("An unchanged state is not read");}});
+  assert.equal(unchanged.outcome,null);
+  // Open States promoting the same people again changes nothing: published offices are never read again.
+  const later="2026-10-02T00:00:00.000Z", nextSha="c".repeat(40);
+  const same = zip([{ name: `people-${nextSha}/data/ca/legislature/One.yml`, data: Buffer.from(yaml("one", "Member One")) }], "2026-10-02");
+  const again=await acquireStatePeople({ state: "ca", store: new MemoryEvidenceStore(), locks, now: () => later,
+    signal: AbortSignal.timeout(10_000), divisions: [],
+    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha: nextSha }]) : new Response(same)) as typeof fetch });
+  assert.ok((await publishStatePeople({ vault, store, ...again, now: later,resolveOfficePoint })).outcome.promoted);
+  assert.equal((await memberOfficesRunNeeded(store,["US-CA"])).needed,false);
+  // Someone new takes office: only the new member is joined, reusing the saved point and its Census evidence; Member One's offices are carried as they were.
+  const third="2026-10-03T00:00:00.000Z", thirdSha="d".repeat(40);
+  const joined = zip([{ name: `people-${thirdSha}/data/ca/legislature/One.yml`, data: Buffer.from(yaml("one", "Member One")) },
+    { name: `people-${thirdSha}/data/ca/legislature/Two.yml`, data: Buffer.from(yaml("two", "Member Two").replace("district: '7'","district: '8'")) }], "2026-10-03");
+  const grown=await acquireStatePeople({ state: "ca", store: new MemoryEvidenceStore(), locks, now: () => third,
+    signal: AbortSignal.timeout(10_000), divisions: [],
+    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha: thirdSha }]) : new Response(joined)) as typeof fetch });
+  assert.ok((await publishStatePeople({ vault, store, ...grown, now: third,resolveOfficePoint })).outcome.promoted);
+  assert.equal((await memberOfficesRunNeeded(store,["US-CA"])).needed,true);
+  const next=await publishMemberOffices({store,now:third,jurisdictions:["US-CA"],resolveOfficePoint:async()=>{assert.fail("The next daily office publication reuses the saved point and its Census evidence");}});
+  assert.ok(next.outcome?.promoted && !next.outcome.confirmed,JSON.stringify(next));
+  assert.equal(next.records,4,"Member Two's two new offices joined; Member One's two carried");
+  const settled=await memberOfficesRunNeeded(store,["US-CA"]); assert.equal(settled.needed,false,settled.reason);
+  await refreshMemberOfficesFromPromoted({ store, now: third, bypassCache: true });
+  assert.deepEqual(currentMemberOffices("plural:ca:one"), offices, "Member One's published offices are exactly as they were");
+  assert.equal(currentMemberOffices("plural:ca:two").length, 2);
 });
 test("one malformed native record leaves verified people publishable without claiming a complete replacement", async () => {
   const archive = zip([

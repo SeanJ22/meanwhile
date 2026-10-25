@@ -106,6 +106,8 @@ export interface CandidateTransitionOptions {
 }
 
 export interface RoutineDataStore {
+  /** Reuse a proven read across runner passes until this scope's candidates, events or pointer change. */
+  readonly readVersioned?: <T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>) => Promise<T>;
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
@@ -1728,6 +1730,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
+  private async scopeVersion(recordClass: RoutineRecordClass, scope: string): Promise<string> {
+    const result = await this.db.execute(sql`select coalesce((select version::text
+      from civic_data_clock_versions where record_class = ${recordClass} and scope = ${scope}), '0') as etag`);
+    return String((result.rows[0] as { etag: string }).etag);
+  }
+
+  async readVersioned<T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>): Promise<T> {
+    if (!this.readCache) return read();
+    const key = projectionKey(recordClass, scope);
+    const [held] = await this.readCache.rows({ namespace, keys: [key], keyOf: row => row.key,
+      versions: async () => [{ key, etag: await this.scopeVersion(recordClass, scope) }],
+      values: async () => [{ key, value: await read() }],
+    });
+    return held!.value;
+  }
   private stateReadMetadata: PublishedCandidateMetadata | null = null;
   private async readPayloadParts(hashes: readonly string[]) {
     return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));
@@ -2632,9 +2649,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (!this.readCache) return this.readClock(sourceId, recordClass, scope, parserVersion);
     const [held] = await this.readCache.rows({ namespace: "routine-clock-v2", keys: [key], keyOf: row => row.key,
       values: async () => [{ key, clock: await this.readClock(sourceId, recordClass, scope, parserVersion) }],
-      versions: async () => (await this.db.execute(sql`select coalesce((select version::text
-        from civic_data_clock_versions where record_class = ${recordClass} and scope = ${scope}), '0') as etag`))
-        .rows.map(row => ({ key, etag: String((row as { etag: unknown }).etag) })),
+      versions: async () => [{ key, etag: await this.scopeVersion(recordClass, scope) }],
     });
     return held!.clock;
   }

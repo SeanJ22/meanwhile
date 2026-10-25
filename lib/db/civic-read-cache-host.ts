@@ -32,7 +32,7 @@ export function civicReadCopyStore(root: string, maxBytes = CIVIC_READ_CACHE_MAX
       await mkdir(directory, { recursive: true });
       for (const file of await readdir(directory, { withFileTypes: true })) {
         const path = join(directory, file.name);
-        if (file.isDirectory()) await scan(path);
+        if (file.isDirectory() && file.name !== "checkpoint") await scan(path);
         else if (file.isFile() && file.name.endsWith(".tmp")) await unlink(path);
         else if (file.isFile() && file.name.endsWith(".json")) {
           const info = await stat(path);
@@ -100,11 +100,31 @@ export async function startCivicReadCacheHost(options: { readonly maxBytes?: num
   void store.ready.catch(error => console.error(`Read cache unavailable; collection continues: ${error instanceof Error ? error.name : "error"}`));
   const token = randomUUID();
   const server = createServer(async (request, response) => {
-    if (!["GET", "PUT"].includes(request.method ?? "") || request.headers.authorization !== token || !/^\/[a-f0-9]{64}$/.test(request.url ?? "")) {
+    if (!["GET", "PUT"].includes(request.method ?? "") || request.headers.authorization !== token || !/^\/(?:checkpoint\/)?[a-f0-9]{64}$/.test(request.url ?? "")) {
       response.writeHead(404).end(); return;
     }
     const key = namespace + request.url!;
     try {
+      if (request.url!.startsWith("/checkpoint/")) {
+        // Continuations survive ordinary copy eviction and host restarts. They are not facts or a receipt.
+        const file = join(root, key + ".json");
+        if (request.method === "GET") {
+          await stat(file); response.writeHead(200, { "content-type": "application/json" });
+          await pipeline(createReadStream(file), response); return;
+        }
+        await mkdir(dirname(file), { recursive: true });
+        const temporary = file + "." + randomUUID() + ".tmp", held = await open(temporary, "wx", 0o600);
+        let bytes = 0;
+        try {
+          for await (const chunk of request) {
+            bytes += chunk.length;
+            if (bytes > CIVIC_READ_COPY_MAX_BYTES) throw new Error("Job continuation exceeds the existing copy bound");
+            await held.writeFile(chunk);
+          }
+          await held.sync(); await held.close(); await rename(temporary, file);
+        } catch (error) { await held.close().catch(() => {}); await unlink(temporary).catch(() => {}); throw error; }
+        response.writeHead(204).end(); return;
+      }
       if (request.method === "GET") {
         const file = join(root, key + ".json");
         await stat(file);

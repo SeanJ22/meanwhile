@@ -893,6 +893,28 @@ function returningList(query: string): string | null {
   return at < 0 ? null : query.slice(at + " returning ".length);
 }
 
+test("a vote job reads only the retained source references, without loading its historical vote graph",async()=>{
+  const value={acquisitions:[{finalUrl:"https://v3.openstates.org/bills/held",sha256:HASH}],
+    rollCalls:Array.from({length:100},(_,id)=>({id,text:"historical positions ".repeat(2000)}))};
+  const parts=new Map<string,unknown>();
+  const codec=new CivicPayloadParts({existing:async hashes=>hashes.filter(hash=>parts.has(hash)),
+    write:async rows=>{for(const row of rows)parts.set(row.hash,row.payload);},read:async()=>{throw Error("writer cannot read");}});
+  const encoded=await codec.store(value);
+  const fetched:unknown[]=[];
+  await withCannedNeon(statement=>{
+    if(statement.query.includes('from "civic_data_candidates"')) {
+      assert.match(statement.query,/"candidate"->\$1/);assert.deepEqual(statement.params.slice(0,2),["normalizedPayload","held-votes"]);
+      return {columns:[["value","jsonb"]],rows:[[encoded]]};
+    }
+    assert.ok(statement.query.includes('from "civic_data_payload_parts"'));
+    const hashes=statement.params.filter((value):value is string=>typeof value==="string"&&/^[a-f0-9]{64}$/.test(value));
+    return {columns:[["hash","text"],["payload","jsonb"]],rows:hashes.map(hash=>{const value=parts.get(hash);fetched.push(value);return [hash,value];})};
+  },async store=>{
+    assert.deepEqual(await store.readCandidatePath("held-votes",["normalizedPayload","acquisitions"]),value.acquisitions);
+  });
+  assert.ok(!JSON.stringify(fetched).includes("historical positions"));
+});
+
 test("Postgres promotion ships no dataset back and returns the pointer with the read model it copied", async () => {
   const value = candidate("postgres-promotion-returning", "2026-09-08T12:00:00.000Z", "fec-open-api");
   const persisted = receiptFor(value);

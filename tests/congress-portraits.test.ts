@@ -182,7 +182,9 @@ test("portrait image transport receives the existing caller cancellation signal"
     }, "officials", signal) });
   assert.equal(observed, true); assert.equal(wrote, false);
   assert.equal(result.projection.roster.officeholders[0].photo, null);
-  assert.ok(result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_PROCESSING_FAILED"));
+  // Cancelled mid-image, the member is unfinished rather than failed, and stays due for the next pass.
+  assert.ok(result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_INTERRUPTED" && (row.record as { interrupted?: boolean }).interrupted));
+  assert.ok(!result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_PROCESSING_FAILED"));
 });
 
 test("directory image leads publish only when the exact person's own official page labels that image",async()=>{

@@ -27,6 +27,7 @@ import {
   type RoutineRecordClass,
   type ValidationReceipt,
 } from "./types.ts";
+import type { DerivedInputRef } from "./derived-authority.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
@@ -137,6 +138,12 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
+  /** The current portrait record's input versions and next due time, without the record itself. */
+  readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
+  /** Named top-level fields of a pointer's payload, without the rest of it. */
+  readonly readPromotionPayloadFields: (recordClass: RoutineRecordClass, scope: string, keys: readonly string[]) => Promise<Readonly<Record<string, unknown>> | null>;
+  /** One part of a stored candidate, by path, without the rest of it; undefined when the candidate or the path is absent. */
+  readonly readCandidateField: (candidateId: string, path: readonly string[]) => Promise<unknown>;
   readonly listPromotionScopes?: (recordClasses: readonly RoutineRecordClass[]) => Promise<readonly { recordClass: RoutineRecordClass; scope: string }[]>;
   readonly promote: (candidateId: string, receipt: ValidationReceipt, at: string, options?: CandidateTransitionOptions) => Promise<PromotedProjection>;
   readonly appendEvidence: (candidateId: string, state: CandidateState, at: string, detail: string) => Promise<CandidateEvent>;
@@ -150,6 +157,20 @@ export interface RoutineDataStore {
     scope: string,
     parserVersion?: string,
   ) => Promise<RoutineStoreClock>;
+}
+
+/** The fact a portrait record carries to say when its next photo is due. */
+export const PORTRAIT_SCHEDULE_CODE = "PEOPLE_PORTRAIT_SCHEDULE";
+/** What the last portrait run was built from, and when it is next due. */
+export interface PortraitRunState {
+  readonly inputs: readonly { readonly recordClass: string; readonly scope: string; readonly versionId: string }[];
+  readonly nextDueAt: string | null;
+}
+function portraitRunState(candidate: RoutineCandidate): PortraitRunState {
+  const inputs = (candidate.retrieval as { derived?: { inputs?: readonly DerivedInputRef[] } }).derived?.inputs ?? [];
+  const schedule = (candidate.excludedFacts ?? []).find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string } | undefined;
+  return { inputs: inputs.flatMap(ref => ref.kind === "PROMOTED_VERSION" ? [{ recordClass: ref.recordClass, scope: ref.scope, versionId: ref.versionId }] : []),
+    nextDueAt: schedule?.nextDueAt ?? null };
 }
 
 export interface RoutineStoreClock {
@@ -743,6 +764,25 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
+  async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
+    const pointer = this.promotions.get(projectionKey("STATE_LEGISLATOR", scope));
+    const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
+    return record ? portraitRunState(record.candidate) : null;
+  }
+
+  async readPromotionPayloadFields(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<Readonly<Record<string, unknown>> | null> {
+    const pointer = this.promotions.get(projectionKey(recordClass, scope));
+    if (!pointer) return null;
+    const payload = (pointer.payload ?? {}) as Record<string, unknown>;
+    return Object.fromEntries(keys.flatMap(key => payload[key] === undefined ? [] : [[key, structuredClone(payload[key])]]));
+  }
+
+  async readCandidateField(candidateId: string, path: readonly string[]): Promise<unknown> {
+    let value: unknown = this.candidates.get(candidateId)?.candidate;
+    for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
+    return value === undefined ? undefined : structuredClone(value);
+  }
+
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
     const pointer = this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)));
     return pointer?.receipt.decision === "GOOD" ? registryDivisionMatches(pointer.payload, state, labels) : [];
@@ -1081,6 +1121,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
         ? { continuationPending: federalMoneyContinuationPending(pointer.payload, sourceId) } : {}),
+      ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE
+        ? { continuationPending: memberOfficesContinuationPending(pointer?.payload) } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation, sittings, parserVersion);
@@ -1151,6 +1193,9 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
           where state_progress->>'status' = 'BACKFILL'
             or state_progress->'cursor' is not null and state_progress->'cursor' <> 'null'::jsonb
         )` } : {}),
+      // A member-office run its deadline cut short names the states it still owes.
+      ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE ? { continuationPending: sql<boolean>`
+        jsonb_typeof(${civicDataPromotions.payload}->'pending') = 'array' and jsonb_array_length(${civicDataPromotions.payload}->'pending') > 0` } : {}),
     })
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
@@ -1204,6 +1249,13 @@ function confirmedClock(
 }
 
 /** Only the source's promoted national marker owns the unfinished acquisition pages. */
+/** The member-office package; its payload names the states a cut-off run still owes. */
+export const MEMBER_OFFICES_SCOPE = "US:state-legislator-member-offices";
+function memberOfficesContinuationPending(payload: unknown): boolean {
+  const pending = payload && typeof payload === "object" ? (payload as { readonly pending?: unknown }).pending : undefined;
+  return Array.isArray(pending) && pending.length > 0;
+}
+
 function federalMoneyContinuationPending(payload: unknown, sourceId: string): boolean {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
   const marker = payload as { readonly state?: unknown; readonly source?: unknown; readonly states?: unknown };
@@ -2095,6 +2147,32 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows as { recordClass: RoutineRecordClass; scope: string }[];
   }
 
+  async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
+    // The record itself is about 1 MB; only its input versions and its schedule fact leave the database.
+    const [row] = (await this.db.execute(sql`select
+        (select coalesce(jsonb_agg(jsonb_build_object('recordClass', i->>'recordClass', 'scope', i->>'scope', 'versionId', i->>'versionId')), '[]'::jsonb)
+          from jsonb_array_elements(case when jsonb_typeof(c.candidate #> '{retrieval,derived,inputs}') = 'array'
+            then c.candidate #> '{retrieval,derived,inputs}' else '[]'::jsonb end) i where i->>'kind' = 'PROMOTED_VERSION') as inputs,
+        (select f #>> '{record,nextDueAt}' from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
+            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as next_due_at
+      from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
+      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { inputs: PortraitRunState["inputs"]; next_due_at: string | null }[];
+    return row ? { inputs: row.inputs, nextDueAt: row.next_due_at } : null;
+  }
+
+  async readPromotionPayloadFields(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<Readonly<Record<string, unknown>> | null> {
+    const [row] = (await this.db.execute(sql`select coalesce((select jsonb_object_agg(k, p.payload->k) from unnest(${`{${keys.map(key => `"${key}"`).join(",")}}`}::text[]) k
+        where jsonb_exists(p.payload, k)), '{}'::jsonb) as fields
+      from civic_data_promotions p where p.record_class = ${recordClass} and p.scope = ${scope}`)).rows as { fields: Record<string, unknown> }[];
+    return row ? row.fields : null;
+  }
+
+  async readCandidateField(candidateId: string, path: readonly string[]): Promise<unknown> {
+    const [row] = (await this.db.execute(sql`select candidate #> ${`{${path.map(key => `"${key}"`).join(",")}}`}::text[] as value
+      from civic_data_candidates where id = ${candidateId}`)).rows as { value: unknown }[];
+    return row?.value ?? undefined;
+  }
+
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
     // (record_class, scope) is unique, so this names at most one pointer.
     const [identity] = await this.readPromotionIdentities(recordClass, [scope]);
@@ -2548,6 +2626,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: pointer?.publishedScopeVersions ?? [] } : {}),
       ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
         ? { continuationPending: pointer.continuationPending === true } : {}),
+      ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE
+        ? { continuationPending: pointer?.continuationPending === true } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);

@@ -62,6 +62,44 @@ export async function storeStandingPortrait(personId: string, sources: PortraitS
 }
 
 export type PortraitAttempt = NonNullable<import("../civic-data/types.ts").RoutineCandidate["excludedFacts"]>[number];
+type PortraitPerson = import("../officials/types.ts").Officeholder;
+
+const DAY_MS = 86_400_000;
+/** A portrait that could not be found is tried again after a week, as a verified photo is rechecked. */
+export const PORTRAIT_RETRY_MS = 7 * DAY_MS;
+/** A run takes everyone falling due within a day, so an unchanged state runs about once a day. */
+export const PORTRAIT_DUE_WINDOW_MS = DAY_MS;
+
+/** The links an attempt read for this person; a change makes the person due again at once. */
+export function portraitProfileLinks(person: PortraitPerson): readonly string[] {
+  return [...new Set([person.websiteUrl, ...(person.profileUrls ?? []), person.portraitCandidate?.imageUrl]
+    .filter((url): url is string => Boolean(url)))].sort();
+}
+
+/** When this person's portrait is next due: a verified photo's recheck, a failed attempt's retry, or now. */
+export function portraitDueAt(person: PortraitPerson, lastAttempt: PortraitAttempt | undefined, recheckMs: number,
+  verified: (person: PortraitPerson) => boolean): number {
+  const checkedAt = verified(person) ? Date.parse(person.photo?.verification?.checkedAt ?? "") : Number.NaN;
+  const record = lastAttempt?.record as { attemptedAt?: string; profiles?: readonly string[]; interrupted?: boolean } | undefined;
+  if (record?.interrupted) return 0;
+  const attemptedAt = Date.parse(record?.attemptedAt ?? "");
+  if (!Number.isFinite(checkedAt) && !Number.isFinite(attemptedAt)) return 0;
+  if (record?.profiles && record.profiles.join("\n") !== portraitProfileLinks(person).join("\n")) return 0;
+  return Math.max(Number.isFinite(checkedAt) ? checkedAt + recheckMs : 0, Number.isFinite(attemptedAt) ? attemptedAt + PORTRAIT_RETRY_MS : 0);
+}
+
+/** Each person's latest attempt with this code prefix. */
+export function latestPortraitAttempts(facts: readonly PortraitAttempt[], prefix: string): Map<string, PortraitAttempt> {
+  const latest = new Map<string, PortraitAttempt>();
+  for (const fact of facts) {
+    const record = fact.record as { personId?: unknown; attemptedAt?: unknown } | undefined;
+    if (!fact.code.startsWith(prefix) || typeof record?.personId !== "string" || typeof record.attemptedAt !== "string" ||
+      !Number.isFinite(Date.parse(record.attemptedAt))) continue;
+    const held = (latest.get(record.personId)?.record as { attemptedAt?: string } | undefined)?.attemptedAt ?? "";
+    if (record.attemptedAt > held) latest.set(record.personId, fact);
+  }
+  return latest;
+}
 export interface StandingPortraitOptions {
   readonly signal?: AbortSignal;
   readonly now?: () => string;

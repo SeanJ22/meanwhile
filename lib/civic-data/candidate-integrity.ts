@@ -116,6 +116,9 @@ function candidateReadOnlyStore(
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
     readRegistryDivisions: async () => [],
+    readPortraitRunState: readOnly,
+    readPromotionPayloadFields: readOnly,
+    readCandidateField: readOnly,
     readPublishedCandidateMetadata: async (candidateId) => candidateId === candidate.id
       ? publishedCandidateMetadata(record)
       : predecessor?.candidate.id === candidateId ? publishedCandidateMetadata(predecessor) : null,

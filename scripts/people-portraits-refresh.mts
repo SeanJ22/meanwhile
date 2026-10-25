@@ -2,21 +2,22 @@
 import { pathToFileURL } from "node:url";
 import { STATE_PEOPLE_JURISDICTIONS } from "../lib/officials/people-identity.ts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
-import { statePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
-import { readPeopleSourceProjection, publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
+import { STATE_PORTRAIT_RECHECK_MS, statePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
+import { publishPeopleSource, readHeldPeopleSource, readPeopleSourceProjection, type HeldPeopleSource } from "../lib/civic-data/people-source-publication.ts";
 import { readStateFederalDirectory, withFederalPortraits } from "../lib/officials/federal-directory-read-model.ts";
-import { congressPortraits } from "../lib/officials/congress-portraits.ts";
-import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { CONGRESS_PORTRAIT_RECHECK_MS, congressPortraits } from "../lib/officials/congress-portraits.ts";
+import { portraitInputScopes } from "../lib/photos/portrait-run.ts";
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
+import { PORTRAIT_SCHEDULE_CODE, PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { PortraitAttempt, StandingPortraitOptions } from "../lib/photos/portrait-work.ts";
 import { portraitHash, type PortraitCapture } from "../lib/photos/evidence.ts";
-import { pacedPortraitAcquire, storeStandingPortrait } from "../lib/photos/portrait-work.ts";
+import { latestPortraitAttempts, pacedPortraitAcquire, portraitDueAt, PORTRAIT_RETRY_MS, storeStandingPortrait } from "../lib/photos/portrait-work.ts";
+import { portraitBindingMatches } from "../lib/photos/binding.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
@@ -44,10 +45,8 @@ function portraitPerson(person:Officeholder):Officeholder {
       ...(person.fieldSources?.photo ? {photo:person.fieldSources.photo} : {})}};
 }
 
-async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[]}):Promise<DerivedInputRef[]> {
-  const contracts=[...ROUTINE_SOURCE_CONTRACTS,...MANUAL_PRODUCTION_SOURCE_CONTRACTS]
-    .filter(row=>row.sourceId !== "people-portraits" && ["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(row.recordClass) &&
-      (row.scope === jurisdiction || row.scope.startsWith(`${jurisdiction}:`)));
+async function sourceInputs(store:RoutineDataStore,state:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[]}):Promise<DerivedInputRef[]> {
+  const contracts=portraitInputScopes(state).filter(row=>row.recordClass !== "REGISTRY_RUNTIME_BINDING");
   const found=await Promise.all(contracts.map(async contract=>{
     const promotion=await store.readPromotion(contract.recordClass,contract.scope);
     if (!promotion) return null;
@@ -78,6 +77,21 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
   return saved;
 }
 
+/** A run saves its finished people this many at a time, and once more at its end. */
+export const PORTRAIT_BATCH_SIZE = 50;
+/** Time a run cut off by its pass deadline keeps for its last save. */
+const PORTRAIT_SAVE_MARGIN_MS = 45_000;
+
+/** When the state's next portrait falls due; while it is in the future and no input moves, the runner skips the state. */
+export function portraitNextDueAt(people:readonly Officeholder[],members:readonly Officeholder[],facts:readonly PortraitAttempt[],now:string,workRemains:boolean):string {
+  if(workRemains)return now;
+  const verified=(person:Officeholder)=>portraitBindingMatches(person.personId ?? person.id,person.photo ?? {url:""});
+  const state=latestPortraitAttempts(facts,"STATE_PORTRAIT_"),congress=latestPortraitAttempts(facts,"CONGRESS_PORTRAIT_");
+  const due=[...people.map(person=>portraitDueAt(person,state.get(person.personId ?? person.id),STATE_PORTRAIT_RECHECK_MS,verified)),
+    ...members.map(person=>portraitDueAt(person,congress.get(person.personId ?? person.id),CONGRESS_PORTRAIT_RECHECK_MS,verified))];
+  return new Date(Math.max(Date.parse(now),due.length ? Math.min(...due) : Date.parse(now)+PORTRAIT_RETRY_MS)).toISOString();
+}
+
 export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;options?:StandingPortraitOptions}) {
   const {store,vault,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
   const pacing={sizeFor:websiteSizeFromHoldings([state])};
@@ -85,38 +99,47 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const portraitOptions={...options,acquire,storePortrait:options.storePortrait ?? ((...args:Parameters<typeof storeStandingPortrait>)=>storeStandingPortrait(args[0],args[1],args[2],args[3],pacing))};
   const jurisdiction=peopleJurisdiction(state);
   const contractId=`people-portraits-${state.toLowerCase()}`;
-  const prior=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
-  if(prior.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-  const previous=prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
-  const priorFacts=previous?.candidate.excludedFacts ?? [];
+  // The held record is read once; every save builds on the version the run itself last saved.
+  let held:HeldPeopleSource=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());
+  const heldFacts=(base:HeldPeopleSource)=>(base.normalizedPayload as {excludedFacts?:PortraitAttempt[]}|undefined)?.excludedFacts ?? [];
+  const priorFacts=heldFacts(held);
+  const priorRoster=held.versionId ? held.roster : null;
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
-  const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
+  const sources=await sourceInputs(store,state,{vault,captures:linkingCaptures});
   let baseRoster:OfficeholderSet|null=null,last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
   let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),queue=Promise.resolve();
-  const publish=async(continuation:readonly PortraitAttempt[]|null)=>{
+  // The last save carries the run's end state: what is left to do, or when the next photo is due.
+  const publish=async(end:{continuation:readonly PortraitAttempt[];schedule:PortraitAttempt}|null)=>{
     const batch=[...finished.values()];
     finished=new Map();
     const people=new Set(batch.map(row=>row.person.personId ?? row.person.id));
     const officeholders=batch.length ? batch.map(row=>portraitPerson(row.person)) : baseRoster!.officeholders.map(portraitPerson);
     for(;;){
-      const held=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
-      if(held.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-      const current=held.kind === "PROMOTED" ? await store.readCandidate(held.metadata.versionId!) : null;
-      const kept=(current?.candidate.excludedFacts ?? priorFacts).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
-        !(continuation && fact.code.endsWith("_WORK_REMAINS")));
+      const kept=heldFacts(held).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
+        fact.code !== PORTRAIT_SCHEDULE_CODE && !(end && fact.code.endsWith("_WORK_REMAINS")));
+      // Attempt times and the schedule are the record's own news: an unchanged roster still saves them.
+      const heldSchedule=heldFacts(held).find(fact=>fact.code === PORTRAIT_SCHEDULE_CODE);
+      const news=batch.some(row=>row.facts.length>0) || Boolean(end && (end.continuation.length>0 ||
+        (heldSchedule?.record as {nextDueAt?:string}|undefined)?.nextDueAt !== (end.schedule.record as {nextDueAt:string}).nextDueAt));
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
         derivedInputs:[...sources,...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
-        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...continuation ?? []],confirmUnchanged:true});
-      if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
+        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...end ? [...end.continuation,end.schedule] : []],confirmUnchanged:!news,held});
+      if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED"){held=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());continue;}
       if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
+      if(publication.outcome.promoted)held={versionId:publication.outcome.promoted.versionId,
+        roster:(publication.candidate.readModel as {roster:OfficeholderSet}).roster,normalizedPayload:publication.candidate.normalizedPayload};
       last=publication;return;
     }
   };
+  const runFacts:PortraitAttempt[]=[],runPeople=new Set<string>();
   const marker=async(person:Officeholder,facts:readonly PortraitAttempt[])=>{
     finished.set(person.personId ?? person.id,{person,facts});
-    const operation=queue.then(async()=>{if(finished.size)await publish(null);});
-    queue=operation.catch(()=>{});await operation;
+    runPeople.add(person.personId ?? person.id);runFacts.push(...facts);
+    if(finished.size>=PORTRAIT_BATCH_SIZE){
+      const operation=queue.then(async()=>{if(finished.size>=PORTRAIT_BATCH_SIZE)await publish(null);});
+      queue=operation.catch(()=>{});await operation;
+    }
     await options.onPerson?.(person,facts);
   };
   // The place's members of Congress share its portrait record; readers lay their photos on the place directory.
@@ -124,7 +147,7 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
     state === "us" ? Promise.resolve(null) : readStateFederalDirectory(state,{store,now:clock(),bypassCache:true})]);
   const people=peopleRead.kind === "PROMOTED" || peopleRead.kind === "BOOTSTRAP" ? peopleRead.value.roster : null;
   const place=placeRead?.kind === "PROMOTED" ? {...placeRead.value,
-    roster:prior.kind === "PROMOTED" ? withFederalPortraits(placeRead.value.roster,prior.value.roster) : placeRead.value.roster} : null;
+    roster:priorRoster ? withFederalPortraits(placeRead.value.roster,priorRoster) : placeRead.value.roster} : null;
   if(!people && !place)throw Error("PEOPLE_PORTRAIT_ROSTER_UNAVAILABLE");
   const local:Officeholder[]=[];
   if(state !== "us") {
@@ -144,9 +167,9 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
     }
   }
   const combined=mergePeopleSets([...(people ? [people] : []),{scope:state,generatedAt:clock(),officeholders:local,divisions:[],unmatched:[]}])!;
-  if(prior.kind === "PROMOTED") {
-    const held=new Map(prior.value.roster.officeholders.filter(person=>person.photo).map(person=>[person.personId ?? person.id,person.photo]));
-    for(const person of combined.officeholders) person.photo=person.photo ?? held.get(person.personId ?? person.id) ?? null;
+  if(priorRoster) {
+    const photos=new Map(priorRoster.officeholders.filter(person=>person.photo).map(person=>[person.personId ?? person.id,person.photo]));
+    for(const person of combined.officeholders) person.photo=person.photo ?? photos.get(person.personId ?? person.id) ?? null;
   }
   baseRoster={...(people ?? place!.roster),officeholders:[...combined.officeholders,...place?.roster.officeholders ?? []]};
   const stateResult=combined.officeholders.length ? await statePeoplePortraits({roster:combined,state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
@@ -154,8 +177,11 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const continuationFacts=[...stateResult?.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS") ?? [],
     ...congressResult?.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS") ?? []];
   await queue;
-  // The last batch carries the remaining work; a run that finished nothing still advances its own clock.
-  if(finished.size || !last || continuationFacts.length)await publish(continuationFacts);
+  // The last save carries the remaining work and the next due time, so a cut-off run resumes and an unchanged state rests.
+  const factsNow=[...priorFacts.filter(fact=>!runPeople.has((fact.record as {personId?:string}|undefined)?.personId ?? "")),...runFacts];
+  const nextDueAt=portraitNextDueAt(stateResult?.roster.officeholders ?? [],congressResult?.projection.roster.officeholders ?? [],factsNow,clock(),continuationFacts.length>0);
+  await publish({continuation:continuationFacts,schedule:{key:`${jurisdiction}:portrait-schedule`,code:PORTRAIT_SCHEDULE_CODE,
+    detail:`The next portrait in this state is due ${nextDueAt}; until then the runner skips it unless its people inputs change.`,record:{nextDueAt}}});
   if(!last)throw Error("PEOPLE_PORTRAIT_NO_HELD_PEOPLE");
   printSourceRunnerReceipt(contractId,last.candidate,last.outcome);
   return last;
@@ -165,6 +191,10 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
 async function main(){
   const state=parsePeoplePortraitArguments(process.argv.slice(2));
   installNeonRequestDeadline();prepareProductionCivicDataWrite();
-  await refreshPeoplePortraits({store:new PostgresRoutineDataStore(),vault:rawCaptureVault(),state});
+  // Told when its pass ends, the run stops taking people in time to save where it stopped and print its receipt.
+  const stop=new AbortController(),deadline=passDeadlineFromEnv();
+  if(Number.isFinite(deadline))setTimeout(()=>stop.abort(Error("PASS_TIME_BUDGET")),Math.max(0,deadline-PORTRAIT_SAVE_MARGIN_MS-Date.now())).unref();
+  process.once("SIGTERM",()=>stop.abort(Error("PASS_TIME_BUDGET")));
+  await refreshPeoplePortraits({store:new PostgresRoutineDataStore(),vault:rawCaptureVault(),state,options:{signal:stop.signal}});
 }
 if(process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)await main();

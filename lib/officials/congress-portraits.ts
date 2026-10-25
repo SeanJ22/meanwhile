@@ -1,7 +1,7 @@
 import { acquireKnownRelease, type KnownRelease } from "../sources/known-release.ts";
 import { readSourceApi } from "../control-plane/scheduler/scout-api.ts";
 import { portraitHash, type PortraitCapture, type PortraitSources } from "../photos/evidence.ts";
-import { pacedPortraitAcquire, storeStandingPortrait } from "../photos/portrait-work.ts";
+import { latestPortraitAttempts, pacedPortraitAcquire, portraitDueAt, portraitProfileLinks, PORTRAIT_DUE_WINDOW_MS, storeStandingPortrait } from "../photos/portrait-work.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 import { imagesIn, pickPortraits } from "../hunt/portrait-pick.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
@@ -56,6 +56,9 @@ export function congressDirectoryPortraitLeads(bioguide:string):readonly string[
   ];
 }
 
+/** A member of Congress's verified photo is rechecked every 30 days. */
+export const CONGRESS_PORTRAIT_RECHECK_MS = 30 * 86_400_000;
+
 /** Drain every due native member; caller cancellation leaves durable reasons. */
 export async function congressPortraits(value: FederalDirectoryReadModel, asOf: string, signal?: AbortSignal,
   options: CongressPortraitOptions = {}): Promise<CongressPortraitResult> {
@@ -66,16 +69,13 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
   const sourceSignal = signal ?? new AbortController().signal;
   const apiConfigured = options.apiKeyConfigured ?? Boolean(process.env.CONGRESS_API_KEY?.trim());
   const holders = value.roster.officeholders.map(row => ({ ...row }));
-  const lastAttempt = new Map<string, string>();
-  for (const fact of options.previousExcludedFacts ?? []) {
-    const record = fact.record as { personId?: unknown; attemptedAt?: unknown } | undefined;
-    if (fact.code.startsWith("CONGRESS_PORTRAIT_") && typeof record?.personId === "string" &&
-      typeof record.attemptedAt === "string" && Number.isFinite(Date.parse(record.attemptedAt)) &&
-      record.attemptedAt > (lastAttempt.get(record.personId) ?? "")) lastAttempt.set(record.personId, record.attemptedAt);
-  }
-  const due = holders.filter(row => !portraitBindingMatches(row.personId ?? row.id, row.photo ?? { url: "" }) ||
-    Date.parse(asOf) - Date.parse(row.photo!.verification!.checkedAt) >= 30 * 86_400_000)
-    .sort((a, b) => (lastAttempt.get(a.personId ?? a.id) ?? "").localeCompare(lastAttempt.get(b.personId ?? b.id) ?? "") ||
+  const lastAttempt = latestPortraitAttempts(options.previousExcludedFacts ?? [], "CONGRESS_PORTRAIT_");
+  const attemptedAt = (person: Officeholder) =>
+    (lastAttempt.get(person.personId ?? person.id)?.record as { attemptedAt?: string } | undefined)?.attemptedAt ?? "";
+  const verified = (person: Officeholder) => portraitBindingMatches(person.personId ?? person.id, person.photo ?? { url: "" });
+  const dueBy = Date.parse(asOf) + PORTRAIT_DUE_WINDOW_MS;
+  const due = holders.filter(row => portraitDueAt(row, lastAttempt.get(row.personId ?? row.id), CONGRESS_PORTRAIT_RECHECK_MS, verified) <= dueBy)
+    .sort((a, b) => attemptedAt(a).localeCompare(attemptedAt(b)) ||
       (a.photo?.verification?.checkedAt ?? "").localeCompare(b.photo?.verification?.checkedAt ?? "") || a.id.localeCompare(b.id));
   const dueKeys = new Set(due.map(person => `${person.personId ?? person.id}:portrait`));
   // The existing per-field receipt is also the continuation order: an unavailable early ID cannot starve untouched members.
@@ -84,13 +84,16 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
   const refreshed = new Set<string>();
   let attempted = 0;
   const gap = (person: Officeholder, sourceUrl: string | null, code: string, detail: string, error?: unknown, page?: KnownRelease) => {
+    // A member the deadline interrupted is unfinished, not failed: they stay due, behind members not yet tried.
+    if (sourceSignal.aborted) { code = "CONGRESS_PORTRAIT_INTERRUPTED"; detail = "The pass deadline interrupted this attempt; it continues on the next pass."; }
     let diagnostic = error === undefined ? "" : sanitizedErrorDiagnostic(error, 500);
     for (const [key, secret] of Object.entries(process.env)) if (/(?:API_KEY|TOKEN)$/.test(key) && secret) {
       diagnostic = diagnostic.split(secret).join("[REDACTED]").split(encodeURIComponent(secret)).join("[REDACTED]");
     }
     excludedFacts.push({ key: `${person.personId ?? person.id}:portrait`, code,
       detail: `${detail}${diagnostic ? ` ${diagnostic}` : ""}`,
-      record: { personId: person.personId ?? person.id, sourceUrl, attemptedAt: now(),
+      record: { personId: person.personId ?? person.id, sourceUrl, attemptedAt: now(), profiles: portraitProfileLinks(person),
+        ...(sourceSignal.aborted ? { interrupted: true } : {}),
         ...(page ? { httpStatus: page.httpStatus, rawHash: page.sha256, vaultKey: page.vaultKey,
           sourceRetrievedAt: page.retrievedAt, sourceCheckedAt: page.checkedAt } : {}),
         retainedVerifiedPortrait: Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id, person.photo)) } });

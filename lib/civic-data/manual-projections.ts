@@ -99,6 +99,9 @@ export interface CuratedReaderProjection {
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   readonly formatVersion?: number;
   readonly denominator?: Readonly<Record<string, number>>;
+  /** Member offices: the roster versions each state's offices were built from, and the changed states still owed this round. */
+  readonly rosterVersions?: Readonly<Record<string, string>>;
+  readonly pending?: readonly string[];
 }
 
 type ManualProjectionPayload =
@@ -508,9 +511,15 @@ function rebuildSourceScopedPayload(
       members.map((member) => member.record as EverydayRoutingRecord),
     );
   }
+  // Member offices keep which roster each state was built from and which states a cut-off run still owes.
+  const progress = contractId === "member-offices" ? {
+    ...(object(current.rosterVersions) ? { rosterVersions: current.rosterVersions } : {}),
+    ...(Array.isArray(current.pending) && current.pending.length ? { pending: current.pending } : {}),
+  } : {};
   return {
     kind: string(current.kind) || contractId,
     records: members.map((member) => member.record),
+    ...progress,
   } as CuratedReaderProjection;
 }
 
